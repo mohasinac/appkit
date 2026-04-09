@@ -139,7 +139,52 @@ export const TOKENS = {
   token,
 } as const;
 
-// ─── THEME_CONSTANTS ───────────────────────────────────────────────────────
+// ─── LOCALE_CONFIG ─────────────────────────────────────────────────────────
+
+/**
+ * Locale and currency defaults for Indian e-commerce.
+ * Consumer projects can override individual keys in their own constants.
+ *
+ * @example
+ * ```ts
+ * import { LOCALE_CONFIG } from "@mohasinac/appkit/tokens";
+ *
+ * const price = new Intl.NumberFormat(LOCALE_CONFIG.defaultLocale, {
+ *   style: "currency",
+ *   currency: LOCALE_CONFIG.defaultCurrency,
+ * }).format(1299);
+ * // => "\u20b91,299.00"
+ * ```
+ */
+export const LOCALE_CONFIG = {
+  /** IETF language tag used for Intl formatters. */
+  defaultLocale: "en-IN",
+  /** ISO 4217 currency code. */
+  defaultCurrency: "INR",
+  /** IANA timezone for server-side date rendering. */
+  defaultTimezone: "Asia/Kolkata",
+  /** ISO 3166-1 alpha-2 country code. */
+  defaultCountry: "IN",
+  /** Locales available for the i18n router. */
+  supportedLocales: ["en-IN", "en-US", "en-GB"] as const,
+  /** Currencies the platform accepts. */
+  supportedCurrencies: ["INR", "USD", "GBP", "EUR", "AED", "SGD"] as const,
+  /** Currency symbol map for quick display use. */
+  currencySymbols: {
+    INR: "\u20b9",
+    USD: "$",
+    GBP: "\u00a3",
+    EUR: "\u20ac",
+    AED: "\u062f.\u0625",
+    SGD: "S$",
+  } as const,
+  /** Phone number prefix for IN locale. */
+  defaultPhonePrefix: "+91",
+  /** Postal code pattern for India (6 digits). */
+  postalPattern: /^[1-9][0-9]{5}$/,
+} as const;
+
+
 //
 // Responsive-first design system constants for Tailwind CSS.
 // Framework rule: every grid includes xl: and 2xl: breakpoints (widescreen).
@@ -568,13 +613,29 @@ const TRANSITIONS = {
 
 /**
  * Skeleton loading placeholders.
+ *
+ * Two variants:
+ * - `pulse` (default) — fade in/out via `animate-pulse`.
+ * - `shimmer` — left-to-right highlight sweep. Requires `animate-shimmer`
+ *   keyframe defined in tailwind.config.js:
+ *   ```js
+ *   // tailwind.config.js
+ *   theme: { extend: { animation: { shimmer: "shimmer 1.5s infinite" },
+ *     keyframes: { shimmer: { "0%": { backgroundPosition: "-400% 0" },
+ *                              "100%": { backgroundPosition: "400% 0" } } } } }
+ *   ```
  */
 const SKELETON = {
+  // ─ Pulse (fade) variant ────────────────────────────────────────────────────────────────
   base: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60",
   text: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-4",
   heading: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-7",
   image: "animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700/60",
   card: "animate-pulse rounded-2xl bg-zinc-200 dark:bg-slate-700/60",
+  // ─ Shimmer (sweep) variant ──────────────────────────────────────────────────────────
+  shimmer: "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+  shimmerText: "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+  shimmerCard: "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
 } as const;
 
 /**

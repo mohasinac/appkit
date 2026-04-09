@@ -1,6 +1,39 @@
 // appkit/src/seed/factories/product.factory.ts
 let _seq = 1;
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+/** Deterministic pick from array using sequence number (no Math.random). */
+function pick<T>(arr: readonly T[], n: number): T {
+  return arr[n % arr.length];
+}
+
+/** Deterministic integer in [min, max] range based on n. */
+function irand(n: number, min: number, max: number): number {
+  return min + (((n * 2_654_435_761) >>> 0) % (max - min + 1));
+}
+
+// ─── Realistic data pools (INR / Indian market) ───────────────────────────────
+const PRODUCT_NAMES = [
+  "Handloom Cotton Saree", "Silver Oxidised Jhumkas", "Brass Pooja Diya Set",
+  "Khadi Kurta & Pyjama Set", "Terracotta Flower Vase", "Sandalwood Incense Sticks",
+  "Batik Print Salwar Suit", "Copper Water Bottle", "Warli Art Wall Frame",
+  "Clay Tea Kadai Set", "Jute Laptop Bag", "Madhubani Painting Print",
+  "Organic Tulsi Green Tea", "Kantha Embroidered Cushion", "Brass Dancing Ganesha Figurine",
+  "Block Print Bedsheet Set", "Bamboo Cutlery Kit", "Dhokra Metal Elephant",
+  "Rajasthani Mojari Jutti", "Coconut Shell Bowl Set",
+] as const;
+
+const CATEGORIES = [
+  "clothing", "jewellery", "home-decor", "food-beverages",
+  "art-crafts", "wellness", "accessories", "kitchenware",
+] as const;
+
+const TAGS_POOL = [
+  ["handmade", "artisan"], ["featured", "new-arrival"], ["bestseller", "eco-friendly"],
+  ["sale"], ["handcrafted", "traditional"], ["organic", "sustainable"],
+  ["limited-edition"], ["gift-worthy", "premium"],
+] as const;
+
 export interface SeedBaseProductDocument {
   id: string;
   title: string;
@@ -25,21 +58,25 @@ export function makeProduct(
 ): SeedBaseProductDocument {
   const n = _seq++;
   const now = new Date();
+  const title = pick(PRODUCT_NAMES, n);
+  const category = pick(CATEGORIES, n);
+  const price = irand(n, 99, 9999);
+  const stock = irand(n + 7, 5, 200);
   return {
     id: overrides.id ?? `product-${n}`,
-    title: overrides.title ?? `Product ${n}`,
-    description: overrides.description ?? "",
+    title: overrides.title ?? title,
+    description: overrides.description ?? `Authentic ${title} — handcrafted by skilled Indian artisans.`,
     slug: overrides.slug ?? `product-${n}`,
-    seoTitle: overrides.seoTitle ?? `Product ${n}`,
-    price: overrides.price ?? 100,
+    seoTitle: overrides.seoTitle ?? `Buy ${title} Online | Free Shipping`,
+    price: overrides.price ?? price,
     currency: overrides.currency ?? "INR",
-    stockQuantity: overrides.stockQuantity ?? 10,
-    availableQuantity: overrides.availableQuantity ?? 10,
+    stockQuantity: overrides.stockQuantity ?? stock,
+    availableQuantity: overrides.availableQuantity ?? Math.max(0, stock - irand(n, 0, 5)),
     mainImage: overrides.mainImage ?? "",
     images: overrides.images ?? [],
     status: overrides.status ?? "published",
-    category: overrides.category ?? "",
-    tags: overrides.tags ?? [],
+    category: overrides.category ?? category,
+    tags: overrides.tags ?? [...pick(TAGS_POOL, n)],
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,
     ...overrides,

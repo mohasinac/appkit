@@ -135,6 +135,25 @@ export interface RichTextProps {
   className?: string;
   /** Tailwind prose class variant. Defaults to "prose dark:prose-invert". */
   proseClass?: string;
+  /**
+   * Optional syntax highlighter applied to every `<pre><code>` block.
+   * Called with (rawCode, languageName) — return the highlighted HTML string.
+   *
+   * The language name is derived from the `language-*` CSS class on the `<code>`
+   * element (e.g. "ts", "js", "python"). Falls back to `"plaintext"` when absent.
+   *
+   * @example
+   * ```tsx
+   * import hljs from "highlight.js";
+   * <RichText
+   *   html={post.body}
+   *   highlightCode={(code, lang) =>
+   *     hljs.highlight(code, { language: lang || "plaintext", ignoreIllegals: true }).value
+   *   }
+   * />
+   * ```
+   */
+  highlightCode?: (code: string, lang: string) => string;
 }
 
 /**
@@ -152,8 +171,26 @@ export function RichText({
   html,
   className = "",
   proseClass = "prose dark:prose-invert max-w-none",
+  highlightCode,
 }: RichTextProps) {
-  const safe = useMemo(() => sanitiseHtml(html), [html]);
+  const safe = useMemo(() => {
+    const sanitized = sanitiseHtml(html);
+
+    if (!highlightCode || typeof document === "undefined") return sanitized;
+
+    // Apply syntax highlighting to <pre><code> blocks after sanitisation
+    const container = document.createElement("div");
+    container.innerHTML = sanitized;
+    container.querySelectorAll("pre > code").forEach((codeEl) => {
+      const langClass = Array.from(codeEl.classList).find((c) =>
+        c.startsWith("language-"),
+      );
+      const lang = langClass ? langClass.replace("language-", "") : "plaintext";
+      const highlighted = highlightCode(codeEl.textContent ?? "", lang);
+      codeEl.innerHTML = highlighted;
+    });
+    return container.innerHTML;
+  }, [html, highlightCode]);
 
   return (
     <Div
