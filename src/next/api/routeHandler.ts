@@ -54,7 +54,7 @@ interface RouteHandlerOptions<
     user?: RouteUser;
     body?: TInput;
     params?: TParams;
-  }) => Promise<NextResponse>;
+  }) => Promise<Response>;
 }
 
 /** Read the `__session` HTTP-only cookie from request headers. */

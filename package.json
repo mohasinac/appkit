@@ -296,6 +296,56 @@
       "import": "./dist/features/whatsapp-bot/index.js",
       "require": "./dist/features/whatsapp-bot/index.cjs"
     },
+    "./features/auth/server": {
+      "types": "./dist/features/auth/server.d.ts",
+      "import": "./dist/features/auth/server.js",
+      "require": "./dist/features/auth/server.cjs"
+    },
+    "./features/blog/server": {
+      "types": "./dist/features/blog/server.d.ts",
+      "import": "./dist/features/blog/server.js",
+      "require": "./dist/features/blog/server.cjs"
+    },
+    "./features/categories/server": {
+      "types": "./dist/features/categories/server.d.ts",
+      "import": "./dist/features/categories/server.js",
+      "require": "./dist/features/categories/server.cjs"
+    },
+    "./features/events/server": {
+      "types": "./dist/features/events/server.d.ts",
+      "import": "./dist/features/events/server.js",
+      "require": "./dist/features/events/server.cjs"
+    },
+    "./features/homepage/server": {
+      "types": "./dist/features/homepage/server.d.ts",
+      "import": "./dist/features/homepage/server.js",
+      "require": "./dist/features/homepage/server.cjs"
+    },
+    "./features/pre-orders/server": {
+      "types": "./dist/features/pre-orders/server.d.ts",
+      "import": "./dist/features/pre-orders/server.js",
+      "require": "./dist/features/pre-orders/server.cjs"
+    },
+    "./features/products/server": {
+      "types": "./dist/features/products/server.d.ts",
+      "import": "./dist/features/products/server.js",
+      "require": "./dist/features/products/server.cjs"
+    },
+    "./features/reviews/server": {
+      "types": "./dist/features/reviews/server.d.ts",
+      "import": "./dist/features/reviews/server.js",
+      "require": "./dist/features/reviews/server.cjs"
+    },
+    "./features/search/server": {
+      "types": "./dist/features/search/server.d.ts",
+      "import": "./dist/features/search/server.js",
+      "require": "./dist/features/search/server.cjs"
+    },
+    "./features/stores/server": {
+      "types": "./dist/features/stores/server.d.ts",
+      "import": "./dist/features/stores/server.js",
+      "require": "./dist/features/stores/server.cjs"
+    },
     "./cli": {
       "types": "./dist/cli/index.d.ts",
       "import": "./dist/cli/index.js",
@@ -313,7 +363,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup",
+    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup && cross-env BUILD_BATCH=7 tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"

@@ -181,6 +181,20 @@ const featureEntriesD = {
   "seed/index": "src/seed/index.ts",
 };
 
+/** Batch 7 — server-only API handler sub-paths (no React/client code). */
+const serverEntries = {
+  "features/auth/server": "src/features/auth/server.ts",
+  "features/blog/server": "src/features/blog/server.ts",
+  "features/categories/server": "src/features/categories/server.ts",
+  "features/events/server": "src/features/events/server.ts",
+  "features/homepage/server": "src/features/homepage/server.ts",
+  "features/pre-orders/server": "src/features/pre-orders/server.ts",
+  "features/products/server": "src/features/products/server.ts",
+  "features/reviews/server": "src/features/reviews/server.ts",
+  "features/search/server": "src/features/search/server.ts",
+  "features/stores/server": "src/features/stores/server.ts",
+};
+
 const external = [
   "react",
   "react-dom",
@@ -208,7 +222,9 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: true,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
   "2": {
@@ -219,7 +235,9 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
   "3": {
@@ -230,7 +248,9 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
   "4": {
@@ -241,7 +261,9 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
   "5": {
@@ -252,7 +274,9 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
   "6": {
@@ -263,7 +287,22 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) { options.alias = alias; },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external,
+  },
+  "7": {
+    entry: serverEntries,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: false,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
     external,
   },
 };
