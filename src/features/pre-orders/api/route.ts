@@ -67,3 +67,30 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 }
+
+// ─── POST /api/pre-orders ──────────────────────────────────────────────────
+export async function POST(request: Request): Promise<NextResponse> {
+  try {
+    const input = (await request.json()) as Record<string, unknown>;
+    const { db } = getProviders();
+    if (!db)
+      return NextResponse.json(
+        { success: false, error: "DB not configured" },
+        { status: 503 },
+      );
+    const repo = db.getRepository<Record<string, unknown>>("preorders");
+    const created = await repo.create({
+      ...input,
+      status: "pending",
+    } as Omit<Record<string, unknown>, "id" | "createdAt" | "updatedAt">);
+    return NextResponse.json({ success: true, data: created }, { status: 201 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Internal server error",
+      },
+      { status: 500 },
+    );
+  }
+}

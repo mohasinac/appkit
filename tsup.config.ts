@@ -135,9 +135,72 @@ const featureEntries = {
   "seed/index": "src/seed/index.ts",
 };
 
-export default defineConfig([
-  // ─── Batch 1: Primitives ────────────────────────────────────────────────────
-  {
+const featureEntriesA = {
+  "features/layout/index": "src/features/layout/index.ts",
+  "features/forms/index": "src/features/forms/index.ts",
+  "features/filters/index": "src/features/filters/index.ts",
+  "features/media/index": "src/features/media/index.ts",
+  "features/auth/index": "src/features/auth/index.ts",
+  "features/account/index": "src/features/account/index.ts",
+  "features/admin/index": "src/features/admin/index.ts",
+  "features/cms/index": "src/features/cms/index.ts",
+  "features/blog/index": "src/features/blog/index.ts",
+};
+
+const featureEntriesB = {
+  "features/cart/index": "src/features/cart/index.ts",
+  "features/categories/index": "src/features/categories/index.ts",
+  "features/checkout/index": "src/features/checkout/index.ts",
+  "features/collections/index": "src/features/collections/index.ts",
+  "features/consultation/index": "src/features/consultation/index.ts",
+  "features/corporate/index": "src/features/corporate/index.ts",
+  "features/events/index": "src/features/events/index.ts",
+  "features/faq/index": "src/features/faq/index.ts",
+  "features/homepage/index": "src/features/homepage/index.ts",
+};
+
+const featureEntriesC = {
+  "features/loyalty/index": "src/features/loyalty/index.ts",
+  "features/orders/index": "src/features/orders/index.ts",
+  "features/payments/index": "src/features/payments/index.ts",
+  "features/products/index": "src/features/products/index.ts",
+  "features/promotions/index": "src/features/promotions/index.ts",
+  "features/reviews/index": "src/features/reviews/index.ts",
+  "features/search/index": "src/features/search/index.ts",
+  "features/seller/index": "src/features/seller/index.ts",
+};
+
+const featureEntriesD = {
+  "features/stores/index": "src/features/stores/index.ts",
+  "features/wishlist/index": "src/features/wishlist/index.ts",
+  "features/auctions/index": "src/features/auctions/index.ts",
+  "features/pre-orders/index": "src/features/pre-orders/index.ts",
+  "features/before-after/index": "src/features/before-after/index.ts",
+  "features/whatsapp-bot/index": "src/features/whatsapp-bot/index.ts",
+  "cli/index": "src/cli/index.ts",
+  "seed/index": "src/seed/index.ts",
+};
+
+const external = [
+  "react",
+  "react-dom",
+  "next",
+  "next-intl",
+  "firebase-admin",
+  "resend",
+  "razorpay",
+  "@upstash/redis",
+  "@upstash/ratelimit",
+  "@tanstack/react-query",
+  "@tanstack/query-core",
+];
+
+const BATCH = process.env.BUILD_BATCH ?? "1";
+
+// Each batch runs in a separate tsup invocation (see package.json build script).
+// This avoids the DTS race condition and OOM issues from parallel/large batches.
+const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
+  "1": {
     entry: primitiveEntries,
     format: ["esm", "cjs"],
     dts: { resolve: false },
@@ -145,73 +208,64 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external: [
-      "react",
-      "react-dom",
-      "next",
-      "next-intl",
-      "firebase-admin",
-      "resend",
-      "razorpay",
-      "@upstash/redis",
-      "@upstash/ratelimit",
-      "@tanstack/react-query",
-      "@tanstack/query-core",
-    ],
+    esbuildOptions(options) { options.alias = alias; },
+    external,
   },
-  // ─── Batch 2: Providers ─────────────────────────────────────────────────────
-  {
+  "2": {
     entry: providerEntries,
     format: ["esm", "cjs"],
     dts: { resolve: false },
-    splitting: true,
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external: [
-      "react",
-      "react-dom",
-      "next",
-      "next-intl",
-      "firebase-admin",
-      "resend",
-      "razorpay",
-      "@upstash/redis",
-      "@upstash/ratelimit",
-      "@tanstack/react-query",
-      "@tanstack/query-core",
-    ],
+    esbuildOptions(options) { options.alias = alias; },
+    external,
   },
-  // ─── Batch 3: Features ──────────────────────────────────────────────────────
-  {
-    entry: featureEntries,
+  "3": {
+    entry: featureEntriesA,
     format: ["esm", "cjs"],
     dts: { resolve: false },
     splitting: true,
     sourcemap: true,
     clean: false,
     treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external: [
-      "react",
-      "react-dom",
-      "next",
-      "next-intl",
-      "firebase-admin",
-      "resend",
-      "razorpay",
-      "@upstash/redis",
-      "@upstash/ratelimit",
-      "@tanstack/react-query",
-      "@tanstack/query-core",
-    ],
+    esbuildOptions(options) { options.alias = alias; },
+    external,
   },
-]);
+  "4": {
+    entry: featureEntriesB,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) { options.alias = alias; },
+    external,
+  },
+  "5": {
+    entry: featureEntriesC,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) { options.alias = alias; },
+    external,
+  },
+  "6": {
+    entry: featureEntriesD,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) { options.alias = alias; },
+    external,
+  },
+};
+
+export default defineConfig(configs[BATCH]!);

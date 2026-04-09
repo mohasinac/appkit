@@ -313,7 +313,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
@@ -362,6 +362,7 @@
     "@types/react-dom": "^19.1.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
+    "cross-env": "^10.1.0",
     "eslint": "^9.37.0",
     "firebase-admin": "^13.6.1",
     "lucide-react": "^1.7.0",
