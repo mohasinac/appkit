@@ -135,32 +135,83 @@ const featureEntries = {
   "seed/index": "src/seed/index.ts",
 };
 
-export default defineConfig({
-  entry: {
-    ...primitiveEntries,
-    ...providerEntries,
-    ...featureEntries,
+export default defineConfig([
+  // ─── Batch 1: Primitives ────────────────────────────────────────────────────
+  {
+    entry: primitiveEntries,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: true,
+    treeshake: true,
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external: [
+      "react",
+      "react-dom",
+      "next",
+      "next-intl",
+      "firebase-admin",
+      "resend",
+      "razorpay",
+      "@upstash/redis",
+      "@upstash/ratelimit",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
-  format: ["esm", "cjs"],
-  dts: true,
-  splitting: true,
-  sourcemap: true,
-  clean: true,
-  treeshake: true,
-  esbuildOptions(options) {
-    options.alias = alias;
+  // ─── Batch 2: Providers ─────────────────────────────────────────────────────
+  {
+    entry: providerEntries,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external: [
+      "react",
+      "react-dom",
+      "next",
+      "next-intl",
+      "firebase-admin",
+      "resend",
+      "razorpay",
+      "@upstash/redis",
+      "@upstash/ratelimit",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
-  external: [
-    "react",
-    "react-dom",
-    "next",
-    "next-intl",
-    "firebase-admin",
-    "resend",
-    "razorpay",
-    "@upstash/redis",
-    "@upstash/ratelimit",
-    "@tanstack/react-query",
-    "@tanstack/query-core",
-  ],
-});
+  // ─── Batch 3: Features ──────────────────────────────────────────────────────
+  {
+    entry: featureEntries,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external: [
+      "react",
+      "react-dom",
+      "next",
+      "next-intl",
+      "firebase-admin",
+      "resend",
+      "razorpay",
+      "@upstash/redis",
+      "@upstash/ratelimit",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
+  },
+]);
