@@ -29,7 +29,9 @@ const alias: Record<string, string> = {
   "@mohasinac/storage-firebase": path.resolve("src/providers/storage-firebase"),
   "@mohasinac/payment-razorpay": path.resolve("src/providers/payment-razorpay"),
   "@mohasinac/search-algolia": path.resolve("src/providers/search-algolia"),
-  "@mohasinac/shipping-shiprocket": path.resolve("src/providers/shipping-shiprocket"),
+  "@mohasinac/shipping-shiprocket": path.resolve(
+    "src/providers/shipping-shiprocket",
+  ),
   // Feature layers
   "@mohasinac/feat-layout": path.resolve("src/features/layout"),
   "@mohasinac/feat-forms": path.resolve("src/features/forms"),
@@ -66,7 +68,7 @@ const alias: Record<string, string> = {
 };
 
 const primitiveEntries = {
-  "index": "src/index.ts",
+  index: "src/index.ts",
   "contracts/index": "src/contracts/index.ts",
   "core/index": "src/core/index.ts",
   "http/index": "src/http/index.ts",
@@ -92,7 +94,8 @@ const providerEntries = {
   "providers/storage-firebase/index": "src/providers/storage-firebase/index.ts",
   "providers/payment-razorpay/index": "src/providers/payment-razorpay/index.ts",
   "providers/search-algolia/index": "src/providers/search-algolia/index.ts",
-  "providers/shipping-shiprocket/index": "src/providers/shipping-shiprocket/index.ts",
+  "providers/shipping-shiprocket/index":
+    "src/providers/shipping-shiprocket/index.ts",
 };
 
 const featureEntries = {
@@ -129,6 +132,7 @@ const featureEntries = {
   "features/before-after/index": "src/features/before-after/index.ts",
   "features/whatsapp-bot/index": "src/features/whatsapp-bot/index.ts",
   "cli/index": "src/cli/index.ts",
+  "seed/index": "src/seed/index.ts",
 };
 
 export default defineConfig({

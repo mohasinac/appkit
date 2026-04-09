@@ -61,7 +61,9 @@
       "@mohasinac/search-algolia": ["./src/providers/search-algolia"],
       "@mohasinac/search-algolia/*": ["./src/providers/search-algolia/*"],
       "@mohasinac/shipping-shiprocket": ["./src/providers/shipping-shiprocket"],
-      "@mohasinac/shipping-shiprocket/*": ["./src/providers/shipping-shiprocket/*"],
+      "@mohasinac/shipping-shiprocket/*": [
+        "./src/providers/shipping-shiprocket/*"
+      ],
       "@mohasinac/feat-layout": ["./src/features/layout"],
       "@mohasinac/feat-layout/*": ["./src/features/layout/*"],
       "@mohasinac/feat-forms": ["./src/features/forms"],

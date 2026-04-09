@@ -18,6 +18,12 @@ export type { SidebarLayoutProps } from "./SidebarLayout";
 export { BottomNavLayout } from "./BottomNavLayout";
 export type { BottomNavLayoutProps } from "./BottomNavLayout";
 
+export { BottomNavItem } from "./BottomNavItem";
+export type { BottomNavItemProps } from "./BottomNavItem";
+
+export { BottomSheet } from "./BottomSheet";
+export type { BottomSheetProps } from "./BottomSheet";
+
 export { TitleBarLayout } from "./TitleBarLayout";
 export type { TitleBarLayoutProps, TitleBarUser } from "./TitleBarLayout";
 

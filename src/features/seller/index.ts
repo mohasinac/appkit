@@ -9,6 +9,7 @@ export {
   PayoutsRepository,
 } from "./repository/seller.repository";
 export { manifest } from "./manifest";
+export { SELLER_PAGE_PERMISSIONS } from "./permission-map";
 
 // API route handlers — re-exported for 2-line consumer stubs
 export { GET as sellerProductsGET } from "./api/products/route.js";

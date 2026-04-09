@@ -300,6 +300,11 @@
       "types": "./dist/cli/index.d.ts",
       "import": "./dist/cli/index.js",
       "require": "./dist/cli/index.cjs"
+    },
+    "./seed": {
+      "types": "./dist/seed/index.d.ts",
+      "import": "./dist/seed/index.js",
+      "require": "./dist/seed/index.cjs"
     }
   },
   "files": [

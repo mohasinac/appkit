@@ -39,3 +39,19 @@ export {
 // Response caching middleware
 export { withCache, invalidateCache } from "./cache-middleware";
 export type { CacheConfig } from "./cache-middleware";
+
+// PII-aware composable middleware chain (Phase 21)
+export {
+  createApiMiddleware,
+  runChain,
+  buildBaseContext,
+} from "./middleware/chain";
+export type { CreateApiMiddlewareConfig } from "./middleware/chain";
+export { piiScrubberMiddleware } from "./middleware/pii-scrubber";
+export { createPiiRedactorMiddleware } from "./middleware/pii-redactor";
+export type {
+  BaseRequestContext,
+  AuthRequestContext,
+  Middleware,
+  PiiRedactionRule,
+} from "./middleware";

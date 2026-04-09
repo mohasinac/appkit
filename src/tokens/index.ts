@@ -210,6 +210,29 @@ const LAYOUT = {
   fullScreen: "min-h-screen",
   flexCenter: "flex items-center justify-center",
   centerText: "text-center",
+  // Mobile-first layout zone tokens (Phase 20)
+  /** Full-width content zone: max screen-xl, centred, responsive px */
+  content: "w-full max-w-screen-xl mx-auto px-4 sm:px-6 xl:px-8",
+  /** Narrow zone for forms, articles, policy pages */
+  tight: "w-full max-w-3xl mx-auto px-4 sm:px-6",
+  /** Vertical rhythm padding for sections */
+  section: "py-10 sm:py-14 xl:py-20",
+  /** Compact sections (filters, related products) */
+  sectionSm: "py-6 sm:py-10",
+  /** Responsive gap for flex/grid children */
+  gap: "gap-4 sm:gap-6 xl:gap-8",
+  /** Responsive vertical stack spacing */
+  stack: "space-y-4 sm:space-y-6",
+  /** Kill trailing space from last child in a zone */
+  noBleed: "pb-0 mb-0",
+  /** Kill top margin from first element in a zone */
+  firstChild: "mt-0 pt-0",
+  /** Kill bottom margin from last element in a zone */
+  lastChild: "mb-0 pb-0",
+  /** Combined bottom-nav bar (hidden on lg+, iPhone safe-area aware) */
+  bottomNav: "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]",
+  /** Main content bottom padding to clear the bottom nav on mobile */
+  mainPadBottomNav: "pb-20 lg:pb-0",
 } as const;
 
 /**
@@ -341,6 +364,15 @@ const GRID = {
   twoThird: "grid grid-cols-1 md:grid-cols-[2fr_1fr]",
   /** 1fr / 2fr */
   oneThird: "grid grid-cols-1 md:grid-cols-[1fr_2fr]",
+  // Phase 20 mobile-first named grid presets
+  /** Product grid — 2 cols on mobile, scales to 5 on ultrawide */
+  products: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 xl:gap-6",
+  /** Wide card grid — 1 col on mobile → 3 on xl */
+  wide: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8",
+  /** Admin stats grid — 1 col → 4 KPI tiles on xl */
+  admin: "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4",
+  /** Filter sidebar + main content + optional right aside */
+  withFilter: "grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr_200px] gap-4 xl:gap-6",
 } as const;
 
 /**
@@ -400,6 +432,21 @@ const CARD = {
     "rounded-2xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md hover:border-primary-300/60 dark:hover:border-secondary-500/60 transition-all duration-200 cursor-pointer",
   glass:
     "rounded-2xl backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border border-zinc-200/60 dark:border-slate-700/40 shadow-lg",
+  // Card anatomy tokens (Phase 20)
+  /** Product card image wrapper — portrait aspect ratio */
+  image: "relative aspect-[3/4] overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  /** Wide image wrapper — video/landscape ratio */
+  imageWide: "relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  /** Square image wrapper */
+  imageSquare: "relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  /** Card body — flex-column, responsive padding */
+  body: "flex flex-col flex-1 gap-1 p-3 sm:p-4",
+  /** Card footer — responsive padding */
+  footer: "px-3 pb-3 sm:px-4 sm:pb-4",
+  /** Badge overlay (top-left) */
+  badge: "absolute top-2 left-2 z-10",
+  /** Action overlay, e.g. wishlist button (top-right) */
+  action: "absolute top-2 right-2 z-10",
 } as const;
 
 /**
@@ -499,6 +546,16 @@ const TOUCH = {
   targetSm: "min-h-[36px] min-w-[36px]",
   targetH: "min-h-[44px]",
   targetW: "min-w-[44px]",
+  /** 44 px height primary button */
+  button: "h-11 px-5 py-2.5",
+  /** 44×44 icon button */
+  icon: "h-11 w-11 flex items-center justify-center",
+  /** 44 px height input */
+  input: "h-11 px-3 py-2",
+  /** 48 px height tab */
+  tab: "h-12 px-4",
+  /** Secondary chip (smaller but acceptable) */
+  chip: "h-9 px-3",
 } as const;
 
 /**
@@ -565,6 +622,40 @@ const TAB = {
     "border-transparent text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300",
 } as const;
 
+/**
+ * Motion tokens — respect prefers-reduced-motion via motion-safe: prefix.
+ * Custom keyframes must be defined in tailwind.config.js:
+ *   fade-in, slide-up, scale-in
+ */
+const MOTION = {
+  fadeIn: "motion-safe:animate-fade-in",
+  slideUp: "motion-safe:animate-slide-up",
+  scaleIn: "motion-safe:animate-scale-in",
+  skeleton: "motion-safe:animate-pulse",
+  transition: "motion-safe:transition-all motion-safe:duration-200",
+  transitionSlow: "motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-in-out",
+} as const;
+
+/**
+ * Mobile-first typography scale — maps to named semantic sizes.
+ * Use in place of raw text-* utilities.
+ */
+const TEXT = {
+  h1: "text-2xl sm:text-3xl xl:text-4xl font-bold tracking-tight leading-tight",
+  h2: "text-xl sm:text-2xl xl:text-3xl font-semibold tracking-tight",
+  h3: "text-lg sm:text-xl xl:text-2xl font-semibold",
+  h4: "text-base sm:text-lg font-semibold",
+  body: "text-sm sm:text-base leading-relaxed",
+  bodyLg: "text-base sm:text-lg leading-relaxed",
+  small: "text-xs sm:text-sm",
+  label: "text-xs font-medium uppercase tracking-wide",
+  price: "text-lg sm:text-xl font-bold tabular-nums",
+  priceLg: "text-2xl sm:text-3xl font-bold tabular-nums",
+  muted: "text-zinc-500 dark:text-zinc-400",
+  error: "text-red-600 dark:text-red-400",
+  success: "text-green-600 dark:text-green-400",
+} as const;
+
 /** Star rating colours. */
 const RATING = {
   filled: "text-yellow-400",
@@ -606,6 +697,8 @@ export const THEME_CONSTANTS = {
   states: STATES,
   transitions: TRANSITIONS,
   skeleton: SKELETON,
+  motion: MOTION,
+  text: TEXT,
   touch: TOUCH,
   utilities: UTILITIES,
   patterns: PATTERNS,

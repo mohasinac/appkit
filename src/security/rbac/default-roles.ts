@@ -1,0 +1,86 @@
+// appkit/src/security/rbac/default-roles.ts
+import type { RoleDefinition } from "./types";
+
+export const DEFAULT_ROLES: Record<string, RoleDefinition> = {
+  super_admin: {
+    label: "Super Admin",
+    permissions: ["*"],
+    inherits: [],
+  },
+  admin: {
+    label: "Admin",
+    permissions: [
+      "admin:access",
+      "admin:settings",
+      "admin:users",
+      "admin:orders",
+      "admin:orders:refund",
+      "admin:products",
+      "admin:reviews",
+      "admin:analytics",
+      "admin:activity",
+      "admin:sessions",
+      "admin:newsletter",
+      "admin:search",
+      "admin:feature-flags",
+      "admin:cms",
+      "admin:payouts",
+      "admin:kyc",
+    ],
+    inherits: ["moderator"],
+  },
+  moderator: {
+    label: "Moderator",
+    permissions: [
+      "admin:access",
+      "admin:reviews",
+      "admin:products",
+      "content:reviews:moderate",
+      "content:products:moderate",
+      "content:orders:support",
+    ],
+    inherits: [],
+  },
+  seller: {
+    label: "Seller",
+    permissions: [
+      "seller:access",
+      "seller:products:read",
+      "seller:products:write",
+      "seller:products:delete",
+      "seller:orders:read",
+      "seller:orders:fulfill",
+      "seller:analytics",
+      "seller:coupons",
+      "seller:store",
+      "seller:payouts:read",
+      "seller:shipping",
+    ],
+    inherits: ["user"],
+  },
+  user: {
+    label: "User",
+    permissions: [
+      "user:profile",
+      "user:orders",
+      "user:orders:cancel",
+      "user:reviews",
+      "user:wishlist",
+      "user:addresses",
+      "user:chat",
+      "user:offers",
+      "user:auctions",
+    ],
+    inherits: [],
+  },
+  support_agent: {
+    label: "Support Agent",
+    permissions: [
+      "admin:access",
+      "admin:orders",
+      "content:orders:support",
+      "admin:users",
+    ],
+    inherits: [],
+  },
+};

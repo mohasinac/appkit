@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ## [2.0.0] — 2026-04-09
 
 ### Added
+
 - Initial release consolidating all 58 `@mohasinac/*` packages
 - Sub-path exports for all layers: contracts, core, http, errors, utils, validation, tokens, next, react, ui, security, seo, monitoring, instrumentation, style/tailwind, style/vanilla
 - Provider sub-paths: db-firebase, auth-firebase, email-resend, storage-firebase, payment-razorpay, search-algolia, shipping-shiprocket
@@ -17,6 +18,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Tree-shakeable ESM + CJS dual output via `tsup` with code splitting
 
 ### Migration
+
 - Replace `@mohasinac/contracts` → `@mohasinac/appkit/contracts`
 - Replace `@mohasinac/http` → `@mohasinac/appkit/http`
 - Replace all other `@mohasinac/*` → `@mohasinac/appkit/<path>`
