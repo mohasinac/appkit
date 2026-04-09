@@ -1,6 +1,7 @@
 import React from "react";
 import type { LayoutSlots } from "@mohasinac/contracts";
 import { Button, Div, Span, Text } from "@mohasinac/ui";
+import type { ViewMode } from "@mohasinac/ui";
 import type { ProductItem } from "../types";
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
@@ -165,6 +166,129 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
   total?: number;
   currentPage?: number;
   totalPages?: number;
+  /**
+   * Layout mode for the product listing.
+   * - `"card"`  — fixed breakpoint columns (2→3→4→5) per Section 34 spec
+   * - `"fluid"` — CSS auto-fill columns, min 220 px each
+   * - `"list"`  — compact horizontal rows (thumbnail + title + price)
+   * @default "card"
+   */
+  view?: ViewMode;
+}
+
+// ─── Grid class maps ─────────────────────────────────────────────────────────
+
+const GRID_CLASSES: Record<"card" | "fluid", string> = {
+  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
+  fluid: "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4",
+};
+
+// ─── ProductListRow (list-mode row) ──────────────────────────────────────────
+
+interface ProductListRowProps<T extends ProductItem = ProductItem> {
+  product: T;
+  onClick?: (product: T) => void;
+  onAddToWishlist?: (productId: string) => void;
+  isWishlisted?: boolean;
+}
+
+function ProductListRow<T extends ProductItem = ProductItem>({
+  product,
+  onClick,
+  onAddToWishlist,
+  isWishlisted,
+}: ProductListRowProps<T>) {
+  const discount =
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round(
+          ((product.originalPrice - product.price) / product.originalPrice) *
+            100,
+        )
+      : null;
+
+  return (
+    <Div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(product)
+          : undefined
+      }
+      onClick={onClick ? () => onClick(product) : undefined}
+      className={[
+        "flex items-center gap-3 p-3 rounded-lg",
+        "border-b border-zinc-100 dark:border-zinc-800 last:border-0",
+        "hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors",
+        onClick ? "cursor-pointer" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {/* Thumbnail — 72×72 */}
+      <Div className="flex-shrink-0 w-[72px] h-[72px] rounded-lg overflow-hidden bg-neutral-100 dark:bg-zinc-800">
+        {product.mainImage ? (
+          <Div
+            role="img"
+            aria-label={product.title}
+            className="w-full h-full bg-center bg-cover"
+            style={{ backgroundImage: `url(${product.mainImage})` }}
+          />
+        ) : (
+          <Div className="w-full h-full bg-neutral-200 dark:bg-zinc-700" />
+        )}
+      </Div>
+
+      {/* Title — flex-1 */}
+      <Text className="flex-1 min-w-0 truncate text-sm font-medium text-neutral-900 dark:text-zinc-100">
+        {product.title}
+      </Text>
+
+      {/* Category — hidden on mobile */}
+      {product.categoryName && (
+        <Span className="hidden sm:block w-[110px] text-xs text-neutral-400 dark:text-zinc-500 truncate">
+          {product.categoryName}
+        </Span>
+      )}
+
+      {/* Rating — hidden on mobile */}
+      {product.rating !== undefined && (
+        <Span className="hidden sm:flex w-[72px] items-center gap-0.5 text-xs text-neutral-500">
+          <Span className="text-yellow-500">★</Span>
+          {product.rating.toFixed(1)}
+        </Span>
+      )}
+
+      {/* Price */}
+      <Div className="w-[80px] text-right flex-shrink-0">
+        <Span className="text-sm font-semibold text-neutral-900 dark:text-zinc-100">
+          {product.currency ?? "₹"}{product.price.toLocaleString()}
+        </Span>
+        {discount && (
+          <Span className="block text-[10px] text-neutral-400 dark:text-zinc-500">
+            -{discount}%
+          </Span>
+        )}
+      </Div>
+
+      {/* Wishlist action */}
+      {onAddToWishlist && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddToWishlist(product.id);
+          }}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          className="flex-shrink-0 w-[36px] h-[36px] flex items-center justify-center rounded-lg text-neutral-400 hover:text-red-500 transition-colors"
+        >
+          {isWishlisted ? "♥" : "♡"}
+        </Button>
+      )}
+    </Div>
+  );
 }
 
 export function ProductGrid<T extends ProductItem = ProductItem>({
@@ -182,6 +306,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   total = 0,
   currentPage = 1,
   totalPages = 1,
+  view = "card",
 }: ProductGridProps<T>) {
   const isEmpty = products.length === 0;
 
@@ -205,45 +330,63 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       ? (slots.renderEmptyState() as React.ReactNode)
       : null);
 
+  const renderItems = () => {
+    if (view === "list") {
+      return (
+        <Div className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 ${className}`}>
+          {products.map((p) => (
+            <ProductListRow<T>
+              key={p.id}
+              product={p}
+              onClick={onProductClick}
+              onAddToWishlist={onWishlistToggle}
+              isWishlisted={wishlistedIds?.has(p.id) ?? false}
+            />
+          ))}
+        </Div>
+      );
+    }
+
+    const gridClass = GRID_CLASSES[view];
+    return (
+      <Div className={`${gridClass} ${className}`}>
+        {products.map((p, i) => {
+          const ctx: ProductCardContext<T> = {
+            onClick: onProductClick,
+            onWishlistToggle,
+            isWishlisted: wishlistedIds?.has(p.id) ?? false,
+          };
+          const cardRenderer = renderCard ?? slots?.renderCard;
+          return cardRenderer ? (
+            <React.Fragment key={p.id}>
+              {cardRenderer === renderCard
+                ? (renderCard as NonNullable<typeof renderCard>)(p, ctx)
+                : (slots!.renderCard!(p, i) as React.ReactNode)}
+            </React.Fragment>
+          ) : (
+            <ProductCard<T>
+              key={p.id}
+              product={p}
+              onClick={onProductClick}
+              onAddToWishlist={onWishlistToggle}
+              isWishlisted={ctx.isWishlisted}
+            />
+          );
+        })}
+      </Div>
+    );
+  };
+
   return (
     <Div>
       {resolvedHeader}
-      {isEmpty ? (
-        (resolvedEmpty ?? (
-          <Text className="py-12 text-center text-sm text-neutral-500">
-            {emptyLabel}
-          </Text>
-        ))
-      ) : (
-        <Div
-          className={`grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 ${className}`}
-        >
-          {products.map((p, i) => {
-            const ctx: ProductCardContext<T> = {
-              onClick: onProductClick,
-              onWishlistToggle,
-              isWishlisted: wishlistedIds?.has(p.id) ?? false,
-            };
-            // Explicit renderCard prop wins; fall back to slots.renderCard
-            const cardRenderer = renderCard ?? slots?.renderCard;
-            return cardRenderer ? (
-              <React.Fragment key={p.id}>
-                {cardRenderer === renderCard
-                  ? (renderCard as NonNullable<typeof renderCard>)(p, ctx)
-                  : (slots!.renderCard!(p, i) as React.ReactNode)}
-              </React.Fragment>
-            ) : (
-              <ProductCard<T>
-                key={p.id}
-                product={p}
-                onClick={onProductClick}
-                onAddToWishlist={onWishlistToggle}
-                isWishlisted={ctx.isWishlisted}
-              />
-            );
-          })}
-        </Div>
-      )}
+      {isEmpty
+        ? (resolvedEmpty ?? (
+            <Text className="py-12 text-center text-sm text-neutral-500">
+              {emptyLabel}
+            </Text>
+          ))
+        : renderItems()}
       {resolvedFooter}
     </Div>
   );

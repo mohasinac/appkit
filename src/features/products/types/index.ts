@@ -45,6 +45,7 @@ export interface ProductItem {
   currentBid?: number;
   availableQuantity?: number;
   category?: string;
+  categoryName?: string;
   categorySlug?: string;
   sellerId?: string;
   sellerName?: string;

@@ -1,4 +1,5 @@
 import { Caption, Text } from "./Typography";
+import { Div } from "./Div";
 import { classNames } from "../style.helper";
 
 export interface ItemRowProps {
@@ -19,18 +20,18 @@ export function ItemRow({
   className,
 }: ItemRowProps) {
   return (
-    <div className={classNames("flex items-start gap-4", className)}>
-      {thumbnail && <div className="flex-shrink-0">{thumbnail}</div>}
+    <Div className={classNames("flex items-start gap-4", className)}>
+      {thumbnail && <Div className="flex-shrink-0">{thumbnail}</Div>}
 
-      <div className="min-w-0 flex-1">
+      <Div className="min-w-0 flex-1">
         <Text size="sm" weight="medium" className="line-clamp-2">
           {title}
         </Text>
         {subtitle && <Caption className="mt-0.5">{subtitle}</Caption>}
-        {actions && <div className="mt-2">{actions}</div>}
-      </div>
+        {actions && <Div className="mt-2">{actions}</Div>}
+      </Div>
 
-      {rightSlot && <div className="flex-shrink-0">{rightSlot}</div>}
-    </div>
+      {rightSlot && <Div className="flex-shrink-0">{rightSlot}</Div>}
+    </Div>
   );
 }

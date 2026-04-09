@@ -1,11 +1,14 @@
 "use client";
 
 import { Button } from "./Button";
+import { Div } from "./Div";
 
-export type ViewMode = "grid" | "list";
+/** Three layout modes for listing pages. Stored in URL as ?view=card|fluid|list */
+export type ViewMode = "card" | "fluid" | "list";
 
 export interface ViewToggleLabels {
-  grid: string;
+  card: string;
+  fluid: string;
   list: string;
   toolbar?: string;
 }
@@ -22,7 +25,8 @@ const INACTIVE =
   "text-zinc-500 ring-zinc-200 hover:bg-zinc-100 dark:text-zinc-400 dark:ring-slate-700 dark:hover:bg-slate-800";
 
 const DEFAULT_LABELS: ViewToggleLabels = {
-  grid: "Grid view",
+  card: "Card grid",
+  fluid: "Fluid grid",
   list: "List view",
   toolbar: "View mode",
 };
@@ -36,20 +40,21 @@ export function ViewToggle({
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
 
   return (
-    <div
+    <Div
       className={["flex gap-1", className ?? ""].join(" ").trim()}
       role="toolbar"
       aria-label={mergedLabels.toolbar}
     >
+      {/* Card grid — fixed breakpoint columns */}
       <Button
         type="button"
         variant="ghost"
         size="sm"
-        onClick={() => onChange("grid")}
-        aria-label={mergedLabels.grid}
-        aria-pressed={value === "grid"}
+        onClick={() => onChange("card")}
+        aria-label={mergedLabels.card}
+        aria-pressed={value === "card"}
         className={`flex items-center justify-center rounded-lg p-2 ring-1 transition-colors ${
-          value === "grid" ? ACTIVE : INACTIVE
+          value === "card" ? ACTIVE : INACTIVE
         }`}
       >
         <svg
@@ -68,6 +73,35 @@ export function ViewToggle({
         </svg>
       </Button>
 
+      {/* Fluid grid — CSS auto-fill columns */}
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => onChange("fluid")}
+        aria-label={mergedLabels.fluid}
+        aria-pressed={value === "fluid"}
+        className={`flex items-center justify-center rounded-lg p-2 ring-1 transition-colors ${
+          value === "fluid" ? ACTIVE : INACTIVE
+        }`}
+      >
+        <svg
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h1.5C5.496 19.5 6 18.996 6 18.375m-3.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-1.5A1.125 1.125 0 0118 18.375M20.625 4.5H3.375m17.25 0c.621 0 1.125.504 1.125 1.125M20.625 4.5h-1.5C18.504 4.5 18 5.004 18 5.625m3.75 0v1.5c0 .621-.504 1.125-1.125 1.125M3.375 4.5c-.621 0-1.125.504-1.125 1.125M3.375 4.5h1.5C5.496 4.5 6 5.004 6 5.625m-3.75 0v1.5c0 .621.504 1.125 1.125 1.125m0 0h1.5m-1.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m1.5-3.75C5.496 8.25 6 8.754 6 9.375v1.5m0-5.25v5.25m0-5.25C6 5.004 6.504 4.5 7.125 4.5h9.75c.621 0 1.125.504 1.125 1.125m1.125 2.625h1.5m-1.5 0A1.125 1.125 0 0118 9.375v1.5m1.5-3.75C19.496 8.25 20 8.754 20 9.375v1.5m0-5.25v5.25m0-5.25C20 5.004 19.496 4.5 18.875 4.5M7.5 15h9"
+          />
+        </svg>
+      </Button>
+
+      {/* List mode — compact rows */}
       <Button
         type="button"
         variant="ghost"
@@ -94,6 +128,6 @@ export function ViewToggle({
           />
         </svg>
       </Button>
-    </div>
+    </Div>
   );
 }
