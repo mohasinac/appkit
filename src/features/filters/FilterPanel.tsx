@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Div } from "@mohasinac/ui";
 import { FilterFacetSection } from "./FilterFacetSection";
 import type { FacetOption } from "./FilterFacetSection";
 import { RangeFilter } from "./RangeFilter";
@@ -99,7 +100,7 @@ export function FilterPanel({
     setExpandedIndex((prev) => (prev === idx ? null : idx));
 
   return (
-    <div className={className}>
+    <Div className={className}>
       {config.map((item, idx) => {
         const isOpen = expandedIndex === idx;
 
@@ -221,6 +222,6 @@ export function FilterPanel({
           }
         }
       })}
-    </div>
+    </Div>
   );
 }

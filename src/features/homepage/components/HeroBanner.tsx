@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Heading, Span } from "@mohasinac/ui";
+import { Button, Div, Heading, Span } from "@mohasinac/ui";
 import type { Banner } from "../types";
 
 export interface HeroBannerProps {
@@ -45,7 +45,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
   const banner = banners[current]!;
 
   return (
-    <div
+    <Div
       className="relative overflow-hidden"
       style={{
         minHeight: "100svh",
@@ -54,7 +54,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
     >
       {/* Background images — cross-fade between slides */}
       {banners.map((b, i) => (
-        <div
+        <Div
           key={b.id}
           className="absolute inset-0 transition-opacity duration-700"
           style={{ opacity: i === current ? 1 : 0, zIndex: 1 }}
@@ -69,11 +69,11 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               sizes="100vw"
             />
           )}
-        </div>
+        </Div>
       ))}
 
       {/* Cinematic gradient overlays */}
-      <div
+      <Div
         className="absolute inset-0"
         style={{
           background:
@@ -81,7 +81,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
           zIndex: 2,
         }}
       />
-      <div
+      <Div
         className="absolute inset-0"
         style={{
           background:
@@ -91,7 +91,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
       />
 
       {/* Content */}
-      <div
+      <Div
         className="relative flex flex-col justify-end px-5 pb-16 sm:px-12 sm:pb-24 lg:px-20"
         style={{
           minHeight: "100svh",
@@ -100,7 +100,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         }}
       >
         {banner.subtitle && (
-          <div className="mb-3">
+          <Div className="mb-3">
             <Span
               className="inline-block px-3 py-1 text-xs font-black uppercase tracking-[0.18em]"
               style={{
@@ -112,7 +112,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             >
               {banner.subtitle}
             </Span>
-          </div>
+          </Div>
         )}
 
         <Heading
@@ -130,7 +130,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         </Heading>
 
         {banner.ctaLabel && banner.ctaUrl && (
-          <div className="flex flex-wrap items-center gap-4">
+          <Div className="flex flex-wrap items-center gap-4">
             <Link
               href={banner.ctaUrl}
               className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5"
@@ -151,9 +151,9 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
                 →
               </Span>
             </Link>
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       {/* Prev / Next arrows */}
       {banners.length > 1 && (
@@ -225,7 +225,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
       {/* Dot indicator + counter */}
       {banners.length > 1 && (
-        <div
+        <Div
           className="absolute bottom-8 right-6 sm:right-12 flex items-center gap-3"
           style={{ zIndex: 15 }}
         >
@@ -240,7 +240,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             {String(current + 1).padStart(2, "0")} /{" "}
             {String(banners.length).padStart(2, "0")}
           </Span>
-          <div className="flex gap-1.5">
+          <Div className="flex gap-1.5">
             {banners.map((_, i) => (
               <Button
                 key={i}
@@ -260,24 +260,24 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
                 }}
               />
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {/* Scroll-down hint */}
-      <div
+      <Div
         className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
         style={{ zIndex: 15, opacity: 0.5 }}
         aria-hidden="true"
       >
-        <div
+        <Div
           className="h-8 w-px"
           style={{
             background:
               "linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8))",
           }}
         />
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

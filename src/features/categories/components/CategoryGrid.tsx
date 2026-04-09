@@ -1,8 +1,12 @@
+"use client";
+
 import React from "react";
-import { Text } from "@mohasinac/ui";
+import { Div, Text } from "@mohasinac/ui";
 import type { CategoryItem } from "../types";
 
-interface CategoryCardProps {
+// ─── CategoryCard ─────────────────────────────────────────────────────────────
+
+export interface CategoryCardProps {
   category: CategoryItem;
   onClick?: (category: CategoryItem) => void;
   className?: string;
@@ -14,7 +18,7 @@ export function CategoryCard({
   className = "",
 }: CategoryCardProps) {
   return (
-    <div
+    <Div
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
@@ -23,38 +27,42 @@ export function CategoryCard({
           : undefined
       }
       onClick={onClick ? () => onClick(category) : undefined}
-      className={`group relative overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
+      className={`group relative overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
       {category.display?.coverImage ? (
-        <div className="aspect-video w-full overflow-hidden bg-neutral-100">
-          <div
+        <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-zinc-800">
+          <Div
             role="img"
             aria-label={category.name}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundImage: `url(${category.display.coverImage})` }}
           />
-        </div>
+        </Div>
       ) : (
-        <div className="aspect-video w-full bg-gradient-to-br from-neutral-100 to-neutral-200" />
+        <Div className="aspect-video w-full bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700" />
       )}
-      <div className="p-4">
-        <Text className="font-semibold text-neutral-900">{category.name}</Text>
+      <Div className="p-4">
+        <Text className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
+          {category.name}
+        </Text>
         {category.description && (
-          <Text className="mt-1 text-sm text-neutral-500 line-clamp-2">
+          <Text className="mt-1 text-sm text-neutral-500 dark:text-zinc-400 line-clamp-2">
             {category.description}
           </Text>
         )}
         {category.metrics && (
-          <Text className="mt-2 text-xs text-neutral-400">
-            {category.metrics.productCount} items
+          <Text className="mt-2 text-xs text-neutral-400 dark:text-zinc-500">
+            {category.metrics.productCount.toLocaleString()} items
           </Text>
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
-interface CategoryGridProps {
+// ─── CategoryGrid ─────────────────────────────────────────────────────────────
+
+export interface CategoryGridProps {
   categories: CategoryItem[];
   onCategoryClick?: (category: CategoryItem) => void;
   emptyLabel?: string;
@@ -69,19 +77,22 @@ export function CategoryGrid({
 }: CategoryGridProps) {
   if (categories.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-neutral-500">
+      <Text className="py-12 text-center text-sm text-neutral-500 dark:text-zinc-500">
         {emptyLabel}
       </Text>
     );
   }
 
   return (
-    <div
+    <Div
       className={`grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-4 ${className}`}
     >
       {categories.map((cat) => (
         <CategoryCard key={cat.id} category={cat} onClick={onCategoryClick} />
       ))}
-    </div>
+    </Div>
   );
 }
+
+
+

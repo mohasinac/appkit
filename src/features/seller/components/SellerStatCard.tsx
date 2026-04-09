@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@mohasinac/ui";
+import { Div, Text } from "@mohasinac/ui";
 
 interface SellerStatCardProps {
   label: string;
@@ -19,11 +19,11 @@ export function SellerStatCard({
   className = "",
 }: SellerStatCardProps) {
   return (
-    <div
+    <Div
       className={`rounded-xl border border-gray-200 bg-white p-5 shadow-sm ${className}`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
+      <Div className="flex items-start justify-between gap-2">
+        <Div className="flex-1 min-w-0">
           <Text className="text-sm text-gray-500 mb-1 truncate">{label}</Text>
           <Text className="text-2xl font-bold text-gray-900">{value}</Text>
           {subLabel && (
@@ -36,9 +36,9 @@ export function SellerStatCard({
               {trend.positive ? "▲" : "▼"} {Math.abs(trend.value)}%
             </Text>
           )}
-        </div>
-        {icon && <div className="shrink-0 text-gray-400 text-2xl">{icon}</div>}
-      </div>
-    </div>
+        </Div>
+        {icon && <Div className="shrink-0 text-gray-400 text-2xl">{icon}</Div>}
+      </Div>
+    </Div>
   );
 }

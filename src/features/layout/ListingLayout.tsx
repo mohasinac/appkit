@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Aside, Button, Nav } from "@mohasinac/ui";
+import { Aside, Button, Div, Nav, Span } from "@mohasinac/ui";
 
 export interface ListingLayoutLabels {
   filtersTitle?: string;
@@ -107,7 +107,7 @@ export function ListingLayout({
   };
 
   return (
-    <div
+    <Div
       className={[
         "w-full space-y-4",
         toolbarPaginationSlot
@@ -123,12 +123,12 @@ export function ListingLayout({
       {headerSlot}
 
       {statusTabsSlot && (
-        <div className="overflow-x-auto touch-pan-x -mx-4 px-4 md:-mx-6 md:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <Div className="overflow-x-auto touch-pan-x -mx-4 px-4 md:-mx-6 md:px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {statusTabsSlot}
-        </div>
+        </Div>
       )}
 
-      <div
+      <Div
         className={[
           "sticky z-20 -mx-4 px-4 md:-mx-6 md:px-6",
           isDashboard ? "top-0" : "top-14 md:top-[120px]",
@@ -138,7 +138,7 @@ export function ListingLayout({
           "py-2.5",
         ].join(" ")}
       >
-        <div className="hidden md:flex items-center gap-2 min-w-0">
+        <Div className="hidden md:flex items-center gap-2 min-w-0">
           {hasFilter && (
             <Button
               type="button"
@@ -158,34 +158,34 @@ export function ListingLayout({
             >
               {l.filtersTitle}
               {filterActiveCount > 0 && (
-                <span className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white">
+                <Span className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white">
                   {filterActiveCount}
-                </span>
+                </Span>
               )}
             </Button>
           )}
 
-          {searchSlot && <div className="flex-1 min-w-0">{searchSlot}</div>}
+          {searchSlot && <Div className="flex-1 min-w-0">{searchSlot}</Div>}
 
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <Div className="flex items-center gap-1.5 flex-shrink-0">
             {sortSlot}
             {viewToggleSlot && (
-              <div className="flex items-center gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
+              <Div className="flex items-center gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
                 {viewToggleSlot}
-              </div>
+              </Div>
             )}
             {actionsSlot}
-          </div>
+          </Div>
 
           {toolbarPaginationSlot && (
-            <div className="ml-auto flex-shrink-0 pl-3 border-l border-zinc-200/70 dark:border-slate-700/70">
+            <Div className="ml-auto flex-shrink-0 pl-3 border-l border-zinc-200/70 dark:border-slate-700/70">
               {toolbarPaginationSlot}
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
 
-        <div className="flex flex-col gap-2 md:hidden">
-          <div className="flex items-center gap-2">
+        <Div className="flex flex-col gap-2 md:hidden">
+          <Div className="flex items-center gap-2">
             {hasFilter && (
               <Button
                 type="button"
@@ -206,34 +206,34 @@ export function ListingLayout({
               >
                 {l.filtersTitle}
                 {filterActiveCount > 0 && (
-                  <span className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white">
+                  <Span className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white">
                     {filterActiveCount}
-                  </span>
+                  </Span>
                 )}
               </Button>
             )}
-            {searchSlot && <div className="flex-1 min-w-0">{searchSlot}</div>}
-          </div>
+            {searchSlot && <Div className="flex-1 min-w-0">{searchSlot}</Div>}
+          </Div>
 
           {(sortSlot || viewToggleSlot || actionsSlot) && (
-            <div className="flex items-stretch min-h-[44px] gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <div className="flex items-center gap-2 flex-shrink-0 pb-px">
+            <Div className="flex items-stretch min-h-[44px] gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <Div className="flex items-center gap-2 flex-shrink-0 pb-px">
                 {sortSlot}
                 {viewToggleSlot}
                 {actionsSlot}
-              </div>
-            </div>
+              </Div>
+            </Div>
           )}
-        </div>
+        </Div>
 
         {selectedCount > 0 && bulkActionBarSlot && (
-          <div className="hidden md:block pt-2 mt-2 border-t border-zinc-100 dark:border-slate-800">
+          <Div className="hidden md:block pt-2 mt-2 border-t border-zinc-100 dark:border-slate-800">
             {bulkActionBarSlot}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
-      <div className="flex gap-4 lg:gap-6 items-start">
+      <Div className="flex gap-4 lg:gap-6 items-start">
         {hasFilter && (
           <Aside
             aria-label={panelTitle}
@@ -246,9 +246,9 @@ export function ListingLayout({
                 : "w-0 opacity-0 pointer-events-none",
             ].join(" ")}
           >
-            <div className="w-60 xl:w-64 2xl:w-72 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-sm">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800">
-                <div className="font-semibold text-sm">{panelTitle}</div>
+            <Div className="w-60 xl:w-64 2xl:w-72 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-sm">
+              <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800">
+                <Div className="font-semibold text-sm">{panelTitle}</Div>
                 {filterActiveCount > 0 && (
                   <Button
                     type="button"
@@ -260,13 +260,13 @@ export function ListingLayout({
                     {l.clearAll}
                   </Button>
                 )}
-              </div>
+              </Div>
 
-              <div className="px-3 pt-5 pb-3 max-h-[calc(100vh-15rem)] overflow-y-auto space-y-4">
+              <Div className="px-3 pt-5 pb-3 max-h-[calc(100vh-15rem)] overflow-y-auto space-y-4">
                 {filterContent}
-              </div>
+              </Div>
 
-              <div className="px-3 pb-3 pt-2 border-t border-zinc-100 dark:border-slate-800">
+              <Div className="px-3 pb-3 pt-2 border-t border-zinc-100 dark:border-slate-800">
                 <Button
                   type="button"
                   variant="primary"
@@ -275,12 +275,12 @@ export function ListingLayout({
                 >
                   {l.applyFilters}
                 </Button>
-              </div>
-            </div>
+              </Div>
+            </Div>
           </Aside>
         )}
 
-        <div className="flex-1 min-w-0 space-y-3">
+        <Div className="flex-1 min-w-0 space-y-3">
           {activeFiltersSlot}
 
           {errorSlot ? (
@@ -288,11 +288,11 @@ export function ListingLayout({
           ) : (
             <>
               {children}
-              {paginationSlot && <div className="pt-2">{paginationSlot}</div>}
+              {paginationSlot && <Div className="pt-2">{paginationSlot}</Div>}
             </>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {toolbarPaginationSlot && (
         <Nav
@@ -317,28 +317,28 @@ export function ListingLayout({
 
       {hasFilter && mobileFilterOpen && (
         <>
-          <div
+          <Div
             className="fixed inset-0 z-40 bg-black/40 lg:hidden"
             onClick={() => setMobileFilterOpen(false)}
             aria-hidden="true"
           />
 
-          <div
+          <Div
             ref={mobileOverlayRef}
             className="fixed inset-0 z-50 flex flex-col lg:hidden bg-white dark:bg-slate-950"
             role="dialog"
             aria-modal="true"
             aria-label={panelTitle}
           >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0">
-              <div className="font-semibold">
+            <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0">
+              <Div className="font-semibold">
                 {panelTitle}
                 {filterActiveCount > 0 && (
-                  <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-[11px] font-bold rounded-full bg-primary text-white">
+                  <Span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-[11px] font-bold rounded-full bg-primary text-white">
                     {filterActiveCount}
-                  </span>
+                  </Span>
                 )}
-              </div>
+              </Div>
               <Button
                 type="button"
                 variant="ghost"
@@ -349,13 +349,13 @@ export function ListingLayout({
               >
                 x
               </Button>
-            </div>
+            </Div>
 
-            <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 space-y-4">
+            <Div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 space-y-4">
               {filterContent}
-            </div>
+            </Div>
 
-            <div className="flex-shrink-0 flex gap-3 px-4 py-4 border-t border-zinc-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+            <Div className="flex-shrink-0 flex gap-3 px-4 py-4 border-t border-zinc-100 dark:border-slate-800 bg-white dark:bg-slate-950">
               <Button
                 type="button"
                 variant="outline"
@@ -374,10 +374,10 @@ export function ListingLayout({
               >
                 {l.applyFilters}
               </Button>
-            </div>
-          </div>
+            </Div>
+          </Div>
         </>
       )}
-    </div>
+    </Div>
   );
 }

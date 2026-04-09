@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Modal, Span, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Text } from "@mohasinac/ui";
 import { MediaSlider } from "../components/MediaSlider";
 import { useMediaTrim } from "../hooks/useMedia";
 
@@ -97,13 +97,13 @@ export function VideoTrimModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("trimTitle")} size="lg">
-      <div className="space-y-4">
+      <Div className="space-y-4">
         <Text variant="secondary" className="text-xs">
           {t("trimInstruction")}
         </Text>
 
         {/* Video player — raw <video> required: needs ref for duration/currentTime */}
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+        <Div className="relative aspect-video overflow-hidden rounded-lg bg-black">
           <video
             ref={videoRef}
             src={videoUrl}
@@ -111,17 +111,17 @@ export function VideoTrimModal({
             controls
             onLoadedMetadata={handleLoadedMetadata}
           />
-        </div>
+        </Div>
 
         {duration > 0 && (
           <>
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
+            <Div className="space-y-1">
+              <Div className="flex items-center justify-between">
                 <Text size="sm">{t("trimStart")}</Text>
                 <Span className="text-sm font-mono tabular-nums">
                   {formatTime(startTime)}
                 </Span>
-              </div>
+              </Div>
               <MediaSlider
                 value={startTime}
                 min={0}
@@ -129,15 +129,15 @@ export function VideoTrimModal({
                 step={0.1}
                 onChange={handleStartChange}
               />
-            </div>
+            </Div>
 
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
+            <Div className="space-y-1">
+              <Div className="flex items-center justify-between">
                 <Text size="sm">{t("trimEnd")}</Text>
                 <Span className="text-sm font-mono tabular-nums">
                   {formatTime(endTime)}
                 </Span>
-              </div>
+              </Div>
               <MediaSlider
                 value={endTime}
                 min={0}
@@ -145,15 +145,15 @@ export function VideoTrimModal({
                 step={0.1}
                 onChange={handleEndChange}
               />
-            </div>
+            </Div>
 
             <Text size="xs" variant="secondary">
               {t("trimDuration", { duration: (endTime - startTime).toFixed(1) })}
             </Text>
 
-            <div className="space-y-1">
+            <Div className="space-y-1">
               <Text size="sm">{t("trimQuality")}</Text>
-              <div className="flex gap-2">
+              <Div className="flex gap-2">
                 {(["low", "medium", "high"] as const).map((q) => (
                   <Button
                     key={q}
@@ -166,14 +166,14 @@ export function VideoTrimModal({
                     {qualityLabels[q]}
                   </Button>
                 ))}
-              </div>
-            </div>
+              </Div>
+            </Div>
           </>
         )}
 
         {error && <Alert variant="error">{error}</Alert>}
 
-        <div className="flex items-center justify-end gap-2">
+        <Div className="flex items-center justify-end gap-2">
           <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isPending}>
             {t("trimSkip")}
           </Button>
@@ -186,8 +186,8 @@ export function VideoTrimModal({
           >
             {isPending ? t("trimming") : t("trimSave")}
           </Button>
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Modal>
   );
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import type { PreOrderStatus } from "../types";
+import { Div, Span } from "@mohasinac/ui";
 
 const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-yellow-100 text-yellow-700" },
@@ -17,11 +18,11 @@ interface PreOrderBadgeProps {
 export function PreOrderBadge({ status, className = "" }: PreOrderBadgeProps) {
   const { label, color } = STATUS_MAP[status] ?? STATUS_MAP.pending;
   return (
-    <span
+    <Span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${color} ${className}`}
     >
       {label}
-    </span>
+    </Span>
   );
 }
 
@@ -38,15 +39,15 @@ export function PreOrderTag({
   className = "",
 }: PreOrderTagProps) {
   return (
-    <div className={`inline-flex flex-col ${className}`}>
-      <span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white">
+    <Div className={`inline-flex flex-col ${className}`}>
+      <Span className="rounded-full bg-indigo-600 px-2.5 py-0.5 text-xs font-bold text-white">
         {label}
-      </span>
+      </Span>
       {estimatedDate && (
-        <span className="mt-0.5 text-[10px] text-gray-400">
+        <Span className="mt-0.5 text-[10px] text-gray-400">
           Ships {estimatedDate}
-        </span>
+        </Span>
       )}
-    </div>
+    </Div>
   );
 }

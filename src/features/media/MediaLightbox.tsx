@@ -12,6 +12,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { MediaImage } from "./MediaImage";
+import { Button, Div, Span } from "@mohasinac/ui";
 
 export interface LightboxItem {
   src: string;
@@ -85,7 +86,7 @@ function IconBtn({
   children,
 }: IconBtnProps) {
   return (
-    <button
+    <Button
       type="button"
       onClick={onClick}
       disabled={disabled}
@@ -97,7 +98,7 @@ function IconBtn({
       )}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -342,7 +343,7 @@ export function MediaLightbox({
 
   const current = items[index];
   return (
-    <div
+    <Div
       ref={containerRef}
       className="fixed inset-0 z-[9999] bg-black/95 flex flex-col"
       role="dialog"
@@ -350,7 +351,7 @@ export function MediaLightbox({
       aria-label={L.lightboxTitle}
     >
       {/* ── Image area ── */}
-      <div
+      <Div
         ref={imageAreaRef}
         className="flex-1 relative overflow-hidden select-none"
         onMouseDown={handleMouseDown}
@@ -368,7 +369,7 @@ export function MediaLightbox({
           if (e.target === e.currentTarget) onClose();
         }}
       >
-        <div
+        <Div
           className="absolute inset-0"
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
@@ -383,11 +384,11 @@ export function MediaLightbox({
             size="hero"
             objectFit="contain"
           />
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {/* ── Controls bar ── */}
-      <div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
+      <Div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
         {/* Prev */}
         {items.length > 1 && (
           <IconBtn
@@ -410,9 +411,9 @@ export function MediaLightbox({
           <ZoomOut className="w-7 h-7" />
         </IconBtn>
 
-        <span className="text-white/70 w-14 text-center tabular-nums text-xs">
+        <Span className="text-white/70 w-14 text-center tabular-nums text-xs">
           {Math.round(zoom * 100)}%
-        </span>
+        </Span>
 
         {/* Zoom in */}
         <IconBtn
@@ -431,18 +432,18 @@ export function MediaLightbox({
         )}
 
         {/* Divider */}
-        <span
+        <Span
           className="w-px h-6 bg-white/15 mx-1 shrink-0"
           aria-hidden="true"
         />
 
         {/* Counter */}
-        <span className="text-white/60 w-12 text-center tabular-nums text-xs">
+        <Span className="text-white/60 w-12 text-center tabular-nums text-xs">
           {index + 1} / {items.length}
-        </span>
+        </Span>
 
         {/* Divider */}
-        <span
+        <Span
           className="w-px h-6 bg-white/15 mx-1 shrink-0"
           aria-hidden="true"
         />
@@ -480,18 +481,18 @@ export function MediaLightbox({
             <ChevronRight className="w-7 h-7" />
           </IconBtn>
         )}
-      </div>
+      </Div>
 
       {/* ── Thumbnail strip ── */}
       {items.length > 1 && (
-        <div
+        <Div
           className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"
           style={{
             paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
           }}
         >
           {items.map((item, i) => (
-            <button
+            <Button
               key={i}
               type="button"
               onClick={() => {
@@ -508,11 +509,11 @@ export function MediaLightbox({
               )}
             >
               <MediaImage src={item.src} alt={item.alt} size="thumbnail" />
-            </button>
+            </Button>
           ))}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }
 

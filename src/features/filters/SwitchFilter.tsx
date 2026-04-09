@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "@mohasinac/ui";
 import { cn } from "./filterUtils";
 
 export interface SwitchFilterProps {
@@ -37,7 +37,7 @@ export function SwitchFilter({
   };
 
   return (
-    <div
+    <Div
       role="group"
       aria-labelledby={`sf-${title}`}
       className={cn(
@@ -45,7 +45,7 @@ export function SwitchFilter({
         className,
       )}
     >
-      <div className="flex items-center gap-2">
+      <Div className="flex items-center gap-2">
         <Button
           type="button"
           id={`sf-${title}`}
@@ -101,10 +101,10 @@ export function SwitchFilter({
             </svg>
           </Button>
         )}
-      </div>
+      </Div>
 
       {!isCollapsed && (
-        <div className="mt-3">
+        <Div className="mt-3">
           <Button
             type="button"
             role="switch"
@@ -136,8 +136,8 @@ export function SwitchFilter({
               />
             </Span>
           </Button>
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

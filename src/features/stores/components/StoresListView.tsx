@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "@mohasinac/contracts";
-import { Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Span, Text } from "@mohasinac/ui";
 import type { StoreListItem } from "../types";
 
 interface StoreCardProps {
@@ -17,32 +17,32 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
       className={`block rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {store.storeBannerURL ? (
-        <div className="h-24 overflow-hidden bg-gray-100">
-          <div
+        <Div className="h-24 overflow-hidden bg-gray-100">
+          <Div
             role="img"
             aria-label={`${store.storeName} banner`}
             className="h-full w-full bg-center bg-cover"
             style={{ backgroundImage: `url(${store.storeBannerURL})` }}
           />
-        </div>
+        </Div>
       ) : (
-        <div className="h-24 bg-gradient-to-br from-orange-50 to-orange-100" />
+        <Div className="h-24 bg-gradient-to-br from-orange-50 to-orange-100" />
       )}
-      <div className="px-4 pb-4">
-        <div className="-mt-6 mb-3">
+      <Div className="px-4 pb-4">
+        <Div className="-mt-6 mb-3">
           {store.storeLogoURL ? (
-            <div
+            <Div
               role="img"
               aria-label={store.storeName}
               className="h-12 w-12 rounded-lg border-2 border-white bg-center bg-cover shadow-sm"
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (
-            <div className="h-12 w-12 rounded-lg border-2 border-white bg-orange-100 flex items-center justify-center text-orange-600 font-bold shadow-sm">
+            <Div className="h-12 w-12 rounded-lg border-2 border-white bg-orange-100 flex items-center justify-center text-orange-600 font-bold shadow-sm">
               {store.storeName[0]?.toUpperCase()}
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
         <Heading
           level={3}
           className="font-semibold text-gray-900 text-sm truncate"
@@ -54,7 +54,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
             {store.storeDescription}
           </Text>
         )}
-        <div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+        <Div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
           {store.totalProducts != null && (
             <Span>
               {store.totalProducts} {labels.products ?? "products"}
@@ -68,8 +68,8 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
           {store.averageRating != null && (
             <Span>★ {store.averageRating.toFixed(1)}</Span>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Link>
   );
 }
@@ -111,11 +111,11 @@ export function StoresListView<T extends StoreListItem = StoreListItem>({
   }
 
   return (
-    <div className="space-y-4">
+    <Div className="space-y-4">
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <div
+      <Div
         className={`grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 ${className}`}
       >
         {stores.map((store, i) =>
@@ -131,13 +131,13 @@ export function StoresListView<T extends StoreListItem = StoreListItem>({
             />
           ),
         )}
-      </div>
+      </Div>
       {slots?.renderFooter
         ? (slots.renderFooter({
             page: currentPage,
             totalPages,
           }) as React.ReactNode)
         : null}
-    </div>
+    </Div>
   );
 }

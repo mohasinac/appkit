@@ -9,7 +9,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Modal, Span, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Text } from "@mohasinac/ui";
 import { MediaSlider } from "../components/MediaSlider";
 
 export interface ImageCropData {
@@ -125,13 +125,13 @@ export function ImageCropModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("cropTitle")} size="lg">
-      <div className="space-y-3">
+      <Div className="space-y-3">
         <Text variant="secondary" className="text-xs">
           {t("cropInstruction")}
         </Text>
 
         {/* Preview container */}
-        <div
+        <Div
           ref={containerRef}
           className="relative w-full max-w-sm mx-auto aspect-square bg-zinc-100 dark:bg-slate-800 rounded-lg overflow-hidden cursor-move max-h-[280px] touch-none"
           data-disable-swipe="true"
@@ -161,29 +161,29 @@ export function ImageCropModal({
             }}
           />
           {/* 3×3 grid overlay */}
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute w-full h-full grid grid-cols-3 grid-rows-3">
+          <Div className="absolute inset-0 pointer-events-none">
+            <Div className="absolute w-full h-full grid grid-cols-3 grid-rows-3">
               {Array.from({ length: 9 }).map((_, i) => (
-                <div key={i} className="border border-white/20 dark:border-slate-600/30" />
+                <Div key={i} className="border border-white/20 dark:border-slate-600/30" />
               ))}
-            </div>
+            </Div>
             {/* Centre crosshair */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-6 h-px bg-white/50" />
-              <div className="absolute h-6 w-px bg-white/50" />
-            </div>
-          </div>
-        </div>
+            <Div className="absolute inset-0 flex items-center justify-center">
+              <Div className="w-6 h-px bg-white/50" />
+              <Div className="absolute h-6 w-px bg-white/50" />
+            </Div>
+          </Div>
+        </Div>
 
         {/* Zoom control */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between">
+        <Div className="space-y-1">
+          <Div className="flex items-center justify-between">
             <Text className="text-xs font-medium">{t("cropZoom")}</Text>
             <Text className="text-xs text-zinc-500 dark:text-slate-400">
               {Math.round(zoom * 100)}%
             </Text>
-          </div>
-          <div className="flex items-center gap-3">
+          </Div>
+          <Div className="flex items-center gap-3">
             <Button
               type="button"
               variant="ghost"
@@ -214,9 +214,9 @@ export function ImageCropModal({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
               </svg>
             </Button>
-          </div>
+          </Div>
           {/* Zoom presets */}
-          <div className="flex gap-2">
+          <Div className="flex gap-2">
             {[0.5, 1, 1.5, 2].map((preset) => (
               <Button
                 key={preset}
@@ -229,8 +229,8 @@ export function ImageCropModal({
                 {preset * 100}%
               </Button>
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {/* Zoom warning */}
         {showZoomWarning && (
@@ -240,7 +240,7 @@ export function ImageCropModal({
         )}
 
         {/* Position info + reset */}
-        <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-slate-400">
+        <Div className="flex items-center justify-between text-xs text-zinc-500 dark:text-slate-400">
           <Span>
             {t("cropPosition")}: {Math.round(position.x)}%, {Math.round(position.y)}%
           </Span>
@@ -253,18 +253,18 @@ export function ImageCropModal({
           >
             {t("cropReset")}
           </Button>
-        </div>
+        </Div>
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2">
+        <Div className="flex gap-2 pt-2">
           <Button onClick={handleSave} variant="primary" className="flex-1">
             {t("cropSave")}
           </Button>
           <Button onClick={onClose} variant="secondary" className="flex-1">
             {t("cropCancel")}
           </Button>
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Modal>
   );
 }

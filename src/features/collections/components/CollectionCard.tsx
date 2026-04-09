@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Article, Heading, Text } from "@mohasinac/ui";
+import { Article, Div, Heading, Text } from "@mohasinac/ui";
 import type { CollectionListItem } from "../types";
 
 interface CollectionCardProps {
@@ -24,16 +24,16 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
       className="group relative block overflow-hidden rounded-xl bg-gray-100 transition-shadow hover:shadow-lg"
     >
       {collection.image ? (
-        <div
+        <Div
           role="img"
           aria-label={collection.title}
           className="h-48 w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (
-        <div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100" />
+        <Div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100" />
       )}
-      <div className="p-4">
+      <Div className="p-4">
         <Heading level={3} className="font-semibold text-gray-900">
           {collection.title}
         </Heading>
@@ -48,7 +48,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
             {collection.productCount === 1 ? "item" : "items"}
           </Text>
         )}
-      </div>
+      </Div>
     </Article>
   );
 }
@@ -60,10 +60,10 @@ interface CollectionGridProps {
 
 export function CollectionGrid({ collections, getHref }: CollectionGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <Div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {collections.map((c) => (
         <CollectionCard key={c.slug} collection={c} href={getHref(c.slug)} />
       ))}
-    </div>
+    </Div>
   );
 }

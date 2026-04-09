@@ -1,6 +1,6 @@
 import React from "react";
 import type { LayoutSlots } from "@mohasinac/contracts";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "@mohasinac/ui";
 import type { ProductItem } from "../types";
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       : null;
 
   return (
-    <div
+    <Div
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
@@ -40,16 +40,16 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       onClick={onClick ? () => onClick(product) : undefined}
       className={`group relative flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
-      <div className="relative aspect-square overflow-hidden bg-neutral-100">
+      <Div className="relative aspect-square overflow-hidden bg-neutral-100">
         {product.mainImage ? (
-          <div
+          <Div
             role="img"
             aria-label={product.title}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundImage: `url(${product.mainImage})` }}
           />
         ) : (
-          <div className="h-full w-full bg-neutral-200" />
+          <Div className="h-full w-full bg-neutral-200" />
         )}
         {discount && (
           <Span className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
@@ -78,8 +78,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             {isWishlisted ? "♥" : "♡"}
           </Button>
         )}
-      </div>
-      <div className="flex flex-1 flex-col p-3">
+      </Div>
+      <Div className="flex flex-1 flex-col p-3">
         <Text className="line-clamp-2 text-sm font-medium text-neutral-900">
           {product.title}
         </Text>
@@ -88,7 +88,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             {product.sellerName}
           </Text>
         )}
-        <div className="mt-2 flex items-baseline gap-2">
+        <Div className="mt-2 flex items-baseline gap-2">
           <Span className="font-semibold text-neutral-900">
             {product.currency ?? "₹"}
             {product.price.toLocaleString()}
@@ -99,18 +99,18 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {product.originalPrice.toLocaleString()}
             </Span>
           )}
-        </div>
+        </Div>
         {product.rating !== undefined && (
-          <div className="mt-1 flex items-center gap-1">
+          <Div className="mt-1 flex items-center gap-1">
             <Span className="text-xs text-yellow-500">★</Span>
             <Span className="text-xs text-neutral-500">
               {product.rating.toFixed(1)}
               {product.reviewCount ? ` (${product.reviewCount})` : ""}
             </Span>
-          </div>
+          </Div>
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -206,7 +206,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       : null);
 
   return (
-    <div>
+    <Div>
       {resolvedHeader}
       {isEmpty ? (
         (resolvedEmpty ?? (
@@ -215,7 +215,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
           </Text>
         ))
       ) : (
-        <div
+        <Div
           className={`grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-4 ${className}`}
         >
           {products.map((p, i) => {
@@ -242,9 +242,9 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               />
             );
           })}
-        </div>
+        </Div>
       )}
       {resolvedFooter}
-    </div>
+    </Div>
   );
 }

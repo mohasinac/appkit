@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Aside, Li, Nav, Span, Text, Ul } from "@mohasinac/ui";
+import { Aside, Div, Li, Nav, Span, Text, Ul } from "@mohasinac/ui";
 
 export interface SellerNavItem {
   href: string;
@@ -29,23 +29,23 @@ export function SellerSidebar({
       className={`w-64 shrink-0 bg-white border-r border-gray-200 flex flex-col ${className}`}
     >
       {storeName && (
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
+        <Div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
           {storeLogoURL ? (
-            <div
+            <Div
               role="img"
               aria-label={storeName}
               className="h-8 w-8 rounded-full bg-center bg-cover"
               style={{ backgroundImage: `url(${storeLogoURL})` }}
             />
           ) : (
-            <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
+            <Div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-sm">
               {storeName[0]?.toUpperCase()}
-            </div>
+            </Div>
           )}
           <Text className="font-semibold text-gray-900 text-sm truncate">
             {storeName}
           </Text>
-        </div>
+        </Div>
       )}
       <Nav
         aria-label="Seller navigation"

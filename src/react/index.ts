@@ -89,3 +89,7 @@ export type {
   UseVisibleItemsOptions,
   UseVisibleItemsResult,
 } from "./hooks/useVisibleItems";
+
+// Modal stack management
+export { useModalStack } from "./useModalStack";
+export type { ModalEntry } from "./useModalStack";

@@ -1,7 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Heading, Input, Section, Text } from "@mohasinac/ui";
+import {
+  Button,
+  Div,
+  Heading,
+  Input,
+  Section,
+  Span,
+  Text,
+} from "@mohasinac/ui";
 
 export interface NewsletterBannerProps {
   /**
@@ -65,13 +73,13 @@ export function NewsletterBanner({
       }}
     >
       {/* Decorative rings */}
-      <div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 rounded-full border border-white/[0.06]" />
-      <div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full border border-dashed border-white/[0.08]" />
+      <Div className="pointer-events-none absolute -top-20 -right-20 h-60 w-60 rounded-full border border-white/[0.06]" />
+      <Div className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full border border-dashed border-white/[0.08]" />
 
-      <div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
-        <span className="mb-4 inline-flex rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white/70">
+      <Div className="relative mx-auto max-w-2xl px-4 text-center sm:px-6">
+        <Span className="mb-4 inline-flex rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white/70">
           {eyebrow}
-        </span>
+        </Span>
         <Heading
           level={2}
           className="text-3xl font-bold text-white sm:text-4xl"
@@ -116,7 +124,7 @@ export function NewsletterBanner({
         <Text className="mt-4 text-xs text-white/40">
           No spam, ever. Unsubscribe anytime.
         </Text>
-      </div>
+      </Div>
     </Section>
   );
 }

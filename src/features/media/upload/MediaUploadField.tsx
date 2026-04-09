@@ -10,7 +10,7 @@
 import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "@mohasinac/react";
-import { Alert, Button, Label, Spinner, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Label, Spinner, Text } from "@mohasinac/ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
@@ -185,31 +185,31 @@ export function MediaUploadField({
   };
 
   return (
-    <div className="space-y-2">
+    <Div className="space-y-2">
       <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
         {label}
       </Label>
 
       {value && !isLoading && (
-        <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
+        <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
           {isVideo(value) ? (
-            <div className="relative aspect-video overflow-hidden rounded-lg">
+            <Div className="relative aspect-video overflow-hidden rounded-lg">
               <MediaVideo
                 src={value}
                 alt={label}
                 controls
                 objectFit="contain"
               />
-            </div>
+            </Div>
           ) : isImage(value) ? (
-            <div className="relative aspect-video overflow-hidden rounded-lg">
+            <Div className="relative aspect-video overflow-hidden rounded-lg">
               <MediaImage
                 src={value}
                 alt={label}
                 size="card"
                 objectFit="contain"
               />
-            </div>
+            </Div>
           ) : (
             <a
               href={value}
@@ -222,7 +222,7 @@ export function MediaUploadField({
           )}
 
           {!disabled && (
-            <div className="flex flex-wrap gap-2 mt-2">
+            <Div className="flex flex-wrap gap-2 mt-2">
               {isVideo(value) && (enableTrim || enableThumbnail) && (
                 <Button
                   type="button"
@@ -245,15 +245,15 @@ export function MediaUploadField({
               >
                 {tUpload("remove")}
               </Button>
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
       )}
 
       {!disabled && !isLoading && (
         <>
           {captureSource === "both" && isCameraSupported && (
-            <div className="flex items-center gap-2">
+              <Div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant={inputMode === "file" ? "primary" : "outline"}
@@ -270,7 +270,7 @@ export function MediaUploadField({
               >
                 {t("switchToCamera")}
               </Button>
-            </div>
+            </Div>
           )}
 
           {showCamera && isCameraSupported && (
@@ -307,12 +307,12 @@ export function MediaUploadField({
       )}
 
       {isLoading && (
-        <div className="flex items-center gap-2">
+        <Div className="flex items-center gap-2">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploading")}
           </Text>
-        </div>
+        </Div>
       )}
 
       <input
@@ -362,6 +362,6 @@ export function MediaUploadField({
           onUpload={onUpload}
         />
       )}
-    </div>
+    </Div>
   );
 }

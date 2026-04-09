@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button, Input, Select, Textarea } from "@mohasinac/ui";
+import { Button, Div, Input, Select, Textarea } from "@mohasinac/ui";
 import type { BookConsultationInput } from "../types";
 
 interface ConsultationFormProps {
@@ -96,7 +96,7 @@ export function ConsultationForm({
         className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
       />
       {concerns.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <Div className="flex flex-wrap gap-2">
           {concerns.map((c) => (
             <Button
               key={c}
@@ -113,9 +113,9 @@ export function ConsultationForm({
               {c}
             </Button>
           ))}
-        </div>
+        </Div>
       )}
-      <div className="flex gap-3">
+      <Div className="flex gap-3">
         <Input
           name="preferredDate"
           type="date"
@@ -130,7 +130,7 @@ export function ConsultationForm({
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
           className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
         />
-      </div>
+      </Div>
       <Select
         value={form.mode}
         onChange={(value) => handleValueChange("mode", value)}

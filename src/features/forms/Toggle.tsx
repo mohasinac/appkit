@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Button, Div, Span } from "@mohasinac/ui";
 import { cn } from "./utils";
 
 export interface ToggleProps {
@@ -64,8 +65,8 @@ export function Toggle({
   const cfg = SIZE_CONFIG[size];
 
   return (
-    <div className={cn("flex items-center gap-3", className)}>
-      <button
+    <Div className={cn("flex items-center gap-3", className)}>
+      <Button
         type="button"
         role="switch"
         id={toggleId}
@@ -81,14 +82,14 @@ export function Toggle({
           disabled && "opacity-50 cursor-not-allowed",
         )}
       >
-        <span
+        <Span
           className={cn(
             "inline-block rounded-full bg-white shadow-sm transition-transform duration-200",
             cfg.thumb,
             checked ? cfg.translateOn : cfg.translateOff,
           )}
         />
-      </button>
+      </Button>
 
       {label && (
         <label
@@ -104,6 +105,6 @@ export function Toggle({
           {label}
         </label>
       )}
-    </div>
+    </Div>
   );
 }

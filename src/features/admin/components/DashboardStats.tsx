@@ -1,6 +1,6 @@
 import React from "react";
 import type { DashboardStats } from "../types";
-import { Text } from "@mohasinac/ui";
+import { Div, Text } from "@mohasinac/ui";
 
 interface StatCardProps {
   label: string;
@@ -18,13 +18,13 @@ function StatCard({ label, value, sub, color = "default" }: StatCardProps) {
     red: "bg-red-50",
   }[color];
   return (
-    <div className={`rounded-xl border border-neutral-200 p-5 ${colorClass}`}>
+    <Div className={`rounded-xl border border-neutral-200 p-5 ${colorClass}`}>
       <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500">
         {label}
       </Text>
       <Text className="mt-2 text-2xl font-bold text-neutral-900">{value}</Text>
       {sub && <Text className="mt-1 text-xs text-neutral-500">{sub}</Text>}
-    </div>
+    </Div>
   );
 }
 
@@ -41,23 +41,23 @@ export function DashboardStatsGrid({
 }: DashboardStatsGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="animate-pulse rounded-xl border border-neutral-200 p-5"
           >
-            <div className="h-3 w-20 rounded bg-neutral-200" />
-            <div className="mt-2 h-8 w-24 rounded bg-neutral-200" />
-          </div>
+            <Div className="h-3 w-20 rounded bg-neutral-200" />
+            <Div className="mt-2 h-8 w-24 rounded bg-neutral-200" />
+          </Div>
         ))}
-      </div>
+      </Div>
     );
   }
 
   const cur = stats.currency ?? "";
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+    <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
       <StatCard
         label={labels.totalOrders ?? "Total Orders"}
         value={stats.totalOrders ?? 0}
@@ -90,6 +90,6 @@ export function DashboardStatsGrid({
           color="amber"
         />
       )}
-    </div>
+    </Div>
   );
 }

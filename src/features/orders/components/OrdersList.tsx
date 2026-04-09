@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Div, Pagination, Span, Text } from "@mohasinac/ui";
 import type { Order, OrderStatus } from "../types";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
@@ -32,7 +32,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
     STATUS_COLORS[order.orderStatus] ?? "bg-neutral-100 text-neutral-700";
 
   return (
-    <div
+    <Div
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={
@@ -43,54 +43,54 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       onClick={onClick ? () => onClick(order) : undefined}
       className={`rounded-xl border border-neutral-200 bg-white p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`}
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
+      <Div className="flex flex-wrap items-start justify-between gap-3">
+        <Div>
           <Text className="text-xs text-neutral-500">
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
             <Text className="mt-0.5 text-xs text-neutral-400">{date}</Text>
           )}
-        </div>
+        </Div>
         <Span
           className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${statusColor}`}
         >
           {labels[order.orderStatus] ?? order.orderStatus.replace(/_/g, " ")}
         </Span>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-3">
+      </Div>
+      <Div className="mt-4 flex flex-wrap gap-3">
         {order.items.slice(0, 3).map((item, i) => (
-          <div key={i} className="flex items-center gap-2">
+          <Div key={i} className="flex items-center gap-2">
             {item.image && (
-              <div
+              <Div
                 role="img"
                 aria-label={item.title}
                 className="h-10 w-10 rounded-lg bg-center bg-cover"
                 style={{ backgroundImage: `url(${item.image})` }}
               />
             )}
-            <div>
+            <Div>
               <Text className="text-sm font-medium text-neutral-900 line-clamp-1">
                 {item.title}
               </Text>
               <Text className="text-xs text-neutral-400">×{item.quantity}</Text>
-            </div>
-          </div>
+            </Div>
+          </Div>
         ))}
         {order.items.length > 3 && (
           <Span className="self-center text-xs text-neutral-400">
             +{order.items.length - 3} more
           </Span>
         )}
-      </div>
-      <div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
+      </Div>
+      <Div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
         <Span className="text-sm text-neutral-500">{order.currency} Total</Span>
         <Span className="font-semibold text-neutral-900">
           {order.currency}
           {order.total.toLocaleString()}
         </Span>
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -115,26 +115,26 @@ export function OrdersList({
 }: OrdersListProps) {
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <Div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="animate-pulse rounded-xl border border-neutral-200 p-5"
           >
-            <div className="flex justify-between">
-              <div className="space-y-1">
-                <div className="h-3 w-20 rounded bg-neutral-200" />
-                <div className="h-3 w-16 rounded bg-neutral-200" />
-              </div>
-              <div className="h-6 w-20 rounded-full bg-neutral-200" />
-            </div>
-            <div className="mt-4 flex gap-3">
-              <div className="h-10 w-10 rounded-lg bg-neutral-200" />
-              <div className="h-10 w-10 rounded-lg bg-neutral-200" />
-            </div>
-          </div>
+            <Div className="flex justify-between">
+              <Div className="space-y-1">
+                <Div className="h-3 w-20 rounded bg-neutral-200" />
+                <Div className="h-3 w-16 rounded bg-neutral-200" />
+              </Div>
+              <Div className="h-6 w-20 rounded-full bg-neutral-200" />
+            </Div>
+            <Div className="mt-4 flex gap-3">
+              <Div className="h-10 w-10 rounded-lg bg-neutral-200" />
+              <Div className="h-10 w-10 rounded-lg bg-neutral-200" />
+            </Div>
+          </Div>
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -147,28 +147,21 @@ export function OrdersList({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
+    <Div className="space-y-6">
+      <Div className="space-y-4">
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} onClick={onOrderClick} />
         ))}
-      </div>
+      </Div>
       {totalPages > 1 && onPageChange && (
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Button
-              key={p}
-              type="button"
-              variant={p === currentPage ? "primary" : "outline"}
-              size="sm"
-              onClick={() => onPageChange(p)}
-              className={`h-9 w-9 rounded-lg text-sm font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-100"}`}
-            >
-              {p}
-            </Button>
-          ))}
-        </div>
+        <Div className="flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { Div, Span } from "@mohasinac/ui";
 
 // ─── Size presets ─────────────────────────────────────────────────────────────
 
@@ -75,13 +76,13 @@ export function MediaImage({
 
   if (!src || hasError) {
     return (
-      <div
+      <Div
         className={`absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl${className ? ` ${className}` : ""}`}
         role="img"
         aria-label={alt}
       >
-        <span aria-hidden="true">{icon}</span>
-      </div>
+        <Span aria-hidden="true">{icon}</Span>
+      </Div>
     );
   }
 
@@ -91,11 +92,11 @@ export function MediaImage({
     /[./]svg(\?|$)/i.test(src);
 
   return (
-    <div
+    <Div
       className={`absolute inset-0 overflow-hidden${className ? ` ${className}` : ""}`}
     >
       {!isLoaded && (
-        <div
+        <Div
           className="absolute inset-0 bg-zinc-200 dark:bg-slate-700 animate-pulse"
           aria-hidden="true"
         />
@@ -111,7 +112,7 @@ export function MediaImage({
         onError={() => setHasError(true)}
         unoptimized={isSvg}
       />
-    </div>
+    </Div>
   );
 }
 

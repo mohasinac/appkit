@@ -10,7 +10,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "@mohasinac/react";
-import { Alert, Button, Span, Spinner } from "@mohasinac/ui";
+import { Alert, Button, Div, Span, Spinner } from "@mohasinac/ui";
 
 export interface CameraCaptureProps {
   mode: "photo" | "video" | "both";
@@ -78,7 +78,7 @@ export default function CameraCapture({
   const showVideoButton = mode === "video" || mode === "both";
 
   return (
-    <div
+    <Div
       className={`relative rounded-xl overflow-hidden bg-black ${className ?? ""}`}
     >
       <video
@@ -90,22 +90,22 @@ export default function CameraCapture({
       />
 
       {isStarting && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-          <div className="flex flex-col items-center gap-2">
+        <Div className="absolute inset-0 flex items-center justify-center bg-black/60">
+          <Div className="flex flex-col items-center gap-2">
             <Spinner />
             <Span className="text-white text-sm">{t("starting")}</Span>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {camera.error && (
-        <div className="absolute top-2 left-2 right-2">
+        <Div className="absolute top-2 left-2 right-2">
           <Alert variant="error">{camera.error}</Alert>
-        </div>
+        </Div>
       )}
 
       {!isStarting && !camera.error && camera.isActive && (
-        <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/40 flex items-center justify-center gap-3">
+        <Div className="absolute bottom-0 left-0 right-0 p-3 bg-black/40 flex items-center justify-center gap-3">
           {showPhotoButton && (
             <Button
               variant="secondary"
@@ -143,8 +143,8 @@ export default function CameraCapture({
               {t("flipCamera")}
             </Button>
           )}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Section, Span, Text } from "@mohasinac/ui";
 import type { PromoBanner } from "../types";
 
 export interface PromoGridProps {
@@ -27,9 +27,9 @@ export function PromoGrid({
         borderBottom: "1px solid rgba(255,255,255,0.06)",
       }}
     >
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-y-2">
-          <div>
+      <Div className="mx-auto max-w-7xl px-4">
+        <Div className="mb-7 flex flex-wrap items-end justify-between gap-y-2">
+          <Div>
             <Text
               className="mb-1 text-xs font-black uppercase tracking-widest"
               style={{ color: "var(--color-red)", letterSpacing: "0.18em" }}
@@ -48,8 +48,8 @@ export function PromoGrid({
             >
               {heading}
             </Heading>
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {/*
           Layout:
@@ -57,7 +57,7 @@ export function PromoGrid({
           - sm: 2 columns
           - lg: 3 cols, first card spans 2 rows
         */}
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {banners.slice(0, 4).map((banner, i) => (
             <Link
               key={banner.id}
@@ -82,7 +82,7 @@ export function PromoGrid({
                     : "(max-width: 640px) 50vw, 30vw"
                 }
               />
-              <div
+              <Div
                 className="absolute inset-0"
                 style={{
                   background:
@@ -92,11 +92,11 @@ export function PromoGrid({
                 }}
               />
               {/* Yellow inset border on hover */}
-              <div
+              <Div
                 className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 style={{ boxShadow: "inset 0 0 0 2px var(--color-yellow)" }}
               />
-              <div className="absolute bottom-0 left-0 right-0 p-4">
+              <Div className="absolute bottom-0 left-0 right-0 p-4">
                 <Text
                   className="leading-tight"
                   style={{
@@ -114,11 +114,11 @@ export function PromoGrid({
                 >
                   {banner.ctaLabel} →
                 </Span>
-              </div>
+              </Div>
             </Link>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Section>
   );
 }

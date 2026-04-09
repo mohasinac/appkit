@@ -4,10 +4,12 @@ import { useState, useRef } from "react";
 import Image from "next/image";
 import {
   Button,
+  Div,
   Heading,
   Input,
   Label,
   Li,
+  Span,
   Text,
   Textarea,
   Ul,
@@ -174,7 +176,7 @@ export function CharacterHotspotForm({
   const stepIndex = STEPS.findIndex((s) => s.key === step);
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <Div className="mx-auto max-w-3xl space-y-6">
       {error && (
         <Text className="rounded border border-red-200 bg-red-50 px-4 py-2 text-sm font-bold text-red-600">
           {error}
@@ -187,12 +189,12 @@ export function CharacterHotspotForm({
       )}
 
       {/* Progress stepper */}
-      <div className="flex items-start">
+      <Div className="flex items-start">
         {STEPS.map((s, i) => (
-          <div key={s.key} className="flex flex-1 flex-col items-center">
-            <div className="flex w-full items-center">
+          <Div key={s.key} className="flex flex-1 flex-col items-center">
+            <Div className="flex w-full items-center">
               {i > 0 && (
-                <div
+                <Div
                   className="h-0.5 flex-1"
                   style={{
                     background:
@@ -202,7 +204,7 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-              <div
+              <Div
                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold"
                 style={{
                   background:
@@ -222,9 +224,9 @@ export function CharacterHotspotForm({
                 }}
               >
                 {i < stepIndex ? "✓" : i + 1}
-              </div>
+              </Div>
               {i < STEPS.length - 1 && (
-                <div
+                <Div
                   className="h-0.5 flex-1"
                   style={{
                     background:
@@ -234,20 +236,20 @@ export function CharacterHotspotForm({
                   }}
                 />
               )}
-            </div>
-            <span
+            </Div>
+            <Span
               className="mt-1 text-center text-[10px] font-medium"
               style={{ color: "var(--color-muted)" }}
             >
               {s.label}
-            </span>
-          </div>
+            </Span>
+          </Div>
         ))}
-      </div>
+      </Div>
 
       {/* ── Step 1: Upload Image ── */}
       {step === "image" && (
-        <div
+        <Div
           className="space-y-4 rounded-lg border-2 p-6"
           style={{
             borderColor: "var(--border-ink)",
@@ -266,13 +268,13 @@ export function CharacterHotspotForm({
             className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-8 transition-colors hover:opacity-80"
             style={{ borderColor: "var(--border-ink)" }}
           >
-            <span className="text-3xl">🖼</span>
-            <span className="font-medium">
+            <Span className="text-3xl">🖼</Span>
+            <Span className="font-medium">
               {uploading ? "Uploading…" : "Click to choose image"}
-            </span>
-            <span className="text-xs" style={{ color: "var(--color-muted)" }}>
+            </Span>
+            <Span className="text-xs" style={{ color: "var(--color-muted)" }}>
               JPG, PNG, WebP — wide landscape images work best
-            </span>
+            </Span>
             <Input
               type="file"
               accept="image/*"
@@ -283,8 +285,8 @@ export function CharacterHotspotForm({
           </Label>
 
           {imageUrl && (
-            <div className="space-y-1">
-              <div
+            <Div className="space-y-1">
+              <Div
                 className="relative w-full overflow-hidden rounded-lg"
                 style={{ paddingTop: "37.5%" }}
               >
@@ -295,14 +297,14 @@ export function CharacterHotspotForm({
                   className="object-cover"
                   sizes="680px"
                 />
-              </div>
+              </Div>
               <Text className="text-xs font-medium text-green-700">
                 ✓ Image uploaded
               </Text>
-            </div>
+            </Div>
           )}
 
-          <div className="flex flex-col gap-1">
+          <Div className="flex flex-col gap-1">
             <Label className="text-sm font-bold">Image Alt Text</Label>
             <Input
               type="text"
@@ -316,7 +318,7 @@ export function CharacterHotspotForm({
                 color: "var(--color-black)",
               }}
             />
-          </div>
+          </Div>
 
           <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
             <Input
@@ -328,7 +330,7 @@ export function CharacterHotspotForm({
             Active (show on homepage)
           </Label>
 
-          <div
+          <Div
             className="flex items-center justify-end gap-3 border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
@@ -359,13 +361,13 @@ export function CharacterHotspotForm({
             >
               Next: Place Pins →
             </Button>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
       {/* ── Step 2: Place Pin ── */}
       {step === "place" && (
-        <div
+        <Div
           className="space-y-4 rounded-lg border-2 p-6"
           style={{
             borderColor: "var(--border-ink)",
@@ -380,7 +382,7 @@ export function CharacterHotspotForm({
             exact coordinates below.
           </Text>
 
-          <div
+          <Div
             ref={containerRef}
             className="relative w-full overflow-hidden rounded-lg"
             style={{
@@ -399,7 +401,7 @@ export function CharacterHotspotForm({
             />
 
             {pins.map((pin) => (
-              <div
+              <Div
                 key={pin.id}
                 className="pointer-events-none absolute"
                 style={{
@@ -409,7 +411,7 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <div
+                <Div
                   className="flex items-center justify-center rounded-full text-xs font-bold text-white"
                   style={{
                     width: 24,
@@ -420,20 +422,20 @@ export function CharacterHotspotForm({
                   }}
                 >
                   +
-                </div>
+                </Div>
                 {pin.name && (
-                  <div
+                  <Div
                     className="pointer-events-none absolute left-7 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}
-                  </div>
+                  </Div>
                 )}
-              </div>
+              </Div>
             ))}
 
             {draftPos && (
-              <div
+              <Div
                 className="absolute"
                 style={{
                   left: `${draftPos.xPct}%`,
@@ -442,7 +444,7 @@ export function CharacterHotspotForm({
                   zIndex: 20,
                 }}
               >
-                <span
+                <Span
                   className="absolute animate-ping rounded-full"
                   style={{
                     inset: -6,
@@ -450,7 +452,7 @@ export function CharacterHotspotForm({
                     pointerEvents: "none",
                   }}
                 />
-                <div
+                <Div
                   className="relative flex items-center justify-center rounded-full font-bold"
                   style={{
                     width: 32,
@@ -463,8 +465,8 @@ export function CharacterHotspotForm({
                   }}
                 >
                   ★
-                </div>
-                <div
+                </Div>
+                <Div
                   className="pointer-events-none absolute left-9 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-2 py-0.5 text-[10px] font-bold"
                   style={{
                     background: "var(--color-black)",
@@ -472,12 +474,12 @@ export function CharacterHotspotForm({
                   }}
                 >
                   NEW PIN
-                </div>
-              </div>
+                </Div>
+              </Div>
             )}
-          </div>
+          </Div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <Div className="grid grid-cols-2 gap-3">
             {(
               [
                 {
@@ -504,7 +506,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, field, value, onChange }) => (
-              <div key={field} className="flex flex-col gap-1">
+              <Div key={field} className="flex flex-col gap-1">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="number"
@@ -524,9 +526,9 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
 
           {pins.length > 0 && (
             <Text className="text-xs" style={{ color: "var(--color-muted)" }}>
@@ -535,7 +537,7 @@ export function CharacterHotspotForm({
             </Text>
           )}
 
-          <div
+          <Div
             className="flex items-center justify-between border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
@@ -548,7 +550,7 @@ export function CharacterHotspotForm({
             >
               ← Back
             </Button>
-            <div className="flex items-center gap-3">
+            <Div className="flex items-center gap-3">
               {pins.length > 0 && (
                 <Button
                   type="button"
@@ -577,14 +579,14 @@ export function CharacterHotspotForm({
               >
                 Continue: Add Details →
               </Button>
-            </div>
-          </div>
-        </div>
+            </Div>
+          </Div>
+        </Div>
       )}
 
       {/* ── Step 3: Pin Details ── */}
       {step === "details" && (
-        <div
+        <Div
           className="space-y-4 rounded-lg border-2 p-6"
           style={{
             borderColor: "var(--border-ink)",
@@ -602,7 +604,7 @@ export function CharacterHotspotForm({
             .
           </Text>
 
-          <div className="grid grid-cols-2 gap-3">
+          <Div className="grid grid-cols-2 gap-3">
             {(
               [
                 {
@@ -619,7 +621,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
-              <div key={label} className="flex flex-col gap-1">
+              <Div key={label} className="flex flex-col gap-1">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="text"
@@ -635,11 +637,11 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
 
-          <div className="flex flex-col gap-1">
+          <Div className="flex flex-col gap-1">
             <Label className="text-sm font-bold">Description *</Label>
             <Textarea
               rows={3}
@@ -653,9 +655,9 @@ export function CharacterHotspotForm({
               }}
               placeholder="Short description shown in the popup…"
             />
-          </div>
+          </Div>
 
-          <div className="flex flex-col gap-1">
+          <Div className="flex flex-col gap-1">
             <Label className="text-sm font-bold">Link (href) *</Label>
             <Input
               type="text"
@@ -669,9 +671,9 @@ export function CharacterHotspotForm({
                 color: "var(--color-black)",
               }}
             />
-          </div>
+          </Div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <Div className="grid grid-cols-2 gap-3">
             {(
               [
                 {
@@ -688,7 +690,7 @@ export function CharacterHotspotForm({
                 },
               ] as const
             ).map(({ label, value, onChange, placeholder }) => (
-              <div key={label} className="flex flex-col gap-1">
+              <Div key={label} className="flex flex-col gap-1">
                 <Label className="text-sm font-bold">{label}</Label>
                 <Input
                   type="text"
@@ -704,12 +706,12 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
 
-          <div className="flex items-end gap-3">
-            <div className="flex-1 flex flex-col gap-1">
+          <Div className="flex items-end gap-3">
+            <Div className="flex-1 flex flex-col gap-1">
               <Label className="text-sm font-bold">Accent Colour (hex)</Label>
               <Input
                 type="text"
@@ -723,7 +725,7 @@ export function CharacterHotspotForm({
                   color: "var(--color-black)",
                 }}
               />
-            </div>
+            </Div>
             <Input
               type="color"
               value={draftAccent}
@@ -732,9 +734,9 @@ export function CharacterHotspotForm({
               style={{ borderColor: "var(--border-ink)" }}
               title="Pick colour"
             />
-          </div>
+          </Div>
 
-          <div
+          <Div
             className="flex items-center justify-between border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
@@ -747,7 +749,7 @@ export function CharacterHotspotForm({
             >
               ← Back
             </Button>
-            <div className="flex items-center gap-3">
+            <Div className="flex items-center gap-3">
               <Button
                 type="button"
                 disabled={!draftName || !draftHref}
@@ -781,34 +783,34 @@ export function CharacterHotspotForm({
               >
                 Save Pin &amp; Add Another →
               </Button>
-            </div>
-          </div>
-        </div>
+            </Div>
+          </Div>
+        </Div>
       )}
 
       {/* ── Step 4: Review & Save ── */}
       {step === "review" && (
-        <div
+        <Div
           className="space-y-4 rounded-lg border-2 p-6"
           style={{
             borderColor: "var(--border-ink)",
             background: "var(--surface-elevated)",
           }}
         >
-          <div className="flex items-center justify-between">
+          <Div className="flex items-center justify-between">
             <Heading level={2} className="text-lg font-bold">
               Review &amp; Save
             </Heading>
-            <span
+            <Span
               className="rounded-full px-3 py-1 text-sm font-bold"
               style={{ background: "var(--surface-warm)" }}
             >
               {pins.length} pin{pins.length !== 1 ? "s" : ""}
-            </span>
-          </div>
+            </Span>
+          </Div>
 
           {/* Preview image */}
-          <div
+          <Div
             className="relative w-full overflow-hidden rounded-lg"
             style={{ paddingTop: "56.25%", background: "#111" }}
           >
@@ -820,7 +822,7 @@ export function CharacterHotspotForm({
               sizes="(max-width: 680px) 100vw"
             />
             {pins.map((pin) => (
-              <div
+              <Div
                 key={pin.id}
                 className="pointer-events-none absolute"
                 style={{
@@ -830,7 +832,7 @@ export function CharacterHotspotForm({
                   zIndex: 10,
                 }}
               >
-                <div
+                <Div
                   className="flex items-center justify-center rounded-full text-xs font-bold text-white"
                   style={{
                     width: 28,
@@ -841,18 +843,18 @@ export function CharacterHotspotForm({
                   }}
                 >
                   +
-                </div>
+                </Div>
                 {pin.name && (
-                  <div
+                  <Div
                     className="pointer-events-none absolute left-8 top-1/2 -translate-y-1/2 whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-bold text-white"
                     style={{ background: "#0D0D0D" }}
                   >
                     {pin.name}
-                  </div>
+                  </Div>
                 )}
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
 
           {/* Pin list */}
           {pins.length > 0 ? (
@@ -862,21 +864,21 @@ export function CharacterHotspotForm({
             >
               {pins.map((pin, i) => (
                 <Li key={pin.id} className="flex items-center gap-3 px-4 py-3">
-                  <span
+                  <Span
                     className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
                     style={{ background: pin.accent || "#E8001C" }}
                   >
                     {i + 1}
-                  </span>
-                  <div className="min-w-0 flex-1">
+                  </Span>
+                  <Div className="min-w-0 flex-1">
                     <Text className="truncate text-sm font-bold">
                       {pin.name || (
-                        <span
+                        <Span
                           className="italic"
                           style={{ color: "var(--color-muted)" }}
                         >
                           Unnamed
-                        </span>
+                        </Span>
                       )}
                     </Text>
                     <Text
@@ -886,7 +888,7 @@ export function CharacterHotspotForm({
                       {pin.universe} · {pin.xPct.toFixed(0)}%,{" "}
                       {pin.yPct.toFixed(0)}%
                     </Text>
-                  </div>
+                  </Div>
                   <Button
                     type="button"
                     onClick={() => deletePin(pin.id)}
@@ -900,7 +902,7 @@ export function CharacterHotspotForm({
               ))}
             </Ul>
           ) : (
-            <div
+            <Div
               className="rounded-lg border-2 border-dashed p-8 text-center text-sm"
               style={{
                 borderColor: "var(--border-ink)",
@@ -908,7 +910,7 @@ export function CharacterHotspotForm({
               }}
             >
               No pins yet — add some using the button below.
-            </div>
+            </Div>
           )}
 
           {/* Image settings */}
@@ -919,7 +921,7 @@ export function CharacterHotspotForm({
             <summary className="cursor-pointer text-sm font-medium">
               Image Settings
             </summary>
-            <div className="mt-3 space-y-3">
+            <Div className="mt-3 space-y-3">
               <Label
                 className="inline-flex cursor-pointer items-center gap-2 rounded border-2 border-dashed px-3 py-1.5 text-sm font-medium transition-colors hover:opacity-80"
                 style={{ borderColor: "var(--border-ink)" }}
@@ -933,7 +935,7 @@ export function CharacterHotspotForm({
                   disabled={uploading}
                 />
               </Label>
-              <div className="flex flex-col gap-1">
+              <Div className="flex flex-col gap-1">
                 <Label className="text-sm font-bold">Image Alt Text</Label>
                 <Input
                   type="text"
@@ -946,7 +948,7 @@ export function CharacterHotspotForm({
                     color: "var(--color-black)",
                   }}
                 />
-              </div>
+              </Div>
               <Label className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium">
                 <Input
                   type="checkbox"
@@ -956,10 +958,10 @@ export function CharacterHotspotForm({
                 />
                 Active (show on homepage)
               </Label>
-            </div>
+            </Div>
           </details>
 
-          <div
+          <Div
             className="flex items-center justify-between border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
@@ -992,9 +994,9 @@ export function CharacterHotspotForm({
             >
               {saving ? "Saving…" : "Save to Database"}
             </Button>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

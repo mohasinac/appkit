@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
+import { Button, Div, Span } from "@mohasinac/ui";
 
 export interface BottomSheetProps {
   open: boolean;
@@ -58,33 +59,33 @@ export function BottomSheet({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden" role="presentation">
+    <Div className="fixed inset-0 z-50 lg:hidden" role="presentation">
       {/* Backdrop */}
-      <div
+      <Div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         aria-hidden="true"
         onClick={onClose}
       />
 
       {/* Drawer panel */}
-      <div
+      <Div
         role="dialog"
         aria-modal="true"
         aria-label={title}
         className={`absolute bottom-0 inset-x-0 flex flex-col rounded-t-2xl bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`}
       >
         {/* Handle and header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
+        <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
           {/* Drag handle */}
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+          <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
 
           {title && (
-            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 mt-2">
+            <Span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 mt-2">
               {title}
-            </span>
+            </Span>
           )}
 
-          <button
+          <Button
             type="button"
             onClick={onClose}
             aria-label="Close"
@@ -106,14 +107,14 @@ export function BottomSheet({
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </button>
-        </div>
+          </Button>
+        </Div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">
+        <Div className="flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">
           {children}
-        </div>
-      </div>
-    </div>
+        </Div>
+      </Div>
+    </Div>
   );
 }

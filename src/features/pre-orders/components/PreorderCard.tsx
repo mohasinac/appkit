@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Span, Text } from "@mohasinac/ui";
 import type { PreorderItem, PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
 
@@ -26,11 +26,11 @@ interface PreorderBadgeProps {
 export function PreorderBadge({ shipDate, className }: PreorderBadgeProps) {
   const status = getPreorderStatus(shipDate);
   return (
-    <span
+    <Span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[status]} ${className ?? ""}`}
     >
       {STATUS_LABELS[status]}
-    </span>
+    </Span>
   );
 }
 
@@ -46,16 +46,16 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
       className="group relative block overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-md"
     >
       {item.images[0] ? (
-        <div
+        <Div
           role="img"
           aria-label={item.name}
           className="h-56 w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
           style={{ backgroundImage: `url(${item.images[0]})` }}
         />
       ) : (
-        <div className="h-56 w-full bg-gray-100" />
+        <Div className="h-56 w-full bg-gray-100" />
       )}
-      <div className="p-4">
+      <Div className="p-4">
         <PreorderBadge shipDate={item.preorderShipDate} />
         <Heading
           level={3}
@@ -64,7 +64,7 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
           {item.name}
         </Heading>
         <Text className="mt-1 text-sm text-gray-500">{item.brand}</Text>
-        <div className="mt-3 flex items-baseline gap-2">
+        <Div className="mt-3 flex items-baseline gap-2">
           <Span className="text-lg font-bold text-gray-900">
             ₹{item.salePrice.toLocaleString()}
           </Span>
@@ -73,7 +73,7 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
               ₹{item.regularPrice.toLocaleString()}
             </Span>
           )}
-        </div>
+        </Div>
         {item.preorderShipDate && (
           <Text className="mt-1 text-xs text-gray-400">
             Ships:{" "}
@@ -83,7 +83,7 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
             })}
           </Text>
         )}
-      </div>
+      </Div>
     </Link>
   );
 }

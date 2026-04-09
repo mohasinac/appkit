@@ -1,6 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { Div, Span } from "@mohasinac/ui";
 
 interface ProductFeatureBadgeLabels {
   featured: string;
@@ -62,7 +63,7 @@ export function ProductFeatureBadges({
   if (featured) {
     badges.push({
       key: "featured",
-      icon: <span className="text-xs">★</span>,
+      icon: <Span className="text-xs">★</Span>,
       label: labels.featured,
       colorClass: "text-amber-700 dark:text-amber-300",
       bgClass:
@@ -73,7 +74,7 @@ export function ProductFeatureBadges({
   if (fasterDelivery) {
     badges.push({
       key: "fasterDelivery",
-      icon: <span className="text-xs">⚡</span>,
+      icon: <Span className="text-xs">⚡</Span>,
       label: labels.fasterDelivery,
       colorClass: "text-orange-700 dark:text-orange-300",
       bgClass:
@@ -84,7 +85,7 @@ export function ProductFeatureBadges({
   if (ratedSeller) {
     badges.push({
       key: "ratedSeller",
-      icon: <span className="text-xs">✓</span>,
+      icon: <Span className="text-xs">✓</Span>,
       label: labels.ratedSeller,
       colorClass: "text-primary",
       bgClass: "bg-primary/5 dark:bg-primary/10 border-primary/20",
@@ -105,7 +106,7 @@ export function ProductFeatureBadges({
 
     badges.push({
       key: "condition",
-      icon: <span className="text-xs">▣</span>,
+      icon: <Span className="text-xs">▣</Span>,
       label: `${labels.condition}: ${conditionLabel}`,
       colorClass: "text-primary",
       bgClass:
@@ -116,7 +117,7 @@ export function ProductFeatureBadges({
   if (returnable && condition === "new") {
     badges.push({
       key: "returnable",
-      icon: <span className="text-xs">↺</span>,
+      icon: <Span className="text-xs">↺</Span>,
       label: labels.returnable,
       colorClass: "text-teal-700 dark:text-teal-300",
       bgClass:
@@ -127,7 +128,7 @@ export function ProductFeatureBadges({
   if (freeShipping) {
     badges.push({
       key: "freeShipping",
-      icon: <span className="text-xs">🚚</span>,
+      icon: <Span className="text-xs">🚚</Span>,
       label: labels.freeShipping,
       colorClass: "text-emerald-700 dark:text-emerald-300",
       bgClass:
@@ -138,7 +139,7 @@ export function ProductFeatureBadges({
   if (codAvailable) {
     badges.push({
       key: "cod",
-      icon: <span className="text-xs">₹</span>,
+      icon: <Span className="text-xs">₹</Span>,
       label: labels.codAvailable,
       colorClass: "text-purple-700 dark:text-purple-300",
       bgClass:
@@ -149,7 +150,7 @@ export function ProductFeatureBadges({
   if (wishlistCount && wishlistCount > 0) {
     badges.push({
       key: "wishlist",
-      icon: <span className="text-xs">♥</span>,
+      icon: <Span className="text-xs">♥</Span>,
       label: labels.wishlistCount(wishlistCount),
       colorClass: "text-pink-700 dark:text-pink-300",
       bgClass:
@@ -164,7 +165,7 @@ export function ProductFeatureBadges({
 
     badges.push({
       key: "categoryCount",
-      icon: <span className="text-xs">▦</span>,
+      icon: <Span className="text-xs">▦</Span>,
       label: labels.categoryProductCount(formattedCount, categoryName),
       colorClass: "text-zinc-700 dark:text-zinc-300",
       bgClass:
@@ -176,16 +177,16 @@ export function ProductFeatureBadges({
   if (badges.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <Div className="flex flex-wrap gap-2">
       {badges.map((badge) => (
-        <span
+        <Span
           key={badge.key}
           className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium ${badge.bgClass} ${badge.colorClass}`}
         >
-          <span aria-hidden="true">{badge.icon}</span>
+          <Span aria-hidden="true">{badge.icon}</Span>
           {badge.label}
-        </span>
+        </Span>
       ))}
-    </div>
+    </Div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "@mohasinac/ui";
 import type { CouponItem, CouponType } from "../types";
 
 const TYPE_COLORS: Record<CouponType, string> = {
@@ -42,14 +42,14 @@ export function CouponCard({
         : (labels.freeShipping ?? "Free Shipping");
 
   return (
-    <div className={`rounded-xl border-2 p-4 ${colorClass} ${className}`}>
-      <div className="flex items-start justify-between gap-2 mb-2">
-        <div>
+    <Div className={`rounded-xl border-2 p-4 ${colorClass} ${className}`}>
+      <Div className="flex items-start justify-between gap-2 mb-2">
+        <Div>
           <Text className="text-xl font-bold tracking-wide">
             {discountLabel}
           </Text>
           <Text className="text-sm mt-0.5">{coupon.name}</Text>
-        </div>
+        </Div>
         <Button
           type="button"
           onClick={() => onCopy?.(coupon.code)}
@@ -57,24 +57,24 @@ export function CouponCard({
         >
           {coupon.code} — {labels.copy ?? "Copy"}
         </Button>
-      </div>
+      </Div>
 
       {coupon.description && (
         <Text className="text-xs opacity-70 mb-2">{coupon.description}</Text>
       )}
 
-      <div className="flex flex-wrap gap-2 text-xs opacity-70">
+      <Div className="flex flex-wrap gap-2 text-xs opacity-70">
         {coupon.minOrderAmount && (
-          <span>
+          <Span>
             {labels.minOrder ?? "Min order"}: {coupon.minOrderAmount}
-          </span>
+          </Span>
         )}
         {expiry && (
-          <span>
+          <Span>
             {labels.expires ?? "Expires"}: {expiry}
-          </span>
+          </Span>
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

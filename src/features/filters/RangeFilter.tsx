@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Button, Input, Slider, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Input, Slider, Span, Text } from "@mohasinac/ui";
 import { cn } from "./filterUtils";
 
 interface DualSliderProps {
@@ -35,8 +35,8 @@ function DualSlider({
   );
 
   return (
-    <div className="w-full space-y-2">
-      <div className="flex items-center justify-between">
+    <Div className="w-full space-y-2">
+      <Div className="flex items-center justify-between">
         <Span className="text-sm font-semibold tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
           {minNum}
@@ -46,9 +46,9 @@ function DualSlider({
           {prefix}
           {maxNum}
         </Span>
-      </div>
+      </Div>
 
-      <div className="space-y-1" aria-hidden="true">
+      <Div className="space-y-1" aria-hidden="true">
         <Slider
           value={minNum}
           min={minBound}
@@ -63,9 +63,9 @@ function DualSlider({
           step={step}
           onChange={(v) => onMaxChange(String(v))}
         />
-      </div>
+      </Div>
 
-      <div className="flex items-center justify-between">
+      <Div className="flex items-center justify-between">
         <Span className="text-xs text-zinc-500 dark:text-zinc-400">
           {prefix}
           {minBound}
@@ -74,8 +74,8 @@ function DualSlider({
           {prefix}
           {maxBound}
         </Span>
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -144,7 +144,7 @@ export function RangeFilter({
     "w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20";
 
   return (
-    <div
+    <Div
       role="group"
       aria-labelledby={`rf-${title}`}
       className={cn(
@@ -152,7 +152,7 @@ export function RangeFilter({
         className,
       )}
     >
-      <div className="flex items-center gap-2">
+      <Div className="flex items-center gap-2">
         <Button
           type="button"
           id={`rf-${title}`}
@@ -162,14 +162,14 @@ export function RangeFilter({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <span className="flex items-center gap-2">
+          <Span className="flex items-center gap-2">
             {title}
             {hasValue && (
               <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20">
                 1
               </Span>
             )}
-          </span>
+          </Span>
           <svg
             className={cn(
               "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
@@ -214,10 +214,10 @@ export function RangeFilter({
             </svg>
           </Button>
         )}
-      </div>
+      </Div>
 
       {!isCollapsed && (
-        <div className="mt-3 space-y-3">
+        <Div className="mt-3 space-y-3">
           {canShowSlider && (
             <DualSlider
               minValue={minValue}
@@ -231,14 +231,14 @@ export function RangeFilter({
             />
           )}
 
-          <div className="flex items-end gap-2">
-            <div className="flex-1 min-w-0">
+          <Div className="flex items-end gap-2">
+            <Div className="flex-1 min-w-0">
               {minLabel && (
                 <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
                   {minLabel}
                 </Text>
               )}
-              <div className="relative">
+              <Div className="relative">
                 {prefix && (
                   <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-500 pointer-events-none">
                     {prefix}
@@ -253,20 +253,20 @@ export function RangeFilter({
                   }
                   className={cn(inputClass, prefix ? "pl-5" : "")}
                 />
-              </div>
-            </div>
+              </Div>
+            </Div>
 
             <Span className="flex-shrink-0 pb-1.5 text-zinc-400 dark:text-zinc-500 text-xs">
               -
             </Span>
 
-            <div className="flex-1 min-w-0">
+            <Div className="flex-1 min-w-0">
               {maxLabel && (
                 <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
                   {maxLabel}
                 </Text>
               )}
-              <div className="relative">
+              <Div className="relative">
                 {prefix && (
                   <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-500 pointer-events-none">
                     {prefix}
@@ -281,11 +281,11 @@ export function RangeFilter({
                   }
                   className={cn(inputClass, prefix ? "pl-5" : "")}
                 />
-              </div>
-            </div>
-          </div>
-        </div>
+              </Div>
+            </Div>
+          </Div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

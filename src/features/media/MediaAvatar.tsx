@@ -1,4 +1,5 @@
 import { MediaImage } from "./MediaImage";
+import { Div } from "@mohasinac/ui";
 
 export interface MediaAvatarProps {
   /** Avatar image URL. Shows a 👤 fallback when undefined. */
@@ -25,11 +26,11 @@ export function MediaAvatar({
   className = "",
 }: MediaAvatarProps) {
   return (
-    <div
+    <Div
       className={`relative ${sizeClasses[size]} rounded-full overflow-hidden flex-shrink-0 ${className}`}
     >
       <MediaImage src={src} alt={alt} size="avatar" />
-    </div>
+    </Div>
   );
 }
 

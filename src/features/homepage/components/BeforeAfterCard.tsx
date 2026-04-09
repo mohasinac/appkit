@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { Text } from "@mohasinac/ui";
+import { Div, Span, Text } from "@mohasinac/ui";
 import type { BeforeAfterItem } from "../types";
 
 export interface BeforeAfterCardProps {
@@ -57,8 +57,8 @@ export function BeforeAfterCard({
   }, [dragging, updatePosition]);
 
   return (
-    <div className="border-border overflow-hidden rounded-2xl border bg-card shadow-sm">
-      <div
+    <Div className="border-border overflow-hidden rounded-2xl border bg-card shadow-sm">
+      <Div
         ref={containerRef}
         className="relative aspect-[4/3] cursor-col-resize overflow-hidden select-none"
         onMouseDown={(e) => {
@@ -90,7 +90,7 @@ export function BeforeAfterCard({
         />
 
         {/* Before image — clipped to left of divider */}
-        <div
+        <Div
           className="absolute inset-0 overflow-hidden"
           style={{ width: `${position}%` }}
         >
@@ -101,14 +101,14 @@ export function BeforeAfterCard({
             sizes="(max-width: 640px) 100vw, 50vw"
             className="object-cover"
           />
-        </div>
+        </Div>
 
         {/* Divider */}
-        <div
+        <Div
           className="absolute top-0 bottom-0 z-10 w-0.5 bg-card shadow-md"
           style={{ left: `${position}%` }}
         >
-          <div className="absolute top-1/2 left-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card shadow-lg">
+          <Div className="absolute top-1/2 left-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-card shadow-lg">
             <svg
               width="16"
               height="16"
@@ -124,24 +124,24 @@ export function BeforeAfterCard({
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {/* Labels */}
-        <span className="absolute top-3 left-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
+        <Span className="absolute top-3 left-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
           {beforeLabel}
-        </span>
-        <span className="absolute top-3 right-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
+        </Span>
+        <Span className="absolute top-3 right-3 z-10 rounded-full bg-black/50 px-2.5 py-0.5 text-xs font-medium text-white">
           {afterLabel}
-        </span>
-      </div>
+        </Span>
+      </Div>
 
       {/* Caption */}
-      <div className="p-4">
+      <Div className="p-4">
         <Text className="text-foreground text-sm font-medium">
           {item.caption}
         </Text>
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

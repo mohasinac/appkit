@@ -1,6 +1,6 @@
 import React from "react";
 import type { CategoryItem } from "../types";
-import { Button, Heading, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Text } from "@mohasinac/ui";
 
 interface ConcernCardProps {
   concern: CategoryItem;
@@ -8,7 +8,11 @@ interface ConcernCardProps {
   className?: string;
 }
 
-export function ConcernCard({ concern, onClick, className = "" }: ConcernCardProps) {
+export function ConcernCard({
+  concern,
+  onClick,
+  className = "",
+}: ConcernCardProps) {
   return (
     <Button
       type="button"
@@ -17,14 +21,14 @@ export function ConcernCard({ concern, onClick, className = "" }: ConcernCardPro
       className={`group flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-white p-4 text-center shadow-sm transition hover:border-primary hover:shadow-md ${className}`}
     >
       {concern.display?.coverImage && (
-        <div
+        <Div
           role="img"
           aria-label={concern.name}
           className="h-16 w-16 rounded-full bg-center bg-cover"
           style={{ backgroundImage: `url(${concern.display.coverImage})` }}
         />
       )}
-      <div>
+      <Div>
         <Heading
           level={3}
           className="text-sm font-semibold text-neutral-900 group-hover:text-primary"
@@ -36,7 +40,7 @@ export function ConcernCard({ concern, onClick, className = "" }: ConcernCardPro
             {concern.description}
           </Text>
         )}
-      </div>
+      </Div>
     </Button>
   );
 }

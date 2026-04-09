@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Li, Nav, Ol } from "@mohasinac/ui";
+import { Li, Nav, Ol, Span } from "@mohasinac/ui";
 
 export interface BreadcrumbsProps {
   children: React.ReactNode;
@@ -41,12 +41,12 @@ export function Breadcrumbs({
           <Li key={index} className="flex items-center gap-2">
             {item}
             {index < items.length - 1 && (
-              <span
+              <Span
                 className="text-zinc-400 dark:text-zinc-500 select-none"
                 aria-hidden="true"
               >
                 {separator}
-              </span>
+              </Span>
             )}
           </Li>
         ))}
@@ -63,12 +63,12 @@ export function BreadcrumbItem({
 }: BreadcrumbItemProps) {
   if (current || !href) {
     return (
-      <span
+      <Span
         aria-current={current ? "page" : undefined}
         className={`text-zinc-500 dark:text-zinc-400 ${className}`}
       >
         {children}
-      </span>
+      </Span>
     );
   }
 

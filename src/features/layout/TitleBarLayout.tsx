@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { Button } from "@mohasinac/ui";
+import { BlockHeader, Button, Div, Span } from "@mohasinac/ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -67,21 +67,21 @@ export function TitleBarLayout({
   void searchOpen;
 
   return (
-    <header
+    <BlockHeader
       id={id}
       className={`sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-slate-800/80 ${className}`}
     >
       {/* Promo strip */}
       {promoStripText && (
-        <div className="bg-gradient-to-r from-primary-700 to-blue-700 dark:from-secondary-700 dark:to-blue-700 text-white text-xs py-1 text-center font-medium">
+        <Div className="bg-gradient-to-r from-primary-700 to-blue-700 dark:from-secondary-700 dark:to-blue-700 text-white text-xs py-1 text-center font-medium">
           {promoStripText}
-        </div>
+        </Div>
       )}
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
-        <div className="flex items-center justify-between h-12">
+      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
+        <Div className="flex items-center justify-between h-12">
           {/* Left: hamburger (mobile) + logo */}
-          <div className="flex items-center gap-3">
+          <Div className="flex items-center gap-3">
             <Button
               type="button"
               variant="ghost"
@@ -123,20 +123,20 @@ export function TitleBarLayout({
             >
               {brandShortName ? (
                 <>
-                  <span className="md:hidden">{brandShortName}</span>
-                  <span className="hidden md:inline">{brandName}</span>
+                  <Span className="md:hidden">{brandShortName}</Span>
+                  <Span className="hidden md:inline">{brandName}</Span>
                 </>
               ) : (
                 brandName
               )}
             </Link>
-          </div>
+          </Div>
 
           {/* Centre: nav slot (desktop only) */}
-          {navSlot && <div className="hidden md:flex">{navSlot}</div>}
+          {navSlot && <Div className="hidden md:flex">{navSlot}</Div>}
 
           {/* Right: actions */}
-          <div className="flex items-center gap-1">
+          <Div className="flex items-center gap-1">
             {/* Search toggle */}
             <Button
               type="button"
@@ -233,9 +233,9 @@ export function TitleBarLayout({
                   />
                 </svg>
                 {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
+                  <Span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none">
                     {cartCount > 9 ? "9+" : cartCount}
-                  </span>
+                  </Span>
                 )}
               </Link>
             )}
@@ -277,9 +277,9 @@ export function TitleBarLayout({
                 )}
               </Link>
             )}
-          </div>
-        </div>
-      </div>
-    </header>
+          </Div>
+        </Div>
+      </Div>
+    </BlockHeader>
   );
 }

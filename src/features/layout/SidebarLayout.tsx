@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { Aside } from "@mohasinac/ui";
+import { Aside, Div } from "@mohasinac/ui";
 
 export interface SidebarLayoutProps {
   isOpen: boolean;
@@ -35,7 +35,7 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
       <>
         {/* Backdrop overlay */}
         {isOpen && (
-          <div
+          <Div
             className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[45] transition-opacity duration-300"
             onClick={onClose}
             aria-hidden="true"
@@ -58,14 +58,14 @@ export const SidebarLayout = forwardRef<HTMLElement, SidebarLayoutProps>(
           `}
         >
           {/* Fixed (non-scrolling) header strip */}
-          <div className="flex-shrink-0 px-6 py-5 border-b border-zinc-200 dark:border-slate-800 bg-zinc-50 dark:bg-slate-900/80">
+          <Div className="flex-shrink-0 px-6 py-5 border-b border-zinc-200 dark:border-slate-800 bg-zinc-50 dark:bg-slate-900/80">
             {header}
-          </div>
+          </Div>
 
           {/* Scrollable body */}
-          <div className="flex-1 overflow-y-auto scrollbar-thin px-6 py-4">
+          <Div className="flex-1 overflow-y-auto scrollbar-thin px-6 py-4">
             {children}
-          </div>
+          </Div>
         </Aside>
       </>
     );

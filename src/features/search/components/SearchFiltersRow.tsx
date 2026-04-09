@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Label, Select } from "@mohasinac/ui";
+import { Button, Div, Input, Label, Select, Span } from "@mohasinac/ui";
 import type { SearchCategoryOption } from "../types";
 
 interface SearchFiltersRowProps {
@@ -49,9 +49,9 @@ export function SearchFiltersRow({
   };
 
   return (
-    <div className="flex flex-wrap gap-4 items-end">
+    <Div className="flex flex-wrap gap-4 items-end">
       {/* Category filter */}
-      <div className="flex flex-col gap-1">
+      <Div className="flex flex-col gap-1">
         <Label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {L.categoryFilter}
         </Label>
@@ -64,14 +64,14 @@ export function SearchFiltersRow({
           ]}
           className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
         />
-      </div>
+      </Div>
 
       {/* Price range */}
-      <div className="flex flex-col gap-1">
+      <Div className="flex flex-col gap-1">
         <Label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {L.priceRange}
         </Label>
-        <div className="flex items-center gap-2">
+        <Div className="flex items-center gap-2">
           <Input
             type="number"
             min={0}
@@ -80,7 +80,7 @@ export function SearchFiltersRow({
             placeholder={L.minPrice}
             className="w-28 rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
           />
-          <span className="text-sm text-zinc-500 dark:text-zinc-400">–</span>
+          <Span className="text-sm text-zinc-500 dark:text-zinc-400">–</Span>
           <Input
             type="number"
             min={0}
@@ -98,8 +98,8 @@ export function SearchFiltersRow({
           >
             {L.apply}
           </Button>
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {/* Clear filters */}
       {showClear && (
@@ -113,6 +113,6 @@ export function SearchFiltersRow({
           {L.clearFilters}
         </Button>
       )}
-    </div>
+    </Div>
   );
 }

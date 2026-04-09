@@ -1,4 +1,5 @@
 import React from "react";
+import { Div, Span } from "@mohasinac/ui";
 import {
   cn,
   INPUT_BASE,
@@ -32,19 +33,19 @@ export function Select({
   ...props
 }: SelectProps) {
   return (
-    <div className="w-full">
+    <Div className="w-full">
       {label && (
         <label className={LABEL_BASE}>
           {label}
           {required && (
-            <span className="text-red-500 ml-1" aria-hidden="true">
+            <Span className="text-red-500 ml-1" aria-hidden="true">
               *
-            </span>
+            </Span>
           )}
         </label>
       )}
 
-      <div className="relative group">
+      <Div className="relative group">
         <select
           className={cn(
             INPUT_BASE,
@@ -68,7 +69,7 @@ export function Select({
         </select>
 
         {/* Chevron icon */}
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-150">
+        <Div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-colors duration-150">
           <svg
             className={cn(
               "w-5 h-5 transition-transform duration-200",
@@ -86,8 +87,8 @@ export function Select({
               clipRule="evenodd"
             />
           </svg>
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {error && (
         <p className={ERROR_BASE} role="alert">
@@ -95,6 +96,6 @@ export function Select({
         </p>
       )}
       {!error && helperText && <p className={HELPER_BASE}>{helperText}</p>}
-    </div>
+    </Div>
   );
 }

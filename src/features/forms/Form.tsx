@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Div } from "@mohasinac/ui";
 import { cn } from "./utils";
 
 // ─── Form ─────────────────────────────────────────────────────────────────────
@@ -51,9 +52,9 @@ export function FormGroup({
   };
 
   return (
-    <div className={cn("grid", gridClasses[columns], GAP_MAP[gap], className)}>
+    <Div className={cn("grid", gridClasses[columns], GAP_MAP[gap], className)}>
       {children}
-    </div>
+    </Div>
   );
 }
 
@@ -67,7 +68,7 @@ export function FormFieldSpan({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("col-span-full", className)}>{children}</div>;
+  return <Div className={cn("col-span-full", className)}>{children}</Div>;
 }
 
 // ─── FormActions ─────────────────────────────────────────────────────────────
@@ -91,7 +92,7 @@ export function FormActions({
   className = "",
 }: FormActionsProps) {
   return (
-    <div
+    <Div
       className={cn(
         "flex items-center gap-3 pt-2",
         ALIGN_MAP[align],
@@ -99,6 +100,6 @@ export function FormActions({
       )}
     >
       {children}
-    </div>
+    </Div>
   );
 }

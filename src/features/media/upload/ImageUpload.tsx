@@ -14,6 +14,7 @@ import { useCamera } from "@mohasinac/react";
 import {
   Alert,
   Button,
+  Div,
   Label,
   Progress,
   Span,
@@ -168,27 +169,27 @@ export function ImageUpload({
   };
 
   return (
-    <div className="space-y-3">
+    <Div className="space-y-3">
       {label && (
         <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
           {label}
         </Label>
       )}
 
-      <div className="relative">
+      <Div className="relative">
         {preview ? (
-          <div className="space-y-2">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border-2 border-zinc-200 dark:border-zinc-700">
+          <Div className="space-y-2">
+            <Div className="relative aspect-[16/9] overflow-hidden rounded-xl border-2 border-zinc-200 dark:border-zinc-700">
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
-                <div className="absolute inset-x-0 bottom-0">
+                <Div className="absolute inset-x-0 bottom-0">
                   <Progress value={progress} size="sm" />
-                </div>
+                </Div>
               )}
-            </div>
+            </Div>
 
             {!uploading && (
-              <div className="flex flex-wrap gap-2">
+              <Div className="flex flex-wrap gap-2">
                 {enableCrop && (
                   <Button
                     type="button"
@@ -218,13 +219,13 @@ export function ImageUpload({
                 >
                   {tUpload("remove")}
                 </Button>
-              </div>
+              </Div>
             )}
-          </div>
+          </Div>
         ) : (
           <>
             {captureSource === "both" && isCameraSupported && (
-              <div className="flex items-center justify-center gap-2 mb-3">
+              <Div className="flex items-center justify-center gap-2 mb-3">
                 <Button
                   type="button"
                   variant={captureMode === "file" ? "primary" : "outline"}
@@ -241,7 +242,7 @@ export function ImageUpload({
                 >
                   {t("switchToCamera")}
                 </Button>
-              </div>
+              </Div>
             )}
 
             {showCamera && isCameraSupported && (
@@ -303,7 +304,7 @@ export function ImageUpload({
             )}
           </>
         )}
-      </div>
+      </Div>
 
       <input
         ref={fileInputRef}
@@ -335,12 +336,12 @@ export function ImageUpload({
       {error && <Alert variant="error">{error}</Alert>}
 
       {uploading && (
-        <div className="flex items-center gap-2">
+        <Div className="flex items-center gap-2">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploadingProgress", { progress })}
           </Text>
-        </div>
+        </Div>
       )}
 
       {cropPreviewUrl && (
@@ -351,6 +352,6 @@ export function ImageUpload({
           onSave={handleCropSave}
         />
       )}
-    </div>
+    </Div>
   );
 }

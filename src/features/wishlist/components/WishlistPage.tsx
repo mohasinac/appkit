@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text } from "@mohasinac/ui";
+import { Button, Div, Text } from "@mohasinac/ui";
 import type { WishlistItem } from "../types";
 
 interface WishlistCardProps {
@@ -14,8 +14,8 @@ export function WishlistCard({
   onProductClick,
 }: WishlistCardProps) {
   return (
-    <div className="flex gap-4 rounded-xl border border-neutral-200 bg-white p-4">
-      <div
+    <Div className="flex gap-4 rounded-xl border border-neutral-200 bg-white p-4">
+      <Div
         role={onProductClick ? "button" : undefined}
         tabIndex={onProductClick ? 0 : undefined}
         onClick={onProductClick ? () => onProductClick(item) : undefined}
@@ -27,15 +27,15 @@ export function WishlistCard({
         className={`h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 ${onProductClick ? "cursor-pointer" : ""}`}
       >
         {item.productImage && (
-          <div
+          <Div
             role="img"
             aria-label={item.productTitle ?? ""}
             className="h-full w-full bg-center bg-cover"
             style={{ backgroundImage: `url(${item.productImage})` }}
           />
         )}
-      </div>
-      <div className="flex flex-1 flex-col justify-between">
+      </Div>
+      <Div className="flex flex-1 flex-col justify-between">
         <Text className="font-medium text-neutral-900 line-clamp-2">
           {item.productTitle}
         </Text>
@@ -45,7 +45,7 @@ export function WishlistCard({
             {item.productPrice.toLocaleString()}
           </Text>
         )}
-      </div>
+      </Div>
       {onRemove && (
         <Button
           type="button"
@@ -58,7 +58,7 @@ export function WishlistCard({
           ✕
         </Button>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -79,20 +79,20 @@ export function WishlistPage({
 }: WishlistPageProps) {
   if (isLoading) {
     return (
-      <div className="space-y-4">
+      <Div className="space-y-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="flex animate-pulse gap-4 rounded-xl border border-neutral-200 p-4"
           >
-            <div className="h-20 w-20 rounded-lg bg-neutral-200" />
-            <div className="flex-1 space-y-2">
-              <div className="h-4 w-3/4 rounded bg-neutral-200" />
-              <div className="h-4 w-1/3 rounded bg-neutral-200" />
-            </div>
-          </div>
+            <Div className="h-20 w-20 rounded-lg bg-neutral-200" />
+            <Div className="flex-1 space-y-2">
+              <Div className="h-4 w-3/4 rounded bg-neutral-200" />
+              <Div className="h-4 w-1/3 rounded bg-neutral-200" />
+            </Div>
+          </Div>
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -103,7 +103,7 @@ export function WishlistPage({
   }
 
   return (
-    <div className="space-y-4">
+    <Div className="space-y-4">
       {items.map((item) => (
         <WishlistCard
           key={item.id}
@@ -112,6 +112,6 @@ export function WishlistPage({
           onProductClick={onProductClick}
         />
       ))}
-    </div>
+    </Div>
   );
 }

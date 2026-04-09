@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import type { LinkProps } from "next/link";
+import { Li, Span } from "@mohasinac/ui";
 
 export interface BottomNavItemProps {
   href: string;
@@ -41,7 +40,7 @@ export function BottomNavItem({
   // Use a plain anchor so this component stays framework-agnostic.
   // Consumer projects may swap for next/link if preferred.
   return (
-    <li className="flex-1">
+    <Li className="flex-1">
       <a
         href={href}
         aria-label={label}
@@ -52,19 +51,19 @@ export function BottomNavItem({
             : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
         }${className ? ` ${className}` : ""}`}
       >
-        <span className="relative">
+        <Span className="relative">
           {icon}
           {badge != null && badge > 0 && (
-            <span
+            <Span
               aria-label={`${badge} items`}
               className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[10px] font-bold bg-secondary-500 text-white flex items-center justify-center leading-none"
             >
               {badge > 99 ? "99+" : badge}
-            </span>
+            </Span>
           )}
-        </span>
-        <span className="text-[10px] font-medium leading-none">{label}</span>
+        </Span>
+        <Span className="text-[10px] font-medium leading-none">{label}</Span>
       </a>
-    </li>
+    </Li>
   );
 }

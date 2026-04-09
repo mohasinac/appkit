@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
-import { Article, Button, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
 
 interface AuctionCountdownProps {
   endsAt: string;
@@ -46,7 +46,7 @@ export function AuctionCountdown({
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className={`flex items-center gap-1 text-sm font-mono ${className}`}>
+    <Div className={`flex items-center gap-1 text-sm font-mono ${className}`}>
       <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
         {pad(countdown.h)}
       </Span>
@@ -58,7 +58,7 @@ export function AuctionCountdown({
       <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
         {pad(countdown.s)}
       </Span>
-    </div>
+    </Div>
   );
 }
 
@@ -89,8 +89,8 @@ export function AuctionCard({
       className={`rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {auction.mainImage && (
-        <div className="aspect-square overflow-hidden relative">
-          <div
+        <Div className="aspect-square overflow-hidden relative">
+          <Div
             role="img"
             aria-label={auction.title}
             className="h-full w-full bg-center bg-cover"
@@ -99,9 +99,9 @@ export function AuctionCard({
           <Span className="absolute top-2 left-2 rounded-full bg-orange-500 px-2 py-0.5 text-xs font-bold text-white">
             AUCTION
           </Span>
-        </div>
+        </Div>
       )}
-      <div className="p-4">
+      <Div className="p-4">
         <Heading
           level={3}
           className="font-semibold text-gray-900 text-sm leading-snug mb-2 line-clamp-2"
@@ -109,28 +109,28 @@ export function AuctionCard({
           {auction.title}
         </Heading>
 
-        <div className="flex items-center justify-between mb-2">
-          <div>
+        <Div className="flex items-center justify-between mb-2">
+          <Div>
             <Text className="text-xs text-gray-400">
               {labels.currentBid ?? "Current bid"}
             </Text>
             <Text className="text-base font-bold text-gray-900">
               {auction.currency} {displayBid.toLocaleString()}
             </Text>
-          </div>
-          <div className="text-right">
+          </Div>
+          <Div className="text-right">
             <Text className="text-xs text-gray-400">
               {auction.bidCount} {labels.bids ?? "bids"}
             </Text>
-          </div>
-        </div>
+          </Div>
+        </Div>
 
-        <div className="mb-3">
+        <Div className="mb-3">
           <AuctionCountdown
             endsAt={auction.auctionEndDate}
             labels={{ ended: labels.ended }}
           />
-        </div>
+        </Div>
 
         {!hasEnded && onBid && (
           <Button
@@ -142,7 +142,7 @@ export function AuctionCard({
             {labels.placeBid ?? "Place Bid"}
           </Button>
         )}
-      </div>
+      </Div>
     </Article>
   );
 }

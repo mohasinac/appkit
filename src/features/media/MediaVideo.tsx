@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { Div, Span } from "@mohasinac/ui";
 
 export interface MediaVideoProps {
   /** Video URL. When undefined the fallback placeholder is rendered. */
@@ -64,13 +65,13 @@ export function MediaVideo({
 
   if (!src) {
     return (
-      <div
+      <Div
         className="absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl"
         role="img"
         aria-label={alt}
       >
-        <span aria-hidden="true">🎬</span>
-      </div>
+        <Span aria-hidden="true">🎬</Span>
+      </Div>
     );
   }
 

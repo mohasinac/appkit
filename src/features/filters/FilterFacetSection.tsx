@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Input, Span, Text } from "@mohasinac/ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
@@ -72,14 +72,14 @@ export function FilterFacetSection({
   const hasValue = selected.length > 0;
 
   return (
-    <div
+    <Div
       className={cn(
         "p-4 border-b border-zinc-200 dark:border-slate-700 last:border-b-0",
         className,
       )}
     >
       {/* Header */}
-      <div className="flex items-center gap-2">
+      <Div className="flex items-center gap-2">
         <Button
           type="button"
           onClick={handleToggle}
@@ -88,14 +88,14 @@ export function FilterFacetSection({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <span className="flex items-center gap-2">
+          <Span className="flex items-center gap-2">
             {title}
             {hasValue && (
               <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
                 {selected.length}
               </Span>
             )}
-          </span>
+          </Span>
           <svg
             className={cn(
               "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
@@ -139,10 +139,10 @@ export function FilterFacetSection({
             </svg>
           </Button>
         )}
-      </div>
+      </Div>
 
       {!isCollapsed && (
-        <div className="mt-3 space-y-1">
+        <Div className="mt-3 space-y-1">
           {searchable && options.length > 8 && (
             <Input
               type="search"
@@ -155,7 +155,7 @@ export function FilterFacetSection({
           {filtered.map((option) => {
             const isSelected = selected.includes(option.value);
             return (
-              <div
+              <Div
                 key={option.value}
                 className="flex items-center gap-2.5 py-1 cursor-pointer group"
               >
@@ -190,7 +190,7 @@ export function FilterFacetSection({
                     {option.count}
                   </Span>
                 )}
-              </div>
+              </Div>
             );
           })}
           {filtered.length === 0 && (
@@ -198,8 +198,8 @@ export function FilterFacetSection({
               No results
             </Text>
           )}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

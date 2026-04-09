@@ -9,7 +9,7 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Modal, Spinner, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Spinner, Text } from "@mohasinac/ui";
 
 export interface VideoThumbnailSelectorProps {
   isOpen: boolean;
@@ -69,13 +69,13 @@ export function VideoThumbnailSelector({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={t("thumbnailTitle")} size="lg">
-      <div className="space-y-4">
+      <Div className="space-y-4">
         <Text variant="secondary" className="text-xs">
           {t("thumbnailInstruction")}
         </Text>
 
         {/* Video player — raw <video> required: needs ref for videoWidth/videoHeight */}
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
+        <Div className="relative aspect-video overflow-hidden rounded-lg bg-black">
           <video
             ref={videoRef}
             src={videoUrl}
@@ -83,14 +83,14 @@ export function VideoThumbnailSelector({
             controls
             preload="metadata"
           />
-        </div>
+        </Div>
 
         {/* Hidden canvas for frame capture */}
         <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
 
         {error && <Alert variant="error">{error}</Alert>}
 
-        <div className="flex items-center justify-end gap-2">
+        <Div className="flex items-center justify-end gap-2">
           <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isCapturing}>
             {t("thumbnailSkip")}
           </Button>
@@ -102,16 +102,16 @@ export function VideoThumbnailSelector({
             disabled={isCapturing}
           >
             {isCapturing ? (
-              <span className="flex items-center gap-2">
+              <Span className="flex items-center gap-2">
                 <Spinner size="sm" />
                 {t("thumbnailCapturing")}
-              </span>
+              </Span>
             ) : (
               t("thumbnailCapture")
             )}
           </Button>
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Modal>
   );
 }

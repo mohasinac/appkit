@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Div, Span } from "@mohasinac/ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface RadioOption {
@@ -33,9 +34,9 @@ export function RadioGroup({
 }: RadioGroupProps) {
   if (variant === "classic") {
     return (
-      <div className="w-full">
+      <Div className="w-full">
         {label && <p className={LABEL_BASE}>{label}</p>}
-        <div
+        <Div
           className={cn(
             "flex gap-3",
             orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
@@ -60,27 +61,27 @@ export function RadioGroup({
                   onChange={() => !option.disabled && onChange?.(option.value)}
                   className="w-4 h-4 text-primary-600 dark:text-secondary-500 border-zinc-300 dark:border-slate-600 focus:ring-primary-500/30 dark:focus:ring-secondary-400/30"
                 />
-                <span className="text-sm text-zinc-700 dark:text-zinc-300">
+                <Span className="text-sm text-zinc-700 dark:text-zinc-300">
                   {option.label}
-                </span>
+                </Span>
               </label>
             );
           })}
-        </div>
+        </Div>
         {error && (
           <p className={ERROR_BASE} role="alert">
             {error}
           </p>
         )}
-      </div>
+      </Div>
     );
   }
 
   // Toggle variant — pill style
   return (
-    <div className="w-full">
+    <Div className="w-full">
       {label && <p className={LABEL_BASE}>{label}</p>}
-      <div
+      <Div
         className={cn(
           "flex gap-2",
           orientation === "vertical" ? "flex-col" : "flex-row flex-wrap",
@@ -114,12 +115,12 @@ export function RadioGroup({
             </label>
           );
         })}
-      </div>
+      </Div>
       {error && (
         <p className={ERROR_BASE} role="alert">
           {error}
         </p>
       )}
-    </div>
+    </Div>
   );
 }

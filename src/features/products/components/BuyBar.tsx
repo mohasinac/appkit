@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Div } from "@mohasinac/ui";
 
 export interface BuyBarProps {
   children: React.ReactNode;
@@ -24,12 +25,12 @@ export interface BuyBarProps {
  */
 export function BuyBar({ children, className }: BuyBarProps) {
   return (
-    <div
+    <Div
       className={`fixed bottom-16 inset-x-0 z-40 flex items-center gap-2 px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-100 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]${className ? ` ${className}` : ""}`}
       role="region"
       aria-label="Purchase actions"
     >
       {children}
-    </div>
+    </Div>
   );
 }

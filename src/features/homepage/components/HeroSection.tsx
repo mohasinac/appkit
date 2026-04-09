@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Heading, Section, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Section, Text } from "@mohasinac/ui";
 import type { HomepageSection } from "../types";
 
 interface HeroSectionProps {
@@ -22,8 +22,8 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
           : undefined
       }
     >
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative mx-auto max-w-7xl px-4 py-16 text-center text-white sm:px-6 lg:px-8">
+      <Div className="absolute inset-0 bg-black/40" />
+      <Div className="relative mx-auto max-w-7xl px-4 py-16 text-center text-white sm:px-6 lg:px-8">
         {content?.title && (
           <Heading
             level={1}
@@ -45,7 +45,7 @@ export function HeroSection({ section, onCtaClick }: HeroSectionProps) {
             {content.ctaLabel}
           </Button>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

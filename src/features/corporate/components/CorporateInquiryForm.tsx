@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button, Input, Text, Textarea } from "@mohasinac/ui";
+import { Button, Div, Input, Text, Textarea } from "@mohasinac/ui";
 import type { SubmitCorporateInquiryInput } from "../types";
 
 interface CorporateInquiryFormProps {
@@ -49,7 +49,7 @@ export function CorporateInquiryForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <Div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input
           name="companyName"
           type="text"
@@ -121,8 +121,8 @@ export function CorporateInquiryForm({
           onChange={handleChange}
           className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
         />
-      </div>
-      <div className="flex items-center gap-2 text-sm text-neutral-700">
+      </Div>
+      <Div className="flex items-center gap-2 text-sm text-neutral-700">
         <input
           name="customBranding"
           type="checkbox"
@@ -133,7 +133,7 @@ export function CorporateInquiryForm({
         <Text className="text-sm text-neutral-700">
           Custom branding required
         </Text>
-      </div>
+      </Div>
       <Textarea
         name="message"
         placeholder="Additional requirements (optional)"

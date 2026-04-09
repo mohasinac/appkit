@@ -1,4 +1,5 @@
 import React from "react";
+import { Div, Span } from "@mohasinac/ui";
 import { cn, ERROR_BASE } from "./utils";
 
 export interface CheckboxProps extends Omit<
@@ -29,9 +30,9 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-    <div className="w-full">
+    <Div className="w-full">
       <label className="flex flex-row items-center gap-3 cursor-pointer group">
-        <div className="relative flex items-center justify-center flex-shrink-0">
+          <Div className="relative flex items-center justify-center flex-shrink-0">
           <input
             ref={inputRef}
             type="checkbox"
@@ -79,13 +80,13 @@ export function Checkbox({
               />
             )}
           </svg>
-        </div>
+          </Div>
 
         {(label || suffix) && (
-          <span className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">
+          <Span className="flex items-center gap-2 text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">
             {label}
             {suffix}
-          </span>
+          </Span>
         )}
       </label>
 
@@ -94,6 +95,6 @@ export function Checkbox({
           {error}
         </p>
       )}
-    </div>
+    </Div>
   );
 }

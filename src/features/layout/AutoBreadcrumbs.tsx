@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Li, Nav, Ol } from "@mohasinac/ui";
+import { Li, Nav, Ol, Span } from "@mohasinac/ui";
 
 /** Map of path segments → human-readable labels. */
 const DEFAULT_PATH_LABELS: Record<string, string> = {
@@ -108,12 +108,12 @@ export function AutoBreadcrumbs({
           return (
             <Li key={crumb.href} className="flex items-center gap-2">
               {isLast ? (
-                <span
+                <Span
                   aria-current="page"
                   className="text-zinc-500 dark:text-zinc-400"
                 >
                   {crumb.label}
-                </span>
+                </Span>
               ) : renderLink ? (
                 renderLink(crumb.href, crumb.label)
               ) : (
@@ -125,12 +125,12 @@ export function AutoBreadcrumbs({
                 </Link>
               )}
               {!isLast && (
-                <span
+                <Span
                   className="text-zinc-400 dark:text-zinc-500 select-none"
                   aria-hidden="true"
                 >
                   {separator}
-                </span>
+                </Span>
               )}
             </Li>
           );

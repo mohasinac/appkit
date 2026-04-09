@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "@mohasinac/ui";
 import type { FAQ, FAQCategory } from "../types";
 
 interface FAQAccordionItemProps {
@@ -10,7 +10,7 @@ interface FAQAccordionItemProps {
 
 function FAQAccordionItem({ faq, isOpen, onToggle }: FAQAccordionItemProps) {
   return (
-    <div className="border-b border-neutral-200 last:border-0">
+    <Div className="border-b border-neutral-200 last:border-0">
       <Button
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -38,18 +38,18 @@ function FAQAccordionItem({ faq, isOpen, onToggle }: FAQAccordionItemProps) {
         </Span>
       </Button>
       {isOpen && (
-        <div className="pb-4 text-sm text-neutral-600">
+        <Div className="pb-4 text-sm text-neutral-600">
           {faq.answer.format === "html" ? (
-            <div
+            <Div
               className="prose prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: faq.answer.text }}
             />
           ) : (
             <Text className="whitespace-pre-line">{faq.answer.text}</Text>
           )}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -62,7 +62,7 @@ export function FAQAccordion({ faqs, className = "" }: FAQAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <div
+    <Div
       className={`divide-y divide-neutral-100 rounded-xl border border-neutral-200 bg-white px-5 ${className}`}
     >
       {faqs.map((faq) => (
@@ -73,7 +73,7 @@ export function FAQAccordion({ faqs, className = "" }: FAQAccordionProps) {
           onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
         />
       ))}
-    </div>
+    </Div>
   );
 }
 
@@ -91,7 +91,7 @@ export function FAQCategoryTabs({
   labels = {},
 }: FAQCategoryTabsProps) {
   return (
-    <div className="scrollbar-none flex flex-wrap gap-2">
+    <Div className="scrollbar-none flex flex-wrap gap-2">
       <Button
         onClick={() => onSelect(null)}
         className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
@@ -107,6 +107,6 @@ export function FAQCategoryTabs({
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>
       ))}
-    </div>
+    </Div>
   );
 }

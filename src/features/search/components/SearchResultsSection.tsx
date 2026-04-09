@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Select, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Select, Span, Text } from "@mohasinac/ui";
 import type { SearchProductItem } from "../types";
 
 export interface SearchResultsSectionProps {
@@ -55,20 +55,20 @@ export function SearchResultsSection({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
         {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="aspect-square rounded-xl bg-zinc-100 dark:bg-slate-800 animate-pulse"
           />
         ))}
-      </div>
+      </Div>
     );
   }
 
   if (products.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+      <Div className="flex flex-col items-center justify-center py-20 text-center gap-3">
         <Span className="text-5xl" aria-hidden="true">
           🔍
         </Span>
@@ -80,14 +80,14 @@ export function SearchResultsSection({
             {L.noResultsSubtitle}
           </Text>
         )}
-      </div>
+      </Div>
     );
   }
 
   return (
-    <div className="space-y-5">
+    <Div className="space-y-5">
       {/* Sort + count bar */}
-      <div className="flex items-center justify-between">
+      <Div className="flex items-center justify-between">
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">
           {L.showing(products.length, total)}
         </Text>
@@ -99,18 +99,18 @@ export function SearchResultsSection({
             className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
           />
         )}
-      </div>
+      </Div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
         {products.map((p) => (
-          <div key={p.id}>{renderItem(p)}</div>
+          <Div key={p.id}>{renderItem(p)}</Div>
         ))}
-      </div>
+      </Div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 pt-4">
+        <Div className="flex items-center justify-center gap-2 pt-4">
           <Button
             type="button"
             variant="outline"
@@ -134,8 +134,8 @@ export function SearchResultsSection({
           >
             {L.nextPage}
           </Button>
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

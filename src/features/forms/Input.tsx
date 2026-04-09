@@ -1,4 +1,5 @@
 import React from "react";
+import { Div, Span } from "@mohasinac/ui";
 import {
   cn,
   INPUT_BASE,
@@ -45,21 +46,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           : "";
 
     return (
-      <div className="w-full">
+      <Div className="w-full">
         {label && (
           <label className={LABEL_BASE}>
             {label}
             {required && (
-              <span className="text-red-500 ml-1" aria-hidden="true">
+              <Span className="text-red-500 ml-1" aria-hidden="true">
                 *
-              </span>
+              </Span>
             )}
           </label>
         )}
 
-        <div className="relative group">
+        <Div className="relative group">
           {icon && (
-            <div
+            <Div
               className={cn(
                 "absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
@@ -69,7 +70,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               )}
             >
               {icon}
-            </div>
+            </Div>
           )}
 
           <input
@@ -95,7 +96,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
 
           {rightIcon && (
-            <div
+            <Div
               className={cn(
                 "absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
@@ -104,9 +105,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               )}
             >
               {rightIcon}
-            </div>
+            </Div>
           )}
-        </div>
+        </Div>
 
         {error && (
           <p id={`${props.id}-error`} className={ERROR_BASE} role="alert">
@@ -118,7 +119,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {helperText}
           </p>
         )}
-      </div>
+      </Div>
     );
   },
 );

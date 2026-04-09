@@ -1,4 +1,4 @@
-import { Heading, Section, StarRating, Text } from "@mohasinac/ui";
+import { Div, Heading, Section, StarRating, Text } from "@mohasinac/ui";
 import type { Testimonial } from "../types";
 
 export interface TestimonialsCarouselProps {
@@ -29,12 +29,12 @@ export function TestimonialsCarousel({
         paddingBlock: "clamp(3rem, 6vh, 5rem)",
       }}
     >
-      <div
+      <Div
         className="mx-auto w-full max-w-7xl px-6 sm:px-8 flex flex-col"
         style={{ minHeight: 0 }}
       >
         {/* Heading */}
-        <div className="mb-6 text-center" style={{ flexShrink: 0 }}>
+        <Div className="mb-6 text-center" style={{ flexShrink: 0 }}>
           <Text
             className="mb-1 text-xs font-black uppercase tracking-widest"
             style={{ color: "var(--color-red)", letterSpacing: "0.18em" }}
@@ -53,15 +53,15 @@ export function TestimonialsCarousel({
           >
             {heading}
           </Heading>
-        </div>
+        </Div>
 
         {/* 2-row masonry grid — wraps into 2 rows, scrolls horizontally on overflow */}
-        <div
+        <Div
           className="flex flex-col flex-wrap gap-4 overflow-x-auto scrollbar-none"
           style={{ maxHeight: "50svh", alignContent: "flex-start" }}
         >
           {testimonials.map((t) => (
-            <div
+            <Div
               key={t.id}
               className="flex shrink-0 flex-col gap-3 p-5"
               style={{
@@ -87,10 +87,10 @@ export function TestimonialsCarousel({
               >
                 — {t.name}
               </Text>
-            </div>
+            </Div>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Section>
   );
 }

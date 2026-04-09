@@ -1,4 +1,5 @@
 import React from "react";
+import { Span } from "@mohasinac/ui";
 import type { EventStatus } from "../types";
 
 const STATUS_MAP: Record<EventStatus, { label: string; color: string }> = {
@@ -19,10 +20,10 @@ export function EventStatusBadge({
 }: EventStatusBadgeProps) {
   const { label, color } = STATUS_MAP[status] ?? STATUS_MAP.draft;
   return (
-    <span
+    <Span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${color} ${className}`}
     >
       {label}
-    </span>
+    </Span>
   );
 }

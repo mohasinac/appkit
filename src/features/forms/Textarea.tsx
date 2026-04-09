@@ -1,4 +1,5 @@
 import React from "react";
+import { Div, Span } from "@mohasinac/ui";
 import {
   cn,
   INPUT_BASE,
@@ -39,14 +40,14 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           : 0;
 
     return (
-      <div className="w-full">
+      <Div className="w-full">
         {label && (
           <label className={LABEL_BASE}>
             {label}
             {required && (
-              <span className="text-red-500 ml-1" aria-hidden="true">
+              <Span className="text-red-500 ml-1" aria-hidden="true">
                 *
-              </span>
+              </Span>
             )}
           </label>
         )}
@@ -66,8 +67,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
 
-        <div className="flex items-center justify-between mt-1.5">
-          <div className="flex-1">
+        <Div className="flex items-center justify-between mt-1.5">
+          <Div className="flex-1">
             {error && (
               <p className={ERROR_BASE} role="alert">
                 {error}
@@ -76,7 +77,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             {!error && helperText && (
               <p className={HELPER_BASE}>{helperText}</p>
             )}
-          </div>
+          </Div>
           {showCharCount && maxLength && (
             <p
               className={cn(
@@ -89,8 +90,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               {charCount} / {maxLength}
             </p>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
     );
   },
 );

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { Button, Heading, Li, Span, Text, Ul } from "@mohasinac/ui";
+import { BlockFooter, Button, Div, Heading, Li, Span, Text, Ul } from "@mohasinac/ui";
 
 export interface FooterLinkGroup {
   heading: string;
@@ -63,42 +63,42 @@ export function FooterLayout({
   );
 
   return (
-    <footer
+    <BlockFooter
       id={id}
       className="bg-zinc-50 dark:bg-slate-900 border-t border-zinc-200 dark:border-slate-800"
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
-        <div className="border-b border-zinc-200 dark:border-slate-800 py-6">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
+        <Div className="border-b border-zinc-200 dark:border-slate-800 py-6">
+          <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
             <Ul className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
               {visibleTrustItems.map((item) => (
                 <Li
                   key={item.id}
                   className="flex items-center gap-3 text-sm min-w-[160px]"
                 >
-                  <span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
+                  <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
                     {item.icon}
-                  </span>
-                  <span>
+                  </Span>
+                  <Span>
                     <Span className="font-semibold text-zinc-900 dark:text-zinc-100">
                       {item.title}
                     </Span>
                     <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
                       {item.subtitle}
                     </Span>
-                  </span>
+                  </Span>
                 </Li>
               ))}
             </Ul>
-          </div>
-        </div>
+          </Div>
+        </Div>
       )}
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] py-10 lg:py-14">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
+      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] py-10 lg:py-14">
+        <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
-          <div className="lg:col-span-2 space-y-4">
+          <Div className="lg:col-span-2 space-y-4">
             <Heading level={5} className="text-zinc-900 dark:text-zinc-100">
               {brandName}
             </Heading>
@@ -127,14 +127,14 @@ export function FooterLayout({
 
             {/* Newsletter slot */}
             {newsletterEnabled && newsletterSlot && (
-              <div className="pt-2">{newsletterSlot}</div>
+              <Div className="pt-2">{newsletterSlot}</Div>
             )}
-          </div>
+          </Div>
 
           {/* Link groups — desktop: columns, mobile: accordions */}
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-8">
+          <Div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-8">
             {linkGroups.map((group, idx) => (
-              <div key={idx}>
+              <Div key={idx}>
                 {/* Mobile accordion header */}
                 <Button
                   type="button"
@@ -166,7 +166,7 @@ export function FooterLayout({
                 </Ul>
 
                 {/* Desktop column */}
-                <div className="hidden sm:block">
+                <Div className="hidden sm:block">
                   <Text className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
                     {group.heading}
                   </Text>
@@ -182,14 +182,14 @@ export function FooterLayout({
                       </Li>
                     ))}
                   </Ul>
-                </div>
-              </div>
+                </Div>
+              </Div>
             ))}
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {/* Bottom bar */}
-        <div className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+        <Div className="mt-10 pt-6 border-t border-zinc-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-zinc-600 dark:text-zinc-400">
           <Text className="text-xs text-zinc-600 dark:text-zinc-400">
             {copyrightText}
           </Text>
@@ -198,8 +198,8 @@ export function FooterLayout({
               {madeInText}
             </Text>
           )}
-        </div>
-      </div>
-    </footer>
+        </Div>
+      </Div>
+    </BlockFooter>
   );
 }

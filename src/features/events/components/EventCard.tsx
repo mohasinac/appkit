@@ -1,5 +1,5 @@
 import React from "react";
-import { Article, Button, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
 import type { EventItem, EventType } from "../types";
 import { EventStatusBadge } from "./EventStatusBadge";
 
@@ -38,22 +38,22 @@ export function EventCard({
       className={`flex flex-col h-full rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {event.coverImageUrl && (
-        <div className="aspect-video overflow-hidden">
-          <div
+        <Div className="aspect-video overflow-hidden">
+          <Div
             role="img"
             aria-label={event.title}
             className="h-full w-full bg-cover bg-center"
             style={{ backgroundImage: `url(${event.coverImageUrl})` }}
           />
-        </div>
+        </Div>
       )}
-      <div className="p-4 flex-1 flex flex-col">
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <Div className="p-4 flex-1 flex flex-col">
+        <Div className="flex items-start justify-between gap-2 mb-2">
           <Span className="text-lg" aria-hidden="true">
             {TYPE_ICONS[event.type]}
           </Span>
           <EventStatusBadge status={event.status} />
-        </div>
+        </Div>
         <Heading
           level={3}
           className="font-semibold text-gray-900 text-base leading-snug mb-1"
@@ -64,14 +64,14 @@ export function EventCard({
           {event.description}
         </Text>
 
-        <div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+        <Div className="flex items-center justify-between text-xs text-gray-400 mb-3">
           {event.status === "active" && daysLeft > 0 && (
             <Span>{daysLeft}d remaining</Span>
           )}
           <Span>
             {event.stats.totalEntries} {labels.entries ?? "entries"}
           </Span>
-        </div>
+        </Div>
 
         {event.status === "active" && onParticipate && (
           <Button
@@ -82,7 +82,7 @@ export function EventCard({
             {labels.participate ?? "Participate"}
           </Button>
         )}
-      </div>
+      </Div>
     </Article>
   );
 }

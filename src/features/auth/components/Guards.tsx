@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "@mohasinac/ui";
 import type { UserRole } from "../types";
 
 interface RoleGateProps {
@@ -43,9 +44,9 @@ export function ProtectedRoute({
     return (
       <>
         {loadingFallback ?? (
-          <div className="flex min-h-[40vh] items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-800" />
-          </div>
+          <Div className="flex min-h-[40vh] items-center justify-center">
+            <Div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-800" />
+          </Div>
         )}
       </>
     );

@@ -1,6 +1,6 @@
 import React from "react";
 import type { CartItem } from "../types";
-import { Aside, Button, Heading, Span, Text } from "@mohasinac/ui";
+import { Aside, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -10,18 +10,18 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
   return (
-    <div className="flex gap-4 rounded-xl border border-neutral-200 bg-white p-4">
-      <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
+    <Div className="flex gap-4 rounded-xl border border-neutral-200 bg-white p-4">
+      <Div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
         {item.meta.image && (
-          <div
+          <Div
             role="img"
             aria-label={item.meta.title}
             className="h-full w-full bg-center bg-cover"
             style={{ backgroundImage: `url(${item.meta.image})` }}
           />
         )}
-      </div>
-      <div className="flex flex-1 flex-col justify-between">
+      </Div>
+      <Div className="flex flex-1 flex-col justify-between">
         <Text className="font-medium text-neutral-900 line-clamp-2">
           {item.meta.title}
         </Text>
@@ -33,13 +33,13 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
                 .join(", ")}
             </Text>
           )}
-        <div className="flex items-center justify-between">
+        <Div className="flex items-center justify-between">
           <Text className="font-semibold text-neutral-900">
             {item.meta.currency ?? "₹"}
             {(item.meta.price * item.quantity).toLocaleString()}
           </Text>
           {onQtyChange && (
-            <div className="flex items-center gap-2">
+            <Div className="flex items-center gap-2">
               <Button
                 onClick={() => onQtyChange(item.id, item.quantity - 1)}
                 disabled={item.quantity <= 1}
@@ -60,10 +60,10 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
               >
                 +
               </Button>
-            </div>
+            </Div>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
       {onRemove && (
         <Button
           onClick={() => onRemove(item.id)}
@@ -75,7 +75,7 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
           ✕
         </Button>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -113,13 +113,13 @@ export function CartDrawer({
 
   return (
     <>
-      <div
+      <Div
         role="presentation"
         className="fixed inset-0 z-40 bg-black/40"
         onClick={onClose}
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-neutral-200 p-4">
+        <Div className="flex items-center justify-between border-b border-neutral-200 p-4">
           <Heading level={2} className="text-lg font-semibold">
             {labels.title ?? "Cart"}
           </Heading>
@@ -132,12 +132,12 @@ export function CartDrawer({
           >
             ✕
           </Button>
-        </div>
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        </Div>
+        <Div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isLoading ? (
-            <div className="flex justify-center py-12">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-800" />
-            </div>
+            <Div className="flex justify-center py-12">
+              <Div className="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-800" />
+            </Div>
           ) : items.length === 0 ? (
             <Text className="py-12 text-center text-sm text-neutral-500">
               {labels.empty ?? "Your cart is empty"}
@@ -152,10 +152,10 @@ export function CartDrawer({
               />
             ))
           )}
-        </div>
+        </Div>
         {items.length > 0 && (
-          <div className="border-t border-neutral-200 p-4 space-y-4">
-            <div className="flex items-center justify-between text-sm">
+          <Div className="border-t border-neutral-200 p-4 space-y-4">
+            <Div className="flex items-center justify-between text-sm">
               <Span className="text-neutral-600">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
@@ -163,7 +163,7 @@ export function CartDrawer({
                 {currency}
                 {subtotal.toLocaleString()}
               </Span>
-            </div>
+            </Div>
             {onCheckout && (
               <Button
                 onClick={onCheckout}
@@ -173,7 +173,7 @@ export function CartDrawer({
                 {labels.checkout ?? "Proceed to Checkout"}
               </Button>
             )}
-          </div>
+          </Div>
         )}
       </Aside>
     </>

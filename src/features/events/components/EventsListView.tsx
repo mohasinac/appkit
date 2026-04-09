@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text } from "@mohasinac/ui";
+import { Div, Pagination, Text } from "@mohasinac/ui";
 import type { LayoutSlots } from "@mohasinac/contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";
@@ -30,21 +30,21 @@ export function EventsListView<T extends EventItem = EventItem>({
 }: EventsListViewProps<T>) {
   if (isLoading) {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100"
           >
-            <div className="aspect-video bg-neutral-200" />
-            <div className="space-y-2 p-4">
-              <div className="h-4 w-16 rounded bg-neutral-200" />
-              <div className="h-5 w-full rounded bg-neutral-200" />
-              <div className="h-4 w-3/4 rounded bg-neutral-200" />
-            </div>
-          </div>
+            <Div className="aspect-video bg-neutral-200" />
+            <Div className="space-y-2 p-4">
+              <Div className="h-4 w-16 rounded bg-neutral-200" />
+              <Div className="h-5 w-full rounded bg-neutral-200" />
+              <Div className="h-4 w-3/4 rounded bg-neutral-200" />
+            </Div>
+          </Div>
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -60,11 +60,11 @@ export function EventsListView<T extends EventItem = EventItem>({
   }
 
   return (
-    <div className="space-y-8">
+    <Div className="space-y-8">
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {events.map((event, i) =>
           slots?.renderCard ? (
             <React.Fragment key={event.id}>
@@ -80,25 +80,21 @@ export function EventsListView<T extends EventItem = EventItem>({
             />
           ),
         )}
-      </div>
+      </Div>
       {slots?.renderFooter ? (
         (slots.renderFooter({
           page: currentPage,
           totalPages,
         }) as React.ReactNode)
       ) : totalPages > 1 && onPageChange ? (
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Button
-              key={p}
-              onClick={() => onPageChange(p)}
-              className={`h-9 w-9 rounded-lg text-sm font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-100"}`}
-            >
-              {p}
-            </Button>
-          ))}
-        </div>
+        <Div className="flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </Div>
       ) : null}
-    </div>
+    </Div>
   );
 }

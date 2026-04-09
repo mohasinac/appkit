@@ -1,6 +1,6 @@
 import React from "react";
 import type { AdminTableColumn } from "../types";
-import { Button } from "@mohasinac/ui";
+import { Button, Div, Span } from "@mohasinac/ui";
 
 interface DataTableProps<T extends { id: string }> {
   columns: AdminTableColumn<T>[];
@@ -28,8 +28,8 @@ export function DataTable<T extends { id: string }>({
   emptyLabel = "No records found",
 }: DataTableProps<T>) {
   return (
-    <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
-      <div className="overflow-x-auto">
+    <Div className="overflow-hidden rounded-xl border border-neutral-200 bg-white">
+      <Div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-neutral-200 bg-neutral-50">
@@ -44,9 +44,9 @@ export function DataTable<T extends { id: string }>({
                 >
                   {col.header}
                   {col.sortable && sortKey === col.key && (
-                    <span className="ml-1">
+                    <Span className="ml-1">
                       {sortDir === "asc" ? "↑" : "↓"}
-                    </span>
+                    </Span>
                   )}
                 </th>
               ))}
@@ -58,7 +58,7 @@ export function DataTable<T extends { id: string }>({
                 <tr key={i} className="border-b border-neutral-100">
                   {columns.map((col) => (
                     <td key={col.key} className="px-4 py-3">
-                      <div className="h-4 w-full animate-pulse rounded bg-neutral-200" />
+                      <Div className="h-4 w-full animate-pulse rounded bg-neutral-200" />
                     </td>
                   ))}
                 </tr>
@@ -95,9 +95,9 @@ export function DataTable<T extends { id: string }>({
             )}
           </tbody>
         </table>
-      </div>
+      </Div>
       {totalPages > 1 && onPageChange && (
-        <div className="flex items-center justify-end gap-2 border-t border-neutral-200 px-4 py-3">
+        <Div className="flex items-center justify-end gap-2 border-t border-neutral-200 px-4 py-3">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <Button
               key={p}
@@ -109,8 +109,8 @@ export function DataTable<T extends { id: string }>({
               {p}
             </Button>
           ))}
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "@mohasinac/ui";
 import type { CategoryItem } from "../types";
 import { ConcernCard } from "./ConcernCard";
 
@@ -16,12 +17,12 @@ export function ConcernGrid({
   if (concerns.length === 0) return null;
 
   return (
-    <div
+    <Div
       className={`grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-4 ${className}`}
     >
       {concerns.map((concern) => (
         <ConcernCard key={concern.id} concern={concern} onClick={onSelect} />
       ))}
-    </div>
+    </Div>
   );
 }

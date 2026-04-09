@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useMediaQuery } from "@mohasinac/react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Section, Span, Text } from "@mohasinac/ui";
 import { MediaImage, MediaVideo } from "@mohasinac/feat-media";
 import { useHeroCarousel } from "../hooks/useHeroCarousel.js";
 import type { CarouselSlide, CarouselSlideCard } from "../types/index.js";
@@ -87,13 +87,13 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (isLoading) {
     return (
-      <div
+      <Div
         className={`relative w-full ${homepage.heroMinH} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}
       >
-        <div className={`${position.fill} ${flex.center}`}>
+        <Div className={`${position.fill} ${flex.center}`}>
           <Text variant="secondary">{tLoading("default")}</Text>
-        </div>
-      </div>
+        </Div>
+      </Div>
     );
   }
 
@@ -136,28 +136,28 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       onBlur={() => setIsPaused(false)}
       tabIndex={0}
     >
-      <div aria-live="polite" aria-atomic="true" className="sr-only">
+      <Div aria-live="polite" aria-atomic="true" className="sr-only">
         {tA11y("heroCarouselSlideOf", {
           current: currentSlide + 1,
           total: slides.length,
         })}
-      </div>
+      </Div>
 
       {/* Snap Scroll Rail */}
-      <div className={position.fill}>
-        <div
+      <Div className={position.fill}>
+        <Div
           ref={slidesRef}
           onScroll={handleSlidesScroll}
           className="flex h-full overflow-x-auto scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           style={{ gap: 0 }}
         >
           {slides.map((slide, slideIndex) => (
-            <div
+            <Div
               key={slide.id}
               className="snap-start flex-none w-full relative self-stretch bg-zinc-900"
             >
               {/* Background Media */}
-              <div className={position.fill}>
+              <Div className={position.fill}>
                 {slide.media.type === "image" ? (
                   <MediaImage
                     src={
@@ -183,12 +183,12 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                     controls={false}
                   />
                 )}
-                <div className={`${position.fill} bg-black/10`} />
-              </div>
+                <Div className={`${position.fill} bg-black/10`} />
+              </Div>
 
               {/* Overlay mode — centred text + optional button */}
               {slide.overlay ? (
-                <div
+                <Div
                   className={`${position.fill} ${flex.center} flex-col text-center px-6 md:px-16 lg:px-32`}
                 >
                   {slide.overlay.subtitle && (
@@ -210,7 +210,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                     </Text>
                   )}
                   {slide.overlay.button && (
-                    <div className="stagger-4">
+                    <Div className="stagger-4">
                       <Button
                         variant={slide.overlay.button.variant}
                         size="sm"
@@ -229,12 +229,12 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       >
                         {slide.overlay.button.text}
                       </Button>
-                    </div>
+                    </Div>
                   )}
-                </div>
+                </Div>
               ) : (
                 /* Grid Overlay with Cards */
-                <div
+                <Div
                   className={`${position.fill} grid gap-2 md:gap-4 p-4 md:p-8`}
                   style={{
                     gridTemplateRows: "repeat(2, 1fr)",
@@ -244,7 +244,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                   }}
                 >
                   {slide.cards.map((card) => (
-                    <div
+                    <Div
                       key={card.id}
                       className="relative rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105"
                       style={{
@@ -273,7 +273,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                           />
                         )}
                       {!card.isButtonOnly && (
-                        <div
+                        <Div
                           className={`${position.fill} flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/30 to-transparent ${
                             card.sizing?.padding === "none"
                               ? "p-0"
@@ -303,7 +303,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                             </Text>
                           )}
                           {(card.buttons?.length ?? 0) > 0 && (
-                            <div className="flex flex-wrap gap-1 md:gap-2">
+                            <Div className="flex flex-wrap gap-1 md:gap-2">
                               {(card.buttons ?? []).map((btn) => (
                                 <Button
                                   key={btn.id}
@@ -324,9 +324,9 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                                   {btn.text}
                                 </Button>
                               ))}
-                            </div>
+                            </Div>
                           )}
-                        </div>
+                        </Div>
                       )}
                       {card.isButtonOnly && card.buttons?.[0] && (
                         <Button
@@ -350,18 +350,18 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                           </Span>
                         </Button>
                       )}
-                    </div>
+                    </Div>
                   ))}
-                </div>
+                </Div>
               )}
-            </div>
+            </Div>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       {/* Navigation Dots */}
       {slides.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <Div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {slides.map((_, index) => (
             <Button
               key={index}
@@ -382,18 +382,18 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               )}
             </Button>
           ))}
-        </div>
+        </Div>
       )}
 
       {/* Bottom gradient bleed */}
-      <div
+      <Div
         className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-950 to-transparent pointer-events-none z-[5]"
         aria-hidden="true"
       />
 
       {/* Navigation Arrows */}
       {slides.length > 1 && (
-        <div className="absolute bottom-4 right-4 z-20 flex gap-2">
+        <Div className="absolute bottom-4 right-4 z-20 flex gap-2">
           <Button
             variant="ghost"
             className={`p-0 ${THEME_CONSTANTS.carousel.arrow}`}
@@ -434,7 +434,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
               />
             </svg>
           </Button>
-        </div>
+        </Div>
       )}
     </Section>
   );

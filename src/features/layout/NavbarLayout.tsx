@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Li, Nav, Span, Ul } from "@mohasinac/ui";
+import { Div, Li, Nav, Span, Ul } from "@mohasinac/ui";
 
 export interface NavbarLayoutItem {
   href: string;
@@ -87,7 +87,7 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden md:block bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-slate-800/80"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
+      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
         <Ul className="flex items-center gap-0.5 lg:gap-1 h-10 md:h-12">
           {items.map((item) => (
             <Li key={item.href}>
@@ -102,7 +102,7 @@ export function NavbarLayout({
             </Li>
           ))}
         </Ul>
-      </div>
+      </Div>
     </Nav>
   );
 }

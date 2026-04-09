@@ -1,6 +1,6 @@
 import React from "react";
 import type { UserAddress } from "../types";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "@mohasinac/ui";
 
 interface AddressCardProps {
   address: UserAddress;
@@ -16,7 +16,7 @@ export function AddressCard({
   labels = {},
 }: AddressCardProps) {
   return (
-    <div className="relative rounded-xl border border-neutral-200 bg-white p-4">
+    <Div className="relative rounded-xl border border-neutral-200 bg-white p-4">
       {address.isDefault && (
         <Span className="absolute right-3 top-3 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
           {labels.defaultBadge ?? "Default"}
@@ -38,7 +38,7 @@ export function AddressCard({
       {address.phone && (
         <Text className="mt-1 text-sm text-neutral-500">{address.phone}</Text>
       )}
-      <div className="mt-3 flex gap-3">
+      <Div className="mt-3 flex gap-3">
         {onEdit && (
           <Button
             onClick={() => onEdit(address)}
@@ -59,8 +59,8 @@ export function AddressCard({
             {labels.delete ?? "Delete"}
           </Button>
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }
 
@@ -82,11 +82,11 @@ export function AddressBook({
   addLabel = "Add Address",
 }: AddressBookProps) {
   return (
-    <div className="space-y-4">
+    <Div className="space-y-4">
       {addresses.length === 0 && (
         <Text className="text-sm text-neutral-500">{emptyLabel}</Text>
       )}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <Div className="grid gap-4 sm:grid-cols-2">
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}
@@ -95,7 +95,7 @@ export function AddressBook({
             onDelete={onDelete}
           />
         ))}
-      </div>
+      </Div>
       {onAdd && (
         <Button
           onClick={onAdd}
@@ -105,6 +105,6 @@ export function AddressBook({
           + {addLabel}
         </Button>
       )}
-    </div>
+    </Div>
   );
 }

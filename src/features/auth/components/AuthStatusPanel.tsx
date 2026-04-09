@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Text } from "@mohasinac/ui";
 
 type AuthStatusTone = "success" | "error" | "loading";
 
@@ -36,7 +36,7 @@ export function AuthStatusPanel({
 }: AuthStatusPanelProps) {
   return (
     <>
-      <div className={`mb-4 ${toneClass(tone)}`}>
+      <Div className={`mb-4 ${toneClass(tone)}`}>
         <svg
           className="w-16 h-16 mx-auto"
           fill="none"
@@ -51,7 +51,7 @@ export function AuthStatusPanel({
             d={iconPath(tone)}
           />
         </svg>
-      </div>
+      </Div>
 
       <Heading level={2} className="mb-2 text-xl font-semibold">
         {title}

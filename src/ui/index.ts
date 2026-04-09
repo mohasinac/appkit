@@ -223,3 +223,11 @@ export { Container, Stack, Row, Grid, GRID_MAP } from "./components/Layout";
 export { easings } from "./animation.helper";
 export { hexToRgb, rgbToHex, getContrastColor } from "./color.helper";
 export { classNames, mergeTailwindClasses } from "./style.helper";
+
+// ─── SideModal ────────────────────────────────────────────────────────────────
+export type { SideModalProps } from "./components/SideModal";
+export { SideModal } from "./components/SideModal";
+
+// ─── RichText ─────────────────────────────────────────────────────────────────
+export type { RichTextProps } from "./rich-text/RichText";
+export { RichText } from "./rich-text/RichText";

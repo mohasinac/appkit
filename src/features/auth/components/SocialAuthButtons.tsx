@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@mohasinac/ui";
+import { Button, Div, Span } from "@mohasinac/ui";
 
 interface SocialAuthButtonsProps {
   onGoogle: () => void;
@@ -17,16 +17,16 @@ export function SocialAuthButtons({
 }: SocialAuthButtonsProps) {
   return (
     <>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-neutral-200" />
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-neutral-500">{dividerLabel}</span>
-        </div>
-      </div>
+      <Div className="relative">
+        <Div className="absolute inset-0 flex items-center">
+          <Div className="w-full border-t border-neutral-200" />
+        </Div>
+        <Div className="relative flex justify-center text-sm">
+          <Span className="px-2 bg-white text-neutral-500">{dividerLabel}</Span>
+        </Div>
+      </Div>
 
-      <div className="grid grid-cols-1 gap-3">
+      <Div className="grid grid-cols-1 gap-3">
         <Button
           type="button"
           onClick={onGoogle}
@@ -54,7 +54,7 @@ export function SocialAuthButtons({
           </svg>
           {googleLabel}
         </Button>
-      </div>
+      </Div>
     </>
   );
 }

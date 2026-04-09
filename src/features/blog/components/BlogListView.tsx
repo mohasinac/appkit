@@ -1,7 +1,7 @@
 import React from "react";
 import type { LayoutSlots } from "@mohasinac/contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Button, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Button, Div, Heading, Pagination, Span, Text } from "@mohasinac/ui";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -31,17 +31,17 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
       {post.coverImage && (
-        <div className="aspect-video w-full overflow-hidden bg-neutral-100">
-          <div
+        <Div className="aspect-video w-full overflow-hidden bg-neutral-100">
+          <Div
             role="img"
             aria-label={post.title}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundImage: `url(${post.coverImage})` }}
           />
-        </div>
+        </Div>
       )}
-      <div className="flex flex-1 flex-col p-5">
-        <div className="mb-2 flex items-center gap-2">
+      <Div className="flex flex-1 flex-col p-5">
+        <Div className="mb-2 flex items-center gap-2">
           <Span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
             {post.category}
           </Span>
@@ -50,7 +50,7 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
               {post.readTimeMinutes} min read
             </Span>
           )}
-        </div>
+        </Div>
         <Heading
           level={3}
           className="line-clamp-2 text-base font-semibold text-neutral-900 group-hover:text-primary"
@@ -62,9 +62,9 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             {post.excerpt}
           </Text>
         )}
-        <div className="mt-4 flex items-center gap-3">
+        <Div className="mt-4 flex items-center gap-3">
           {post.authorAvatar && (
-            <div
+            <Div
               role="img"
               aria-label={post.authorName ?? "author"}
               className="h-7 w-7 rounded-full bg-center bg-cover"
@@ -79,8 +79,8 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             )}
             {date && <Span className="ml-1">· {date}</Span>}
           </Text>
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Article>
   );
 }
@@ -99,7 +99,7 @@ export function BlogCategoryTabs({
   labels = {},
 }: BlogCategoryTabsProps) {
   return (
-    <div className="scrollbar-none flex gap-2 overflow-x-auto pb-1">
+    <Div className="scrollbar-none flex gap-2 overflow-x-auto pb-1">
       <Button
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}
@@ -119,7 +119,7 @@ export function BlogCategoryTabs({
           {labels[cat] ?? cat}
         </Button>
       ))}
-    </div>
+    </Div>
   );
 }
 
@@ -149,21 +149,21 @@ export function BlogListView<T extends BlogPost = BlogPost>({
 }: BlogListViewProps<T>) {
   if (isLoading) {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div
+          <Div
             key={i}
             className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100"
           >
-            <div className="aspect-video bg-neutral-200" />
-            <div className="space-y-2 p-5">
-              <div className="h-4 w-16 rounded bg-neutral-200" />
-              <div className="h-5 w-full rounded bg-neutral-200" />
-              <div className="h-4 w-3/4 rounded bg-neutral-200" />
-            </div>
-          </div>
+            <Div className="aspect-video bg-neutral-200" />
+            <Div className="space-y-2 p-5">
+              <Div className="h-4 w-16 rounded bg-neutral-200" />
+              <Div className="h-5 w-full rounded bg-neutral-200" />
+              <Div className="h-4 w-3/4 rounded bg-neutral-200" />
+            </Div>
+          </Div>
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -179,11 +179,11 @@ export function BlogListView<T extends BlogPost = BlogPost>({
   }
 
   return (
-    <div className="space-y-8">
+    <Div className="space-y-8">
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {posts.map((post, i) =>
           slots?.renderCard ? (
             <React.Fragment key={post.id}>
@@ -197,27 +197,21 @@ export function BlogListView<T extends BlogPost = BlogPost>({
             />
           ),
         )}
-      </div>
+      </Div>
       {slots?.renderFooter ? (
         (slots.renderFooter({
           page: currentPage,
           totalPages,
         }) as React.ReactNode)
       ) : totalPages > 1 && onPageChange ? (
-        <div className="flex justify-center gap-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <Button
-              key={p}
-              onClick={() => onPageChange(p)}
-              variant={p === currentPage ? "primary" : "outline"}
-              size="sm"
-              className={`h-9 w-9 rounded-lg text-sm font-medium transition ${p === currentPage ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-100"}`}
-            >
-              {p}
-            </Button>
-          ))}
-        </div>
+        <Div className="flex justify-center">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+          />
+        </Div>
       ) : null}
-    </div>
+    </Div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import type { BeforeAfterItem } from "../types";
-import { Span } from "@mohasinac/ui";
+import { Div, Span } from "@mohasinac/ui";
 
 interface BeforeAfterSliderProps {
   item: BeforeAfterItem;
@@ -32,14 +32,14 @@ export function BeforeAfterSlider({
   }
 
   return (
-    <div
+    <Div
       ref={containerRef}
       className={`relative aspect-square select-none overflow-hidden rounded-xl ${className}`}
       onPointerMove={handlePointerMove}
       onTouchMove={handleTouchMove}
     >
       {/* After image (base layer) */}
-      <div
+      <Div
         role="img"
         aria-label="After"
         className="absolute inset-0 h-full w-full bg-center bg-cover"
@@ -47,11 +47,11 @@ export function BeforeAfterSlider({
       />
 
       {/* Before image (clipped layer) */}
-      <div
+      <Div
         className="absolute inset-0 overflow-hidden"
         style={{ width: `${position}%` }}
       >
-        <div
+        <Div
           role="img"
           aria-label="Before"
           className="h-full w-full bg-center bg-cover"
@@ -60,16 +60,16 @@ export function BeforeAfterSlider({
             backgroundImage: `url(${item.beforeImageUrl})`,
           }}
         />
-      </div>
+      </Div>
 
       {/* Divider handle */}
-      <div
+      <Div
         className="absolute inset-y-0 flex w-1 -translate-x-1/2 cursor-ew-resize flex-col items-center justify-center"
         style={{ left: `${position}%` }}
       >
-        <div className="h-full w-0.5 bg-white/80 shadow" />
-        <div className="absolute h-8 w-8 rounded-full border-2 border-white bg-white/80 shadow-md" />
-      </div>
+        <Div className="h-full w-0.5 bg-white/80 shadow" />
+        <Div className="absolute h-8 w-8 rounded-full border-2 border-white bg-white/80 shadow-md" />
+      </Div>
 
       {/* Labels */}
       <Span className="absolute left-2 top-2 rounded bg-black/40 px-2 py-0.5 text-xs font-medium text-white">
@@ -84,6 +84,6 @@ export function BeforeAfterSlider({
           {item.durationWeeks} weeks
         </Span>
       )}
-    </div>
+    </Div>
   );
 }

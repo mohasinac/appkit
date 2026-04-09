@@ -1,5 +1,5 @@
 import React from "react";
-import { Section, Text } from "@mohasinac/ui";
+import { Div, Section, Text } from "@mohasinac/ui";
 import type { TrustBadge, TrustBadgeIconKey } from "../types";
 
 const BADGE_ICONS: Record<TrustBadgeIconKey, React.ReactNode> = {
@@ -115,14 +115,14 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
         borderBottom: "var(--section-border)",
       }}
     >
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
-        <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+      <Div className="mx-auto max-w-7xl px-4 py-6 sm:py-10">
+        <Div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
           {items.map((badge) => (
-            <div
+            <Div
               key={badge.id}
               className="flex flex-col items-center gap-2 text-center sm:flex-row sm:items-center sm:text-left sm:gap-4"
             >
-              <div
+              <Div
                 className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full"
                 style={{
                   background: "rgba(240,196,23,0.12)",
@@ -131,8 +131,8 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
                 }}
               >
                 {BADGE_ICONS[badge.iconKey]}
-              </div>
-              <div>
+              </Div>
+              <Div>
                 <Text
                   className="text-sm font-black uppercase tracking-wide"
                   style={{ color: "var(--section-title-color)" }}
@@ -145,11 +145,11 @@ export function TrustBadges({ badges }: TrustBadgesProps) {
                 >
                   {badge.sub}
                 </Text>
-              </div>
-            </div>
+              </Div>
+            </Div>
           ))}
-        </div>
-      </div>
+        </Div>
+      </Div>
     </Section>
   );
 }
