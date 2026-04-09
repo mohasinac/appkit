@@ -1,0 +1,69 @@
+"use client";
+
+import React from "react";
+import { Article, Heading, Text } from "@mohasinac/ui";
+import type { CollectionListItem } from "../types";
+
+interface CollectionCardProps {
+  collection: CollectionListItem;
+  href: string;
+}
+
+export function CollectionCard({ collection, href }: CollectionCardProps) {
+  return (
+    <Article
+      role="link"
+      tabIndex={0}
+      onClick={() => window.location.assign(href)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          window.location.assign(href);
+        }
+      }}
+      className="group relative block overflow-hidden rounded-xl bg-gray-100 transition-shadow hover:shadow-lg"
+    >
+      {collection.image ? (
+        <div
+          role="img"
+          aria-label={collection.title}
+          className="h-48 w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+          style={{ backgroundImage: `url(${collection.image})` }}
+        />
+      ) : (
+        <div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100" />
+      )}
+      <div className="p-4">
+        <Heading level={3} className="font-semibold text-gray-900">
+          {collection.title}
+        </Heading>
+        {collection.subtitle && (
+          <Text className="mt-1 text-sm text-gray-500">
+            {collection.subtitle}
+          </Text>
+        )}
+        {collection.productCount !== undefined && (
+          <Text className="mt-2 text-xs text-gray-400">
+            {collection.productCount}{" "}
+            {collection.productCount === 1 ? "item" : "items"}
+          </Text>
+        )}
+      </div>
+    </Article>
+  );
+}
+
+interface CollectionGridProps {
+  collections: CollectionListItem[];
+  getHref: (slug: string) => string;
+}
+
+export function CollectionGrid({ collections, getHref }: CollectionGridProps) {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {collections.map((c) => (
+        <CollectionCard key={c.slug} collection={c} href={getHref(c.slug)} />
+      ))}
+    </div>
+  );
+}

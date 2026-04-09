@@ -1,0 +1,18 @@
+{
+  "card": {
+    "currentBid": "Current bid",
+    "startingBid": "Starting bid",
+    "bids": "bids",
+    "placeBid": "Place Bid",
+    "ended": "Auction ended"
+  },
+  "countdown": {
+    "hours": "h",
+    "mins": "m",
+    "secs": "s"
+  },
+  "list": {
+    "title": "Live Auctions",
+    "empty": "No auctions running right now."
+  }
+}

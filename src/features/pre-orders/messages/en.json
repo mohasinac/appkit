@@ -1,0 +1,13 @@
+{
+    "preorders": {
+        "title": "Pre-orders",
+        "subtitle": "Reserve yours before it arrives",
+        "badge": "Pre-order",
+        "shipsOn": "Ships {date}",
+        "shippingSoon": "Shipping soon",
+        "shipped": "Shipped",
+        "empty": "No pre-orders available right now.",
+        "reserveNow": "Reserve now",
+        "depositRequired": "Deposit required: ₹{amount}"
+    }
+}

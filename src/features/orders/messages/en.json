@@ -1,0 +1,15 @@
+{
+  "title": "Orders",
+  "noOrders": "No orders found",
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "refunded": "Refunded",
+    "return_requested": "Return Requested",
+    "returned": "Returned"
+  }
+}

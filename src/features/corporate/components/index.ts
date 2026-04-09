@@ -1,0 +1,1 @@
+export { CorporateInquiryForm } from "./CorporateInquiryForm";

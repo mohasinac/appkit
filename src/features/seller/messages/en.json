@@ -1,0 +1,32 @@
+{
+  "storeStatus": {
+    "pending": "Pending",
+    "active": "Active",
+    "suspended": "Suspended",
+    "rejected": "Rejected"
+  },
+  "payoutStatus": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "dashboard": {
+    "totalRevenue": "Total Revenue",
+    "pendingPayouts": "Pending Payouts",
+    "activeListings": "Active Listings",
+    "totalOrders": "Total Orders",
+    "pendingOrders": "Pending Orders"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "orders": "Orders",
+    "payouts": "Payouts",
+    "store": "My Store",
+    "analytics": "Analytics",
+    "coupons": "Coupons",
+    "shipping": "Shipping",
+    "addresses": "Addresses"
+  }
+}

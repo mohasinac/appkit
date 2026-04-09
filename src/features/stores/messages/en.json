@@ -1,0 +1,21 @@
+{
+  "card": {
+    "products": "products",
+    "sold": "sold",
+    "reviews": "reviews",
+    "follow": "Follow"
+  },
+  "header": {
+    "vacationMode": "Store is currently on vacation. Orders are paused."
+  },
+  "list": {
+    "title": "Explore Stores",
+    "empty": "No stores found."
+  },
+  "tabs": {
+    "products": "Products",
+    "auctions": "Live Auctions",
+    "reviews": "Reviews",
+    "about": "About"
+  }
+}

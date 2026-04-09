@@ -1,0 +1,13 @@
+{
+  "title": "Admin",
+  "dashboard": "Dashboard",
+  "noRecords": "No records found",
+  "stats": {
+    "totalOrders": "Total Orders",
+    "totalRevenue": "Total Revenue",
+    "totalUsers": "Total Users",
+    "totalProducts": "Total Products",
+    "pendingOrders": "Pending Orders",
+    "pendingReviews": "Pending Reviews"
+  }
+}

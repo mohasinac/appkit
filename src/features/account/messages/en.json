@@ -1,0 +1,12 @@
+{
+  "title": "My Account",
+  "profile": "Profile",
+  "addresses": "Addresses",
+  "notifications": "Notifications",
+  "security": "Security",
+  "editProfile": "Edit Profile",
+  "saveChanges": "Save Changes",
+  "addAddress": "Add Address",
+  "defaultBadge": "Default",
+  "noAddresses": "No saved addresses"
+}

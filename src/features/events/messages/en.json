@@ -1,0 +1,28 @@
+{
+  "eventStatus": {
+    "draft": "Draft",
+    "active": "Active",
+    "paused": "Paused",
+    "ended": "Ended"
+  },
+  "eventType": {
+    "sale": "Sale",
+    "offer": "Offer",
+    "poll": "Poll",
+    "survey": "Survey",
+    "feedback": "Feedback"
+  },
+  "card": {
+    "participate": "Participate",
+    "viewResults": "View Results",
+    "entries": "entries",
+    "daysRemaining": "{count}d remaining"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "participant": "Participant",
+    "points": "Points"
+  },
+  "empty": "No events available right now."
+}

@@ -1,0 +1,26 @@
+{
+    "title": "Corporate Gifting",
+    "subtitle": "Premium Ayurvedic gifts for your team and clients",
+    "form": {
+        "companyName": "Company name",
+        "contactPerson": "Contact person",
+        "designation": "Designation (optional)",
+        "email": "Business email",
+        "phone": "Phone number",
+        "units": "Number of units",
+        "budgetPerUnit": "Budget per unit (optional)",
+        "deliveryDate": "Required by (optional)",
+        "customBranding": "Custom branding required",
+        "message": "Additional requirements (optional)",
+        "submit": "Submit Inquiry",
+        "submitting": "Submitting..."
+    },
+    "status": {
+        "new": "New",
+        "in_progress": "In Progress",
+        "won": "Won",
+        "lost": "Lost"
+    },
+    "success": "Your inquiry has been submitted. Our team will contact you within 24 hours.",
+    "error": "Failed to submit inquiry. Please try again."
+}

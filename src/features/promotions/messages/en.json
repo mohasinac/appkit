@@ -1,0 +1,20 @@
+{
+  "card": {
+    "copy": "Copy",
+    "copied": "Copied!",
+    "expires": "Expires",
+    "minOrder": "Min order",
+    "off": "OFF",
+    "freeShipping": "Free Shipping"
+  },
+  "type": {
+    "percentage": "Percentage",
+    "fixed": "Fixed",
+    "free_shipping": "Free Shipping",
+    "buy_x_get_y": "Buy X Get Y"
+  },
+  "list": {
+    "title": "Promotions & Coupons",
+    "empty": "No active promotions right now."
+  }
+}

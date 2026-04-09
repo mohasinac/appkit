@@ -1,0 +1,10 @@
+{
+    "collections": {
+        "title": "Collections",
+        "subtitle": "Shop by collection",
+        "viewAll": "View all collections",
+        "items": "{count} items",
+        "empty": "No collections found.",
+        "notFound": "Collection not found."
+    }
+}

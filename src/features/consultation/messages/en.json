@@ -1,0 +1,25 @@
+{
+    "title": "Book a Consultation",
+    "subtitle": "Get personalised Ayurvedic guidance",
+    "form": {
+        "name": "Full name",
+        "email": "Email address",
+        "phone": "Phone number",
+        "preferredDate": "Preferred date",
+        "preferredTime": "Preferred time",
+        "mode": "Consultation mode",
+        "modeRemote": "Remote (Video Call)",
+        "modeInPerson": "In-Person",
+        "message": "Additional notes (optional)",
+        "submit": "Book Consultation",
+        "submitting": "Booking..."
+    },
+    "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+    },
+    "success": "Your consultation has been booked. We\u2019ll confirm shortly.",
+    "error": "Failed to book consultation. Please try again."
+}

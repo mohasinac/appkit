@@ -1,0 +1,11 @@
+{
+  "title": "Products",
+  "noProducts": "No products found",
+  "addToWishlist": "Add to Wishlist",
+  "removeFromWishlist": "Remove from Wishlist",
+  "auction": "Auction",
+  "sortNewest": "Newest",
+  "sortPriceLow": "Price: Low to High",
+  "sortPriceHigh": "Price: High to Low",
+  "sortPopular": "Most Popular"
+}

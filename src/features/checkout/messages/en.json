@@ -1,0 +1,10 @@
+{
+  "title": "Checkout",
+  "address": "Delivery Address",
+  "shipping": "Shipping",
+  "payment": "Payment",
+  "review": "Review",
+  "confirmation": "Confirmation",
+  "placeOrder": "Place Order",
+  "orderPlaced": "Order placed successfully!"
+}

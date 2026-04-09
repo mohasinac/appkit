@@ -1,0 +1,10 @@
+{
+  "title": "Reviews",
+  "noReviews": "No reviews yet",
+  "verified": "Verified Purchase",
+  "helpful": "{{count}} found this helpful",
+  "writeReview": "Write a Review",
+  "rating": "Rating",
+  "yourReview": "Your Review",
+  "submit": "Submit Review"
+}

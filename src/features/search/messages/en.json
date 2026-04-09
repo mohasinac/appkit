@@ -1,0 +1,15 @@
+{
+  "noResultsTitle": "No results found",
+  "noResultsSubtitle": "Try adjusting your search or filters",
+  "categoryFilter": "Category",
+  "allCategories": "All Categories",
+  "priceRange": "Price Range",
+  "minPrice": "Min price",
+  "maxPrice": "Max price",
+  "clearFilters": "Clear Filters",
+  "showing": "Showing {{count}} of {{total}}",
+  "sortNewest": "Newest First",
+  "sortPriceLow": "Price: Low to High",
+  "sortPriceHigh": "Price: High to Low",
+  "sortPopular": "Most Popular"
+}

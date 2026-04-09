@@ -1,0 +1,19 @@
+{
+    "loyalty": {
+        "title": "HC Coins",
+        "balance": "Your Coin Balance",
+        "earn": "Earn Coins",
+        "redeem": "Redeem Coins",
+        "history": "Coin History",
+        "noHistory": "No coin transactions yet.",
+        "earnedFor": "Earned for order",
+        "redeemedFor": "Redeemed on order",
+        "adminGrant": "Admin grant",
+        "refund": "Refund",
+        "coinsEarned": "{coins} coins earned",
+        "coinsRedeemed": "{coins} coins redeemed",
+        "worthRupees": "Worth ₹{amount}",
+        "minRequired": "Minimum {min} coins required to redeem",
+        "notActive": "Loyalty program is currently inactive"
+    }
+}

@@ -1,0 +1,367 @@
+"use client";
+
+/**
+ * MediaUploadField — single-file upload field for @mohasinac/feat-media.
+ *
+ * For video: optionally opens VideoTrimModal then VideoThumbnailSelector after upload.
+ * Stage locally → caller-provided onUpload() → /api/media/upload.
+ */
+
+import { useState, useRef, ChangeEvent } from "react";
+import { useTranslations } from "next-intl";
+import { useCamera } from "@mohasinac/react";
+import { Alert, Button, Label, Spinner, Text } from "@mohasinac/ui";
+import { MediaImage } from "../MediaImage";
+import { MediaVideo } from "../MediaVideo";
+import { VideoTrimModal } from "../modals/VideoTrimModal";
+import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
+import CameraCapture from "./CameraCapture";
+
+export interface MediaUploadFieldProps {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+  onUpload: (file: File) => Promise<string>;
+  accept?: string;
+  maxSizeMB?: number;
+  disabled?: boolean;
+  helperText?: string;
+  captureSource?: "file-only" | "camera-only" | "both";
+  captureMode?: "photo" | "video" | "both";
+  enableTrim?: boolean;
+  enableThumbnail?: boolean;
+  onThumbnailChange?: (url: string) => void;
+}
+
+function isVideo(url: string): boolean {
+  return /\.(mp4|webm|ogg|mov|avi)(\?|$)/i.test(url);
+}
+
+function isImage(url: string): boolean {
+  return /\.(jpe?g|png|gif|webp|svg)(\?|$)/i.test(url);
+}
+
+function filenameFromUrl(url: string): string {
+  try {
+    const parts = new URL(url).pathname.split("/");
+    return decodeURIComponent(parts[parts.length - 1] || url);
+  } catch {
+    return url;
+  }
+}
+
+export function MediaUploadField({
+  label,
+  value,
+  onChange,
+  onUpload,
+  accept = "*",
+  maxSizeMB = 50,
+  disabled = false,
+  helperText,
+  captureSource = "file-only",
+  captureMode = "photo",
+  enableTrim = true,
+  enableThumbnail = true,
+  onThumbnailChange,
+}: MediaUploadFieldProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingVideoUrl, setPendingVideoUrl] = useState<string | null>(null);
+  const [showTrimModal, setShowTrimModal] = useState(false);
+  const [showThumbnailModal, setShowThumbnailModal] = useState(false);
+  const [inputMode, setInputMode] = useState<"file" | "camera">("file");
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileCaptureRef = useRef<HTMLInputElement>(null);
+
+  const t = useTranslations("camera");
+  const tUpload = useTranslations("upload");
+  const tMediaEditor = useTranslations("mediaEditor");
+  const { isSupported: isCameraSupported } = useCamera();
+
+  const showCamera =
+    captureSource === "camera-only" ||
+    (captureSource === "both" && inputMode === "camera");
+  const showFileInput =
+    captureSource === "file-only" ||
+    (captureSource === "both" && inputMode === "file");
+
+  const captureModeAccept =
+    captureMode === "video"
+      ? "video/*"
+      : captureMode === "both"
+        ? "image/*,video/*"
+        : "image/*";
+
+  const afterUpload = (url: string, fileType: string) => {
+    const isVideoFile = fileType.startsWith("video/");
+    if (isVideoFile && enableTrim) {
+      setPendingVideoUrl(url);
+      setShowTrimModal(true);
+      return;
+    }
+    if (isVideoFile && enableThumbnail) {
+      setPendingVideoUrl(url);
+      setShowThumbnailModal(true);
+      return;
+    }
+    onChange(url);
+  };
+
+  const handleTrimSave = (trimmedUrl: string) => {
+    setShowTrimModal(false);
+    if (enableThumbnail) {
+      setPendingVideoUrl(trimmedUrl);
+      setShowThumbnailModal(true);
+    } else {
+      onChange(trimmedUrl);
+      setPendingVideoUrl(null);
+    }
+  };
+
+  const handleTrimClose = () => {
+    setShowTrimModal(false);
+    if (enableThumbnail && pendingVideoUrl) {
+      setShowThumbnailModal(true);
+    } else {
+      if (pendingVideoUrl) onChange(pendingVideoUrl);
+      setPendingVideoUrl(null);
+    }
+  };
+
+  const handleThumbnailSelect = (thumbUrl: string) => {
+    setShowThumbnailModal(false);
+    if (pendingVideoUrl) onChange(pendingVideoUrl);
+    onThumbnailChange?.(thumbUrl);
+    setPendingVideoUrl(null);
+  };
+
+  const handleThumbnailClose = () => {
+    setShowThumbnailModal(false);
+    if (pendingVideoUrl) onChange(pendingVideoUrl);
+    setPendingVideoUrl(null);
+  };
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const fileSizeMB = file.size / 1024 / 1024;
+    if (fileSizeMB > maxSizeMB) {
+      setError(`File size must be less than ${maxSizeMB}MB`);
+      return;
+    }
+    setError(null);
+    setIsLoading(true);
+    try {
+      const url = await onUpload(file);
+      afterUpload(url, file.type);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setIsLoading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleRemove = () => {
+    onChange("");
+    setError(null);
+  };
+
+  const handleCameraCapture = async (blob: Blob, type: "photo" | "video") => {
+    const ext = type === "video" ? "webm" : "webp";
+    const file = new File([blob], `camera-capture.${ext}`, { type: blob.type });
+    setError(null);
+    setIsLoading(true);
+    try {
+      const url = await onUpload(file);
+      afterUpload(url, blob.type);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label className="block text-sm font-medium text-zinc-600 dark:text-zinc-400">
+        {label}
+      </Label>
+
+      {value && !isLoading && (
+        <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
+          {isVideo(value) ? (
+            <div className="relative aspect-video overflow-hidden rounded-lg">
+              <MediaVideo
+                src={value}
+                alt={label}
+                controls
+                objectFit="contain"
+              />
+            </div>
+          ) : isImage(value) ? (
+            <div className="relative aspect-video overflow-hidden rounded-lg">
+              <MediaImage
+                src={value}
+                alt={label}
+                size="card"
+                objectFit="contain"
+              />
+            </div>
+          ) : (
+            <a
+              href={value}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm underline break-all text-blue-600 dark:text-blue-400"
+            >
+              {filenameFromUrl(value)}
+            </a>
+          )}
+
+          {!disabled && (
+            <div className="flex flex-wrap gap-2 mt-2">
+              {isVideo(value) && (enableTrim || enableThumbnail) && (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setPendingVideoUrl(value);
+                    if (enableTrim) setShowTrimModal(true);
+                    else setShowThumbnailModal(true);
+                  }}
+                  variant="secondary"
+                  size="sm"
+                >
+                  {tMediaEditor("editVideo")}
+                </Button>
+              )}
+              <Button
+                type="button"
+                onClick={handleRemove}
+                variant="danger"
+                size="sm"
+              >
+                {tUpload("remove")}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {!disabled && !isLoading && (
+        <>
+          {captureSource === "both" && isCameraSupported && (
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant={inputMode === "file" ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setInputMode("file")}
+              >
+                {t("switchToUpload")}
+              </Button>
+              <Button
+                type="button"
+                variant={inputMode === "camera" ? "primary" : "outline"}
+                size="sm"
+                onClick={() => setInputMode("camera")}
+              >
+                {t("switchToCamera")}
+              </Button>
+            </div>
+          )}
+
+          {showCamera && isCameraSupported && (
+            <CameraCapture
+              mode={captureMode}
+              facingMode="environment"
+              onCapture={handleCameraCapture}
+              onError={(msg) => setError(msg)}
+            />
+          )}
+
+          {showCamera && !isCameraSupported && (
+            <Button
+              type="button"
+              onClick={() => mobileCaptureRef.current?.click()}
+              variant="ghost"
+              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl text-sm text-zinc-500 dark:text-zinc-400"
+            >
+              {t("switchToCamera")}
+            </Button>
+          )}
+
+          {showFileInput && (
+            <Button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              variant="ghost"
+              className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl text-sm text-zinc-500 dark:text-zinc-400"
+            >
+              {value ? tUpload("replaceFile") : tUpload("chooseFile")}
+            </Button>
+          )}
+        </>
+      )}
+
+      {isLoading && (
+        <div className="flex items-center gap-2">
+          <Spinner size="sm" />
+          <Text size="sm" variant="secondary">
+            {tUpload("uploading")}
+          </Text>
+        </div>
+      )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept={accept}
+        onChange={handleFileChange}
+        className="hidden"
+        aria-hidden="true"
+      />
+
+      {showCamera && !isCameraSupported && (
+        <input
+          ref={mobileCaptureRef}
+          type="file"
+          accept={captureModeAccept}
+          capture="environment"
+          onChange={handleFileChange}
+          className="hidden"
+          aria-hidden="true"
+        />
+      )}
+
+      {helperText && !error && (
+        <Text variant="secondary" size="xs">
+          {helperText}
+        </Text>
+      )}
+
+      {error && <Alert variant="error">{error}</Alert>}
+
+      {pendingVideoUrl && (
+        <VideoTrimModal
+          isOpen={showTrimModal}
+          videoUrl={pendingVideoUrl}
+          onClose={handleTrimClose}
+          onSave={handleTrimSave}
+        />
+      )}
+
+      {pendingVideoUrl && (
+        <VideoThumbnailSelector
+          isOpen={showThumbnailModal}
+          videoUrl={pendingVideoUrl}
+          onClose={handleThumbnailClose}
+          onSelect={handleThumbnailSelect}
+          onUpload={onUpload}
+        />
+      )}
+    </div>
+  );
+}

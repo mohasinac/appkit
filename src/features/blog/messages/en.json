@@ -1,0 +1,14 @@
+{
+  "title": "Blog",
+  "all": "All",
+  "readMore": "Read More",
+  "minRead": "{{count}} min read",
+  "noPostsFound": "No posts found",
+  "category": {
+    "news": "News",
+    "tips": "Tips",
+    "guides": "Guides",
+    "updates": "Updates",
+    "community": "Community"
+  }
+}

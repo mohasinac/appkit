@@ -1,0 +1,14 @@
+{
+  "title": "Frequently Asked Questions",
+  "all": "All",
+  "noFAQs": "No questions found",
+  "category": {
+    "orders_payment": "Orders & Payment",
+    "shipping_delivery": "Shipping & Delivery",
+    "returns_refunds": "Returns & Refunds",
+    "product_information": "Product Information",
+    "account_security": "Account & Security",
+    "technical_support": "Technical Support",
+    "general": "General"
+  }
+}
