@@ -9,6 +9,8 @@ export type {
   NavProps,
   BlockHeaderProps,
   BlockFooterProps,
+  HeaderProps,
+  FooterProps,
   UlProps,
   OlProps,
   LiProps,
@@ -21,6 +23,8 @@ export {
   Nav,
   BlockHeader,
   BlockFooter,
+  Header,
+  Footer,
   Ul,
   Ol,
   Li,
@@ -39,6 +43,21 @@ export { Skeleton } from "./components/Skeleton";
 // ─── Interactive ──────────────────────────────────────────────────────────────
 export type { ButtonProps } from "./components/Button";
 export { Button } from "./components/Button";
+
+export type { IconButtonProps } from "./components/IconButton";
+export { IconButton } from "./components/IconButton";
+
+export type { TextLinkProps } from "./components/TextLink";
+export { TextLink } from "./components/TextLink";
+
+export type { TooltipProps } from "./components/Tooltip";
+export { Tooltip } from "./components/Tooltip";
+
+export type { AccordionProps } from "./components/Accordion";
+export { Accordion } from "./components/Accordion";
+
+export type { FormProps } from "./components/Form";
+export { Form } from "./components/Form";
 
 export type { BadgeProps, BadgeVariant } from "./components/Badge";
 export { Badge } from "./components/Badge";

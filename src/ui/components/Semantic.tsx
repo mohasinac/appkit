@@ -245,3 +245,13 @@ export function Li({ className = "", children, ...props }: LiProps) {
     </li>
   );
 }
+
+// ─── Header / Footer — convenience aliases ────────────────────────────────────
+/**
+ * Aliases for `BlockHeader` and `BlockFooter`.
+ * Use when importing from the standard `<Header>` / `<Footer>` names.
+ */
+export type HeaderProps = BlockHeaderProps;
+export const Header = BlockHeader;
+export type FooterProps = BlockFooterProps;
+export const Footer = BlockFooter;

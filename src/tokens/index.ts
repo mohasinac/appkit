@@ -752,6 +752,11 @@ export const THEME_CONSTANTS = {
     section:     "space-y-6",
     sectionHead: "text-base font-semibold text-zinc-900 dark:text-zinc-100 border-b pb-2 mb-2 border-zinc-200 dark:border-zinc-700",
   } as const,
+  /** Tooltip bubble styles — used by the <Tooltip> component. */
+  tooltip: {
+    content: "z-50 px-2 py-1 text-xs font-medium rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm",
+    arrow:   "fill-zinc-900 dark:fill-zinc-100",
+  } as const,
   utilities: UTILITIES,
   patterns: PATTERNS,
   icon: ICON,
