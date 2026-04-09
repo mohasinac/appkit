@@ -30,6 +30,9 @@ export {
   Li,
 } from "./components/Semantic";
 
+export type { DivProps } from "./components/Div";
+export { Div } from "./components/Div";
+
 // ─── Typography primitives ────────────────────────────────────────────────────
 export { Heading, Text, Label, Caption, Span } from "./components/Typography";
 
