@@ -1,6 +1,7 @@
 // appkit/src/seed/runner.ts
 // Server-only — requires firebase-admin
 import type { SeedConfig, SeedResult } from "./types";
+import { encryptPiiFields } from "../security/pii-encrypt";
 
 const BATCH_SIZE = 400; // Firestore max batch is 500
 
@@ -16,6 +17,7 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
       data,
       idField = "id",
       merge = false,
+      piiFields = [],
     } = collection;
 
     config.onProgress?.(name, 0, data.length);
@@ -25,12 +27,19 @@ export async function runSeed(config: SeedConfig): Promise<SeedResult> {
       const slice = data.slice(written, written + BATCH_SIZE);
       if (!config.dryRun) {
         const batch = db.batch();
-        for (const doc of slice) {
+        for (const rawDoc of slice) {
+          const doc = piiFields.length
+            ? encryptPiiFields(
+                rawDoc as Record<string, unknown>,
+                piiFields as string[],
+              )
+            : (rawDoc as Record<string, unknown>);
           const id = String(
-            (doc as Record<string, unknown>)[idField] ?? `auto-${written + slice.indexOf(doc)}`,
+            (rawDoc as Record<string, unknown>)[idField] ??
+              `auto-${written + slice.indexOf(rawDoc)}`,
           );
           const ref = db.collection(name).doc(id);
-          batch.set(ref, doc as Record<string, unknown>, { merge });
+          batch.set(ref, doc, { merge });
         }
         await batch.commit();
       }

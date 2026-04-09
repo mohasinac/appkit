@@ -141,6 +141,17 @@ export type {
 } from "./components/HorizontalScroller";
 export { HorizontalScroller } from "./components/HorizontalScroller";
 
+// Tab strip with ResizeObserver-driven overflow scroll
+export type { TabStripProps, TabStripTab } from "./components/TabStrip";
+export { TabStrip } from "./components/TabStrip";
+
+// Fluid form layout
+export type { FormGridProps, FormFieldProps } from "./components/FormGrid";
+export { FormGrid, FormField } from "./components/FormGrid";
+
+export type { DescriptionFieldProps } from "./components/DescriptionField";
+export { DescriptionField } from "./components/DescriptionField";
+
 export type {
   ActiveFilter,
   ActiveFilterChipsProps,

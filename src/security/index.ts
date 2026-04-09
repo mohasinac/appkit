@@ -18,6 +18,15 @@ export {
 } from "./authorization";
 export type { UserRole } from "./authorization";
 export { redactPii } from "./pii-redact";
+export {
+  encryptValue,
+  decryptValue,
+  hmacBlindIndex,
+  encryptPiiFields,
+  decryptPiiFields,
+  ENC_PREFIX,
+  HMAC_PREFIX,
+} from "./pii-encrypt";
 
 // RBAC system
 export type {

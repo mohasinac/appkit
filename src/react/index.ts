@@ -75,3 +75,17 @@ export type {
   UseBulkActionOptions,
   UseBulkActionReturn,
 } from "./hooks/useBulkAction";
+
+// Container-aware fluid grid column counter (ResizeObserver-based)
+export { useContainerGrid } from "./hooks/useContainerGrid";
+export type {
+  UseContainerGridOptions,
+  UseContainerGridResult,
+} from "./hooks/useContainerGrid";
+
+// Visible-items counter for tab strips and overflow scrollers
+export { useVisibleItems } from "./hooks/useVisibleItems";
+export type {
+  UseVisibleItemsOptions,
+  UseVisibleItemsResult,
+} from "./hooks/useVisibleItems";

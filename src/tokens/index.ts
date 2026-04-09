@@ -375,6 +375,45 @@ const GRID = {
   withFilter: "grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr_200px] gap-4 xl:gap-6",
 } as const;
 
+// ─── FLUID GRID ─────────────────────────────────────────────────────────────
+/**
+ * Minimum item widths for auto-fill fluid grids matching the four
+ * `fluid-grid-*` CSS utilities (defined in tailwind.config.js plugin).
+ *
+ * Usage: `useContainerGrid({ minItemWidth: FLUID_GRID_MIN_WIDTHS.card })`
+ */
+export const FLUID_GRID_MIN_WIDTHS = {
+  /** Product cards, store cards */
+  card: 220,
+  /** Admin stat cards, user cards */
+  admin: 260,
+  /** Blog cards, event cards */
+  wide: 300,
+  /** Gallery thumbnails */
+  thumb: 160,
+  /** Form fields — two-column threshold */
+  form: 280,
+  /** Tab strip items */
+  tabItem: 100,
+  /** Filter chips */
+  chip: 80,
+} as const;
+
+/**
+ * Tailwind CSS class strings for fluid auto-fill grids.
+ * Use these instead of `grid grid-cols-*` breakpoint classes.
+ */
+const FLUID_GRID = {
+  /** Product / store cards — min 220 px */
+  card: "fluid-grid-card",
+  /** Admin stat / user cards — min 260 px */
+  admin: "fluid-grid-admin",
+  /** Blog / event cards — min 300 px */
+  wide: "fluid-grid-wide",
+  /** Gallery thumbnails — min 160 px */
+  thumb: "fluid-grid-thumb",
+} as const;
+
 /**
  * Page container presets — max-width + centering + responsive horizontal padding.
  * Mirrors the CONTAINER_MAP inlined in @mohasinac/ui Layout.tsx.
@@ -700,6 +739,19 @@ export const THEME_CONSTANTS = {
   motion: MOTION,
   text: TEXT,
   touch: TOUCH,
+  fluidGrid: FLUID_GRID,
+  /** Form layout tokens — pair with FormGrid / FormField components */
+  form: {
+    grid:        "flex flex-wrap gap-4",
+    field:       "flex-1 min-w-[280px] flex flex-col gap-1.5",
+    fieldWide:   "w-full flex flex-col gap-1.5",
+    fieldHalf:   "w-1/2 min-w-[280px] flex flex-col gap-1.5",
+    label:       "text-sm font-medium text-zinc-700 dark:text-zinc-300",
+    hint:        "text-xs text-zinc-500 dark:text-zinc-400",
+    error:       "text-xs text-red-600 dark:text-red-400",
+    section:     "space-y-6",
+    sectionHead: "text-base font-semibold text-zinc-900 dark:text-zinc-100 border-b pb-2 mb-2 border-zinc-200 dark:border-zinc-700",
+  } as const,
   utilities: UTILITIES,
   patterns: PATTERNS,
   icon: ICON,

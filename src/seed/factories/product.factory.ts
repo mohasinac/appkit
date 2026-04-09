@@ -45,3 +45,39 @@ export function makeProduct(
     ...overrides,
   };
 }
+
+/** Full product with all optional fields populated — for rendering tests */
+export function makeFullProduct(
+  overrides: Partial<SeedBaseProductDocument> = {},
+): SeedBaseProductDocument {
+  return makeProduct({
+    mainImage: "https://example.com/product.jpg",
+    images: [
+      "https://example.com/product-1.jpg",
+      "https://example.com/product-2.jpg",
+    ],
+    seoTitle: "Buy Amazing Product Online",
+    tags: ["featured", "new-arrival"],
+    ...overrides,
+  });
+}
+
+/** Named fixtures used by seed scripts and integration tests */
+export const PRODUCT_FIXTURES = {
+  basic: makeProduct({ id: "product-1", title: "Basic Product", slug: "basic-product" }),
+  full: makeFullProduct({
+    id: "product-2",
+    title: "Full Product",
+    slug: "full-product",
+    price: 1499,
+    category: "clothing",
+    tags: ["featured"],
+  }),
+  outOfStock: makeProduct({
+    id: "product-3",
+    title: "Out of Stock Product",
+    slug: "out-of-stock-product",
+    stockQuantity: 0,
+    availableQuantity: 0,
+  }),
+};
