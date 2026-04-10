@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
   "author": "Mohasin AC",
   "license": "MIT",
@@ -180,6 +180,21 @@
       "types": "./dist/features/blog/index.d.ts",
       "import": "./dist/features/blog/index.js",
       "require": "./dist/features/blog/index.cjs"
+    },
+    "./features/about": {
+      "types": "./dist/features/about/index.d.ts",
+      "import": "./dist/features/about/index.js",
+      "require": "./dist/features/about/index.cjs"
+    },
+    "./features/contact": {
+      "types": "./dist/features/contact/index.d.ts",
+      "import": "./dist/features/contact/index.js",
+      "require": "./dist/features/contact/index.cjs"
+    },
+    "./features/copilot": {
+      "types": "./dist/features/copilot/index.d.ts",
+      "import": "./dist/features/copilot/index.js",
+      "require": "./dist/features/copilot/index.cjs"
     },
     "./features/cart": {
       "types": "./dist/features/cart/index.d.ts",
@@ -363,8 +378,12 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup && cross-env BUILD_BATCH=7 tsup",
+    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup && cross-env BUILD_BATCH=7 tsup && cross-env BUILD_BATCH=8 tsup && cross-env BUILD_BATCH=9 tsup",
     "dev": "tsup --watch",
+    "watch:primitives": "cross-env BUILD_BATCH=1 tsup --watch",
+    "watch:features-a": "cross-env BUILD_BATCH=3 tsup --watch",
+    "watch:features-b": "cross-env BUILD_BATCH=4 tsup --watch",
+    "watch:features-c": "cross-env BUILD_BATCH=5 tsup --watch",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
   },

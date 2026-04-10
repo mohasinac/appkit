@@ -49,6 +49,9 @@ const alias: Record<string, string> = {
   "@mohasinac/feat-corporate": path.resolve("src/features/corporate"),
   "@mohasinac/feat-events": path.resolve("src/features/events"),
   "@mohasinac/feat-faq": path.resolve("src/features/faq"),
+  "@mohasinac/feat-about": path.resolve("src/features/about"),
+  "@mohasinac/feat-contact": path.resolve("src/features/contact"),
+  "@mohasinac/feat-copilot": path.resolve("src/features/copilot"),
   "@mohasinac/feat-homepage": path.resolve("src/features/homepage"),
   "@mohasinac/feat-loyalty": path.resolve("src/features/loyalty"),
   "@mohasinac/feat-orders": path.resolve("src/features/orders"),
@@ -77,14 +80,17 @@ const primitiveEntries = {
   "validation/index": "src/validation/index.ts",
   "tokens/index": "src/tokens/index.ts",
   "next/index": "src/next/index.ts",
-  "react/index": "src/react/index.ts",
-  "ui/index": "src/ui/index.ts",
   "security/index": "src/security/index.ts",
   "seo/index": "src/seo/index.ts",
   "monitoring/index": "src/monitoring/index.ts",
   "instrumentation/index": "src/instrumentation/index.ts",
   "style/tailwind/index": "src/style/tailwind/index.ts",
   "style/vanilla/index": "src/style/vanilla/index.ts",
+};
+
+const clientPrimitiveEntries = {
+  "react/index": "src/react/index.ts",
+  "ui/index": "src/ui/index.ts",
 };
 
 const providerEntries = {
@@ -107,8 +113,11 @@ const featureEntries = {
   "features/account/index": "src/features/account/index.ts",
   "features/admin/index": "src/features/admin/index.ts",
   "features/cms/index": "src/features/cms/index.ts",
+  "features/about/index": "src/features/about/index.ts",
   "features/blog/index": "src/features/blog/index.ts",
   "features/cart/index": "src/features/cart/index.ts",
+  "features/contact/index": "src/features/contact/index.ts",
+  "features/copilot/index": "src/features/copilot/index.ts",
   "features/categories/index": "src/features/categories/index.ts",
   "features/checkout/index": "src/features/checkout/index.ts",
   "features/collections/index": "src/features/collections/index.ts",
@@ -179,6 +188,12 @@ const featureEntriesD = {
   "features/whatsapp-bot/index": "src/features/whatsapp-bot/index.ts",
   "cli/index": "src/cli/index.ts",
   "seed/index": "src/seed/index.ts",
+};
+
+const featureEntriesE = {
+  "features/about/index": "src/features/about/index.ts",
+  "features/contact/index": "src/features/contact/index.ts",
+  "features/copilot/index": "src/features/copilot/index.ts",
 };
 
 /** Batch 7 — server-only API handler sub-paths (no React/client code). */
@@ -297,6 +312,35 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     format: ["esm", "cjs"],
     dts: { resolve: false },
     splitting: false,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external,
+  },
+  "8": {
+    entry: clientPrimitiveEntries,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: false,
+    sourcemap: true,
+    clean: false,
+    treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
+    esbuildOptions(options) {
+      options.alias = alias;
+    },
+    external,
+  },
+  "9": {
+    entry: featureEntriesE,
+    format: ["esm", "cjs"],
+    dts: { resolve: false },
+    splitting: true,
     sourcemap: true,
     clean: false,
     treeshake: true,

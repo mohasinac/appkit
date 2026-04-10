@@ -17,3 +17,5 @@ export type { BeforeAfterCardProps } from "./BeforeAfterCard";
 export { BeforeAfterCard } from "./BeforeAfterCard";
 export type { NewsletterBannerProps } from "./NewsletterBanner";
 export { NewsletterBanner } from "./NewsletterBanner";
+export { HomepageView } from "./HomepageView";
+export type { HomepageViewProps } from "./HomepageView";

@@ -42,12 +42,22 @@ export interface FAQ {
 export interface FAQListResponse {
   items: FAQ[];
   total: number;
+  page?: number;
+  pageSize?: number;
+  totalPages?: number;
+  hasMore?: boolean;
+  categories?: readonly string[];
 }
 
 export interface FAQListParams {
   category?: FAQCategory;
   homepage?: boolean;
   q?: string;
+  search?: string;
+  tags?: string[];
+  showOnHomepage?: boolean;
   page?: number;
   perPage?: number;
+  pageSize?: number;
+  sorts?: string;
 }

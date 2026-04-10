@@ -6,9 +6,15 @@ interface FAQAccordionItemProps {
   faq: FAQ;
   isOpen: boolean;
   onToggle: () => void;
+  renderExpandedFooter?: (faq: FAQ) => React.ReactNode;
 }
 
-function FAQAccordionItem({ faq, isOpen, onToggle }: FAQAccordionItemProps) {
+function FAQAccordionItem({
+  faq,
+  isOpen,
+  onToggle,
+  renderExpandedFooter,
+}: FAQAccordionItemProps) {
   return (
     <Div className="border-b border-neutral-200 last:border-0">
       <Button
@@ -39,6 +45,18 @@ function FAQAccordionItem({ faq, isOpen, onToggle }: FAQAccordionItemProps) {
       </Button>
       {isOpen && (
         <Div className="pb-4 text-sm text-neutral-600">
+          {faq.tags && faq.tags.length > 0 && (
+            <Div className="mb-3 flex flex-wrap gap-2">
+              {faq.tags.map((tag) => (
+                <Span
+                  key={tag}
+                  className="rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-600"
+                >
+                  {tag}
+                </Span>
+              ))}
+            </Div>
+          )}
           {faq.answer.format === "html" ? (
             <Div
               className="prose prose-sm max-w-none"
@@ -47,19 +65,38 @@ function FAQAccordionItem({ faq, isOpen, onToggle }: FAQAccordionItemProps) {
           ) : (
             <Text className="whitespace-pre-line">{faq.answer.text}</Text>
           )}
+          {renderExpandedFooter?.(faq)}
         </Div>
       )}
     </Div>
   );
 }
 
-interface FAQAccordionProps {
+export interface FAQAccordionProps {
   faqs: FAQ[];
   className?: string;
+  /** Render extra content inside the expanded panel (below the answer text). */
+  renderExpandedFooter?: (faq: FAQ) => React.ReactNode;
+  labels?: {
+    noResults?: string;
+  };
 }
 
-export function FAQAccordion({ faqs, className = "" }: FAQAccordionProps) {
+export function FAQAccordion({
+  faqs,
+  className = "",
+  renderExpandedFooter,
+  labels,
+}: FAQAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
+
+  if (faqs.length === 0 && labels?.noResults) {
+    return (
+      <Div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
+        <Text className="text-neutral-600">{labels.noResults}</Text>
+      </Div>
+    );
+  }
 
   return (
     <Div
@@ -71,6 +108,7 @@ export function FAQAccordion({ faqs, className = "" }: FAQAccordionProps) {
           faq={faq}
           isOpen={openId === faq.id}
           onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
+          renderExpandedFooter={renderExpandedFooter}
         />
       ))}
     </Div>

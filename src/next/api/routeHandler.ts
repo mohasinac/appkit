@@ -105,7 +105,7 @@ export function createRouteHandler<
   return async (
     request: Request,
     context: { params: Promise<TParams> },
-  ): Promise<NextResponse> => {
+  ): Promise<Response> => {
     try {
       // ── Auth ──────────────────────────────────────────────────────────────
       let user: RouteUser | undefined;
