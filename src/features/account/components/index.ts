@@ -38,6 +38,10 @@ export type {
 } from "./UserOffersView";
 export { MessagesView } from "./MessagesView";
 export type { MessagesViewProps, MessagesViewLabels } from "./MessagesView";
+export { ChatList } from "./ChatList";
+export type { ChatListProps, ChatListLabels } from "./ChatList";
+export { ChatWindow } from "./ChatWindow";
+export type { ChatWindowProps, ChatWindowLabels } from "./ChatWindow";
 export { BecomeSellerView } from "./BecomeSellerView";
 export type {
   BecomeSellerViewProps,

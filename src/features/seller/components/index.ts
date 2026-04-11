@@ -17,6 +17,13 @@ export { SellersListView } from "./SellersListView";
 export type { SellersListViewProps } from "./SellersListView";
 export { SellerPayoutsView } from "./SellerPayoutsView";
 export type { SellerPayoutsViewProps } from "./SellerPayoutsView";
+export { SellerPayoutStats } from "./SellerPayoutStats";
+export type { SellerPayoutStatsProps } from "./SellerPayoutStats";
+export { SellerPayoutHistoryTable } from "./SellerPayoutHistoryTable";
+export type {
+  SellerPayoutHistoryTableProps,
+  SellerPayoutHistoryTableLabels,
+} from "./SellerPayoutHistoryTable";
 export { SellerPayoutSettingsView } from "./SellerPayoutSettingsView";
 export type { SellerPayoutSettingsViewProps } from "./SellerPayoutSettingsView";
 export { SellerAnalyticsView } from "./SellerAnalyticsView";
