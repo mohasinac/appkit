@@ -211,6 +211,18 @@ import { SiteConfig } from "@/config/site";
 - “Keep it in the consumer because it is different today” is not an acceptable steady-state architecture decision.
 - The only acceptable long-term reasons for code to remain outside appkit are consumer-only routing, server action entrypoints, project configuration, secrets, and deployment/runtime wiring.
 
+### 15. Multi-Session Delivery Discipline
+
+- Assume migration work may continue across many separate Copilot sessions and machines.
+- Keep changes scoped so each session can end with a coherent commit and a clear next starting point.
+- When working from `prune.md`, treat it as the authoritative backlog and update it as part of the workflow, not as an afterthought.
+- If watcher/build output is available, use it continuously during the session and mention its latest state in the handoff summary.
+- Prefer incremental, appkit-owned migration steps that can be resumed independently instead of large cross-repo unfinished rewrites.
+- Multiple related migration tasks may be completed in the same session when they serve one appkit-owned delivery unit, share validation signals, and still produce a coherent commit.
+- Do not batch unrelated cleanup just to increase throughput; batching is for tightly coupled migration steps only.
+- After each meaningful change batch, update `prune.md` or the active migration tracker so status stays current while work is in progress.
+- After each commit, refresh the tracker status to reflect the exact committed state rather than pending local edits.
+
 ---
 
 ## File Conventions
