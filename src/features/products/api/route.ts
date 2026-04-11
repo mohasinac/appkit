@@ -18,6 +18,7 @@ import { z } from "zod";
 import { getProviders } from "@mohasinac/contracts";
 import { createRouteHandler } from "@mohasinac/next";
 import type { ProductItem, ProductListResponse } from "../types/index.js";
+import { mediaFieldSchema } from "../../media/types/index.js";
 
 type ProductRecord = ProductItem & {
   sellerId?: string;
@@ -56,6 +57,10 @@ const productMutateSchema = z
     sellerName: z.string().optional(),
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
+    listingType: z
+      .enum(["fixed", "standard", "auction", "pre-order"])
+      .optional(),
+    media: z.array(mediaFieldSchema).optional(),
   })
   .passthrough();
 

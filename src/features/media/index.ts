@@ -24,7 +24,12 @@ export { MediaSlider } from "./components/MediaSlider";
 export type { MediaSliderProps } from "./components/MediaSlider";
 
 // Hooks
-export { useMediaUpload, useMediaCrop, useMediaTrim } from "./hooks/useMedia";
+export {
+  useMediaUpload,
+  useMediaCrop,
+  useMediaTrim,
+  useMediaCleanup,
+} from "./hooks/useMedia";
 export type {
   MediaUploadResult,
   MediaCropInput,
@@ -50,6 +55,12 @@ export type { ImageUploadProps } from "./upload/ImageUpload";
 
 export { MediaUploadField } from "./upload/MediaUploadField";
 export type { MediaUploadFieldProps } from "./upload/MediaUploadField";
+
+export { MediaUploadList } from "./upload/MediaUploadList";
+export type { MediaUploadListProps } from "./upload/MediaUploadList";
+
+export { inferMediaTypeFromMime, mediaFieldSchema } from "./types/index";
+export type { MediaField, MediaFieldType } from "./types/index";
 
 export { default as CameraCapture } from "./upload/CameraCapture";
 export type { CameraCaptureProps } from "./upload/CameraCapture";

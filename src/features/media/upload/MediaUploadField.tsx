@@ -7,7 +7,7 @@
  * Stage locally → caller-provided onUpload() → /api/media/upload.
  */
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "@mohasinac/react";
 import { Alert, Button, Div, Label, Spinner, Text } from "@mohasinac/ui";
@@ -16,11 +16,13 @@ import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
 import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
+import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
 export interface MediaUploadFieldProps {
   label: string;
   value: string;
   onChange: (url: string) => void;
+  onChangeField?: (media: MediaField | null) => void;
   onUpload: (file: File) => Promise<string>;
   accept?: string;
   maxSizeMB?: number;
@@ -31,6 +33,19 @@ export interface MediaUploadFieldProps {
   enableTrim?: boolean;
   enableThumbnail?: boolean;
   onThumbnailChange?: (url: string) => void;
+  /**
+   * Called with every URL that was staged (uploaded) but never persisted.
+   * The parent form should call `DELETE /api/media?url=…` for each entry.
+   */
+  onAbort?: (stagedUrls: string[]) => void;
+  /**
+   * Called whenever staged URLs change.
+   */
+  onStagedUrlsChange?: (stagedUrls: string[]) => void;
+  /**
+   * Set true after successful save to prevent auto-cleanup on unmount.
+   */
+  isPersisted?: boolean;
 }
 
 function isVideo(url: string): boolean {
@@ -54,6 +69,7 @@ export function MediaUploadField({
   label,
   value,
   onChange,
+  onChangeField,
   onUpload,
   accept = "*",
   maxSizeMB = 50,
@@ -64,6 +80,9 @@ export function MediaUploadField({
   enableTrim = true,
   enableThumbnail = true,
   onThumbnailChange,
+  onAbort,
+  onStagedUrlsChange,
+  isPersisted = false,
 }: MediaUploadFieldProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,6 +93,50 @@ export function MediaUploadField({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mobileCaptureRef = useRef<HTMLInputElement>(null);
+  const stagedUrlsRef = useRef<string[]>([]);
+  const onAbortRef = useRef(onAbort);
+  const onStagedUrlsChangeRef = useRef(onStagedUrlsChange);
+  const isPersistedRef = useRef(isPersisted);
+
+  useEffect(() => {
+    onAbortRef.current = onAbort;
+  }, [onAbort]);
+
+  useEffect(() => {
+    onStagedUrlsChangeRef.current = onStagedUrlsChange;
+  }, [onStagedUrlsChange]);
+
+  useEffect(() => {
+    isPersistedRef.current = isPersisted;
+  }, [isPersisted]);
+
+  // On unmount, clean up only if the form wasn't persisted.
+  useEffect(() => {
+    return () => {
+      if (!isPersistedRef.current && stagedUrlsRef.current.length > 0) {
+        onAbortRef.current?.([...stagedUrlsRef.current]);
+      }
+    };
+  }, []);
+
+  const emitStaged = () => {
+    onStagedUrlsChangeRef.current?.([...stagedUrlsRef.current]);
+  };
+
+  const stageUrl = (url: string) => {
+    if (!stagedUrlsRef.current.includes(url)) {
+      stagedUrlsRef.current.push(url);
+      emitStaged();
+    }
+  };
+
+  const unstageUrl = (url: string) => {
+    const next = stagedUrlsRef.current.filter((u) => u !== url);
+    if (next.length !== stagedUrlsRef.current.length) {
+      stagedUrlsRef.current = next;
+      emitStaged();
+    }
+  };
 
   const t = useTranslations("camera");
   const tUpload = useTranslations("upload");
@@ -95,6 +158,11 @@ export function MediaUploadField({
         : "image/*";
 
   const afterUpload = (url: string, fileType: string) => {
+    onChangeField?.({
+      url,
+      type: inferMediaTypeFromMime(fileType, url),
+    });
+
     const isVideoFile = fileType.startsWith("video/");
     if (isVideoFile && enableTrim) {
       setPendingVideoUrl(url);
@@ -155,6 +223,7 @@ export function MediaUploadField({
     setIsLoading(true);
     try {
       const url = await onUpload(file);
+      stageUrl(url);
       afterUpload(url, file.type);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -165,7 +234,12 @@ export function MediaUploadField({
   };
 
   const handleRemove = () => {
+    if (value && stagedUrlsRef.current.includes(value)) {
+      onAbortRef.current?.([value]);
+      unstageUrl(value);
+    }
     onChange("");
+    onChangeField?.(null);
     setError(null);
   };
 
@@ -176,6 +250,7 @@ export function MediaUploadField({
     setIsLoading(true);
     try {
       const url = await onUpload(file);
+      stageUrl(url);
       afterUpload(url, blob.type);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -253,7 +328,7 @@ export function MediaUploadField({
       {!disabled && !isLoading && (
         <>
           {captureSource === "both" && isCameraSupported && (
-              <Div className="flex items-center gap-2">
+            <Div className="flex items-center gap-2">
               <Button
                 type="button"
                 variant={inputMode === "file" ? "primary" : "outline"}

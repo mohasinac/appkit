@@ -107,13 +107,14 @@ The appkit component reads feature-level config from the prop; letitrip passes t
 ```ts
 // ✗ Bad — letitrip shim re-exporting appkit
 // src/lib/monitoring/performance.ts
-export { trackPerformance } from '@mohasinac/appkit/monitoring';
+export { trackPerformance } from "@mohasinac/appkit/monitoring";
 
 // ✓ Good — every consumer imports directly
-import { trackPerformance } from '@mohasinac/appkit/monitoring';
+import { trackPerformance } from "@mohasinac/appkit/monitoring";
 ```
 
 **When deleting a re-export file:**
+
 1. Run a codebase-wide find for the shim's import path.
 2. Replace each occurrence with the canonical appkit import.
 3. Delete the shim file.
@@ -151,8 +152,77 @@ import { SiteConfig } from "@/config/site";
 
 ---
 
+### 10. Multi-Media Support in Schemas and Forms
+
+- Any schema field that can hold ≥ 1 image, video, or file uses `MediaField` — a single typed descriptor:
+  ```ts
+  type MediaField = {
+    url: string;
+    type: "image" | "video" | "file";
+    alt?: string;
+  };
+  // Single media: MediaField | null
+  // Multiple media: MediaField[]
+  ```
+- Forms that include media uploads use `<MediaUploadField>` (single) or `<MediaUploadList>` (multiple), both from `@mohasinac/appkit/media`.
+- **Auto-delete on cancel:** Every `<MediaUploadField>` / `<MediaUploadList>` instance receives an `onAbort` prop. The parent form calls `onAbort()` for every staged-but-unsaved URL when the user dismisses without saving. The implementation calls `DELETE /api/media?url=...` for each staged URL so orphaned files are never left in storage.
+- Media upload hooks (`useMediaUpload`, `useMediaCrop`, `useMediaTrim`) live in `appkit/src/features/media/hooks/`. Consumer apps never redefine upload logic.
+
+### 11. Standardised ID Generators
+
+- All ID generation for Firestore documents uses the pre-built generators in `appkit/src/utils/id-generators.ts`.
+- Every generator accepts an optional `customId?: string` override — if supplied it is returned as-is (validated as non-empty string), allowing callers to bring their own ID without duplicating the generator.
+  ```ts
+  export function generateProductId(
+    input: GenerateProductIdInput & { customId?: string },
+  ): string {
+    if (input.customId?.trim()) return input.customId.trim();
+    // ... derived slug logic
+  }
+  ```
+- Do not create ad-hoc ID strings (`Date.now()`, `Math.random()`, `uuidv4()`) anywhere in letitrip or in appkit features. Always call the typed generator.
+- New entity types get a new generator added to `id-generators.ts` — never inline.
+
+### 12. Auction / Pre-Order / Listing Logic Is Appkit-Configurable
+
+- Auction, pre-order, and listing behaviours (bidding logic, countdown timers, pre-order eligibility windows, offer negotiation flows) are **generic marketplace patterns** and belong in appkit under `src/features/products/` and `src/features/auctions/`.
+- letitrip passes configuration (e.g. `listingType="auction" | "pre-order" | "standard"`) — it never duplicates the business logic.
+- Hard-coded country/currency values (`INR`, `IN`) **do** remain letitrip-specific and must be injected via `SiteConfig` / `providers.config.ts`, never hard-coded in appkit.
+
+---
+
+## File Conventions
+
+| Pattern           | Rule                                              |
+| ----------------- | ------------------------------------------------- |
+| `*View.tsx`       | Full-page view — must be `async` Server Component |
+| `*Form.tsx`       | Form component — may be `'use client'`            |
+| `*Drawer.tsx`     | Sliding panel — may be `'use client'`             |
+| `*Modal.tsx`      | Dialog — may be `'use client'`                    |
+| `use*.ts`         | Client hook — always `'use client'`               |
+| `*.repository.ts` | Repository class — never `'use client'`           |
+| `*.schema.ts`     | Firestore constants — never `'use client'`        |
+| `*.factory.ts`    | Seed factory — never `'use client'`               |
+
+---
+
+## Import Order
+
+```ts
+// 1. React / Next
+import React from "react";
+import { cookies } from "next/headers";
+// 2. Appkit
+import { Container, Stack } from "@mohasinac/appkit/ui";
+import { BlogRepository } from "@mohasinac/appkit/features/blog";
+// 3. Local (letitrip-specific)
+import { SiteConfig } from "@/config/site";
+```
+
+---
+
 ## What NOT to Add to Appkit
 
-- letitrip-specific business rules (country/currency hard-coded to India/INR, listing auction/pre-order logic specific to this marketplace)
+- Hard-coded country/currency values (`INR`, `IN`, phone code `+91`) — inject via `SiteConfig`
 - Firebase project credentials or `.env` values
 - Next.js `app/` route pages — those always stay in the consumer app

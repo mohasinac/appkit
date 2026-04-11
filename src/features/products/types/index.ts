@@ -1,3 +1,5 @@
+import type { MediaField } from "../../media/types/index.js";
+
 export type ProductStatus =
   | "draft"
   | "published"
@@ -14,7 +16,7 @@ export type ProductCondition =
   | "used"
   | "refurbished"
   | "broken";
-export type ListingType = "fixed" | "auction";
+export type ListingType = "fixed" | "standard" | "auction" | "pre-order";
 
 export interface ProductImage {
   url: string;
@@ -39,6 +41,7 @@ export interface ProductItem {
   currency?: string;
   mainImage?: string;
   images?: string[];
+  media?: MediaField[];
   video?: { url: string; thumbnailUrl?: string };
   featured?: boolean;
   isPromoted?: boolean;

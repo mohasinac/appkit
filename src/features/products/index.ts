@@ -6,6 +6,7 @@ export * from "./schemas";
 export * from "./columns";
 export { ProductsRepository } from "./repository/products.repository";
 export { manifest } from "./manifest";
+export { normalizeListingType } from "./utils/listing-type";
 // Next.js App Router route handlers (2-line stub re-export)
 export { GET, POST } from "./api/route";
 export {

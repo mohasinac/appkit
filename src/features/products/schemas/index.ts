@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mediaFieldSchema } from "../../media/types/index.js";
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
@@ -40,6 +41,7 @@ export const productItemSchema = z.object({
   currency: z.string().optional(),
   mainImage: z.string().optional(),
   images: z.array(z.string()).optional(),
+  media: z.array(mediaFieldSchema).optional(),
   video: z
     .object({ url: z.string(), thumbnailUrl: z.string().optional() })
     .optional(),
@@ -72,7 +74,7 @@ export const productItemSchema = z.object({
       "broken",
     ])
     .optional(),
-  listingType: z.enum(["fixed", "auction"]).optional(),
+  listingType: z.enum(["fixed", "standard", "auction", "pre-order"]).optional(),
   isAuction: z.boolean().optional(),
   isPreOrder: z.boolean().optional(),
   inStock: z.boolean().optional(),

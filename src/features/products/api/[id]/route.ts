@@ -15,6 +15,7 @@ import { z } from "zod";
 import { getProviders } from "@mohasinac/contracts";
 import { createRouteHandler } from "@mohasinac/next";
 import type { ProductItem } from "../../types/index.js";
+import { mediaFieldSchema } from "../../../media/types/index.js";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -53,6 +54,10 @@ const productUpdateSchema = z
     isPromoted: z.boolean().optional(),
     isAuction: z.boolean().optional(),
     isPreOrder: z.boolean().optional(),
+    listingType: z
+      .enum(["fixed", "standard", "auction", "pre-order"])
+      .optional(),
+    media: z.array(mediaFieldSchema).optional(),
   })
   .passthrough();
 

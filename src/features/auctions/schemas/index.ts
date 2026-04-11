@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mediaFieldSchema } from "../../media/types/index.js";
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
@@ -31,6 +32,7 @@ export const auctionItemSchema = z.object({
   slug: z.string(),
   mainImage: z.string().optional(),
   images: z.array(z.string()).optional(),
+  media: z.array(mediaFieldSchema).optional(),
   currency: z.string(),
   price: z.number(),
   startingBid: z.number(),

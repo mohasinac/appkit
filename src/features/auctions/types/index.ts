@@ -1,3 +1,5 @@
+import type { MediaField } from "../../media/types/index.js";
+
 // ─── Auction product item ─────────────────────────────────────────────────────
 
 export interface AuctionItem {
@@ -7,6 +9,7 @@ export interface AuctionItem {
   slug?: string;
   mainImage?: string;
   images?: string[];
+  media?: MediaField[];
   currency: string;
   /** Reserve / buy-now price */
   price: number;

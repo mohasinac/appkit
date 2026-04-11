@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { mediaFieldSchema } from "../../media/types/index.js";
 
 /**
  * Base Zod schema for a preorder product item (storefront listing).
@@ -15,6 +16,7 @@ export const preorderItemSchema = z.object({
   name: z.string(),
   slug: z.string(),
   images: z.array(z.string()).optional(),
+  media: z.array(mediaFieldSchema).optional(),
   salePrice: z.number(),
   regularPrice: z.number(),
   franchise: z.string().optional(),
