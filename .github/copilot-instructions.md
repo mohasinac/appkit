@@ -24,6 +24,7 @@
 - If code is reusable across ≥ 2 consumer apps → it **must** live in appkit.
 - If the same concept exists with different variants in two repos → **merge into one configurable file** in appkit, delete both originals.
 - Consumer repos (`letitrip.in`) may only contain: Next.js `app/` routes, server actions, project-specific `providers.config.ts`, `features.config.ts`, and single-purpose adapters that call appkit APIs.
+- While consumer repos are still evolving, temporary divergence is not a reason to keep duplicate implementations outside appkit; fold the differences back into appkit quickly.
 
 ### 2. SSR by Default — Avoid `'use client'`
 
@@ -64,6 +65,9 @@ When a pattern (e.g. `flex items-center gap-2`) appears in ≥ 3 places → add 
 <Grid cols={3} gap="md">
 ```
 
+- When expanding variants, mine repeated wrapper usage across consumers before adding API surface. A new variant/config prop should correspond to a verified repeated semantic pattern, not a one-off styling preference.
+- Every new wrapper variant must preserve or improve accessibility: semantic landmark choice, heading order, focus visibility, interaction affordances, and color contrast must remain correct by default.
+
 ### 5. Merge Duplicates With Config
 
 If two files serve the same logical purpose but differ in data shape or presentation:
@@ -78,6 +82,9 @@ If two files serve the same logical purpose but differ in data shape or presenta
 ```
 
 The appkit component reads feature-level config from the prop; letitrip passes the prop — no logic duplication.
+
+If the same basename appears in both a consumer index and `appkit/index.md`, treat that as a high-confidence dedupe candidate and resolve ownership explicitly.
+Default resolution: appkit owns the reusable implementation, and the consumer is reduced to direct imports or minimal config-only wiring.
 
 ### 6. Hooks & Contexts — All in Appkit
 
@@ -96,6 +103,8 @@ The appkit component reads feature-level config from the prop; letitrip passes t
 - All third-party integrations (auth, DB, email, payment, shipping, storage, search) are abstracted behind an interface in `src/contracts/`.
 - Concrete implementations live in `src/providers/`.
 - Consumer apps register a provider in `providers.config.ts` — they never call the SDK directly.
+
+Locale, currency, and market-specific formatting config follow the same rule: appkit owns the reusable formatter/component, while the consumer injects market config.
 
 ### 9. No Re-exports — Direct Imports Only
 
@@ -188,6 +197,19 @@ import { SiteConfig } from "@/config/site";
 - Auction, pre-order, and listing behaviours (bidding logic, countdown timers, pre-order eligibility windows, offer negotiation flows) are **generic marketplace patterns** and belong in appkit under `src/features/products/` and `src/features/auctions/`.
 - letitrip passes configuration (e.g. `listingType="auction" | "pre-order" | "standard"`) — it never duplicates the business logic.
 - Hard-coded country/currency values (`INR`, `IN`) **do** remain letitrip-specific and must be injected via `SiteConfig` / `providers.config.ts`, never hard-coded in appkit.
+
+### 13. i18n and Currency APIs Must Be Shared-Ready
+
+- Shared UI and utility code must assume locale-aware rendering and must not hard-code user-facing English copy when the string belongs to a translatable interface.
+- Shared money rendering should go through canonical formatters/components such as `src/utils/number.formatter.ts`, `src/ui/components/PriceDisplay.tsx`, or provider-backed payment helpers.
+- Appkit may define formatter/component APIs and sensible fallbacks, but market ownership (currency code, country, locale policy) must stay in the consumer config.
+- If a consumer reports `$` output in an INR market, first inspect config propagation into appkit before adding local formatting patches.
+
+### 14. Consolidation Bias
+
+- If a consumer implementation differs from appkit but the concept is still reusable, merge the difference into appkit instead of preserving two codepaths.
+- “Keep it in the consumer because it is different today” is not an acceptable steady-state architecture decision.
+- The only acceptable long-term reasons for code to remain outside appkit are consumer-only routing, server action entrypoints, project configuration, secrets, and deployment/runtime wiring.
 
 ---
 
