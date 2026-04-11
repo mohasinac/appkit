@@ -5,14 +5,14 @@ import type { IStyleAdapter } from "@mohasinac/contracts";
  * Tailwind CSS adapter implementing IStyleAdapter.
  *
  * - cn()    uses twMerge to deduplicate conflicting Tailwind utility classes.
- * - token() returns a CSS custom property reference: var(--lir-{name})
+ * - token() returns a CSS custom property reference: var(--appkit-{name})
  *
  * Register this in providers.config.ts:
  *   import { tailwindAdapter } from "@mohasinac/css-tailwind";
  *   registerProviders({ ..., style: tailwindAdapter });
  *
  * Pair with @mohasinac/tokens — import tokens.css in globals.css so the
- * --lir-* variables are defined.
+ * --appkit-* variables are defined.
  */
 export const tailwindAdapter: IStyleAdapter = {
   /**
@@ -31,11 +31,11 @@ export const tailwindAdapter: IStyleAdapter = {
    * Returns a CSS custom property reference for the given token name.
    *
    * @example
-   *   tailwindAdapter.token("color-primary")  // "var(--lir-color-primary)"
-   *   tailwindAdapter.token("radius-card")    // "var(--lir-radius-card)"
+   *   tailwindAdapter.token("color-primary")  // "var(--appkit-color-primary)"
+   *   tailwindAdapter.token("radius-card")    // "var(--appkit-radius-card)"
    */
   token(name: string): string {
-    return `var(--lir-${name})`;
+    return `var(--appkit-${name})`;
   },
 };
 

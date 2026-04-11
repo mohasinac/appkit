@@ -19,7 +19,7 @@ export interface IStyleAdapter {
   cn(...classes: Array<string | undefined | null | false>): string;
   /**
    * Resolves a design token name to a CSS custom property reference.
-   * e.g. token("color-primary") → "var(--lir-color-primary)"
+   * e.g. token("color-primary") → "var(--appkit-color-primary)"
    */
   token(name: string): string;
 }

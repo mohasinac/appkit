@@ -21,20 +21,20 @@ export interface SkeletonProps {
 const BG_TERTIARY = "bg-zinc-100 dark:bg-slate-800";
 
 const WAVE_CSS = `
-@keyframes lir-skeleton-wave {
+@keyframes appkit-skeleton-wave {
   0% { transform: translateX(-100%); }
   50%, 100% { transform: translateX(100%); }
 }
-.lir-skeleton-wave {
+.appkit-skeleton-wave {
   position: relative;
   overflow: hidden;
 }
-.lir-skeleton-wave::after {
+.appkit-skeleton-wave::after {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-  animation: lir-skeleton-wave 1.5s infinite;
+  animation: appkit-skeleton-wave 1.5s infinite;
 }
 `;
 
@@ -55,7 +55,7 @@ export function Skeleton({
 
   const animationClass = {
     pulse: "animate-pulse",
-    wave: "lir-skeleton-wave",
+    wave: "appkit-skeleton-wave",
     none: "",
   }[animation];
 

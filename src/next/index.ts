@@ -36,6 +36,17 @@ export {
   getNumberParam,
 } from "./request-helpers";
 
+// Shared route-map primitives (SSR apps can extend/override)
+export {
+  DEFAULT_ROUTE_MAP,
+  createRouteMap,
+  ROUTES,
+  PUBLIC_ROUTES,
+  PROTECTED_ROUTES,
+  AUTH_ROUTES,
+} from "./routing/route-map";
+export type { RouteMap, RoutePath } from "./routing/route-map";
+
 // Response caching middleware
 export { withCache, invalidateCache } from "./cache-middleware";
 export type { CacheConfig } from "./cache-middleware";
@@ -55,3 +66,17 @@ export type {
   Middleware,
   PiiRedactionRule,
 } from "./middleware";
+
+// Standardized API response helpers
+export { successResponse, errorResponse, ApiErrors } from "./api/api-response";
+export type { ApiSuccessResponse, ApiErrorResponse } from "./api/api-response";
+
+// Error UI view components
+export { GlobalError } from "./components/GlobalError";
+export type { GlobalErrorProps } from "./components/GlobalError";
+export { ErrorView } from "./components/ErrorView";
+export type { ErrorViewProps } from "./components/ErrorView";
+export { NotFoundView } from "./components/NotFoundView";
+export type { NotFoundViewProps } from "./components/NotFoundView";
+export { UnauthorizedView } from "./components/UnauthorizedView";
+export type { UnauthorizedViewProps } from "./components/UnauthorizedView";

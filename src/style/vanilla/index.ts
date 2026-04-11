@@ -7,7 +7,7 @@ import type { IStyleAdapter } from "@mohasinac/contracts";
  * properties, CSS Modules, or any non-Tailwind styling system.
  *
  * - cn()    joins class strings, filtering falsy values (no deduplication)
- * - token() returns a CSS custom property reference: var(--lir-{name})
+ * - token() returns a CSS custom property reference: var(--appkit-{name})
  *
  * Register this in providers.config.ts:
  *   import { vanillaAdapter } from "@mohasinac/css-vanilla";
@@ -31,10 +31,10 @@ export const vanillaAdapter: IStyleAdapter = {
    * Identical to the tailwindAdapter implementation — allows interchangeability.
    *
    * @example
-   *   vanillaAdapter.token("color-primary")  // "var(--lir-color-primary)"
+   *   vanillaAdapter.token("color-primary")  // "var(--appkit-color-primary)"
    */
   token(name: string): string {
-    return `var(--lir-${name})`;
+    return `var(--appkit-${name})`;
   },
 };
 

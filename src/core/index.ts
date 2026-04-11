@@ -19,3 +19,33 @@ export type { EventSubscription } from "./EventBus";
 
 export { CacheManager, cacheManager } from "./CacheManager";
 export type { CacheOptions, CacheEntry } from "./CacheManager";
+
+export {
+  SITE_CONFIG,
+  FEATURE_FLAGS,
+  createSiteConfig,
+  resolveSiteConfig,
+} from "./site-config";
+export type { RuntimeSiteConfig } from "./site-config";
+
+export {
+  CopilotLogRepository,
+  copilotLogRepository,
+} from "./copilot-log.repository";
+export type {
+  CopilotFeedback,
+  CopilotLogDocument,
+  CopilotLogCreateInput,
+} from "./copilot-log.repository";
+
+export {
+  NewsletterRepository,
+  newsletterRepository,
+  NEWSLETTER_SUBSCRIBER_FIELDS,
+} from "./newsletter.repository";
+export type {
+  NewsletterSubscriberDocument,
+  NewsletterSubscriberCreateInput,
+  NewsletterSubscriberUpdateInput,
+  NewsletterListModel,
+} from "./newsletter.repository";

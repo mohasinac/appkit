@@ -93,3 +93,7 @@ export type {
 // Modal stack management
 export { useModalStack } from "./useModalStack";
 export type { ModalEntry } from "./useModalStack";
+
+// Error boundary
+export { ErrorBoundary } from "./ErrorBoundary";
+export type { ErrorBoundaryProps } from "./ErrorBoundary";

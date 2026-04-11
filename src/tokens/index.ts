@@ -5,7 +5,7 @@
  * Use these when you need token values in JS (e.g. canvas drawing, charting,
  * or building the tailwind.config.js color palette from a single source).
  *
- * In CSS/Tailwind prefer `var(--lir-*)` references over these constants.
+ * In CSS/Tailwind prefer `var(--appkit-*)` references over these constants.
  */
 
 // ─── Brand Colors ──────────────────────────────────────────────────────────
@@ -121,12 +121,12 @@ export const Z_INDEX = {
  * Returns a CSS custom property reference for the given token name.
  *
  * @example
- *   token("color-primary")       // "var(--lir-color-primary)"
- *   token("radius-card")         // "var(--lir-radius-card)"
- *   token("shadow-glow")         // "var(--lir-shadow-glow)"
+ *   token("color-primary")       // "var(--appkit-color-primary)"
+ *   token("radius-card")         // "var(--appkit-radius-card)"
+ *   token("shadow-glow")         // "var(--appkit-shadow-glow)"
  */
 export function token(name: string): string {
-  return `var(--lir-${name})`;
+  return `var(--appkit-${name})`;
 }
 
 // ─── Convenience groups ────────────────────────────────────────────────────
@@ -183,7 +183,6 @@ export const LOCALE_CONFIG = {
   /** Postal code pattern for India (6 digits). */
   postalPattern: /^[1-9][0-9]{5}$/,
 } as const;
-
 
 //
 // Responsive-first design system constants for Tailwind CSS.
@@ -275,7 +274,8 @@ const LAYOUT = {
   /** Kill bottom margin from last element in a zone */
   lastChild: "mb-0 pb-0",
   /** Combined bottom-nav bar (hidden on lg+, iPhone safe-area aware) */
-  bottomNav: "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]",
+  bottomNav:
+    "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]",
   /** Main content bottom padding to clear the bottom nav on mobile */
   mainPadBottomNav: "pb-20 lg:pb-0",
 } as const;
@@ -411,13 +411,15 @@ const GRID = {
   oneThird: "grid grid-cols-1 md:grid-cols-[1fr_2fr]",
   // Phase 20 mobile-first named grid presets
   /** Product grid — 2 cols on mobile, scales to 5 on ultrawide */
-  products: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 xl:gap-6",
+  products:
+    "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 xl:gap-6",
   /** Wide card grid — 1 col on mobile → 3 on xl */
   wide: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 xl:gap-8",
   /** Admin stats grid — 1 col → 4 KPI tiles on xl */
   admin: "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4",
   /** Filter sidebar + main content + optional right aside */
-  withFilter: "grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr_200px] gap-4 xl:gap-6",
+  withFilter:
+    "grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr_200px] gap-4 xl:gap-6",
 } as const;
 
 // ─── FLUID GRID ─────────────────────────────────────────────────────────────
@@ -520,9 +522,11 @@ const CARD = {
   /** Product card image wrapper — portrait aspect ratio */
   image: "relative aspect-[3/4] overflow-hidden bg-zinc-100 dark:bg-zinc-800",
   /** Wide image wrapper — video/landscape ratio */
-  imageWide: "relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  imageWide:
+    "relative aspect-video overflow-hidden bg-zinc-100 dark:bg-zinc-800",
   /** Square image wrapper */
-  imageSquare: "relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  imageSquare:
+    "relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800",
   /** Card body — flex-column, responsive padding */
   body: "flex flex-col flex-1 gap-1 p-3 sm:p-4",
   /** Card footer — responsive padding */
@@ -633,9 +637,12 @@ const SKELETON = {
   image: "animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700/60",
   card: "animate-pulse rounded-2xl bg-zinc-200 dark:bg-slate-700/60",
   // ─ Shimmer (sweep) variant ──────────────────────────────────────────────────────────
-  shimmer: "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
-  shimmerText: "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
-  shimmerCard: "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+  shimmer:
+    "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+  shimmerText:
+    "animate-shimmer bg-[length:400%_100%] h-4 rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
+  shimmerCard:
+    "animate-shimmer bg-[length:400%_100%] rounded-2xl bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
 } as const;
 
 /**
@@ -733,7 +740,8 @@ const MOTION = {
   scaleIn: "motion-safe:animate-scale-in",
   skeleton: "motion-safe:animate-pulse",
   transition: "motion-safe:transition-all motion-safe:duration-200",
-  transitionSlow: "motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-in-out",
+  transitionSlow:
+    "motion-safe:transition-all motion-safe:duration-500 motion-safe:ease-in-out",
 } as const;
 
 /**
@@ -803,20 +811,22 @@ export const THEME_CONSTANTS = {
   fluidGrid: FLUID_GRID,
   /** Form layout tokens — pair with FormGrid / FormField components */
   form: {
-    grid:        "flex flex-wrap gap-4",
-    field:       "flex-1 min-w-[280px] flex flex-col gap-1.5",
-    fieldWide:   "w-full flex flex-col gap-1.5",
-    fieldHalf:   "w-1/2 min-w-[280px] flex flex-col gap-1.5",
-    label:       "text-sm font-medium text-zinc-700 dark:text-zinc-300",
-    hint:        "text-xs text-zinc-500 dark:text-zinc-400",
-    error:       "text-xs text-red-600 dark:text-red-400",
-    section:     "space-y-6",
-    sectionHead: "text-base font-semibold text-zinc-900 dark:text-zinc-100 border-b pb-2 mb-2 border-zinc-200 dark:border-zinc-700",
+    grid: "flex flex-wrap gap-4",
+    field: "flex-1 min-w-[280px] flex flex-col gap-1.5",
+    fieldWide: "w-full flex flex-col gap-1.5",
+    fieldHalf: "w-1/2 min-w-[280px] flex flex-col gap-1.5",
+    label: "text-sm font-medium text-zinc-700 dark:text-zinc-300",
+    hint: "text-xs text-zinc-500 dark:text-zinc-400",
+    error: "text-xs text-red-600 dark:text-red-400",
+    section: "space-y-6",
+    sectionHead:
+      "text-base font-semibold text-zinc-900 dark:text-zinc-100 border-b pb-2 mb-2 border-zinc-200 dark:border-zinc-700",
   } as const,
   /** Tooltip bubble styles — used by the <Tooltip> component. */
   tooltip: {
-    content: "z-50 px-2 py-1 text-xs font-medium rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm",
-    arrow:   "fill-zinc-900 dark:fill-zinc-100",
+    content:
+      "z-50 px-2 py-1 text-xs font-medium rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm",
+    arrow: "fill-zinc-900 dark:fill-zinc-100",
   } as const,
   utilities: UTILITIES,
   patterns: PATTERNS,

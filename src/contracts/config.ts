@@ -8,7 +8,7 @@ export interface SiteConfig {
   name: string;
   tagline?: string;
   description: string;
-  /** Canonical base URL, e.g. "https://letitrip.in" */
+  /** Canonical base URL, e.g. "https://example.com" */
   url: string;
   logoUrl: string;
   logoAlt?: string;

@@ -13,8 +13,8 @@
  * ```
  */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://letitrip.in";
-const SITE_NAME = "LetItRip";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 
 // ─── Input Types ──────────────────────────────────────────────────────────────
 

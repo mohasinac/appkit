@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
   "author": "Mohasin AC",
   "license": "MIT",

@@ -6,5 +6,6 @@ export * from "./hooks/useCartQuery";
 export * from "./hooks/useCheckoutReadQueries";
 export * from "./hooks/useOrder";
 export * from "./components";
+export * from "./utils/guest-cart";
 export { CartRepository } from "./repository/cart.repository";
 export { manifest } from "./manifest";

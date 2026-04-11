@@ -40,7 +40,7 @@ export function WelcomeSection({
   onSecondaryCtaClick,
   trustChips = [],
   isLoading = false,
-  brandLogoText = "LIR",
+  brandLogoText = "",
   className = "",
 }: WelcomeSectionProps) {
   const { themed, flex } = THEME_CONSTANTS;

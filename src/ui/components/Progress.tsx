@@ -16,12 +16,12 @@ const TEXT_SECONDARY = "text-zinc-500 dark:text-zinc-400";
 const BG_SECONDARY = "bg-zinc-50 dark:bg-slate-900";
 const FLEX_BETWEEN = "flex items-center justify-between";
 const INDETERMINATE_CSS = `
-@keyframes lir-progress-indeterminate {
+@keyframes appkit-progress-indeterminate {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(350%); }
 }
-.lir-progress-indeterminate {
-  animation: lir-progress-indeterminate 1.5s ease-in-out infinite;
+.appkit-progress-indeterminate {
+  animation: appkit-progress-indeterminate 1.5s ease-in-out infinite;
 }
 `;
 
@@ -145,7 +145,7 @@ export function IndeterminateProgress({
         aria-label={label || "Loading..."}
       >
         <div
-          className={`absolute inset-0 ${variantClasses[variant]} lir-progress-indeterminate rounded-full`}
+          className={`absolute inset-0 ${variantClasses[variant]} appkit-progress-indeterminate rounded-full`}
           style={{ width: "40%" }}
         />
       </div>
