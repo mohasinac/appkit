@@ -24,6 +24,12 @@ export interface UsePendingTableReturn {
   onFilterApply: () => void;
   /** Clear all filter keys from pending state and URL */
   onFilterClear: () => void;
+  /**
+   * Revert pending state to the current URL values without clearing them.
+   * Call this when opening a filter drawer to ensure it shows the last
+   * committed state, even if the URL changed externally (e.g. a status tab).
+   */
+  onFilterReset: () => void;
 }
 
 /**
@@ -73,5 +79,6 @@ export function usePendingTable(
     filterActiveCount: filters.appliedCount,
     onFilterApply: filters.apply,
     onFilterClear: filters.clear,
+    onFilterReset: filters.reset,
   };
 }

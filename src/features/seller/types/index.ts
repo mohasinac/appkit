@@ -116,6 +116,27 @@ export interface SellerAnalytics {
   period: string;
 }
 
+export interface SellerAnalyticsSummary {
+  totalOrders: number;
+  totalRevenue: number;
+  totalProducts: number;
+  publishedProducts: number;
+}
+
+export interface SellerAnalyticsMonthEntry {
+  month: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface SellerAnalyticsTopProduct {
+  productId: string;
+  title: string;
+  revenue: number;
+  orders: number;
+  mainImage?: string;
+}
+
 // ─── List responses ───────────────────────────────────────────────────────────
 
 export interface PayoutListResponse {

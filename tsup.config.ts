@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 import path from "path";
 
-// Alias map — resolves old @mohasinac/* package names to internal paths.
+// Alias map - resolves old @mohasinac/* package names to internal paths.
 // This ensures tsup/esbuild bundles everything from src/ without
 // needing to rewrite every import statement in the copied source files.
 const alias: Record<string, string> = {
@@ -196,7 +196,7 @@ const featureEntriesE = {
   "features/copilot/index": "src/features/copilot/index.ts",
 };
 
-/** Batch 7 — server-only API handler sub-paths (no React/client code). */
+/** Batch 7 - server-only API handler sub-paths (no React/client code). */
 const serverEntries = {
   "features/auth/server": "src/features/auth/server.ts",
   "features/blog/server": "src/features/blog/server.ts",
@@ -258,11 +258,14 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
   "3": {
     entry: featureEntriesA,
     format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: true,
+    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
     esbuildOptions(options) {
       options.alias = alias;
     },
@@ -271,11 +274,14 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
   "4": {
     entry: featureEntriesB,
     format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: true,
+    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
     esbuildOptions(options) {
       options.alias = alias;
     },
@@ -284,11 +290,14 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
   "5": {
     entry: featureEntriesC,
     format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: true,
+    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
     esbuildOptions(options) {
       options.alias = alias;
     },
@@ -297,11 +306,14 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
   "6": {
     entry: featureEntriesD,
     format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: true,
+    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
     esbuildOptions(options) {
       options.alias = alias;
     },
@@ -340,10 +352,14 @@ const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
     entry: featureEntriesE,
     format: ["esm", "cjs"],
     dts: { resolve: false },
-    splitting: true,
+    // Keep client boundaries stable by avoiding shared chunk emission.
+    splitting: false,
     sourcemap: true,
     clean: false,
     treeshake: true,
+    banner: {
+      js: '"use client";',
+    },
     esbuildOptions(options) {
       options.alias = alias;
     },

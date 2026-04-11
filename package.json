@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.0.3",
+  "version": "2.0.6",
   "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
   "author": "Mohasin AC",
   "license": "MIT",
@@ -378,7 +378,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup && cross-env BUILD_BATCH=7 tsup && cross-env BUILD_BATCH=8 tsup && cross-env BUILD_BATCH=9 tsup",
+    "build": "cross-env BUILD_BATCH=1 tsup && cross-env BUILD_BATCH=2 tsup && cross-env BUILD_BATCH=3 tsup && cross-env BUILD_BATCH=4 tsup && cross-env BUILD_BATCH=5 tsup && cross-env BUILD_BATCH=6 tsup && cross-env BUILD_BATCH=7 tsup && cross-env BUILD_BATCH=8 tsup && cross-env BUILD_BATCH=9 tsup && node scripts/preserve-client-directives.mjs",
     "dev": "tsup --watch",
     "watch:primitives": "cross-env BUILD_BATCH=1 tsup --watch",
     "watch:features-a": "cross-env BUILD_BATCH=3 tsup --watch",
@@ -403,6 +403,7 @@
     "razorpay": ">=2.9.0",
     "react": ">=18",
     "react-dom": ">=18",
+    "recharts": "^3.8.1",
     "resend": ">=3.0.0"
   },
   "peerDependenciesMeta": {

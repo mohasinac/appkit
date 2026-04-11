@@ -19,3 +19,73 @@ export type { NewsletterBannerProps } from "./NewsletterBanner";
 export { NewsletterBanner } from "./NewsletterBanner";
 export { HomepageView } from "./HomepageView";
 export type { HomepageViewProps } from "./HomepageView";
+
+// ── Homepage section shells ──────────────────────────────────────────────────
+export type { SectionCarouselProps } from "./SectionCarousel";
+export { SectionCarousel } from "./SectionCarousel";
+
+export type { WelcomeSectionProps, WelcomeSectionChip } from "./WelcomeSection";
+export { WelcomeSection } from "./WelcomeSection";
+
+export type {
+  TrustFeatureItem,
+  TrustFeaturesSectionProps,
+} from "./TrustFeaturesSection";
+export { TrustFeaturesSection } from "./TrustFeaturesSection";
+
+export type { StatItem, StatsCounterSectionProps } from "./StatsCounterSection";
+export { StatsCounterSection } from "./StatsCounterSection";
+
+export type {
+  HowItWorksStep,
+  HowItWorksSectionProps,
+} from "./HowItWorksSection";
+export { HowItWorksSection } from "./HowItWorksSection";
+
+export type { CustomerReviewsSectionProps } from "./CustomerReviewsSection";
+export { CustomerReviewsSection } from "./CustomerReviewsSection";
+
+export type { FAQItem, FAQTab, FAQSectionProps } from "./FAQSection";
+export { FAQSection } from "./FAQSection";
+
+export type { NewsletterSectionProps } from "./NewsletterSection";
+export { NewsletterSection } from "./NewsletterSection";
+
+export type { AdvertisementBannerProps } from "./AdvertisementBanner";
+export { AdvertisementBanner } from "./AdvertisementBanner";
+
+export type {
+  SecurityHighlightItem,
+  SecurityHighlightsSectionProps,
+} from "./SecurityHighlightsSection";
+export { SecurityHighlightsSection } from "./SecurityHighlightsSection";
+
+export type {
+  SiteFeatureItem,
+  SiteFeaturesSectionProps,
+} from "./SiteFeaturesSection";
+export { SiteFeaturesSection } from "./SiteFeaturesSection";
+
+export type {
+  TrustIndicatorItem,
+  TrustIndicatorsSectionProps,
+} from "./TrustIndicatorsSection";
+export { TrustIndicatorsSection } from "./TrustIndicatorsSection";
+
+export type { WhatsAppCommunitySectionProps } from "./WhatsAppCommunitySection";
+export { WhatsAppCommunitySection } from "./WhatsAppCommunitySection";
+
+export { HomepageSkeleton } from "./HomepageSkeleton";
+
+export type {
+  FeaturedResultItem,
+  FeaturedResultsSectionProps,
+} from "./FeaturedResultsSection";
+export { FeaturedResultsSection } from "./FeaturedResultsSection";
+
+export type {
+  HowItWorksInfoStep,
+  HowItWorksInfoDetail,
+  HowItWorksInfoViewProps,
+} from "./HowItWorksInfoView";
+export { HowItWorksInfoView } from "./HowItWorksInfoView";

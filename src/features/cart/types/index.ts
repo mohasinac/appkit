@@ -20,7 +20,7 @@ export interface CartItem {
   updatedAt?: string;
 }
 
-export interface CartSummary {
+export interface CartData {
   items: CartItem[];
   subtotal: number;
   total: number;

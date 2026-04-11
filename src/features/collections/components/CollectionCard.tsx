@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Article, Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Text, TextLink } from "@mohasinac/ui";
 import type { CollectionListItem } from "../types";
 
 interface CollectionCardProps {
@@ -11,16 +11,8 @@ interface CollectionCardProps {
 
 export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
-    <Article
-      role="link"
-      tabIndex={0}
-      onClick={() => window.location.assign(href)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          window.location.assign(href);
-        }
-      }}
+    <TextLink
+      href={href}
       className="group relative block overflow-hidden rounded-xl bg-gray-100 transition-shadow hover:shadow-lg"
     >
       {collection.image ? (
@@ -49,7 +41,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
           </Text>
         )}
       </Div>
-    </Article>
+    </TextLink>
   );
 }
 

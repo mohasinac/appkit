@@ -9,8 +9,10 @@ export type { TableColumn } from "@mohasinac/contracts";
  * Extends `TableColumn<T>` from `@mohasinac/contracts` so it is compatible
  * with column arrays built from the base type.
  */
-export interface AdminTableColumn<T = Record<string, unknown>>
-  extends Omit<TableColumn<T>, "render"> {
+export interface AdminTableColumn<T = Record<string, unknown>> extends Omit<
+  TableColumn<T>,
+  "render"
+> {
   render?: (row: T) => React.ReactNode;
 }
 
@@ -39,4 +41,35 @@ export interface AdminListResponse<T> {
   page: number;
   perPage: number;
   totalPages: number;
+}
+
+// ─── Analytics Types ──────────────────────────────────────────────────────────
+
+export interface AnalyticsMonthEntry {
+  month: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface AnalyticsTopProduct {
+  productId: string;
+  title: string;
+  revenue: number;
+  orders: number;
+  mainImage?: string;
+}
+
+export interface AnalyticsSummary {
+  totalOrders: number;
+  totalRevenue: number;
+  newOrdersThisMonth: number;
+  revenueThisMonth: number;
+  totalProducts?: number;
+  publishedProducts?: number;
+}
+
+export interface AdminAnalyticsData {
+  summary: AnalyticsSummary;
+  ordersByMonth: AnalyticsMonthEntry[];
+  topProducts: AnalyticsTopProduct[];
 }

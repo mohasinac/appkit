@@ -1,6 +1,7 @@
 // appkit/src/ui/components/TabStrip.tsx
 "use client";
 import { useEffect } from "react";
+import { Span } from "./Typography";
 import { useVisibleItems } from "../../react/hooks/useVisibleItems";
 import { FLUID_GRID_MIN_WIDTHS } from "../../tokens";
 
@@ -118,9 +119,9 @@ export function TabStrip({
         >
           {tab.label}
           {tab.badge != null && tab.badge > 0 && (
-            <span className="ml-1.5 inline-flex items-center justify-center h-4 min-w-[1rem] px-1 rounded-full text-[10px] bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
+            <Span className="ml-1.5 inline-flex items-center justify-center h-4 min-w-[1rem] px-1 rounded-full text-[10px] bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
               {tab.badge > 99 ? "99+" : tab.badge}
-            </span>
+            </Span>
           )}
         </button>
       ))}

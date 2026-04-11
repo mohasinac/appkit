@@ -8,6 +8,7 @@ export interface UserSidebarProps {
   renderAvatar?: () => React.ReactNode;
   activePath?: string;
   className?: string;
+  ariaLabel?: string;
 }
 
 export function UserSidebar({
@@ -15,9 +16,10 @@ export function UserSidebar({
   renderAvatar,
   activePath = "",
   className = "",
+  ariaLabel = "User account navigation",
 }: UserSidebarProps) {
   return (
-    <Nav className={className}>
+    <Nav aria-label={ariaLabel} className={className}>
       {renderAvatar?.()}
       {renderNavItems?.(activePath)}
     </Nav>

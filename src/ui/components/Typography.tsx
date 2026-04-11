@@ -81,6 +81,8 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
   size?: "xs" | "sm" | "base" | "lg" | "xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
+  /** Override the rendered element. Defaults to `p`. */
+  as?: React.ElementType;
   children: React.ReactNode;
 }
 
@@ -89,6 +91,7 @@ export function Text({
   size = "base",
   weight = "normal",
   className = "",
+  as: Tag = "p",
   children,
   ...props
 }: TextProps) {
@@ -119,12 +122,12 @@ export function Text({
   };
 
   return (
-    <p
+    <Tag
       className={`${sizeClasses[size]} ${weightClasses[weight]} ${variantClasses[variant]} ${className}`}
       {...props}
     >
       {children}
-    </p>
+    </Tag>
   );
 }
 

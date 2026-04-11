@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Span } from "./Typography";
 
 export interface ActiveFilter {
   key: string;
@@ -37,9 +38,9 @@ export function ActiveFilterChips({
           role="listitem"
           className="inline-flex items-center gap-1 text-xs font-medium rounded-lg border border-zinc-200 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800 text-zinc-800 dark:text-zinc-200 py-1 pl-2 pr-1"
         >
-          <span className="text-zinc-500 dark:text-zinc-400 mr-0.5">
+          <Span className="text-zinc-500 dark:text-zinc-400 mr-0.5">
             {filter.label}:
-          </span>
+          </Span>
           {filter.value}
           <button
             type="button"

@@ -1,18 +1,18 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@mohasinac/http";
-import type { CartSummary } from "../types";
+import type { CartData } from "../types";
 
 interface UseCartOptions {
-  initialData?: CartSummary;
+  initialData?: CartData;
   enabled?: boolean;
 }
 
 export function useCart(userIdOrSession: string, opts?: UseCartOptions) {
-  const query = useQuery<CartSummary>({
+  const query = useQuery<CartData>({
     queryKey: ["cart", userIdOrSession],
     queryFn: () =>
-      apiClient.get<CartSummary>(`/api/cart?userId=${userIdOrSession}`),
+      apiClient.get<CartData>(`/api/cart?userId=${userIdOrSession}`),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userIdOrSession,
   });

@@ -42,7 +42,25 @@ export type {
 export { AdminSiteView } from "./AdminSiteView";
 export type { AdminSiteViewProps } from "./AdminSiteView";
 export { AdminAnalyticsView } from "./AdminAnalyticsView";
-export type { AdminAnalyticsViewProps } from "./AdminAnalyticsView";
+export type {
+  AdminAnalyticsViewProps,
+  AdminAnalyticsViewLabels,
+} from "./AdminAnalyticsView";
+export { AdminStatCard } from "./analytics/AdminStatCard";
+export type { AdminStatCardProps } from "./analytics/AdminStatCard";
+export {
+  AdminRevenueChart,
+  AdminOrdersChart,
+} from "./analytics/AdminAnalyticsCharts";
+export type {
+  AdminRevenueChartProps,
+  AdminOrdersChartProps,
+} from "./analytics/AdminAnalyticsCharts";
+export { AdminTopProductsTable } from "./analytics/AdminTopProductsTable";
+export type {
+  AdminTopProductsTableProps,
+  AdminTopProductsTableLabels,
+} from "./analytics/AdminTopProductsTable";
 export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
 export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
 export { AlgoliaDashboardView } from "./AlgoliaDashboardView";

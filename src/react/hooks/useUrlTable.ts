@@ -35,20 +35,42 @@
  */
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 export interface UseUrlTableOptions {
   /** Default param values used when a param is absent from the URL */
   defaults?: Record<string, string>;
+  /**
+   * Override the router used for navigation. Pass a locale-aware router
+   * (e.g. from next-intl) to preserve locale prefixes on replace.
+   */
+  router?: { replace: (url: string) => void };
+  /** Override the current pathname (e.g. from a locale-aware usePathname). */
+  pathname?: string;
+  /**
+   * Override the URLSearchParams instance. Useful when driving the hook
+   * from a non-standard location source.
+   */
+  searchParams?: URLSearchParams;
 }
 
 const NON_RESETTING_KEYS = ["page", "pageSize", "view"] as const;
 
 export function useUrlTable(options?: UseUrlTableOptions) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const defaults = options?.defaults ?? {};
+  // Always call native hooks unconditionally (React rules).
+  const nativeRouter = useRouter();
+  const nativePathname = usePathname();
+  const nativeSearchParams = useSearchParams();
+
+  // Callers may inject locale-aware overrides; fall back to native.
+  const router = options?.router ?? nativeRouter;
+  const pathname = options?.pathname ?? nativePathname;
+  const searchParams = options?.searchParams ?? nativeSearchParams;
+
+  // Stabilise defaults — callers often pass object literals inline, which
+  // would recreate all useCallback deps on every render without this ref.
+  const defaultsRef = useRef(options?.defaults ?? {});
+  const defaults = defaultsRef.current;
 
   const get = useCallback(
     (key: string) => searchParams.get(key) ?? defaults[key] ?? "",

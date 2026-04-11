@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Div, Heading, Modal, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, IconButton, Modal, Text } from "@mohasinac/ui";
 import { StarRating } from "@mohasinac/ui";
 import type { Review } from "../types";
 
@@ -17,7 +17,11 @@ export interface ViewReviewModalProps {
  * ViewReviewModal — full review details in a Modal overlay.
  * Shows all images, the full comment, and seller response if present.
  */
-export function ViewReviewModal({ review, isOpen, onClose }: ViewReviewModalProps) {
+export function ViewReviewModal({
+  review,
+  isOpen,
+  onClose,
+}: ViewReviewModalProps) {
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
 
   if (!review) return null;
@@ -71,7 +75,10 @@ export function ViewReviewModal({ review, isOpen, onClose }: ViewReviewModalProp
 
         {/* Title + comment */}
         {review.title && (
-          <Heading level={4} className="font-semibold text-neutral-900 dark:text-white">
+          <Heading
+            level={4}
+            className="font-semibold text-neutral-900 dark:text-white"
+          >
             {review.title}
           </Heading>
         )}
@@ -85,17 +92,16 @@ export function ViewReviewModal({ review, isOpen, onClose }: ViewReviewModalProp
         {review.images && review.images.length > 0 && (
           <Div className="flex flex-wrap gap-2">
             {review.images.map((img, i) => (
-              <Div
+              <IconButton
                 key={i}
-                role="button"
-                tabIndex={0}
                 aria-label={`View image ${i + 1}`}
                 onClick={() => setLightboxIdx(i)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") setLightboxIdx(i);
+                variant="ghost"
+                className={`h-20 w-20 rounded-lg border bg-center bg-cover transition hover:opacity-80 p-0 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 dark:border-zinc-700"}`}
+                style={{
+                  backgroundImage: `url(${img.thumbnailUrl ?? img.url})`,
                 }}
-                className={`h-20 w-20 cursor-pointer rounded-lg border bg-center bg-cover transition hover:opacity-80 ${lightboxIdx === i ? "ring-2 ring-primary-500" : "border-neutral-100 dark:border-zinc-700"}`}
-                style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
+                icon={<Div />}
               />
             ))}
           </Div>

@@ -10,6 +10,7 @@ export interface AdminDashboardViewProps {
   };
   stats?: DashboardStats;
   isLoading?: boolean;
+  renderHeader?: () => React.ReactNode;
   renderStats?: (stats: DashboardStats, isLoading: boolean) => React.ReactNode;
   renderQuickActions?: () => React.ReactNode;
   renderRecentActivity?: () => React.ReactNode;
@@ -22,6 +23,7 @@ export function AdminDashboardView({
   labels = {},
   stats = {},
   isLoading = false,
+  renderHeader,
   renderStats,
   renderQuickActions,
   renderRecentActivity,
@@ -31,13 +33,15 @@ export function AdminDashboardView({
 }: AdminDashboardViewProps) {
   return (
     <Div className={className}>
-      {labels.title && (
+      {renderHeader ? (
+        renderHeader()
+      ) : labels.title ? (
         <Heading level={1} className="text-2xl font-bold mb-6">
           {labels.title}
         </Heading>
-      )}
+      ) : null}
       {renderAlerts?.()}
-      {renderStats?.(stats, isLoading)}
+      {renderStats ? renderStats(stats as DashboardStats, isLoading) : null}
       {renderQuickActions?.()}
       {renderCharts?.()}
       {renderRecentActivity?.()}

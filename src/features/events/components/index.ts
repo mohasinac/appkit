@@ -1,3 +1,15 @@
 export { EventStatusBadge } from "./EventStatusBadge";
 export { EventCard } from "./EventCard";
 export { EventsListView } from "./EventsListView";
+export { EventDetailView } from "./EventDetailView";
+export type { EventDetailViewProps } from "./EventDetailView";
+export { EventParticipateView } from "./EventParticipateView";
+export type { EventParticipateViewProps } from "./EventParticipateView";
+export { EventLeaderboard } from "./EventLeaderboard";
+export type { EventLeaderboardProps } from "./EventLeaderboard";
+export { AdminEventsView } from "./AdminEventsView";
+export type { AdminEventsViewProps } from "./AdminEventsView";
+export { AdminEventEntriesView } from "./AdminEventEntriesView";
+export type { AdminEventEntriesViewProps } from "./AdminEventEntriesView";
+export { EventFormDrawer } from "./EventFormDrawer";
+export type { EventFormDrawerProps } from "./EventFormDrawer";

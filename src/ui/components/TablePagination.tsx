@@ -3,6 +3,7 @@
 import React from "react";
 import { Pagination } from "./Pagination";
 import { Select } from "./Select";
+import { Span, Text } from "./Typography";
 
 const DEFAULT_PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
 
@@ -81,17 +82,21 @@ export function TablePagination({
         className,
       ].join(" ")}
     >
-      <p className="text-xs text-zinc-400 dark:text-slate-500 tabular-nums sm:mr-auto">
+      <Text
+        size="xs"
+        variant="none"
+        className="text-zinc-400 dark:text-slate-500 tabular-nums sm:mr-auto"
+      >
         {l.showing}{" "}
-        <span className="font-semibold text-zinc-600 dark:text-slate-300">
+        <Span className="font-semibold text-zinc-600 dark:text-slate-300">
           {from}–{to}
-        </span>{" "}
+        </Span>{" "}
         {l.of}{" "}
-        <span className="font-semibold text-zinc-600 dark:text-slate-300">
+        <Span className="font-semibold text-zinc-600 dark:text-slate-300">
           {new Intl.NumberFormat().format(total)}
-        </span>{" "}
+        </Span>{" "}
         {l.results}
-      </p>
+      </Text>
 
       <div className="rounded-xl p-0.5 bg-zinc-100 dark:bg-slate-800 inline-flex">
         <Pagination

@@ -43,7 +43,8 @@ export type DataTableColumn<T> = Omit<TableColumn<T>, "render"> & {
 export interface DataTableProps<T> {
   data: T[];
   columns: DataTableColumn<T>[];
-  keyExtractor: (item: T) => string;
+  /** Derives a stable key per row. Defaults to `(item) => (item as Record<string,string>).id`. */
+  keyExtractor?: (item: T) => string;
   onRowClick?: (item: T) => void;
   loading?: boolean;
   emptyMessage?: string;
@@ -103,7 +104,7 @@ export interface DataTableProps<T> {
 export function DataTable<T extends object>({
   data,
   columns,
-  keyExtractor,
+  keyExtractor: keyExtractorProp,
   onRowClick,
   loading = false,
   emptyMessage,
@@ -137,6 +138,10 @@ export function DataTable<T extends object>({
     ...tableConfig?.pagination,
     ...paginationConfig,
   };
+
+  const keyExtractor: (item: T) => string =
+    keyExtractorProp ??
+    ((item) => (item as Record<string, string>).id ?? JSON.stringify(item));
 
   const pageSize = pageSizeProp ?? resolvedTable.pageSize;
   const stickyHeader = stickyHeaderProp ?? resolvedTable.sticky.enabled;
