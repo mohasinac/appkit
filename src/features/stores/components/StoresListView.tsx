@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "@mohasinac/contracts";
-import { Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Grid, Heading, Span, Text } from "@mohasinac/ui";
+import { stripHtml } from "../../../utils/string.formatter";
 import type { StoreListItem } from "../types";
 
 interface StoreCardProps {
@@ -51,7 +52,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
         </Heading>
         {store.storeDescription && (
           <Text className="text-xs text-gray-500 mt-0.5 line-clamp-2">
-            {store.storeDescription}
+            {stripHtml(store.storeDescription)}
           </Text>
         )}
         <Div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
@@ -115,9 +116,7 @@ export function StoresListView<T extends StoreListItem = StoreListItem>({
       {slots?.renderHeader
         ? (slots.renderHeader({ total }) as React.ReactNode)
         : null}
-      <Div
-        className={`grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 ${className}`}
-      >
+      <Grid cols="storeCards" gap="md" className={className}>
         {stores.map((store, i) =>
           slots?.renderCard ? (
             <React.Fragment key={store.id}>
@@ -131,7 +130,7 @@ export function StoresListView<T extends StoreListItem = StoreListItem>({
             />
           ),
         )}
-      </Div>
+      </Grid>
       {slots?.renderFooter
         ? (slots.renderFooter({
             page: currentPage,
