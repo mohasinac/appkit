@@ -41,6 +41,7 @@ const GAP_MAP = {
   "2.5": "gap-2.5",
   "3": "gap-3",
   md: "gap-4",
+  "5": "gap-5",
   lg: "gap-6",
   xl: "gap-8",
   "2xl": "gap-12",

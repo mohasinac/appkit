@@ -381,6 +381,7 @@
     "build": "node scripts/build.mjs",
     "dev": "npm run watch",
     "watch": "node --watch-path=src --watch-path=scripts --watch-path=tsup.config.ts --watch-path=package.json scripts/build.mjs",
+    "index:generate": "node scripts/get-index.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
   },
