@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Text } from "@mohasinac/ui";
+import { Grid, Heading, Section, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -51,7 +51,10 @@ export function SiteFeaturesSection({
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+        <Grid
+          gap="lg"
+          className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-8"
+        >
           {features.map((feature) => (
             <div
               key={feature.id}
@@ -76,7 +79,7 @@ export function SiteFeaturesSection({
               </Text>
             </div>
           ))}
-        </div>
+        </Grid>
       </div>
     </Section>
   );

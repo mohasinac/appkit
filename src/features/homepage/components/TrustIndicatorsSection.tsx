@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Text } from "@mohasinac/ui";
+import { Grid, Heading, Section, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -29,7 +29,10 @@ export function TrustIndicatorsSection({
   return (
     <Section className={`p-6 ${themed.bgSecondary} ${className}`}>
       <div className="w-full">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 md:gap-8">
+        <Grid
+          gap="md"
+          className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 md:gap-8"
+        >
           {items.map((indicator, index) => (
             <div
               key={index}
@@ -49,7 +52,7 @@ export function TrustIndicatorsSection({
               </Text>
             </div>
           ))}
-        </div>
+        </Grid>
       </div>
     </Section>
   );

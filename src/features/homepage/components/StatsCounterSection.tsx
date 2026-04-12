@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Text } from "@mohasinac/ui";
+import { Grid, Heading, Section, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -99,7 +99,7 @@ export function StatsCounterSection({
       className={`bg-gradient-to-br from-cobalt-50 via-zinc-50 to-cobalt-50 dark:from-cobalt-900 dark:via-slate-900 dark:to-cobalt-950 py-12 px-4 ${className}`}
     >
       <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
+        <Grid gap="none" className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
           {stats.map((stat, i) => (
             <StatCard
               key={stat.key}
@@ -109,7 +109,7 @@ export function StatsCounterSection({
               isLast={i === stats.length - 1}
             />
           ))}
-        </div>
+        </Grid>
       </div>
     </Section>
   );

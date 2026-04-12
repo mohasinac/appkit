@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Grid, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -78,7 +78,10 @@ export function WelcomeSection({
       />
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-12 items-center">
+        <Grid
+          gap="2xl"
+          className="grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 items-center"
+        >
           {/* Left: text content */}
           <div className="text-center lg:text-left">
             {/* Pill badge */}
@@ -168,7 +171,7 @@ export function WelcomeSection({
               </div>
             </div>
           </div>
-        </div>
+        </Grid>
       </div>
     </Section>
   );

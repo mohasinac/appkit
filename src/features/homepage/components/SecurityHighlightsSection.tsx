@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Span, Text, TextLink } from "@mohasinac/ui";
+import { Grid, Heading, Section, Span, Text, TextLink } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -123,7 +123,7 @@ export function SecurityHighlightsSection({
         </div>
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <Grid gap="none" className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
           {items.map((item, index) => (
             <SecurityCard
               key={item.key}
@@ -132,7 +132,7 @@ export function SecurityHighlightsSection({
               delay={index * 100}
             />
           ))}
-        </div>
+        </Grid>
 
         {/* CTA link */}
         {learnMoreHref && (

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -149,7 +149,10 @@ export function TrustFeaturesSection({
             </Heading>
           </div>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
+        <Grid
+          gap="lg"
+          className="grid-cols-2 sm:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
+        >
           {items.map((item, index) => (
             <TrustFeatureCard
               key={item.iconName}
@@ -158,7 +161,7 @@ export function TrustFeaturesSection({
               delay={index * 100}
             />
           ))}
-        </div>
+        </Grid>
       </div>
     </Section>
   );
