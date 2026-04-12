@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 
@@ -118,7 +118,11 @@ export function WelcomeSection({
 
             {/* CTAs */}
             {showCTA && (
-              <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
+              <Row
+                wrap
+                gap="md"
+                className="mt-8 justify-center lg:justify-start"
+              >
                 <Button variant="primary" size="lg" onClick={onCtaClick}>
                   {ctaLabel}
                 </Button>
@@ -129,12 +133,16 @@ export function WelcomeSection({
                 >
                   {secondaryCtaLabel}
                 </Button>
-              </div>
+              </Row>
             )}
 
             {/* Trust chips */}
             {trustChips.length > 0 && (
-              <div className="mt-6 flex flex-wrap gap-2 justify-center lg:justify-start">
+              <Row
+                wrap
+                gap="sm"
+                className="mt-6 justify-center lg:justify-start"
+              >
                 {trustChips.map((chip) => (
                   <Span
                     key={chip.key}
@@ -143,7 +151,7 @@ export function WelcomeSection({
                     {chip.emoji} {chip.label}
                   </Span>
                 ))}
-              </div>
+              </Row>
             )}
           </div>
 

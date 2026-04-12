@@ -1,7 +1,7 @@
 "use client";
 
 import { Span } from "./Typography";
-import { classNames } from "../style.helper";
+import { Row } from "./Layout";
 
 export interface PriceDisplayProps {
   amount: number;
@@ -46,7 +46,7 @@ export function PriceDisplay({
       : "text-xs text-zinc-400 line-through dark:text-zinc-500";
 
   return (
-    <div className={classNames("flex flex-wrap items-baseline gap-1.5", className)}>
+    <Row wrap align="baseline" gap="xs" className={className}>
       <Span className={priceClass}>{formatCurrency(amount, currency)}</Span>
       {hasDiscount && (
         <>
@@ -58,6 +58,6 @@ export function PriceDisplay({
           </Span>
         </>
       )}
-    </div>
+    </Row>
   );
 }

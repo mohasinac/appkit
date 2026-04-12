@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button, Div, Heading, IconButton, Modal, Text } from "@mohasinac/ui";
+import {
+  Button,
+  Div,
+  Heading,
+  IconButton,
+  Modal,
+  Row,
+  Text,
+} from "@mohasinac/ui";
 import { StarRating } from "@mohasinac/ui";
 import type { Review } from "../types";
 
@@ -90,7 +98,7 @@ export function ViewReviewModal({
 
         {/* Images */}
         {review.images && review.images.length > 0 && (
-          <Div className="flex flex-wrap gap-2">
+          <Row wrap gap="sm">
             {review.images.map((img, i) => (
               <IconButton
                 key={i}
@@ -104,7 +112,7 @@ export function ViewReviewModal({
                 icon={<Div />}
               />
             ))}
-          </Div>
+          </Row>
         )}
 
         {/* Helpful */}

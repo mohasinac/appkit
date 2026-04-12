@@ -17,6 +17,7 @@ import {
   Div,
   Label,
   Progress,
+  Row,
   Span,
   Spinner,
   Text,
@@ -189,7 +190,7 @@ export function ImageUpload({
             </Div>
 
             {!uploading && (
-              <Div className="flex flex-wrap gap-2">
+              <Row wrap gap="sm">
                 {enableCrop && (
                   <Button
                     type="button"
@@ -219,7 +220,7 @@ export function ImageUpload({
                 >
                   {tUpload("remove")}
                 </Button>
-              </Div>
+              </Row>
             )}
           </Div>
         ) : (

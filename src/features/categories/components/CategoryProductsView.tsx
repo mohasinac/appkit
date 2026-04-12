@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Text } from "@mohasinac/ui";
 import type { CategoryItem } from "../types";
 
 export interface CategoryProductsViewProps {
@@ -24,11 +24,20 @@ export interface CategoryProductsViewProps {
   /** Render active filter chips */
   renderActiveFilters?: () => React.ReactNode;
   /** Render search */
-  renderSearch?: (value: string, onChange: (v: string) => void) => React.ReactNode;
+  renderSearch?: (
+    value: string,
+    onChange: (v: string) => void,
+  ) => React.ReactNode;
   /** Render sort dropdown */
-  renderSort?: (value: string, onChange: (v: string) => void) => React.ReactNode;
+  renderSort?: (
+    value: string,
+    onChange: (v: string) => void,
+  ) => React.ReactNode;
   /** Render view mode toggle */
-  renderViewToggle?: (mode: string, onToggle: (m: string) => void) => React.ReactNode;
+  renderViewToggle?: (
+    mode: string,
+    onToggle: (m: string) => void,
+  ) => React.ReactNode;
   /** Render the products grid */
   renderProducts: (isLoading: boolean) => React.ReactNode;
   /** Render pagination */
@@ -75,7 +84,9 @@ export function CategoryProductsView({
               {category.name}
             </Heading>
             {category.description && (
-              <Text className="text-neutral-500 mt-1">{category.description}</Text>
+              <Text className="text-neutral-500 mt-1">
+                {category.description}
+              </Text>
             )}
           </Div>
         )}
@@ -84,12 +95,12 @@ export function CategoryProductsView({
         {childCategories.length > 0 && renderChildCategories?.(childCategories)}
 
         {/* Toolbar */}
-        <Div className="flex flex-wrap items-center gap-3">
+        <Row wrap gap="3">
           {renderSearch?.(search, setSearch)}
           {renderSort?.(sort, setSort)}
           {renderFilters?.()}
           {renderViewToggle?.(viewMode, setViewMode)}
-        </Div>
+        </Row>
 
         {/* Active filters */}
         {renderActiveFilters?.()}

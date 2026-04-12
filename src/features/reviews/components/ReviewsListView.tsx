@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Container, Div, Heading, Text } from "@mohasinac/ui";
+import { Container, Div, Heading, Row, Text } from "@mohasinac/ui";
 import { useReviews } from "../hooks/useReviews";
 import type { Review, ReviewListParams, ReviewListResponse } from "../types";
 
@@ -13,9 +13,15 @@ export interface ReviewsListViewProps {
   /** Rendered inside the page header */
   renderHeader?: (total: number) => React.ReactNode;
   /** Render search input */
-  renderSearch?: (value: string, onChange: (v: string) => void) => React.ReactNode;
+  renderSearch?: (
+    value: string,
+    onChange: (v: string) => void,
+  ) => React.ReactNode;
   /** Render sort dropdown */
-  renderSort?: (value: string, onChange: (v: string) => void) => React.ReactNode;
+  renderSort?: (
+    value: string,
+    onChange: (v: string) => void,
+  ) => React.ReactNode;
   /** Render filter panel */
   renderFilters?: () => React.ReactNode;
   /** Render active filter chips */
@@ -64,18 +70,19 @@ export function ReviewsListView({
             <Heading level={1}>{labels.title ?? "Reviews"}</Heading>
             <Text variant="secondary" className="mt-1">
               {total > 0
-                ? (labels.subtitleWithCount?.(total) ?? `${total} reviews from our customers`)
+                ? (labels.subtitleWithCount?.(total) ??
+                  `${total} reviews from our customers`)
                 : (labels.subtitle ?? "See what our customers say")}
             </Text>
           </Div>
         )}
 
         {/* Search + Sort + Filters */}
-        <Div className="flex flex-wrap gap-3 mb-4">
+        <Row wrap gap="3" className="mb-4">
           {renderSearch?.(search, setSearch)}
           {renderSort?.(sort, setSort)}
           {renderFilters?.()}
-        </Div>
+        </Row>
 
         {/* Active filter chips */}
         {renderActiveFilters?.()}

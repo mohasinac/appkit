@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Div, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Row, Span, Text } from "@mohasinac/ui";
 import type { FAQ, FAQCategory } from "../types";
 
 interface FAQAccordionItemProps {
@@ -46,7 +46,7 @@ function FAQAccordionItem({
       {isOpen && (
         <Div className="pb-4 text-sm text-neutral-600">
           {faq.tags && faq.tags.length > 0 && (
-            <Div className="mb-3 flex flex-wrap gap-2">
+            <Row wrap gap="sm" className="mb-3">
               {faq.tags.map((tag) => (
                 <Span
                   key={tag}
@@ -55,7 +55,7 @@ function FAQAccordionItem({
                   {tag}
                 </Span>
               ))}
-            </Div>
+            </Row>
           )}
           {faq.answer.format === "html" ? (
             <Div
@@ -129,7 +129,7 @@ export function FAQCategoryTabs({
   labels = {},
 }: FAQCategoryTabsProps) {
   return (
-    <Div className="scrollbar-none flex flex-wrap gap-2">
+    <Row wrap gap="sm" className="scrollbar-none">
       <Button
         onClick={() => onSelect(null)}
         className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
@@ -145,6 +145,6 @@ export function FAQCategoryTabs({
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>
       ))}
-    </Div>
+    </Row>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Div, Input, Label, Select, Span } from "@mohasinac/ui";
+import { Button, Div, Input, Label, Row, Select, Span } from "@mohasinac/ui";
 import type { SearchCategoryOption } from "../types";
 
 interface SearchFiltersRowProps {
@@ -49,7 +49,7 @@ export function SearchFiltersRow({
   };
 
   return (
-    <Div className="flex flex-wrap gap-4 items-end">
+    <Row wrap gap="md" align="end">
       {/* Category filter */}
       <Div className="flex flex-col gap-1">
         <Label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
@@ -113,6 +113,6 @@ export function SearchFiltersRow({
           {L.clearFilters}
         </Button>
       )}
-    </Div>
+    </Row>
   );
 }

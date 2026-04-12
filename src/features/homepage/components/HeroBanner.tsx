@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Div, Heading, Span } from "@mohasinac/ui";
+import { Button, Div, Heading, Row, Span } from "@mohasinac/ui";
 import type { Banner } from "../types";
 
 export interface HeroBannerProps {
@@ -130,7 +130,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
         </Heading>
 
         {banner.ctaLabel && banner.ctaUrl && (
-          <Div className="flex flex-wrap items-center gap-4">
+          <Row wrap gap="md">
             <Link
               href={banner.ctaUrl}
               className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5"
@@ -151,7 +151,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
                 →
               </Span>
             </Link>
-          </Div>
+          </Row>
         )}
       </Div>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Main, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Main, Row, Span, Text } from "@mohasinac/ui";
 
 export interface SearchViewProps {
   /** Current search query string */
@@ -81,10 +81,10 @@ export function SearchView({
             {renderActiveFilters?.()}
 
             {/* Toolbar: sort + view mode + filter toggle */}
-            <Div className="flex flex-wrap items-center justify-between gap-3">
+            <Row wrap justify="between" gap="3">
               {renderFilters?.()}
               {renderToolbar?.()}
-            </Div>
+            </Row>
 
             {/* Results */}
             {renderResults()}

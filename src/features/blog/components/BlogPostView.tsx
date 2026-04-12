@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Span, Text } from "@mohasinac/ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
@@ -132,9 +132,11 @@ export function BlogPostView({
             {post.title}
           </Heading>
           {post.excerpt && (
-            <Text className="text-lg text-neutral-500 mb-6">{post.excerpt}</Text>
+            <Text className="text-lg text-neutral-500 mb-6">
+              {post.excerpt}
+            </Text>
           )}
-          <Div className="flex flex-wrap items-center gap-4 text-sm text-neutral-400">
+          <Row wrap gap="md" className="text-sm text-neutral-400">
             {post.authorName && (
               <Span>
                 {labels.author ?? "By"}{" "}
@@ -158,12 +160,12 @@ export function BlogPostView({
                 {post.views} {labels.viewsLabel ?? "views"}
               </Span>
             )}
-          </Div>
+          </Row>
         </Div>
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
-          <Div className="flex flex-wrap gap-2 mb-8">
+          <Row wrap gap="sm" className="mb-8">
             {post.tags.map((tag) => (
               <Span
                 key={tag}
@@ -172,7 +174,7 @@ export function BlogPostView({
                 #{tag}
               </Span>
             ))}
-          </Div>
+          </Row>
         )}
 
         {/* Content */}

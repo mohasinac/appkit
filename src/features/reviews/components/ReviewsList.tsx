@@ -1,7 +1,16 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Heading, Pagination, Skeleton, Span, Text } from "@mohasinac/ui";
+import {
+  Button,
+  Div,
+  Heading,
+  Pagination,
+  Row,
+  Skeleton,
+  Span,
+  Text,
+} from "@mohasinac/ui";
 import { StarRating } from "@mohasinac/ui";
 import type { Review } from "../types";
 
@@ -41,7 +50,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
           </Div>
         )}
         <Div className="flex-1 min-w-0">
-          <Div className="flex flex-wrap items-center gap-2">
+          <Row wrap gap="sm">
             <Span className="font-medium text-neutral-900 dark:text-white">
               {review.userName}
             </Span>
@@ -55,7 +64,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
                 {date}
               </Span>
             )}
-          </Div>
+          </Row>
           <Div className="mt-1">
             <StarRating value={review.rating} size="sm" readOnly />
           </Div>
@@ -63,7 +72,10 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
       </Div>
 
       {review.title && (
-        <Heading level={4} className="mt-3 font-semibold text-neutral-900 dark:text-white">
+        <Heading
+          level={4}
+          className="mt-3 font-semibold text-neutral-900 dark:text-white"
+        >
           {review.title}
         </Heading>
       )}
@@ -75,7 +87,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
       )}
 
       {review.images && review.images.length > 0 && (
-        <Div className="mt-3 flex flex-wrap gap-2">
+        <Row wrap gap="sm" className="mt-3">
           {review.images.map((img, i) => (
             <Div
               key={i}
@@ -85,7 +97,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
               style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
             />
           ))}
-        </Div>
+        </Row>
       )}
 
       {(review.helpfulCount ?? 0) > 0 && (
@@ -168,6 +180,3 @@ export function ReviewsList({
     </Div>
   );
 }
-
-
-

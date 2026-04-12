@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button, Div, Input, Select, Textarea } from "@mohasinac/ui";
+import { Button, Div, Input, Row, Select, Textarea } from "@mohasinac/ui";
 import type { BookConsultationInput } from "../types";
 
 interface ConsultationFormProps {
@@ -96,7 +96,7 @@ export function ConsultationForm({
         className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
       />
       {concerns.length > 0 && (
-        <Div className="flex flex-wrap gap-2">
+        <Row wrap gap="sm">
           {concerns.map((c) => (
             <Button
               key={c}
@@ -113,7 +113,7 @@ export function ConsultationForm({
               {c}
             </Button>
           ))}
-        </Div>
+        </Row>
       )}
       <Div className="flex gap-3">
         <Input

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Row } from "./Layout";
 import { Span } from "./Typography";
 
 export interface ActiveFilter {
@@ -27,8 +28,10 @@ export function ActiveFilterChips({
   if (filters.length === 0) return null;
 
   return (
-    <div
-      className={`flex flex-wrap items-center gap-2 ${className}`}
+    <Row
+      wrap
+      gap="sm"
+      className={className}
       role="list"
       aria-label="Active filters"
     >
@@ -73,6 +76,6 @@ export function ActiveFilterChips({
       >
         {clearAllLabel}
       </button>
-    </div>
+    </Row>
   );
 }

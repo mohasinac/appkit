@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Div, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
 import type { PromoBanner } from "../types";
 
 export interface PromoGridProps {
@@ -28,7 +28,13 @@ export function PromoGrid({
       }}
     >
       <Div className="mx-auto max-w-7xl px-4">
-        <Div className="mb-7 flex flex-wrap items-end justify-between gap-y-2">
+        <Row
+          wrap
+          align="end"
+          justify="between"
+          gap="sm"
+          className="mb-7 gap-y-2"
+        >
           <Div>
             <Text
               className="mb-1 text-xs font-black uppercase tracking-widest"
@@ -49,7 +55,7 @@ export function PromoGrid({
               {heading}
             </Heading>
           </Div>
-        </Div>
+        </Row>
 
         {/*
           Layout:

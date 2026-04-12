@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Div, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Row, Span, Text } from "@mohasinac/ui";
 import type { CouponItem, CouponType } from "../types";
 
 const TYPE_COLORS: Record<CouponType, string> = {
@@ -63,7 +63,7 @@ export function CouponCard({
         <Text className="text-xs opacity-70 mb-2">{coupon.description}</Text>
       )}
 
-      <Div className="flex flex-wrap gap-2 text-xs opacity-70">
+      <Row wrap gap="sm" className="text-xs opacity-70">
         {coupon.minOrderAmount && (
           <Span>
             {labels.minOrder ?? "Min order"}: {coupon.minOrderAmount}
@@ -74,7 +74,7 @@ export function CouponCard({
             {labels.expires ?? "Expires"}: {expiry}
           </Span>
         )}
-      </Div>
+      </Row>
     </Div>
   );
 }

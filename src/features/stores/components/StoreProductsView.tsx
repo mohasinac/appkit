@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Text } from "@mohasinac/ui";
 import type { StoreProductItem } from "../types";
 
 export interface StoreProductsViewProps {
@@ -71,12 +71,12 @@ export function StoreProductsView({
       )}
 
       {/* Toolbar */}
-      <Div className="flex flex-wrap items-center gap-3 mb-4">
+      <Row wrap gap="3" className="mb-4">
         {renderSearch?.(search, setSearch)}
         {renderSort?.(sort, setSort)}
         {renderFilters?.()}
         {renderViewToggle?.(viewMode, setViewMode)}
-      </Div>
+      </Row>
 
       {/* Active filters */}
       {renderActiveFilters?.()}

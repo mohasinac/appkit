@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Pagination, Span, Text } from "@mohasinac/ui";
+import { Div, Pagination, Row, Span, Text } from "@mohasinac/ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -44,7 +44,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       onClick={onClick ? () => onClick(order) : undefined}
       className={`rounded-xl border border-neutral-200 bg-white p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`}
     >
-      <Div className="flex flex-wrap items-start justify-between gap-3">
+      <Row wrap align="start" justify="between" gap="3">
         <Div>
           <Text className="text-xs text-neutral-500">
             Order #{order.id.slice(-8).toUpperCase()}
@@ -58,8 +58,8 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         >
           {labels[order.orderStatus] ?? order.orderStatus.replace(/_/g, " ")}
         </Span>
-      </Div>
-      <Div className="mt-4 flex flex-wrap gap-3">
+      </Row>
+      <Row wrap gap="3" className="mt-4">
         {order.items.slice(0, 3).map((item, i) => (
           <Div key={i} className="flex items-center gap-2">
             {item.image && (
@@ -83,9 +83,11 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
             +{order.items.length - 3} more
           </Span>
         )}
-      </Div>
+      </Row>
       <Div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
-        <Span className="text-sm text-neutral-500">{order.currency ?? "INR"} Total</Span>
+        <Span className="text-sm text-neutral-500">
+          {order.currency ?? "INR"} Total
+        </Span>
         <Span className="font-semibold text-neutral-900">
           {formatCurrency(order.total, order.currency ?? "INR")}
         </Span>

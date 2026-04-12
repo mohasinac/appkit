@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useMediaQuery } from "@mohasinac/react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Div, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
 import { MediaImage, MediaVideo } from "@mohasinac/feat-media";
 import { useHeroCarousel } from "../hooks/useHeroCarousel.js";
 import type { CarouselSlide, CarouselSlideCard } from "../types/index.js";
@@ -303,7 +303,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                             </Text>
                           )}
                           {(card.buttons?.length ?? 0) > 0 && (
-                            <Div className="flex flex-wrap gap-1 md:gap-2">
+                            <Row wrap gap="xs" className="md:gap-2">
                               {(card.buttons ?? []).map((btn) => (
                                 <Button
                                   key={btn.id}
@@ -324,7 +324,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                                   {btn.text}
                                 </Button>
                               ))}
-                            </Div>
+                            </Row>
                           )}
                         </Div>
                       )}

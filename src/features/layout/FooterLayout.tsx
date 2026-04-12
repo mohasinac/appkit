@@ -3,7 +3,17 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { BlockFooter, Button, Div, Heading, Li, Span, Text, Ul } from "@mohasinac/ui";
+import {
+  BlockFooter,
+  Button,
+  Div,
+  Heading,
+  Li,
+  Row,
+  Span,
+  Text,
+  Ul,
+} from "@mohasinac/ui";
 
 export interface FooterLinkGroup {
   heading: string;
@@ -71,7 +81,7 @@ export function FooterLayout({
       {showTrustBar && visibleTrustItems.length > 0 && (
         <Div className="border-b border-zinc-200 dark:border-slate-800 py-6">
           <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
-            <Ul className="flex flex-wrap items-center justify-center gap-6 lg:gap-10">
+            <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item) => (
                 <Li
                   key={item.id}
@@ -90,7 +100,7 @@ export function FooterLayout({
                   </Span>
                 </Li>
               ))}
-            </Ul>
+            </Row>
           </Div>
         </Div>
       )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Row, Span } from "@mohasinac/ui";
 
 interface ProductFeatureBadgeLabels {
   featured: string;
@@ -177,7 +177,7 @@ export function ProductFeatureBadges({
   if (badges.length === 0) return null;
 
   return (
-    <Div className="flex flex-wrap gap-2">
+    <Row wrap gap="sm">
       {badges.map((badge) => (
         <Span
           key={badge.key}
@@ -187,6 +187,6 @@ export function ProductFeatureBadges({
           {badge.label}
         </Span>
       ))}
-    </Div>
+    </Row>
   );
 }

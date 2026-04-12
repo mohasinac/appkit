@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMediaQuery } from "@mohasinac/react";
-import { Button, Div, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
 /* ── Fallback when no Firestore config is saved yet ──────────────────────────
@@ -306,7 +306,13 @@ function CharacterHotspotInner({
               "linear-gradient(to bottom, rgba(10,10,18,0.88) 0%, rgba(10,10,18,0.40) 50%, transparent 100%)",
           }}
         >
-          <Div className="pointer-events-auto mx-auto max-w-7xl px-4 pt-4 pb-6 flex flex-wrap items-start justify-between gap-y-3">
+          <Row
+            wrap
+            align="start"
+            justify="between"
+            gap="sm"
+            className="pointer-events-auto mx-auto max-w-7xl px-4 pt-4 pb-6 gap-y-3"
+          >
             <Div>
               <Text
                 className="mb-1 text-xs font-black uppercase tracking-[0.2em]"
@@ -374,7 +380,7 @@ function CharacterHotspotInner({
             >
               SHOP ALL →
             </Link>
-          </Div>
+          </Row>
         </Div>
 
         {/* Image layer */}

@@ -10,7 +10,7 @@
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useCamera } from "@mohasinac/react";
-import { Alert, Button, Div, Label, Spinner, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Label, Row, Spinner, Text } from "@mohasinac/ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";
@@ -297,7 +297,7 @@ export function MediaUploadField({
           )}
 
           {!disabled && (
-            <Div className="flex flex-wrap gap-2 mt-2">
+            <Row wrap gap="sm" className="mt-2">
               {isVideo(value) && (enableTrim || enableThumbnail) && (
                 <Button
                   type="button"
@@ -320,7 +320,7 @@ export function MediaUploadField({
               >
                 {tUpload("remove")}
               </Button>
-            </Div>
+            </Row>
           )}
         </Div>
       )}
