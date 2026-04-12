@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Div, Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
 import type { BeforeAfterItem } from "../types";
 
@@ -44,7 +44,7 @@ export function FeaturedResultsSection({
   return (
     <Section className={`py-16 md:py-20 px-4 ${className}`}>
       {/* Section header */}
-      <div className="mb-12 text-center">
+      <Div className="mb-12 text-center">
         {pillLabel && (
           <Span className={pillCls}>
             <Span
@@ -63,24 +63,27 @@ export function FeaturedResultsSection({
         </Heading>
 
         {/* Ornament */}
-        <div
+        <Div
           className={`mt-3 ${flex.center} gap-2 text-zinc-400 dark:text-zinc-500`}
           aria-hidden="true"
         >
           <Span className="h-px w-6 bg-current" />
           <Span className="text-xs">{ornamentLabel}</Span>
           <Span className="h-px w-6 bg-current" />
-        </div>
+        </Div>
 
         {subtitle && (
           <Text className="mx-auto mt-4 max-w-md text-sm text-zinc-500 dark:text-zinc-400">
             {subtitle}
           </Text>
         )}
-      </div>
+      </Div>
 
       {/* Card grid */}
-      <div className="mx-auto max-w-7xl grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4">
+      <Grid
+        gap="lg"
+        className="mx-auto max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4"
+      >
         {items.map((item, i) => (
           <BeforeAfterCard
             key={item.id ?? `result-${i}`}
@@ -93,7 +96,7 @@ export function FeaturedResultsSection({
             }}
           />
         ))}
-      </div>
+      </Grid>
     </Section>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Heading, Section, Text } from "@mohasinac/ui";
+import { Button, Div, Grid, Heading, Section, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -133,7 +133,7 @@ export function HowItWorksSection({
       ref={sectionRef}
       className={`p-8 ${themed.bgPrimary} ${className}`}
     >
-      <div className="max-w-6xl mx-auto">
+      <Div className="max-w-6xl mx-auto">
         {/* Header */}
         <div
           className={`text-center mb-12 transition-all duration-700 ${
@@ -162,7 +162,10 @@ export function HowItWorksSection({
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 gap-6 mb-10">
+        <Grid
+          gap="lg"
+          className="grid-cols-1 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 mb-10"
+        >
           {steps.map((step, i) => (
             <StepCard
               key={step.number}
@@ -171,7 +174,7 @@ export function HowItWorksSection({
               delay={i * 150}
             />
           ))}
-        </div>
+        </Grid>
 
         {/* CTA */}
         {ctaLabel && onCtaClick && (
@@ -185,7 +188,7 @@ export function HowItWorksSection({
             </Button>
           </div>
         )}
-      </div>
+      </Div>
     </Section>
   );
 }

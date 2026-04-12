@@ -244,8 +244,12 @@ export interface GenerateOfferIdInput {
 
 export function generateOfferId(input: GenerateOfferIdInput): string {
   if (input.customId?.trim()) return input.customId.trim();
-  const productPrefix = slugify(input.productId).substring(0, 20).replace(/-+$/, "");
-  const buyerPrefix = slugify(input.buyerUid).substring(0, 12).replace(/-+$/, "");
+  const productPrefix = slugify(input.productId)
+    .substring(0, 20)
+    .replace(/-+$/, "");
+  const buyerPrefix = slugify(input.buyerUid)
+    .substring(0, 12)
+    .replace(/-+$/, "");
   const date = input.date || new Date();
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -327,7 +331,9 @@ export interface GenerateProductImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateProductImageFilename(input: GenerateProductImageFilenameInput): string {
+export function generateProductImageFilename(
+  input: GenerateProductImageFilenameInput,
+): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const store = slugify(input.store).substring(0, 20).replace(/-+$/, "");
@@ -343,7 +349,9 @@ export interface GenerateProductVideoFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateProductVideoFilename(input: GenerateProductVideoFilenameInput): string {
+export function generateProductVideoFilename(
+  input: GenerateProductVideoFilenameInput,
+): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const store = slugify(input.store).substring(0, 20).replace(/-+$/, "");
@@ -359,7 +367,9 @@ export interface GenerateAuctionImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateAuctionImageFilename(input: GenerateAuctionImageFilenameInput): string {
+export function generateAuctionImageFilename(
+  input: GenerateAuctionImageFilenameInput,
+): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const store = slugify(input.store).substring(0, 20).replace(/-+$/, "");
@@ -375,7 +385,9 @@ export interface GeneratePreOrderImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generatePreOrderImageFilename(input: GeneratePreOrderImageFilenameInput): string {
+export function generatePreOrderImageFilename(
+  input: GeneratePreOrderImageFilenameInput,
+): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const store = slugify(input.store).substring(0, 20).replace(/-+$/, "");
@@ -389,7 +401,9 @@ export interface GenerateReviewImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateReviewImageFilename(input: GenerateReviewImageFilenameInput): string {
+export function generateReviewImageFilename(
+  input: GenerateReviewImageFilenameInput,
+): string {
   const product = slugify(input.productId).substring(0, 40).replace(/-+$/, "");
   const n = input.index ?? 1;
   const ext = (input.ext ?? "webp").replace(/^\./, "");
@@ -400,18 +414,26 @@ export interface GenerateReviewVideoFilenameInput {
   productId: string;
   ext?: string;
 }
-export function generateReviewVideoFilename(input: GenerateReviewVideoFilenameInput): string {
+export function generateReviewVideoFilename(
+  input: GenerateReviewVideoFilenameInput,
+): string {
   const product = slugify(input.productId).substring(0, 40).replace(/-+$/, "");
   const ext = (input.ext ?? "mp4").replace(/^\./, "");
   return `review-${product}-video-1.${ext}`;
 }
 
-export function generateStoreLogoFilename(storeName: string, ext: string = "webp"): string {
+export function generateStoreLogoFilename(
+  storeName: string,
+  ext: string = "webp",
+): string {
   const store = slugify(storeName).substring(0, 40).replace(/-+$/, "");
   return `store-${store}-logo.${ext.replace(/^\./, "")}`;
 }
 
-export function generateStoreBannerFilename(storeName: string, ext: string = "webp"): string {
+export function generateStoreBannerFilename(
+  storeName: string,
+  ext: string = "webp",
+): string {
   const store = slugify(storeName).substring(0, 40).replace(/-+$/, "");
   return `store-${store}-banner.${ext.replace(/^\./, "")}`;
 }
@@ -422,7 +444,9 @@ export interface GenerateBlogImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateBlogImageFilename(input: GenerateBlogImageFilenameInput): string {
+export function generateBlogImageFilename(
+  input: GenerateBlogImageFilenameInput,
+): string {
   const title = slugify(input.title).substring(0, 40).replace(/-+$/, "");
   const category = slugify(input.category).substring(0, 20).replace(/-+$/, "");
   const n = input.index ?? 1;
@@ -435,30 +459,61 @@ export interface GenerateEventImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateEventImageFilename(input: GenerateEventImageFilenameInput): string {
+export function generateEventImageFilename(
+  input: GenerateEventImageFilenameInput,
+): string {
   const title = slugify(input.title).substring(0, 50).replace(/-+$/, "");
   const n = input.index ?? 1;
   const ext = (input.ext ?? "webp").replace(/^\./, "");
   return `event-${title}-image-${n}.${ext}`;
 }
 
-export function generateCategoryImageFilename(categoryName: string, ext: string = "webp"): string {
+export interface GenerateRichTextImageFilenameInput {
+  entity: string;
+  name: string;
+  index?: number;
+  ext?: string;
+}
+export function generateRichTextImageFilename(
+  input: GenerateRichTextImageFilenameInput,
+): string {
+  const entity = slugify(input.entity).substring(0, 24).replace(/-+$/, "");
+  const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
+  const n = input.index ?? 1;
+  const ext = (input.ext ?? "webp").replace(/^\./, "");
+  return `rich-text-${entity}-${name}-image-${n}.${ext}`;
+}
+
+export function generateCategoryImageFilename(
+  categoryName: string,
+  ext: string = "webp",
+): string {
   const name = slugify(categoryName).substring(0, 40).replace(/-+$/, "");
   return `category-${name}-image.${ext.replace(/^\./, "")}`;
 }
 
-export function generateUserAvatarFilename(firstName: string, lastName: string, ext: string = "webp"): string {
+export function generateUserAvatarFilename(
+  firstName: string,
+  lastName: string,
+  ext: string = "webp",
+): string {
   const first = slugify(firstName).substring(0, 20).replace(/-+$/, "");
   const last = slugify(lastName).substring(0, 20).replace(/-+$/, "");
   return `user-${first}-${last}-avatar.${ext.replace(/^\./, "")}`;
 }
 
-export function generateCarouselImageFilename(title: string, ext: string = "webp"): string {
+export function generateCarouselImageFilename(
+  title: string,
+  ext: string = "webp",
+): string {
   const slug = slugify(title).substring(0, 40).replace(/-+$/, "");
   return `carousel-${slug}-image.${ext.replace(/^\./, "")}`;
 }
 
-export function generateCroppedImageFilename(originalFilenameOrPath: string, ext?: string): string {
+export function generateCroppedImageFilename(
+  originalFilenameOrPath: string,
+  ext?: string,
+): string {
   const stem = basenameStem(originalFilenameOrPath);
   const originalExt = originalFilenameOrPath.includes(".")
     ? originalFilenameOrPath.split(".").pop()!
@@ -466,7 +521,10 @@ export function generateCroppedImageFilename(originalFilenameOrPath: string, ext
   return `${stem}-cropped.${(ext ?? originalExt).replace(/^\./, "")}`;
 }
 
-export function generateTrimmedVideoFilename(originalFilenameOrPath: string, ext?: string): string {
+export function generateTrimmedVideoFilename(
+  originalFilenameOrPath: string,
+  ext?: string,
+): string {
   const stem = basenameStem(originalFilenameOrPath);
   const originalExt = originalFilenameOrPath.includes(".")
     ? originalFilenameOrPath.split(".").pop()!
@@ -474,14 +532,20 @@ export function generateTrimmedVideoFilename(originalFilenameOrPath: string, ext
   return `${stem}-trimmed.${(ext ?? originalExt).replace(/^\./, "")}`;
 }
 
-export function generateInvoiceFilename(orderId: string, date: Date = new Date()): string {
+export function generateInvoiceFilename(
+  orderId: string,
+  date: Date = new Date(),
+): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
   return `invoice-${orderId}-${y}${m}${d}.pdf`;
 }
 
-export function generatePayoutDocFilename(sellerName: string, date: Date = new Date()): string {
+export function generatePayoutDocFilename(
+  sellerName: string,
+  date: Date = new Date(),
+): string {
   const seller = slugify(sellerName).substring(0, 30).replace(/-+$/, "");
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -508,6 +572,7 @@ export type MediaFilenameContext =
   | ({ type: "event-cover" } & GenerateEventImageFilenameInput)
   | ({ type: "event-winner-image" } & GenerateEventImageFilenameInput)
   | ({ type: "event-additional-image" } & GenerateEventImageFilenameInput)
+  | ({ type: "rich-text-image" } & GenerateRichTextImageFilenameInput)
   | { type: "category-image"; name: string; ext?: string }
   | { type: "user-avatar"; firstName: string; lastName: string; ext?: string }
   | { type: "carousel-image"; title: string; ext?: string }
@@ -516,26 +581,49 @@ export type MediaFilenameContext =
 
 export function generateMediaFilename(ctx: MediaFilenameContext): string {
   switch (ctx.type) {
-    case "product-image":   return generateProductImageFilename(ctx);
-    case "product-video":   return generateProductVideoFilename(ctx);
-    case "review-image":    return generateReviewImageFilename(ctx);
-    case "review-video":    return generateReviewVideoFilename(ctx);
-    case "auction-image":   return generateAuctionImageFilename(ctx);
-    case "preorder-image":  return generatePreOrderImageFilename(ctx);
-    case "store-logo":      return generateStoreLogoFilename(ctx.store, ctx.ext);
-    case "store-banner":    return generateStoreBannerFilename(ctx.store, ctx.ext);
-    case "blog-image":      return generateBlogImageFilename(ctx);
-    case "blog-cover":      return generateBlogImageFilename(ctx);
-    case "blog-content-image": return generateBlogImageFilename(ctx);
-    case "blog-additional-image": return generateBlogImageFilename(ctx);
-    case "event-image":     return generateEventImageFilename(ctx);
-    case "event-cover":     return generateEventImageFilename(ctx);
-    case "event-winner-image": return generateEventImageFilename(ctx);
-    case "event-additional-image": return generateEventImageFilename(ctx);
-    case "category-image":  return generateCategoryImageFilename(ctx.name, ctx.ext);
-    case "user-avatar":     return generateUserAvatarFilename(ctx.firstName, ctx.lastName, ctx.ext);
-    case "carousel-image":  return generateCarouselImageFilename(ctx.title, ctx.ext);
-    case "invoice":         return generateInvoiceFilename(ctx.orderId, ctx.date);
-    case "payout-doc":      return generatePayoutDocFilename(ctx.sellerName, ctx.date);
+    case "product-image":
+      return generateProductImageFilename(ctx);
+    case "product-video":
+      return generateProductVideoFilename(ctx);
+    case "review-image":
+      return generateReviewImageFilename(ctx);
+    case "review-video":
+      return generateReviewVideoFilename(ctx);
+    case "auction-image":
+      return generateAuctionImageFilename(ctx);
+    case "preorder-image":
+      return generatePreOrderImageFilename(ctx);
+    case "store-logo":
+      return generateStoreLogoFilename(ctx.store, ctx.ext);
+    case "store-banner":
+      return generateStoreBannerFilename(ctx.store, ctx.ext);
+    case "blog-image":
+      return generateBlogImageFilename(ctx);
+    case "blog-cover":
+      return generateBlogImageFilename(ctx);
+    case "blog-content-image":
+      return generateBlogImageFilename(ctx);
+    case "blog-additional-image":
+      return generateBlogImageFilename(ctx);
+    case "event-image":
+      return generateEventImageFilename(ctx);
+    case "event-cover":
+      return generateEventImageFilename(ctx);
+    case "event-winner-image":
+      return generateEventImageFilename(ctx);
+    case "event-additional-image":
+      return generateEventImageFilename(ctx);
+    case "rich-text-image":
+      return generateRichTextImageFilename(ctx);
+    case "category-image":
+      return generateCategoryImageFilename(ctx.name, ctx.ext);
+    case "user-avatar":
+      return generateUserAvatarFilename(ctx.firstName, ctx.lastName, ctx.ext);
+    case "carousel-image":
+      return generateCarouselImageFilename(ctx.title, ctx.ext);
+    case "invoice":
+      return generateInvoiceFilename(ctx.orderId, ctx.date);
+    case "payout-doc":
+      return generatePayoutDocFilename(ctx.sellerName, ctx.date);
   }
 }

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -131,7 +131,9 @@ export function HowItWorksInfoView({
                 {detailsSectionTitle}
               </Heading>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-4 mb-12">
+            <Grid
+              className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mb-12"
+            >
               {details.map(({ title: dt, text: dx }) => (
                 <div
                   key={dt}
@@ -149,7 +151,7 @@ export function HowItWorksInfoView({
                   </Text>
                 </div>
               ))}
-            </div>
+            </Grid>
           </>
         )}
 

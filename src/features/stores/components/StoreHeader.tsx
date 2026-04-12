@@ -1,5 +1,14 @@
 import React from "react";
-import { Button, Div, Heading, Section, Span, Text } from "@mohasinac/ui";
+import {
+  Button,
+  Div,
+  Heading,
+  RichText,
+  Section,
+  Span,
+  Text,
+} from "@mohasinac/ui";
+import { proseMirrorToHtml } from "../../../utils/string.formatter";
 import type { StoreDetail } from "../types";
 
 interface StoreHeaderProps {
@@ -55,9 +64,11 @@ export function StoreHeader({
               {store.storeName}
             </Heading>
             {store.storeDescription && (
-              <Text className="text-sm text-gray-500 mt-0.5 line-clamp-1">
-                {store.storeDescription}
-              </Text>
+              <RichText
+                html={proseMirrorToHtml(store.storeDescription)}
+                copyableCode
+                className="text-sm text-gray-500 mt-0.5"
+              />
             )}
           </Div>
           {onFollow && (

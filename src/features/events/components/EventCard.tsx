@@ -1,5 +1,6 @@
 import React from "react";
 import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { stripHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EventStatusBadge } from "./EventStatusBadge";
 
@@ -61,7 +62,7 @@ export function EventCard({
           {event.title}
         </Heading>
         <Text className="text-sm text-gray-500 line-clamp-2 mb-3">
-          {event.description}
+          {stripHtml(event.description ?? "")}
         </Text>
 
         <Div className="flex items-center justify-between text-xs text-gray-400 mb-3">

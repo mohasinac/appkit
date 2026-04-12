@@ -123,7 +123,10 @@ export function SecurityHighlightsSection({
         </div>
 
         {/* Cards grid */}
-        <Grid gap="none" className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+        <Grid
+          gap="none"
+          className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5"
+        >
           {items.map((item, index) => (
             <SecurityCard
               key={item.key}

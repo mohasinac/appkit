@@ -67,6 +67,7 @@ When a pattern (e.g. `flex items-center gap-2`) appears in ≥ 3 places → add 
 
 - When expanding variants, mine repeated wrapper usage across consumers before adding API surface. A new variant/config prop should correspond to a verified repeated semantic pattern, not a one-off styling preference.
 - Every new wrapper variant must preserve or improve accessibility: semantic landmark choice, heading order, focus visibility, interaction affordances, and color contrast must remain correct by default.
+- Once a variant is approved and added, adoption is mandatory across appkit and consumer repos for matching repeated patterns. Replace large repeated className bundles with the variant; do not leave parallel class-string implementations except documented one-off exceptions.
 
 ### 5. Merge Duplicates With Config
 

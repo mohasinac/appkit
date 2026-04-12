@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Button, Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
 import { MessageCircle } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -131,7 +131,7 @@ export function WhatsAppCommunitySection({
 
             {/* Benefits */}
             {benefits.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 max-w-2xl mx-auto my-8">
+              <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 max-w-2xl mx-auto my-8">
                 {benefits.slice(0, 4).map((benefit, index) => (
                   <div
                     key={index}
@@ -151,7 +151,7 @@ export function WhatsAppCommunitySection({
                     <Span className="text-sm md:text-base">{benefit}</Span>
                   </div>
                 ))}
-              </div>
+              </Grid>
             )}
 
             {/* CTA Button */}

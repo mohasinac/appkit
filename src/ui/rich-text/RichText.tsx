@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Div } from "../components/Div";
 
 // ─── Allowed HTML tags (safe subset — no script/iframe/object) ────────────────
@@ -52,7 +52,7 @@ const ALLOWED_TAGS = new Set([
 const ALLOWED_ATTRS: Record<string, string[]> = {
   "*": ["class", "id", "lang", "dir", "aria-label", "role", "tabindex"],
   a: ["href", "title", "target", "rel"],
-  img: ["src", "alt", "width", "height", "loading"],
+  img: ["src", "alt", "width", "height", "loading", "data-align"],
   td: ["colspan", "rowspan"],
   th: ["colspan", "rowspan", "scope"],
   ol: ["type", "start"],
@@ -128,6 +128,42 @@ function sanitiseHtml(dirty: string): string {
 
 // ─── RichText component ───────────────────────────────────────────────────────
 
+/** Adds interactive copy buttons to every `<pre>` block inside a container. */
+function attachCopyButtons(container: HTMLDivElement) {
+  container.querySelectorAll<HTMLElement>("pre").forEach((pre) => {
+    // Avoid double-adding
+    if (pre.querySelector("[data-copy-btn]")) return;
+
+    pre.style.position = "relative";
+
+    const btn = document.createElement("button");
+    btn.dataset.copyBtn = "1";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Copy code");
+    btn.textContent = "Copy";
+    btn.style.cssText =
+      "position:absolute;top:8px;right:8px;padding:2px 10px;font-size:11px;font-family:inherit;" +
+      "border-radius:6px;border:1px solid rgba(148,163,184,.4);background:rgba(30,41,59,.75);" +
+      "color:#e2e8f0;cursor:pointer;line-height:1.6;user-select:none;transition:background .15s;";
+
+    btn.addEventListener("click", () => {
+      const code =
+        pre.querySelector("code")?.textContent ?? pre.textContent ?? "";
+      navigator.clipboard
+        .writeText(code)
+        .then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => {
+            btn.textContent = "Copy";
+          }, 1800);
+        })
+        .catch(() => {});
+    });
+
+    pre.appendChild(btn);
+  });
+}
+
 export interface RichTextProps {
   /** Raw HTML string — typically from ProseMirror / Tiptap JSON rendered to HTML. */
   html: string;
@@ -135,6 +171,11 @@ export interface RichTextProps {
   className?: string;
   /** Tailwind prose class variant. Defaults to "prose dark:prose-invert". */
   proseClass?: string;
+  /**
+   * When true, every `<pre>` code block gets an overlay "Copy" button that
+   * copies the code text to the clipboard on click. Defaults to false.
+   */
+  copyableCode?: boolean;
   /**
    * Optional syntax highlighter applied to every `<pre><code>` block.
    * Called with (rawCode, languageName) — return the highlighted HTML string.
@@ -165,14 +206,18 @@ export interface RichTextProps {
  * Usage:
  * ```tsx
  * <RichText html={blogPost.body} className="max-w-2xl" />
+ * <RichText html={desc} copyableCode />
  * ```
  */
 export function RichText({
   html,
   className = "",
   proseClass = "prose dark:prose-invert max-w-none",
+  copyableCode = false,
   highlightCode,
 }: RichTextProps) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   const safe = useMemo(() => {
     const sanitized = sanitiseHtml(html);
 
@@ -192,8 +237,17 @@ export function RichText({
     return container.innerHTML;
   }, [html, highlightCode]);
 
+  // Attach copy buttons imperatively after the HTML is mounted / updated.
+  const ref = (el: HTMLDivElement | null) => {
+    containerRef.current = el;
+    if (el && copyableCode) {
+      attachCopyButtons(el);
+    }
+  };
+
   return (
     <Div
+      ref={ref}
       className={`${proseClass} ${className}`}
       dangerouslySetInnerHTML={{ __html: safe }}
     />

@@ -56,8 +56,11 @@ export { TextLink } from "./components/TextLink";
 export type { TooltipProps } from "./components/Tooltip";
 export { Tooltip } from "./components/Tooltip";
 
-export type { AccordionProps } from "./components/Accordion";
-export { Accordion } from "./components/Accordion";
+export type {
+  AccordionProps,
+  AccordionItemProps,
+} from "./components/Accordion";
+export { Accordion, AccordionItem } from "./components/Accordion";
 
 export type { FormProps } from "./components/Form";
 export { Form } from "./components/Form";

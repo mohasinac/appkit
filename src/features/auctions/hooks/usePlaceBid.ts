@@ -33,7 +33,10 @@ export function usePlaceBid() {
 
   return useMutation<BidResult, Error, PlaceBidPayload>({
     mutationFn: async (data) => {
-      const result = await apiClient.post<{ bid: BidResult }>("/api/bids", data);
+      const result = await apiClient.post<{ bid: BidResult }>(
+        "/api/bids",
+        data,
+      );
       return result.bid;
     },
     onSuccess: async (_, { productId }) => {

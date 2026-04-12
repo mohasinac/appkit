@@ -44,11 +44,11 @@ export function AuctionDetailView({
     <Div className={className}>
       {renderBreadcrumb?.()}
       {/* 3-column grid: gallery | info | bid-sidebar (desktop only) */}
-         <Grid cols="productDetailTriplet" className="mt-6">
+      <Grid cols="productDetailTriplet" className="mt-6">
         <Div>{renderGallery?.(isLoading)}</Div>
         <Div>{renderInfo?.(isLoading)}</Div>
         <Div className="hidden lg:block">{renderBidForm?.()}</Div>
-         </Grid>
+      </Grid>
       {/* Mobile bid form — shown below grid on small screens */}
       {renderMobileBidForm?.()}
       {renderBidHistory?.()}
