@@ -14,14 +14,14 @@ export interface DescriptionFieldProps {
  * text style. Short values render inline-ish (`flex-1 min-w-[280px]`);
  * long values (> 80 chars) take full width with `prose` wrapping.
  *
- * Designed for use inside `FormGrid` or `<dl>` definition lists.
+ * Designed for use inside `FormGrid` or `<Row as="dl">` definition lists.
  *
  * @example
  * ```tsx
- * <dl className="flex flex-wrap gap-4">
+ * <Row as="dl" wrap gap="md">
  *   <DescriptionField label="Store name" value="My Amazing Store" />
  *   <DescriptionField label="Description" value={longDescription} />
- * </dl>
+ * </Row>
  * ```
  */
 export function DescriptionField({

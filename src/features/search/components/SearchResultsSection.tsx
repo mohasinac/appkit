@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Div, Select, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Grid, Select, Span, Text } from "@mohasinac/ui";
 import type { SearchProductItem } from "../types";
 
 export interface SearchResultsSectionProps {
@@ -83,14 +83,14 @@ export function SearchResultsSection({
     }
 
     return (
-      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+      <Grid cols="statTiles">
         {Array.from({ length: PAGE_SIZE }).map((_, i) => (
           <Div
             key={i}
             className="aspect-square rounded-xl bg-zinc-100 dark:bg-slate-800 animate-pulse"
           />
         ))}
-      </Div>
+      </Grid>
     );
   }
 
@@ -146,11 +146,11 @@ export function SearchResultsSection({
       {renderProducts ? (
         renderProducts(products)
       ) : (
-        <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+        <Grid cols="statTiles">
           {products.map((p) => (
             <Div key={p.id}>{renderItem(p)}</Div>
           ))}
-        </Div>
+        </Grid>
       )}
 
       {/* Pagination */}

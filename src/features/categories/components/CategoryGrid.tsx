@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Text } from "@mohasinac/ui";
+import { Div, Grid, Text } from "@mohasinac/ui";
 import type { CategoryItem } from "../types";
 
 // ─── CategoryCard ─────────────────────────────────────────────────────────────
@@ -84,15 +84,10 @@ export function CategoryGrid({
   }
 
   return (
-    <Div
-      className={`grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-4 ${className}`}
-    >
+    <Grid cols="categoryCards" className={className}>
       {categories.map((cat) => (
         <CategoryCard key={cat.id} category={cat} onClick={onCategoryClick} />
       ))}
-    </Div>
+    </Grid>
   );
 }
-
-
-

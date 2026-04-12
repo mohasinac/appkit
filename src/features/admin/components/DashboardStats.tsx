@@ -1,6 +1,6 @@
 import React from "react";
 import type { DashboardStats } from "../types";
-import { Div, Text } from "@mohasinac/ui";
+import { Div, Text, Grid } from "@mohasinac/ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface StatCardProps {
@@ -42,7 +42,7 @@ export function DashboardStatsGrid({
 }: DashboardStatsGridProps) {
   if (isLoading) {
     return (
-      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+      <Grid cols="statTiles">
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
@@ -52,13 +52,13 @@ export function DashboardStatsGrid({
             <Div className="mt-2 h-8 w-24 rounded bg-neutral-200" />
           </Div>
         ))}
-      </Div>
+      </Grid>
     );
   }
 
   const currency = stats.currency ?? "INR";
   return (
-    <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+    <Grid cols="statTiles">
       <StatCard
         label={labels.totalOrders ?? "Total Orders"}
         value={stats.totalOrders ?? 0}
@@ -91,6 +91,6 @@ export function DashboardStatsGrid({
           color="amber"
         />
       )}
-    </Div>
+    </Grid>
   );
 }
