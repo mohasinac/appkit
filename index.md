@@ -2,7 +2,7 @@
 
 Auto-generated inventory of code/config files with detected exported and internal symbols.
 
-Generated: 2026-04-12T22:28:18.920Z
+Generated: 2026-04-12T23:52:24.087Z
 Total indexed files: 817
 
 | Name | Path | Usage / What Is Inside | Symbols (Exported + Internal) |
