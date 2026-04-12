@@ -127,6 +127,9 @@ export const GRID_MAP = {
   sidebarRight: "grid grid-cols-1 lg:grid-cols-[1fr_280px]",
   /** Fixed 320px left sidebar + 1fr on lg+ (admin layout) */
   sidebarWide: "grid grid-cols-1 lg:grid-cols-[320px_1fr]",
+  /** Product detail triplet: gallery | info | actions sidebar */
+  productDetailTriplet:
+    "grid grid-cols-1 lg:grid-cols-[1fr_1fr_280px] xl:grid-cols-[1fr_1fr_300px] 2xl:grid-cols-[1fr_1fr_320px] gap-6 lg:gap-8",
   /** CSS auto-fill, min 200px columns */
   autoSm: "grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
   /** CSS auto-fill, min 280px columns */

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div } from "@mohasinac/ui";
+import { Div, Grid } from "@mohasinac/ui";
 
 export interface ProductDetailViewProps {
   labels?: { title?: string };
@@ -40,11 +40,11 @@ export function ProductDetailView({
     <Div className={className}>
       {renderBreadcrumb?.()}
       {/* Responsive 3-column grid: gallery | info | actions-sidebar */}
-      <Div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_280px] xl:grid-cols-[1fr_1fr_300px] 2xl:grid-cols-[1fr_1fr_320px] gap-6 lg:gap-8 mt-6">
+      <Grid cols="productDetailTriplet" className="mt-6">
         <Div>{renderGallery?.(isLoading)}</Div>
         <Div>{renderInfo?.(isLoading)}</Div>
         {renderActions?.()}
-      </Div>
+      </Grid>
       {renderTabs?.()}
       {renderRelated?.()}
     </Div>
