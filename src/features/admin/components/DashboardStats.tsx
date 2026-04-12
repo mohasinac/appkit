@@ -1,6 +1,7 @@
 import React from "react";
 import type { DashboardStats } from "../types";
 import { Div, Text } from "@mohasinac/ui";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 interface StatCardProps {
   label: string;
@@ -55,7 +56,7 @@ export function DashboardStatsGrid({
     );
   }
 
-  const cur = stats.currency ?? "";
+  const currency = stats.currency ?? "INR";
   return (
     <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
       <StatCard
@@ -64,7 +65,7 @@ export function DashboardStatsGrid({
       />
       <StatCard
         label={labels.totalRevenue ?? "Total Revenue"}
-        value={`${cur}${(stats.totalRevenue ?? 0).toLocaleString()}`}
+        value={formatCurrency(stats.totalRevenue ?? 0, currency)}
         color="green"
       />
       <StatCard

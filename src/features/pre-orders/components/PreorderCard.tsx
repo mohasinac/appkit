@@ -5,6 +5,7 @@ import React from "react";
 import { Div, Heading, Span, Text } from "@mohasinac/ui";
 import type { PreorderItem, PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 const STATUS_LABELS: Record<PreorderStatus, string> = {
   available: "Pre-order now",
@@ -66,11 +67,11 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
         <Text className="mt-1 text-sm text-gray-500">{item.brand}</Text>
         <Div className="mt-3 flex items-baseline gap-2">
           <Span className="text-lg font-bold text-gray-900">
-            ₹{item.salePrice.toLocaleString()}
+            {formatCurrency(item.salePrice)}
           </Span>
           {item.regularPrice > item.salePrice && (
             <Span className="text-sm text-gray-400 line-through">
-              ₹{item.regularPrice.toLocaleString()}
+              {formatCurrency(item.regularPrice)}
             </Span>
           )}
         </Div>

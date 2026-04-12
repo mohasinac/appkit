@@ -1,6 +1,7 @@
 import React from "react";
 import { Div, Pagination, Span, Text } from "@mohasinac/ui";
 import type { Order, OrderStatus } from "../types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -84,10 +85,9 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
         )}
       </Div>
       <Div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
-        <Span className="text-sm text-neutral-500">{order.currency} Total</Span>
+        <Span className="text-sm text-neutral-500">{order.currency ?? "INR"} Total</Span>
         <Span className="font-semibold text-neutral-900">
-          {order.currency}
-          {order.total.toLocaleString()}
+          {formatCurrency(order.total, order.currency ?? "INR")}
         </Span>
       </Div>
     </Div>

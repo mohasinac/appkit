@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Div, Text } from "@mohasinac/ui";
 import type { WishlistItem } from "../types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 interface WishlistCardProps {
   item: WishlistItem;
@@ -41,8 +42,7 @@ export function WishlistCard({
         </Text>
         {item.productPrice !== undefined && (
           <Text className="text-sm font-semibold text-neutral-900">
-            {item.productCurrency ?? "₹"}
-            {item.productPrice.toLocaleString()}
+            {formatCurrency(item.productPrice, item.productCurrency ?? "INR")}
           </Text>
         )}
       </Div>
@@ -98,7 +98,9 @@ export function WishlistPage({
 
   if (items.length === 0) {
     return (
-      <Text className="py-16 text-center text-sm text-neutral-500">{emptyLabel}</Text>
+      <Text className="py-16 text-center text-sm text-neutral-500">
+        {emptyLabel}
+      </Text>
     );
   }
 

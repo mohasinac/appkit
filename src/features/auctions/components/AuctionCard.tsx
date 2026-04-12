@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
 import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 interface AuctionCountdownProps {
   endsAt: string;
@@ -115,7 +116,7 @@ export function AuctionCard({
               {labels.currentBid ?? "Current bid"}
             </Text>
             <Text className="text-base font-bold text-gray-900">
-              {auction.currency} {displayBid.toLocaleString()}
+              {formatCurrency(displayBid, auction.currency ?? "INR")}
             </Text>
           </Div>
           <Div className="text-right">

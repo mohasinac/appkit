@@ -1,6 +1,7 @@
 import React from "react";
 import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -35,8 +36,10 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
           )}
         <Div className="flex items-center justify-between">
           <Text className="font-semibold text-neutral-900">
-            {item.meta.currency ?? "₹"}
-            {(item.meta.price * item.quantity).toLocaleString()}
+            {formatCurrency(
+              item.meta.price * item.quantity,
+              item.meta.currency ?? "INR",
+            )}
           </Text>
           {onQtyChange && (
             <Div className="flex items-center gap-2">
@@ -84,6 +87,7 @@ interface CartDrawerProps {
   onClose: () => void;
   items: CartItem[];
   subtotal?: number;
+  /** ISO 4217 currency code, e.g. "INR", "USD". Defaults to "INR". */
   currency?: string;
   isLoading?: boolean;
   onQtyChange?: (id: string, qty: number) => void;
@@ -102,7 +106,7 @@ export function CartDrawer({
   onClose,
   items,
   subtotal = 0,
-  currency = "₹",
+  currency = "INR",
   isLoading,
   onQtyChange,
   onRemove,
@@ -160,8 +164,7 @@ export function CartDrawer({
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span className="font-semibold">
-                {currency}
-                {subtotal.toLocaleString()}
+                {formatCurrency(subtotal, currency ?? "INR")}
               </Span>
             </Div>
             {onCheckout && (

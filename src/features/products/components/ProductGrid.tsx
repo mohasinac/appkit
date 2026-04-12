@@ -3,6 +3,7 @@ import type { LayoutSlots } from "@mohasinac/contracts";
 import { Button, Div, Span, Text } from "@mohasinac/ui";
 import type { ViewMode } from "@mohasinac/ui";
 import type { ProductItem } from "../types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
 
@@ -91,13 +92,11 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
         <Div className="mt-2 flex items-baseline gap-2">
           <Span className="font-semibold text-neutral-900">
-            {product.currency ?? "₹"}
-            {product.price.toLocaleString()}
+            {formatCurrency(product.price, product.currency ?? "INR")}
           </Span>
           {product.originalPrice && (
             <Span className="text-xs text-neutral-400 line-through">
-              {product.currency ?? "₹"}
-              {product.originalPrice.toLocaleString()}
+              {formatCurrency(product.originalPrice, product.currency ?? "INR")}
             </Span>
           )}
         </Div>
@@ -262,7 +261,8 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       {/* Price */}
       <Div className="w-[80px] text-right flex-shrink-0">
         <Span className="text-sm font-semibold text-neutral-900 dark:text-zinc-100">
-          {product.currency ?? "₹"}{product.price.toLocaleString()}
+          {product.currency ?? "₹"}
+          {product.price.toLocaleString()}
         </Span>
         {discount && (
           <Span className="block text-[10px] text-neutral-400 dark:text-zinc-500">
@@ -333,7 +333,9 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   const renderItems = () => {
     if (view === "list") {
       return (
-        <Div className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 ${className}`}>
+        <Div
+          className={`flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 ${className}`}
+        >
           {products.map((p) => (
             <ProductListRow<T>
               key={p.id}
