@@ -17,6 +17,25 @@ export interface SearchResultsSectionProps {
   onPageChange: (page: number) => void;
   /** Slot for rendering a single product card */
   renderItem: (product: SearchProductItem) => React.ReactNode;
+  /** Optional custom loading renderer. */
+  renderLoading?: (opts: { skeletonCount: number }) => React.ReactNode;
+  /** Optional custom empty-state renderer. */
+  renderEmpty?: (opts: { query: string }) => React.ReactNode;
+  /** Optional custom products renderer. */
+  renderProducts?: (products: SearchProductItem[]) => React.ReactNode;
+  /** Optional custom sort/count toolbar renderer. */
+  renderSortBar?: (opts: {
+    total: number;
+    showing: number;
+    urlSort: string;
+    onSortChange: (sort: string) => void;
+  }) => React.ReactNode;
+  /** Optional custom pagination renderer. */
+  renderPagination?: (opts: {
+    urlPage: number;
+    totalPages: number;
+    onPageChange: (page: number) => void;
+  }) => React.ReactNode;
   sortOptions?: Array<{ value: string; label: string }>;
   labels?: {
     sortLabel?: string;
@@ -41,6 +60,11 @@ export function SearchResultsSection({
   onSortChange,
   onPageChange,
   renderItem,
+  renderLoading,
+  renderEmpty,
+  renderProducts,
+  renderSortBar,
+  renderPagination,
   sortOptions = [],
   labels = {},
 }: SearchResultsSectionProps) {
@@ -54,6 +78,10 @@ export function SearchResultsSection({
   };
 
   if (isLoading) {
+    if (renderLoading) {
+      return <>{renderLoading({ skeletonCount: PAGE_SIZE })}</>;
+    }
+
     return (
       <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
         {Array.from({ length: PAGE_SIZE }).map((_, i) => (
@@ -67,6 +95,10 @@ export function SearchResultsSection({
   }
 
   if (products.length === 0) {
+    if (renderEmpty) {
+      return <>{renderEmpty({ query: urlQ })}</>;
+    }
+
     return (
       <Div className="flex flex-col items-center justify-center py-20 text-center gap-3">
         <Span className="text-5xl" aria-hidden="true">
@@ -87,55 +119,75 @@ export function SearchResultsSection({
   return (
     <Div className="space-y-5">
       {/* Sort + count bar */}
-      <Div className="flex items-center justify-between">
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
-          {L.showing(products.length, total)}
-        </Text>
-        {sortOptions.length > 0 && (
-          <Select
-            value={urlSort}
-            onChange={onSortChange}
-            options={sortOptions}
-            className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
-          />
-        )}
-      </Div>
-
-      {/* Product grid */}
-      <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
-        {products.map((p) => (
-          <Div key={p.id}>{renderItem(p)}</Div>
-        ))}
-      </Div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <Div className="flex items-center justify-center gap-2 pt-4">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(urlPage - 1)}
-            disabled={urlPage <= 1}
-            className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            {L.prevPage}
-          </Button>
-          <Span className="text-sm text-zinc-600 dark:text-zinc-400 tabular-nums">
-            {urlPage} / {totalPages}
-          </Span>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => onPageChange(urlPage + 1)}
-            disabled={urlPage >= totalPages}
-            className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            {L.nextPage}
-          </Button>
+      {renderSortBar ? (
+        renderSortBar({
+          total,
+          showing: products.length,
+          urlSort,
+          onSortChange,
+        })
+      ) : (
+        <Div className="flex items-center justify-between">
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+            {L.showing(products.length, total)}
+          </Text>
+          {sortOptions.length > 0 && (
+            <Select
+              value={urlSort}
+              onChange={onSortChange}
+              options={sortOptions}
+              className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
+            />
+          )}
         </Div>
       )}
+
+      {/* Product grid */}
+      {renderProducts ? (
+        renderProducts(products)
+      ) : (
+        <Div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
+          {products.map((p) => (
+            <Div key={p.id}>{renderItem(p)}</Div>
+          ))}
+        </Div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 &&
+        (renderPagination ? (
+          renderPagination({
+            urlPage,
+            totalPages,
+            onPageChange,
+          })
+        ) : (
+          <Div className="flex items-center justify-center gap-2 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onPageChange(urlPage - 1)}
+              disabled={urlPage <= 1}
+              className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              {L.prevPage}
+            </Button>
+            <Span className="text-sm text-zinc-600 dark:text-zinc-400 tabular-nums">
+              {urlPage} / {totalPages}
+            </Span>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onPageChange(urlPage + 1)}
+              disabled={urlPage >= totalPages}
+              className="px-4 py-2 rounded-lg border border-zinc-200 dark:border-slate-700 text-sm text-zinc-700 dark:text-zinc-300 disabled:opacity-40 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              {L.nextPage}
+            </Button>
+          </Div>
+        ))}
     </Div>
   );
 }
