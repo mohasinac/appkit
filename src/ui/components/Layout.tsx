@@ -226,6 +226,8 @@ export function Container({
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   /** Space between children. Defaults to `"md"` (`gap-4`). */
   gap?: GapKey;
+  /** Centers children on both axes (`items-center justify-center`). */
+  centered?: boolean;
   /** Cross-axis (horizontal) alignment. Defaults to `"stretch"`. */
   align?: Extract<ItemsAlign, "start" | "center" | "end" | "stretch">;
   /** Render as a different element. Defaults to `"div"`. */
@@ -235,6 +237,7 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement> {
 
 export function Stack({
   gap = "md",
+  centered = false,
   align = "stretch",
   as,
   className = "",
@@ -245,7 +248,8 @@ export function Stack({
   const classes = [
     "flex flex-col",
     GAP_MAP[gap],
-    align !== "stretch" ? ITEMS_MAP[align] : "",
+    centered ? "items-center justify-center" : "",
+    !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
     className,
   ]
     .filter(Boolean)
@@ -278,6 +282,8 @@ export function Stack({
 export interface RowProps extends React.HTMLAttributes<HTMLElement> {
   /** Space between children. Defaults to `"md"` (`gap-4`). */
   gap?: GapKey;
+  /** Centers children on both axes (`items-center justify-center`). */
+  centered?: boolean;
   /** Cross-axis (vertical) alignment. Defaults to `"center"`. */
   align?: ItemsAlign;
   /** Main-axis (horizontal) distribution. Defaults to `"start"`. */
@@ -291,6 +297,7 @@ export interface RowProps extends React.HTMLAttributes<HTMLElement> {
 
 export function Row({
   gap = "md",
+  centered = false,
   align = "center",
   justify = "start",
   wrap = false,
@@ -302,8 +309,8 @@ export function Row({
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
     "flex flex-row",
-    ITEMS_MAP[align],
-    justify !== "start" ? JUSTIFY_MAP[justify] : "",
+    centered ? "items-center justify-center" : ITEMS_MAP[align],
+    !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "flex-wrap" : "",
     className,
