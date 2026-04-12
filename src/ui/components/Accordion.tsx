@@ -53,17 +53,14 @@ function renderLegacyAccordion({
   className = "",
   titleClassName = "",
   contentClassName = "",
-}: Required<
-  Pick<
-    AccordionProps,
-    | "title"
-    | "children"
-    | "open"
-    | "className"
-    | "titleClassName"
-    | "contentClassName"
-  >
->) {
+}: {
+  title: React.ReactNode;
+  children?: React.ReactNode;
+  open: boolean;
+  className?: string;
+  titleClassName?: string;
+  contentClassName?: string;
+}) {
   return (
     <details
       open={open}

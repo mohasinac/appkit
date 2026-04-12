@@ -12,7 +12,7 @@ export interface RouteMap {
   BLOG: Record<string, RoutePath>;
 }
 
-export const DEFAULT_ROUTE_MAP: RouteMap = {
+export const DEFAULT_ROUTE_MAP = {
   HOME: "/",
   PUBLIC: {
     FAQS: "/faqs",
@@ -140,7 +140,7 @@ export const DEFAULT_ROUTE_MAP: RouteMap = {
     LIST: "/blog",
     ARTICLE: (slug: string) => `/blog/${slug}`,
   },
-};
+} as const satisfies RouteMap;
 
 export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
   return {
@@ -181,7 +181,7 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
   };
 }
 
-export const ROUTES = createRouteMap();
+export const ROUTES = DEFAULT_ROUTE_MAP;
 
 export const PUBLIC_ROUTES = [
   ROUTES.HOME,

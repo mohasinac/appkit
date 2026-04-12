@@ -131,9 +131,7 @@ export function HowItWorksInfoView({
                 {detailsSectionTitle}
               </Heading>
             )}
-            <Grid
-              className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mb-12"
-            >
+            <Grid className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 mb-12">
               {details.map(({ title: dt, text: dx }) => (
                 <div
                   key={dt}
