@@ -100,6 +100,9 @@ export const GRID_MAP = {
     "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5",
   /** Auto-fill product cards — min 200 px */
   productCards: "grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6",
+  /** Auto-fill product cards (compact) — min 220 px */
+  productCardsCompact:
+    "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4",
   /** Auto-fill store cards — min 220 px */
   storeCards: "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-6",
   /** Auto-fill category tiles — min 130 px */

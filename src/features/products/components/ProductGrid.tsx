@@ -1,6 +1,6 @@
 import React from "react";
 import type { LayoutSlots } from "@mohasinac/contracts";
-import { Button, Div, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Grid, Span, Text } from "@mohasinac/ui";
 import type { ViewMode } from "@mohasinac/ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -177,9 +177,8 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
 
 // ─── Grid class maps ─────────────────────────────────────────────────────────
 
-const GRID_CLASSES: Record<"card" | "fluid", string> = {
+const GRID_CLASSES: Record<"card", string> = {
   card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
-  fluid: "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4",
 };
 
 // ─── ProductListRow (list-mode row) ──────────────────────────────────────────
@@ -349,7 +348,37 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       );
     }
 
-    const gridClass = GRID_CLASSES[view];
+    if (view === "fluid") {
+      return (
+        <Grid cols="productCardsCompact" className={className}>
+          {products.map((p, i) => {
+            const ctx: ProductCardContext<T> = {
+              onClick: onProductClick,
+              onWishlistToggle,
+              isWishlisted: wishlistedIds?.has(p.id) ?? false,
+            };
+            const cardRenderer = renderCard ?? slots?.renderCard;
+            return cardRenderer ? (
+              <React.Fragment key={p.id}>
+                {cardRenderer === renderCard
+                  ? (renderCard as NonNullable<typeof renderCard>)(p, ctx)
+                  : (slots!.renderCard!(p, i) as React.ReactNode)}
+              </React.Fragment>
+            ) : (
+              <ProductCard<T>
+                key={p.id}
+                product={p}
+                onClick={onProductClick}
+                onAddToWishlist={onWishlistToggle}
+                isWishlisted={ctx.isWishlisted}
+              />
+            );
+          })}
+        </Grid>
+      );
+    }
+
+    const gridClass = GRID_CLASSES.card;
     return (
       <Div className={`${gridClass} ${className}`}>
         {products.map((p, i) => {
