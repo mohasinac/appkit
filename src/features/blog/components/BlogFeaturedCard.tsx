@@ -3,6 +3,7 @@
 import React from "react";
 import { Article, Div, Heading, Span, Text } from "@mohasinac/ui";
 import type { BlogPost, BlogPostCategory } from "../types";
+import { getMediaUrl } from "../../media/types/index.js";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",
@@ -35,6 +36,7 @@ export function BlogFeaturedCard({
   renderImage,
   className = "",
 }: BlogFeaturedCardProps) {
+  const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString("en-US", {
         year: "numeric",
@@ -47,7 +49,7 @@ export function BlogFeaturedCard({
     <Article
       className={`overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm hover:shadow-lg transition-shadow duration-200 md:flex ${className}`}
     >
-      {post.coverImage && (
+      {coverImageUrl && (
         <Div className="md:w-1/2 relative h-64 md:min-h-[320px] overflow-hidden">
           {renderImage ? (
             renderImage(post)
@@ -56,7 +58,7 @@ export function BlogFeaturedCard({
               role="img"
               aria-label={post.title}
               className="h-full w-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.coverImage})` }}
+              style={{ backgroundImage: `url(${coverImageUrl})` }}
             />
           )}
         </Div>

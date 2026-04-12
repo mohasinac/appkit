@@ -4,6 +4,7 @@ export * from "./string.formatter";
 export * from "./type.converter";
 export * from "./cookie.converter";
 export * from "./id-generators";
+export * from "./media-field";
 export * from "./array.helper";
 export * from "./object.helper";
 export * from "./pagination.helper";

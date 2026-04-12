@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export type MediaFieldType = "image" | "video" | "file";
 
+export type MediaFieldInput = MediaField | string | null | undefined;
+
 export interface MediaField {
   url: string;
   type: MediaFieldType;
@@ -15,6 +17,41 @@ export const mediaFieldSchema = z.object({
   alt: z.string().optional(),
   thumbnailUrl: z.string().url().optional(),
 });
+
+export function coerceMediaField(
+  value: MediaFieldInput,
+  fallbackType: MediaFieldType = "image",
+): MediaField | null {
+  if (!value) {
+    return null;
+  }
+
+  if (typeof value === "string") {
+    return {
+      url: value,
+      type: fallbackType,
+    };
+  }
+
+  return value;
+}
+
+export function coerceMediaFieldArray(
+  values: Array<MediaField | string> | null | undefined,
+  fallbackType: MediaFieldType = "image",
+): MediaField[] {
+  if (!values || values.length === 0) {
+    return [];
+  }
+
+  return values
+    .map((value) => coerceMediaField(value, fallbackType))
+    .filter((value): value is MediaField => value !== null);
+}
+
+export function getMediaUrl(value: MediaFieldInput): string | undefined {
+  return coerceMediaField(value)?.url;
+}
 
 export function inferMediaTypeFromMime(
   mimeType?: string,

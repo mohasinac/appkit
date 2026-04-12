@@ -6,6 +6,7 @@ import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
 import type { BlogPostDetailResponse } from "../api/[slug]/route.js";
+import { getMediaUrl } from "../../media/types/index.js";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",
@@ -91,11 +92,12 @@ export function BlogPostView({
         day: "numeric",
       })
     : "";
+  const coverImageUrl = getMediaUrl(post.coverImage);
 
   return (
     <Div className={`min-h-screen ${className}`}>
       {/* Cover image */}
-      {post.coverImage && (
+      {coverImageUrl && (
         <Div className="relative h-72 md:h-96 overflow-hidden">
           {renderImage ? (
             renderImage(post)
@@ -104,7 +106,7 @@ export function BlogPostView({
               role="img"
               aria-label={post.title}
               className="h-full w-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.coverImage})` }}
+              style={{ backgroundImage: `url(${coverImageUrl})` }}
             />
           )}
           <Div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />

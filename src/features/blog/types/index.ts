@@ -1,3 +1,5 @@
+import type { MediaField, MediaFieldInput } from "../../media/types/index.js";
+
 export type BlogPostCategory =
   | "news"
   | "tips"
@@ -13,7 +15,9 @@ export interface BlogPost {
   slug: string;
   excerpt?: string;
   content?: string;
-  coverImage?: string;
+  coverImage?: MediaFieldInput;
+  contentImages?: MediaField[];
+  additionalImages?: MediaField[];
   category: BlogPostCategory;
   tags?: string[];
   isFeatured?: boolean;

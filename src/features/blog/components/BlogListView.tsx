@@ -2,6 +2,7 @@ import React from "react";
 import type { LayoutSlots } from "@mohasinac/contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { Article, Button, Div, Heading, Pagination, Span, Text } from "@mohasinac/ui";
+import { getMediaUrl } from "../../media/types/index.js";
 
 interface BlogCardProps {
   post: BlogPost;
@@ -10,6 +11,7 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
+  const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString("en-US", {
         year: "numeric",
@@ -30,13 +32,13 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
       onClick={onClick ? () => onClick(post) : undefined}
       className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
-      {post.coverImage && (
+      {coverImageUrl && (
         <Div className="aspect-video w-full overflow-hidden bg-neutral-100">
           <Div
             role="img"
             aria-label={post.title}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-            style={{ backgroundImage: `url(${post.coverImage})` }}
+            style={{ backgroundImage: `url(${coverImageUrl})` }}
           />
         </Div>
       )}

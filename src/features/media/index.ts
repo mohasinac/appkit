@@ -59,8 +59,14 @@ export type { MediaUploadFieldProps } from "./upload/MediaUploadField";
 export { MediaUploadList } from "./upload/MediaUploadList";
 export type { MediaUploadListProps } from "./upload/MediaUploadList";
 
-export { inferMediaTypeFromMime, mediaFieldSchema } from "./types/index";
-export type { MediaField, MediaFieldType } from "./types/index";
+export {
+  coerceMediaField,
+  coerceMediaFieldArray,
+  getMediaUrl,
+  inferMediaTypeFromMime,
+  mediaFieldSchema,
+} from "./types/index";
+export type { MediaField, MediaFieldInput, MediaFieldType } from "./types/index";
 
 export { default as CameraCapture } from "./upload/CameraCapture";
 export type { CameraCaptureProps } from "./upload/CameraCapture";

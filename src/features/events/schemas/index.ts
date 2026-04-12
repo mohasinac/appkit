@@ -1,4 +1,14 @@
 import { z } from "zod";
+import { mediaFieldSchema } from "../../media/types/index.js";
+
+const eventCoverImageSchema = z
+  .union([
+    mediaFieldSchema,
+    z.string().url().transform((url) => ({ url, type: "image" as const })),
+  ])
+  .nullable()
+  .optional()
+  .transform((value) => value ?? null);
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
@@ -59,7 +69,11 @@ export const eventItemSchema = z.object({
   status: eventStatusSchema,
   startsAt: z.string(),
   endsAt: z.string(),
+  coverImage: eventCoverImageSchema,
   coverImageUrl: z.string().optional(),
+  eventImages: z.array(mediaFieldSchema).max(10).optional().default([]),
+  winnerImages: z.array(mediaFieldSchema).max(5).optional().default([]),
+  additionalImages: z.array(mediaFieldSchema).max(10).optional().default([]),
   saleConfig: saleConfigSchema.optional(),
   offerConfig: offerConfigSchema.optional(),
   pollConfig: pollConfigSchema.optional(),

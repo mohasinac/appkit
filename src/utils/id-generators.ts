@@ -501,7 +501,13 @@ export type MediaFilenameContext =
   | { type: "store-logo"; store: string; ext?: string }
   | { type: "store-banner"; store: string; ext?: string }
   | ({ type: "blog-image" } & GenerateBlogImageFilenameInput)
+  | ({ type: "blog-cover" } & GenerateBlogImageFilenameInput)
+  | ({ type: "blog-content-image" } & GenerateBlogImageFilenameInput)
+  | ({ type: "blog-additional-image" } & GenerateBlogImageFilenameInput)
   | ({ type: "event-image" } & GenerateEventImageFilenameInput)
+  | ({ type: "event-cover" } & GenerateEventImageFilenameInput)
+  | ({ type: "event-winner-image" } & GenerateEventImageFilenameInput)
+  | ({ type: "event-additional-image" } & GenerateEventImageFilenameInput)
   | { type: "category-image"; name: string; ext?: string }
   | { type: "user-avatar"; firstName: string; lastName: string; ext?: string }
   | { type: "carousel-image"; title: string; ext?: string }
@@ -519,7 +525,13 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
     case "store-logo":      return generateStoreLogoFilename(ctx.store, ctx.ext);
     case "store-banner":    return generateStoreBannerFilename(ctx.store, ctx.ext);
     case "blog-image":      return generateBlogImageFilename(ctx);
+    case "blog-cover":      return generateBlogImageFilename(ctx);
+    case "blog-content-image": return generateBlogImageFilename(ctx);
+    case "blog-additional-image": return generateBlogImageFilename(ctx);
     case "event-image":     return generateEventImageFilename(ctx);
+    case "event-cover":     return generateEventImageFilename(ctx);
+    case "event-winner-image": return generateEventImageFilename(ctx);
+    case "event-additional-image": return generateEventImageFilename(ctx);
     case "category-image":  return generateCategoryImageFilename(ctx.name, ctx.ext);
     case "user-avatar":     return generateUserAvatarFilename(ctx.firstName, ctx.lastName, ctx.ext);
     case "carousel-image":  return generateCarouselImageFilename(ctx.title, ctx.ext);

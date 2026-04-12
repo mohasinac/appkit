@@ -10,6 +10,8 @@ export interface EventFormDrawerProps {
   renderHeader?: () => React.ReactNode;
   /** Render the base fields (title, description, dates, cover image) */
   renderBaseFields?: () => React.ReactNode;
+  /** Render the media fields (cover, gallery, winners, additional) */
+  renderMediaFields?: () => React.ReactNode;
   /** Render the type-specific config form */
   renderTypeConfig?: () => React.ReactNode;
   /** Render the type selector (shown only in create mode) */
@@ -24,6 +26,7 @@ export function EventFormDrawer({
   onClose,
   renderHeader,
   renderBaseFields,
+  renderMediaFields,
   renderTypeConfig,
   renderTypeSelector,
   renderFooter,
@@ -36,6 +39,7 @@ export function EventFormDrawer({
       {renderHeader?.()}
       {renderTypeSelector?.()}
       {renderBaseFields?.()}
+      {renderMediaFields?.()}
       {renderTypeConfig?.()}
       {renderFooter?.()}
     </div>

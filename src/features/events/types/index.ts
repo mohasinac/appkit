@@ -1,3 +1,5 @@
+import type { MediaField } from "../../media/types/index.js";
+
 // ─── Enums / union types ──────────────────────────────────────────────────────
 
 export type EventType = "sale" | "offer" | "poll" | "survey" | "feedback";
@@ -82,7 +84,11 @@ export interface EventItem {
   status: EventStatus;
   startsAt: string;
   endsAt: string;
+  coverImage?: MediaField | null;
   coverImageUrl?: string;
+  eventImages?: MediaField[];
+  winnerImages?: MediaField[];
+  additionalImages?: MediaField[];
   saleConfig?: SaleConfig;
   offerConfig?: OfferConfig;
   pollConfig?: PollConfig;
@@ -150,7 +156,11 @@ export interface CreateEventInput {
   description: string;
   startsAt: string;
   endsAt: string;
+  coverImage?: MediaField | null;
   coverImageUrl?: string;
+  eventImages?: MediaField[];
+  winnerImages?: MediaField[];
+  additionalImages?: MediaField[];
   saleConfig?: SaleConfig;
   offerConfig?: OfferConfig;
   pollConfig?: PollConfig;

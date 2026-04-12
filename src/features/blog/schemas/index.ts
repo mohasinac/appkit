@@ -1,4 +1,14 @@
 import { z } from "zod";
+import { mediaFieldSchema } from "../../media/types/index.js";
+
+const blogCoverImageSchema = z
+  .union([
+    mediaFieldSchema,
+    z.string().url().transform((url) => ({ url, type: "image" as const })),
+  ])
+  .nullable()
+  .optional()
+  .transform((value) => value ?? null);
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 
@@ -33,7 +43,9 @@ export const blogPostSchema = z.object({
   slug: z.string(),
   excerpt: z.string().optional(),
   content: z.string().optional(),
-  coverImage: z.string().optional(),
+  coverImage: blogCoverImageSchema,
+  contentImages: z.array(mediaFieldSchema).max(10).optional().default([]),
+  additionalImages: z.array(mediaFieldSchema).max(5).optional().default([]),
   category: blogPostCategorySchema,
   tags: z.array(z.string()).optional(),
   isFeatured: z.boolean().optional(),
