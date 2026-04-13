@@ -14,7 +14,7 @@ import {
   createDecipheriv,
   randomBytes,
   createHmac,
-} from "node:crypto";
+} from "crypto";
 
 const ALGO = "aes-256-gcm";
 export const ENC_PREFIX = "enc:v1:";
@@ -31,9 +31,7 @@ function getEncKey(): Buffer {
 
 function getHmacKey(): Buffer {
   const raw =
-    process.env["PII_HMAC_KEY"] ??
-    process.env["PII_ENCRYPTION_KEY"] ??
-    "";
+    process.env["PII_HMAC_KEY"] ?? process.env["PII_ENCRYPTION_KEY"] ?? "";
   if (!raw)
     throw new Error(
       "PII_HMAC_KEY env var is not set — cannot generate blind PII index",
@@ -56,7 +54,8 @@ export function decryptValue(ciphertext: string): string {
   if (!ciphertext.startsWith(ENC_PREFIX)) return ciphertext;
   const inner = ciphertext.slice(ENC_PREFIX.length);
   const parts = inner.split(":");
-  if (parts.length !== 3) throw new Error(`Invalid PII ciphertext: ${ciphertext}`);
+  if (parts.length !== 3)
+    throw new Error(`Invalid PII ciphertext: ${ciphertext}`);
   const [ivB64, encB64, tagB64] = parts as [string, string, string];
   const key = getEncKey();
   const iv = Buffer.from(ivB64, "base64");

@@ -1,5 +1,6 @@
-import React from "react";
 "use client";
+
+import React from "react";
 
 import { Divider } from "./Divider";
 import { Span } from "./Typography";
@@ -34,7 +35,9 @@ export function SummaryCard({
       <div className="space-y-2">
         {lines.map((line, i) => (
           <div key={i} className="flex items-center justify-between text-sm">
-            <Span className="text-zinc-500 dark:text-zinc-400">{line.label}</Span>
+            <Span className="text-zinc-500 dark:text-zinc-400">
+              {line.label}
+            </Span>
             <Span
               className={
                 line.muted

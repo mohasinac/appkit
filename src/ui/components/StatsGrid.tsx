@@ -1,5 +1,6 @@
-import React from "react";
 "use client";
+
+import React from "react";
 
 import { Text } from "./Typography";
 import { classNames } from "../style.helper";

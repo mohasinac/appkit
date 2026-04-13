@@ -7,17 +7,47 @@
  *
  * All getters are lazy — the SDK is not touched until first use.
  */
+import "server-only";
 
-import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
-import { getAuth, type Auth } from "firebase-admin/auth";
-import { getFirestore, type Firestore } from "firebase-admin/firestore";
-import {
-  getStorage as getFirebaseStorage,
-  type Storage,
-} from "firebase-admin/storage";
-import { getDatabase, type Database } from "firebase-admin/database";
+import type { App } from "firebase-admin/app";
+import type { Auth } from "firebase-admin/auth";
+import type { Firestore } from "firebase-admin/firestore";
+import type { Storage } from "firebase-admin/storage";
+import type { Database } from "firebase-admin/database";
 import * as path from "path";
 import * as fs from "fs";
+
+// Lazy loaders — prevents webpack from bundling firebase-admin into browser chunks.
+// (module as any).require() is used because webpack's static analysis does NOT trace
+// module.require() calls, unlike calls to the literal `require` or aliased `require`.
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function loadApp() {
+  return (module as any).require(
+    "firebase-admin/app",
+  ) as typeof import("firebase-admin/app");
+}
+function loadAuth() {
+  return (module as any).require(
+    "firebase-admin/auth",
+  ) as typeof import("firebase-admin/auth");
+}
+function loadFirestore() {
+  return (module as any).require(
+    "firebase-admin/firestore",
+  ) as typeof import("firebase-admin/firestore");
+}
+function loadStorage() {
+  return (module as any).require(
+    "firebase-admin/storage",
+  ) as typeof import("firebase-admin/storage");
+}
+function loadDatabase() {
+  return (module as any).require(
+    "firebase-admin/database",
+  ) as typeof import("firebase-admin/database");
+}
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 // ─── Private key normalisation ────────────────────────────────────────────────
 //
@@ -67,6 +97,8 @@ function set<T>(key: keyof typeof globalThis, value: T): void {
 export function getAdminApp(): App {
   const cached = get<App>("__mohasinac_firebase_admin_app__");
   if (cached) return cached;
+
+  const { initializeApp, getApps, cert } = loadApp();
 
   if (getApps().length) {
     const existing = getApps()[0];
@@ -129,6 +161,7 @@ export function getAdminApp(): App {
 export function getAdminAuth(): Auth {
   const cached = get<Auth>("__mohasinac_firebase_admin_auth__");
   if (cached) return cached;
+  const { getAuth } = loadAuth();
   const auth = getAuth(getAdminApp());
   set("__mohasinac_firebase_admin_auth__", auth);
   return auth;
@@ -139,6 +172,7 @@ export function getAdminAuth(): Auth {
 export function getAdminDb(): Firestore {
   const cached = get<Firestore>("__mohasinac_firebase_admin_db__");
   if (cached) return cached;
+  const { getFirestore } = loadFirestore();
   const db = getFirestore(getAdminApp());
   try {
     // settings() can only be called once per Firestore instance — guard for
@@ -156,6 +190,7 @@ export function getAdminDb(): Firestore {
 export function getAdminStorage(): Storage {
   const cached = get<Storage>("__mohasinac_firebase_admin_storage__");
   if (cached) return cached;
+  const { getStorage: getFirebaseStorage } = loadStorage();
   const storage = getFirebaseStorage(getAdminApp());
   set("__mohasinac_firebase_admin_storage__", storage);
   return storage;
@@ -166,6 +201,7 @@ export function getAdminStorage(): Storage {
 export function getAdminRealtimeDb(): Database {
   const cached = get<Database>("__mohasinac_firebase_admin_rtdb__");
   if (cached) return cached;
+  const { getDatabase } = loadDatabase();
   const rtdb = getDatabase(getAdminApp());
   set("__mohasinac_firebase_admin_rtdb__", rtdb);
   return rtdb;

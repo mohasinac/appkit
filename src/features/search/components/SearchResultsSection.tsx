@@ -1,5 +1,6 @@
-import React from "react";
 "use client";
+
+import React from "react";
 
 import { Button, Div, Grid, Select, Span, Text } from "../../../ui";
 import type { SearchProductItem } from "../types";

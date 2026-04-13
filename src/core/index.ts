@@ -37,15 +37,3 @@ export type {
   CopilotLogDocument,
   CopilotLogCreateInput,
 } from "./copilot-log.repository";
-
-export {
-  NewsletterRepository,
-  newsletterRepository,
-  NEWSLETTER_SUBSCRIBER_FIELDS,
-} from "./newsletter.repository";
-export type {
-  NewsletterSubscriberDocument,
-  NewsletterSubscriberCreateInput,
-  NewsletterSubscriberUpdateInput,
-  NewsletterListModel,
-} from "./newsletter.repository";
