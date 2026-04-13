@@ -3,4 +3,4 @@
 // Views: AboutPageView, HowItWorksView, PolicyPageView, FeesTableView,
 //         TrackOrderView, SiteSettingsFormView, NavigationEditorView
 
-export {};
+export const CMS_FEATURE = "cms";

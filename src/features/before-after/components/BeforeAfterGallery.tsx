@@ -1,7 +1,6 @@
-import React from "react";
 import type { BeforeAfterItem } from "../types";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
-import { Div, Text } from "@mohasinac/ui";
+import { Div, Text } from "../../../ui";
 
 interface BeforeAfterGalleryProps {
   items: BeforeAfterItem[];

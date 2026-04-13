@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Button,
   Div,
@@ -7,7 +6,7 @@ import {
   Section,
   Span,
   Text,
-} from "@mohasinac/ui";
+} from "../../../ui";
 import { proseMirrorToHtml } from "../../../utils/string.formatter";
 import type { StoreDetail } from "../types";
 

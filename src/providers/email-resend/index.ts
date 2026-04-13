@@ -12,5 +12,5 @@
  * ```
  */
 
-export { createResendProvider } from "./provider.js";
-export type { ResendProviderOptions } from "./provider.js";
+export { createResendProvider } from "./provider";
+export type { ResendProviderOptions } from "./provider";

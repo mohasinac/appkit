@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading } from "@mohasinac/ui";
+import { Div, Heading } from "../../../ui";
 import type { Review } from "../../reviews/types";
 
 export interface StoreReviewsViewProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Div, Span } from "@mohasinac/ui";
+import { Button, Div, Span } from "../../../ui";
 
 interface SocialAuthButtonsProps {
   onGoogle: () => void;

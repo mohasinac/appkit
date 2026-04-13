@@ -780,7 +780,7 @@ const RATING = {
  * @example
  * ```ts
  * // In your project constants/theme.ts:
- * import { THEME_CONSTANTS } from "@mohasinac/tokens";
+ * import { THEME_CONSTANTS } from "./";
  *
  * export { THEME_CONSTANTS };        // re-export as-is
  *

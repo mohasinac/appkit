@@ -1,6 +1,6 @@
 // appkit/src/ui/components/TabStrip.tsx
 "use client";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Span } from "./Typography";
 import { useVisibleItems } from "../../react/hooks/useVisibleItems";
 import { FLUID_GRID_MIN_WIDTHS } from "../../tokens";

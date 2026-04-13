@@ -10,12 +10,12 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
+import { getProviders } from "../../../contracts";
 import type {
   BlogPost,
   BlogListResponse,
   BlogListMeta,
-} from "../types/index.js";
+} from "../types/index";
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);

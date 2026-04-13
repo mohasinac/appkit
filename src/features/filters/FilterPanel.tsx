@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Div } from "@mohasinac/ui";
+import { Div } from "../../ui";
 import { FilterFacetSection } from "./FilterFacetSection";
 import type { FacetOption } from "./FilterFacetSection";
 import { RangeFilter } from "./RangeFilter";

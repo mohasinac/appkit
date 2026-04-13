@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { Div } from "../components/Div";
 
-// ─── Allowed HTML tags (safe subset — no script/iframe/object) ────────────────
+// ─── Allowed HTML tags (safe subset — no script/iframe/object) ───────────────
 
 const ALLOWED_TAGS = new Set([
   "p",
@@ -58,14 +58,12 @@ const ALLOWED_ATTRS: Record<string, string[]> = {
   ol: ["type", "start"],
 };
 
-// ─── Simple client-side sanitiser ─────────────────────────────────────────────
-// We avoid 3rd-party DOMPurify to keep the bundle lean.
-// This runs only on nodes rendered from trusted ProseMirror output (staff CMS).
-// For user-supplied HTML, add a server-side DOMPurify step before storing.
+// ─── Simple client-side sanitiser ────────────────────────────────────────────
+// We avoid a third-party sanitizer dependency to keep this module lightweight.
+// For user-supplied HTML, also sanitize server-side before storage.
 
 function sanitiseHtml(dirty: string): string {
   if (typeof window === "undefined") {
-    // SSR: return as-is; real sanitisation should happen before storage.
     return dirty;
   }
 
@@ -78,7 +76,6 @@ function sanitiseHtml(dirty: string): string {
       const tag = child.tagName.toLowerCase();
 
       if (!ALLOWED_TAGS.has(tag)) {
-        // Replace disallowed tag with its text content
         node.replaceChild(
           document.createTextNode(child.textContent ?? ""),
           child,
@@ -86,7 +83,6 @@ function sanitiseHtml(dirty: string): string {
         continue;
       }
 
-      // Strip disallowed attributes
       const attrNames = Array.from(child.attributes).map((a) => a.name);
       const allowed = [
         ...(ALLOWED_ATTRS["*"] ?? []),
@@ -98,22 +94,20 @@ function sanitiseHtml(dirty: string): string {
         }
       }
 
-      // Force external links to be safe
       if (tag === "a") {
         const href = child.getAttribute("href") ?? "";
-        if (/^javascript:/i.test(href)) {
+        if (/^javascript:/i.test(href.trim())) {
           child.removeAttribute("href");
         }
-        if (!href.startsWith("/") && !href.startsWith("#")) {
+        if (href && !href.startsWith("/") && !href.startsWith("#")) {
           child.setAttribute("rel", "noopener noreferrer");
           child.setAttribute("target", "_blank");
         }
       }
 
-      // Strip src from img if it's a data URI (can exfiltrate data)
       if (tag === "img") {
         const src = child.getAttribute("src") ?? "";
-        if (/^data:/i.test(src)) {
+        if (/^data:/i.test(src.trim())) {
           child.removeAttribute("src");
         }
       }
@@ -126,12 +120,11 @@ function sanitiseHtml(dirty: string): string {
   return doc.body.innerHTML;
 }
 
-// ─── RichText component ───────────────────────────────────────────────────────
+// ─── RichText component ──────────────────────────────────────────────────────
 
-/** Adds interactive copy buttons to every `<pre>` block inside a container. */
+/** Adds interactive copy buttons to every `<pre>` block in a container. */
 function attachCopyButtons(container: HTMLDivElement) {
   container.querySelectorAll<HTMLElement>("pre").forEach((pre) => {
-    // Avoid double-adding
     if (pre.querySelector("[data-copy-btn]")) return;
 
     pre.style.position = "relative";
@@ -149,6 +142,7 @@ function attachCopyButtons(container: HTMLDivElement) {
     btn.addEventListener("click", () => {
       const code =
         pre.querySelector("code")?.textContent ?? pre.textContent ?? "";
+      if (!navigator.clipboard) return;
       navigator.clipboard
         .writeText(code)
         .then(() => {
@@ -165,11 +159,11 @@ function attachCopyButtons(container: HTMLDivElement) {
 }
 
 export interface RichTextProps {
-  /** Raw HTML string — typically from ProseMirror / Tiptap JSON rendered to HTML. */
+  /** Raw HTML string, typically rendered from a rich-text editor payload. */
   html: string;
   /** Extra class names on the wrapper div. */
   className?: string;
-  /** Tailwind prose class variant. Defaults to "prose dark:prose-invert". */
+  /** Tailwind prose class variant. */
   proseClass?: string;
   /**
    * When true, every `<pre>` code block gets an overlay "Copy" button that
@@ -178,7 +172,7 @@ export interface RichTextProps {
   copyableCode?: boolean;
   /**
    * Optional syntax highlighter applied to every `<pre><code>` block.
-   * Called with (rawCode, languageName) — return the highlighted HTML string.
+   * Called with (rawCode, languageName) and should return highlighted HTML.
    *
    * The language name is derived from the `language-*` CSS class on the `<code>`
    * element (e.g. "ts", "js", "python"). Falls back to `"plaintext"` when absent.
@@ -198,7 +192,7 @@ export interface RichTextProps {
 }
 
 /**
- * RichText — renders sanitised HTML from a CMS / ProseMirror output.
+ * RichText renders sanitised HTML from a CMS / ProseMirror output.
  *
  * Security: client-side DOM-based sanitiser strips disallowed tags/attrs.
  * For defence-in-depth, also sanitise on the server before storing.
@@ -212,18 +206,15 @@ export interface RichTextProps {
 export function RichText({
   html,
   className = "",
-  proseClass = "prose dark:prose-invert max-w-none",
+  proseClass = "prose max-w-none dark:prose-invert",
   copyableCode = false,
   highlightCode,
 }: RichTextProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
   const safe = useMemo(() => {
     const sanitized = sanitiseHtml(html);
 
     if (!highlightCode || typeof document === "undefined") return sanitized;
 
-    // Apply syntax highlighting to <pre><code> blocks after sanitisation
     const container = document.createElement("div");
     container.innerHTML = sanitized;
     container.querySelectorAll("pre > code").forEach((codeEl) => {
@@ -231,15 +222,12 @@ export function RichText({
         c.startsWith("language-"),
       );
       const lang = langClass ? langClass.replace("language-", "") : "plaintext";
-      const highlighted = highlightCode(codeEl.textContent ?? "", lang);
-      codeEl.innerHTML = highlighted;
+      codeEl.innerHTML = highlightCode(codeEl.textContent ?? "", lang);
     });
     return container.innerHTML;
   }, [html, highlightCode]);
 
-  // Attach copy buttons imperatively after the HTML is mounted / updated.
   const ref = (el: HTMLDivElement | null) => {
-    containerRef.current = el;
     if (el && copyableCode) {
       attachCopyButtons(el);
     }

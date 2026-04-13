@@ -1,5 +1,4 @@
-import React from "react";
-import { Span } from "@mohasinac/ui";
+import { Span } from "../../../ui";
 import type { EventStatus } from "../types";
 
 const STATUS_MAP: Record<EventStatus, { label: string; color: string }> = {

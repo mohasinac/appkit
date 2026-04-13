@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Breadcrumb } from "@mohasinac/ui";
-import type { BreadcrumbItem } from "@mohasinac/ui";
+import { Breadcrumb } from "../../../ui";
+import type { BreadcrumbItem } from "../../../ui";
 import type { CategoryItem, CategoryAncestor } from "../types";
 
 // ─── BreadcrumbTrail ──────────────────────────────────────────────────────────

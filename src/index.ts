@@ -10,13 +10,13 @@
  * when bundle size is not a concern.
  */
 
-export * from "./contracts/index.js";
-export * from "./core/index.js";
-export * from "./http/index.js";
-export * from "./errors/index.js";
-export * from "./utils/index.js";
-export * from "./validation/index.js";
-export * from "./tokens/index.js";
-export * from "./security/index.js";
-export * from "./seo/index.js";
-export * from "./monitoring/index.js";
+export * from "./contracts/index";
+export * from "./core/index";
+export * from "./http/index";
+export * from "./errors/index";
+export * from "./utils/index";
+export * from "./validation/index";
+export * from "./tokens/index";
+export * from "./security/index";
+export * from "./seo/index";
+export * from "./monitoring/index";

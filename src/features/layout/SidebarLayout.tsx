@@ -1,7 +1,7 @@
 "use client";
 
 import React, { forwardRef } from "react";
-import { Aside, Div } from "@mohasinac/ui";
+import { Aside, Div } from "../../ui";
 
 export interface SidebarLayoutProps {
   isOpen: boolean;

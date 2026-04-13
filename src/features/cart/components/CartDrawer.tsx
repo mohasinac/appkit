@@ -1,6 +1,5 @@
-import React from "react";
 import type { CartItem } from "../types";
-import { Aside, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Aside, Button, Div, Heading, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface CartItemRowProps {

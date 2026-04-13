@@ -15,11 +15,11 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
+import { getProviders } from "../../../../../contracts";
 import type {
   StoreAuctionItem,
   StoreProductsResponse,
-} from "../../../types/index.js";
+} from "../../../types/index";
 
 interface StoreEntity {
   ownerId: string;

@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import type { IStyleAdapter } from "@mohasinac/contracts";
+import type { IStyleAdapter } from "../../contracts";
 
 /**
  * Tailwind CSS adapter implementing IStyleAdapter.

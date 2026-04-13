@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Button, Grid, Heading, Section, Span, Text } from "../../../ui";
 import { MessageCircle } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────

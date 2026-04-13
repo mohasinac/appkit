@@ -13,8 +13,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import type { StoreDetail } from "../../types/index.js";
+import { getProviders } from "../../../../contracts";
+import type { StoreDetail } from "../../types/index";
 
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 

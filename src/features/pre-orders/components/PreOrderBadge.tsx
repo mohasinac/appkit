@@ -1,6 +1,5 @@
-import React from "react";
 import type { PreOrderStatus } from "../types";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../../ui";
 
 const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
   pending: { label: "Pending", color: "bg-yellow-100 text-yellow-700" },

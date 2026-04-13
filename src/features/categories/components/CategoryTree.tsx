@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Div, Span, Text } from "@mohasinac/ui";
+import { useState } from "react";
+import { Div, Span, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 
 // ─── CategoryTreeNode ──────────────────────────────────────────────────────────

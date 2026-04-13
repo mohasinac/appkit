@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Div, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 export interface SwitchFilterProps {

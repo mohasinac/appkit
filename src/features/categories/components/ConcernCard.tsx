@@ -1,6 +1,5 @@
-import React from "react";
 import type { CategoryItem } from "../types";
-import { Button, Div, Heading, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Text } from "../../../ui";
 
 interface ConcernCardProps {
   concern: CategoryItem;

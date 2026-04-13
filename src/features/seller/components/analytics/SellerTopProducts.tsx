@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Span, Text } from "../../../../ui";
 import type { SellerAnalyticsTopProduct } from "../../types";
 
 export interface SellerTopProductsLabels {

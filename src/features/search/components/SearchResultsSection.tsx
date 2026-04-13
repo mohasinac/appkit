@@ -1,6 +1,7 @@
+import React from "react";
 "use client";
 
-import { Button, Div, Grid, Select, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Grid, Select, Span, Text } from "../../../ui";
 import type { SearchProductItem } from "../types";
 
 export interface SearchResultsSectionProps {

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Nav, Ul } from "@mohasinac/ui";
+import { Nav, Ul } from "../../ui";
 
 export interface BottomNavLayoutProps {
   ariaLabel: string;

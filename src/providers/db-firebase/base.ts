@@ -31,9 +31,9 @@ import type {
   PagedResult,
   SieveQuery,
   WhereOp,
-} from "@mohasinac/contracts";
-import { getAdminDb } from "./admin.js";
-import { prepareForFirestore, deserializeTimestamps } from "./helpers.js";
+} from "../../contracts";
+import { getAdminDb } from "./admin";
+import { prepareForFirestore, deserializeTimestamps } from "./helpers";
 
 export class FirebaseRepository<
   T extends DocumentData,

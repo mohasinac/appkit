@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Text } from "../../../ui";
 
 export interface VerifyEmailViewProps {
   /** Status of the verification */

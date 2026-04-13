@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Heading, Section, Text } from "@mohasinac/ui";
+import { Div, Heading, Section, Text } from "../../../ui";
 
 export interface PromotionProductItem {
   id: string;

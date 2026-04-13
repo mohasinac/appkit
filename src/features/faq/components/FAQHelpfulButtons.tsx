@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Span, Text } from "@mohasinac/ui";
+import { Button, Span, Text } from "../../../ui";
 
 interface FAQHelpfulButtonsProps {
   faqId: string;

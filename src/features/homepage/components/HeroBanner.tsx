@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, Div, Heading, Row, Span } from "@mohasinac/ui";
+import { Button, Div, Heading, Row, Span } from "../../../ui";
 import type { Banner } from "../types";
 
 export interface HeroBannerProps {

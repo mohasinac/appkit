@@ -2,7 +2,7 @@ import type {
   IRepository,
   PagedResult,
   SieveQuery,
-} from "@mohasinac/contracts";
+} from "../../../contracts";
 import type { CategoryItem, CategoryType } from "../types";
 
 export class CategoriesRepository {

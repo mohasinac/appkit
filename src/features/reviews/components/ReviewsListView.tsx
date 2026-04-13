@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Container, Div, Heading, Row, Text } from "@mohasinac/ui";
+import { Container, Div, Heading, Row, Text } from "../../../ui";
 import { useReviews } from "../hooks/useReviews";
 import type { Review, ReviewListParams, ReviewListResponse } from "../types";
 

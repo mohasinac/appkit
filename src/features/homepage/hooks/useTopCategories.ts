@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
-import type { CategoryItem } from "@mohasinac/feat-categories";
+import { apiClient } from "../../../http";
+import type { CategoryItem } from "../../categories/types";
 
 export function useTopCategories(
   limit = 12,

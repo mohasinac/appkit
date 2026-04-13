@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Article, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Div, Heading, Span, Text } from "../../../ui";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { getMediaUrl } from "../../media/types/index.js";
+import { getMediaUrl } from "../../media/types/index";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",

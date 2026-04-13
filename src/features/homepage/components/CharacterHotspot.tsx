@@ -3,8 +3,8 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMediaQuery } from "@mohasinac/react";
-import { Button, Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
+import { useMediaQuery } from "../../../react";
+import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
 /* ── Fallback when no Firestore config is saved yet ──────────────────────────

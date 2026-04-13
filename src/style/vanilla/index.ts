@@ -1,4 +1,4 @@
-import type { IStyleAdapter } from "@mohasinac/contracts";
+import type { IStyleAdapter } from "../../contracts";
 
 /**
  * Vanilla CSS adapter implementing IStyleAdapter.

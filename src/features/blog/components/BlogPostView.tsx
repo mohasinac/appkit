@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Row, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Span, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
-import type { BlogPostDetailResponse } from "../api/[slug]/route.js";
-import { getMediaUrl } from "../../media/types/index.js";
+import type { BlogPostDetailResponse } from "../api/[slug]/route";
+import { getMediaUrl } from "../../media/types/index";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",

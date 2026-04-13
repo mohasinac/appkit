@@ -1,6 +1,6 @@
 "use client";
 
-import { Select, Span } from "@mohasinac/ui";
+import { Select, Span } from "../../../ui";
 
 export type FAQSortOption = "helpful" | "newest" | "alphabetical";
 

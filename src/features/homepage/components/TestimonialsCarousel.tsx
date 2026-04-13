@@ -1,4 +1,4 @@
-import { Div, Heading, Section, StarRating, Text } from "@mohasinac/ui";
+import { Div, Heading, Section, StarRating, Text } from "../../../ui";
 import type { Testimonial } from "../types";
 
 export interface TestimonialsCarouselProps {

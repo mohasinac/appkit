@@ -15,7 +15,7 @@
  *   const messages = await mergeFeatureMessages(locale, features);
  */
 
-import type { FeaturesConfig } from "@mohasinac/contracts";
+import type { FeaturesConfig } from "../contracts";
 
 // ---------------------------------------------------------------------------
 // Types

@@ -1,4 +1,3 @@
-import React from "react";
 
 /**
  * Spinner — generic loading indicator.

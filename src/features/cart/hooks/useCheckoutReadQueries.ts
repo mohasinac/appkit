@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
+import { apiClient } from "../../../http";
 
 interface UseCheckoutReadQueriesOptions<TAddress, TCart> {
   addressesEndpoint: string;

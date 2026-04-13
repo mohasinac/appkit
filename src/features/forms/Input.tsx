@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../ui";
 import {
   cn,
   INPUT_BASE,

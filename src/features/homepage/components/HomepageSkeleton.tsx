@@ -1,7 +1,7 @@
 "use client";
 
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Grid, Section } from "@mohasinac/ui";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Grid, Section } from "../../../ui";
 
 /** Full-page skeleton shown while homepage data loads. */
 export function HomepageSkeleton() {

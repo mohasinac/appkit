@@ -10,8 +10,8 @@ import type {
   AuthPayload,
   AuthUser,
   CreateUserInput,
-} from "@mohasinac/contracts";
-import { getAdminAuth } from "@mohasinac/db-firebase";
+} from "../../contracts";
+import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 
 /** Firebase error codes that represent a normal "not authenticated" state. */
 const EXPECTED_AUTH_CODES = new Set([
@@ -85,7 +85,7 @@ function toAuthUser(record: {
 export const firebaseAuthProvider: IAuthProvider = {
   async verifyToken(token: string): Promise<AuthPayload> {
     try {
-      const decoded = await getAdminAuth().verifyIdToken(token);
+      const decoded = await getAdminAuthLite().verifyIdToken(token);
       return toAuthPayload(decoded);
     } catch (err) {
       if (!isExpectedAuthError(err)) {
@@ -102,12 +102,12 @@ export const firebaseAuthProvider: IAuthProvider = {
     uid: string,
     claims?: Record<string, unknown>,
   ): Promise<string> {
-    return getAdminAuth().createCustomToken(uid, claims);
+    return getAdminAuthLite().createCustomToken(uid, claims);
   },
 
   async getUser(uid: string): Promise<AuthUser | null> {
     try {
-      const record = await getAdminAuth().getUser(uid);
+      const record = await getAdminAuthLite().getUser(uid);
       return toAuthUser(record);
     } catch (err) {
       if ((err as { code?: string }).code === "auth/user-not-found")
@@ -117,7 +117,7 @@ export const firebaseAuthProvider: IAuthProvider = {
   },
 
   async createUser(data: CreateUserInput): Promise<AuthUser> {
-    const record = await getAdminAuth().createUser({
+    const record = await getAdminAuthLite().createUser({
       email: data.email,
       password: data.password,
       displayName: data.displayName,
@@ -125,9 +125,11 @@ export const firebaseAuthProvider: IAuthProvider = {
       emailVerified: data.emailVerified ?? false,
     });
     if (data.role) {
-      await getAdminAuth().setCustomUserClaims(record.uid, { role: data.role });
+      await getAdminAuthLite().setCustomUserClaims(record.uid, {
+        role: data.role,
+      });
       // Re-fetch to get updated claims
-      const updated = await getAdminAuth().getUser(record.uid);
+      const updated = await getAdminAuthLite().getUser(record.uid);
       return toAuthUser(updated);
     }
     return toAuthUser(record);
@@ -137,7 +139,7 @@ export const firebaseAuthProvider: IAuthProvider = {
     uid: string,
     data: Partial<CreateUserInput>,
   ): Promise<AuthUser> {
-    const record = await getAdminAuth().updateUser(uid, {
+    const record = await getAdminAuthLite().updateUser(uid, {
       email: data.email,
       password: data.password,
       displayName: data.displayName,
@@ -145,17 +147,17 @@ export const firebaseAuthProvider: IAuthProvider = {
       emailVerified: data.emailVerified,
     });
     if (data.role !== undefined) {
-      await getAdminAuth().setCustomUserClaims(uid, { role: data.role });
+      await getAdminAuthLite().setCustomUserClaims(uid, { role: data.role });
     }
-    const updated = await getAdminAuth().getUser(record.uid);
+    const updated = await getAdminAuthLite().getUser(record.uid);
     return toAuthUser(updated);
   },
 
   async deleteUser(uid: string): Promise<void> {
-    await getAdminAuth().deleteUser(uid);
+    await getAdminAuthLite().deleteUser(uid);
   },
 
   async revokeTokens(uid: string): Promise<void> {
-    await getAdminAuth().revokeRefreshTokens(uid);
+    await getAdminAuthLite().revokeRefreshTokens(uid);
   },
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../ui";
 
 export interface MediaVideoProps {
   /** Video URL. When undefined the fallback placeholder is rendered. */

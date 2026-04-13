@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { BlockHeader, Button, Div, Span } from "@mohasinac/ui";
+import { BlockHeader, Button, Div, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {

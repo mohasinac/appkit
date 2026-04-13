@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef, useState } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import {
   X,
   ZoomIn,
@@ -12,7 +12,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { MediaImage } from "./MediaImage";
-import { Button, Div, Span } from "@mohasinac/ui";
+import { Button, Div, Span } from "../../ui";
 
 export interface LightboxItem {
   src: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Section, Text } from "@mohasinac/ui";
+import { Div, Section, Text } from "../../../ui";
 import type { TrustBadge, TrustBadgeIconKey } from "../types";
 
 const BADGE_ICONS: Record<TrustBadgeIconKey, React.ReactNode> = {

@@ -10,9 +10,9 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import { BlogRepository } from "../../repository/blog.repository.js";
-import type { BlogPost } from "../../types/index.js";
+import { getProviders } from "../../../../contracts";
+import { BlogRepository } from "../../repository/blog.repository";
+import type { BlogPost } from "../../types/index";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 

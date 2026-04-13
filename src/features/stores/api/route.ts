@@ -10,8 +10,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import type { StoreListItem, StoreListResponse } from "../types/index.js";
+import { getProviders } from "../../../contracts";
+import type { StoreListItem, StoreListResponse } from "../types/index";
 
 type StoreListEntity = StoreListItem & {
   stats?: {

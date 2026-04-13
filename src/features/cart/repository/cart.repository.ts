@@ -2,7 +2,7 @@ import type {
   IRepository,
   PagedResult,
   SieveQuery,
-} from "@mohasinac/contracts";
+} from "../../../contracts";
 import type { CartItem } from "../types";
 
 export class CartRepository {

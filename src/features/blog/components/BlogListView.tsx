@@ -1,8 +1,8 @@
 import React from "react";
-import type { LayoutSlots } from "@mohasinac/contracts";
+import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Button, Div, Heading, Pagination, Span, Text } from "@mohasinac/ui";
-import { getMediaUrl } from "../../media/types/index.js";
+import { Article, Button, Div, Heading, Pagination, Span, Text } from "../../../ui";
+import { getMediaUrl } from "../../media/types/index";
 
 interface BlogCardProps {
   post: BlogPost;

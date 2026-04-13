@@ -16,8 +16,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import type { EventItem, EventEntryItem } from "../../types/index.js";
+import { getProviders } from "../../../../contracts";
+import type { EventItem, EventEntryItem } from "../../types/index";
 
 type RouteContext = { params: Promise<{ id: string }> };
 

@@ -26,7 +26,7 @@
  * ## Usage (in app root instrumentation.ts)
  *
  * ```ts
- * import { createInstrumentation } from "@mohasinac/instrumentation";
+ * import { createInstrumentation } from "./";
  *
  * const { register } = createInstrumentation({
  *   onNodeServer: async () => {

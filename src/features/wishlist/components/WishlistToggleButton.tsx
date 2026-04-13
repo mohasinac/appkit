@@ -1,7 +1,7 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { Button } from "@mohasinac/ui";
+import { Button } from "../../../ui";
 
 interface WishlistToggleButtonProps {
   inWishlist: boolean;

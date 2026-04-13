@@ -8,7 +8,7 @@
  * @example
  * ```ts
  * // apps/web/src/lib/api/error-handler.ts
- * import { createApiErrorHandler } from '@mohasinac/next';
+ * import { createApiErrorHandler } from '..';
  * import { AppError } from '@/lib/errors';
  * import { serverLogger } from '@/lib/server-logger';
  *

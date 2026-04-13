@@ -1,6 +1,5 @@
-import React from "react";
 import type { DashboardStats } from "../types";
-import { Div, Text, Grid } from "@mohasinac/ui";
+import { Div, Text, Grid } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface StatCardProps {

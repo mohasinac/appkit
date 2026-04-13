@@ -2,7 +2,7 @@ import type {
   IReadRepository,
   SieveQuery,
   PagedResult,
-} from "@mohasinac/contracts";
+} from "../../../contracts";
 import type { SearchProductItem, SearchQuery, SearchResponse } from "../types";
 
 /**

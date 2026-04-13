@@ -4,10 +4,10 @@ export {
   getMediaUrl,
   inferMediaTypeFromMime,
   mediaFieldSchema,
-} from "../features/media/types/index.js";
+} from "../features/media/types/index";
 
 export type {
   MediaField,
   MediaFieldInput,
   MediaFieldType,
-} from "../features/media/types/index.js";
+} from "../features/media/types/index";

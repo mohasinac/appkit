@@ -1,5 +1,4 @@
-import React from "react";
-import { Div, Pagination, Row, Span, Text } from "@mohasinac/ui";
+import { Div, Pagination, Row, Span, Text } from "../../../ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { ChevronRight } from "lucide-react";
 import { Nav, Ol, Li } from "./Semantic";
 import { Span } from "./Typography";

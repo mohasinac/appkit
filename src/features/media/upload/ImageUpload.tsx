@@ -10,7 +10,7 @@
 
 import { useState, useRef, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
-import { useCamera } from "@mohasinac/react";
+import { useCamera } from "../../../react";
 import {
   Alert,
   Button,
@@ -21,7 +21,7 @@ import {
   Span,
   Spinner,
   Text,
-} from "@mohasinac/ui";
+} from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";

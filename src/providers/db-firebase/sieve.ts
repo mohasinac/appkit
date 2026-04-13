@@ -27,8 +27,8 @@ import type {
 import { SieveProcessorBase } from "@mohasinac/sievejs/services";
 import { createFirebaseAdapter } from "@mohasinac/sievejs/adapters/firebase";
 
-import { FirebaseRepository } from "./base.js";
-import { deserializeTimestamps } from "./helpers.js";
+import { FirebaseRepository } from "./base";
+import { deserializeTimestamps } from "./helpers";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

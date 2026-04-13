@@ -9,8 +9,8 @@
 
 import { useState, useRef, useEffect, ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
-import { useCamera } from "@mohasinac/react";
-import { Alert, Button, Div, Label, Row, Spinner, Text } from "@mohasinac/ui";
+import { useCamera } from "../../../react";
+import { Alert, Button, Div, Label, Row, Spinner, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { VideoTrimModal } from "../modals/VideoTrimModal";

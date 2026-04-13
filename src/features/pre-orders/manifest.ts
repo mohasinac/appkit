@@ -1,4 +1,4 @@
-import type { FeatureManifest } from "@mohasinac/contracts";
+import type { FeatureManifest } from "../../contracts";
 
 export const manifest: FeatureManifest = {
   name: "pre-orders",

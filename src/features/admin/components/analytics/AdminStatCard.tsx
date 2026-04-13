@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Text, Heading } from "@mohasinac/ui";
+import { Div, Text, Heading } from "../../../../ui";
 
 export interface AdminStatCardProps {
   label: string;

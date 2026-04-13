@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, Div, Text } from "@mohasinac/ui";
+import { Button, Div, Text } from "../../../ui";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 

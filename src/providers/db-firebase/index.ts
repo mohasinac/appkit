@@ -22,24 +22,24 @@ export {
   getAdminStorage,
   getAdminRealtimeDb,
   _resetAdminSingletons,
-} from "./admin.js";
+} from "./admin";
 
 // Serialisation helpers
 export {
   removeUndefined,
   prepareForFirestore,
   deserializeTimestamps,
-} from "./helpers.js";
+} from "./helpers";
 
 // Repository base classes
-export { FirebaseRepository } from "./base.js";
-export { FirebaseSieveRepository } from "./sieve.js";
-export { FirebaseRealtimeRepository } from "./realtime.js";
+export { FirebaseRepository } from "./base";
+export { FirebaseSieveRepository } from "./sieve";
+export { FirebaseRealtimeRepository } from "./realtime";
 
 // IDbProvider implementation — registers Firebase as the database backend.
 // Wire once in providers.config.ts: db: firebaseDbProvider
-import { FirebaseRepository } from "./base.js";
-import type { IDbProvider, IRepository } from "@mohasinac/contracts";
+import { FirebaseRepository } from "./base";
+import type { IDbProvider, IRepository } from "../../contracts";
 import type { DocumentData } from "firebase-admin/firestore";
 
 export const firebaseDbProvider: IDbProvider = {
@@ -57,4 +57,4 @@ export type {
   SieveFieldConfig,
   SieveOptions,
   SieveResult,
-} from "./sieve.js";
+} from "./sieve";

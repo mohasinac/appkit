@@ -9,7 +9,7 @@
  * app layer using these primitives.
  */
 
-import { AuthenticationError, AuthorizationError } from "@mohasinac/errors";
+import { AuthenticationError, AuthorizationError } from "../errors";
 
 export type UserRole = "admin" | "moderator" | "seller" | "user";
 

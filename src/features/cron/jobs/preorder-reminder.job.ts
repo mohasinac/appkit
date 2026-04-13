@@ -1,4 +1,4 @@
-import type { IRepository } from "@mohasinac/contracts";
+import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
 
 /**

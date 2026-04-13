@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Aside, Button, Div, Nav, Span } from "@mohasinac/ui";
+import { Aside, Button, Div, Nav, Span } from "../../ui";
 
 export interface ListingLayoutLabels {
   filtersTitle?: string;

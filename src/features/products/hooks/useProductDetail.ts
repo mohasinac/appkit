@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient, ApiClientError } from "@mohasinac/http";
+import { apiClient, ApiClientError } from "../../../http";
 import type { ProductItem } from "../types";
 
 interface UseProductDetailOptions<TProduct = ProductItem> {

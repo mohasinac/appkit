@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading } from "@mohasinac/ui";
+import { Div, Heading } from "../../../ui";
 import type { AdminAnalyticsData, AnalyticsTopProduct } from "../types";
 import { AdminStatCard } from "./analytics/AdminStatCard";
 import {

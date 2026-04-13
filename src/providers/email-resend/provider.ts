@@ -22,7 +22,7 @@ import type {
   IEmailProvider,
   EmailOptions,
   EmailResult,
-} from "@mohasinac/contracts";
+} from "../../contracts";
 
 export interface ResendProviderOptions {
   /** Resend API key. Defaults to `process.env.RESEND_API_KEY`. */

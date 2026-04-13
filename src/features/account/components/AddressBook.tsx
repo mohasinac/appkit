@@ -1,6 +1,5 @@
-import React from "react";
 import type { UserAddress } from "../types";
-import { Button, Div, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Span, Text } from "../../../ui";
 
 interface AddressCardProps {
   address: UserAddress;

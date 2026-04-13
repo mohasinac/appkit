@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Div } from "@mohasinac/ui";
-import { Grid } from "@mohasinac/ui";
+import { Div } from "../../../ui";
+import { Grid } from "../../../ui";
 
 export interface AuctionDetailViewProps {
   labels?: { title?: string };

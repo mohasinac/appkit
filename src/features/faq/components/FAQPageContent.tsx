@@ -1,6 +1,7 @@
+import React from "react";
 "use client";
 
-import { Heading, Text } from "@mohasinac/ui";
+import { Heading, Text } from "../../../ui";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
 import { FAQSortDropdown, type FAQSortOption } from "./FAQSortDropdown";

@@ -1,5 +1,5 @@
 import React from "react";
-import { Span, Text } from "@mohasinac/ui";
+import { Span, Text } from "../../../ui";
 import type { LeaderboardEntry } from "../types";
 
 export interface EventLeaderboardProps {

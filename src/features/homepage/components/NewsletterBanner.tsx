@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Div,
@@ -9,7 +9,7 @@ import {
   Section,
   Span,
   Text,
-} from "@mohasinac/ui";
+} from "../../../ui";
 
 export interface NewsletterBannerProps {
   /**

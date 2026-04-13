@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Div, Span, Text } from "@mohasinac/ui";
-import { StarRating } from "@mohasinac/ui";
+import { Div, Span, Text } from "../../../ui";
+import { StarRating } from "../../../ui";
 
 // ─── ReviewSummary ────────────────────────────────────────────────────────────
 

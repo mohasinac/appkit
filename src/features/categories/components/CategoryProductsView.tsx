@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Row, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 
 export interface CategoryProductsViewProps {

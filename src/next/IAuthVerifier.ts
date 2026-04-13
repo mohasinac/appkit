@@ -9,7 +9,7 @@
  * @example
  * ```ts
  * // apps/web/src/lib/firebase/auth-verifier.ts
- * import type { IAuthVerifier, AuthVerifiedUser } from '@mohasinac/next';
+ * import type { IAuthVerifier, AuthVerifiedUser } from './';
  * import { getAdminAuth } from '@/lib/firebase/admin';
  *
  * export const firebaseAuthVerifier: IAuthVerifier = {

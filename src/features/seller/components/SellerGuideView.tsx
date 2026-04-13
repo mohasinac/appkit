@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import type { ReactNode } from "react";
+import { Div, Heading } from "../../../ui";
 
 export interface SellerGuideViewProps {
   labels?: { title?: string };
-  sections?: React.ReactNode;
-  cta?: React.ReactNode;
-  renderSections?: () => React.ReactNode;
-  renderCTA?: () => React.ReactNode;
+  sections?: ReactNode;
+  cta?: ReactNode;
+  renderSections?: () => ReactNode;
+  renderCTA?: () => ReactNode;
   className?: string;
 }
 
@@ -23,7 +23,7 @@ export function SellerGuideView({
   return (
     <Div className={className}>
       {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">
+        <Heading level={1} className="mb-6 text-2xl font-bold">
           {labels.title}
         </Heading>
       )}

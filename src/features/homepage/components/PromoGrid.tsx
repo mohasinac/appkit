@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { PromoBanner } from "../types";
 
 export interface PromoGridProps {

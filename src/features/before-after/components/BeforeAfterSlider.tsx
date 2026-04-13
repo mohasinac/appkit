@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useState } from "react";
 import type { BeforeAfterItem } from "../types";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../../ui";
 
 interface BeforeAfterSliderProps {
   item: BeforeAfterItem;

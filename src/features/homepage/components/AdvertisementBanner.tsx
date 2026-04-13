@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Button, Heading, Section, Span, Text } from "@mohasinac/ui";
-import { MediaImage } from "@mohasinac/feat-media";
+import { Button, Heading, Section, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────

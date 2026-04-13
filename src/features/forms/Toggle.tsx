@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Span } from "@mohasinac/ui";
+import { Button, Div, Span } from "../../ui";
 import { cn } from "./utils";
 
 export interface ToggleProps {

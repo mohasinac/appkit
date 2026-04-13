@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Li, Nav, Span, Ul } from "@mohasinac/ui";
+import { Div, Li, Nav, Span, Ul } from "../../ui";
 
 export interface NavbarLayoutItem {
   href: string;

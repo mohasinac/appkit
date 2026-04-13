@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { useMediaQuery } from "@mohasinac/react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Div, Heading, Row, Section, Span, Text } from "@mohasinac/ui";
-import { MediaImage, MediaVideo } from "@mohasinac/feat-media";
-import { useHeroCarousel } from "../hooks/useHeroCarousel.js";
-import type { CarouselSlide, CarouselSlideCard } from "../types/index.js";
+import { useMediaQuery } from "../../../react";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
+import { MediaVideo } from "../../media/MediaVideo";
+import { useHeroCarousel } from "../hooks/useHeroCarousel";
+import type { CarouselSlide, CarouselSlideCard } from "../types/index";
 
 const { flex, position, homepage } = THEME_CONSTANTS;
 

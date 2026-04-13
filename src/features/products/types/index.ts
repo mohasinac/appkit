@@ -1,4 +1,4 @@
-import type { MediaField } from "../../media/types/index.js";
+import type { MediaField } from "../../media/types/index";
 
 export type ProductStatus =
   | "draft"

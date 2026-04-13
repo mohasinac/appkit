@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { Div, Span, Text } from "@mohasinac/ui";
+import { Div, Span, Text } from "../../../ui";
 import type { BeforeAfterItem } from "../types";
 
 export interface BeforeAfterCardProps {

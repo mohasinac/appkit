@@ -1,5 +1,3 @@
-"use client";
-
 // Public API for @mohasinac/feat-media
 
 // Core media display components
@@ -66,7 +64,11 @@ export {
   inferMediaTypeFromMime,
   mediaFieldSchema,
 } from "./types/index";
-export type { MediaField, MediaFieldInput, MediaFieldType } from "./types/index";
+export type {
+  MediaField,
+  MediaFieldInput,
+  MediaFieldType,
+} from "./types/index";
 
 export { default as CameraCapture } from "./upload/CameraCapture";
 export type { CameraCaptureProps } from "./upload/CameraCapture";

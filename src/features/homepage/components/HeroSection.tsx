@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, Div, Heading, Section, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Section, Text } from "../../../ui";
 import type { HomepageSection } from "../types";
 
 interface HeroSectionProps {

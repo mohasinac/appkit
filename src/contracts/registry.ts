@@ -1,12 +1,12 @@
-import type { IAuthProvider, ISessionProvider } from "./auth.js";
-import type { IEmailProvider } from "./email.js";
-import type { IStorageProvider } from "./storage.js";
-import type { IPaymentProvider } from "./payment.js";
-import type { IShippingProvider } from "./shipping.js";
-import type { ISearchProvider } from "./search.js";
-import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra.js";
-import type { IStyleAdapter } from "./style.js";
-import type { IDbProvider } from "./repository.js";
+import type { IAuthProvider, ISessionProvider } from "./auth";
+import type { IEmailProvider } from "./email";
+import type { IStorageProvider } from "./storage";
+import type { IPaymentProvider } from "./payment";
+import type { IShippingProvider } from "./shipping";
+import type { ISearchProvider } from "./search";
+import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra";
+import type { IStyleAdapter } from "./style";
+import type { IDbProvider } from "./repository";
 
 export interface ProviderRegistry {
   auth: IAuthProvider;

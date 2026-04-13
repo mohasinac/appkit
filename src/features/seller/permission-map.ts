@@ -1,5 +1,5 @@
 // appkit/src/features/seller/permission-map.ts
-import type { Permission } from "@mohasinac/security";
+import type { Permission } from "../../security";
 
 /** Required permission for each seller route path */
 export const SELLER_PAGE_PERMISSIONS: Record<string, Permission> = {

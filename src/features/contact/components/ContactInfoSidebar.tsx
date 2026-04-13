@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Aside, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Aside, Div, Heading, Span, Text } from "../../../ui";
 
 export interface ContactInfoItem {
   icon: string;

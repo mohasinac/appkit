@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { mediaFieldSchema } from "../../media/types/index.js";
+import { mediaFieldSchema } from "../../media/types/index";
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
 

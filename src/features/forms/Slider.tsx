@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface SliderProps {

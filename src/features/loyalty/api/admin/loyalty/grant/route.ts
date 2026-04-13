@@ -10,7 +10,7 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
+import { getProviders } from "../../../../../../contracts";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Text } from "../../../ui";
 
 type AuthStatusTone = "success" | "error" | "loading";
 

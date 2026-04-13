@@ -21,9 +21,9 @@ import type {
   PagedResult,
   SieveQuery,
   WhereOp,
-} from "@mohasinac/contracts";
+} from "../../contracts";
 import type { DocumentData } from "firebase-admin/firestore";
-import { getAdminRealtimeDb } from "./admin.js";
+import { getAdminRealtimeDb } from "./admin";
 
 export abstract class FirebaseRealtimeRepository<
   T extends DocumentData,

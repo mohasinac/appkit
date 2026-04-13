@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading } from "@mohasinac/ui";
+import { Div, Heading } from "../../../ui";
 
 export interface CartViewProps {
   labels?: { title?: string; emptyText?: string; checkoutButton?: string };

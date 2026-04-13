@@ -59,8 +59,6 @@
       "@mohasinac/storage-firebase/*": ["./src/providers/storage-firebase/*"],
       "@mohasinac/payment-razorpay": ["./src/providers/payment-razorpay"],
       "@mohasinac/payment-razorpay/*": ["./src/providers/payment-razorpay/*"],
-      "@mohasinac/search-algolia": ["./src/providers/search-algolia"],
-      "@mohasinac/search-algolia/*": ["./src/providers/search-algolia/*"],
       "@mohasinac/shipping-shiprocket": ["./src/providers/shipping-shiprocket"],
       "@mohasinac/shipping-shiprocket/*": [
         "./src/providers/shipping-shiprocket/*"

@@ -14,4 +14,4 @@
  * ```
  */
 
-export { firebaseStorageProvider } from "./provider.js";
+export { firebaseStorageProvider } from "./provider";

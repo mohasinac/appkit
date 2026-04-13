@@ -14,8 +14,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import { createRouteHandler } from "@mohasinac/next";
+import { getProviders } from "../../../../contracts";
+import { createRouteHandler } from "../../../../next";
 
 export const GET = createRouteHandler({
   roles: ["seller", "admin", "moderator"],

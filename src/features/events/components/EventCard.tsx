@@ -1,5 +1,4 @@
-import React from "react";
-import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Button, Div, Heading, Span, Text } from "../../../ui";
 import { stripHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EventStatusBadge } from "./EventStatusBadge";

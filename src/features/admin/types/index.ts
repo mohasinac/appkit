@@ -1,8 +1,8 @@
 import type React from "react";
-import type { TableColumn } from "@mohasinac/contracts";
+import type { TableColumn } from "../../../contracts";
 
 // Re-export the base column type from contracts
-export type { TableColumn } from "@mohasinac/contracts";
+export type { TableColumn } from "../../../contracts";
 
 /**
  * Admin-specific column definition that narrows `render` to `React.ReactNode`.

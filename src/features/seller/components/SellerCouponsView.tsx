@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading } from "@mohasinac/ui";
+import { Div, Heading } from "../../../ui";
 
 export interface SellerCouponsViewProps {
   labels?: { title?: string; addButton?: string; emptyText?: string };

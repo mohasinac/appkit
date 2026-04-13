@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Heading, Section, Text, TextLink } from "@mohasinac/ui";
+import { Heading, Section, Text, TextLink } from "../../../ui";
 import { Mail } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────

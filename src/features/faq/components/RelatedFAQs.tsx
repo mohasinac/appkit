@@ -1,6 +1,6 @@
 "use client";
 
-import { Div, Heading, Text, TextLink } from "@mohasinac/ui";
+import { Div, Heading, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {

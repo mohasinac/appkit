@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Li, Nav, Ol, Span } from "@mohasinac/ui";
+import { Li, Nav, Ol, Span } from "../../ui";
 
 export interface BreadcrumbsProps {
   children: React.ReactNode;

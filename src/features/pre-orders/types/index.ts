@@ -1,4 +1,4 @@
-import type { MediaField } from "../../media/types/index.js";
+import type { MediaField } from "../../media/types/index";
 
 export interface PreorderItem {
   id: string;

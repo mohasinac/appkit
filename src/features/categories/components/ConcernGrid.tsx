@@ -1,5 +1,4 @@
-import React from "react";
-import { Div, Grid } from "@mohasinac/ui";
+import { Grid } from "../../../ui";
 import type { CategoryItem } from "../types";
 import { ConcernCard } from "./ConcernCard";
 

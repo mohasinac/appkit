@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Grid } from "@mohasinac/ui";
+import { Div, Grid } from "../../../ui";
 
 export interface ProductDetailViewProps {
   labels?: { title?: string };

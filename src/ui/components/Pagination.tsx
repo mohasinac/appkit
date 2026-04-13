@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import type { PaginationConfig } from "@mohasinac/contracts";
-import { DEFAULT_PAGINATION_CONFIG } from "@mohasinac/contracts";
+import type { PaginationConfig } from "../../contracts";
+import { DEFAULT_PAGINATION_CONFIG } from "../../contracts";
 
 /**
  * Pagination — smart ellipsis pagination with prev/next chevrons.

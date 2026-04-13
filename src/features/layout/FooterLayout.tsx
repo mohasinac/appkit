@@ -13,7 +13,7 @@ import {
   Span,
   Text,
   Ul,
-} from "@mohasinac/ui";
+} from "../../ui";
 
 export interface FooterLinkGroup {
   heading: string;

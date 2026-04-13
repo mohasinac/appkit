@@ -5,9 +5,9 @@
  * All functions use the shared `getAdminAuth()` singleton from `@mohasinac/db-firebase`.
  */
 
-import type { AuthPayload } from "@mohasinac/contracts";
-import { getAdminAuth } from "@mohasinac/db-firebase";
-import { createSessionCookieFromToken } from "./session.js";
+import type { AuthPayload } from "../../contracts";
+import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
+import { createSessionCookieFromToken } from "./session";
 
 export { createSessionCookieFromToken };
 
@@ -28,7 +28,7 @@ export async function verifyIdToken(
   token: string,
 ): Promise<AuthPayload | null> {
   try {
-    const decoded = await getAdminAuth().verifyIdToken(token);
+    const decoded = await getAdminAuthLite().verifyIdToken(token);
     return {
       uid: decoded.uid,
       email: decoded.email ?? null,
@@ -51,7 +51,7 @@ export async function verifySessionCookie(
   cookie: string,
 ): Promise<AuthPayload | null> {
   try {
-    const decoded = await getAdminAuth().verifySessionCookie(cookie, true);
+    const decoded = await getAdminAuthLite().verifySessionCookie(cookie, true);
     return {
       uid: decoded.uid,
       email: decoded.email ?? null,

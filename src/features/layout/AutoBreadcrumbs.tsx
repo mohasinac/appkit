@@ -1,8 +1,9 @@
+import React from "react";
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Li, Nav, Ol, Span } from "@mohasinac/ui";
+import { Li, Nav, Ol, Span } from "../../ui";
 
 /** Map of path segments → human-readable labels. */
 const DEFAULT_PATH_LABELS: Record<string, string> = {

@@ -10,7 +10,7 @@
  *
  * Usage:
  * ```ts
- * import { ApiClient, ApiClientError } from "@mohasinac/http";
+ * import { ApiClient, ApiClientError } from "./";
  *
  * const client = new ApiClient({ baseURL: process.env.NEXT_PUBLIC_APP_URL });
  * const data = await client.get("/api/products");

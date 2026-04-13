@@ -10,8 +10,8 @@ import {
   Skeleton,
   Span,
   Text,
-} from "@mohasinac/ui";
-import { StarRating } from "@mohasinac/ui";
+} from "../../../ui";
+import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 
 // ─── ReviewCard ───────────────────────────────────────────────────────────────

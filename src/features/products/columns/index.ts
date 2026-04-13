@@ -1,4 +1,4 @@
-import type { TableColumn, ColumnExtensionOpts } from "@mohasinac/contracts";
+import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
 import type { ProductItem } from "../types";
 
 /**

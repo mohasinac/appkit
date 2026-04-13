@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Heading, Span, Text } from "../../../ui";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
 

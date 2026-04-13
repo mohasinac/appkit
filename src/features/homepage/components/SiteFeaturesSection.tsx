@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Grid, Heading, Section, Text } from "@mohasinac/ui";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Grid, Heading, Section, Text } from "../../../ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

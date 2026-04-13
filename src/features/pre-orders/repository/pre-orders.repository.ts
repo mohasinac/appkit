@@ -2,7 +2,7 @@ import type {
   IRepository,
   PagedResult,
   SieveQuery,
-} from "@mohasinac/contracts";
+} from "../../../contracts";
 import type { PreOrderItem, PreOrderStatus } from "../types";
 
 export class PreOrdersRepository {

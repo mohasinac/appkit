@@ -9,15 +9,15 @@ import {
   TagInput,
   Text,
   Textarea,
-} from "@mohasinac/ui";
-import { Checkbox } from "../../forms/index.js";
-import { MediaUploadField, MediaUploadList } from "../../media/index.js";
+} from "../../../ui";
+import { Checkbox } from "../../forms/index";
+import { MediaUploadField, MediaUploadList } from "../../media/index";
 import {
   coerceMediaFieldArray,
   getMediaUrl,
   type MediaField,
   type MediaFieldInput,
-} from "../../media/types/index.js";
+} from "../../media/types/index";
 
 export interface BlogPostFormValue {
   title?: string;

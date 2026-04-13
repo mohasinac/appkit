@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Button, Div, Input, Text, Textarea } from "@mohasinac/ui";
+import { Button, Div, Input, Text, Textarea } from "../../../ui";
 import type { SubmitCorporateInquiryInput } from "../types";
 
 interface CorporateInquiryFormProps {

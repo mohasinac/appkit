@@ -9,8 +9,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useCamera } from "@mohasinac/react";
-import { Alert, Button, Div, Span, Spinner } from "@mohasinac/ui";
+import { useCamera } from "../../../react";
+import { Alert, Button, Div, Span, Spinner } from "../../../ui";
 
 export interface CameraCaptureProps {
   mode: "photo" | "video" | "both";

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../ui";
 
 // ─── Size presets ─────────────────────────────────────────────────────────────
 

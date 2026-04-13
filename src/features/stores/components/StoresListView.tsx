@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import type { LayoutSlots } from "@mohasinac/contracts";
-import { Div, Grid, Heading, Span, Text } from "@mohasinac/ui";
+import type { LayoutSlots } from "../../../contracts";
+import { Div, Grid, Heading, Span, Text } from "../../../ui";
 import { stripHtml } from "../../../utils/string.formatter";
 import type { StoreListItem } from "../types";
 

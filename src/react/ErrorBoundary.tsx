@@ -9,9 +9,13 @@
  * and a reset handler.
  */
 
-import React, { Component, type ReactNode, type ErrorInfo } from "react";
+import { Component, type ReactNode, type ErrorInfo } from "react";
 import { Logger } from "../core";
-import { trackError, ErrorCategory, ErrorSeverity } from "../monitoring";
+import {
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "../monitoring/error-tracking";
 
 export interface ErrorBoundaryProps {
   children: ReactNode;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Alert, Button, Div, Label, Spinner, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Label, Spinner, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";
 import { MediaVideo } from "../MediaVideo";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";

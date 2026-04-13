@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
+import { apiClient } from "../../../http";
 import type { FAQCategory, FAQListResponse } from "../types";
 
 interface UseFaqListOptions {

@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
+import { apiClient } from "../../../http";
 import type { HomepageData } from "../types";
 
 interface UseHomepageOptions {

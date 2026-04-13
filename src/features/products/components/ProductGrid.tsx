@@ -1,7 +1,7 @@
 import React from "react";
-import type { LayoutSlots } from "@mohasinac/contracts";
-import { Button, Div, Grid, Span, Text } from "@mohasinac/ui";
-import type { ViewMode } from "@mohasinac/ui";
+import type { LayoutSlots } from "../../../contracts";
+import { Button, Div, Grid, Span, Text } from "../../../ui";
+import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 

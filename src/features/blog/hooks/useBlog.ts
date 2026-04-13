@@ -1,8 +1,8 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
+import { apiClient } from "../../../http";
 import type { BlogListResponse, BlogListParams } from "../types";
-import type { BlogPostDetailResponse } from "../api/[slug]/route.js";
+import type { BlogPostDetailResponse } from "../api/[slug]/route";
 
 export type { BlogListResponse };
 

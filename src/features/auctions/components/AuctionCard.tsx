@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
-import { Article, Button, Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Article, Button, Div, Heading, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface AuctionCountdownProps {

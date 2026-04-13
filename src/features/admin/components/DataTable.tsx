@@ -1,6 +1,5 @@
-import React from "react";
 import type { AdminTableColumn } from "../types";
-import { Button, Div, Span } from "@mohasinac/ui";
+import { Button, Div, Span } from "../../../ui";
 
 interface DataTableProps<T extends { id: string }> {
   columns: AdminTableColumn<T>[];

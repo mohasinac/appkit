@@ -8,10 +8,10 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { createRouteHandler } from "@mohasinac/next";
-import { getProviders } from "@mohasinac/contracts";
-import type { AuthUser as ContractsAuthUser } from "@mohasinac/contracts";
-import type { AuthUser, UserRole } from "../types/index.js";
+import { createRouteHandler } from "../../../next";
+import { getProviders } from "../../../contracts";
+import type { AuthUser as ContractsAuthUser } from "../../../contracts";
+import type { AuthUser, UserRole } from "../types/index";
 
 // ─── Transform ────────────────────────────────────────────────────────────────
 

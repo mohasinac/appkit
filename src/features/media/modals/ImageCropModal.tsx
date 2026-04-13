@@ -7,9 +7,9 @@
  * (display-only focal-point). No pixel cropping — use useMediaCrop for that.
  */
 
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Span, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Text } from "../../../ui";
 import { MediaSlider } from "../components/MediaSlider";
 
 export interface ImageCropData {

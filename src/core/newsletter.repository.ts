@@ -1,10 +1,10 @@
-import { getProviders } from "@mohasinac/contracts";
-import type { IRepository, PagedResult } from "@mohasinac/contracts";
+import { getProviders } from "../contracts/registry";
+import type { IRepository, PagedResult } from "../contracts/repository";
 import {
   decryptPiiFields,
   encryptPiiFields,
   hmacBlindIndex,
-} from "@mohasinac/security";
+} from "../security/pii-encrypt";
 
 export const NEWSLETTER_SUBSCRIBER_FIELDS = {
   EMAIL: "email",

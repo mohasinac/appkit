@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { Button, Div, Span } from "@mohasinac/ui";
+import { Button, Div, Span } from "../../ui";
 
 export interface BottomSheetProps {
   open: boolean;

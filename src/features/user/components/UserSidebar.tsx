@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Nav } from "@mohasinac/ui";
+import { Nav } from "../../../ui";
 
 export interface UserSidebarProps {
   renderNavItems?: (activePath: string) => React.ReactNode;

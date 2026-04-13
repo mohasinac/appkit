@@ -1,4 +1,4 @@
-import type { ListingType, ProductItem } from "../types/index.js";
+import type { ListingType, ProductItem } from "../types/index";
 
 export function normalizeListingType(
   input?: Partial<

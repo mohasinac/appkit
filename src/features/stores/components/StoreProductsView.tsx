@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
-import { Div, Heading, Row, Text } from "@mohasinac/ui";
+import { useState } from "react";
+import type { ReactNode } from "react";
+import { Div, Heading, Row } from "../../../ui";
 import type { StoreProductItem } from "../types";
 
 export interface StoreProductsViewProps {
@@ -11,33 +12,21 @@ export interface StoreProductsViewProps {
     emptyTitle?: string;
     emptyDescription?: string;
   };
-  /** Render the products (grid / list) */
-  renderProducts: (
-    items: StoreProductItem[],
-    isLoading: boolean,
-  ) => React.ReactNode;
-  /** Render search input */
-  renderSearch?: (
-    value: string,
-    onChange: (v: string) => void,
-  ) => React.ReactNode;
-  /** Render sort dropdown */
-  renderSort?: (
-    value: string,
-    onChange: (v: string) => void,
-  ) => React.ReactNode;
-  /** Render filter panel */
-  renderFilters?: () => React.ReactNode;
-  /** Render active filter chips */
-  renderActiveFilters?: () => React.ReactNode;
-  /** Render view mode toggle */
-  renderViewToggle?: (
-    mode: string,
-    onToggle: (m: string) => void,
-  ) => React.ReactNode;
-  /** Render pagination */
-  renderPagination?: (total: number) => React.ReactNode;
-  /** Raw product data — use this when you handle fetching externally */
+  /** Render the products area (grid or list). */
+  renderProducts: (items: StoreProductItem[], isLoading: boolean) => ReactNode;
+  /** Render search input. */
+  renderSearch?: (value: string, onChange: (v: string) => void) => ReactNode;
+  /** Render sort dropdown. */
+  renderSort?: (value: string, onChange: (v: string) => void) => ReactNode;
+  /** Render filter panel. */
+  renderFilters?: () => ReactNode;
+  /** Render active filter chips. */
+  renderActiveFilters?: () => ReactNode;
+  /** Render view mode toggle. */
+  renderViewToggle?: (mode: string, onToggle: (m: string) => void) => ReactNode;
+  /** Render pagination controls. */
+  renderPagination?: (total: number) => ReactNode;
+  /** Raw product data when fetching is handled externally. */
   items?: StoreProductItem[];
   total?: number;
   isLoading?: boolean;
@@ -45,6 +34,7 @@ export interface StoreProductsViewProps {
 }
 
 export function StoreProductsView({
+  storeSlug,
   labels = {},
   renderProducts,
   renderSearch,
@@ -58,19 +48,20 @@ export function StoreProductsView({
   isLoading = false,
   className = "",
 }: StoreProductsViewProps) {
-  const [search, setSearch] = React.useState("");
-  const [sort, setSort] = React.useState("-createdAt");
-  const [viewMode, setViewMode] = React.useState("grid");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("-createdAt");
+  const [viewMode, setViewMode] = useState("grid");
+
+  void storeSlug;
 
   return (
     <Div className={`py-4 ${className}`}>
       {labels.title && (
-        <Heading level={2} className="text-xl font-semibold mb-4">
+        <Heading level={2} className="mb-4 text-xl font-semibold">
           {labels.title}
         </Heading>
       )}
 
-      {/* Toolbar */}
       <Row wrap gap="3" className="mb-4">
         {renderSearch?.(search, setSearch)}
         {renderSort?.(sort, setSort)}
@@ -78,13 +69,8 @@ export function StoreProductsView({
         {renderViewToggle?.(viewMode, setViewMode)}
       </Row>
 
-      {/* Active filters */}
       {renderActiveFilters?.()}
-
-      {/* Products */}
       {renderProducts(items, isLoading)}
-
-      {/* Pagination */}
       {renderPagination?.(total)}
     </Div>
   );

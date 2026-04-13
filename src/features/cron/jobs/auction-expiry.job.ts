@@ -1,4 +1,4 @@
-import type { IRepository } from "@mohasinac/contracts";
+import type { IRepository } from "../../../contracts";
 import { createCronJob } from "../registry";
 
 /**
@@ -9,7 +9,7 @@ import { createCronJob } from "../registry";
  *
  * @example
  * ```ts
- * import { getProviders } from "@mohasinac/contracts";
+ * import { getProviders } from "../../../contracts";
  * import { createAuctionExpiryJob } from "@mohasinac/appkit/cron";
  *
  * const { db } = getProviders();

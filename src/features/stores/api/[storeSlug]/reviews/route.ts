@@ -15,7 +15,7 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
+import { getProviders } from "../../../../../contracts";
 
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 

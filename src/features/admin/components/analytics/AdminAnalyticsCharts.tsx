@@ -2,7 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Div, Heading } from "@mohasinac/ui";
+import { Div, Heading } from "../../../../ui";
 import type { AnalyticsMonthEntry } from "../../types";
 
 const ResponsiveContainer = dynamic(

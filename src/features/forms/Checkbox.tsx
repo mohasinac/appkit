@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span } from "@mohasinac/ui";
+import { Div, Span } from "../../ui";
 import { cn, ERROR_BASE } from "./utils";
 
 export interface CheckboxProps extends Omit<

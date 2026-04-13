@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
+import { THEME_CONSTANTS } from "../../../tokens";
 import {
   Button,
   Heading,
@@ -11,8 +11,8 @@ import {
   Text,
   TextLink,
   type PerViewConfig,
-} from "@mohasinac/ui";
-import { MediaImage } from "@mohasinac/feat-media";
+} from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 

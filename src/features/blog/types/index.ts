@@ -1,4 +1,4 @@
-import type { MediaField, MediaFieldInput } from "../../media/types/index.js";
+import type { MediaField, MediaFieldInput } from "../../media/types/index";
 
 export type BlogPostCategory =
   | "news"

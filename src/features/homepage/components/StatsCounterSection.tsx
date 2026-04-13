@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Grid, Heading, Section, Text } from "@mohasinac/ui";
+import { useEffect, useRef, useState } from "react";
+import type { ReactNode } from "react";
+import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -10,7 +10,7 @@ export interface StatItem {
   key: string;
   value: string;
   label: string;
-  renderIcon?: (props: { className?: string }) => React.ReactNode;
+  renderIcon?: (props: { className?: string }) => ReactNode;
 }
 
 export interface StatsCounterSectionProps {
@@ -18,7 +18,7 @@ export interface StatsCounterSectionProps {
   className?: string;
 }
 
-// ─── Single stat item ─────────────────────────────────────────────────────────
+// ─── Smngle stat mtem ─────────────────────────────────────────────────────────
 
 function StatCard({
   stat,
@@ -32,43 +32,40 @@ function StatCard({
   isLast: boolean;
 }) {
   return (
-    <div
+    <Div
       className={[
-        "relative flex flex-col items-center text-center px-6 py-8",
+        "relative flex flex-col items-center px-6 py-8 text-center",
         "transition-all duration-700",
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
-        !isLast ? "md:border-r border-cobalt-200 dark:border-white/10" : "",
+        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+        !isLast ? "border-cobalt-200 md:border-r dark:border-white/10" : "",
       ].join(" ")}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      {/* Icon wrapper */}
       {stat.renderIcon && (
-        <div className="w-14 h-14 rounded-2xl bg-cobalt-100 dark:bg-white/10 backdrop-blur flex items-center justify-center mb-4">
+        <Div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-cobalt-100 backdrop-blur dark:bg-white/10">
           {stat.renderIcon({ className: "w-7 h-7" })}
-        </div>
+        </Div>
       )}
 
-      {/* Stat value */}
       <Heading
         level={2}
         variant="none"
-        className="font-display text-4xl md:text-5xl text-zinc-900 dark:text-white mb-1"
+        className="mb-1 font-display text-4xl text-zinc-900 dark:text-white md:text-5xl"
       >
         {stat.value}
       </Heading>
 
-      {/* Label */}
       <Text
         variant="none"
-        className="text-zinc-500 dark:text-white/60 text-sm uppercase tracking-widest"
+        className="text-sm uppercase tracking-widest text-zinc-500 dark:text-white/60"
       >
         {stat.label}
       </Text>
-    </div>
+    </Div>
   );
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// ─── Sectmon ─────────────────────────────────────────────────────────────────
 
 export function StatsCounterSection({
   stats,
@@ -80,6 +77,7 @@ export function StatsCounterSection({
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
+
     const observer = new IntersectionObserver(
       ([entry], obs) => {
         if (entry.isIntersecting) {
@@ -89,6 +87,7 @@ export function StatsCounterSection({
       },
       { threshold: 0.2 },
     );
+
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
@@ -96,9 +95,9 @@ export function StatsCounterSection({
   return (
     <Section
       ref={sectionRef}
-      className={`bg-gradient-to-br from-cobalt-50 via-zinc-50 to-cobalt-50 dark:from-cobalt-900 dark:via-slate-900 dark:to-cobalt-950 py-12 px-4 ${className}`}
+      className={`bg-gradient-to-br from-cobalt-50 via-zinc-50 to-cobalt-50 px-4 py-12 dark:from-cobalt-900 dark:via-slate-900 dark:to-cobalt-950 ${className}`}
     >
-      <div className="max-w-5xl mx-auto">
+      <Div className="mx-auto max-w-5xl">
         <Grid
           gap="none"
           className="grid-cols-2 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4"
@@ -113,7 +112,7 @@ export function StatsCounterSection({
             />
           ))}
         </Grid>
-      </div>
+      </Div>
     </Section>
   );
 }

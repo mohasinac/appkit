@@ -10,8 +10,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import type { EventItem, EventListResponse } from "../types/index.js";
+import { getProviders } from "../../../contracts";
+import type { EventItem, EventListResponse } from "../types/index";
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);

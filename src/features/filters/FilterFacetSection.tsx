@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Div, Input, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Input, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 

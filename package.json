@@ -12,375 +12,314 @@
     "url": "https://github.com/mohasinac/appkit.git"
   },
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
     },
     "./contracts": {
-      "types": "./dist/contracts/index.d.ts",
-      "import": "./dist/contracts/index.js",
-      "require": "./dist/contracts/index.cjs"
+      "types": "./src/contracts/index.ts",
+      "default": "./src/contracts/index.ts"
     },
     "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs"
+      "types": "./src/core/index.ts",
+      "default": "./src/core/index.ts"
     },
     "./http": {
-      "types": "./dist/http/index.d.ts",
-      "import": "./dist/http/index.js",
-      "require": "./dist/http/index.cjs"
+      "types": "./src/http/index.ts",
+      "default": "./src/http/index.ts"
     },
     "./errors": {
-      "types": "./dist/errors/index.d.ts",
-      "import": "./dist/errors/index.js",
-      "require": "./dist/errors/index.cjs"
+      "types": "./src/errors/index.ts",
+      "default": "./src/errors/index.ts"
     },
     "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "import": "./dist/utils/index.js",
-      "require": "./dist/utils/index.cjs"
+      "types": "./src/utils/index.ts",
+      "default": "./src/utils/index.ts"
     },
     "./validation": {
-      "types": "./dist/validation/index.d.ts",
-      "import": "./dist/validation/index.js",
-      "require": "./dist/validation/index.cjs"
+      "types": "./src/validation/index.ts",
+      "default": "./src/validation/index.ts"
     },
     "./tokens": {
-      "types": "./dist/tokens/index.d.ts",
-      "import": "./dist/tokens/index.js",
-      "require": "./dist/tokens/index.cjs"
+      "types": "./src/tokens/index.ts",
+      "default": "./src/tokens/index.ts"
     },
     "./next": {
-      "types": "./dist/next/index.d.ts",
-      "import": "./dist/next/index.js",
-      "require": "./dist/next/index.cjs"
+      "types": "./src/next/index.ts",
+      "default": "./src/next/index.ts"
     },
     "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js",
-      "require": "./dist/react/index.cjs"
+      "types": "./src/react/index.ts",
+      "default": "./src/react/index.ts"
     },
     "./ui": {
-      "types": "./dist/ui/index.d.ts",
-      "import": "./dist/ui/index.js",
-      "require": "./dist/ui/index.cjs"
+      "types": "./src/ui/index.ts",
+      "default": "./src/ui/index.ts"
     },
     "./security": {
-      "types": "./dist/security/index.d.ts",
-      "import": "./dist/security/index.js",
-      "require": "./dist/security/index.cjs"
+      "types": "./src/security/index.ts",
+      "default": "./src/security/index.ts"
     },
     "./seo": {
-      "types": "./dist/seo/index.d.ts",
-      "import": "./dist/seo/index.js",
-      "require": "./dist/seo/index.cjs"
+      "types": "./src/seo/index.ts",
+      "default": "./src/seo/index.ts"
     },
     "./monitoring": {
-      "types": "./dist/monitoring/index.d.ts",
-      "import": "./dist/monitoring/index.js",
-      "require": "./dist/monitoring/index.cjs"
+      "types": "./src/monitoring/index.ts",
+      "default": "./src/monitoring/index.ts"
     },
     "./instrumentation": {
-      "types": "./dist/instrumentation/index.d.ts",
-      "import": "./dist/instrumentation/index.js",
-      "require": "./dist/instrumentation/index.cjs"
+      "types": "./src/instrumentation/index.ts",
+      "default": "./src/instrumentation/index.ts"
     },
     "./style/tailwind": {
-      "types": "./dist/style/tailwind/index.d.ts",
-      "import": "./dist/style/tailwind/index.js",
-      "require": "./dist/style/tailwind/index.cjs"
+      "types": "./src/style/tailwind/index.ts",
+      "default": "./src/style/tailwind/index.ts"
     },
     "./style/vanilla": {
-      "types": "./dist/style/vanilla/index.d.ts",
-      "import": "./dist/style/vanilla/index.js",
-      "require": "./dist/style/vanilla/index.cjs"
+      "types": "./src/style/vanilla/index.ts",
+      "default": "./src/style/vanilla/index.ts"
     },
     "./providers/db-firebase": {
-      "types": "./dist/providers/db-firebase/index.d.ts",
-      "import": "./dist/providers/db-firebase/index.js",
-      "require": "./dist/providers/db-firebase/index.cjs"
+      "types": "./src/providers/db-firebase/index.ts",
+      "default": "./src/providers/db-firebase/index.ts"
     },
     "./providers/auth-firebase": {
-      "types": "./dist/providers/auth-firebase/index.d.ts",
-      "import": "./dist/providers/auth-firebase/index.js",
-      "require": "./dist/providers/auth-firebase/index.cjs"
+      "types": "./src/providers/auth-firebase/index.ts",
+      "default": "./src/providers/auth-firebase/index.ts"
     },
     "./providers/email-resend": {
-      "types": "./dist/providers/email-resend/index.d.ts",
-      "import": "./dist/providers/email-resend/index.js",
-      "require": "./dist/providers/email-resend/index.cjs"
+      "types": "./src/providers/email-resend/index.ts",
+      "default": "./src/providers/email-resend/index.ts"
     },
     "./providers/storage-firebase": {
-      "types": "./dist/providers/storage-firebase/index.d.ts",
-      "import": "./dist/providers/storage-firebase/index.js",
-      "require": "./dist/providers/storage-firebase/index.cjs"
+      "types": "./src/providers/storage-firebase/index.ts",
+      "default": "./src/providers/storage-firebase/index.ts"
     },
     "./providers/payment-razorpay": {
-      "types": "./dist/providers/payment-razorpay/index.d.ts",
-      "import": "./dist/providers/payment-razorpay/index.js",
-      "require": "./dist/providers/payment-razorpay/index.cjs"
-    },
-    "./providers/search-algolia": {
-      "types": "./dist/providers/search-algolia/index.d.ts",
-      "import": "./dist/providers/search-algolia/index.js",
-      "require": "./dist/providers/search-algolia/index.cjs"
+      "types": "./src/providers/payment-razorpay/index.ts",
+      "default": "./src/providers/payment-razorpay/index.ts"
     },
     "./providers/shipping-shiprocket": {
-      "types": "./dist/providers/shipping-shiprocket/index.d.ts",
-      "import": "./dist/providers/shipping-shiprocket/index.js",
-      "require": "./dist/providers/shipping-shiprocket/index.cjs"
+      "types": "./src/providers/shipping-shiprocket/index.ts",
+      "default": "./src/providers/shipping-shiprocket/index.ts"
     },
     "./features/layout": {
-      "types": "./dist/features/layout/index.d.ts",
-      "import": "./dist/features/layout/index.js",
-      "require": "./dist/features/layout/index.cjs"
+      "types": "./src/features/layout/index.ts",
+      "default": "./src/features/layout/index.ts"
     },
     "./features/forms": {
-      "types": "./dist/features/forms/index.d.ts",
-      "import": "./dist/features/forms/index.js",
-      "require": "./dist/features/forms/index.cjs"
+      "types": "./src/features/forms/index.ts",
+      "default": "./src/features/forms/index.ts"
     },
     "./features/filters": {
-      "types": "./dist/features/filters/index.d.ts",
-      "import": "./dist/features/filters/index.js",
-      "require": "./dist/features/filters/index.cjs"
+      "types": "./src/features/filters/index.ts",
+      "default": "./src/features/filters/index.ts"
     },
     "./features/media": {
-      "types": "./dist/features/media/index.d.ts",
-      "import": "./dist/features/media/index.js",
-      "require": "./dist/features/media/index.cjs"
+      "types": "./src/features/media/index.ts",
+      "default": "./src/features/media/index.ts"
     },
     "./features/auth": {
-      "types": "./dist/features/auth/index.d.ts",
-      "import": "./dist/features/auth/index.js",
-      "require": "./dist/features/auth/index.cjs"
+      "types": "./src/features/auth/index.ts",
+      "default": "./src/features/auth/index.ts"
     },
     "./features/account": {
-      "types": "./dist/features/account/index.d.ts",
-      "import": "./dist/features/account/index.js",
-      "require": "./dist/features/account/index.cjs"
+      "types": "./src/features/account/index.ts",
+      "default": "./src/features/account/index.ts"
     },
     "./features/admin": {
-      "types": "./dist/features/admin/index.d.ts",
-      "import": "./dist/features/admin/index.js",
-      "require": "./dist/features/admin/index.cjs"
+      "types": "./src/features/admin/index.ts",
+      "default": "./src/features/admin/index.ts"
     },
     "./features/cms": {
-      "types": "./dist/features/cms/index.d.ts",
-      "import": "./dist/features/cms/index.js",
-      "require": "./dist/features/cms/index.cjs"
+      "types": "./src/features/cms/index.ts",
+      "default": "./src/features/cms/index.ts"
     },
     "./features/blog": {
-      "types": "./dist/features/blog/index.d.ts",
-      "import": "./dist/features/blog/index.js",
-      "require": "./dist/features/blog/index.cjs"
+      "types": "./src/features/blog/index.ts",
+      "default": "./src/features/blog/index.ts"
     },
     "./features/about": {
-      "types": "./dist/features/about/index.d.ts",
-      "import": "./dist/features/about/index.js",
-      "require": "./dist/features/about/index.cjs"
+      "types": "./src/features/about/index.ts",
+      "default": "./src/features/about/index.ts"
     },
     "./features/contact": {
-      "types": "./dist/features/contact/index.d.ts",
-      "import": "./dist/features/contact/index.js",
-      "require": "./dist/features/contact/index.cjs"
+      "types": "./src/features/contact/index.ts",
+      "default": "./src/features/contact/index.ts"
     },
     "./features/copilot": {
-      "types": "./dist/features/copilot/index.d.ts",
-      "import": "./dist/features/copilot/index.js",
-      "require": "./dist/features/copilot/index.cjs"
+      "types": "./src/features/copilot/index.ts",
+      "default": "./src/features/copilot/index.ts"
     },
     "./features/cart": {
-      "types": "./dist/features/cart/index.d.ts",
-      "import": "./dist/features/cart/index.js",
-      "require": "./dist/features/cart/index.cjs"
+      "types": "./src/features/cart/index.ts",
+      "default": "./src/features/cart/index.ts"
     },
     "./features/categories": {
-      "types": "./dist/features/categories/index.d.ts",
-      "import": "./dist/features/categories/index.js",
-      "require": "./dist/features/categories/index.cjs"
+      "types": "./src/features/categories/index.ts",
+      "default": "./src/features/categories/index.ts"
     },
     "./features/checkout": {
-      "types": "./dist/features/checkout/index.d.ts",
-      "import": "./dist/features/checkout/index.js",
-      "require": "./dist/features/checkout/index.cjs"
+      "types": "./src/features/checkout/index.ts",
+      "default": "./src/features/checkout/index.ts"
     },
     "./features/collections": {
-      "types": "./dist/features/collections/index.d.ts",
-      "import": "./dist/features/collections/index.js",
-      "require": "./dist/features/collections/index.cjs"
+      "types": "./src/features/collections/index.ts",
+      "default": "./src/features/collections/index.ts"
     },
     "./features/consultation": {
-      "types": "./dist/features/consultation/index.d.ts",
-      "import": "./dist/features/consultation/index.js",
-      "require": "./dist/features/consultation/index.cjs"
+      "types": "./src/features/consultation/index.ts",
+      "default": "./src/features/consultation/index.ts"
     },
     "./features/corporate": {
-      "types": "./dist/features/corporate/index.d.ts",
-      "import": "./dist/features/corporate/index.js",
-      "require": "./dist/features/corporate/index.cjs"
+      "types": "./src/features/corporate/index.ts",
+      "default": "./src/features/corporate/index.ts"
     },
     "./features/events": {
-      "types": "./dist/features/events/index.d.ts",
-      "import": "./dist/features/events/index.js",
-      "require": "./dist/features/events/index.cjs"
+      "types": "./src/features/events/index.ts",
+      "default": "./src/features/events/index.ts"
     },
     "./features/faq": {
-      "types": "./dist/features/faq/index.d.ts",
-      "import": "./dist/features/faq/index.js",
-      "require": "./dist/features/faq/index.cjs"
+      "types": "./src/features/faq/index.ts",
+      "default": "./src/features/faq/index.ts"
     },
     "./features/homepage": {
-      "types": "./dist/features/homepage/index.d.ts",
-      "import": "./dist/features/homepage/index.js",
-      "require": "./dist/features/homepage/index.cjs"
+      "types": "./src/features/homepage/index.ts",
+      "default": "./src/features/homepage/index.ts"
     },
     "./features/loyalty": {
-      "types": "./dist/features/loyalty/index.d.ts",
-      "import": "./dist/features/loyalty/index.js",
-      "require": "./dist/features/loyalty/index.cjs"
+      "types": "./src/features/loyalty/index.ts",
+      "default": "./src/features/loyalty/index.ts"
     },
     "./features/orders": {
-      "types": "./dist/features/orders/index.d.ts",
-      "import": "./dist/features/orders/index.js",
-      "require": "./dist/features/orders/index.cjs"
+      "types": "./src/features/orders/index.ts",
+      "default": "./src/features/orders/index.ts"
     },
     "./features/payments": {
-      "types": "./dist/features/payments/index.d.ts",
-      "import": "./dist/features/payments/index.js",
-      "require": "./dist/features/payments/index.cjs"
+      "types": "./src/features/payments/index.ts",
+      "default": "./src/features/payments/index.ts"
     },
     "./features/products": {
-      "types": "./dist/features/products/index.d.ts",
-      "import": "./dist/features/products/index.js",
-      "require": "./dist/features/products/index.cjs"
+      "types": "./src/features/products/index.ts",
+      "default": "./src/features/products/index.ts"
     },
     "./features/promotions": {
-      "types": "./dist/features/promotions/index.d.ts",
-      "import": "./dist/features/promotions/index.js",
-      "require": "./dist/features/promotions/index.cjs"
+      "types": "./src/features/promotions/index.ts",
+      "default": "./src/features/promotions/index.ts"
     },
     "./features/reviews": {
-      "types": "./dist/features/reviews/index.d.ts",
-      "import": "./dist/features/reviews/index.js",
-      "require": "./dist/features/reviews/index.cjs"
+      "types": "./src/features/reviews/index.ts",
+      "default": "./src/features/reviews/index.ts"
     },
     "./features/search": {
-      "types": "./dist/features/search/index.d.ts",
-      "import": "./dist/features/search/index.js",
-      "require": "./dist/features/search/index.cjs"
+      "types": "./src/features/search/index.ts",
+      "default": "./src/features/search/index.ts"
     },
     "./features/seller": {
-      "types": "./dist/features/seller/index.d.ts",
-      "import": "./dist/features/seller/index.js",
-      "require": "./dist/features/seller/index.cjs"
+      "types": "./src/features/seller/index.ts",
+      "default": "./src/features/seller/index.ts"
     },
     "./features/stores": {
-      "types": "./dist/features/stores/index.d.ts",
-      "import": "./dist/features/stores/index.js",
-      "require": "./dist/features/stores/index.cjs"
+      "types": "./src/features/stores/index.ts",
+      "default": "./src/features/stores/index.ts"
     },
     "./features/wishlist": {
-      "types": "./dist/features/wishlist/index.d.ts",
-      "import": "./dist/features/wishlist/index.js",
-      "require": "./dist/features/wishlist/index.cjs"
+      "types": "./src/features/wishlist/index.ts",
+      "default": "./src/features/wishlist/index.ts"
     },
     "./features/auctions": {
-      "types": "./dist/features/auctions/index.d.ts",
-      "import": "./dist/features/auctions/index.js",
-      "require": "./dist/features/auctions/index.cjs"
+      "types": "./src/features/auctions/index.ts",
+      "default": "./src/features/auctions/index.ts"
     },
     "./features/pre-orders": {
-      "types": "./dist/features/pre-orders/index.d.ts",
-      "import": "./dist/features/pre-orders/index.js",
-      "require": "./dist/features/pre-orders/index.cjs"
+      "types": "./src/features/pre-orders/index.ts",
+      "default": "./src/features/pre-orders/index.ts"
     },
     "./features/before-after": {
-      "types": "./dist/features/before-after/index.d.ts",
-      "import": "./dist/features/before-after/index.js",
-      "require": "./dist/features/before-after/index.cjs"
+      "types": "./src/features/before-after/index.ts",
+      "default": "./src/features/before-after/index.ts"
     },
     "./features/whatsapp-bot": {
-      "types": "./dist/features/whatsapp-bot/index.d.ts",
-      "import": "./dist/features/whatsapp-bot/index.js",
-      "require": "./dist/features/whatsapp-bot/index.cjs"
+      "types": "./src/features/whatsapp-bot/index.ts",
+      "default": "./src/features/whatsapp-bot/index.ts"
     },
     "./features/auth/server": {
-      "types": "./dist/features/auth/server.d.ts",
-      "import": "./dist/features/auth/server.js",
-      "require": "./dist/features/auth/server.cjs"
+      "types": "./src/features/auth/server.ts",
+      "default": "./src/features/auth/server.ts"
+    },
+    "./features/admin/server": {
+      "types": "./src/features/admin/server.ts",
+      "default": "./src/features/admin/server.ts"
+    },
+    "./features/auctions/server": {
+      "types": "./src/features/auctions/server.ts",
+      "default": "./src/features/auctions/server.ts"
     },
     "./features/blog/server": {
-      "types": "./dist/features/blog/server.d.ts",
-      "import": "./dist/features/blog/server.js",
-      "require": "./dist/features/blog/server.cjs"
+      "types": "./src/features/blog/server.ts",
+      "default": "./src/features/blog/server.ts"
     },
     "./features/categories/server": {
-      "types": "./dist/features/categories/server.d.ts",
-      "import": "./dist/features/categories/server.js",
-      "require": "./dist/features/categories/server.cjs"
+      "types": "./src/features/categories/server.ts",
+      "default": "./src/features/categories/server.ts"
     },
     "./features/events/server": {
-      "types": "./dist/features/events/server.d.ts",
-      "import": "./dist/features/events/server.js",
-      "require": "./dist/features/events/server.cjs"
+      "types": "./src/features/events/server.ts",
+      "default": "./src/features/events/server.ts"
+    },
+    "./features/faq/server": {
+      "types": "./src/features/faq/server.ts",
+      "default": "./src/features/faq/server.ts"
     },
     "./features/homepage/server": {
-      "types": "./dist/features/homepage/server.d.ts",
-      "import": "./dist/features/homepage/server.js",
-      "require": "./dist/features/homepage/server.cjs"
+      "types": "./src/features/homepage/server.ts",
+      "default": "./src/features/homepage/server.ts"
     },
     "./features/pre-orders/server": {
-      "types": "./dist/features/pre-orders/server.d.ts",
-      "import": "./dist/features/pre-orders/server.js",
-      "require": "./dist/features/pre-orders/server.cjs"
+      "types": "./src/features/pre-orders/server.ts",
+      "default": "./src/features/pre-orders/server.ts"
     },
     "./features/products/server": {
-      "types": "./dist/features/products/server.d.ts",
-      "import": "./dist/features/products/server.js",
-      "require": "./dist/features/products/server.cjs"
+      "types": "./src/features/products/server.ts",
+      "default": "./src/features/products/server.ts"
+    },
+    "./features/promotions/server": {
+      "types": "./src/features/promotions/server.ts",
+      "default": "./src/features/promotions/server.ts"
     },
     "./features/reviews/server": {
-      "types": "./dist/features/reviews/server.d.ts",
-      "import": "./dist/features/reviews/server.js",
-      "require": "./dist/features/reviews/server.cjs"
+      "types": "./src/features/reviews/server.ts",
+      "default": "./src/features/reviews/server.ts"
     },
     "./features/search/server": {
-      "types": "./dist/features/search/server.d.ts",
-      "import": "./dist/features/search/server.js",
-      "require": "./dist/features/search/server.cjs"
+      "types": "./src/features/search/server.ts",
+      "default": "./src/features/search/server.ts"
+    },
+    "./features/seller/server": {
+      "types": "./src/features/seller/server.ts",
+      "default": "./src/features/seller/server.ts"
     },
     "./features/stores/server": {
-      "types": "./dist/features/stores/server.d.ts",
-      "import": "./dist/features/stores/server.js",
-      "require": "./dist/features/stores/server.cjs"
+      "types": "./src/features/stores/server.ts",
+      "default": "./src/features/stores/server.ts"
     },
     "./cli": {
-      "types": "./dist/cli/index.d.ts",
-      "import": "./dist/cli/index.js",
-      "require": "./dist/cli/index.cjs"
+      "types": "./src/cli/index.ts",
+      "default": "./src/cli/index.ts"
     },
     "./seed": {
-      "types": "./dist/seed/index.d.ts",
-      "import": "./dist/seed/index.js",
-      "require": "./dist/seed/index.cjs"
+      "types": "./src/seed/index.ts",
+      "default": "./src/seed/index.ts"
     }
   },
   "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
+    "src",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsup && node scripts/preserve-client-directives.mjs",
-    "dev": "npm run watch",
-    "watch": "tsup --watch --onSuccess \"node scripts/preserve-client-directives.mjs\"",
     "index:generate": "node scripts/get-index.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
@@ -430,7 +369,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "resend": "^6.10.0",
-    "tsup": "^8.5.0",
     "typescript": "^5.9.3"
   }
 }

@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Grid, Heading, Section, Span, Text } from "@mohasinac/ui";
+import { ReactNode } from "react";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Grid, Heading, Section, Span, Text } from "../../../ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

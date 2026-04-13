@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
-import type { BlogListResponse } from "@mohasinac/feat-blog";
+import { apiClient } from "../../../http";
+import type { BlogListResponse } from "../../blog/types";
 
 const MIN_BLOG_COUNT = 4;
 

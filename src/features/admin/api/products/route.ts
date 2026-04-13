@@ -11,8 +11,8 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import { createRouteHandler } from "@mohasinac/next";
+import { getProviders } from "../../../../contracts";
+import { createRouteHandler } from "../../../../next";
 
 function numParam(url: URL, key: string, fallback: number): number {
   const v = url.searchParams.get(key);

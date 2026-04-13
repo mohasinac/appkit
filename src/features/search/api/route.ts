@@ -20,9 +20,9 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
-import { SearchRepository } from "../repository/search.repository.js";
-import type { SearchProductItem } from "../types/index.js";
+import { getProviders } from "../../../contracts";
+import { SearchRepository } from "../repository/search.repository";
+import type { SearchProductItem } from "../types/index";
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);

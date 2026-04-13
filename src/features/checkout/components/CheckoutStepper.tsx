@@ -1,6 +1,6 @@
 import React from "react";
 import type { CheckoutStep } from "../types";
-import { Div, Nav, Span } from "@mohasinac/ui";
+import { Div, Nav, Span } from "../../../ui";
 
 interface CheckoutStepperProps {
   steps: { id: CheckoutStep; label: string }[];

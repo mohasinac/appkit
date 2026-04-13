@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Section, Span, Text } from "@mohasinac/ui";
+import { Heading, Section, Span, Text } from "../../../ui";
 
 export interface AboutHowItem {
   title: string;

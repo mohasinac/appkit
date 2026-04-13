@@ -1,6 +1,6 @@
 import React from "react";
-import { Div, Pagination, Text } from "@mohasinac/ui";
-import type { LayoutSlots } from "@mohasinac/contracts";
+import { Div, Pagination, Text } from "../../../ui";
+import type { LayoutSlots } from "../../../contracts";
 import type { EventItem } from "../types";
 import { EventCard } from "./EventCard";
 

@@ -10,9 +10,9 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
-import { getProviders } from "@mohasinac/contracts";
-import { createRouteHandler } from "@mohasinac/next";
-import type { CarouselSlide } from "../../types/index.js";
+import { getProviders } from "../../../../contracts";
+import { createRouteHandler } from "../../../../next";
+import type { CarouselSlide } from "../../types/index";
 
 /** Read `__session` cookie from request headers (HTTP cookie string). */
 function getSessionCookie(request: Request): string | null {

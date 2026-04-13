@@ -12,7 +12,7 @@
  */
 
 import { NextResponse } from "next/server.js";
-import { getProviders } from "@mohasinac/contracts";
+import { getProviders } from "../../../../contracts";
 
 export async function GET(
   request: Request,

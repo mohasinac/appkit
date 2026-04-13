@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
-import { Div, Heading, Span, Text } from "@mohasinac/ui";
+import { Div, Heading, Span, Text } from "../../../ui";
 import type { PreorderItem, PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";

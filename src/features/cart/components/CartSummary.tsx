@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading } from "@mohasinac/ui";
+import { Heading } from "../../../ui";
 
 export interface CartSummaryProps {
   isLoading?: boolean;

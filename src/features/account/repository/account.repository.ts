@@ -1,4 +1,4 @@
-import type { IRepository, PagedResult } from "@mohasinac/contracts";
+import type { IRepository, PagedResult } from "../../../contracts";
 import type { UserProfile } from "../types";
 
 export class AccountRepository {
@@ -21,7 +21,7 @@ export class AccountRepository {
   }
 
   async findAll(
-    query?: import("@mohasinac/contracts").SieveQuery,
+    query?: import("../../../contracts").SieveQuery,
   ): Promise<PagedResult<UserProfile>> {
     return this.repo.findAll(query ?? {});
   }

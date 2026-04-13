@@ -11,9 +11,9 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
-import { getProviders } from "@mohasinac/contracts";
-import { createRouteHandler } from "@mohasinac/next";
-import type { Review } from "../../types/index.js";
+import { getProviders } from "../../../../contracts";
+import { createRouteHandler } from "../../../../next";
+import type { Review } from "../../types/index";
 
 // ──── GET /api/reviews/[id] ───────────────────────────────────────────────────
 

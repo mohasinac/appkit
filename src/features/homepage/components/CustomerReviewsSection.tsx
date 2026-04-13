@@ -1,14 +1,14 @@
 "use client";
 
 import React from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
+import { THEME_CONSTANTS } from "../../../tokens";
 import {
   Heading,
   HorizontalScroller,
   Section,
   Text,
   TextLink,
-} from "@mohasinac/ui";
+} from "../../../ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

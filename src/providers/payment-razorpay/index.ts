@@ -7,7 +7,7 @@
  * @example
  * ```ts
  * import { RazorpayProvider } from "@mohasinac/payment-razorpay";
- * import { registerProviders } from "@mohasinac/contracts";
+ * import { registerProviders } from "../../contracts";
  *
  * registerProviders({
  *   payment: new RazorpayProvider({
@@ -26,7 +26,7 @@ import type {
   PaymentOrder,
   PaymentCapture,
   Refund,
-} from "@mohasinac/contracts";
+} from "../../contracts";
 
 export interface RazorpayConfig {
   keyId: string;

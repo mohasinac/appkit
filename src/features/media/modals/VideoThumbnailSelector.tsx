@@ -9,7 +9,7 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Span, Spinner, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Spinner, Text } from "../../../ui";
 
 export interface VideoThumbnailSelectorProps {
   isOpen: boolean;

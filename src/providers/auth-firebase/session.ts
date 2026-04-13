@@ -7,8 +7,8 @@
  * Server-side only.
  */
 
-import type { ISessionProvider, AuthPayload } from "@mohasinac/contracts";
-import { getAdminAuth } from "@mohasinac/db-firebase";
+import type { ISessionProvider, AuthPayload } from "../../contracts";
+import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 
 /** Default session duration: 5 days (in milliseconds). */
 const DEFAULT_EXPIRES_IN_MS = 60 * 60 * 24 * 5 * 1000;
@@ -44,7 +44,10 @@ export const firebaseSessionProvider: ISessionProvider = {
 
   async verifySession(cookie: string): Promise<AuthPayload> {
     try {
-      const decoded = await getAdminAuth().verifySessionCookie(cookie, true);
+      const decoded = await getAdminAuthLite().verifySessionCookie(
+        cookie,
+        true,
+      );
       return {
         uid: decoded.uid,
         email: decoded.email ?? null,
@@ -81,8 +84,11 @@ export const firebaseSessionProvider: ISessionProvider = {
 
   async destroySession(cookie: string): Promise<void> {
     try {
-      const decoded = await getAdminAuth().verifySessionCookie(cookie, false);
-      await getAdminAuth().revokeRefreshTokens(decoded.uid);
+      const decoded = await getAdminAuthLite().verifySessionCookie(
+        cookie,
+        false,
+      );
+      await getAdminAuthLite().revokeRefreshTokens(decoded.uid);
     } catch {
       // Best-effort: if cookie is already invalid, treat as already destroyed
     }
@@ -101,5 +107,5 @@ export async function createSessionCookieFromToken(
   idToken: string,
   expiresIn: number = DEFAULT_EXPIRES_IN_MS,
 ): Promise<string> {
-  return getAdminAuth().createSessionCookie(idToken, { expiresIn });
+  return getAdminAuthLite().createSessionCookie(idToken, { expiresIn });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, useCallback, useState } from "react";
-import { Div, Heading, Label, Text } from "@mohasinac/ui";
+import { Div, Heading, Label, Text } from "../../../ui";
 
 export interface RegisterFormValues {
   email: string;

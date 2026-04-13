@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div } from "@mohasinac/ui";
+import { Div } from "../../../ui";
 
 export interface ProfileViewProps {
   renderHeader?: () => React.ReactNode;

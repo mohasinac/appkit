@@ -6,7 +6,7 @@
  * type identity issues when multiple Next.js installs exist in a monorepo.
  */
 
-import { AuthenticationError } from "@mohasinac/errors";
+import { AuthenticationError } from "../errors";
 
 interface CookieStoreLike {
   get(name: string): { value?: string } | string | undefined;

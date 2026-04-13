@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { Row, Span } from "@mohasinac/ui";
+import { Row, Span } from "../../../ui";
 
 interface ProductFeatureBadgeLabels {
   featured: string;

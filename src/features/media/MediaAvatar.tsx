@@ -1,5 +1,5 @@
 import { MediaImage } from "./MediaImage";
-import { Div } from "@mohasinac/ui";
+import { Div } from "../../ui";
 
 export interface MediaAvatarProps {
   /** Avatar image URL. Shows a 👤 fallback when undefined. */

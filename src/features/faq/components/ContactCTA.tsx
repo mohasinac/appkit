@@ -1,6 +1,6 @@
 "use client";
 
-import { Div, Heading, Span, Text, TextLink } from "@mohasinac/ui";
+import { Div, Heading, Span, Text, TextLink } from "../../../ui";
 
 interface ContactCTAProps {
   email: string;

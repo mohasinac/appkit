@@ -1,3 +1,4 @@
+import React from "react";
 import { Caption, Text } from "./Typography";
 import { Div } from "./Div";
 import { classNames } from "../style.helper";

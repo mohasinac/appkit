@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { THEME_CONSTANTS } from "@mohasinac/tokens";
-import { Button, Div, Grid, Heading, Section, Text } from "@mohasinac/ui";
+import { THEME_CONSTANTS } from "../../../tokens";
+import { Button, Div, Grid, Heading, Section, Text } from "../../../ui";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

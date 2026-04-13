@@ -1,5 +1,5 @@
 // appkit/src/features/admin/permission-map.ts
-import type { Permission } from "@mohasinac/security";
+import type { Permission } from "../../security";
 
 /** Required permission for each admin route path */
 export const ADMIN_PAGE_PERMISSIONS: Record<string, Permission> = {

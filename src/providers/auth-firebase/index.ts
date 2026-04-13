@@ -8,13 +8,13 @@
  */
 
 // IAuthProvider implementation
-export { firebaseAuthProvider } from "./provider.js";
+export { firebaseAuthProvider } from "./provider";
 
 // ISessionProvider implementation
 export {
   firebaseSessionProvider,
   createSessionCookieFromToken,
-} from "./session.js";
+} from "./session";
 
 // Standalone helpers (drop-in replacements for auth-server.ts)
 export {
@@ -23,4 +23,4 @@ export {
   createMiddlewareAuthChain,
   requireAuth,
   requireRole,
-} from "./helpers.js";
+} from "./helpers";

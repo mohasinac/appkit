@@ -11,11 +11,11 @@ import type {
   TableColumn,
   TableConfig,
   PaginationConfig,
-} from "@mohasinac/contracts";
+} from "../contracts";
 import {
   mergeTableConfig,
   DEFAULT_PAGINATION_CONFIG,
-} from "@mohasinac/contracts";
+} from "../contracts";
 
 /**
  * DataTable — generic sortable + paginated table promoted to @mohasinac/ui.

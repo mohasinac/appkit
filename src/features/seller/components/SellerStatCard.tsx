@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Text } from "@mohasinac/ui";
+import { Div, Text } from "../../../ui";
 
 interface SellerStatCardProps {
   label: string;

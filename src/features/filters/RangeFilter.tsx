@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Button, Div, Input, Slider, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Input, Slider, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 interface DualSliderProps {

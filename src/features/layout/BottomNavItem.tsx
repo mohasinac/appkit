@@ -1,6 +1,7 @@
+import React from "react";
 "use client";
 
-import { Li, Span } from "@mohasinac/ui";
+import { Li, Span } from "../../ui";
 
 export interface BottomNavItemProps {
   href: string;

@@ -15,7 +15,7 @@
  * ```ts
  * // 1. Declare the extension (one file per feature in your app)
  * import { productItemSchema, buildProductColumns } from "@mohasinac/feat-products";
- * import type { FeatureExtension } from "@mohasinac/contracts";
+ * import type { FeatureExtension } from "./";
  * import type { ProductItem } from "@mohasinac/feat-products";
  * import { z } from "zod";
  *
@@ -163,7 +163,7 @@ export interface LayoutSlots<T> {
  * @example
  * ```ts
  * import { productItemSchema, buildProductColumns } from "@mohasinac/feat-products";
- * import type { FeatureExtension } from "@mohasinac/contracts";
+ * import type { FeatureExtension } from "./";
  * import type { ProductItem } from "@mohasinac/feat-products";
  * import { z } from "zod";
  *

@@ -12,10 +12,10 @@
 
 import { NextResponse } from "next/server.js";
 import { z } from "zod";
-import { getProviders } from "@mohasinac/contracts";
-import { createRouteHandler } from "@mohasinac/next";
-import type { ProductItem } from "../../types/index.js";
-import { mediaFieldSchema } from "../../../media/types/index.js";
+import { getProviders } from "../../../../contracts";
+import { createRouteHandler } from "../../../../next";
+import type { ProductItem } from "../../types/index";
+import { mediaFieldSchema } from "../../../media/types/index";
 
 type RouteContext = { params: Promise<{ id: string }> };
 

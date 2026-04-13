@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Div, Row, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Row, Span, Text } from "../../../ui";
 import type { FAQ, FAQCategory } from "../types";
 
 interface FAQAccordionItemProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Div,
@@ -9,8 +9,8 @@ import {
   Modal,
   Row,
   Text,
-} from "@mohasinac/ui";
-import { StarRating } from "@mohasinac/ui";
+} from "../../../ui";
+import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 
 // ─── ViewReviewModal ──────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import { Button, Div, Heading } from "@mohasinac/ui";
+import { Button, Div, Heading } from "..";
 
 // ─── SideModal ─────────────────────────────────────────────────────────────────
 

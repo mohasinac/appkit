@@ -8,7 +8,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Span, Text } from "@mohasinac/ui";
+import { Alert, Button, Div, Modal, Span, Text } from "../../../ui";
 import { MediaSlider } from "../components/MediaSlider";
 import { useMediaTrim } from "../hooks/useMedia";
 

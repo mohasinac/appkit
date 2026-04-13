@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
-import type { CarouselSlide } from "../types/index.js";
+import { apiClient } from "../../../http";
+import type { CarouselSlide } from "../types/index";
 
 /**
  * useHeroCarousel

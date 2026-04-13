@@ -15,7 +15,7 @@ import React from "react";
  *
  * @example
  * ```tsx
- * import { Section, Article, Main, Aside, Nav, Ul, Ol, Li } from '@mohasinac/ui';
+ * import { Section, Article, Main, Aside, Nav, Ul, Ol, Li } from '..';
  *
  * <Main className="max-w-7xl mx-auto px-4">
  *   <Section className="py-12">

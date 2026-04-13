@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Div, Heading } from "@mohasinac/ui";
+import type { ReactNode } from "react";
+import { Div } from "../../../ui";
 
 export interface UserOrderTrackViewLabels {
   title?: string;
@@ -12,21 +12,19 @@ export interface UserOrderTrackViewLabels {
 
 export interface UserOrderTrackViewProps {
   labels?: UserOrderTrackViewLabels;
-  renderBack?: () => React.ReactNode;
-  renderTracking?: () => React.ReactNode;
-  renderNotFound?: () => React.ReactNode;
+  renderBack?: () => ReactNode;
+  renderTracking?: () => ReactNode;
+  renderNotFound?: () => ReactNode;
   isNotFound?: boolean;
   isLoading?: boolean;
   className?: string;
 }
 
 export function UserOrderTrackView({
-  labels = {},
   renderBack,
   renderTracking,
   renderNotFound,
   isNotFound = false,
-  isLoading = false,
   className = "",
 }: UserOrderTrackViewProps) {
   return (

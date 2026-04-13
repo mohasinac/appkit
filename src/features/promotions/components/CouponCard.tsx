@@ -1,5 +1,4 @@
-import React from "react";
-import { Button, Div, Row, Span, Text } from "@mohasinac/ui";
+import { Button, Div, Row, Span, Text } from "../../../ui";
 import type { CouponItem, CouponType } from "../types";
 
 const TYPE_COLORS: Record<CouponType, string> = {

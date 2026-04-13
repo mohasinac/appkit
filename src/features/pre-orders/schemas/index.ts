@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { mediaFieldSchema } from "../../media/types/index.js";
+import { mediaFieldSchema } from "../../media/types/index";
 
 /**
  * Base Zod schema for a preorder product item (storefront listing).

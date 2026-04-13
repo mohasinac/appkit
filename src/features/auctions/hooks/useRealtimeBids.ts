@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { logger } from "../../../core/Logger.js";
+import { logger } from "../../../core/Logger";
 
 export interface RealtimeBidData {
   currentBid: number;

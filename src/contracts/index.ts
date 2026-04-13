@@ -12,7 +12,7 @@ export type {
   IRepository,
   IRealtimeRepository,
   IDbProvider,
-} from "./repository.js";
+} from "./repository";
 
 // Auth
 export type {
@@ -21,7 +21,7 @@ export type {
   CreateUserInput,
   IAuthProvider,
   ISessionProvider,
-} from "./auth.js";
+} from "./auth";
 
 // Email
 export type {
@@ -29,14 +29,14 @@ export type {
   EmailOptions,
   EmailResult,
   IEmailProvider,
-} from "./email.js";
+} from "./email";
 
 // Storage
 export type {
   UploadOptions,
   StorageFile,
   IStorageProvider,
-} from "./storage.js";
+} from "./storage";
 
 // Payment
 export type {
@@ -44,7 +44,7 @@ export type {
   PaymentCapture,
   Refund,
   IPaymentProvider,
-} from "./payment.js";
+} from "./payment";
 
 // Shipping
 export type {
@@ -55,7 +55,7 @@ export type {
   TrackingInfo,
   ServiceabilityResult,
   IShippingProvider,
-} from "./shipping.js";
+} from "./shipping";
 
 // Search
 export type {
@@ -64,7 +64,7 @@ export type {
   SearchResult,
   SuggestOptions,
   ISearchProvider,
-} from "./search.js";
+} from "./search";
 
 // Infra (Cache, Queue, EventBus)
 export type {
@@ -73,18 +73,18 @@ export type {
   IQueueProvider,
   EventHandler,
   IEventBus,
-} from "./infra.js";
+} from "./infra";
 
 // Style
-export type { IStyleAdapter } from "./style.js";
+export type { IStyleAdapter } from "./style";
 
 // Registry
-export type { ProviderRegistry } from "./registry.js";
+export type { ProviderRegistry } from "./registry";
 export {
   registerProviders,
   getProviders,
   _resetProviders,
-} from "./registry.js";
+} from "./registry";
 
 // Feature manifest
 export type {
@@ -92,10 +92,10 @@ export type {
   ApiRouteStub,
   FeatureManifest,
   FeaturesConfig,
-} from "./feature.js";
+} from "./feature";
 
 // Site config
-export type { SiteConfig, NavItem } from "./config.js";
+export type { SiteConfig, NavItem } from "./config";
 
 // Extensibility utilities
 export type {
@@ -105,7 +105,7 @@ export type {
   ColumnExtensionOpts,
   LayoutSlots,
   FeatureExtension,
-} from "./extend.js";
+} from "./extend";
 
 // Table / Pagination / Sticky config
 export type {
@@ -113,10 +113,10 @@ export type {
   StickyConfig,
   TableConfig,
   TableViewMode,
-} from "./table.js";
+} from "./table";
 export {
   DEFAULT_PAGINATION_CONFIG,
   DEFAULT_STICKY_CONFIG,
   DEFAULT_TABLE_CONFIG,
   mergeTableConfig,
-} from "./table.js";
+} from "./table";

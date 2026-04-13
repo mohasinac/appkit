@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Span } from "@mohasinac/ui";
+import { Div, Heading, Span } from "../../../ui";
 
 export interface ChatWindowLabels {
   title?: string;

@@ -1,5 +1,5 @@
-import { getProviders } from "@mohasinac/contracts";
-import type { IRepository } from "@mohasinac/contracts";
+import { getProviders } from "../contracts";
+import type { IRepository } from "../contracts";
 
 export type CopilotFeedback = "positive" | "negative";
 

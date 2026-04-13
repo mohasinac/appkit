@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import {
   Button,
@@ -13,7 +13,7 @@ import {
   Text,
   Textarea,
   Ul,
-} from "@mohasinac/ui";
+} from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
 type WizardStep = "image" | "place" | "details" | "review";

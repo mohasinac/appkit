@@ -2,7 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Div, Heading, Text } from "@mohasinac/ui";
+import { Div, Heading, Text } from "../../../../ui";
 import type { SellerAnalyticsMonthEntry } from "../../types";
 
 const BarChart = dynamic(() => import("recharts").then((m) => m.BarChart), {

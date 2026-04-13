@@ -6,7 +6,7 @@
  *
  * @example
  * // App-level base config (one file, reused everywhere)
- * import { DEFAULT_TABLE_CONFIG, DEFAULT_PAGINATION_CONFIG } from "@mohasinac/contracts";
+ * import { DEFAULT_TABLE_CONFIG, DEFAULT_PAGINATION_CONFIG } from "./";
  *
  * export const myTableConfig: TableConfig = {
  *   ...DEFAULT_TABLE_CONFIG,

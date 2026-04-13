@@ -1,5 +1,3 @@
-"use client";
-
 // ─── Semantic HTML wrappers ───────────────────────────────────────────────────
 export type {
   SectionProps,
@@ -202,13 +200,13 @@ export type {
   TableViewMode,
   PaginationConfig,
   StickyConfig,
-} from "@mohasinac/contracts";
+} from "../contracts";
 export {
   DEFAULT_TABLE_CONFIG,
   DEFAULT_PAGINATION_CONFIG,
   DEFAULT_STICKY_CONFIG,
   mergeTableConfig,
-} from "@mohasinac/contracts";
+} from "../contracts";
 
 // ─── Layout Primitives ────────────────────────────────────────────────────────
 export type {

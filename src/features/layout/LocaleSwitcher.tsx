@@ -1,6 +1,6 @@
 "use client";
 
-import { Select } from "@mohasinac/ui";
+import { Select } from "../../ui";
 
 export interface LocaleSwitcherOption {
   value: string;

@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { ListingLayout } from "@mohasinac/ui";
-import type { ListingLayoutProps } from "@mohasinac/ui";
+import { ListingLayout } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 
 export interface AdminReviewsViewProps extends Omit<
   ListingLayoutProps,

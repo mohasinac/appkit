@@ -20,12 +20,12 @@ export function createRequirePermission(config: RbacConfig) {
     permission: Permission,
   ): Promise<void> {
     if (!user) {
-      const { AuthenticationError } = await import("@mohasinac/errors");
+      const { AuthenticationError } = await import("../../errors");
       throw new AuthenticationError("Not authenticated");
     }
     const perms = resolvePermissions(user.roles, config);
     if (!hasPermission(perms, permission)) {
-      const { AuthorizationError } = await import("@mohasinac/errors");
+      const { AuthorizationError } = await import("../../errors");
       throw new AuthorizationError(`Missing permission: ${permission}`);
     }
   };

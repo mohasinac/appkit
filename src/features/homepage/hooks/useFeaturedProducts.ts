@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@mohasinac/http";
-import type { ProductListResponse } from "@mohasinac/feat-products";
+import { apiClient } from "../../../http";
+import type { ProductListResponse } from "../../products/types";
 
 const MIN_COUNT = 12;
 

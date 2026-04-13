@@ -24,16 +24,16 @@ import type {
   IStorageProvider,
   StorageFile,
   UploadOptions,
-} from "@mohasinac/contracts";
-import { getAdminStorage } from "@mohasinac/db-firebase";
+} from "../../contracts";
+import { getAdminStorageLite } from "../db-firebase/admin-storage-lite";
 
 function getBucket() {
   const bucketName =
     process.env.FIREBASE_ADMIN_STORAGE_BUCKET?.trim() ??
     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim();
   return bucketName
-    ? getAdminStorage().bucket(bucketName)
-    : getAdminStorage().bucket();
+    ? getAdminStorageLite().bucket(bucketName)
+    : getAdminStorageLite().bucket();
 }
 
 export const firebaseStorageProvider: IStorageProvider = {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronUp } from "lucide-react";
-import { Button } from "@mohasinac/ui";
+import { Button } from "../../ui";
 
 export interface BackToTopProps {
   /** Scroll distance (px) before the button appears. Defaults to 400. */

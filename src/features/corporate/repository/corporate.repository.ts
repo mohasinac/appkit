@@ -1,4 +1,4 @@
-import type { IRepository, PagedResult, SieveQuery } from "@mohasinac/contracts";
+import type { IRepository, PagedResult, SieveQuery } from "../../../contracts";
 import type { CorporateInquiry, CorporateInquiryStatus } from "../types";
 
 export class CorporateRepository {
