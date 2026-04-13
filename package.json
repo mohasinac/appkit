@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
   "author": "Mohasin AC",
   "license": "MIT",
@@ -378,23 +378,20 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "tsup && node scripts/preserve-client-directives.mjs",
     "dev": "npm run watch",
-    "watch": "node --watch-path=src --watch-path=scripts --watch-path=tsup.config.ts --watch-path=package.json scripts/build.mjs",
+    "watch": "tsup --watch --onSuccess \"node scripts/preserve-client-directives.mjs\"",
     "index:generate": "node scripts/get-index.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
   },
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
-    "algoliasearch": "^5.39.0",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",
-    "@upstash/ratelimit": ">=1.0.0",
-    "@upstash/redis": ">=1.0.0",
     "firebase-admin": ">=12.0.0",
     "next": ">=14",
     "next-intl": ">=3",
@@ -412,12 +409,6 @@
       "optional": true
     },
     "razorpay": {
-      "optional": true
-    },
-    "@upstash/redis": {
-      "optional": true
-    },
-    "@upstash/ratelimit": {
       "optional": true
     },
     "@tanstack/react-query": {

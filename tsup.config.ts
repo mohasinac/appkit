@@ -2,10 +2,7 @@ import { defineConfig } from "tsup";
 import path from "path";
 
 // Alias map - resolves old @mohasinac/* package names to internal paths.
-// This ensures tsup/esbuild bundles everything from src/ without
-// needing to rewrite every import statement in the copied source files.
 const alias: Record<string, string> = {
-  // Primitive layers
   "@mohasinac/contracts": path.resolve("src/contracts"),
   "@mohasinac/core": path.resolve("src/core"),
   "@mohasinac/http": path.resolve("src/http"),
@@ -20,57 +17,10 @@ const alias: Record<string, string> = {
   "@mohasinac/seo": path.resolve("src/seo"),
   "@mohasinac/monitoring": path.resolve("src/monitoring"),
   "@mohasinac/instrumentation": path.resolve("src/instrumentation"),
-  "@mohasinac/css-tailwind": path.resolve("src/style/tailwind"),
-  "@mohasinac/css-vanilla": path.resolve("src/style/vanilla"),
-  // Provider layers
-  "@mohasinac/db-firebase": path.resolve("src/providers/db-firebase"),
-  "@mohasinac/auth-firebase": path.resolve("src/providers/auth-firebase"),
-  "@mohasinac/email-resend": path.resolve("src/providers/email-resend"),
-  "@mohasinac/storage-firebase": path.resolve("src/providers/storage-firebase"),
-  "@mohasinac/payment-razorpay": path.resolve("src/providers/payment-razorpay"),
-  "@mohasinac/search-algolia": path.resolve("src/providers/search-algolia"),
-  "@mohasinac/shipping-shiprocket": path.resolve(
-    "src/providers/shipping-shiprocket",
-  ),
-  // Feature layers
-  "@mohasinac/feat-layout": path.resolve("src/features/layout"),
-  "@mohasinac/feat-forms": path.resolve("src/features/forms"),
-  "@mohasinac/feat-filters": path.resolve("src/features/filters"),
-  "@mohasinac/feat-media": path.resolve("src/features/media"),
-  "@mohasinac/feat-auth": path.resolve("src/features/auth"),
-  "@mohasinac/feat-account": path.resolve("src/features/account"),
-  "@mohasinac/feat-admin": path.resolve("src/features/admin"),
-  "@mohasinac/feat-blog": path.resolve("src/features/blog"),
-  "@mohasinac/feat-cart": path.resolve("src/features/cart"),
-  "@mohasinac/feat-categories": path.resolve("src/features/categories"),
-  "@mohasinac/feat-checkout": path.resolve("src/features/checkout"),
-  "@mohasinac/feat-collections": path.resolve("src/features/collections"),
-  "@mohasinac/feat-consultation": path.resolve("src/features/consultation"),
-  "@mohasinac/feat-corporate": path.resolve("src/features/corporate"),
-  "@mohasinac/feat-events": path.resolve("src/features/events"),
-  "@mohasinac/feat-faq": path.resolve("src/features/faq"),
-  "@mohasinac/feat-about": path.resolve("src/features/about"),
-  "@mohasinac/feat-contact": path.resolve("src/features/contact"),
-  "@mohasinac/feat-copilot": path.resolve("src/features/copilot"),
-  "@mohasinac/feat-homepage": path.resolve("src/features/homepage"),
-  "@mohasinac/feat-loyalty": path.resolve("src/features/loyalty"),
-  "@mohasinac/feat-orders": path.resolve("src/features/orders"),
-  "@mohasinac/feat-payments": path.resolve("src/features/payments"),
-  "@mohasinac/feat-products": path.resolve("src/features/products"),
-  "@mohasinac/feat-promotions": path.resolve("src/features/promotions"),
-  "@mohasinac/feat-reviews": path.resolve("src/features/reviews"),
-  "@mohasinac/feat-search": path.resolve("src/features/search"),
-  "@mohasinac/feat-seller": path.resolve("src/features/seller"),
-  "@mohasinac/feat-stores": path.resolve("src/features/stores"),
-  "@mohasinac/feat-wishlist": path.resolve("src/features/wishlist"),
-  "@mohasinac/feat-auctions": path.resolve("src/features/auctions"),
-  "@mohasinac/feat-pre-orders": path.resolve("src/features/pre-orders"),
-  "@mohasinac/feat-preorders": path.resolve("src/features/pre-orders"),
-  "@mohasinac/feat-before-after": path.resolve("src/features/before-after"),
-  "@mohasinac/feat-whatsapp-bot": path.resolve("src/features/whatsapp-bot"),
 };
 
-const primitiveEntries = {
+// All entry points combined for single-pass build
+const entries = {
   index: "src/index.ts",
   "contracts/index": "src/contracts/index.ts",
   "core/index": "src/core/index.ts",
@@ -80,20 +30,14 @@ const primitiveEntries = {
   "validation/index": "src/validation/index.ts",
   "tokens/index": "src/tokens/index.ts",
   "next/index": "src/next/index.ts",
+  "react/index": "src/react/index.ts",
+  "ui/index": "src/ui/index.ts",
   "security/index": "src/security/index.ts",
   "seo/index": "src/seo/index.ts",
   "monitoring/index": "src/monitoring/index.ts",
   "instrumentation/index": "src/instrumentation/index.ts",
   "style/tailwind/index": "src/style/tailwind/index.ts",
   "style/vanilla/index": "src/style/vanilla/index.ts",
-};
-
-const clientPrimitiveEntries = {
-  "react/index": "src/react/index.ts",
-  "ui/index": "src/ui/index.ts",
-};
-
-const providerEntries = {
   "providers/db-firebase/index": "src/providers/db-firebase/index.ts",
   "providers/auth-firebase/index": "src/providers/auth-firebase/index.ts",
   "providers/email-resend/index": "src/providers/email-resend/index.ts",
@@ -102,9 +46,7 @@ const providerEntries = {
   "providers/search-algolia/index": "src/providers/search-algolia/index.ts",
   "providers/shipping-shiprocket/index":
     "src/providers/shipping-shiprocket/index.ts",
-};
-
-const featureEntries = {
+  // Features
   "features/layout/index": "src/features/layout/index.ts",
   "features/forms/index": "src/features/forms/index.ts",
   "features/filters/index": "src/features/filters/index.ts",
@@ -142,62 +84,7 @@ const featureEntries = {
   "features/whatsapp-bot/index": "src/features/whatsapp-bot/index.ts",
   "cli/index": "src/cli/index.ts",
   "seed/index": "src/seed/index.ts",
-};
-
-const featureEntriesA = {
-  "features/layout/index": "src/features/layout/index.ts",
-  "features/forms/index": "src/features/forms/index.ts",
-  "features/filters/index": "src/features/filters/index.ts",
-  "features/media/index": "src/features/media/index.ts",
-  "features/auth/index": "src/features/auth/index.ts",
-  "features/account/index": "src/features/account/index.ts",
-  "features/admin/index": "src/features/admin/index.ts",
-  "features/cms/index": "src/features/cms/index.ts",
-  "features/blog/index": "src/features/blog/index.ts",
-};
-
-const featureEntriesB = {
-  "features/cart/index": "src/features/cart/index.ts",
-  "features/categories/index": "src/features/categories/index.ts",
-  "features/checkout/index": "src/features/checkout/index.ts",
-  "features/collections/index": "src/features/collections/index.ts",
-  "features/consultation/index": "src/features/consultation/index.ts",
-  "features/corporate/index": "src/features/corporate/index.ts",
-  "features/events/index": "src/features/events/index.ts",
-  "features/faq/index": "src/features/faq/index.ts",
-  "features/homepage/index": "src/features/homepage/index.ts",
-};
-
-const featureEntriesC = {
-  "features/loyalty/index": "src/features/loyalty/index.ts",
-  "features/orders/index": "src/features/orders/index.ts",
-  "features/payments/index": "src/features/payments/index.ts",
-  "features/products/index": "src/features/products/index.ts",
-  "features/promotions/index": "src/features/promotions/index.ts",
-  "features/reviews/index": "src/features/reviews/index.ts",
-  "features/search/index": "src/features/search/index.ts",
-  "features/seller/index": "src/features/seller/index.ts",
-};
-
-const featureEntriesD = {
-  "features/stores/index": "src/features/stores/index.ts",
-  "features/wishlist/index": "src/features/wishlist/index.ts",
-  "features/auctions/index": "src/features/auctions/index.ts",
-  "features/pre-orders/index": "src/features/pre-orders/index.ts",
-  "features/before-after/index": "src/features/before-after/index.ts",
-  "features/whatsapp-bot/index": "src/features/whatsapp-bot/index.ts",
-  "cli/index": "src/cli/index.ts",
-  "seed/index": "src/seed/index.ts",
-};
-
-const featureEntriesE = {
-  "features/about/index": "src/features/about/index.ts",
-  "features/contact/index": "src/features/contact/index.ts",
-  "features/copilot/index": "src/features/copilot/index.ts",
-};
-
-/** Batch 7 - server-only API handler sub-paths (no React/client code). */
-const serverEntries = {
+  // Server-only exports
   "features/auth/server": "src/features/auth/server.ts",
   "features/blog/server": "src/features/blog/server.ts",
   "features/categories/server": "src/features/categories/server.ts",
@@ -224,147 +111,16 @@ const external = [
   "@tanstack/query-core",
 ];
 
-const BATCH = process.env.BUILD_BATCH ?? "1";
-
-// Each batch runs in a separate tsup invocation (see package.json build script).
-// This avoids the DTS race condition and OOM issues from parallel/large batches.
-const configs: Record<string, Parameters<typeof defineConfig>[0]> = {
-  "1": {
-    entry: primitiveEntries,
-    format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: true,
-    sourcemap: true,
-    clean: true,
-    treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
+export default defineConfig({
+  entry: entries,
+  format: ["esm", "cjs"],
+  dts: { resolve: false },
+  splitting: false,
+  sourcemap: true,
+  clean: true,
+  treeshake: true,
+  esbuildOptions(options) {
+    options.alias = alias;
   },
-  "2": {
-    entry: providerEntries,
-    format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "3": {
-    entry: featureEntriesA,
-    format: ["esm", "cjs"],
-    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "4": {
-    entry: featureEntriesB,
-    format: ["esm", "cjs"],
-    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "5": {
-    entry: featureEntriesC,
-    format: ["esm", "cjs"],
-    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "6": {
-    entry: featureEntriesD,
-    format: ["esm", "cjs"],
-    dts: { resolve: false }, // Keep client boundaries stable by avoiding shared chunk emission.
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "7": {
-    entry: serverEntries,
-    format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "8": {
-    entry: clientPrimitiveEntries,
-    format: ["esm", "cjs"],
-    dts: { resolve: false },
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-  "9": {
-    entry: featureEntriesE,
-    format: ["esm", "cjs"],
-    dts: { resolve: false },
-    // Keep client boundaries stable by avoiding shared chunk emission.
-    splitting: false,
-    sourcemap: true,
-    clean: false,
-    treeshake: true,
-    banner: {
-      js: '"use client";',
-    },
-    esbuildOptions(options) {
-      options.alias = alias;
-    },
-    external,
-  },
-};
-
-export default defineConfig(configs[BATCH]!);
+  external,
+});

@@ -1,10 +1,13 @@
 /**
  * Rate Limiting
  *
- * Sliding-window rate limiter. Uses Upstash Redis when configured,
- * falls back to in-memory for local development.
+ * Sliding-window rate limiter. Designed for free tier:
+ * - Defaults to in-memory rate limiting (no external service required)
+ * - Upstash Redis optional for distributed deployments (removed from free tier)
  *
- * Required env vars (Upstash):
+ * On Vercel Free + Firebase Blaze free tier: uses in-memory only
+ *
+ * Legacy Upstash support (if UPSTASH_REDIS_REST_URL/TOKEN set):
  *   UPSTASH_REDIS_REST_URL
  *   UPSTASH_REDIS_REST_TOKEN
  */

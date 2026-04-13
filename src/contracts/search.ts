@@ -38,8 +38,7 @@ export interface SuggestOptions {
 
 /**
  * Full-text search adapter contract.
- * Implemented by @mohasinac/search-algolia, @mohasinac/search-typesense,
- * @mohasinac/search-meilisearch.
+ * Implemented by concrete provider packages (for example, Typesense or Meilisearch).
  */
 export interface ISearchProvider<T = Record<string, unknown>> {
   index(id: string, data: T): Promise<void>;

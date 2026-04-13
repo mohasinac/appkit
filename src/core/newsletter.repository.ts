@@ -78,12 +78,17 @@ function decryptNewsletterDoc(
 }
 
 export class NewsletterRepository {
-  private readonly repo: IRepository<NewsletterSubscriberDocument>;
+  private _repo: IRepository<NewsletterSubscriberDocument> | null;
 
-  constructor(
-    repo: IRepository<NewsletterSubscriberDocument> = resolveRepository(),
-  ) {
-    this.repo = repo;
+  constructor(repo: IRepository<NewsletterSubscriberDocument> | null = null) {
+    this._repo = repo;
+  }
+
+  private get repo(): IRepository<NewsletterSubscriberDocument> {
+    if (!this._repo) {
+      this._repo = resolveRepository();
+    }
+    return this._repo;
   }
 
   async list(

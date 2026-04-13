@@ -11,7 +11,7 @@
  * Supports: q, category, subcategory, minPrice, maxPrice, condition,
  *   isAuction, isPreOrder, inStock, minRating, sort, page, pageSize.
  *
- * Note: Algolia search is not built into this route. To enable Algolia,
+ * Note: external search providers are not built into this route. To enable one,
  * register an ISearchProvider via registerProviders() and handle it at
  * the application layer (middleware / wrapper route) before delegating here.
  *

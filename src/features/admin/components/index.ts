@@ -63,8 +63,6 @@ export type {
 } from "./analytics/AdminTopProductsTable";
 export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
 export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
-export { AlgoliaDashboardView } from "./AlgoliaDashboardView";
-export type { AlgoliaDashboardViewProps } from "./AlgoliaDashboardView";
 export { AdminSidebar } from "./AdminSidebar";
 export type { AdminSidebarProps } from "./AdminSidebar";
 export { AdminTopBar } from "./AdminTopBar";

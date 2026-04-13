@@ -134,7 +134,6 @@ export const DEFAULT_ROUTE_MAP = {
   },
   DEMO: {
     SEED: "/demo/seed",
-    ALGOLIA: "/demo/algolia",
   },
   BLOG: {
     LIST: "/blog",

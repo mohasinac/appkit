@@ -42,25 +42,38 @@ function resolveRepository(): IRepository<CopilotLogDocument> {
 }
 
 export class CopilotLogRepository {
-  private readonly repo: IRepository<CopilotLogDocument>;
+  private _repo: IRepository<CopilotLogDocument> | null;
+  private readonly _collection: string | null;
 
   constructor(
-    repoOrCollection:
-      | IRepository<CopilotLogDocument>
-      | string = resolveRepository(),
+    repoOrCollection: IRepository<CopilotLogDocument> | string | null = null,
   ) {
     if (typeof repoOrCollection === "string") {
-      const provider = getProviders().db;
-      if (!provider) {
-        throw new Error(
-          "DB provider is not registered. Configure providers before using CopilotLogRepository.",
-        );
-      }
-      this.repo = provider.getRepository<CopilotLogDocument>(repoOrCollection);
-      return;
+      this._repo = null;
+      this._collection = repoOrCollection;
+    } else {
+      this._repo = repoOrCollection;
+      this._collection = null;
     }
+  }
 
-    this.repo = repoOrCollection;
+  private get repo(): IRepository<CopilotLogDocument> {
+    if (!this._repo) {
+      if (this._collection) {
+        const provider = getProviders().db;
+        if (!provider) {
+          throw new Error(
+            "DB provider is not registered. Configure providers before using CopilotLogRepository.",
+          );
+        }
+        this._repo = provider.getRepository<CopilotLogDocument>(
+          this._collection,
+        );
+      } else {
+        this._repo = resolveRepository();
+      }
+    }
+    return this._repo;
   }
 
   async create(input: CopilotLogCreateInput): Promise<CopilotLogDocument> {
