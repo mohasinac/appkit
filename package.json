@@ -328,6 +328,7 @@
   "scripts": {
     "index:generate": "node scripts/get-index.js",
     "typecheck": "tsc --noEmit",
+    "watch": "tsc --noEmit --watch --preserveWatchOutput",
     "lint": "eslint src"
   },
   "dependencies": {
