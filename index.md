@@ -2,7 +2,7 @@
 
 Auto-generated inventory of code/config files with detected exported and internal symbols.
 
-Generated: 2026-04-12T23:52:24.087Z
+Generated: 2026-04-13T00:18:09.213Z
 Total indexed files: 817
 
 | Name | Path | Usage / What Is Inside | Symbols (Exported + Internal) |
@@ -122,7 +122,7 @@ Total indexed files: 817
 | index.ts | src/features/auctions/columns/index.ts | Feature module logic, hooks, types, or schemas | const auctionAdminColumns, const base, const bidAdminColumns, const cols, const columns, const omit, const ovr |
 | AuctionCard.tsx | src/features/auctions/components/AuctionCard.tsx | Feature-level UI/view composition | const countdown, const displayBid, const h, const hasEnded, const id, const m, const pad, const s, const totalSecs, fn AuctionCard, fn AuctionCountdown, fn useCountdown, interface AuctionCardProps, interface AuctionCountdownProps |
 | index.ts | src/features/auctions/components/index.ts | Feature-level UI/view composition | export AuctionCard, export AuctionCountdown |
-| useAuctions.ts | src/features/auctions/hooks/useAuctions.ts | Feature module logic, hooks, types, or schemas | const qs, const sp, fn useAuction, fn useAuctionBids, fn useAuctions |
+| useAuctions.ts | src/features/auctions/hooks/useAuctions.ts | Feature module logic, hooks, types, or schemas | const bidsEndpoint, const bidsQuery, const bidsQueryKeyPrefix, const enabled, const endpoint, const product, const productEndpoint, const productQuery, const productQueryKeyPrefix, const qs, const queryKeyPrefix, const refetchIntervalMs, const sp, fn toQueryString, fn useAuction, fn useAuctionBids, fn useAuctionDetail, fn useAuctions, interface UseAuctionDetailOptions, interface UseAuctionsOptions, type AuctionListQuery |
 | usePlaceBid.ts | src/features/auctions/hooks/usePlaceBid.ts | Feature module logic, hooks, types, or schemas | const bid, const queryClient, const result, fn usePlaceBid, interface BidResult, interface PlaceBidPayload |
 | useRealtimeBids.ts | src/features/auctions/hooks/useRealtimeBids.ts | Feature module logic, hooks, types, or schemas | const es, const msg, const url, fn useRealtimeBids, interface RealtimeBidData, interface UseRealtimeBidsReturn |
 | index.ts | src/features/auctions/index.ts | Feature module logic, hooks, types, or schemas | export AuctionsRepository, export bidsGET, export GET, export manifest |
@@ -130,7 +130,7 @@ Total indexed files: 817
 | en.json | src/features/auctions/messages/en.json | Feature module logic, hooks, types, or schemas | - |
 | auctions.repository.ts | src/features/auctions/repository/auctions.repository.ts | Feature module logic, hooks, types, or schemas | class AuctionsRepository, const result |
 | index.ts | src/features/auctions/schemas/index.ts | Feature module logic, hooks, types, or schemas | const auctionItemSchema, const auctionListParamsSchema, const auctionStatusSchema, const bidRecordSchema, const mySchema, type MyAuction |
-| index.ts | src/features/auctions/types/index.ts | Feature module logic, hooks, types, or schemas | interface AuctionItem, interface AuctionListParams, interface AuctionListResponse, interface BidListResponse, interface BidRecord, interface PlaceBidInput |
+| index.ts | src/features/auctions/types/index.ts | Feature module logic, hooks, types, or schemas | interface AuctionItem, interface AuctionListParams, interface AuctionListResponse, interface BidListResponse, interface BidRecord, interface PlaceBidInput, interface PublicBid |
 | route.ts | src/features/auth/api/route.ts | Feature module logic, hooks, types, or schemas | const authMeGET, const profile, export GET, fn toClientUser |
 | AuthStatusPanel.tsx | src/features/auth/components/AuthStatusPanel.tsx | Feature-level UI/view composition | fn AuthStatusPanel, fn iconPath, fn toneClass, interface AuthStatusPanelProps, type AuthStatusTone |
 | ForgotPasswordView.tsx | src/features/auth/components/ForgotPasswordView.tsx | Feature-level UI/view composition | const handleSubmit, fn ForgotPasswordView, interface ForgotPasswordViewProps |
