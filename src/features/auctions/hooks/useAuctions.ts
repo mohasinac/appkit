@@ -7,31 +7,67 @@ import type {
   AuctionListParams,
   AuctionItem,
   BidListResponse,
+  PublicBid,
 } from "../types";
+import type { ProductItem } from "../../products/types";
+
+type AuctionListQuery = AuctionListParams | URLSearchParams | string;
+
+interface UseAuctionsOptions {
+  enabled?: boolean;
+  endpoint?: string;
+  initialData?: AuctionListResponse;
+  queryKeyPrefix?: string;
+}
+
+interface UseAuctionDetailOptions {
+  enabled?: boolean;
+  productEndpoint?: string;
+  bidsEndpoint?: string;
+  refetchIntervalMs?: number;
+  productQueryKeyPrefix?: string;
+  bidsQueryKeyPrefix?: string;
+}
+
+function toQueryString(params: AuctionListQuery): string {
+  if (typeof params === "string") {
+    return params.startsWith("?") ? params.slice(1) : params;
+  }
+
+  if (params instanceof URLSearchParams) {
+    return params.toString();
+  }
+
+  const sp = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      sp.set(key, String(value));
+    }
+  });
+  return sp.toString();
+}
 
 export function useAuctions(
-  params: AuctionListParams = {},
-  opts?: { enabled?: boolean },
+  params: AuctionListQuery = {},
+  opts?: UseAuctionsOptions,
 ) {
-  const sp = new URLSearchParams();
-  if (params.storeSlug) sp.set("storeSlug", params.storeSlug);
-  if (params.page) sp.set("page", String(params.page));
-  if (params.pageSize) sp.set("pageSize", String(params.pageSize));
-  if (params.sort) sp.set("sorts", params.sort);
-  if (params.filters) sp.set("filters", params.filters);
-  const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? "/api/auctions";
+  const queryKeyPrefix = opts?.queryKeyPrefix ?? "auctions";
+  const qs = toQueryString(params);
 
   const { data, isLoading, error, refetch } = useQuery<AuctionListResponse>({
-    queryKey: ["auctions", qs],
+    queryKey: [queryKeyPrefix, endpoint, qs],
     queryFn: () =>
-      apiClient.get<AuctionListResponse>(`/api/auctions${qs ? `?${qs}` : ""}`),
+      apiClient.get<AuctionListResponse>(`${endpoint}${qs ? `?${qs}` : ""}`),
     enabled: opts?.enabled ?? true,
+    initialData: opts?.initialData,
   });
 
   return {
+    data,
     auctions: data?.items ?? [],
     total: data?.total ?? 0,
-    totalPages: data?.totalPages ?? 0,
+    totalPages: data?.totalPages ?? 1,
     hasMore: data?.hasMore ?? false,
     isLoading,
     error: error instanceof Error ? error.message : null,
@@ -74,5 +110,36 @@ export function useAuctionBids(
     total: data?.total ?? 0,
     isLoading,
     error: error instanceof Error ? error.message : null,
+  };
+}
+
+export function useAuctionDetail(id: string, opts?: UseAuctionDetailOptions) {
+  const enabled = opts?.enabled ?? true;
+  const productEndpoint = opts?.productEndpoint ?? `/api/products/${id}`;
+  const bidsEndpoint = opts?.bidsEndpoint ?? `/api/bids?productId=${id}`;
+  const productQueryKeyPrefix = opts?.productQueryKeyPrefix ?? "product";
+  const bidsQueryKeyPrefix = opts?.bidsQueryKeyPrefix ?? "bids";
+  const refetchIntervalMs = opts?.refetchIntervalMs ?? 60_000;
+
+  const productQuery = useQuery<ProductItem | null>({
+    queryKey: [productQueryKeyPrefix, id, productEndpoint],
+    queryFn: () => apiClient.get<ProductItem | null>(productEndpoint),
+    enabled: enabled && Boolean(id),
+  });
+
+  const product = productQuery.data ?? null;
+
+  const bidsQuery = useQuery<PublicBid[]>({
+    queryKey: [bidsQueryKeyPrefix, id, bidsEndpoint],
+    queryFn: () => apiClient.get<PublicBid[]>(bidsEndpoint),
+    enabled: enabled && Boolean(product?.isAuction),
+    refetchInterval: refetchIntervalMs,
+  });
+
+  return {
+    productQuery,
+    product,
+    bidsQuery,
+    bids: bidsQuery.data ?? [],
   };
 }

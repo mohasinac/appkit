@@ -72,4 +72,19 @@ export interface AuctionListParams {
   pageSize?: number;
   sort?: string;
   filters?: string;
+  [key: string]: string | number | boolean | undefined;
+}
+
+export interface PublicBid {
+  id: string;
+  productId: string;
+  productTitle: string;
+  userId: string;
+  userName: string;
+  bidAmount: number;
+  currency: string;
+  status: string;
+  isWinning: boolean;
+  bidDate: Date | string;
+  autoMaxBid?: number;
 }
