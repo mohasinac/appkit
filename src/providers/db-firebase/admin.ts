@@ -39,7 +39,7 @@ function parsePrivateKey(raw: string): string {
 }
 
 // ─── Global singletons ────────────────────────────────────────────────────────
-// Stored on globalThis so all module instances (pnpm deduplication may create
+// Stored on globalThis so all module instances (package-manager deduplication may create
 // multiple copies of this package in the same process) share one SDK instance.
 
 declare global {

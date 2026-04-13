@@ -1,5 +1,5 @@
 param(
-  [string]$ProjectDir = "../letitrip.in",
+  [string]$ProjectDir,
   [switch]$Yes
 )
 
@@ -17,6 +17,10 @@ function Resolve-ProjectPath([string]$path) {
 }
 
 Assert-Command "firebase"
+
+if (-not $ProjectDir) {
+  throw "Provide -ProjectDir pointing to the consumer app root (for example ../consumer-app)."
+}
 
 $projectPath = Resolve-ProjectPath $ProjectDir
 $indexFile = Join-Path $projectPath "firestore.indexes.json"
