@@ -61,9 +61,9 @@ function getPageNumbers(
 }
 
 const SIZE_CLASSES = {
-  sm: "text-xs px-2 py-1 min-w-[28px]",
-  md: "text-sm px-3 py-1.5 min-w-[36px]",
-  lg: "text-base px-4 py-2 min-w-[44px]",
+  sm: "appkit-pagination--sm",
+  md: "appkit-pagination--md",
+  lg: "appkit-pagination--lg",
 } as const;
 
 export function Pagination({
@@ -90,21 +90,16 @@ export function Pagination({
   };
 
   const btnClass = (active: boolean, off: boolean) => {
-    const base = `${SIZE_CLASSES[size]} rounded border font-medium transition-colors`;
-    if (off)
-      return `${base} bg-zinc-100 dark:bg-slate-800 opacity-50 text-zinc-400 dark:text-zinc-500 border-zinc-200 dark:border-slate-700 cursor-not-allowed`;
-    if (active)
-      return `${base} bg-primary-600 text-white border-primary-600 cursor-default`;
-    return `${base} bg-white dark:bg-slate-900 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-slate-700 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:border-zinc-300 dark:hover:border-slate-600 cursor-pointer`;
+    const base = `appkit-pagination__button ${SIZE_CLASSES[size]}`;
+    if (off) return `${base} appkit-pagination__button--disabled`;
+    if (active) return `${base} appkit-pagination__button--active`;
+    return `${base} appkit-pagination__button--default`;
   };
 
   const pages = getPageNumbers(currentPage, totalPages, maxVisible);
 
   return (
-    <nav
-      className={`flex items-center gap-1 ${className}`}
-      aria-label="Pagination"
-    >
+    <nav className={`appkit-pagination ${className}`} aria-label="Pagination">
       {showFirstLast && (
         <button
           type="button"
@@ -132,7 +127,7 @@ export function Pagination({
         page === "..." ? (
           <span
             key={`ellipsis-${i}`}
-            className={`${SIZE_CLASSES[size]} text-zinc-400 dark:text-zinc-500 text-center`}
+            className={`appkit-pagination__ellipsis ${SIZE_CLASSES[size]}`}
             aria-hidden="true"
           >
             …

@@ -1,0 +1,12 @@
+.appkit-sort-dropdown {
+  align-items: center;
+}
+
+.appkit-sort-dropdown__label {
+  white-space: nowrap;
+}
+
+.appkit-sort-dropdown__select {
+  min-height: 2.25rem;
+  height: 2.25rem;
+}

@@ -1,0 +1,33 @@
+.appkit-item-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.appkit-item-row__thumbnail {
+  flex-shrink: 0;
+}
+
+.appkit-item-row__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.appkit-item-row__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.appkit-item-row__subtitle {
+  margin-top: 0.125rem;
+}
+
+.appkit-item-row__actions {
+  margin-top: 0.5rem;
+}
+
+.appkit-item-row__right {
+  flex-shrink: 0;
+}

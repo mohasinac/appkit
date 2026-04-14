@@ -49,8 +49,17 @@ export type StatusBadgeStatus =
 export interface StatusBadgeProps {
   status: StatusBadgeStatus;
   label?: string;
+  variant?: "default" | "homepage" | "public" | "admin" | "order";
   className?: string;
 }
+
+const STATUS_BADGE_VARIANT_CLASS = {
+  default: "appkit-status-badge--default",
+  homepage: "appkit-status-badge--homepage",
+  public: "appkit-status-badge--public",
+  admin: "appkit-status-badge--admin",
+  order: "appkit-status-badge--order",
+} as const;
 
 type BadgeVariantKey =
   | "active"
@@ -119,11 +128,25 @@ const STATUS_LABELS: Record<string, string> = {
   closed: "Closed",
 };
 
-export function StatusBadge({ status, label, className }: StatusBadgeProps) {
-  const variant = STATUS_TO_VARIANT[status] ?? "default";
+export function StatusBadge({
+  status,
+  label,
+  variant = "default",
+  className,
+}: StatusBadgeProps) {
+  const badgeVariant = STATUS_TO_VARIANT[status] ?? "default";
   const displayLabel = label ?? STATUS_LABELS[status] ?? status;
   return (
-    <Badge variant={variant} className={className}>
+    <Badge
+      variant={badgeVariant}
+      className={[
+        "appkit-status-badge",
+        STATUS_BADGE_VARIANT_CLASS[variant],
+        className ?? "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {displayLabel}
     </Badge>
   );

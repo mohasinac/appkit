@@ -79,12 +79,7 @@ export function TabStrip({
     <div
       ref={containerRef as React.RefObject<HTMLDivElement>}
       role="tablist"
-      className={[
-        "flex items-end border-b border-zinc-200 dark:border-zinc-700",
-        className ?? "",
-      ]
-        .join(" ")
-        .trim()}
+      className={["appkit-tab-strip", className ?? ""].join(" ").trim()}
     >
       {hasOverflow && (
         <button
@@ -92,7 +87,7 @@ export function TabStrip({
           onClick={scrollLeft}
           disabled={!canScrollLeft}
           aria-label="Previous tabs"
-          className="flex-none h-12 w-9 flex items-center justify-center text-zinc-500 disabled:opacity-30 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          className="appkit-tab-strip__arrow"
         >
           ‹
         </button>
@@ -108,18 +103,20 @@ export function TabStrip({
           onClick={() => !tab.disabled && onChange(tab.key)}
           style={{ minWidth: `${minTabWidth}px` }}
           className={[
-            "flex-1 h-12 px-4 text-sm font-medium whitespace-nowrap border-b-2 transition-colors",
+            "appkit-tab-strip__tab",
             tab.key === activeKey
-              ? "border-primary-500 text-primary-600 dark:text-primary-400"
-              : "border-transparent text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100",
-            tab.disabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer",
+              ? "appkit-tab-strip__tab--active"
+              : "appkit-tab-strip__tab--inactive",
+            tab.disabled
+              ? "appkit-tab-strip__tab--disabled"
+              : "appkit-tab-strip__tab--enabled",
           ]
             .join(" ")
             .trim()}
         >
           {tab.label}
           {tab.badge != null && tab.badge > 0 && (
-            <Span className="ml-1.5 inline-flex items-center justify-center h-4 min-w-[1rem] px-1 rounded-full text-[10px] bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
+            <Span className="appkit-tab-strip__badge">
               {tab.badge > 99 ? "99+" : tab.badge}
             </Span>
           )}
@@ -132,7 +129,7 @@ export function TabStrip({
           onClick={scrollRight}
           disabled={!canScrollRight}
           aria-label="Next tabs"
-          className="flex-none h-12 w-9 flex items-center justify-center text-zinc-500 disabled:opacity-30 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+          className="appkit-tab-strip__arrow"
         >
           ›
         </button>

@@ -12,36 +12,32 @@ import { Button } from "./Button";
 // Inlined from THEME_CONSTANTS.colors.alert
 const ALERT_STYLES = {
   info: {
-    container:
-      "bg-sky-50 border-sky-200/80 dark:bg-sky-950/30 dark:border-sky-800/50",
-    icon: "text-sky-600 dark:text-sky-400",
-    title: "text-sky-900 dark:text-sky-200",
-    text: "text-sky-800 dark:text-sky-300",
+    container: "appkit-alert--info",
+    icon: "appkit-alert__icon--info",
+    title: "appkit-alert__title--info",
+    text: "appkit-alert__text--info",
   },
   success: {
-    container:
-      "bg-emerald-50 border-emerald-200/80 dark:bg-emerald-950/30 dark:border-emerald-800/50",
-    icon: "text-emerald-600 dark:text-emerald-400",
-    title: "text-emerald-900 dark:text-emerald-200",
-    text: "text-emerald-800 dark:text-emerald-300",
+    container: "appkit-alert--success",
+    icon: "appkit-alert__icon--success",
+    title: "appkit-alert__title--success",
+    text: "appkit-alert__text--success",
   },
   warning: {
-    container:
-      "bg-amber-50 border-amber-200/80 dark:bg-amber-950/30 dark:border-amber-800/50",
-    icon: "text-amber-600 dark:text-amber-400",
-    title: "text-amber-900 dark:text-amber-200",
-    text: "text-amber-800 dark:text-amber-300",
+    container: "appkit-alert--warning",
+    icon: "appkit-alert__icon--warning",
+    title: "appkit-alert__title--warning",
+    text: "appkit-alert__text--warning",
   },
   error: {
-    container:
-      "bg-red-50 border-red-200/80 dark:bg-red-950/30 dark:border-red-800/50",
-    icon: "text-red-600 dark:text-red-400",
-    title: "text-red-900 dark:text-red-200",
-    text: "text-red-800 dark:text-red-300",
+    container: "appkit-alert--error",
+    icon: "appkit-alert__icon--error",
+    title: "appkit-alert__title--error",
+    text: "appkit-alert__text--error",
   },
 } as const;
 
-const ALERT_CLOSE_HOVER = "hover:bg-black/5 dark:hover:bg-white/5";
+const ALERT_CLOSE_HOVER = "appkit-alert__close-hover";
 
 const ICONS = {
   info: (
@@ -121,22 +117,24 @@ export function Alert({
 
   return (
     <div
-      className={`relative p-4 rounded-xl border ${styles.container} ${className}`}
+      className={`appkit-alert ${styles.container} ${className}`}
       role="alert"
     >
-      <div className="flex gap-3">
-        <div className={`flex-shrink-0 ${styles.icon}`}>{ICONS[variant]}</div>
+      <div className="appkit-alert__content">
+        <div className={`appkit-alert__icon ${styles.icon}`}>
+          {ICONS[variant]}
+        </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="appkit-alert__body">
           {title && (
             <Heading
               level={3}
-              className={`text-sm font-semibold mb-1 ${styles.title}`}
+              className={`appkit-alert__title ${styles.title}`}
             >
               {title}
             </Heading>
           )}
-          <div className={`text-sm ${styles.text}`}>{children}</div>
+          <div className={`appkit-alert__text ${styles.text}`}>{children}</div>
         </div>
 
         {onClose && (
@@ -144,11 +142,11 @@ export function Alert({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className={`flex-shrink-0 ml-3 rounded-lg p-1.5 min-h-0 ${styles.icon} ${ALERT_CLOSE_HOVER}`}
+            className={`appkit-alert__close ${styles.icon} ${ALERT_CLOSE_HOVER}`}
             aria-label="Close"
           >
             <svg
-              className="w-5 h-5"
+              className="appkit-alert__close-icon"
               fill="currentColor"
               viewBox="0 0 20 20"
               aria-hidden="true"

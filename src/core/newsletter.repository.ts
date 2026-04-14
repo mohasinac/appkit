@@ -54,7 +54,7 @@ export interface NewsletterListModel {
   pageSize?: string;
 }
 
-const NEWSLETTER_PII_FIELDS = ["email", "ipAddress"];
+const NEWSLETTER_PII_FIELDS: string[] = [];
 
 function resolveRepository(): IRepository<NewsletterSubscriberDocument> {
   const provider = getProviders().db;

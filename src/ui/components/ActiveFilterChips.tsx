@@ -39,9 +39,9 @@ export function ActiveFilterChips({
         <span
           key={filter.key}
           role="listitem"
-          className="inline-flex items-center gap-1 text-xs font-medium rounded-lg border border-zinc-200 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800 text-zinc-800 dark:text-zinc-200 py-1 pl-2 pr-1"
+          className="appkit-active-filter-chips__chip"
         >
-          <Span className="text-zinc-500 dark:text-zinc-400 mr-0.5">
+          <Span className="appkit-active-filter-chips__chip-label">
             {filter.label}:
           </Span>
           {filter.value}
@@ -49,10 +49,10 @@ export function ActiveFilterChips({
             type="button"
             onClick={() => onRemove(filter.key)}
             aria-label={`Remove ${filter.label}: ${filter.value} filter`}
-            className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
+            className="appkit-active-filter-chips__chip-remove"
           >
             <svg
-              className="w-2.5 h-2.5"
+              className="appkit-active-filter-chips__chip-remove-icon"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -72,7 +72,7 @@ export function ActiveFilterChips({
       <button
         type="button"
         onClick={onClearAll}
-        className="text-xs font-medium text-primary hover:underline p-2"
+        className="appkit-active-filter-chips__clear"
       >
         {clearAllLabel}
       </button>

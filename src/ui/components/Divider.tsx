@@ -7,10 +7,6 @@ import { Span } from "./Typography";
  * Theme values inlined from THEME_CONSTANTS.themed.
  */
 
-// Inlined from THEME_CONSTANTS.themed
-const BORDER_LIGHT = "border-zinc-100 dark:border-slate-700/60";
-const TEXT_MUTED = "text-zinc-400 dark:text-zinc-500";
-
 export interface DividerProps {
   label?: string;
   orientation?: "horizontal" | "vertical";
@@ -25,7 +21,7 @@ export function Divider({
   if (orientation === "vertical") {
     return (
       <div
-        className={`w-px h-full border-l ${BORDER_LIGHT} ${className}`}
+        className={`appkit-divider appkit-divider--vertical ${className}`}
         role="separator"
         aria-orientation="vertical"
       />
@@ -34,17 +30,20 @@ export function Divider({
 
   if (label) {
     return (
-      <div className={`flex items-center gap-4 ${className}`} role="separator">
-        <div className={`flex-1 h-px border-t ${BORDER_LIGHT}`} />
-        <Span className={`text-sm font-medium ${TEXT_MUTED}`}>{label}</Span>
-        <div className={`flex-1 h-px border-t ${BORDER_LIGHT}`} />
+      <div
+        className={`appkit-divider appkit-divider--labeled ${className}`}
+        role="separator"
+      >
+        <div className="appkit-divider__line" />
+        <Span className="appkit-divider__label">{label}</Span>
+        <div className="appkit-divider__line" />
       </div>
     );
   }
 
   return (
     <div
-      className={`w-full h-px border-t ${BORDER_LIGHT} ${className}`}
+      className={`appkit-divider appkit-divider--horizontal ${className}`}
       role="separator"
       aria-orientation="horizontal"
     />

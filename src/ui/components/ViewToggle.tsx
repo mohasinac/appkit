@@ -20,10 +20,6 @@ export interface ViewToggleProps {
   className?: string;
 }
 
-const ACTIVE = "bg-primary/5 text-primary ring-primary/30 dark:bg-primary/10";
-const INACTIVE =
-  "text-zinc-500 ring-zinc-200 hover:bg-zinc-100 dark:text-zinc-400 dark:ring-slate-700 dark:hover:bg-slate-800";
-
 const DEFAULT_LABELS: ViewToggleLabels = {
   card: "Card grid",
   fluid: "Fluid grid",
@@ -41,7 +37,7 @@ export function ViewToggle({
 
   return (
     <Div
-      className={["flex gap-1", className ?? ""].join(" ").trim()}
+      className={["appkit-view-toggle", className ?? ""].join(" ").trim()}
       role="toolbar"
       aria-label={mergedLabels.toolbar}
     >
@@ -53,12 +49,15 @@ export function ViewToggle({
         onClick={() => onChange("card")}
         aria-label={mergedLabels.card}
         aria-pressed={value === "card"}
-        className={`flex items-center justify-center rounded-lg p-2 ring-1 transition-colors ${
-          value === "card" ? ACTIVE : INACTIVE
-        }`}
+        className={[
+          "appkit-view-toggle__button",
+          value === "card"
+            ? "appkit-view-toggle__button--active"
+            : "appkit-view-toggle__button--inactive",
+        ].join(" ")}
       >
         <svg
-          className="h-5 w-5"
+          className="appkit-view-toggle__icon"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -81,12 +80,15 @@ export function ViewToggle({
         onClick={() => onChange("fluid")}
         aria-label={mergedLabels.fluid}
         aria-pressed={value === "fluid"}
-        className={`flex items-center justify-center rounded-lg p-2 ring-1 transition-colors ${
-          value === "fluid" ? ACTIVE : INACTIVE
-        }`}
+        className={[
+          "appkit-view-toggle__button",
+          value === "fluid"
+            ? "appkit-view-toggle__button--active"
+            : "appkit-view-toggle__button--inactive",
+        ].join(" ")}
       >
         <svg
-          className="h-5 w-5"
+          className="appkit-view-toggle__icon"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -109,12 +111,15 @@ export function ViewToggle({
         onClick={() => onChange("list")}
         aria-label={mergedLabels.list}
         aria-pressed={value === "list"}
-        className={`flex items-center justify-center rounded-lg p-2 ring-1 transition-colors ${
-          value === "list" ? ACTIVE : INACTIVE
-        }`}
+        className={[
+          "appkit-view-toggle__button",
+          value === "list"
+            ? "appkit-view-toggle__button--active"
+            : "appkit-view-toggle__button--inactive",
+        ].join(" ")}
       >
         <svg
-          className="h-5 w-5"
+          className="appkit-view-toggle__icon"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"

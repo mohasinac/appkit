@@ -1,33 +1,36 @@
 import React from "react";
 
-/**
- * UI_THEME — inlined subset of the app-level THEME_CONSTANTS.
- * Consumer apps can override by passing `className` on each component.
- * Full THEME_CONSTANTS lives in the host app (`@/constants`).
- */
-const UI_THEME = {
-  typography: {
-    h1: "text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight font-display",
-    h2: "text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight font-display",
-    h3: "text-xl md:text-2xl lg:text-3xl font-bold tracking-tight font-display",
-    h4: "text-lg md:text-xl lg:text-2xl font-bold font-display",
-    h5: "text-base md:text-lg lg:text-xl font-medium",
-    h6: "text-sm md:text-base lg:text-lg font-medium",
-    body: "text-base lg:text-lg",
-    small: "text-sm lg:text-base",
-    xs: "text-xs lg:text-sm",
+const TYPOGRAPHY = {
+  headingLevel: {
+    1: "appkit-heading--h1",
+    2: "appkit-heading--h2",
+    3: "appkit-heading--h3",
+    4: "appkit-heading--h4",
+    5: "appkit-heading--h5",
+    6: "appkit-heading--h6",
   },
-  themed: {
-    textPrimary: "text-zinc-900 dark:text-zinc-50",
-    textSecondary: "text-zinc-500 dark:text-zinc-400",
-    textMuted: "text-zinc-400 dark:text-zinc-500",
-    textError: "text-red-600 dark:text-red-400",
-    textSuccess: "text-emerald-600 dark:text-emerald-400",
+  textSize: {
+    xs: "appkit-text--xs",
+    sm: "appkit-text--sm",
+    base: "appkit-text--base",
+    lg: "appkit-text--lg",
+    xl: "appkit-text--xl",
   },
-  colors: {
-    form: {
-      required: "text-red-500",
-    },
+  textWeight: {
+    normal: "appkit-font--normal",
+    medium: "appkit-font--medium",
+    semibold: "appkit-font--semibold",
+    bold: "appkit-font--bold",
+  },
+  colorVariant: {
+    primary: "appkit-color--primary",
+    secondary: "appkit-color--secondary",
+    muted: "appkit-color--muted",
+    error: "appkit-color--error",
+    success: "appkit-color--success",
+    none: "",
+    inherit: "",
+    accent: "appkit-color--accent",
   },
 } as const;
 
@@ -47,27 +50,17 @@ export function Heading({
   ...props
 }: HeadingProps) {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-  const { typography, themed } = UI_THEME;
-
-  const sizeClasses = {
-    1: typography.h1,
-    2: typography.h2,
-    3: typography.h3,
-    4: typography.h4,
-    5: typography.h5,
-    6: typography.h6,
-  };
-
-  const variantClasses = {
-    primary: themed.textPrimary,
-    secondary: themed.textSecondary,
-    muted: themed.textMuted,
-    none: "",
-  };
 
   return (
     <Tag
-      className={`${sizeClasses[level]} ${variantClasses[variant]} ${className}`}
+      className={[
+        "appkit-heading",
+        TYPOGRAPHY.headingLevel[level],
+        TYPOGRAPHY.colorVariant[variant],
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       {...props}
     >
       {children}
@@ -95,35 +88,17 @@ export function Text({
   children,
   ...props
 }: TextProps) {
-  const { typography, themed } = UI_THEME;
-
-  const sizeClasses = {
-    xs: typography.xs,
-    sm: typography.small,
-    base: typography.body,
-    lg: "text-lg",
-    xl: "text-xl",
-  };
-
-  const weightClasses = {
-    normal: "font-normal",
-    medium: "font-medium",
-    semibold: "font-semibold",
-    bold: "font-bold",
-  };
-
-  const variantClasses = {
-    primary: themed.textPrimary,
-    secondary: themed.textSecondary,
-    muted: themed.textMuted,
-    error: themed.textError,
-    success: themed.textSuccess,
-    none: "",
-  };
-
   return (
     <Tag
-      className={`${sizeClasses[size]} ${weightClasses[weight]} ${variantClasses[variant]} ${className}`}
+      className={[
+        "appkit-text",
+        TYPOGRAPHY.textSize[size],
+        TYPOGRAPHY.textWeight[weight],
+        TYPOGRAPHY.colorVariant[variant],
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       {...props}
     >
       {children}
@@ -144,14 +119,13 @@ export function Label({
   children,
   ...props
 }: LabelProps) {
-  const { themed, typography, colors } = UI_THEME;
   return (
     <label
-      className={`block ${typography.small} font-medium ${themed.textSecondary} mb-1.5 ${className}`}
+      className={["appkit-label", className].filter(Boolean).join(" ")}
       {...props}
     >
       {children}
-      {required && <span className={`${colors.form.required} ml-1`}>*</span>}
+      {required && <span className="appkit-label__required">*</span>}
     </label>
   );
 }
@@ -170,17 +144,17 @@ export function Caption({
   children,
   ...props
 }: CaptionProps) {
-  const { themed, typography } = UI_THEME;
-
   const variantClasses = {
-    default: themed.textMuted,
-    accent: "text-primary font-semibold",
-    inverse: "text-primary/40",
+    default: "appkit-caption--default",
+    accent: "appkit-caption--accent",
+    inverse: "appkit-caption--inverse",
   };
 
   return (
     <span
-      className={`${typography.xs} ${variantClasses[variant]} ${className}`}
+      className={["appkit-caption", variantClasses[variant], className]
+        .filter(Boolean)
+        .join(" ")}
       {...props}
     >
       {children}
@@ -226,34 +200,33 @@ export function Span({
   children,
   ...props
 }: SpanProps) {
-  const { themed, typography } = UI_THEME;
-
   const variantClasses: Record<NonNullable<SpanProps["variant"]>, string> = {
     inherit: "",
-    primary: themed.textPrimary,
-    secondary: themed.textSecondary,
-    muted: themed.textMuted,
-    error: themed.textError,
-    success: themed.textSuccess,
-    accent: "text-primary",
+    primary: "appkit-color--primary",
+    secondary: "appkit-color--secondary",
+    muted: "appkit-color--muted",
+    error: "appkit-color--error",
+    success: "appkit-color--success",
+    accent: "appkit-color--accent",
   };
 
   const sizeClasses: Record<NonNullable<SpanProps["size"]>, string> = {
-    xs: typography.xs,
-    sm: typography.small,
-    base: typography.body,
-    lg: "text-lg",
-    xl: "text-xl",
+    xs: "appkit-text--xs",
+    sm: "appkit-text--sm",
+    base: "appkit-text--base",
+    lg: "appkit-text--lg",
+    xl: "appkit-text--xl",
   };
 
   const weightClasses: Record<NonNullable<SpanProps["weight"]>, string> = {
-    normal: "font-normal",
-    medium: "font-medium",
-    semibold: "font-semibold",
-    bold: "font-bold",
+    normal: "appkit-font--normal",
+    medium: "appkit-font--medium",
+    semibold: "appkit-font--semibold",
+    bold: "appkit-font--bold",
   };
 
   const classes = [
+    "appkit-span",
     size ? sizeClasses[size] : "",
     weight ? weightClasses[weight] : "",
     variantClasses[variant],

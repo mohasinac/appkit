@@ -1,4 +1,3 @@
-
 /**
  * Spinner — generic loading indicator.
  *
@@ -20,29 +19,28 @@ export function Spinner({
   label = "Loading...",
 }: SpinnerProps) {
   const sizeClasses: Record<NonNullable<SpinnerProps["size"]>, string> = {
-    sm: "w-4 h-4 border-2",
-    md: "w-8 h-8 border-2",
-    lg: "w-12 h-12 border-[3px]",
-    xl: "w-16 h-16 border-4",
+    sm: "appkit-spinner__indicator--sm",
+    md: "appkit-spinner__indicator--md",
+    lg: "appkit-spinner__indicator--lg",
+    xl: "appkit-spinner__indicator--xl",
   };
 
   const variantClasses: Record<NonNullable<SpinnerProps["variant"]>, string> = {
-    primary:
-      "border-primary-600 border-t-transparent dark:border-secondary-500 dark:border-t-transparent",
-    white: "border-white border-t-transparent",
-    current: "border-current border-t-transparent",
+    primary: "appkit-spinner__indicator--primary",
+    white: "appkit-spinner__indicator--white",
+    current: "appkit-spinner__indicator--current",
   };
 
   return (
     <div
-      className={`inline-flex items-center gap-3 ${className}`}
+      className={`appkit-spinner ${className}`}
       role="status"
       aria-label={label}
     >
       <div
-        className={`${sizeClasses[size]} ${variantClasses[variant]} rounded-full animate-spin force-spin`}
+        className={`appkit-spinner__indicator ${sizeClasses[size]} ${variantClasses[variant]}`}
       />
-      {label && <span className="sr-only">{label}</span>}
+      {label && <span className="appkit-sr-only">{label}</span>}
     </div>
   );
 }

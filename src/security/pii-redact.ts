@@ -40,9 +40,6 @@ const REDACT_KEYS = new Set([
   "addressLine1",
   "addressLine2",
   "address",
-  "shippingAddress",
-  "postalCode",
-  "pincode",
   "zipCode",
 ]);
 
@@ -59,11 +56,9 @@ const PHONE_KEYS = new Set(["phone", "phoneNumber", "mobileNumber"]);
 
 /** Keys whose string values get name masking */
 const NAME_KEYS = new Set([
-  "displayName",
   "fullName",
   "firstName",
   "lastName",
-  "userName",
 ]);
 
 /** Keys whose string values get IP masking */

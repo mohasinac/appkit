@@ -64,22 +64,15 @@ function renderLegacyAccordion({
   return (
     <details
       open={open}
-      className={`group border-b border-zinc-200 dark:border-zinc-700 ${className}`}
+      className={`appkit-accordion appkit-accordion--legacy ${className}`}
     >
-      <summary
-        className={`flex cursor-pointer select-none list-none items-center justify-between py-3 text-sm font-medium text-zinc-900 dark:text-zinc-100 ${titleClassName}`}
-      >
+      <summary className={`appkit-accordion__summary ${titleClassName}`}>
         {title}
-        <span
-          className="ml-2 flex-shrink-0 text-zinc-400 transition-transform duration-200 group-open:rotate-180"
-          aria-hidden="true"
-        >
+        <span className="appkit-accordion__chevron" aria-hidden="true">
           ▾
         </span>
       </summary>
-      <div
-        className={`pb-4 text-sm text-zinc-600 dark:text-zinc-400 ${contentClassName}`}
-      >
+      <div className={`appkit-accordion__content ${contentClassName}`}>
         {children}
       </div>
     </details>
@@ -162,28 +155,22 @@ export function AccordionItem({
   const isOpen = ctx.openValues.includes(value);
 
   return (
-    <Div
-      className={`border-b border-gray-200 dark:border-gray-700 ${className}`}
-    >
+    <Div className={`appkit-accordion__item ${className}`}>
       <Button
         type="button"
         disabled={disabled}
         aria-expanded={isOpen}
         onClick={() => ctx.toggle(value)}
-        className="w-full flex items-center justify-between py-3 px-1 text-left text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        className="appkit-accordion__trigger"
       >
         <Span>{title}</Span>
         <Span
-          className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`appkit-accordion__item-chevron ${isOpen ? "appkit-accordion__item-chevron--open" : ""}`}
         >
           ▾
         </Span>
       </Button>
-      {isOpen && (
-        <Div className="pb-3 px-1 text-sm text-gray-600 dark:text-gray-400">
-          {children}
-        </Div>
-      )}
+      {isOpen && <Div className="appkit-accordion__panel">{children}</Div>}
     </Div>
   );
 }

@@ -10,21 +10,6 @@ import { Span } from "./Typography";
  * Theme values inlined; styled-jsx replaced with plain <style> element.
  */
 
-// Inlined from THEME_CONSTANTS
-const TEXT_PRIMARY = "text-zinc-900 dark:text-zinc-50";
-const TEXT_SECONDARY = "text-zinc-500 dark:text-zinc-400";
-const BG_SECONDARY = "bg-zinc-50 dark:bg-slate-900";
-const FLEX_BETWEEN = "flex items-center justify-between";
-const INDETERMINATE_CSS = `
-@keyframes appkit-progress-indeterminate {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(350%); }
-}
-.appkit-progress-indeterminate {
-  animation: appkit-progress-indeterminate 1.5s ease-in-out infinite;
-}
-`;
-
 export interface ProgressProps {
   value: number;
   max?: number;
@@ -47,32 +32,28 @@ export function Progress({
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
   const sizeClasses: Record<NonNullable<ProgressProps["size"]>, string> = {
-    sm: "h-1",
-    md: "h-2",
-    lg: "h-3",
+    sm: "appkit-progress__track--sm",
+    md: "appkit-progress__track--md",
+    lg: "appkit-progress__track--lg",
   };
 
   const variantClasses: Record<
     NonNullable<ProgressProps["variant"]>,
     string
   > = {
-    primary: "bg-primary",
-    success: "bg-green-600 dark:bg-green-500",
-    warning: "bg-yellow-600 dark:bg-yellow-500",
-    error: "bg-red-600 dark:bg-red-500",
+    primary: "appkit-progress__bar--primary",
+    success: "appkit-progress__bar--success",
+    warning: "appkit-progress__bar--warning",
+    error: "appkit-progress__bar--error",
   };
 
   return (
-    <div className={className}>
+    <div className={`appkit-progress ${className}`}>
       {(label || showValue) && (
-        <div className={`${FLEX_BETWEEN} mb-2`}>
-          {label && (
-            <Span className={`text-sm font-medium ${TEXT_PRIMARY}`}>
-              {label}
-            </Span>
-          )}
+        <div className="appkit-progress__meta">
+          {label && <Span className="appkit-progress__label">{label}</Span>}
           {showValue && (
-            <Span className={`text-sm font-medium ${TEXT_SECONDARY}`}>
+            <Span className="appkit-progress__value">
               {Math.round(percentage)}%
             </Span>
           )}
@@ -80,7 +61,7 @@ export function Progress({
       )}
 
       <div
-        className={`w-full ${sizeClasses[size]} rounded-full overflow-hidden ${BG_SECONDARY}`}
+        className={`appkit-progress__track ${sizeClasses[size]}`}
         role="progressbar"
         aria-valuenow={value}
         aria-valuemin={0}
@@ -88,7 +69,7 @@ export function Progress({
         aria-label={label || `Progress: ${Math.round(percentage)}%`}
       >
         <div
-          className={`h-full ${variantClasses[variant]} transition-all duration-300 ease-in-out rounded-full`}
+          className={`appkit-progress__bar ${variantClasses[variant]}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -115,37 +96,36 @@ export function IndeterminateProgress({
     NonNullable<IndeterminateProgressProps["size"]>,
     string
   > = {
-    sm: "h-1",
-    md: "h-2",
-    lg: "h-3",
+    sm: "appkit-progress__track--sm",
+    md: "appkit-progress__track--md",
+    lg: "appkit-progress__track--lg",
   };
 
   const variantClasses: Record<
     NonNullable<IndeterminateProgressProps["variant"]>,
     string
   > = {
-    primary: "bg-primary",
-    success: "bg-green-600 dark:bg-green-500",
-    warning: "bg-yellow-600 dark:bg-yellow-500",
-    error: "bg-red-600 dark:bg-red-500",
+    primary: "appkit-progress__bar--primary",
+    success: "appkit-progress__bar--success",
+    warning: "appkit-progress__bar--warning",
+    error: "appkit-progress__bar--error",
   };
 
   return (
-    <div className={className}>
-      <style dangerouslySetInnerHTML={{ __html: INDETERMINATE_CSS }} />
+    <div className={`appkit-progress ${className}`}>
       {label && (
-        <Span className={`block text-sm font-medium mb-2 ${TEXT_PRIMARY}`}>
+        <Span className="appkit-progress__label appkit-progress__label--block">
           {label}
         </Span>
       )}
 
       <div
-        className={`w-full ${sizeClasses[size]} rounded-full overflow-hidden ${BG_SECONDARY} relative`}
+        className={`appkit-progress__track appkit-progress__track--indeterminate ${sizeClasses[size]}`}
         role="progressbar"
         aria-label={label || "Loading..."}
       >
         <div
-          className={`absolute inset-0 ${variantClasses[variant]} appkit-progress-indeterminate rounded-full`}
+          className={`appkit-progress__bar appkit-progress__bar--indeterminate ${variantClasses[variant]}`}
           style={{ width: "40%" }}
         />
       </div>

@@ -1,0 +1,89 @@
+.appkit-table-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #f4f4f5;
+}
+
+@media (min-width: 640px) {
+  .appkit-table-pagination {
+    flex-direction: row;
+  }
+}
+
+.appkit-table-pagination--compact {
+  flex-direction: row;
+  gap: 0.125rem;
+  padding: 0;
+  border-top: none;
+}
+
+.appkit-table-pagination__summary {
+  color: #a1a1aa;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 640px) {
+  .appkit-table-pagination__summary {
+    margin-right: auto;
+  }
+}
+
+.appkit-table-pagination__summary-value {
+  font-weight: 600;
+  color: #52525b;
+}
+
+.appkit-table-pagination__controls {
+  display: inline-flex;
+  padding: 0.125rem;
+  border-radius: 0.75rem;
+  background: #f4f4f5;
+}
+
+.appkit-table-pagination__size {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+@media (min-width: 640px) {
+  .appkit-table-pagination__size {
+    margin-left: 0.25rem;
+  }
+}
+
+.appkit-table-pagination__size-label {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  white-space: nowrap;
+}
+
+.appkit-table-pagination__size-select {
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.dark .appkit-table-pagination {
+  border-top-color: rgba(30, 41, 59, 0.8);
+}
+
+.dark .appkit-table-pagination__summary {
+  color: #64748b;
+}
+
+.dark .appkit-table-pagination__summary-value {
+  color: #cbd5e1;
+}
+
+.dark .appkit-table-pagination__controls {
+  background: #1e293b;
+}
+
+.dark .appkit-table-pagination__size-label {
+  color: #64748b;
+}

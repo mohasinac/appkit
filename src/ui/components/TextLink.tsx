@@ -5,17 +5,13 @@ import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 const VARIANTS = {
-  default:
-    "text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors",
-  muted:
-    "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors",
-  underline:
-    "text-primary-600 dark:text-primary-400 underline hover:no-underline transition-all",
+  default: "appkit-text-link appkit-text-link--default",
+  muted: "appkit-text-link appkit-text-link--muted",
+  underline: "appkit-text-link appkit-text-link--underline",
   none: "",
 } as const;
 
-export interface TextLinkProps
-  extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
   children: React.ReactNode;
   variant?: keyof typeof VARIANTS;

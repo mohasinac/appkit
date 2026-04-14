@@ -1,0 +1,50 @@
+.appkit-rating-display {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.appkit-rating-display__stars {
+  display: flex;
+}
+
+.appkit-rating-display__star--sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.appkit-rating-display__star--md {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.appkit-rating-display__star--lg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.appkit-rating-display__star--active {
+  color: #fbbf24;
+}
+
+.dark .appkit-rating-display__star--active {
+  color: #e91e8c;
+}
+
+.appkit-rating-display__star--inactive {
+  color: #d4d4d8;
+}
+
+.dark .appkit-rating-display__star--inactive {
+  color: #3f3f46;
+}
+
+.appkit-rating-display__value {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3f3f46;
+}
+
+.dark .appkit-rating-display__value {
+  color: #d4d4d8;
+}

@@ -1,0 +1,60 @@
+.appkit-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #71717a;
+}
+
+.dark .appkit-breadcrumb__list {
+  color: #a1a1aa;
+}
+
+.appkit-breadcrumb__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.appkit-breadcrumb__separator {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  color: #a1a1aa;
+}
+
+.dark .appkit-breadcrumb__separator {
+  color: #52525b;
+}
+
+.appkit-breadcrumb__text {
+  color: #71717a;
+}
+
+.dark .appkit-breadcrumb__text {
+  color: #a1a1aa;
+}
+
+.appkit-breadcrumb__current {
+  font-weight: 500;
+  color: #18181b;
+}
+
+.dark .appkit-breadcrumb__current {
+  color: #fafafa;
+}
+
+.appkit-breadcrumb__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.appkit-breadcrumb__link:hover {
+  color: #509c02;
+}
+
+.dark .appkit-breadcrumb__link:hover {
+  color: #f063b9;
+}

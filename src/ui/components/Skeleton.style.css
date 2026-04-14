@@ -1,0 +1,55 @@
+.appkit-skeleton {
+  background: #f4f4f5;
+}
+
+.dark .appkit-skeleton {
+  background: #1e293b;
+}
+
+.appkit-skeleton--rounded {
+  border-radius: 0.25rem;
+}
+
+.appkit-skeleton--circular {
+  border-radius: 9999px;
+}
+
+.appkit-skeleton--pulse {
+  animation: appkit-skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+.appkit-skeleton--wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.appkit-skeleton--wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: appkit-skeleton-wave 1.5s linear infinite;
+}
+
+.dark .appkit-skeleton--wave::after {
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.25), transparent);
+}
+
+@keyframes appkit-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@keyframes appkit-skeleton-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

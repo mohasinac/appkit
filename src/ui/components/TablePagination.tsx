@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Div } from "./Div";
 import { Pagination } from "./Pagination";
 import { Select } from "./Select";
 import { Span, Text } from "./Typography";
@@ -52,10 +53,15 @@ export function TablePagination({
 
   if (compact) {
     return (
-      <div
+      <Div
         role="navigation"
         aria-label={l.paginationLabel}
-        className={`flex items-center gap-0.5 ${className}`}
+        className={[
+          "appkit-table-pagination appkit-table-pagination--compact",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <Pagination
           currentPage={currentPage}
@@ -65,7 +71,7 @@ export function TablePagination({
           size="sm"
           maxVisible={5}
         />
-      </div>
+      </Div>
     );
   }
 
@@ -73,45 +79,43 @@ export function TablePagination({
   const to = Math.min(currentPage * pageSize, total);
 
   return (
-    <div
+    <Div
       role="navigation"
       aria-label={l.paginationLabel}
-      className={[
-        "flex flex-col sm:flex-row items-center gap-3 px-4 py-3",
-        "border-t border-zinc-100 dark:border-slate-800/80",
-        className,
-      ].join(" ")}
+      className={["appkit-table-pagination", className]
+        .filter(Boolean)
+        .join(" ")}
     >
       <Text
         size="xs"
         variant="none"
-        className="text-zinc-400 dark:text-slate-500 tabular-nums sm:mr-auto"
+        className="appkit-table-pagination__summary"
       >
         {l.showing}{" "}
-        <Span className="font-semibold text-zinc-600 dark:text-slate-300">
+        <Span className="appkit-table-pagination__summary-value">
           {from}–{to}
         </Span>{" "}
         {l.of}{" "}
-        <Span className="font-semibold text-zinc-600 dark:text-slate-300">
+        <Span className="appkit-table-pagination__summary-value">
           {new Intl.NumberFormat().format(total)}
         </Span>{" "}
         {l.results}
       </Text>
 
-      <div className="rounded-xl p-0.5 bg-zinc-100 dark:bg-slate-800 inline-flex">
+      <Div className="appkit-table-pagination__controls">
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}
           disabled={isLoading}
         />
-      </div>
+      </Div>
 
       {onPageSizeChange && (
-        <div className="flex items-center gap-1.5 sm:ml-1">
+        <Div className="appkit-table-pagination__size">
           <label
             htmlFor="page-size-select"
-            className="text-xs text-zinc-400 dark:text-slate-500 whitespace-nowrap"
+            className="appkit-table-pagination__size-label"
           >
             {l.perPage}
           </label>
@@ -121,14 +125,14 @@ export function TablePagination({
             onChange={(value) => onPageSizeChange(Number(value))}
             disabled={isLoading}
             aria-label={l.perPage}
-            className="text-xs h-7 py-0 px-2 rounded-lg"
+            className="appkit-table-pagination__size-select"
             options={pageSizeOptions.map((s) => ({
               value: String(s),
               label: String(s),
             }))}
           />
-        </div>
+        </Div>
       )}
-    </div>
+    </Div>
   );
 }

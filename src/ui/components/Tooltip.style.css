@@ -1,0 +1,114 @@
+.appkit-tooltip {
+  position: relative;
+  display: inline-flex;
+}
+
+.appkit-tooltip__bubble {
+  position: absolute;
+  z-index: 50;
+  pointer-events: none;
+  white-space: nowrap;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #18181b;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.dark .appkit-tooltip__bubble {
+  background: #f4f4f5;
+  color: #18181b;
+}
+
+.appkit-tooltip__bubble--top {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+}
+
+.appkit-tooltip__bubble--bottom {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5rem;
+}
+
+.appkit-tooltip__bubble--left {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0.5rem;
+}
+
+.appkit-tooltip__bubble--right {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 0.5rem;
+}
+
+.appkit-tooltip__mobile-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+@media (min-width: 768px) {
+  .appkit-tooltip__mobile-sheet {
+    display: none;
+  }
+}
+
+.appkit-tooltip__mobile-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+}
+
+.appkit-tooltip__mobile-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid #e4e4e7;
+  border-radius: 1rem 1rem 0 0;
+  background: #ffffff;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.2);
+  padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+}
+
+.dark .appkit-tooltip__mobile-panel {
+  border-top-color: #27272a;
+  background: #18181b;
+}
+
+.appkit-tooltip__mobile-drag {
+  width: 2.5rem;
+  height: 0.25rem;
+  border-radius: 9999px;
+  background: #d4d4d8;
+  margin-bottom: 0.5rem;
+}
+
+.dark .appkit-tooltip__mobile-drag {
+  background: #52525b;
+}
+
+.appkit-tooltip__mobile-text {
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #27272a;
+}
+
+.dark .appkit-tooltip__mobile-text {
+  color: #f4f4f5;
+}

@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { Div } from "./Div";
 import { Divider } from "./Divider";
 import { Span } from "./Typography";
 import { classNames } from "../style.helper";
@@ -16,51 +17,58 @@ export interface SummaryCardProps {
   lines: SummaryLine[];
   total: { label: string; value: string };
   action?: React.ReactNode;
+  variant?: "default" | "homepage" | "public" | "admin" | "order";
   className?: string;
 }
+
+const SUMMARY_CARD_VARIANT_CLASS = {
+  default: "appkit-summary-card--default",
+  homepage: "appkit-summary-card--homepage",
+  public: "appkit-summary-card--public",
+  admin: "appkit-summary-card--admin",
+  order: "appkit-summary-card--order",
+} as const;
 
 export function SummaryCard({
   lines,
   total,
   action,
+  variant = "default",
   className,
 }: SummaryCardProps) {
   return (
-    <div
+    <Div
       className={classNames(
-        "space-y-4 rounded-xl border border-zinc-200 bg-white p-5 dark:border-slate-700 dark:bg-slate-900",
+        "appkit-summary-card",
+        SUMMARY_CARD_VARIANT_CLASS[variant],
         className,
       )}
     >
-      <div className="space-y-2">
+      <Div className="appkit-summary-card__lines">
         {lines.map((line, i) => (
-          <div key={i} className="flex items-center justify-between text-sm">
-            <Span className="text-zinc-500 dark:text-zinc-400">
-              {line.label}
-            </Span>
+          <Div key={i} className="appkit-summary-card__line">
+            <Span className="appkit-summary-card__label">{line.label}</Span>
             <Span
               className={
                 line.muted
-                  ? "text-zinc-500 dark:text-zinc-400"
-                  : "text-zinc-900 dark:text-zinc-100"
+                  ? "appkit-summary-card__value appkit-summary-card__value--muted"
+                  : "appkit-summary-card__value"
               }
             >
               {line.value}
             </Span>
-          </div>
+          </Div>
         ))}
-      </div>
+      </Div>
 
       <Divider />
 
-      <div className="flex items-center justify-between">
-        <Span className="font-bold text-zinc-900 dark:text-zinc-100">
-          {total.label}
-        </Span>
-        <Span className="text-lg font-bold text-primary">{total.value}</Span>
-      </div>
+      <Div className="appkit-summary-card__total">
+        <Span className="appkit-summary-card__total-label">{total.label}</Span>
+        <Span className="appkit-summary-card__total-value">{total.value}</Span>
+      </Div>
 
-      {action && <div>{action}</div>}
-    </div>
+      {action && <Div className="appkit-summary-card__action">{action}</Div>}
+    </Div>
   );
 }

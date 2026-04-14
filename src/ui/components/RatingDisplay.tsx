@@ -4,9 +4,9 @@ import { Span } from "./Typography";
 import { classNames } from "../style.helper";
 
 const sizeClass: Record<"sm" | "md" | "lg", string> = {
-  sm: "h-4 w-4",
-  md: "h-5 w-5",
-  lg: "h-6 w-6",
+  sm: "appkit-rating-display__star--sm",
+  md: "appkit-rating-display__star--md",
+  lg: "appkit-rating-display__star--lg",
 };
 
 export interface RatingDisplayProps {
@@ -27,16 +27,16 @@ export function RatingDisplay({
   const starSize = sizeClass[size];
 
   return (
-    <div className={classNames("flex items-center gap-1", className)}>
-      <div className="flex">
+    <div className={classNames("appkit-rating-display", className)}>
+      <div className="appkit-rating-display__stars">
         {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
           <svg
             key={star}
             className={classNames(
               starSize,
               star <= rating
-                ? "text-amber-400 dark:text-secondary-500"
-                : "text-zinc-300 dark:text-zinc-700",
+                ? "appkit-rating-display__star appkit-rating-display__star--active"
+                : "appkit-rating-display__star appkit-rating-display__star--inactive",
             )}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -47,7 +47,7 @@ export function RatingDisplay({
         ))}
       </div>
       {showValue && (
-        <Span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <Span className="appkit-rating-display__value">
           {rating.toFixed(1)}
         </Span>
       )}

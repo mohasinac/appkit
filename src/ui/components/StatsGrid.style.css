@@ -1,0 +1,115 @@
+.appkit-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.appkit-stats-grid--2 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.appkit-stats-grid--3 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.appkit-stats-grid--4 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .appkit-stats-grid--2,
+  .appkit-stats-grid--3,
+  .appkit-stats-grid--4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .appkit-stats-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .appkit-stats-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.appkit-stats-grid__item {
+  padding: 1rem;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.appkit-stats-grid__item-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.appkit-stats-grid__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #71717a;
+}
+
+.appkit-stats-grid__value {
+  margin-top: 0.25rem;
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+.appkit-stats-grid__icon {
+  color: #a1a1aa;
+}
+
+.appkit-stats-grid--homepage .appkit-stats-grid__item {
+  border-color: rgba(80, 156, 2, 0.22);
+  background: linear-gradient(180deg, #fbfff6 0%, #ffffff 100%);
+}
+
+.appkit-stats-grid--public .appkit-stats-grid__item {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.appkit-stats-grid--admin .appkit-stats-grid__item {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.appkit-stats-grid--order .appkit-stats-grid__item {
+  border-color: rgba(59, 130, 246, 0.22);
+}
+
+.dark .appkit-stats-grid__item {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+.dark .appkit-stats-grid__label {
+  color: #94a3b8;
+}
+
+.dark .appkit-stats-grid__icon {
+  color: #64748b;
+}
+
+.dark .appkit-stats-grid--homepage .appkit-stats-grid__item {
+  border-color: rgba(233, 30, 140, 0.3);
+  background: linear-gradient(180deg, rgba(233, 30, 140, 0.08) 0%, #0f172a 100%);
+}
+
+.dark .appkit-stats-grid--public .appkit-stats-grid__item {
+  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.35);
+}
+
+.dark .appkit-stats-grid--admin .appkit-stats-grid__item {
+  border-color: #475569;
+  background: #111827;
+}
+
+.dark .appkit-stats-grid--order .appkit-stats-grid__item {
+  border-color: rgba(125, 211, 252, 0.28);
+}

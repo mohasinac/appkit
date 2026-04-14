@@ -21,15 +21,15 @@ export interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
   return (
-    <Nav aria-label="Breadcrumb" className={className}>
-      <Ol className="flex items-center gap-1 flex-wrap text-sm text-zinc-500 dark:text-zinc-400">
+    <Nav aria-label="Breadcrumb" className={`appkit-breadcrumb ${className}`}>
+      <Ol className="appkit-breadcrumb__list">
         {items.map((item, i) => {
           const isLast = i === items.length - 1;
           return (
-            <Li key={i} className="flex items-center gap-1">
+            <Li key={i} className="appkit-breadcrumb__item">
               {i > 0 && (
                 <ChevronRight
-                  className="w-3.5 h-3.5 flex-shrink-0 text-zinc-400 dark:text-zinc-600"
+                  className="appkit-breadcrumb__separator"
                   aria-hidden="true"
                 />
               )}
@@ -37,18 +37,15 @@ export function Breadcrumb({ items, className = "" }: BreadcrumbProps) {
                 <Span
                   className={
                     isLast
-                      ? "font-medium text-zinc-900 dark:text-zinc-50"
-                      : "text-zinc-500 dark:text-zinc-400"
+                      ? "appkit-breadcrumb__current"
+                      : "appkit-breadcrumb__text"
                   }
                   aria-current={isLast ? "page" : undefined}
                 >
                   {item.label}
                 </Span>
               ) : (
-                <a
-                  href={item.href}
-                  className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                >
+                <a href={item.href} className="appkit-breadcrumb__link">
                   {item.label}
                 </a>
               )}

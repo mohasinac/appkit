@@ -37,23 +37,28 @@ export function PriceDisplay({
 
   const priceClass =
     variant === "detail"
-      ? "text-xl font-bold text-primary"
-      : "text-base font-bold text-primary";
+      ? "appkit-price-display__price appkit-price-display__price--detail"
+      : "appkit-price-display__price appkit-price-display__price--compact";
 
   const originalClass =
     variant === "detail"
-      ? "text-sm text-zinc-400 line-through dark:text-zinc-500"
-      : "text-xs text-zinc-400 line-through dark:text-zinc-500";
+      ? "appkit-price-display__original appkit-price-display__original--detail"
+      : "appkit-price-display__original appkit-price-display__original--compact";
 
   return (
-    <Row wrap align="baseline" gap="xs" className={className}>
+    <Row
+      wrap
+      align="baseline"
+      gap="xs"
+      className={`appkit-price-display ${className ?? ""}`.trim()}
+    >
       <Span className={priceClass}>{formatCurrency(amount, currency)}</Span>
       {hasDiscount && (
         <>
           <Span className={originalClass}>
             {formatCurrency(originalAmount, currency)}
           </Span>
-          <Span className="rounded bg-emerald-100 px-1 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+          <Span className="appkit-price-display__discount">
             -{formatPercent(discountPct)}
           </Span>
         </>

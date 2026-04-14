@@ -26,9 +26,16 @@ export function SortDropdown({
   className = "",
 }: SortDropdownProps) {
   return (
-    <Row gap="sm" className={className}>
+    <Row
+      gap="sm"
+      className={["appkit-sort-dropdown", className].filter(Boolean).join(" ")}
+    >
       {label && (
-        <Span variant="secondary" size="sm" className="whitespace-nowrap">
+        <Span
+          variant="secondary"
+          size="sm"
+          className="appkit-sort-dropdown__label"
+        >
           {label}
         </Span>
       )}
@@ -36,7 +43,7 @@ export function SortDropdown({
         value={value ?? ""}
         onChange={onChange}
         options={options}
-        className="h-9 min-h-9"
+        className="appkit-sort-dropdown__select"
       />
     </Row>
   );

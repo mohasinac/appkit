@@ -2,14 +2,11 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
-const TOOLTIP_CONTENT =
-  "absolute z-50 whitespace-nowrap px-2 py-1 text-xs font-medium rounded bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 shadow-sm pointer-events-none";
-
 const POSITION: Record<string, string> = {
-  top: "bottom-full left-1/2 -translate-x-1/2 mb-2",
-  bottom: "top-full left-1/2 -translate-x-1/2 mt-2",
-  left: "right-full top-1/2 -translate-y-1/2 mr-2",
-  right: "left-full top-1/2 -translate-y-1/2 ml-2",
+  top: "appkit-tooltip__bubble--top",
+  bottom: "appkit-tooltip__bubble--bottom",
+  left: "appkit-tooltip__bubble--left",
+  right: "appkit-tooltip__bubble--right",
 };
 
 export interface TooltipProps {
@@ -104,7 +101,8 @@ export function Tooltip({
   const child = React.cloneElement(
     children as React.ReactElement<Record<string, unknown>>,
     {
-      "aria-label": (existingProps["aria-label"] as string | undefined) ?? label,
+      "aria-label":
+        (existingProps["aria-label"] as string | undefined) ?? label,
       onMouseEnter: (e: React.MouseEvent) => {
         if (typeof existingProps.onMouseEnter === "function")
           existingProps.onMouseEnter(e);
@@ -116,7 +114,8 @@ export function Tooltip({
         hideTooltip();
       },
       onFocus: (e: React.FocusEvent) => {
-        if (typeof existingProps.onFocus === "function") existingProps.onFocus(e);
+        if (typeof existingProps.onFocus === "function")
+          existingProps.onFocus(e);
         setVisible(true);
       },
       onBlur: (e: React.FocusEvent) => {
@@ -142,14 +141,14 @@ export function Tooltip({
   );
 
   return (
-    <span className="relative inline-flex">
+    <span className="appkit-tooltip">
       {child}
 
       {/* Desktop tooltip bubble */}
       {visible && (
         <span
           role="tooltip"
-          className={`${TOOLTIP_CONTENT} ${POSITION[side]}`}
+          className={`appkit-tooltip__bubble ${POSITION[side]}`}
         >
           {label}
         </span>
@@ -159,32 +158,26 @@ export function Tooltip({
       {mobileOpen && (
         <span
           role="presentation"
-          className="fixed inset-0 z-50 md:hidden"
+          className="appkit-tooltip__mobile-sheet"
           onClick={() => setMobileOpen(false)}
         >
           {/* Backdrop */}
           <span
-            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            className="appkit-tooltip__mobile-backdrop"
             aria-hidden="true"
           />
           {/* Panel */}
           <span
             role="tooltip"
             aria-label={label}
-            className="absolute bottom-0 inset-x-0 flex flex-col items-center gap-2 rounded-t-2xl bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 shadow-2xl px-6 py-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]"
+            className="appkit-tooltip__mobile-panel"
           >
             {/* Drag handle */}
-            <span
-              className="w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600 mb-2"
-              aria-hidden="true"
-            />
-            <span className="text-sm font-medium text-zinc-800 dark:text-zinc-100 text-center">
-              {label}
-            </span>
+            <span className="appkit-tooltip__mobile-drag" aria-hidden="true" />
+            <span className="appkit-tooltip__mobile-text">{label}</span>
           </span>
         </span>
       )}
     </span>
   );
 }
-

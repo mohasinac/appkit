@@ -35,16 +35,16 @@ import React from "react";
  */
 const GAP_MAP = {
   none: "",
-  px: "gap-px",
-  xs: "gap-1",
-  sm: "gap-2",
-  "2.5": "gap-2.5",
-  "3": "gap-3",
-  md: "gap-4",
-  "5": "gap-5",
-  lg: "gap-6",
-  xl: "gap-8",
-  "2xl": "gap-12",
+  px: "appkit-gap--px",
+  xs: "appkit-gap--xs",
+  sm: "appkit-gap--sm",
+  "2.5": "appkit-gap--2-5",
+  "3": "appkit-gap--3",
+  md: "appkit-gap--md",
+  "5": "appkit-gap--5",
+  lg: "appkit-gap--lg",
+  xl: "appkit-gap--xl",
+  "2xl": "appkit-gap--2xl",
 } as const;
 
 export type GapKey = keyof typeof GAP_MAP;
@@ -55,21 +55,21 @@ export type GapKey = keyof typeof GAP_MAP;
  */
 const CONTAINER_MAP = {
   /** `max-w-3xl` — blog posts, legal / policy pages */
-  sm: "max-w-3xl mx-auto px-4 sm:px-6 lg:px-8",
+  sm: "appkit-container--sm",
   /** `max-w-4xl` — narrow content, contact, about */
-  md: "max-w-4xl mx-auto px-4 sm:px-6 lg:px-8",
+  md: "appkit-container--md",
   /** `max-w-5xl` — medium content, checkout, help */
-  lg: "max-w-5xl mx-auto px-4 sm:px-6 lg:px-8",
+  lg: "appkit-container--lg",
   /** `max-w-6xl` — product detail, cart */
-  xl: "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8",
+  xl: "appkit-container--xl",
   /** `max-w-7xl` — main content grids (default) */
-  "2xl": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+  "2xl": "appkit-container--2xl",
   /** `max-w-screen-2xl` — full-bleed wide content */
-  full: "max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8",
+  full: "appkit-container--full",
   /** `max-w-screen-2xl` — wide store/seller layouts (compact px) */
-  wide: "max-w-screen-2xl mx-auto px-4 sm:px-6",
+  wide: "appkit-container--wide",
   /** `max-w-[1920px]` — ultra-wide / 4K displays */
-  ultra: "max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8",
+  ultra: "appkit-container--ultra",
 } as const;
 
 export type ContainerSize = keyof typeof CONTAINER_MAP;
@@ -82,83 +82,80 @@ export type ContainerSizeValue = (typeof CONTAINER_MAP)[ContainerSize];
  */
 export const GRID_MAP = {
   /** Single column */
-  1: "grid grid-cols-1",
+  1: "appkit-grid appkit-grid--1",
   /** 1 → 2 */
-  2: "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
+  2: "appkit-grid appkit-grid--2",
   /** 1 → 2 → 3 → 4 on widescreen */
-  3: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4",
+  3: "appkit-grid appkit-grid--3",
   /** 1 → 2 → 3 → 4 → 5 on widescreen */
-  4: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5",
+  4: "appkit-grid appkit-grid--4",
   /** 1 → 2 → 3 → 4 → 5 */
-  5: "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5",
+  5: "appkit-grid appkit-grid--5",
   /** 2 → 3 → 4 → 5 → 6 */
-  6: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+  6: "appkit-grid appkit-grid--6",
   /**
    * Generic card grid — 1 col on portrait mobile → 5 on ultrawide.
    * Starts at 1 so product cards are readable even on 320 px handsets.
    */
-  cards:
-    "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5",
+  cards: "appkit-grid appkit-grid--cards",
   /** Auto-fill product cards — min 200 px */
-  productCards: "grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-6",
+  productCards: "appkit-grid appkit-grid--product-cards",
   /** Auto-fill product cards (compact) — min 220 px */
-  productCardsCompact:
-    "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4",
+  productCardsCompact: "appkit-grid appkit-grid--product-cards-compact",
   /** Auto-fill store cards — min 220 px */
-  storeCards: "grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-6",
+  storeCards: "appkit-grid appkit-grid--store-cards",
   /** Auto-fill category tiles — min 130 px */
-  categoryCards: "grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-4",
+  categoryCards: "appkit-grid appkit-grid--category-cards",
   /** Auto-fill coupon/promo cards — min 264 px */
-  couponCards: "grid grid-cols-[repeat(auto-fill,minmax(264px,1fr))] gap-6",
+  couponCards: "appkit-grid appkit-grid--coupon-cards",
   /** Auto-fill address / wide cards — min 300 px */
-  addressCards: "grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4",
+  addressCards: "appkit-grid appkit-grid--address-cards",
   /** Auto-fill KPI/stat tiles — min 180 px */
-  statTiles: "grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4",
+  statTiles: "appkit-grid appkit-grid--stat-tiles",
   /** Auto-fill account nav tiles — min 160 px */
-  navTiles: "grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-4",
+  navTiles: "appkit-grid appkit-grid--nav-tiles",
   /** Equal halves on md+ */
-  halves: "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
+  halves: "appkit-grid appkit-grid--halves",
   /** 2fr / 1fr split on md+ */
-  twoThird: "grid grid-cols-1 md:grid-cols-[2fr_1fr]",
+  twoThird: "appkit-grid appkit-grid--two-third",
   /** 1fr / 2fr split on md+ */
-  oneThird: "grid grid-cols-1 md:grid-cols-[1fr_2fr]",
+  oneThird: "appkit-grid appkit-grid--one-third",
   /** Fixed 280px left sidebar + 1fr on lg+ */
-  sidebar: "grid grid-cols-1 lg:grid-cols-[280px_1fr]",
+  sidebar: "appkit-grid appkit-grid--sidebar",
   /** 1fr + fixed 280px right sidebar on lg+ */
-  sidebarRight: "grid grid-cols-1 lg:grid-cols-[1fr_280px]",
+  sidebarRight: "appkit-grid appkit-grid--sidebar-right",
   /** Fixed 320px left sidebar + 1fr on lg+ (admin layout) */
-  sidebarWide: "grid grid-cols-1 lg:grid-cols-[320px_1fr]",
+  sidebarWide: "appkit-grid appkit-grid--sidebar-wide",
   /** Product detail triplet: gallery | info | actions sidebar */
-  productDetailTriplet:
-    "grid grid-cols-1 lg:grid-cols-[1fr_1fr_280px] xl:grid-cols-[1fr_1fr_300px] 2xl:grid-cols-[1fr_1fr_320px] gap-6 lg:gap-8",
+  productDetailTriplet: "appkit-grid appkit-grid--product-detail-triplet",
   /** CSS auto-fill, min 200px columns */
-  autoSm: "grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))]",
+  autoSm: "appkit-grid appkit-grid--auto-sm",
   /** CSS auto-fill, min 280px columns */
-  autoMd: "grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))]",
+  autoMd: "appkit-grid appkit-grid--auto-md",
   /** CSS auto-fill, min 360px columns */
-  autoLg: "grid grid-cols-[repeat(auto-fill,minmax(360px,1fr))]",
+  autoLg: "appkit-grid appkit-grid--auto-lg",
 } as const;
 
 export type GridCols = keyof typeof GRID_MAP;
 
 // Alignment helpers shared across Stack and Row
 const ITEMS_MAP = {
-  start: "items-start",
-  center: "items-center",
-  end: "items-end",
-  stretch: "items-stretch",
-  baseline: "items-baseline",
+  start: "appkit-items--start",
+  center: "appkit-items--center",
+  end: "appkit-items--end",
+  stretch: "appkit-items--stretch",
+  baseline: "appkit-items--baseline",
 } as const;
 
 type ItemsAlign = keyof typeof ITEMS_MAP;
 
 const JUSTIFY_MAP = {
-  start: "justify-start",
-  center: "justify-center",
-  end: "justify-end",
-  between: "justify-between",
-  around: "justify-around",
-  evenly: "justify-evenly",
+  start: "appkit-justify--start",
+  center: "appkit-justify--center",
+  end: "appkit-justify--end",
+  between: "appkit-justify--between",
+  around: "appkit-justify--around",
+  evenly: "appkit-justify--evenly",
 } as const;
 
 type JustifyContent = keyof typeof JUSTIFY_MAP;
@@ -204,7 +201,9 @@ export function Container({
   const Tag = (as ?? "div") as React.ElementType;
   return (
     <Tag
-      className={[CONTAINER_MAP[size], className].filter(Boolean).join(" ")}
+      className={["appkit-container", CONTAINER_MAP[size], className]
+        .filter(Boolean)
+        .join(" ")}
       {...props}
     >
       {children}
@@ -253,9 +252,9 @@ export function Stack({
 }: StackProps) {
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
-    "flex flex-col",
+    "appkit-stack",
     GAP_MAP[gap],
-    centered ? "items-center justify-center" : "",
+    centered ? "appkit-stack--centered" : "",
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
     className,
   ]
@@ -315,11 +314,11 @@ export function Row({
 }: RowProps) {
   const Tag = (as ?? "div") as React.ElementType;
   const classes = [
-    "flex flex-row",
-    centered ? "items-center justify-center" : ITEMS_MAP[align],
+    "appkit-row",
+    centered ? "appkit-row--centered" : ITEMS_MAP[align],
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
-    wrap ? "flex-wrap" : "",
+    wrap ? "appkit-row--wrap" : "",
     className,
   ]
     .filter(Boolean)
@@ -379,7 +378,7 @@ export function Grid({
 }: GridProps) {
   const Tag = (as ?? "div") as React.ElementType;
   // When cols is omitted callers supply grid-cols-* themselves via className.
-  const baseClass = cols !== undefined ? GRID_MAP[cols] : "grid";
+  const baseClass = cols !== undefined ? GRID_MAP[cols] : "appkit-grid";
   const classes = [baseClass, GAP_MAP[gap], className]
     .filter(Boolean)
     .join(" ");

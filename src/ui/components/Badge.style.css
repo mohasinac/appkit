@@ -1,0 +1,114 @@
+.appkit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.appkit-badge--active,
+.appkit-badge--approved,
+.appkit-badge--success {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.appkit-badge--inactive,
+.appkit-badge--default,
+.appkit-badge--user {
+  background: #f4f4f5;
+  color: #52525b;
+  border-color: rgba(113, 113, 122, 0.2);
+}
+
+.appkit-badge--pending,
+.appkit-badge--warning {
+  background: #fffbeb;
+  color: #b45309;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.appkit-badge--danger,
+.appkit-badge--rejected {
+  background: #fff1f2;
+  color: #be123c;
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+.appkit-badge--info,
+.appkit-badge--moderator {
+  background: #f0f9ff;
+  color: #0369a1;
+  border-color: rgba(14, 165, 233, 0.25);
+}
+
+.appkit-badge--admin {
+  background: #faf5ff;
+  color: #7e22ce;
+  border-color: rgba(168, 85, 247, 0.25);
+}
+
+.appkit-badge--seller {
+  background: #f0fdfa;
+  color: #0f766e;
+  border-color: rgba(20, 184, 166, 0.25);
+}
+
+.appkit-badge--primary,
+.appkit-badge--secondary {
+  background: #f3ffe3;
+  color: #3e7708;
+  border-color: rgba(101, 196, 8, 0.25);
+}
+
+.dark .appkit-badge--active,
+.dark .appkit-badge--approved,
+.dark .appkit-badge--success {
+  background: rgba(6, 78, 59, 0.35);
+  color: #6ee7b7;
+}
+
+.dark .appkit-badge--inactive,
+.dark .appkit-badge--default,
+.dark .appkit-badge--user {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.dark .appkit-badge--pending,
+.dark .appkit-badge--warning {
+  background: rgba(120, 53, 15, 0.35);
+  color: #fcd34d;
+}
+
+.dark .appkit-badge--danger,
+.dark .appkit-badge--rejected {
+  background: rgba(136, 19, 55, 0.35);
+  color: #fda4af;
+}
+
+.dark .appkit-badge--info,
+.dark .appkit-badge--moderator {
+  background: rgba(12, 74, 110, 0.35);
+  color: #7dd3fc;
+}
+
+.dark .appkit-badge--admin {
+  background: rgba(88, 28, 135, 0.35);
+  color: #d8b4fe;
+}
+
+.dark .appkit-badge--seller {
+  background: rgba(19, 78, 74, 0.35);
+  color: #99f6e4;
+}
+
+.dark .appkit-badge--primary,
+.dark .appkit-badge--secondary {
+  background: rgba(112, 26, 117, 0.3);
+  color: #f9a8d4;
+}

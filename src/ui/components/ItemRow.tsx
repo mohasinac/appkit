@@ -21,18 +21,22 @@ export function ItemRow({
   className,
 }: ItemRowProps) {
   return (
-    <Div className={classNames("flex items-start gap-4", className)}>
-      {thumbnail && <Div className="flex-shrink-0">{thumbnail}</Div>}
+    <Div className={classNames("appkit-item-row", className)}>
+      {thumbnail && (
+        <Div className="appkit-item-row__thumbnail">{thumbnail}</Div>
+      )}
 
-      <Div className="min-w-0 flex-1">
-        <Text size="sm" weight="medium" className="line-clamp-2">
+      <Div className="appkit-item-row__content">
+        <Text size="sm" weight="medium" className="appkit-item-row__title">
           {title}
         </Text>
-        {subtitle && <Caption className="mt-0.5">{subtitle}</Caption>}
-        {actions && <Div className="mt-2">{actions}</Div>}
+        {subtitle && (
+          <Caption className="appkit-item-row__subtitle">{subtitle}</Caption>
+        )}
+        {actions && <Div className="appkit-item-row__actions">{actions}</Div>}
       </Div>
 
-      {rightSlot && <Div className="flex-shrink-0">{rightSlot}</Div>}
+      {rightSlot && <Div className="appkit-item-row__right">{rightSlot}</Div>}
     </Div>
   );
 }

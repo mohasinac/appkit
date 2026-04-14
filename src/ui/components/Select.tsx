@@ -122,22 +122,20 @@ export function Select<V extends string = string>({
   );
 
   const triggerClass = [
-    "flex h-10 w-full items-center justify-between rounded-lg border px-3 py-2 text-sm",
-    "transition-colors bg-white dark:bg-slate-800/60",
-    "focus:outline-none focus:ring-2 focus:ring-offset-0",
-    error
-      ? "border-red-400 dark:border-red-500 focus:ring-red-500/20"
-      : "border-zinc-200 dark:border-slate-700 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20 focus:border-primary-500 dark:focus:border-secondary-400",
-    disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+    "appkit-select__trigger",
+    error ? "appkit-select__trigger--error" : "appkit-select__trigger--default",
+    disabled
+      ? "appkit-select__trigger--disabled"
+      : "appkit-select__trigger--enabled",
     className,
   ].join(" ");
 
   return (
-    <div ref={ref} className="relative w-full">
+    <div ref={ref} className="appkit-select">
       {label && (
         <Label
           htmlFor={id}
-          className="!text-zinc-700 dark:!text-zinc-300"
+          className="appkit-select__label"
           required={required}
         >
           {label}
@@ -160,14 +158,14 @@ export function Select<V extends string = string>({
         <Span
           className={
             selected
-              ? "text-zinc-900 dark:text-zinc-50"
-              : "text-zinc-400 dark:text-zinc-500"
+              ? "appkit-select__value appkit-select__value--selected"
+              : "appkit-select__value appkit-select__value--placeholder"
           }
         >
           {selected?.label ?? placeholder}
         </Span>
         <ChevronDown
-          className={`h-4 w-4 flex-shrink-0 text-zinc-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`appkit-select__chevron ${open ? "appkit-select__chevron--open" : ""}`}
           aria-hidden="true"
         />
       </Button>
@@ -176,8 +174,8 @@ export function Select<V extends string = string>({
         <Ul
           role="listbox"
           className={[
-            "absolute z-50 w-full overflow-auto rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-lg max-h-60 py-1",
-            openUp ? "bottom-full mb-1" : "top-full mt-1",
+            "appkit-select__list",
+            openUp ? "appkit-select__list--up" : "appkit-select__list--down",
           ].join(" ")}
         >
           {options.map((option) => {
@@ -189,21 +187,20 @@ export function Select<V extends string = string>({
                 aria-selected={isSelected}
                 aria-disabled={option.disabled}
                 className={[
-                  "relative flex cursor-pointer items-center px-3 py-2 text-sm select-none",
+                  "appkit-select__option",
                   option.disabled
-                    ? "opacity-40 cursor-not-allowed"
+                    ? "appkit-select__option--disabled"
                     : isSelected
-                      ? "bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300"
-                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-700",
+                      ? "appkit-select__option--selected"
+                      : "appkit-select__option--default",
                 ].join(" ")}
                 onClick={() => !option.disabled && handleSelect(option.value)}
               >
-                <Span className="flex-1">{option.label}</Span>
+                <Span className="appkit-select__option-label">
+                  {option.label}
+                </Span>
                 {isSelected && (
-                  <Check
-                    className="h-4 w-4 ml-2 flex-shrink-0"
-                    aria-hidden="true"
-                  />
+                  <Check className="appkit-select__check" aria-hidden="true" />
                 )}
               </Li>
             );
@@ -212,7 +209,12 @@ export function Select<V extends string = string>({
       )}
 
       {error && (
-        <Text size="xs" variant="error" className="mt-1.5" role="alert">
+        <Text
+          size="xs"
+          variant="error"
+          className="appkit-select__error"
+          role="alert"
+        >
           {error}
         </Text>
       )}

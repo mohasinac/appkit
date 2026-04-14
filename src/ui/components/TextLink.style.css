@@ -1,0 +1,48 @@
+.appkit-text-link {
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.appkit-text-link--default {
+  color: #509c02;
+}
+
+.appkit-text-link--default:hover {
+  color: #3e7708;
+}
+
+.dark .appkit-text-link--default {
+  color: #f063b9;
+}
+
+.dark .appkit-text-link--default:hover {
+  color: #f9a8d4;
+}
+
+.appkit-text-link--muted {
+  color: #71717a;
+}
+
+.appkit-text-link--muted:hover {
+  color: #3f3f46;
+}
+
+.dark .appkit-text-link--muted {
+  color: #a1a1aa;
+}
+
+.dark .appkit-text-link--muted:hover {
+  color: #e4e4e7;
+}
+
+.appkit-text-link--underline {
+  color: #509c02;
+  text-decoration: underline;
+}
+
+.appkit-text-link--underline:hover {
+  text-decoration: none;
+}
+
+.dark .appkit-text-link--underline {
+  color: #f063b9;
+}

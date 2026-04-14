@@ -1,0 +1,106 @@
+.appkit-summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e4e4e7;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.appkit-summary-card__lines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.appkit-summary-card__line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.875rem;
+}
+
+.appkit-summary-card__label {
+  color: #71717a;
+}
+
+.appkit-summary-card__value {
+  color: #18181b;
+}
+
+.appkit-summary-card__value--muted {
+  color: #71717a;
+}
+
+.appkit-summary-card__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.appkit-summary-card__total-label {
+  font-weight: 700;
+  color: #18181b;
+}
+
+.appkit-summary-card__total-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #509c02;
+}
+
+.appkit-summary-card--homepage {
+  border-color: rgba(80, 156, 2, 0.22);
+  background: linear-gradient(180deg, #fbfff6 0%, #ffffff 100%);
+}
+
+.appkit-summary-card--public {
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.appkit-summary-card--admin {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.appkit-summary-card--order {
+  border-color: rgba(59, 130, 246, 0.22);
+}
+
+.dark .appkit-summary-card {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+.dark .appkit-summary-card__label,
+.dark .appkit-summary-card__value--muted {
+  color: #94a3b8;
+}
+
+.dark .appkit-summary-card__value,
+.dark .appkit-summary-card__total-label {
+  color: #f1f5f9;
+}
+
+.dark .appkit-summary-card__total-value {
+  color: #e91e8c;
+}
+
+.dark .appkit-summary-card--homepage {
+  border-color: rgba(233, 30, 140, 0.3);
+  background: linear-gradient(180deg, rgba(233, 30, 140, 0.08) 0%, #0f172a 100%);
+}
+
+.dark .appkit-summary-card--public {
+  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.35);
+}
+
+.dark .appkit-summary-card--admin {
+  border-color: #475569;
+  background: #111827;
+}
+
+.dark .appkit-summary-card--order {
+  border-color: rgba(125, 211, 252, 0.28);
+}

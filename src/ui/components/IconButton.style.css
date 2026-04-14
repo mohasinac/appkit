@@ -1,0 +1,103 @@
+.appkit-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.appkit-icon-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.2);
+}
+
+.appkit-icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.appkit-icon-button--sm {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+}
+
+.appkit-icon-button--md {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+}
+
+.appkit-icon-button--lg {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.75rem;
+}
+
+.appkit-icon-button--ghost {
+  background: transparent;
+  color: #52525b;
+}
+
+.appkit-icon-button--ghost:hover:not(:disabled) {
+  background: #f4f4f5;
+}
+
+.dark .appkit-icon-button--ghost {
+  color: #a1a1aa;
+}
+
+.dark .appkit-icon-button--ghost:hover:not(:disabled) {
+  background: #27272a;
+}
+
+.appkit-icon-button--outline {
+  border-color: #e4e4e7;
+  background: #ffffff;
+  color: #3f3f46;
+}
+
+.appkit-icon-button--outline:hover:not(:disabled) {
+  background: #fafafa;
+}
+
+.dark .appkit-icon-button--outline {
+  border-color: #334155;
+  background: transparent;
+  color: #d4d4d8;
+}
+
+.dark .appkit-icon-button--outline:hover:not(:disabled) {
+  background: #1e293b;
+}
+
+.appkit-icon-button--primary {
+  background: #509c02;
+  color: #ffffff;
+}
+
+.appkit-icon-button--primary:hover:not(:disabled) {
+  background: #3e7708;
+}
+
+.dark .appkit-icon-button--primary {
+  background: #e91e8c;
+}
+
+.dark .appkit-icon-button--primary:hover:not(:disabled) {
+  background: #d4107a;
+}
+
+.appkit-icon-button--danger {
+  color: #dc2626;
+}
+
+.appkit-icon-button--danger:hover:not(:disabled) {
+  background: #fef2f2;
+}
+
+.dark .appkit-icon-button--danger:hover:not(:disabled) {
+  background: rgba(127, 29, 29, 0.35);
+}

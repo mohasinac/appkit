@@ -25,11 +25,11 @@ export interface ModalProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<ModalProps["size"]>, string> = {
-  sm: "max-w-sm",
-  md: "max-w-lg",
-  lg: "max-w-2xl",
-  xl: "max-w-4xl",
-  full: "max-w-[95vw] max-h-[95vh]",
+  sm: "appkit-modal__panel--sm",
+  md: "appkit-modal__panel--md",
+  lg: "appkit-modal__panel--lg",
+  xl: "appkit-modal__panel--xl",
+  full: "appkit-modal__panel--full",
 };
 
 export function Modal({
@@ -100,7 +100,7 @@ export function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="appkit-modal"
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}
@@ -108,7 +108,7 @@ export function Modal({
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="appkit-modal__backdrop"
         aria-hidden="true"
         onClick={onClose}
       />
@@ -117,24 +117,15 @@ export function Modal({
       <div
         ref={panelRef}
         tabIndex={-1}
-        className={[
-          "relative w-full rounded-2xl bg-white dark:bg-slate-900",
-          "shadow-2xl ring-1 ring-zinc-200 dark:ring-slate-700",
-          "flex flex-col max-h-[90vh] overflow-hidden",
-          "animate-[fadeInUp_0.15s_ease_forwards]",
-          SIZE_CLASSES[size],
-          className,
-        ].join(" ")}
+        className={["appkit-modal__panel", SIZE_CLASSES[size], className].join(
+          " ",
+        )}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0">
+          <div className="appkit-modal__header">
             {title && (
-              <Heading
-                level={2}
-                id={titleId}
-                className="!text-lg !font-semibold !font-sans tracking-tight"
-              >
+              <Heading level={2} id={titleId} className="appkit-modal__title">
                 {title}
               </Heading>
             )}
@@ -144,17 +135,17 @@ export function Modal({
                 size="sm"
                 type="button"
                 onClick={onClose}
-                className="ml-auto p-1.5 !min-h-0 rounded-lg text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
+                className="appkit-modal__close"
                 aria-label="Close"
               >
-                <X className="w-5 h-5" />
+                <X className="appkit-modal__close-icon" />
               </Button>
             )}
           </div>
         )}
 
         {/* Scrollable body */}
-        <div className="overflow-y-auto flex-1 px-6 py-4">{children}</div>
+        <div className="appkit-modal__body">{children}</div>
       </div>
     </div>,
     document.body,

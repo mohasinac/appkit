@@ -1,0 +1,178 @@
+.appkit-heading {
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-family: var(--font-display), Poppins, ui-sans-serif, system-ui, sans-serif;
+}
+
+.appkit-heading--h1 {
+  font-size: clamp(1.875rem, 1.3rem + 2vw, 3rem);
+  font-weight: 700;
+}
+
+.appkit-heading--h2 {
+  font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.25rem);
+  font-weight: 700;
+}
+
+.appkit-heading--h3 {
+  font-size: clamp(1.25rem, 1.05rem + 1vw, 1.875rem);
+  font-weight: 700;
+}
+
+.appkit-heading--h4 {
+  font-size: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+  font-weight: 700;
+}
+
+.appkit-heading--h5 {
+  font-size: clamp(1rem, 0.92rem + 0.4vw, 1.25rem);
+  font-weight: 500;
+}
+
+.appkit-heading--h6 {
+  font-size: clamp(0.875rem, 0.84rem + 0.3vw, 1.125rem);
+  font-weight: 500;
+}
+
+.appkit-text,
+.appkit-span,
+.appkit-label,
+.appkit-caption {
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif;
+}
+
+.appkit-text {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.appkit-text--xs {
+  font-size: 0.75rem;
+}
+
+.appkit-text--sm {
+  font-size: 0.875rem;
+}
+
+.appkit-text--base {
+  font-size: 1rem;
+}
+
+.appkit-text--lg {
+  font-size: 1.125rem;
+}
+
+.appkit-text--xl {
+  font-size: 1.25rem;
+}
+
+.appkit-font--normal {
+  font-weight: 400;
+}
+
+.appkit-font--medium {
+  font-weight: 500;
+}
+
+.appkit-font--semibold {
+  font-weight: 600;
+}
+
+.appkit-font--bold {
+  font-weight: 700;
+}
+
+.appkit-color--primary {
+  color: #18181b;
+}
+
+.appkit-color--secondary {
+  color: #71717a;
+}
+
+.appkit-color--muted {
+  color: #a1a1aa;
+}
+
+.appkit-color--error {
+  color: #dc2626;
+}
+
+.appkit-color--success {
+  color: #059669;
+}
+
+.appkit-color--accent {
+  color: #65c408;
+}
+
+.dark .appkit-color--primary {
+  color: #fafafa;
+}
+
+.dark .appkit-color--secondary {
+  color: #a3a3a3;
+}
+
+.dark .appkit-color--muted {
+  color: #737373;
+}
+
+.dark .appkit-color--error {
+  color: #f87171;
+}
+
+.dark .appkit-color--success {
+  color: #34d399;
+}
+
+.dark .appkit-color--accent {
+  color: #f063b9;
+}
+
+.appkit-label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #71717a;
+}
+
+.dark .appkit-label {
+  color: #cbd5e1;
+}
+
+.appkit-label__required {
+  margin-left: 0.25rem;
+  color: #ef4444;
+}
+
+.appkit-caption {
+  font-size: 0.75rem;
+}
+
+.appkit-caption--default {
+  color: #a1a1aa;
+}
+
+.appkit-caption--accent {
+  color: #65c408;
+  font-weight: 600;
+}
+
+.appkit-caption--inverse {
+  color: rgba(101, 196, 8, 0.4);
+}
+
+.dark .appkit-caption--default {
+  color: #737373;
+}
+
+.dark .appkit-caption--accent {
+  color: #f063b9;
+}
+
+.dark .appkit-caption--inverse {
+  color: rgba(240, 99, 185, 0.5);
+}
