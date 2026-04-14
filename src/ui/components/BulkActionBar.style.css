@@ -1,0 +1,196 @@
+.appkit-bulk-bar {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(80, 156, 2, 0.2);
+  animation: appkit-slide-in 150ms ease;
+}
+
+@keyframes appkit-slide-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.appkit-bulk-bar__stripe {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #3e7708, #509c02, #3e7708);
+}
+
+.appkit-bulk-bar__row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* count pill */
+.appkit-bulk-bar__count-pill {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+  min-height: 0 !important;
+  height: 2rem;
+  padding: 0 0.75rem 0 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(80, 156, 2, 0.3);
+  background: rgba(80, 156, 2, 0.07);
+  color: #3e7708;
+  transition: background-color 0.15s ease;
+}
+
+.appkit-bulk-bar__count-pill:hover {
+  background: rgba(80, 156, 2, 0.14);
+}
+
+.appkit-bulk-bar__count-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+}
+
+.appkit-bulk-bar__count-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* picker trigger */
+.appkit-bulk-bar__picker-trigger {
+  flex: 1;
+  min-width: 0;
+  height: 2.5rem;
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e4e4e7;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: #fafafa;
+  color: #18181b;
+  transition: background-color 0.15s ease;
+}
+
+.appkit-bulk-bar__picker-trigger:hover { background: #f4f4f5; }
+.appkit-bulk-bar__picker-trigger--danger { color: #be123c; }
+
+.appkit-bulk-bar__picker-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.appkit-bulk-bar__picker-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  line-height: 1;
+}
+
+.appkit-bulk-bar__picker-chevron {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: #a1a1aa;
+}
+
+/* apply button */
+.appkit-bulk-bar__apply {
+  flex-shrink: 0;
+  height: 2.5rem;
+}
+
+/* dropdown */
+.appkit-bulk-bar__dropdown {
+  overflow: hidden;
+  border-top: 1px solid rgba(228, 228, 231, 0.8);
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 0.2s ease, opacity 0.2s ease;
+}
+
+.appkit-bulk-bar__dropdown--open {
+  max-height: 16rem;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* dropdown options */
+.appkit-bulk-bar__option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  text-align: left;
+  color: #3f3f46;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.appkit-bulk-bar__option:hover { background: #fafafa; }
+.appkit-bulk-bar__option--danger { color: #be123c; }
+.appkit-bulk-bar__option--selected { background: #fafafa; font-weight: 500; }
+.appkit-bulk-bar__option--disabled { opacity: 0.4; cursor: not-allowed; }
+
+.appkit-bulk-bar__option-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.appkit-bulk-bar__option-label { flex: 1; }
+
+/* dark */
+.dark .appkit-bulk-bar {
+  border-color: rgba(233, 30, 140, 0.3);
+}
+
+.dark .appkit-bulk-bar__stripe {
+  background: linear-gradient(90deg, #be185d, #e91e8c, #be185d);
+}
+
+.dark .appkit-bulk-bar__count-pill {
+  border-color: rgba(233, 30, 140, 0.35);
+  background: rgba(233, 30, 140, 0.1);
+  color: #f9a8d4;
+}
+
+.dark .appkit-bulk-bar__count-pill:hover {
+  background: rgba(233, 30, 140, 0.18);
+}
+
+.dark .appkit-bulk-bar__picker-trigger {
+  border-color: #334155;
+  background: rgba(30, 41, 59, 0.6);
+  color: #f1f5f9;
+}
+
+.dark .appkit-bulk-bar__picker-trigger:hover { background: rgba(51, 65, 85, 0.6); }
+.dark .appkit-bulk-bar__picker-trigger--danger { color: #fda4af; }
+
+.dark .appkit-bulk-bar__dropdown {
+  border-top-color: rgba(51, 65, 85, 0.8);
+}
+
+.dark .appkit-bulk-bar__option { color: #e2e8f0; }
+.dark .appkit-bulk-bar__option:hover { background: rgba(30, 41, 59, 0.6); }
+.dark .appkit-bulk-bar__option--danger { color: #fda4af; }
+.dark .appkit-bulk-bar__option--selected { background: rgba(30, 41, 59, 0.6); }

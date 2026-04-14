@@ -103,7 +103,7 @@ export function ImageLightbox({
     <div
       ref={overlayRef}
       tabIndex={-1}
-      className="fixed inset-0 z-[9999] bg-black/95 flex flex-col items-center justify-center outline-none"
+      className="appkit-lightbox"
       role="dialog"
       aria-modal="true"
       aria-label="Image lightbox"
@@ -123,7 +123,7 @@ export function ImageLightbox({
 
       {/* Counter */}
       {hasMultiple && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium">
+        <div className="appkit-lightbox__counter">
           {currentIndex + 1} / {images.length}
         </div>
       )}
@@ -143,15 +143,15 @@ export function ImageLightbox({
       )}
 
       {/* Image */}
-      <div className="flex-1 flex items-center justify-center p-16 w-full h-full relative">
+      <div className="appkit-lightbox__image-wrap">
         <img
           src={image.src}
           alt={image.alt ?? ""}
-          className="max-h-full max-w-full object-contain select-none"
+          className="appkit-lightbox__img"
           draggable={false}
         />
         {/* Zoom icon hint */}
-        <div className="absolute bottom-4 right-4 text-white/40 flex items-center gap-1 text-xs">
+        <div className="appkit-lightbox__zoom-hint">
           <ZoomIn className="w-4 h-4" />
           <Span className="text-xs">Scroll to zoom</Span>
         </div>

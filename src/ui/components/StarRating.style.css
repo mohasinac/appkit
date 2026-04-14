@@ -1,0 +1,44 @@
+.appkit-star-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.appkit-star-rating--interactive .appkit-star-rating__star {
+  cursor: pointer;
+}
+
+.appkit-star-rating__icon {
+  transition: fill 0.1s ease, color 0.1s ease;
+}
+
+/* sizes */
+.appkit-star-rating--sm .appkit-star-rating__icon { width: 1rem;    height: 1rem; }
+.appkit-star-rating--md .appkit-star-rating__icon { width: 1.25rem; height: 1.25rem; }
+.appkit-star-rating--lg .appkit-star-rating__icon { width: 1.5rem;  height: 1.5rem; }
+
+/* states */
+.appkit-star-rating__icon--filled {
+  fill: #fbbf24;
+  color: #fbbf24;
+}
+
+.appkit-star-rating__icon--empty {
+  fill: transparent;
+  color: #d4d4d8;
+}
+
+.appkit-star-rating--interactive .appkit-star-rating__star:hover .appkit-star-rating__icon--empty {
+  fill: #fde68a;
+  color: #fde68a;
+}
+
+/* dark */
+.dark .appkit-star-rating__icon--empty {
+  color: #475569;
+}
+
+.dark .appkit-star-rating--interactive .appkit-star-rating__star:hover .appkit-star-rating__icon--empty {
+  fill: rgba(251, 191, 36, 0.4);
+  color: rgba(251, 191, 36, 0.4);
+}

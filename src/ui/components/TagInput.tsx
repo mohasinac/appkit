@@ -71,24 +71,20 @@ export function TagInput({
   };
 
   return (
-    <div className={className}>
-      {label && <Label className="mb-1.5 block text-sm font-medium">{label}</Label>}
+    <div className={["appkit-tag-input", className].filter(Boolean).join(" ")}>
+      {label && <Label className="appkit-tag-input__label">{label}</Label>}
 
       <div
         onClick={() => !disabled && inputRef.current?.focus()}
         className={[
-          "flex min-h-[42px] w-full cursor-text flex-wrap items-center gap-1.5 rounded-lg border px-3 py-2",
-          "border-zinc-300 bg-white dark:border-slate-700 dark:bg-slate-900",
-          disabled
-            ? "cursor-not-allowed opacity-50"
-            : "transition-colors focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/30",
-        ].join(" ")}
+          "appkit-tag-input__field",
+          disabled ? "appkit-tag-input__field--disabled" : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         {value.map((tag) => (
-          <span
-            key={tag}
-            className="inline-flex items-center gap-1 rounded-full bg-primary-500/10 px-2 py-0.5 text-xs font-medium text-primary-700 dark:text-primary-300"
-          >
+          <span key={tag} className="appkit-tag-input__tag">
             <Span size="xs">{tag}</Span>
             {!disabled && (
               <button
@@ -97,10 +93,10 @@ export function TagInput({
                   e.stopPropagation();
                   removeTag(tag);
                 }}
-                className="ml-0.5 text-primary-700/70 hover:text-primary-700 dark:text-primary-300/70 dark:hover:text-primary-300"
+                className="appkit-tag-input__tag-remove"
                 aria-label={`Remove tag ${tag}`}
               >
-                x
+                ×
               </button>
             )}
           </span>
@@ -115,16 +111,17 @@ export function TagInput({
           disabled={disabled}
           placeholder={value.length === 0 ? placeholder : ""}
           className={[
-            "min-w-[100px] flex-1 bg-transparent text-sm outline-none",
-            "text-zinc-900 placeholder:text-zinc-400 dark:text-zinc-100 dark:placeholder:text-zinc-500",
-            disabled ? "cursor-not-allowed" : "",
-          ].join(" ")}
+            "appkit-tag-input__text",
+            disabled ? "appkit-tag-input__text--disabled" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
           aria-label={label ?? "Tag input"}
         />
       </div>
 
       {helperText && (
-        <Span size="xs" className="mt-1 text-zinc-500 dark:text-zinc-400">
+        <Span size="xs" className="appkit-tag-input__helper">
           {helperText}
         </Span>
       )}

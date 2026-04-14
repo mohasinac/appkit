@@ -17,29 +17,32 @@ export interface StepperNavProps {
 
 export function StepperNav({ steps, currentStep, className }: StepperNavProps) {
   return (
-    <Nav aria-label="Steps" className={classNames("mb-8", className)}>
-      <Ol className="flex items-center gap-0">
+    <Nav
+      aria-label="Steps"
+      className={classNames("appkit-stepper-nav", className)}
+    >
+      <Ol className="appkit-stepper-nav__list">
         {steps.map((step, i) => {
           const isComplete = step.number < currentStep;
           const isActive = step.number === currentStep;
           const isLast = i === steps.length - 1;
 
           return (
-            <Li key={step.number} className="flex flex-1 items-center">
-              <div className="flex flex-shrink-0 items-center gap-2">
+            <Li key={step.number} className="appkit-stepper-nav__item">
+              <div className="appkit-stepper-nav__step">
                 <div
                   className={classNames(
-                    "flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold transition-colors",
+                    "appkit-stepper-nav__bubble",
                     isComplete
-                      ? "border-primary bg-primary text-white"
+                      ? "appkit-stepper-nav__bubble--complete"
                       : isActive
-                        ? "border-primary bg-transparent text-primary"
-                        : "border-zinc-300 text-zinc-500 dark:border-slate-700 dark:text-zinc-400",
+                        ? "appkit-stepper-nav__bubble--active"
+                        : "appkit-stepper-nav__bubble--pending",
                   )}
                 >
                   {isComplete ? (
                     <svg
-                      className="h-4 w-4"
+                      className="appkit-stepper-nav__check"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -58,12 +61,12 @@ export function StepperNav({ steps, currentStep, className }: StepperNavProps) {
                 </div>
                 <Span
                   className={classNames(
-                    "hidden text-sm font-medium sm:block",
+                    "appkit-stepper-nav__label",
                     isActive
-                      ? "text-primary"
+                      ? "appkit-stepper-nav__label--active"
                       : isComplete
-                        ? "text-zinc-900 dark:text-zinc-100"
-                        : "text-zinc-500 dark:text-zinc-400",
+                        ? "appkit-stepper-nav__label--complete"
+                        : "appkit-stepper-nav__label--pending",
                   )}
                 >
                   {step.label}
@@ -73,10 +76,10 @@ export function StepperNav({ steps, currentStep, className }: StepperNavProps) {
               {!isLast && (
                 <div
                   className={classNames(
-                    "mx-3 h-0.5 flex-1 transition-colors",
+                    "appkit-stepper-nav__connector",
                     isComplete
-                      ? "bg-primary"
-                      : "bg-zinc-200 dark:bg-slate-700",
+                      ? "appkit-stepper-nav__connector--complete"
+                      : "appkit-stepper-nav__connector--pending",
                   )}
                 />
               )}

@@ -99,31 +99,27 @@ export function BulkActionBar({
   return (
     <div
       ref={containerRef}
-      className="relative rounded-lg overflow-hidden border border-primary/20 dark:border-primary/30 animate-in fade-in slide-in-from-top-1 duration-150"
+      className="appkit-bulk-bar"
       role="region"
       aria-live="polite"
       aria-label={l.bulkActions}
     >
-      {/* Accent stripe */}
-      <div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-primary-400 to-primary-600 dark:from-secondary-600 dark:via-secondary-400 dark:to-secondary-600" />
+      <div className="appkit-bulk-bar__stripe" />
 
-      {/* Main row */}
-      <div className="flex items-center gap-2 px-3 py-2">
-        {/* Selection count pill */}
+      <div className="appkit-bulk-bar__row">
         <Button
           type="button"
           variant="ghost"
           onClick={onClearSelection}
-          className="inline-flex items-center gap-1.5 flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
+          className="appkit-bulk-bar__count-pill"
           aria-label={l.clearSelection}
         >
-          <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
-          <Span className="text-xs font-semibold tabular-nums whitespace-nowrap leading-none">
+          <X className="appkit-bulk-bar__count-icon" aria-hidden="true" />
+          <Span className="appkit-bulk-bar__count-label">
             {selectedCount} {l.selected}
           </Span>
         </Button>
 
-        {/* Picker trigger */}
         {actions.length > 0 && (
           <Button
             type="button"
@@ -132,42 +128,36 @@ export function BulkActionBar({
             aria-haspopup="listbox"
             aria-expanded={pickerOpen}
             className={[
-              "flex-1 min-w-0 h-10 flex items-center gap-2 px-3 rounded-lg border text-sm font-medium transition-colors",
-              "bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-slate-800/60 dark:hover:bg-slate-700/60",
-              "border-zinc-200 dark:border-slate-700",
+              "appkit-bulk-bar__picker-trigger",
               selectedAction?.variant === "danger"
-                ? "text-red-600 dark:text-red-400"
-                : "text-zinc-800 dark:text-zinc-100",
+                ? "appkit-bulk-bar__picker-trigger--danger"
+                : "",
             ]
               .filter(Boolean)
               .join(" ")}
           >
             {selectedAction?.icon && (
-              <Span
-                className="flex-shrink-0 w-4 h-4 flex items-center justify-center"
-                aria-hidden="true"
-              >
+              <Span className="appkit-bulk-bar__picker-icon" aria-hidden="true">
                 {selectedAction.icon}
               </Span>
             )}
-            <Span className="flex-1 truncate text-left leading-none">
+            <Span className="appkit-bulk-bar__picker-label">
               {selectedAction?.label ?? l.bulkActions}
             </Span>
             {pickerOpen ? (
               <ChevronUp
-                className="w-4 h-4 flex-shrink-0 text-zinc-400"
+                className="appkit-bulk-bar__picker-chevron"
                 aria-hidden="true"
               />
             ) : (
               <ChevronDown
-                className="w-4 h-4 flex-shrink-0 text-zinc-400"
+                className="appkit-bulk-bar__picker-chevron"
                 aria-hidden="true"
               />
             )}
           </Button>
         )}
 
-        {/* Apply button */}
         {actions.length > 0 && (
           <Button
             type="button"
@@ -180,24 +170,20 @@ export function BulkActionBar({
               selectedAction?.loading
             }
             onClick={handleApply}
-            className="h-10 flex-shrink-0"
+            className="appkit-bulk-bar__apply"
           >
             <Span className="leading-none">{l.apply}</Span>
           </Button>
         )}
       </div>
 
-      {/* Picker dropdown */}
       {actions.length > 0 && (
         <div
           role="listbox"
           aria-label={l.bulkActions}
           className={[
-            "overflow-hidden border-t border-zinc-200/80 dark:border-slate-700/80",
-            "transition-[max-height,opacity] duration-200 ease-out",
-            pickerOpen
-              ? "max-h-64 opacity-100"
-              : "max-h-0 opacity-0 pointer-events-none",
+            "appkit-bulk-bar__dropdown",
+            pickerOpen ? "appkit-bulk-bar__dropdown--open" : "",
           ]
             .filter(Boolean)
             .join(" ")}
@@ -213,30 +199,29 @@ export function BulkActionBar({
                 setPickerOpen(false);
               }}
               className={[
-                "w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors",
-                "hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+                "appkit-bulk-bar__option",
                 action.variant === "danger"
-                  ? "text-red-600 dark:text-red-400"
-                  : "text-zinc-700 dark:text-zinc-200",
-                selectedActionId === action.id
-                  ? "bg-zinc-50 dark:bg-slate-800/60 font-medium"
+                  ? "appkit-bulk-bar__option--danger"
                   : "",
-                action.disabled
-                  ? "opacity-40 cursor-not-allowed"
-                  : "cursor-pointer",
+                selectedActionId === action.id
+                  ? "appkit-bulk-bar__option--selected"
+                  : "",
+                action.disabled ? "appkit-bulk-bar__option--disabled" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
             >
               {action.icon && (
                 <Span
-                  className="flex-shrink-0 w-4 h-4 flex items-center justify-center"
+                  className="appkit-bulk-bar__option-icon"
                   aria-hidden="true"
                 >
                   {action.icon}
                 </Span>
               )}
-              <Span className="flex-1">{action.label}</Span>
+              <Span className="appkit-bulk-bar__option-label">
+                {action.label}
+              </Span>
             </button>
           ))}
         </div>

@@ -1,0 +1,32 @@
+/* appkit/src/ui/components/FormGrid.style.css */
+
+.appkit-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  /* gap is driven by the inline style prop */
+}
+
+/* ── FormField ─────────────────────────────────────── */
+
+.appkit-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem; /* ~6px (gap-1.5) */
+}
+
+/* fluid: grows to fill, wraps below min width */
+.appkit-form-field--auto {
+  flex: 1 1 var(--appkit-form-grid-min-field, 280px);
+  min-width: var(--appkit-form-grid-min-field, 280px);
+}
+
+/* always spans full container width */
+.appkit-form-field--full {
+  width: 100%;
+}
+
+/* fixed half width, still respects min-field constraint */
+.appkit-form-field--half {
+  width: 50%;
+  min-width: var(--appkit-form-grid-min-field, 280px);
+}

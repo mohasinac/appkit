@@ -1,4 +1,5 @@
 // appkit/src/ui/components/FormGrid.tsx
+import React from "react";
 import type { ReactNode } from "react";
 
 export interface FormGridProps {
@@ -50,8 +51,13 @@ export function FormGrid({
 }: FormGridProps) {
   return (
     <div
-      className={`flex flex-wrap ${className ?? ""}`}
-      style={{ gap: `${gap}px` }}
+      className={["appkit-form-grid", className].filter(Boolean).join(" ")}
+      style={
+        {
+          gap: `${gap}px`,
+          "--appkit-form-grid-min-field": `${minFieldWidth}px`,
+        } as React.CSSProperties
+      }
     >
       {children}
     </div>
@@ -67,15 +73,19 @@ export function FormField({
   span = "auto",
   className,
 }: FormFieldProps) {
-  const spanClass =
+  const spanMod =
     span === "full"
-      ? "w-full"
+      ? "appkit-form-field--full"
       : span === "half"
-        ? "w-1/2 min-w-[280px]"
-        : "flex-1 min-w-[280px]";
+        ? "appkit-form-field--half"
+        : "appkit-form-field--auto";
 
   return (
-    <div className={`${spanClass} flex flex-col gap-1.5 ${className ?? ""}`}>
+    <div
+      className={["appkit-form-field", spanMod, className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
     </div>
   );

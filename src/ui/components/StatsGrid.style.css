@@ -65,22 +65,16 @@
   color: #a1a1aa;
 }
 
-.appkit-stats-grid--homepage .appkit-stats-grid__item {
-  border-color: rgba(80, 156, 2, 0.22);
-  background: linear-gradient(180deg, #fbfff6 0%, #ffffff 100%);
+/* flat variant — no shadow, minimal border, for dense admin tables */
+.appkit-stats-grid--flat .appkit-stats-grid__item {
+  background: transparent;
+  border-color: #e4e4e7;
+  box-shadow: none;
+  border-radius: 0.5rem;
 }
 
-.appkit-stats-grid--public .appkit-stats-grid__item {
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
-}
-
-.appkit-stats-grid--admin .appkit-stats-grid__item {
-  border-color: #cbd5e1;
-  background: #f8fafc;
-}
-
-.appkit-stats-grid--order .appkit-stats-grid__item {
-  border-color: rgba(59, 130, 246, 0.22);
+.appkit-stats-grid--flat .appkit-stats-grid__value {
+  font-size: 1.5rem;
 }
 
 .dark .appkit-stats-grid__item {
@@ -96,20 +90,7 @@
   color: #64748b;
 }
 
-.dark .appkit-stats-grid--homepage .appkit-stats-grid__item {
-  border-color: rgba(233, 30, 140, 0.3);
-  background: linear-gradient(180deg, rgba(233, 30, 140, 0.08) 0%, #0f172a 100%);
-}
-
-.dark .appkit-stats-grid--public .appkit-stats-grid__item {
-  box-shadow: 0 1px 3px rgba(2, 6, 23, 0.35);
-}
-
-.dark .appkit-stats-grid--admin .appkit-stats-grid__item {
-  border-color: #475569;
-  background: #111827;
-}
-
-.dark .appkit-stats-grid--order .appkit-stats-grid__item {
-  border-color: rgba(125, 211, 252, 0.28);
+.dark .appkit-stats-grid--flat .appkit-stats-grid__item {
+  background: transparent;
+  border-color: #334155;
 }

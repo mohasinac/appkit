@@ -1,24 +1,5 @@
+/* StatusBadge inherits all styles from Badge.
+   This base class is a stable hook for consumer overrides. */
 .appkit-status-badge {
   text-transform: none;
-}
-
-.appkit-status-badge--homepage {
-  box-shadow: inset 0 0 0 1px rgba(80, 156, 2, 0.18);
-}
-
-.appkit-status-badge--public {
-  letter-spacing: 0.01em;
-}
-
-.appkit-status-badge--admin {
-  font-weight: 700;
-}
-
-.appkit-status-badge--order {
-  min-width: 5.25rem;
-  justify-content: center;
-}
-
-.dark .appkit-status-badge--homepage {
-  box-shadow: inset 0 0 0 1px rgba(233, 30, 140, 0.25);
 }

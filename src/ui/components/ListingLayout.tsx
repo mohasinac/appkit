@@ -129,11 +129,6 @@ export function ListingLayout({
   const hasFilter = Boolean(filterContent);
   const panelTitle = filterTitle ?? l.filtersTitle;
 
-  // Sticky offset: dashboard containers scroll internally (top-0);
-  // public pages have a top navbar (top-14 / top-[120px]).
-  const stickyTop = isDashboard ? "top-0" : "top-14 md:top-[120px]";
-  const sidebarSticky = isDashboard ? "sticky top-16" : "sticky top-[176px]";
-
   // Close mobile overlay on Escape key
   useEffect(() => {
     if (!mobileFilterOpen) return;
@@ -168,11 +163,11 @@ export function ListingLayout({
   return (
     <div
       className={[
-        "w-full space-y-4",
+        "appkit-listing-layout",
         toolbarPaginationSlot
           ? selectedCount > 0
-            ? "pb-28 lg:pb-0"
-            : "pb-12 lg:pb-0"
+            ? "appkit-listing-layout--bulk-offset"
+            : "appkit-listing-layout--page-offset"
           : "",
         className,
       ]
@@ -184,7 +179,7 @@ export function ListingLayout({
 
       {/* Status tabs */}
       {statusTabsSlot && (
-        <div className="overflow-x-auto touch-pan-x -mx-4 px-4 md:-mx-6 md:px-6">
+        <div className="appkit-listing-layout__status-tabs">
           {statusTabsSlot}
         </div>
       )}
@@ -192,16 +187,14 @@ export function ListingLayout({
       {/* Sticky toolbar */}
       <div
         className={[
-          "sticky z-20 -mx-4 px-4 md:-mx-6 md:px-6",
-          stickyTop,
-          "bg-white/80 dark:bg-slate-950/80 backdrop-blur-md",
-          "border-b border-zinc-200/70 dark:border-slate-800/70",
-          "shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
-          "py-2.5",
+          "appkit-listing-layout__toolbar",
+          isDashboard
+            ? "appkit-listing-layout__toolbar--dashboard"
+            : "appkit-listing-layout__toolbar--page",
         ].join(" ")}
       >
         {/* Desktop (lg+): single flex row */}
-        <div className="hidden lg:flex items-center gap-2 min-w-0">
+        <div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--desktop">
           {hasFilter && (
             <Button
               type="button"
@@ -211,19 +204,15 @@ export function ListingLayout({
               aria-label={sidebarOpen ? l.hideFilters : l.showFilters}
               aria-expanded={sidebarOpen}
               className={[
-                "hidden lg:flex flex-shrink-0 items-center gap-1.5",
-                "rounded-full h-8 px-3 text-sm font-medium",
-                "border transition-all duration-150",
-                sidebarOpen
-                  ? "bg-primary/10 border-primary/30 text-primary dark:bg-primary/15 dark:border-primary/40"
-                  : "border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-slate-300 hover:border-zinc-300 dark:hover:border-slate-600 hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+                "appkit-listing-layout__filter-btn",
+                sidebarOpen ? "appkit-listing-layout__filter-btn--active" : "",
               ].join(" ")}
             >
               <FilterIcon />
               {l.filtersTitle}
               {filterActiveCount > 0 && (
                 <Span
-                  className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white"
+                  className="appkit-listing-layout__filter-badge"
                   aria-label={l.filterActiveCount(filterActiveCount)}
                 >
                   {filterActiveCount}
@@ -232,12 +221,14 @@ export function ListingLayout({
             </Button>
           )}
 
-          {searchSlot && <div className="flex-1 min-w-0">{searchSlot}</div>}
+          {searchSlot && (
+            <div className="appkit-listing-layout__search">{searchSlot}</div>
+          )}
 
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="appkit-listing-layout__toolbar-actions">
             {sortSlot}
             {viewToggleSlot && (
-              <div className="flex items-center gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
+              <div className="appkit-listing-layout__view-toggle-wrap">
                 {viewToggleSlot}
               </div>
             )}
@@ -245,15 +236,15 @@ export function ListingLayout({
           </div>
 
           {toolbarPaginationSlot && (
-            <div className="ml-auto flex-shrink-0 pl-3 border-l border-zinc-200/70 dark:border-slate-700/70">
+            <div className="appkit-listing-layout__toolbar-pagination">
               {toolbarPaginationSlot}
             </div>
           )}
         </div>
 
         {/* Mobile/Tablet (< lg): two stacked rows */}
-        <div className="flex flex-col gap-2 lg:hidden">
-          <div className="flex items-center gap-2">
+        <div className="appkit-listing-layout__toolbar-row appkit-listing-layout__toolbar-row--mobile">
+          <div className="appkit-listing-layout__mobile-row-1">
             {hasFilter && (
               <Button
                 type="button"
@@ -262,13 +253,9 @@ export function ListingLayout({
                 onClick={() => setMobileFilterOpen(true)}
                 aria-label={l.filtersTitle}
                 className={[
-                  "flex-shrink-0 flex items-center gap-1.5",
-                  "rounded-full h-9 px-3 text-sm font-medium",
-                  "border border-zinc-200 dark:border-slate-700",
-                  "text-zinc-600 dark:text-slate-300",
-                  "hover:bg-zinc-50 dark:hover:bg-slate-800/60 transition-colors",
+                  "appkit-listing-layout__filter-btn",
                   filterActiveCount > 0
-                    ? "border-primary/40 bg-primary/5 text-primary"
+                    ? "appkit-listing-layout__filter-btn--active"
                     : "",
                 ].join(" ")}
               >
@@ -276,7 +263,7 @@ export function ListingLayout({
                 {l.filtersTitle}
                 {filterActiveCount > 0 && (
                   <Span
-                    className="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-primary text-white"
+                    className="appkit-listing-layout__filter-badge"
                     aria-label={l.filterActiveCount(filterActiveCount)}
                   >
                     {filterActiveCount}
@@ -284,12 +271,14 @@ export function ListingLayout({
                 )}
               </Button>
             )}
-            {searchSlot && <div className="flex-1 min-w-0">{searchSlot}</div>}
+            {searchSlot && (
+              <div className="appkit-listing-layout__search">{searchSlot}</div>
+            )}
           </div>
 
           {(sortSlot || viewToggleSlot || actionsSlot) && (
-            <div className="flex items-stretch min-h-[44px] gap-2 overflow-x-auto">
-              <div className="flex items-center gap-2 flex-shrink-0 pb-px">
+            <div className="appkit-listing-layout__mobile-row-2">
+              <div className="appkit-listing-layout__mobile-row-2__inner">
                 {sortSlot}
                 {viewToggleSlot}
                 {actionsSlot}
@@ -300,7 +289,7 @@ export function ListingLayout({
 
         {/* Bulk action bar — desktop, inside toolbar */}
         {selectedCount > 0 && (
-          <div className="hidden lg:block pt-2 mt-2 border-t border-zinc-100 dark:border-slate-800">
+          <div className="appkit-listing-layout__bulk-bar">
             <BulkActionBar
               selectedCount={selectedCount}
               onClearSelection={onClearSelection}
@@ -316,30 +305,24 @@ export function ListingLayout({
       </div>
 
       {/* Sidebar + Content area */}
-      <div className="flex gap-4 lg:gap-6 items-start">
+      <div className="appkit-listing-layout__body">
         {/* Desktop filter sidebar */}
         {hasFilter && (
           <Aside
             aria-label={panelTitle}
             className={[
-              "hidden lg:block flex-shrink-0 self-start",
-              sidebarSticky,
-              "transition-all duration-200 ease-in-out overflow-hidden",
+              "appkit-listing-layout__sidebar",
+              isDashboard
+                ? "appkit-listing-layout__sidebar--dashboard"
+                : "appkit-listing-layout__sidebar--page",
               sidebarOpen
-                ? "w-60 xl:w-64 2xl:w-72 opacity-100"
-                : "w-0 opacity-0 pointer-events-none",
+                ? "appkit-listing-layout__sidebar--open"
+                : "appkit-listing-layout__sidebar--collapsed",
             ].join(" ")}
           >
-            <div
-              className={[
-                "w-60 xl:w-64 2xl:w-72 rounded-2xl overflow-hidden",
-                "border border-zinc-200/80 dark:border-slate-700/60",
-                "bg-white dark:bg-slate-900",
-                "shadow-sm",
-              ].join(" ")}
-            >
+            <div className="appkit-listing-layout__sidebar-panel">
               {/* Panel header */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800">
+              <div className="appkit-listing-layout__sidebar-header">
                 <Text weight="semibold" size="sm">
                   {panelTitle}
                 </Text>
@@ -357,12 +340,12 @@ export function ListingLayout({
               </div>
 
               {/* Scrollable facets */}
-              <div className="px-3 pt-5 pb-3 max-h-[calc(100vh-15rem)] overflow-y-auto space-y-4">
+              <div className="appkit-listing-layout__sidebar-facets">
                 {filterContent}
               </div>
 
               {/* Apply button */}
-              <div className="px-3 pb-3 pt-2 border-t border-zinc-100 dark:border-slate-800">
+              <div className="appkit-listing-layout__sidebar-footer">
                 <Button
                   type="button"
                   variant="primary"
@@ -378,7 +361,7 @@ export function ListingLayout({
         )}
 
         {/* Main content */}
-        <div className="flex-1 min-w-0 space-y-3">
+        <div className="appkit-listing-layout__content">
           {activeFiltersSlot}
 
           {errorSlot ? (
@@ -386,7 +369,11 @@ export function ListingLayout({
           ) : (
             <>
               {children}
-              {paginationSlot && <div className="pt-2">{paginationSlot}</div>}
+              {paginationSlot && (
+                <div className="appkit-listing-layout__pagination">
+                  {paginationSlot}
+                </div>
+              )}
             </>
           )}
         </div>
@@ -397,16 +384,12 @@ export function ListingLayout({
         <Nav
           aria-label="Pagination"
           className={[
-            "fixed left-0 right-0 lg:hidden",
+            "appkit-listing-layout__mobile-pagination",
             isDashboard
-              ? "bottom-0"
+              ? "appkit-listing-layout__mobile-pagination--dashboard"
               : selectedCount > 0
-                ? "bottom-28"
-                : "bottom-14",
-            "z-[39]",
-            "bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-zinc-200/80 dark:border-slate-800/80",
-            "shadow-[0_-2px_8px_rgba(0,0,0,0.06)] dark:shadow-[0_-2px_8px_rgba(0,0,0,0.20)]",
-            "h-10 flex items-center justify-center px-3 overflow-x-auto pb-px",
+                ? "appkit-listing-layout__mobile-pagination--bulk"
+                : "appkit-listing-layout__mobile-pagination--default",
           ].join(" ")}
         >
           {toolbarPaginationSlot}
@@ -417,19 +400,19 @@ export function ListingLayout({
       {hasFilter && mobileFilterOpen && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+            className="appkit-listing-layout__mobile-overlay-backdrop"
             onClick={() => setMobileFilterOpen(false)}
             aria-hidden="true"
           />
           <div
             ref={mobileOverlayRef}
-            className="fixed inset-0 z-50 flex flex-col lg:hidden bg-white dark:bg-slate-950"
+            className="appkit-listing-layout__mobile-overlay"
             role="dialog"
             aria-modal="true"
             aria-label={panelTitle}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0">
+            <div className="appkit-listing-layout__mobile-overlay-header">
               <Text weight="semibold">
                 {panelTitle}
                 {filterActiveCount > 0 && (
@@ -444,7 +427,7 @@ export function ListingLayout({
                 size="sm"
                 onClick={() => setMobileFilterOpen(false)}
                 aria-label={l.close}
-                className="rounded-full w-8 h-8 p-0 flex items-center justify-center hover:bg-zinc-100 dark:hover:bg-slate-800"
+                className="appkit-listing-layout__close-btn"
               >
                 <svg
                   className="w-4 h-4"
@@ -464,12 +447,12 @@ export function ListingLayout({
             </div>
 
             {/* Scrollable facets */}
-            <div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 space-y-4">
+            <div className="appkit-listing-layout__mobile-overlay-facets">
               {filterContent}
             </div>
 
             {/* Footer actions */}
-            <div className="flex-shrink-0 flex gap-3 px-4 py-4 border-t border-zinc-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+            <div className="appkit-listing-layout__mobile-overlay-footer">
               <Button
                 type="button"
                 variant="secondary"

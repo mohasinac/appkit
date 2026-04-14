@@ -1,0 +1,109 @@
+/* appkit/src/ui/components/HorizontalScroller.style.css */
+
+.appkit-hscroller {
+  position: relative;
+}
+
+/* ── Track ─────────────────────────────────────────── */
+
+.appkit-hscroller__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 4px;
+}
+
+.appkit-hscroller__track--snap {
+  scroll-snap-type: x mandatory;
+}
+
+.appkit-hscroller__track--no-scrollbar {
+  scrollbar-width: none;
+}
+.appkit-hscroller__track--no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Items ─────────────────────────────────────────── */
+
+.appkit-hscroller__item {
+  flex: none;
+}
+
+.appkit-hscroller__item--snap {
+  scroll-snap-align: start;
+}
+
+/* ── Arrows ────────────────────────────────────────── */
+
+.appkit-hscroller--with-arrows .appkit-hscroller__track {
+  padding-left: 36px;
+  padding-right: 36px;
+}
+
+.appkit-hscroller__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e5e7eb; /* gray-200 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms;
+  cursor: pointer;
+}
+.appkit-hscroller__arrow:hover {
+  background: #ffffff;
+}
+
+.appkit-hscroller__arrow--prev { left: 0; }
+.appkit-hscroller__arrow--next { right: 0; }
+
+.appkit-hscroller__arrow--sm { width: 1.75rem; height: 1.75rem; font-size: 0.875rem; }
+.appkit-hscroller__arrow--md { width: 2.25rem;  height: 2.25rem;  font-size: 1rem; }
+.appkit-hscroller__arrow--lg { width: 2.75rem;  height: 2.75rem;  font-size: 1.125rem; }
+
+@media (prefers-color-scheme: dark) {
+  .appkit-hscroller__arrow {
+    background: rgba(31, 41, 55, 0.9); /* gray-800/90 */
+    border-color: #374151; /* gray-700 */
+  }
+  .appkit-hscroller__arrow:hover {
+    background: #374151;
+  }
+}
+
+/* ── Fade edges ────────────────────────────────────── */
+
+.appkit-hscroller__fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.appkit-hscroller__fade--left {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.appkit-hscroller__fade--right {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .appkit-hscroller__fade--left {
+    background: linear-gradient(to right, #111827, transparent); /* gray-900 */
+  }
+  .appkit-hscroller__fade--right {
+    background: linear-gradient(to left, #111827, transparent);
+  }
+}

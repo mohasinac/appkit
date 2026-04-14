@@ -1,0 +1,17 @@
+/* appkit/src/ui/components/Slider.style.css */
+
+.appkit-slider {
+  width: 100%;
+  accent-color: var(--color-primary, #6366f1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .appkit-slider {
+    accent-color: var(--color-secondary, #818cf8);
+  }
+}
+
+.appkit-slider--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

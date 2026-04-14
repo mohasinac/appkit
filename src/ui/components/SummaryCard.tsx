@@ -17,23 +17,24 @@ export interface SummaryCardProps {
   lines: SummaryLine[];
   total: { label: string; value: string };
   action?: React.ReactNode;
-  variant?: "default" | "homepage" | "public" | "admin" | "order";
+  /**
+   * - `standalone` (default) — spacious card, used on full-width checkout/order pages
+   * - `sidebar` — compact, tight padding, used inside narrow sidebars
+   */
+  variant?: "standalone" | "sidebar";
   className?: string;
 }
 
 const SUMMARY_CARD_VARIANT_CLASS = {
-  default: "appkit-summary-card--default",
-  homepage: "appkit-summary-card--homepage",
-  public: "appkit-summary-card--public",
-  admin: "appkit-summary-card--admin",
-  order: "appkit-summary-card--order",
+  standalone: "",
+  sidebar: "appkit-summary-card--sidebar",
 } as const;
 
 export function SummaryCard({
   lines,
   total,
   action,
-  variant = "default",
+  variant = "standalone",
   className,
 }: SummaryCardProps) {
   return (

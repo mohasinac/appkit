@@ -80,7 +80,10 @@ export function CountdownDisplay({
   const label = remaining ? formatLabel(remaining, format) : expiredLabel;
 
   return (
-    <Span variant="inherit" className={classNames("tabular-nums", className)}>
+    <Span
+      variant="inherit"
+      className={classNames("appkit-countdown", className)}
+    >
       {label}
     </Span>
   );

@@ -1,4 +1,3 @@
-
 export interface SliderProps {
   value?: number;
   min?: number;
@@ -27,7 +26,11 @@ export function Slider({
       value={value}
       disabled={disabled}
       onChange={(e) => onChange?.(Number(e.target.value))}
-      className={["w-full accent-primary dark:accent-secondary", className]
+      className={[
+        "appkit-slider",
+        disabled ? "appkit-slider--disabled" : "",
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
     />

@@ -93,17 +93,10 @@ export function HorizontalScroller<T = unknown>({
 
   const itemsMode = items != null && renderItem != null;
 
-  const arrowCls = {
-    sm: "w-7 h-7 text-sm",
-    md: "w-9 h-9 text-base",
-    lg: "w-11 h-11 text-lg",
-  }[arrowSize];
-
   const scrollerCls = [
-    "flex h-full overflow-x-auto scroll-smooth",
-    snapToItems ? "snap-x snap-mandatory" : "",
-    showScrollbar ? "" : "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-    "pb-1",
+    "appkit-hscroller__track",
+    snapToItems ? "appkit-hscroller__track--snap" : "",
+    !showScrollbar ? "appkit-hscroller__track--no-scrollbar" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -113,7 +106,8 @@ export function HorizontalScroller<T = unknown>({
         <div
           key={keyExtractor ? keyExtractor(item, i) : i}
           className={[
-            snapToItems ? "snap-start flex-none" : "flex-none",
+            "appkit-hscroller__item",
+            snapToItems ? "appkit-hscroller__item--snap" : "",
             itemClassName,
           ]
             .filter(Boolean)
@@ -127,18 +121,22 @@ export function HorizontalScroller<T = unknown>({
 
   if (showArrows) {
     return (
-      <div className={`relative ${className}`}>
+      <div
+        className={["appkit-hscroller appkit-hscroller--with-arrows", className]
+          .filter(Boolean)
+          .join(" ")}
+      >
         {showFadeEdges && (
           <>
-            <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-900 to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-900 to-transparent z-10 pointer-events-none" />
+            <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
+            <div className="appkit-hscroller__fade appkit-hscroller__fade--right" />
           </>
         )}
         <button
           type="button"
           onClick={() => scrollBy(-1)}
           aria-label="Previous"
-          className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 ${arrowCls} rounded-full bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors`}
+          className={`appkit-hscroller__arrow appkit-hscroller__arrow--prev appkit-hscroller__arrow--${arrowSize}`}
         >
           {"<"}
         </button>
@@ -154,7 +152,7 @@ export function HorizontalScroller<T = unknown>({
           type="button"
           onClick={() => scrollBy(1)}
           aria-label="Next"
-          className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 ${arrowCls} rounded-full bg-white/90 dark:bg-gray-800/90 border border-gray-200 dark:border-gray-700 shadow flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 transition-colors`}
+          className={`appkit-hscroller__arrow appkit-hscroller__arrow--next appkit-hscroller__arrow--${arrowSize}`}
         >
           {">"}
         </button>
@@ -163,11 +161,11 @@ export function HorizontalScroller<T = unknown>({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={["appkit-hscroller", className].filter(Boolean).join(" ")}>
       {showFadeEdges && (
         <>
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-gray-900 to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-gray-900 to-transparent z-10 pointer-events-none" />
+          <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
+          <div className="appkit-hscroller__fade appkit-hscroller__fade--right" />
         </>
       )}
       <div

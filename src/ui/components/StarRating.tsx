@@ -22,8 +22,6 @@ export interface StarRatingProps {
   label?: string;
 }
 
-const SIZE_PX = { sm: "w-4 h-4", md: "w-5 h-5", lg: "w-6 h-6" } as const;
-
 export function StarRating({
   value = 0,
   onChange,
@@ -39,7 +37,16 @@ export function StarRating({
 
   return (
     <Span
-      className={`inline-flex items-center gap-0.5 ${className}`}
+      className={[
+        "appkit-star-rating",
+        `appkit-star-rating--${size}`,
+        readOnly
+          ? "appkit-star-rating--readonly"
+          : "appkit-star-rating--interactive",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       role={readOnly ? "img" : "group"}
       aria-label={label ?? `${value} out of ${max} stars`}
     >
@@ -51,7 +58,7 @@ export function StarRating({
         return (
           <Span
             key={starValue}
-            className={readOnly ? undefined : "cursor-pointer"}
+            className="appkit-star-rating__star"
             onClick={() => !readOnly && onChange?.(starValue)}
             onMouseEnter={() => !readOnly && setHovered(starValue)}
             onMouseLeave={() => !readOnly && setHovered(null)}
@@ -59,14 +66,10 @@ export function StarRating({
           >
             <Star
               className={[
-                SIZE_PX[size],
-                "transition-colors duration-100",
+                "appkit-star-rating__icon",
                 filled || half
-                  ? "fill-amber-400 text-amber-400"
-                  : "fill-transparent text-zinc-300 dark:text-slate-600",
-                !readOnly && !filled
-                  ? "hover:fill-amber-300 hover:text-amber-300"
-                  : "",
+                  ? "appkit-star-rating__icon--filled"
+                  : "appkit-star-rating__icon--empty",
               ].join(" ")}
               aria-hidden="true"
             />
@@ -74,7 +77,6 @@ export function StarRating({
         );
       })}
 
-      {/* Screen-reader-only value for interactive mode */}
       {!readOnly && (
         <Span className="sr-only">
           {value} out of {max}

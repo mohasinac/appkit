@@ -1,0 +1,58 @@
+/* appkit/src/ui/components/ImageLightbox.style.css */
+
+.appkit-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+/* ── Counter ───────────────────────────────────────── */
+
+.appkit-lightbox__counter {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ── Image area ────────────────────────────────────── */
+
+.appkit-lightbox__image-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.appkit-lightbox__img {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+/* ── Zoom hint ─────────────────────────────────────── */
+
+.appkit-lightbox__zoom-hint {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}

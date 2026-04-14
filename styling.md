@@ -47,28 +47,37 @@ This ensures consumer classes can override defaults without patching appkit inte
 
 ## Variant Consolidation Rules
 
-Use a component `variant` prop when the same component shape appears in multiple surfaces with mostly styling differences (for example: homepage vs public page vs admin vs order screens).
+Add a `variant` prop only when the **structure is identical** across surfaces but styling differs meaningfully enough that `className` overrides would be repeated in 3+ places.
 
-Introduce a new variant only when all checks pass:
+### Variant names must describe structure or visual weight — never location or role
 
-1. The base structure is the same (same semantic blocks/slots and behavior).
-2. At least 2 surfaces already duplicate 60%+ of markup/props and differ mostly by style tokens.
-3. The variant name is domain-semantic (`homepage`, `public`, `admin`, `order`) instead of visual-only (`blue`, `compact2`).
-4. Accessibility remains equivalent across variants (focus, contrast, landmarks, labels).
-5. The default variant remains backward compatible.
+| Wrong (location/role)         | Right (structure/weight)           |
+| ----------------------------- | ---------------------------------- |
+| `homepage`, `public`, `admin` | `elevated`, `flat`, `outlined`     |
+| `order`, `dashboard`          | `standalone`, `sidebar`, `compact` |
+| `mobile`                      | `condensed`                        |
 
-When not to add a variant:
+Decision checklist — introduce a variant only if ALL are true:
 
-- If behavior/data flow differs meaningfully (then split into separate components or feature wrappers).
-- If the need is a one-off visual tweak (use `className` override).
-- If the new prop matrix becomes hard to reason about (prefer a new component boundary).
+1. Same component, same slots/behavior — only styling tokens differ.
+2. The pattern already repeats across ≥ 3 concrete callsites.
+3. The name describes _how it looks or fits_ (layout density, visual weight, border treatment) not _where it appears_.
+4. The default variant stays backward compatible — no breaking changes.
+5. Adding the variant does not create a combinatorial explosion (avoid `variant` × `size` × `status` matrices).
 
-Implementation pattern:
+When NOT to add a variant:
 
-- Add union prop: `variant?: "default" | "homepage" | "public" | "admin" | "order"`.
-- Map variant to class hooks in TSX (no inline utility bundles).
-- Keep consumer override order: base -> state/variant -> consumer `className`.
-- Add/adjust tests or stories for each variant used in production surfaces.
+- One-off tweak → use `className`.
+- Different data or behavior → split into a separate component.
+- New surface with unconfirmed reuse → wait until second callsite exists.
+
+### Current approved variants by component
+
+| Component     | Variants                          | Rationale                                                       |
+| ------------- | --------------------------------- | --------------------------------------------------------------- |
+| `SummaryCard` | `standalone` (default), `sidebar` | Layout density: spacious vs compact inside a narrow aside       |
+| `StatsGrid`   | `elevated` (default), `flat`      | Visual weight: card shadow vs borderless for dense admin tables |
+| `StatusBadge` | none — status drives color        | `status` prop already covers all semantic variation             |
 
 ## Migration Status
 
@@ -106,21 +115,21 @@ Implementation pattern:
 - `SummaryCard`
 - `StatsGrid`
 - `StatusBadge`
-
-### Remaining (next slices)
-
+- `StepperNav`
+- `TagInput`
+- `StarRating`
 - `BulkActionBar`
 - `CountdownDisplay`
 - `DescriptionField`
+
+### Remaining (next slices)
+
 - `FormGrid`
 - `HorizontalScroller`
 - `ImageLightbox`
 - `ListingLayout`
 - `SideModal`
 - `Slider`
-- `StarRating`
-- `StepperNav`
-- `TagInput`
 
 ## PR/Review Checklist
 

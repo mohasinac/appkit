@@ -9,6 +9,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import type { MediaFilenameContext } from "../../../utils/id-generators";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -59,7 +60,7 @@ export function useMediaUpload(endpoint = "/api/media/upload") {
     file: File,
     folder = "uploads",
     isPublic = true,
-    context?: Record<string, string>,
+    context?: MediaFilenameContext | Record<string, unknown>,
   ): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);

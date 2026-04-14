@@ -16,7 +16,11 @@ export interface StatItem {
 export interface StatsGridProps {
   stats: StatItem[];
   columns?: 2 | 3 | 4;
-  variant?: "default" | "homepage" | "public" | "admin" | "order";
+  /**
+   * - `elevated` (default) — white card with border + shadow, for dashboards/homepages
+   * - `flat` — no shadow, subtle border only, for dense admin tables
+   */
+  variant?: "elevated" | "flat";
   className?: string;
 }
 
@@ -27,17 +31,14 @@ const columnsClass: Record<2 | 3 | 4, string> = {
 };
 
 const variantClass = {
-  default: "appkit-stats-grid--default",
-  homepage: "appkit-stats-grid--homepage",
-  public: "appkit-stats-grid--public",
-  admin: "appkit-stats-grid--admin",
-  order: "appkit-stats-grid--order",
+  elevated: "",
+  flat: "appkit-stats-grid--flat",
 } as const;
 
 export function StatsGrid({
   stats,
   columns = 3,
-  variant = "default",
+  variant = "elevated",
   className,
 }: StatsGridProps) {
   return (

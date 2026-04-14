@@ -1,5 +1,4 @@
 // appkit/src/ui/components/DescriptionField.tsx
-import { THEME_CONSTANTS } from "../../tokens";
 
 export interface DescriptionFieldProps {
   label: string;
@@ -35,21 +34,17 @@ export function DescriptionField({
   return (
     <div
       className={[
-        "flex flex-col gap-1",
-        isLong ? "w-full" : "flex-1 min-w-[280px]",
+        "appkit-description-field",
+        isLong
+          ? "appkit-description-field--full"
+          : "appkit-description-field--auto",
         className ?? "",
       ]
-        .join(" ")
-        .trim()}
+        .filter(Boolean)
+        .join(" ")}
     >
-      <dt className={THEME_CONSTANTS.text.label}>{label}</dt>
-      <dd
-        className={
-          isLong ? THEME_CONSTANTS.text.body : THEME_CONSTANTS.text.body
-        }
-      >
-        {value}
-      </dd>
+      <dt className="appkit-description-field__label">{label}</dt>
+      <dd className="appkit-description-field__value">{value}</dd>
     </div>
   );
 }

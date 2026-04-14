@@ -1,0 +1,121 @@
+.appkit-tag-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.appkit-tag-input__label {
+  margin-bottom: 0.375rem;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.appkit-tag-input__field {
+  display: flex;
+  min-height: 2.625rem;
+  width: 100%;
+  cursor: text;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d4d4d8;
+  background: #ffffff;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.appkit-tag-input__field:focus-within {
+  border-color: #509c02;
+  box-shadow: 0 0 0 2px rgba(80, 156, 2, 0.2);
+}
+
+.appkit-tag-input__field--disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.appkit-tag-input__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: 9999px;
+  background: rgba(80, 156, 2, 0.1);
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #3a6b02;
+}
+
+.appkit-tag-input__tag-remove {
+  margin-left: 0.125rem;
+  color: rgba(58, 107, 2, 0.65);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 0.9em;
+}
+
+.appkit-tag-input__tag-remove:hover {
+  color: #3a6b02;
+}
+
+.appkit-tag-input__text {
+  min-width: 6.25rem;
+  flex: 1;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #18181b;
+  outline: none;
+}
+
+.appkit-tag-input__text::placeholder {
+  color: #a1a1aa;
+}
+
+.appkit-tag-input__text--disabled {
+  cursor: not-allowed;
+}
+
+.appkit-tag-input__helper {
+  margin-top: 0.25rem;
+  color: #71717a;
+}
+
+/* dark */
+.dark .appkit-tag-input__field {
+  border-color: #334155;
+  background: #0f172a;
+}
+
+.dark .appkit-tag-input__field:focus-within {
+  border-color: #e91e8c;
+  box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.2);
+}
+
+.dark .appkit-tag-input__tag {
+  background: rgba(233, 30, 140, 0.15);
+  color: #f9a8d4;
+}
+
+.dark .appkit-tag-input__tag-remove {
+  color: rgba(249, 168, 212, 0.65);
+}
+
+.dark .appkit-tag-input__tag-remove:hover {
+  color: #f9a8d4;
+}
+
+.dark .appkit-tag-input__text {
+  color: #f1f5f9;
+}
+
+.dark .appkit-tag-input__text::placeholder {
+  color: #64748b;
+}
+
+.dark .appkit-tag-input__helper {
+  color: #94a3b8;
+}

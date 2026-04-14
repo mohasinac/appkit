@@ -37,7 +37,9 @@ export function SideModal({
   className = "",
 }: SideModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
-  const titleId = useRef(`side-modal-title-${Math.random().toString(36).slice(2, 8)}`);
+  const titleId = useRef(
+    `side-modal-title-${Math.random().toString(36).slice(2, 8)}`,
+  );
 
   // Escape key handler
   useEffect(() => {
@@ -76,17 +78,11 @@ export function SideModal({
 
   if (!isOpen) return null;
 
-  const translateOut = side === "right" ? "translate-x-full" : "-translate-x-full";
-  const origin = side === "right" ? "right-0" : "left-0";
-
   return (
-    <Div
-      className="fixed inset-0 z-50 flex"
-      aria-hidden={!isOpen}
-    >
+    <Div className="appkit-side-modal" aria-hidden={!isOpen}>
       {/* Backdrop */}
       <Div
-        className="absolute inset-0 bg-black/50 transition-opacity duration-300"
+        className="appkit-side-modal__backdrop"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -97,19 +93,17 @@ export function SideModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId.current : undefined}
-        className={`
-          absolute inset-y-0 ${origin} flex flex-col
-          w-full sm:w-[min(60vw,_672px)]
-          bg-white dark:bg-zinc-900
-          shadow-2xl
-          transition-transform duration-300 ease-in-out
-          ${isOpen ? "translate-x-0" : translateOut}
-          ${className}
-        `}
+        className={[
+          "appkit-side-modal__panel",
+          `appkit-side-modal__panel--${side}`,
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         {/* Header */}
         {title && (
-          <Div className="flex items-center justify-between border-b border-neutral-200 dark:border-zinc-700 px-5 py-4 flex-shrink-0">
+          <Div className="appkit-side-modal__header">
             <Heading
               level={2}
               id={titleId.current}
@@ -130,7 +124,7 @@ export function SideModal({
         )}
 
         {/* Body — scrollable */}
-        <Div className="flex-1 overflow-y-auto p-5">{children}</Div>
+        <Div className="appkit-side-modal__body">{children}</Div>
       </Div>
     </Div>
   );
