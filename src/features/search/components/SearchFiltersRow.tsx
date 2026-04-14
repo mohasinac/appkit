@@ -57,7 +57,7 @@ export function SearchFiltersRow({
         </Label>
         <Select
           value={urlCategory}
-          onChange={(value) => onCategoryChange(value)}
+          onValueChange={(value) => onCategoryChange(value)}
           options={[
             { value: "", label: L.allCategories },
             ...categories.map((cat) => ({ value: cat.id, label: cat.name })),

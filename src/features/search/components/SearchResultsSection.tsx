@@ -136,7 +136,7 @@ export function SearchResultsSection({
           {sortOptions.length > 0 && (
             <Select
               value={urlSort}
-              onChange={onSortChange}
+              onValueChange={onSortChange}
               options={sortOptions}
               className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
             />

@@ -201,14 +201,14 @@ export function BlogPostForm({
         <Select
           label={labels.category}
           value={value.category}
-          onChange={(category) => update({ category })}
+          onValueChange={(category) => update({ category })}
           options={categoryOptions}
           disabled={isReadonly}
         />
         <Select
           label={labels.status}
           value={value.status}
-          onChange={(status) => update({ status })}
+          onValueChange={(status) => update({ status })}
           options={statusOptions}
           disabled={isReadonly}
         />

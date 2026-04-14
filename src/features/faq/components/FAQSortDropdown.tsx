@@ -34,7 +34,7 @@ export function FAQSortDropdown({
       <div className="min-w-44">
         <Select
           value={selectedSort}
-          onChange={(value) => onSortChange(value as FAQSortOption)}
+          onValueChange={(value) => onSortChange(value as FAQSortOption)}
           options={sortOptions}
         />
       </div>

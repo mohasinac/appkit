@@ -80,3 +80,6 @@ export { NotFoundView } from "./components/NotFoundView";
 export type { NotFoundViewProps } from "./components/NotFoundView";
 export { UnauthorizedView } from "./components/UnauthorizedView";
 export type { UnauthorizedViewProps } from "./components/UnauthorizedView";
+
+export { ErrorBoundary } from "./ErrorBoundary";
+export type { ErrorBoundaryProps } from "./ErrorBoundary";

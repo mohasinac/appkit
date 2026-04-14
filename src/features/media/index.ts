@@ -72,3 +72,6 @@ export type {
 
 export { default as CameraCapture } from "./upload/CameraCapture";
 export type { CameraCaptureProps } from "./upload/CameraCapture";
+
+export { AvatarUpload } from "./AvatarUpload";
+export type { AvatarUploadProps } from "./AvatarUpload";

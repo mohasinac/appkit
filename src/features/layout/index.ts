@@ -44,3 +44,6 @@ export type { BackToTopProps } from "./BackToTop";
 
 export { ListingLayout } from "./ListingLayout";
 export type { ListingLayoutProps, ListingLayoutLabels } from "./ListingLayout";
+
+export { LayoutClient } from "./LayoutClient";
+export type { LayoutClientProps, LayoutProvider } from "./LayoutClient";

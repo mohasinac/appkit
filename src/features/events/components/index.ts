@@ -13,3 +13,5 @@ export { AdminEventEntriesView } from "./AdminEventEntriesView";
 export type { AdminEventEntriesViewProps } from "./AdminEventEntriesView";
 export { EventFormDrawer } from "./EventFormDrawer";
 export type { EventFormDrawerProps } from "./EventFormDrawer";
+export { EventBanner } from "./EventBanner";
+export type { EventBannerProps } from "./EventBanner";

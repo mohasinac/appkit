@@ -122,7 +122,7 @@ export function TablePagination({
           <Select
             id="page-size-select"
             value={String(pageSize)}
-            onChange={(value) => onPageSizeChange(Number(value))}
+            onValueChange={(value) => onPageSizeChange(Number(value))}
             disabled={isLoading}
             aria-label={l.perPage}
             className="appkit-table-pagination__size-select"

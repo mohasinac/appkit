@@ -126,14 +126,14 @@ export function ConsultationForm({
         />
         <Select
           value={form.preferredTime}
-          onChange={(value) => handleValueChange("preferredTime", value)}
+          onValueChange={(value) => handleValueChange("preferredTime", value)}
           options={TIME_SLOTS.map((t) => ({ value: t, label: t }))}
           className="flex-1 rounded-md border border-neutral-300 px-3 py-2 text-sm"
         />
       </Div>
       <Select
         value={form.mode}
-        onChange={(value) => handleValueChange("mode", value)}
+        onValueChange={(value) => handleValueChange("mode", value)}
         options={[
           { value: "remote", label: "Remote (Video Call)" },
           { value: "in-person", label: "In-Person" },

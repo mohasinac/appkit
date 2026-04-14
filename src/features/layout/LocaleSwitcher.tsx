@@ -35,7 +35,7 @@ export function LocaleSwitcher({
   return (
     <Select
       value={locale}
-      onChange={onChange}
+      onValueChange={onChange}
       options={options}
       aria-label={ariaLabel}
       className={className}

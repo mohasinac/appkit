@@ -1,16 +1,5 @@
-"use client";
-
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
-import { Check, ChevronDown } from "lucide-react";
-import { Label, Span, Text } from "./Typography";
-import { Ul, Li } from "./Semantic";
-import { Button } from "./Button";
-
-/**
- * Select — accessible combobox with label, error state, and disabled support.
- *
- * Standalone @mohasinac/ui primitive. No app-specific imports.
- */
+import React from "react";
+import { Label, Text } from "./Typography";
 
 export interface SelectOption<V = string> {
   label: string;
@@ -18,123 +7,58 @@ export interface SelectOption<V = string> {
   disabled?: boolean;
 }
 
-export interface SelectProps<V extends string = string> {
+export interface SelectProps<V extends string = string> extends Omit<
+  React.SelectHTMLAttributes<HTMLSelectElement>,
+  "onChange"
+> {
   options: SelectOption<V>[];
   value?: V;
-  onChange?: (value: V) => void;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+  onValueChange?: (value: V) => void;
   placeholder?: string;
-  label?: string;
-  error?: string;
-  disabled?: boolean;
+  label?: React.ReactNode;
+  error?: React.ReactNode;
+  helperText?: React.ReactNode;
   required?: boolean;
-  className?: string;
-  id?: string;
+  variant?: "default" | "ghost" | "error";
 }
 
 export function Select<V extends string = string>({
   options,
   value,
   onChange,
-  placeholder = "Select…",
+  onValueChange,
+  placeholder,
   label,
   error,
+  helperText,
   disabled = false,
   required,
   className = "",
-  id: externalId,
+  id,
+  variant = "default",
+  ...props
 }: SelectProps<V>) {
-  const generatedId = useId();
-  const id = externalId ?? generatedId;
-  const [open, setOpen] = useState(false);
-  const [openUp, setOpenUp] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const generatedId = React.useId();
+  const inputId = id ?? generatedId;
 
-  const selected = options.find((o) => o.value === value);
+  const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
+    onChange?.(event);
+    onValueChange?.(event.target.value as V);
+  };
 
-  const toggle = useCallback(() => {
-    if (!disabled) {
-      if (!open && ref.current) {
-        const rect = ref.current.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - rect.bottom;
-        const spaceAbove = rect.top;
-        setOpenUp(spaceBelow < 160 && spaceAbove > spaceBelow);
-      }
-      setOpen((v) => !v);
-    }
-  }, [disabled, open]);
-
-  const handleSelect = useCallback(
-    (val: V) => {
-      onChange?.(val);
-      setOpen(false);
-    },
-    [onChange],
-  );
-
-  // Close on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    if (open) document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
-
-  // Keyboard navigation
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-      if (e.key === "Enter" || e.key === " ") {
-        toggle();
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "ArrowDown" && !open) {
-        setOpen(true);
-        e.preventDefault();
-        return;
-      }
-      if (e.key === "ArrowDown") {
-        e.preventDefault();
-        const idx = options.findIndex((o) => o.value === value);
-        const next = options
-          .slice(idx < 0 ? 0 : idx + 1)
-          .find((o) => !o.disabled);
-        if (next) onChange?.(next.value);
-      }
-      if (e.key === "ArrowUp") {
-        e.preventDefault();
-        const idx = options.findIndex((o) => o.value === value);
-        if (idx < 0) return;
-        const prev = [...options]
-          .slice(0, idx)
-          .reverse()
-          .find((o) => !o.disabled);
-        if (prev) onChange?.(prev.value);
-      }
-    },
-    [open, options, value, onChange, toggle],
-  );
-
-  const triggerClass = [
-    "appkit-select__trigger",
-    error ? "appkit-select__trigger--error" : "appkit-select__trigger--default",
-    disabled
-      ? "appkit-select__trigger--disabled"
-      : "appkit-select__trigger--enabled",
-    className,
-  ].join(" ");
+  const variantClass =
+    error || variant === "error"
+      ? "appkit-select__trigger--error"
+      : variant === "ghost"
+        ? "border-transparent bg-transparent shadow-none"
+        : "appkit-select__trigger--default";
 
   return (
-    <div ref={ref} className="appkit-select">
+    <div className="appkit-select">
       {label && (
         <Label
-          htmlFor={id}
+          htmlFor={inputId}
           className="appkit-select__label"
           required={required}
         >
@@ -142,82 +66,72 @@ export function Select<V extends string = string>({
         </Label>
       )}
 
-      <Button
-        id={id}
-        type="button"
-        role="combobox"
-        aria-expanded={open}
-        aria-haspopup="listbox"
-        aria-disabled={disabled}
-        disabled={disabled}
-        variant="ghost"
-        className={triggerClass}
-        onClick={toggle}
-        onKeyDown={handleKeyDown}
-      >
-        <Span
-          className={
-            selected
-              ? "appkit-select__value appkit-select__value--selected"
-              : "appkit-select__value appkit-select__value--placeholder"
-          }
-        >
-          {selected?.label ?? placeholder}
-        </Span>
-        <ChevronDown
-          className={`appkit-select__chevron ${open ? "appkit-select__chevron--open" : ""}`}
-          aria-hidden="true"
-        />
-      </Button>
-
-      {open && (
-        <Ul
-          role="listbox"
+      <div className="relative group">
+        <select
+          {...props}
+          id={inputId}
+          value={value}
+          onChange={handleChange}
+          disabled={disabled}
+          aria-invalid={error ? "true" : undefined}
           className={[
-            "appkit-select__list",
-            openUp ? "appkit-select__list--up" : "appkit-select__list--down",
-          ].join(" ")}
+            "appkit-select__trigger",
+            "w-full appearance-none pr-10",
+            disabled
+              ? "appkit-select__trigger--disabled"
+              : "appkit-select__trigger--enabled",
+            variantClass,
+            className,
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
-          {options.map((option) => {
-            const isSelected = option.value === value;
-            return (
-              <Li
-                key={option.value}
-                role="option"
-                aria-selected={isSelected}
-                aria-disabled={option.disabled}
-                className={[
-                  "appkit-select__option",
-                  option.disabled
-                    ? "appkit-select__option--disabled"
-                    : isSelected
-                      ? "appkit-select__option--selected"
-                      : "appkit-select__option--default",
-                ].join(" ")}
-                onClick={() => !option.disabled && handleSelect(option.value)}
-              >
-                <Span className="appkit-select__option-label">
-                  {option.label}
-                </Span>
-                {isSelected && (
-                  <Check className="appkit-select__check" aria-hidden="true" />
-                )}
-              </Li>
-            );
-          })}
-        </Ul>
-      )}
+          {placeholder ? (
+            <option value="" disabled>
+              {placeholder}
+            </option>
+          ) : null}
+          {options.map((option) => (
+            <option
+              key={String(option.value)}
+              value={option.value}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
 
-      {error && (
+        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-500">
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {error ? (
         <Text
-          size="xs"
+          size="sm"
           variant="error"
           className="appkit-select__error"
           role="alert"
         >
           {error}
         </Text>
-      )}
+      ) : helperText ? (
+        <Text size="sm" variant="secondary" className="appkit-select__error">
+          {helperText}
+        </Text>
+      ) : null}
     </div>
   );
 }

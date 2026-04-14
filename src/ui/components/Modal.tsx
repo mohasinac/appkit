@@ -1,26 +1,19 @@
 "use client";
 
-import React, { useCallback, useEffect, useId, useRef } from "react";
+import React from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
 
-/**
- * Modal — centered dialog with backdrop, multiple sizes, ESC-to-close, and scroll lock.
- *
- * Standalone @mohasinac/ui primitive. No app-specific imports.
- * Renders via React Portal for correct z-index layering.
- */
-
 export interface ModalProps {
-  isOpen: boolean;
+  isOpen?: boolean;
+  open?: boolean;
   onClose: () => void;
-  title?: string;
+  title?: React.ReactNode;
   children: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   showCloseButton?: boolean;
-  /** Additional classNames for the modal panel */
+  actions?: React.ReactNode;
   className?: string;
 }
 
@@ -34,69 +27,80 @@ const SIZE_CLASSES: Record<NonNullable<ModalProps["size"]>, string> = {
 
 export function Modal({
   isOpen,
+  open,
   onClose,
   title,
   children,
   size = "md",
   showCloseButton = true,
+  actions,
   className = "",
 }: ModalProps) {
-  const titleId = useId();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const prevFocusRef = useRef<HTMLElement | null>(null);
+  const visible = open ?? isOpen ?? false;
+  const titleId = React.useId();
+  const panelRef = React.useRef<HTMLDivElement>(null);
+  const previousFocusRef = React.useRef<HTMLElement | null>(null);
 
-  // Lock body scroll while open
-  useEffect(() => {
-    if (!isOpen) return;
-    const prev = document.body.style.overflow;
+  React.useEffect(() => {
+    if (!visible) {
+      return;
+    }
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = prev;
+      document.body.style.overflow = previousOverflow;
     };
-  }, [isOpen]);
+  }, [visible]);
 
-  // Restore focus on close
-  useEffect(() => {
-    if (isOpen) {
-      prevFocusRef.current = document.activeElement as HTMLElement;
-      // Focus the panel itself so ESC works immediately
+  React.useEffect(() => {
+    if (visible) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
       requestAnimationFrame(() => panelRef.current?.focus());
-    } else {
-      prevFocusRef.current?.focus();
+      return;
     }
-  }, [isOpen]);
+    previousFocusRef.current?.focus();
+  }, [visible]);
 
-  // Trap focus inside modal
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key !== "Tab") return;
-      const panel = panelRef.current;
-      if (!panel) return;
-      const focusable = Array.from(
-        panel.querySelectorAll<HTMLElement>(
-          'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])',
-        ),
-      );
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    },
-    [onClose],
-  );
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Escape") {
+      onClose();
+      return;
+    }
 
-  if (!isOpen) return null;
-  if (typeof document === "undefined") return null;
+    if (event.key !== "Tab") {
+      return;
+    }
+
+    const panel = panelRef.current;
+    if (!panel) {
+      return;
+    }
+
+    const focusable = Array.from(
+      panel.querySelectorAll<HTMLElement>(
+        'a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])',
+      ),
+    );
+
+    if (!focusable.length) {
+      return;
+    }
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
+
+  if (!visible || typeof document === "undefined") {
+    return null;
+  }
 
   return createPortal(
     <div
@@ -106,30 +110,29 @@ export function Modal({
       aria-labelledby={title ? titleId : undefined}
       onKeyDown={handleKeyDown}
     >
-      {/* Backdrop */}
       <div
         className="appkit-modal__backdrop"
         aria-hidden="true"
         onClick={onClose}
       />
 
-      {/* Panel */}
       <div
         ref={panelRef}
         tabIndex={-1}
-        className={["appkit-modal__panel", SIZE_CLASSES[size], className].join(
-          " ",
-        )}
+        className={["appkit-modal__panel", SIZE_CLASSES[size], className]
+          .filter(Boolean)
+          .join(" ")}
       >
-        {/* Header */}
         {(title || showCloseButton) && (
           <div className="appkit-modal__header">
-            {title && (
+            {title ? (
               <Heading level={2} id={titleId} className="appkit-modal__title">
                 {title}
               </Heading>
+            ) : (
+              <span />
             )}
-            {showCloseButton && (
+            {showCloseButton ? (
               <Button
                 variant="ghost"
                 size="sm"
@@ -138,16 +141,39 @@ export function Modal({
                 className="appkit-modal__close"
                 aria-label="Close"
               >
-                <X className="appkit-modal__close-icon" />
+                <span className="appkit-modal__close-icon" aria-hidden="true">
+                  ×
+                </span>
               </Button>
-            )}
+            ) : null}
           </div>
         )}
 
-        {/* Scrollable body */}
         <div className="appkit-modal__body">{children}</div>
+        {actions ? <ModalFooter>{actions}</ModalFooter> : null}
       </div>
     </div>,
     document.body,
+  );
+}
+
+export function ModalFooter({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={[
+        "flex items-center justify-end gap-3 border-t border-zinc-100 px-6 py-4 dark:border-slate-800",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {children}
+    </div>
   );
 }

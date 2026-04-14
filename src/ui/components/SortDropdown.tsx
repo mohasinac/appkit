@@ -41,7 +41,7 @@ export function SortDropdown({
       )}
       <Select
         value={value ?? ""}
-        onChange={onChange}
+        onValueChange={onChange}
         options={options}
         className="appkit-sort-dropdown__select"
       />
