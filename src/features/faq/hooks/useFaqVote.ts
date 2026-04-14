@@ -5,7 +5,7 @@ import { apiClient } from "../../../http";
 
 export interface VoteFaqInput {
   faqId: string;
-  vote: "helpful" | "not_helpful";
+  vote: "helpful" | "not_helpful" | "not-helpful";
 }
 
 export interface VoteFaqResult {
