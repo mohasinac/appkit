@@ -22,18 +22,27 @@ export interface TitleBarLayoutProps {
   brandName: string;
   brandShortName?: string;
   logoHref: string;
+  promotionsHref?: string;
   cartHref?: string;
   cartCount?: number;
   profileHref?: string;
   user?: TitleBarUser | null;
   /** Slot rendered between the search button and profile link (e.g. NotificationBell). */
   notificationSlot?: React.ReactNode;
+  /** Optional dev-only action slot rendered in the right-side action group. */
+  devSlot?: React.ReactNode;
   /** Optional nav slot rendered between logo and right action icons (desktop only). */
   navSlot?: React.ReactNode;
   /** When set, renders a dismissable promo micro-strip above the header. */
   promoStripText?: string;
   isDark?: boolean;
   onToggleTheme?: () => void;
+  /** Whether a dashboard section has registered a secondary navigation drawer. */
+  hasDashboardNav?: boolean;
+  /** Callback to open the registered dashboard navigation drawer. */
+  onOpenDashboardNav?: () => void;
+  /** Hide the public sidebar toggle button when nested layouts own navigation. */
+  hideSidebarToggle?: boolean;
   id?: string;
   className?: string;
 }
@@ -52,15 +61,20 @@ export function TitleBarLayout({
   brandName,
   brandShortName,
   logoHref,
+  promotionsHref,
   cartHref,
   cartCount = 0,
   profileHref,
   user,
   notificationSlot,
+  devSlot,
   navSlot,
   promoStripText,
   isDark = false,
   onToggleTheme,
+  hasDashboardNav = false,
+  onOpenDashboardNav,
+  hideSidebarToggle = false,
   id = "titlebar",
   className = "",
 }: TitleBarLayoutProps) {
@@ -82,40 +96,68 @@ export function TitleBarLayout({
         <Div className="flex items-center justify-between h-12">
           {/* Left: hamburger (mobile) + logo */}
           <Div className="flex items-center gap-3">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              aria-label={sidebarOpen ? "Close menu" : "Open menu"}
-              aria-expanded={sidebarOpen}
-              aria-controls="secondary-sidebar"
-              onClick={onToggleSidebar}
-              className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
+            {!hideSidebarToggle && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+                aria-expanded={sidebarOpen}
+                aria-controls="secondary-sidebar"
+                onClick={onToggleSidebar}
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
               >
-                {sidebarOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  {sidebarOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </Button>
+            )}
+
+            {hasDashboardNav && onOpenDashboardNav && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-label="Open dashboard navigation"
+                onClick={onOpenDashboardNav}
+                className="hidden md:flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
                     d="M4 6h16M4 12h16M4 18h16"
                   />
-                )}
-              </svg>
-            </Button>
+                </svg>
+              </Button>
+            )}
 
             <Link
               href={logoHref}
@@ -137,6 +179,17 @@ export function TitleBarLayout({
 
           {/* Right: actions */}
           <Div className="flex items-center gap-1">
+            {/* Promotions */}
+            {promotionsHref && (
+              <Link
+                href={promotionsHref}
+                aria-label="Today's deals"
+                className="hidden lg:flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950/30 transition-colors"
+              >
+                Deals
+              </Link>
+            )}
+
             {/* Search toggle */}
             <Button
               type="button"
@@ -164,6 +217,9 @@ export function TitleBarLayout({
 
             {/* Notification slot */}
             {notificationSlot}
+
+            {/* Dev slot */}
+            {devSlot}
 
             {/* Theme toggle */}
             {onToggleTheme && (

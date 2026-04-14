@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { Div } from "../../../ui";
 
 export const BLOG_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -47,7 +48,7 @@ export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {
     : [];
 
   return (
-    <div>
+    <Div>
       {variant !== "public" && (
         <FilterFacetSection
           title={t("status")}
@@ -77,6 +78,6 @@ export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {
           defaultCollapsed={true}
         />
       )}
-    </div>
+    </Div>
   );
 }

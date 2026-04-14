@@ -7,4 +7,6 @@ export * from "./hooks/useFeaturedPreOrders";
 export * from "./hooks/useTopCategories";
 export * from "./hooks/useTopBrands";
 export * from "./hooks/useBlogArticles";
+export * from "./hooks/useHomepageReviews";
+export * from "./hooks/useNewsletter";
 export * from "./components";

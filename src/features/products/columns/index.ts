@@ -1,5 +1,24 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
 import type { ProductItem } from "../types";
+export { getProductTableColumns } from "./productTableColumns";
+export type {
+  ProductTableColumnLabels,
+  ProductTableColumnsConfig,
+} from "./productTableColumns";
+
+export const PRODUCT_SORT_VALUES = {
+  NEWEST: "-createdAt",
+  OLDEST: "createdAt",
+  PRICE_LOW: "price",
+  PRICE_HIGH: "-price",
+  RATING_HIGH: "-avgRating",
+  POPULAR: "-viewCount",
+  NAME_AZ: "title",
+  NAME_ZA: "-title",
+} as const;
+
+export type ProductSortValue =
+  (typeof PRODUCT_SORT_VALUES)[keyof typeof PRODUCT_SORT_VALUES];
 
 /**
  * Default admin column definitions for a product table.

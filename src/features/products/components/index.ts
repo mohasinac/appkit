@@ -1,4 +1,10 @@
 export { ProductCard, ProductGrid } from "./ProductGrid";
+export { ProductFilters } from "./ProductFilters";
+export type { ProductFiltersProps, FacetOption, UrlTable } from "./ProductFilters";
+export { InteractiveProductCard } from "./InteractiveProductCard";
+export type { InteractiveProductCardProps } from "./InteractiveProductCard";
+export { ProductForm, PRODUCT_STATUS_OPTIONS } from "./ProductForm";
+export type { ProductFormProps, ProductFormValue } from "./ProductForm";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
 export { BuyBar } from "./BuyBar";
 export type { BuyBarProps } from "./BuyBar";

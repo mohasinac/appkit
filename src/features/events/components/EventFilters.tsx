@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { Div } from "../../../ui";
 
 export const EVENT_SORT_OPTIONS = [
   { value: "title", label: "Title A–Z" },
@@ -46,7 +47,7 @@ export function EventFilters({ table }: EventFiltersProps) {
     : [];
 
   return (
-    <div>
+    <Div>
       <FilterFacetSection
         title={t("type")}
         options={typeOptions}
@@ -76,6 +77,6 @@ export function EventFilters({ table }: EventFiltersProps) {
         maxPlaceholder={t("maxDate")}
         defaultCollapsed={true}
       />
-    </div>
+    </Div>
   );
 }

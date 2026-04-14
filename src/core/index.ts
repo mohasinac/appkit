@@ -37,3 +37,5 @@ export type {
   CopilotLogDocument,
   CopilotLogCreateInput,
 } from "./copilot-log.repository";
+
+export { useSiteSettings } from "./hooks/useSiteSettings";

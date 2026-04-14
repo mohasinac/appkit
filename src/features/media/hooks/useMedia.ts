@@ -79,19 +79,31 @@ export function useMediaUpload(endpoint = "/api/media/upload") {
 /**
  * useMediaCrop — sends pixel-crop params to /api/media/crop.
  */
-export function useMediaCrop(endpoint = "/api/media/crop") {
-  return useMutation<{ url: string }, Error, MediaCropInput>({
-    mutationFn: (data) => apiClient.post<{ url: string }>(endpoint, data),
+export function useMediaCrop<TResult = { url: string }>(
+  endpoint = "/api/media/crop",
+) {
+  return useMutation<TResult, Error, MediaCropInput>({
+    mutationFn: (data) => apiClient.post<TResult>(endpoint, data),
   });
 }
 
 /**
  * useMediaTrim — sends trim params to /api/media/trim.
  */
-export function useMediaTrim(endpoint = "/api/media/trim") {
-  return useMutation<{ url: string }, Error, MediaTrimInput>({
-    mutationFn: (data) => apiClient.post<{ url: string }>(endpoint, data),
+export function useMediaTrim<TResult = { url: string }>(
+  endpoint = "/api/media/trim",
+) {
+  return useMutation<TResult, Error, MediaTrimInput>({
+    mutationFn: (data) => apiClient.post<TResult>(endpoint, data),
   });
+}
+
+/**
+ * useMediaAbort — compatibility alias for staged-media cleanup.
+ */
+export function useMediaAbort(endpoint = "/api/media") {
+  const { cleanup } = useMediaCleanup(endpoint);
+  return cleanup;
 }
 
 /**

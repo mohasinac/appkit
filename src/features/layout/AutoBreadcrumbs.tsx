@@ -83,24 +83,29 @@ export function AutoBreadcrumbs({
   const pathname = usePathname();
   const labels = { ...DEFAULT_PATH_LABELS, ...pathLabels };
 
-  const segments = pathname
-    .split("/")
-    .filter(Boolean)
-    .filter(
-      (seg) =>
-        !LOCALE_CODES.has(seg.toLowerCase()) &&
-        !/^[0-9a-f-]{8,}$/.test(seg) &&
-        !/^\d+$/.test(seg),
-    );
+  const rawSegments = pathname.split("/").filter(Boolean);
+  const leadingSegment = rawSegments[0]?.toLowerCase();
+  const hasLocalePrefix =
+    !!leadingSegment &&
+    (LOCALE_CODES.has(leadingSegment) ||
+      /^[a-z]{2}-[a-z]{2}$/.test(leadingSegment));
+  const localePrefix = hasLocalePrefix ? `/${rawSegments[0]}` : "";
+
+  const segments = rawSegments.filter(
+    (seg) =>
+      !LOCALE_CODES.has(seg.toLowerCase()) &&
+      !/^[0-9a-f-]{8,}$/.test(seg) &&
+      !/^\d+$/.test(seg),
+  );
 
   if (segments.length === 0) return null;
 
   const crumbs = segments.map((seg, i) => ({
     label: labels[seg] ?? capitalize(seg),
-    href: "/" + segments.slice(0, i + 1).join("/"),
+    href: `${localePrefix}/${segments.slice(0, i + 1).join("/")}`,
   }));
 
-  const allCrumbs = [{ label: "Home", href: "/" }, ...crumbs];
+  const allCrumbs = [{ label: "Home", href: localePrefix || "/" }, ...crumbs];
 
   return (
     <Nav aria-label="Breadcrumb" className={className}>

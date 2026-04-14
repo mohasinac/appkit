@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { Div } from "../../../ui";
 
 export const ORDER_ADMIN_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -31,9 +32,14 @@ export type OrderFilterVariant = "admin" | "seller" | "user";
 export interface OrderFiltersProps {
   table: UrlTable;
   variant?: OrderFilterVariant;
+  currencyPrefix?: string;
 }
 
-export function OrderFilters({ table, variant = "admin" }: OrderFiltersProps) {
+export function OrderFilters({
+  table,
+  variant = "admin",
+  currencyPrefix = "",
+}: OrderFiltersProps) {
   const t = useTranslations("filters");
 
   const statusOptions = [
@@ -69,7 +75,7 @@ export function OrderFilters({ table, variant = "admin" }: OrderFiltersProps) {
     : [];
 
   return (
-    <div>
+    <Div>
       <FilterFacetSection
         title={t("status")}
         options={statusOptions}
@@ -105,6 +111,7 @@ export function OrderFilters({ table, variant = "admin" }: OrderFiltersProps) {
         maxValue={table.get("maxAmount")}
         onMinChange={(v) => table.set("minAmount", v)}
         onMaxChange={(v) => table.set("maxAmount", v)}
+        prefix={currencyPrefix}
         showSlider
         minBound={0}
         maxBound={500000}
@@ -125,6 +132,6 @@ export function OrderFilters({ table, variant = "admin" }: OrderFiltersProps) {
         maxPlaceholder={t("maxDate")}
         defaultCollapsed={true}
       />
-    </div>
+    </Div>
   );
 }

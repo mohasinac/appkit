@@ -1,4 +1,5 @@
 export * from "./types";
+export * from "./hooks/useBecomeSeller";
 export * from "./hooks/useSellerStore";
 export * from "./hooks/useSellerPayouts";
 export * from "./components";

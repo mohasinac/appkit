@@ -10,3 +10,5 @@ export { StoreAuctionsView } from "./StoreAuctionsView";
 export type { StoreAuctionsViewProps } from "./StoreAuctionsView";
 export { StoreReviewsView } from "./StoreReviewsView";
 export type { StoreReviewsViewProps } from "./StoreReviewsView";
+export { InteractiveStoreCard } from "./InteractiveStoreCard";
+export type { InteractiveStoreCardProps } from "./InteractiveStoreCard";

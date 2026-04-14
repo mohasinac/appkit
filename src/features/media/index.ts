@@ -24,6 +24,7 @@ export type { MediaSliderProps } from "./components/MediaSlider";
 // Hooks
 export {
   useMediaUpload,
+  useMediaAbort,
   useMediaCrop,
   useMediaTrim,
   useMediaCleanup,

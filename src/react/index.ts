@@ -59,7 +59,10 @@ export type {
 } from "./hooks/usePendingTable";
 
 // Unsaved changes tracking
-export { useUnsavedChanges, UNSAVED_CHANGES_EVENT } from "./hooks/useUnsavedChanges";
+export {
+  useUnsavedChanges,
+  UNSAVED_CHANGES_EVENT,
+} from "./hooks/useUnsavedChanges";
 export type {
   UseUnsavedChangesOptions,
   UseUnsavedChangesReturn,
@@ -78,6 +81,9 @@ export type {
 
 // Container-aware fluid grid column counter (ResizeObserver-based)
 export { useContainerGrid } from "./hooks/useContainerGrid";
+
+// Success/error message management
+export { useMessage } from "./hooks/useMessage";
 export type {
   UseContainerGridOptions,
   UseContainerGridResult,
@@ -97,3 +103,18 @@ export type { ModalEntry } from "./useModalStack";
 // Error boundary
 export { ErrorBoundary } from "./ErrorBoundary";
 export type { ErrorBoundaryProps } from "./ErrorBoundary";
+
+// Realtime event bridge
+export {
+  useRealtimeEvent,
+  RealtimeEventType,
+  RealtimeEventStatus,
+} from "./hooks/useRealtimeEvent";
+export type {
+  RTDBEventPayload,
+  RealtimeEventMessages,
+  RealtimeEventType as RealtimeEventTypeValue,
+  RealtimeEventStatus as RealtimeEventStatusValue,
+  UseRealtimeEventConfig,
+  UseRealtimeEventReturn,
+} from "./hooks/useRealtimeEvent";

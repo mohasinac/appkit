@@ -5,6 +5,7 @@ import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { Div } from "../../../ui";
 
 export type { FacetOption, UrlTable };
 
@@ -69,7 +70,7 @@ export function ProductFilters({
     : [];
 
   return (
-    <div>
+    <Div>
       {categoryOptions.length > 0 && (
         <FilterFacetSection
           title={t("category")}
@@ -149,6 +150,6 @@ export function ProductFilters({
           defaultCollapsed={true}
         />
       )}
-    </div>
+    </Div>
   );
 }

@@ -5,6 +5,7 @@ import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { Div } from "../../../ui";
 
 export const REVIEW_SORT_OPTIONS = [
   { value: "-createdAt", key: "sortNewest" },
@@ -51,7 +52,7 @@ export function ReviewFilters({
     : [];
 
   return (
-    <div>
+    <Div>
       {variant === "admin" && (
         <FilterFacetSection
           title={t("status")}
@@ -103,6 +104,6 @@ export function ReviewFilters({
           />
         </>
       )}
-    </div>
+    </Div>
   );
 }

@@ -28,10 +28,12 @@ export interface FooterSocialLink {
 }
 
 export interface TrustBarItem {
-  id: string;
+  id?: string;
   icon: React.ReactNode;
-  title: string;
-  subtitle: string;
+  /** Primary label text. */
+  label: string;
+  /** Optional secondary text shown below the label. */
+  subtitle?: string;
   visible?: boolean;
 }
 
@@ -82,9 +84,9 @@ export function FooterLayout({
         <Div className="border-b border-zinc-200 dark:border-slate-800 py-6">
           <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
-              {visibleTrustItems.map((item) => (
+              {visibleTrustItems.map((item, i) => (
                 <Li
-                  key={item.id}
+                  key={item.id ?? String(i)}
                   className="flex items-center gap-3 text-sm min-w-[160px]"
                 >
                   <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
@@ -92,11 +94,13 @@ export function FooterLayout({
                   </Span>
                   <Span>
                     <Span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                      {item.title}
+                      {item.label}
                     </Span>
-                    <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
-                      {item.subtitle}
-                    </Span>
+                    {item.subtitle && (
+                      <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
+                        {item.subtitle}
+                      </Span>
+                    )}
                   </Span>
                 </Li>
               ))}

@@ -16,6 +16,8 @@ export interface SortDropdownProps {
   options: SortOption[];
   label?: string;
   className?: string;
+  /** Optional text shown before the sort selector (e.g. "Showing 12 of 45") */
+  countText?: React.ReactNode;
 }
 
 export function SortDropdown({
@@ -24,12 +26,22 @@ export function SortDropdown({
   options,
   label,
   className = "",
+  countText,
 }: SortDropdownProps) {
   return (
     <Row
       gap="sm"
       className={["appkit-sort-dropdown", className].filter(Boolean).join(" ")}
     >
+      {countText && (
+        <Span
+          variant="secondary"
+          size="sm"
+          className="appkit-sort-dropdown__count"
+        >
+          {countText}
+        </Span>
+      )}
       {label && (
         <Span
           variant="secondary"

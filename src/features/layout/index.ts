@@ -21,6 +21,9 @@ export type { BottomNavLayoutProps } from "./BottomNavLayout";
 export { BottomNavItem } from "./BottomNavItem";
 export type { BottomNavItemProps } from "./BottomNavItem";
 
+export { NavItem } from "./NavItem";
+export type { NavItemProps } from "./NavItem";
+
 export { BottomSheet } from "./BottomSheet";
 export type { BottomSheetProps } from "./BottomSheet";
 
@@ -47,3 +50,17 @@ export type { ListingLayoutProps, ListingLayoutLabels } from "./ListingLayout";
 
 export { LayoutClient } from "./LayoutClient";
 export type { LayoutClientProps, LayoutProvider } from "./LayoutClient";
+
+export {
+  BottomActionsProvider,
+  useBottomActionsContext,
+} from "./BottomActionsContext";
+export type {
+  BottomAction,
+  BottomBulkConfig,
+  BottomActionsState,
+} from "./BottomActionsContext";
+export { useBottomActions } from "./hooks/useBottomActions";
+export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
+
+export { default as BottomActions } from "./BottomActions";
