@@ -37,5 +37,22 @@ export type {
   CopilotLogDocument,
   CopilotLogCreateInput,
 } from "./copilot-log.repository";
+export {
+  COPILOT_LOGS_COLLECTION,
+  COPILOT_LOGS_INDEXED_FIELDS,
+  copilotLogQueryHelpers,
+} from "./copilot-log.repository";
 
 export { useSiteSettings } from "./hooks/useSiteSettings";
+
+export {
+  NEWSLETTER_SUBSCRIBER_FIELDS,
+  NEWSLETTER_SUBSCRIBERS_COLLECTION,
+  NEWSLETTER_SUBSCRIBER_INDEXED_FIELDS,
+  newsletterRepository,
+} from "./newsletter.repository";
+export type {
+  NewsletterSubscriberDocument,
+  NewsletterSubscriberCreateInput,
+  NewsletterSubscriberUpdateInput,
+} from "./newsletter.repository";

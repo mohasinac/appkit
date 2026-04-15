@@ -1,3 +1,4 @@
+export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
 

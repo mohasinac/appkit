@@ -1,3 +1,4 @@
+export * from "./firestore";
 import { z } from "zod";
 
 // ─── Sub-schemas ──────────────────────────────────────────────────────────────
@@ -16,10 +17,7 @@ export const payoutStatusSchema = z.enum([
   "failed",
 ]);
 
-export const payoutPaymentMethodSchema = z.enum([
-  "bank_transfer",
-  "upi",
-]);
+export const payoutPaymentMethodSchema = z.enum(["bank_transfer", "upi"]);
 
 export const socialLinksSchema = z.object({
   twitter: z.string().optional(),

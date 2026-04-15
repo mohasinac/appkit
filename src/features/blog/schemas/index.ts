@@ -1,10 +1,14 @@
+export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
 
 const blogCoverImageSchema = z
   .union([
     mediaFieldSchema,
-    z.string().url().transform((url) => ({ url, type: "image" as const })),
+    z
+      .string()
+      .url()
+      .transform((url) => ({ url, type: "image" as const })),
   ])
   .nullable()
   .optional()

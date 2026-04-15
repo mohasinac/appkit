@@ -1,3 +1,5 @@
+export * from "./firestore";
+
 import { z } from "zod";
 
 // ─── Form schemas ─────────────────────────────────────────────────────────────

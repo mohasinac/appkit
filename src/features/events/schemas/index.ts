@@ -1,10 +1,14 @@
+export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
 
 const eventCoverImageSchema = z
   .union([
     mediaFieldSchema,
-    z.string().url().transform((url) => ({ url, type: "image" as const })),
+    z
+      .string()
+      .url()
+      .transform((url) => ({ url, type: "image" as const })),
   ])
   .nullable()
   .optional()
@@ -20,12 +24,7 @@ export const eventTypeSchema = z.enum([
   "feedback",
 ]);
 
-export const eventStatusSchema = z.enum([
-  "draft",
-  "active",
-  "paused",
-  "ended",
-]);
+export const eventStatusSchema = z.enum(["draft", "active", "paused", "ended"]);
 
 export const saleConfigSchema = z.object({
   discountPercent: z.number(),

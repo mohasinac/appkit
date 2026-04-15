@@ -1,4 +1,5 @@
 export * from "./types";
+export * from "./schemas";
 export * from "./hooks/useHomepage";
 export * from "./hooks/useHeroCarousel";
 export * from "./hooks/useFeaturedProducts";

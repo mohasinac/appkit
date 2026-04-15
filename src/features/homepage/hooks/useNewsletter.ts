@@ -22,7 +22,11 @@ export interface UseNewsletterOptions {
 }
 
 export function useNewsletter(options?: UseNewsletterOptions) {
-  return useMutation<SubscribeNewsletterResult, Error, SubscribeNewsletterInput>({
+  return useMutation<
+    SubscribeNewsletterResult,
+    Error,
+    SubscribeNewsletterInput
+  >({
     mutationFn:
       options?.mutationFn ??
       ((data) =>

@@ -191,3 +191,6 @@ export class NewsletterRepository {
 }
 
 export const newsletterRepository = new NewsletterRepository();
+
+export const NEWSLETTER_SUBSCRIBERS_COLLECTION = "newsletterSubscribers" as const;
+export const NEWSLETTER_SUBSCRIBER_INDEXED_FIELDS = ["status", "email", "emailIndex", "createdAt", "subscribedAt"] as const;

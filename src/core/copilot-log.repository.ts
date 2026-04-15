@@ -104,3 +104,10 @@ export class CopilotLogRepository {
 }
 
 export const copilotLogRepository = new CopilotLogRepository();
+
+export const COPILOT_LOGS_COLLECTION = "copilotLogs" as const;
+export const COPILOT_LOGS_INDEXED_FIELDS = ["userId", "conversationId", "createdAt"] as const;
+export const copilotLogQueryHelpers = {
+  byUser: (userId: string) => ["userId", "==", userId] as const,
+  byConversation: (conversationId: string) => ["conversationId", "==", conversationId] as const,
+} as const;

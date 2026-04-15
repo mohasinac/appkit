@@ -23,6 +23,10 @@ export function useFaqVote(options?: UseFaqVoteOptions) {
   return useMutation<VoteFaqResult, Error, VoteFaqInput>({
     mutationFn:
       options?.mutationFn ??
-      ((data) => apiClient.post<VoteFaqResult>(options?.endpoint ?? "/api/faqs/vote", data)),
+      ((data) =>
+        apiClient.post<VoteFaqResult>(
+          options?.endpoint ?? "/api/faqs/vote",
+          data,
+        )),
   });
 }

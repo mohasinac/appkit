@@ -1,383 +1,399 @@
 {
-  "name": "@mohasinac/appkit",
-  "version": "2.1.3",
-  "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
-  "author": "Mohasin AC",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mohasinac/appkit.git"
-  },
-  "type": "module",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
-    },
-    "./contracts": {
-      "types": "./src/contracts/index.ts",
-      "default": "./src/contracts/index.ts"
-    },
-    "./core": {
-      "types": "./src/core/index.ts",
-      "default": "./src/core/index.ts"
-    },
-    "./core/newsletter.repository": {
-      "types": "./src/core/newsletter.repository.ts",
-      "default": "./src/core/newsletter.repository.ts"
-    },
-    "./http": {
-      "types": "./src/http/index.ts",
-      "default": "./src/http/index.ts"
-    },
-    "./errors": {
-      "types": "./src/errors/index.ts",
-      "default": "./src/errors/index.ts"
-    },
-    "./utils": {
-      "types": "./src/utils/index.ts",
-      "default": "./src/utils/index.ts"
-    },
-    "./validation": {
-      "types": "./src/validation/index.ts",
-      "default": "./src/validation/index.ts"
-    },
-    "./tokens": {
-      "types": "./src/tokens/index.ts",
-      "default": "./src/tokens/index.ts"
-    },
-    "./next": {
-      "types": "./src/next/index.ts",
-      "default": "./src/next/index.ts"
-    },
-    "./react": {
-      "types": "./src/react/index.ts",
-      "default": "./src/react/index.ts"
-    },
-    "./ui": {
-      "types": "./src/ui/index.ts",
-      "default": "./src/ui/index.ts"
-    },
-    "./security": {
-      "types": "./src/security/index.ts",
-      "default": "./src/security/index.ts"
-    },
-    "./seo": {
-      "types": "./src/seo/index.ts",
-      "default": "./src/seo/index.ts"
-    },
-    "./monitoring": {
-      "types": "./src/monitoring/index.ts",
-      "default": "./src/monitoring/index.ts"
-    },
-    "./instrumentation": {
-      "types": "./src/instrumentation/index.ts",
-      "default": "./src/instrumentation/index.ts"
-    },
-    "./style/tailwind": {
-      "types": "./src/style/tailwind/index.ts",
-      "default": "./src/style/tailwind/index.ts"
-    },
-    "./style/vanilla": {
-      "types": "./src/style/vanilla/index.ts",
-      "default": "./src/style/vanilla/index.ts"
-    },
-    "./providers/db-firebase": {
-      "types": "./src/providers/db-firebase/index.ts",
-      "browser": "./src/providers/db-firebase/browser-stub.ts",
-      "default": "./src/providers/db-firebase/index.ts"
-    },
-    "./providers/auth-firebase": {
-      "types": "./src/providers/auth-firebase/index.ts",
-      "browser": "./src/providers/auth-firebase/browser-stub.ts",
-      "default": "./src/providers/auth-firebase/index.ts"
-    },
-    "./providers/email-resend": {
-      "types": "./src/providers/email-resend/index.ts",
-      "default": "./src/providers/email-resend/index.ts"
-    },
-    "./providers/storage-firebase": {
-      "types": "./src/providers/storage-firebase/index.ts",
-      "default": "./src/providers/storage-firebase/index.ts"
-    },
-    "./providers/payment-razorpay": {
-      "types": "./src/providers/payment-razorpay/index.ts",
-      "default": "./src/providers/payment-razorpay/index.ts"
-    },
-    "./providers/shipping-shiprocket": {
-      "types": "./src/providers/shipping-shiprocket/index.ts",
-      "default": "./src/providers/shipping-shiprocket/index.ts"
-    },
-    "./features/layout": {
-      "types": "./src/features/layout/index.ts",
-      "default": "./src/features/layout/index.ts"
-    },
-    "./features/forms": {
-      "types": "./src/features/forms/index.ts",
-      "default": "./src/features/forms/index.ts"
-    },
-    "./features/filters": {
-      "types": "./src/features/filters/index.ts",
-      "default": "./src/features/filters/index.ts"
-    },
-    "./features/media": {
-      "types": "./src/features/media/index.ts",
-      "default": "./src/features/media/index.ts"
-    },
-    "./features/auth": {
-      "types": "./src/features/auth/index.ts",
-      "default": "./src/features/auth/index.ts"
-    },
-    "./features/account": {
-      "types": "./src/features/account/index.ts",
-      "default": "./src/features/account/index.ts"
-    },
-    "./features/admin": {
-      "types": "./src/features/admin/index.ts",
-      "default": "./src/features/admin/index.ts"
-    },
-    "./features/cms": {
-      "types": "./src/features/cms/index.ts",
-      "default": "./src/features/cms/index.ts"
-    },
-    "./features/blog": {
-      "types": "./src/features/blog/index.ts",
-      "default": "./src/features/blog/index.ts"
-    },
-    "./features/about": {
-      "types": "./src/features/about/index.ts",
-      "default": "./src/features/about/index.ts"
-    },
-    "./features/contact": {
-      "types": "./src/features/contact/index.ts",
-      "default": "./src/features/contact/index.ts"
-    },
-    "./features/copilot": {
-      "types": "./src/features/copilot/index.ts",
-      "default": "./src/features/copilot/index.ts"
-    },
-    "./features/cart": {
-      "types": "./src/features/cart/index.ts",
-      "default": "./src/features/cart/index.ts"
-    },
-    "./features/categories": {
-      "types": "./src/features/categories/index.ts",
-      "default": "./src/features/categories/index.ts"
-    },
-    "./features/checkout": {
-      "types": "./src/features/checkout/index.ts",
-      "default": "./src/features/checkout/index.ts"
-    },
-    "./features/collections": {
-      "types": "./src/features/collections/index.ts",
-      "default": "./src/features/collections/index.ts"
-    },
-    "./features/consultation": {
-      "types": "./src/features/consultation/index.ts",
-      "default": "./src/features/consultation/index.ts"
-    },
-    "./features/corporate": {
-      "types": "./src/features/corporate/index.ts",
-      "default": "./src/features/corporate/index.ts"
-    },
-    "./features/events": {
-      "types": "./src/features/events/index.ts",
-      "default": "./src/features/events/index.ts"
-    },
-    "./features/faq": {
-      "types": "./src/features/faq/index.ts",
-      "default": "./src/features/faq/index.ts"
-    },
-    "./features/homepage": {
-      "types": "./src/features/homepage/index.ts",
-      "default": "./src/features/homepage/index.ts"
-    },
-    "./features/loyalty": {
-      "types": "./src/features/loyalty/index.ts",
-      "default": "./src/features/loyalty/index.ts"
-    },
-    "./features/orders": {
-      "types": "./src/features/orders/index.ts",
-      "default": "./src/features/orders/index.ts"
-    },
-    "./features/payments": {
-      "types": "./src/features/payments/index.ts",
-      "default": "./src/features/payments/index.ts"
-    },
-    "./features/products": {
-      "types": "./src/features/products/index.ts",
-      "default": "./src/features/products/index.ts"
-    },
-    "./features/promotions": {
-      "types": "./src/features/promotions/index.ts",
-      "default": "./src/features/promotions/index.ts"
-    },
-    "./features/reviews": {
-      "types": "./src/features/reviews/index.ts",
-      "default": "./src/features/reviews/index.ts"
-    },
-    "./features/search": {
-      "types": "./src/features/search/index.ts",
-      "default": "./src/features/search/index.ts"
-    },
-    "./features/seller": {
-      "types": "./src/features/seller/index.ts",
-      "default": "./src/features/seller/index.ts"
-    },
-    "./features/stores": {
-      "types": "./src/features/stores/index.ts",
-      "default": "./src/features/stores/index.ts"
-    },
-    "./features/wishlist": {
-      "types": "./src/features/wishlist/index.ts",
-      "default": "./src/features/wishlist/index.ts"
-    },
-    "./features/auctions": {
-      "types": "./src/features/auctions/index.ts",
-      "default": "./src/features/auctions/index.ts"
-    },
-    "./features/pre-orders": {
-      "types": "./src/features/pre-orders/index.ts",
-      "default": "./src/features/pre-orders/index.ts"
-    },
-    "./features/before-after": {
-      "types": "./src/features/before-after/index.ts",
-      "default": "./src/features/before-after/index.ts"
-    },
-    "./features/whatsapp-bot": {
-      "types": "./src/features/whatsapp-bot/index.ts",
-      "default": "./src/features/whatsapp-bot/index.ts"
-    },
-    "./features/auth/server": {
-      "types": "./src/features/auth/server.ts",
-      "default": "./src/features/auth/server.ts"
-    },
-    "./features/admin/server": {
-      "types": "./src/features/admin/server.ts",
-      "default": "./src/features/admin/server.ts"
-    },
-    "./features/auctions/server": {
-      "types": "./src/features/auctions/server.ts",
-      "default": "./src/features/auctions/server.ts"
-    },
-    "./features/blog/server": {
-      "types": "./src/features/blog/server.ts",
-      "default": "./src/features/blog/server.ts"
-    },
-    "./features/categories/server": {
-      "types": "./src/features/categories/server.ts",
-      "default": "./src/features/categories/server.ts"
-    },
-    "./features/events/server": {
-      "types": "./src/features/events/server.ts",
-      "default": "./src/features/events/server.ts"
-    },
-    "./features/faq/server": {
-      "types": "./src/features/faq/server.ts",
-      "default": "./src/features/faq/server.ts"
-    },
-    "./features/homepage/server": {
-      "types": "./src/features/homepage/server.ts",
-      "default": "./src/features/homepage/server.ts"
-    },
-    "./features/pre-orders/server": {
-      "types": "./src/features/pre-orders/server.ts",
-      "default": "./src/features/pre-orders/server.ts"
-    },
-    "./features/products/server": {
-      "types": "./src/features/products/server.ts",
-      "default": "./src/features/products/server.ts"
-    },
-    "./features/promotions/server": {
-      "types": "./src/features/promotions/server.ts",
-      "default": "./src/features/promotions/server.ts"
-    },
-    "./features/reviews/server": {
-      "types": "./src/features/reviews/server.ts",
-      "default": "./src/features/reviews/server.ts"
-    },
-    "./features/search/server": {
-      "types": "./src/features/search/server.ts",
-      "default": "./src/features/search/server.ts"
-    },
-    "./features/seller/server": {
-      "types": "./src/features/seller/server.ts",
-      "default": "./src/features/seller/server.ts"
-    },
-    "./features/stores/server": {
-      "types": "./src/features/stores/server.ts",
-      "default": "./src/features/stores/server.ts"
-    },
-    "./cli": {
-      "types": "./src/cli/index.ts",
-      "default": "./src/cli/index.ts"
-    },
-    "./seed": {
-      "types": "./src/seed/index.ts",
-      "default": "./src/seed/index.ts"
-    }
-  },
-  "files": [
-    "src",
-    "README.md"
-  ],
-  "scripts": {
-    "index:generate": "node scripts/get-index.js",
-    "typecheck": "tsc --noEmit",
-    "watch": "tsc --noEmit --watch --preserveWatchOutput",
-    "lint": "eslint src"
-  },
-  "dependencies": {
-    "@mohasinac/sievejs": "^1.0.0",
-    "server-only": "^0.0.1",
-    "tailwind-merge": "^3.3.0",
-    "zod": "^3.24.0"
-  },
-  "peerDependencies": {
-    "@tanstack/react-query": ">=5.0.0",
-    "firebase-admin": ">=12.0.0",
-    "next": ">=14",
-    "next-intl": ">=3",
-    "razorpay": ">=2.9.0",
-    "react": ">=18",
-    "react-dom": ">=18",
-    "recharts": "^3.8.1",
-    "resend": ">=3.0.0"
-  },
-  "peerDependenciesMeta": {
-    "firebase-admin": {
-      "optional": true
-    },
-    "resend": {
-      "optional": true
-    },
-    "razorpay": {
-      "optional": true
-    },
-    "@tanstack/react-query": {
-      "optional": true
-    }
-  },
-  "devDependencies": {
-    "@tanstack/react-query": "^5.0.0",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "@upstash/ratelimit": "^2.0.8",
-    "@upstash/redis": "^1.37.0",
-    "eslint": "^9.37.0",
-    "firebase": "^11.6.0",
-    "firebase-admin": "^13.8.0",
-    "lucide-react": "^1.7.0",
-    "next": "^15.0.0",
-    "next-intl": "^4.9.1",
-    "razorpay": "^2.9.6",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "resend": "^6.10.0",
-    "typescript": "^5.9.3"
-  }
+    "name":  "@mohasinac/appkit",
+    "version":  "2.1.3",
+    "description":  "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
+    "author":  "Mohasin AC",
+    "license":  "MIT",
+    "publishConfig":  {
+                          "access":  "public"
+                      },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "https://github.com/mohasinac/appkit.git"
+                   },
+    "type":  "module",
+    "types":  "./src/index.ts",
+    "exports":  {
+                    ".":  {
+                              "types":  "./src/index.ts",
+                              "default":  "./src/index.ts"
+                          },
+                    "./contracts":  {
+                                        "types":  "./src/contracts/index.ts",
+                                        "default":  "./src/contracts/index.ts"
+                                    },
+                    "./core":  {
+                                   "types":  "./src/core/index.ts",
+                                   "default":  "./src/core/index.ts"
+                               },
+                    "./core/newsletter.repository":  {
+                                                         "types":  "./src/core/newsletter.repository.ts",
+                                                         "default":  "./src/core/newsletter.repository.ts"
+                                                     },
+                    "./http":  {
+                                   "types":  "./src/http/index.ts",
+                                   "default":  "./src/http/index.ts"
+                               },
+                    "./errors":  {
+                                     "types":  "./src/errors/index.ts",
+                                     "default":  "./src/errors/index.ts"
+                                 },
+                    "./utils":  {
+                                    "types":  "./src/utils/index.ts",
+                                    "default":  "./src/utils/index.ts"
+                                },
+                    "./validation":  {
+                                         "types":  "./src/validation/index.ts",
+                                         "default":  "./src/validation/index.ts"
+                                     },
+                    "./tokens":  {
+                                     "types":  "./src/tokens/index.ts",
+                                     "default":  "./src/tokens/index.ts"
+                                 },
+                    "./next":  {
+                                   "types":  "./src/next/index.ts",
+                                   "default":  "./src/next/index.ts"
+                               },
+                    "./react":  {
+                                    "types":  "./src/react/index.ts",
+                                    "default":  "./src/react/index.ts"
+                                },
+                    "./ui":  {
+                                 "types":  "./src/ui/index.ts",
+                                 "default":  "./src/ui/index.ts"
+                             },
+                    "./security":  {
+                                       "types":  "./src/security/index.ts",
+                                       "default":  "./src/security/index.ts"
+                                   },
+                    "./seo":  {
+                                  "types":  "./src/seo/index.ts",
+                                  "default":  "./src/seo/index.ts"
+                              },
+                    "./monitoring":  {
+                                         "types":  "./src/monitoring/index.ts",
+                                         "default":  "./src/monitoring/index.ts"
+                                     },
+                    "./instrumentation":  {
+                                              "types":  "./src/instrumentation/index.ts",
+                                              "default":  "./src/instrumentation/index.ts"
+                                          },
+                    "./style/tailwind":  {
+                                             "types":  "./src/style/tailwind/index.ts",
+                                             "default":  "./src/style/tailwind/index.ts"
+                                         },
+                    "./style/vanilla":  {
+                                            "types":  "./src/style/vanilla/index.ts",
+                                            "default":  "./src/style/vanilla/index.ts"
+                                        },
+                    "./providers/db-firebase":  {
+                                                    "types":  "./src/providers/db-firebase/index.ts",
+                                                    "browser":  "./src/providers/db-firebase/browser-stub.ts",
+                                                    "default":  "./src/providers/db-firebase/index.ts"
+                                                },
+                    "./providers/auth-firebase":  {
+                                                      "types":  "./src/providers/auth-firebase/index.ts",
+                                                      "browser":  "./src/providers/auth-firebase/browser-stub.ts",
+                                                      "default":  "./src/providers/auth-firebase/index.ts"
+                                                  },
+                    "./providers/email-resend":  {
+                                                     "types":  "./src/providers/email-resend/index.ts",
+                                                     "default":  "./src/providers/email-resend/index.ts"
+                                                 },
+                    "./providers/storage-firebase":  {
+                                                         "types":  "./src/providers/storage-firebase/index.ts",
+                                                         "default":  "./src/providers/storage-firebase/index.ts"
+                                                     },
+                    "./providers/payment-razorpay":  {
+                                                         "types":  "./src/providers/payment-razorpay/index.ts",
+                                                         "default":  "./src/providers/payment-razorpay/index.ts"
+                                                     },
+                    "./providers/shipping-shiprocket":  {
+                                                            "types":  "./src/providers/shipping-shiprocket/index.ts",
+                                                            "default":  "./src/providers/shipping-shiprocket/index.ts"
+                                                        },
+                    "./features/layout":  {
+                                              "types":  "./src/features/layout/index.ts",
+                                              "default":  "./src/features/layout/index.ts"
+                                          },
+                    "./features/forms":  {
+                                             "types":  "./src/features/forms/index.ts",
+                                             "default":  "./src/features/forms/index.ts"
+                                         },
+                    "./features/filters":  {
+                                               "types":  "./src/features/filters/index.ts",
+                                               "default":  "./src/features/filters/index.ts"
+                                           },
+                    "./features/media":  {
+                                             "types":  "./src/features/media/index.ts",
+                                             "default":  "./src/features/media/index.ts"
+                                         },
+                    "./features/auth":  {
+                                            "types":  "./src/features/auth/index.ts",
+                                            "default":  "./src/features/auth/index.ts"
+                                        },
+                    "./features/account":  {
+                                               "types":  "./src/features/account/index.ts",
+                                               "default":  "./src/features/account/index.ts"
+                                           },
+                    "./features/admin":  {
+                                             "types":  "./src/features/admin/index.ts",
+                                             "default":  "./src/features/admin/index.ts"
+                                         },
+                    "./features/cms":  {
+                                           "types":  "./src/features/cms/index.ts",
+                                           "default":  "./src/features/cms/index.ts"
+                                       },
+                    "./features/blog":  {
+                                            "types":  "./src/features/blog/index.ts",
+                                            "default":  "./src/features/blog/index.ts"
+                                        },
+                    "./features/about":  {
+                                             "types":  "./src/features/about/index.ts",
+                                             "default":  "./src/features/about/index.ts"
+                                         },
+                    "./features/contact":  {
+                                               "types":  "./src/features/contact/index.ts",
+                                               "default":  "./src/features/contact/index.ts"
+                                           },
+                    "./features/copilot":  {
+                                               "types":  "./src/features/copilot/index.ts",
+                                               "default":  "./src/features/copilot/index.ts"
+                                           },
+                    "./features/cart":  {
+                                            "types":  "./src/features/cart/index.ts",
+                                            "default":  "./src/features/cart/index.ts"
+                                        },
+                    "./features/categories":  {
+                                                  "types":  "./src/features/categories/index.ts",
+                                                  "default":  "./src/features/categories/index.ts"
+                                              },
+                    "./features/checkout":  {
+                                                "types":  "./src/features/checkout/index.ts",
+                                                "default":  "./src/features/checkout/index.ts"
+                                            },
+                    "./features/collections":  {
+                                                   "types":  "./src/features/collections/index.ts",
+                                                   "default":  "./src/features/collections/index.ts"
+                                               },
+                    "./features/consultation":  {
+                                                    "types":  "./src/features/consultation/index.ts",
+                                                    "default":  "./src/features/consultation/index.ts"
+                                                },
+                    "./features/corporate":  {
+                                                 "types":  "./src/features/corporate/index.ts",
+                                                 "default":  "./src/features/corporate/index.ts"
+                                             },
+                    "./features/events":  {
+                                              "types":  "./src/features/events/index.ts",
+                                              "default":  "./src/features/events/index.ts"
+                                          },
+                    "./features/faq":  {
+                                           "types":  "./src/features/faq/index.ts",
+                                           "default":  "./src/features/faq/index.ts"
+                                       },
+                    "./features/homepage":  {
+                                                "types":  "./src/features/homepage/index.ts",
+                                                "default":  "./src/features/homepage/index.ts"
+                                            },
+                    "./features/loyalty":  {
+                                               "types":  "./src/features/loyalty/index.ts",
+                                               "default":  "./src/features/loyalty/index.ts"
+                                           },
+                    "./features/orders":  {
+                                              "types":  "./src/features/orders/index.ts",
+                                              "default":  "./src/features/orders/index.ts"
+                                          },
+                    "./features/payments":  {
+                                                "types":  "./src/features/payments/index.ts",
+                                                "default":  "./src/features/payments/index.ts"
+                                            },
+                    "./features/products":  {
+                                                "types":  "./src/features/products/index.ts",
+                                                "default":  "./src/features/products/index.ts"
+                                            },
+                    "./features/promotions":  {
+                                                  "types":  "./src/features/promotions/index.ts",
+                                                  "default":  "./src/features/promotions/index.ts"
+                                              },
+                    "./features/reviews":  {
+                                               "types":  "./src/features/reviews/index.ts",
+                                               "default":  "./src/features/reviews/index.ts"
+                                           },
+                    "./features/search":  {
+                                              "types":  "./src/features/search/index.ts",
+                                              "default":  "./src/features/search/index.ts"
+                                          },
+                    "./features/seller":  {
+                                              "types":  "./src/features/seller/index.ts",
+                                              "default":  "./src/features/seller/index.ts"
+                                          },
+                    "./features/stores":  {
+                                              "types":  "./src/features/stores/index.ts",
+                                              "default":  "./src/features/stores/index.ts"
+                                          },
+                    "./features/wishlist":  {
+                                                "types":  "./src/features/wishlist/index.ts",
+                                                "default":  "./src/features/wishlist/index.ts"
+                                            },
+                    "./features/auctions":  {
+                                                "types":  "./src/features/auctions/index.ts",
+                                                "default":  "./src/features/auctions/index.ts"
+                                            },
+                    "./features/pre-orders":  {
+                                                  "types":  "./src/features/pre-orders/index.ts",
+                                                  "default":  "./src/features/pre-orders/index.ts"
+                                              },
+                    "./features/before-after":  {
+                                                    "types":  "./src/features/before-after/index.ts",
+                                                    "default":  "./src/features/before-after/index.ts"
+                                                },
+                    "./features/whatsapp-bot":  {
+                                                    "types":  "./src/features/whatsapp-bot/index.ts",
+                                                    "default":  "./src/features/whatsapp-bot/index.ts"
+                                                },
+                    "./features/auth/server":  {
+                                                   "types":  "./src/features/auth/server.ts",
+                                                   "default":  "./src/features/auth/server.ts"
+                                               },
+                    "./features/admin/server":  {
+                                                    "types":  "./src/features/admin/server.ts",
+                                                    "default":  "./src/features/admin/server.ts"
+                                                },
+                    "./features/auctions/server":  {
+                                                       "types":  "./src/features/auctions/server.ts",
+                                                       "default":  "./src/features/auctions/server.ts"
+                                                   },
+                    "./features/blog/server":  {
+                                                   "types":  "./src/features/blog/server.ts",
+                                                   "default":  "./src/features/blog/server.ts"
+                                               },
+                    "./features/categories/server":  {
+                                                         "types":  "./src/features/categories/server.ts",
+                                                         "default":  "./src/features/categories/server.ts"
+                                                     },
+                    "./features/events/server":  {
+                                                     "types":  "./src/features/events/server.ts",
+                                                     "default":  "./src/features/events/server.ts"
+                                                 },
+                    "./features/faq/server":  {
+                                                  "types":  "./src/features/faq/server.ts",
+                                                  "default":  "./src/features/faq/server.ts"
+                                              },
+                    "./features/homepage/server":  {
+                                                       "types":  "./src/features/homepage/server.ts",
+                                                       "default":  "./src/features/homepage/server.ts"
+                                                   },
+                    "./features/pre-orders/server":  {
+                                                         "types":  "./src/features/pre-orders/server.ts",
+                                                         "default":  "./src/features/pre-orders/server.ts"
+                                                     },
+                    "./features/products/server":  {
+                                                       "types":  "./src/features/products/server.ts",
+                                                       "default":  "./src/features/products/server.ts"
+                                                   },
+                    "./features/promotions/server":  {
+                                                         "types":  "./src/features/promotions/server.ts",
+                                                         "default":  "./src/features/promotions/server.ts"
+                                                     },
+                    "./features/reviews/server":  {
+                                                      "types":  "./src/features/reviews/server.ts",
+                                                      "default":  "./src/features/reviews/server.ts"
+                                                  },
+                    "./features/search/server":  {
+                                                     "types":  "./src/features/search/server.ts",
+                                                     "default":  "./src/features/search/server.ts"
+                                                 },
+                    "./features/seller/server":  {
+                                                     "types":  "./src/features/seller/server.ts",
+                                                     "default":  "./src/features/seller/server.ts"
+                                                 },
+                    "./features/stores/server":  {
+                                                     "types":  "./src/features/stores/server.ts",
+                                                     "default":  "./src/features/stores/server.ts"
+                                                 },
+                    "./cli":  {
+                                  "types":  "./src/cli/index.ts",
+                                  "default":  "./src/cli/index.ts"
+                              },
+                    "./seed":  {
+                                   "types":  "./src/seed/index.ts",
+                                   "default":  "./src/seed/index.ts"
+                               },
+                    "./features/admin/schemas":  {
+                                                     "types":  "./src/features/admin/schemas/index.ts",
+                                                     "default":  "./src/features/admin/schemas/index.ts"
+                                                 },
+                    "./features/faq/schemas":  {
+                                                   "types":  "./src/features/faq/schemas/index.ts",
+                                                   "default":  "./src/features/faq/schemas/index.ts"
+                                               },
+                    "./features/checkout/schemas":  {
+                                                        "types":  "./src/features/checkout/schemas/index.ts",
+                                                        "default":  "./src/features/checkout/schemas/index.ts"
+                                                    },
+                    "./features/homepage/schemas":  {
+                                                        "types":  "./src/features/homepage/schemas/index.ts",
+                                                        "default":  "./src/features/homepage/schemas/index.ts"
+                                                    }
+                },
+    "files":  [
+                  "src",
+                  "README.md"
+              ],
+    "scripts":  {
+                    "index:generate":  "node scripts/get-index.js",
+                    "typecheck":  "tsc --noEmit",
+                    "watch":  "tsc --noEmit --watch --preserveWatchOutput",
+                    "lint":  "eslint src"
+                },
+    "dependencies":  {
+                         "@mohasinac/sievejs":  "^1.0.0",
+                         "server-only":  "^0.0.1",
+                         "tailwind-merge":  "^3.3.0",
+                         "zod":  "^3.24.0"
+                     },
+    "peerDependencies":  {
+                             "@tanstack/react-query":  "\u003e=5.0.0",
+                             "firebase-admin":  "\u003e=12.0.0",
+                             "next":  "\u003e=14",
+                             "next-intl":  "\u003e=3",
+                             "razorpay":  "\u003e=2.9.0",
+                             "react":  "\u003e=18",
+                             "react-dom":  "\u003e=18",
+                             "recharts":  "^3.8.1",
+                             "resend":  "\u003e=3.0.0"
+                         },
+    "peerDependenciesMeta":  {
+                                 "firebase-admin":  {
+                                                        "optional":  true
+                                                    },
+                                 "resend":  {
+                                                "optional":  true
+                                            },
+                                 "razorpay":  {
+                                                  "optional":  true
+                                              },
+                                 "@tanstack/react-query":  {
+                                                               "optional":  true
+                                                           }
+                             },
+    "devDependencies":  {
+                            "@tanstack/react-query":  "^5.0.0",
+                            "@types/react":  "^19.1.0",
+                            "@types/react-dom":  "^19.1.0",
+                            "@upstash/ratelimit":  "^2.0.8",
+                            "@upstash/redis":  "^1.37.0",
+                            "eslint":  "^9.37.0",
+                            "firebase":  "^11.6.0",
+                            "firebase-admin":  "^13.8.0",
+                            "lucide-react":  "^1.7.0",
+                            "next":  "^15.0.0",
+                            "next-intl":  "^4.9.1",
+                            "razorpay":  "^2.9.6",
+                            "react":  "^19.2.0",
+                            "react-dom":  "^19.2.0",
+                            "resend":  "^6.10.0",
+                            "typescript":  "^5.9.3"
+                        }
 }

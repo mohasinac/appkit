@@ -12,9 +12,15 @@ export interface UseHomepageReviewsOptions {
 
 export function useHomepageReviews(options?: UseHomepageReviewsOptions) {
   return useQuery<Review[]>({
-    queryKey: ["reviews", "latest", options?.endpoint ?? "/api/reviews?featured=true"],
+    queryKey: [
+      "reviews",
+      "latest",
+      options?.endpoint ?? "/api/reviews?featured=true",
+    ],
     queryFn: () =>
-      apiClient.get<Review[]>(options?.endpoint ?? "/api/reviews?featured=true"),
+      apiClient.get<Review[]>(
+        options?.endpoint ?? "/api/reviews?featured=true",
+      ),
     staleTime: options?.staleTime ?? 10 * 60 * 1000,
     initialData: options?.initialData,
   });
