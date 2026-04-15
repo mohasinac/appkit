@@ -1,110 +1,170 @@
+import { DatabaseError } from "../../../errors";
+import { serverLogger } from "../../../monitoring";
 import type {
-  IRepository,
-  PagedResult,
-  SieveQuery,
-} from "../../../contracts";
-import type { EventItem, EventEntryItem } from "../types";
+  FirebaseSieveFields,
+  FirebaseSieveResult,
+  SieveModel,
+} from "../../../providers/db-firebase";
+import {
+  BaseRepository,
+  prepareForFirestore,
+} from "../../../providers/db-firebase";
+import {
+  EVENT_FIELDS,
+  EVENTS_COLLECTION,
+  type EventCreateInput,
+  type EventDocument,
+  type EventUpdateInput,
+} from "../schemas";
+import { FieldValue } from "firebase-admin/firestore";
 
-export class EventsRepository {
-  constructor(private readonly repo: IRepository<EventItem>) {}
+class EventRepository extends BaseRepository<EventDocument> {
+  static readonly SIEVE_FIELDS: FirebaseSieveFields = {
+    type: { canFilter: true, canSort: false },
+    status: { canFilter: true, canSort: true },
+    title: { canFilter: true, canSort: true },
+    createdBy: { canFilter: true, canSort: false },
+    startsAt: { canFilter: true, canSort: true },
+    endsAt: { canFilter: true, canSort: true },
+    "stats.totalEntries": {
+      path: "stats.totalEntries",
+      canFilter: true,
+      canSort: true,
+    },
+    "stats.approvedEntries": {
+      path: "stats.approvedEntries",
+      canFilter: true,
+      canSort: true,
+    },
+    "stats.flaggedEntries": {
+      path: "stats.flaggedEntries",
+      canFilter: true,
+      canSort: true,
+    },
+    id: { canFilter: true, canSort: false },
+    createdAt: { canFilter: true, canSort: true },
+  };
 
-  async findAll(query?: SieveQuery): Promise<PagedResult<EventItem>> {
-    return this.repo.findAll(query ?? {});
+  constructor() {
+    super(EVENTS_COLLECTION);
   }
 
-  async findById(id: string): Promise<EventItem | null> {
-    return this.repo.findById(id);
+  async list(model: SieveModel): Promise<FirebaseSieveResult<EventDocument>> {
+    return this.sieveQuery<EventDocument>(model, EventRepository.SIEVE_FIELDS);
   }
 
-  async findActive(): Promise<EventItem[]> {
-    const result = await this.repo.findAll({
-      filters: "status==active",
-      sort: "startsAt",
-    });
-    return result.data;
+  async listActive(): Promise<EventDocument[]> {
+    try {
+      const now = new Date();
+      const snapshot = await this.getCollection()
+        .where(EVENT_FIELDS.STATUS, "==", EVENT_FIELDS.STATUS_VALUES.ACTIVE)
+        .where(EVENT_FIELDS.ENDS_AT, ">=", now)
+        .orderBy(EVENT_FIELDS.ENDS_AT, "asc")
+        .get();
+
+      return snapshot.docs.map((doc) => this.mapDoc<EventDocument>(doc));
+    } catch (error) {
+      throw new DatabaseError("Failed to list active events", error);
+    }
   }
 
-  async findByType(
-    type: string,
-    page = 1,
-    perPage = 20,
-  ): Promise<PagedResult<EventItem>> {
-    return this.repo.findAll({
-      filters: `type==${type},status==active`,
-      sort: "-startsAt",
-      page,
-      perPage,
-    });
+  async createEvent(input: EventCreateInput): Promise<EventDocument> {
+    try {
+      const now = new Date();
+      const data = prepareForFirestore({
+        ...input,
+        stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+        createdAt: now,
+        updatedAt: now,
+      });
+
+      const ref = await this.getCollection().add(data);
+      const created = await ref.get();
+
+      serverLogger.info("Event created", { eventId: ref.id, type: input.type });
+
+      return this.mapDoc<EventDocument>(created);
+    } catch (error) {
+      throw new DatabaseError("Failed to create event", error);
+    }
   }
 
-  async create(
-    data: Omit<EventItem, "id" | "createdAt" | "updatedAt">,
-  ): Promise<EventItem> {
-    return this.repo.create(data);
-  }
-
-  async update(id: string, data: Partial<EventItem>): Promise<EventItem> {
-    return this.repo.update(id, data);
-  }
-
-  async delete(id: string): Promise<void> {
-    return this.repo.delete(id);
-  }
-}
-
-export class EventEntriesRepository {
-  constructor(private readonly repo: IRepository<EventEntryItem>) {}
-
-  async findByEvent(
-    eventId: string,
-    page = 1,
-    perPage = 50,
-  ): Promise<PagedResult<EventEntryItem>> {
-    return this.repo.findAll({
-      filters: `eventId==${eventId}`,
-      sort: "-submittedAt",
-      page,
-      perPage,
-    });
-  }
-
-  async findPending(eventId: string): Promise<EventEntryItem[]> {
-    const result = await this.repo.findAll({
-      filters: `eventId==${eventId},reviewStatus==pending`,
-      sort: "submittedAt",
-    });
-    return result.data;
-  }
-
-  async findLeaderboard(
-    eventId: string,
-    limit = 10,
-  ): Promise<EventEntryItem[]> {
-    const result = await this.repo.findAll({
-      filters: `eventId==${eventId},reviewStatus==approved`,
-      sort: "-points",
-      perPage: limit,
-    });
-    return result.data;
-  }
-
-  async create(data: Omit<EventEntryItem, "id">): Promise<EventEntryItem> {
-    return this.repo.create(
-      data as Omit<EventEntryItem, "id" | "createdAt" | "updatedAt">,
-    );
-  }
-
-  async updateReviewStatus(
+  async updateEvent(
     id: string,
-    status: "approved" | "flagged",
-    reviewedBy: string,
-    note?: string,
-  ): Promise<EventEntryItem> {
-    return this.repo.update(id, {
-      reviewStatus: status,
-      reviewedBy,
-      reviewedAt: new Date().toISOString(),
-      reviewNote: note,
-    });
+    input: EventUpdateInput,
+  ): Promise<EventDocument> {
+    try {
+      const now = new Date();
+      const data = prepareForFirestore({
+        ...input,
+        [EVENT_FIELDS.UPDATED_AT]: now,
+      });
+
+      await this.getCollection().doc(id).update(data);
+      const updated = await this.findByIdOrFail(id);
+
+      serverLogger.info("Event updated", { eventId: id });
+
+      return updated;
+    } catch (error) {
+      throw new DatabaseError(`Failed to update event ${id}`, error);
+    }
+  }
+
+  async changeStatus(
+    id: string,
+    status: EventDocument["status"],
+  ): Promise<EventDocument> {
+    return this.updateEvent(id, { status });
+  }
+
+  async incrementTotalEntries(id: string): Promise<void> {
+    try {
+      await this.getCollection()
+        .doc(id)
+        .update({
+          [EVENT_FIELDS.STATS.TOTAL_ENTRIES]: FieldValue.increment(1),
+        });
+    } catch (error) {
+      throw new DatabaseError(
+        `Failed to increment totalEntries for event ${id}`,
+        error,
+      );
+    }
+  }
+
+  async incrementApprovedEntries(id: string): Promise<void> {
+    try {
+      await this.getCollection()
+        .doc(id)
+        .update({
+          [EVENT_FIELDS.STATS.APPROVED_ENTRIES]: FieldValue.increment(1),
+        });
+    } catch (error) {
+      throw new DatabaseError(
+        `Failed to increment approvedEntries for event ${id}`,
+        error,
+      );
+    }
+  }
+
+  async incrementFlaggedEntries(id: string): Promise<void> {
+    try {
+      await this.getCollection()
+        .doc(id)
+        .update({
+          [EVENT_FIELDS.STATS.FLAGGED_ENTRIES]: FieldValue.increment(1),
+        });
+    } catch (error) {
+      throw new DatabaseError(
+        `Failed to increment flaggedEntries for event ${id}`,
+        error,
+      );
+    }
   }
 }
+
+const eventRepository = new EventRepository();
+
+export { EventRepository, eventRepository };
+export { EventRepository as EventsRepository };

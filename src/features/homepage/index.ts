@@ -11,3 +11,5 @@ export * from "./hooks/useBlogArticles";
 export * from "./hooks/useHomepageReviews";
 export * from "./hooks/useNewsletter";
 export * from "./components";
+export { carouselRepository } from "./repository/carousel.repository";
+export { homepageSectionsRepository } from "./repository/homepage-sections.repository";

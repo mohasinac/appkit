@@ -12,4 +12,5 @@ export * from "./hooks/useGuestCartMerge";
 export * from "./components";
 export * from "./utils/guest-cart";
 export { CartRepository } from "./repository/cart.repository";
+export { cartRepository } from "./repository/cart.repository";
 export { manifest } from "./manifest";

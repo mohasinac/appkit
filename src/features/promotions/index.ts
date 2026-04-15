@@ -5,4 +5,5 @@ export * from "./hooks/usePromotions";
 export * from "./hooks/useCouponValidate";
 export * from "./components";
 export { PromotionsRepository } from "./repository/promotions.repository";
+export { couponsRepository } from "./repository/coupons.repository";
 export { manifest } from "./manifest";

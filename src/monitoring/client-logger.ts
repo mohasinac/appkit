@@ -81,3 +81,122 @@ export const logClientDebug = (
 ): void => {
   logger.debug(message, { ...data, timestamp: new Date().toISOString() });
 };
+
+export const logApiError = async (
+  endpoint: string,
+  response: Response,
+  context?: ClientErrorContext,
+): Promise<void> => {
+  let responseBody: unknown;
+
+  try {
+    responseBody = await response.clone().json();
+  } catch {
+    responseBody = await response.clone().text();
+  }
+
+  logClientError(`API Error: ${endpoint}`, new Error(response.statusText), {
+    ...context,
+    endpoint,
+    status: response.status,
+    statusText: response.statusText,
+    responseBody,
+  });
+};
+
+export const logValidationError = (
+  formName: string,
+  errors: Record<string, unknown>,
+  context?: ClientErrorContext,
+): void => {
+  logClientWarning(`Form validation failed: ${formName}`, {
+    ...context,
+    formName,
+    validationErrors: errors,
+  });
+};
+
+export const logNavigationError = (
+  route: string,
+  error: unknown,
+  context?: ClientErrorContext,
+): void => {
+  logClientError(`Navigation error to ${route}`, error, {
+    ...context,
+    route,
+    type: "navigation",
+  });
+};
+
+export const logAuthError = (
+  operation: string,
+  error: unknown,
+  context?: ClientErrorContext,
+): void => {
+  logClientError(`Authentication error: ${operation}`, error, {
+    ...context,
+    operation,
+    type: "authentication",
+  });
+};
+
+export const logUploadError = (
+  fileName: string,
+  error: unknown,
+  context?: ClientErrorContext,
+): void => {
+  logClientError(`File upload failed: ${fileName}`, error, {
+    ...context,
+    fileName,
+    type: "upload",
+  });
+};
+
+export const logPaymentError = (
+  transactionId: string,
+  error: unknown,
+  context?: ClientErrorContext,
+): void => {
+  logClientError(`Payment error: ${transactionId}`, error, {
+    ...context,
+    transactionId,
+    type: "payment",
+  });
+};
+
+export const logApplicationError = (
+  category: string,
+  message: string,
+  error: unknown,
+  context?: ClientErrorContext,
+): void => {
+  logClientError(`[${category}] ${message}`, error, {
+    ...context,
+    category,
+  });
+};
+
+let clientLoggerInitialized = false;
+
+export const initializeClientLogger = (): void => {
+  if (typeof window === "undefined" || clientLoggerInitialized) {
+    return;
+  }
+
+  clientLoggerInitialized = true;
+
+  window.addEventListener("unhandledrejection", (event) => {
+    logClientError("Unhandled Promise Rejection", event.reason, {
+      type: "unhandled-rejection",
+    });
+  });
+
+  window.addEventListener("error", (event) => {
+    logClientError("Global Error", event.error ?? event.message, {
+      type: "global-error",
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    });
+  });
+};

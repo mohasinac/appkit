@@ -164,6 +164,7 @@ export type CategoryCreateInput = Omit<
   CategoryDocument,
   "id" | "createdAt" | "updatedAt" | "metrics" | "isLeaf" | "ancestors"
 > & {
+  parentIds?: string[];
   parentId?: string | null;
 };
 

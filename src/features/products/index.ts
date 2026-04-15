@@ -5,6 +5,10 @@ export * from "./hooks/useBrands";
 export * from "./components";
 export * from "./schemas";
 export * from "./columns";
-export { ProductsRepository } from "./repository/products.repository";
+export {
+  ProductRepository,
+  ProductsRepository,
+  productRepository,
+} from "./repository/products.repository";
 export { manifest } from "./manifest";
 export { normalizeListingType } from "./utils/listing-type";

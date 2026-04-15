@@ -29,3 +29,4 @@ export {
   smoothScrollTo,
   preventBodyScroll,
 } from "./event-manager";
+export * from "./business-day";

@@ -26,6 +26,7 @@ export interface GridCard {
     textColor?: string;
   };
   buttons?: Array<{
+    id?: string;
     text: string;
     link: string;
     variant: "primary" | "secondary" | "outline";
@@ -62,9 +63,21 @@ export interface CarouselSlideDocument {
   };
   cards: GridCard[];
   overlay?: {
-    enabled: boolean;
-    color: string;
-    opacity: number;
+    /** Visual overlay — dims the background image */
+    enabled?: boolean;
+    color?: string;
+    opacity?: number;
+    /** Content overlay — text and CTA layered over the slide */
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    button?: {
+      id?: string;
+      text: string;
+      link: string;
+      variant: "primary" | "secondary" | "outline";
+      openInNewTab: boolean;
+    };
   };
   analytics?: {
     views: number;

@@ -65,6 +65,14 @@ export {
   inferMediaTypeFromMime,
   mediaFieldSchema,
 } from "./types/index";
+export {
+  extractStoragePathFromUrl,
+  finalizeStagedMediaUrl,
+  finalizeStagedMediaField,
+  finalizeStagedMediaArray,
+  finalizeStagedMediaObject,
+  finalizeStagedMediaObjectArray,
+} from "./finalize";
 export type {
   MediaField,
   MediaFieldInput,

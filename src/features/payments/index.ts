@@ -4,4 +4,5 @@ export * from "./columns";
 export * from "./hooks/usePayments";
 export * from "./hooks/usePaymentEvent";
 export { PaymentsRepository } from "./repository/payments.repository";
+export { payoutRepository } from "./repository/payout.repository";
 export { manifest } from "./manifest";

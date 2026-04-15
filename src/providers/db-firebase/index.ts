@@ -33,8 +33,10 @@ export {
 
 // Repository base classes
 export { FirebaseRepository } from "./base";
+export { BaseRepository } from "./base.repository";
 export { FirebaseSieveRepository } from "./sieve";
 export { FirebaseRealtimeRepository } from "./realtime";
+export { RTDB_PATHS } from "./rtdb-paths";
 
 // IDbProvider implementation — registers Firebase as the database backend.
 // Wire once in providers.config.ts: db: firebaseDbProvider
@@ -57,4 +59,9 @@ export type {
   SieveFieldConfig,
   SieveOptions,
   SieveResult,
+  FirebaseSieveFieldConfig,
+  FirebaseSieveFields,
+  FirebaseSieveOptions,
+  FirebaseSieveResult,
 } from "./sieve";
+export { applySieveToFirestore } from "./sieve";

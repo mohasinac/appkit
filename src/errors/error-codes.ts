@@ -52,7 +52,12 @@ export const ERROR_CODES = {
 
 export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES];
 
-export const ERROR_MESSAGES: Record<ErrorCode, string> = {
+/**
+ * ERROR_MESSAGES_BY_CODE - Flat mapping from error codes to locale-neutral technical messages.
+ * For user-facing error messages with category/context, use ERROR_MESSAGES from @mohasinac/appkit/errors which exports from messages.ts.
+ * @deprecated Prefer the categorized ERROR_MESSAGES from messages.ts instead.
+ */
+export const ERROR_MESSAGES_BY_CODE: Record<ErrorCode, string> = {
   // Authentication
   AUTH_001: "Invalid email or password",
   AUTH_002: "Your session has expired. Please log in again",

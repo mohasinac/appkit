@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server.js";
 import { AppError } from "./base-error";
-import { ERROR_CODES, ERROR_MESSAGES } from "./error-codes";
+import { ERROR_CODES, ERROR_MESSAGES_BY_CODE } from "./error-codes";
 
 /**
  * Handle API errors with consistent response format.
@@ -42,7 +42,7 @@ export function handleApiError(error: unknown): NextResponse {
   return NextResponse.json(
     {
       success: false,
-      error: ERROR_MESSAGES[ERROR_CODES.GEN_INTERNAL_ERROR],
+      error: ERROR_MESSAGES_BY_CODE[ERROR_CODES.GEN_INTERNAL_ERROR],
       code: ERROR_CODES.GEN_INTERNAL_ERROR,
     },
     { status: 500 },

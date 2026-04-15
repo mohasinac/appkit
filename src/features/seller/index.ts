@@ -9,5 +9,9 @@ export {
   SellerRepository,
   PayoutsRepository,
 } from "./repository/seller.repository";
+export {
+  OfferRepository,
+  offerRepository,
+} from "./repository/offer.repository";
 export { manifest } from "./manifest";
 export { SELLER_PAGE_PERMISSIONS } from "./permission-map";

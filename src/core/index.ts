@@ -56,3 +56,6 @@ export type {
   NewsletterSubscriberCreateInput,
   NewsletterSubscriberUpdateInput,
 } from "./newsletter.repository";
+
+export { unitOfWork } from "./unit-of-work";
+export type { UnitOfWork } from "./unit-of-work";

@@ -66,12 +66,66 @@ export interface SieveResult<T> {
   hasMore: boolean;
 }
 
+// Backward-compatible aliases used by consumer repos during migration.
+export type FirebaseSieveFieldConfig = SieveFieldConfig;
+export type FirebaseSieveFields = SieveFields;
+export type FirebaseSieveOptions = SieveOptions;
+export type FirebaseSieveResult<T> = SieveResult<T>;
+
 const SIEVE_DEFAULTS: Required<SieveOptions> = {
   caseSensitive: false,
   defaultPageSize: 20,
   maxPageSize: 100,
   throwExceptions: false,
 };
+
+/**
+ * Apply Sieve DSL to a CollectionReference/Query without requiring repository subclassing.
+ */
+export async function applySieveToFirestore<T extends DocumentData>(params: {
+  baseQuery: CollectionReference | Query;
+  model: SieveModel;
+  fields: SieveFields;
+  options?: SieveOptions;
+}): Promise<SieveResult<T>> {
+  const { baseQuery, model, fields, options } = params;
+  const merged = { ...SIEVE_DEFAULTS, ...(options ?? {}) };
+
+  const processor = new SieveProcessorBase({
+    adapter: createFirebaseAdapter() as never,
+    autoLoadConfig: false,
+    options: merged,
+    fields,
+  } as never);
+
+  const filteredQ = processor.apply(model, baseQuery, {
+    applyPagination: false,
+  } as never) as unknown as Query;
+  const total: number = (await filteredQ.count().get()).data().count;
+
+  const pagedQ = processor.apply(model, baseQuery) as unknown as Query;
+  const snap = await pagedQ.get();
+
+  const items = snap.docs.map(
+    (d) => deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as T,
+  );
+
+  const page = Math.max(1, Number(model.page ?? 1));
+  const pageSize = Math.min(
+    merged.maxPageSize,
+    Math.max(1, Number(model.pageSize ?? merged.defaultPageSize)),
+  );
+  const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
+
+  return {
+    items,
+    total,
+    page,
+    pageSize,
+    totalPages,
+    hasMore: page < totalPages,
+  };
+}
 
 // ─── Class ────────────────────────────────────────────────────────────────────
 

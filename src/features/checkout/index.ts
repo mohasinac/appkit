@@ -10,5 +10,6 @@ export type {
   UnavailableItem,
   PreflightResponse,
 } from "./hooks/useCheckoutApi";
+export * from "./repository/failed-checkout.repository";
 export * from "./components";
 export { manifest } from "./manifest";

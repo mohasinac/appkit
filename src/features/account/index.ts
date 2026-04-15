@@ -7,6 +7,12 @@ export * from "./hooks/useAddressForm";
 export * from "./hooks/useAddressSelector";
 export * from "./hooks/useNotifications";
 export * from "./hooks/useProfileStats";
+export * from "./constants/addresses";
+export * from "./address-validation";
 export * from "./components";
 export { AccountRepository } from "./repository/account.repository";
+export {
+  AddressRepository,
+  addressRepository,
+} from "./repository/address.repository";
 export { manifest } from "./manifest";

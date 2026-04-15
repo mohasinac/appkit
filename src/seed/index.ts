@@ -4,18 +4,33 @@ export { runSeed } from "./runner";
 
 // Factories — user
 export type { SeedBaseUserDocument } from "./factories/user.factory";
-export { makeUser, makeFullUser, USER_FIXTURES } from "./factories/user.factory";
+export {
+  makeUser,
+  makeFullUser,
+  USER_FIXTURES,
+} from "./factories/user.factory";
 
 // Factories — product
 export type { SeedBaseProductDocument } from "./factories/product.factory";
-export { makeProduct, makeFullProduct, PRODUCT_FIXTURES } from "./factories/product.factory";
+export {
+  makeProduct,
+  makeFullProduct,
+  PRODUCT_FIXTURES,
+} from "./factories/product.factory";
 
 // Factories — store
 export type { SeedBaseStoreDocument } from "./factories/store.factory";
-export { makeStore, makeFullStore, STORE_FIXTURES } from "./factories/store.factory";
+export {
+  makeStore,
+  makeFullStore,
+  STORE_FIXTURES,
+} from "./factories/store.factory";
 
 // Factories — order
-export type { SeedBaseOrderDocument, SeedBaseOrderItem } from "./factories/order.factory";
+export type {
+  SeedBaseOrderDocument,
+  SeedBaseOrderItem,
+} from "./factories/order.factory";
 export { makeOrder } from "./factories/order.factory";
 
 // Factories — review
@@ -47,38 +62,89 @@ export { makeHomepageSection } from "./factories/homepage-section.factory";
 
 // Factories — address
 export type { SeedAddressDocument } from "./factories/address.factory";
-export { makeAddress, makeFullAddress, ADDRESS_FIXTURES } from "./factories/address.factory";
+export {
+  makeAddress,
+  makeFullAddress,
+  ADDRESS_FIXTURES,
+} from "./factories/address.factory";
 
 // Factories — cart
-export type { SeedCartDocument, SeedCartItemDocument } from "./factories/cart.factory";
-export { makeCart, makeCartItem, makeFullCart, CART_FIXTURES } from "./factories/cart.factory";
+export type {
+  SeedCartDocument,
+  SeedCartItemDocument,
+} from "./factories/cart.factory";
+export {
+  makeCart,
+  makeCartItem,
+  makeFullCart,
+  CART_FIXTURES,
+} from "./factories/cart.factory";
 
 // Factories — bid
 export type { SeedBidDocument } from "./factories/bid.factory";
 export { makeBid, makeWinningBid, BID_FIXTURES } from "./factories/bid.factory";
 
 // Factories — notification
-export type { SeedNotificationDocument, NotificationType } from "./factories/notification.factory";
-export { makeNotification, makeFullNotification, NOTIFICATION_FIXTURES } from "./factories/notification.factory";
+export type {
+  SeedNotificationDocument,
+  NotificationType,
+} from "./factories/notification.factory";
+export {
+  makeNotification,
+  makeFullNotification,
+  NOTIFICATION_FIXTURES,
+} from "./factories/notification.factory";
 
 // Factories — session
 export type { SeedSessionDocument } from "./factories/session.factory";
-export { makeSession, makeRevokedSession, SESSION_FIXTURES } from "./factories/session.factory";
+export {
+  makeSession,
+  makeRevokedSession,
+  SESSION_FIXTURES,
+} from "./factories/session.factory";
 
 // Factories — coupon
-export type { SeedCouponDocument, CouponDiscountType } from "./factories/coupon.factory";
-export { makeCoupon, makeFullCoupon, COUPON_FIXTURES } from "./factories/coupon.factory";
+export type {
+  SeedCouponDocument,
+  CouponDiscountType,
+} from "./factories/coupon.factory";
+export {
+  makeCoupon,
+  makeFullCoupon,
+  COUPON_FIXTURES,
+} from "./factories/coupon.factory";
 
 // Factories — payout
-export type { SeedPayoutDocument, PayoutStatus } from "./factories/payout.factory";
-export { makePayout, makeFullPayout, PAYOUT_FIXTURES } from "./factories/payout.factory";
+export type {
+  SeedPayoutDocument,
+  PayoutStatus,
+} from "./factories/payout.factory";
+export {
+  makePayout,
+  makeFullPayout,
+  PAYOUT_FIXTURES,
+} from "./factories/payout.factory";
 
 // Defaults
 export { DEFAULT_CATEGORIES } from "./defaults/categories";
 export { DEFAULT_FAQS } from "./defaults/faqs";
 export { DEFAULT_HOMEPAGE_SECTIONS } from "./defaults/homepage-sections";
 
+// Migrated seed datasets from consumer repositories
+export { usersSeedData } from "./users-seed-data";
+export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
+export { addressesSeedData } from "./addresses-seed-data";
+export { storesSeedData } from "./stores-seed-data";
+export { storeAddressesSeedData } from "./store-addresses-seed-data";
+export { categoriesSeedData } from "./categories-seed-data";
+
+// Firestore index helpers
+export type { FirestoreIndexConfig } from "./firestore-indexes";
+export {
+  mergeFirestoreIndices,
+  generateMergedFirestoreIndexFile,
+} from "./firestore-indexes";
+
 // Test utilities (Firestore emulator + PII assertion)
 export { assertPiiRoundTrip, seedForTest } from "./test-utils";
 export type { TestSeedHandles } from "./test-utils";
-

@@ -6,4 +6,5 @@ export * from "./hooks/usePlaceBid";
 export * from "./hooks/useRealtimeBids";
 export * from "./components";
 export { AuctionsRepository } from "./repository/auctions.repository";
+export { bidRepository } from "./repository/bid.repository";
 export { manifest } from "./manifest";

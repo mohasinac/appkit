@@ -24,13 +24,28 @@ import type {
   EmailResult,
 } from "../../contracts";
 
+type ResolvedValue = string | Promise<string>;
+type ValueResolver = string | (() => ResolvedValue);
+
 export interface ResendProviderOptions {
   /** Resend API key. Defaults to `process.env.RESEND_API_KEY`. */
-  apiKey?: string;
+  apiKey?: ValueResolver;
   /** Default "From" email address. */
-  fromEmail?: string;
+  fromEmail?: ValueResolver;
   /** Default "From" display name. */
-  fromName?: string;
+  fromName?: ValueResolver;
+}
+
+async function resolveValue(
+  value: ValueResolver | undefined,
+  fallback: string,
+): Promise<string> {
+  if (typeof value === "function") {
+    const resolved = await value();
+    return resolved?.trim() || fallback;
+  }
+
+  return value?.trim() || fallback;
 }
 
 /**
@@ -48,24 +63,24 @@ export interface ResendProviderOptions {
 export function createResendProvider(
   options: ResendProviderOptions = {},
 ): IEmailProvider {
-  const resolveKey = (): string =>
-    options.apiKey ?? process.env.RESEND_API_KEY?.trim() ?? "";
-
-  const resolveFrom = (): string => {
-    const name =
-      options.fromName ?? process.env.EMAIL_FROM_NAME?.trim() ?? "App";
-    const email =
-      options.fromEmail ??
-      process.env.EMAIL_FROM?.trim() ??
-      `noreply@${process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/^https?:\/\//, "") ?? "example.com"}`;
-    return `${name} <${email}>`;
-  };
-
   return {
     async send(opts: EmailOptions): Promise<EmailResult> {
-      const resend = new Resend(resolveKey());
+      const apiKey = await resolveValue(
+        options.apiKey,
+        process.env.RESEND_API_KEY?.trim() ?? "",
+      );
+      const fromName = await resolveValue(
+        options.fromName,
+        process.env.EMAIL_FROM_NAME?.trim() ?? "App",
+      );
+      const fromEmail = await resolveValue(
+        options.fromEmail,
+        process.env.EMAIL_FROM?.trim() ??
+          `noreply@${process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/^https?:\/\//, "") ?? "example.com"}`,
+      );
+      const resend = new Resend(apiKey);
       const { data, error } = await resend.emails.send({
-        from: opts.from ?? resolveFrom(),
+        from: opts.from ?? `${fromName} <${fromEmail}>`,
         to: opts.to,
         subject: opts.subject,
         html: opts.html,
