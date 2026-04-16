@@ -280,6 +280,52 @@ import { SiteConfig } from "@/config/site";
 
 ---
 
+### 21. Reuse-First Composition
+
+- Before building any new component, hook, utility, layout, or view, **search appkit first**.
+- If a semantically equivalent primitive or feature already exists, compose or extend it — do not create a parallel implementation.
+- If existing code covers 80 %+ of the need, add a variant/prop/slot to the existing piece rather than creating a new file.
+- New files are only justified when the concept has no prior owner in appkit and is genuinely distinct.
+- When reviewing existing components, prefer extending them with typed props over wrapping them in another layer.
+
+### 22. Constants Over Hard-Coded Strings
+
+- **Never** hard-code route paths, label strings, message copy, aria labels, status values, or other repeated string literals inline.
+- All route names live in `src/constants/routes.ts` (or the feature-scoped `routes.ts`) and are imported by name:
+  ```ts
+  // ✗ Bad
+  href="/seller/dashboard"
+  redirect("/auth/login")
+
+  // ✓ Good
+  import { ROUTES } from "@mohasinac/appkit/constants";
+  href={ROUTES.SELLER.DASHBOARD}
+  redirect(ROUTES.AUTH.LOGIN)
+  ```
+- All user-facing labels, button text, validation messages, empty-state copy, and notification strings live in the feature's `constants/messages.ts` (or the shared `src/constants/messages.ts`) and are imported — not inlined:
+  ```ts
+  // ✗ Bad
+  toast.error("Something went wrong. Please try again.")
+  <Button>Save Changes</Button>
+
+  // ✓ Good
+  import { MESSAGES } from "@mohasinac/appkit/constants";
+  toast.error(MESSAGES.GENERIC.ERROR)
+  <Button>{LABELS.COMMON.SAVE_CHANGES}</Button>
+  ```
+- Status/enum-like string values (e.g. `"published"`, `"pending"`, `"active"`) must be typed enums or `as const` objects in the feature schema — never bare string literals in logic:
+  ```ts
+  // ✗ Bad
+  if (product.status === "published")
+
+  // ✓ Good
+  import { ProductStatus } from "@mohasinac/appkit/features/products";
+  if (product.status === ProductStatus.PUBLISHED)
+  ```
+- This applies everywhere: components, hooks, server actions, repositories, validators, and seeds.
+
+---
+
 ## What NOT to Add to Appkit
 
 - Hard-coded country/currency values (`INR`, `IN`, phone code `+91`) — inject via `SiteConfig`
