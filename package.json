@@ -82,13 +82,9 @@
       "types": "./src/instrumentation/index.ts",
       "default": "./src/instrumentation/index.ts"
     },
-    "./style/tailwind": {
-      "types": "./src/style/tailwind/index.ts",
-      "default": "./src/style/tailwind/index.ts"
-    },
-    "./style/vanilla": {
-      "types": "./src/style/vanilla/index.ts",
-      "default": "./src/style/vanilla/index.ts"
+    "./style/*": {
+      "types": "./src/style/*/index.ts",
+      "default": "./src/style/*/index.ts"
     },
     "./providers/db-firebase": {
       "types": "./src/providers/db-firebase/index.ts",
@@ -100,225 +96,21 @@
       "browser": "./src/providers/auth-firebase/browser-stub.ts",
       "default": "./src/providers/auth-firebase/index.ts"
     },
-    "./providers/email-resend": {
-      "types": "./src/providers/email-resend/index.ts",
-      "default": "./src/providers/email-resend/index.ts"
-    },
-    "./providers/storage-firebase": {
-      "types": "./src/providers/storage-firebase/index.ts",
-      "default": "./src/providers/storage-firebase/index.ts"
+    "./providers/*": {
+      "types": "./src/providers/*/index.ts",
+      "default": "./src/providers/*/index.ts"
     },
     "./providers/storage-firebase/client": {
       "types": "./src/providers/storage-firebase/client.ts",
       "default": "./src/providers/storage-firebase/client.ts"
     },
-    "./providers/payment-razorpay": {
-      "types": "./src/providers/payment-razorpay/index.ts",
-      "default": "./src/providers/payment-razorpay/index.ts"
+    "./features/*": {
+      "types": "./src/features/*/index.ts",
+      "default": "./src/features/*/index.ts"
     },
-    "./providers/shipping-shiprocket": {
-      "types": "./src/providers/shipping-shiprocket/index.ts",
-      "default": "./src/providers/shipping-shiprocket/index.ts"
-    },
-    "./features/layout": {
-      "types": "./src/features/layout/index.ts",
-      "default": "./src/features/layout/index.ts"
-    },
-    "./features/forms": {
-      "types": "./src/features/forms/index.ts",
-      "default": "./src/features/forms/index.ts"
-    },
-    "./features/filters": {
-      "types": "./src/features/filters/index.ts",
-      "default": "./src/features/filters/index.ts"
-    },
-    "./features/media": {
-      "types": "./src/features/media/index.ts",
-      "default": "./src/features/media/index.ts"
-    },
-    "./features/auth": {
-      "types": "./src/features/auth/index.ts",
-      "default": "./src/features/auth/index.ts"
-    },
-    "./features/account": {
-      "types": "./src/features/account/index.ts",
-      "default": "./src/features/account/index.ts"
-    },
-    "./features/admin": {
-      "types": "./src/features/admin/index.ts",
-      "default": "./src/features/admin/index.ts"
-    },
-    "./features/cms": {
-      "types": "./src/features/cms/index.ts",
-      "default": "./src/features/cms/index.ts"
-    },
-    "./features/blog": {
-      "types": "./src/features/blog/index.ts",
-      "default": "./src/features/blog/index.ts"
-    },
-    "./features/about": {
-      "types": "./src/features/about/index.ts",
-      "default": "./src/features/about/index.ts"
-    },
-    "./features/contact": {
-      "types": "./src/features/contact/index.ts",
-      "default": "./src/features/contact/index.ts"
-    },
-    "./features/copilot": {
-      "types": "./src/features/copilot/index.ts",
-      "default": "./src/features/copilot/index.ts"
-    },
-    "./features/cart": {
-      "types": "./src/features/cart/index.ts",
-      "default": "./src/features/cart/index.ts"
-    },
-    "./features/categories": {
-      "types": "./src/features/categories/index.ts",
-      "default": "./src/features/categories/index.ts"
-    },
-    "./features/checkout": {
-      "types": "./src/features/checkout/index.ts",
-      "default": "./src/features/checkout/index.ts"
-    },
-    "./features/collections": {
-      "types": "./src/features/collections/index.ts",
-      "default": "./src/features/collections/index.ts"
-    },
-    "./features/consultation": {
-      "types": "./src/features/consultation/index.ts",
-      "default": "./src/features/consultation/index.ts"
-    },
-    "./features/corporate": {
-      "types": "./src/features/corporate/index.ts",
-      "default": "./src/features/corporate/index.ts"
-    },
-    "./features/events": {
-      "types": "./src/features/events/index.ts",
-      "default": "./src/features/events/index.ts"
-    },
-    "./features/faq": {
-      "types": "./src/features/faq/index.ts",
-      "default": "./src/features/faq/index.ts"
-    },
-    "./features/homepage": {
-      "types": "./src/features/homepage/index.ts",
-      "default": "./src/features/homepage/index.ts"
-    },
-    "./features/loyalty": {
-      "types": "./src/features/loyalty/index.ts",
-      "default": "./src/features/loyalty/index.ts"
-    },
-    "./features/orders": {
-      "types": "./src/features/orders/index.ts",
-      "default": "./src/features/orders/index.ts"
-    },
-    "./features/payments": {
-      "types": "./src/features/payments/index.ts",
-      "default": "./src/features/payments/index.ts"
-    },
-    "./features/products": {
-      "types": "./src/features/products/index.ts",
-      "default": "./src/features/products/index.ts"
-    },
-    "./features/promotions": {
-      "types": "./src/features/promotions/index.ts",
-      "default": "./src/features/promotions/index.ts"
-    },
-    "./features/reviews": {
-      "types": "./src/features/reviews/index.ts",
-      "default": "./src/features/reviews/index.ts"
-    },
-    "./features/search": {
-      "types": "./src/features/search/index.ts",
-      "default": "./src/features/search/index.ts"
-    },
-    "./features/seller": {
-      "types": "./src/features/seller/index.ts",
-      "default": "./src/features/seller/index.ts"
-    },
-    "./features/stores": {
-      "types": "./src/features/stores/index.ts",
-      "default": "./src/features/stores/index.ts"
-    },
-    "./features/wishlist": {
-      "types": "./src/features/wishlist/index.ts",
-      "default": "./src/features/wishlist/index.ts"
-    },
-    "./features/auctions": {
-      "types": "./src/features/auctions/index.ts",
-      "default": "./src/features/auctions/index.ts"
-    },
-    "./features/pre-orders": {
-      "types": "./src/features/pre-orders/index.ts",
-      "default": "./src/features/pre-orders/index.ts"
-    },
-    "./features/before-after": {
-      "types": "./src/features/before-after/index.ts",
-      "default": "./src/features/before-after/index.ts"
-    },
-    "./features/whatsapp-bot": {
-      "types": "./src/features/whatsapp-bot/index.ts",
-      "default": "./src/features/whatsapp-bot/index.ts"
-    },
-    "./features/auth/server": {
-      "types": "./src/features/auth/server.ts",
-      "default": "./src/features/auth/server.ts"
-    },
-    "./features/admin/server": {
-      "types": "./src/features/admin/server.ts",
-      "default": "./src/features/admin/server.ts"
-    },
-    "./features/auctions/server": {
-      "types": "./src/features/auctions/server.ts",
-      "default": "./src/features/auctions/server.ts"
-    },
-    "./features/blog/server": {
-      "types": "./src/features/blog/server.ts",
-      "default": "./src/features/blog/server.ts"
-    },
-    "./features/categories/server": {
-      "types": "./src/features/categories/server.ts",
-      "default": "./src/features/categories/server.ts"
-    },
-    "./features/events/server": {
-      "types": "./src/features/events/server.ts",
-      "default": "./src/features/events/server.ts"
-    },
-    "./features/faq/server": {
-      "types": "./src/features/faq/server.ts",
-      "default": "./src/features/faq/server.ts"
-    },
-    "./features/homepage/server": {
-      "types": "./src/features/homepage/server.ts",
-      "default": "./src/features/homepage/server.ts"
-    },
-    "./features/pre-orders/server": {
-      "types": "./src/features/pre-orders/server.ts",
-      "default": "./src/features/pre-orders/server.ts"
-    },
-    "./features/products/server": {
-      "types": "./src/features/products/server.ts",
-      "default": "./src/features/products/server.ts"
-    },
-    "./features/promotions/server": {
-      "types": "./src/features/promotions/server.ts",
-      "default": "./src/features/promotions/server.ts"
-    },
-    "./features/reviews/server": {
-      "types": "./src/features/reviews/server.ts",
-      "default": "./src/features/reviews/server.ts"
-    },
-    "./features/search/server": {
-      "types": "./src/features/search/server.ts",
-      "default": "./src/features/search/server.ts"
-    },
-    "./features/seller/server": {
-      "types": "./src/features/seller/server.ts",
-      "default": "./src/features/seller/server.ts"
-    },
-    "./features/stores/server": {
-      "types": "./src/features/stores/server.ts",
-      "default": "./src/features/stores/server.ts"
+    "./features/*/server": {
+      "types": "./src/features/*/server.ts",
+      "default": "./src/features/*/server.ts"
     },
     "./cli": {
       "types": "./src/cli/index.ts",
@@ -328,21 +120,9 @@
       "types": "./src/seed/index.ts",
       "default": "./src/seed/index.ts"
     },
-    "./features/admin/schemas": {
-      "types": "./src/features/admin/schemas/index.ts",
-      "default": "./src/features/admin/schemas/index.ts"
-    },
-    "./features/faq/schemas": {
-      "types": "./src/features/faq/schemas/index.ts",
-      "default": "./src/features/faq/schemas/index.ts"
-    },
-    "./features/checkout/schemas": {
-      "types": "./src/features/checkout/schemas/index.ts",
-      "default": "./src/features/checkout/schemas/index.ts"
-    },
-    "./features/homepage/schemas": {
-      "types": "./src/features/homepage/schemas/index.ts",
-      "default": "./src/features/homepage/schemas/index.ts"
+    "./features/*/schemas": {
+      "types": "./src/features/*/schemas/index.ts",
+      "default": "./src/features/*/schemas/index.ts"
     },
     "./values": {
       "types": "./src/values/index.ts",

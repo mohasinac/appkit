@@ -229,33 +229,54 @@ import { SiteConfig } from "@/config/site";
 
 ---
 
-## File Conventions
+### 16. Baseline Defaults Contract (Mandatory)
 
-| Pattern           | Rule                                              |
-| ----------------- | ------------------------------------------------- |
-| `*View.tsx`       | Full-page view — must be `async` Server Component |
-| `*Form.tsx`       | Form component — may be `'use client'`            |
-| `*Drawer.tsx`     | Sliding panel — may be `'use client'`             |
-| `*Modal.tsx`      | Dialog — may be `'use client'`                    |
-| `use*.ts`         | Client hook — always `'use client'`               |
-| `*.repository.ts` | Repository class — never `'use client'`           |
-| `*.schema.ts`     | Firestore constants — never `'use client'`        |
-| `*.factory.ts`    | Seed factory — never `'use client'`               |
+- Every shared appkit API/component/provider that accepts consumer-injected values must also have appkit-owned fallback defaults.
+- If a consumer does not provide a value, behavior must still be correct via baseline defaults.
+- Baseline defaults must match current letitrip behavior unless a versioned, documented change is approved.
+- Consumer values override baseline defaults when supplied.
+- Do not duplicate fallback literals across modules; route defaults through a single baseline resolver surface.
 
----
+### 17. SOLID + Approved Patterns Only
 
-## Import Order
+- Use SOLID consistently:
+  - Single Responsibility: one concern per module.
+  - Open/Closed: extend with variants/adapters, not file cloning.
+  - Liskov + Interface Segregation: keep contracts substitutable and minimal.
+  - Dependency Inversion: features depend on contracts/providers, not concrete SDK calls.
+- Approved patterns:
+  - Provider/Adapter for third-party integrations.
+  - Repository pattern for data access.
+  - Variant + slot composition for UI reuse.
+  - Feature flags for enable/disable behavior.
+- Non-approved approach:
+  - Parallel implementations for same concept.
+  - Configuration objects so complex that variants/slots would be simpler.
 
-```ts
-// 1. React / Next
-import React from "react";
-import { cookies } from "next/headers";
-// 2. Appkit
-import { Container, Stack } from "@mohasinac/appkit/ui";
-import { BlogRepository } from "@mohasinac/appkit/features/blog";
-// 3. Local (letitrip-specific)
-import { SiteConfig } from "@/config/site";
-```
+### 18. Variant-First UI Policy
+
+- If variation is primarily visual/layout semantics, add or reuse named variants.
+- Use config-heavy APIs only for behavior/data concerns, not styling concerns.
+- When class bundles repeat in 3 or more places, convert to a variant and migrate all matching usages.
+
+### 19. Consumer Override and Feature Control Contract
+
+- Consumers must be able to:
+  - Enable/disable major features through `features.config.ts`.
+  - Override providers through `providers.config.ts`.
+  - Override labels/copy/formatters through typed extension points.
+  - Replace behavior partially or fully through adapters/callback interfaces.
+- Appkit must expose typed extension points; consumers must not fork shared logic.
+
+### 20. Conflict Resolution Precedence
+
+- If instruction rules appear to conflict, apply this order:
+  1. appkit-first ownership and no duplication
+  2. SOLID + approved patterns
+  3. baseline default-with-override contract
+  4. SSR/server-first and semantic wrapper requirements
+  5. local style or implementation preferences
+- Prefer the stricter reusable architecture interpretation.
 
 ---
 
