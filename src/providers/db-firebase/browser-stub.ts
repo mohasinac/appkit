@@ -54,3 +54,6 @@ export const RTDB_PATHS = {
   PAYMENT_EVENTS: "payment_events",
   BULK_EVENTS: "bulk_events",
 } as const;
+// Client config builder — safe in all environments
+export { buildFirebaseClientConfig, normalizeFirebaseConfigValue } from './client-config';
+export type { FirebaseClientConfig } from './client-config';

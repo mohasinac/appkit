@@ -52,7 +52,12 @@ export const firebaseDbProvider: IDbProvider = {
   },
 };
 
-// Types re-exported for consumers
+// Firebase client config builder (for consumer app bundles)
+export {
+  buildFirebaseClientConfig,
+  normalizeFirebaseConfigValue,
+} from "./client-config";
+export type { FirebaseClientConfig } from "./client-config";
 export type {
   SieveModel,
   SieveFields,

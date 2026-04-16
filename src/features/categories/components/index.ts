@@ -20,8 +20,10 @@ export { CategoryForm } from "./CategoryForm";
 export type { CategoryFormProps, CategoryFormLabels } from "./CategoryForm";
 
 export { CategorySelectorCreate } from "./CategorySelectorCreate";
-export type { CategorySelectorCreateProps, CategorySelectorCreateLabels } from "./CategorySelectorCreate";
+export type {
+  CategorySelectorCreateProps,
+  CategorySelectorCreateLabels,
+} from "./CategorySelectorCreate";
 
 export { getCategoryTableColumns } from "./CategoryTableColumns";
 export type { CategoryTableColumnsLabels } from "./CategoryTableColumns";
-

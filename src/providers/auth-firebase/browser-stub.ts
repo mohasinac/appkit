@@ -12,21 +12,21 @@
 
 export const firebaseAuthProvider: any = null;
 export const firebaseSessionProvider: any = null;
-export function createSessionCookieFromToken(): never {
-  throw new Error("createSessionCookieFromToken is server-only");
+
+function serverOnly(name: string): never {
+  throw new Error(`${name} is server-only`);
 }
-export function verifyIdToken(): never {
-  throw new Error("verifyIdToken is server-only");
-}
-export function verifySessionCookie(): never {
-  throw new Error("verifySessionCookie is server-only");
-}
-export function createMiddlewareAuthChain(): never {
-  throw new Error("createMiddlewareAuthChain is server-only");
-}
-export function requireAuth(): never {
-  throw new Error("requireAuth is server-only");
-}
-export function requireRole(): never {
-  throw new Error("requireRole is server-only");
-}
+
+export function createSessionCookieFromToken(): never { return serverOnly("createSessionCookieFromToken"); }
+export function createSessionCookie(): never { return serverOnly("createSessionCookie"); }
+export function verifyIdToken(): never { return serverOnly("verifyIdToken"); }
+export function verifySessionCookie(): never { return serverOnly("verifySessionCookie"); }
+export function createMiddlewareAuthChain(): never { return serverOnly("createMiddlewareAuthChain"); }
+export function requireAuth(): never { return serverOnly("requireAuth"); }
+export function requireRole(): never { return serverOnly("requireRole"); }
+export function requireAuthUser(): never { return serverOnly("requireAuthUser"); }
+export function requireRoleUser(): never { return serverOnly("requireRoleUser"); }
+export function getUserFromRequest(): never { return serverOnly("getUserFromRequest"); }
+export function requireAuthFromRequest(): never { return serverOnly("requireAuthFromRequest"); }
+export function requireRoleFromRequest(): never { return serverOnly("requireRoleFromRequest"); }
+export function revokeUserTokens(): never { return serverOnly("revokeUserTokens"); }

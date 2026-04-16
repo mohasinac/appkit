@@ -163,3 +163,115 @@ export function verifyPaymentSignature(
     Buffer.from(params.razorpay_signature, "hex"),
   );
 }
+
+// ─── Standalone API helpers (auto-credential resolution via resolveKeys) ──────
+// These resolve credentials from Firestore → env fallback so callers don't
+// need to instantiate RazorpayProvider or pass credentials explicitly.
+
+import { resolveKeys } from "../../core/integration-keys";
+
+export interface RazorpayOrderOptions {
+  /** Amount in paise (smallest currency unit). E.g. ₹500 → 50000 */
+  amount: number;
+  currency?: string;
+  receipt?: string;
+  notes?: Record<string, string>;
+}
+
+export interface RazorpayOrder {
+  id: string;
+  entity: string;
+  amount: number;
+  amount_paid: number;
+  amount_due: number;
+  currency: string;
+  receipt: string | null;
+  status: string;
+  attempts: number;
+  created_at: number;
+}
+
+export interface RazorpayRefundResult {
+  id: string;
+  payment_id: string;
+  amount: number;
+  currency: string;
+  status: string;
+}
+
+async function getRazorpayInstance(): Promise<Razorpay> {
+  const keys = await resolveKeys();
+  if (!keys.razorpayKeyId || !keys.razorpayKeySecret) {
+    throw new Error(
+      "Razorpay credentials are missing. Configure them in Admin › Site Settings › Credentials, or set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local",
+    );
+  }
+  return new Razorpay({ key_id: keys.razorpayKeyId, key_secret: keys.razorpayKeySecret });
+}
+
+/** Create a Razorpay order. Credentials resolved from Firestore → env. */
+export async function createRazorpayOrder(
+  opts: RazorpayOrderOptions,
+): Promise<RazorpayOrder> {
+  const razorpay = await getRazorpayInstance();
+  const order = await razorpay.orders.create({
+    amount: opts.amount,
+    currency: opts.currency ?? "INR",
+    receipt: opts.receipt ?? `rcpt_${Date.now()}`,
+    notes: opts.notes,
+  });
+  return order as unknown as RazorpayOrder;
+}
+
+/** Fetch an existing Razorpay order by ID. */
+export async function fetchRazorpayOrder(orderId: string): Promise<RazorpayOrder> {
+  const razorpay = await getRazorpayInstance();
+  const order = await razorpay.orders.fetch(orderId);
+  return order as unknown as RazorpayOrder;
+}
+
+/**
+ * Verify Razorpay payment signature — auto-resolves key secret.
+ * Returns false if credentials are unavailable.
+ */
+export async function verifyPaymentSignatureWithKeys(
+  params: RazorpayPaymentResult,
+): Promise<boolean> {
+  const { razorpayKeySecret } = await resolveKeys();
+  if (!razorpayKeySecret) return false;
+  return verifyPaymentSignature(params, razorpayKeySecret);
+}
+
+/**
+ * Verify Razorpay webhook signature — auto-resolves webhook secret.
+ * Uses HMAC-SHA256 over raw body.
+ */
+export async function verifyWebhookSignature(
+  rawBody: string,
+  receivedSignature: string,
+): Promise<boolean> {
+  const { razorpayWebhookSecret } = await resolveKeys();
+  if (!razorpayWebhookSecret) {
+    throw new Error("Razorpay webhook secret is not configured");
+  }
+  const expected = createHmac("sha256", razorpayWebhookSecret)
+    .update(rawBody)
+    .digest("hex");
+  if (receivedSignature.length !== 64) return false;
+  return timingSafeEqual(
+    Buffer.from(expected, "hex"),
+    Buffer.from(receivedSignature, "hex"),
+  );
+}
+
+/** Create a full or partial refund for a Razorpay payment. */
+export async function createRazorpayRefund(
+  paymentId: string,
+  amountPaise?: number,
+): Promise<RazorpayRefundResult> {
+  const razorpay = await getRazorpayInstance();
+  const opts: Record<string, unknown> = {};
+  if (amountPaise) opts.amount = amountPaise;
+  const refund = await razorpay.payments.refund(paymentId, opts as Parameters<typeof razorpay.payments.refund>[1]);
+  return refund as unknown as RazorpayRefundResult;
+}

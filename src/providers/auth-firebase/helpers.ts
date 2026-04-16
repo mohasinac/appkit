@@ -6,6 +6,7 @@
  */
 
 import type { AuthPayload } from "../../contracts";
+import type { NextRequest } from "next/server";
 import { getAdminAuthLite } from "../db-firebase/admin-auth-lite";
 import { createSessionCookieFromToken } from "./session";
 
@@ -147,4 +148,112 @@ export async function requireRole(
   }
 
   return { ...user, role: userRole };
+}
+
+// ─── Server-action / RSC helpers (no-arg, reads Next.js cookie store) ─────────
+
+/**
+ * Require authentication in a Server Action or RSC context.
+ * Reads `__session` / `idToken` cookies via `next/headers` `cookies()`.
+ * Returns `AuthPayload` or throws 401.
+ */
+export async function requireAuthUser(): Promise<AuthPayload> {
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  return requireAuth(cookieStore);
+}
+
+/**
+ * Require a specific role in a Server Action or RSC context.
+ * Reads cookies via `next/headers` and resolves role via optional `resolveRole`.
+ */
+export async function requireRoleUser(
+  role: string | string[],
+  resolveRole?: (uid: string) => Promise<string>,
+): Promise<AuthPayload> {
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  return requireRole(cookieStore, role, resolveRole);
+}
+
+// ─── Request-level helpers ────────────────────────────────────────────────────
+
+/**
+ * Resolve the `__session` cookie from a `Request` or `NextRequest`.
+ * Handles both Next.js request objects and standard Web API `Request`.
+ */
+function extractSessionCookie(request: Request): string | undefined {
+  if (
+    "cookies" in request &&
+    typeof (request as NextRequest).cookies?.get === "function"
+  ) {
+    return (request as NextRequest).cookies.get("__session")?.value;
+  }
+  const cookieHeader = request.headers.get("cookie") ?? "";
+  const match = cookieHeader.match(/(?:^|;\s*)__session=([^;]*)/);
+  return match?.[1];
+}
+
+/**
+ * Get the authenticated user document from a request's session cookie.
+ * Returns null if the request is unauthenticated or the session is invalid.
+ */
+export async function getUserFromRequest<T = unknown>(
+  request: Request,
+  findById: (uid: string) => Promise<T | null>,
+): Promise<T | null> {
+  try {
+    const sessionCookie = extractSessionCookie(request);
+    if (!sessionCookie) return null;
+    const payload = await verifySessionCookie(sessionCookie);
+    if (!payload) return null;
+    return findById(payload.uid);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Require an authenticated user from a request. Throws if not authenticated.
+ */
+export async function requireAuthFromRequest<T = unknown>(
+  request: Request,
+  findById: (uid: string) => Promise<T | null>,
+  isDisabled?: (user: T) => boolean,
+): Promise<T> {
+  const user = await getUserFromRequest(request, findById);
+  if (!user) {
+    throw Object.assign(new Error("Unauthorized"), { statusCode: 401 });
+  }
+  if (isDisabled?.(user)) {
+    throw Object.assign(new Error("Account is disabled"), { statusCode: 401 });
+  }
+  return user;
+}
+
+/**
+ * Require a specific role from a request.
+ */
+export async function requireRoleFromRequest<T = unknown>(
+  request: Request,
+  findById: (uid: string) => Promise<T | null>,
+  roles: string | string[],
+  getRole: (user: T) => string,
+): Promise<T> {
+  const user = await requireAuthFromRequest(request, findById);
+  const allowed = Array.isArray(roles) ? roles : [roles];
+  if (!allowed.includes(getRole(user))) {
+    throw Object.assign(
+      new Error(`Forbidden — requires role: ${allowed.join(" | ")}`),
+      { statusCode: 403 },
+    );
+  }
+  return user;
+}
+
+/**
+ * Revoke all refresh tokens for a Firebase user (server-side).
+ */
+export async function revokeUserTokens(uid: string): Promise<void> {
+  await getAdminAuthLite().revokeRefreshTokens(uid);
 }

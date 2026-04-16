@@ -108,6 +108,10 @@
       "types": "./src/providers/storage-firebase/index.ts",
       "default": "./src/providers/storage-firebase/index.ts"
     },
+    "./providers/storage-firebase/client": {
+      "types": "./src/providers/storage-firebase/client.ts",
+      "default": "./src/providers/storage-firebase/client.ts"
+    },
     "./providers/payment-razorpay": {
       "types": "./src/providers/payment-razorpay/index.ts",
       "default": "./src/providers/payment-razorpay/index.ts"

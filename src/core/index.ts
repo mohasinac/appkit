@@ -65,3 +65,9 @@ export {
 
 export { unitOfWork } from "./unit-of-work";
 export type { UnitOfWork } from "./unit-of-work";
+
+export {
+  resolveKeys,
+  invalidateIntegrationKeysCache,
+} from "./integration-keys";
+export type { ResolvedKeys } from "./integration-keys";

@@ -14,6 +14,8 @@ export { firebaseAuthProvider } from "./provider";
 export {
   firebaseSessionProvider,
   createSessionCookieFromToken,
+  // Alias for backwards compatibility
+  createSessionCookieFromToken as createSessionCookie,
 } from "./session";
 
 // Standalone helpers (drop-in replacements for auth-server.ts)
@@ -23,4 +25,10 @@ export {
   createMiddlewareAuthChain,
   requireAuth,
   requireRole,
+  requireAuthUser,
+  requireRoleUser,
+  getUserFromRequest,
+  requireAuthFromRequest,
+  requireRoleFromRequest,
+  revokeUserTokens,
 } from "./helpers";
