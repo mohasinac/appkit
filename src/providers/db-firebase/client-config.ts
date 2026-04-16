@@ -28,15 +28,21 @@ export function normalizeFirebaseConfigValue(
 }
 
 export function buildFirebaseClientConfig(
-  env: Record<string, string | undefined>,
+  env?: Record<string, string | undefined>,
 ): FirebaseClientConfig {
+  const resolvedEnv =
+    env ??
+    (typeof process !== "undefined"
+      ? (process.env as Record<string, string | undefined>)
+      : {});
+
   return {
-    apiKey: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_API_KEY),
-    authDomain: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN),
-    projectId: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_PROJECT_ID),
-    storageBucket: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET),
-    messagingSenderId: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID),
-    appId: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_APP_ID),
-    databaseURL: normalizeFirebaseConfigValue(env.NEXT_PUBLIC_FIREBASE_DATABASE_URL),
+    apiKey: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_API_KEY),
+    authDomain: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN),
+    projectId: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_PROJECT_ID),
+    storageBucket: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET),
+    messagingSenderId: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID),
+    appId: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_APP_ID),
+    databaseURL: normalizeFirebaseConfigValue(resolvedEnv.NEXT_PUBLIC_FIREBASE_DATABASE_URL),
   };
 }

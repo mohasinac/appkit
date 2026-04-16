@@ -27,6 +27,14 @@ export interface ResolvedKeys {
   whatsappApiKey: string;
 }
 
+const EMPTY_KEYS: ResolvedKeys = {
+  razorpayKeyId: "",
+  razorpayKeySecret: "",
+  razorpayWebhookSecret: "",
+  resendApiKey: "",
+  whatsappApiKey: "",
+};
+
 let _cache: { value: ResolvedKeys; expiresAt: number } | null = null;
 const CACHE_TTL_MS = 60_000; // 1 minute
 
@@ -42,7 +50,13 @@ export function invalidateIntegrationKeysCache(): void {
 export async function resolveKeys(): Promise<ResolvedKeys> {
   if (_cache && _cache.expiresAt > Date.now()) return _cache.value;
 
-  const db = await siteSettingsRepository.getDecryptedCredentials();
+  let db: Partial<ResolvedKeys> = EMPTY_KEYS;
+  try {
+    db = await siteSettingsRepository.getDecryptedCredentials();
+  } catch {
+    // Preserve legacy letitrip behavior: Firestore failures must still fall
+    // through to env-based defaults instead of failing key resolution.
+  }
 
   const value: ResolvedKeys = {
     razorpayKeyId: db.razorpayKeyId || process.env.RAZORPAY_KEY_ID || "",
