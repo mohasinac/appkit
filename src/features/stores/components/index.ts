@@ -1,4 +1,9 @@
 export { StoreHeader } from "./StoreHeader";
+export { StoreAddressSelectorCreate } from "./StoreAddressSelectorCreate";
+export type {
+  StoreAddressSelectorCreateProps,
+  StoreAddressSelectorCreateLabels,
+} from "./StoreAddressSelectorCreate";
 export { StoresListView } from "./StoresListView";
 export { StoreNavTabs } from "./StoreNavTabs";
 export type { StoreNavTabsProps, StoreTab } from "./StoreNavTabs";

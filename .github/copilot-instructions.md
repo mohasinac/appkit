@@ -84,6 +84,9 @@ If two files serve the same logical purpose but differ in data shape or presenta
 
 The appkit component reads feature-level config from the prop; letitrip passes the prop — no logic duplication.
 
+When migrating a reusable concern from letitrip into appkit, keep letitrip behavior as the initial default baseline in appkit.
+That default must never be a dead-end: expose typed extension points so consumers can override either the whole behavior or only specific parts (for example via config objects, callbacks, adapters, render functions, or provider bindings).
+
 If the same basename appears in both a consumer index and `appkit/index.md`, treat that as a high-confidence dedupe candidate and resolve ownership explicitly.
 Default resolution: appkit owns the reusable implementation, and the consumer is reduced to direct imports or minimal config-only wiring.
 

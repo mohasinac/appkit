@@ -1,4 +1,17 @@
 export { AddressCard, AddressBook } from "./AddressBook";
+export { AddressForm } from "./AddressForm";
+export type { AddressFormLabels, AddressFormPlaceholders } from "./AddressForm";
+export { AddressSelectorCreate } from "./AddressSelectorCreate";
+export { NotificationBell } from "./NotificationBell";
+export type {
+  NotificationBellLabels,
+  NotificationBellProps,
+  NotificationBellRenderLinkProps,
+} from "./NotificationBell";
+export type {
+  AddressSelectorCreateProps,
+  AddressSelectorCreateLabels,
+} from "./AddressSelectorCreate";
 export { UserAccountHubView } from "./UserAccountHubView";
 export type {
   UserAccountHubViewProps,

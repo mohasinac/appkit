@@ -30,6 +30,10 @@
       "types": "./src/core/newsletter.repository.ts",
       "default": "./src/core/newsletter.repository.ts"
     },
+    "./repositories": {
+      "types": "./src/repositories/index.ts",
+      "default": "./src/repositories/index.ts"
+    },
     "./http": {
       "types": "./src/http/index.ts",
       "default": "./src/http/index.ts"

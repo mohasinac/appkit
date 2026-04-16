@@ -5,13 +5,20 @@ interface AddressCardProps {
   address: UserAddress;
   onEdit?: (address: UserAddress) => void;
   onDelete?: (id: string) => void;
-  labels?: { edit?: string; delete?: string; defaultBadge?: string };
+  onSetDefault?: (id: string) => void;
+  labels?: {
+    edit?: string;
+    delete?: string;
+    defaultBadge?: string;
+    setDefault?: string;
+  };
 }
 
 export function AddressCard({
   address,
   onEdit,
   onDelete,
+  onSetDefault,
   labels = {},
 }: AddressCardProps) {
   return (
@@ -56,6 +63,16 @@ export function AddressCard({
             className="text-xs font-medium text-red-500 hover:underline"
           >
             {labels.delete ?? "Delete"}
+          </Button>
+        )}
+        {!address.isDefault && onSetDefault && (
+          <Button
+            onClick={() => onSetDefault(address.id)}
+            variant="outline"
+            size="sm"
+            className="ml-auto text-xs font-medium"
+          >
+            {labels.setDefault ?? "Set default"}
           </Button>
         )}
       </Div>
