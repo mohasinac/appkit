@@ -35,6 +35,9 @@ export async function verifyIdToken(
       email: decoded.email ?? null,
       role: (decoded.role as string | undefined) ?? "user",
       emailVerified: decoded.email_verified ?? false,
+      name: (decoded.name as string | undefined) ?? null,
+      picture: (decoded.picture as string | undefined) ?? null,
+      phoneNumber: (decoded.phone_number as string | undefined) ?? null,
     };
   } catch (err) {
     if (!EXPECTED_AUTH_CODES.has((err as { code?: string }).code ?? "")) {
@@ -58,6 +61,9 @@ export async function verifySessionCookie(
       email: decoded.email ?? null,
       role: (decoded.role as string | undefined) ?? "user",
       emailVerified: decoded.email_verified ?? false,
+      name: (decoded.name as string | undefined) ?? null,
+      picture: (decoded.picture as string | undefined) ?? null,
+      phoneNumber: (decoded.phone_number as string | undefined) ?? null,
     };
   } catch (err) {
     if (!EXPECTED_AUTH_CODES.has((err as { code?: string }).code ?? "")) {

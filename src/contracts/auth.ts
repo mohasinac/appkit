@@ -6,6 +6,12 @@ export interface AuthPayload {
   /** Application-level role string, e.g. "admin" | "seller" | "user" */
   role: string;
   emailVerified: boolean;
+  /** Display name from the auth provider (Google "name" claim) */
+  name?: string | null;
+  /** Photo URL from the auth provider (Google "picture" claim) */
+  picture?: string | null;
+  /** Phone number from the auth provider */
+  phoneNumber?: string | null;
   /** Any extra custom claims stored on the token */
   claims?: Record<string, unknown>;
 }
