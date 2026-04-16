@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./schemas";
+export * from "./actions";
 export * from "./auth-helpers";
 export * from "./token-helpers";
 export * from "./token-store";
@@ -7,6 +8,7 @@ export * from "./consent-otp";
 export * from "./repository";
 export * from "./hooks/useAuth";
 export * from "./hooks/useAuthEvent";
+export * from "./hooks/useRBAC";
 export * from "./hooks/useLogout";
 export * from "./components";
 export { manifest } from "./manifest";

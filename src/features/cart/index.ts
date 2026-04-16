@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./schemas";
+export * from "./actions";
 export * from "./columns";
 export * from "./hooks/useCart";
 export * from "./hooks/useCartQuery";

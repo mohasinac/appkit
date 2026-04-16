@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./schemas";
+export * from "./actions";
 export * from "./hooks/useCheckout";
 export { useCheckout as useCheckoutApi } from "./hooks/useCheckoutApi";
 export type {

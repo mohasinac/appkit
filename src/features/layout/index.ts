@@ -64,3 +64,15 @@ export { useBottomActions } from "./hooks/useBottomActions";
 export type { UseBottomActionsOptions } from "./hooks/useBottomActions";
 
 export { default as BottomActions } from "./BottomActions";
+
+export { BottomNavbar } from "./BottomNavbar";
+export type { BottomNavbarProps } from "./BottomNavbar";
+
+export { MainNavbar } from "./MainNavbar";
+export type { MainNavbarProps, MainNavbarItem } from "./MainNavbar";
+
+export { TitleBar } from "./TitleBar";
+export type { TitleBarProps } from "./TitleBar";
+
+export { DashboardNavProvider, useDashboardNav } from "./DashboardNavContext";
+export type { DashboardNavState } from "./DashboardNavContext";

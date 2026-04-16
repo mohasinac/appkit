@@ -108,8 +108,23 @@ export { StatusBadge } from "./components/StatusBadge";
 export type { ModalProps } from "./components/Modal";
 export { Modal, ModalFooter } from "./components/Modal";
 
+export type {
+  UnsavedChangesModalProps,
+  UnsavedChangesLabels,
+} from "./components/UnsavedChangesModal";
+export { UnsavedChangesModal } from "./components/UnsavedChangesModal";
+
 export type { DrawerProps } from "./components/Drawer";
 export { Drawer } from "./components/Drawer";
+
+export type {
+  BackgroundRendererProps,
+  BackgroundConfig,
+} from "./components/BackgroundRenderer";
+export { BackgroundRenderer } from "./components/BackgroundRenderer";
+
+export type { ResponsiveViewProps } from "./components/ResponsiveView";
+export { ResponsiveView } from "./components/ResponsiveView";
 
 export type { SelectProps, SelectOption } from "./components/Select";
 export { Select } from "./components/Select";
@@ -356,3 +371,11 @@ export type {
   ImageGalleryProps,
 } from "./components/ImageGallery";
 export { default as ImageGallery } from "./components/ImageGallery";
+
+// ─── SideDrawer ──────────────────────────────────────────────────────────────
+export type { SideDrawerProps, DrawerMode } from "./components/SideDrawer";
+export { SideDrawer } from "./components/SideDrawer";
+
+// ─── ConfirmDeleteModal ──────────────────────────────────────────────────────
+export type { ConfirmDeleteModalProps } from "./components/ConfirmDeleteModal";
+export { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";

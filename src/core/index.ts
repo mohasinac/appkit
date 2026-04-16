@@ -57,5 +57,11 @@ export type {
   NewsletterSubscriberUpdateInput,
 } from "./newsletter.repository";
 
+export {
+  subscribeNewsletter,
+  type SubscribeNewsletterActionInput,
+  type SupportedNewsletterSource,
+} from "./newsletter-actions";
+
 export { unitOfWork } from "./unit-of-work";
 export type { UnitOfWork } from "./unit-of-work";
