@@ -15,3 +15,13 @@ export type { CategoriesListViewProps } from "./CategoriesListView";
 
 export { CategoryProductsView } from "./CategoryProductsView";
 export type { CategoryProductsViewProps } from "./CategoryProductsView";
+
+export { CategoryForm } from "./CategoryForm";
+export type { CategoryFormProps, CategoryFormLabels } from "./CategoryForm";
+
+export { CategorySelectorCreate } from "./CategorySelectorCreate";
+export type { CategorySelectorCreateProps, CategorySelectorCreateLabels } from "./CategorySelectorCreate";
+
+export { getCategoryTableColumns } from "./CategoryTableColumns";
+export type { CategoryTableColumnsLabels } from "./CategoryTableColumns";
+
