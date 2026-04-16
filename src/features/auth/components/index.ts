@@ -1,4 +1,10 @@
 export { RoleGate, ProtectedRoute } from "./Guards";
+export type {
+  RoleGateProps,
+  ProtectedRouteProps,
+  AuthGuardUser,
+  AuthRouteConfig,
+} from "./Guards";
 export { SocialAuthButtons } from "./SocialAuthButtons";
 export { AuthStatusPanel } from "./AuthStatusPanel";
 export { LoginForm } from "./LoginForm";

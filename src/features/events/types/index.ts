@@ -150,24 +150,6 @@ export interface EventEntryListResponse {
 
 // ─── Inputs ───────────────────────────────────────────────────────────────────
 
-export interface CreateEventInput {
-  type: EventType;
-  title: string;
-  description: string;
-  startsAt: string;
-  endsAt: string;
-  coverImage?: MediaField | null;
-  coverImageUrl?: string;
-  eventImages?: MediaField[];
-  winnerImages?: MediaField[];
-  additionalImages?: MediaField[];
-  saleConfig?: SaleConfig;
-  offerConfig?: OfferConfig;
-  pollConfig?: PollConfig;
-  surveyConfig?: SurveyConfig;
-  feedbackConfig?: FeedbackConfig;
-}
-
 export interface CreateEventEntryInput {
   eventId: string;
   pollVotes?: string[];

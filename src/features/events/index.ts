@@ -5,6 +5,7 @@ export * from "./components";
 export * from "./schemas";
 export * from "./columns";
 export * from "./actions";
+export * from "./types";
 export {
   EventRepository,
   EventsRepository,

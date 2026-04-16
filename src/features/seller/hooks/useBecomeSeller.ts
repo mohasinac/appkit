@@ -3,11 +3,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useMessage } from "../../../react";
+import type { BecomeSellerResult } from "../actions/seller-actions";
 
-export interface BecomeSellerResult {
-  storeStatus: "pending" | "approved" | "rejected";
-  alreadySeller?: boolean;
-}
+export type { BecomeSellerResult };
 
 export interface UseBecomeSellerOptions<T = BecomeSellerResult> {
   mutationFn?: () => Promise<T>;

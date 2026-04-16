@@ -58,14 +58,6 @@ export interface BidListResponse {
   hasMore: boolean;
 }
 
-// ─── Input ────────────────────────────────────────────────────────────────────
-
-export interface PlaceBidInput {
-  auctionId: string;
-  amount: number;
-  currency: string;
-}
-
 export interface AuctionListParams {
   storeSlug?: string;
   page?: number;

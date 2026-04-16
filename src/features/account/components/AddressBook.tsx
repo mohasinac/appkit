@@ -1,9 +1,25 @@
 import type { UserAddress } from "../types";
 import { Button, Div, Span, Text } from "../../../ui";
 
-interface AddressCardProps {
-  address: UserAddress;
-  onEdit?: (address: UserAddress) => void;
+export interface AddressCardAddress {
+  id: string;
+  label?: string;
+  line1?: string;
+  line2?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  isDefault?: boolean;
+  phone?: string;
+  [key: string]: unknown;
+}
+
+export interface AddressCardProps {
+  address: AddressCardAddress;
+  onEdit?: (address: AddressCardAddress) => void;
   onDelete?: (id: string) => void;
   onSetDefault?: (id: string) => void;
   labels?: {
@@ -14,6 +30,15 @@ interface AddressCardProps {
   };
 }
 
+interface AddressBookProps {
+  addresses: (UserAddress | AddressCardAddress)[];
+  onEdit?: (address: AddressCardAddress) => void;
+  onDelete?: (id: string) => void;
+  onAdd?: () => void;
+  emptyLabel?: string;
+  addLabel?: string;
+}
+
 export function AddressCard({
   address,
   onEdit,
@@ -21,6 +46,14 @@ export function AddressCard({
   onSetDefault,
   labels = {},
 }: AddressCardProps) {
+  const line1 =
+    "line1" in address && address.line1
+      ? address.line1
+      : ((address as { addressLine1?: string }).addressLine1 ?? "");
+  const line2 =
+    "line2" in address && address.line2
+      ? address.line2
+      : (address as { addressLine2?: string }).addressLine2;
   return (
     <Div className="relative rounded-xl border border-neutral-200 bg-white p-4">
       {address.isDefault && (
@@ -33,10 +66,8 @@ export function AddressCard({
           {address.label}
         </Text>
       )}
-      <Text className="text-sm text-neutral-900">{address.line1}</Text>
-      {address.line2 && (
-        <Text className="text-sm text-neutral-900">{address.line2}</Text>
-      )}
+      <Text className="text-sm text-neutral-900">{line1}</Text>
+      {line2 && <Text className="text-sm text-neutral-900">{line2}</Text>}
       <Text className="text-sm text-neutral-900">
         {address.city}, {address.state} {address.postalCode}
       </Text>
@@ -80,15 +111,6 @@ export function AddressCard({
   );
 }
 
-interface AddressBookProps {
-  addresses: UserAddress[];
-  onEdit?: (address: UserAddress) => void;
-  onDelete?: (id: string) => void;
-  onAdd?: () => void;
-  emptyLabel?: string;
-  addLabel?: string;
-}
-
 export function AddressBook({
   addresses,
   onEdit,
@@ -106,7 +128,7 @@ export function AddressBook({
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}
-            address={addr}
+            address={addr as AddressCardAddress}
             onEdit={onEdit}
             onDelete={onDelete}
           />

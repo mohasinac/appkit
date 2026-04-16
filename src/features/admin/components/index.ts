@@ -48,6 +48,12 @@ export type {
 } from "./AdminAnalyticsView";
 export { AdminStatCard } from "./analytics/AdminStatCard";
 export type { AdminStatCardProps } from "./analytics/AdminStatCard";
+export { AdminFilterBar } from "./AdminFilterBar";
+export type { AdminFilterBarProps } from "./AdminFilterBar";
+export { AdminPageHeader } from "./AdminPageHeader";
+export type { AdminPageHeaderProps } from "./AdminPageHeader";
+export { DrawerFormFooter } from "./DrawerFormFooter";
+export type { DrawerFormFooterProps } from "./DrawerFormFooter";
 export {
   AdminRevenueChart,
   AdminOrdersChart,

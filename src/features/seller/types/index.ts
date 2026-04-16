@@ -173,13 +173,3 @@ export interface UpdateSellerStoreInput {
   isVacationMode?: boolean;
   vacationMessage?: string;
 }
-
-export interface RequestPayoutInput {
-  amount: number;
-  currency: string;
-  paymentMethod: PayoutPaymentMethod;
-  bankAccount?: PayoutBankAccount;
-  upiId?: string;
-  notes?: string;
-  orderIds: string[];
-}

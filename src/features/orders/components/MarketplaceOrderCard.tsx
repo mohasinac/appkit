@@ -2,7 +2,14 @@
 
 import { useCallback } from "react";
 import { Package } from "lucide-react";
-import { Button, Caption, Span, StatusBadge, Text, TextLink } from "../../../ui";
+import {
+  Button,
+  Caption,
+  Span,
+  StatusBadge,
+  Text,
+  TextLink,
+} from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 
 const STATUS_MAP: Record<
@@ -46,7 +53,7 @@ export interface MarketplaceOrderCardLinks {
 
 export interface MarketplaceOrderCardProps {
   order: MarketplaceOrderCardOrder;
-  links: MarketplaceOrderCardLinks;
+  links?: MarketplaceOrderCardLinks;
   labels?: Partial<MarketplaceOrderCardLabels>;
   className?: string;
   variant?: "grid" | "list";
@@ -93,9 +100,9 @@ export function MarketplaceOrderCard({
   const isDelivered = order.status === "delivered";
   const isShipped = order.status === "shipped";
 
-  const detailHref = links.detailHref(order);
-  const trackHref = links.trackHref?.(order);
-  const reviewHref = links.reviewHref?.(order);
+  const detailHref = links?.detailHref(order) ?? `/orders/${order.id}`;
+  const trackHref = links?.trackHref?.(order);
+  const reviewHref = links?.reviewHref?.(order);
 
   const handleSelect = useCallback(
     (event: React.MouseEvent) => {
@@ -181,16 +188,18 @@ export function MarketplaceOrderCard({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            {(isShipped || isDelivered) && trackHref && order.trackingNumber && (
-              <Button
-                variant="ghost"
-                size="sm"
-                className="min-w-0 flex-1 px-2 text-xs"
-                onClick={() => navigate(trackHref)}
-              >
-                {mergedLabels.trackOrder}
-              </Button>
-            )}
+            {(isShipped || isDelivered) &&
+              trackHref &&
+              order.trackingNumber && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="min-w-0 flex-1 px-2 text-xs"
+                  onClick={() => navigate(trackHref)}
+                >
+                  {mergedLabels.trackOrder}
+                </Button>
+              )}
             {isDelivered && reviewHref && (
               <Button
                 variant="outline"

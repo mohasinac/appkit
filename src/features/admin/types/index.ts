@@ -4,6 +4,14 @@ import type { TableColumn } from "../../../contracts";
 // Re-export the base column type from contracts
 export type { TableColumn } from "../../../contracts";
 
+// Admin product types
+export type {
+  AdminProduct,
+  AdminProductStatus,
+  AdminProductDrawerMode,
+} from "./product.types";
+export { ADMIN_PRODUCT_STATUS_OPTIONS } from "./product.types";
+
 /**
  * Admin-specific column definition that narrows `render` to `React.ReactNode`.
  * Extends `TableColumn<T>` from `@mohasinac/contracts` so it is compatible

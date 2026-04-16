@@ -30,3 +30,10 @@ export {
   preventBodyScroll,
 } from "./event-manager";
 export * from "./business-day";
+
+// Re-export order utilities for checkout flows
+export {
+  splitCartIntoOrderGroups,
+  type OrderType,
+  type OrderGroup,
+} from "../features/orders/utils/order-splitter";

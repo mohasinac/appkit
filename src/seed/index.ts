@@ -2,6 +2,13 @@
 export type { SeedCollection, SeedConfig, SeedResult } from "./types";
 export { runSeed } from "./runner";
 
+// Demo seed actions
+export type {
+  SeedCollectionName,
+  SeedOperationResult,
+} from "./actions/demo-seed-actions";
+export { demoSeed } from "./actions/demo-seed-actions";
+
 // Factories — user
 export type { SeedBaseUserDocument } from "./factories/user.factory";
 export {
