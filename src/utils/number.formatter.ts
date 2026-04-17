@@ -2,22 +2,31 @@
  * Number Formatting Utilities
  */
 
+import {
+  getDefaultCurrency,
+  getDefaultLocale,
+} from "../core/baseline-resolver";
+
 export function formatCurrency(
   amount: number,
-  currency: string = "INR",
-  locale: string = "en-IN",
+  currency?: string,
+  locale?: string,
 ): string {
-  return new Intl.NumberFormat(locale, { style: "currency", currency }).format(
-    amount,
-  );
+  const resolvedCurrency = currency ?? getDefaultCurrency();
+  const resolvedLocale = locale ?? getDefaultLocale();
+  return new Intl.NumberFormat(resolvedLocale, {
+    style: "currency",
+    currency: resolvedCurrency,
+  }).format(amount);
 }
 
 export function formatNumber(
   num: number,
-  locale: string = "en-IN",
+  locale?: string,
   options?: { decimals?: number },
 ): string {
-  return new Intl.NumberFormat(locale, {
+  const resolvedLocale = locale ?? getDefaultLocale();
+  return new Intl.NumberFormat(resolvedLocale, {
     minimumFractionDigits: options?.decimals,
     maximumFractionDigits: options?.decimals,
   }).format(num);

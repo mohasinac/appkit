@@ -16,6 +16,8 @@
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 
+import { ProductStatusValues } from "../features/products/schemas";
+
 // ─── Input Types ──────────────────────────────────────────────────────────────
 
 export interface ProductJsonLdInput {
@@ -90,9 +92,9 @@ export function productJsonLd(
       price: product.price,
       priceCurrency: product.currency || "INR",
       availability:
-        product.status === "published" || !product.status
+        product.status === ProductStatusValues.PUBLISHED || !product.status
           ? "https://schema.org/InStock"
-          : product.status === "out_of_stock"
+          : product.status === ProductStatusValues.OUT_OF_STOCK
             ? "https://schema.org/OutOfStock"
             : "https://schema.org/Discontinued",
       url,

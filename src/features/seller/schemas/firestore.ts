@@ -16,6 +16,17 @@ export type OfferStatus =
   | "withdrawn"
   | "paid";
 
+/** Runtime-accessible offer status values — use instead of bare string literals. */
+export const OfferStatusValues = {
+  PENDING: "pending",
+  ACCEPTED: "accepted",
+  DECLINED: "declined",
+  COUNTERED: "countered",
+  EXPIRED: "expired",
+  WITHDRAWN: "withdrawn",
+  PAID: "paid",
+} as const satisfies Record<string, OfferStatus>;
+
 export interface OfferDocument {
   id: string;
   productId: string;

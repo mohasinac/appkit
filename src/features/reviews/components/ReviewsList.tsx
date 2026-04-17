@@ -13,6 +13,7 @@ import {
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 // ─── ReviewCard ───────────────────────────────────────────────────────────────
 
@@ -23,7 +24,7 @@ export interface ReviewCardProps {
 
 export function ReviewCard({ review, className = "" }: ReviewCardProps) {
   const date = review.createdAt
-    ? new Date(review.createdAt).toLocaleDateString("en-US", {
+    ? new Date(review.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "short",
         day: "numeric",

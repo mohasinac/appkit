@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import React, { useState, useRef, useEffect } from "react";
 import { Text } from "./Typography";

@@ -66,7 +66,7 @@ class PayoutRepository extends BaseRepository<PayoutDocument> {
 
   /** Override mapDoc to auto-decrypt PII on every Firestore read */
   protected override mapDoc<D = PayoutDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<PayoutDocument>(snap);
     return this.decryptPayout(raw) as unknown as D;
@@ -176,7 +176,8 @@ class PayoutRepository extends BaseRepository<PayoutDocument> {
     return this.update(payoutId, {
       status,
       ...extra,
-      ...(status === "completed" || status === "failed"
+      ...(status === PAYOUT_FIELDS.STATUS_VALUES.COMPLETED ||
+      status === PAYOUT_FIELDS.STATUS_VALUES.FAILED
         ? { processedAt: new Date() }
         : {}),
       updatedAt: new Date(),

@@ -37,7 +37,7 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
           <Text className="font-semibold text-neutral-900">
             {formatCurrency(
               item.meta.price * item.quantity,
-              item.meta.currency ?? "INR",
+              item.meta.currency,
             )}
           </Text>
           {onQtyChange && (
@@ -105,7 +105,7 @@ export function CartDrawer({
   onClose,
   items,
   subtotal = 0,
-  currency = "INR",
+  currency,
   isLoading,
   onQtyChange,
   onRemove,
@@ -163,7 +163,7 @@ export function CartDrawer({
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span className="font-semibold">
-                {formatCurrency(subtotal, currency ?? "INR")}
+                {formatCurrency(subtotal, currency)}
               </Span>
             </Div>
             {onCheckout && (

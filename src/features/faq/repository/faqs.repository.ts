@@ -10,7 +10,7 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
-import { FieldValue } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
 import type { FAQ, FAQCategory } from "../types";
 import {
   FAQS_COLLECTION,
@@ -326,7 +326,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
       .collection(this.collection)
       .doc(faqId)
       .update({
-        "stats.views": FieldValue.increment(1),
+        "stats.views": increment(1),
         "stats.lastViewed": new Date(),
       });
   }
@@ -336,7 +336,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
       .collection(this.collection)
       .doc(faqId)
       .update({
-        "stats.helpful": FieldValue.increment(1),
+        "stats.helpful": increment(1),
       });
   }
 
@@ -345,7 +345,7 @@ export class FirebaseFAQsRepository extends BaseRepository<FAQDocument> {
       .collection(this.collection)
       .doc(faqId)
       .update({
-        "stats.notHelpful": FieldValue.increment(1),
+        "stats.notHelpful": increment(1),
       });
   }
 

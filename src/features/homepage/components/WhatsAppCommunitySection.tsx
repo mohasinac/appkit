@@ -1,9 +1,11 @@
 "use client";
+import "client-only";
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Grid, Heading, Section, Span, Text } from "../../../ui";
 import { MessageCircle } from "lucide-react";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -111,7 +113,7 @@ export function WhatsAppCommunitySection({
                 </div>
                 <Text variant="none" className="text-white font-bold">
                   <Span className="text-xl font-extrabold">
-                    {memberCount.toLocaleString("en-IN")}
+                    {memberCount.toLocaleString(getDefaultLocale())}
                   </Span>{" "}
                   {memberCountLabel}
                 </Text>

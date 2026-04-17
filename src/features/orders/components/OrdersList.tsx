@@ -1,6 +1,7 @@
 import { Div, Pagination, Row, Span, Text } from "../../../ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -22,7 +23,7 @@ interface OrderCardProps {
 
 export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
   const date = order.createdAt
-    ? new Date(order.createdAt).toLocaleDateString("en-US", {
+    ? new Date(order.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -85,10 +86,10 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       </Row>
       <Div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
         <Span className="text-sm text-neutral-500">
-          {order.currency ?? "INR"} Total
+          {order.currency ?? ""} Total
         </Span>
         <Span className="font-semibold text-neutral-900">
-          {formatCurrency(order.total, order.currency ?? "INR")}
+          {formatCurrency(order.total, order.currency)}
         </Span>
       </Div>
     </Div>

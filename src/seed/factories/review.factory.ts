@@ -5,9 +5,16 @@ let _seq = 1;
 const RATING_DIST = [5, 5, 4, 5, 4, 3, 5, 4, 5, 2] as const;
 
 const REVIEW_TITLES = [
-  "Excellent quality!", "Beautifully crafted", "Worth every rupee",
-  "Exceeded expectations", "Good value for money", "Authentic and unique",
-  "Some quality issues", "Lovely gift option", "Super fast delivery", "Not as described",
+  "Excellent quality!",
+  "Beautifully crafted",
+  "Worth every penny",
+  "Exceeded expectations",
+  "Good value for money",
+  "Authentic and unique",
+  "Some quality issues",
+  "Lovely gift option",
+  "Super fast delivery",
+  "Not as described",
 ] as const;
 
 const REVIEW_COMMENTS = [
@@ -60,7 +67,7 @@ export function makeReview(
     images: overrides.images ?? [],
     status: overrides.status ?? "published",
     helpfulCount: overrides.helpfulCount ?? irand(n, 0, 47),
-    verified: overrides.verified ?? (n % 5 !== 0), // 80% verified
+    verified: overrides.verified ?? n % 5 !== 0, // 80% verified
     createdAt: overrides.createdAt ?? now,
     ...overrides,
   };

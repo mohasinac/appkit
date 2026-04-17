@@ -1,4 +1,6 @@
 // appkit/src/seed/factories/order.factory.ts
+import { getDefaultCurrency } from "../seed-market-config";
+
 let _seq = 1;
 
 export interface SeedBaseOrderItem {
@@ -34,7 +36,7 @@ export function makeOrder(
     status: overrides.status ?? "confirmed",
     paymentStatus: overrides.paymentStatus ?? "paid",
     totalPrice: overrides.totalPrice ?? 0,
-    currency: overrides.currency ?? "INR",
+    currency: overrides.currency ?? getDefaultCurrency(),
     orderDate: overrides.orderDate ?? now,
     createdAt: overrides.createdAt ?? now,
     updatedAt: overrides.updatedAt ?? now,

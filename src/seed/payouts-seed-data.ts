@@ -1,4 +1,7 @@
 import "server-only";
+import { getDefaultCurrency } from "./seed-market-config";
+
+const _CURRENCY = getDefaultCurrency();
 
 /**
  * Payouts Seed Data
@@ -28,7 +31,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 50399.0, // 12490 + 9990 + 18990 + 8990 Jan figure orders
     platformFee: 2519.45,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.COMPLETED,
     paymentMethod: "bank_transfer",
     bankAccount: {
@@ -62,7 +65,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 35493.0, // 24990 + 3499 + 6990 = 35,479
     platformFee: 1774.45,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.PROCESSING,
     paymentMethod: "bank_transfer",
     bankAccount: {
@@ -96,7 +99,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 14201.0,
     platformFee: 710.05,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.COMPLETED,
     paymentMethod: "upi",
     upiId: "fashionboutique@okaxis",
@@ -124,7 +127,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 18993.68,
     platformFee: 950.18,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.PENDING,
     paymentMethod: "upi",
     upiId: "fashionboutique@okaxis",
@@ -153,7 +156,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 24000.0,
     platformFee: 1200.0,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.FAILED,
     paymentMethod: "bank_transfer",
     bankAccount: {
@@ -183,7 +186,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 24000.0,
     platformFee: 1200.0,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.PENDING,
     paymentMethod: "bank_transfer",
     bankAccount: {
@@ -210,7 +213,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     grossAmount: 12100.0,
     platformFee: 605.0,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: _CURRENCY,
     status: PAYOUT_FIELDS.STATUS_VALUES.COMPLETED,
     paymentMethod: "upi",
     upiId: "homeessentials@paytm",

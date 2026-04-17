@@ -1,5 +1,10 @@
 import "server-only";
 
+// Auto-register Firebase field operations on import
+import { registerFieldOps } from "../../contracts/field-ops";
+import { firebaseFieldOps } from "./field-ops";
+registerFieldOps(firebaseFieldOps);
+
 /**
  * @mohasinac/db-firebase
  *
@@ -32,6 +37,12 @@ export {
   prepareForFirestore,
   deserializeTimestamps,
 } from "./helpers";
+
+// Firebase field ops implementation
+export { firebaseFieldOps } from "./field-ops";
+
+// Re-export DocumentSnapshot type for mapDoc overrides in feature repos
+export type { DocumentSnapshot } from "firebase-admin/firestore";
 
 // Repository base classes
 export { FirebaseRepository } from "./base";

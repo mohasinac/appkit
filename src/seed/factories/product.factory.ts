@@ -1,37 +1,57 @@
 // appkit/src/seed/factories/product.factory.ts
+import {
+  getSeedLocale,
+  getDefaultCurrency,
+  pick,
+  irand,
+} from "../seed-market-config";
+
 let _seq = 1;
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-/** Deterministic pick from array using sequence number (no Math.random). */
-function pick<T>(arr: readonly T[], n: number): T {
-  return arr[n % arr.length];
-}
-
-/** Deterministic integer in [min, max] range based on n. */
-function irand(n: number, min: number, max: number): number {
-  return min + (((n * 2_654_435_761) >>> 0) % (max - min + 1));
-}
-
-// ─── Realistic data pools (INR / Indian market) ───────────────────────────────
+// ─── Realistic data pools (from seed locale config) ───────────────────────────
 const PRODUCT_NAMES = [
-  "Handloom Cotton Saree", "Silver Oxidised Jhumkas", "Brass Pooja Diya Set",
-  "Khadi Kurta & Pyjama Set", "Terracotta Flower Vase", "Sandalwood Incense Sticks",
-  "Batik Print Salwar Suit", "Copper Water Bottle", "Warli Art Wall Frame",
-  "Clay Tea Kadai Set", "Jute Laptop Bag", "Madhubani Painting Print",
-  "Organic Tulsi Green Tea", "Kantha Embroidered Cushion", "Brass Dancing Ganesha Figurine",
-  "Block Print Bedsheet Set", "Bamboo Cutlery Kit", "Dhokra Metal Elephant",
-  "Rajasthani Mojari Jutti", "Coconut Shell Bowl Set",
+  "Handloom Cotton Saree",
+  "Silver Oxidised Jhumkas",
+  "Brass Pooja Diya Set",
+  "Khadi Kurta & Pyjama Set",
+  "Terracotta Flower Vase",
+  "Sandalwood Incense Sticks",
+  "Batik Print Salwar Suit",
+  "Copper Water Bottle",
+  "Warli Art Wall Frame",
+  "Clay Tea Kadai Set",
+  "Jute Laptop Bag",
+  "Madhubani Painting Print",
+  "Organic Tulsi Green Tea",
+  "Kantha Embroidered Cushion",
+  "Brass Dancing Ganesha Figurine",
+  "Block Print Bedsheet Set",
+  "Bamboo Cutlery Kit",
+  "Dhokra Metal Elephant",
+  "Rajasthani Mojari Jutti",
+  "Coconut Shell Bowl Set",
 ] as const;
 
 const CATEGORIES = [
-  "clothing", "jewellery", "home-decor", "food-beverages",
-  "art-crafts", "wellness", "accessories", "kitchenware",
+  "clothing",
+  "jewellery",
+  "home-decor",
+  "food-beverages",
+  "art-crafts",
+  "wellness",
+  "accessories",
+  "kitchenware",
 ] as const;
 
 const TAGS_POOL = [
-  ["handmade", "artisan"], ["featured", "new-arrival"], ["bestseller", "eco-friendly"],
-  ["sale"], ["handcrafted", "traditional"], ["organic", "sustainable"],
-  ["limited-edition"], ["gift-worthy", "premium"],
+  ["handmade", "artisan"],
+  ["featured", "new-arrival"],
+  ["bestseller", "eco-friendly"],
+  ["sale"],
+  ["handcrafted", "traditional"],
+  ["organic", "sustainable"],
+  ["limited-edition"],
+  ["gift-worthy", "premium"],
 ] as const;
 
 export interface SeedBaseProductDocument {
@@ -58,20 +78,24 @@ export function makeProduct(
 ): SeedBaseProductDocument {
   const n = _seq++;
   const now = new Date();
-  const title = pick(PRODUCT_NAMES, n);
-  const category = pick(CATEGORIES, n);
+  const locale = getSeedLocale();
+  const title = pick(locale.productNames, n);
+  const category = pick(locale.productCategories, n);
   const price = irand(n, 99, 9999);
   const stock = irand(n + 7, 5, 200);
   return {
     id: overrides.id ?? `product-${n}`,
     title: overrides.title ?? title,
-    description: overrides.description ?? `Authentic ${title} — handcrafted by skilled Indian artisans.`,
+    description:
+      overrides.description ??
+      `Authentic ${title} — handcrafted by skilled artisans.`,
     slug: overrides.slug ?? `product-${n}`,
     seoTitle: overrides.seoTitle ?? `Buy ${title} Online | Free Shipping`,
     price: overrides.price ?? price,
-    currency: overrides.currency ?? "INR",
+    currency: overrides.currency ?? getDefaultCurrency(),
     stockQuantity: overrides.stockQuantity ?? stock,
-    availableQuantity: overrides.availableQuantity ?? Math.max(0, stock - irand(n, 0, 5)),
+    availableQuantity:
+      overrides.availableQuantity ?? Math.max(0, stock - irand(n, 0, 5)),
     mainImage: overrides.mainImage ?? "",
     images: overrides.images ?? [],
     status: overrides.status ?? "published",
@@ -101,7 +125,11 @@ export function makeFullProduct(
 
 /** Named fixtures used by seed scripts and integration tests */
 export const PRODUCT_FIXTURES = {
-  basic: makeProduct({ id: "product-1", title: "Basic Product", slug: "basic-product" }),
+  basic: makeProduct({
+    id: "product-1",
+    title: "Basic Product",
+    slug: "basic-product",
+  }),
   full: makeFullProduct({
     id: "product-2",
     title: "Full Product",

@@ -1,4 +1,7 @@
 import "server-only";
+import { getDefaultCurrency } from "./seed-market-config";
+
+const _CURRENCY = getDefaultCurrency();
 
 /**
  * Carts Seed Data
@@ -39,7 +42,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=400&fit=crop",
         price: 12490,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-techhub-electronics-electron",
         sellerName: "FigureVault JP",
@@ -55,7 +58,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1599447292325-2a765f31b759?w=400&h=400&fit=crop",
         price: 3999,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-home-essentials-homeesse",
         sellerName: "OtakuShelf Co",
@@ -71,7 +74,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1591209733349-e1b6e42f4e97?w=400&h=400&fit=crop",
         price: 1290,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 2, // quantity > 1 edge case
         sellerId: "user-techhub-electronics-electron",
         sellerName: "FigureVault JP",
@@ -99,7 +102,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop",
         price: 2899,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-fashion-boutique-fashionb",
         sellerName: "AnimeCraft Apparel",
@@ -127,7 +130,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
         price: 50000, // starting bid price captured at add time
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-home-essentials-homeesse",
         sellerName: "OtakuShelf Co",
@@ -143,7 +146,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop",
         price: 3799,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-home-essentials-homeesse",
         sellerName: "OtakuShelf Co",
@@ -171,7 +174,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1602810316693-3667c854239a?w=400&h=400&fit=crop",
         price: 1299,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 3, // buying 3 (as gifts)
         sellerId: "user-fashion-boutique-fashionb",
         sellerName: "AnimeCraft Apparel",
@@ -187,7 +190,7 @@ export const cartsSeedData: CartDocument[] = [
         productImage:
           "https://images.unsplash.com/photo-1591209733349-e1b6e42f4e97?w=400&h=400&fit=crop",
         price: 1290,
-        currency: "INR",
+        currency: _CURRENCY,
         quantity: 1,
         sellerId: "user-techhub-electronics-electron",
         sellerName: "FigureVault JP",

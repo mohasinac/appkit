@@ -21,8 +21,11 @@ import {
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { ProductStatusValues } from "../../products/schemas";
 import { orderRepository } from "../../orders/repository/orders.repository";
+import { OrderStatusValues } from "../../orders/schemas";
 import { payoutRepository } from "../../payments/repository/payout.repository";
+import { PAYOUT_FIELDS } from "../../payments/schemas";
 import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { DEFAULT_PLATFORM_FEE_RATE } from "../../payments/schemas/firestore";
@@ -343,7 +346,9 @@ async function computeSellerEarnings(sellerId: string) {
         orderRepository.findByProduct(id).catch(() => [] as OrderDocument[]),
       ),
     );
-    deliveredOrders = batches.flat().filter((o) => o.status === "delivered");
+    deliveredOrders = batches
+      .flat()
+      .filter((o) => o.status === OrderStatusValues.DELIVERED);
   }
 
   const paidOutIds = await payoutRepository.getPaidOutOrderIds(sellerId);
@@ -375,7 +380,9 @@ export async function requestPayout(
 ): Promise<unknown> {
   const existing = await payoutRepository.findBySeller(userId);
   const hasPending = existing.some(
-    (p) => p.status === "pending" || p.status === "processing",
+    (p) =>
+      p.status === PAYOUT_FIELDS.STATUS_VALUES.PENDING ||
+      p.status === PAYOUT_FIELDS.STATUS_VALUES.PROCESSING,
   );
   if (hasPending)
     throw new ValidationError("A payout is already pending or processing.");
@@ -447,7 +454,7 @@ export async function bulkSellerOrder(
       skipped.push(id);
       continue;
     }
-    if (order.status !== "delivered") {
+    if (order.status !== OrderStatusValues.DELIVERED) {
       skipped.push(id);
       continue;
     }
@@ -615,7 +622,7 @@ export async function getSellerAnalytics(userId: string) {
   const totalRevenue = allOrders.reduce((s, o) => s + (o.totalPrice ?? 0), 0);
   const totalProducts = products.length;
   const publishedProducts = products.filter(
-    (p) => p.status === "published",
+    (p) => p.status === ProductStatusValues.PUBLISHED,
   ).length;
   const now = new Date();
   const monthMap = new Map<
@@ -739,13 +746,16 @@ export async function customShipOrder(
   if (!order) throw new NotFoundError("Order not found");
   if (userRole !== "admin" && order.sellerId !== userId)
     throw new AuthorizationError("You do not own this order");
-  if (order.status === "shipped" || order.status === "delivered")
+  if (
+    order.status === OrderStatusValues.SHIPPED ||
+    order.status === OrderStatusValues.DELIVERED
+  )
     throw new ValidationError("Order is already shipped");
-  if (order.status !== "confirmed")
+  if (order.status !== OrderStatusValues.CONFIRMED)
     throw new ValidationError("Order must be confirmed before shipping");
 
   await orderRepository.update(orderId, {
-    status: "shipped",
+    status: OrderStatusValues.SHIPPED,
     shippingMethod: "custom",
     shippingCarrier: input.shippingCarrier,
     trackingNumber: input.trackingNumber,

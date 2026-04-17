@@ -1,7 +1,6 @@
 "use client";
 
-import type { FirebaseApp } from "firebase/app";
-import type { Database } from "firebase/database";
+import type { IClientRealtimeProvider } from "../../../contracts/client-realtime";
 import {
   RealtimeEventType,
   useRealtimeEvent,
@@ -16,8 +15,7 @@ import {
 export type { RealtimeEventStatus as BulkEventStatus };
 
 export interface UseBulkEventOptions<TData = Record<string, unknown>> {
-  realtimeApp: FirebaseApp;
-  realtimeDb: Database;
+  realtimeProvider?: IClientRealtimeProvider;
   rtdbPath: string;
   timeoutMs?: number;
   messages?: RealtimeEventMessages;
@@ -67,8 +65,7 @@ export function useBulkEvent<TData = Record<string, unknown>>(
   } = useRealtimeEvent<BulkActionResult<TData>>({
     type: RealtimeEventType.BULK,
     rtdbPath: options.rtdbPath,
-    realtimeApp: options.realtimeApp,
-    realtimeDb: options.realtimeDb,
+    realtimeProvider: options.realtimeProvider,
     timeoutMs: options.timeoutMs ?? BULK_EVENT_TIMEOUT_MS,
     onLogError: options.onLogError,
     extractData: (options.extractData ?? extractBulkResult) as (

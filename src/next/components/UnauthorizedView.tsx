@@ -12,6 +12,8 @@
  *   }
  */
 
+import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
+
 export interface UnauthorizedViewProps {
   /** Override the heading text. */
   heading?: string;
@@ -31,9 +33,9 @@ export function UnauthorizedView({
   heading = "401 — Unauthorized",
   description = "You need to be signed in to view this page.",
   loginLabel = "Sign in",
-  loginHref = "/auth/login",
+  loginHref = DEFAULT_ROUTE_MAP.AUTH.LOGIN,
   homeLabel = "Go home",
-  homeHref = "/",
+  homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: UnauthorizedViewProps) {
   return (
     <div

@@ -17,7 +17,7 @@ import {
 } from "../schemas";
 import type { BlogPostCategory, BlogPostStatus } from "../types";
 import { createBlogPostId } from "../schemas";
-import { FieldValue } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
 
 class BlogRepository extends BaseRepository<BlogPostDocument> {
   constructor() {
@@ -96,7 +96,7 @@ class BlogRepository extends BaseRepository<BlogPostDocument> {
       await this.db
         .collection(this.collection)
         .doc(id)
-        .update({ [BLOG_POST_FIELDS.VIEWS]: FieldValue.increment(1) });
+        .update({ [BLOG_POST_FIELDS.VIEWS]: increment(1) });
     } catch {
       // Fire-and-forget by design.
     }

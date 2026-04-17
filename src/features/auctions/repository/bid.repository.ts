@@ -41,7 +41,7 @@ class BidRepository extends BaseRepository<BidDocument> {
 
   /** Override mapDoc to auto-decrypt PII on every bid read */
   protected override mapDoc<D = BidDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<BidDocument>(snap);
     return decryptPiiFields(raw as unknown as Record<string, unknown>, [

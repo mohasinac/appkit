@@ -6,6 +6,7 @@ import { Div, Heading, Span, Text } from "../../../ui";
 import type { PreorderItem, PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 const STATUS_LABELS: Record<PreorderStatus, string> = {
   available: "Pre-order now",
@@ -78,10 +79,13 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
         {item.preorderShipDate && (
           <Text className="mt-1 text-xs text-gray-400">
             Ships:{" "}
-            {new Date(item.preorderShipDate).toLocaleDateString("en-IN", {
-              month: "short",
-              year: "numeric",
-            })}
+            {new Date(item.preorderShipDate).toLocaleDateString(
+              getDefaultLocale(),
+              {
+                month: "short",
+                year: "numeric",
+              },
+            )}
           </Text>
         )}
       </Div>

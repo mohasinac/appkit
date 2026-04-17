@@ -10,6 +10,7 @@ import { finalizeStagedMediaField } from "../../media/finalize";
 import { userRepository } from "../repository/user.repository";
 import { sessionRepository } from "../repository/session.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import type { UserDocument } from "../schemas";
 
@@ -64,7 +65,9 @@ export async function getPublicUserProfile(
 
 export async function getSellerReviews(sellerId: string) {
   const products = await productRepository.findBySeller(sellerId);
-  const published = products.filter((p) => p.status === "published");
+  const published = products.filter(
+    (p) => p.status === ProductStatusValues.PUBLISHED,
+  );
   if (published.length === 0) return [];
   const batches = await Promise.all(
     published
@@ -76,5 +79,5 @@ export async function getSellerReviews(sellerId: string) {
 
 export async function getSellerProducts(sellerId: string) {
   const products = await productRepository.findBySeller(sellerId);
-  return products.filter((p) => p.status === "published");
+  return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }

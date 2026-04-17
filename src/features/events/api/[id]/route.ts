@@ -18,6 +18,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import type { EventItem, EventEntryItem } from "../../types/index";
+import { EVENT_FIELDS } from "../../schemas";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -40,7 +41,11 @@ export async function GET(
     const eventsRepo = db.getRepository<EventItem>("events");
     const event = await eventsRepo.findById(id);
 
-    if (!event || event.status === "draft" || event.status === "paused") {
+    if (
+      !event ||
+      event.status === EVENT_FIELDS.STATUS_VALUES.DRAFT ||
+      event.status === EVENT_FIELDS.STATUS_VALUES.PAUSED
+    ) {
       return NextResponse.json(
         { success: false, error: "Event not found" },
         { status: 404 },

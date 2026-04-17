@@ -8,6 +8,7 @@
 import { serverLogger } from "../../../monitoring";
 import { offerRepository } from "../repository/offer.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { ProductStatusValues } from "../../products/schemas";
 import { notificationRepository } from "../../admin/repository/notification.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { cartRepository } from "../../cart/repository/cart.repository";
@@ -18,6 +19,7 @@ import {
   ValidationError,
   NotFoundError,
 } from "../../../errors";
+import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
 import type { CartDocument } from "../../cart/schemas/firestore";
 
@@ -128,7 +130,7 @@ export async function respondToOffer(
   if (!offer) throw new NotFoundError("Offer not found.");
   if (offer.sellerId !== userId)
     throw new AuthorizationError("Not authorised to respond to this offer.");
-  if (offer.status !== "pending")
+  if (offer.status !== OfferStatusValues.PENDING)
     throw new ValidationError(
       `Offer is already ${offer.status}. No further action is possible.`,
     );
@@ -197,7 +199,7 @@ export async function acceptCounterOffer(
   if (!offer) throw new NotFoundError("Offer not found.");
   if (offer.buyerUid !== userId)
     throw new AuthorizationError("Not authorised.");
-  if (offer.status !== "countered")
+  if (offer.status !== OfferStatusValues.COUNTERED)
     throw new ValidationError("No counter to accept.");
   if (new Date() > offer.expiresAt)
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
@@ -230,7 +232,7 @@ export async function counterOfferByBuyer(
   if (!offer) throw new NotFoundError("Offer not found.");
   if (offer.buyerUid !== userId)
     throw new AuthorizationError("Not authorised.");
-  if (offer.status !== "countered")
+  if (offer.status !== OfferStatusValues.COUNTERED)
     throw new ValidationError(ERROR_MESSAGES.OFFER.NOT_COUNTERED);
   if (new Date() > offer.expiresAt)
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
@@ -308,9 +310,13 @@ export async function withdrawOffer(
   if (!offer) throw new NotFoundError("Offer not found.");
   if (offer.buyerUid !== userId)
     throw new AuthorizationError("Not authorised.");
-  if (offer.status === "expired")
+  if (offer.status === OfferStatusValues.EXPIRED)
     throw new ValidationError("This offer has already expired.");
-  if (!["pending", "countered"].includes(offer.status))
+  if (
+    !(
+      [OfferStatusValues.PENDING, OfferStatusValues.COUNTERED] as string[]
+    ).includes(offer.status)
+  )
     throw new ValidationError("Offer cannot be withdrawn at this stage.");
 
   await offerRepository.withdraw(offerId);
@@ -343,7 +349,7 @@ export async function checkoutOffer(
   if (!offer) throw new NotFoundError("Offer not found.");
   if (offer.buyerUid !== userId)
     throw new AuthorizationError("Not authorised.");
-  if (offer.status !== "accepted")
+  if (offer.status !== OfferStatusValues.ACCEPTED)
     throw new ValidationError("Only accepted offers can be checked out.");
   if (!offer.lockedPrice)
     throw new ValidationError("Offer price not confirmed. Contact support.");
@@ -352,8 +358,8 @@ export async function checkoutOffer(
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
   if (
     (product.availableQuantity ?? 0) <= 0 ||
-    product.status === "discontinued" ||
-    product.status === "sold"
+    product.status === ProductStatusValues.DISCONTINUED ||
+    product.status === ProductStatusValues.SOLD
   )
     throw new ValidationError(ERROR_MESSAGES.OFFER.PRODUCT_UNAVAILABLE);
 

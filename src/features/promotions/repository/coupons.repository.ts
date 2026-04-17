@@ -28,7 +28,7 @@ import {
 import type { CouponType } from "../types";
 import { USER_COLLECTION } from "../../auth/schemas";
 import { DatabaseError } from "../../../errors";
-import { FieldValue } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
 
 const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
 const COUPON_FIELDS = {
@@ -306,9 +306,9 @@ class CouponsRepository extends BaseRepository<CouponDocument> {
       // Update coupon usage stats
       const couponRef = this.db.collection(this.collection).doc(couponId);
       batch.update(couponRef, {
-        "usage.currentUsage": FieldValue.increment(1),
-        "stats.totalDiscountGiven": FieldValue.increment(discountAmount),
-        "stats.totalOrders": FieldValue.increment(1),
+        "usage.currentUsage": increment(1),
+        "stats.totalDiscountGiven": increment(discountAmount),
+        "stats.totalOrders": increment(1),
         updatedAt: new Date(),
       });
 

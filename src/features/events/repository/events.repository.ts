@@ -16,7 +16,7 @@ import {
   type EventDocument,
   type EventUpdateInput,
 } from "../schemas";
-import { FieldValue } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
 
 class EventRepository extends BaseRepository<EventDocument> {
   static readonly SIEVE_FIELDS: FirebaseSieveFields = {
@@ -123,7 +123,7 @@ class EventRepository extends BaseRepository<EventDocument> {
       await this.getCollection()
         .doc(id)
         .update({
-          [EVENT_FIELDS.STATS.TOTAL_ENTRIES]: FieldValue.increment(1),
+          [EVENT_FIELDS.STATS.TOTAL_ENTRIES]: increment(1),
         });
     } catch (error) {
       throw new DatabaseError(
@@ -138,7 +138,7 @@ class EventRepository extends BaseRepository<EventDocument> {
       await this.getCollection()
         .doc(id)
         .update({
-          [EVENT_FIELDS.STATS.APPROVED_ENTRIES]: FieldValue.increment(1),
+          [EVENT_FIELDS.STATS.APPROVED_ENTRIES]: increment(1),
         });
     } catch (error) {
       throw new DatabaseError(
@@ -153,7 +153,7 @@ class EventRepository extends BaseRepository<EventDocument> {
       await this.getCollection()
         .doc(id)
         .update({
-          [EVENT_FIELDS.STATS.FLAGGED_ENTRIES]: FieldValue.increment(1),
+          [EVENT_FIELDS.STATS.FLAGGED_ENTRIES]: increment(1),
         });
     } catch (error) {
       throw new DatabaseError(

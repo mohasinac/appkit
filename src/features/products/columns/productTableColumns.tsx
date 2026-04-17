@@ -31,21 +31,27 @@ export interface ProductTableColumnLabels {
   no: string;
 }
 
-export interface ProductTableColumnsConfig<T extends ProductItem = ProductItem> {
+export interface ProductTableColumnsConfig<
+  T extends ProductItem = ProductItem,
+> {
   labels: ProductTableColumnLabels;
   onEdit: (product: T) => void;
   onDelete: (product: T) => void;
   currencyCode?: string;
   locale?: string;
-  formatCurrency?: (amount: number, currencyCode: string, locale: string) => string;
+  formatCurrency?: (
+    amount: number,
+    currencyCode?: string,
+    locale?: string,
+  ) => string;
 }
 
 export function getProductTableColumns<T extends ProductItem = ProductItem>({
   labels,
   onEdit,
   onDelete,
-  currencyCode = "INR",
-  locale = "en-IN",
+  currencyCode,
+  locale,
   formatCurrency = defaultFormatCurrency,
 }: ProductTableColumnsConfig<T>) {
   const columns: DataTableColumn<T>[] = [
@@ -67,7 +73,9 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
           ) : (
             <Div className="h-8 w-8 flex-shrink-0 rounded bg-zinc-200 dark:bg-slate-700" />
           )}
-          <Span className="max-w-[180px] truncate font-medium">{product.title}</Span>
+          <Span className="max-w-[180px] truncate font-medium">
+            {product.title}
+          </Span>
         </Row>
       ),
     },
@@ -85,7 +93,11 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       width: "10%",
       render: (product: T) => (
         <Span>
-          {formatCurrency(product.price ?? 0, product.currency ?? currencyCode, locale)}
+          {formatCurrency(
+            product.price ?? 0,
+            product.currency ?? currencyCode,
+            locale,
+          )}
         </Span>
       ),
     },
@@ -94,7 +106,9 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       header: labels.stock,
       sortable: true,
       width: "10%",
-      render: (product: T) => <Span>{product.stockQuantity ?? product.stockCount ?? 0}</Span>,
+      render: (product: T) => (
+        <Span>{product.stockQuantity ?? product.stockCount ?? 0}</Span>
+      ),
     },
     {
       key: "status",
@@ -107,7 +121,8 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
           <Span
             className={[
               "rounded px-2 py-1 text-xs font-medium",
-              STATUS_STYLES[status] ?? "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
+              STATUS_STYLES[status] ??
+                "bg-zinc-100 text-zinc-700 dark:bg-slate-700 dark:text-zinc-300",
             ].join(" ")}
           >
             {status.replace("_", " ")}
@@ -121,7 +136,9 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       sortable: true,
       width: "15%",
       render: (product: T) => (
-        <Span className="block max-w-[120px] truncate text-sm">{product.sellerName ?? "-"}</Span>
+        <Span className="block max-w-[120px] truncate text-sm">
+          {product.sellerName ?? "-"}
+        </Span>
       ),
     },
     {

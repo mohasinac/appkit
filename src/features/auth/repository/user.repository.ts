@@ -1,5 +1,6 @@
 import "server-only";
-import { FieldValue, type DocumentSnapshot } from "firebase-admin/firestore";
+import { increment, serverTimestamp } from "../../../contracts/field-ops";
+import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
@@ -292,9 +293,9 @@ export class UserRepository extends BaseRepository<UserDocument> {
       await this.getCollection()
         .doc(uid)
         .update({
-          [USER_FIELDS.META.LAST_SIGN_IN_TIME]: FieldValue.serverTimestamp(),
-          [USER_FIELDS.META.LOGIN_COUNT]: FieldValue.increment(1),
-          [USER_FIELDS.UPDATED_AT]: FieldValue.serverTimestamp(),
+          [USER_FIELDS.META.LAST_SIGN_IN_TIME]: serverTimestamp(),
+          [USER_FIELDS.META.LOGIN_COUNT]: increment(1),
+          [USER_FIELDS.UPDATED_AT]: serverTimestamp(),
         });
     } catch (error) {
       throw new DatabaseError("Failed to update login metadata", error);

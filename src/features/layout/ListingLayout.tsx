@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Aside, Button, Div, Nav, Span } from "../../ui";

@@ -3,6 +3,7 @@
 import React from "react";
 import { Div, Heading, Text } from "../../../ui";
 import type { StoreDetail } from "../types";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 export interface StoreAboutViewProps {
   store: StoreDetail;
@@ -31,7 +32,7 @@ export function StoreAboutView({
   className = "",
 }: StoreAboutViewProps) {
   const joinDate = store.createdAt
-    ? new Date(store.createdAt).toLocaleDateString("en-US", {
+    ? new Date(store.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "long",
       })

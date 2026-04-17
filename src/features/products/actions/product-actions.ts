@@ -1,4 +1,5 @@
 ﻿import { productRepository } from "../repository/products.repository";
+import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
 import type {
   FirebaseSieveResult,
@@ -178,5 +179,5 @@ export async function getSellerStorefrontProducts(
   sellerId: string,
 ): Promise<ProductDocument[]> {
   const products = await productRepository.findBySeller(sellerId);
-  return products.filter((p) => p.status === "published");
+  return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }

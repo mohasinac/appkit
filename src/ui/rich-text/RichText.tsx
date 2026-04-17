@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import { useMemo } from "react";
 import { Div } from "../components/Div";

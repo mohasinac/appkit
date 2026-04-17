@@ -8,6 +8,7 @@
 import { productRepository } from "../../../features/products/repository/products.repository";
 import { couponsRepository } from "../repository/coupons.repository";
 import type { ProductDocument } from "../../../features/products/schemas";
+import { ProductStatusValues } from "../../../features/products/schemas";
 import type { CouponDocument } from "../schemas";
 
 export interface PromotionsResult {
@@ -30,11 +31,11 @@ export async function getPromotions(): Promise<PromotionsResult> {
   const now = new Date();
 
   const promotedProducts = promotedRaw
-    .filter((p) => p.status === "published")
+    .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 12);
 
   const featuredProducts = featuredRaw
-    .filter((p) => p.status === "published")
+    .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 8);
 
   const validCoupons = activeCoupons.filter((c) => {

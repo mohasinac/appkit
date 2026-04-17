@@ -10,6 +10,27 @@ export type ShippingMethod = "custom" | "shiprocket";
 export type OrderPayoutStatus = "eligible" | "requested" | "paid";
 export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 
+/** Runtime-accessible order status values — use instead of bare string literals. */
+export const OrderStatusValues = {
+  PENDING: "pending",
+  CONFIRMED: "confirmed",
+  PROCESSING: "processing",
+  SHIPPED: "shipped",
+  DELIVERED: "delivered",
+  CANCELLED: "cancelled",
+  REFUNDED: "refunded",
+  RETURN_REQUESTED: "return_requested",
+  RETURNED: "returned",
+} as const satisfies Record<string, OrderStatus>;
+
+/** Runtime-accessible refund status values — use instead of bare string literals. */
+export const RefundStatusValues = {
+  PENDING: "pending",
+  PROCESSING: "processing",
+  COMPLETED: "completed",
+  REJECTED: "rejected",
+} as const satisfies Record<string, RefundStatus>;
+
 /** Firestore storage shape for an order line item — distinct from the API display model OrderItem */
 export interface OrderDocumentItem {
   productId: string;

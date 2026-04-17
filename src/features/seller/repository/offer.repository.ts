@@ -33,7 +33,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
 
   /** Override mapDoc to auto-decrypt PII on every offer read */
   protected override mapDoc<D = OfferDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<OfferDocument>(snap);
     return decryptPiiFields(raw as unknown as Record<string, unknown>, [

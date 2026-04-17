@@ -1,5 +1,6 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
 import type { CartItem } from "../types";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 /**
  * Default admin columns for cart items.
@@ -10,7 +11,8 @@ export const cartAdminColumns: TableColumn<CartItem>[] = [
     key: "meta",
     header: "Product",
     sortable: false,
-    render: (item) => (item.meta as { title?: string })?.title ?? item.productId,
+    render: (item) =>
+      (item.meta as { title?: string })?.title ?? item.productId,
   },
   {
     key: "quantity",
@@ -22,9 +24,11 @@ export const cartAdminColumns: TableColumn<CartItem>[] = [
     header: "Unit Price",
     sortable: false,
     render: (item) => {
-      const meta = item.meta as { price?: number; currency?: string } | undefined;
+      const meta = item.meta as
+        | { price?: number; currency?: string }
+        | undefined;
       if (!meta?.price) return "—";
-      return `${meta.currency ?? "INR"} ${meta.price}`;
+      return formatCurrency(meta.price, meta.currency);
     },
   },
   {
@@ -50,7 +54,7 @@ export const cartAdminColumns: TableColumn<CartItem>[] = [
  * });
  */
 export function buildCartColumns<T extends CartItem = CartItem>(
-  opts?: ColumnExtensionOpts<T>
+  opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
   let base = cartAdminColumns as unknown as TableColumn<T>[];
 
@@ -60,7 +64,9 @@ export function buildCartColumns<T extends CartItem = CartItem>(
 
   if (opts?.overrides) {
     base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
+      const override = (
+        opts.overrides as Record<string, Partial<TableColumn<T>>>
+      )[c.key as string];
       return override ? { ...c, ...override } : c;
     });
   }

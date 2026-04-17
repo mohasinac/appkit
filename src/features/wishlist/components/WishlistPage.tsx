@@ -41,7 +41,7 @@ export function WishlistCard({
         </Text>
         {item.productPrice !== undefined && (
           <Text className="text-sm font-semibold text-neutral-900">
-            {formatCurrency(item.productPrice, item.productCurrency ?? "INR")}
+            {formatCurrency(item.productPrice, item.productCurrency)}
           </Text>
         )}
       </Div>

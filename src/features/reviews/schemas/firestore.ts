@@ -5,6 +5,13 @@
 import { generateReviewId } from "../../../utils/id-generators";
 import type { ReviewStatus } from "../types";
 
+/** Runtime-accessible review status values — use instead of bare string literals. */
+export const ReviewStatusValues = {
+  PENDING: "pending",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+} as const satisfies Record<string, ReviewStatus>;
+
 export interface ReviewVideoField {
   url: string;
   thumbnailUrl: string;

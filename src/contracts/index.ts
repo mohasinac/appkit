@@ -32,11 +32,7 @@ export type {
 } from "./email";
 
 // Storage
-export type {
-  UploadOptions,
-  StorageFile,
-  IStorageProvider,
-} from "./storage";
+export type { UploadOptions, StorageFile, IStorageProvider } from "./storage";
 
 // Payment
 export type {
@@ -80,11 +76,7 @@ export type { IStyleAdapter } from "./style";
 
 // Registry
 export type { ProviderRegistry } from "./registry";
-export {
-  registerProviders,
-  getProviders,
-  _resetProviders,
-} from "./registry";
+export { registerProviders, getProviders, _resetProviders } from "./registry";
 
 // Feature manifest
 export type {
@@ -120,3 +112,32 @@ export {
   DEFAULT_TABLE_CONFIG,
   mergeTableConfig,
 } from "./table";
+
+// Field operations (source-agnostic sentinels)
+export type { IFieldOps, FieldSentinel } from "./field-ops";
+export {
+  registerFieldOps,
+  serverTimestamp,
+  increment,
+  arrayUnion,
+  arrayRemove,
+  deleteField,
+} from "./field-ops";
+
+// Client-side realtime provider
+export type {
+  RealtimeSnapshot,
+  Unsubscribe,
+  IClientRealtimeProvider,
+} from "./client-realtime";
+export {
+  registerClientRealtimeProvider,
+  getClientRealtimeProvider,
+} from "./client-realtime";
+
+// Client-side auth provider
+export type { IClientAuthProvider } from "./client-auth";
+export {
+  registerClientAuthProvider,
+  getClientAuthProvider,
+} from "./client-auth";

@@ -55,7 +55,7 @@ export const DEFAULT_HOMEPAGE_SECTIONS: SeedHomepageSectionDocument[] = [
       items: [
         { label: "Products", value: "10,000+" },
         { label: "Sellers", value: "500+" },
-        { label: "Orders Delivered", value: "1,00,000+" },
+        { label: "Orders Delivered", value: "100,000+" },
         { label: "Happy Customers", value: "50,000+" },
       ],
     },

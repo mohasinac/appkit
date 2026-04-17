@@ -13,7 +13,7 @@ import {
   type FirebaseSieveFields,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
-import { FieldValue } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
 import {
   CAROUSEL_SLIDES_COLLECTION,
   CarouselSlideDocument,
@@ -314,7 +314,7 @@ class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
         .collection(this.collection)
         .doc(slideId)
         .update({
-          "stats.views": FieldValue.increment(1),
+          "stats.views": increment(1),
           "stats.lastViewed": new Date(),
         });
     } catch (_e) {

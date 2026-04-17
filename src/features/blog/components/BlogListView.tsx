@@ -1,7 +1,16 @@
 import React from "react";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
-import { Article, Button, Div, Heading, Pagination, Span, Text } from "../../../ui";
+import {
+  Article,
+  Button,
+  Div,
+  Heading,
+  Pagination,
+  Span,
+  Text,
+} from "../../../ui";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 
 interface BlogCardProps {
@@ -13,7 +22,7 @@ interface BlogCardProps {
 export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
   const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+    ? new Date(post.publishedAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "short",
         day: "numeric",

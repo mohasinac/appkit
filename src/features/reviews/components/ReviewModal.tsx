@@ -12,6 +12,7 @@ import {
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 // ─── ViewReviewModal ──────────────────────────────────────────────────────────
 
@@ -35,7 +36,7 @@ export function ViewReviewModal({
   if (!review) return null;
 
   const date = review.createdAt
-    ? new Date(review.createdAt).toLocaleDateString("en-US", {
+    ? new Date(review.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "long",
         day: "numeric",

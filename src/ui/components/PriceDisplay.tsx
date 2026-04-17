@@ -2,6 +2,10 @@
 
 import { Span } from "./Typography";
 import { Row } from "./Layout";
+import {
+  getDefaultCurrency,
+  getDefaultLocale,
+} from "../../core/baseline-resolver";
 
 export interface PriceDisplayProps {
   amount: number;
@@ -12,7 +16,7 @@ export interface PriceDisplayProps {
 }
 
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-IN", {
+  return new Intl.NumberFormat(getDefaultLocale(), {
     style: "currency",
     currency,
     maximumFractionDigits: 2,
@@ -25,7 +29,7 @@ function formatPercent(value: number): string {
 
 export function PriceDisplay({
   amount,
-  currency = "INR",
+  currency = getDefaultCurrency(),
   originalAmount,
   variant = "compact",
   className,

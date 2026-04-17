@@ -1,7 +1,6 @@
 "use client";
 
-import type { FirebaseApp } from "firebase/app";
-import type { Database } from "firebase/database";
+import type { IClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { logger } from "../../../core";
 import {
   RealtimeEventType,
@@ -10,7 +9,6 @@ import {
   type RTDBEventPayload,
   type RealtimeEventMessages,
 } from "../../../react";
-import { getFirebaseRealtimeClient } from "../../../react/hooks/firebaseRealtimeClient";
 
 export type { RealtimeEventStatus as AuthEventStatus };
 
@@ -32,9 +30,7 @@ export interface UseAuthEventOptions {
   rtdbPath?: string;
   timeoutMs?: number;
   messages?: RealtimeEventMessages;
-  realtimeApp?: FirebaseApp;
-  realtimeDb?: Database;
-  firebaseAppName?: string;
+  realtimeProvider?: IClientRealtimeProvider;
 }
 
 const AUTH_EVENT_TIMEOUT_MS = 5 * 60 * 1000;
@@ -54,16 +50,11 @@ function extractAuthData(raw: RTDBEventPayload): AuthEventData | null {
 export function useAuthEvent(
   options?: UseAuthEventOptions,
 ): UseAuthEventReturn {
-  const defaultClient = getFirebaseRealtimeClient(
-    options?.firebaseAppName ?? "appkit-auth-realtime",
-  );
-
   const { status, error, data, subscribe, reset } =
     useRealtimeEvent<AuthEventData>({
       type: RealtimeEventType.AUTH,
       rtdbPath: options?.rtdbPath ?? DEFAULT_RTDB_PATH,
-      realtimeApp: options?.realtimeApp ?? defaultClient.realtimeApp,
-      realtimeDb: options?.realtimeDb ?? defaultClient.realtimeDb,
+      realtimeProvider: options?.realtimeProvider,
       timeoutMs: options?.timeoutMs ?? AUTH_EVENT_TIMEOUT_MS,
       onLogError: (message, err) => logger.error(message, err),
       extractData: extractAuthData,

@@ -141,9 +141,18 @@ export const TOKENS = {
 
 // ─── LOCALE_CONFIG ─────────────────────────────────────────────────────────
 
+import {
+  getDefaultCurrency,
+  getDefaultLocale,
+  getDefaultCountry,
+  getDefaultTimezone,
+  getDefaultPhonePrefix,
+} from "../core/baseline-resolver";
+
 /**
- * Locale and currency defaults for Indian e-commerce.
- * Consumer projects can override individual keys in their own constants.
+ * Locale and currency defaults.
+ * Scalar defaults are resolved at call-time via the baseline resolver so that
+ * consumer overrides (via `configureMarketDefaults()`) take effect everywhere.
  *
  * @example
  * ```ts
@@ -157,14 +166,26 @@ export const TOKENS = {
  * ```
  */
 export const LOCALE_CONFIG = {
-  /** IETF language tag used for Intl formatters. */
-  defaultLocale: "en-IN",
-  /** ISO 4217 currency code. */
-  defaultCurrency: "INR",
-  /** IANA timezone for server-side date rendering. */
-  defaultTimezone: "Asia/Kolkata",
-  /** ISO 3166-1 alpha-2 country code. */
-  defaultCountry: "IN",
+  /** IETF language tag used for Intl formatters. Resolved via baseline resolver. */
+  get defaultLocale() {
+    return getDefaultLocale();
+  },
+  /** ISO 4217 currency code. Resolved via baseline resolver. */
+  get defaultCurrency() {
+    return getDefaultCurrency();
+  },
+  /** IANA timezone for server-side date rendering. Resolved via baseline resolver. */
+  get defaultTimezone() {
+    return getDefaultTimezone();
+  },
+  /** ISO 3166-1 alpha-2 country code. Resolved via baseline resolver. */
+  get defaultCountry() {
+    return getDefaultCountry();
+  },
+  /** Phone number prefix. Resolved via baseline resolver. */
+  get defaultPhonePrefix() {
+    return getDefaultPhonePrefix();
+  },
   /** Locales available for the i18n router. */
   supportedLocales: ["en-IN", "en-US", "en-GB"] as const,
   /** Currencies the platform accepts. */
@@ -178,8 +199,6 @@ export const LOCALE_CONFIG = {
     AED: "\u062f.\u0625",
     SGD: "S$",
   } as const,
-  /** Phone number prefix for IN locale. */
-  defaultPhonePrefix: "+91",
   /** Postal code pattern for India (6 digits). */
   postalPattern: /^[1-9][0-9]{5}$/,
 } as const;

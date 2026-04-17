@@ -1,20 +1,13 @@
 "use client";
-import {
-  applyActionCode,
-  confirmPasswordReset,
-  EmailAuthProvider,
-  getAuth,
-  reauthenticateWithCredential,
-  sendPasswordResetEmail,
-  signInWithEmailAndPassword,
-  updatePassword,
-} from "firebase/auth";
+import "client-only";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getClientAuthProvider } from "../../../contracts/client-auth";
 import { apiClient } from "../../../http";
 import { NotFoundError } from "../../../errors";
 import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
+import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
 
 interface UseCurrentUserOptions {
   initialData?: AuthUser | null;
@@ -90,8 +83,7 @@ export function useLogin(options?: {
         password: credentials.password,
       });
 
-      await signInWithEmailAndPassword(
-        getAuth(),
+      await getClientAuthProvider().signInWithEmailAndPassword(
         credentials.email.trim(),
         credentials.password,
       );
@@ -130,13 +122,13 @@ export function useGoogleLogin(options?: {
   }, [options?.onSessionSynced]);
 
   useEffect(() => {
-    if (authEvent.status === "success") {
+    if (authEvent.status === RealtimeEventStatus.SUCCESS) {
       Promise.resolve(onSessionSyncedRef.current?.()).then(() => {
         onSuccessRef.current?.(authEvent.data);
       });
     } else if (
-      authEvent.status === "failed" ||
-      authEvent.status === "timeout"
+      authEvent.status === RealtimeEventStatus.FAILED ||
+      authEvent.status === RealtimeEventStatus.TIMEOUT
     ) {
       onErrorRef.current?.(
         new Error(authEvent.error ?? "Sign-in failed. Please try again."),
@@ -183,8 +175,8 @@ export function useGoogleLogin(options?: {
 
   const isLoading =
     initiating ||
-    authEvent.status === "subscribing" ||
-    authEvent.status === "pending";
+    authEvent.status === RealtimeEventStatus.SUBSCRIBING ||
+    authEvent.status === RealtimeEventStatus.PENDING;
 
   return { mutate, isLoading };
 }
@@ -205,8 +197,7 @@ export function useRegister(options?: {
         },
       );
 
-      await signInWithEmailAndPassword(
-        getAuth(),
+      await getClientAuthProvider().signInWithEmailAndPassword(
         data.email.trim(),
         data.password,
       );
@@ -223,10 +214,9 @@ export function useVerifyEmail(options?: {
 }) {
   return useMutation<unknown, Error, VerifyEmailData>({
     mutationFn: async ({ token }) => {
-      await applyActionCode(getAuth(), token);
-      if (getAuth().currentUser) {
-        await getAuth().currentUser?.reload();
-      }
+      const authProvider = getClientAuthProvider();
+      await authProvider.applyActionCode(token);
+      await authProvider.reloadCurrentUser();
       return { success: true, emailVerified: true };
     },
     onSuccess: options?.onSuccess,
@@ -251,7 +241,7 @@ export function useForgotPassword(options?: {
 }) {
   return useMutation<unknown, Error, ForgotPasswordData>({
     mutationFn: async (data) => {
-      await sendPasswordResetEmail(getAuth(), data.email);
+      await getClientAuthProvider().sendPasswordResetEmail(data.email);
       return { success: true };
     },
     onSuccess: options?.onSuccess,
@@ -265,7 +255,10 @@ export function useResetPassword(options?: {
 }) {
   return useMutation<unknown, Error, ResetPasswordData>({
     mutationFn: async (data) => {
-      await confirmPasswordReset(getAuth(), data.token, data.newPassword);
+      await getClientAuthProvider().confirmPasswordReset(
+        data.token,
+        data.newPassword,
+      );
       return { success: true };
     },
     onSuccess: options?.onSuccess,
@@ -279,18 +272,10 @@ export function useChangePassword(options?: {
 }) {
   return useMutation<unknown, Error, ChangePasswordData>({
     mutationFn: async (data) => {
-      const auth = getAuth();
-      const user = auth.currentUser;
-      if (!user?.email) {
-        throw new NotFoundError("User not found");
-      }
-
-      const credential = EmailAuthProvider.credential(
-        user.email,
+      await getClientAuthProvider().reauthenticateAndChangePassword(
         data.currentPassword,
+        data.newPassword,
       );
-      await reauthenticateWithCredential(user, credential);
-      await updatePassword(user, data.newPassword);
       return apiClient.post("/api/user/change-password", data);
     },
     onSuccess: options?.onSuccess,

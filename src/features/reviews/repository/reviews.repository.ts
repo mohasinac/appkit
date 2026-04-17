@@ -46,7 +46,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   }
 
   protected override mapDoc<D = ReviewDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<ReviewDocument>(snap);
     return decryptPiiFields(raw as unknown as Record<string, unknown>, [

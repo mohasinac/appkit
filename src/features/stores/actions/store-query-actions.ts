@@ -8,7 +8,9 @@
 import { NotFoundError } from "../../../errors";
 import { maskPublicReview } from "../../../security";
 import { storeRepository } from "../repository/store.repository";
+import { STORE_FIELDS } from "../schemas";
 import { productRepository } from "../../products/repository/products.repository";
+import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import type { StoreDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas";
@@ -68,7 +70,11 @@ export async function getStoreProducts(
   const { sorts = "-createdAt", page = 1, pageSize = 24, filters } = params;
 
   const storeDoc = await storeRepository.findBySlug(storeSlug);
-  if (!storeDoc || storeDoc.status !== "active" || !storeDoc.isPublic) {
+  if (
+    !storeDoc ||
+    storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
+    !storeDoc.isPublic
+  ) {
     throw new NotFoundError("Store not found");
   }
 
@@ -94,7 +100,11 @@ export async function getStoreAuctions(
   const { sorts = "auctionEndDate", page = 1, pageSize = 24, filters } = params;
 
   const storeDoc = await storeRepository.findBySlug(storeSlug);
-  if (!storeDoc || storeDoc.status !== "active" || !storeDoc.isPublic) {
+  if (
+    !storeDoc ||
+    storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
+    !storeDoc.isPublic
+  ) {
     throw new NotFoundError("Store not found");
   }
 
@@ -117,13 +127,17 @@ export async function getStoreReviews(
   storeSlug: string,
 ): Promise<StoreReviewsResult> {
   const storeDoc = await storeRepository.findBySlug(storeSlug);
-  if (!storeDoc || storeDoc.status !== "active" || !storeDoc.isPublic) {
+  if (
+    !storeDoc ||
+    storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
+    !storeDoc.isPublic
+  ) {
     throw new NotFoundError("Store not found");
   }
 
   const allProducts = await productRepository.findBySeller(storeDoc.ownerId);
   const publishedProducts = allProducts
-    .filter((p) => p.status === "published")
+    .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 20);
 
   const reviewArrays = await Promise.all(

@@ -1,6 +1,7 @@
 import { Article, Button, Div, Heading, Span, Text } from "../../../ui";
 import { stripHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
+import { EVENT_FIELDS } from "../schemas";
 import { EventStatusBadge } from "./EventStatusBadge";
 
 const TYPE_ICONS: Record<EventType, string> = {
@@ -65,23 +66,23 @@ export function EventCard({
         </Text>
 
         <Div className="flex items-center justify-between text-xs text-gray-400 mb-3">
-          {event.status === "active" && daysLeft > 0 && (
-            <Span>{daysLeft}d remaining</Span>
-          )}
+          {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
+            daysLeft > 0 && <Span>{daysLeft}d remaining</Span>}
           <Span>
             {event.stats.totalEntries} {labels.entries ?? "entries"}
           </Span>
         </Div>
 
-        {event.status === "active" && onParticipate && (
-          <Button
-            type="button"
-            onClick={() => onParticipate(event)}
-            className="w-full rounded-lg bg-orange-500 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
-          >
-            {labels.participate ?? "Participate"}
-          </Button>
-        )}
+        {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
+          onParticipate && (
+            <Button
+              type="button"
+              onClick={() => onParticipate(event)}
+              className="w-full rounded-lg bg-orange-500 py-2 text-sm font-medium text-white hover:bg-orange-600 transition-colors"
+            >
+              {labels.participate ?? "Participate"}
+            </Button>
+          )}
       </Div>
     </Article>
   );

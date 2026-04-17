@@ -1,4 +1,8 @@
 import "server-only";
+import { getDefaultPhonePrefix, getSeedLocale } from "./seed-market-config";
+
+const _phonePrefix = getDefaultPhonePrefix();
+const _locale = getSeedLocale();
 
 /**
  * Users Seed Data — Anime/Otaku Marketplace Theme
@@ -17,7 +21,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-admin-user-admin",
     email: "admin@letitrip.in",
-    phoneNumber: "+919876543210",
+    phoneNumber: `${_phonePrefix}9876543210`,
     phoneVerified: true,
     displayName: "Admin User",
     photoURL: null,
@@ -51,7 +55,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-john-doe-johndoe",
     email: "john@letitrip.in",
-    phoneNumber: "+919876543211",
+    phoneNumber: `${_phonePrefix}9876543211`,
     phoneVerified: true,
     displayName: "John Doe",
     photoURL: null,
@@ -68,7 +72,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: true,
       showWishlist: true,
       bio: "Tech enthusiast",
-      location: "Mumbai, India",
+      location: `Mumbai, ${_locale.countryName}`,
       website: "https://johndoe.example.com",
       socialLinks: {
         twitter: "https://twitter.com/johndoe",
@@ -91,7 +95,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-jane-smith-janes",
     email: "jane@letitrip.in",
-    phoneNumber: "+919876543212",
+    phoneNumber: `${_phonePrefix}9876543212`,
     phoneVerified: true,
     displayName: "Jane Smith",
     photoURL: null,
@@ -108,7 +112,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: true,
       showWishlist: true,
       bio: "Fashion blogger",
-      location: "Delhi, India",
+      location: `Delhi, ${_locale.countryName}`,
       socialLinks: {
         instagram: "https://instagram.com/janesmith",
         facebook: "https://facebook.com/janesmith",
@@ -130,7 +134,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-mike-johnson-mikejohn",
     email: "mike@letitrip.in",
-    phoneNumber: "+919876543213",
+    phoneNumber: `${_phonePrefix}9876543213`,
     phoneVerified: false,
     displayName: "Mike Johnson",
     photoURL: null,
@@ -147,7 +151,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: true,
       showWishlist: false,
       bio: "Sports enthusiast",
-      location: "Bangalore, India",
+      location: `Bangalore, ${_locale.countryName}`,
     },
     stats: {
       totalOrders: 4,
@@ -166,7 +170,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-techhub-electronics-electron",
     email: "techhub@letitrip.in",
-    phoneNumber: "+919876543214",
+    phoneNumber: `${_phonePrefix}9876543214`,
     phoneVerified: true,
     displayName: "FigureVault JP",
     photoURL:
@@ -187,7 +191,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: false,
       bio: "Japan-based premium scale figures dealer — Bandai Spirits, MegaHouse, Kotobukiya and more.",
-      location: "Mumbai, India",
+      location: `Mumbai, ${_locale.countryName}`,
       website: "https://figurevaultjp.example.com",
       socialLinks: {
         facebook: "https://facebook.com/figurevaultjp",
@@ -222,7 +226,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-fashion-boutique-fashionb",
     email: "fashion@letitrip.in",
-    phoneNumber: "+919876543215",
+    phoneNumber: `${_phonePrefix}9876543215`,
     phoneVerified: true,
     displayName: "AnimeCraft Apparel",
     photoURL:
@@ -243,7 +247,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: false,
       bio: "Handcrafted cosplay outfits and anime apparel — Demon Slayer, Sailor Moon, Genshin Impact and more.",
-      location: "Delhi, India",
+      location: `Delhi, ${_locale.countryName}`,
       website: "https://animecraftapparel.example.com",
       socialLinks: {
         instagram: "https://instagram.com/animecraftapparel",
@@ -278,7 +282,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-home-essentials-homeesse",
     email: "home@letitrip.in",
-    phoneNumber: "+919876543216",
+    phoneNumber: `${_phonePrefix}9876543216`,
     phoneVerified: true,
     displayName: "OtakuShelf Co",
     photoURL:
@@ -299,7 +303,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: false,
       bio: "Nendoroid sets, Gunpla kits, and collectible display pieces for the serious anime collector.",
-      location: "Pune, India",
+      location: `Pune, ${_locale.countryName}`,
       website: "https://otakushelfco.example.com",
       socialLinks: {
         instagram: "https://instagram.com/otakushelfco",
@@ -336,7 +340,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-moderator-mod-user",
     email: "moderator@letitrip.in",
-    phoneNumber: "+919876543220",
+    phoneNumber: `${_phonePrefix}9876543220`,
     phoneVerified: true,
     displayName: "Riya Sharma",
     photoURL: null,
@@ -366,7 +370,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-priya-sharma-priya",
     email: "priya@letitrip.in",
-    phoneNumber: "+919876543260",
+    phoneNumber: `${_phonePrefix}9876543260`,
     phoneVerified: true,
     displayName: "Priya Sharma",
     photoURL: null,
@@ -383,7 +387,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: true,
       bio: "Shopaholic | Fashion lover",
-      location: "Hyderabad, India",
+      location: `Hyderabad, ${_locale.countryName}`,
     },
     stats: {
       totalOrders: 9,
@@ -400,7 +404,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-raj-patel-rajpatel",
     email: "raj@letitrip.in",
-    phoneNumber: "+919876543270",
+    phoneNumber: `${_phonePrefix}9876543270`,
     phoneVerified: true,
     displayName: "Raj Patel",
     photoURL: null,
@@ -432,7 +436,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-vikram-nair-vikram",
     email: "vikram@letitrip.in",
-    phoneNumber: "+919876543280",
+    phoneNumber: `${_phonePrefix}9876543280`,
     phoneVerified: false,
     displayName: "Vikram Nair",
     photoURL: null,
@@ -449,7 +453,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: false,
       bio: "Beauty & wellness enthusiast",
-      location: "Kochi, India",
+      location: `Kochi, ${_locale.countryName}`,
     },
     stats: {
       totalOrders: 6,
@@ -506,7 +510,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-phone-only-phoneuser",
     email: null, // ← no email address
-    phoneNumber: "+919988776655",
+    phoneNumber: `${_phonePrefix}9988776655`,
     phoneVerified: true,
     displayName: "Phone User",
     photoURL: null,
@@ -542,7 +546,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-pending-seller-pendingsl",
     email: "pending.seller@letitrip.in",
-    phoneNumber: "+919876543282",
+    phoneNumber: `${_phonePrefix}9876543282`,
     phoneVerified: true,
     displayName: "Pending Seller",
     photoURL: null,
@@ -560,7 +564,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showOrders: false,
       showWishlist: false,
       bio: "Aspiring seller of handmade crafts",
-      location: "Jaipur, India",
+      location: `Jaipur, ${_locale.countryName}`,
     },
     stats: {
       totalOrders: 2,
@@ -581,7 +585,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-rejected-seller-rejectsl",
     email: "rejected.seller@letitrip.in",
-    phoneNumber: "+919876543281",
+    phoneNumber: `${_phonePrefix}9876543281`,
     phoneVerified: false,
     displayName: "Rejected Seller",
     photoURL: null,
@@ -618,7 +622,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-ananya-bose-ananya",
     email: "ananya@letitrip.in",
-    phoneNumber: "+919876543231",
+    phoneNumber: `${_phonePrefix}9876543231`,
     phoneVerified: true,
     displayName: "Ananya Bose",
     photoURL: null,
@@ -657,7 +661,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-pooja-mehta-pooja",
     email: "pooja@letitrip.in",
-    phoneNumber: "+919876543233",
+    phoneNumber: `${_phonePrefix}9876543233`,
     phoneVerified: true,
     displayName: "Pooja Mehta",
     photoURL: null,
@@ -693,7 +697,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-ravi-kumar-ravi",
     email: "ravi@letitrip.in",
-    phoneNumber: "+919876543234",
+    phoneNumber: `${_phonePrefix}9876543234`,
     phoneVerified: false,
     displayName: "Ravi Kumar",
     photoURL: null,
@@ -729,7 +733,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
   {
     uid: "user-sneha-gupta-sneha",
     email: "sneha@letitrip.in",
-    phoneNumber: "+919876543235",
+    phoneNumber: `${_phonePrefix}9876543235`,
     phoneVerified: true,
     displayName: "Sneha Gupta",
     photoURL: null,

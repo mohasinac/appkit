@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
 import { useTranslations } from "next-intl";

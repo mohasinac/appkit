@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import React, { useEffect, useRef } from "react";
 import { Button, Div, Heading } from "..";

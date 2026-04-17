@@ -1,4 +1,8 @@
 import "server-only";
+import { getDefaultPhonePrefix, getSeedLocale } from "./seed-market-config";
+
+const _phonePrefix = getDefaultPhonePrefix();
+const _locale = getSeedLocale();
 
 /**
  * Site Settings Seed Data
@@ -42,10 +46,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
   },
   contact: {
     email: "support@letitrip.in",
-    phone: "+91-9876543210",
-    address: "123, Marketplace Street, Mumbai, Maharashtra - 400001, India",
+    phone: `${_phonePrefix}-9876543210`,
+    address: `123, Marketplace Street, ${_locale.cities[0][0]}, ${_locale.cities[0][1]} - ${_locale.cities[0][2]}, ${_locale.countryName}`,
     upiVpa: "letitrip@upi",
-    whatsappNumber: "+919876543210",
+    whatsappNumber: `${_phonePrefix.replace(/[^+\d]/g, "")}9876543210`,
   },
   payment: {
     razorpayEnabled: true,
@@ -219,7 +223,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       minOrderValue: 999,
       returnWindow: 7,
       supportEmail: "support@letitrip.in",
-      supportPhone: "+91-9876543210",
+      supportPhone: `${_phonePrefix}-9876543210`,
       codDeposit: 0.1, // 10%
     },
   },

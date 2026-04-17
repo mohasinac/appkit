@@ -29,6 +29,7 @@ import type {
   PaymentCapture,
   Refund,
 } from "../../contracts";
+import { getDefaultCurrency } from "../../core/baseline-resolver";
 
 export interface RazorpayConfig {
   keyId: string;
@@ -52,12 +53,13 @@ export class RazorpayProvider implements IPaymentProvider {
 
   async createOrder(
     amount: number,
-    currency = "INR",
+    currency?: string,
     metadata?: Record<string, unknown>,
   ): Promise<PaymentOrder> {
+    const resolvedCurrency = currency ?? getDefaultCurrency();
     const order = await this.razorpay.orders.create({
       amount,
-      currency,
+      currency: resolvedCurrency,
       notes: metadata as Record<string, string> | undefined,
     });
     return {
@@ -208,7 +210,10 @@ async function getRazorpayInstance(): Promise<Razorpay> {
       "Razorpay credentials are missing. Configure them in Admin › Site Settings › Credentials, or set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in .env.local",
     );
   }
-  return new Razorpay({ key_id: keys.razorpayKeyId, key_secret: keys.razorpayKeySecret });
+  return new Razorpay({
+    key_id: keys.razorpayKeyId,
+    key_secret: keys.razorpayKeySecret,
+  });
 }
 
 /** Create a Razorpay order. Credentials resolved from Firestore → env. */
@@ -218,7 +223,7 @@ export async function createRazorpayOrder(
   const razorpay = await getRazorpayInstance();
   const order = await razorpay.orders.create({
     amount: opts.amount,
-    currency: opts.currency ?? "INR",
+    currency: opts.currency ?? getDefaultCurrency(),
     receipt: opts.receipt ?? `rcpt_${Date.now()}`,
     notes: opts.notes,
   });
@@ -226,7 +231,9 @@ export async function createRazorpayOrder(
 }
 
 /** Fetch an existing Razorpay order by ID. */
-export async function fetchRazorpayOrder(orderId: string): Promise<RazorpayOrder> {
+export async function fetchRazorpayOrder(
+  orderId: string,
+): Promise<RazorpayOrder> {
   const razorpay = await getRazorpayInstance();
   const order = await razorpay.orders.fetch(orderId);
   return order as unknown as RazorpayOrder;
@@ -274,6 +281,9 @@ export async function createRazorpayRefund(
   const razorpay = await getRazorpayInstance();
   const opts: Record<string, unknown> = {};
   if (amountPaise) opts.amount = amountPaise;
-  const refund = await razorpay.payments.refund(paymentId, opts as Parameters<typeof razorpay.payments.refund>[1]);
+  const refund = await razorpay.payments.refund(
+    paymentId,
+    opts as Parameters<typeof razorpay.payments.refund>[1],
+  );
   return refund as unknown as RazorpayRefundResult;
 }

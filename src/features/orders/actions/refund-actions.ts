@@ -13,6 +13,7 @@ import {
 } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import { orderRepository } from "../../orders/repository/orders.repository";
+import { RefundStatusValues } from "../../orders/schemas";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { notificationRepository } from "../../admin/repository/notification.repository";
 
@@ -36,7 +37,7 @@ export async function issuePartialRefund(
   if (!order) throw new NotFoundError("Order not found.");
   if (order.paymentStatus !== "paid")
     throw new ValidationError("Only paid orders can be refunded.");
-  if (order.refundStatus === "completed")
+  if (order.refundStatus === RefundStatusValues.COMPLETED)
     throw new ValidationError("Order has already been fully refunded.");
 
   const settings = await siteSettingsRepository.getSingleton();

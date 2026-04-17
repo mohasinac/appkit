@@ -2,13 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  ref,
-  onValue,
-  type Database,
-  type DatabaseReference,
-} from "firebase/database";
-import { getAuth, signInWithCustomToken, signOut } from "firebase/auth";
-import type { FirebaseApp } from "firebase/app";
+  getClientRealtimeProvider,
+  type IClientRealtimeProvider,
+  type Unsubscribe,
+} from "../../contracts/client-realtime";
 
 export const RealtimeEventType = {
   AUTH: "auth",
@@ -49,8 +46,8 @@ export interface RealtimeEventMessages {
 export interface UseRealtimeEventConfig<TData = undefined> {
   type: RealtimeEventType;
   rtdbPath: string;
-  realtimeApp: FirebaseApp;
-  realtimeDb: Database;
+  /** Optional provider override. Falls back to the globally registered provider. */
+  realtimeProvider?: IClientRealtimeProvider;
   timeoutMs?: number;
   extractData?: (raw: RTDBEventPayload) => TData | null;
   messages?: RealtimeEventMessages;
@@ -84,8 +81,7 @@ export function useRealtimeEvent<TData = undefined>(
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<TData | null>(null);
 
-  const dbRefRef = useRef<DatabaseReference | null>(null);
-  const unsubscribeRef = useRef<(() => void) | null>(null);
+  const unsubscribeRef = useRef<Unsubscribe | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const eventIdRef = useRef<string | null>(null);
 
@@ -94,13 +90,14 @@ export function useRealtimeEvent<TData = undefined>(
       unsubscribeRef.current();
       unsubscribeRef.current = null;
     }
-    dbRefRef.current = null;
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
 
-    signOut(getAuth(configRef.current.realtimeApp)).catch(() => {
+    const provider =
+      configRef.current.realtimeProvider ?? getClientRealtimeProvider();
+    provider.signOut().catch(() => {
       // no-op
     });
   }, []);
@@ -110,13 +107,14 @@ export function useRealtimeEvent<TData = undefined>(
       const {
         type,
         rtdbPath,
-        realtimeApp,
-        realtimeDb,
+        realtimeProvider,
         timeoutMs = DEFAULT_TIMEOUT_MS,
         extractData,
         messages,
         onLogError,
       } = configRef.current;
+
+      const provider = realtimeProvider ?? getClientRealtimeProvider();
 
       const msg = {
         ...DEFAULT_MESSAGES,
@@ -131,7 +129,7 @@ export function useRealtimeEvent<TData = undefined>(
 
       (async () => {
         try {
-          await signInWithCustomToken(getAuth(realtimeApp), customToken);
+          await provider.signInWithToken(customToken);
         } catch (authErr) {
           onLogError?.(
             `useRealtimeEvent[${type}]: custom token sign-in failed`,
@@ -150,11 +148,8 @@ export function useRealtimeEvent<TData = undefined>(
 
         setStatus(RealtimeEventStatus.PENDING);
 
-        const dbRef = ref(realtimeDb, `${rtdbPath}/${eventId}`);
-        dbRefRef.current = dbRef;
-
-        unsubscribeRef.current = onValue(
-          dbRef,
+        unsubscribeRef.current = provider.subscribe(
+          `${rtdbPath}/${eventId}`,
           (snapshot) => {
             if (!snapshot.exists()) return;
             const raw = snapshot.val() as RTDBEventPayload | null;

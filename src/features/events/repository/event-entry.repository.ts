@@ -36,7 +36,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   }
 
   protected override mapDoc<D = EventEntryDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<EventEntryDocument>(snap);
     return decryptPiiFields(raw as unknown as Record<string, unknown>, [

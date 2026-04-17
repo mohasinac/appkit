@@ -1,18 +1,12 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import type { FirebaseApp } from "firebase/app";
-import { getApp, getApps } from "firebase/app";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  off,
-  type DatabaseReference,
-  type Database,
-} from "firebase/database";
-import { getAuth, signInWithCustomToken } from "firebase/auth";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getClientRealtimeProvider,
+  type IClientRealtimeProvider,
+  type Unsubscribe,
+} from "../../../contracts/client-realtime";
 import { logger } from "../../../core";
 import { apiClient } from "../../../http";
 import { nowMs } from "../../../utils";
@@ -33,31 +27,24 @@ export interface UseChatReturn {
   error: string | null;
 }
 
-function resolveFirebaseApp(override?: FirebaseApp): FirebaseApp {
-  if (override) return override;
-  const apps = getApps();
-  return apps.length ? apps[0] : getApp();
-}
-
 export function useChat(
   chatId: string | null,
-  options?: { realtimeApp?: FirebaseApp; realtimeDb?: Database },
+  options?: { realtimeProvider?: IClientRealtimeProvider },
 ): UseChatReturn {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const tokenExpiresAtRef = useRef<number>(0);
-  const msgRefRef = useRef<DatabaseReference | null>(null);
-  const listenerRef = useRef<
-    ((snap: import("firebase/database").DataSnapshot) => void) | null
-  >(null);
+  const unsubscribeRef = useRef<Unsubscribe | null>(null);
 
   const connectAndSubscribe = useCallback(async () => {
     if (!chatId) return;
 
     setIsLoading(true);
     setError(null);
+
+    const provider = options?.realtimeProvider ?? getClientRealtimeProvider();
 
     try {
       const shouldRefresh =
@@ -70,58 +57,54 @@ export function useChat(
           expiresAt: number;
         }>("/api/realtime/token", {});
 
-        const app = resolveFirebaseApp(options?.realtimeApp);
-        const realtimeAuth = getAuth(app);
-        await signInWithCustomToken(realtimeAuth, tokenResponse.customToken);
+        await provider.signInWithToken(tokenResponse.customToken);
         tokenExpiresAtRef.current = tokenResponse.expiresAt;
       }
 
-      if (msgRefRef.current && listenerRef.current) {
-        off(msgRefRef.current, "value", listenerRef.current);
-        listenerRef.current = null;
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
       }
 
-      const database =
-        options?.realtimeDb ??
-        getDatabase(resolveFirebaseApp(options?.realtimeApp));
-      const messagesRef = ref(database, `/chat/${chatId}/messages`);
-      msgRefRef.current = messagesRef;
-
-      listenerRef.current = (snapshot) => {
-        if (snapshot.exists()) {
-          const raw = snapshot.val() as Record<string, Omit<ChatMessage, "id">>;
-          const parsed: ChatMessage[] = Object.entries(raw)
-            .map(([id, msg]) => ({ id, ...msg }))
-            .sort((a, b) => a.timestamp - b.timestamp);
-          setMessages(parsed);
-        } else {
-          setMessages([]);
-        }
-        setIsConnected(true);
-        setIsLoading(false);
-      };
-
-      onValue(messagesRef, listenerRef.current, (err) => {
-        logger.error("Chat RTDB subscription error", err);
-        setError("Could not connect to chat. Please try again.");
-        setIsConnected(false);
-        setIsLoading(false);
-      });
+      unsubscribeRef.current = provider.subscribe(
+        `/chat/${chatId}/messages`,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const raw = snapshot.val() as Record<
+              string,
+              Omit<ChatMessage, "id">
+            >;
+            const parsed: ChatMessage[] = Object.entries(raw)
+              .map(([id, msg]) => ({ id, ...msg }))
+              .sort((a, b) => a.timestamp - b.timestamp);
+            setMessages(parsed);
+          } else {
+            setMessages([]);
+          }
+          setIsConnected(true);
+          setIsLoading(false);
+        },
+        (err) => {
+          logger.error("Chat RTDB subscription error", err);
+          setError("Could not connect to chat. Please try again.");
+          setIsConnected(false);
+          setIsLoading(false);
+        },
+      );
     } catch (err) {
       logger.error("Failed to authenticate for chat RTDB", err);
       setError("Failed to connect to chat.");
       setIsLoading(false);
     }
-  }, [chatId, options?.realtimeApp, options?.realtimeDb]);
+  }, [chatId, options?.realtimeProvider]);
 
   useEffect(() => {
     connectAndSubscribe();
 
     return () => {
-      if (msgRefRef.current && listenerRef.current) {
-        off(msgRefRef.current, "value", listenerRef.current);
-        listenerRef.current = null;
-        msgRefRef.current = null;
+      if (unsubscribeRef.current) {
+        unsubscribeRef.current();
+        unsubscribeRef.current = null;
       }
     };
   }, [connectAndSubscribe]);

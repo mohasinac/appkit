@@ -1,5 +1,6 @@
 import "server-only";
-import { FieldValue, type DocumentSnapshot } from "firebase-admin/firestore";
+import { increment } from "../../../contracts/field-ops";
+import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
@@ -334,7 +335,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         .collection(this.collection)
         .doc(productId)
         .update({
-          [PRODUCT_FIELDS.VIEW_COUNT]: FieldValue.increment(1),
+          [PRODUCT_FIELDS.VIEW_COUNT]: increment(1),
         });
     } catch {
       // View analytics must not break product read path.

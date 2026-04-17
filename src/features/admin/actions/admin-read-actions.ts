@@ -21,6 +21,7 @@ import type { OrderDocument } from "../../orders";
 import type { PayoutDocument } from "../../payments";
 import type { UserDocument } from "../../auth";
 import type { ProductDocument } from "../../products";
+import { ProductStatusValues } from "../../products/schemas";
 import type { BlogPostDocument } from "../../blog";
 import type { StoreDocument } from "../../stores";
 import type { BidDocument } from "../../auctions";
@@ -141,8 +142,9 @@ export async function getAdminAnalytics() {
       newOrdersThisMonth,
       revenueThisMonth,
       totalProducts: allProducts.length,
-      publishedProducts: allProducts.filter((p) => p.status === "published")
-        .length,
+      publishedProducts: allProducts.filter(
+        (p) => p.status === ProductStatusValues.PUBLISHED,
+      ).length,
     },
     ordersByMonth,
     topProducts,

@@ -47,7 +47,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
   }
 
   protected override mapDoc<D = OrderDocument>(
-    snap: import("firebase-admin/firestore").DocumentSnapshot,
+    snap: import("../../../providers/db-firebase").DocumentSnapshot,
   ): D {
     const raw = super.mapDoc<OrderDocument>(snap);
     return this.decryptOrder(raw) as unknown as D;

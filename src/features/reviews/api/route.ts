@@ -20,6 +20,7 @@ import { z } from "zod";
 import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { Review, ReviewListResponse } from "../types/index";
+import { ReviewStatusValues } from "../schemas";
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
@@ -39,7 +40,7 @@ function computeAggregates(reviews: Review[]): {
   let total = 0;
   let count = 0;
   for (const r of reviews) {
-    if (r.status === "approved") {
+    if (r.status === ReviewStatusValues.APPROVED) {
       dist[r.rating] = (dist[r.rating] ?? 0) + 1;
       total += r.rating;
       count++;

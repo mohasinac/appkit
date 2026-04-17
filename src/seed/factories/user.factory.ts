@@ -1,23 +1,7 @@
 // appkit/src/seed/factories/user.factory.ts
+import { getSeedLocale, pick } from "../seed-market-config";
+
 let _seq = 1;
-
-// ─── Indian name pools ─────────────────────────────────────────────────────────────────
-
-const FIRST_NAMES = [
-  "Priya", "Rahul", "Anjali", "Arjun", "Sneha", "Vikram", "Kavya", "Rohan",
-  "Pooja", "Aditya", "Deepa", "Karthik", "Meena", "Suresh", "Nisha", "Amit",
-  "Shalini", "Rajesh", "Divya", "Manish",
-] as const;
-
-const LAST_NAMES = [
-  "Sharma", "Patel", "Iyer", "Nair", "Singh", "Reddy", "Mehta", "Joshi",
-  "Gupta", "Pillai", "Rao", "Kumar", "Verma", "Shah", "Desai", "Chopra",
-  "Malhotra", "Saxena", "Kapoor", "Bhat",
-] as const;
-
-function pick<T>(arr: readonly T[], n: number): T {
-  return arr[n % arr.length];
-}
 
 export interface SeedBaseUserDocument {
   uid: string;
@@ -35,12 +19,15 @@ export function makeUser(
 ): SeedBaseUserDocument {
   const n = _seq++;
   const now = new Date();
-  const firstName = pick(FIRST_NAMES, n);
-  const lastName = pick(LAST_NAMES, n + 3);
+  const locale = getSeedLocale();
+  const firstName = pick(locale.firstNames, n);
+  const lastName = pick(locale.lastNames, n + 3);
   const displayName = `${firstName} ${lastName}`;
   return {
     uid: overrides.uid ?? `user-${n}`,
-    email: overrides.email ?? `${firstName.toLowerCase()}.${lastName.toLowerCase()}${n}@example.com`,
+    email:
+      overrides.email ??
+      `${firstName.toLowerCase()}.${lastName.toLowerCase()}${n}@example.com`,
     displayName: overrides.displayName ?? displayName,
     photoURL: overrides.photoURL,
     roles: overrides.roles ?? ["user"],

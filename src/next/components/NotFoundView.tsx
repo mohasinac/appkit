@@ -16,6 +16,8 @@
  *   }
  */
 
+import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
+
 export interface NotFoundViewProps {
   /** Override the heading text. */
   heading?: string;
@@ -31,7 +33,7 @@ export function NotFoundView({
   heading = "404 — Page not found",
   description = "The page you are looking for does not exist.",
   homeLabel = "Go home",
-  homeHref = "/",
+  homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: NotFoundViewProps) {
   return (
     <div

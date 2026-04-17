@@ -18,6 +18,7 @@ import {
 } from "../../media/finalize";
 import { reviewRepository } from "../repository/reviews.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { ProductStatusValues } from "../../products/schemas";
 import { userRepository } from "../../auth/repository/user.repository";
 import type {
   FirebaseSieveResult,
@@ -262,7 +263,7 @@ export async function listReviewsBySeller(
 ): Promise<ReviewDocument[]> {
   const products = await productRepository.findBySeller(sellerId);
   const productIds = products
-    .filter((product) => product.status === "published")
+    .filter((product) => product.status === ProductStatusValues.PUBLISHED)
     .map((product) => product.id);
 
   if (productIds.length === 0) {

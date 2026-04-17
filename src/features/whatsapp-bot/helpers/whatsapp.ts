@@ -1,5 +1,9 @@
 import "server-only";
 import { createHmac, timingSafeEqual } from "crypto";
+import {
+  getDefaultCurrencySymbol,
+  getDefaultLocale,
+} from "../../../core/baseline-resolver";
 import type {
   CheckoutMessageInput,
   StatusNotificationInput,
@@ -13,14 +17,15 @@ export function buildCheckoutMessageURL(input: CheckoutMessageInput): string {
   const { waNumber, cart, total, address, isPreorder = false } = input;
   const prefix = isPreorder ? "\uD83D\uDD16 *PRE-ORDER*\n\n" : "";
   const lines = cart.map(
-    (i) => `\u2022 ${i.name} \xD7${i.qty} \u2014 \u20B9${(i.salePrice * i.qty).toLocaleString("en-IN")}`,
+    (i) =>
+      `• ${i.name} ×${i.qty} — ${getDefaultCurrencySymbol()}${(i.salePrice * i.qty).toLocaleString(getDefaultLocale())}`,
   );
   const body = [
     `${prefix}Hi Hobson! I'd like to place an order:`,
     "",
     ...lines,
     "",
-    `*Total: \u20B9${total.toLocaleString("en-IN")}*`,
+    `*Total: ${getDefaultCurrencySymbol()}${total.toLocaleString(getDefaultLocale())}*`,
     "",
     `Deliver to: ${address.name}, ${address.line1}${address.line2 ? ", " + address.line2 : ""}, ${address.city} - ${address.pincode}`,
     `Phone: ${address.phone}`,
@@ -30,7 +35,9 @@ export function buildCheckoutMessageURL(input: CheckoutMessageInput): string {
   return `https://wa.me/${waNumber}?text=${encodeURIComponent(body)}`;
 }
 
-export function buildStatusNotificationURL(input: StatusNotificationInput): string {
+export function buildStatusNotificationURL(
+  input: StatusNotificationInput,
+): string {
   const { userPhone, template, vars } = input;
   const body = template.replace(
     /\{(\w+)\}/g,
@@ -48,7 +55,10 @@ export function verifyWebhookSignature(input: WebhookVerifyInput): boolean {
   return timingSafeEqual(expectedBuf, sigBuf);
 }
 
-export function isAdminNumber(incomingNumber: string, adminBotNumber: string): boolean {
+export function isAdminNumber(
+  incomingNumber: string,
+  adminBotNumber: string,
+): boolean {
   const clean = (n: string) => n.replace(/\D/g, "");
   return clean(incomingNumber).endsWith(clean(adminBotNumber));
 }
@@ -67,17 +77,26 @@ export function parseIncomingWebhookPayload(
       const from = params.get("From") ?? "";
       const body = params.get("Body") ?? "";
       if (!from || !body) return null;
-      return { from: from.replace(/^whatsapp:/i, "").replace(/\D/g, ""), body: body.trim() };
+      return {
+        from: from.replace(/^whatsapp:/i, "").replace(/\D/g, ""),
+        body: body.trim(),
+      };
     }
     // JSON format (Wati.io or generic)
     const json = JSON.parse(rawBody) as Record<string, unknown>;
     const from =
-      typeof json.senderWaId === "string" ? json.senderWaId :
-      typeof json.from === "string" ? json.from : "";
+      typeof json.senderWaId === "string"
+        ? json.senderWaId
+        : typeof json.from === "string"
+          ? json.from
+          : "";
     const body =
-      typeof (json.text as Record<string, unknown> | undefined)?.body === "string"
+      typeof (json.text as Record<string, unknown> | undefined)?.body ===
+      "string"
         ? ((json.text as Record<string, unknown>).body as string)
-        : typeof json.body === "string" ? json.body : "";
+        : typeof json.body === "string"
+          ? json.body
+          : "";
     if (!from || !body) return null;
     return { from: from.replace(/\D/g, ""), body: body.trim() };
   } catch {
@@ -86,14 +105,18 @@ export function parseIncomingWebhookPayload(
 }
 
 const DEFAULT_STATUS_MESSAGES: Record<string, string> = {
-  pending_payment:   "🛒 Your order #{id} has been received and is awaiting payment confirmation.",
-  payment_confirmed: "✅ Payment confirmed for order #{id}! We're getting it ready.",
-  processing:        "📦 Your order #{id} is being packed and prepared for dispatch.",
-  shipped:           "🚚 Your order #{id} is on its way!{tracking}",
-  out_for_delivery:  "🏃 Your order #{id} is out for delivery today!",
-  delivered:         "🎉 Order #{id} delivered! Thank you for your order!",
-  cancelled:         "❌ Your order #{id} has been cancelled. Contact us if you have any questions.",
-  refund_initiated:  "💸 Refund initiated for order #{id}. It should reflect within 5–7 business days.",
+  pending_payment:
+    "🛒 Your order #{id} has been received and is awaiting payment confirmation.",
+  payment_confirmed:
+    "✅ Payment confirmed for order #{id}! We're getting it ready.",
+  processing: "📦 Your order #{id} is being packed and prepared for dispatch.",
+  shipped: "🚚 Your order #{id} is on its way!{tracking}",
+  out_for_delivery: "🏃 Your order #{id} is out for delivery today!",
+  delivered: "🎉 Order #{id} delivered! Thank you for your order!",
+  cancelled:
+    "❌ Your order #{id} has been cancelled. Contact us if you have any questions.",
+  refund_initiated:
+    "💸 Refund initiated for order #{id}. It should reflect within 5–7 business days.",
 };
 
 /**
@@ -105,7 +128,9 @@ export function buildStatusMessage(
   statusMessages: Record<string, string> = DEFAULT_STATUS_MESSAGES,
 ): string {
   const { orderId, status, trackingNumber, courierName } = input;
-  const template = statusMessages[status] ?? `Your order #${orderId} status updated to: ${status}.`;
+  const template =
+    statusMessages[status] ??
+    `Your order #${orderId} status updated to: ${status}.`;
   const trackingLine = trackingNumber
     ? `\nTracking: ${courierName ? courierName + " — " : ""}${trackingNumber}`
     : "";
@@ -116,7 +141,9 @@ export function buildStatusMessage(
  * Send an outbound WhatsApp message via Twilio REST API.
  * Returns true on success, false on failure.
  */
-export async function sendWhatsAppMessage(input: SendWhatsAppInput): Promise<boolean> {
+export async function sendWhatsAppMessage(
+  input: SendWhatsAppInput,
+): Promise<boolean> {
   const { toPhone, message, accountSid, authToken, fromNumber } = input;
   const cleanPhone = toPhone.replace(/\D/g, "");
   if (!cleanPhone) return false;

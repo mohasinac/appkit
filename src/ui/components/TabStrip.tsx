@@ -1,5 +1,6 @@
 // appkit/src/ui/components/TabStrip.tsx
 "use client";
+import "client-only";
 import React, { useEffect } from "react";
 import { Span } from "./Typography";
 import { useVisibleItems } from "../../react/hooks/useVisibleItems";

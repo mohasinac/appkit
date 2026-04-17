@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import { useCallback } from "react";
 import { Package } from "lucide-react";
@@ -11,6 +12,7 @@ import {
   TextLink,
 } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
+import { OrderStatusValues } from "../schemas";
 
 const STATUS_MAP: Record<
   string,
@@ -97,8 +99,8 @@ export function MarketplaceOrderCard({
   const status = STATUS_MAP[order.status] ?? "pending";
   const statusLabel =
     order.status.charAt(0).toUpperCase() + order.status.slice(1);
-  const isDelivered = order.status === "delivered";
-  const isShipped = order.status === "shipped";
+  const isDelivered = order.status === OrderStatusValues.DELIVERED;
+  const isShipped = order.status === OrderStatusValues.SHIPPED;
 
   const detailHref = links?.detailHref(order) ?? `/orders/${order.id}`;
   const trackHref = links?.trackHref?.(order);

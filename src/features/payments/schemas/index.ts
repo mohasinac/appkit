@@ -1,5 +1,6 @@
 export * from "./firestore";
 import { z } from "zod";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 export const paymentGatewaySchema = z.enum([
   "razorpay",
@@ -34,7 +35,7 @@ export const paymentRecordSchema = z.object({
   gateway: paymentGatewaySchema,
   gatewayPaymentId: z.string().optional(),
   amount: z.number(),
-  currency: z.string().default("INR"),
+  currency: z.string().default(getDefaultCurrency()),
   status: paymentStatusSchema.default("pending"),
   createdAt: z.string().optional(),
 });

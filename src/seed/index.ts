@@ -4,6 +4,15 @@ import "server-only";
 export type { SeedCollection, SeedConfig, SeedResult } from "./types";
 export { runSeed } from "./runner";
 
+// Seed market config (for consumer locale registration)
+export type { SeedLocaleData } from "./seed-market-config";
+export {
+  registerSeedLocale,
+  getSeedLocale,
+  formatSeedPrice,
+  makeSeedPhone,
+} from "./seed-market-config";
+
 // Demo seed actions
 export type {
   SeedCollectionName,

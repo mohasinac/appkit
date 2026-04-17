@@ -12,6 +12,27 @@ import {
 } from "../../../utils/id-generators";
 
 // ============================================================================
+// SCHEMA DEFAULTS
+// ============================================================================
+
+/**
+ * Generic schema defaults for user-related data.
+ * Consumer-specific values (admin email, currency) belong in SiteConfig, not here.
+ */
+export const UserSchemaDefaults = {
+  /** Default role assigned to newly registered users */
+  USER_ROLE: "user" as UserRole,
+  /** Fallback display name for users without a name set */
+  DEFAULT_DISPLAY_NAME: "User",
+  /** Display name for anonymous/unauthenticated users */
+  ANONYMOUS_USER: "Anonymous",
+  /** Fallback label when user identity cannot be resolved */
+  UNKNOWN_USER: "Unknown User",
+  /** Fallback user-agent string for sessions without UA detection */
+  UNKNOWN_USER_AGENT: "Unknown",
+} as const;
+
+// ============================================================================
 // USER DOCUMENT
 // ============================================================================
 

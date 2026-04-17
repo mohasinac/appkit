@@ -1,4 +1,5 @@
 "use client";
+import "client-only";
 
 import React, { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";

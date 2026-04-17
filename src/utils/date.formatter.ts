@@ -2,6 +2,8 @@
  * Date Formatting Utilities
  */
 
+import { getDefaultLocale } from "../core/baseline-resolver";
+
 /**
  * Resolve any date-like value (Date, ISO string, number, or Firestore Timestamp JSON)
  * into a native Date object. Returns null for falsy or unparseable input.
@@ -24,8 +26,9 @@ export function resolveDate(value: unknown): Date | null {
 export function formatDate(
   date: Date | string | number | unknown,
   format: "short" | "medium" | "long" | "full" = "medium",
-  locale: string = "en-IN",
+  locale?: string,
 ): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
   const dateObj = resolveDate(date);
   if (!dateObj) return "";
 
@@ -55,14 +58,15 @@ export function formatDate(
       break;
   }
 
-  return dateObj.toLocaleDateString(locale, options);
+  return dateObj.toLocaleDateString(resolvedLocale, options);
 }
 
 export function formatDateTime(
   date: Date | string | number | unknown,
   format: "short" | "medium" | "long" | "full" = "medium",
-  locale: string = "en-IN",
+  locale?: string,
 ): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
   const dateObj = resolveDate(date);
   if (!dateObj) return "";
 
@@ -103,22 +107,23 @@ export function formatDateTime(
       break;
   }
 
-  const datePart = dateObj.toLocaleDateString(locale, dateOptions);
-  const timePart = dateObj.toLocaleTimeString(locale, timeOptions);
+  const datePart = dateObj.toLocaleDateString(resolvedLocale, dateOptions);
+  const timePart = dateObj.toLocaleTimeString(resolvedLocale, timeOptions);
   return `${datePart}, ${timePart}`;
 }
 
 export function formatTime(
   date: Date | string,
   format: "short" | "long" = "long",
-  locale: string = "en-IN",
+  locale?: string,
 ): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
   const dateObj = typeof date === "string" ? new Date(date) : date;
   const options: Intl.DateTimeFormatOptions =
     format === "short"
       ? { hour: "2-digit", minute: "2-digit" }
       : { hour: "2-digit", minute: "2-digit", second: "2-digit" };
-  return dateObj.toLocaleTimeString(locale, options);
+  return dateObj.toLocaleTimeString(resolvedLocale, options);
 }
 
 export function formatRelativeTime(date: Date | string): string {
@@ -143,28 +148,30 @@ export function formatRelativeTime(date: Date | string): string {
   return `${diffYear} year${diffYear > 1 ? "s" : ""} ago`;
 }
 
-export function formatMonthYear(
-  date: Date | string,
-  locale: string = "en-IN",
-): string {
+export function formatMonthYear(date: Date | string, locale?: string): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
   const dateObj = typeof date === "string" ? new Date(date) : date;
-  return dateObj.toLocaleDateString(locale, { month: "long", year: "numeric" });
+  return dateObj.toLocaleDateString(resolvedLocale, {
+    month: "long",
+    year: "numeric",
+  });
 }
 
 export function formatDateRange(
   startDate: Date | string,
   endDate: Date | string,
-  locale: string = "en-IN",
+  locale?: string,
 ): string {
+  const resolvedLocale = locale ?? getDefaultLocale();
   const start = typeof startDate === "string" ? new Date(startDate) : startDate;
   const end = typeof endDate === "string" ? new Date(endDate) : endDate;
 
-  const startFormatted = start.toLocaleDateString(locale, {
+  const startFormatted = start.toLocaleDateString(resolvedLocale, {
     month: "short",
     day: "numeric",
     year: start.getFullYear() !== end.getFullYear() ? "numeric" : undefined,
   });
-  const endFormatted = end.toLocaleDateString(locale, {
+  const endFormatted = end.toLocaleDateString(resolvedLocale, {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -224,5 +231,5 @@ export function formatCustomDate(
     full: { weekday: "long", month: "long", day: "numeric", year: "numeric" },
   };
   const options = formatOptions[format] || formatOptions.medium;
-  return dateObj.toLocaleDateString("en-US", options);
+  return dateObj.toLocaleDateString(getDefaultLocale(), options);
 }

@@ -94,6 +94,16 @@ export interface ProductDocument {
   updatedAt: Date;
 }
 
+/** Runtime-accessible product status values — use instead of bare string literals. */
+export const ProductStatusValues = {
+  DRAFT: "draft",
+  PUBLISHED: "published",
+  ARCHIVED: "archived",
+  SOLD: "sold",
+  OUT_OF_STOCK: "out_of_stock",
+  DISCONTINUED: "discontinued",
+} as const satisfies Record<string, ProductStatus>;
+
 export const PRODUCT_COLLECTION = "products" as const;
 
 export const PRODUCT_INDEXED_FIELDS = [

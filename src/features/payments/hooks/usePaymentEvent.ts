@@ -1,7 +1,6 @@
 "use client";
 
-import type { FirebaseApp } from "firebase/app";
-import type { Database } from "firebase/database";
+import type { IClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { logger } from "../../../core";
 import {
   RealtimeEventType,
@@ -10,7 +9,6 @@ import {
   type RTDBEventPayload,
   type RealtimeEventMessages,
 } from "../../../react";
-import { getFirebaseRealtimeClient } from "../../../react/hooks/firebaseRealtimeClient";
 
 export type { RealtimeEventStatus as PaymentEventStatus };
 
@@ -26,9 +24,7 @@ export interface UsePaymentEventOptions {
   rtdbPath?: string;
   timeoutMs?: number;
   messages?: RealtimeEventMessages;
-  realtimeApp?: FirebaseApp;
-  realtimeDb?: Database;
-  firebaseAppName?: string;
+  realtimeProvider?: IClientRealtimeProvider;
 }
 
 const PAYMENT_EVENT_TIMEOUT_MS = 5 * 60 * 1000;
@@ -41,10 +37,6 @@ function extractOrderIds(raw: RTDBEventPayload): string[] | null {
 export function usePaymentEvent(
   options?: UsePaymentEventOptions,
 ): UsePaymentEventReturn {
-  const defaultClient = getFirebaseRealtimeClient(
-    options?.firebaseAppName ?? "appkit-payment-realtime",
-  );
-
   const {
     status,
     error,
@@ -54,8 +46,7 @@ export function usePaymentEvent(
   } = useRealtimeEvent<string[]>({
     type: RealtimeEventType.PAYMENT,
     rtdbPath: options?.rtdbPath ?? DEFAULT_RTDB_PATH,
-    realtimeApp: options?.realtimeApp ?? defaultClient.realtimeApp,
-    realtimeDb: options?.realtimeDb ?? defaultClient.realtimeDb,
+    realtimeProvider: options?.realtimeProvider,
     timeoutMs: options?.timeoutMs ?? PAYMENT_EVENT_TIMEOUT_MS,
     onLogError: (message, err) => logger.error(message, err),
     extractData: extractOrderIds,

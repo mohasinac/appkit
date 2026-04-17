@@ -4,6 +4,7 @@ import React from "react";
 import { Article, Div, Heading, Span, Text } from "../../../ui";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
+import { getDefaultLocale } from "../../../core/baseline-resolver";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",
@@ -38,7 +39,7 @@ export function BlogFeaturedCard({
 }: BlogFeaturedCardProps) {
   const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+    ? new Date(post.publishedAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
         month: "short",
         day: "numeric",
@@ -101,8 +102,6 @@ export function BlogFeaturedCard({
   );
 
   return (
-    <Div className="mb-10">
-      {renderLink ? renderLink(href, inner) : inner}
-    </Div>
+    <Div className="mb-10">{renderLink ? renderLink(href, inner) : inner}</Div>
   );
 }

@@ -1,5 +1,9 @@
 import "server-only";
-import { FieldValue } from "firebase-admin/firestore";
+import {
+  increment,
+  arrayUnion,
+  arrayRemove,
+} from "../../../contracts/field-ops";
 import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
@@ -305,22 +309,18 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
 
       const categoryRef = this.db.collection(this.collection).doc(categoryId);
       const updates: Record<string, unknown> = {
-        "metrics.productCount": FieldValue.increment(productDelta),
-        "metrics.auctionCount": FieldValue.increment(auctionDelta),
-        "metrics.totalProductCount": FieldValue.increment(productDelta),
-        "metrics.totalAuctionCount": FieldValue.increment(auctionDelta),
-        "metrics.totalItemCount": FieldValue.increment(
-          productDelta + auctionDelta,
-        ),
+        "metrics.productCount": increment(productDelta),
+        "metrics.auctionCount": increment(auctionDelta),
+        "metrics.totalProductCount": increment(productDelta),
+        "metrics.totalAuctionCount": increment(auctionDelta),
+        "metrics.totalItemCount": increment(productDelta + auctionDelta),
         "metrics.lastUpdated": now,
         updatedAt: now,
       };
 
       if (productId && productDelta !== 0) {
         updates["metrics.productIds"] =
-          productDelta > 0
-            ? FieldValue.arrayUnion(productId)
-            : FieldValue.arrayRemove(productId);
+          productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
       }
 
       batch.update(categoryRef, updates);
@@ -328,11 +328,9 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       for (const ancestorId of category.parentIds) {
         const ancestorRef = this.db.collection(this.collection).doc(ancestorId);
         batch.update(ancestorRef, {
-          "metrics.totalProductCount": FieldValue.increment(productDelta),
-          "metrics.totalAuctionCount": FieldValue.increment(auctionDelta),
-          "metrics.totalItemCount": FieldValue.increment(
-            productDelta + auctionDelta,
-          ),
+          "metrics.totalProductCount": increment(productDelta),
+          "metrics.totalAuctionCount": increment(auctionDelta),
+          "metrics.totalItemCount": increment(productDelta + auctionDelta),
           "metrics.lastUpdated": now,
           updatedAt: now,
         });
@@ -387,7 +385,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
           .collection(this.collection)
           .doc(oldParentId);
         batch.update(oldParentRef, {
-          childrenIds: FieldValue.arrayRemove(categoryId),
+          childrenIds: arrayRemove(categoryId),
           updatedAt: now,
         });
 
@@ -402,7 +400,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
           .collection(this.collection)
           .doc(newParentId);
         batch.update(newParentRef, {
-          childrenIds: FieldValue.arrayUnion(categoryId),
+          childrenIds: arrayUnion(categoryId),
           isLeaf: false,
           updatedAt: now,
         });

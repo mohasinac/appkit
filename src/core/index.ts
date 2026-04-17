@@ -66,5 +66,17 @@ export {
 export { unitOfWork } from "./unit-of-work";
 export type { UnitOfWork } from "./unit-of-work";
 
-// integration-keys is server-only — import directly from "./core/integration-keys" instead
 export type { ResolvedKeys } from "./integration-keys";
+
+export {
+  configureMarketDefaults,
+  resetMarketDefaults,
+  getMarketProfile,
+  getDefaultCurrency,
+  getDefaultLocale,
+  getDefaultCountry,
+  getDefaultPhonePrefix,
+  getDefaultTimezone,
+  getDefaultCurrencySymbol,
+} from "./baseline-resolver";
+export type { MarketProfile } from "./baseline-resolver";
