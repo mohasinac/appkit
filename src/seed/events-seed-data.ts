@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Events Seed Data
  * Sample events: sale, offer, poll, survey, and feedback — with entries

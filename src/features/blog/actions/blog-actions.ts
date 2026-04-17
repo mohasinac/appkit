@@ -6,7 +6,7 @@ import {
   finalizeStagedMediaField,
   finalizeStagedMediaObject,
   finalizeStagedMediaObjectArray,
-} from "../../media";
+} from "../../media/finalize";
 import type {
   BlogPostDocument,
   BlogPostCreateInput,

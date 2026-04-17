@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Payouts Seed Data
  * Sample seller payout requests across all statuses

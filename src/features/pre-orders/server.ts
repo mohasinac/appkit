@@ -1,8 +1,11 @@
 /**
  * @mohasinac/appkit/features/pre-orders/server
  *
- * Server-only entry point — exports only the API route handlers.
+ * Server-only entry point — repositories and API route handlers.
  */
+import "server-only";
+
+export { PreordersRepository } from "./repository/preorders.repository";
 
 export {
   GET as preOrdersGET,

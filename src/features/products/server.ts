@@ -1,8 +1,17 @@
 /**
  * @mohasinac/appkit/features/products/server
  *
- * Server-only entry point — exports only the API route handlers.
+ * Server-only entry point — repositories and API route handlers.
  */
+import "server-only";
+
+export * from "./actions";
+
+export {
+  ProductRepository,
+  ProductsRepository,
+  productRepository,
+} from "./repository/products.repository";
 
 export { GET, POST } from "./api/route";
 export {

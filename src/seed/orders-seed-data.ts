@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Orders Seed Data — Anime/Otaku Marketplace
  * Sample orders across all statuses, linked to anime products and users

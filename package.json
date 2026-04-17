@@ -29,6 +29,11 @@
       "default": "./src/core/index.ts",
       "import": "./src/core/index.ts"
     },
+    "./core/integration-keys": {
+      "types": "./src/core/integration-keys.ts",
+      "default": "./src/core/integration-keys.ts",
+      "import": "./src/core/integration-keys.ts"
+    },
     "./core/newsletter.repository": {
       "types": "./src/core/newsletter.repository.ts",
       "default": "./src/core/newsletter.repository.ts",
@@ -168,6 +173,7 @@
   },
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
+    "client-only": "^0.0.1",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.0"

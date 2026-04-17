@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * PII Encryption Utilities — AES-256-GCM with HMAC-SHA256 blind indexes.
  *

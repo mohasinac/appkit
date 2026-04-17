@@ -1,3 +1,4 @@
+import "server-only";
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
 import * as path from "path";
 import * as fs from "fs";

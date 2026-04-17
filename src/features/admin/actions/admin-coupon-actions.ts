@@ -5,7 +5,7 @@
  * consumer-side thin server-action wrappers.
  */
 
-import { couponsRepository } from "../../promotions";
+import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import type {

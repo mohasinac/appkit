@@ -5,10 +5,4 @@ export * from "./hooks/useFaqVote";
 export * from "./components";
 export * from "./schemas";
 export * from "./columns";
-export * from "./actions";
-export {
-  FAQsRepository,
-  FirebaseFAQsRepository,
-  faqsRepository,
-} from "./repository/faqs.repository";
 export { manifest } from "./manifest";

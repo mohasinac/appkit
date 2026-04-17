@@ -21,7 +21,7 @@ import {
   finalizeStagedMediaField,
   finalizeStagedMediaObject,
   finalizeStagedMediaObjectArray,
-} from "../../media";
+} from "../../media/finalize";
 import type {
   EventDocument,
   EventCreateInput,

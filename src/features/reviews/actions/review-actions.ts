@@ -12,10 +12,13 @@ import {
 } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import { maskPublicReview } from "../../../security";
-import { finalizeStagedMediaArray, finalizeStagedMediaUrl } from "../../media";
+import {
+  finalizeStagedMediaArray,
+  finalizeStagedMediaUrl,
+} from "../../media/finalize";
 import { reviewRepository } from "../repository/reviews.repository";
-import { productRepository } from "../../products";
-import { userRepository } from "../../auth";
+import { productRepository } from "../../products/repository/products.repository";
+import { userRepository } from "../../auth/repository/user.repository";
 import type {
   FirebaseSieveResult,
   SieveModel,

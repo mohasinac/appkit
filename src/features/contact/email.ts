@@ -1,3 +1,4 @@
+import "server-only";
 import { getProviders } from "../../contracts";
 import { serverLogger } from "../../monitoring";
 import {

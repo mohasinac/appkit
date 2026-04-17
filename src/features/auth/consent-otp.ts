@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Consent OTP - Shared constants, path helpers, and utilities
  */

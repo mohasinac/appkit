@@ -66,8 +66,5 @@ export {
 export { unitOfWork } from "./unit-of-work";
 export type { UnitOfWork } from "./unit-of-work";
 
-export {
-  resolveKeys,
-  invalidateIntegrationKeysCache,
-} from "./integration-keys";
+// integration-keys is server-only — import directly from "./core/integration-keys" instead
 export type { ResolvedKeys } from "./integration-keys";

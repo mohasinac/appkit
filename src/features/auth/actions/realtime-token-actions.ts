@@ -6,7 +6,7 @@
  */
 
 import { getAdminAuth } from "../../../providers/db-firebase/index";
-import { chatRepository } from "../../admin/index";
+import { chatRepository } from "../../admin/repository/chat.repository";
 import { serverLogger } from "../../../monitoring/index";
 
 export interface RealtimeTokenResult {

@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Addresses Seed Data
  * Sample user addresses for development and testing

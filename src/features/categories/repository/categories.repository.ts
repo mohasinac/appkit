@@ -1,3 +1,4 @@
+import "server-only";
 import { FieldValue } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import {

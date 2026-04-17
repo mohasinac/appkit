@@ -1,5 +1,4 @@
 export * from "./types";
-export * from "./actions";
 export * from "./hooks/useHomepage";
 export * from "./hooks/useHomepageSections";
 export * from "./hooks/useHeroCarousel";
@@ -12,5 +11,3 @@ export * from "./hooks/useBlogArticles";
 export * from "./hooks/useHomepageReviews";
 export * from "./hooks/useNewsletter";
 export * from "./components";
-export { carouselRepository } from "./repository/carousel.repository";
-export { homepageSectionsRepository } from "./repository/homepage-sections.repository";

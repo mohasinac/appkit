@@ -1,10 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { hasRole } from "../../auth";
+import { hasRole } from "../../auth/auth-helpers";
 import { apiClient } from "../../../http";
 import type { ProductItem } from "../../products";
-import type { UserRole } from "../../auth";
+import type { UserRole } from "../../auth/types";
 
 export interface PublicUserProfile {
   uid: string;

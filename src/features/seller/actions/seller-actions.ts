@@ -18,19 +18,19 @@ import {
   NotFoundError,
   ValidationError,
 } from "../../../errors";
-import { userRepository } from "../../auth/index";
-import { storeRepository } from "../../stores/index";
-import { productRepository } from "../../products/index";
-import { orderRepository } from "../../orders/index";
-import { payoutRepository } from "../../payments/index";
-import { couponsRepository } from "../../promotions/index";
+import { userRepository } from "../../auth/repository/user.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
+import { productRepository } from "../../products/repository/products.repository";
+import { orderRepository } from "../../orders/repository/orders.repository";
+import { payoutRepository } from "../../payments/repository/payout.repository";
+import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { DEFAULT_PLATFORM_FEE_RATE } from "../../payments/schemas/firestore";
 import {
   finalizeStagedMediaUrl,
   finalizeStagedMediaField,
   finalizeStagedMediaArray,
-} from "../../media";
+} from "../../media/finalize";
 import type {
   UserDocument,
   SellerPayoutDetails,

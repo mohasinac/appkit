@@ -1,3 +1,4 @@
+import "server-only";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { BaseRepository } from "../../../providers/db-firebase";

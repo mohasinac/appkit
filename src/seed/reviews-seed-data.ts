@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Reviews Seed Data
  * Sample product reviews with various ratings and statuses

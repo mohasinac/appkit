@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Checkout Domain Actions (appkit)
  *
@@ -9,7 +11,7 @@
 import { timingSafeEqual } from "crypto";
 import { ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
-import { sendEmail } from "../../contact";
+import { sendEmail } from "../../contact/email";
 import {
   CONSENT_OTP_EXPIRY_MS,
   CONSENT_OTP_MAX_ATTEMPTS,
@@ -21,7 +23,7 @@ import {
   saveConsentOtp,
   readConsentOtp,
   patchConsentOtp,
-} from "../../auth";
+} from "../../auth/consent-otp";
 import { addressRepository } from "../../account/repository/address.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { resolveDate } from "../../../utils";

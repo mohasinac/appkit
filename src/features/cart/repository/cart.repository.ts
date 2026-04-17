@@ -1,3 +1,4 @@
+import "server-only";
 import { randomUUID } from "crypto";
 import type { DocumentSnapshot } from "firebase-admin/firestore";
 import { DatabaseError, NotFoundError } from "../../../errors";

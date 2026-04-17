@@ -1,3 +1,4 @@
+import "server-only";
 import crypto from "crypto";
 import { getAdminDb, prepareForFirestore } from "../../providers/db-firebase";
 import { resolveDate } from "../../utils";

@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Site Settings Seed Data
  * Global site configuration (singleton document)

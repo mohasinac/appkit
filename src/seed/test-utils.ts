@@ -1,3 +1,5 @@
+import "server-only";
+
 // appkit/src/seed/test-utils.ts
 // Server-only — used in integration tests and Firestore emulator setup.
 import type { SeedConfig } from "./types";

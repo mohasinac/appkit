@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Store Addresses Seed Data
  * Sample pickup/warehouse addresses for demo stores

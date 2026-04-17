@@ -9,8 +9,8 @@
  */
 
 import { chatRepository } from "../repository/chat.repository";
-import { orderRepository } from "../../orders/index";
-import { userRepository } from "../../auth/index";
+import { orderRepository } from "../../orders/repository/orders.repository";
+import { userRepository } from "../../auth/repository/user.repository";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase/index";
 import {
   AuthorizationError,

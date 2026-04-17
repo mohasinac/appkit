@@ -1,3 +1,4 @@
+import "server-only";
 import type { IRepository, PagedResult, SieveQuery } from "../../../contracts";
 import {
   BaseRepository,

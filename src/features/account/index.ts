@@ -12,13 +12,7 @@ export {
   useUpdateCurrentProfile as useUpdateProfile,
 } from "./hooks/useProfile";
 export * from "./hooks/usePublicProfile";
-export * from "./actions";
 export * from "./constants/addresses";
 export * from "./address-validation";
 export * from "./components";
-export { AccountRepository } from "./repository/account.repository";
-export {
-  AddressRepository,
-  addressRepository,
-} from "./repository/address.repository";
 export { manifest } from "./manifest";

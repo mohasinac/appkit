@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Sessions Seed Data
  *

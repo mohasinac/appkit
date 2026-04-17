@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Bids Seed Data
  * Auction bids for testing - related to vintage camera auction

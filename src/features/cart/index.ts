@@ -1,6 +1,5 @@
 export * from "./types";
 export * from "./schemas";
-export * from "./actions";
 export * from "./columns";
 export * from "./hooks/useCart";
 export * from "./hooks/useCartQuery";
@@ -12,6 +11,4 @@ export * from "./hooks/useAddToCart";
 export * from "./hooks/useGuestCartMerge";
 export * from "./components";
 export * from "./utils/guest-cart";
-export { CartRepository } from "./repository/cart.repository";
-export { cartRepository } from "./repository/cart.repository";
 export { manifest } from "./manifest";

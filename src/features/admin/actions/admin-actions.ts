@@ -6,11 +6,11 @@
  */
 
 import { serverLogger } from "../../../monitoring";
-import { sessionRepository } from "../../auth";
-import { orderRepository } from "../../orders";
-import { payoutRepository } from "../../payments";
-import { userRepository } from "../../auth";
-import { productRepository } from "../../products";
+import { sessionRepository } from "../../auth/repository/session.repository";
+import { orderRepository } from "../../orders/repository/orders.repository";
+import { payoutRepository } from "../../payments/repository/payout.repository";
+import { userRepository } from "../../auth/repository/user.repository";
+import { productRepository } from "../../products/repository/products.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
 import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";

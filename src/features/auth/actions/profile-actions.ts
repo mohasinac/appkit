@@ -6,7 +6,7 @@
  */
 
 import { maskPublicReview } from "../../../security";
-import { finalizeStagedMediaField } from "../../media";
+import { finalizeStagedMediaField } from "../../media/finalize";
 import { userRepository } from "../repository/user.repository";
 import { sessionRepository } from "../repository/session.repository";
 import { productRepository } from "../../products/repository/products.repository";

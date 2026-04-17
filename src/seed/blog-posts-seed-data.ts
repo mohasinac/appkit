@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Blog Posts Seed Data — Anime / Otaku Marketplace
  * Sample blog posts across all categories for development and testing

@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Server-Side Error Logging Utilities
  *

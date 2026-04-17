@@ -1,3 +1,4 @@
+import "server-only";
 import { DatabaseError } from "../../../errors";
 import type {
   FirebaseSieveResult,

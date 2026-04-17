@@ -1,3 +1,4 @@
+import "server-only";
 import type {
   Firestore,
   Transaction,
@@ -18,27 +19,23 @@ import {
   userRepository,
   tokenRepository,
   sessionRepository,
-} from "../features/auth";
-import { addressRepository } from "../features/account";
-import { cartRepository } from "../features/cart";
-import { categoriesRepository } from "../features/categories";
-import { productRepository } from "../features/products";
-import { orderRepository } from "../features/orders";
-import { reviewRepository } from "../features/reviews";
-import { bidRepository } from "../features/auctions";
-import {
-  siteSettingsRepository,
-  notificationRepository,
-} from "../features/admin";
-import {
-  carouselRepository,
-  homepageSectionsRepository,
-} from "../features/homepage";
-import { couponsRepository } from "../features/promotions";
-import { faqsRepository } from "../features/faq";
-import { wishlistRepository } from "../features/wishlist";
-import { blogRepository } from "../features/blog";
-import { payoutRepository } from "../features/payments";
+} from "../features/auth/repository";
+import { addressRepository } from "../features/account/repository/address.repository";
+import { cartRepository } from "../features/cart/repository/cart.repository";
+import { categoriesRepository } from "../features/categories/repository/categories.repository";
+import { productRepository } from "../features/products/repository/products.repository";
+import { orderRepository } from "../features/orders/repository/orders.repository";
+import { reviewRepository } from "../features/reviews/repository/reviews.repository";
+import { bidRepository } from "../features/auctions/repository/bid.repository";
+import { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
+import { notificationRepository } from "../features/admin/repository/notification.repository";
+import { carouselRepository } from "../features/homepage/repository/carousel.repository";
+import { homepageSectionsRepository } from "../features/homepage/repository/homepage-sections.repository";
+import { couponsRepository } from "../features/promotions/repository/coupons.repository";
+import { faqsRepository } from "../features/faq/repository/faqs.repository";
+import { wishlistRepository } from "../features/wishlist/repository/user-wishlist.repository";
+import { blogRepository } from "../features/blog/repository/blog.repository";
+import { payoutRepository } from "../features/payments/repository/payout.repository";
 
 class UnitOfWork {
   private get db(): Firestore {

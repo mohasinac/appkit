@@ -2,7 +2,9 @@
  * Repositories
  *
  * Canonical repository entrypoint for consumer apps.
+ * Server-only — all repository instances use firebase-admin.
  */
+import "server-only";
 
 // Shared repository foundations
 export { BaseRepository } from "../providers/db-firebase";
@@ -22,69 +24,83 @@ export {
   tokenRepository,
   SessionRepository,
   sessionRepository,
-} from "../features/auth";
-export { AddressRepository, addressRepository } from "../features/account";
+} from "../features/auth/repository";
+export {
+  SmsCounterRepository,
+  smsCounterRepository,
+} from "../features/auth/repository/sms-counter.repository";
+export {
+  AddressRepository,
+  addressRepository,
+} from "../features/account/repository/address.repository";
 export {
   ProductRepository,
   ProductsRepository,
   productRepository,
-} from "../features/products";
+} from "../features/products/repository/products.repository";
 export {
   OrderRepository,
   OrdersRepository,
   orderRepository,
-} from "../features/orders";
+} from "../features/orders/repository/orders.repository";
 export {
   ReviewRepository,
   ReviewsRepository,
   reviewRepository,
-} from "../features/reviews";
+} from "../features/reviews/repository/reviews.repository";
 
 // Canonical appkit-owned repositories
-export { bidRepository } from "../features/auctions";
-export { CartRepository, cartRepository } from "../features/cart";
+export { bidRepository } from "../features/auctions/repository/bid.repository";
+export {
+  CartRepository,
+  cartRepository,
+} from "../features/cart/repository/cart.repository";
 export {
   StoreRepository,
   storeRepository,
-  storeAddressRepository,
-} from "../features/stores";
-export {
-  siteSettingsRepository,
-  notificationRepository,
-  chatRepository,
-} from "../features/admin";
-export {
-  carouselRepository,
-  homepageSectionsRepository,
-} from "../features/homepage";
+} from "../features/stores/repository/store.repository";
+export { storeAddressRepository } from "../features/stores/repository/store-address.repository";
+export { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
+export { notificationRepository } from "../features/admin/repository/notification.repository";
+export { chatRepository } from "../features/admin/repository/chat.repository";
+export { carouselRepository } from "../features/homepage/repository/carousel.repository";
+export { homepageSectionsRepository } from "../features/homepage/repository/homepage-sections.repository";
 export {
   CategoriesRepository,
   categoriesRepository,
-} from "../features/categories";
-export { couponsRepository } from "../features/promotions";
+} from "../features/categories/repository/categories.repository";
+export { couponsRepository } from "../features/promotions/repository/coupons.repository";
 export {
   FAQsRepository,
   FirebaseFAQsRepository,
   faqsRepository,
-} from "../features/faq";
-export { BlogRepository, blogRepository } from "../features/blog";
-export { payoutRepository } from "../features/payments";
-export { OfferRepository, offerRepository } from "../features/seller";
+} from "../features/faq/repository/faqs.repository";
+export {
+  BlogRepository,
+  blogRepository,
+} from "../features/blog/repository/blog.repository";
+export { payoutRepository } from "../features/payments/repository/payout.repository";
+export {
+  OfferRepository,
+  offerRepository,
+} from "../features/seller/repository/offer.repository";
 
 export {
   wishlistRepository,
   type UserWishlistItem as WishlistItem,
-} from "../features/wishlist";
+} from "../features/wishlist/repository/user-wishlist.repository";
 
 // Feature repositories already appkit-owned
 export {
   EventRepository,
   EventsRepository,
   eventRepository,
+} from "../features/events/repository/events.repository";
+export {
   EventEntryRepository,
   EventEntriesRepository,
   eventEntryRepository,
-} from "../features/events";
+} from "../features/events/repository/event-entry.repository";
 export {
   NewsletterRepository,
   newsletterRepository,
@@ -95,8 +111,6 @@ export type {
   NewsletterSubscriberUpdateInput,
   NewsletterListModel,
 } from "../core/newsletter.repository";
-
-export { SmsCounterRepository, smsCounterRepository } from "../features/auth";
 
 export { CopilotLogRepository, copilotLogRepository } from "../core";
 export type {

@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Carts Seed Data
  *

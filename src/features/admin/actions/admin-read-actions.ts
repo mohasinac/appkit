@@ -4,14 +4,14 @@
  * Pure read functions for admin dashboards and paginated list queries.
  */
 
-import { sessionRepository } from "../../auth";
-import { orderRepository } from "../../orders";
-import { userRepository } from "../../auth";
-import { productRepository } from "../../products";
-import { blogRepository } from "../../blog";
-import { storeRepository } from "../../stores";
-import { bidRepository } from "../../auctions";
-import { payoutRepository } from "../../payments";
+import { sessionRepository } from "../../auth/repository/session.repository";
+import { orderRepository } from "../../orders/repository/orders.repository";
+import { userRepository } from "../../auth/repository/user.repository";
+import { productRepository } from "../../products/repository/products.repository";
+import { blogRepository } from "../../blog/repository/blog.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
+import { bidRepository } from "../../auctions/repository/bid.repository";
+import { payoutRepository } from "../../payments/repository/payout.repository";
 import { formatMonthYear } from "../../../utils";
 import type {
   FirebaseSieveResult,

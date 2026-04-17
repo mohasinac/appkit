@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Products Seed Data � 101 Beyblade products, launchers, parts & merch
  * All dates computed dynamically at module-load time (never stale).
