@@ -17,6 +17,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 
 import { ProductStatusValues } from "../features/products/schemas";
+import { getDefaultCurrency } from "../core/baseline-resolver";
 
 // ─── Input Types ──────────────────────────────────────────────────────────────
 
@@ -90,7 +91,7 @@ export function productJsonLd(
     offers: {
       "@type": "Offer",
       price: product.price,
-      priceCurrency: product.currency || "INR",
+      priceCurrency: product.currency || getDefaultCurrency(),
       availability:
         product.status === ProductStatusValues.PUBLISHED || !product.status
           ? "https://schema.org/InStock"

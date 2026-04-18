@@ -4,6 +4,7 @@ import { Button, Div, Grid, Row, Span, Text } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 // ─── ProductCard ──────────────────────────────────────────────────────────────
 
@@ -92,11 +93,17 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
         <Div className="mt-2 flex items-baseline gap-2">
           <Span className="font-semibold text-neutral-900">
-            {formatCurrency(product.price, product.currency ?? "INR")}
+            {formatCurrency(
+              product.price,
+              product.currency ?? getDefaultCurrency(),
+            )}
           </Span>
           {product.originalPrice && (
             <Span className="text-xs text-neutral-400 line-through">
-              {formatCurrency(product.originalPrice, product.currency ?? "INR")}
+              {formatCurrency(
+                product.originalPrice,
+                product.currency ?? getDefaultCurrency(),
+              )}
             </Span>
           )}
         </Div>

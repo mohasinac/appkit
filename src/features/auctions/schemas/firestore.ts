@@ -9,6 +9,15 @@ import {
 
 export type BidStatus = "active" | "outbid" | "won" | "lost" | "cancelled";
 
+/** Runtime-accessible bid status values — use instead of bare string literals. */
+export const BidStatusValues = {
+  ACTIVE: "active",
+  OUTBID: "outbid",
+  WON: "won",
+  LOST: "lost",
+  CANCELLED: "cancelled",
+} as const satisfies Record<string, BidStatus>;
+
 export interface BidDocument {
   id: string;
   productId: string;

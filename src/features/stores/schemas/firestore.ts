@@ -9,7 +9,15 @@ import { slugify } from "../../../utils/string.formatter";
 
 // ── Store Document ───────────────────────────────────────────────────────────
 
-export type StoreStatus = "pending" | "active" | "suspended" | "rejected";
+export const StoreStatusValues = {
+  PENDING: "pending",
+  ACTIVE: "active",
+  SUSPENDED: "suspended",
+  REJECTED: "rejected",
+} as const;
+
+export type StoreStatus =
+  (typeof StoreStatusValues)[keyof typeof StoreStatusValues];
 
 export interface StoreDocument {
   id: string; // = storeSlug

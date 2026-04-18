@@ -30,8 +30,15 @@ export const RealtimeEventStatus = {
 export type RealtimeEventStatus =
   (typeof RealtimeEventStatus)[keyof typeof RealtimeEventStatus];
 
+export const RTDBPayloadStatus = {
+  PENDING: "pending",
+  SUCCESS: "success",
+  FAILED: "failed",
+  ERROR: "error",
+} as const;
+
 export interface RTDBEventPayload {
-  status: "pending" | "success" | "failed" | "error";
+  status: (typeof RTDBPayloadStatus)[keyof typeof RTDBPayloadStatus];
   error?: string;
   [key: string]: unknown;
 }
@@ -155,11 +162,14 @@ export function useRealtimeEvent<TData = undefined>(
             const raw = snapshot.val() as RTDBEventPayload | null;
             if (!raw) return;
 
-            if (raw.status === "success") {
+            if (raw.status === RTDBPayloadStatus.SUCCESS) {
               cleanup();
               if (extractData) setData(extractData(raw));
               setStatus(RealtimeEventStatus.SUCCESS);
-            } else if (raw.status === "failed" || raw.status === "error") {
+            } else if (
+              raw.status === RTDBPayloadStatus.FAILED ||
+              raw.status === RTDBPayloadStatus.ERROR
+            ) {
               cleanup();
               setError(raw.error ?? msg.failure);
               setStatus(RealtimeEventStatus.FAILED);

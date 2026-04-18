@@ -18,6 +18,7 @@ import {
   ValidationError,
   NotFoundError,
 } from "../../../errors";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { resolveDate } from "../../../utils";
 import type { BidDocument } from "../schemas";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase";
@@ -75,7 +76,7 @@ export async function placeBid(
     userName: profile?.displayName ?? userEmail ?? "Anonymous",
     userEmail: profile?.email ?? userEmail ?? "",
     bidAmount,
-    currency: product.currency || "INR",
+    currency: product.currency || getDefaultCurrency(),
     bidDate: new Date(),
     ...(autoMaxBid ? { autoMaxBid } : {}),
   } as Parameters<typeof bidRepository.create>[0]);

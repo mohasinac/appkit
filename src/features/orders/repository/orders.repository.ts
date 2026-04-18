@@ -1,3 +1,6 @@
+import "server-only";
+
+import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import type {
   FirebaseSieveResult,
@@ -12,9 +15,11 @@ import {
   encryptPiiFields,
   ORDER_PII_FIELDS,
 } from "../../../security";
+import { serverTimestamp } from "../../../contracts/field-ops";
 import {
   createOrderId,
   ORDER_COLLECTION,
+  OrderStatusValues,
   type OrderCreateInput,
   type OrderDocument,
 } from "../schemas";
@@ -290,6 +295,150 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         maxPageSize: 200,
       },
     );
+  }
+
+  /**
+   * Cloud Functions: find pending orders created before a timeout threshold.
+   * Used by the payment-timeout cleanup job to cancel stale unconfirmed orders.
+   */
+  async getTimedOutPending(
+    hours: number,
+  ): Promise<
+    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
+  > {
+    const cutoff = new Date();
+    cutoff.setHours(cutoff.getHours() - hours);
+
+    const snap = await this.db
+      .collection(this.collection)
+      .where("status", "==", OrderStatusValues.PENDING)
+      .where("paymentStatus", "==", "pending")
+      .where("createdAt", "<", cutoff)
+      .limit(500)
+      .get();
+
+    return snap.docs.map((d) => ({
+      id: d.id,
+      ref: d.ref as DocumentReference,
+      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+    }));
+  }
+
+  /**
+   * Cloud Functions: find shiprocket-shipped delivered orders eligible for payout.
+   */
+  async getEligibleShiprocket(): Promise<
+    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
+  > {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("payoutStatus", "==", "eligible")
+      .where("shippingMethod", "==", "shiprocket")
+      .where("status", "==", OrderStatusValues.DELIVERED)
+      .limit(500)
+      .get();
+
+    return snap.docs.map((d) => ({
+      id: d.id,
+      ref: d.ref as DocumentReference,
+      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+    }));
+  }
+
+  /**
+   * Cloud Functions: find auto-payout eligible delivered orders older than windowDays business days.
+   * @param windowDays - number of business days since delivery
+   * @param cutoff - pre-computed business-day cutoff date (computed by caller)
+   */
+  async getEligibleAutomatic(
+    cutoff: Date,
+  ): Promise<
+    Array<{ id: string; ref: DocumentReference; data: OrderDocument }>
+  > {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("payoutStatus", "==", "eligible")
+      .where("status", "==", OrderStatusValues.DELIVERED)
+      .where("updatedAt", "<=", cutoff)
+      .limit(500)
+      .get();
+
+    return snap.docs.map((d) => ({
+      id: d.id,
+      ref: d.ref as DocumentReference,
+      data: this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument),
+    }));
+  }
+
+  /**
+   * Cloud Functions: stage a payout-requested update into a caller-owned WriteBatch.
+   */
+  markPayoutRequested(
+    batch: WriteBatch,
+    ref: DocumentReference,
+    payoutId: string,
+  ): void {
+    batch.update(ref, {
+      payoutStatus: "requested",
+      payoutId,
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /**
+   * Cloud Functions: stage a cancellation update into a caller-owned WriteBatch.
+   */
+  cancelInBatch(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref, {
+      status: OrderStatusValues.CANCELLED,
+      cancellationDate: new Date(),
+      cancellationReason: "payment_timeout",
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /**
+   * Cloud Functions: create an auction-won order inside a caller-owned WriteBatch.
+   * Returns the new DocumentReference synchronously so the caller can chain further batch ops.
+   */
+  createFromAuction(
+    batch: WriteBatch,
+    input: {
+      productId: string;
+      productTitle: string;
+      userId: string;
+      userName: string;
+      userEmail: string;
+      sellerId?: string;
+      amount: number;
+      currency: string;
+      auctionProductId: string;
+    },
+  ): DocumentReference {
+    const ref = this.db.collection(this.collection).doc() as DocumentReference;
+    batch.create(
+      ref,
+      prepareForFirestore({
+        id: ref.id,
+        productId: input.productId,
+        productTitle: input.productTitle,
+        userId: input.userId,
+        userName: input.userName,
+        userEmail: input.userEmail,
+        sellerId: input.sellerId ?? null,
+        quantity: 1,
+        unitPrice: input.amount,
+        totalPrice: input.amount,
+        currency: input.currency,
+        status: OrderStatusValues.CONFIRMED,
+        paymentStatus: "pending",
+        orderDate: new Date(),
+        notes: `Won via auction bid — auction product ${input.auctionProductId}`,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }),
+    );
+    return ref;
   }
 }
 

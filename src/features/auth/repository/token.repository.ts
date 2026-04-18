@@ -96,6 +96,15 @@ export class EmailVerificationTokenRepository extends BaseRepository<EmailVerifi
     }
   }
 
+  async getExpiredRefs(
+    now: Date,
+  ): Promise<FirebaseFirestore.DocumentReference[]> {
+    const snapshot = await this.getCollection()
+      .where(TOKEN_FIELDS.EXPIRES_AT, "<", now)
+      .get();
+    return snapshot.docs.map((doc) => doc.ref);
+  }
+
   async deleteAllForUser(userId: string): Promise<void> {
     try {
       const tokens = await this.findByUserId(userId);
@@ -225,6 +234,15 @@ export class PasswordResetTokenRepository extends BaseRepository<PasswordResetTo
     }
   }
 
+  async getExpiredRefs(
+    now: Date,
+  ): Promise<FirebaseFirestore.DocumentReference[]> {
+    const snapshot = await this.getCollection()
+      .where(TOKEN_FIELDS.EXPIRES_AT, "<", now)
+      .get();
+    return snapshot.docs.map((doc) => doc.ref);
+  }
+
   async deleteAllForUser(userId: string): Promise<void> {
     try {
       const tokens = await this.findByUserId(userId);
@@ -253,4 +271,14 @@ export const passwordResetTokenRepository = new PasswordResetTokenRepository();
 export const tokenRepository = {
   email: emailVerificationTokenRepository,
   password: passwordResetTokenRepository,
+  async getExpiredEmailVerificationRefs(
+    now: Date,
+  ): Promise<FirebaseFirestore.DocumentReference[]> {
+    return emailVerificationTokenRepository.getExpiredRefs(now);
+  },
+  async getExpiredPasswordResetRefs(
+    now: Date,
+  ): Promise<FirebaseFirestore.DocumentReference[]> {
+    return passwordResetTokenRepository.getExpiredRefs(now);
+  },
 };

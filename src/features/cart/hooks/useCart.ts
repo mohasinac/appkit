@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CartData } from "../types";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 interface UseCartOptions {
   initialData?: CartData;
@@ -21,7 +22,7 @@ export function useCart(userIdOrSession: string, opts?: UseCartOptions) {
     items: query.data?.items ?? [],
     subtotal: query.data?.subtotal ?? 0,
     total: query.data?.total ?? 0,
-    currency: query.data?.currency ?? "INR",
+    currency: query.data?.currency ?? getDefaultCurrency(),
     itemCount: query.data?.itemCount ?? 0,
     isLoading: query.isLoading,
     error: query.error,

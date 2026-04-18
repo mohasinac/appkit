@@ -1,13 +1,14 @@
 export * from "./firestore";
 
 import { z } from "zod";
+import { StoreStatusValues } from "./firestore";
 
 /** Zod schema for store status — use instead of inline `z.enum(["pending",...])`. */
 export const storeStatusSchema = z.enum([
-  "pending",
-  "active",
-  "suspended",
-  "rejected",
+  StoreStatusValues.PENDING,
+  StoreStatusValues.ACTIVE,
+  StoreStatusValues.SUSPENDED,
+  StoreStatusValues.REJECTED,
 ]);
 
 // ─── Base item schema ─────────────────────────────────────────────────────────

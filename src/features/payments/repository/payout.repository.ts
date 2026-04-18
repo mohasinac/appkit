@@ -11,6 +11,7 @@ import {
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
+import type { DocumentReference, WriteResult } from "firebase-admin/firestore";
 import type {
   PayoutDocument,
   PayoutCreateInput,
@@ -166,6 +167,24 @@ class PayoutRepository extends BaseRepository<PayoutDocument> {
   }
 
   /**
+   * Cloud Functions compatibility: pending payouts with refs.
+   */
+  async getPending(): Promise<
+    Array<{ id: string; ref: DocumentReference; data: PayoutDocument }>
+  > {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(PAYOUT_FIELDS.STATUS, "==", "pending")
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ref: doc.ref,
+      data: this.mapDoc<PayoutDocument>(doc),
+    }));
+  }
+
+  /**
    * Update payout status (admin action)
    */
   async updateStatus(
@@ -180,6 +199,40 @@ class PayoutRepository extends BaseRepository<PayoutDocument> {
       status === PAYOUT_FIELDS.STATUS_VALUES.FAILED
         ? { processedAt: new Date() }
         : {}),
+      updatedAt: new Date(),
+    });
+  }
+
+  markProcessing(ref: DocumentReference): Promise<WriteResult> {
+    return ref.update({
+      status: "processing",
+      processedAt: new Date(),
+      updatedAt: new Date(),
+    });
+  }
+
+  recordSuccess(
+    ref: DocumentReference,
+    razorpayPayoutId: string,
+    razorpayStatus: string,
+  ): Promise<WriteResult> {
+    return ref.update({
+      razorpayPayoutId,
+      razorpayStatus,
+      updatedAt: new Date(),
+    });
+  }
+
+  recordFailure(
+    ref: DocumentReference,
+    failureCount: number,
+    reason: string,
+    isFinal: boolean,
+  ): Promise<WriteResult> {
+    return ref.update({
+      status: isFinal ? "failed" : "pending",
+      failureCount,
+      lastFailureReason: reason,
       updatedAt: new Date(),
     });
   }

@@ -8,6 +8,7 @@ import {
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
+import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import type {
   SieveModel,
@@ -102,6 +103,82 @@ class BidRepository extends BaseRepository<BidDocument> {
    */
   async findByStatus(status: BidStatus): Promise<BidDocument[]> {
     return this.findBy(BID_FIELDS.STATUS, status);
+  }
+
+  /**
+   * Cloud Functions compatibility: active bids for a product with refs.
+   */
+  async getActiveByProduct(
+    productId: string,
+  ): Promise<Array<{ id: string; ref: DocumentReference; data: BidDocument }>> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(BID_FIELDS.PRODUCT_ID, "==", productId)
+      .where(BID_FIELDS.STATUS, "==", "active")
+      .orderBy("bidAmount", "desc")
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ref: doc.ref,
+      data: this.mapDoc<BidDocument>(doc),
+    }));
+  }
+
+  /**
+   * Cloud Functions compatibility: current winning active bid with ref.
+   */
+  async getWinningBid(
+    productId: string,
+  ): Promise<{ ref: DocumentReference; data: BidDocument } | null> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(BID_FIELDS.PRODUCT_ID, "==", productId)
+      .where(BID_FIELDS.IS_WINNING, "==", true)
+      .where(BID_FIELDS.STATUS, "==", "active")
+      .limit(1)
+      .get();
+
+    if (snapshot.empty) {
+      return null;
+    }
+
+    const doc = snapshot.docs[0];
+    return {
+      ref: doc.ref,
+      data: this.mapDoc<BidDocument>(doc),
+    };
+  }
+
+  markWon(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref, {
+      status: "won",
+      isWinning: true,
+      updatedAt: new Date(),
+    });
+  }
+
+  markLost(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref, {
+      status: "lost",
+      isWinning: false,
+      updatedAt: new Date(),
+    });
+  }
+
+  markOutbid(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref, {
+      status: "outbid",
+      isWinning: false,
+      updatedAt: new Date(),
+    });
+  }
+
+  markWinning(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref, {
+      isWinning: true,
+      updatedAt: new Date(),
+    });
   }
 
   /**

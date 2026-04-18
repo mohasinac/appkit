@@ -29,6 +29,7 @@ import { PAYOUT_FIELDS } from "../../payments/schemas";
 import { couponsRepository } from "../../promotions/repository/coupons.repository";
 import { generateStoreSlug } from "../../stores/schemas/firestore";
 import { DEFAULT_PLATFORM_FEE_RATE } from "../../payments/schemas/firestore";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   finalizeStagedMediaUrl,
   finalizeStagedMediaField,
@@ -399,7 +400,7 @@ export async function requestPayout(
     grossAmount: earnings.grossAmount,
     platformFee: earnings.platformFee,
     platformFeeRate: DEFAULT_PLATFORM_FEE_RATE,
-    currency: "INR",
+    currency: getDefaultCurrency(),
     paymentMethod: input.paymentMethod,
     ...(input.bankAccount && { bankAccount: input.bankAccount }),
     ...(input.upiId && { upiId: input.upiId }),
@@ -487,7 +488,7 @@ export async function bulkSellerOrder(
     grossAmount,
     platformFee,
     platformFeeRate: PLATFORM_COMMISSION_RATE,
-    currency: "INR",
+    currency: getDefaultCurrency(),
     paymentMethod:
       userDoc.payoutDetails.method === "upi"
         ? ("upi" as const)

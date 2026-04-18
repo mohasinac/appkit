@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Store Repository
  *
@@ -12,11 +14,13 @@ import {
   type SieveModel,
   type FirebaseSieveResult,
 } from "../../../providers/db-firebase";
+import { increment } from "../../../contracts/field-ops";
 import {
   StoreDocument,
   STORE_COLLECTION,
   STORE_FIELDS,
   DEFAULT_STORE_DATA,
+  StoreStatusValues,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
 
@@ -109,8 +113,8 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     return this.update(storeSlug, {
       status,
       // Auto-set isPublic when approved
-      ...(status === "active" && { isPublic: true }),
-      ...(status !== "active" && { isPublic: false }),
+      ...(status === StoreStatusValues.ACTIVE && { isPublic: true }),
+      ...(status !== StoreStatusValues.ACTIVE && { isPublic: false }),
       updatedAt: new Date(),
     } as Partial<StoreDocument>);
   }
@@ -152,6 +156,82 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     model: SieveModel,
   ): Promise<FirebaseSieveResult<StoreDocument>> {
     return this.listStores(model, false);
+  }
+
+  /**
+   * Cloud Functions: atomically increment `stats.totalProducts` counter.
+   */
+  async incrementTotalProducts(storeId: string, delta: number): Promise<void> {
+    if (!storeId) return;
+    await this.db
+      .collection(this.collection)
+      .doc(storeId)
+      .update({
+        "stats.totalProducts": increment(delta),
+        updatedAt: new Date(),
+      });
+  }
+
+  /**
+   * Cloud Functions: atomically increment `stats.itemsSold` counter.
+   */
+  async incrementItemsSold(storeId: string, delta: number): Promise<void> {
+    if (!storeId) return;
+    await this.db
+      .collection(this.collection)
+      .doc(storeId)
+      .update({
+        "stats.itemsSold": increment(delta),
+        updatedAt: new Date(),
+      });
+  }
+
+  /**
+   * Cloud Functions: full-overwrite store stats (used by nightly reconciliation job).
+   * Passing `null` for averageRating means "do not update this field".
+   */
+  async setStats(
+    storeId: string,
+    totalProducts: number,
+    itemsSold: number,
+    totalReviews: number,
+    averageRating: number | null,
+  ): Promise<void> {
+    if (!storeId) return;
+    const data: Record<string, unknown> = {
+      "stats.totalProducts": totalProducts,
+      "stats.itemsSold": itemsSold,
+      "stats.totalReviews": totalReviews,
+      updatedAt: new Date(),
+    };
+    if (averageRating !== null) {
+      data["stats.averageRating"] = averageRating;
+    }
+    await this.db.collection(this.collection).doc(storeId).update(data);
+  }
+
+  /**
+   * Cloud Functions: update review aggregate stats on a store.
+   */
+  async updateReviewStats(
+    storeId: string,
+    totalReviews: number,
+    averageRating: number,
+  ): Promise<void> {
+    if (!storeId) return;
+    await this.db.collection(this.collection).doc(storeId).update({
+      "stats.totalReviews": totalReviews,
+      "stats.averageRating": averageRating,
+      updatedAt: new Date(),
+    });
+  }
+
+  /**
+   * Cloud Functions: return IDs of all stores (lightweight ID-only scan).
+   */
+  async listIds(): Promise<string[]> {
+    const snap = await this.db.collection(this.collection).select().get();
+    return snap.docs.map((d) => d.id);
   }
 }
 

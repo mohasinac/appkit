@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { Order, OrderListResponse, OrderListParams } from "../types";
+import type { TrackingInfo } from "../../../contracts/shipping";
 
 interface UseOrdersOptions {
   initialData?: OrderListResponse;
@@ -50,4 +51,22 @@ export function useOrder(
   });
 
   return { order: query.data, isLoading: query.isLoading, error: query.error };
+}
+
+export function useTrackOrder(
+  trackingId: string | null | undefined,
+  opts?: { enabled?: boolean },
+) {
+  const query = useQuery<TrackingInfo | null>({
+    queryKey: ["order-tracking", trackingId],
+    queryFn: () =>
+      apiClient.get<TrackingInfo>(`/api/orders/track/${trackingId}`),
+    enabled: opts?.enabled !== false && !!trackingId,
+  });
+
+  return {
+    trackingInfo: query.data ?? null,
+    isLoading: query.isLoading,
+    error: query.error,
+  };
 }

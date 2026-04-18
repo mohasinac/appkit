@@ -1,3 +1,6 @@
+import "server-only";
+
+import type { DocumentReference } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
@@ -331,6 +334,19 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
         `Failed to fetch admin sessions: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
+  }
+
+  /**
+   * Cloud Functions: return refs for expired sessions for caller-managed batch deletion.
+   * Complements cleanupExpiredSessions() with a composable batch-friendly variant.
+   */
+  async getExpiredRefs(now: Date): Promise<DocumentReference[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(SESSION_FIELDS.EXPIRES_AT, "<", now)
+      .limit(500)
+      .get();
+    return snap.docs.map((d) => d.ref as DocumentReference);
   }
 }
 

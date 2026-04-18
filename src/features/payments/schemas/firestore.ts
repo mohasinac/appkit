@@ -15,6 +15,14 @@ export interface PayoutBankAccount {
 }
 
 export type PayoutStatus = "pending" | "processing" | "completed" | "failed";
+
+export const PayoutStatusValues = {
+  PENDING: "pending",
+  PROCESSING: "processing",
+  COMPLETED: "completed",
+  FAILED: "failed",
+} as const satisfies Record<string, PayoutStatus>;
+
 export type PayoutPaymentMethod = "bank_transfer" | "upi";
 
 export interface PayoutDocument {

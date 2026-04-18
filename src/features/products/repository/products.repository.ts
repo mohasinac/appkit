@@ -1,5 +1,6 @@
 import "server-only";
-import { increment } from "../../../contracts/field-ops";
+import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
+import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
@@ -15,6 +16,7 @@ import {
   createAuctionId,
   createPreOrderId,
   createProductId,
+  ProductStatusValues,
   type ProductCreateInput,
   type ProductDocument,
   type ProductUpdateInput,
@@ -340,6 +342,69 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     } catch {
       // View analytics must not break product read path.
     }
+  }
+
+  /**
+   * Cloud Functions: find published auctions whose end date has already passed.
+   * Used by the auction settlement job to finalize expired auctions.
+   */
+  async getExpiredAuctions(
+    now: Date,
+  ): Promise<
+    Array<{ id: string; ref: DocumentReference; data: ProductDocument }>
+  > {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(PRODUCT_FIELDS.IS_AUCTION, "==", true)
+      .where(PRODUCT_FIELDS.AUCTION_END_DATE, "<", now)
+      .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
+      .limit(500)
+      .get();
+
+    return snap.docs.map((d) => ({
+      id: d.id,
+      ref: d.ref as DocumentReference,
+      data: this.mapDoc<ProductDocument>(d),
+    }));
+  }
+
+  /**
+   * Cloud Functions: return IDs of all published products (lightweight scan).
+   * Used by search index rebuild jobs.
+   */
+  async getPublishedIds(): Promise<string[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
+      .limit(2000)
+      .get();
+
+    return snap.docs.map((d) => d.id);
+  }
+
+  /**
+   * Cloud Functions: stage a status update into a caller-owned WriteBatch.
+   */
+  updateStatusInBatch(batch: WriteBatch, id: string, status: string): void {
+    batch.update(this.db.collection(this.collection).doc(id), {
+      status,
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /**
+   * Cloud Functions: stage an atomic bid-count increment into a caller-owned WriteBatch.
+   */
+  incrementBidCountInBatch(
+    batch: WriteBatch,
+    productId: string,
+    currentBid: number,
+  ): void {
+    batch.update(this.db.collection(this.collection).doc(productId), {
+      currentBid,
+      bidCount: increment(1),
+      updatedAt: serverTimestamp(),
+    });
   }
 }
 

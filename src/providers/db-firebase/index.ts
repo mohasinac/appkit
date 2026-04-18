@@ -49,7 +49,10 @@ export { FirebaseRepository } from "./base";
 export { BaseRepository } from "./base.repository";
 export { FirebaseSieveRepository } from "./sieve";
 export { FirebaseRealtimeRepository } from "./realtime";
-export { RTDB_PATHS } from "./rtdb-paths";
+
+// Re-export RTDB paths
+import { RTDB_PATHS } from "./rtdb-paths";
+export { RTDB_PATHS };
 
 // IDbProvider implementation — registers Firebase as the database backend.
 // Wire once in providers.config.ts: db: firebaseDbProvider

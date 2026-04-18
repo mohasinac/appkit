@@ -11,8 +11,10 @@ import {
   ValidationError,
 } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
+import { getProviders } from "../../../contracts";
 import { orderRepository } from "../repository/orders.repository";
 import type { OrderDocument } from "../schemas";
+import type { TrackingInfo } from "../../../contracts/shipping";
 
 const CANCELLABLE_STATUSES = ["pending", "confirmed"] as const;
 
@@ -56,4 +58,21 @@ export async function getOrderByIdForUser(
   if (!order) throw new NotFoundError("Order not found");
   if (order.userId !== userId) throw new NotFoundError("Order not found");
   return order;
+}
+
+/**
+ * Retrieve live tracking info for an order via the registered IShippingProvider.
+ * Returns null when no shipping provider is registered or no trackingNumber exists.
+ */
+export async function getTrackingInfo(
+  trackingId: string,
+): Promise<TrackingInfo | null> {
+  const { shipping } = getProviders();
+  if (!shipping) {
+    serverLogger.warn(
+      "getTrackingInfo called but no shipping provider registered",
+    );
+    return null;
+  }
+  return shipping.trackShipment(trackingId);
 }

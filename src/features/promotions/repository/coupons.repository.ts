@@ -28,7 +28,8 @@ import {
 import type { CouponType } from "../types";
 import { USER_COLLECTION } from "../../auth/schemas";
 import { DatabaseError } from "../../../errors";
-import { increment } from "../../../contracts/field-ops";
+import { increment, serverTimestamp } from "../../../contracts/field-ops";
+import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 
 const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
 const COUPON_FIELDS = {
@@ -658,6 +659,29 @@ class CouponsRepository extends BaseRepository<CouponDocument> {
         maxPageSize: 200,
       },
     );
+  }
+
+  /**
+   * Cloud Functions: find active coupons whose validity period has expired.
+   */
+  async getExpiredActiveRefs(now: Date): Promise<DocumentReference[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where(COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE, "==", true)
+      .where(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "<=", now)
+      .limit(500)
+      .get();
+    return snap.docs.map((d) => d.ref as DocumentReference);
+  }
+
+  /**
+   * Cloud Functions: stage coupon deactivation into a caller-owned WriteBatch.
+   */
+  deactivateInBatch(batch: WriteBatch, ref: DocumentReference): void {
+    batch.update(ref as unknown as FirebaseFirestore.DocumentReference, {
+      [COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE]: false,
+      updatedAt: serverTimestamp(),
+    });
   }
 }
 

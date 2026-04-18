@@ -1,11 +1,12 @@
 export * from "./firestore";
 
 import { z } from "zod";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 export const cartItemMetaSchema = z.object({
   title: z.string(),
   price: z.number(),
-  currency: z.string().default("INR"),
+  currency: z.string().default(getDefaultCurrency()),
   slug: z.string().optional(),
   attributes: z.record(z.string()).optional(),
 });
@@ -33,6 +34,6 @@ export const cartItemSchema = z.object({
 export const cartSummarySchema = z.object({
   items: z.array(cartItemSchema),
   subtotal: z.number(),
-  currency: z.string().default("INR"),
+  currency: z.string().default(getDefaultCurrency()),
   itemCount: z.number(),
 });

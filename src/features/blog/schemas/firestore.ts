@@ -6,6 +6,13 @@ import { generateBlogPostId } from "../../../utils/id-generators";
 import type { MediaFieldInput, MediaField } from "../../media/types";
 import type { BlogPostStatus, BlogPostCategory } from "../types";
 
+/** Runtime-accessible blog post status values — use instead of bare string literals. */
+export const BlogPostStatusValues = {
+  DRAFT: "draft" as BlogPostStatus,
+  PUBLISHED: "published" as BlogPostStatus,
+  ARCHIVED: "archived" as BlogPostStatus,
+} as const;
+
 export interface BlogPostDocument {
   id: string;
   title: string;

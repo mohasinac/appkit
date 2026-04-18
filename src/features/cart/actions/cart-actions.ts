@@ -8,6 +8,7 @@
 import { serverLogger } from "../../../monitoring";
 import { cartRepository } from "../repository/cart.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import type {
   AddToCartInput,
   CartDocument,
@@ -59,7 +60,7 @@ export async function mergeGuestCart(
       productTitle: product.title,
       productImage: product.images?.[0] ?? "",
       price: product.price,
-      currency: product.currency ?? "INR",
+      currency: product.currency ?? getDefaultCurrency(),
       quantity: safeQty,
       sellerId: product.sellerId,
       sellerName: product.sellerName ?? "",

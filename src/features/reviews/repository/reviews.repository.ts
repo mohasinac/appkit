@@ -30,6 +30,11 @@ const REVIEW_FIELDS = {
   CREATED_AT: "createdAt",
 } as const;
 
+export interface ReviewRatingAggregate {
+  count: number;
+  avgRating: number;
+}
+
 class ReviewRepository extends BaseRepository<ReviewDocument> {
   constructor() {
     super(REVIEW_COLLECTION);
@@ -202,6 +207,48 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     });
 
     return distribution;
+  }
+
+  /**
+   * Cloud Functions compatibility: approved review count + average by product.
+   */
+  async getApprovedRatingAggregate(
+    productId: string,
+  ): Promise<ReviewRatingAggregate> {
+    const reviews = await this.findApprovedByProduct(productId);
+    if (reviews.length === 0) {
+      return { count: 0, avgRating: 0 };
+    }
+
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const count = reviews.length;
+    const avgRating = Math.round((sum / count) * 10) / 10;
+    return { count, avgRating };
+  }
+
+  /**
+   * Cloud Functions compatibility: approved review count + average by seller.
+   */
+  async getApprovedRatingAggregateBySeller(
+    sellerId: string,
+  ): Promise<ReviewRatingAggregate> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(REVIEW_FIELDS.SELLER_ID, "==", sellerId)
+      .where(REVIEW_FIELDS.STATUS, "==", "approved")
+      .get();
+
+    if (snapshot.empty) {
+      return { count: 0, avgRating: 0 };
+    }
+
+    const reviews = snapshot.docs.map((doc) =>
+      this.mapDoc<ReviewDocument>(doc),
+    );
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    const count = reviews.length;
+    const avgRating = Math.round((sum / count) * 10) / 10;
+    return { count, avgRating };
   }
 
   static readonly SIEVE_FIELDS = {

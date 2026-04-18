@@ -1,6 +1,7 @@
 import type { DashboardStats } from "../types";
 import { Div, Text, Grid } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
 interface StatCardProps {
   label: string;
@@ -55,7 +56,7 @@ export function DashboardStatsGrid({
     );
   }
 
-  const currency = stats.currency ?? "INR";
+  const currency = stats.currency ?? getDefaultCurrency();
   return (
     <Grid cols="statTiles">
       <StatCard

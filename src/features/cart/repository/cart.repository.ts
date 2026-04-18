@@ -1,5 +1,6 @@
 import "server-only";
 import { randomUUID } from "crypto";
+import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError } from "../../../errors";
 import {
@@ -250,6 +251,20 @@ export class CartRepository extends BaseRepository<CartDocument> {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
+  }
+
+  /**
+   * Cloud Functions: return refs of stale carts not updated within TTL.
+   */
+  async getStaleRefs(ttlDays = 30): Promise<DocumentReference[]> {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - ttlDays);
+    const snap = await this.db
+      .collection(this.collection)
+      .where("updatedAt", "<", cutoff)
+      .limit(500)
+      .get();
+    return snap.docs.map((d) => d.ref as DocumentReference);
   }
 }
 

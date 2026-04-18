@@ -257,6 +257,20 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     });
   }
 
+  /**
+   * Cloud Functions compatibility: pending/countered offers already expired.
+   */
+  async findExpiredActive(now: Date): Promise<OfferDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(OFFER_FIELDS.STATUS, "in", ["pending", "countered"])
+      .where(OFFER_FIELDS.EXPIRES_AT, "<=", now)
+      .limit(500)
+      .get();
+
+    return snapshot.docs.map((doc) => this.mapDoc<OfferDocument>(doc));
+  }
+
   async expireMany(offerIds: string[]): Promise<void> {
     const batch = this.db.batch();
     const now = new Date();

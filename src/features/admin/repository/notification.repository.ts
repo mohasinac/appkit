@@ -1,3 +1,5 @@
+import "server-only";
+
 /**
  * Notification Repository
  *
@@ -5,6 +7,7 @@
  * Used exclusively by server-side API routes (Firebase Admin SDK).
  */
 
+import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -16,6 +19,7 @@ import {
   NOTIFICATION_FIELDS,
 } from "../schemas";
 import { serverLogger } from "../../../monitoring";
+import { serverTimestamp } from "../../../contracts/field-ops";
 import type {
   SieveModel,
   FirebaseSieveFields,
@@ -249,6 +253,42 @@ class NotificationRepository extends BaseRepository<NotificationDocument> {
       });
       throw error;
     }
+  }
+
+  /**
+   * Cloud Functions: return refs of old read notifications for TTL-based cleanup.
+   */
+  async getOldReadRefs(ttlDays = 30): Promise<DocumentReference[]> {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - ttlDays);
+    const snap = await this.getCollection()
+      .where(NOTIFICATION_FIELDS.IS_READ, "==", true)
+      .where(NOTIFICATION_FIELDS.CREATED_AT, "<", cutoff)
+      .limit(500)
+      .get();
+    return snap.docs.map((d) => d.ref as DocumentReference);
+  }
+
+  /**
+   * Cloud Functions: stage notification creation into a caller-owned WriteBatch.
+   * Returns the new DocumentReference synchronously for chaining.
+   */
+  createInBatch(
+    batch: WriteBatch,
+    input: NotificationCreateInput,
+  ): DocumentReference {
+    const ref = this.getCollection().doc() as unknown as DocumentReference;
+    batch.create(
+      ref as unknown as FirebaseFirestore.DocumentReference,
+      prepareForFirestore({
+        id: ref.id,
+        ...input,
+        isRead: false,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      }),
+    );
+    return ref;
   }
 }
 

@@ -466,6 +466,80 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
       );
     }
   }
+
+  /**
+   * Cloud Functions: stage metric increments into a caller-owned WriteBatch.
+   * The caller must have already fetched `parentIds` for the category.
+   */
+  updateMetricsInBatch(
+    batch: import("firebase-admin/firestore").WriteBatch,
+    categoryId: string,
+    parentIds: string[],
+    productDelta: number,
+    auctionDelta: number,
+    productId?: string,
+  ): void {
+    const now = new Date();
+    const colRef = this.db.collection(this.collection);
+
+    const directRef = colRef.doc(categoryId);
+    const directUpdate: Record<string, unknown> = {
+      "metrics.productCount": increment(productDelta),
+      "metrics.auctionCount": increment(auctionDelta),
+      "metrics.totalProductCount": increment(productDelta),
+      "metrics.totalAuctionCount": increment(auctionDelta),
+      "metrics.totalItemCount": increment(productDelta + auctionDelta),
+      "metrics.lastUpdated": now,
+      updatedAt: now,
+    };
+
+    if (productId && productDelta !== 0) {
+      directUpdate["metrics.productIds"] =
+        productDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+    }
+    if (productId && auctionDelta !== 0) {
+      directUpdate["metrics.auctionIds"] =
+        auctionDelta > 0 ? arrayUnion(productId) : arrayRemove(productId);
+    }
+
+    batch.update(directRef, directUpdate);
+
+    for (const ancestorId of parentIds) {
+      batch.update(colRef.doc(ancestorId), {
+        "metrics.totalProductCount": increment(productDelta),
+        "metrics.totalAuctionCount": increment(auctionDelta),
+        "metrics.totalItemCount": increment(productDelta + auctionDelta),
+        "metrics.lastUpdated": now,
+        updatedAt: now,
+      });
+    }
+  }
+
+  /**
+   * Cloud Functions: full-overwrite category metrics (used by nightly reconciliation job).
+   */
+  async setMetrics(
+    categoryId: string,
+    productCount: number,
+    auctionCount: number,
+    productIds: string[],
+    auctionIds: string[],
+  ): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(categoryId)
+      .update({
+        "metrics.productCount": productCount,
+        "metrics.auctionCount": auctionCount,
+        "metrics.totalProductCount": productCount,
+        "metrics.totalAuctionCount": auctionCount,
+        "metrics.totalItemCount": productCount + auctionCount,
+        "metrics.productIds": productIds,
+        "metrics.auctionIds": auctionIds,
+        "metrics.lastUpdated": new Date(),
+        updatedAt: new Date(),
+      });
+  }
 }
 
 export const categoriesRepository = new CategoriesRepository();
