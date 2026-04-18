@@ -1,0 +1,61 @@
+/* FilterDrawer — slide-out filter panel with trigger badge, footer actions */
+
+.appkit-filter-drawer__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.5rem;
+  border-color: #d4d4d8;
+  color: #3f3f46;
+}
+
+:is(.dark) .appkit-filter-drawer__trigger {
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+.appkit-filter-drawer__trigger:hover {
+  background: #f4f4f5;
+}
+
+:is(.dark) .appkit-filter-drawer__trigger:hover {
+  background: #1e293b;
+}
+
+.appkit-filter-drawer__badge {
+  display: inline-flex;
+  height: 1.25rem;
+  min-width: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--color-primary);
+  padding-inline: 0.25rem;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.appkit-filter-drawer__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-top: 1px solid #e4e4e7;
+  padding: 0.75rem 1rem;
+}
+
+:is(.dark) .appkit-filter-drawer__footer {
+  border-top-color: #334155;
+}
+
+.appkit-filter-drawer__body {
+  & > * + * {
+    border-top: 1px solid #e4e4e7;
+  }
+}
+
+:is(.dark) .appkit-filter-drawer__body {
+  & > * + * {
+    border-top-color: #334155;
+  }
+}

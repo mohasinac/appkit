@@ -1,45 +1,31 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { SlottedListingView } from "../../../ui";
+import type { SlottedListingViewProps } from "../../../ui";
 
 export interface UserOrdersViewLabels {
   title?: string;
 }
 
-export interface UserOrdersViewProps {
+export interface UserOrdersViewProps extends Omit<
+  SlottedListingViewProps,
+  "renderTable"
+> {
   labels?: UserOrdersViewLabels;
-  renderTabs?: () => React.ReactNode;
+  /** @deprecated Use `renderSearch` instead. */
   renderToolbar?: () => React.ReactNode;
   renderTable?: () => React.ReactNode;
-  renderPagination?: () => React.ReactNode;
-  renderActiveFilters?: () => React.ReactNode;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function UserOrdersView({
-  labels = {},
-  renderTabs,
   renderToolbar,
   renderTable,
-  renderPagination,
-  renderActiveFilters,
-  isLoading = false,
-  className = "",
+  ...props
 }: UserOrdersViewProps) {
   return (
-    <Div className={className}>
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      )}
-      {renderTabs?.()}
-      {renderToolbar?.()}
-      {renderActiveFilters?.()}
-      {renderTable?.()}
-      {renderPagination?.()}
-    </Div>
+    <SlottedListingView
+      {...props}
+      renderSearch={renderToolbar ? () => renderToolbar() : props.renderSearch}
+      renderTable={renderTable ?? (() => null)}
+    />
   );
 }

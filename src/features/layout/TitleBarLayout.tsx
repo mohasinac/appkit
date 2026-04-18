@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { BlockHeader, Button, Div, Span } from "../../ui";
+import { BlockHeader, Button, Div, Row, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -93,9 +93,9 @@ export function TitleBarLayout({
       )}
 
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
-        <Div className="flex items-center justify-between h-12">
+        <Row justify="between" gap="none" className="h-12">
           {/* Left: hamburger (mobile) + logo */}
-          <Div className="flex items-center gap-3">
+          <Row gap="3">
             {!hideSidebarToggle && (
               <Button
                 type="button"
@@ -172,13 +172,13 @@ export function TitleBarLayout({
                 brandName
               )}
             </Link>
-          </Div>
+          </Row>
 
           {/* Centre: nav slot (desktop only) */}
           {navSlot && <Div className="hidden md:flex">{navSlot}</Div>}
 
           {/* Right: actions */}
-          <Div className="flex items-center gap-1">
+          <Row gap="xs">
             {/* Promotions */}
             {promotionsHref && (
               <Link
@@ -333,8 +333,8 @@ export function TitleBarLayout({
                 )}
               </Link>
             )}
-          </Div>
-        </Div>
+          </Row>
+        </Row>
       </Div>
     </BlockHeader>
   );

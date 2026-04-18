@@ -1,24 +1,22 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
 export interface UserNotificationsViewLabels {
   title?: string;
 }
 
-export interface UserNotificationsViewProps {
+export interface UserNotificationsViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: UserNotificationsViewLabels;
   renderToolbar?: () => React.ReactNode;
   renderFilters?: () => React.ReactNode;
   renderActiveFilters?: () => React.ReactNode;
   renderBulkActions?: () => React.ReactNode;
   renderList?: () => React.ReactNode;
-  renderEmpty?: () => React.ReactNode;
   renderPagination?: () => React.ReactNode;
-  isEmpty?: boolean;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function UserNotificationsView({
@@ -28,25 +26,21 @@ export function UserNotificationsView({
   renderActiveFilters,
   renderBulkActions,
   renderList,
-  renderEmpty,
   renderPagination,
-  isEmpty = false,
-  isLoading = false,
-  className = "",
+  ...rest
 }: UserNotificationsViewProps) {
   return (
-    <Div className={className}>
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      )}
-      {renderToolbar?.()}
-      {renderFilters?.()}
-      {renderActiveFilters?.()}
-      {renderBulkActions?.()}
-      {isEmpty ? renderEmpty?.() : renderList?.()}
-      {renderPagination?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[
+        renderToolbar?.(),
+        renderFilters?.(),
+        renderActiveFilters?.(),
+        renderBulkActions?.(),
+        renderList?.(),
+        renderPagination?.(),
+      ]}
+    />
   );
 }

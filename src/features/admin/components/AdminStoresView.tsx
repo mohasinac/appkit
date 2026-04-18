@@ -1,29 +1,9 @@
-"use client";
-
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingViewShell } from "../../../ui";
+import type { ListingViewShellProps } from "../../../ui";
 
-export interface AdminStoresViewProps extends Omit<
-  ListingLayoutProps,
-  "children"
-> {
-  renderConfirmModal?: () => React.ReactNode;
-  children: React.ReactNode;
-}
+export interface AdminStoresViewProps extends ListingViewShellProps {}
 
-export function AdminStoresView({
-  renderConfirmModal,
-  children,
-  isDashboard = true,
-  ...listingProps
-}: AdminStoresViewProps) {
-  return (
-    <>
-      <ListingLayout {...listingProps} isDashboard={isDashboard}>
-        {children}
-      </ListingLayout>
-      {renderConfirmModal?.()}
-    </>
-  );
+export function AdminStoresView(props: AdminStoresViewProps) {
+  return <ListingViewShell {...props} />;
 }

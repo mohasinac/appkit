@@ -1,6 +1,9 @@
-import type { LoyaltyConfig } from "./index";
+import type { LoyaltyConfig } from "./loyalty-config";
 
-export function calculateCoinsEarned(orderTotal: number, config: LoyaltyConfig): number {
+export function calculateCoinsEarned(
+  orderTotal: number,
+  config: LoyaltyConfig,
+): number {
   if (!config.active || orderTotal <= 0) return 0;
   return Math.floor(orderTotal * config.coinsPerRupee);
 }
@@ -10,8 +13,11 @@ export function calculateMaxRedeemable(
   orderTotal: number,
   config: LoyaltyConfig,
 ): number {
-  if (!config.active || userCoins < config.minCoinsToRedeem || orderTotal <= 0) return 0;
-  const maxDiscountRupees = Math.floor((orderTotal * config.maxRedeemPercent) / 100);
+  if (!config.active || userCoins < config.minCoinsToRedeem || orderTotal <= 0)
+    return 0;
+  const maxDiscountRupees = Math.floor(
+    (orderTotal * config.maxRedeemPercent) / 100,
+  );
   const maxCoinsByPercent = Math.floor(maxDiscountRupees / config.rupeePerCoin);
   return Math.min(userCoins, maxCoinsByPercent);
 }

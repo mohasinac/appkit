@@ -1,29 +1,9 @@
-"use client";
-
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingViewShell } from "../../../ui";
+import type { ListingViewShellProps } from "../../../ui";
 
-export interface AdminOrdersViewProps extends Omit<
-  ListingLayoutProps,
-  "children"
-> {
-  renderDrawer?: () => React.ReactNode;
-  children: React.ReactNode;
-}
+export interface AdminOrdersViewProps extends ListingViewShellProps {}
 
-export function AdminOrdersView({
-  renderDrawer,
-  children,
-  isDashboard = true,
-  ...listingProps
-}: AdminOrdersViewProps) {
-  return (
-    <>
-      <ListingLayout {...listingProps} isDashboard={isDashboard}>
-        {children}
-      </ListingLayout>
-      {renderDrawer?.()}
-    </>
-  );
+export function AdminOrdersView(props: AdminOrdersViewProps) {
+  return <ListingViewShell {...props} />;
 }

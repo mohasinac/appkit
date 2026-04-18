@@ -13,13 +13,20 @@ export interface AvatarDisplayProps {
   email?: string | null;
 }
 
-const SIZE_CLASS: Record<NonNullable<AvatarDisplayProps["size"]>, string> = {
-  sm: "h-8 w-8",
-  md: "h-12 w-12",
-  lg: "h-16 w-16",
-  xl: "h-24 w-24",
-  "2xl": "h-32 w-32",
-};
+const UI_AVATAR_DISPLAY = {
+  base: "appkit-avatar-display",
+  sizes: {
+    sm: "appkit-avatar-display--sm",
+    md: "appkit-avatar-display--md",
+    lg: "appkit-avatar-display--lg",
+    xl: "appkit-avatar-display--xl",
+    "2xl": "appkit-avatar-display--2xl",
+  },
+  initials: "appkit-avatar-display--initials",
+  initialsText: "appkit-avatar-display__initials",
+  image: "appkit-avatar-display--image",
+  imageInner: "appkit-avatar-display__image",
+} as const;
 
 export function AvatarDisplay({
   cropData,
@@ -46,9 +53,16 @@ export function AvatarDisplay({
       <div
         role="img"
         aria-label={alt}
-        className={`${SIZE_CLASS[size]} ${className} flex items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-blue-500 to-indigo-600`}
+        className={[
+          UI_AVATAR_DISPLAY.base,
+          UI_AVATAR_DISPLAY.sizes[size],
+          UI_AVATAR_DISPLAY.initials,
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
-        <Span className="select-none font-semibold text-white">{initials}</Span>
+        <Span className={UI_AVATAR_DISPLAY.initialsText}>{initials}</Span>
       </div>
     );
   }
@@ -57,10 +71,17 @@ export function AvatarDisplay({
     <div
       role="img"
       aria-label={alt}
-      className={`${SIZE_CLASS[size]} ${className} relative overflow-hidden rounded-full bg-zinc-100 dark:bg-slate-800`}
+      className={[
+        UI_AVATAR_DISPLAY.base,
+        UI_AVATAR_DISPLAY.sizes[size],
+        UI_AVATAR_DISPLAY.image,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       <div
-        className="absolute h-full w-full -translate-x-1/2 -translate-y-1/2 bg-center bg-no-repeat"
+        className={UI_AVATAR_DISPLAY.imageInner}
         style={{
           backgroundImage: `url(${cropData.url})`,
           backgroundSize: "cover",

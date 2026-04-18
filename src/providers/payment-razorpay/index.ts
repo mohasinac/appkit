@@ -216,7 +216,11 @@ async function getRazorpayInstance(): Promise<Razorpay> {
   });
 }
 
-/** Create a Razorpay order. Credentials resolved from Firestore → env. */
+/**
+ * Create a Razorpay order. Credentials resolved from Firestore → env.
+ * @deprecated Use `getProviders().payment.createOrder()` via `IPaymentProvider` instead.
+ * @internal Will be removed in a future version.
+ */
 export async function createRazorpayOrder(
   opts: RazorpayOrderOptions,
 ): Promise<RazorpayOrder> {
@@ -230,7 +234,11 @@ export async function createRazorpayOrder(
   return order as unknown as RazorpayOrder;
 }
 
-/** Fetch an existing Razorpay order by ID. */
+/**
+ * Fetch an existing Razorpay order by ID.
+ * @deprecated Use `getProviders().payment.getOrder()` via `IPaymentProvider` instead.
+ * @internal Will be removed in a future version.
+ */
 export async function fetchRazorpayOrder(
   orderId: string,
 ): Promise<RazorpayOrder> {
@@ -242,6 +250,8 @@ export async function fetchRazorpayOrder(
 /**
  * Verify Razorpay payment signature — auto-resolves key secret.
  * Returns false if credentials are unavailable.
+ * @deprecated Use `getProviders().payment.verifyWebhook()` via `IPaymentProvider` instead.
+ * @internal Will be removed in a future version.
  */
 export async function verifyPaymentSignatureWithKeys(
   params: RazorpayPaymentResult,
@@ -254,6 +264,8 @@ export async function verifyPaymentSignatureWithKeys(
 /**
  * Verify Razorpay webhook signature — auto-resolves webhook secret.
  * Uses HMAC-SHA256 over raw body.
+ * @deprecated Use `getProviders().payment.verifyWebhook()` via `IPaymentProvider` instead.
+ * @internal Will be removed in a future version.
  */
 export async function verifyWebhookSignature(
   rawBody: string,
@@ -273,7 +285,11 @@ export async function verifyWebhookSignature(
   );
 }
 
-/** Create a full or partial refund for a Razorpay payment. */
+/**
+ * Create a full or partial refund for a Razorpay payment.
+ * @deprecated Use `getProviders().payment.refund()` via `IPaymentProvider` instead.
+ * @internal Will be removed in a future version.
+ */
 export async function createRazorpayRefund(
   paymentId: string,
   amountPaise?: number,

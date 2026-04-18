@@ -47,7 +47,7 @@ export function ViewReviewModal({
     <Modal isOpen={isOpen} onClose={onClose} title="Review Details">
       <Div className="space-y-4">
         {/* Author + rating */}
-        <Div className="flex items-center gap-3">
+        <Row className="gap-3">
           {review.userAvatar ? (
             <Div
               role="img"
@@ -61,7 +61,7 @@ export function ViewReviewModal({
             </Div>
           )}
           <Div>
-            <Div className="flex items-center gap-2">
+            <Row className="gap-2">
               <Text className="font-medium text-neutral-900 dark:text-white">
                 {review.userName}
               </Text>
@@ -70,17 +70,17 @@ export function ViewReviewModal({
                   ✓ Verified purchase
                 </Text>
               )}
-            </Div>
-            <Div className="flex items-center gap-2 mt-0.5">
+            </Row>
+            <Row className="gap-2 mt-0.5">
               <StarRating value={review.rating} size="sm" readOnly />
               {date && (
                 <Text className="text-xs text-neutral-400 dark:text-zinc-500">
                   {date}
                 </Text>
               )}
-            </Div>
+            </Row>
           </Div>
-        </Div>
+        </Row>
 
         {/* Title + comment */}
         {review.title && (

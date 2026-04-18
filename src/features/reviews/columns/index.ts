@@ -1,4 +1,10 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderRating,
+  renderBoolean,
+  renderCount,
+} from "../../../ui/columns";
 import type { Review } from "../types";
 
 /**
@@ -45,13 +51,5 @@ export const reviewAdminColumns: TableColumn<Review>[] = [
 export function buildReviewColumns<T extends Review = Review>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = reviewAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(reviewAdminColumns as TableColumn<T>[], opts);
 }

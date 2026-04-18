@@ -1,10 +1,6 @@
-﻿export interface LoyaltyConfig {
-  coinsPerRupee: number;
-  rupeePerCoin: number;
-  minCoinsToRedeem: number;
-  maxRedeemPercent: number;
-  active: boolean;
-}
+﻿import type { LoyaltyConfig } from "./loyalty-config";
+
+export type { LoyaltyConfig } from "./loyalty-config";
 
 export type CoinReason = "purchase" | "redemption" | "admin-grant" | "refund";
 
@@ -40,4 +36,9 @@ export interface RedeemCoinsResult {
   discountAmount: number;
 }
 
-export { calculateCoinsEarned, calculateMaxRedeemable, coinsToRupees, applyCoinsToOrder } from "./loyalty-math";
+export {
+  calculateCoinsEarned,
+  calculateMaxRedeemable,
+  coinsToRupees,
+  applyCoinsToOrder,
+} from "./loyalty-math";

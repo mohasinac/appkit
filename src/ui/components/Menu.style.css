@@ -1,0 +1,6 @@
+/* Menu — delegates to Dropdown; no additional styles needed */
+/* Exists for style contract compliance. See Dropdown.style.css for actual styles. */
+
+.appkit-menu {
+  /* Inherits all styling from Dropdown */
+}

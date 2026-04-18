@@ -6,6 +6,7 @@ import {
   Input,
   Label,
   Select,
+  Stack,
   TagInput,
   Text,
   Textarea,
@@ -102,9 +103,9 @@ export function BlogPostForm({
   };
 
   return (
-    <Div className="space-y-5">
+    <Stack gap="5">
       <Div className="grid gap-4 md:grid-cols-2">
-        <Div className="space-y-1.5">
+        <Stack gap="xs">
           <Label htmlFor="blog-post-title">{labels.title}</Label>
           <Input
             id="blog-post-title"
@@ -112,9 +113,9 @@ export function BlogPostForm({
             onChange={(event) => update({ title: event.target.value })}
             disabled={isReadonly}
           />
-        </Div>
+        </Stack>
 
-        <Div className="space-y-1.5">
+        <Stack gap="xs">
           <Label htmlFor="blog-post-slug">{labels.slug}</Label>
           <Input
             id="blog-post-slug"
@@ -122,10 +123,10 @@ export function BlogPostForm({
             onChange={(event) => update({ slug: event.target.value })}
             disabled={isReadonly}
           />
-        </Div>
+        </Stack>
       </Div>
 
-      <Div className="space-y-1.5">
+      <Stack gap="xs">
         <Label htmlFor="blog-post-excerpt">{labels.excerpt}</Label>
         <Textarea
           id="blog-post-excerpt"
@@ -134,9 +135,9 @@ export function BlogPostForm({
           rows={3}
           disabled={isReadonly}
         />
-      </Div>
+      </Stack>
 
-      <Div className="space-y-1.5">
+      <Stack gap="xs">
         <Label>{labels.content}</Label>
         {renderContentField ? (
           renderContentField({
@@ -154,7 +155,7 @@ export function BlogPostForm({
             disabled={isReadonly}
           />
         )}
-      </Div>
+      </Stack>
 
       <MediaUploadField
         label={labels.coverImage}
@@ -221,7 +222,7 @@ export function BlogPostForm({
           onChange={(tags) => update({ tags })}
           disabled={isReadonly}
         />
-        <Div className="space-y-1.5">
+        <Stack gap="xs">
           <Label htmlFor="blog-post-read-time">{labels.readTime}</Label>
           <Input
             id="blog-post-read-time"
@@ -234,7 +235,7 @@ export function BlogPostForm({
             }
             disabled={isReadonly}
           />
-        </Div>
+        </Stack>
       </Div>
 
       <Checkbox
@@ -249,6 +250,6 @@ export function BlogPostForm({
           {coverImageUrl}
         </Text>
       )}
-    </Div>
+    </Stack>
   );
 }

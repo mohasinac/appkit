@@ -9,6 +9,7 @@ import {
   Input,
   Label,
   Li,
+  Row,
   Span,
   Text,
   Textarea,
@@ -330,8 +331,10 @@ export function CharacterHotspotForm({
             Active (show on homepage)
           </Label>
 
-          <Div
-            className="flex items-center justify-end gap-3 border-t pt-4"
+          <Row
+            justify="end"
+            gap="sm"
+            className="border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
             {(initial?.pins?.length ?? 0) > 0 && (
@@ -361,7 +364,7 @@ export function CharacterHotspotForm({
             >
               Next: Place Pins →
             </Button>
-          </Div>
+          </Row>
         </Div>
       )}
 
@@ -537,8 +540,9 @@ export function CharacterHotspotForm({
             </Text>
           )}
 
-          <Div
-            className="flex items-center justify-between border-t pt-4"
+          <Row
+            justify="between"
+            className="border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button
@@ -550,7 +554,7 @@ export function CharacterHotspotForm({
             >
               ← Back
             </Button>
-            <Div className="flex items-center gap-3">
+            <Row gap="sm">
               {pins.length > 0 && (
                 <Button
                   type="button"
@@ -579,8 +583,8 @@ export function CharacterHotspotForm({
               >
                 Continue: Add Details →
               </Button>
-            </Div>
-          </Div>
+            </Row>
+          </Row>
         </Div>
       )}
 
@@ -710,7 +714,7 @@ export function CharacterHotspotForm({
             ))}
           </Div>
 
-          <Div className="flex items-end gap-3">
+          <Row align="end" gap="sm">
             <Div className="flex-1 flex flex-col gap-1">
               <Label className="text-sm font-bold">Accent Colour (hex)</Label>
               <Input
@@ -734,10 +738,11 @@ export function CharacterHotspotForm({
               style={{ borderColor: "var(--border-ink)" }}
               title="Pick colour"
             />
-          </Div>
+          </Row>
 
-          <Div
-            className="flex items-center justify-between border-t pt-4"
+          <Row
+            justify="between"
+            className="border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button
@@ -749,7 +754,7 @@ export function CharacterHotspotForm({
             >
               ← Back
             </Button>
-            <Div className="flex items-center gap-3">
+            <Row gap="sm">
               <Button
                 type="button"
                 disabled={!draftName || !draftHref}
@@ -783,8 +788,8 @@ export function CharacterHotspotForm({
               >
                 Save Pin &amp; Add Another →
               </Button>
-            </Div>
-          </Div>
+            </Row>
+          </Row>
         </Div>
       )}
 
@@ -797,7 +802,7 @@ export function CharacterHotspotForm({
             background: "var(--surface-elevated)",
           }}
         >
-          <Div className="flex items-center justify-between">
+          <Row justify="between">
             <Heading level={2} className="text-lg font-bold">
               Review &amp; Save
             </Heading>
@@ -807,7 +812,7 @@ export function CharacterHotspotForm({
             >
               {pins.length} pin{pins.length !== 1 ? "s" : ""}
             </Span>
-          </Div>
+          </Row>
 
           {/* Preview image */}
           <Div
@@ -863,41 +868,43 @@ export function CharacterHotspotForm({
               style={{ borderColor: "var(--border-ink)" }}
             >
               {pins.map((pin, i) => (
-                <Li key={pin.id} className="flex items-center gap-3 px-4 py-3">
-                  <Span
-                    className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                    style={{ background: pin.accent || "#E8001C" }}
-                  >
-                    {i + 1}
-                  </Span>
-                  <Div className="min-w-0 flex-1">
-                    <Text className="truncate text-sm font-bold">
-                      {pin.name || (
-                        <Span
-                          className="italic"
-                          style={{ color: "var(--color-muted)" }}
-                        >
-                          Unnamed
-                        </Span>
-                      )}
-                    </Text>
-                    <Text
-                      className="text-xs"
-                      style={{ color: "var(--color-muted)" }}
+                <Li key={pin.id} className="px-4 py-3">
+                  <Row gap="sm">
+                    <Span
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+                      style={{ background: pin.accent || "#E8001C" }}
                     >
-                      {pin.universe} · {pin.xPct.toFixed(0)}%,{" "}
-                      {pin.yPct.toFixed(0)}%
-                    </Text>
-                  </Div>
-                  <Button
-                    type="button"
-                    onClick={() => deletePin(pin.id)}
-                    variant="ghost"
-                    className="shrink-0 rounded p-1 text-xs text-red-500 hover:bg-red-50"
-                    title="Remove pin"
-                  >
-                    ✕
-                  </Button>
+                      {i + 1}
+                    </Span>
+                    <Div className="min-w-0 flex-1">
+                      <Text className="truncate text-sm font-bold">
+                        {pin.name || (
+                          <Span
+                            className="italic"
+                            style={{ color: "var(--color-muted)" }}
+                          >
+                            Unnamed
+                          </Span>
+                        )}
+                      </Text>
+                      <Text
+                        className="text-xs"
+                        style={{ color: "var(--color-muted)" }}
+                      >
+                        {pin.universe} · {pin.xPct.toFixed(0)}%,{" "}
+                        {pin.yPct.toFixed(0)}%
+                      </Text>
+                    </Div>
+                    <Button
+                      type="button"
+                      onClick={() => deletePin(pin.id)}
+                      variant="ghost"
+                      className="shrink-0 rounded p-1 text-xs text-red-500 hover:bg-red-50"
+                      title="Remove pin"
+                    >
+                      ✕
+                    </Button>
+                  </Row>
                 </Li>
               ))}
             </Ul>
@@ -961,8 +968,9 @@ export function CharacterHotspotForm({
             </Div>
           </details>
 
-          <Div
-            className="flex items-center justify-between border-t pt-4"
+          <Row
+            justify="between"
+            className="border-t pt-4"
             style={{ borderColor: "var(--border-ink)" }}
           >
             <Button
@@ -994,7 +1002,7 @@ export function CharacterHotspotForm({
             >
               {saving ? "Saving…" : "Save to Database"}
             </Button>
-          </Div>
+          </Row>
         </Div>
       )}
     </Div>

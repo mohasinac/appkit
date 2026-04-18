@@ -11,6 +11,7 @@ import {
   BaseListingCard,
   Button,
   Div,
+  Row,
   Span,
   Text,
   TextLink,
@@ -144,14 +145,14 @@ export function MarketplacePreorderCard({
           </Text>
         </TextLink>
 
-        <Div className="mt-1 flex items-center justify-between gap-2">
+        <Row justify="between" className="mt-1 gap-2">
           <Text className="text-sm font-semibold text-zinc-900">
             {formatCurrency(product.price, product.currency)}
           </Text>
           {shipDate && <PreorderBadge shipDate={shipDate} />}
-        </Div>
+        </Row>
 
-        <Div className="mt-2 flex items-center justify-between gap-2">
+        <Row justify="between" className="mt-2 gap-2">
           <Button
             type="button"
             variant="primary"
@@ -177,7 +178,7 @@ export function MarketplacePreorderCard({
               {inWishlist ? "♥" : "♡"}
             </Button>
           ) : null}
-        </Div>
+        </Row>
       </BaseListingCard.Info>
     </BaseListingCard>
   );

@@ -38,8 +38,8 @@ export interface FailedCheckoutDocument {
 export interface FailedPaymentDocument {
   id: string;
   uid: string;
-  razorpayOrderId?: string;
-  razorpayPaymentId?: string;
+  gatewayOrderId?: string;
+  gatewayPaymentId?: string;
   /** Amount in smallest currency unit (e.g. paise). */
   amountRs?: number;
   addressId?: string;

@@ -10,6 +10,20 @@ import React, {
   useState,
 } from "react";
 
+const UI_DROPDOWN = {
+  root: "appkit-dropdown",
+  menu: "appkit-dropdown__menu",
+  menuLeft: "appkit-dropdown__menu--left",
+  menuRight: "appkit-dropdown__menu--right",
+  item: "appkit-dropdown__item",
+  itemActive: "appkit-dropdown__item--active",
+  itemDestructive: "appkit-dropdown__item--destructive",
+  composedMenu: "appkit-dropdown__composed-menu",
+  composedItem: "appkit-dropdown__composed-item",
+  separator: "appkit-dropdown__separator",
+  trigger: "appkit-dropdown__trigger",
+} as const;
+
 export interface DropdownMenuItem {
   id?: string;
   label: React.ReactNode;
@@ -134,9 +148,7 @@ export function Dropdown({
     >
       <div
         ref={containerRef}
-        className={["relative inline-block", className]
-          .filter(Boolean)
-          .join(" ")}
+        className={[UI_DROPDOWN.root, className].filter(Boolean).join(" ")}
         onKeyDown={onKeyDown}
         onClick={() => {
           if (trigger) return;
@@ -164,9 +176,8 @@ export function Dropdown({
           <div
             role="menu"
             className={[
-              "absolute z-50 mt-2 min-w-[180px] rounded-lg border border-zinc-200",
-              "bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-900",
-              align === "left" ? "left-0" : "right-0",
+              UI_DROPDOWN.menu,
+              align === "left" ? UI_DROPDOWN.menuLeft : UI_DROPDOWN.menuRight,
               menuClassName,
             ]
               .filter(Boolean)
@@ -183,12 +194,9 @@ export function Dropdown({
                   type="button"
                   disabled={isDisabled}
                   className={[
-                    "flex w-full items-center rounded-md px-3 py-2 text-left text-sm transition-colors",
-                    isActive ? "bg-zinc-100 dark:bg-slate-800" : "",
-                    item.destructive
-                      ? "text-red-600 dark:text-red-400"
-                      : "text-zinc-700 dark:text-slate-200",
-                    isDisabled ? "cursor-not-allowed opacity-50" : "",
+                    UI_DROPDOWN.item,
+                    isActive ? UI_DROPDOWN.itemActive : "",
+                    item.destructive ? UI_DROPDOWN.itemDestructive : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
@@ -218,7 +226,7 @@ export function DropdownTrigger({
   children: React.ReactNode;
 }) {
   return (
-    <div className={["cursor-pointer", className ?? ""].join(" ")}>
+    <div className={[UI_DROPDOWN.trigger, className ?? ""].join(" ")}>
       {children}
     </div>
   );
@@ -237,11 +245,7 @@ export function DropdownMenu({
   return (
     <div
       role="menu"
-      className={[
-        "absolute right-0 z-50 mt-1 min-w-[160px] rounded-lg border border-zinc-200",
-        "bg-white py-1 shadow-lg dark:border-slate-700 dark:bg-slate-900",
-        className ?? "",
-      ].join(" ")}
+      className={[UI_DROPDOWN.composedMenu, className ?? ""].join(" ")}
       onClick={(event) => event.stopPropagation()}
     >
       {children}
@@ -266,11 +270,7 @@ export function DropdownItem({
     <button
       type="button"
       disabled={disabled}
-      className={[
-        "flex w-full items-center rounded-md px-3 py-2 text-left text-sm",
-        "text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:text-slate-200 dark:hover:bg-slate-800",
-        className ?? "",
-      ].join(" ")}
+      className={[UI_DROPDOWN.composedItem, className ?? ""].join(" ")}
       onClick={() => {
         onClick?.();
         close();
@@ -282,14 +282,7 @@ export function DropdownItem({
 }
 
 export function DropdownSeparator({ className }: { className?: string }) {
-  return (
-    <div
-      className={[
-        "my-1 border-t border-zinc-200 dark:border-slate-700",
-        className ?? "",
-      ].join(" ")}
-    />
-  );
+  return <div className={[UI_DROPDOWN.separator, className ?? ""].join(" ")} />;
 }
 
 export default Dropdown;

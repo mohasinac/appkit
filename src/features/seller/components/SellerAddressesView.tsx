@@ -1,15 +1,16 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface SellerAddressesViewProps {
+export interface SellerAddressesViewProps extends Omit<
+  StackedViewShellProps,
+  "sections" | "renderHeader"
+> {
   labels?: { title?: string; addButton?: string };
   renderHeader?: (onAdd: () => void) => React.ReactNode;
   renderAddressList: (isLoading: boolean) => React.ReactNode;
   renderModal?: () => React.ReactNode;
   isLoading?: boolean;
-  className?: string;
 }
 
 export function SellerAddressesView({
@@ -18,15 +19,15 @@ export function SellerAddressesView({
   renderAddressList,
   renderModal,
   isLoading = false,
-  className = "",
+  ...rest
 }: SellerAddressesViewProps) {
   return (
-    <Div className={className}>
-      {renderHeader ? renderHeader(() => {}) : labels.title ? (
-        <Heading level={1} className="text-2xl font-bold mb-6">{labels.title}</Heading>
-      ) : null}
-      {renderAddressList(isLoading)}
-      {renderModal?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      renderHeader={renderHeader ? () => renderHeader(() => {}) : undefined}
+      sections={[renderAddressList(isLoading)]}
+      overlays={renderModal?.()}
+    />
   );
 }

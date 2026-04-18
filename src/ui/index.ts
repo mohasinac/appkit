@@ -1,5 +1,22 @@
 import "./components/index.style.css";
 
+// ─── Column utilities ─────────────────────────────────────────────────────────
+export {
+  buildColumns,
+  createColumnBuilder,
+  renderBoolean,
+  renderCurrency,
+  renderCurrencyCompact,
+  renderCount,
+  renderNullable,
+  renderRating,
+} from "./columns";
+export type {
+  BooleanRenderOpts,
+  RatingMode,
+  RatingRenderOpts,
+} from "./columns";
+
 // ─── Semantic HTML wrappers ───────────────────────────────────────────────────
 export type {
   SectionProps,
@@ -347,6 +364,27 @@ export type {
   ListingLayoutLabels,
 } from "./components/ListingLayout";
 export { ListingLayout } from "./components/ListingLayout";
+
+export type { ListingViewShellProps } from "./components/ListingViewShell";
+export { ListingViewShell } from "./components/ListingViewShell";
+
+export type {
+  SlottedListingViewProps,
+  SlottedListingViewLabels,
+} from "./components/SlottedListingView";
+export { SlottedListingView } from "./components/SlottedListingView";
+
+export type {
+  DetailViewShellProps,
+  DetailViewLayout,
+} from "./components/DetailViewShell";
+export { DetailViewShell } from "./components/DetailViewShell";
+
+export type {
+  StackedViewShellProps,
+  StackedViewShellLabels,
+} from "./components/StackedViewShell";
+export { StackedViewShell } from "./components/StackedViewShell";
 
 export type {
   BulkActionBarProps,

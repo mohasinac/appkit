@@ -75,7 +75,7 @@ export function FormField({
 
   if (type === "image" && onUpload) {
     return (
-      <div className="w-full">
+      <div className="appkit-form-field">
         <ImageUpload
           currentImage={value || undefined}
           onUpload={onUpload}
@@ -91,7 +91,7 @@ export function FormField({
             id={errorId}
             size="sm"
             variant="error"
-            className="mt-1.5"
+            className="appkit-form-field__error"
             role="alert"
           >
             {error}
@@ -103,7 +103,7 @@ export function FormField({
 
   if (type === "media" && onUpload) {
     return (
-      <div className="w-full">
+      <div className="appkit-form-field">
         <MediaUploadField
           label={`${label || name}${required ? " *" : ""}`}
           value={value}
@@ -121,7 +121,7 @@ export function FormField({
             id={errorId}
             size="sm"
             variant="error"
-            className="mt-1.5"
+            className="appkit-form-field__error"
             role="alert"
           >
             {error}
@@ -132,14 +132,13 @@ export function FormField({
   }
 
   return (
-    <div className="w-full">
+    <div className="appkit-form-field">
       {label ? (
-        <Label
-          htmlFor={inputId}
-          className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
-        >
+        <Label htmlFor={inputId} className="appkit-form-field__label">
           {label}
-          {required ? <Span className="ml-1 text-red-500">*</Span> : null}
+          {required ? (
+            <Span className="appkit-form-field__required">*</Span>
+          ) : null}
         </Label>
       ) : null}
 
@@ -188,7 +187,7 @@ export function FormField({
       )}
 
       {!showError && (hint || helpText) ? (
-        <Text size="sm" variant="secondary" className="mt-1.5">
+        <Text size="sm" variant="secondary" className="appkit-form-field__hint">
           {hint ?? helpText}
         </Text>
       ) : null}
@@ -198,7 +197,7 @@ export function FormField({
           id={errorId}
           size="sm"
           variant="error"
-          className="mt-1.5"
+          className="appkit-form-field__error"
           role="alert"
         >
           {error}

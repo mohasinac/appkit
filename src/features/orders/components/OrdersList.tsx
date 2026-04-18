@@ -1,4 +1,4 @@
-import { Div, Pagination, Row, Span, Text } from "../../../ui";
+import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -61,7 +61,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       </Row>
       <Row wrap gap="3" className="mt-4">
         {order.items.slice(0, 3).map((item, i) => (
-          <Div key={i} className="flex items-center gap-2">
+          <Row key={i} className="gap-2">
             {item.image && (
               <Div
                 role="img"
@@ -76,7 +76,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               </Text>
               <Text className="text-xs text-neutral-400">×{item.quantity}</Text>
             </Div>
-          </Div>
+          </Row>
         ))}
         {order.items.length > 3 && (
           <Span className="self-center text-xs text-neutral-400">
@@ -84,14 +84,14 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           </Span>
         )}
       </Row>
-      <Div className="mt-4 flex items-center justify-between border-t border-neutral-100 pt-3">
+      <Row justify="between" className="mt-4 border-t border-neutral-100 pt-3">
         <Span className="text-sm text-neutral-500">
           {order.currency ?? ""} Total
         </Span>
         <Span className="font-semibold text-neutral-900">
           {formatCurrency(order.total, order.currency)}
         </Span>
-      </Div>
+      </Row>
     </Div>
   );
 }
@@ -117,17 +117,17 @@ export function OrdersList({
 }: OrdersListProps) {
   if (isLoading) {
     return (
-      <Div className="space-y-4">
+      <Stack gap="md">
         {Array.from({ length: 3 }).map((_, i) => (
           <Div
             key={i}
             className="animate-pulse rounded-xl border border-neutral-200 p-5"
           >
             <Div className="flex justify-between">
-              <Div className="space-y-1">
+              <Stack gap="xs">
                 <Div className="h-3 w-20 rounded bg-neutral-200" />
                 <Div className="h-3 w-16 rounded bg-neutral-200" />
-              </Div>
+              </Stack>
               <Div className="h-6 w-20 rounded-full bg-neutral-200" />
             </Div>
             <Div className="mt-4 flex gap-3">
@@ -136,7 +136,7 @@ export function OrdersList({
             </Div>
           </Div>
         ))}
-      </Div>
+      </Stack>
     );
   }
 
@@ -149,12 +149,12 @@ export function OrdersList({
   }
 
   return (
-    <Div className="space-y-6">
-      <Div className="space-y-4">
+    <Stack gap="lg">
+      <Stack gap="md">
         {orders.map((order) => (
           <OrderCard key={order.id} order={order} onClick={onOrderClick} />
         ))}
-      </Div>
+      </Stack>
       {totalPages > 1 && onPageChange && (
         <Div className="flex justify-center">
           <Pagination
@@ -164,6 +164,6 @@ export function OrdersList({
           />
         </Div>
       )}
-    </Div>
+    </Stack>
   );
 }

@@ -1,4 +1,11 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderBoolean,
+  renderCount,
+  renderNullable,
+  renderRating,
+} from "../../../ui/columns";
 import type { StoreListItem } from "../types";
 
 /**
@@ -17,25 +24,25 @@ export const storeAdminColumns: TableColumn<StoreListItem>[] = [
   {
     key: "isPublic",
     header: "Public",
-    render: (s) => (s.isPublic ? "Yes" : "No"),
+    render: (s) => renderBoolean(s.isPublic),
   },
   {
     key: "totalProducts",
     header: "Products",
     sortable: true,
-    render: (s) => s.totalProducts?.toLocaleString() ?? "—",
+    render: (s) => renderNullable(s.totalProducts, (v) => v.toLocaleString()),
   },
   {
     key: "itemsSold",
     header: "Sold",
     sortable: true,
-    render: (s) => s.itemsSold?.toLocaleString() ?? "—",
+    render: (s) => renderNullable(s.itemsSold, (v) => v.toLocaleString()),
   },
   {
     key: "averageRating",
     header: "Rating",
     sortable: true,
-    render: (s) => (s.averageRating != null ? s.averageRating.toFixed(1) : "—"),
+    render: (s) => renderRating(s.averageRating, null, { showCount: false }),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -46,13 +53,5 @@ export const storeAdminColumns: TableColumn<StoreListItem>[] = [
 export function buildStoreColumns<T extends StoreListItem = StoreListItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = storeAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(storeAdminColumns as TableColumn<T>[], opts);
 }

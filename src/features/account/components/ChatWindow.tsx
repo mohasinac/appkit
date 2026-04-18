@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Heading, Span } from "../../../ui";
+import { Div, Heading, Row, Span } from "../../../ui";
 
 export interface ChatWindowLabels {
   title?: string;
@@ -32,16 +32,19 @@ export function ChatWindow({
 }: ChatWindowProps) {
   return (
     <Div className={className}>
-      <Div className="flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-neutral-700 mb-3">
-        <Div className="flex items-center gap-2">
+      <Row
+        justify="between"
+        className="pb-3 border-b border-neutral-200 dark:border-neutral-700 mb-3"
+      >
+        <Row className="gap-2">
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
           <Span
             className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500" : "bg-zinc-400"}`}
             aria-label={isConnected ? labels.connected : labels.disconnected}
           />
-        </Div>
+        </Row>
         {isLoading && (renderLoadingIndicator?.() ?? null)}
-      </Div>
+      </Row>
 
       {error ?? null}
 

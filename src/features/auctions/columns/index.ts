@@ -1,4 +1,11 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderCurrencyCompact,
+  renderCount,
+  renderBoolean,
+  renderNullable,
+} from "../../../ui/columns";
 import type { AuctionItem, BidRecord } from "../types";
 
 // ─── Auction columns ──────────────────────────────────────────────────────────
@@ -47,15 +54,7 @@ export const auctionAdminColumns: TableColumn<AuctionItem>[] = [
 export function buildAuctionColumns<T extends AuctionItem = AuctionItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = auctionAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(auctionAdminColumns as TableColumn<T>[], opts);
 }
 
 // ─── Bid columns ──────────────────────────────────────────────────────────────
@@ -79,13 +78,5 @@ export const bidAdminColumns: TableColumn<BidRecord>[] = [
 export function buildBidColumns<T extends BidRecord = BidRecord>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = bidAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(bidAdminColumns as TableColumn<T>[], opts);
 }

@@ -1,5 +1,5 @@
 import type { CartItem } from "../types";
-import { Aside, Button, Div, Heading, Span, Text } from "../../../ui";
+import { Aside, Button, Div, Heading, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface CartItemRowProps {
@@ -33,7 +33,7 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
                 .join(", ")}
             </Text>
           )}
-        <Div className="flex items-center justify-between">
+        <Row justify="between">
           <Text className="font-semibold text-neutral-900">
             {formatCurrency(
               item.meta.price * item.quantity,
@@ -41,7 +41,7 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
             )}
           </Text>
           {onQtyChange && (
-            <Div className="flex items-center gap-2">
+            <Row className="gap-2">
               <Button
                 onClick={() => onQtyChange(item.id, item.quantity - 1)}
                 disabled={item.quantity <= 1}
@@ -62,9 +62,9 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
               >
                 +
               </Button>
-            </Div>
+            </Row>
           )}
-        </Div>
+        </Row>
       </Div>
       {onRemove && (
         <Button
@@ -122,7 +122,7 @@ export function CartDrawer({
         onClick={onClose}
       />
       <Aside className="fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white shadow-xl">
-        <Div className="flex items-center justify-between border-b border-neutral-200 p-4">
+        <Row justify="between" className="border-b border-neutral-200 p-4">
           <Heading level={2} className="text-lg font-semibold">
             {labels.title ?? "Cart"}
           </Heading>
@@ -135,7 +135,7 @@ export function CartDrawer({
           >
             ✕
           </Button>
-        </Div>
+        </Row>
         <Div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isLoading ? (
             <Div className="flex justify-center py-12">
@@ -158,14 +158,14 @@ export function CartDrawer({
         </Div>
         {items.length > 0 && (
           <Div className="border-t border-neutral-200 p-4 space-y-4">
-            <Div className="flex items-center justify-between text-sm">
+            <Row justify="between" className="text-sm">
               <Span className="text-neutral-600">
                 {labels.subtotal ?? "Subtotal"}
               </Span>
               <Span className="font-semibold">
                 {formatCurrency(subtotal, currency)}
               </Span>
-            </Div>
+            </Row>
             {onCheckout && (
               <Button
                 onClick={onCheckout}

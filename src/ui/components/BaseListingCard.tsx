@@ -4,12 +4,18 @@ import type { ReactNode, MouseEvent } from "react";
 import { Button } from "./Button";
 import { Span } from "./Typography";
 
-// Viewport-relative card dimensions — clamp between floor/ceiling
-const DIMS = {
-  minW: "min-w-[clamp(150px,18vw,260px)]",
-  minH: "min-h-[clamp(220px,26vh,360px)]",
-  heroMinH: "min-h-[clamp(120px,14vh,200px)]",
-  heroMaxH: "max-h-[clamp(160px,24vh,280px)]",
+const UI_LISTING_CARD = {
+  root: "appkit-listing-card",
+  selected: "appkit-listing-card--selected",
+  disabled: "appkit-listing-card--disabled",
+  clickable: "appkit-listing-card--clickable",
+  hero: "appkit-listing-card__hero",
+  heroSquare: "appkit-listing-card__hero--square",
+  heroLandscape: "appkit-listing-card__hero--landscape",
+  info: "appkit-listing-card__info",
+  checkbox: "appkit-listing-card__checkbox",
+  checkboxSelected: "appkit-listing-card__checkbox--selected",
+  checkboxIcon: "appkit-listing-card__checkbox-icon",
 } as const;
 
 export interface BaseListingCardRootProps {
@@ -54,11 +60,15 @@ function BaseListingCardRoot({
   return (
     <div
       onClick={onClick}
-      className={`relative flex flex-col h-full rounded-xl border overflow-hidden transition-shadow ${DIMS.minW} ${DIMS.minH}
-        ${isSelected ? "ring-2 ring-primary border-primary" : "border-gray-200 dark:border-gray-700"}
-        ${isDisabled ? "opacity-60" : ""}
-        ${onClick ? "cursor-pointer hover:shadow-md" : ""}
-        ${className}`}
+      className={[
+        UI_LISTING_CARD.root,
+        isSelected ? UI_LISTING_CARD.selected : "",
+        isDisabled ? UI_LISTING_CARD.disabled : "",
+        onClick ? UI_LISTING_CARD.clickable : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
       {children}
     </div>
@@ -74,13 +84,15 @@ function BaseListingCardHero({
 }: BaseListingCardHeroProps) {
   const aspectClass =
     aspect === "square"
-      ? "aspect-square"
-      : aspect
-        ? `aspect-[${aspect}]`
-        : "aspect-[4/3]";
+      ? UI_LISTING_CARD.heroSquare
+      : aspect === "4/3" || !aspect
+        ? UI_LISTING_CARD.heroLandscape
+        : `aspect-[${aspect}]`;
   return (
     <div
-      className={`relative overflow-hidden bg-gray-100 dark:bg-gray-800 ${aspectClass} ${DIMS.heroMinH} ${DIMS.heroMaxH} ${className}`}
+      className={[UI_LISTING_CARD.hero, aspectClass, className]
+        .filter(Boolean)
+        .join(" ")}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -94,7 +106,11 @@ function BaseListingCardInfo({
   children,
 }: BaseListingCardInfoProps) {
   return (
-    <div className={`p-3 flex flex-col flex-1 ${className}`}>{children}</div>
+    <div
+      className={[UI_LISTING_CARD.info, className].filter(Boolean).join(" ")}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -110,11 +126,16 @@ function BaseListingCardCheckbox({
       type="button"
       aria-label={label ?? (selected ? "Deselect" : "Select")}
       onClick={onSelect}
-      className={`absolute ${position} z-10 h-5 w-5 rounded border-2 flex items-center justify-center
-        ${selected ? "bg-primary border-primary" : "bg-white/90 border-gray-300"}
-        ${className}`}
+      className={[
+        UI_LISTING_CARD.checkbox,
+        selected ? UI_LISTING_CARD.checkboxSelected : "",
+        position,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      {selected && <Span className="text-white text-xs leading-none">✓</Span>}
+      {selected && <Span className={UI_LISTING_CARD.checkboxIcon}>✓</Span>}
     </Button>
   );
 }

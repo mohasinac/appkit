@@ -1,7 +1,6 @@
-"use client";
-
 import type { ReactNode } from "react";
-import { Div } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
 export interface UserOrderTrackViewLabels {
   title?: string;
@@ -10,14 +9,15 @@ export interface UserOrderTrackViewLabels {
   notFoundDescription?: string;
 }
 
-export interface UserOrderTrackViewProps {
+export interface UserOrderTrackViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: UserOrderTrackViewLabels;
   renderBack?: () => ReactNode;
   renderTracking?: () => ReactNode;
   renderNotFound?: () => ReactNode;
   isNotFound?: boolean;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function UserOrderTrackView({
@@ -25,12 +25,15 @@ export function UserOrderTrackView({
   renderTracking,
   renderNotFound,
   isNotFound = false,
-  className = "",
+  ...rest
 }: UserOrderTrackViewProps) {
   return (
-    <Div className={className}>
-      {renderBack?.()}
-      {isNotFound ? renderNotFound?.() : renderTracking?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      sections={[
+        renderBack?.(),
+        isNotFound ? renderNotFound?.() : renderTracking?.(),
+      ]}
+    />
   );
 }

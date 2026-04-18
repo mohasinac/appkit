@@ -1,0 +1,30 @@
+/* FormField — labelled input wrapper with error/hint slots */
+
+.appkit-form-field {
+  width: 100%;
+}
+
+.appkit-form-field__label {
+  display: block;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3f3f46;
+}
+
+:is(.dark) .appkit-form-field__label {
+  color: #d4d4d8;
+}
+
+.appkit-form-field__required {
+  margin-left: 0.25rem;
+  color: #ef4444;
+}
+
+.appkit-form-field__hint {
+  margin-top: 0.375rem;
+}
+
+.appkit-form-field__error {
+  margin-top: 0.375rem;
+}

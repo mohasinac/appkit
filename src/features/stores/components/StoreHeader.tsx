@@ -3,6 +3,7 @@ import {
   Div,
   Heading,
   RichText,
+  Row,
   Section,
   Span,
   Text,
@@ -91,7 +92,7 @@ export function StoreHeader({
           </Text>
         )}
 
-        <Div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+        <Row className="gap-4 mt-3 text-sm text-gray-500">
           {store.totalProducts != null && (
             <Span>
               {store.totalProducts} {labels.products ?? "products"}
@@ -108,7 +109,7 @@ export function StoreHeader({
               {labels.reviews ?? "reviews"})
             </Span>
           )}
-        </Div>
+        </Row>
       </Div>
     </Section>
   );

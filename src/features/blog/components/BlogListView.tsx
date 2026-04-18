@@ -7,6 +7,7 @@ import {
   Div,
   Heading,
   Pagination,
+  Row,
   Span,
   Text,
 } from "../../../ui";
@@ -52,7 +53,7 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
         </Div>
       )}
       <Div className="flex flex-1 flex-col p-5">
-        <Div className="mb-2 flex items-center gap-2">
+        <Row className="mb-2 gap-2">
           <Span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
             {post.category}
           </Span>
@@ -61,7 +62,7 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
               {post.readTimeMinutes} min read
             </Span>
           )}
-        </Div>
+        </Row>
         <Heading
           level={3}
           className="line-clamp-2 text-base font-semibold text-neutral-900 group-hover:text-primary"
@@ -73,7 +74,7 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             {post.excerpt}
           </Text>
         )}
-        <Div className="mt-4 flex items-center gap-3">
+        <Row className="mt-4 gap-3">
           {post.authorAvatar && (
             <Div
               role="img"
@@ -90,7 +91,7 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             )}
             {date && <Span className="ml-1">· {date}</Span>}
           </Text>
-        </Div>
+        </Row>
       </Div>
     </Article>
   );

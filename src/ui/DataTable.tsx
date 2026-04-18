@@ -7,15 +7,9 @@ import { Pagination } from "./components/Pagination";
 import { Text } from "./components/Typography";
 import { GRID_MAP } from "./components/Layout";
 import type { GridCols } from "./components/Layout";
-import type {
-  TableColumn,
-  TableConfig,
-  PaginationConfig,
-} from "../contracts";
-import {
-  mergeTableConfig,
-  DEFAULT_PAGINATION_CONFIG,
-} from "../contracts";
+import { Row } from "./components/Layout";
+import type { TableColumn, TableConfig, PaginationConfig } from "../contracts";
+import { mergeTableConfig, DEFAULT_PAGINATION_CONFIG } from "../contracts";
 
 /**
  * DataTable — generic sortable + paginated table promoted to @mohasinac/ui.
@@ -221,8 +215,8 @@ export function DataTable<T extends object>({
   // ─── Loading state ──────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="rounded-2xl border border-zinc-200 dark:border-slate-700 overflow-hidden">
-        <div className="flex items-center justify-center h-64">
+      <div className="appkit-data-table__wrapper">
+        <div className="appkit-data-table__loading">
           <Spinner size="lg" label={labelLoading} />
         </div>
       </div>
@@ -233,8 +227,8 @@ export function DataTable<T extends object>({
   if (data.length === 0) {
     if (emptyState) return <>{emptyState}</>;
     return (
-      <div className="rounded-2xl border border-zinc-200 dark:border-slate-700 overflow-hidden">
-        <div className="flex items-center justify-center h-64">
+      <div className="appkit-data-table__wrapper">
+        <div className="appkit-data-table__empty">
           <div className="text-center px-4">
             {emptyIcon ?? (
               <svg
@@ -268,7 +262,7 @@ export function DataTable<T extends object>({
     if (!showViewToggle) return null;
     return (
       <div
-        className="flex justify-end gap-1"
+        className="appkit-data-table__view-toggle"
         role="toolbar"
         aria-label="View mode"
       >
@@ -280,7 +274,7 @@ export function DataTable<T extends object>({
             onClick={() => handleViewModeChange("table")}
             aria-label={tableView}
             aria-pressed={activeViewMode === "table"}
-            className={`hidden sm:flex items-center justify-center p-2 rounded-lg ring-1 transition-colors ${activeViewMode === "table" ? "bg-primary/5 text-primary dark:bg-primary/10 ring-primary/30" : "text-zinc-500 dark:text-zinc-400 ring-zinc-200 dark:ring-slate-700 hover:bg-zinc-100 dark:hover:bg-slate-800"}`}
+            className={`appkit-data-table__view-btn ${activeViewMode === "table" ? "appkit-data-table__view-btn--active" : ""} hidden sm:flex`}
           >
             <svg
               className="w-4 h-4"
@@ -305,7 +299,7 @@ export function DataTable<T extends object>({
           onClick={() => handleViewModeChange("grid")}
           aria-label={gridView}
           aria-pressed={activeViewMode === "grid"}
-          className={`flex items-center justify-center p-2 rounded-lg ring-1 transition-colors ${activeViewMode === "grid" ? "bg-primary/5 text-primary dark:bg-primary/10 ring-primary/30" : "text-zinc-500 dark:text-zinc-400 ring-zinc-200 dark:ring-slate-700 hover:bg-zinc-100 dark:hover:bg-slate-800"}`}
+          className={`appkit-data-table__view-btn ${activeViewMode === "grid" ? "appkit-data-table__view-btn--active" : ""}`}
         >
           <svg
             className="w-4 h-4"
@@ -329,7 +323,7 @@ export function DataTable<T extends object>({
           onClick={() => handleViewModeChange("list")}
           aria-label={listView}
           aria-pressed={activeViewMode === "list"}
-          className={`flex items-center justify-center p-2 rounded-lg ring-1 transition-colors ${activeViewMode === "list" ? "bg-primary/5 text-primary dark:bg-primary/10 ring-primary/30" : "text-zinc-500 dark:text-zinc-400 ring-zinc-200 dark:ring-slate-700 hover:bg-zinc-100 dark:hover:bg-slate-800"}`}
+          className={`appkit-data-table__view-btn ${activeViewMode === "list" ? "appkit-data-table__view-btn--active" : ""}`}
         >
           <svg
             className="w-4 h-4"
@@ -385,7 +379,7 @@ export function DataTable<T extends object>({
 
   // ─── Main render ─────────────────────────────────────────────────────────────
   return (
-    <div className="space-y-4">
+    <div className="appkit-data-table">
       {renderViewToggle()}
 
       {/* Non-table views */}
@@ -395,7 +389,7 @@ export function DataTable<T extends object>({
 
       {/* Mobile cards in table mode */}
       {activeViewMode === "table" && mobileCardRender && (
-        <div className="md:hidden space-y-6">
+        <div className="appkit-data-table__mobile-cards">
           {paginatedData.map((item) => (
             <SelectableCard
               key={keyExtractor(item)}
@@ -418,13 +412,13 @@ export function DataTable<T extends object>({
 
       {/* Desktop table */}
       {activeViewMode === "table" && (
-        <div className="rounded-2xl border border-zinc-200 dark:border-slate-700 overflow-hidden">
+        <div className="appkit-data-table__wrapper">
           <div
-            className={`overflow-x-auto ${stickyHeader ? "max-h-[600px] overflow-y-auto" : ""}`}
+            className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
           >
-            <table className="min-w-full divide-y divide-zinc-200 dark:divide-slate-700">
+            <table className="appkit-data-table__table">
               <thead
-                className={`bg-zinc-50 dark:bg-slate-800 ${stickyHeader ? "sticky top-0 z-10" : ""}`}
+                className={`appkit-data-table__thead ${stickyHeader ? "appkit-data-table__thead--sticky" : ""}`}
               >
                 <tr>
                   {selectable && (
@@ -465,11 +459,11 @@ export function DataTable<T extends object>({
                             : "none"
                           : undefined
                       }
-                      className={`px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider ${col.sortable ? "cursor-pointer select-none hover:bg-zinc-100 dark:hover:bg-slate-700" : ""}`}
+                      className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""}`}
                       style={{ width: col.width }}
                       onClick={() => col.sortable && handleSort(col.key)}
                     >
-                      <div className="flex items-center gap-2">
+                      <Row gap="sm">
                         {col.header}
                         {col.sortable && (
                           <span className="text-zinc-400" aria-hidden="true">
@@ -484,31 +478,29 @@ export function DataTable<T extends object>({
                             )}
                           </span>
                         )}
-                      </div>
+                      </Row>
                     </th>
                   ))}
                   {actions && (
                     <th
                       scope="col"
-                      className="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider"
+                      className="appkit-data-table__th appkit-data-table__td--actions"
                     >
                       {labelActions}
                     </th>
                   )}
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-slate-900 divide-y divide-zinc-200 dark:divide-slate-700">
+              <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 dark:divide-slate-700">
                 {paginatedData.map((item, index) => (
                   <tr
                     key={keyExtractor(item)}
                     className={[
+                      "appkit-data-table__row",
                       striped && index % 2 === 1
-                        ? "bg-zinc-50 dark:bg-slate-800"
+                        ? "appkit-data-table__row--striped"
                         : "",
-                      onRowClick
-                        ? "cursor-pointer hover:bg-zinc-50 dark:hover:bg-slate-800/60"
-                        : "",
-                      "transition-colors duration-150",
+                      onRowClick ? "appkit-data-table__row--clickable" : "",
                     ].join(" ")}
                     onClick={() => onRowClick?.(item)}
                   >
@@ -534,10 +526,7 @@ export function DataTable<T extends object>({
                       </td>
                     )}
                     {columns.map((col) => (
-                      <td
-                        key={col.key}
-                        className="px-6 py-4 whitespace-nowrap text-sm text-zinc-900 dark:text-zinc-100"
-                      >
+                      <td key={col.key} className="appkit-data-table__td">
                         {col.render
                           ? col.render(item)
                           : (((item as Record<string, unknown>)[
@@ -547,7 +536,7 @@ export function DataTable<T extends object>({
                     ))}
                     {actions && (
                       <td
-                        className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                        className="appkit-data-table__td appkit-data-table__td--actions"
                         onClick={(e) => e.stopPropagation()}
                       >
                         {actions(item)}
@@ -563,7 +552,7 @@ export function DataTable<T extends object>({
 
       {/* Pagination */}
       {!externalPagination && totalPages > 1 && (
-        <div className="flex justify-center">
+        <div className="appkit-data-table__pagination">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

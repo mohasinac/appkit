@@ -2,7 +2,7 @@
 import "client-only";
 
 import React, { useEffect, useCallback } from "react";
-import { Button, Div, Span } from "../../ui";
+import { Button, Div, Row, Span } from "../../ui";
 
 export interface BottomSheetProps {
   open: boolean;
@@ -76,7 +76,10 @@ export function BottomSheet({
         className={`absolute bottom-0 inset-x-0 flex flex-col rounded-t-2xl bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 shadow-2xl ${maxHeight} animate-slide-up${className ? ` ${className}` : ""}`}
       >
         {/* Handle and header */}
-        <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
+        <Row
+          justify="between"
+          className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 shrink-0"
+        >
           {/* Drag handle */}
           <Div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-zinc-300 dark:bg-zinc-600" />
 
@@ -109,7 +112,7 @@ export function BottomSheet({
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </Button>
-        </Div>
+        </Row>
 
         {/* Scrollable content */}
         <Div className="flex-1 overflow-y-auto overscroll-contain pb-[env(safe-area-inset-bottom)]">

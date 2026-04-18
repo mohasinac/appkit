@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Div, Span } from "../../ui";
+import { Div, Row, Span } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface SliderProps {
@@ -55,7 +55,7 @@ export function Slider({
   return (
     <Div className={cn("w-full space-y-2", className)}>
       {(label || showValue) && (
-        <Div className="flex items-center justify-between">
+        <Row justify="between">
           {label && (
             <label htmlFor={sliderId} className={LABEL_BASE}>
               {label}
@@ -66,10 +66,10 @@ export function Slider({
               {displayValue}
             </Span>
           )}
-        </Div>
+        </Row>
       )}
 
-      <Div className="relative h-5 flex items-center">
+      <Row className="relative h-5">
         {/* Track background */}
         <Div className="absolute inset-y-0 flex items-center w-full">
           <Div className="w-full h-1.5 rounded-full bg-zinc-200 dark:bg-slate-700">
@@ -102,12 +102,15 @@ export function Slider({
             disabled && "opacity-50 cursor-not-allowed",
           )}
         />
-      </Div>
+      </Row>
 
-      <Div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500">
+      <Row
+        justify="between"
+        className="text-xs text-zinc-400 dark:text-zinc-500"
+      >
         <Span>{formatValue ? formatValue(min) : min}</Span>
         <Span>{formatValue ? formatValue(max) : max}</Span>
-      </Div>
+      </Row>
 
       {error && (
         <p className={ERROR_BASE} role="alert">

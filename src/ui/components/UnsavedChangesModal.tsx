@@ -72,20 +72,17 @@ export function UnsavedChangesModal({ labels = {} }: UnsavedChangesModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-      onClick={handleCancel}
-    >
+    <div className="appkit-unsaved-modal__backdrop" onClick={handleCancel}>
       <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-        <Card className="w-full max-w-md p-6">
-          <Heading level={2} className="mb-2">
+        <Card className="appkit-unsaved-modal__card">
+          <Heading level={2} className="appkit-unsaved-modal__title">
             {labels.title ?? "Unsaved changes"}
           </Heading>
-          <Text className="mb-6">
+          <Text className="appkit-unsaved-modal__message">
             {labels.message ??
               "You have unsaved changes. Are you sure you want to leave this page?"}
           </Text>
-          <div className="flex gap-3 justify-start">
+          <div className="appkit-unsaved-modal__actions">
             <Button variant="outline" onClick={handleCancel}>
               {labels.stay ?? "Stay"}
             </Button>

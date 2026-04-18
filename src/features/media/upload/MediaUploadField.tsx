@@ -328,7 +328,7 @@ export function MediaUploadField({
       {!disabled && !isLoading && (
         <>
           {captureSource === "both" && isCameraSupported && (
-            <Div className="flex items-center gap-2">
+            <Row className="gap-2">
               <Button
                 type="button"
                 variant={inputMode === "file" ? "primary" : "outline"}
@@ -345,7 +345,7 @@ export function MediaUploadField({
               >
                 {t("switchToCamera")}
               </Button>
-            </Div>
+            </Row>
           )}
 
           {showCamera && isCameraSupported && (
@@ -382,12 +382,12 @@ export function MediaUploadField({
       )}
 
       {isLoading && (
-        <Div className="flex items-center gap-2">
+        <Row className="gap-2">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploading")}
           </Text>
-        </Div>
+        </Row>
       )}
 
       <input

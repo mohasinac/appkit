@@ -1,10 +1,5 @@
-export type PaymentGateway =
-  | "razorpay"
-  | "stripe"
-  | "paypal"
-  | "cod"
-  | "upi"
-  | "whatsapp";
+import { type PaymentGateway, PaymentGatewayValues } from "../schemas";
+export { type PaymentGateway, PaymentGatewayValues };
 export type PaymentStatus =
   | "pending"
   | "processing"

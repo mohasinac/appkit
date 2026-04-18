@@ -66,6 +66,26 @@ export {
 export { unitOfWork } from "./unit-of-work";
 export type { UnitOfWork } from "./unit-of-work";
 
+export {
+  createServerAction,
+  setActionMiddleware,
+  _resetActionMiddleware,
+} from "./server-action";
+export type {
+  ActionResult,
+  ActionMiddleware,
+  ActionMiddlewareContext,
+  ServerActionOptions,
+} from "./server-action";
+
+export {
+  MUTATION_EVENTS,
+  emitMutation,
+  onMutation,
+  inferMutationEvent,
+} from "./mutation-events";
+export type { MutationEventPayload } from "./mutation-events";
+
 export type { ResolvedKeys } from "./integration-keys";
 
 export {

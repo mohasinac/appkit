@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, useCallback, useState } from "react";
-import { Div, Heading, Label, Text } from "../../../ui";
+import { Alert, Div, Heading, Label, Text } from "../../../ui";
 
 export interface ForgotPasswordViewProps {
   onSubmit: (email: string) => Promise<void>;
@@ -55,21 +55,15 @@ export function ForgotPasswordView({
         </Div>
 
         {error && (
-          <Div
-            role="alert"
-            className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700"
-          >
+          <Alert variant="error" compact>
             {error}
-          </Div>
+          </Alert>
         )}
 
         {success && (
-          <Div
-            role="status"
-            className="rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700"
-          >
+          <Alert variant="success" compact>
             {success}
-          </Div>
+          </Alert>
         )}
 
         {!success && (

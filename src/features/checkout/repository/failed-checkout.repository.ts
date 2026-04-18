@@ -16,8 +16,8 @@ export interface FailedCheckoutMeta {
 }
 
 export interface FailedPaymentMeta {
-  razorpayOrderId?: string;
-  razorpayPaymentId?: string;
+  gatewayOrderId?: string;
+  gatewayPaymentId?: string;
   amountRs?: number;
   addressId?: string;
 }

@@ -226,7 +226,7 @@ export function ImageUpload({
         ) : (
           <>
             {captureSource === "both" && isCameraSupported && (
-              <Div className="flex items-center justify-center gap-2 mb-3">
+              <Row justify="center" className="gap-2 mb-3">
                 <Button
                   type="button"
                   variant={captureMode === "file" ? "primary" : "outline"}
@@ -243,7 +243,7 @@ export function ImageUpload({
                 >
                   {t("switchToCamera")}
                 </Button>
-              </Div>
+              </Row>
             )}
 
             {showCamera && isCameraSupported && (
@@ -337,12 +337,12 @@ export function ImageUpload({
       {error && <Alert variant="error">{error}</Alert>}
 
       {uploading && (
-        <Div className="flex items-center gap-2">
+        <Row className="gap-2">
           <Spinner size="sm" />
           <Text size="sm" variant="secondary">
             {tUpload("uploadingProgress", { progress })}
           </Text>
-        </Div>
+        </Row>
       )}
 
       {cropPreviewUrl && (

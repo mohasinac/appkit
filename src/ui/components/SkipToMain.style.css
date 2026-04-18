@@ -1,0 +1,34 @@
+/* SkipToMain — accessibility skip-navigation link */
+
+.appkit-skip-to-main {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.appkit-skip-to-main:focus-visible {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  width: auto;
+  height: auto;
+  padding: 0.625rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  border-radius: 0.5rem;
+  background: var(--color-primary, #65a30d);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-primary, #65a30d), 0 0 0 4px white;
+}

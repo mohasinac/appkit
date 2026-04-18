@@ -70,21 +70,14 @@ export function FilterDrawer({
           onClick={() => {
             if (!isOpen) handleOpen();
           }}
-          className={[
-            "inline-flex items-center gap-2",
-            "rounded-lg border-zinc-300 text-zinc-700 hover:bg-zinc-100",
-            "dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800",
-            triggerClassName,
-          ]
+          className={["appkit-filter-drawer__trigger", triggerClassName]
             .filter(Boolean)
             .join(" ")}
           aria-label={triggerLabel}
         >
           <Span>{triggerLabel}</Span>
           {activeCount > 0 ? (
-            <Span className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1 text-xs text-white">
-              {activeCount}
-            </Span>
+            <Span className="appkit-filter-drawer__badge">{activeCount}</Span>
           ) : null}
         </Button>
       ) : null}
@@ -95,7 +88,7 @@ export function FilterDrawer({
         title={title}
         side="left"
         footer={
-          <div className="flex items-center justify-between gap-2 border-t border-zinc-200 px-4 py-3 dark:border-slate-700">
+          <div className="appkit-filter-drawer__footer">
             <Button type="button" variant="ghost" onClick={onReset}>
               Reset all
             </Button>
@@ -107,9 +100,7 @@ export function FilterDrawer({
           </div>
         }
       >
-        <div className="divide-y divide-zinc-200 dark:divide-slate-700">
-          {children}
-        </div>
+        <div className="appkit-filter-drawer__body">{children}</div>
       </Drawer>
     </>
   );

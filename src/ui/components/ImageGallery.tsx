@@ -123,7 +123,7 @@ export default function ImageGallery({
   if (images.length === 0) {
     return (
       <div
-        className={`${flex.center} p-8 ${themed.bgTertiary} rounded-lg ${className}`}
+        className={`appkit-image-gallery ${flex.center} p-8 ${themed.bgTertiary} rounded-lg ${className}`}
       >
         <Text className={themed.textMuted}>No images to display</Text>
       </div>
@@ -131,18 +131,18 @@ export default function ImageGallery({
   }
 
   return (
-    <div className={`image-gallery ${className}`}>
+    <div className={`appkit-image-gallery ${className}`}>
       {/* Main Image Container */}
       <div
         ref={imageContainerRef}
-        className={`relative ${themed.bgSecondary} rounded-lg overflow-hidden touch-pan-y select-none`}
+        className={`appkit-image-gallery__viewport ${themed.bgSecondary}`}
       >
         {/* Image */}
-        <div className="relative aspect-video md:aspect-[16/10] overflow-hidden">
+        <div className="appkit-image-gallery__image-frame">
           <div
             role="img"
             aria-label={currentImage.alt}
-            className="w-full h-full bg-center bg-contain bg-no-repeat transition-transform duration-200"
+            className="appkit-image-gallery__image"
             style={{
               backgroundImage: `url(${currentImage.src})`,
               transform: `scale(${scale})`,
@@ -161,16 +161,7 @@ export default function ImageGallery({
                 variant="ghost"
                 onClick={goToPrevious}
                 disabled={currentIndex === 0}
-                className={`
-                  absolute left-2 md:left-4 top-1/2 -translate-y-1/2
-                  p-2 md:p-3 rounded-full
-                  ${themed.bgSecondary} bg-opacity-80 backdrop-blur-sm
-                  ${themed.textPrimary}
-                  transition-all hover:bg-opacity-100
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  focus:outline-none focus:ring-2 focus:ring-primary-500
-                  touch-manipulation
-                `}
+                className={`appkit-image-gallery__nav-btn appkit-image-gallery__nav-btn--prev ${themed.bgSecondary} ${themed.textPrimary}`}
                 aria-label="Previous image"
               >
                 <svg
@@ -192,16 +183,7 @@ export default function ImageGallery({
                 variant="ghost"
                 onClick={goToNext}
                 disabled={currentIndex === images.length - 1}
-                className={`
-                  absolute right-2 md:right-4 top-1/2 -translate-y-1/2
-                  p-2 md:p-3 rounded-full
-                  ${themed.bgSecondary} bg-opacity-80 backdrop-blur-sm
-                  ${themed.textPrimary}
-                  transition-all hover:bg-opacity-100
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  focus:outline-none focus:ring-2 focus:ring-primary-500
-                  touch-manipulation
-                `}
+                className={`appkit-image-gallery__nav-btn appkit-image-gallery__nav-btn--next ${themed.bgSecondary} ${themed.textPrimary}`}
                 aria-label="Next image"
               >
                 <svg
@@ -224,12 +206,7 @@ export default function ImageGallery({
           {/* Image Counter */}
           {images.length > 1 && (
             <div
-              className={`
-              absolute bottom-2 md:bottom-4 right-2 md:right-4
-              px-3 py-1.5 rounded-full
-              ${themed.bgSecondary} bg-opacity-80 backdrop-blur-sm
-              ${themed.textPrimary} text-xs md:text-sm font-medium
-            `}
+              className={`appkit-image-gallery__counter ${themed.bgSecondary} ${themed.textPrimary}`}
             >
               {currentIndex + 1} / {images.length}
             </div>
@@ -238,12 +215,7 @@ export default function ImageGallery({
           {/* Zoom Indicator */}
           {allowZoom && isZoomed && (
             <div
-              className={`
-              absolute top-2 md:top-4 right-2 md:right-4
-              px-3 py-1.5 rounded-full
-              ${themed.bgSecondary} bg-opacity-80 backdrop-blur-sm
-              ${themed.textPrimary} text-xs md:text-sm font-medium
-            `}
+              className={`appkit-image-gallery__zoom-indicator ${themed.bgSecondary} ${themed.textPrimary}`}
             >
               {Math.round(scale * 100)}%
             </div>
@@ -252,10 +224,8 @@ export default function ImageGallery({
 
         {/* Caption */}
         {showCaptions && currentImage.caption && (
-          <div className={`p-4 ${themed.border} border-t`}>
-            <Text className={`${themed.textSecondary} text-sm md:text-base`}>
-              {currentImage.caption}
-            </Text>
+          <div className={`appkit-image-gallery__caption ${themed.border}`}>
+            <Text className={themed.textSecondary}>{currentImage.caption}</Text>
           </div>
         )}
       </div>
@@ -268,15 +238,11 @@ export default function ImageGallery({
               key={index}
               variant="ghost"
               onClick={() => goToIndex(index)}
-              className={`
-                flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden
-                border-2 transition-all snap-center touch-manipulation
-                ${
-                  index === currentIndex
-                    ? "border-primary-500 ring-2 ring-primary-200 dark:ring-primary-800"
-                    : `${themed.border} hover:border-primary-300 dark:hover:border-primary-700`
-                }
-              `}
+              className={`appkit-image-gallery__thumbnail ${
+                index === currentIndex
+                  ? "appkit-image-gallery__thumbnail--active"
+                  : themed.border
+              }`}
               aria-label={`View image ${index + 1}`}
             >
               <MediaImage
@@ -291,7 +257,7 @@ export default function ImageGallery({
       )}
 
       {/* Mobile Help Text */}
-      <div className={`mt-2 text-center ${themed.textMuted} text-xs md:hidden`}>
+      <div className={`appkit-image-gallery__help ${themed.textMuted}`}>
         {allowZoom
           ? "Swipe to navigate • Double tap to zoom"
           : "Swipe to navigate"}

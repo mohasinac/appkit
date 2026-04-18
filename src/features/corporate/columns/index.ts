@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns } from "../../../ui/columns";
 import type { CorporateInquiry } from "../types";
 
 /**
@@ -52,25 +53,8 @@ export const corporateAdminColumns: TableColumn<CorporateInquiry>[] = [
  *   omit: ["units"],
  * });
  */
-export function buildCorporateColumns<T extends CorporateInquiry = CorporateInquiry>(
-  opts?: ColumnExtensionOpts<T>
-): TableColumn<T>[] {
-  let base = corporateAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+export function buildCorporateColumns<
+  T extends CorporateInquiry = CorporateInquiry,
+>(opts?: ColumnExtensionOpts<T>): TableColumn<T>[] {
+  return buildColumns(corporateAdminColumns as TableColumn<T>[], opts);
 }

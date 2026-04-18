@@ -2,12 +2,39 @@ export * from "./firestore";
 import { z } from "zod";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
+/** Zod schema for payout status — use instead of inline `z.enum(["pending",...])`. */
+export const payoutStatusSchema = z.enum([
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+]);
+
+/**
+ * Canonical payment gateway identifiers.
+ * Use these constants instead of bare string literals.
+ */
+export const PaymentGatewayValues = {
+  RAZORPAY: "razorpay",
+  STRIPE: "stripe",
+  PAYPAL: "paypal",
+  COD: "cod",
+  UPI: "upi",
+  WHATSAPP: "whatsapp",
+  BANK_TRANSFER: "bank_transfer",
+} as const;
+
+export type PaymentGateway =
+  (typeof PaymentGatewayValues)[keyof typeof PaymentGatewayValues];
+
 export const paymentGatewaySchema = z.enum([
-  "razorpay",
-  "stripe",
-  "paypal",
-  "cod",
-  "bank_transfer",
+  PaymentGatewayValues.RAZORPAY,
+  PaymentGatewayValues.STRIPE,
+  PaymentGatewayValues.PAYPAL,
+  PaymentGatewayValues.COD,
+  PaymentGatewayValues.UPI,
+  PaymentGatewayValues.WHATSAPP,
+  PaymentGatewayValues.BANK_TRANSFER,
 ]);
 
 export const paymentStatusSchema = z.enum([

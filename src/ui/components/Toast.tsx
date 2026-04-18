@@ -51,14 +51,25 @@ export interface ToastProviderProps {
   position?: ToastPosition;
 }
 
-const POSITION_CLASSES: Record<ToastPosition, string> = {
-  "top-right": "md:top-4 md:right-4",
-  "top-left": "md:top-4 md:left-4",
-  "bottom-right": "md:bottom-4 md:right-4",
-  "bottom-left": "md:bottom-4 md:left-4",
-  "top-center": "md:top-4 md:left-1/2 md:-translate-x-1/2",
-  "bottom-center": "md:bottom-4 md:left-1/2 md:-translate-x-1/2",
-};
+const UI_TOAST = {
+  container: "appkit-toast-container",
+  positions: {
+    "top-right": "appkit-toast-container--top-right",
+    "top-left": "appkit-toast-container--top-left",
+    "bottom-right": "appkit-toast-container--bottom-right",
+    "bottom-left": "appkit-toast-container--bottom-left",
+    "top-center": "appkit-toast-container--top-center",
+    "bottom-center": "appkit-toast-container--bottom-center",
+  },
+  row: "appkit-toast",
+  variants: {
+    success: "appkit-toast--success",
+    error: "appkit-toast--error",
+    warning: "appkit-toast--warning",
+    info: "appkit-toast--info",
+  },
+  icon: "appkit-toast__icon",
+} as const;
 
 export function ToastProvider({
   children,
@@ -87,11 +98,7 @@ export function ToastProvider({
       <div
         aria-live="polite"
         aria-atomic="true"
-        className={[
-          "pointer-events-none fixed inset-x-0 top-0 z-[100] flex flex-col gap-2 px-3 pt-3 md:inset-x-auto md:px-0 md:pt-0",
-          position.startsWith("bottom") ? "md:top-auto" : "",
-          POSITION_CLASSES[position],
-        ]
+        className={[UI_TOAST.container, UI_TOAST.positions[position]]
           .filter(Boolean)
           .join(" ")}
       >
@@ -110,16 +117,6 @@ function ToastRow({
   toast: ToastItem;
   onClose: (id: string) => void;
 }) {
-  const variantClasses: Record<ToastVariant, string> = {
-    success:
-      "border-green-200 bg-green-50 text-green-900 dark:border-green-900/60 dark:bg-green-950/70 dark:text-green-100",
-    error:
-      "border-red-200 bg-red-50 text-red-900 dark:border-red-900/60 dark:bg-red-950/70 dark:text-red-100",
-    warning:
-      "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/70 dark:text-amber-100",
-    info: "border-sky-200 bg-sky-50 text-sky-900 dark:border-sky-900/60 dark:bg-sky-950/70 dark:text-sky-100",
-  };
-
   const iconMap: Record<ToastVariant, React.ReactNode> = {
     success: <span aria-hidden="true">✓</span>,
     error: <span aria-hidden="true">!</span>,
@@ -130,14 +127,9 @@ function ToastRow({
   return (
     <div
       role="alert"
-      className={[
-        "pointer-events-auto flex w-full items-start gap-3 rounded-xl border px-4 py-3 shadow-lg md:min-w-[320px] md:max-w-md",
-        variantClasses[toast.variant],
-      ].join(" ")}
+      className={[UI_TOAST.row, UI_TOAST.variants[toast.variant]].join(" ")}
     >
-      <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black/5 text-sm font-semibold dark:bg-white/10">
-        {iconMap[toast.variant]}
-      </div>
+      <div className={UI_TOAST.icon}>{iconMap[toast.variant]}</div>
       <Text as="div" size="sm" weight="medium" className="flex-1 pr-1">
         {toast.message}
       </Text>

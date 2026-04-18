@@ -35,7 +35,7 @@ export function RoleBadge({
     "default") as "admin" | "moderator" | "seller" | "user" | "default";
 
   return (
-    <Badge variant={variant} className={className}>
+    <Badge variant={variant} className={`appkit-role-badge ${className ?? ""}`}>
       {label ?? DEFAULT_ROLE_LABELS[role] ?? role}
     </Badge>
   );

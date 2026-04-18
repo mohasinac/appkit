@@ -33,7 +33,7 @@ import { useTranslations } from "next-intl";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
-import { Span, Text, Button } from "../../ui";
+import { Row, Span, Text, Button } from "../../ui";
 
 // Token values inlined from @mohasinac/appkit/tokens
 const BOTTOM_NAV_BG =
@@ -194,7 +194,7 @@ export default function BottomActions() {
       )}
 
       {/* ── Main action row ────────────────────────────────────────────────── */}
-      <div className={`flex items-center gap-2 px-3 ${BOTTOM_NAV_HEIGHT}`}>
+      <Row className={`gap-2 px-3 ${BOTTOM_NAV_HEIGHT}`}>
         {isBulkMode && bulk ? (
           <>
             {/* Selection count pill — tap to clear ─────────────────────── */}
@@ -328,7 +328,7 @@ export default function BottomActions() {
             );
           })
         )}
-      </div>
+      </Row>
     </div>
   );
 }

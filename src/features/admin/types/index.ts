@@ -1,9 +1,6 @@
 import type React from "react";
 import type { TableColumn } from "../../../contracts";
 
-// Re-export the base column type from contracts
-export type { TableColumn } from "../../../contracts";
-
 // Admin product types
 export type {
   AdminProduct,

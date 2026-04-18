@@ -1,14 +1,15 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface SellerShippingViewProps {
+export interface SellerShippingViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: { title?: string; saveButton?: string };
   renderZones?: (isLoading: boolean) => React.ReactNode;
   renderForm?: () => React.ReactNode;
   isLoading?: boolean;
-  className?: string;
 }
 
 export function SellerShippingView({
@@ -16,15 +17,13 @@ export function SellerShippingView({
   renderZones,
   renderForm,
   isLoading = false,
-  className = "",
+  ...rest
 }: SellerShippingViewProps) {
   return (
-    <Div className={className}>
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">{labels.title}</Heading>
-      )}
-      {renderZones?.(isLoading)}
-      {renderForm?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[renderZones?.(isLoading), renderForm?.()]}
+    />
   );
 }

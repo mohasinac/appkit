@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Button, Div, Grid, Select, Span, Text } from "../../../ui";
+import { Button, Div, Grid, Row, Select, Span, Text } from "../../../ui";
 import type { SearchProductItem } from "../types";
 
 export interface SearchResultsSectionProps {
@@ -129,7 +129,7 @@ export function SearchResultsSection({
           onSortChange,
         })
       ) : (
-        <Div className="flex items-center justify-between">
+        <Row justify="between">
           <Text className="text-sm text-zinc-500 dark:text-zinc-400">
             {L.showing(products.length, total)}
           </Text>
@@ -141,7 +141,7 @@ export function SearchResultsSection({
               className="rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-3 py-1.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none"
             />
           )}
-        </Div>
+        </Row>
       )}
 
       {/* Product grid */}

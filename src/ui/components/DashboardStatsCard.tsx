@@ -4,6 +4,18 @@ import React from "react";
 import type { ElementType } from "react";
 import { Text } from "./Typography";
 
+const UI_STATS_CARD = {
+  base: "appkit-stats-card",
+  dark: "appkit-stats-card--dark",
+  iconWrap: "appkit-stats-card__icon-wrap",
+  body: "appkit-stats-card__body",
+  label: "appkit-stats-card__label",
+  value: "appkit-stats-card__value",
+  trend: "appkit-stats-card__trend",
+  trendUp: "appkit-stats-card__trend--up",
+  trendDown: "appkit-stats-card__trend--down",
+} as const;
+
 export interface DashboardStatsCardProps {
   label: string;
   value: number | string;
@@ -32,26 +44,27 @@ export function DashboardStatsCard({
   const card = (
     <div
       className={[
-        "flex items-center gap-4 rounded-xl p-4",
-        isDark
-          ? "bg-zinc-900 text-white"
-          : "border border-zinc-200 bg-white dark:border-slate-700 dark:bg-slate-900",
+        UI_STATS_CARD.base,
+        isDark ? UI_STATS_CARD.dark : "",
         className,
       ].join(" ")}
     >
       {Icon ? (
-        <div className={`rounded-lg p-2 ${iconBg}`}>
+        <div className={[UI_STATS_CARD.iconWrap, iconBg].join(" ")}>
           <Icon className={`h-5 w-5 ${iconColor}`} />
         </div>
       ) : null}
-      <div className="min-w-0 flex-1">
-        <Text className="truncate text-xs text-zinc-500 dark:text-zinc-400">
-          {label}
-        </Text>
-        <Text className="truncate text-xl font-semibold">{value}</Text>
+      <div className={UI_STATS_CARD.body}>
+        <Text className={UI_STATS_CARD.label}>{label}</Text>
+        <Text className={UI_STATS_CARD.value}>{value}</Text>
         {trend ? (
           <Text
-            className={`text-xs font-medium ${trend.value >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-500 dark:text-red-400"}`}
+            className={[
+              UI_STATS_CARD.trend,
+              trend.value >= 0
+                ? UI_STATS_CARD.trendUp
+                : UI_STATS_CARD.trendDown,
+            ].join(" ")}
           >
             {trend.value >= 0 ? "+" : ""}
             {trend.value}%

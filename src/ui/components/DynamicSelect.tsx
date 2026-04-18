@@ -32,6 +32,21 @@ export interface DynamicSelectProps<V = string> {
   ariaLabel?: string;
 }
 
+const UI_DYNAMIC_SELECT = {
+  root: "appkit-dynamic-select",
+  trigger: "appkit-dynamic-select__trigger",
+  triggerDisabled: "appkit-dynamic-select__trigger--disabled",
+  placeholder: "appkit-dynamic-select__placeholder",
+  dropdown: "appkit-dynamic-select__dropdown",
+  search: "appkit-dynamic-select__search",
+  list: "appkit-dynamic-select__list",
+  option: "appkit-dynamic-select__option",
+  optionSelected: "appkit-dynamic-select__option--selected",
+  empty: "appkit-dynamic-select__empty",
+  loading: "appkit-dynamic-select__loading",
+  loadMore: "appkit-dynamic-select__load-more",
+} as const;
+
 export function DynamicSelect<V = string>({
   value,
   onChange,
@@ -103,7 +118,7 @@ export function DynamicSelect<V = string>({
   return (
     <div
       ref={containerRef}
-      className={["relative", className].filter(Boolean).join(" ")}
+      className={[UI_DYNAMIC_SELECT.root, className].filter(Boolean).join(" ")}
       aria-label={ariaLabel}
     >
       <button
@@ -111,27 +126,28 @@ export function DynamicSelect<V = string>({
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
         className={[
-          "flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm",
-          "border-zinc-300 bg-white text-zinc-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200",
-          disabled ? "cursor-not-allowed opacity-50" : "",
-        ].join(" ")}
+          UI_DYNAMIC_SELECT.trigger,
+          disabled ? UI_DYNAMIC_SELECT.triggerDisabled : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
-        <span className={value == null ? "text-zinc-400" : ""}>
+        <span className={value == null ? UI_DYNAMIC_SELECT.placeholder : ""}>
           {selectedLabel || placeholder}
         </span>
         <span aria-hidden="true">▾</span>
       </button>
 
       {open ? (
-        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+        <div className={UI_DYNAMIC_SELECT.dropdown}>
           <Input
             autoFocus
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={searchPlaceholder}
-            className="rounded-none border-x-0 border-t-0"
+            className={UI_DYNAMIC_SELECT.search}
           />
-          <ul className="max-h-48 overflow-y-auto py-1">
+          <ul className={UI_DYNAMIC_SELECT.list}>
             {filtered.map((option, index) => (
               <li key={`${String(option.value)}-${index}`}>
                 <button
@@ -141,10 +157,13 @@ export function DynamicSelect<V = string>({
                     setOpen(false);
                   }}
                   className={[
-                    "w-full px-3 py-2 text-left text-sm",
-                    "hover:bg-zinc-100 dark:hover:bg-slate-800",
-                    option.value === value ? "font-medium" : "",
-                  ].join(" ")}
+                    UI_DYNAMIC_SELECT.option,
+                    option.value === value
+                      ? UI_DYNAMIC_SELECT.optionSelected
+                      : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
                   {option.label}
                 </button>
@@ -152,20 +171,18 @@ export function DynamicSelect<V = string>({
             ))}
 
             {filtered.length === 0 && !loading ? (
-              <li className="px-3 py-2 text-xs text-zinc-400">
-                {noResultsText}
-              </li>
+              <li className={UI_DYNAMIC_SELECT.empty}>{noResultsText}</li>
             ) : null}
 
             {loading ? (
-              <li className="px-3 py-2 text-xs text-zinc-400">Loading...</li>
+              <li className={UI_DYNAMIC_SELECT.loading}>Loading...</li>
             ) : null}
 
             {hasMore && !loading ? (
               <li>
                 <button
                   type="button"
-                  className="w-full px-3 py-2 text-left text-xs text-primary hover:underline"
+                  className={UI_DYNAMIC_SELECT.loadMore}
                   onClick={() => void load(query, page + 1)}
                 >
                   Load more

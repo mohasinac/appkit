@@ -1,4 +1,4 @@
-import { Button, Div, Text } from "../../../ui";
+import { Button, Div, Stack, Text } from "../../../ui";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -78,20 +78,20 @@ export function WishlistPage({
 }: WishlistPageProps) {
   if (isLoading) {
     return (
-      <Div className="space-y-4">
+      <Stack gap="md">
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
             className="flex animate-pulse gap-4 rounded-xl border border-neutral-200 p-4"
           >
             <Div className="h-20 w-20 rounded-lg bg-neutral-200" />
-            <Div className="flex-1 space-y-2">
+            <Stack gap="sm" className="flex-1">
               <Div className="h-4 w-3/4 rounded bg-neutral-200" />
               <Div className="h-4 w-1/3 rounded bg-neutral-200" />
-            </Div>
+            </Stack>
           </Div>
         ))}
-      </Div>
+      </Stack>
     );
   }
 
@@ -104,7 +104,7 @@ export function WishlistPage({
   }
 
   return (
-    <Div className="space-y-4">
+    <Stack gap="md">
       {items.map((item) => (
         <WishlistCard
           key={item.id}
@@ -113,6 +113,6 @@ export function WishlistPage({
           onProductClick={onProductClick}
         />
       ))}
-    </Div>
+    </Stack>
   );
 }

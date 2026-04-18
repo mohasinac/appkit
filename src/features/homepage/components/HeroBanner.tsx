@@ -225,8 +225,8 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
 
       {/* Dot indicator + counter */}
       {banners.length > 1 && (
-        <Div
-          className="absolute bottom-8 right-6 sm:right-12 flex items-center gap-3"
+        <Row
+          className="absolute bottom-8 right-6 sm:right-12 gap-3"
           style={{ zIndex: 15 }}
         >
           <Span
@@ -261,7 +261,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               />
             ))}
           </Div>
-        </Div>
+        </Row>
       )}
 
       {/* Scroll-down hint */}

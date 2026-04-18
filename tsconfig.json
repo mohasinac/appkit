@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2020",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -12,20 +11,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "incremental": true,
-    "baseUrl": ".",
-    "paths": {
-      "@mohasinac/appkit": ["./src/index.ts"],
-      "@mohasinac/appkit/*": ["./src/*"],
-      "@mohasinac/feat-*": ["./src/features/*"],
-      "@mohasinac/css-*": ["./src/style/*"],
-      "@mohasinac/db-*": ["./src/providers/*"],
-      "@mohasinac/auth-*": ["./src/providers/*"],
-      "@mohasinac/email-*": ["./src/providers/*"],
-      "@mohasinac/storage-*": ["./src/providers/*"],
-      "@mohasinac/payment-*": ["./src/providers/*"],
-      "@mohasinac/shipping-*": ["./src/providers/*"]
-    }
+    "incremental": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

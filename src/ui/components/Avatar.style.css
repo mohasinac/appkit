@@ -1,0 +1,73 @@
+/* Avatar — circular image or initials display with size variants */
+
+.appkit-avatar {
+  border-radius: 9999px;
+  object-fit: cover;
+  background: #f4f4f5;
+}
+
+.appkit-avatar--fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #e4e4e7;
+  font-weight: 500;
+  color: #3f3f46;
+}
+
+/* Sizes */
+.appkit-avatar--xs {
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: 10px;
+}
+.appkit-avatar--sm {
+  height: 2rem;
+  width: 2rem;
+  font-size: 0.75rem;
+}
+.appkit-avatar--md {
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 0.875rem;
+}
+.appkit-avatar--lg {
+  height: 3rem;
+  width: 3rem;
+  font-size: 1rem;
+}
+
+/* Group */
+.appkit-avatar-group {
+  display: flex;
+}
+.appkit-avatar-group > * + * {
+  margin-left: -0.5rem;
+}
+.appkit-avatar-group__overflow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  ring: 2px solid white;
+  background: #d4d4d8;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #3f3f46;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .appkit-avatar {
+    background: #1e293b;
+  }
+  .appkit-avatar--fallback {
+    background: #334155;
+    color: #e2e8f0;
+  }
+  .appkit-avatar-group__overflow {
+    background: #475569;
+    color: #e2e8f0;
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Article, Div, Heading, Span, Text } from "../../../ui";
+import { Article, Div, Heading, Row, Span, Text } from "../../../ui";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -65,7 +65,7 @@ export function BlogFeaturedCard({
         </Div>
       )}
       <Div className="p-8 md:w-1/2 flex flex-col justify-center">
-        <Div className="flex items-center gap-2 mb-3">
+        <Row className="gap-2 mb-3">
           <Span
             className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}
           >
@@ -76,7 +76,7 @@ export function BlogFeaturedCard({
               {labels.featuredBadge ?? "Featured"}
             </Span>
           )}
-        </Div>
+        </Row>
         <Heading
           level={2}
           className="text-xl font-semibold text-neutral-900 mb-3 leading-snug"
@@ -88,7 +88,7 @@ export function BlogFeaturedCard({
             {post.excerpt}
           </Text>
         )}
-        <Div className="flex items-center gap-4 text-xs text-neutral-400">
+        <Row className="gap-4 text-xs text-neutral-400">
           {post.authorName && <Span>{post.authorName}</Span>}
           {post.readTimeMinutes != null && (
             <Span>
@@ -96,7 +96,7 @@ export function BlogFeaturedCard({
             </Span>
           )}
           {date && <Span>{date}</Span>}
-        </Div>
+        </Row>
       </Div>
     </Article>
   );

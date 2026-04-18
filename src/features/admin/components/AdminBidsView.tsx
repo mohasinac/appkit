@@ -1,29 +1,9 @@
-"use client";
-
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingViewShell } from "../../../ui";
+import type { ListingViewShellProps } from "../../../ui";
 
-export interface AdminBidsViewProps extends Omit<
-  ListingLayoutProps,
-  "children"
-> {
-  renderDrawer?: () => React.ReactNode;
-  children: React.ReactNode;
-}
+export interface AdminBidsViewProps extends ListingViewShellProps {}
 
-export function AdminBidsView({
-  renderDrawer,
-  children,
-  isDashboard = true,
-  ...listingProps
-}: AdminBidsViewProps) {
-  return (
-    <>
-      <ListingLayout {...listingProps} isDashboard={isDashboard}>
-        {children}
-      </ListingLayout>
-      {renderDrawer?.()}
-    </>
-  );
+export function AdminBidsView(props: AdminBidsViewProps) {
+  return <ListingViewShell {...props} />;
 }

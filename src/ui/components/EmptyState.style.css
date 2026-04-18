@@ -1,0 +1,30 @@
+/* EmptyState — centered feedback panel with icon, title, description, action */
+
+.appkit-empty-state {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 220px;
+}
+
+.appkit-empty-state__icon {
+  color: #a1a1aa;
+}
+
+.appkit-empty-state__description {
+  max-width: 48ch;
+}
+
+.appkit-empty-state__action {
+  padding-top: 0.25rem;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .appkit-empty-state__icon {
+    color: #64748b;
+  }
+}

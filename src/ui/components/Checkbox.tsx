@@ -13,6 +13,19 @@ export interface CheckboxProps extends Omit<
   indeterminate?: boolean;
 }
 
+const UI_CHECKBOX = {
+  base: "appkit-checkbox",
+  label: "appkit-checkbox__label",
+  labelDisabled: "appkit-checkbox__label--disabled",
+  boxWrap: "appkit-checkbox__box-wrap",
+  input: "appkit-checkbox__input",
+  inputError: "appkit-checkbox__input--error",
+  icon: "appkit-checkbox__icon",
+  content: "appkit-checkbox__content",
+  text: "appkit-checkbox__text",
+  error: "appkit-checkbox__error",
+} as const;
+
 export function Checkbox({
   label,
   suffix,
@@ -35,17 +48,17 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-    <div className="w-full">
+    <div className={UI_CHECKBOX.base}>
       <Label
         htmlFor={inputId}
         className={[
-          "inline-flex w-full cursor-pointer items-start gap-3",
-          disabled ? "cursor-not-allowed opacity-60" : "",
+          UI_CHECKBOX.label,
+          disabled ? UI_CHECKBOX.labelDisabled : "",
         ]
           .filter(Boolean)
           .join(" ")}
       >
-        <span className="relative mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center">
+        <span className={UI_CHECKBOX.boxWrap}>
           <input
             {...props}
             ref={inputRef}
@@ -55,16 +68,8 @@ export function Checkbox({
             disabled={disabled}
             aria-invalid={error ? "true" : undefined}
             className={[
-              "peer h-5 w-5 appearance-none rounded-md border border-zinc-300 bg-white transition",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500/30 focus-visible:ring-offset-2",
-              "dark:border-slate-600 dark:bg-slate-900 dark:focus-visible:ring-pink-500/30 dark:focus-visible:ring-offset-slate-950",
-              error ? "border-red-400 dark:border-red-500" : "",
-              disabled
-                ? "cursor-not-allowed"
-                : "cursor-pointer hover:border-lime-500 dark:hover:border-pink-500",
-              checked
-                ? "border-lime-600 bg-lime-600 dark:border-pink-500 dark:bg-pink-500"
-                : "",
+              UI_CHECKBOX.input,
+              error ? UI_CHECKBOX.inputError : "",
               className,
             ]
               .filter(Boolean)
@@ -73,7 +78,7 @@ export function Checkbox({
           <svg
             aria-hidden="true"
             viewBox="0 0 20 20"
-            className="pointer-events-none absolute h-3.5 w-3.5 text-white opacity-0 transition peer-checked:opacity-100"
+            className={UI_CHECKBOX.icon}
           >
             {indeterminate ? (
               <path
@@ -98,11 +103,9 @@ export function Checkbox({
         </span>
 
         {(label || suffix) && (
-          <span className="flex min-w-0 flex-1 items-start justify-between gap-3">
+          <span className={UI_CHECKBOX.content}>
             {label ? (
-              <Span className="pt-0.5 text-sm text-zinc-700 dark:text-zinc-200">
-                {label}
-              </Span>
+              <Span className={UI_CHECKBOX.text}>{label}</Span>
             ) : (
               <span />
             )}
@@ -112,7 +115,12 @@ export function Checkbox({
       </Label>
 
       {error && (
-        <Text size="sm" variant="error" className="mt-1.5 pl-8" role="alert">
+        <Text
+          size="sm"
+          variant="error"
+          className={UI_CHECKBOX.error}
+          role="alert"
+        >
           {error}
         </Text>
       )}

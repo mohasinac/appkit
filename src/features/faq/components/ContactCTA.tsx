@@ -1,6 +1,6 @@
 "use client";
 
-import { Div, Heading, Span, Text, TextLink } from "../../../ui";
+import { Card, Div, Heading, Span, Text, TextLink } from "../../../ui";
 
 interface ContactCTAProps {
   email: string;
@@ -24,7 +24,11 @@ export function ContactCTA({
   labels,
 }: ContactCTAProps) {
   return (
-    <Div className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-slate-700 dark:bg-slate-800/60">
+    <Card
+      variant="outlined"
+      padding="lg"
+      className="text-center dark:bg-slate-800/60"
+    >
       <Div className="mb-6 flex justify-center">
         <Div className="rounded-full bg-primary/10 p-8">
           <svg
@@ -110,6 +114,6 @@ export function ContactCTA({
           />
         </svg>
       </TextLink>
-    </Div>
+    </Card>
   );
 }

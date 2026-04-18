@@ -35,14 +35,16 @@ npm install
 npm run watch
 ```
 
-## Build and Quality
+## Type Safety and Quality
 
 ```bash
-npm run build
 npm run lint
 npm run typecheck
-npm run index:generate
 ```
+
+No bundler or custom build pipeline is required. The package is source-first and
+exports TypeScript entry points directly for modern Next.js and TypeScript
+toolchains.
 
 ## Publishing Notes
 

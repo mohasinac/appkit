@@ -1,5 +1,6 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
 import type { CartItem } from "../types";
+import { buildColumns } from "../../../ui/columns";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 /**
@@ -56,24 +57,5 @@ export const cartAdminColumns: TableColumn<CartItem>[] = [
 export function buildCartColumns<T extends CartItem = CartItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  let base = cartAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (
-        opts.overrides as Record<string, Partial<TableColumn<T>>>
-      )[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+  return buildColumns(cartAdminColumns as TableColumn<T>[], opts);
 }

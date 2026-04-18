@@ -49,32 +49,26 @@ export function FlowDiagram({
   children,
 }: FlowDiagramProps) {
   return (
-    <div
-      className={`rounded-2xl border ${themed.border} overflow-hidden ${className}`}
-    >
+    <div className={`appkit-flow-diagram ${themed.border} ${className}`}>
       <div
-        className={`${themed.bgSecondary} px-5 py-3 border-b ${themed.border}`}
+        className={`appkit-flow-diagram__header ${themed.bgSecondary} ${themed.border}`}
       >
         <Text weight="semibold" size="sm" className={titleClass}>
           {title}
         </Text>
       </div>
-      <div className={`${themed.bgPrimary} p-5`}>
+      <div className={`appkit-flow-diagram__body ${themed.bgPrimary}`}>
         <div
-          className={
-            centered
-              ? "flex justify-center items-start gap-1.5 mb-4"
-              : "flex items-start overflow-x-auto pb-3 gap-1.5 scroll-smooth"
-          }
+          className={`appkit-flow-diagram__chain ${centered ? "appkit-flow-diagram__chain--centered" : "appkit-flow-diagram__chain--scroll"}`}
         >
           {steps.flatMap((step, i) => {
             const nodes: ReactNode[] = [
               <div
                 key={`s-${i}`}
-                className={`shrink-0 flex flex-col items-center text-center gap-1 ${stepWidth}`}
+                className={`appkit-flow-diagram__step ${stepWidth}`}
               >
                 <div
-                  className={`w-12 h-12 rounded-full ${step.circleClass} ${flex.center} text-xl`}
+                  className={`appkit-flow-diagram__circle ${step.circleClass}`}
                 >
                   {step.emoji}
                 </div>
@@ -85,7 +79,7 @@ export function FlowDiagram({
                 )}
                 {step.badge && step.badgeClass && (
                   <Span
-                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${step.badgeClass}`}
+                    className={`appkit-flow-diagram__badge ${step.badgeClass}`}
                   >
                     {step.badge}
                   </Span>
@@ -101,7 +95,7 @@ export function FlowDiagram({
               nodes.push(
                 <div
                   key={`c-${i}`}
-                  className={`shrink-0 self-start h-0.5 w-5 ${connectorClass} mt-6`}
+                  className={`appkit-flow-diagram__connector ${connectorClass}`}
                 />,
               );
             }
@@ -110,7 +104,7 @@ export function FlowDiagram({
         </div>
         {children}
         {note && (
-          <div className="mt-3 pt-3 border-t border-dashed border-slate-200 dark:border-slate-700">
+          <div className="appkit-flow-diagram__note">
             <Text size="xs" variant="secondary">
               {note}
             </Text>

@@ -1,0 +1,5 @@
+/* RichText — sanitised HTML renderer with prose styling */
+
+.appkit-rich-text {
+  /* Base wrapper — prose classes applied via className prop */
+}

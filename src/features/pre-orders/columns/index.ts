@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderBoolean } from "../../../ui/columns";
 import type { PreorderItem } from "../types";
 
 /**
@@ -42,13 +43,13 @@ export const preorderAdminColumns: TableColumn<PreorderItem>[] = [
     key: "isFeatured",
     header: "Featured",
     sortable: false,
-    render: (item) => (item.isFeatured ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.isFeatured),
   },
   {
     key: "active",
     header: "Active",
     sortable: false,
-    render: (item) => (item.active ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.active),
   },
   {
     key: "createdAt",
@@ -67,24 +68,7 @@ export const preorderAdminColumns: TableColumn<PreorderItem>[] = [
  * });
  */
 export function buildPreorderColumns<T extends PreorderItem = PreorderItem>(
-  opts?: ColumnExtensionOpts<T>
+  opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  let base = preorderAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+  return buildColumns(preorderAdminColumns as TableColumn<T>[], opts);
 }

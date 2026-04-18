@@ -5,7 +5,7 @@ import { apiClient } from "../../../http";
 import type {
   ProductItem,
   ProductListResponse,
-} from "@mohasinac/feat-products";
+} from "@mohasinac/appkit/features/products";
 
 const MIN_COUNT = 12;
 

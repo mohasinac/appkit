@@ -1,6 +1,6 @@
 import React from "react";
 import type { CheckoutStep } from "../types";
-import { Div, Nav, Span } from "../../../ui";
+import { Div, Nav, Row, Span } from "../../../ui";
 
 interface CheckoutStepperProps {
   steps: { id: CheckoutStep; label: string }[];
@@ -16,7 +16,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
         const isActive = step.id === current;
         return (
           <React.Fragment key={step.id}>
-            <Div className="flex items-center gap-1.5">
+            <Row className="gap-1.5">
               <Span
                 className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
                   isDone
@@ -33,7 +33,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
               >
                 {step.label}
               </Span>
-            </Div>
+            </Row>
             {idx < steps.length - 1 && (
               <Span className="h-px flex-1 bg-neutral-200" />
             )}

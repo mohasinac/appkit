@@ -1,14 +1,15 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface CheckoutSuccessViewProps {
+export interface CheckoutSuccessViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: { title?: string; continueButton?: string };
   renderHero?: () => React.ReactNode;
   renderOrderCard?: () => React.ReactNode;
   renderActions?: (onContinue: () => void) => React.ReactNode;
-  className?: string;
 }
 
 export function CheckoutSuccessView({
@@ -16,16 +17,17 @@ export function CheckoutSuccessView({
   renderHero,
   renderOrderCard,
   renderActions,
-  className = "",
+  ...rest
 }: CheckoutSuccessViewProps) {
   return (
-    <Div className={className}>
-      {renderHero?.()}
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-4">{labels.title}</Heading>
-      )}
-      {renderOrderCard?.()}
-      {renderActions?.(() => {})}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[
+        renderHero?.(),
+        renderOrderCard?.(),
+        renderActions?.(() => {}),
+      ]}
+    />
   );
 }

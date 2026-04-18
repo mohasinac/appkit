@@ -1,0 +1,84 @@
+/* BaseListingCard — compound card for product/event/auction listings */
+
+.appkit-listing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  min-width: clamp(150px, 18vw, 260px);
+  min-height: clamp(220px, 26vh, 360px);
+}
+
+:is(.dark) .appkit-listing-card {
+  border-color: #374151;
+}
+
+.appkit-listing-card--selected {
+  ring: 2px;
+  outline: 2px solid var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.appkit-listing-card--disabled {
+  opacity: 0.6;
+}
+
+.appkit-listing-card--clickable {
+  cursor: pointer;
+}
+.appkit-listing-card--clickable:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero (image area) */
+.appkit-listing-card__hero {
+  position: relative;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  min-height: clamp(120px, 14vh, 200px);
+  max-height: clamp(160px, 24vh, 280px);
+}
+
+:is(.dark) .appkit-listing-card__hero {
+  background-color: #1f2937;
+}
+
+.appkit-listing-card__hero--square { aspect-ratio: 1 / 1; }
+.appkit-listing-card__hero--landscape { aspect-ratio: 4 / 3; }
+
+/* Info (text area) */
+.appkit-listing-card__info {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Checkbox overlay */
+.appkit-listing-card__checkbox {
+  position: absolute;
+  z-index: 10;
+  height: 1.25rem;
+  width: 1.25rem;
+  border-radius: 0.25rem;
+  border: 2px solid #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.appkit-listing-card__checkbox--selected {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.appkit-listing-card__checkbox-icon {
+  color: white;
+  font-size: 0.75rem;
+  line-height: 1;
+}

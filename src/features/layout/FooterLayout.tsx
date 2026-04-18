@@ -85,23 +85,22 @@ export function FooterLayout({
           <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
-                <Li
-                  key={item.id ?? String(i)}
-                  className="flex items-center gap-3 text-sm min-w-[160px]"
-                >
-                  <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
-                    {item.icon}
-                  </Span>
-                  <Span>
-                    <Span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                      {item.label}
+                <Li key={item.id ?? String(i)}>
+                  <Row gap="sm" className="text-sm min-w-[160px]">
+                    <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
+                      {item.icon}
                     </Span>
-                    {item.subtitle && (
-                      <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
-                        {item.subtitle}
+                    <Span>
+                      <Span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                        {item.label}
                       </Span>
-                    )}
-                  </Span>
+                      {item.subtitle && (
+                        <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
+                          {item.subtitle}
+                        </Span>
+                      )}
+                    </Span>
+                  </Row>
                 </Li>
               ))}
             </Row>
@@ -122,7 +121,7 @@ export function FooterLayout({
 
             {/* Social links */}
             {socialLinks.length > 0 && (
-              <Ul className="flex items-center gap-3">
+              <Row as={Ul} gap="sm">
                 {socialLinks.map((link) => (
                   <Li key={link.platform}>
                     <Link
@@ -136,7 +135,7 @@ export function FooterLayout({
                     </Link>
                   </Li>
                 ))}
-              </Ul>
+              </Row>
             )}
 
             {/* Newsletter slot */}

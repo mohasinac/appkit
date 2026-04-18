@@ -153,12 +153,12 @@ export const SUCCESS_MESSAGES = {
   // Shipping Success
   SHIPPING: {
     UPDATED: "Shipping configuration saved successfully",
-    SHIPROCKET_CONNECTED: "Shiprocket account connected successfully",
+    PROVIDER_CONNECTED: "Shipping provider account connected successfully",
     PICKUP_OTP_SENT: "OTP sent to your registered phone number",
     PICKUP_VERIFIED: "Pickup address verified successfully",
     ORDER_SHIPPED: "Order marked as shipped",
-    SHIPROCKET_ORDER_CREATED: "Shipment created in Shiprocket",
-    PICKUP_SCHEDULED: "Pickup scheduled with Shiprocket",
+    SHIPMENT_CREATED: "Shipment created with shipping provider",
+    PICKUP_SCHEDULED: "Pickup scheduled with shipping provider",
   },
 
   // Payout settings Success

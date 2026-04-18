@@ -30,6 +30,7 @@ export {
   preventBodyScroll,
 } from "./event-manager";
 export * from "./business-day";
+export * from "./schema-ui";
 
 // Re-export order utilities for checkout flows
 export {

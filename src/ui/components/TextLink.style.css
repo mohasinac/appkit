@@ -46,3 +46,49 @@
 .dark .appkit-text-link--underline {
   color: #f063b9;
 }
+
+/* nav — secondary text colour; hover to primary; no underline */
+.appkit-text-link--nav {
+  color: #71717a;
+}
+
+.appkit-text-link--nav:hover {
+  color: #509c02;
+}
+
+.dark .appkit-text-link--nav {
+  color: #a1a1aa;
+}
+
+.dark .appkit-text-link--nav:hover {
+  color: #f063b9;
+}
+
+/* danger — red destructive link */
+.appkit-text-link--danger {
+  color: #dc2626;
+  text-underline-offset: 2px;
+}
+
+.appkit-text-link--danger:hover {
+  color: #991b1b;
+  text-decoration: underline;
+}
+
+.dark .appkit-text-link--danger {
+  color: #f87171;
+}
+
+.dark .appkit-text-link--danger:hover {
+  color: #fca5a5;
+}
+
+/* inherit — inherits surrounding text colour; underline on hover only */
+.appkit-text-link--inherit {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.appkit-text-link--inherit:hover {
+  text-decoration: underline;
+}

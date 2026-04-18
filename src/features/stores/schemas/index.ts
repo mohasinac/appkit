@@ -2,6 +2,14 @@ export * from "./firestore";
 
 import { z } from "zod";
 
+/** Zod schema for store status — use instead of inline `z.enum(["pending",...])`. */
+export const storeStatusSchema = z.enum([
+  "pending",
+  "active",
+  "suspended",
+  "rejected",
+]);
+
 // ─── Base item schema ─────────────────────────────────────────────────────────
 
 /**

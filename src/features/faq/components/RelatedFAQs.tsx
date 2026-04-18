@@ -1,6 +1,6 @@
 "use client";
 
-import { Div, Heading, Text, TextLink } from "../../../ui";
+import { Card, Div, Heading, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 
 interface RelatedFAQsProps {
@@ -21,7 +21,7 @@ export function RelatedFAQs({
   }
 
   return (
-    <Div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800/60">
+    <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
       <Heading level={3} className="mb-4 text-lg font-semibold">
         {labels?.title ?? "Related Questions"}
       </Heading>
@@ -69,6 +69,6 @@ export function RelatedFAQs({
           </TextLink>
         ))}
       </Div>
-    </Div>
+    </Card>
   );
 }

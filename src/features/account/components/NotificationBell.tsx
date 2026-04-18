@@ -5,6 +5,7 @@ import {
   Button,
   Heading,
   Li,
+  Row,
   Spinner,
   Span,
   Text,
@@ -186,7 +187,11 @@ export function NotificationBell({
         <div
           className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 overflow-hidden ${dropdownClassName}`}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-200 dark:border-slate-800">
+          <Row
+            justify="between"
+            gap="none"
+            className="px-4 py-3 border-b border-zinc-200 dark:border-slate-800"
+          >
             <Heading
               level={3}
               className="font-semibold text-zinc-900 dark:text-white"
@@ -207,7 +212,7 @@ export function NotificationBell({
                 {isMarkingAll ? labels.loading : labels.markAllRead}
               </Button>
             )}
-          </div>
+          </Row>
 
           <div className="max-h-96 overflow-y-auto">
             {isLoading ? (
@@ -271,7 +276,7 @@ export function NotificationBell({
                         {notification.message}
                       </Text>
 
-                      <div className="flex items-center gap-3 mt-1.5">
+                      <Row gap="3" className="mt-1.5">
                         {notification.actionUrl &&
                           renderActionLink({
                             href: notification.actionUrl,
@@ -294,7 +299,7 @@ export function NotificationBell({
                             {labels.markRead}
                           </Button>
                         )}
-                      </div>
+                      </Row>
                     </div>
                   </Li>
                 ))}

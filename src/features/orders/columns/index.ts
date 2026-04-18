@@ -1,4 +1,9 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderCurrencyCompact,
+  renderCount,
+} from "../../../ui/columns";
 import type { Order } from "../types";
 
 /**
@@ -15,14 +20,14 @@ export const orderAdminColumns: TableColumn<Order>[] = [
     key: "total",
     header: "Total",
     sortable: true,
-    render: (o) => `${o.currency} ${o.total.toLocaleString()}`,
+    render: (o) => renderCurrencyCompact(o.total, o.currency),
   },
   { key: "orderStatus", header: "Status", sortable: true },
   { key: "paymentStatus", header: "Payment", sortable: true },
   {
     key: "items",
     header: "Items",
-    render: (o) => o.items.length.toLocaleString(),
+    render: (o) => renderCount(o.items.length),
   },
   { key: "trackingNumber", header: "Tracking" },
   { key: "createdAt", header: "Placed", sortable: true },
@@ -35,13 +40,5 @@ export const orderAdminColumns: TableColumn<Order>[] = [
 export function buildOrderColumns<T extends Order = Order>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = orderAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(orderAdminColumns as TableColumn<T>[], opts);
 }

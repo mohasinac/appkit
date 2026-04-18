@@ -14,153 +14,24 @@
   "type": "module",
   "types": "./src/index.ts",
   "exports": {
-    ".": {
-      "types": "./src/index.ts",
-      "default": "./src/index.ts",
-      "import": "./src/index.ts"
-    },
-    "./contracts": {
-      "types": "./src/contracts/index.ts",
-      "default": "./src/contracts/index.ts",
-      "import": "./src/contracts/index.ts"
-    },
-    "./core": {
-      "types": "./src/core/index.ts",
-      "default": "./src/core/index.ts",
-      "import": "./src/core/index.ts"
-    },
-    "./core/integration-keys": {
-      "types": "./src/core/integration-keys.ts",
-      "default": "./src/core/integration-keys.ts",
-      "import": "./src/core/integration-keys.ts"
-    },
-    "./core/newsletter.repository": {
-      "types": "./src/core/newsletter.repository.ts",
-      "default": "./src/core/newsletter.repository.ts",
-      "import": "./src/core/newsletter.repository.ts"
-    },
-    "./repositories": {
-      "types": "./src/repositories/index.ts",
-      "default": "./src/repositories/index.ts",
-      "import": "./src/repositories/index.ts"
-    },
-    "./http": {
-      "types": "./src/http/index.ts",
-      "default": "./src/http/index.ts",
-      "import": "./src/http/index.ts"
-    },
-    "./errors": {
-      "types": "./src/errors/index.ts",
-      "default": "./src/errors/index.ts",
-      "import": "./src/errors/index.ts"
-    },
-    "./utils": {
-      "types": "./src/utils/index.ts",
-      "default": "./src/utils/index.ts",
-      "import": "./src/utils/index.ts"
-    },
-    "./validation": {
-      "types": "./src/validation/index.ts",
-      "default": "./src/validation/index.ts",
-      "import": "./src/validation/index.ts"
-    },
-    "./tokens": {
-      "types": "./src/tokens/index.ts",
-      "default": "./src/tokens/index.ts",
-      "import": "./src/tokens/index.ts"
-    },
-    "./next": {
-      "types": "./src/next/index.ts",
-      "default": "./src/next/index.ts",
-      "import": "./src/next/index.ts"
-    },
-    "./react": {
-      "types": "./src/react/index.ts",
-      "default": "./src/react/index.ts",
-      "import": "./src/react/index.ts"
-    },
-    "./ui": {
-      "types": "./src/ui/index.ts",
-      "default": "./src/ui/index.ts",
-      "import": "./src/ui/index.ts"
-    },
-    "./security": {
-      "types": "./src/security/index.ts",
-      "default": "./src/security/index.ts",
-      "import": "./src/security/index.ts"
-    },
-    "./seo": {
-      "types": "./src/seo/index.ts",
-      "default": "./src/seo/index.ts",
-      "import": "./src/seo/index.ts"
-    },
-    "./monitoring": {
-      "types": "./src/monitoring/index.ts",
-      "default": "./src/monitoring/index.ts",
-      "import": "./src/monitoring/index.ts"
-    },
-    "./instrumentation": {
-      "types": "./src/instrumentation/index.ts",
-      "default": "./src/instrumentation/index.ts",
-      "import": "./src/instrumentation/index.ts"
-    },
-    "./style/*": {
-      "types": "./src/style/*/index.ts",
-      "default": "./src/style/*/index.ts",
-      "import": "./src/style/*/index.ts"
-    },
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts",
+    "./core/integration-keys": "./src/core/integration-keys.ts",
+    "./core/newsletter.repository": "./src/core/newsletter.repository.ts",
+    "./style/*": "./src/style/*/index.ts",
     "./providers/db-firebase": {
-      "types": "./src/providers/db-firebase/index.ts",
       "browser": "./src/providers/db-firebase/browser-stub.ts",
-      "default": "./src/providers/db-firebase/index.ts",
-      "import": "./src/providers/db-firebase/index.ts"
+      "default": "./src/providers/db-firebase/index.ts"
     },
     "./providers/auth-firebase": {
-      "types": "./src/providers/auth-firebase/index.ts",
       "browser": "./src/providers/auth-firebase/browser-stub.ts",
-      "default": "./src/providers/auth-firebase/index.ts",
-      "import": "./src/providers/auth-firebase/index.ts"
+      "default": "./src/providers/auth-firebase/index.ts"
     },
-    "./providers/*": {
-      "types": "./src/providers/*/index.ts",
-      "default": "./src/providers/*/index.ts",
-      "import": "./src/providers/*/index.ts"
-    },
-    "./providers/storage-firebase/client": {
-      "types": "./src/providers/storage-firebase/client.ts",
-      "default": "./src/providers/storage-firebase/client.ts",
-      "import": "./src/providers/storage-firebase/client.ts"
-    },
-    "./features/*": {
-      "types": "./src/features/*/index.ts",
-      "default": "./src/features/*/index.ts",
-      "import": "./src/features/*/index.ts"
-    },
-    "./features/*/server": {
-      "types": "./src/features/*/server.ts",
-      "default": "./src/features/*/server.ts",
-      "import": "./src/features/*/server.ts"
-    },
-    "./cli": {
-      "types": "./src/cli/index.ts",
-      "default": "./src/cli/index.ts",
-      "import": "./src/cli/index.ts"
-    },
-    "./seed": {
-      "types": "./src/seed/index.ts",
-      "default": "./src/seed/index.ts",
-      "import": "./src/seed/index.ts"
-    },
-    "./features/*/schemas": {
-      "types": "./src/features/*/schemas/index.ts",
-      "default": "./src/features/*/schemas/index.ts",
-      "import": "./src/features/*/schemas/index.ts"
-    },
-    "./values": {
-      "types": "./src/values/index.ts",
-      "default": "./src/values/index.ts",
-      "import": "./src/values/index.ts"
-    }
+    "./providers/*": "./src/providers/*/index.ts",
+    "./providers/storage-firebase/client": "./src/providers/storage-firebase/client.ts",
+    "./features/*": "./src/features/*/index.ts",
+    "./features/*/server": "./src/features/*/server.ts",
+    "./features/*/schemas": "./src/features/*/schemas/index.ts"
   },
   "files": [
     "src",
@@ -171,6 +42,7 @@
     "watch": "tsc --noEmit --watch --preserveWatchOutput",
     "lint": "eslint src"
   },
+  "sideEffects": false,
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
     "client-only": "^0.0.1",

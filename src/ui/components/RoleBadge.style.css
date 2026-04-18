@@ -1,0 +1,7 @@
+/* RoleBadge — thin wrapper over Badge with role-specific color mapping */
+/* No additional styles needed — delegates entirely to Badge component */
+/* File exists to satisfy style contract requirement */
+
+.appkit-role-badge {
+  /* Inherits all styling from Badge variant */
+}

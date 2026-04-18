@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Div, Span } from "../../ui";
+import { Button, Div, Row, Span } from "../../ui";
 import { cn } from "./utils";
 
 export interface ToggleProps {
@@ -65,7 +65,7 @@ export function Toggle({
   const cfg = SIZE_CONFIG[size];
 
   return (
-    <Div className={cn("flex items-center gap-3", className)}>
+    <Row className={cn("gap-3", className)}>
       <Button
         type="button"
         role="switch"
@@ -105,6 +105,6 @@ export function Toggle({
           {label}
         </label>
       )}
-    </Div>
+    </Row>
   );
 }

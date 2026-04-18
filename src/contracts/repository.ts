@@ -85,3 +85,104 @@ export interface IRealtimeRepository<T> extends IRepository<T> {
 export interface IDbProvider {
   getRepository<T>(collection: string): IRepository<T>;
 }
+
+// ─── Repository lifecycle hooks ───────────────────────────────────────────────
+
+/**
+ * Optional lifecycle hooks that can be attached to any `IRepository<T>`.
+ * All hooks are optional. If provided, they are called by the repository
+ * wrapper at the appropriate point in the CRUD lifecycle.
+ *
+ * Register hooks globally via `setRepositoryHooks()` or per-collection via
+ * `setCollectionHooks()`.
+ *
+ * @example
+ * ```ts
+ * // providers.config.ts
+ * import { setRepositoryHooks } from "@mohasinac/appkit/contracts";
+ *
+ * setRepositoryHooks("products", {
+ *   afterRead: (item) => { console.log("read product", item.id); },
+ *   beforeCreate: (data) => ({ ...data, source: "letitrip" }),
+ *   afterUpdate: (item) => myCache.invalidate(`product:${item.id}`),
+ * });
+ * ```
+ */
+export interface RepositoryLifecycleHooks<T> {
+  /**
+   * Called after a successful `findById` or per-item result in `findAll`.
+   * Return value is ignored — use for side-effects only (logging, caching).
+   */
+  afterRead?: (item: T) => void | Promise<void>;
+  /**
+   * Called before `create`. Return the (possibly mutated) data to be persisted.
+   * If not returned, the original data is used unchanged.
+   */
+  beforeCreate?: (
+    data: Omit<T, "id" | "createdAt" | "updatedAt">,
+  ) =>
+    | Omit<T, "id" | "createdAt" | "updatedAt">
+    | Promise<Omit<T, "id" | "createdAt" | "updatedAt">>;
+  /**
+   * Called after a successful `create`. Receives the persisted document.
+   */
+  afterCreate?: (item: T) => void | Promise<void>;
+  /**
+   * Called before `update`. Return the (possibly mutated) partial to be applied.
+   */
+  beforeUpdate?: (
+    id: string,
+    data: Partial<T>,
+  ) => Partial<T> | Promise<Partial<T>>;
+  /**
+   * Called after a successful `update`. Receives the updated document.
+   */
+  afterUpdate?: (item: T) => void | Promise<void>;
+  /**
+   * Called before `delete`. Return `false` to cancel the deletion.
+   */
+  beforeDelete?: (id: string) => boolean | void | Promise<boolean | void>;
+  /**
+   * Called after a successful `delete`.
+   */
+  afterDelete?: (id: string) => void | Promise<void>;
+}
+
+// ─── Global hooks registry ────────────────────────────────────────────────────
+
+const _hooksRegistry = new Map<string, RepositoryLifecycleHooks<unknown>>();
+
+/**
+ * Register lifecycle hooks for a specific Firestore collection (or any
+ * collection identifier used by `IDbProvider.getRepository()`).
+ *
+ * @param collection  The collection name (e.g. "products", "orders").
+ * @param hooks       Partial hooks object — only the hooks you provide are applied.
+ */
+export function setCollectionHooks<T>(
+  collection: string,
+  hooks: RepositoryLifecycleHooks<T>,
+): void {
+  _hooksRegistry.set(collection, hooks as RepositoryLifecycleHooks<unknown>);
+}
+
+/**
+ * Retrieve registered hooks for a collection, or `undefined` if none are set.
+ */
+export function getCollectionHooks<T>(
+  collection: string,
+): RepositoryLifecycleHooks<T> | undefined {
+  return _hooksRegistry.get(collection) as
+    | RepositoryLifecycleHooks<T>
+    | undefined;
+}
+
+/** Remove hooks for a collection. */
+export function removeCollectionHooks(collection: string): void {
+  _hooksRegistry.delete(collection);
+}
+
+/** Reset all registered hooks (used in tests). */
+export function _resetCollectionHooks(): void {
+  _hooksRegistry.clear();
+}

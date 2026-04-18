@@ -1,9 +1,11 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface SellerDashboardViewProps {
+export interface SellerDashboardViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: { title?: string };
   renderStats?: (isLoading: boolean) => React.ReactNode;
   renderQuickActions?: () => React.ReactNode;
@@ -11,7 +13,6 @@ export interface SellerDashboardViewProps {
   renderRevenueChart?: () => React.ReactNode;
   renderTopProducts?: () => React.ReactNode;
   isLoading?: boolean;
-  className?: string;
 }
 
 export function SellerDashboardView({
@@ -22,20 +23,19 @@ export function SellerDashboardView({
   renderRevenueChart,
   renderTopProducts,
   isLoading = false,
-  className = "",
+  ...rest
 }: SellerDashboardViewProps) {
   return (
-    <Div className={className}>
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      )}
-      {renderStats?.(isLoading)}
-      {renderQuickActions?.()}
-      {renderRevenueChart?.()}
-      {renderTopProducts?.()}
-      {renderRecentListings?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[
+        renderStats?.(isLoading),
+        renderQuickActions?.(),
+        renderRevenueChart?.(),
+        renderTopProducts?.(),
+        renderRecentListings?.(),
+      ]}
+    />
   );
 }

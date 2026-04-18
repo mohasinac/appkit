@@ -14,25 +14,20 @@ export interface ToggleProps {
   id?: string;
 }
 
-const SIZE_MAP = {
-  sm: {
-    track: "h-[18px] w-8",
-    thumb: "h-3.5 w-3.5",
-    translateOn: "translate-x-[14px]",
-    translateOff: "translate-x-0.5",
+const UI_TOGGLE = {
+  base: "appkit-toggle",
+  sizes: {
+    sm: "appkit-toggle--sm",
+    md: "appkit-toggle--md",
+    lg: "appkit-toggle--lg",
   },
-  md: {
-    track: "h-6 w-11",
-    thumb: "h-5 w-5",
-    translateOn: "translate-x-5",
-    translateOff: "translate-x-0.5",
-  },
-  lg: {
-    track: "h-7 w-14",
-    thumb: "h-6 w-6",
-    translateOn: "translate-x-7",
-    translateOff: "translate-x-0.5",
-  },
+  track: "appkit-toggle__track",
+  trackOn: "appkit-toggle__track--on",
+  trackOff: "appkit-toggle__track--off",
+  trackDisabled: "appkit-toggle__track--disabled",
+  thumb: "appkit-toggle__thumb",
+  thumbOn: "appkit-toggle__thumb--on",
+  thumbOff: "appkit-toggle__thumb--off",
 } as const;
 
 export function Toggle({
@@ -49,7 +44,6 @@ export function Toggle({
   const toggleId = id ?? generatedId;
   const [internalChecked, setInternalChecked] = React.useState(defaultChecked);
   const checked = checkedProp ?? internalChecked;
-  const sizeConfig = SIZE_MAP[size];
 
   const handleToggle = () => {
     if (disabled) {
@@ -64,7 +58,7 @@ export function Toggle({
 
   return (
     <div
-      className={["inline-flex items-center gap-3", className]
+      className={[UI_TOGGLE.base, UI_TOGGLE.sizes[size], className]
         .filter(Boolean)
         .join(" ")}
     >
@@ -77,21 +71,18 @@ export function Toggle({
         disabled={disabled}
         onClick={handleToggle}
         className={[
-          "relative inline-flex shrink-0 items-center rounded-full p-0 transition-colors",
-          sizeConfig.track,
-          checked
-            ? "bg-lime-600 dark:bg-pink-500"
-            : "bg-zinc-300 dark:bg-slate-700",
-          disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-500/30 focus-visible:ring-offset-2 dark:focus-visible:ring-pink-500/30 dark:focus-visible:ring-offset-slate-950",
-        ].join(" ")}
+          UI_TOGGLE.track,
+          checked ? UI_TOGGLE.trackOn : UI_TOGGLE.trackOff,
+          disabled ? UI_TOGGLE.trackDisabled : "",
+        ]
+          .filter(Boolean)
+          .join(" ")}
       >
         <Span
           aria-hidden="true"
           className={[
-            "inline-block rounded-full bg-white shadow-sm transition-transform dark:bg-slate-950",
-            sizeConfig.thumb,
-            checked ? sizeConfig.translateOn : sizeConfig.translateOff,
+            UI_TOGGLE.thumb,
+            checked ? UI_TOGGLE.thumbOn : UI_TOGGLE.thumbOff,
           ].join(" ")}
         />
       </button>

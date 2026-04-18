@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderBoolean } from "../../../ui/columns";
 import type { CouponItem } from "../types";
 
 /**
@@ -34,12 +35,12 @@ export const couponAdminColumns: TableColumn<CouponItem>[] = [
   {
     key: "isActive",
     header: "Active",
-    render: (c) => (c.isActive ? "Yes" : "No"),
+    render: (c) => renderBoolean(c.isActive),
   },
   {
     key: "isPublic",
     header: "Public",
-    render: (c) => (c.isPublic ? "Yes" : "No"),
+    render: (c) => renderBoolean(c.isPublic),
   },
   { key: "expiresAt", header: "Expires", sortable: true },
   { key: "createdAt", header: "Created", sortable: true },
@@ -48,13 +49,5 @@ export const couponAdminColumns: TableColumn<CouponItem>[] = [
 export function buildCouponColumns<T extends CouponItem = CouponItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = couponAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(couponAdminColumns as TableColumn<T>[], opts);
 }

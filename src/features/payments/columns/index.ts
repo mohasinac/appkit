@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderCurrencyCompact } from "../../../ui/columns";
 import type { PaymentRecord } from "../types";
 
 /**
@@ -20,7 +21,7 @@ export const paymentAdminColumns: TableColumn<PaymentRecord>[] = [
     key: "amount",
     header: "Amount",
     sortable: true,
-    render: (item) => `${item.currency ?? "INR"} ${item.amount}`,
+    render: (item) => renderCurrencyCompact(item.amount, item.currency),
   },
   {
     key: "status",
@@ -44,24 +45,7 @@ export const paymentAdminColumns: TableColumn<PaymentRecord>[] = [
  * });
  */
 export function buildPaymentColumns<T extends PaymentRecord = PaymentRecord>(
-  opts?: ColumnExtensionOpts<T>
+  opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  let base = paymentAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+  return buildColumns(paymentAdminColumns as TableColumn<T>[], opts);
 }

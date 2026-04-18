@@ -22,7 +22,7 @@ const GAP_MAP: Record<GapToken, string> = {
 export function Form({ children, className = "", ...props }: FormProps) {
   return (
     <form
-      className={["space-y-4", className].filter(Boolean).join(" ")}
+      className={["appkit-form", className].filter(Boolean).join(" ")}
       {...props}
     >
       {children}
@@ -52,7 +52,12 @@ export function FormGroup({
 
   return (
     <div
-      className={["grid", gridClasses[columns], GAP_MAP[gap], className]
+      className={[
+        "appkit-form-group",
+        gridClasses[columns],
+        GAP_MAP[gap],
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
     >
@@ -71,7 +76,11 @@ export function FormFieldSpan({
   className = "",
 }: FormFieldSpanProps) {
   return (
-    <div className={["col-span-full", className].filter(Boolean).join(" ")}>
+    <div
+      className={["appkit-form-field-span", className]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
     </div>
   );
@@ -99,11 +108,7 @@ export function FormActions({
     <Row
       wrap
       gap="md"
-      className={[
-        "border-t border-zinc-200 pt-4 dark:border-slate-800",
-        alignClass,
-        className,
-      ]
+      className={["appkit-form-actions", alignClass, className]
         .filter(Boolean)
         .join(" ")}
     >

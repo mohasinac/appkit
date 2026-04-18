@@ -1,4 +1,9 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderBoolean,
+  renderNullable,
+} from "../../../ui/columns";
 import type { FAQ } from "../types";
 
 /**
@@ -15,29 +20,29 @@ export const faqAdminColumns: TableColumn<FAQ>[] = [
   {
     key: "isActive",
     header: "Active",
-    render: (f) => (f.isActive !== false ? "Yes" : "No"),
+    render: (f) => renderBoolean(f.isActive !== false),
   },
   {
     key: "isPinned",
     header: "Pinned",
-    render: (f) => (f.isPinned ? "Yes" : "No"),
+    render: (f) => renderBoolean(f.isPinned),
   },
   {
     key: "showOnHomepage",
     header: "Homepage",
-    render: (f) => (f.showOnHomepage ? "Yes" : "No"),
+    render: (f) => renderBoolean(f.showOnHomepage),
   },
   {
     key: "order",
     header: "Order",
     sortable: true,
-    render: (f) => f.order?.toLocaleString() ?? "—",
+    render: (f) => renderNullable(f.order, (v) => v.toLocaleString()),
   },
   {
     key: "views",
     header: "Views",
     sortable: true,
-    render: (f) => f.stats?.views?.toLocaleString() ?? "—",
+    render: (f) => renderNullable(f.stats?.views, (v) => v.toLocaleString()),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -48,13 +53,5 @@ export const faqAdminColumns: TableColumn<FAQ>[] = [
 export function buildFaqColumns<T extends FAQ = FAQ>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = faqAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(faqAdminColumns as TableColumn<T>[], opts);
 }

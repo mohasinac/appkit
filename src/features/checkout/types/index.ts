@@ -1,10 +1,8 @@
-export type PaymentGateway =
-  | "razorpay"
-  | "stripe"
-  | "paypal"
-  | "cod"
-  | "upi"
-  | "whatsapp";
+import {
+  type PaymentGateway,
+  PaymentGatewayValues,
+} from "../../payments/schemas";
+export { type PaymentGateway, PaymentGatewayValues };
 
 export interface UserAddress {
   id: string;

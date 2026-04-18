@@ -1,0 +1,69 @@
+/* ResponsiveView — CSS-driven responsive branch visibility */
+
+.appkit-responsive-view__mobile {
+  display: block;
+}
+
+.appkit-responsive-view__desktop {
+  display: none;
+}
+
+.appkit-responsive-view__tablet {
+  display: none;
+}
+
+/* sm breakpoint */
+.appkit-responsive-view--sm .appkit-responsive-view__mobile {
+  @media (min-width: 640px) {
+    display: none;
+  }
+}
+.appkit-responsive-view--sm .appkit-responsive-view__desktop {
+  @media (min-width: 640px) {
+    display: block;
+  }
+}
+
+/* md breakpoint (default) */
+.appkit-responsive-view--md .appkit-responsive-view__mobile {
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+.appkit-responsive-view--md .appkit-responsive-view__desktop {
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+.appkit-responsive-view--md .appkit-responsive-view__tablet {
+  @media (min-width: 768px) {
+    display: block;
+  }
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+/* lg breakpoint */
+.appkit-responsive-view--lg .appkit-responsive-view__mobile {
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+.appkit-responsive-view--lg .appkit-responsive-view__desktop {
+  @media (min-width: 1024px) {
+    display: block;
+  }
+}
+
+/* xl breakpoint */
+.appkit-responsive-view--xl .appkit-responsive-view__mobile {
+  @media (min-width: 1280px) {
+    display: none;
+  }
+}
+.appkit-responsive-view--xl .appkit-responsive-view__desktop {
+  @media (min-width: 1280px) {
+    display: block;
+  }
+}

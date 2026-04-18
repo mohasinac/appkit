@@ -2,7 +2,7 @@
 import "client-only";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Aside, Button, Div, Nav, Span } from "../../ui";
+import { Aside, Button, Div, Nav, Row, Span } from "../../ui";
 
 export interface ListingLayoutLabels {
   filtersTitle?: string;
@@ -139,7 +139,7 @@ export function ListingLayout({
           "py-2.5",
         ].join(" ")}
       >
-        <Div className="hidden md:flex items-center gap-2 min-w-0">
+        <Row className="hidden md:flex gap-2 min-w-0">
           {hasFilter && (
             <Button
               type="button"
@@ -168,25 +168,25 @@ export function ListingLayout({
 
           {searchSlot && <Div className="flex-1 min-w-0">{searchSlot}</Div>}
 
-          <Div className="flex items-center gap-1.5 flex-shrink-0">
+          <Row className="gap-1.5 flex-shrink-0">
             {sortSlot}
             {viewToggleSlot && (
-              <Div className="flex items-center gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
+              <Row className="gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
                 {viewToggleSlot}
-              </Div>
+              </Row>
             )}
             {actionsSlot}
-          </Div>
+          </Row>
 
           {toolbarPaginationSlot && (
             <Div className="ml-auto flex-shrink-0 pl-3 border-l border-zinc-200/70 dark:border-slate-700/70">
               {toolbarPaginationSlot}
             </Div>
           )}
-        </Div>
+        </Row>
 
         <Div className="flex flex-col gap-2 md:hidden">
-          <Div className="flex items-center gap-2">
+          <Row className="gap-2">
             {hasFilter && (
               <Button
                 type="button"
@@ -214,15 +214,15 @@ export function ListingLayout({
               </Button>
             )}
             {searchSlot && <Div className="flex-1 min-w-0">{searchSlot}</Div>}
-          </Div>
+          </Row>
 
           {(sortSlot || viewToggleSlot || actionsSlot) && (
             <Div className="flex items-stretch min-h-[44px] gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              <Div className="flex items-center gap-2 flex-shrink-0 pb-px">
+              <Row className="gap-2 flex-shrink-0 pb-px">
                 {sortSlot}
                 {viewToggleSlot}
                 {actionsSlot}
-              </Div>
+              </Row>
             </Div>
           )}
         </Div>
@@ -248,7 +248,10 @@ export function ListingLayout({
             ].join(" ")}
           >
             <Div className="w-60 xl:w-64 2xl:w-72 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-sm">
-              <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800">
+              <Row
+                justify="between"
+                className="px-4 py-3 border-b border-zinc-100 dark:border-slate-800"
+              >
                 <Div className="font-semibold text-sm">{panelTitle}</Div>
                 {filterActiveCount > 0 && (
                   <Button
@@ -261,7 +264,7 @@ export function ListingLayout({
                     {l.clearAll}
                   </Button>
                 )}
-              </Div>
+              </Row>
 
               <Div className="px-3 pt-5 pb-3 max-h-[calc(100vh-15rem)] overflow-y-auto space-y-4">
                 {filterContent}
@@ -331,7 +334,10 @@ export function ListingLayout({
             aria-modal="true"
             aria-label={panelTitle}
           >
-            <Div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0">
+            <Row
+              justify="between"
+              className="px-4 py-3 border-b border-zinc-100 dark:border-slate-800 flex-shrink-0"
+            >
               <Div className="font-semibold">
                 {panelTitle}
                 {filterActiveCount > 0 && (
@@ -350,7 +356,7 @@ export function ListingLayout({
               >
                 x
               </Button>
-            </Div>
+            </Row>
 
             <Div className="flex-1 overflow-y-auto px-4 pt-6 pb-4 space-y-4">
               {filterContent}

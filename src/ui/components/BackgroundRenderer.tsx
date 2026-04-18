@@ -63,10 +63,7 @@ export function BackgroundRenderer({
 
   return (
     <>
-      <div
-        className="fixed inset-0 -z-10 transition-all duration-500"
-        style={getBackgroundStyle()}
-      >
+      <div className="appkit-bg-renderer" style={getBackgroundStyle()}>
         {config.type === "video" && (
           <video
             ref={videoRef}
@@ -75,8 +72,10 @@ export function BackgroundRenderer({
             muted
             playsInline
             onLoadedData={() => setIsVideoLoaded(true)}
-            className={`w-full h-full object-cover transition-opacity duration-500 ${
-              isVideoLoaded ? "opacity-100" : "opacity-0"
+            className={`appkit-bg-renderer__video ${
+              isVideoLoaded
+                ? "appkit-bg-renderer__video--loaded"
+                : "appkit-bg-renderer__video--loading"
             }`}
           >
             <source src={config.value} type="video/mp4" />
@@ -85,10 +84,7 @@ export function BackgroundRenderer({
         )}
       </div>
 
-      <div
-        className="fixed inset-0 -z-[5] transition-all duration-500 pointer-events-none"
-        style={overlayStyle}
-      />
+      <div className="appkit-bg-renderer__overlay" style={overlayStyle} />
     </>
   );
 }

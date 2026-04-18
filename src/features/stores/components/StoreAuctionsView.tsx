@@ -1,10 +1,12 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 import type { StoreAuctionItem } from "../types";
 
-export interface StoreAuctionsViewProps {
+export interface StoreAuctionsViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   storeSlug: string;
   labels?: {
     title?: string;
@@ -19,7 +21,6 @@ export interface StoreAuctionsViewProps {
   items?: StoreAuctionItem[];
   total?: number;
   isLoading?: boolean;
-  className?: string;
 }
 
 export function StoreAuctionsView({
@@ -29,18 +30,14 @@ export function StoreAuctionsView({
   items = [],
   total = 0,
   isLoading = false,
-  className = "",
+  ...rest
 }: StoreAuctionsViewProps) {
   return (
-    <Div className={`py-4 ${className}`}>
-      {labels.title && (
-        <Heading level={2} className="text-xl font-semibold mb-4">
-          {labels.title}
-        </Heading>
-      )}
-
-      {renderAuctions(items, isLoading)}
-      {renderPagination?.(total)}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      className={`py-4 ${rest.className ?? ""}`}
+      sections={[renderAuctions(items, isLoading), renderPagination?.(total)]}
+    />
   );
 }

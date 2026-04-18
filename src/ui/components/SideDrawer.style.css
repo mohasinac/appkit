@@ -1,0 +1,214 @@
+/* SideDrawer — accessible slide-in panel with focus trap + unsaved-changes */
+
+.appkit-side-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.2s ease;
+}
+
+.appkit-side-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 50;
+  background: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out;
+}
+
+:is(.dark) .appkit-side-drawer {
+  background: #0f172a;
+}
+
+/* Position */
+.appkit-side-drawer--left { left: 0; width: 100%; }
+.appkit-side-drawer--right { right: 0; width: 100%; }
+
+@media (min-width: 640px) {
+  .appkit-side-drawer--left { width: 24rem; }
+}
+@media (min-width: 768px) {
+  .appkit-side-drawer--left { width: 420px; }
+  .appkit-side-drawer--right { min-width: 50%; }
+}
+
+/* Header */
+.appkit-side-drawer__header {
+  padding: 1.5rem;
+  border-bottom-width: 1px;
+}
+
+.appkit-side-drawer__header--view {
+  background-color: #fafafa;
+  border-color: #e4e4e7;
+}
+:is(.dark) .appkit-side-drawer__header--view {
+  background-color: rgba(15, 23, 42, 0.8);
+  border-color: #334155;
+}
+
+.appkit-side-drawer__header--create {
+  background: linear-gradient(to right, rgba(var(--color-primary-rgb, 59, 130, 246), 0.05), transparent, rgba(20, 184, 166, 0.03));
+  border-color: #e4e4e7;
+}
+:is(.dark) .appkit-side-drawer__header--create {
+  background: linear-gradient(to right, rgba(var(--color-primary-rgb, 59, 130, 246), 0.1), transparent, rgba(20, 184, 166, 0.025));
+  border-color: #334155;
+}
+
+.appkit-side-drawer__header--edit {
+  background: linear-gradient(to right, rgba(251, 191, 36, 0.04), transparent, rgba(var(--color-primary-rgb, 59, 130, 246), 0.05));
+  border-color: #e4e4e7;
+}
+:is(.dark) .appkit-side-drawer__header--edit {
+  background: linear-gradient(to right, rgba(120, 53, 15, 0.15), transparent, rgba(var(--color-primary-rgb, 59, 130, 246), 0.1));
+  border-color: #334155;
+}
+
+.appkit-side-drawer__header--delete {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+:is(.dark) .appkit-side-drawer__header--delete {
+  background-color: rgba(69, 10, 10, 0.3);
+  border-color: #991b1b;
+}
+
+.appkit-side-drawer__close-btn {
+  flex-shrink: 0;
+  padding: 0.5rem;
+  color: #52525b;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+  box-shadow: 0 0 0 1px #e4e4e7;
+}
+.appkit-side-drawer__close-btn:hover {
+  background-color: #f4f4f5;
+  box-shadow: 0 0 0 1px #d4d4d8;
+}
+:is(.dark) .appkit-side-drawer__close-btn {
+  color: #d4d4d8;
+  box-shadow: 0 0 0 1px #334155;
+}
+:is(.dark) .appkit-side-drawer__close-btn:hover {
+  background-color: #1e293b;
+  box-shadow: 0 0 0 1px #475569;
+}
+
+.appkit-side-drawer__close-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.appkit-side-drawer__delete-badge {
+  flex-shrink: 0;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.25rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+:is(.dark) .appkit-side-drawer__delete-badge {
+  background-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Content */
+.appkit-side-drawer__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+@media (min-width: 640px) {
+  .appkit-side-drawer__content { padding: 1.5rem; }
+}
+
+/* Footer */
+.appkit-side-drawer__footer {
+  flex-shrink: 0;
+  padding: 1rem 1rem;
+  border-top: 1px solid #e4e4e7;
+  background-color: #fafafa;
+}
+:is(.dark) .appkit-side-drawer__footer {
+  border-color: #334155;
+  background-color: rgba(15, 23, 42, 0.8);
+}
+@media (min-width: 640px) {
+  .appkit-side-drawer__footer { padding: 1.25rem 1.5rem; }
+}
+
+/* Unsaved-changes warning overlay */
+.appkit-side-drawer__warn-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.appkit-side-drawer__warn-dialog {
+  position: fixed;
+  z-index: 60;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 28rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+}
+:is(.dark) .appkit-side-drawer__warn-dialog {
+  background: #0f172a;
+}
+
+.appkit-side-drawer__warn-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.appkit-side-drawer__warn-icon {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fef9c3;
+}
+:is(.dark) .appkit-side-drawer__warn-icon {
+  background-color: rgba(113, 63, 18, 0.3);
+}
+
+.appkit-side-drawer__warn-icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #ca8a04;
+}
+:is(.dark) .appkit-side-drawer__warn-icon svg {
+  color: #facc15;
+}
+
+.appkit-side-drawer__warn-text {
+  font-size: 0.875rem;
+  color: #52525b;
+}
+:is(.dark) .appkit-side-drawer__warn-text {
+  color: #a1a1aa;
+}
+
+.appkit-side-drawer__warn-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}

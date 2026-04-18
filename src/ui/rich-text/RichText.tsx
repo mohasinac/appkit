@@ -237,7 +237,7 @@ export function RichText({
   return (
     <Div
       ref={ref}
-      className={`${proseClass} ${className}`}
+      className={`appkit-rich-text ${proseClass} ${className}`}
       dangerouslySetInnerHTML={{ __html: safe }}
     />
   );

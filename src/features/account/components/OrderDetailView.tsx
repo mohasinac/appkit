@@ -1,14 +1,16 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
 export interface OrderDetailViewLabels {
   title?: string;
   backLabel?: string;
 }
 
-export interface OrderDetailViewProps {
+export interface OrderDetailViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: OrderDetailViewLabels;
   renderBack?: () => React.ReactNode;
   renderHeader?: () => React.ReactNode;
@@ -18,7 +20,6 @@ export interface OrderDetailViewProps {
   renderActions?: () => React.ReactNode;
   isLoading?: boolean;
   isNotFound?: boolean;
-  className?: string;
 }
 
 export function OrderDetailView({
@@ -29,22 +30,20 @@ export function OrderDetailView({
   renderAddress,
   renderPayment,
   renderActions,
-  isLoading = false,
-  className = "",
+  ...rest
 }: OrderDetailViewProps) {
   return (
-    <Div className={className}>
-      {renderBack?.()}
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-4">
-          {labels.title}
-        </Heading>
-      )}
-      {renderHeader?.()}
-      {renderActions?.()}
-      {renderItems?.()}
-      {renderAddress?.()}
-      {renderPayment?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[
+        renderBack?.(),
+        renderHeader?.(),
+        renderActions?.(),
+        renderItems?.(),
+        renderAddress?.(),
+        renderPayment?.(),
+      ]}
+    />
   );
 }

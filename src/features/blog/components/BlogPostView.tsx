@@ -117,7 +117,7 @@ export function BlogPostView({
       <Div className="max-w-3xl mx-auto px-4 py-12">
         {/* Header */}
         <Div className="mb-8">
-          <Div className="flex items-center gap-2 mb-4">
+          <Row className="gap-2 mb-4">
             <Span
               className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}
             >
@@ -128,7 +128,7 @@ export function BlogPostView({
                 {labels.featured ?? "Featured"}
               </Span>
             )}
-          </Div>
+          </Row>
           <Heading level={1} className="text-3xl font-bold mb-4">
             {post.title}
           </Heading>

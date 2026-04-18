@@ -9,7 +9,16 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Alert, Button, Div, Modal, Span, Spinner, Text } from "../../../ui";
+import {
+  Alert,
+  Button,
+  Div,
+  Modal,
+  Row,
+  Span,
+  Spinner,
+  Text,
+} from "../../../ui";
 
 export interface VideoThumbnailSelectorProps {
   isOpen: boolean;
@@ -56,7 +65,9 @@ export function VideoThumbnailSelector({
       );
       if (!blob) throw new Error(t("thumbnailError"));
 
-      const file = new File([blob], `thumbnail-${Date.now()}.jpg`, { type: "image/jpeg" });
+      const file = new File([blob], `thumbnail-${Date.now()}.jpg`, {
+        type: "image/jpeg",
+      });
       const url = await onUpload(file);
       onSelect(url);
       onClose();
@@ -68,7 +79,12 @@ export function VideoThumbnailSelector({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t("thumbnailTitle")} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t("thumbnailTitle")}
+      size="lg"
+    >
       <Div className="space-y-4">
         <Text variant="secondary" className="text-xs">
           {t("thumbnailInstruction")}
@@ -90,8 +106,14 @@ export function VideoThumbnailSelector({
 
         {error && <Alert variant="error">{error}</Alert>}
 
-        <Div className="flex items-center justify-end gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={onClose} disabled={isCapturing}>
+        <Row justify="end" className="gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onClose}
+            disabled={isCapturing}
+          >
             {t("thumbnailSkip")}
           </Button>
           <Button
@@ -110,7 +132,7 @@ export function VideoThumbnailSelector({
               t("thumbnailCapture")
             )}
           </Button>
-        </Div>
+        </Row>
       </Div>
     </Modal>
   );

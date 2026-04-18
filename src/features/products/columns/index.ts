@@ -1,4 +1,10 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderBoolean,
+  renderRating,
+  renderCurrencyCompact,
+} from "../../../ui/columns";
 import type { ProductItem } from "../types";
 export { getProductTableColumns } from "./productTableColumns";
 export type {
@@ -58,7 +64,7 @@ export const productAdminColumns: TableColumn<ProductItem>[] = [
     key: "price",
     header: "Price",
     sortable: true,
-    render: (p) => `${p.currency ?? "₹"}${p.price.toLocaleString()}`,
+    render: (p) => renderCurrencyCompact(p.price, p.currency),
   },
   { key: "category", header: "Category", sortable: true },
   { key: "status", header: "Status", sortable: true },
@@ -66,15 +72,12 @@ export const productAdminColumns: TableColumn<ProductItem>[] = [
   {
     key: "inStock",
     header: "In Stock",
-    render: (p) => (p.inStock ? "Yes" : "No"),
+    render: (p) => renderBoolean(p.inStock),
   },
   {
     key: "rating",
     header: "Rating",
-    render: (p) =>
-      p.rating !== undefined
-        ? `${p.rating.toFixed(1)} (${p.reviewCount ?? 0})`
-        : "—",
+    render: (p) => renderRating(p.rating, p.reviewCount),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -97,13 +100,5 @@ export const productAdminColumns: TableColumn<ProductItem>[] = [
 export function buildProductColumns<T extends ProductItem = ProductItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = productAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(productAdminColumns as TableColumn<T>[], opts);
 }

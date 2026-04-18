@@ -1,0 +1,46 @@
+/* Tabs — tabbed navigation with list, triggers, and content panels */
+
+.appkit-tabs-list {
+  display: flex;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.appkit-tabs-trigger {
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.appkit-tabs-trigger[aria-selected="true"] {
+  border-color: var(--color-primary, #65a30d);
+  color: var(--color-primary, #65a30d);
+}
+.appkit-tabs-trigger:not([aria-selected="true"]) {
+  color: #52525b;
+}
+.appkit-tabs-trigger:not([aria-selected="true"]):hover {
+  color: #18181b;
+}
+.appkit-tabs-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.appkit-tabs-content {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .appkit-tabs-list {
+    border-color: #334155;
+  }
+  .appkit-tabs-trigger:not([aria-selected="true"]) {
+    color: #94a3b8;
+  }
+  .appkit-tabs-trigger:not([aria-selected="true"]):hover {
+    color: #fff;
+  }
+}

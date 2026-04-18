@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
-import { Article, Button, Div, Heading, Span, Text } from "../../../ui";
+import { Article, Button, Div, Heading, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 interface AuctionCountdownProps {
@@ -49,7 +49,7 @@ export function AuctionCountdown({
   const pad = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <Div className={`flex items-center gap-1 text-sm font-mono ${className}`}>
+    <Row className={`gap-1 text-sm font-mono ${className}`}>
       <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
         {pad(countdown.h)}
       </Span>
@@ -61,7 +61,7 @@ export function AuctionCountdown({
       <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
         {pad(countdown.s)}
       </Span>
-    </Div>
+    </Row>
   );
 }
 
@@ -112,7 +112,7 @@ export function AuctionCard({
           {auction.title}
         </Heading>
 
-        <Div className="flex items-center justify-between mb-2">
+        <Row justify="between" className="mb-2">
           <Div>
             <Text className="text-xs text-gray-400">
               {labels.currentBid ?? "Current bid"}
@@ -126,7 +126,7 @@ export function AuctionCard({
               {auction.bidCount} {labels.bids ?? "bids"}
             </Text>
           </Div>
-        </Div>
+        </Row>
 
         <Div className="mb-3">
           <AuctionCountdown

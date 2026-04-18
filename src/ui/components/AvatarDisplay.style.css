@@ -1,0 +1,46 @@
+/* AvatarDisplay — avatar with crop/zoom or initials fallback */
+
+.appkit-avatar-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+/* Sizes */
+.appkit-avatar-display--sm { height: 2rem; width: 2rem; }
+.appkit-avatar-display--md { height: 3rem; width: 3rem; }
+.appkit-avatar-display--lg { height: 4rem; width: 4rem; }
+.appkit-avatar-display--xl { height: 6rem; width: 6rem; }
+.appkit-avatar-display--2xl { height: 8rem; width: 8rem; }
+
+/* Initials fallback */
+.appkit-avatar-display--initials {
+  background: linear-gradient(to bottom right, #3b82f6, #4f46e5);
+}
+
+.appkit-avatar-display__initials {
+  user-select: none;
+  font-weight: 600;
+  color: white;
+}
+
+/* Image variant */
+.appkit-avatar-display--image {
+  position: relative;
+  background-color: #f4f4f5;
+}
+
+:is(.dark) .appkit-avatar-display--image {
+  background-color: #1e293b;
+}
+
+.appkit-avatar-display__image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  background-position: center;
+  background-repeat: no-repeat;
+}

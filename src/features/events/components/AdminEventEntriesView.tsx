@@ -1,6 +1,11 @@
 import React from "react";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface AdminEventEntriesViewProps {
+export interface AdminEventEntriesViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   /** Back-link and event title header */
   renderHeader?: () => React.ReactNode;
   /** Stats banner (total / approved / flagged counts) */
@@ -13,8 +18,6 @@ export interface AdminEventEntriesViewProps {
   renderPagination?: () => React.ReactNode;
   /** Entry review side-drawer */
   renderReviewDrawer?: () => React.ReactNode;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function AdminEventEntriesView({
@@ -24,16 +27,19 @@ export function AdminEventEntriesView({
   renderTable,
   renderPagination,
   renderReviewDrawer,
-  className = "",
+  ...rest
 }: AdminEventEntriesViewProps) {
   return (
-    <div className={`space-y-4 ${className}`}>
-      {renderHeader?.()}
-      {renderStats?.()}
-      {renderFilters?.()}
-      {renderTable()}
-      {renderPagination?.()}
-      {renderReviewDrawer?.()}
-    </div>
+    <StackedViewShell
+      {...rest}
+      renderHeader={renderHeader}
+      sections={[
+        renderStats?.(),
+        renderFilters?.(),
+        renderTable(),
+        renderPagination?.(),
+      ]}
+      overlays={renderReviewDrawer?.()}
+    />
   );
 }

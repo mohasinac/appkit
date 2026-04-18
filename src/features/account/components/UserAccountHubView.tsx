@@ -1,20 +1,20 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
 export interface UserAccountHubViewLabels {
   title?: string;
   recentOrders?: string;
 }
 
-export interface UserAccountHubViewProps {
+export interface UserAccountHubViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: UserAccountHubViewLabels;
   renderProfile?: () => React.ReactNode;
   renderNav?: () => React.ReactNode;
   renderRecentOrders?: () => React.ReactNode;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function UserAccountHubView({
@@ -22,19 +22,13 @@ export function UserAccountHubView({
   renderProfile,
   renderNav,
   renderRecentOrders,
-  isLoading = false,
-  className = "",
+  ...rest
 }: UserAccountHubViewProps) {
   return (
-    <Div className={className}>
-      {labels.title && (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      )}
-      {renderProfile?.()}
-      {renderNav?.()}
-      {renderRecentOrders?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[renderProfile?.(), renderNav?.(), renderRecentOrders?.()]}
+    />
   );
 }

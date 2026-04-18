@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { Div, Grid, Heading, Span, Text } from "../../../ui";
+import { Div, Grid, Heading, Row, Span, Text } from "../../../ui";
 import { stripHtml } from "../../../utils/string.formatter";
 import type { StoreListItem } from "../types";
 
@@ -55,7 +55,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
             {stripHtml(store.storeDescription)}
           </Text>
         )}
-        <Div className="flex items-center gap-3 mt-2 text-xs text-gray-400">
+        <Row className="gap-3 mt-2 text-xs text-gray-400">
           {store.totalProducts != null && (
             <Span>
               {store.totalProducts} {labels.products ?? "products"}
@@ -69,7 +69,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
           {store.averageRating != null && (
             <Span>★ {store.averageRating.toFixed(1)}</Span>
           )}
-        </Div>
+        </Row>
       </Div>
     </Link>
   );

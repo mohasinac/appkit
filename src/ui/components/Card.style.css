@@ -1,0 +1,192 @@
+/* Card — surface container with variant, padding, and section sub-components */
+
+.appkit-card {
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+/* Variants */
+.appkit-card--flat {
+  background: white;
+}
+.appkit-card--default {
+  background: white;
+}
+.appkit-card--primary {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground, white);
+}
+.appkit-card--outlined {
+  background: white;
+  border: 1px solid #e4e4e7;
+}
+.appkit-card--bordered {
+  background: white;
+  border: 2px solid #e4e4e7;
+}
+.appkit-card--elevated {
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(228, 228, 231, 0.5);
+}
+.appkit-card--interactive {
+  background: white;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+.appkit-card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.appkit-card--glass {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+}
+
+/* Gradient variants */
+.appkit-card--gradient-indigo {
+  background: linear-gradient(to bottom right, #6366f1, #4f46e5);
+  color: white;
+}
+.appkit-card--gradient-teal {
+  background: linear-gradient(to bottom right, #14b8a6, #0891b2);
+  color: white;
+}
+.appkit-card--gradient-amber {
+  background: linear-gradient(to bottom right, #f59e0b, #ea580c);
+  color: white;
+}
+.appkit-card--gradient-rose {
+  background: linear-gradient(to bottom right, #f43f5e, #ec4899);
+  color: white;
+}
+
+/* Stat variants */
+.appkit-card--stat-indigo {
+  background: #eef2ff;
+  color: #312e81;
+  border: 1px solid #c7d2fe;
+}
+.appkit-card--stat-teal {
+  background: #f0fdfa;
+  color: #134e4a;
+  border: 1px solid #99f6e4;
+}
+.appkit-card--stat-amber {
+  background: #fffbeb;
+  color: #78350f;
+  border: 1px solid #fde68a;
+}
+.appkit-card--stat-rose {
+  background: #fff1f2;
+  color: #881337;
+  border: 1px solid #fecdd3;
+}
+.appkit-card--stat-emerald {
+  background: #ecfdf5;
+  color: #064e3b;
+  border: 1px solid #a7f3d0;
+}
+
+/* Padding */
+.appkit-card--pad-sm {
+  padding: 0.75rem;
+}
+.appkit-card--pad-md {
+  padding: 1rem;
+}
+@media (min-width: 640px) {
+  .appkit-card--pad-md {
+    padding: 1.25rem;
+  }
+}
+.appkit-card--pad-lg {
+  padding: 1.5rem;
+}
+@media (min-width: 640px) {
+  .appkit-card--pad-lg {
+    padding: 1.75rem;
+  }
+}
+
+/* Hover */
+.appkit-card--hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Clickable */
+.appkit-card--clickable {
+  cursor: pointer;
+}
+
+/* Sections */
+.appkit-card__header {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.appkit-card__footer {
+  padding-top: 1rem;
+  border-top: 1px solid #e4e4e7;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .appkit-card--flat,
+  .appkit-card--default {
+    background: #0f172a;
+  }
+  .appkit-card--outlined {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  .appkit-card--bordered {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  .appkit-card--elevated {
+    background: #0f172a;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  }
+  .appkit-card--interactive {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  .appkit-card--glass {
+    border-color: rgba(51, 65, 85, 0.4);
+    background: rgba(15, 23, 42, 0.75);
+  }
+  .appkit-card--stat-indigo {
+    background: rgba(49, 46, 129, 0.4);
+    color: #c7d2fe;
+    border-color: rgba(99, 102, 241, 0.6);
+  }
+  .appkit-card--stat-teal {
+    background: rgba(19, 78, 74, 0.4);
+    color: #99f6e4;
+    border-color: rgba(20, 184, 166, 0.6);
+  }
+  .appkit-card--stat-amber {
+    background: rgba(120, 53, 15, 0.4);
+    color: #fde68a;
+    border-color: rgba(245, 158, 11, 0.6);
+  }
+  .appkit-card--stat-rose {
+    background: rgba(136, 19, 55, 0.4);
+    color: #fecdd3;
+    border-color: rgba(244, 63, 94, 0.6);
+  }
+  .appkit-card--stat-emerald {
+    background: rgba(6, 78, 59, 0.4);
+    color: #a7f3d0;
+    border-color: rgba(16, 185, 129, 0.6);
+  }
+  .appkit-card__header {
+    border-bottom-color: #334155;
+  }
+  .appkit-card__footer {
+    border-top-color: #334155;
+  }
+}

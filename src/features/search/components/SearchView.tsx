@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div, Heading, Main, Row, Span, Text } from "../../../ui";
 

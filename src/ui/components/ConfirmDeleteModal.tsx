@@ -24,22 +24,33 @@ export interface ConfirmDeleteModalProps {
   variant?: "danger" | "warning" | "primary";
 }
 
+const UI_CONFIRM_MODAL = {
+  backdrop: "appkit-confirm-modal__backdrop",
+  body: "appkit-confirm-modal__body",
+  iconWrap: "appkit-confirm-modal__icon-wrap",
+  icon: "appkit-confirm-modal__icon",
+  iconVariant: {
+    danger: "appkit-confirm-modal__icon--danger",
+    warning: "appkit-confirm-modal__icon--warning",
+    primary: "appkit-confirm-modal__icon--primary",
+  },
+  iconSvg: "appkit-confirm-modal__icon-svg",
+  content: "appkit-confirm-modal__content",
+  message: "appkit-confirm-modal__message",
+  actions: "appkit-confirm-modal__actions",
+  actionBtn: "appkit-confirm-modal__action-btn",
+} as const;
+
 const VARIANT_STYLES = {
   danger: {
-    iconBg: "bg-red-100 dark:bg-red-900/20",
-    iconColor: "text-red-600 dark:text-red-500",
     buttonVariant: "danger" as const,
     loadingText: "Deleting...",
   },
   warning: {
-    iconBg: "bg-amber-100 dark:bg-amber-900/20",
-    iconColor: "text-amber-600 dark:text-amber-500",
     buttonVariant: "warning" as const,
     loadingText: "Processing...",
   },
   primary: {
-    iconBg: "bg-primary/10 dark:bg-primary/20",
-    iconColor: "text-primary",
     buttonVariant: "primary" as const,
     loadingText: "Processing...",
   },
@@ -92,18 +103,21 @@ export function ConfirmDeleteModal({
   return (
     <div
       data-testid="confirm-delete-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className={UI_CONFIRM_MODAL.backdrop}
       onClick={onClose}
     >
       <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
-        <Card className="w-full max-w-md p-6 space-y-4">
+        <Card className={UI_CONFIRM_MODAL.body}>
           {/* Icon */}
-          <div className="flex justify-center">
+          <div className={UI_CONFIRM_MODAL.iconWrap}>
             <div
-              className={`w-12 h-12 rounded-full ${styles.iconBg} flex items-center justify-center`}
+              className={[
+                UI_CONFIRM_MODAL.icon,
+                UI_CONFIRM_MODAL.iconVariant[variant],
+              ].join(" ")}
             >
               <svg
-                className={`w-6 h-6 ${styles.iconColor}`}
+                className={UI_CONFIRM_MODAL.iconSvg}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -119,18 +133,18 @@ export function ConfirmDeleteModal({
           </div>
 
           {/* Content */}
-          <div className="text-center space-y-2">
+          <div className={UI_CONFIRM_MODAL.content}>
             <Heading level={4}>{title}</Heading>
-            <Text className="text-sm">{message}</Text>
+            <Text className={UI_CONFIRM_MODAL.message}>{message}</Text>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className={UI_CONFIRM_MODAL.actions}>
             <Button
               variant="secondary"
               onClick={onClose}
               disabled={isDeleting}
-              className="flex-1"
+              className={UI_CONFIRM_MODAL.actionBtn}
             >
               {cancelText}
             </Button>
@@ -138,7 +152,7 @@ export function ConfirmDeleteModal({
               variant={styles.buttonVariant}
               onClick={onConfirm}
               disabled={isDeleting}
-              className="flex-1"
+              className={UI_CONFIRM_MODAL.actionBtn}
             >
               {isDeleting ? styles.loadingText : confirmText}
             </Button>

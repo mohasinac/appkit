@@ -10,6 +10,12 @@ export type ShippingMethod = "custom" | "shiprocket";
 export type OrderPayoutStatus = "eligible" | "requested" | "paid";
 export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 
+/** Runtime-accessible shipping method values — use instead of bare string literals. */
+export const ShippingMethodValues = {
+  CUSTOM: "custom",
+  SHIPROCKET: "shiprocket",
+} as const satisfies Record<string, ShippingMethod>;
+
 /** Runtime-accessible order status values — use instead of bare string literals. */
 export const OrderStatusValues = {
   PENDING: "pending",

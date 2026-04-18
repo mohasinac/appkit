@@ -1,57 +1,30 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { SlottedListingView } from "../../../ui";
+import type { SlottedListingViewProps } from "../../../ui";
 
-export interface AdminMediaViewProps {
-  labels?: { title?: string; addButton?: string; emptyText?: string };
-  renderHeader?: () => React.ReactNode;
-  renderSearch?: () => React.ReactNode;
-  renderFilters?: () => React.ReactNode;
-  renderActiveFilters?: () => React.ReactNode;
-  renderTabs?: () => React.ReactNode;
-  renderTable: () => React.ReactNode;
-  renderPagination?: () => React.ReactNode;
+export interface AdminMediaViewProps extends SlottedListingViewProps {
+  /** @deprecated Use `overlays` instead. */
   renderDrawer?: () => React.ReactNode;
+  /** @deprecated Use `overlays` instead. */
   renderModal?: () => React.ReactNode;
-  renderBulkActions?: () => React.ReactNode;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function AdminMediaView({
-  labels = {},
-  renderHeader,
-  renderSearch,
-  renderFilters,
-  renderActiveFilters,
-  renderTabs,
-  renderTable,
-  renderPagination,
   renderDrawer,
   renderModal,
-  renderBulkActions,
-  isLoading = false,
-  className = "",
+  overlays,
+  ...props
 }: AdminMediaViewProps) {
   return (
-    <Div className={className}>
-      {renderHeader ? (
-        renderHeader()
-      ) : labels.title ? (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      ) : null}
-      {renderTabs?.()}
-      {renderSearch?.()}
-      {renderFilters?.()}
-      {renderActiveFilters?.()}
-      {renderBulkActions?.()}
-      {renderTable()}
-      {renderPagination?.()}
-      {renderDrawer?.()}
-      {renderModal?.()}
-    </Div>
+    <SlottedListingView
+      {...props}
+      overlays={
+        <>
+          {overlays}
+          {renderDrawer?.()}
+          {renderModal?.()}
+        </>
+      }
+    />
   );
 }

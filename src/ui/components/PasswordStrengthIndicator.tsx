@@ -57,11 +57,15 @@ export function PasswordStrengthIndicator({
           : "bg-green-500";
 
   return (
-    <div className="mt-2" aria-live="polite" aria-atomic="true">
+    <div
+      className="appkit-password-strength"
+      aria-live="polite"
+      aria-atomic="true"
+    >
       <Row gap="sm" className="mb-2">
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200 dark:bg-slate-700">
+        <div className="appkit-password-strength__track">
           <div
-            className={`h-full transition-all duration-300 ${strengthColor}`}
+            className={`appkit-password-strength__fill ${strengthColor}`}
             style={{ width: `${strength}%` }}
             role="progressbar"
             aria-valuenow={Math.round(strength)}
@@ -70,17 +74,15 @@ export function PasswordStrengthIndicator({
             aria-label={`Password strength: ${strengthLabel}`}
           />
         </div>
-        <Span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
-          {strengthLabel}
-        </Span>
+        <Span className="appkit-password-strength__label">{strengthLabel}</Span>
       </Row>
 
       {showRequirements ? (
-        <Ul className="mt-2 space-y-1">
+        <Ul className="appkit-password-strength__requirements">
           {requirements.map((req) => (
             <Li
               key={req.label}
-              className={`flex items-center gap-2 text-xs ${req.met ? "text-green-600 dark:text-green-400" : "text-zinc-500 dark:text-zinc-400"}`}
+              className={`appkit-password-strength__requirement ${req.met ? "appkit-password-strength__requirement--met" : ""}`}
             >
               <Span className="sr-only">{req.met ? "Met: " : "Not met: "}</Span>
               {req.label}

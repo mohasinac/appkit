@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, useCallback, useState } from "react";
-import { Div, Heading, Text, Label } from "../../../ui";
+import { Alert, Div, Heading, Row, Text, Label } from "../../../ui";
 
 export interface LoginFormValues {
   email: string;
@@ -87,12 +87,9 @@ export function LoginForm({
 
         {/* Error */}
         {error && (
-          <Div
-            role="alert"
-            className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700"
-          >
+          <Alert variant="error" compact>
             {error}
-          </Div>
+          </Alert>
         )}
 
         {/* Form */}
@@ -139,8 +136,8 @@ export function LoginForm({
             />
           </Div>
 
-          <Div className="flex items-center justify-between">
-            <Div className="flex items-center gap-2">
+          <Row justify="between">
+            <Row className="gap-2">
               <input
                 id="login-remember"
                 type="checkbox"
@@ -153,9 +150,9 @@ export function LoginForm({
               <Label htmlFor="login-remember" className="text-sm">
                 {labels.rememberMe ?? "Remember me"}
               </Label>
-            </Div>
+            </Row>
             {renderForgotPasswordLink?.()}
-          </Div>
+          </Row>
 
           {renderSubmitButton ? (
             renderSubmitButton(isLoading, labels)

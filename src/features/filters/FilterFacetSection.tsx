@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Div, Input, Span, Text } from "../../ui";
+import { Button, Div, Input, Row, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FilterOption } from "./filterUtils";
 
@@ -79,7 +79,7 @@ export function FilterFacetSection({
       )}
     >
       {/* Header */}
-      <Div className="flex items-center gap-2">
+      <Row gap="xs">
         <Button
           type="button"
           onClick={handleToggle}
@@ -88,14 +88,14 @@ export function FilterFacetSection({
           className="flex flex-1 items-center justify-between text-sm font-semibold text-zinc-900 dark:text-zinc-50 py-1 hover:opacity-80 transition-opacity"
           aria-expanded={!isCollapsed}
         >
-          <Span className="flex items-center gap-2">
+          <Row as={Span} gap="xs">
             {title}
             {hasValue && (
               <Span className="inline-flex items-center justify-center w-5 h-5 text-xs rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-600/20 dark:ring-emerald-400/20">
                 {selected.length}
               </Span>
             )}
-          </Span>
+          </Row>
           <svg
             className={cn(
               "w-4 h-4 text-zinc-500 dark:text-zinc-400 transition-transform duration-200",
@@ -139,7 +139,7 @@ export function FilterFacetSection({
             </svg>
           </Button>
         )}
-      </Div>
+      </Row>
 
       {!isCollapsed && (
         <Div className="mt-3 space-y-1">
@@ -155,9 +155,10 @@ export function FilterFacetSection({
           {filtered.map((option) => {
             const isSelected = selected.includes(option.value);
             return (
-              <Div
+              <Row
                 key={option.value}
-                className="flex items-center gap-2.5 py-1 cursor-pointer group"
+                gap="2.5"
+                className="py-1 cursor-pointer group"
               >
                 {selectionMode === "single" ? (
                   <input
@@ -190,7 +191,7 @@ export function FilterFacetSection({
                     {option.count}
                   </Span>
                 )}
-              </Div>
+              </Row>
             );
           })}
           {filtered.length === 0 && (

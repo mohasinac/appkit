@@ -33,8 +33,11 @@ export interface PreflightResponse {
   unavailable: UnavailableItem[];
 }
 
-export interface CreateRazorpayOrderResponse {
-  razorpayOrderId: string;
+/** @deprecated Use `CreatePaymentOrderResponse` instead. */
+export type CreateRazorpayOrderResponse = CreatePaymentOrderResponse;
+
+export interface CreatePaymentOrderResponse {
+  gatewayOrderId: string;
   amount: number;
   currency: string;
   keyId: string;
@@ -48,16 +51,16 @@ interface PlaceOrderPayload {
   excludedProductIds?: string[];
 }
 
-interface CreateRazorpayOrderPayload {
+interface CreatePaymentOrderPayload {
   amount: number;
   currency?: string;
   receipt?: string;
 }
 
 interface VerifyPaymentPayload {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
+  gateway_order_id: string;
+  gateway_payment_id: string;
+  gateway_signature: string;
   addressId: string;
   notes?: string;
   excludedProductIds?: string[];
@@ -123,9 +126,9 @@ export function useCheckout<TAddress = any, TCart = any>(
   });
 
   const createPaymentOrderMutation = useMutation<
-    CreateRazorpayOrderResponse,
+    CreatePaymentOrderResponse,
     Error,
-    CreateRazorpayOrderPayload
+    CreatePaymentOrderPayload
   >({
     mutationFn: (data) => apiClient.post(paymentCreateOrderEndpoint, data),
   });

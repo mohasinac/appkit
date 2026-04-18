@@ -276,8 +276,17 @@ async function shiprocketFetch<T>(
   return json as T;
 }
 
-// ─── API Functions ────────────────────────────────────────────────────────────
+// ─── Re-export Provider Class ─────────────────────────────────────────────────
 
+export { ShiprocketProvider } from "./shiprocket-provider";
+export type { ShiprocketProviderConfig } from "./shiprocket-provider";
+
+// ─── API Functions (prefer ShiprocketProvider class for new code) ─────────────
+
+/**
+ * @deprecated Use `ShiprocketProvider.authenticate()` instead.
+ * @internal
+ */
 export async function shiprocketAuthenticate(
   credentials: ShiprocketAuthRequest,
 ): Promise<ShiprocketAuthResponse> {
@@ -287,6 +296,10 @@ export async function shiprocketAuthenticate(
   });
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.getPickupLocations()` instead.
+ * @internal
+ */
 export async function shiprocketGetPickupLocations(
   token: string,
 ): Promise<ShiprocketPickupLocationsResponse> {
@@ -296,6 +309,10 @@ export async function shiprocketGetPickupLocations(
   );
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.addPickupLocation()` instead.
+ * @internal
+ */
 export async function shiprocketAddPickupLocation(
   token: string,
   data: ShiprocketAddPickupRequest,
@@ -306,6 +323,10 @@ export async function shiprocketAddPickupLocation(
   );
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.verifyPickupOTP()` instead.
+ * @internal
+ */
 export async function shiprocketVerifyPickupOTP(
   token: string,
   data: ShiprocketVerifyPickupOTPRequest,
@@ -316,6 +337,10 @@ export async function shiprocketVerifyPickupOTP(
   );
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.createShipment()` instead.
+ * @internal
+ */
 export async function shiprocketCreateOrder(
   token: string,
   order: ShiprocketCreateOrderRequest,
@@ -326,6 +351,10 @@ export async function shiprocketCreateOrder(
   );
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.createShipment()` instead (generates AWB internally).
+ * @internal
+ */
 export async function shiprocketGenerateAWB(
   token: string,
   params: ShiprocketGenerateAWBRequest,
@@ -337,6 +366,10 @@ export async function shiprocketGenerateAWB(
   });
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.createShipment()` instead (schedules pickup internally).
+ * @internal
+ */
 export async function shiprocketGeneratePickup(
   token: string,
   params: ShiprocketGeneratePickupRequest,
@@ -348,6 +381,10 @@ export async function shiprocketGeneratePickup(
   });
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.trackShipment()` instead.
+ * @internal
+ */
 export async function shiprocketTrackByAWB(
   token: string,
   awb: string,
@@ -358,6 +395,10 @@ export async function shiprocketTrackByAWB(
   );
 }
 
+/**
+ * @deprecated Use `ShiprocketProvider.checkServiceability()` instead.
+ * @internal
+ */
 export async function shiprocketCheckServiceability(
   token: string,
   paramsOrPickup:

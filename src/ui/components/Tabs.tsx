@@ -2,6 +2,12 @@
 
 import React, { createContext, useContext, useMemo, useState } from "react";
 
+const UI_TABS = {
+  list: "appkit-tabs-list",
+  trigger: "appkit-tabs-trigger",
+  content: "appkit-tabs-content",
+} as const;
+
 interface TabsContextValue {
   active: string;
   setActive: (value: string) => void;
@@ -72,12 +78,7 @@ export function TabsList({ className = "", children }: TabsListProps) {
   return (
     <div
       role="tablist"
-      className={[
-        "flex border-b border-zinc-200 dark:border-slate-700",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={[UI_TABS.list, className].filter(Boolean).join(" ")}
     >
       {children}
     </div>
@@ -100,16 +101,7 @@ export function TabsTrigger({
       disabled={disabled}
       aria-selected={isActive}
       onClick={() => setActive(value)}
-      className={[
-        "-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors",
-        isActive
-          ? "border-primary text-primary"
-          : "border-transparent text-zinc-600 hover:text-zinc-900 dark:text-slate-400 dark:hover:text-white",
-        disabled ? "cursor-not-allowed opacity-50" : "",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={[UI_TABS.trigger, className].filter(Boolean).join(" ")}
     >
       {children}
     </button>
@@ -124,7 +116,9 @@ export function TabsContent({
   const { active } = useContext(TabsContext);
   if (active !== value) return null;
 
-  return <div className={["py-4", className].join(" ")}>{children}</div>;
+  return (
+    <div className={[UI_TABS.content, className].join(" ")}>{children}</div>
+  );
 }
 
 export default Tabs;

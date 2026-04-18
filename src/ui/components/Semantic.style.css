@@ -1,0 +1,14 @@
+/* Semantic — HTML5 landmark wrappers (Section, Article, Main, Aside, Nav, etc.) */
+/* Pure passthroughs — no default styles. Exists for style contract compliance. */
+/* Consumer themes may add base landmark styles via these hooks. */
+
+.appkit-section {}
+.appkit-article {}
+.appkit-main {}
+.appkit-aside {}
+.appkit-nav {}
+.appkit-header {}
+.appkit-footer {}
+.appkit-ul {}
+.appkit-ol {}
+.appkit-li {}

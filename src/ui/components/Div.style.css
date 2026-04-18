@@ -1,0 +1,6 @@
+/* Div — general-purpose layout container wrapper */
+/* Pure passthrough — no default styles. Exists for style contract compliance. */
+
+.appkit-div {
+  /* Consumer themes may add base styles here */
+}

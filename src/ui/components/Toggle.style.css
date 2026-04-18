@@ -1,0 +1,107 @@
+/* Toggle — switch control with size variants */
+
+.appkit-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.appkit-toggle__track {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  border-radius: 9999px;
+  padding: 0;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+.appkit-toggle__track:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px white;
+}
+
+.appkit-toggle__track--off {
+  background-color: #d4d4d8;
+}
+.appkit-toggle__track--on {
+  background-color: #65a30d;
+}
+
+.appkit-toggle__track--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.appkit-toggle__thumb {
+  display: inline-block;
+  border-radius: 9999px;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+/* Sizes */
+.appkit-toggle--sm .appkit-toggle__track {
+  height: 18px;
+  width: 2rem;
+}
+.appkit-toggle--sm .appkit-toggle__thumb {
+  height: 0.875rem;
+  width: 0.875rem;
+}
+.appkit-toggle--sm .appkit-toggle__thumb--off {
+  transform: translateX(2px);
+}
+.appkit-toggle--sm .appkit-toggle__thumb--on {
+  transform: translateX(14px);
+}
+
+.appkit-toggle--md .appkit-toggle__track {
+  height: 1.5rem;
+  width: 2.75rem;
+}
+.appkit-toggle--md .appkit-toggle__thumb {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+.appkit-toggle--md .appkit-toggle__thumb--off {
+  transform: translateX(2px);
+}
+.appkit-toggle--md .appkit-toggle__thumb--on {
+  transform: translateX(1.25rem);
+}
+
+.appkit-toggle--lg .appkit-toggle__track {
+  height: 1.75rem;
+  width: 3.5rem;
+}
+.appkit-toggle--lg .appkit-toggle__thumb {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+.appkit-toggle--lg .appkit-toggle__thumb--off {
+  transform: translateX(2px);
+}
+.appkit-toggle--lg .appkit-toggle__thumb--on {
+  transform: translateX(1.75rem);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .appkit-toggle__track:focus-visible {
+    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
+  }
+  .appkit-toggle__track--off {
+    background-color: #334155;
+  }
+  .appkit-toggle__track--on {
+    background-color: #ec4899;
+  }
+  .appkit-toggle__thumb {
+    background: #020617;
+  }
+}

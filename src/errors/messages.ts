@@ -509,16 +509,23 @@ export const ERROR_MESSAGES = {
     INVALID_METHOD: "Invalid shipping method selected",
     CUSTOM_PRICE_REQUIRED: "A shipping price is required for custom shipping",
     CARRIER_REQUIRED: "Carrier name is required for custom shipping",
-    SHIPROCKET_CREDS_REQUIRED: "Shiprocket email and password are required",
-    SHIPROCKET_AUTH_FAILED:
-      "Failed to authenticate with Shiprocket — check your credentials",
+    PROVIDER_CREDS_REQUIRED:
+      "Shipping provider email and password are required",
+    PROVIDER_AUTH_FAILED:
+      "Failed to authenticate with shipping provider — check your credentials",
     PICKUP_ADDRESS_REQUIRED:
-      "A verified pickup address is required before shipping with Shiprocket",
+      "A verified pickup address is required before shipping",
     PICKUP_VERIFICATION_FAILED: "Pickup address OTP verification failed",
-    PICKUP_ADD_FAILED: "Failed to add pickup address in Shiprocket",
-    ORDER_CREATE_FAILED: "Failed to create shipment in Shiprocket",
+    PICKUP_ADD_FAILED: "Failed to add pickup address with shipping provider",
+    ORDER_CREATE_FAILED: "Failed to create shipment with shipping provider",
     AWB_ASSIGN_FAILED: "Failed to assign courier AWB number",
-    PICKUP_SCHEDULE_FAILED: "Failed to schedule pickup with Shiprocket",
+    PICKUP_SCHEDULE_FAILED: "Failed to schedule pickup with shipping provider",
+    /** @deprecated Use PROVIDER_CREDS_REQUIRED */
+    SHIPROCKET_CREDS_REQUIRED:
+      "Shipping provider email and password are required",
+    /** @deprecated Use PROVIDER_AUTH_FAILED */
+    SHIPROCKET_AUTH_FAILED:
+      "Failed to authenticate with shipping provider — check your credentials",
     TRACKING_FAILED: "Failed to fetch tracking details",
     INVALID_TRACKING_URL: "Please provide a valid tracking URL",
     CARRIER_NAME_REQUIRED:

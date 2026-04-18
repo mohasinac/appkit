@@ -1,4 +1,11 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderBoolean,
+  renderNullable,
+  renderCurrencyCompact,
+  renderRating,
+} from "../../../ui/columns";
 import type { SellerStore, PayoutRecord } from "../types";
 
 // ─── Seller store columns ─────────────────────────────────────────────────────
@@ -19,28 +26,28 @@ export const sellerAdminColumns: TableColumn<SellerStore>[] = [
   {
     key: "isPublic",
     header: "Public",
-    render: (s) => (s.isPublic ? "Yes" : "No"),
+    render: (s) => renderBoolean(s.isPublic),
   },
   {
     key: "totalProducts",
     header: "Products",
     sortable: true,
-    render: (s) => s.stats?.totalProducts?.toLocaleString() ?? "—",
+    render: (s) =>
+      renderNullable(s.stats?.totalProducts, (v) => v.toLocaleString()),
   },
   {
     key: "itemsSold",
     header: "Sold",
     sortable: true,
-    render: (s) => s.stats?.itemsSold?.toLocaleString() ?? "—",
+    render: (s) =>
+      renderNullable(s.stats?.itemsSold, (v) => v.toLocaleString()),
   },
   {
     key: "averageRating",
     header: "Rating",
     sortable: true,
     render: (s) =>
-      s.stats?.averageRating != null
-        ? s.stats.averageRating.toFixed(1)
-        : "—",
+      renderRating(s.stats?.averageRating, null, { showCount: false }),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -48,15 +55,7 @@ export const sellerAdminColumns: TableColumn<SellerStore>[] = [
 export function buildSellerColumns<T extends SellerStore = SellerStore>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = sellerAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(sellerAdminColumns as TableColumn<T>[], opts);
 }
 
 // ─── Payout columns ───────────────────────────────────────────────────────────
@@ -75,12 +74,12 @@ export const payoutAdminColumns: TableColumn<PayoutRecord>[] = [
     key: "amount",
     header: "Amount",
     sortable: true,
-    render: (p) => `${p.currency} ${p.amount.toLocaleString()}`,
+    render: (p) => renderCurrencyCompact(p.amount, p.currency),
   },
   {
     key: "platformFee",
     header: "Platform Fee",
-    render: (p) => `${p.currency} ${p.platformFee.toLocaleString()}`,
+    render: (p) => renderCurrencyCompact(p.platformFee, p.currency),
   },
   { key: "status", header: "Status", sortable: true },
   { key: "paymentMethod", header: "Method" },
@@ -91,13 +90,5 @@ export const payoutAdminColumns: TableColumn<PayoutRecord>[] = [
 export function buildPayoutColumns<T extends PayoutRecord = PayoutRecord>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = payoutAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(payoutAdminColumns as TableColumn<T>[], opts);
 }

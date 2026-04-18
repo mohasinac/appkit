@@ -1,38 +1,15 @@
-"use client";
-
 import React from "react";
-import { ListingLayout } from "../../../ui";
-import type { ListingLayoutProps } from "../../../ui";
+import { ListingViewShell } from "../../../ui";
+import type { ListingViewShellProps } from "../../../ui";
 
-export interface AdminReviewsViewProps extends Omit<
-  ListingLayoutProps,
-  "children"
-> {
-  renderDrawer?: () => React.ReactNode;
-  renderConfirmModal?: () => React.ReactNode;
+export interface AdminReviewsViewProps extends ListingViewShellProps {
+  /** @deprecated Use `detailView` instead. */
   renderDetailView?: () => React.ReactNode;
-  children: React.ReactNode;
 }
 
 export function AdminReviewsView({
-  renderDrawer,
-  renderConfirmModal,
   renderDetailView,
-  children,
-  isDashboard = true,
-  ...listingProps
+  ...props
 }: AdminReviewsViewProps) {
-  // When a detail view is provided, short-circuit to it
-  if (renderDetailView) {
-    return <>{renderDetailView()}</>;
-  }
-  return (
-    <>
-      <ListingLayout {...listingProps} isDashboard={isDashboard}>
-        {children}
-      </ListingLayout>
-      {renderDrawer?.()}
-      {renderConfirmModal?.()}
-    </>
-  );
+  return <ListingViewShell {...props} detailView={renderDetailView?.()} />;
 }

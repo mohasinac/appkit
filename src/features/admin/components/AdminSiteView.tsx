@@ -1,34 +1,27 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 
-export interface AdminSiteViewProps {
+export interface AdminSiteViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   labels?: { title?: string };
-  renderHeader?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderForm?: () => React.ReactNode;
-  className?: string;
 }
 
 export function AdminSiteView({
   labels = {},
-  renderHeader,
   renderTabs,
   renderForm,
-  className = "",
+  ...rest
 }: AdminSiteViewProps) {
   return (
-    <Div className={className}>
-      {renderHeader ? (
-        renderHeader()
-      ) : labels.title ? (
-        <Heading level={1} className="text-2xl font-bold mb-6">
-          {labels.title}
-        </Heading>
-      ) : null}
-      {renderTabs?.()}
-      {renderForm?.()}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      sections={[renderTabs?.(), renderForm?.()]}
+    />
   );
 }

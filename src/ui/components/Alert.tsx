@@ -102,6 +102,7 @@ export interface AlertProps {
   children: React.ReactNode;
   variant?: keyof typeof ALERT_STYLES;
   title?: string;
+  compact?: boolean;
   onClose?: () => void;
   className?: string;
 }
@@ -110,6 +111,7 @@ export function Alert({
   children,
   variant = "info",
   title,
+  compact = false,
   onClose,
   className = "",
 }: AlertProps) {
@@ -121,9 +123,11 @@ export function Alert({
       role="alert"
     >
       <div className="appkit-alert__content">
-        <div className={`appkit-alert__icon ${styles.icon}`}>
-          {ICONS[variant]}
-        </div>
+        {!compact && (
+          <div className={`appkit-alert__icon ${styles.icon}`}>
+            {ICONS[variant]}
+          </div>
+        )}
 
         <div className="appkit-alert__body">
           {title && (

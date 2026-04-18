@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderBoolean } from "../../../ui/columns";
 import type { CollectionItem } from "../types";
 
 /**
@@ -30,7 +31,7 @@ export const collectionAdminColumns: TableColumn<CollectionItem>[] = [
     key: "active",
     header: "Active",
     sortable: false,
-    render: (item) => (item.active ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.active),
   },
   {
     key: "sortOrder",
@@ -53,25 +54,8 @@ export const collectionAdminColumns: TableColumn<CollectionItem>[] = [
  *   omit: ["brandSlug"],
  * });
  */
-export function buildCollectionColumns<T extends CollectionItem = CollectionItem>(
-  opts?: ColumnExtensionOpts<T>
-): TableColumn<T>[] {
-  let base = collectionAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+export function buildCollectionColumns<
+  T extends CollectionItem = CollectionItem,
+>(opts?: ColumnExtensionOpts<T>): TableColumn<T>[] {
+  return buildColumns(collectionAdminColumns as TableColumn<T>[], opts);
 }

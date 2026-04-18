@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Aside, Div, Heading, Span, Text } from "../../../ui";
+import { Aside, Div, Heading, Span, Stack, Text } from "../../../ui";
 
 export interface ContactInfoItem {
   icon: string;
@@ -29,12 +29,12 @@ export function ContactInfoSidebar({
   renderActions,
 }: ContactInfoSidebarProps) {
   return (
-    <Aside className="space-y-6">
+    <Stack as="aside" gap="lg">
       <Div>
         <Heading level={3} className="mb-4">
           {labels.title ?? "Contact Information"}
         </Heading>
-        <Div className="space-y-4">
+        <Stack gap="md">
           {infoItems.map((item) => (
             <Div key={item.label} className="flex items-start gap-3">
               <Span className="text-xl flex-shrink-0 mt-0.5">{item.icon}</Span>
@@ -55,11 +55,11 @@ export function ContactInfoSidebar({
               </Div>
             </Div>
           ))}
-        </Div>
+        </Stack>
       </Div>
 
       {(labels.businessHoursLabel || labels.responseTimeLabel) && (
-        <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 p-4 space-y-2">
+        <Stack gap="sm" className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800/60 p-4">
           {labels.businessHoursLabel && labels.businessHoursValue && (
             <Div>
               <Text className="text-xs font-semibold text-neutral-500 uppercase tracking-wide">
@@ -76,10 +76,10 @@ export function ContactInfoSidebar({
               <Text className="text-sm mt-0.5">{labels.responseTimeValue}</Text>
             </Div>
           )}
-        </Div>
+        </Stack>
       )}
 
       {renderActions?.()}
-    </Aside>
+    </Stack>
   );
 }

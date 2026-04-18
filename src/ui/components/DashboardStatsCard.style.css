@@ -1,0 +1,70 @@
+/* DashboardStatsCard — stat tile with icon, value, and trend */
+
+.appkit-stats-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+}
+.appkit-stats-card--dark {
+  border: none;
+  background: #18181b;
+  color: #fff;
+}
+
+.appkit-stats-card__icon-wrap {
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.appkit-stats-card__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.appkit-stats-card__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.appkit-stats-card__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.appkit-stats-card__trend {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.appkit-stats-card__trend--up {
+  color: #059669;
+}
+.appkit-stats-card__trend--down {
+  color: #ef4444;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .appkit-stats-card {
+    border-color: #334155;
+    background: #0f172a;
+  }
+  .appkit-stats-card__label {
+    color: #a1a1aa;
+  }
+  .appkit-stats-card__trend--up {
+    color: #34d399;
+  }
+  .appkit-stats-card__trend--down {
+    color: #f87171;
+  }
+}

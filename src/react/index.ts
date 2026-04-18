@@ -27,6 +27,23 @@ export type {
   UsePullToRefreshReturn,
 } from "./hooks/usePullToRefresh";
 
+// Contexts
+export { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+export type { ThemeMode } from "./contexts/ThemeContext";
+export {
+  SessionProvider,
+  useSession,
+  useAuth,
+} from "./contexts/SessionContext";
+export type {
+  SessionUser,
+  SessionContextValue,
+  SessionEndpoints,
+  SessionProviderProps,
+  AvatarMetadataShape,
+  InvalidateQueriesFn,
+} from "./contexts/SessionContext";
+
 // Timer / countdown
 export { useCountdown } from "./hooks/useCountdown";
 export type { CountdownRemaining } from "./hooks/useCountdown";

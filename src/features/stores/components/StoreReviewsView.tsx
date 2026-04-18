@@ -1,10 +1,12 @@
-"use client";
-
 import React from "react";
-import { Div, Heading } from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
 import type { Review } from "../../reviews/types";
 
-export interface StoreReviewsViewProps {
+export interface StoreReviewsViewProps extends Omit<
+  StackedViewShellProps,
+  "sections"
+> {
   storeSlug: string;
   labels?: {
     title?: string;
@@ -16,7 +18,6 @@ export interface StoreReviewsViewProps {
   items?: Review[];
   total?: number;
   isLoading?: boolean;
-  className?: string;
 }
 
 export function StoreReviewsView({
@@ -27,19 +28,18 @@ export function StoreReviewsView({
   items = [],
   total = 0,
   isLoading = false,
-  className = "",
+  ...rest
 }: StoreReviewsViewProps) {
   return (
-    <Div className={`py-4 ${className}`}>
-      {labels.title && (
-        <Heading level={2} className="text-xl font-semibold mb-4">
-          {labels.title}
-        </Heading>
-      )}
-
-      {renderSummary?.()}
-      {renderReviews(items, isLoading)}
-      {renderPagination?.(total)}
-    </Div>
+    <StackedViewShell
+      {...rest}
+      title={labels.title}
+      className={`py-4 ${rest.className ?? ""}`}
+      sections={[
+        renderSummary?.(),
+        renderReviews(items, isLoading),
+        renderPagination?.(total),
+      ]}
+    />
   );
 }

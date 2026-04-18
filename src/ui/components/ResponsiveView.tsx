@@ -18,11 +18,11 @@ export function ResponsiveView({
   breakpoint = "md",
 }: ResponsiveViewProps) {
   return (
-    <>
-      <div className={`block ${breakpoint}:hidden`}>{mobile}</div>
-      {tablet && <div className="hidden md:block lg:hidden">{tablet}</div>}
-      <div className={`hidden ${breakpoint}:block`}>{desktop}</div>
-    </>
+    <div className={`appkit-responsive-view--${breakpoint}`}>
+      <div className="appkit-responsive-view__mobile">{mobile}</div>
+      {tablet && <div className="appkit-responsive-view__tablet">{tablet}</div>}
+      <div className="appkit-responsive-view__desktop">{desktop}</div>
+    </div>
   );
 }
 

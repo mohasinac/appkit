@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderBoolean } from "../../../ui/columns";
 import type { BeforeAfterItem } from "../types";
 
 /**
@@ -25,7 +26,7 @@ export const beforeAfterAdminColumns: TableColumn<BeforeAfterItem>[] = [
     key: "isActive",
     header: "Active",
     sortable: false,
-    render: (item) => (item.isActive ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.isActive),
   },
   {
     key: "sortOrder",
@@ -48,25 +49,8 @@ export const beforeAfterAdminColumns: TableColumn<BeforeAfterItem>[] = [
  *   omit: ["sortOrder"],
  * });
  */
-export function buildBeforeAfterColumns<T extends BeforeAfterItem = BeforeAfterItem>(
-  opts?: ColumnExtensionOpts<T>
-): TableColumn<T>[] {
-  let base = beforeAfterAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+export function buildBeforeAfterColumns<
+  T extends BeforeAfterItem = BeforeAfterItem,
+>(opts?: ColumnExtensionOpts<T>): TableColumn<T>[] {
+  return buildColumns(beforeAfterAdminColumns as TableColumn<T>[], opts);
 }

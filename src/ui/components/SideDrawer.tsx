@@ -3,10 +3,37 @@ import "client-only";
 
 import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { Heading, Button, Span } from "../index";
+import { Button } from "./Button";
+import { Row } from "./Layout";
+import { Heading, Span } from "./Typography";
 import { useSwipe } from "../../react";
 
 export type DrawerMode = "create" | "edit" | "delete" | "view";
+
+const UI_SIDE_DRAWER = {
+  backdrop: "appkit-side-drawer__backdrop",
+  root: "appkit-side-drawer",
+  left: "appkit-side-drawer--left",
+  right: "appkit-side-drawer--right",
+  header: "appkit-side-drawer__header",
+  headerMode: {
+    view: "appkit-side-drawer__header--view",
+    create: "appkit-side-drawer__header--create",
+    edit: "appkit-side-drawer__header--edit",
+    delete: "appkit-side-drawer__header--delete",
+  },
+  closeBtn: "appkit-side-drawer__close-btn",
+  closeIcon: "appkit-side-drawer__close-icon",
+  deleteBadge: "appkit-side-drawer__delete-badge",
+  content: "appkit-side-drawer__content",
+  footer: "appkit-side-drawer__footer",
+  warnBackdrop: "appkit-side-drawer__warn-backdrop",
+  warnDialog: "appkit-side-drawer__warn-dialog",
+  warnHeader: "appkit-side-drawer__warn-header",
+  warnIcon: "appkit-side-drawer__warn-icon",
+  warnText: "appkit-side-drawer__warn-text",
+  warnActions: "appkit-side-drawer__warn-actions",
+} as const;
 
 export interface SideDrawerProps {
   isOpen: boolean;
@@ -152,23 +179,13 @@ export function SideDrawer({
   if (!isOpen) return null;
 
   const positionClass =
-    side === "left"
-      ? "left-0 w-full sm:w-96 md:w-[420px]"
-      : "right-0 w-full md:min-w-[50%]";
-
-  const modeHeaderClass: Record<DrawerMode, string> = {
-    delete: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800",
-    create:
-      "bg-gradient-to-r from-primary/5 via-transparent to-teal-50/30 dark:from-primary/10 dark:via-transparent dark:to-teal-950/10 border-zinc-200 dark:border-slate-700",
-    edit: "bg-gradient-to-r from-amber-50/40 via-transparent to-primary/5 dark:from-amber-950/15 dark:via-transparent dark:to-primary/10 border-zinc-200 dark:border-slate-700",
-    view: "bg-zinc-50 dark:bg-slate-900/80 border-zinc-200 dark:border-slate-700",
-  };
+    side === "left" ? UI_SIDE_DRAWER.left : UI_SIDE_DRAWER.right;
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity"
+        className={UI_SIDE_DRAWER.backdrop}
         onClick={attemptClose}
         aria-hidden="true"
       />
@@ -176,24 +193,29 @@ export function SideDrawer({
       {/* Drawer */}
       <div
         ref={drawerRef}
-        className={`fixed ${positionClass} top-0 bottom-0 z-50 bg-white dark:bg-slate-900 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out`}
+        className={[UI_SIDE_DRAWER.root, positionClass].join(" ")}
         role="dialog"
         aria-modal="true"
         aria-labelledby="drawer-title"
       >
         {/* Header */}
-        <div
-          className={`flex items-center justify-between p-6 ${modeHeaderClass[mode]} border-b`}
+        <Row
+          justify="between"
+          gap="none"
+          className={[
+            UI_SIDE_DRAWER.header,
+            UI_SIDE_DRAWER.headerMode[mode],
+          ].join(" ")}
         >
-          <div className="flex items-center gap-3 min-w-0">
+          <Row gap="3" className="min-w-0">
             <Button
               variant="ghost"
               onClick={attemptClose}
-              className="flex-shrink-0 p-2 text-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors ring-1 ring-zinc-200 dark:ring-slate-700 hover:ring-zinc-300 dark:hover:ring-slate-600"
+              className={UI_SIDE_DRAWER.closeBtn}
               aria-label={tActions("close")}
             >
               <svg
-                className="w-5 h-5"
+                className={UI_SIDE_DRAWER.closeIcon}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -209,41 +231,29 @@ export function SideDrawer({
             <Heading level={3} id="drawer-title" className="truncate">
               {title}
             </Heading>
-          </div>
+          </Row>
           {mode === "delete" && (
-            <Span className="flex-shrink-0 px-2.5 py-1 text-xs font-semibold rounded bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
+            <Span className={UI_SIDE_DRAWER.deleteBadge}>
               {tActions("delete")}
             </Span>
           )}
-        </div>
+        </Row>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">{children}</div>
+        <div className={UI_SIDE_DRAWER.content}>{children}</div>
 
         {/* Footer */}
-        {footer && (
-          <div className="px-4 sm:px-6 py-4 sm:py-5 border-t border-zinc-200 dark:border-slate-700 bg-zinc-50 dark:bg-slate-900/80 flex-shrink-0">
-            {footer}
-          </div>
-        )}
+        {footer && <div className={UI_SIDE_DRAWER.footer}>{footer}</div>}
       </div>
 
       {/* Unsaved changes warning overlay */}
       {showUnsavedWarning && (
         <>
-          <div
-            className="fixed inset-0 z-[60] bg-black/60"
-            onClick={cancelClose}
-          />
-          <div className="fixed z-[60] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-md bg-white dark:bg-slate-900 rounded-xl shadow-2xl p-6">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+          <div className={UI_SIDE_DRAWER.warnBackdrop} onClick={cancelClose} />
+          <div className={UI_SIDE_DRAWER.warnDialog}>
+            <div className={UI_SIDE_DRAWER.warnHeader}>
+              <div className={UI_SIDE_DRAWER.warnIcon}>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -256,12 +266,12 @@ export function SideDrawer({
                 <Heading level={4} className="mb-1">
                   {tConfirm("unsavedChangesTitle")}
                 </Heading>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className={UI_SIDE_DRAWER.warnText}>
                   {tConfirm("unsavedChangesDescription")}
                 </p>
               </div>
             </div>
-            <div className="flex gap-3 justify-end">
+            <div className={UI_SIDE_DRAWER.warnActions}>
               <Button variant="outline" onClick={cancelClose} size="sm">
                 {tActions("keepEditing")}
               </Button>

@@ -1,6 +1,6 @@
 import React from "react";
 import type { LayoutSlots } from "../../../contracts";
-import { Button, Div, Grid, Span, Text } from "../../../ui";
+import { Button, Div, Grid, Row, Span, Text } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -101,13 +101,13 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           )}
         </Div>
         {product.rating !== undefined && (
-          <Div className="mt-1 flex items-center gap-1">
+          <Row className="mt-1 gap-1">
             <Span className="text-xs text-yellow-500">★</Span>
             <Span className="text-xs text-neutral-500">
               {product.rating.toFixed(1)}
               {product.reviewCount ? ` (${product.reviewCount})` : ""}
             </Span>
-          </Div>
+          </Row>
         )}
       </Div>
     </Div>

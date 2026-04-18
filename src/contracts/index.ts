@@ -78,6 +78,24 @@ export type { IStyleAdapter } from "./style";
 export type { ProviderRegistry } from "./registry";
 export { registerProviders, getProviders, _resetProviders } from "./registry";
 
+// Repository lifecycle hooks
+export type { RepositoryLifecycleHooks } from "./repository";
+export {
+  setCollectionHooks,
+  getCollectionHooks,
+  removeCollectionHooks,
+  _resetCollectionHooks,
+} from "./repository";
+
+// Form field registry
+export type { ExtraFormField, ExtraFieldRenderArgs } from "./form";
+export {
+  registerFormFields,
+  resolveFormFields,
+  removeFormFields,
+  _resetFormFields,
+} from "./form";
+
 // Feature manifest
 export type {
   RouteStub,
@@ -141,3 +159,35 @@ export {
   registerClientAuthProvider,
   getClientAuthProvider,
 } from "./client-auth";
+
+// Client-side session adapter
+export type {
+  AdapterAuthUser,
+  AuthUnsubscribe,
+  IClientSessionAdapter,
+} from "./client-session";
+export {
+  registerClientSessionAdapter,
+  getClientSessionAdapter,
+} from "./client-session";
+
+// Composable filter/sort builder
+export type {
+  FilterOption,
+  FilterType,
+  FilterDefinition,
+  SortDefinition,
+} from "./extend";
+export { mergeFilterDefinitions, mergeSortDefinitions } from "./extend";
+
+// Client-side payment gateway
+export type {
+  GatewayPaymentResponse,
+  OpenGatewayOptions,
+  IClientPaymentGateway,
+} from "./client-payment-gateway";
+export {
+  registerClientPaymentGateway,
+  getClientPaymentGateway,
+  getRegisteredPaymentGateways,
+} from "./client-payment-gateway";

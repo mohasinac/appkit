@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Button, Div, Input, Slider, Span, Text } from "../../ui";
+import { Button, Div, Input, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 interface DualSliderProps {
@@ -35,7 +35,7 @@ function DualSlider({
   );
 
   return (
-    <Div className="w-full space-y-2">
+    <Stack gap="sm" className="w-full">
       <Div className="flex items-center justify-between">
         <Span className="text-sm font-semibold tabular-nums text-primary-600 dark:text-secondary-400">
           {prefix}
@@ -48,7 +48,7 @@ function DualSlider({
         </Span>
       </Div>
 
-      <Div className="space-y-1" aria-hidden="true">
+      <Stack gap="xs" aria-hidden="true">
         <Slider
           value={minNum}
           min={minBound}
@@ -63,7 +63,7 @@ function DualSlider({
           step={step}
           onChange={(v) => onMaxChange(String(v))}
         />
-      </Div>
+      </Stack>
 
       <Div className="flex items-center justify-between">
         <Span className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -75,7 +75,7 @@ function DualSlider({
           {maxBound}
         </Span>
       </Div>
-    </Div>
+    </Stack>
   );
 }
 
@@ -217,7 +217,7 @@ export function RangeFilter({
       </Div>
 
       {!isCollapsed && (
-        <Div className="mt-3 space-y-3">
+        <Stack gap="3" className="mt-3">
           {canShowSlider && (
             <DualSlider
               minValue={minValue}
@@ -284,7 +284,7 @@ export function RangeFilter({
               </Div>
             </Div>
           </Div>
-        </Div>
+        </Stack>
       )}
     </Div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Button, Heading, Section, Span, Text } from "../../../ui";
+import { Button, Heading, Row, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -140,7 +140,10 @@ export function AdvertisementBanner({
 
           {/* Content */}
           {compact ? (
-            <div className="relative z-10 flex items-center justify-between w-full px-6 py-4 gap-4 flex-wrap">
+            <Row
+              justify="between"
+              className="relative z-10 w-full px-6 py-4 gap-4 flex-wrap"
+            >
               <div className="inline-flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-white/80" />
                 <Span className="text-white font-semibold text-sm">
@@ -158,7 +161,7 @@ export function AdvertisementBanner({
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Button>
               )}
-            </div>
+            </Row>
           ) : (
             <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center">
               {tagLabel && (

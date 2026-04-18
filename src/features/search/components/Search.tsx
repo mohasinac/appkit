@@ -204,8 +204,8 @@ export function Search({
     };
 
     return (
-      <div className={`relative flex items-center gap-2 ${className ?? ""}`}>
-        <div className="relative flex-1 flex items-center">
+      <Row className={`relative gap-2 ${className ?? ""}`}>
+        <Row className="relative flex-1">
           <svg
             className="absolute left-3 w-4 h-4 text-zinc-400 pointer-events-none"
             aria-hidden="true"
@@ -301,7 +301,7 @@ export function Search({
               </svg>
             </Button>
           )}
-        </div>
+        </Row>
         {deferred && (
           <Button
             type="button"
@@ -435,7 +435,7 @@ export function Search({
             )}
           </div>
         )}
-      </div>
+      </Row>
     );
   }
 

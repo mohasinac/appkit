@@ -1,4 +1,9 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderCurrencyCompact,
+  renderBoolean,
+} from "../../../ui/columns";
 import type { SearchProductItem } from "../types";
 
 /**
@@ -16,7 +21,9 @@ export const searchResultAdminColumns: TableColumn<SearchProductItem>[] = [
     header: "Price",
     sortable: true,
     render: (item) =>
-      item.price != null ? `${item.currency ?? "INR"} ${item.price}` : "—",
+      item.price != null
+        ? renderCurrencyCompact(item.price, item.currency)
+        : "—",
   },
   {
     key: "status",
@@ -27,13 +34,13 @@ export const searchResultAdminColumns: TableColumn<SearchProductItem>[] = [
     key: "featured",
     header: "Featured",
     sortable: false,
-    render: (item) => (item.featured ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.featured),
   },
   {
     key: "isAuction",
     header: "Auction",
     sortable: false,
-    render: (item) => (item.isAuction ? "Yes" : "No"),
+    render: (item) => renderBoolean(item.isAuction),
   },
 ];
 
@@ -46,25 +53,8 @@ export const searchResultAdminColumns: TableColumn<SearchProductItem>[] = [
  *   omit: ["isAuction"],
  * });
  */
-export function buildSearchResultColumns<T extends SearchProductItem = SearchProductItem>(
-  opts?: ColumnExtensionOpts<T>
-): TableColumn<T>[] {
-  let base = searchResultAdminColumns as unknown as TableColumn<T>[];
-
-  if (opts?.omit?.length) {
-    base = base.filter((c) => !opts.omit!.includes(c.key as string));
-  }
-
-  if (opts?.overrides) {
-    base = base.map((c) => {
-      const override = (opts.overrides as Record<string, Partial<TableColumn<T>>>)[c.key as string];
-      return override ? { ...c, ...override } : c;
-    });
-  }
-
-  if (opts?.extras?.length) {
-    base = [...base, ...opts.extras];
-  }
-
-  return base;
+export function buildSearchResultColumns<
+  T extends SearchProductItem = SearchProductItem,
+>(opts?: ColumnExtensionOpts<T>): TableColumn<T>[] {
+  return buildColumns(searchResultAdminColumns as TableColumn<T>[], opts);
 }

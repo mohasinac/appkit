@@ -18,12 +18,18 @@ export interface AvatarGroupProps {
   className?: string;
 }
 
-const SIZE_MAP: Record<NonNullable<AvatarProps["size"]>, string> = {
-  xs: "h-6 w-6 text-[10px]",
-  sm: "h-8 w-8 text-xs",
-  md: "h-10 w-10 text-sm",
-  lg: "h-12 w-12 text-base",
-};
+const UI_AVATAR = {
+  base: "appkit-avatar",
+  fallback: "appkit-avatar--fallback",
+  sizes: {
+    xs: "appkit-avatar--xs",
+    sm: "appkit-avatar--sm",
+    md: "appkit-avatar--md",
+    lg: "appkit-avatar--lg",
+  },
+  group: "appkit-avatar-group",
+  overflow: "appkit-avatar-group__overflow",
+} as const;
 
 function getInitials(name?: string): string {
   if (!name) return "?";
@@ -44,18 +50,14 @@ export function Avatar({
   size = "md",
   className = "",
 }: AvatarProps) {
-  const sizeClass = SIZE_MAP[size];
+  const sizeClass = UI_AVATAR.sizes[size];
 
   if (src) {
     return (
       <img
         src={src}
         alt={alt ?? name ?? ""}
-        className={[
-          "rounded-full object-cover bg-zinc-100 dark:bg-slate-800",
-          sizeClass,
-          className,
-        ]
+        className={[UI_AVATAR.base, sizeClass, className]
           .filter(Boolean)
           .join(" ")}
       />
@@ -65,12 +67,7 @@ export function Avatar({
   return (
     <span
       aria-label={name}
-      className={[
-        "inline-flex items-center justify-center rounded-full",
-        "bg-zinc-200 font-medium text-zinc-700 dark:bg-slate-700 dark:text-slate-200",
-        sizeClass,
-        className,
-      ]
+      className={[UI_AVATAR.fallback, sizeClass, className]
         .filter(Boolean)
         .join(" ")}
     >
@@ -89,7 +86,7 @@ export function AvatarGroup({
   const extra = avatars.length - visible.length;
 
   return (
-    <div className={["flex -space-x-2", className].filter(Boolean).join(" ")}>
+    <div className={[UI_AVATAR.group, className].filter(Boolean).join(" ")}>
       {visible.map((avatar, index) => (
         <Avatar
           key={`${avatar.src ?? avatar.name ?? "avatar"}-${index}`}
@@ -99,13 +96,7 @@ export function AvatarGroup({
         />
       ))}
       {extra > 0 ? (
-        <span
-          className={[
-            "inline-flex items-center justify-center rounded-full ring-2 ring-white",
-            "bg-zinc-300 text-xs font-medium text-zinc-700 dark:bg-slate-600 dark:text-slate-200 dark:ring-slate-900",
-            SIZE_MAP[size],
-          ].join(" ")}
-        >
+        <span className={[UI_AVATAR.overflow, UI_AVATAR.sizes[size]].join(" ")}>
           +{extra}
         </span>
       ) : null}

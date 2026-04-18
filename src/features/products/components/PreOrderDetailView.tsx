@@ -1,50 +1,44 @@
 import React from "react";
+import { DetailViewShell } from "../../../ui";
+import type { DetailViewShellProps } from "../../../ui";
 
 /**
  * PreOrderDetailView — shell for pre-order product detail pages.
- * Same slot structure as ProductDetailView; separate component so the
- * pre-order UX can diverge without coupling to the standard detail layout.
+ * Uses grid-2 layout (gallery | info+buyBar).
  */
-export interface PreOrderDetailViewProps {
-  isLoading?: boolean;
-  renderBreadcrumb?: () => React.ReactNode;
+export interface PreOrderDetailViewProps extends Omit<
+  DetailViewShellProps,
+  "mainSlots" | "belowFold" | "layout"
+> {
   renderGallery?: (isLoading: boolean) => React.ReactNode;
   renderInfo?: (isLoading: boolean) => React.ReactNode;
   renderBuyBar?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
-  renderSkeleton?: () => React.ReactNode;
-  className?: string;
 }
 
 export function PreOrderDetailView({
-  isLoading = false,
-  renderBreadcrumb,
   renderGallery,
   renderInfo,
   renderBuyBar,
   renderTabs,
   renderRelated,
-  renderSkeleton,
-  className = "",
+  isLoading = false,
+  ...rest
 }: PreOrderDetailViewProps) {
-  if (isLoading) {
-    if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <div className="animate-pulse min-h-screen" />;
-  }
-
   return (
-    <div className={className}>
-      {renderBreadcrumb?.()}
-      <div className="flex gap-8 my-6">
-        <div className="w-1/2">{renderGallery?.(isLoading)}</div>
-        <div className="flex-1">
+    <DetailViewShell
+      {...rest}
+      layout="grid-2"
+      isLoading={isLoading}
+      mainSlots={[
+        renderGallery?.(isLoading),
+        <React.Fragment key="info">
           {renderInfo?.(isLoading)}
           {renderBuyBar?.()}
-        </div>
-      </div>
-      {renderTabs?.()}
-      {renderRelated?.()}
-    </div>
+        </React.Fragment>,
+      ]}
+      belowFold={[renderTabs?.(), renderRelated?.()]}
+    />
   );
 }

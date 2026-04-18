@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Div, Span, Text } from "../../ui";
+import { Button, Div, Row, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 
 export interface SwitchFilterProps {
@@ -45,7 +45,7 @@ export function SwitchFilter({
         className,
       )}
     >
-      <Div className="flex items-center gap-2">
+      <Row className="gap-2">
         <Button
           type="button"
           id={`sf-${title}`}
@@ -101,7 +101,7 @@ export function SwitchFilter({
             </svg>
           </Button>
         )}
-      </Div>
+      </Row>
 
       {!isCollapsed && (
         <Div className="mt-3">

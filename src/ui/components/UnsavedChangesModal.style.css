@@ -1,0 +1,33 @@
+/* UnsavedChangesModal — confirmation dialog for unsaved navigation */
+
+.appkit-unsaved-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.appkit-unsaved-modal__card {
+  width: 100%;
+  max-width: 28rem;
+  padding: 1.5rem;
+}
+
+.appkit-unsaved-modal__title {
+  margin-bottom: 0.5rem;
+}
+
+.appkit-unsaved-modal__message {
+  margin-bottom: 1.5rem;
+}
+
+.appkit-unsaved-modal__actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-start;
+}

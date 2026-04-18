@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Span } from "../../ui";
+import { Row, Span } from "../../ui";
 
 export interface NavItemProps {
   href: string;
@@ -55,11 +55,7 @@ export function NavItem({
             aria-hidden
           />
         )}
-        <Span
-          className={["flex items-center relative", iconClassName].join(" ")}
-        >
-          {icon}
-        </Span>
+        <Row className={["relative", iconClassName].join(" ")}>{icon}</Row>
         <Span className={["relative", labelClassName].join(" ")}>{label}</Span>
       </Link>
     );
@@ -76,7 +72,7 @@ export function NavItem({
           .filter(Boolean)
           .join(" ")}
       >
-        <Span className="flex-shrink-0 flex items-center">{icon}</Span>
+        <Row className="flex-shrink-0">{icon}</Row>
         <Span className="whitespace-nowrap">{label}</Span>
       </Link>
     );
@@ -93,11 +89,7 @@ export function NavItem({
         .filter(Boolean)
         .join(" ")}
     >
-      <Span
-        className={["flex-shrink-0 flex items-center", iconClassName].join(" ")}
-      >
-        {icon}
-      </Span>
+      <Row className={["flex-shrink-0", iconClassName].join(" ")}>{icon}</Row>
       <Span className={["whitespace-nowrap", labelClassName].join(" ")}>
         {label}
       </Span>

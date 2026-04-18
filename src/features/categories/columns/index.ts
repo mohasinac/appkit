@@ -1,4 +1,9 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import {
+  buildColumns,
+  renderBoolean,
+  renderNullable,
+} from "../../../ui/columns";
 import type { CategoryItem } from "../types";
 
 /**
@@ -17,18 +22,19 @@ export const categoryAdminColumns: TableColumn<CategoryItem>[] = [
   {
     key: "isFeatured",
     header: "Featured",
-    render: (c) => (c.isFeatured ? "Yes" : "No"),
+    render: (c) => renderBoolean(c.isFeatured),
   },
   {
     key: "productCount",
     header: "Products",
     sortable: true,
-    render: (c) => c.metrics?.productCount.toLocaleString() ?? "—",
+    render: (c) =>
+      renderNullable(c.metrics?.productCount, (v) => v.toLocaleString()),
   },
   {
     key: "isLeaf",
     header: "Leaf",
-    render: (c) => (c.isLeaf ? "Yes" : "No"),
+    render: (c) => renderBoolean(c.isLeaf),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -39,13 +45,5 @@ export const categoryAdminColumns: TableColumn<CategoryItem>[] = [
 export function buildCategoryColumns<T extends CategoryItem = CategoryItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = categoryAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(categoryAdminColumns as TableColumn<T>[], opts);
 }

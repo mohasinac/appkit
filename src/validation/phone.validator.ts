@@ -46,11 +46,6 @@ export function isValidMobile(phone: string, phonePrefix?: string): boolean {
   return cleaned.length >= 10 && cleaned.length <= 15;
 }
 
-/** @deprecated Use `isValidMobile()` instead. */
-export function isValidIndianMobile(phone: string): boolean {
-  return isValidMobile(phone, "+91");
-}
-
 export function isValidIndianPincode(pincode: string): boolean {
   return /^\d{6}$/.test(pincode.trim());
 }

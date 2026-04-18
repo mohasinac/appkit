@@ -1,6 +1,6 @@
 "use client";
 
-import { Div, Heading, Span, Text, TextLink } from "../../../ui";
+import { Card, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
 import type { FAQCategory } from "../types";
 
 export interface FAQCategoryItem {
@@ -42,7 +42,7 @@ export function FAQCategorySidebar({
   );
 
   return (
-    <Div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-800/60">
+    <Card variant="outlined" padding="lg" className="dark:bg-slate-800/60">
       <Heading level={2} className="mb-6 text-lg font-semibold">
         {labels?.title ?? "Categories"}
       </Heading>
@@ -56,17 +56,17 @@ export function FAQCategorySidebar({
             : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700"
         }`}
       >
-        <Div className="flex items-center justify-between">
-          <Div className="flex items-center gap-3">
+        <Row justify="between">
+          <Row className="gap-3">
             <Span className="text-2xl">FAQ</Span>
             <Span className="text-sm font-medium">
               {labels?.allFaqs ?? "All FAQs"}
             </Span>
-          </Div>
+          </Row>
           <Span className="text-xs text-zinc-500 dark:text-zinc-400">
             {totalCount}
           </Span>
-        </Div>
+        </Row>
       </TextLink>
 
       <Div className="mt-4 border-t border-zinc-200 pt-4 dark:border-slate-700">
@@ -85,17 +85,17 @@ export function FAQCategorySidebar({
                   : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-700"
               }`}
             >
-              <Div className="mb-1 flex items-center justify-between">
-                <Div className="flex items-center gap-3">
+              <Row justify="between" className="mb-1">
+                <Row className="gap-3">
                   {category.icon ? (
                     <Span className="text-2xl">{category.icon}</Span>
                   ) : null}
                   <Span className="text-sm">{category.label}</Span>
-                </Div>
+                </Row>
                 <Span className="text-xs text-zinc-500 dark:text-zinc-400">
                   {count}
                 </Span>
-              </Div>
+              </Row>
               {isSelected && category.description ? (
                 <Text className="ml-11 text-xs text-zinc-500 dark:text-zinc-400">
                   {category.description}
@@ -119,6 +119,6 @@ export function FAQCategorySidebar({
           </TextLink>
         </Div>
       ) : null}
-    </Div>
+    </Card>
   );
 }

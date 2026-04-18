@@ -3,6 +3,33 @@
 import React from "react";
 import { Label, Span, Text } from "./Typography";
 
+const UI_RADIO = {
+  group: "appkit-radio-group",
+  stack: {
+    vertical: "appkit-radio-group__stack--vertical",
+    horizontal: "appkit-radio-group__stack--horizontal",
+  },
+  classic: {
+    base: "appkit-radio-classic",
+    disabled: "appkit-radio-classic--disabled",
+    indicator: "appkit-radio-classic__indicator",
+    circle: "appkit-radio-classic__circle",
+    circleSelected: "appkit-radio-classic__circle--selected",
+    dot: "appkit-radio-classic__dot",
+    dotSelected: "appkit-radio-classic__dot--selected",
+  },
+  toggle: {
+    base: "appkit-radio-toggle",
+    disabled: "appkit-radio-toggle--disabled",
+    pill: "appkit-radio-toggle__pill",
+    pillSelected: "appkit-radio-toggle__pill--selected",
+    pillError: "appkit-radio-toggle__pill--error",
+    dotRing: "appkit-radio-toggle__dot-ring",
+    dotRingSelected: "appkit-radio-toggle__dot-ring--selected",
+    dotInner: "appkit-radio-toggle__dot-inner",
+  },
+} as const;
+
 export interface RadioOption {
   value: string;
   label: string;
@@ -32,13 +59,10 @@ export function RadioGroup({
   variant = "toggle",
   required = false,
 }: RadioGroupProps) {
-  const stackClass =
-    orientation === "horizontal"
-      ? "flex flex-wrap gap-2"
-      : "flex flex-col gap-2";
+  const stackClass = UI_RADIO.stack[orientation];
 
   return (
-    <div className="w-full">
+    <div className={UI_RADIO.group}>
       {label && (
         <Label className="mb-2 block" required={required}>
           {label}
@@ -57,15 +81,13 @@ export function RadioGroup({
               <Label
                 key={option.value}
                 className={[
-                  "inline-flex items-center gap-3",
-                  option.disabled
-                    ? "cursor-not-allowed opacity-60"
-                    : "cursor-pointer",
+                  UI_RADIO.classic.base,
+                  option.disabled ? UI_RADIO.classic.disabled : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
               >
-                <span className="relative inline-flex h-5 w-5 items-center justify-center">
+                <span className={UI_RADIO.classic.indicator}>
                   <input
                     type="radio"
                     name={name}
@@ -77,19 +99,14 @@ export function RadioGroup({
                   />
                   <span
                     className={[
-                      "h-5 w-5 rounded-full border transition",
-                      selected
-                        ? "border-lime-600 dark:border-pink-500"
-                        : "border-zinc-300 dark:border-slate-600",
-                      "peer-focus-visible:ring-2 peer-focus-visible:ring-lime-500/30 peer-focus-visible:ring-offset-2 dark:peer-focus-visible:ring-pink-500/30 dark:peer-focus-visible:ring-offset-slate-950",
+                      UI_RADIO.classic.circle,
+                      selected ? UI_RADIO.classic.circleSelected : "",
                     ].join(" ")}
                   />
                   <span
                     className={[
-                      "pointer-events-none absolute h-2.5 w-2.5 rounded-full transition",
-                      selected
-                        ? "scale-100 bg-lime-600 dark:bg-pink-500"
-                        : "scale-0 bg-transparent",
+                      UI_RADIO.classic.dot,
+                      selected ? UI_RADIO.classic.dotSelected : "",
                     ].join(" ")}
                   />
                 </span>
@@ -104,10 +121,8 @@ export function RadioGroup({
             <label
               key={option.value}
               className={[
-                "relative inline-flex",
-                option.disabled
-                  ? "cursor-not-allowed opacity-60"
-                  : "cursor-pointer",
+                UI_RADIO.toggle.base,
+                option.disabled ? UI_RADIO.toggle.disabled : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
@@ -123,32 +138,21 @@ export function RadioGroup({
               />
               <span
                 className={[
-                  "inline-flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition",
-                  selected
-                    ? "border-lime-600 bg-lime-50 text-lime-900 dark:border-pink-500 dark:bg-pink-500/10 dark:text-pink-100"
-                    : "border-zinc-200 bg-white text-zinc-700 hover:border-lime-500 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-200 dark:hover:border-pink-500",
-                  error && !selected
-                    ? "border-red-300 dark:border-red-500/60"
-                    : "",
-                  "peer-focus-visible:ring-2 peer-focus-visible:ring-lime-500/30 peer-focus-visible:ring-offset-2 dark:peer-focus-visible:ring-pink-500/30 dark:peer-focus-visible:ring-offset-slate-950",
+                  UI_RADIO.toggle.pill,
+                  selected ? UI_RADIO.toggle.pillSelected : "",
+                  error && !selected ? UI_RADIO.toggle.pillError : "",
                 ]
                   .filter(Boolean)
                   .join(" ")}
               >
                 <span
                   className={[
-                    "inline-flex h-3.5 w-3.5 items-center justify-center rounded-full border transition",
-                    selected
-                      ? "border-lime-600 bg-lime-600 dark:border-pink-500 dark:bg-pink-500"
-                      : "border-zinc-300 dark:border-slate-600",
+                    UI_RADIO.toggle.dotRing,
+                    selected ? UI_RADIO.toggle.dotRingSelected : "",
                   ].join(" ")}
                 >
                   <span
-                    className={
-                      selected
-                        ? "h-1.5 w-1.5 rounded-full bg-white dark:bg-slate-950"
-                        : "hidden"
-                    }
+                    className={selected ? UI_RADIO.toggle.dotInner : "hidden"}
                   />
                 </span>
                 <Span>{option.label}</Span>

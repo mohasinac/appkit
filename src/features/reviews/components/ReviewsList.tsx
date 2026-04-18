@@ -9,6 +9,7 @@ import {
   Row,
   Skeleton,
   Span,
+  Stack,
   Text,
 } from "../../../ui";
 import { StarRating } from "../../../ui";
@@ -131,7 +132,7 @@ export function ReviewsList({
 }: ReviewsListProps) {
   if (isLoading) {
     return (
-      <Div className="space-y-4">
+      <Stack gap="md">
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
@@ -139,18 +140,18 @@ export function ReviewsList({
           >
             <Div className="flex gap-3">
               <Skeleton className="h-9 w-9 rounded-full" />
-              <Div className="flex-1 space-y-2">
+              <Stack gap="sm" className="flex-1">
                 <Skeleton className="h-4 w-24 rounded" />
                 <Skeleton className="h-3 w-16 rounded" />
-              </Div>
+              </Stack>
             </Div>
-            <Div className="mt-3 space-y-1">
+            <Stack gap="xs" className="mt-3">
               <Skeleton className="h-3 w-full rounded" />
               <Skeleton className="h-3 w-3/4 rounded" />
-            </Div>
+            </Stack>
           </Div>
         ))}
-      </Div>
+      </Stack>
     );
   }
 
@@ -163,12 +164,12 @@ export function ReviewsList({
   }
 
   return (
-    <Div className="space-y-6">
-      <Div className="space-y-4">
+    <Stack gap="lg">
+      <Stack gap="md">
         {reviews.map((review) => (
           <ReviewCard key={review.id} review={review} />
         ))}
-      </Div>
+      </Stack>
       {totalPages > 1 && onPageChange && (
         <Div className="flex justify-center">
           <Pagination
@@ -178,6 +179,6 @@ export function ReviewsList({
           />
         </Div>
       )}
-    </Div>
+    </Stack>
   );
 }

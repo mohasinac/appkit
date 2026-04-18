@@ -1,4 +1,5 @@
 import type { TableColumn, ColumnExtensionOpts } from "../../../contracts";
+import { buildColumns, renderCount } from "../../../ui/columns";
 import type { EventItem } from "../types";
 
 /**
@@ -20,12 +21,12 @@ export const eventAdminColumns: TableColumn<EventItem>[] = [
     key: "totalEntries",
     header: "Entries",
     sortable: true,
-    render: (e) => e.stats.totalEntries.toLocaleString(),
+    render: (e) => renderCount(e.stats.totalEntries),
   },
   {
     key: "flaggedEntries",
     header: "Flagged",
-    render: (e) => e.stats.flaggedEntries.toLocaleString(),
+    render: (e) => renderCount(e.stats.flaggedEntries),
   },
   { key: "createdAt", header: "Created", sortable: true },
 ];
@@ -42,13 +43,5 @@ export const eventAdminColumns: TableColumn<EventItem>[] = [
 export function buildEventColumns<T extends EventItem = EventItem>(
   opts?: ColumnExtensionOpts<T>,
 ): TableColumn<T>[] {
-  const base = eventAdminColumns as TableColumn<T>[];
-  const omit = new Set(opts?.omit ?? []);
-  const cols = base
-    .filter((col) => !omit.has(col.key))
-    .map((col) => {
-      const ovr = opts?.overrides?.[col.key];
-      return ovr ? { ...col, ...ovr } : col;
-    });
-  return opts?.extras ? [...cols, ...opts.extras] : cols;
+  return buildColumns(eventAdminColumns as TableColumn<T>[], opts);
 }

@@ -179,8 +179,10 @@ export interface LayoutSlots<T> {
  * };
  * ```
  */
-export interface FeatureExtension<TBase, TExtended extends TBase = TBase>
-  extends WithTransformOpts<TBase, TExtended> {
+export interface FeatureExtension<
+  TBase,
+  TExtended extends TBase = TBase,
+> extends WithTransformOpts<TBase, TExtended> {
   /**
    * Extended Zod schema. Use the package's base schema with `.extend({...})`.
    * Typed as `unknown` here so contracts stays Zod-free; at runtime it is a
@@ -193,3 +195,132 @@ export interface FeatureExtension<TBase, TExtended extends TBase = TBase>
   slots?: LayoutSlots<TExtended>;
 }
 
+// ─── Composable filter / sort builder ────────────────────────────────────────
+
+/**
+ * A single filter control descriptor used by the composable filter builder.
+ *
+ * Consumers add `FilterDefinition` entries to extend the default set of
+ * filters in `ListingLayout` without replacing the full `filterContent` slot.
+ *
+ * @example
+ * ```tsx
+ * const extraFilters: FilterDefinition[] = [
+ *   {
+ *     key: "brand",
+ *     label: "Brand",
+ *     type: "select",
+ *     options: [{ value: "nike", label: "Nike" }, { value: "adidas", label: "Adidas" }],
+ *   },
+ *   {
+ *     key: "hsn",
+ *     label: "HSN Code",
+ *     type: "text",
+ *   },
+ * ];
+ *
+ * <ProductsView extraFilters={extraFilters} />
+ * ```
+ */
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
+export type FilterType =
+  | "text"
+  | "select"
+  | "multiselect"
+  | "range"
+  | "toggle"
+  | "date";
+
+export interface FilterDefinition {
+  /** Unique key — maps to the Sieve filter field name (e.g. `"brand"`, `"price"`). */
+  key: string;
+  /** Display label shown above the filter control. */
+  label: string;
+  /** The type of filter control to render. */
+  type: FilterType;
+  /**
+   * For `select` and `multiselect` types — the list of available options.
+   * For `toggle` — a single option whose value is used when active.
+   */
+  options?: FilterOption[];
+  /** Placeholder text for text/select inputs. */
+  placeholder?: string;
+  /** For `range` type — minimum selectable value. */
+  min?: number;
+  /** For `range` type — maximum selectable value. */
+  max?: number;
+  /**
+   * Position relative to a built-in filter.
+   * Format: `"after:<builtInKey>"` | `"before:<builtInKey>"` | `"end"` (default)
+   */
+  position?: `after:${string}` | `before:${string}` | "end";
+}
+
+/**
+ * A single sort option descriptor.
+ *
+ * @example
+ * ```tsx
+ * const extraSorts: SortDefinition[] = [
+ *   { value: "brand", label: "Brand A→Z" },
+ *   { value: "-brand", label: "Brand Z→A" },
+ * ];
+ * <ProductsView extraSorts={extraSorts} />
+ * ```
+ */
+export interface SortDefinition {
+  /** Sieve sort value (prefix with `-` for descending, e.g. `"-price"`). */
+  value: string;
+  /** Display label shown in the sort dropdown. */
+  label: string;
+}
+
+/**
+ * Merges an array of extra filter/sort definitions with a base set,
+ * respecting `position` ordering. Used internally by listing views.
+ *
+ * - `"end"` or omitted → appended after base items
+ * - `"after:<key>"` → inserted after the matching base item (or end if not found)
+ * - `"before:<key>"` → inserted before the matching base item (or start if not found)
+ */
+export function mergeFilterDefinitions(
+  base: FilterDefinition[],
+  extras: FilterDefinition[],
+): FilterDefinition[] {
+  const result = [...base];
+  for (const extra of extras) {
+    const pos = extra.position ?? "end";
+    if (pos === "end") {
+      result.push(extra);
+      continue;
+    }
+    const [placement, targetKey] = pos.split(":") as [
+      "after" | "before",
+      string,
+    ];
+    const idx = result.findIndex((f) => f.key === targetKey);
+    if (idx === -1) {
+      result.push(extra);
+    } else {
+      result.splice(placement === "after" ? idx + 1 : idx, 0, extra);
+    }
+  }
+  return result;
+}
+
+/**
+ * Merges extra sort definitions with a base set.
+ * Extra sorts are always appended (no position support needed for sort dropdowns).
+ */
+export function mergeSortDefinitions(
+  base: SortDefinition[],
+  extras: SortDefinition[],
+): SortDefinition[] {
+  const existingValues = new Set(base.map((s) => s.value));
+  const deduped = extras.filter((s) => !existingValues.has(s.value));
+  return [...base, ...deduped];
+}

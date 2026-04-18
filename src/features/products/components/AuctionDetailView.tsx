@@ -1,11 +1,11 @@
-"use client";
-
 import React from "react";
-import { Div } from "../../../ui";
-import { Grid } from "../../../ui";
+import { DetailViewShell, Div } from "../../../ui";
+import type { DetailViewShellProps } from "../../../ui";
 
-export interface AuctionDetailViewProps {
-  labels?: { title?: string };
+export interface AuctionDetailViewProps extends Omit<
+  DetailViewShellProps,
+  "mainSlots" | "belowFold" | "layout" | "afterMain"
+> {
   renderGallery?: (isLoading: boolean) => React.ReactNode;
   renderInfo?: (isLoading: boolean) => React.ReactNode;
   /** Desktop sticky bid sidebar (hidden on mobile, shown in col 3) */
@@ -14,45 +14,32 @@ export interface AuctionDetailViewProps {
   renderMobileBidForm?: () => React.ReactNode;
   renderBidHistory?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
-  renderBreadcrumb?: () => React.ReactNode;
-  renderSkeleton?: () => React.ReactNode;
-  renderNotFound?: () => React.ReactNode;
-  isLoading?: boolean;
-  className?: string;
 }
 
 export function AuctionDetailView({
-  renderBreadcrumb,
   renderGallery,
   renderInfo,
   renderBidForm,
   renderMobileBidForm,
   renderBidHistory,
   renderRelated,
-  renderSkeleton,
-  renderNotFound,
   isLoading = false,
-  className = "",
+  ...rest
 }: AuctionDetailViewProps) {
-  if (isLoading && renderSkeleton) {
-    return <>{renderSkeleton()}</>;
-  }
-  if (renderNotFound) {
-    return <>{renderNotFound()}</>;
-  }
   return (
-    <Div className={className}>
-      {renderBreadcrumb?.()}
-      {/* 3-column grid: gallery | info | bid-sidebar (desktop only) */}
-      <Grid cols="productDetailTriplet" className="mt-6">
-        <Div>{renderGallery?.(isLoading)}</Div>
-        <Div>{renderInfo?.(isLoading)}</Div>
-        <Div className="hidden lg:block">{renderBidForm?.()}</Div>
-      </Grid>
-      {/* Mobile bid form — shown below grid on small screens */}
-      {renderMobileBidForm?.()}
-      {renderBidHistory?.()}
-      {renderRelated?.()}
-    </Div>
+    <DetailViewShell
+      {...rest}
+      layout="grid-3"
+      isLoading={isLoading}
+      mainSlots={[
+        renderGallery?.(isLoading),
+        renderInfo?.(isLoading),
+        <Div key="bid" className="hidden lg:block">
+          {renderBidForm?.()}
+        </Div>,
+      ]}
+      afterMain={renderMobileBidForm?.()}
+      belowFold={[renderBidHistory?.(), renderRelated?.()]}
+    />
   );
 }

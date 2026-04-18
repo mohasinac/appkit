@@ -17,6 +17,13 @@ export interface EmptyStateProps {
   className?: string;
 }
 
+const UI_EMPTY = {
+  base: "appkit-empty-state",
+  icon: "appkit-empty-state__icon",
+  description: "appkit-empty-state__description",
+  action: "appkit-empty-state__action",
+} as const;
+
 export function EmptyState({
   icon,
   title,
@@ -40,25 +47,18 @@ export function EmptyState({
   return (
     <Card
       variant="outlined"
-      className={[
-        "text-center",
-        "flex flex-col items-center justify-center gap-3",
-        "min-h-[220px]",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={[UI_EMPTY.base, className].filter(Boolean).join(" ")}
     >
-      {icon ? (
-        <div className="text-zinc-400 dark:text-slate-500">{icon}</div>
-      ) : null}
+      {icon ? <div className={UI_EMPTY.icon}>{icon}</div> : null}
       <Heading level={3}>{title}</Heading>
       {description ? (
-        <Text variant="secondary" className="max-w-[48ch]">
+        <Text variant="secondary" className={UI_EMPTY.description}>
           {description}
         </Text>
       ) : null}
-      {resolvedAction ? <div className="pt-1">{resolvedAction}</div> : null}
+      {resolvedAction ? (
+        <div className={UI_EMPTY.action}>{resolvedAction}</div>
+      ) : null}
     </Card>
   );
 }

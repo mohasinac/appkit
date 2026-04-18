@@ -25,7 +25,6 @@ export function RowActionMenu({
 }: RowActionMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const alignClass = align === "right" ? "right-0" : "left-0";
 
   useClickOutside(ref, () => setOpen(false), { enabled: open });
   useKeyPress("Escape", () => setOpen(false), { enabled: open });
@@ -33,7 +32,7 @@ export function RowActionMenu({
   return (
     <div
       ref={ref}
-      className="relative inline-block"
+      className="appkit-row-action-menu"
       onClick={(e) => e.stopPropagation()}
     >
       <Button
@@ -43,7 +42,7 @@ export function RowActionMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="rounded-lg p-1.5"
+        className="appkit-row-action-menu__trigger"
       >
         <MoreHorizontal className="h-4 w-4" strokeWidth={1.5} />
       </Button>
@@ -51,12 +50,12 @@ export function RowActionMenu({
       {open ? (
         <div
           role="menu"
-          className={`absolute z-50 mt-1 min-w-[160px] rounded-xl border border-zinc-200 bg-white py-1.5 shadow-xl dark:border-slate-700 dark:bg-slate-900 ${alignClass}`}
+          className={`appkit-row-action-menu__dropdown ${align === "right" ? "appkit-row-action-menu__dropdown--right" : "appkit-row-action-menu__dropdown--left"}`}
         >
           {actions.map((action, idx) => (
             <div key={`${action.label}-${idx}`}>
               {action.separator && idx > 0 ? (
-                <div className="my-1 h-px bg-zinc-200 dark:bg-slate-700" />
+                <div className="appkit-row-action-menu__separator" />
               ) : null}
               <Button
                 type="button"
@@ -66,15 +65,12 @@ export function RowActionMenu({
                   action.onClick();
                   setOpen(false);
                 }}
-                className={[
-                  "flex w-full items-center gap-2.5 px-3.5 py-2 text-left text-sm",
-                  action.destructive
-                    ? "text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40"
-                    : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-slate-800",
-                ].join(" ")}
+                className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""}`}
               >
                 {action.icon ? (
-                  <Span className="h-4 w-4 shrink-0">{action.icon}</Span>
+                  <Span className="appkit-row-action-menu__icon">
+                    {action.icon}
+                  </Span>
                 ) : null}
                 {action.label}
               </Button>
