@@ -22,10 +22,14 @@ export interface UpdateCurrentProfileInput {
   photoURL?: string;
 }
 
-export function useCurrentProfile(options?: { enabled?: boolean }) {
+export function useCurrentProfile(options?: {
+  enabled?: boolean;
+  endpoint?: string;
+}) {
+  const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.PROFILE;
   return useQuery<UserProfile>({
     queryKey: ["profile"],
-    queryFn: () => apiClient.get<UserProfile>(ACCOUNT_ENDPOINTS.PROFILE),
+    queryFn: () => apiClient.get<UserProfile>(endpoint),
     enabled: options?.enabled,
   });
 }
@@ -33,12 +37,14 @@ export function useCurrentProfile(options?: { enabled?: boolean }) {
 export function useUpdateCurrentProfile(options?: {
   onSuccess?: (data: unknown) => void;
   onError?: (error: Error) => void;
+  endpoint?: string;
 }) {
   const queryClient = useQueryClient();
+  const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.PROFILE;
 
   return useMutation({
     mutationFn: (data: UpdateCurrentProfileInput) =>
-      apiClient.patch(ACCOUNT_ENDPOINTS.PROFILE, data),
+      apiClient.patch(endpoint, data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       options?.onSuccess?.(data);

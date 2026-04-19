@@ -7,6 +7,8 @@ import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseSearchOptions {
   initialCategories?: SearchCategoryOption[];
+  categoriesEndpoint?: string;
+  searchEndpoint?: string;
 }
 
 /**
@@ -16,17 +18,19 @@ interface UseSearchOptions {
  * `options.initialCategories` — server-prefetched category list for filter facets.
  */
 export function useSearch(searchParams: string, options?: UseSearchOptions) {
+  const categoriesEndpoint = options?.categoriesEndpoint ?? CATEGORY_ENDPOINTS.FLAT;
   const { data: categories } = useQuery<SearchCategoryOption[]>({
     queryKey: ["search", "categories"],
     queryFn: () =>
-      apiClient.get<SearchCategoryOption[]>(CATEGORY_ENDPOINTS.FLAT),
+      apiClient.get<SearchCategoryOption[]>(categoriesEndpoint),
     initialData: options?.initialCategories,
     staleTime: 1000 * 60 * 5, // 5 min
   });
 
+  const searchEndpoint = options?.searchEndpoint ?? `/api/search?${searchParams}`;
   const { data: searchData, isLoading } = useQuery<SearchResponse>({
     queryKey: ["search", searchParams],
-    queryFn: () => apiClient.get<SearchResponse>(`/api/search?${searchParams}`),
+    queryFn: () => apiClient.get<SearchResponse>(searchEndpoint),
     enabled: searchParams.length > 0,
     placeholderData: (prev) => prev,
   });
