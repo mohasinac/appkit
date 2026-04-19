@@ -8,6 +8,7 @@ import { ORDER_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseOrdersOptions {
   initialData?: OrderListResponse;
   enabled?: boolean;
+  endpoint?: string;
 }
 
 export function useOrders(
@@ -22,13 +23,12 @@ export function useOrders(
   if (params.page) sp.set("page", String(params.page));
   if (params.perPage) sp.set("perPage", String(params.perPage));
   const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? `${ORDER_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`;
 
   const query = useQuery<OrderListResponse>({
     queryKey: ["orders", qs],
     queryFn: () =>
-      apiClient.get<OrderListResponse>(
-        `${ORDER_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
-      ),
+      apiClient.get<OrderListResponse>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
   });
@@ -44,11 +44,12 @@ export function useOrders(
 
 export function useOrder(
   id: string,
-  opts?: { initialData?: Order; enabled?: boolean },
+  opts?: { initialData?: Order; enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? ORDER_ENDPOINTS.BY_ID(id);
   const query = useQuery<Order>({
     queryKey: ["orders", id],
-    queryFn: () => apiClient.get<Order>(ORDER_ENDPOINTS.BY_ID(id)),
+    queryFn: () => apiClient.get<Order>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!id,
   });
@@ -58,12 +59,13 @@ export function useOrder(
 
 export function useTrackOrder(
   trackingId: string | null | undefined,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? ORDER_ENDPOINTS.TRACK(trackingId!);
   const query = useQuery<TrackingInfo | null>({
     queryKey: ["order-tracking", trackingId],
     queryFn: () =>
-      apiClient.get<TrackingInfo>(ORDER_ENDPOINTS.TRACK(trackingId!)),
+      apiClient.get<TrackingInfo>(endpoint),
     enabled: opts?.enabled !== false && !!trackingId,
   });
 
