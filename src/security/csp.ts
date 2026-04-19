@@ -36,6 +36,8 @@ export function buildCSP(nonce: string): string {
       "https://*.firebase.com",
       "https://*.firebaseio.com",
       "https://*.cloudfunctions.net",
+      // Allow local network in dev (CSP does not support IP wildcards; http: covers 192.168.1.* range)
+      ...(isDev ? ["http:"] : []),
     ].join(" "),
     "frame-src 'self' https://accounts.google.com",
     "media-src 'self' https: blob:",
