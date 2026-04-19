@@ -14,7 +14,7 @@
 
 import type { NextRequest } from "next/server.js";
 import { NextResponse } from "next/server.js";
-import { CacheManager } from "../core";
+import { CacheManager } from "../core/CacheManager";
 
 export interface CacheConfig {
   /** Time to live in milliseconds. Default: 5 minutes. */

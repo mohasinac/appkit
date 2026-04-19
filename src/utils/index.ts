@@ -12,23 +12,6 @@ export * from "./sorting.helper";
 export * from "./filter.helper";
 export * from "./animation.helper";
 export * from "./color.helper";
-export {
-  GlobalEventManager,
-  globalEventManager,
-  throttle,
-  debounce,
-  addGlobalScrollHandler,
-  addGlobalResizeHandler,
-  addGlobalClickHandler,
-  addGlobalKeyHandler,
-  removeGlobalHandler,
-  isMobileDevice,
-  hasTouchSupport,
-  getViewportDimensions,
-  isInViewport,
-  smoothScrollTo,
-  preventBodyScroll,
-} from "./event-manager";
 export * from "./business-day";
 export * from "./schema-ui";
 

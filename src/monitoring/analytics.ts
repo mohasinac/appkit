@@ -6,7 +6,7 @@ import {
   setUserProperties,
   type Analytics,
 } from "firebase/analytics";
-import { logger } from "../core";
+import { logger } from "../core/Logger";
 
 let analytics: Analytics | null = null;
 let analyticsEnabled = false;

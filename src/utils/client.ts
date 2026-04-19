@@ -1,0 +1,17 @@
+export {
+  GlobalEventManager,
+  globalEventManager,
+  throttle,
+  debounce,
+  addGlobalScrollHandler,
+  addGlobalResizeHandler,
+  addGlobalClickHandler,
+  addGlobalKeyHandler,
+  removeGlobalHandler,
+  isMobileDevice,
+  hasTouchSupport,
+  getViewportDimensions,
+  isInViewport,
+  smoothScrollTo,
+  preventBodyScroll,
+} from "./event-manager";

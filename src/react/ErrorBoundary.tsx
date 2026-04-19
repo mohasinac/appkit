@@ -10,7 +10,7 @@
  */
 
 import { Component, type ReactNode, type ErrorInfo } from "react";
-import { Logger } from "../core";
+import { Logger } from "../core/Logger";
 import {
   trackError,
   ErrorCategory,

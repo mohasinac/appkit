@@ -13,7 +13,11 @@
  */
 
 import { useEffect } from "react";
-import { trackError, ErrorCategory, ErrorSeverity } from "../../monitoring";
+import {
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "../../monitoring/error-tracking";
 
 export interface GlobalErrorProps {
   error: Error & { digest?: string };

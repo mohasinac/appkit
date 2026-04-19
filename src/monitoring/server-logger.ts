@@ -15,7 +15,7 @@ import { appendFile, mkdir, readdir, rename, stat, unlink } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
 import { type NextRequest } from "next/server";
-import { redactPii } from "../security";
+import { redactPii } from "../security/pii-redact";
 import { AppError } from "../errors";
 
 const LOGS_DIR = path.join(process.cwd(), "logs");

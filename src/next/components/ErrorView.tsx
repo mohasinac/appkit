@@ -21,7 +21,11 @@ import { useEffect } from "react";
 import { Div } from "../../ui/components/Div";
 import { Heading, Text } from "../../ui/components/Typography";
 import { Button } from "../../ui/components/Button";
-import { trackError, ErrorCategory, ErrorSeverity } from "../../monitoring";
+import {
+  trackError,
+  ErrorCategory,
+  ErrorSeverity,
+} from "../../monitoring/error-tracking";
 
 export interface ErrorViewProps {
   error: Error & { digest?: string };

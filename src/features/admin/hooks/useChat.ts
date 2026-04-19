@@ -7,7 +7,7 @@ import {
   type IClientRealtimeProvider,
   type Unsubscribe,
 } from "../../../contracts/client-realtime";
-import { logger } from "../../../core";
+import { logger } from "../../../core/Logger";
 import { apiClient } from "../../../http";
 import { nowMs } from "../../../utils";
 

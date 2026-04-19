@@ -1,7 +1,7 @@
 "use client";
 
 import type { IClientRealtimeProvider } from "../../../contracts/client-realtime";
-import { logger } from "../../../core";
+import { logger } from "../../../core/Logger";
 import {
   RealtimeEventType,
   RealtimeEventStatus,

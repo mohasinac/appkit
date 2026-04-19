@@ -7,7 +7,7 @@
  * For server-side logging use `server-logger.ts`.
  */
 
-import { logger } from "../core";
+import { logger } from "../core/Logger";
 import { AppError } from "../errors";
 
 export interface ClientErrorContext {
