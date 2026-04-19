@@ -8,13 +8,15 @@ import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseCartOptions {
   initialData?: CartData;
   enabled?: boolean;
+  endpoint?: string;
 }
 
 export function useCart(userIdOrSession: string, opts?: UseCartOptions) {
+  const endpoint = opts?.endpoint ?? CART_ENDPOINTS.BY_USER(userIdOrSession);
   const query = useQuery<CartData>({
     queryKey: ["cart", userIdOrSession],
     queryFn: () =>
-      apiClient.get<CartData>(CART_ENDPOINTS.BY_USER(userIdOrSession)),
+      apiClient.get<CartData>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userIdOrSession,
   });

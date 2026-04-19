@@ -7,13 +7,15 @@ import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseWishlistOptions {
   initialData?: WishlistResponse;
   enabled?: boolean;
+  endpoint?: string;
 }
 
 export function useWishlist(userId: string, opts?: UseWishlistOptions) {
+  const endpoint = opts?.endpoint ?? WISHLIST_ENDPOINTS.BY_USER(userId);
   const query = useQuery<WishlistResponse>({
     queryKey: ["wishlist", userId],
     queryFn: () =>
-      apiClient.get<WishlistResponse>(WISHLIST_ENDPOINTS.BY_USER(userId)),
+      apiClient.get<WishlistResponse>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userId,
   });

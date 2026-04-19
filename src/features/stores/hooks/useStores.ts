@@ -12,9 +12,14 @@ import type {
 } from "../types";
 import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
 
+interface UseStoresOptions {
+  enabled?: boolean;
+  endpoint?: string;
+}
+
 export function useStores(
   params: StoreListParams = {},
-  opts?: { enabled?: boolean },
+  opts?: UseStoresOptions,
 ) {
   const sp = new URLSearchParams();
   if (params.category) sp.set("category", params.category);
@@ -23,11 +28,12 @@ export function useStores(
   if (params.sort) sp.set("sorts", params.sort);
   if (params.filters) sp.set("filters", params.filters);
   const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`;
 
   const { data, isLoading, error, refetch } = useQuery<StoreListResponse>({
     queryKey: ["stores", qs],
     queryFn: () =>
-      apiClient.get<StoreListResponse>(`${STORE_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`),
+      apiClient.get<StoreListResponse>(endpoint),
     enabled: opts?.enabled ?? true,
   });
 
@@ -44,11 +50,12 @@ export function useStores(
 
 export function useStoreBySlug(
   storeSlug: string,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? STORE_ENDPOINTS.BY_SLUG(storeSlug);
   const { data, isLoading, error, refetch } = useQuery<StoreDetail | null>({
     queryKey: ["store", storeSlug],
-    queryFn: () => apiClient.get<StoreDetail>(STORE_ENDPOINTS.BY_SLUG(storeSlug)),
+    queryFn: () => apiClient.get<StoreDetail>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
@@ -63,14 +70,13 @@ export function useStoreBySlug(
 export function useStoreProducts(
   storeSlug: string,
   params?: string,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.PRODUCTS(storeSlug)}${params ? `?${params}` : ""}`;
   const { data, isLoading, error, refetch } = useQuery<StoreProductsResponse>({
     queryKey: ["store-products", storeSlug, params ?? ""],
     queryFn: () =>
-      apiClient.get<StoreProductsResponse>(
-        `${STORE_ENDPOINTS.PRODUCTS(storeSlug)}${params ? `?${params}` : ""}`,
-      ),
+      apiClient.get<StoreProductsResponse>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
@@ -87,14 +93,13 @@ export function useStoreProducts(
 export function useStoreAuctions(
   storeSlug: string,
   params?: string,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? `${STORE_ENDPOINTS.AUCTIONS(storeSlug)}${params ? `?${params}` : ""}`;
   const { data, isLoading, error, refetch } = useQuery<StoreAuctionsResponse>({
     queryKey: ["store-auctions", storeSlug, params ?? ""],
     queryFn: () =>
-      apiClient.get<StoreAuctionsResponse>(
-        `${STORE_ENDPOINTS.AUCTIONS(storeSlug)}${params ? `?${params}` : ""}`,
-      ),
+      apiClient.get<StoreAuctionsResponse>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
@@ -110,12 +115,13 @@ export function useStoreAuctions(
 
 export function useStoreReviews(
   storeSlug: string,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? STORE_ENDPOINTS.REVIEWS(storeSlug);
   const { data, isLoading, error, refetch } = useQuery<StoreReviewsData>({
     queryKey: ["store-reviews", storeSlug],
     queryFn: () =>
-      apiClient.get<StoreReviewsData>(STORE_ENDPOINTS.REVIEWS(storeSlug)),
+      apiClient.get<StoreReviewsData>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
