@@ -21,6 +21,7 @@ export function SellerShippingView({
 }: SellerShippingViewProps) {
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       sections={[renderZones?.(isLoading), renderForm?.()]}

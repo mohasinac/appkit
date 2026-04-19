@@ -25,6 +25,7 @@ export function ProductDetailView({
 }: ProductDetailViewProps) {
   return (
     <DetailViewShell
+      portal="public"
       {...rest}
       layout="grid-3"
       isLoading={isLoading}

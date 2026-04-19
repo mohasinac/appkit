@@ -15,6 +15,7 @@ export function SellerAuctionsView({
 }: SellerAuctionsViewProps) {
   return (
     <SlottedListingView
+      portal="seller"
       {...props}
       manageSearch
       manageSelection

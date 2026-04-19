@@ -23,6 +23,7 @@ export function SellerGuideView({
 }: SellerGuideViewProps) {
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       sections={[sections ?? renderSections?.(), cta ?? renderCTA?.()]}

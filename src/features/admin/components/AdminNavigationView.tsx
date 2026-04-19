@@ -17,6 +17,7 @@ export function AdminNavigationView({
 }: AdminNavigationViewProps) {
   return (
     <SlottedListingView
+      portal="admin"
       {...props}
       overlays={
         <>

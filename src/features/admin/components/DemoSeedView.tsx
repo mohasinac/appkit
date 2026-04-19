@@ -21,6 +21,7 @@ export function DemoSeedView({
 }: DemoSeedViewProps) {
   return (
     <StackedViewShell
+      portal="admin"
       {...rest}
       title={labels.title}
       sections={[renderActions?.(isLoading), renderLog?.()]}

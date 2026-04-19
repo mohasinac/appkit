@@ -33,6 +33,7 @@ export function SellerAnalyticsView({
   const [to, setTo] = React.useState("");
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       sections={[

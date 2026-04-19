@@ -26,6 +26,7 @@ export function UserAccountHubView({
 }: UserAccountHubViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[renderProfile?.(), renderNav?.(), renderRecentOrders?.()]}

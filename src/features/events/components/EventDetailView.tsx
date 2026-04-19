@@ -29,6 +29,7 @@ export function EventDetailView({
 }: EventDetailViewProps) {
   return (
     <DetailViewShell
+      portal="public"
       {...rest}
       layout="narrow"
       isLoading={isLoading}

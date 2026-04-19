@@ -12,6 +12,7 @@ export interface AuctionsViewProps extends Omit<
 export function AuctionsView({ renderGrid, ...props }: AuctionsViewProps) {
   return (
     <SlottedListingView
+      portal="public"
       {...props}
       manageSearch
       manageSort

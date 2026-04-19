@@ -32,6 +32,7 @@ export function StoreReviewsView({
 }: StoreReviewsViewProps) {
   return (
     <StackedViewShell
+      portal="public"
       {...rest}
       title={labels.title}
       className={`py-4 ${rest.className ?? ""}`}

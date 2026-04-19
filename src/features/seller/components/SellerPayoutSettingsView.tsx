@@ -19,6 +19,7 @@ export function SellerPayoutSettingsView({
 }: SellerPayoutSettingsViewProps) {
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       sections={[renderForm?.(isLoading)]}

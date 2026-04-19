@@ -17,6 +17,7 @@ export function AdminFeatureFlagsView({
 }: AdminFeatureFlagsViewProps) {
   return (
     <StackedViewShell
+      portal="admin"
       {...rest}
       title={labels.title}
       sections={[renderFlags?.()]}

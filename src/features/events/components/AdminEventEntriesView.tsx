@@ -31,6 +31,7 @@ export function AdminEventEntriesView({
 }: AdminEventEntriesViewProps) {
   return (
     <StackedViewShell
+      portal="admin"
       {...rest}
       renderHeader={renderHeader}
       sections={[

@@ -24,6 +24,7 @@ export function ProfileView({
 }: ProfileViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[renderActions?.(), renderStats?.()]}

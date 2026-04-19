@@ -21,6 +21,7 @@ export function UserOffersView({
 }: UserOffersViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[renderTable?.()]}

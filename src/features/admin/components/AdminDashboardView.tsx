@@ -30,6 +30,7 @@ export function AdminDashboardView({
 }: AdminDashboardViewProps) {
   return (
     <StackedViewShell
+      portal="admin"
       {...rest}
       title={labels.title}
       sections={[

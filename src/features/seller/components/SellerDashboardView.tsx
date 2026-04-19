@@ -27,6 +27,7 @@ export function SellerDashboardView({
 }: SellerDashboardViewProps) {
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       sections={[

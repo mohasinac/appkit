@@ -5,5 +5,5 @@ import type { SlottedListingViewProps } from "../../../ui";
 export interface SellerOrdersViewProps extends SlottedListingViewProps {}
 
 export function SellerOrdersView(props: SellerOrdersViewProps) {
-  return <SlottedListingView {...props} manageSearch manageSelection />;
+  return <SlottedListingView portal="seller" {...props} manageSearch manageSelection />;
 }

@@ -5,5 +5,5 @@ import type { ListingViewShellProps } from "../../../ui";
 export interface AdminUsersViewProps extends ListingViewShellProps {}
 
 export function AdminUsersView(props: AdminUsersViewProps) {
-  return <ListingViewShell {...props} />;
+  return <ListingViewShell portal="admin" {...props} />;
 }

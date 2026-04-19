@@ -34,6 +34,7 @@ export function OrderDetailView({
 }: OrderDetailViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[

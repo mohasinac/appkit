@@ -31,6 +31,7 @@ export function UserSettingsView({
 }: UserSettingsViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[

@@ -28,6 +28,7 @@ export function PreOrderDetailView({
 }: PreOrderDetailViewProps) {
   return (
     <DetailViewShell
+      portal="public"
       {...rest}
       layout="grid-2"
       isLoading={isLoading}

@@ -19,6 +19,7 @@ export function AdminSiteView({
 }: AdminSiteViewProps) {
   return (
     <StackedViewShell
+      portal="admin"
       {...rest}
       title={labels.title}
       sections={[renderTabs?.(), renderForm?.()]}

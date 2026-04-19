@@ -12,6 +12,10 @@
  *   }
  */
 
+import { Div } from "../../ui/components/Div";
+import { Row } from "../../ui/components/Layout";
+import { Heading, Text } from "../../ui/components/Typography";
+import { TextLink } from "../../ui/components/TextLink";
 import { DEFAULT_ROUTE_MAP } from "../routing/route-map";
 
 export interface UnauthorizedViewProps {
@@ -38,26 +42,20 @@ export function UnauthorizedView({
   homeHref = DEFAULT_ROUTE_MAP.HOME,
 }: UnauthorizedViewProps) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "60vh",
-        padding: "2rem",
-        textAlign: "center",
-      }}
-    >
-      <h1 style={{ fontSize: "4rem", fontWeight: 700, marginBottom: "0.5rem" }}>
+    <Div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
+      <Heading level={1} variant="primary" className="text-7xl font-bold mb-2">
         401
-      </h1>
-      <h2 style={{ fontSize: "1.5rem", marginBottom: "0.75rem" }}>{heading}</h2>
-      <p style={{ opacity: 0.7, marginBottom: "2rem" }}>{description}</p>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        <a href={loginHref}>{loginLabel}</a>
-        <a href={homeHref}>{homeLabel}</a>
-      </div>
-    </div>
+      </Heading>
+      <Heading level={2} className="mb-3">
+        {heading}
+      </Heading>
+      <Text variant="secondary" className="mb-8">
+        {description}
+      </Text>
+      <Row gap="md">
+        <TextLink href={loginHref}>{loginLabel}</TextLink>
+        <TextLink href={homeHref}>{homeLabel}</TextLink>
+      </Row>
+    </Div>
   );
 }

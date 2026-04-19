@@ -28,6 +28,7 @@ export function AuctionDetailView({
 }: AuctionDetailViewProps) {
   return (
     <DetailViewShell
+      portal="public"
       {...rest}
       layout="grid-3"
       isLoading={isLoading}

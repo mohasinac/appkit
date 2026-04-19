@@ -26,6 +26,7 @@ export function UserAddressesView({
 }: UserAddressesViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[renderToolbar?.(), renderAddresses?.()]}

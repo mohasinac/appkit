@@ -22,6 +22,7 @@ export function AdminEventsView({
 }: AdminEventsViewProps) {
   return (
     <SlottedListingView
+      portal="admin"
       {...rest}
       renderSearch={renderToolbar ? () => renderToolbar() : undefined}
       renderTable={renderTable}

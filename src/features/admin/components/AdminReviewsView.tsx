@@ -11,5 +11,5 @@ export function AdminReviewsView({
   renderDetailView,
   ...props
 }: AdminReviewsViewProps) {
-  return <ListingViewShell {...props} detailView={renderDetailView?.()} />;
+  return <ListingViewShell portal="admin" {...props} detailView={renderDetailView?.()} />;
 }

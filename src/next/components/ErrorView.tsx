@@ -18,6 +18,9 @@
  */
 
 import { useEffect } from "react";
+import { Div } from "../../ui/components/Div";
+import { Heading, Text } from "../../ui/components/Typography";
+import { Button } from "../../ui/components/Button";
 import { trackError, ErrorCategory, ErrorSeverity } from "../../monitoring";
 
 export interface ErrorViewProps {
@@ -46,28 +49,20 @@ export function ErrorView({
   }, [error]);
 
   return (
-    <div
+    <Div
       role="alert"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "50vh",
-        padding: "2rem",
-        textAlign: "center",
-      }}
+      className="flex flex-col items-center justify-center min-h-[50vh] px-8 text-center"
     >
-      <h2 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{heading}</h2>
-      <p style={{ opacity: 0.7, marginBottom: "1.5rem" }}>{description}</p>
+      <Heading level={2} className="mb-2">{heading}</Heading>
+      <Text variant="secondary" className="mb-6">{description}</Text>
       {process.env.NODE_ENV === "development" && error.digest && (
-        <p style={{ fontSize: "0.75rem", opacity: 0.5, marginBottom: "1rem" }}>
+        <Text variant="muted" size="xs" className="mb-4">
           digest: {error.digest}
-        </p>
+        </Text>
       )}
-      <button onClick={reset} type="button">
+      <Button type="button" variant="primary" onClick={reset}>
         {retryLabel}
-      </button>
-    </div>
+      </Button>
+    </Div>
   );
 }

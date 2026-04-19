@@ -17,6 +17,7 @@ export function AdminMediaView({
 }: AdminMediaViewProps) {
   return (
     <SlottedListingView
+      portal="admin"
       {...props}
       overlays={
         <>

@@ -23,6 +23,7 @@ export function SellerAddressesView({
 }: SellerAddressesViewProps) {
   return (
     <StackedViewShell
+      portal="seller"
       {...rest}
       title={labels.title}
       renderHeader={renderHeader ? () => renderHeader(() => {}) : undefined}

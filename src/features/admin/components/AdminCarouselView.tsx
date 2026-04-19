@@ -17,6 +17,7 @@ export function AdminCarouselView({
 }: AdminCarouselViewProps) {
   return (
     <SlottedListingView
+      portal="admin"
       {...props}
       overlays={
         <>

@@ -12,6 +12,7 @@ export interface ProductsViewProps extends Omit<
 export function ProductsView({ renderGrid, ...props }: ProductsViewProps) {
   return (
     <SlottedListingView
+      portal="public"
       {...props}
       manageSearch
       manageSort

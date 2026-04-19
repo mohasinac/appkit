@@ -12,6 +12,7 @@ export interface PreOrdersViewProps extends Omit<
 export function PreOrdersView({ renderGrid, ...props }: PreOrdersViewProps) {
   return (
     <SlottedListingView
+      portal="public"
       {...props}
       manageSearch
       renderTable={() => renderGrid(props.isLoading ?? false)}

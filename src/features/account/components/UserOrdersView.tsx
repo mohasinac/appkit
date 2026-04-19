@@ -23,6 +23,7 @@ export function UserOrdersView({
 }: UserOrdersViewProps) {
   return (
     <SlottedListingView
+      portal="user"
       {...props}
       renderSearch={renderToolbar ? () => renderToolbar() : props.renderSearch}
       renderTable={renderTable ?? (() => null)}

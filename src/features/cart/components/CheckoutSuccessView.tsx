@@ -21,6 +21,7 @@ export function CheckoutSuccessView({
 }: CheckoutSuccessViewProps) {
   return (
     <StackedViewShell
+      portal="public"
       {...rest}
       title={labels.title}
       sections={[

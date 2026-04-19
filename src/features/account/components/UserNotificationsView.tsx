@@ -31,6 +31,7 @@ export function UserNotificationsView({
 }: UserNotificationsViewProps) {
   return (
     <StackedViewShell
+      portal="user"
       {...rest}
       title={labels.title}
       sections={[
