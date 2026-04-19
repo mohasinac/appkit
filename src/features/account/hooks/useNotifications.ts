@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { NOTIFICATIONS_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface BaseNotificationItem {
   id: string;
@@ -25,11 +26,10 @@ export function useNotifications<TNotification = any>(
   options?: UseNotificationsOptions,
 ) {
   const notificationsEndpoint =
-    options?.notificationsEndpoint ?? "/api/notifications";
+    options?.notificationsEndpoint ?? NOTIFICATIONS_ENDPOINTS.LIST;
   const readAllEndpoint =
-    options?.readAllEndpoint ?? "/api/notifications/read-all";
-  const readEndpoint =
-    options?.readEndpoint ?? ((id: string) => `/api/notifications/${id}`);
+    options?.readAllEndpoint ?? NOTIFICATIONS_ENDPOINTS.READ_ALL;
+  const readEndpoint = options?.readEndpoint ?? NOTIFICATIONS_ENDPOINTS.BY_ID;
 
   const { data, isLoading, refetch } = useQuery<
     NotificationsResponse<TNotification>

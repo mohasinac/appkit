@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { Order, OrderListResponse, OrderListParams } from "../types";
 import type { TrackingInfo } from "../../../contracts/shipping";
+import { ORDER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseOrdersOptions {
   initialData?: OrderListResponse;
@@ -25,7 +26,9 @@ export function useOrders(
   const query = useQuery<OrderListResponse>({
     queryKey: ["orders", qs],
     queryFn: () =>
-      apiClient.get<OrderListResponse>(`/api/orders${qs ? `?${qs}` : ""}`),
+      apiClient.get<OrderListResponse>(
+        `${ORDER_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
   });
@@ -45,7 +48,7 @@ export function useOrder(
 ) {
   const query = useQuery<Order>({
     queryKey: ["orders", id],
-    queryFn: () => apiClient.get<Order>(`/api/orders/${id}`),
+    queryFn: () => apiClient.get<Order>(ORDER_ENDPOINTS.BY_ID(id)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!id,
   });
@@ -60,7 +63,7 @@ export function useTrackOrder(
   const query = useQuery<TrackingInfo | null>({
     queryKey: ["order-tracking", trackingId],
     queryFn: () =>
-      apiClient.get<TrackingInfo>(`/api/orders/track/${trackingId}`),
+      apiClient.get<TrackingInfo>(ORDER_ENDPOINTS.TRACK(trackingId!)),
     enabled: opts?.enabled !== false && !!trackingId,
   });
 

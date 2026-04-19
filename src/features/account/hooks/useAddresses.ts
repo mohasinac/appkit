@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface Address {
   id: string;
@@ -35,9 +36,9 @@ interface SetDefaultAddressData {
 }
 
 const DEFAULT_ENDPOINTS = {
-  list: "/api/user/addresses",
-  byId: (id: string) => `/api/user/addresses/${id}`,
-  setDefault: (id: string) => `/api/user/addresses/${id}/set-default`,
+  list: ACCOUNT_ENDPOINTS.ADDRESSES,
+  byId: ACCOUNT_ENDPOINTS.ADDRESS_BY_ID,
+  setDefault: ACCOUNT_ENDPOINTS.ADDRESS_SET_DEFAULT,
 };
 
 export function useAddresses(options?: {

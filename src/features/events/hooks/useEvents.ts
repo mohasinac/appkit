@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { EventItem, EventListResponse, EventListParams } from "../types";
+import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseEventsOptions<T extends EventItem = EventItem> {
   enabled?: boolean;
@@ -37,7 +38,9 @@ export function useEvents<T extends EventItem = EventItem>(
   const { data, isLoading, error, refetch } = useQuery<EventListResponse>({
     queryKey: ["events", qs],
     queryFn: () =>
-      apiClient.get<EventListResponse>(`/api/events${qs ? `?${qs}` : ""}`),
+      apiClient.get<EventListResponse>(
+        `${EVENT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     enabled: opts?.enabled ?? true,
     initialData: opts?.initialData,
   });

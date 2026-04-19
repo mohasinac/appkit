@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { WishlistResponse } from "../types";
+import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseWishlistOptions {
   initialData?: WishlistResponse;
@@ -12,7 +13,7 @@ export function useWishlist(userId: string, opts?: UseWishlistOptions) {
   const query = useQuery<WishlistResponse>({
     queryKey: ["wishlist", userId],
     queryFn: () =>
-      apiClient.get<WishlistResponse>(`/api/wishlist?userId=${userId}`),
+      apiClient.get<WishlistResponse>(WISHLIST_ENDPOINTS.BY_USER(userId)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userId,
   });

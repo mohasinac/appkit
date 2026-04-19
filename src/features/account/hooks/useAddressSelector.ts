@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { AddressFormData } from "./useAddresses";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface SavedAddress {
   id: string;
@@ -18,8 +19,8 @@ interface CreateAddressApiResponse {
 }
 
 const DEFAULT_ENDPOINTS = {
-  list: "/api/user/addresses",
-  create: "/api/user/addresses",
+  list: ACCOUNT_ENDPOINTS.ADDRESSES,
+  create: ACCOUNT_ENDPOINTS.ADDRESSES,
 };
 
 export function useAddressSelector(options?: {

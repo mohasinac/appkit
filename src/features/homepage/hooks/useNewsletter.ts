@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface SubscribeNewsletterInput {
   email: string;
@@ -31,7 +32,7 @@ export function useNewsletter(options?: UseNewsletterOptions) {
       options?.mutationFn ??
       ((data) =>
         apiClient.post<SubscribeNewsletterResult>(
-          options?.endpoint ?? "/api/newsletter/subscribe",
+          options?.endpoint ?? HOMEPAGE_ENDPOINTS.NEWSLETTER_SUBSCRIBE,
           data,
         )),
   });

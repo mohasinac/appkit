@@ -5,6 +5,10 @@ import { hasRole } from "../../auth/auth-helpers";
 import { apiClient } from "../../../http";
 import type { ProductItem } from "../../products";
 import type { UserRole } from "../../auth/types";
+import {
+  ACCOUNT_ENDPOINTS,
+  PROFILE_STATS_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 
 export interface PublicUserProfile {
   uid: string;
@@ -74,7 +78,7 @@ export function usePublicProfile(userId: string) {
     queryKey: ["public-profile", userId],
     queryFn: async () => {
       const user = await apiClient.get<PublicUserProfile>(
-        `/api/profile/${userId}`,
+        ACCOUNT_ENDPOINTS.PUBLIC_PROFILE(userId),
       );
       return { user };
     },
@@ -94,9 +98,7 @@ export function usePublicProfile(userId: string) {
           total: number;
           page: number;
           pageSize: number;
-        }>(
-          `/api/products?filters=sellerId%3D%3D${userId}%2Cstatus%3D%3Dpublished`,
-        );
+        }>(PROFILE_STATS_ENDPOINTS.PRODUCTS(userId));
         return {
           data: result.items,
           meta: {
@@ -114,7 +116,9 @@ export function usePublicProfile(userId: string) {
     useQuery<SellerReviewsData>({
       queryKey: ["profile-reviews", userId],
       queryFn: () =>
-        apiClient.get<SellerReviewsData>(`/api/profile/${userId}/reviews`),
+        apiClient.get<SellerReviewsData>(
+          ACCOUNT_ENDPOINTS.SELLER_REVIEWS(userId),
+        ),
       enabled: !!userId && isSeller,
       staleTime: 60_000,
     });

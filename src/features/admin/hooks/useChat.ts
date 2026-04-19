@@ -10,6 +10,10 @@ import {
 import { logger } from "../../../core/Logger";
 import { apiClient } from "../../../http";
 import { nowMs } from "../../../utils";
+import {
+  ADMIN_ENDPOINTS,
+  CHAT_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 
 export interface ChatMessage {
   id: string;
@@ -55,7 +59,7 @@ export function useChat(
         const tokenResponse = await apiClient.post<{
           customToken: string;
           expiresAt: number;
-        }>("/api/realtime/token", {});
+        }>(ADMIN_ENDPOINTS.REALTIME_TOKEN, {});
 
         await provider.signInWithToken(tokenResponse.customToken);
         tokenExpiresAtRef.current = tokenResponse.expiresAt;
@@ -112,7 +116,7 @@ export function useChat(
   const sendMessage = useCallback(
     async (text: string) => {
       if (!chatId || !text.trim()) return;
-      await apiClient.post(`/api/chat/${chatId}/messages`, {
+      await apiClient.post(CHAT_ENDPOINTS.MESSAGES(chatId), {
         message: text.trim(),
       });
     },
@@ -126,19 +130,24 @@ export function useChatRooms() {
   return useQuery({
     queryKey: ["chat", "rooms"],
     queryFn: () =>
-      apiClient.get<{ rooms: unknown[] }>("/api/chat").then((r) => r.rooms),
+      apiClient
+        .get<{ rooms: unknown[] }>(CHAT_ENDPOINTS.LIST)
+        .then((r) => r.rooms),
   });
 }
 
 export function useCreateChatRoom() {
   return useMutation({
     mutationFn: (data: { orderId: string; sellerId: string }) =>
-      apiClient.post<{ room: unknown }>("/api/chat", data).then((r) => r.room),
+      apiClient
+        .post<{ room: unknown }>(CHAT_ENDPOINTS.LIST, data)
+        .then((r) => r.room),
   });
 }
 
 export function useDeleteChatRoom() {
   return useMutation({
-    mutationFn: (chatId: string) => apiClient.delete(`/api/chat/${chatId}`),
+    mutationFn: (chatId: string) =>
+      apiClient.delete(CHAT_ENDPOINTS.BY_ID(chatId)),
   });
 }

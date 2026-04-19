@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { COPILOT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface CopilotMessage {
   id: string;
@@ -30,7 +31,7 @@ interface UseCopilotChatOptions {
 }
 
 export function useCopilotChat(options?: UseCopilotChatOptions) {
-  const endpoint = options?.endpoint ?? "/api/copilot/chat";
+  const endpoint = options?.endpoint ?? COPILOT_ENDPOINTS.CHAT;
   const [messages, setMessages] = useState<CopilotMessage[]>([]);
   const [conversationId, setConversationId] = useState(generateConversationId);
 

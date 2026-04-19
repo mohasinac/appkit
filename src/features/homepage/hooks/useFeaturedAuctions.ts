@@ -6,6 +6,7 @@ import type {
   ProductItem,
   ProductListResponse,
 } from "@mohasinac/appkit/features/products";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
@@ -14,7 +15,7 @@ export function useFeaturedAuctions() {
     queryKey: ["auctions", "featured"],
     queryFn: async () => {
       const promotedRes = await apiClient.get<ProductListResponse>(
-        "/api/products?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished%2CisPromoted%3D%3Dtrue&pageSize=18",
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished%2CisPromoted%3D%3Dtrue&pageSize=18`,
       );
       const promoted = promotedRes?.items ?? [];
 
@@ -22,7 +23,7 @@ export function useFeaturedAuctions() {
 
       const remaining = MIN_COUNT - promoted.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `/api/products?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
       );
       const latest = latestRes?.items ?? [];
 

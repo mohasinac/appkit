@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { BeforeAfterListResponse } from "../types";
+import { BEFORE_AFTER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseBeforeAfterOptions {
   concern?: string;
@@ -17,7 +18,9 @@ export function useBeforeAfter(opts?: UseBeforeAfterOptions) {
   const query = useQuery<BeforeAfterListResponse>({
     queryKey: ["before-after", qs],
     queryFn: () =>
-      apiClient.get<BeforeAfterListResponse>(`/api/before-after${qs ? `?${qs}` : ""}`),
+      apiClient.get<BeforeAfterListResponse>(
+        `${BEFORE_AFTER_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
     staleTime: 30 * 60 * 1000,

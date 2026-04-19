@@ -10,6 +10,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { MediaFilenameContext } from "../../../utils/id-generators";
+import { MEDIA_ENDPOINTS } from "../../../constants/api-endpoints";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -50,7 +51,7 @@ export interface MediaTrimInput {
  * const { upload, isPending } = useMediaUpload();
  * const url = await upload(file, "products", true);
  */
-export function useMediaUpload(endpoint = "/api/media/upload") {
+export function useMediaUpload(endpoint: string = MEDIA_ENDPOINTS.UPLOAD) {
   const mutation = useMutation<MediaUploadResult, Error, FormData>({
     mutationFn: (formData) =>
       apiClient.upload<MediaUploadResult>(endpoint, formData),
@@ -80,7 +81,7 @@ export function useMediaUpload(endpoint = "/api/media/upload") {
  * useMediaCrop — sends pixel-crop params to /api/media/crop.
  */
 export function useMediaCrop<TResult = { url: string }>(
-  endpoint = "/api/media/crop",
+  endpoint: string = MEDIA_ENDPOINTS.CROP,
 ) {
   return useMutation<TResult, Error, MediaCropInput>({
     mutationFn: (data) => apiClient.post<TResult>(endpoint, data),
@@ -91,7 +92,7 @@ export function useMediaCrop<TResult = { url: string }>(
  * useMediaTrim — sends trim params to /api/media/trim.
  */
 export function useMediaTrim<TResult = { url: string }>(
-  endpoint = "/api/media/trim",
+  endpoint: string = MEDIA_ENDPOINTS.TRIM,
 ) {
   return useMutation<TResult, Error, MediaTrimInput>({
     mutationFn: (data) => apiClient.post<TResult>(endpoint, data),
@@ -101,7 +102,7 @@ export function useMediaTrim<TResult = { url: string }>(
 /**
  * useMediaAbort — compatibility alias for staged-media cleanup.
  */
-export function useMediaAbort(endpoint = "/api/media") {
+export function useMediaAbort(endpoint: string = MEDIA_ENDPOINTS.BASE) {
   const { cleanup } = useMediaCleanup(endpoint);
   return cleanup;
 }
@@ -109,7 +110,7 @@ export function useMediaAbort(endpoint = "/api/media") {
 /**
  * useMediaCleanup — deletes uploaded objects by URL (for aborted forms).
  */
-export function useMediaCleanup(endpoint = "/api/media") {
+export function useMediaCleanup(endpoint: string = MEDIA_ENDPOINTS.BASE) {
   const mutation = useMutation<void, Error, string[]>({
     mutationFn: async (urls) => {
       await Promise.all(

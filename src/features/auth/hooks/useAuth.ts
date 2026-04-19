@@ -8,6 +8,10 @@ import { NotFoundError } from "../../../errors";
 import type { AuthUser } from "../types";
 import { useAuthEvent } from "./useAuthEvent";
 import { RealtimeEventStatus } from "../../../react/hooks/useRealtimeEvent";
+import {
+  AUTH_ENDPOINTS,
+  ACCOUNT_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 
 interface UseCurrentUserOptions {
   initialData?: AuthUser | null;
@@ -19,7 +23,7 @@ export function useCurrentUser(opts?: UseCurrentUserOptions) {
     queryKey: ["auth", "me"],
     queryFn: async () => {
       try {
-        return await apiClient.get<AuthUser>("/api/auth/me");
+        return await apiClient.get<AuthUser>(AUTH_ENDPOINTS.ME);
       } catch {
         return null;
       }
@@ -78,7 +82,7 @@ export function useLogin(options?: {
 }) {
   return useMutation<unknown, Error, LoginCredentials>({
     mutationFn: async (credentials) => {
-      await apiClient.post("/api/auth/login", {
+      await apiClient.post(AUTH_ENDPOINTS.LOGIN, {
         email: credentials.email.trim(),
         password: credentials.password,
       });
@@ -158,9 +162,9 @@ export function useGoogleLogin(options?: {
         eventId: string;
         customToken: string;
         expiresAt: number;
-      }>("/api/auth/event/init", {});
+      }>(AUTH_ENDPOINTS.EVENT_INIT, {});
 
-      const url = `${window.location.origin}/api/auth/google/start?eventId=${encodeURIComponent(eventId)}`;
+      const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
       localStorage.setItem("letitrip_oauth_redirect", url);
       authEvent.subscribe(eventId, customToken);
     } catch (err) {
@@ -188,7 +192,7 @@ export function useRegister(options?: {
   return useMutation<unknown, Error, RegisterData>({
     mutationFn: async (data) => {
       const response = await apiClient.post<Record<string, unknown>>(
-        "/api/auth/register",
+        AUTH_ENDPOINTS.REGISTER,
         {
           email: data.email.trim(),
           password: data.password,
@@ -229,7 +233,8 @@ export function useResendVerification(options?: {
   onError?: (error: unknown) => void;
 }) {
   return useMutation<unknown, Error, ResendVerificationData>({
-    mutationFn: (data) => apiClient.post("/api/auth/resend-verification", data),
+    mutationFn: (data) =>
+      apiClient.post(AUTH_ENDPOINTS.RESEND_VERIFICATION, data),
     onSuccess: options?.onSuccess,
     onError: options?.onError,
   });
@@ -276,7 +281,7 @@ export function useChangePassword(options?: {
         data.currentPassword,
         data.newPassword,
       );
-      return apiClient.post("/api/user/change-password", data);
+      return apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD, data);
     },
     onSuccess: options?.onSuccess,
     onError: options?.onError,

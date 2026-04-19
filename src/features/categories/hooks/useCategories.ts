@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../types";
+import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseCategoriesListOptions {
   initialData?: CategoryItem[];
@@ -11,7 +12,7 @@ interface UseCategoriesListOptions {
 export function useCategoriesList(opts?: UseCategoriesListOptions) {
   const query = useQuery<CategoryItem[]>({
     queryKey: ["categories", "flat"],
-    queryFn: () => apiClient.get<CategoryItem[]>("/api/categories?flat=true"),
+    queryFn: () => apiClient.get<CategoryItem[]>(CATEGORY_ENDPOINTS.FLAT),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
     staleTime: 5 * 60 * 1000, // 5 min — categories change infrequently
@@ -40,7 +41,7 @@ export function useCategoryDetail(
     queryFn: async () => {
       try {
         return await apiClient.get<CategoryItem>(
-          `/api/categories?slug=${encodeURIComponent(slug)}`,
+          CATEGORY_ENDPOINTS.BY_SLUG(encodeURIComponent(slug)),
         );
       } catch {
         return null;
@@ -56,7 +57,7 @@ export function useCategoryDetail(
     queryKey: ["categories", "children", category?.id ?? ""],
     queryFn: () =>
       apiClient.get<CategoryItem[]>(
-        `/api/categories?parentId=${encodeURIComponent(category!.id)}`,
+        CATEGORY_ENDPOINTS.BY_PARENT(encodeURIComponent(category!.id)),
       ),
     enabled: !!category?.id,
     initialData: opts?.initialChildren,

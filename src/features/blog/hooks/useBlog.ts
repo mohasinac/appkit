@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { BlogListResponse, BlogListParams } from "../types";
 import type { BlogPostDetailResponse } from "../api/[slug]/route";
+import { BLOG_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export type { BlogListResponse };
 
@@ -29,7 +30,9 @@ export function useBlogPosts(
   const query = useQuery<BlogListResponse>({
     queryKey: ["blog", qs],
     queryFn: () =>
-      apiClient.get<BlogListResponse>(`/api/blog${qs ? `?${qs}` : ""}`),
+      apiClient.get<BlogListResponse>(
+        `${BLOG_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
   });
@@ -53,7 +56,8 @@ interface UseBlogPostOptions {
 export function useBlogPost(slug: string, opts?: UseBlogPostOptions) {
   const query = useQuery<BlogPostDetailResponse>({
     queryKey: ["blog", "post", slug],
-    queryFn: () => apiClient.get<BlogPostDetailResponse>(`/api/blog/${slug}`),
+    queryFn: () =>
+      apiClient.get<BlogPostDetailResponse>(BLOG_ENDPOINTS.BY_SLUG(slug)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!slug,
   });

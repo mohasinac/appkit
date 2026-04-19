@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ProductListResponse } from "../../products/types";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
@@ -13,7 +14,7 @@ export function useFeaturedProducts(options?: {
     queryKey: ["products", "featured"],
     queryFn: async () => {
       const promotedRes = await apiClient.get<ProductListResponse>(
-        "/api/products?filters=isPromoted%3D%3Dtrue%2Cstatus%3D%3Dpublished&pageSize=18",
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPromoted%3D%3Dtrue%2Cstatus%3D%3Dpublished&pageSize=18`,
       );
       const promoted = promotedRes?.items ?? [];
 
@@ -21,7 +22,7 @@ export function useFeaturedProducts(options?: {
 
       const remaining = MIN_COUNT - promoted.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `/api/products?filters=status%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=status%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
       );
       const latest = latestRes?.items ?? [];
 

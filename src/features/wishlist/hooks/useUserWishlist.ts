@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface UserWishlistItem<TProduct = unknown> {
   productId: string;
@@ -24,7 +25,7 @@ interface UseUserWishlistOptions<TProduct> {
 export function useUserWishlist<TProduct = unknown>(
   options?: UseUserWishlistOptions<TProduct>,
 ) {
-  const endpoint = options?.endpoint ?? "/api/user/wishlist";
+  const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.WISHLIST;
   const query = useQuery<UserWishlistResponse<TProduct>>({
     queryKey: options?.queryKey ?? ["user", "wishlist"],
     queryFn: () => apiClient.get<UserWishlistResponse<TProduct>>(endpoint),

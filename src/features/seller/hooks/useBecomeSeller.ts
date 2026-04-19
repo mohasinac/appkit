@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useMessage } from "../../../react";
 import type { BecomeSellerResult } from "../actions/seller-actions";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export type { BecomeSellerResult };
 
@@ -25,7 +26,8 @@ export function useBecomeSeller<T = BecomeSellerResult>(
   return useMutation<T, Error, void>({
     mutationFn:
       options?.mutationFn ??
-      (() => apiClient.post<T>(options?.endpoint ?? "/api/seller/become", {})),
+      (() =>
+        apiClient.post<T>(options?.endpoint ?? SELLER_ENDPOINTS.BECOME, {})),
     onSuccess: (result) => {
       const shouldShowSuccess =
         options?.shouldShowSuccess ??

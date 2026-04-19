@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ProductItem, ProductListResponse } from "../types";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 type RelatedProductsResponse = ProductListResponse;
 
@@ -22,7 +23,7 @@ export function useRelatedProducts(
     queryKey: ["related-products", category, excludeId, String(isAuction)],
     queryFn: () =>
       apiClient.get<RelatedProductsResponse>(
-        `/api/products?${params.toString()}`,
+        `${PRODUCT_ENDPOINTS.LIST}?${params.toString()}`,
       ),
     enabled: Boolean(category),
     staleTime: 5 * 60 * 1000,

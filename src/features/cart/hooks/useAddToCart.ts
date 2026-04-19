@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient, type ApiClientError } from "../../../http";
 import { addToGuestCart } from "../utils/guest-cart";
+import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface AddToCartPayload {
   productId: string;
@@ -27,7 +28,7 @@ interface UseAddToCartOptions {
  */
 export function useAddToCart(options?: UseAddToCartOptions) {
   const queryClient = useQueryClient();
-  const endpoint = options?.endpoint ?? "/api/cart";
+  const endpoint = options?.endpoint ?? CART_ENDPOINTS.GET;
 
   const optionsRef = useRef(options);
   useEffect(() => {

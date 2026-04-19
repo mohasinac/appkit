@@ -8,6 +8,7 @@ import type {
   SellerReviewsData,
   ProductsApiResponse,
 } from "../../account/hooks/usePublicProfile";
+import { ACCOUNT_ENDPOINTS, PROFILE_STATS_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export { SellerReviewsData, ProductsApiResponse };
 
@@ -25,9 +26,7 @@ export function useSellerStorefront(
   } = useQuery<{ user: PublicUserProfile }>({
     queryKey: ["seller-profile", sellerId],
     queryFn: async () => {
-      const user = await apiClient.get<PublicUserProfile>(
-        `/api/profile/${sellerId}`,
-      );
+      const user = await apiClient.get<PublicUserProfile>(ACCOUNT_ENDPOINTS.SELLER_PROFILE(sellerId));
       return { user };
     },
     enabled: !!sellerId,
@@ -54,7 +53,7 @@ export function useSellerStorefront(
           page: number;
           pageSize: number;
         }>(
-          `/api/products?filters=sellerId%3D%3D${sellerId}%2Cstatus%3D%3Dpublished`,
+          PROFILE_STATS_ENDPOINTS.PRODUCTS(sellerId),
         );
         return {
           data: result.items,
@@ -73,7 +72,7 @@ export function useSellerStorefront(
     useQuery<SellerReviewsData>({
       queryKey: ["storefront-reviews", sellerId],
       queryFn: () =>
-        apiClient.get<SellerReviewsData>(`/api/profile/${sellerId}/reviews`),
+        apiClient.get<SellerReviewsData>(ACCOUNT_ENDPOINTS.SELLER_REVIEWS(sellerId)),
       enabled: isReady,
       staleTime: 60_000,
     });

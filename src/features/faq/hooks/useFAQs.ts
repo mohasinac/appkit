@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { FAQ, FAQListResponse, FAQListParams } from "../types";
+import { FAQ_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseFAQsOptions {
   initialData?: FAQListResponse;
@@ -21,7 +22,9 @@ export function useFAQs(params: FAQListParams = {}, opts?: UseFAQsOptions) {
   const query = useQuery<FAQListResponse>({
     queryKey: ["faqs", qs],
     queryFn: () =>
-      apiClient.get<FAQListResponse>(`/api/faqs${qs ? `?${qs}` : ""}`),
+      apiClient.get<FAQListResponse>(
+        `${FAQ_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
     staleTime: 10 * 60 * 1000,
@@ -41,7 +44,7 @@ export function useFAQ(
 ) {
   const query = useQuery<FAQ>({
     queryKey: ["faqs", id],
-    queryFn: () => apiClient.get<FAQ>(`/api/faqs/${id}`),
+    queryFn: () => apiClient.get<FAQ>(FAQ_ENDPOINTS.BY_ID(id)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!id,
   });

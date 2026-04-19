@@ -7,6 +7,7 @@ import type {
   PromotionsListParams,
   CouponItem,
 } from "../types";
+import { PROMOTION_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function usePromotions(
   params: PromotionsListParams = {},
@@ -27,7 +28,7 @@ export function usePromotions(
     queryKey: ["promotions", qs],
     queryFn: () =>
       apiClient.get<PromotionsListResponse>(
-        `/api/promotions${qs ? `?${qs}` : ""}`,
+        `${PROMOTION_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
     enabled: opts?.enabled ?? true,
   });
@@ -47,7 +48,9 @@ export function useCoupon(code: string, opts?: { enabled?: boolean }) {
   const { data, isLoading, error } = useQuery<CouponItem | null>({
     queryKey: ["coupon", code],
     queryFn: () =>
-      apiClient.get<CouponItem>(`/api/coupons/${encodeURIComponent(code)}`),
+      apiClient.get<CouponItem>(
+        PROMOTION_ENDPOINTS.COUPON_BY_CODE(encodeURIComponent(code)),
+      ),
     enabled: (opts?.enabled ?? true) && !!code,
   });
 

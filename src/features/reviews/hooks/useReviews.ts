@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { ReviewListResponse, ReviewListParams } from "../types";
+import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseReviewsOptions {
   initialData?: ReviewListResponse;
@@ -27,7 +28,9 @@ export function useReviews(
   const query = useQuery<ReviewListResponse>({
     queryKey: ["reviews", qs],
     queryFn: () =>
-      apiClient.get<ReviewListResponse>(`/api/reviews${qs ? `?${qs}` : ""}`),
+      apiClient.get<ReviewListResponse>(
+        `${REVIEW_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
   });

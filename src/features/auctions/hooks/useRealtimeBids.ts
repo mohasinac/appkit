@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { logger } from "../../../core/Logger";
+import { BID_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface RealtimeBidData {
   currentBid: number;
@@ -44,7 +45,7 @@ export interface UseRealtimeBidsReturn {
  */
 export function useRealtimeBids(
   productId: string | null,
-  getEndpoint: (id: string) => string = (id) => `/api/realtime/bids/${id}`,
+  getEndpoint: (id: string) => string = BID_ENDPOINTS.REALTIME,
 ): UseRealtimeBidsReturn {
   const [data, setData] = useState<RealtimeBidData | null>(null);
   const [connected, setConnected] = useState(false);

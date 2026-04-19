@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../../categories/types";
+import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function useTopCategories(
   limit = 12,
@@ -11,7 +12,7 @@ export function useTopCategories(
   return useQuery<CategoryItem[]>({
     queryKey: ["categories", "top", String(limit)],
     queryFn: () =>
-      apiClient.get<CategoryItem[]>(`/api/categories?tier=0&pageSize=${limit}`),
+      apiClient.get<CategoryItem[]>(CATEGORY_ENDPOINTS.ROOT(limit)),
     staleTime: Infinity,
     gcTime: Infinity,
     initialData: options?.initialData,

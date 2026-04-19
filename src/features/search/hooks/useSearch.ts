@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { SearchResponse, SearchCategoryOption } from "../types";
+import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseSearchOptions {
   initialCategories?: SearchCategoryOption[];
@@ -18,7 +19,7 @@ export function useSearch(searchParams: string, options?: UseSearchOptions) {
   const { data: categories } = useQuery<SearchCategoryOption[]>({
     queryKey: ["search", "categories"],
     queryFn: () =>
-      apiClient.get<SearchCategoryOption[]>("/api/categories?flat=true"),
+      apiClient.get<SearchCategoryOption[]>(CATEGORY_ENDPOINTS.FLAT),
     initialData: options?.initialCategories,
     staleTime: 1000 * 60 * 5, // 5 min
   });

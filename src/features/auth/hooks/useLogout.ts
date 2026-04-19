@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { AUTH_ENDPOINTS } from "../../../constants/api-endpoints";
 
 /**
  * useLogout
@@ -19,7 +20,7 @@ export function useLogout(options?: {
   onSuccess?: () => void;
   onError?: (err: Error) => void;
 }) {
-  const endpoint = options?.endpoint ?? "/api/auth/logout";
+  const endpoint = options?.endpoint ?? AUTH_ENDPOINTS.LOGOUT;
   return useMutation<void, Error, void>({
     mutationFn: () => apiClient.post(endpoint, {}),
     onSuccess: options?.onSuccess,

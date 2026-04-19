@@ -6,6 +6,7 @@ import type {
   ProductItem,
   ProductListResponse,
 } from "@mohasinac/appkit/features/products";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
@@ -14,7 +15,7 @@ export function useFeaturedPreOrders() {
     queryKey: ["pre-orders", "featured"],
     queryFn: async () => {
       const featuredRes = await apiClient.get<ProductListResponse>(
-        "/api/products?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=preOrderDeliveryDate&pageSize=6",
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=preOrderDeliveryDate&pageSize=6`,
       );
       const featured = featuredRes?.items ?? [];
 
@@ -22,7 +23,7 @@ export function useFeaturedPreOrders() {
 
       const remaining = MIN_COUNT - featured.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `/api/products?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + featured.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + featured.length}`,
       );
       const latest = latestRes?.items ?? [];
 

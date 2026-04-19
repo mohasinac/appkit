@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { BID_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface BidResult {
   id: string;
@@ -34,7 +35,7 @@ export function usePlaceBid() {
   return useMutation<BidResult, Error, PlaceBidPayload>({
     mutationFn: async (data) => {
       const result = await apiClient.post<{ bid: BidResult }>(
-        "/api/bids",
+        BID_ENDPOINTS.LIST,
         data,
       );
       return result.bid;

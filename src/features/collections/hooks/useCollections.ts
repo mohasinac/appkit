@@ -2,12 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { CollectionItem, CollectionListItem } from "../types";
+import { COLLECTION_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function useCollections() {
   return useQuery<CollectionListItem[]>({
     queryKey: ["collections"],
     queryFn: async () => {
-      const res = await fetch("/api/collections");
+      const res = await fetch(COLLECTION_ENDPOINTS.LIST);
       if (!res.ok) throw new Error("Failed to fetch collections");
       return res.json() as Promise<CollectionListItem[]>;
     },
@@ -20,7 +21,7 @@ export function useCollection(slug: string | undefined) {
     queryKey: ["collections", slug],
     queryFn: async () => {
       if (!slug) return null;
-      const res = await fetch(`/api/collections/${slug}`);
+      const res = await fetch(COLLECTION_ENDPOINTS.BY_SLUG(slug));
       if (res.status === 404) return null;
       if (!res.ok) throw new Error("Failed to fetch collection");
       return res.json() as Promise<CollectionItem>;

@@ -7,6 +7,7 @@ import type {
   EventEntryListResponse,
   LeaderboardEntry,
 } from "../types";
+import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseEventOptions<T extends EventItem = EventItem> {
   enabled?: boolean;
@@ -27,7 +28,7 @@ export function useEvent<T extends EventItem = EventItem>(
 ) {
   const { data, isLoading, error, refetch } = useQuery<EventItem | null>({
     queryKey: ["event", id],
-    queryFn: () => apiClient.get<EventItem>(`/api/events/${id}`),
+    queryFn: () => apiClient.get<EventItem>(EVENT_ENDPOINTS.BY_ID(id)),
     enabled: (opts?.enabled ?? true) && !!id,
     initialData: opts?.initialData,
   });
@@ -58,7 +59,7 @@ export function useEventEntries(
     queryKey: ["event-entries", eventId, qs],
     queryFn: () =>
       apiClient.get<EventEntryListResponse>(
-        `/api/events/${eventId}/entries${qs ? `?${qs}` : ""}`,
+        `${EVENT_ENDPOINTS.ENTRIES(eventId)}${qs ? `?${qs}` : ""}`,
       ),
     enabled: (opts?.enabled ?? true) && !!eventId,
   });
@@ -81,7 +82,7 @@ export function useEventLeaderboard(
     queryKey: ["event-leaderboard", eventId, limit],
     queryFn: () =>
       apiClient.get<LeaderboardEntry[]>(
-        `/api/events/${eventId}/leaderboard?limit=${limit}`,
+        EVENT_ENDPOINTS.LEADERBOARD(eventId, limit),
       ),
     enabled: (opts?.enabled ?? true) && !!eventId,
   });

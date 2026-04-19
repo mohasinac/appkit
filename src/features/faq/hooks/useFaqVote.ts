@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { FAQ_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface VoteFaqInput {
   faqId: string;
@@ -25,7 +26,7 @@ export function useFaqVote(options?: UseFaqVoteOptions) {
       options?.mutationFn ??
       ((data) =>
         apiClient.post<VoteFaqResult>(
-          options?.endpoint ?? "/api/faqs/vote",
+          options?.endpoint ?? FAQ_ENDPOINTS.VOTE,
           data,
         )),
   });

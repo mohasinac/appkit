@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface UserProfile {
   uid: string;
@@ -24,7 +25,7 @@ export interface UpdateCurrentProfileInput {
 export function useCurrentProfile(options?: { enabled?: boolean }) {
   return useQuery<UserProfile>({
     queryKey: ["profile"],
-    queryFn: () => apiClient.get<UserProfile>("/api/user/profile"),
+    queryFn: () => apiClient.get<UserProfile>(ACCOUNT_ENDPOINTS.PROFILE),
     enabled: options?.enabled,
   });
 }
@@ -37,7 +38,7 @@ export function useUpdateCurrentProfile(options?: {
 
   return useMutation({
     mutationFn: (data: UpdateCurrentProfileInput) =>
-      apiClient.patch("/api/user/profile", data),
+      apiClient.patch(ACCOUNT_ENDPOINTS.PROFILE, data),
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["profile"] });
       options?.onSuccess?.(data);

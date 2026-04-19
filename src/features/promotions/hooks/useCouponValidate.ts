@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { PROMOTION_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface ValidateCouponPayload {
   code: string;
@@ -24,7 +25,7 @@ interface ValidateCouponResult {
 }
 
 export function useCouponValidate(options?: { endpoint?: string }) {
-  const endpoint = options?.endpoint ?? "/api/coupons/validate";
+  const endpoint = options?.endpoint ?? PROMOTION_ENDPOINTS.COUPON_VALIDATE;
 
   return useMutation<ValidateCouponResult, Error, ValidateCouponPayload>({
     mutationFn: (payload) =>

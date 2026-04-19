@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../types";
+import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface UseCategorySelectorOptions {
   categoriesEndpoint?: string;
@@ -13,9 +14,9 @@ export interface UseCategorySelectorOptions {
 
 export function useCategorySelector(options?: UseCategorySelectorOptions) {
   const categoriesEndpoint =
-    options?.categoriesEndpoint ?? "/api/categories?flat=true";
+    options?.categoriesEndpoint ?? CATEGORY_ENDPOINTS.FLAT;
   const createCategoryEndpoint =
-    options?.createCategoryEndpoint ?? "/api/categories";
+    options?.createCategoryEndpoint ?? CATEGORY_ENDPOINTS.LIST;
 
   const {
     data: raw,
@@ -46,7 +47,7 @@ export function useCategorySelector(options?: UseCategorySelectorOptions) {
 }
 
 export function useCategories(options?: { endpoint?: string }) {
-  const endpoint = options?.endpoint ?? "/api/categories?flat=true";
+  const endpoint = options?.endpoint ?? CATEGORY_ENDPOINTS.FLAT;
   const {
     data: raw,
     isLoading,
@@ -68,7 +69,7 @@ export function useCreateCategory(options?: {
   onSuccess?: (res: CategoryItem) => void;
   onError?: (err: Error) => void;
 }) {
-  const endpoint = options?.endpoint ?? "/api/categories";
+  const endpoint = options?.endpoint ?? CATEGORY_ENDPOINTS.LIST;
   return useMutation<CategoryItem, Error, Record<string, unknown>>({
     mutationFn: (data) => apiClient.post<CategoryItem>(endpoint, data),
     onSuccess: options?.onSuccess,

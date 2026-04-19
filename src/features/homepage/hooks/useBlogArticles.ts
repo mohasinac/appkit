@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { BlogListResponse } from "../../blog/types";
+import { BLOG_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_BLOG_COUNT = 4;
 
@@ -16,7 +17,7 @@ export function useBlogArticles() {
     queryKey: ["blog", "featured"],
     queryFn: async () => {
       const featuredResult = await apiClient.get<BlogListResponse>(
-        `/api/blog?featured=true&perPage=${MIN_BLOG_COUNT}`,
+        BLOG_ENDPOINTS.FEATURED(MIN_BLOG_COUNT),
       );
       const featured = featuredResult.posts;
 
@@ -26,7 +27,7 @@ export function useBlogArticles() {
 
       const remaining = MIN_BLOG_COUNT - featured.length;
       const latestResult = await apiClient.get<BlogListResponse>(
-        `/api/blog?sort=-publishedAt&perPage=${MIN_BLOG_COUNT + remaining}`,
+        `${BLOG_ENDPOINTS.SORTED("-publishedAt")}&perPage=${MIN_BLOG_COUNT + remaining}`,
       );
 
       const existingIds = new Set(featured.map((p) => p.id));

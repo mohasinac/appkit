@@ -3,6 +3,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useCheckoutReadQueries } from "../../cart";
+import {
+  ACCOUNT_ENDPOINTS,
+  CART_ENDPOINTS,
+  CHECKOUT_ENDPOINTS,
+  PAYMENT_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 
 export interface AddressListResponse<TAddress = any> {
   data: TAddress[];
@@ -86,12 +92,12 @@ export function useCheckout<TAddress = any, TCart = any>(
   const queryClient = useQueryClient();
 
   const {
-    addressesEndpoint = "/api/user/addresses",
-    cartEndpoint = "/api/cart",
-    preflightEndpoint = "/api/checkout/preflight",
-    placeOrderEndpoint = "/api/checkout",
-    paymentCreateOrderEndpoint = "/api/payment/create-order",
-    paymentVerifyEndpoint = "/api/payment/verify",
+    addressesEndpoint = ACCOUNT_ENDPOINTS.ADDRESSES,
+    cartEndpoint = CART_ENDPOINTS.GET,
+    preflightEndpoint = CHECKOUT_ENDPOINTS.PREFLIGHT,
+    placeOrderEndpoint = CHECKOUT_ENDPOINTS.PLACE_ORDER,
+    paymentCreateOrderEndpoint = PAYMENT_ENDPOINTS.CREATE_ORDER,
+    paymentVerifyEndpoint = PAYMENT_ENDPOINTS.VERIFY,
   } = options ?? {};
 
   const { addressQuery, cartQuery } = useCheckoutReadQueries<

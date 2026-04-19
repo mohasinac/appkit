@@ -10,6 +10,7 @@ import type {
   PublicBid,
 } from "../types";
 import type { ProductItem } from "../../products/types";
+import { AUCTION_ENDPOINTS, BID_ENDPOINTS, PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 type AuctionListQuery = AuctionListParams | URLSearchParams | string;
 
@@ -51,7 +52,7 @@ export function useAuctions(
   params: AuctionListQuery = {},
   opts?: UseAuctionsOptions,
 ) {
-  const endpoint = opts?.endpoint ?? "/api/auctions";
+  const endpoint = opts?.endpoint ?? AUCTION_ENDPOINTS.LIST;
   const queryKeyPrefix = opts?.queryKeyPrefix ?? "auctions";
   const qs = toQueryString(params);
 
@@ -78,7 +79,7 @@ export function useAuctions(
 export function useAuction(slug: string, opts?: { enabled?: boolean }) {
   const { data, isLoading, error, refetch } = useQuery<AuctionItem | null>({
     queryKey: ["auction", slug],
-    queryFn: () => apiClient.get<AuctionItem>(`/api/auctions/${slug}`),
+    queryFn: () => apiClient.get<AuctionItem>(AUCTION_ENDPOINTS.BY_SLUG(slug)),
     enabled: (opts?.enabled ?? true) && !!slug,
   });
 
@@ -99,7 +100,7 @@ export function useAuctionBids(
     queryKey: ["auction-bids", auctionSlug, limit],
     queryFn: () =>
       apiClient.get<BidListResponse>(
-        `/api/auctions/${auctionSlug}/bids?limit=${limit}`,
+        `${AUCTION_ENDPOINTS.BIDS(auctionSlug)}?limit=${limit}`,
       ),
     enabled: (opts?.enabled ?? true) && !!auctionSlug,
     refetchInterval: 15_000, // refresh every 15 s for real-time feel
@@ -115,8 +116,8 @@ export function useAuctionBids(
 
 export function useAuctionDetail(id: string, opts?: UseAuctionDetailOptions) {
   const enabled = opts?.enabled ?? true;
-  const productEndpoint = opts?.productEndpoint ?? `/api/products/${id}`;
-  const bidsEndpoint = opts?.bidsEndpoint ?? `/api/bids?productId=${id}`;
+  const productEndpoint = opts?.productEndpoint ?? PRODUCT_ENDPOINTS.BY_ID(id);
+  const bidsEndpoint = opts?.bidsEndpoint ?? BID_ENDPOINTS.BY_PRODUCT(id);
   const productQueryKeyPrefix = opts?.productQueryKeyPrefix ?? "product";
   const bidsQueryKeyPrefix = opts?.bidsQueryKeyPrefix ?? "bids";
   const refetchIntervalMs = opts?.refetchIntervalMs ?? 60_000;

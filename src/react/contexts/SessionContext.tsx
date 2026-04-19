@@ -22,6 +22,10 @@ import {
   getClientSessionAdapter,
   type AdapterAuthUser,
 } from "../../contracts/client-session";
+import {
+  AUTH_ENDPOINTS,
+  ACCOUNT_ENDPOINTS,
+} from "../../constants/api-endpoints";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -94,11 +98,11 @@ export interface SessionEndpoints {
 }
 
 const DEFAULT_ENDPOINTS: SessionEndpoints = {
-  createSession: "/api/auth/session",
-  sessionActivity: "/api/auth/session/activity",
-  sessionValidate: "/api/auth/session/validate",
-  logout: "/api/auth/logout",
-  userProfile: "/api/user/profile",
+  createSession: AUTH_ENDPOINTS.SESSION,
+  sessionActivity: AUTH_ENDPOINTS.SESSION_ACTIVITY,
+  sessionValidate: AUTH_ENDPOINTS.SESSION_VALIDATE,
+  logout: AUTH_ENDPOINTS.LOGOUT,
+  userProfile: ACCOUNT_ENDPOINTS.PROFILE,
 };
 
 // ---------------------------------------------------------------------------

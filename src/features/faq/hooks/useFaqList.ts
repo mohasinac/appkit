@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { FAQCategory, FAQListResponse } from "../types";
+import { FAQ_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseFaqListOptions {
   category?: FAQCategory;
@@ -37,7 +38,7 @@ export function useFaqList(options: UseFaqListOptions = {}) {
     queryKey: ["faqs", queryString],
     queryFn: () =>
       apiClient.get<FAQListResponse>(
-        `/api/faqs${queryString ? `?${queryString}` : ""}`,
+        `${FAQ_ENDPOINTS.LIST}${queryString ? `?${queryString}` : ""}`,
       ),
     enabled: options.enabled,
     initialData: options.initialData,

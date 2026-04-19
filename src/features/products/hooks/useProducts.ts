@@ -6,6 +6,7 @@ import type {
   ProductListResponse,
   ProductListParams,
 } from "../types";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 // ─── useProducts ──────────────────────────────────────────────────────────────
 
@@ -52,7 +53,9 @@ export function useProducts<T extends ProductItem = ProductItem>(
   const query = useQuery<ProductListResponse>({
     queryKey: ["products", qs],
     queryFn: () =>
-      apiClient.get<ProductListResponse>(`/api/products${qs ? `?${qs}` : ""}`),
+      apiClient.get<ProductListResponse>(
+        `${PRODUCT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
+      ),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
   });
@@ -94,7 +97,7 @@ export function useProduct<T extends ProductItem = ProductItem>(
 ) {
   const query = useQuery<ProductItem>({
     queryKey: ["products", slug],
-    queryFn: () => apiClient.get<ProductItem>(`/api/products/${slug}`),
+    queryFn: () => apiClient.get<ProductItem>(PRODUCT_ENDPOINTS.BY_SLUG(slug)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!slug,
   });

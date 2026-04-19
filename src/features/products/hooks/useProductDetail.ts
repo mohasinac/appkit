@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
 import type { ProductItem } from "../types";
+import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseProductDetailOptions<TProduct = ProductItem> {
   initialData?: TProduct;
@@ -16,7 +17,7 @@ export function useProductDetail<TProduct = ProductItem>(
   slug: string,
   options?: UseProductDetailOptions<TProduct>,
 ) {
-  const endpoint = options?.endpoint ?? `/api/products/${slug}`;
+  const endpoint = options?.endpoint ?? PRODUCT_ENDPOINTS.BY_SLUG(slug);
   const queryKeyPrefix = options?.queryKeyPrefix ?? "product";
 
   const { data, isLoading, error, refetch } = useQuery<ProductItem | null>({

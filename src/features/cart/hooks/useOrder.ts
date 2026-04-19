@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient, ApiClientError } from "../../../http";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseOrderOptions<TOrder> {
   endpoint?: string;
@@ -14,7 +15,7 @@ export function useOrder<TOrder = unknown>(
   orderId: string | null,
   options?: UseOrderOptions<TOrder>,
 ) {
-  const endpoint = options?.endpoint ?? `/api/user/orders/${orderId}`;
+  const endpoint = options?.endpoint ?? ACCOUNT_ENDPOINTS.ORDER_BY_ID(orderId!);
   const queryKeyPrefix = options?.queryKeyPrefix ?? "order";
 
   const { data, isLoading, error, refetch } = useQuery<TOrder | null>({

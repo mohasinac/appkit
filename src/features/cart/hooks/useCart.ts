@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CartData } from "../types";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface UseCartOptions {
   initialData?: CartData;
@@ -13,7 +14,7 @@ export function useCart(userIdOrSession: string, opts?: UseCartOptions) {
   const query = useQuery<CartData>({
     queryKey: ["cart", userIdOrSession],
     queryFn: () =>
-      apiClient.get<CartData>(`/api/cart?userId=${userIdOrSession}`),
+      apiClient.get<CartData>(CART_ENDPOINTS.BY_USER(userIdOrSession)),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userIdOrSession,
   });

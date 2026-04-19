@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useGuestCart } from "./useGuestCart";
+import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface CartCountResponse {
   itemCount: number;
@@ -20,7 +21,7 @@ export function useCartCount() {
   const { count: guestCount } = useGuestCart();
   const { data } = useQuery<CartCountResponse | null>({
     queryKey: ["cart"],
-    queryFn: () => apiClient.get<CartCountResponse | null>("/api/cart"),
+    queryFn: () => apiClient.get<CartCountResponse | null>(CART_ENDPOINTS.GET),
   });
 
   return data?.itemCount ?? guestCount;

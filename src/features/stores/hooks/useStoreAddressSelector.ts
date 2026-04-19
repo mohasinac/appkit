@@ -3,6 +3,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { AddressFormData } from "../../account";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 interface SavedAddress {
   id: string;
@@ -23,7 +24,8 @@ export function useStoreAddressSelector(options?: {
 }) {
   const { data, isLoading, refetch } = useQuery<SavedAddress[]>({
     queryKey: ["store-addresses"],
-    queryFn: () => apiClient.get<SavedAddress[]>("/api/seller/store/addresses"),
+    queryFn: () =>
+      apiClient.get<SavedAddress[]>(SELLER_ENDPOINTS.STORE_ADDRESSES),
   });
 
   const addresses: SavedAddress[] = data ?? [];
@@ -35,7 +37,7 @@ export function useStoreAddressSelector(options?: {
   >({
     mutationFn: async (data) => {
       const result = await apiClient.post<{ id: string }>(
-        "/api/seller/store/addresses",
+        SELLER_ENDPOINTS.STORE_ADDRESSES,
         {
           ...data,
           isDefault: data.isDefault ?? false,

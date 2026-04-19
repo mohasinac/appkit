@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { PayoutListResponse, SellerPayoutSettings } from "../types";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function useSellerPayouts(
   params: { page?: number; pageSize?: number; status?: string } = {},
@@ -18,7 +19,7 @@ export function useSellerPayouts(
     queryKey: ["seller-payouts", qs],
     queryFn: () =>
       apiClient.get<PayoutListResponse>(
-        `/api/seller/payouts${qs ? `?${qs}` : ""}`,
+        `${SELLER_ENDPOINTS.PAYOUTS}${qs ? `?${qs}` : ""}`,
       ),
     enabled: opts?.enabled ?? true,
   });
@@ -38,7 +39,7 @@ export function useSellerPayoutSettings(opts?: { enabled?: boolean }) {
     useQuery<SellerPayoutSettings | null>({
       queryKey: ["seller-payout-settings"],
       queryFn: () =>
-        apiClient.get<SellerPayoutSettings>("/api/seller/payout-settings"),
+        apiClient.get<SellerPayoutSettings>(SELLER_ENDPOINTS.PAYOUT_SETTINGS),
       enabled: opts?.enabled ?? true,
     });
 

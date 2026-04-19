@@ -10,6 +10,7 @@ import type {
   StoreAuctionsResponse,
   StoreReviewsData,
 } from "../types";
+import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function useStores(
   params: StoreListParams = {},
@@ -26,7 +27,7 @@ export function useStores(
   const { data, isLoading, error, refetch } = useQuery<StoreListResponse>({
     queryKey: ["stores", qs],
     queryFn: () =>
-      apiClient.get<StoreListResponse>(`/api/stores${qs ? `?${qs}` : ""}`),
+      apiClient.get<StoreListResponse>(`${STORE_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`),
     enabled: opts?.enabled ?? true,
   });
 
@@ -47,7 +48,7 @@ export function useStoreBySlug(
 ) {
   const { data, isLoading, error, refetch } = useQuery<StoreDetail | null>({
     queryKey: ["store", storeSlug],
-    queryFn: () => apiClient.get<StoreDetail>(`/api/stores/${storeSlug}`),
+    queryFn: () => apiClient.get<StoreDetail>(STORE_ENDPOINTS.BY_SLUG(storeSlug)),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
@@ -68,7 +69,7 @@ export function useStoreProducts(
     queryKey: ["store-products", storeSlug, params ?? ""],
     queryFn: () =>
       apiClient.get<StoreProductsResponse>(
-        `/api/stores/${storeSlug}/products${params ? `?${params}` : ""}`,
+        `${STORE_ENDPOINTS.PRODUCTS(storeSlug)}${params ? `?${params}` : ""}`,
       ),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
@@ -92,7 +93,7 @@ export function useStoreAuctions(
     queryKey: ["store-auctions", storeSlug, params ?? ""],
     queryFn: () =>
       apiClient.get<StoreAuctionsResponse>(
-        `/api/stores/${storeSlug}/auctions${params ? `?${params}` : ""}`,
+        `${STORE_ENDPOINTS.AUCTIONS(storeSlug)}${params ? `?${params}` : ""}`,
       ),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
@@ -114,7 +115,7 @@ export function useStoreReviews(
   const { data, isLoading, error, refetch } = useQuery<StoreReviewsData>({
     queryKey: ["store-reviews", storeSlug],
     queryFn: () =>
-      apiClient.get<StoreReviewsData>(`/api/stores/${storeSlug}/reviews`),
+      apiClient.get<StoreReviewsData>(STORE_ENDPOINTS.REVIEWS(storeSlug)),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 

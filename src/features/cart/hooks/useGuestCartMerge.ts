@@ -9,6 +9,7 @@ import {
   getGuestReturnTo,
   type GuestCartItem,
 } from "../utils/guest-cart";
+import { CART_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface UseGuestCartMergeOptions {
   userId: string | null | undefined;
@@ -53,7 +54,7 @@ export function useGuestCartMerge(options: UseGuestCartMergeOptions): void {
       options.mergeFn ??
       (async (payload: GuestCartItem[]) => {
         await apiClient.post(
-          options.mergeEndpoint ?? "/api/cart/merge",
+          options.mergeEndpoint ?? CART_ENDPOINTS.MERGE,
           payload,
         );
       });

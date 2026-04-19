@@ -8,6 +8,8 @@
  * `import("@/constants")` call, making this usable in any context.
  */
 
+import { LOGS_ENDPOINTS } from "../constants/api-endpoints";
+
 export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface LogEntry {
@@ -56,7 +58,7 @@ export class Logger {
     // `enableFileLogging: true` is a backward-compat alias for logFileUrl.
     const fileUrl =
       options?.logFileUrl ??
-      (options?.enableFileLogging ? "/api/logs/write" : undefined);
+      (options?.enableFileLogging ? LOGS_ENDPOINTS.WRITE : undefined);
     this.options = {
       minLevel: options?.minLevel ?? "debug",
       enableConsole: options?.enableConsole ?? true,

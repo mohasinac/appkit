@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export interface ProfileStats {
   orderCount: number;
@@ -13,13 +14,15 @@ export function useProfileStats(enabled: boolean): ProfileStats {
   const { data: ordersData, isLoading: ordersLoading } = useQuery({
     queryKey: ["user-orders-count"],
     queryFn: () =>
-      apiClient.get<{ orders: unknown[]; total: number }>("/api/user/orders"),
+      apiClient.get<{ orders: unknown[]; total: number }>(
+        ACCOUNT_ENDPOINTS.ORDERS,
+      ),
     enabled,
   });
 
   const { data: addressesData, isLoading: addressesLoading } = useQuery({
     queryKey: ["user-addresses-count"],
-    queryFn: () => apiClient.get<unknown[]>("/api/user/addresses"),
+    queryFn: () => apiClient.get<unknown[]>(ACCOUNT_ENDPOINTS.ADDRESSES),
     enabled,
   });
 
