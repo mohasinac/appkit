@@ -9,10 +9,14 @@ import type {
 } from "../types";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
-export function useSellerStore(opts?: { enabled?: boolean }) {
+export function useSellerStore(opts?: {
+  enabled?: boolean;
+  endpoint?: string;
+}) {
+  const endpoint = opts?.endpoint ?? SELLER_ENDPOINTS.STORE;
   const { data, isLoading, error, refetch } = useQuery<SellerStore | null>({
     queryKey: ["seller-store"],
-    queryFn: () => apiClient.get<SellerStore>(SELLER_ENDPOINTS.STORE),
+    queryFn: () => apiClient.get<SellerStore>(endpoint),
     enabled: opts?.enabled ?? true,
   });
 
@@ -24,11 +28,14 @@ export function useSellerStore(opts?: { enabled?: boolean }) {
   };
 }
 
-export function useSellerDashboard(opts?: { enabled?: boolean }) {
+export function useSellerDashboard(opts?: {
+  enabled?: boolean;
+  endpoint?: string;
+}) {
+  const endpoint = opts?.endpoint ?? SELLER_ENDPOINTS.DASHBOARD;
   const { data, isLoading, error, refetch } = useQuery<SellerDashboardStats>({
     queryKey: ["seller-dashboard"],
-    queryFn: () =>
-      apiClient.get<SellerDashboardStats>(SELLER_ENDPOINTS.DASHBOARD),
+    queryFn: () => apiClient.get<SellerDashboardStats>(endpoint),
     enabled: opts?.enabled ?? true,
     staleTime: 60_000,
   });
@@ -43,12 +50,12 @@ export function useSellerDashboard(opts?: { enabled?: boolean }) {
 
 export function useSellerAnalytics(
   period = "30d",
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
+  const endpoint = opts?.endpoint ?? SELLER_ENDPOINTS.ANALYTICS(period);
   const { data, isLoading, error, refetch } = useQuery<SellerAnalytics>({
     queryKey: ["seller-analytics", period],
-    queryFn: () =>
-      apiClient.get<SellerAnalytics>(SELLER_ENDPOINTS.ANALYTICS(period)),
+    queryFn: () => apiClient.get<SellerAnalytics>(endpoint),
     enabled: opts?.enabled ?? true,
     staleTime: 5 * 60_000,
   });

@@ -7,20 +7,19 @@ import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function useSellerPayouts(
   params: { page?: number; pageSize?: number; status?: string } = {},
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
   const sp = new URLSearchParams();
   if (params.page) sp.set("page", String(params.page));
   if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.status) sp.set("status", params.status);
   const qs = sp.toString();
+  const endpoint =
+    opts?.endpoint ?? `${SELLER_ENDPOINTS.PAYOUTS}${qs ? `?${qs}` : ""}`;
 
   const { data, isLoading, error, refetch } = useQuery<PayoutListResponse>({
     queryKey: ["seller-payouts", qs],
-    queryFn: () =>
-      apiClient.get<PayoutListResponse>(
-        `${SELLER_ENDPOINTS.PAYOUTS}${qs ? `?${qs}` : ""}`,
-      ),
+    queryFn: () => apiClient.get<PayoutListResponse>(endpoint),
     enabled: opts?.enabled ?? true,
   });
 
@@ -34,12 +33,15 @@ export function useSellerPayouts(
   };
 }
 
-export function useSellerPayoutSettings(opts?: { enabled?: boolean }) {
+export function useSellerPayoutSettings(opts?: {
+  enabled?: boolean;
+  endpoint?: string;
+}) {
+  const endpoint = opts?.endpoint ?? SELLER_ENDPOINTS.PAYOUT_SETTINGS;
   const { data, isLoading, error, refetch } =
     useQuery<SellerPayoutSettings | null>({
       queryKey: ["seller-payout-settings"],
-      queryFn: () =>
-        apiClient.get<SellerPayoutSettings>(SELLER_ENDPOINTS.PAYOUT_SETTINGS),
+      queryFn: () => apiClient.get<SellerPayoutSettings>(endpoint),
       enabled: opts?.enabled ?? true,
     });
 

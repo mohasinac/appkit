@@ -12,8 +12,7 @@ export function usePaymentSettings(opts?: {
   const endpoint = opts?.endpoint ?? ADMIN_ENDPOINTS.PAYMENTS_SETTINGS;
   const query = useQuery<PaymentSettings>({
     queryKey: ["payment-settings"],
-    queryFn: () =>
-      apiClient.get<PaymentSettings>(endpoint),
+    queryFn: () => apiClient.get<PaymentSettings>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled,
     staleTime: 10 * 60 * 1000,

@@ -8,14 +8,29 @@ import type {
   SellerReviewsData,
   ProductsApiResponse,
 } from "../../account/hooks/usePublicProfile";
-import { ACCOUNT_ENDPOINTS, PROFILE_STATS_ENDPOINTS } from "../../../constants/api-endpoints";
+import {
+  ACCOUNT_ENDPOINTS,
+  PROFILE_STATS_ENDPOINTS,
+} from "../../../constants/api-endpoints";
 
 export { SellerReviewsData, ProductsApiResponse };
 
 export function useSellerStorefront(
   sellerId: string,
-  options?: { initialSeller?: PublicUserProfile },
+  options?: {
+    initialSeller?: PublicUserProfile;
+    profileEndpoint?: string;
+    productsEndpoint?: string;
+    reviewsEndpoint?: string;
+  },
 ) {
+  const profileEndpoint =
+    options?.profileEndpoint ?? ACCOUNT_ENDPOINTS.SELLER_PROFILE(sellerId);
+  const productsEndpoint =
+    options?.productsEndpoint ?? PROFILE_STATS_ENDPOINTS.PRODUCTS(sellerId);
+  const reviewsEndpoint =
+    options?.reviewsEndpoint ?? ACCOUNT_ENDPOINTS.SELLER_REVIEWS(sellerId);
+
   const initialProfileData: { user: PublicUserProfile } | undefined =
     options?.initialSeller ? { user: options.initialSeller } : undefined;
 
@@ -26,7 +41,7 @@ export function useSellerStorefront(
   } = useQuery<{ user: PublicUserProfile }>({
     queryKey: ["seller-profile", sellerId],
     queryFn: async () => {
-      const user = await apiClient.get<PublicUserProfile>(ACCOUNT_ENDPOINTS.SELLER_PROFILE(sellerId));
+      const user = await apiClient.get<PublicUserProfile>(profileEndpoint);
       return { user };
     },
     enabled: !!sellerId,
@@ -52,9 +67,7 @@ export function useSellerStorefront(
           total: number;
           page: number;
           pageSize: number;
-        }>(
-          PROFILE_STATS_ENDPOINTS.PRODUCTS(sellerId),
-        );
+        }>(productsEndpoint);
         return {
           data: result.items,
           meta: {
@@ -72,7 +85,7 @@ export function useSellerStorefront(
     useQuery<SellerReviewsData>({
       queryKey: ["storefront-reviews", sellerId],
       queryFn: () =>
-        apiClient.get<SellerReviewsData>(ACCOUNT_ENDPOINTS.SELLER_REVIEWS(sellerId)),
+        apiClient.get<SellerReviewsData>(reviewsEndpoint),
       enabled: isReady,
       staleTime: 60_000,
     });
