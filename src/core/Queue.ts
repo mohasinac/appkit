@@ -36,7 +36,7 @@ export class Queue<T = unknown> {
   /** Add a task to the queue */
   public add(id: string, fn: () => Promise<T>, priority: number = 0): void {
     this.tasks.push({ id, fn, priority });
-    this.tasks.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+    this.tasks.sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0));
     if (this.autoStart) {
       this.process();
     }
