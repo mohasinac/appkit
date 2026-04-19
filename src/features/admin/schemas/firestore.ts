@@ -21,6 +21,7 @@ export type NotificationType =
   | "welcome"
   | "offer_received"
   | "offer_responded"
+  | "offer_expired"
   | "offer_counter_accepted"
   | "refund_initiated";
 
@@ -94,6 +95,7 @@ export const NOTIFICATION_FIELDS = {
     WELCOME: "welcome" as NotificationType,
     OFFER_RECEIVED: "offer_received" as NotificationType,
     OFFER_RESPONDED: "offer_responded" as NotificationType,
+    OFFER_EXPIRED: "offer_expired" as NotificationType,
     OFFER_COUNTER_ACCEPTED: "offer_counter_accepted" as NotificationType,
     REFUND_INITIATED: "refund_initiated" as NotificationType,
   },
