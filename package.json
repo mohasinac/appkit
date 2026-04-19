@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
   "author": "Mohasin AC",
   "license": "MIT",
@@ -12,51 +12,28 @@
     "url": "https://github.com/mohasinac/appkit.git"
   },
   "type": "module",
-  "types": "./src/index.ts",
+  "main": "./dist/server.js",
+  "types": "./dist/server.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./core": {
-      "browser": "./src/core/browser.ts",
-      "default": "./src/core/index.ts"
+    ".": {
+      "types": "./dist/server.d.ts",
+      "browser": "./dist/client.js",
+      "default": "./dist/server.js"
     },
-    "./monitoring": {
-      "browser": "./src/monitoring/browser.ts",
-      "default": "./src/monitoring/index.ts"
-    },
-    "./security": {
-      "browser": "./src/security/browser.ts",
-      "default": "./src/security/index.ts"
-    },
-    "./utils/client": "./src/utils/client.ts",
-    "./*": "./src/*/index.ts",
-    "./core/integration-keys": "./src/core/integration-keys.ts",
-    "./core/newsletter.repository": "./src/core/newsletter.repository.ts",
-    "./style/*": "./src/style/*/index.ts",
-    "./providers/db-firebase": {
-      "browser": "./src/providers/db-firebase/browser-stub.ts",
-      "default": "./src/providers/db-firebase/index.ts"
-    },
-    "./providers/db-firebase/rtdb-paths": "./src/providers/db-firebase/rtdb-paths.ts",
-    "./providers/auth-firebase": {
-      "browser": "./src/providers/auth-firebase/browser-stub.ts",
-      "default": "./src/providers/auth-firebase/index.ts"
-    },
-    "./providers/*": "./src/providers/*/index.ts",
-    "./providers/storage-firebase/client": "./src/providers/storage-firebase/client.ts",
-    "./features/*": "./src/features/*/index.ts",
-    "./features/*/server": "./src/features/*/server.ts",
-    "./features/*/schemas": "./src/features/*/schemas/index.ts"
+    "./server": "./dist/server.js",
+    "./client": "./dist/client.js",
+    "./*": "./dist/*/index.js"
   },
   "files": [
-    "src",
+    "dist",
     "README.md"
   ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "watch": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
-    "watch": "tsc --noEmit --watch --preserveWatchOutput",
     "lint": "eslint src"
   },
-  "sideEffects": false,
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
     "client-only": "^0.0.1",

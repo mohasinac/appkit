@@ -29,7 +29,7 @@ import {
   decryptPayoutBankAccount,
 } from "../../../security";
 
-class PayoutRepository extends BaseRepository<PayoutDocument> {
+export class PayoutRepository extends BaseRepository<PayoutDocument> {
   constructor() {
     super(PAYOUT_COLLECTION);
   }

@@ -24,7 +24,7 @@ import { decryptSecret, encryptSecret, maskSecret } from "../../../security";
  *
  * Note: Site settings is a singleton document with ID "global"
  */
-class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument> {
+export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument> {
   /**
    * Singleton document ID
    */

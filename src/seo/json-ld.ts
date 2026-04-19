@@ -51,7 +51,7 @@ export interface FaqJsonLdInput {
   answer: string;
 }
 
-export interface BreadcrumbItem {
+export interface BreadcrumbJsonLdItem {
   name: string;
   url: string;
 }
@@ -147,7 +147,7 @@ export function aggregateRatingJsonLd(
 }
 
 export function breadcrumbJsonLd(
-  items: BreadcrumbItem[],
+  items: BreadcrumbJsonLdItem[],
 ): Record<string, unknown> {
   return {
     "@context": "https://schema.org",

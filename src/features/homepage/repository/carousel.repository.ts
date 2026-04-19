@@ -28,7 +28,7 @@ import { DatabaseError } from "../../../errors";
 /**
  * Repository for carousel slide management
  */
-class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
+export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
   constructor() {
     super(CAROUSEL_SLIDES_COLLECTION);
   }

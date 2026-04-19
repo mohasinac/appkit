@@ -8,8 +8,3 @@
 
 export { ApiClient, ApiClientError, apiClient } from "./ApiClient";
 export type { ApiClientOptions, RequestConfig, ApiResponse } from "./ApiClient";
-export { createApiHandler } from "./api-handler";
-export type {
-  ApiHandlerOptions,
-  ApiHandlerRateLimitConfig,
-} from "./api-handler";

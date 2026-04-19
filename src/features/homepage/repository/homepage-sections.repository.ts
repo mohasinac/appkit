@@ -20,7 +20,7 @@ import {
   createHomepageSectionId,
 } from "../schemas";
 
-class HomepageSectionsRepository extends BaseRepository<HomepageSectionDocument> {
+export class HomepageSectionsRepository extends BaseRepository<HomepageSectionDocument> {
   constructor() {
     super(HOMEPAGE_SECTIONS_COLLECTION);
   }

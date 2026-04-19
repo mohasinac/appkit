@@ -87,6 +87,7 @@ export {
 export type { MutationEventPayload } from "./mutation-events";
 
 export type { ResolvedKeys } from "./integration-keys";
+export { invalidateIntegrationKeysCache } from "./integration-keys";
 
 export {
   configureMarketDefaults,

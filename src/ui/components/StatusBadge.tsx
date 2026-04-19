@@ -7,7 +7,7 @@ import { Badge } from "./Badge";
  * No app-specific imports.
  */
 
-export type OrderStatus =
+export type BadgeOrderStatus =
   | "pending"
   | "confirmed"
   | "processing"
@@ -17,16 +17,16 @@ export type OrderStatus =
   | "refunded"
   | "failed";
 
-export type PaymentStatus =
+export type BadgePaymentStatus =
   | "pending"
   | "paid"
   | "failed"
   | "refunded"
   | "partially_refunded";
 
-export type ReviewStatus = "pending" | "approved" | "rejected";
+export type BadgeReviewStatus = "pending" | "approved" | "rejected";
 
-export type TicketStatus = "open" | "in_progress" | "resolved" | "closed";
+export type BadgeTicketStatus = "open" | "in_progress" | "resolved" | "closed";
 
 export type GenericStatus =
   | "active"
@@ -40,10 +40,10 @@ export type GenericStatus =
   | "info";
 
 export type StatusBadgeStatus =
-  | OrderStatus
-  | PaymentStatus
-  | ReviewStatus
-  | TicketStatus
+  | BadgeOrderStatus
+  | BadgePaymentStatus
+  | BadgeReviewStatus
+  | BadgeTicketStatus
   | GenericStatus;
 
 export interface StatusBadgeProps {

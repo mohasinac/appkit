@@ -114,10 +114,10 @@ export { Pagination } from "./components/Pagination";
 export type {
   StatusBadgeProps,
   StatusBadgeStatus,
-  OrderStatus,
-  PaymentStatus,
-  ReviewStatus,
-  TicketStatus,
+  BadgeOrderStatus,
+  BadgePaymentStatus,
+  BadgeReviewStatus,
+  BadgeTicketStatus,
   GenericStatus,
 } from "./components/StatusBadge";
 export { StatusBadge } from "./components/StatusBadge";
@@ -347,8 +347,6 @@ export type {
 export { Container, Stack, Row, Grid, GRID_MAP } from "./components/Layout";
 
 // ─── UI Helpers ───────────────────────────────────────────────────────────────
-export { easings } from "./animation.helper";
-export { hexToRgb, rgbToHex, getContrastColor } from "./color.helper";
 export { classNames, mergeTailwindClasses } from "./style.helper";
 
 // ─── SideModal ────────────────────────────────────────────────────────────────

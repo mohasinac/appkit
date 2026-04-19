@@ -37,7 +37,7 @@ import { wishlistRepository } from "../features/wishlist/repository/user-wishlis
 import { blogRepository } from "../features/blog/repository/blog.repository";
 import { payoutRepository } from "../features/payments/repository/payout.repository";
 
-class UnitOfWork {
+export class UnitOfWork {
   private get db(): Firestore {
     return getAdminDb();
   }
@@ -135,4 +135,3 @@ class UnitOfWork {
 }
 
 export const unitOfWork = new UnitOfWork();
-export type { UnitOfWork };

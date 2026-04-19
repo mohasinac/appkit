@@ -48,7 +48,7 @@ const COUPON_FIELDS = {
 /**
  * Repository for coupon management
  */
-class CouponsRepository extends BaseRepository<CouponDocument> {
+export class CouponsRepository extends BaseRepository<CouponDocument> {
   constructor() {
     super(COUPONS_COLLECTION);
   }

@@ -26,7 +26,7 @@ import type {
   FirebaseSieveResult,
 } from "../../../providers/db-firebase";
 
-class NotificationRepository extends BaseRepository<NotificationDocument> {
+export class NotificationRepository extends BaseRepository<NotificationDocument> {
   constructor() {
     super(NOTIFICATIONS_COLLECTION);
   }

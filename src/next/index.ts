@@ -20,6 +20,7 @@ export type { RouteUser } from "./api/routeHandler";
 
 // Generic API handler factory (auth + rate-limit + validation wrapper)
 export { createApiHandlerFactory } from "./api/apiHandler";
+export { createRouteHandler as createApiHandler } from "./api/routeHandler";
 export type {
   ApiHandlerOptions,
   ApiHandlerFactoryDeps,

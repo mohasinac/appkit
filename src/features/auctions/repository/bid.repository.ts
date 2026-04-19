@@ -35,7 +35,7 @@ const BID_FIELDS = {
   IS_WINNING: "isWinning",
 } as const;
 
-class BidRepository extends BaseRepository<BidDocument> {
+export class BidRepository extends BaseRepository<BidDocument> {
   constructor() {
     super(BID_COLLECTION);
   }
