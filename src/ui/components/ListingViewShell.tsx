@@ -21,6 +21,7 @@ import "client-only";
  */
 
 import React, { type ReactNode } from "react";
+import type { ViewPortal } from "./Layout";
 import { ListingLayout } from "./ListingLayout";
 import type { ListingLayoutProps } from "./ListingLayout";
 
@@ -28,6 +29,8 @@ export interface ListingViewShellProps extends Omit<
   ListingLayoutProps,
   "children"
 > {
+  /** Portal context — sets isDashboard default (admin/seller=true, user/public=false). */
+  portal?: ViewPortal;
   /** Overlay elements rendered after the layout (drawers, modals, confirm dialogs). */
   overlays?: ReactNode;
   /** @deprecated Use `overlays` instead. Render-prop for a drawer overlay. */
@@ -48,16 +51,18 @@ export function ListingViewShell({
   renderModal,
   detailView,
   children,
-  isDashboard = true,
+  portal,
+  isDashboard,
   ...listingProps
 }: ListingViewShellProps) {
+  const effectiveIsDashboard = isDashboard ?? (portal === "admin" || portal === "seller" || portal === undefined ? true : false);
   if (detailView) {
     return <>{detailView}</>;
   }
 
   return (
     <>
-      <ListingLayout {...listingProps} isDashboard={isDashboard}>
+      <ListingLayout {...listingProps} isDashboard={effectiveIsDashboard}>
         {children}
       </ListingLayout>
       {overlays}

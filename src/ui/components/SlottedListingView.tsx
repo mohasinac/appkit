@@ -25,6 +25,7 @@ import "client-only";
  */
 
 import React, { useState, type ReactNode } from "react";
+import type { ViewPortal } from "./Layout";
 import { Div } from "./Div";
 import { Heading } from "./Typography";
 
@@ -53,9 +54,15 @@ export interface SlottedListingViewProps {
       ) => ReactNode);
   renderPagination?: ((total: number) => ReactNode) | (() => ReactNode);
   overlays?: ReactNode;
-  /** Enable managed search state (default empty string). */
+  /** Portal context — sets default values for manageSearch/manageSelection.
+   * - `admin` / `seller`: search + selection enabled by default
+   * - `user`: search enabled, selection disabled by default
+   * - `public`: no managed state by default
+   */
+  portal?: ViewPortal;
+  /** Enable managed search state (default driven by portal, otherwise false). */
   manageSearch?: boolean;
-  /** Enable managed selection state (default empty array). */
+  /** Enable managed selection state (default driven by portal, otherwise false). */
   manageSelection?: boolean;
   /** Enable managed sort state (default empty string). */
   manageSort?: boolean;
@@ -69,6 +76,7 @@ export interface SlottedListingViewProps {
 export function SlottedListingView({
   title,
   labels = {},
+  portal,
   renderHeader,
   renderTabs,
   renderSearch,
@@ -79,14 +87,19 @@ export function SlottedListingView({
   renderTable,
   renderPagination,
   overlays,
-  manageSearch = false,
-  manageSelection = false,
+  manageSearch,
+  manageSelection,
   manageSort = false,
   inlineToolbar = false,
   total = 0,
   isLoading = false,
   className = "",
 }: SlottedListingViewProps) {
+  const effectiveManageSearch =
+    manageSearch ?? (portal === "admin" || portal === "seller" || portal === "user");
+  const effectiveManageSelection =
+    manageSelection ?? (portal === "admin" || portal === "seller");
+
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [sort, setSort] = useState("");
@@ -116,10 +129,10 @@ export function SlottedListingView({
       )}
       {renderFilters?.()}
       {renderActiveFilters?.()}
-      {manageSelection && renderBulkActions
+      {effectiveManageSelection && renderBulkActions
         ? renderBulkActions(selectedIds, () => setSelectedIds([]))
         : renderBulkActions?.(selectedIds, () => setSelectedIds([]))}
-      {manageSelection
+      {effectiveManageSelection
         ? (renderTable as Function)(selectedIds, setSelectedIds, isLoading)
         : (renderTable as Function)()}
       {renderPagination ? (renderPagination as Function)(total) : null}

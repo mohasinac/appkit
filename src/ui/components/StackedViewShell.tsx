@@ -27,6 +27,7 @@ import "client-only";
  */
 
 import React, { type ReactNode } from "react";
+import type { ViewPortal } from "./Layout";
 import { Div } from "./Div";
 import { Heading } from "./Typography";
 
@@ -38,6 +39,8 @@ export interface StackedViewShellProps {
   /** Page title rendered as H1 unless `renderHeader` is provided. */
   title?: string;
   labels?: StackedViewShellLabels;
+  /** Portal context — controls styling defaults (admin / seller / user / public). */
+  portal?: ViewPortal;
   /** Custom header replacing the default title heading. */
   renderHeader?: () => ReactNode;
   /** Sequential content sections. Functions are called; ReactNodes are rendered as-is. */
@@ -59,6 +62,8 @@ function resolveSlot(slot: ReactNode | (() => ReactNode)): ReactNode {
 export function StackedViewShell({
   title,
   labels = {},
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  portal,
   renderHeader,
   sections = [],
   isEmpty = false,

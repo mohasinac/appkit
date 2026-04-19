@@ -338,6 +338,7 @@ export type {
   GapKey,
   ContainerSize,
   GridCols,
+  ViewPortal,
   ContainerProps,
   StackProps,
   RowProps,

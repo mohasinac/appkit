@@ -20,6 +20,7 @@ import "client-only";
  */
 
 import React, { type ReactNode } from "react";
+import type { ViewPortal } from "./Layout";
 import { Div } from "./Div";
 import { Grid } from "./Layout";
 
@@ -36,6 +37,8 @@ export type DetailViewLayout =
 export interface DetailViewShellProps {
   /** Layout mode for the main content area. */
   layout?: DetailViewLayout;
+  /** Portal context — extension point for future portal-specific detail layout defaults. */
+  portal?: ViewPortal;
   /** Whether data is still loading. */
   isLoading?: boolean;
   /** Render a loading skeleton — shown when `isLoading` is true. */
@@ -59,6 +62,8 @@ function resolveSlot(slot: ReactNode | (() => ReactNode)): ReactNode {
 
 export function DetailViewShell({
   layout = "stacked",
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  portal,
   isLoading = false,
   renderSkeleton,
   renderNotFound,

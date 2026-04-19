@@ -50,6 +50,17 @@ const GAP_MAP = {
 export type GapKey = keyof typeof GAP_MAP;
 
 /**
+ * Portal context for view shells.
+ * Sets appropriate managed-state and layout defaults per portal type.
+ *
+ * - `admin`  — full management UI: search, selection, isDashboard enabled by default
+ * - `seller` — seller dashboard: search, selection enabled by default
+ * - `user`   — account/order pages: search enabled, selection disabled by default
+ * - `public` — public-facing pages: no managed state by default
+ */
+export type ViewPortal = "admin" | "seller" | "user" | "public";
+
+/**
  * Page container sizes.
  * Mirrors THEME_CONSTANTS.page.container in the host app.
  */
