@@ -7,18 +7,53 @@ import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
 
-export const REVIEW_SORT_OPTIONS = [
+export type ReviewFilterVariant = "admin" | "seller" | "public";
+
+export const REVIEW_FILTER_KEYS = {
+  admin: ["status", "rating", "brand", "verified", "featured"],
+  seller: ["status", "rating", "brand"],
+  public: ["rating", "brand"],
+} as const;
+
+export const REVIEW_ADMIN_SORT_OPTIONS = [
   { value: "-createdAt", key: "sortNewest" },
   { value: "createdAt", key: "sortOldest" },
   { value: "-rating", key: "sortHighestRated" },
   { value: "rating", key: "sortLowestRated" },
 ] as const;
 
+export const REVIEW_SELLER_SORT_OPTIONS = REVIEW_ADMIN_SORT_OPTIONS;
+export const REVIEW_PUBLIC_SORT_OPTIONS = REVIEW_ADMIN_SORT_OPTIONS;
+
+// Backward-compatible alias.
+export const REVIEW_SORT_OPTIONS = REVIEW_ADMIN_SORT_OPTIONS;
+
+export function getReviewFilterKeys(
+  variant: ReviewFilterVariant,
+): readonly string[] {
+  return REVIEW_FILTER_KEYS[variant];
+}
+
+export function getReviewSortOptions(
+  variant: ReviewFilterVariant,
+): ReadonlyArray<{ value: string; key: string }> {
+  switch (variant) {
+    case "admin":
+      return REVIEW_ADMIN_SORT_OPTIONS;
+    case "seller":
+      return REVIEW_SELLER_SORT_OPTIONS;
+    case "public":
+      return REVIEW_PUBLIC_SORT_OPTIONS;
+    default:
+      return REVIEW_PUBLIC_SORT_OPTIONS;
+  }
+}
+
 export interface ReviewFiltersProps {
   table: UrlTable;
   /** "admin" (default) shows status, rating, verified, featured.
    *  "public" shows rating only. */
-  variant?: "admin" | "public";
+  variant?: ReviewFilterVariant;
   /** Optional brand options for filter by brand */
   brandOptions?: FacetOption[];
 }
@@ -50,10 +85,12 @@ export function ReviewFilters({
   const selectedRating = table.get("rating")
     ? table.get("rating").split("|").filter(Boolean)
     : [];
+  const isAdmin = variant === "admin";
+  const showStatus = variant !== "public";
 
   return (
     <Div>
-      {variant === "admin" && (
+      {showStatus && (
         <FilterFacetSection
           title={t("status")}
           options={statusOptions}
@@ -85,7 +122,7 @@ export function ReviewFilters({
         />
       )}
 
-      {variant === "admin" && (
+      {isAdmin && (
         <>
           <SwitchFilter
             title={t("verified")}

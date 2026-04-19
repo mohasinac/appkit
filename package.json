@@ -23,6 +23,7 @@
       "browser": "./src/providers/db-firebase/browser-stub.ts",
       "default": "./src/providers/db-firebase/index.ts"
     },
+    "./providers/db-firebase/rtdb-paths": "./src/providers/db-firebase/rtdb-paths.ts",
     "./providers/auth-firebase": {
       "browser": "./src/providers/auth-firebase/browser-stub.ts",
       "default": "./src/providers/auth-firebase/index.ts"

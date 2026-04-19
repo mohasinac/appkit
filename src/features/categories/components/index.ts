@@ -13,6 +13,22 @@ export { ConcernGrid } from "./ConcernGrid";
 export { CategoriesListView } from "./CategoriesListView";
 export type { CategoriesListViewProps } from "./CategoriesListView";
 
+export {
+  CategoryFilters,
+  CATEGORY_FILTER_KEYS,
+  CATEGORY_ADMIN_SORT_OPTIONS,
+  CATEGORY_SELLER_SORT_OPTIONS,
+  CATEGORY_PUBLIC_SORT_OPTIONS,
+  getCategoryFilterKeys,
+  getCategorySortOptions,
+} from "./CategoryFilters";
+export type {
+  CategoryFiltersProps,
+  CategoryFilterVariant,
+} from "./CategoryFilters";
+export { CategorySortSelect } from "./CategorySortSelect";
+export type { CategorySortSelectProps } from "./CategorySortSelect";
+
 export { CategoryProductsView } from "./CategoryProductsView";
 export type { CategoryProductsViewProps } from "./CategoryProductsView";
 

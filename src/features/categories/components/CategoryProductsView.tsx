@@ -3,6 +3,10 @@
 import React from "react";
 import { Div, Heading, Row, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
+import type { UrlTable } from "../../filters/FilterPanel";
+import { CategoryFilters } from "./CategoryFilters";
+import { CategorySortSelect } from "./CategorySortSelect";
+import type { CategoryFilterVariant } from "./CategoryFilters";
 
 export interface CategoryProductsViewProps {
   /** Category slug */
@@ -15,6 +19,14 @@ export interface CategoryProductsViewProps {
     emptyTitle?: string;
     emptyDescription?: string;
   };
+  /** Optional UrlTable-compatible state source for shared filter/sort controls */
+  table?: UrlTable;
+  /** Filter/sort preset for admin/seller/public listing behavior */
+  filterVariant?: CategoryFilterVariant;
+  /** Controlled sort value override */
+  sortValue?: string;
+  /** Controlled sort change callback */
+  onSortChange?: (value: string) => void;
   /** Render breadcrumb trail */
   renderBreadcrumbs?: (category: CategoryItem | null) => React.ReactNode;
   /** Render child category chips/tabs */
@@ -52,6 +64,10 @@ export interface CategoryProductsViewProps {
 
 export function CategoryProductsView({
   labels = {},
+  table,
+  filterVariant = "public",
+  sortValue,
+  onSortChange,
   renderBreadcrumbs,
   renderChildCategories,
   renderFilters,
@@ -70,6 +86,16 @@ export function CategoryProductsView({
   const [search, setSearch] = React.useState("");
   const [sort, setSort] = React.useState("-createdAt");
   const [viewMode, setViewMode] = React.useState("grid");
+
+  const resolvedSort = sortValue ?? table?.get("sorts") ?? sort;
+
+  const handleSortChange = (next: string) => {
+    onSortChange?.(next);
+    if (!sortValue) {
+      setSort(next);
+    }
+    table?.set("sorts", next);
+  };
 
   return (
     <Div className={`min-h-screen ${className}`}>
@@ -97,8 +123,19 @@ export function CategoryProductsView({
         {/* Toolbar */}
         <Row wrap gap="3">
           {renderSearch?.(search, setSearch)}
-          {renderSort?.(sort, setSort)}
-          {renderFilters?.()}
+          {renderSort ? (
+            renderSort(resolvedSort, handleSortChange)
+          ) : (
+            <CategorySortSelect
+              value={resolvedSort}
+              onChange={handleSortChange}
+              variant={filterVariant}
+            />
+          )}
+          {renderFilters?.() ??
+            (table ? (
+              <CategoryFilters table={table} variant={filterVariant} />
+            ) : null)}
           {renderViewToggle?.(viewMode, setViewMode)}
         </Row>
 

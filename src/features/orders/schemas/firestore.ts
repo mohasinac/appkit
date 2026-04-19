@@ -29,6 +29,24 @@ export const OrderStatusValues = {
   RETURNED: "returned",
 } as const satisfies Record<string, OrderStatus>;
 
+/** Runtime-accessible payment status values — use instead of bare string literals. */
+export const PaymentStatusValues = {
+  PENDING: "pending",
+  PROCESSING: "processing",
+  PAID: "paid",
+  FAILED: "failed",
+  REFUNDED: "refunded",
+  PARTIAL_REFUND: "partial_refund",
+} as const satisfies Record<string, PaymentStatus>;
+
+/** Runtime-accessible payment method values — use instead of bare string literals. */
+export const PaymentMethodValues = {
+  COD: "cod",
+  ONLINE: "online",
+  UPI_MANUAL: "upi_manual",
+  RAZORPAY: "razorpay",
+} as const;
+
 /** Runtime-accessible refund status values — use instead of bare string literals. */
 export const RefundStatusValues = {
   PENDING: "pending",

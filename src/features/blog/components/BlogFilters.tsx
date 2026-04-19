@@ -6,7 +6,15 @@ import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
 
-export const BLOG_SORT_OPTIONS = [
+export type BlogFilterVariant = "admin" | "seller" | "public";
+
+export const BLOG_FILTER_KEYS = {
+  admin: ["status", "category", "isFeatured"],
+  seller: ["status", "category", "isFeatured"],
+  public: ["category"],
+} as const;
+
+export const BLOG_ADMIN_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
   { value: "createdAt", label: "Oldest First" },
   { value: "title", label: "Title A–Z" },
@@ -17,10 +25,44 @@ export const BLOG_SORT_OPTIONS = [
   { value: "publishedAt", label: "Published: Oldest" },
 ] as const;
 
+export const BLOG_SELLER_SORT_OPTIONS = BLOG_ADMIN_SORT_OPTIONS;
+
+export const BLOG_PUBLIC_SORT_OPTIONS = [
+  { value: "-publishedAt", label: "Published: Newest" },
+  { value: "publishedAt", label: "Published: Oldest" },
+  { value: "-views", label: "Most Viewed" },
+  { value: "title", label: "Title A–Z" },
+] as const;
+
+// Backward-compatible alias.
+export const BLOG_SORT_OPTIONS = BLOG_ADMIN_SORT_OPTIONS;
+
+export function getBlogFilterKeys(
+  variant: BlogFilterVariant,
+): readonly string[] {
+  return BLOG_FILTER_KEYS[variant];
+}
+
+export function getBlogSortOptions(variant: BlogFilterVariant): ReadonlyArray<{
+  value: string;
+  label: string;
+}> {
+  switch (variant) {
+    case "admin":
+      return BLOG_ADMIN_SORT_OPTIONS;
+    case "seller":
+      return BLOG_SELLER_SORT_OPTIONS;
+    case "public":
+      return BLOG_PUBLIC_SORT_OPTIONS;
+    default:
+      return BLOG_PUBLIC_SORT_OPTIONS;
+  }
+}
+
 export interface BlogFiltersProps {
   table: UrlTable;
   /** "public" hides admin-only fields (status, isFeatured) */
-  variant?: "admin" | "public";
+  variant?: BlogFilterVariant;
 }
 
 export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {

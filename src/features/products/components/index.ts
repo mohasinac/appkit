@@ -1,6 +1,19 @@
 export { ProductCard, ProductGrid } from "./ProductGrid";
-export { ProductFilters } from "./ProductFilters";
-export type { ProductFiltersProps, FacetOption, UrlTable } from "./ProductFilters";
+export {
+  ProductFilters,
+  PRODUCT_FILTER_KEYS,
+  PRODUCT_ADMIN_SORT_OPTIONS,
+  PRODUCT_SELLER_SORT_OPTIONS,
+  PRODUCT_PUBLIC_SORT_OPTIONS,
+  getProductFilterKeys,
+  getProductSortOptions,
+} from "./ProductFilters";
+export type {
+  ProductFiltersProps,
+  ProductFilterVariant,
+  FacetOption,
+  UrlTable,
+} from "./ProductFilters";
 export { InteractiveProductCard } from "./InteractiveProductCard";
 export type { InteractiveProductCardProps } from "./InteractiveProductCard";
 export { ProductForm, PRODUCT_STATUS_OPTIONS } from "./ProductForm";

@@ -126,6 +126,7 @@ export {
   useRealtimeEvent,
   RealtimeEventType,
   RealtimeEventStatus,
+  RTDBPayloadStatus,
 } from "./hooks/useRealtimeEvent";
 export type {
   RTDBEventPayload,

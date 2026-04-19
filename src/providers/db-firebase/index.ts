@@ -51,18 +51,17 @@ export { FirebaseSieveRepository } from "./sieve";
 export { FirebaseRealtimeRepository } from "./realtime";
 
 // Re-export RTDB paths
-import { RTDB_PATHS } from "./rtdb-paths";
-export { RTDB_PATHS };
+export { RTDB_PATHS } from "./rtdb-paths";
 
 // IDbProvider implementation — registers Firebase as the database backend.
 // Wire once in providers.config.ts: db: firebaseDbProvider
-import { FirebaseRepository } from "./base";
 import type { IDbProvider, IRepository } from "../../contracts";
 import type { DocumentData } from "firebase-admin/firestore";
+import { FirebaseRepository as _FirebaseRepository } from "./base";
 
 export const firebaseDbProvider: IDbProvider = {
   getRepository<T>(collection: string): IRepository<T> {
-    return new FirebaseRepository<T & DocumentData>(
+    return new _FirebaseRepository<T & DocumentData>(
       collection,
     ) as unknown as IRepository<T>;
   },

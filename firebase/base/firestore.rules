@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================================
+    // Backend-Only Firestore Architecture
+    // ============================================================
+    // NO client-side Firestore access is permitted, ever.
+    //
+    // All reads and writes must go through Next.js API routes
+    // (src/app/api/**) using the Firebase Admin SDK, which
+    // automatically bypasses these security rules.
+    //
+    // Frontend code MUST NOT import:
+    //   - client SDK initialiser
+    //   - firebase/firestore (client Firestore SDK)
+    //   - firebase/auth     (client Auth SDK)
+    //   - firebase/storage  (client Storage SDK)
+    //
+    // These rules act as a full safety net — any accidental
+    // client SDK call will be rejected at the Firebase layer.
+    // ============================================================
+
+    // Deny all client access unconditionally
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

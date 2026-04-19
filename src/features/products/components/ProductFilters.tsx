@@ -9,6 +9,86 @@ import { Div } from "../../../ui";
 
 export type { FacetOption, UrlTable };
 
+export type ProductFilterVariant = "admin" | "seller" | "public";
+
+export const PRODUCT_FILTER_KEYS = {
+  admin: [
+    "category",
+    "condition",
+    "minPrice",
+    "maxPrice",
+    "brand",
+    "seller",
+    "tags",
+    "status",
+  ],
+  seller: [
+    "category",
+    "condition",
+    "minPrice",
+    "maxPrice",
+    "brand",
+    "tags",
+    "status",
+  ],
+  public: [
+    "category",
+    "condition",
+    "minPrice",
+    "maxPrice",
+    "brand",
+    "seller",
+    "tags",
+  ],
+} as const;
+
+export const PRODUCT_ADMIN_SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest First" },
+  { value: "createdAt", label: "Oldest First" },
+  { value: "-price", label: "Price: High to Low" },
+  { value: "price", label: "Price: Low to High" },
+  { value: "title", label: "Title A-Z" },
+  { value: "-title", label: "Title Z-A" },
+  { value: "-views", label: "Most Viewed" },
+] as const;
+
+export const PRODUCT_SELLER_SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest First" },
+  { value: "createdAt", label: "Oldest First" },
+  { value: "-price", label: "Price: High to Low" },
+  { value: "price", label: "Price: Low to High" },
+  { value: "title", label: "Title A-Z" },
+] as const;
+
+export const PRODUCT_PUBLIC_SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest First" },
+  { value: "-price", label: "Price: High to Low" },
+  { value: "price", label: "Price: Low to High" },
+  { value: "title", label: "Title A-Z" },
+  { value: "-views", label: "Most Viewed" },
+] as const;
+
+export function getProductFilterKeys(
+  variant: ProductFilterVariant,
+): readonly string[] {
+  return PRODUCT_FILTER_KEYS[variant];
+}
+
+export function getProductSortOptions(
+  variant: ProductFilterVariant,
+): ReadonlyArray<{ value: string; label: string }> {
+  switch (variant) {
+    case "admin":
+      return PRODUCT_ADMIN_SORT_OPTIONS;
+    case "seller":
+      return PRODUCT_SELLER_SORT_OPTIONS;
+    case "public":
+      return PRODUCT_PUBLIC_SORT_OPTIONS;
+    default:
+      return PRODUCT_PUBLIC_SORT_OPTIONS;
+  }
+}
+
 export interface ProductFiltersProps {
   table: UrlTable;
   /** Pass category options loaded from the API */
@@ -21,6 +101,8 @@ export interface ProductFiltersProps {
   tagOptions?: FacetOption[];
   /** Show status filter (admin / seller only) */
   showStatus?: boolean;
+  /** Preferred variant contract (overrides showStatus defaults). */
+  variant?: ProductFilterVariant;
   statusOptions?: FacetOption[];
   /**
    * Currency prefix shown in price range labels (e.g. "₹", "$", "€").
@@ -36,6 +118,7 @@ export function ProductFilters({
   sellerOptions = [],
   tagOptions = [],
   showStatus = false,
+  variant,
   statusOptions,
   currencyPrefix = "",
 }: ProductFiltersProps) {
@@ -68,6 +151,9 @@ export function ProductFilters({
   const selectedStatuses = table.get("status")
     ? table.get("status").split("|").filter(Boolean)
     : [];
+  const resolvedVariant: ProductFilterVariant =
+    variant ?? (showStatus ? "admin" : "public");
+  const shouldShowStatus = resolvedVariant !== "public" || showStatus;
 
   return (
     <Div>
@@ -140,7 +226,7 @@ export function ProductFilters({
         />
       )}
 
-      {showStatus && (
+      {shouldShowStatus && (
         <FilterFacetSection
           title={t("status")}
           options={statusOptions ?? defaultStatusOptions}

@@ -6,7 +6,15 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
 
-export const EVENT_SORT_OPTIONS = [
+export type EventFilterVariant = "admin" | "seller" | "public";
+
+export const EVENT_FILTER_KEYS = {
+  admin: ["type", "status", "dateFrom", "dateTo"],
+  seller: ["type", "status", "dateFrom", "dateTo"],
+  public: ["type", "status", "dateFrom", "dateTo"],
+} as const;
+
+export const EVENT_ADMIN_SORT_OPTIONS = [
   { value: "title", label: "Title A–Z" },
   { value: "-title", label: "Title Z–A" },
   { value: "-startsAt", label: "Starts Latest" },
@@ -17,11 +25,48 @@ export const EVENT_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
 ] as const;
 
-export interface EventFiltersProps {
-  table: UrlTable;
+export const EVENT_SELLER_SORT_OPTIONS = EVENT_ADMIN_SORT_OPTIONS;
+
+export const EVENT_PUBLIC_SORT_OPTIONS = [
+  { value: "startsAt", label: "Starts Soonest" },
+  { value: "-startsAt", label: "Starts Latest" },
+  { value: "title", label: "Title A–Z" },
+  { value: "-stats.totalEntries", label: "Most Entries" },
+] as const;
+
+// Backward-compatible alias.
+export const EVENT_SORT_OPTIONS = EVENT_ADMIN_SORT_OPTIONS;
+
+export function getEventFilterKeys(
+  variant: EventFilterVariant,
+): readonly string[] {
+  return EVENT_FILTER_KEYS[variant];
 }
 
-export function EventFilters({ table }: EventFiltersProps) {
+export function getEventSortOptions(
+  variant: EventFilterVariant,
+): ReadonlyArray<{
+  value: string;
+  label: string;
+}> {
+  switch (variant) {
+    case "admin":
+      return EVENT_ADMIN_SORT_OPTIONS;
+    case "seller":
+      return EVENT_SELLER_SORT_OPTIONS;
+    case "public":
+      return EVENT_PUBLIC_SORT_OPTIONS;
+    default:
+      return EVENT_PUBLIC_SORT_OPTIONS;
+  }
+}
+
+export interface EventFiltersProps {
+  table: UrlTable;
+  variant?: EventFilterVariant;
+}
+
+export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
   const t = useTranslations("filters");
 
   const typeOptions = [
@@ -32,12 +77,20 @@ export function EventFilters({ table }: EventFiltersProps) {
     { value: "feedback", label: t("eventTypeFeedback") },
   ];
 
-  const statusOptions = [
+  const adminStatusOptions = [
     { value: "draft", label: t("eventStatusDraft") },
     { value: "active", label: t("eventStatusActive") },
     { value: "paused", label: t("eventStatusPaused") },
     { value: "ended", label: t("eventStatusEnded") },
   ];
+
+  const publicStatusOptions = [
+    { value: "active", label: t("eventStatusActive") },
+    { value: "ended", label: t("eventStatusEnded") },
+  ];
+
+  const statusOptions =
+    variant === "public" ? publicStatusOptions : adminStatusOptions;
 
   const selectedType = table.get("type")
     ? table.get("type").split("|").filter(Boolean)

@@ -1,0 +1,36 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // ============================================================
+    // Backend-Only Upload Architecture
+    // ============================================================
+    // NO client-side uploads are permitted, ever.
+    //
+    // Upload flow:
+    //   1. User selects file → local React state only (no network)
+    //   2. User edits metadata (crop, trim, title, alt text…)
+    //      — all mutations are pure local state changes
+    //   3. User clicks Save / Create / Submit
+    //   4. Client POST FormData to /api/media/upload
+    //      (or domain route e.g. /api/trips, /api/products)
+    //   5. Backend validates + uploads via Admin SDK
+    //      → saves URL to Firestore atomically
+    //      → returns { url } to client
+    //
+    // If the backend call fails, NOTHING is persisted:
+    //   - No orphaned Storage files
+    //   - No partial Firestore records
+    //
+    // Firebase Admin SDK bypasses these rules; the rules below
+    // are purely a safety net for any misconfigured client.
+    // ============================================================
+
+    // Public read — URLs are safe to serve to anyone once generated
+    // No client writes under any circumstance
+    match /{allPaths=**} {
+      allow read:  if true;
+      allow write: if false;
+    }
+  }
+}

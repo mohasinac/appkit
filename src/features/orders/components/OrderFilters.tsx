@@ -6,6 +6,34 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
 
+export const ORDER_FILTER_KEYS = {
+  admin: [
+    "status",
+    "paymentStatus",
+    "payoutStatus",
+    "minAmount",
+    "maxAmount",
+    "dateFrom",
+    "dateTo",
+  ],
+  seller: [
+    "status",
+    "paymentStatus",
+    "minAmount",
+    "maxAmount",
+    "dateFrom",
+    "dateTo",
+  ],
+  user: [
+    "status",
+    "paymentStatus",
+    "minAmount",
+    "maxAmount",
+    "dateFrom",
+    "dateTo",
+  ],
+} as const;
+
 export const ORDER_ADMIN_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
   { value: "createdAt", label: "Oldest First" },
@@ -26,8 +54,41 @@ export const ORDER_SELLER_SORT_OPTIONS = [
   { value: "userName", label: "Customer A–Z" },
 ] as const;
 
+export const ORDER_USER_SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest First" },
+  { value: "createdAt", label: "Oldest First" },
+  { value: "-totalPrice", label: "Amount: High to Low" },
+  { value: "totalPrice", label: "Amount: Low to High" },
+  { value: "-orderDate", label: "Order Date: Newest" },
+  { value: "orderDate", label: "Order Date: Oldest" },
+] as const;
+
 /** Controls which Sieve field set to expose in the filter UI */
 export type OrderFilterVariant = "admin" | "seller" | "user";
+
+export function getOrderFilterKeys(
+  variant: OrderFilterVariant,
+): readonly string[] {
+  return ORDER_FILTER_KEYS[variant];
+}
+
+export function getOrderSortOptions(
+  variant: OrderFilterVariant,
+): ReadonlyArray<{
+  value: string;
+  label: string;
+}> {
+  switch (variant) {
+    case "admin":
+      return ORDER_ADMIN_SORT_OPTIONS;
+    case "seller":
+      return ORDER_SELLER_SORT_OPTIONS;
+    case "user":
+      return ORDER_USER_SORT_OPTIONS;
+    default:
+      return ORDER_USER_SORT_OPTIONS;
+  }
+}
 
 export interface OrderFiltersProps {
   table: UrlTable;

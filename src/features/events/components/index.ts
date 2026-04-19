@@ -1,6 +1,15 @@
 export { EventStatusBadge } from "./EventStatusBadge";
-export { EventFilters, EVENT_SORT_OPTIONS } from "./EventFilters";
-export type { EventFiltersProps } from "./EventFilters";
+export {
+  EventFilters,
+  EVENT_SORT_OPTIONS,
+  EVENT_FILTER_KEYS,
+  EVENT_ADMIN_SORT_OPTIONS,
+  EVENT_SELLER_SORT_OPTIONS,
+  EVENT_PUBLIC_SORT_OPTIONS,
+  getEventFilterKeys,
+  getEventSortOptions,
+} from "./EventFilters";
+export type { EventFiltersProps, EventFilterVariant } from "./EventFilters";
 export { EventCard } from "./EventCard";
 export { EventsListView } from "./EventsListView";
 export { EventDetailView } from "./EventDetailView";

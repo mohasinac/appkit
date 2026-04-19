@@ -1,0 +1,224 @@
+{
+  "rules": {
+    // ============================================================
+    // Backend-Only Write Architecture
+    // ============================================================
+    // ALL writes come exclusively through Next.js API routes
+    // using the Firebase Admin SDK (which bypasses these rules).
+    //
+    // Clients may ONLY subscribe (read) to paths they are
+    // explicitly authorised to read via a server-issued custom
+    // token.  The custom token encodes:
+    //   { uid, sessionId, role, chatIds: { [chatId]: true } }
+    //
+    // /api/realtime/token  —  issues the custom token
+    //   - Verifies active session cookie before issuing
+    //   - Token lifetime ≤ 1 hour (matches session TTL)
+    //   - Client calls this endpoint before the token expires
+    //
+    // Custom token auth flow (client-side):
+    //   import { realtimeApp } from '@/lib/firebase/realtime'
+    //   await signInWithCustomToken(getAuth(realtimeApp), tok.customToken)
+    //   onValue(ref(getDatabase(realtimeApp), `chat/${id}/messages`), ...)
+    // ============================================================
+    ".read": false,
+    ".write": false,
+
+    "chat": {
+      "$chatId": {
+        // Client may read only if the custom token grants access to this chatId
+        ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true",
+        // ALL writes are Admin-only (backend API routes)
+        ".write": false,
+        "messages": {
+          "$messageId": {
+            ".validate": "newData.hasChildren(['userId', 'message', 'timestamp'])",
+            "userId": { ".validate": "newData.isString()" },
+            "message": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() || newData.val() == '.sv'"
+            }
+          }
+        },
+        "metadata": {
+          // metadata readable alongside messages; server-written only
+          ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true"
+        }
+      }
+    },
+
+    "notifications": {
+      "$uid": {
+        // User may read only their own notifications (uid in custom token must match)
+        ".read": "auth != null && auth.uid == $uid",
+        // ALL writes are Admin-only (backend pushes notifications)
+        ".write": false,
+        "$notificationId": {
+          ".validate": "newData.hasChildren(['title', 'message', 'type', 'timestamp', 'read'])",
+          "title": { ".validate": "newData.isString()" },
+          "message": { ".validate": "newData.isString()" },
+          "type": {
+            ".validate": "newData.isString() && (newData.val() == 'info' || newData.val() == 'success' || newData.val() == 'warning' || newData.val() == 'error')"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          },
+          "read": { ".validate": "newData.isBoolean()" }
+        }
+      }
+    },
+
+    "live_updates": {
+      "$updateType": {
+        // Public broadcast channel — anyone may subscribe, only backend writes
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.hasChildren(['timestamp'])",
+        "timestamp": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        }
+      }
+    },
+
+    "presence": {
+      "$uid": {
+        // Online-presence node — client reads own node only after auth,
+        // server writes via Admin SDK when session is established/expired
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false,
+        ".validate": "newData.hasChildren(['online', 'lastSeen'])",
+        "online": { ".validate": "newData.isBoolean()" },
+        "lastSeen": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        }
+      }
+    },
+
+    "auction-bids": {
+      "$productId": {
+        // Public real-time bid feed — no auth required.
+        // The hook useRealtimeBids uses the unauthenticated public RTDB instance
+        // so any visitor can watch live bids on an auction product page.
+        // All writes are Admin-only via the backend bid placement API route.
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.hasChildren(['currentBid', 'bidCount'])",
+        "currentBid": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "bidCount": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+        "updatedAt": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        },
+        "lastBid": {
+          "amount": { ".validate": "newData.isNumber() && newData.val() > 0" },
+          "bidderName": { ".validate": "newData.isString()" },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          }
+        }
+      }
+    },
+
+    "order_tracking": {
+      "$orderId": {
+        // Only the order owner may subscribe to live order tracking updates.
+        // The custom token must contain an orderId claim matching this $orderId.
+        // Token is issued by POST /api/realtime/token?orderId=<id> after verifying ownership.
+        // All writes are Admin-only via backend order management routes.
+        ".read": "auth != null && auth.token.orderId == $orderId",
+        ".write": false,
+        "$event": {
+          ".validate": "newData.hasChildren(['status', 'timestamp'])",
+          "status": { ".validate": "newData.isString()" },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          },
+          "message": { ".validate": "!newData.exists() || newData.isString()" }
+        }
+      }
+    },
+
+    // ============================================================
+    // Auth Event Bridge — pre-session OAuth & login signal channel
+    // ============================================================
+    // Used by Google/Apple OAuth popup flow and payment webhooks.
+    //
+    // Flow:
+    //   1. Client calls POST /api/auth/event/init (no session required)
+    //      → server creates this node { status:'pending', createdAt }
+    //      → server issues a per-event custom token with { authEventId: eventId }
+    //   2. Client signInWithCustomToken(realtimeApp, customToken)
+    //      → subscribes read-only to /auth_events/{eventId}
+    //   3. After OAuth completes / fails, the server API callback route
+    //      writes { status:'success' } or { status:'error', error:'...' }
+    //      and sets the __session cookie on the redirect response.
+    //   4. Client RTDB handler fires → calls router.refresh() to load session.
+    //
+    // The custom token encodes ONLY the specific eventId — no other paths.
+    // Cleanup: Firebase Function cleanupAuthEvents runs every 5 min to
+    // delete events older than 3 min, preventing RTDB accumulation.
+    // ============================================================
+    "auth_events": {
+      "$eventId": {
+        // Readable ONLY if the custom token was issued for this exact eventId.
+        // No session cookie is required — the custom token IS the auth credential.
+        ".read": "auth != null && auth.token.authEventId == $eventId",
+        // ALL writes are Admin-only (Next.js API routes via Admin SDK).
+        ".write": false
+      }
+    },
+
+    // ============================================================
+    // Payment Event Bridge — Razorpay webhook signal channel
+    // ============================================================
+    // Same pattern as auth_events but for payment confirmations.
+    //
+    // Flow:
+    //   1. Client calls POST /api/payments/event/init (requires session)
+    //      → server creates /payment_events/{eventId} { status:'pending' }
+    //      → issues custom token with { paymentEventId: eventId }
+    //   2. Client subscribes read-only to /payment_events/{eventId}
+    //   3. Razorpay webhook hits /api/payments/webhook
+    //      → verifies HMAC → updates Firestore order
+    //      → writes { status:'success', orderId } to /payment_events/{eventId}
+    //   4. Client RTDB handler fires → navigates to order confirmation.
+    // ============================================================
+    "payment_events": {
+      "$eventId": {
+        ".read": "auth != null && auth.token.paymentEventId == $eventId",
+        ".write": false
+      }
+    },
+
+    // ============================================================
+    // Bulk Action Result Bridge — async bulk job signal channel
+    // ============================================================
+    // Used when bulk API routes process items asynchronously and push
+    // the final BulkActionResult to RTDB rather than keeping the HTTP
+    // request open.
+    //
+    // Flow:
+    //   1. Client calls POST /api/.../bulk → server starts async work,
+    //      creates /bulk_events/{jobId} { status:'pending' },
+    //      and returns { jobId, customToken } immediately.
+    //   2. Client signInWithCustomToken(realtimeApp, customToken)
+    //      → subscribes read-only to /bulk_events/{jobId}.
+    //   3. Server writes progress/final { status:'success', ...BulkActionResult }
+    //      or { status:'failed', error:'...' } when done.
+    //   4. Client RTDB handler fires → shows result toast, clears selection.
+    //
+    // The custom token encodes ONLY { bulkJobId: jobId } — no other paths.
+    // Cleanup: Firebase Function cleanupBulkEvents deletes nodes older
+    // than 15 minutes to prevent RTDB accumulation.
+    // ============================================================
+    "bulk_events": {
+      "$jobId": {
+        ".read": "auth != null && auth.token.bulkJobId == $jobId",
+        ".write": false
+      }
+    }
+  }
+}
