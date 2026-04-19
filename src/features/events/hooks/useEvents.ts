@@ -8,6 +8,7 @@ import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseEventsOptions<T extends EventItem = EventItem> {
   enabled?: boolean;
   initialData?: EventListResponse;
+  endpoint?: string;
   /**
    * Map each API item to a richer app-level type.
    * The API always returns `EventItem`; use this to project it to your own
@@ -34,13 +35,12 @@ export function useEvents<T extends EventItem = EventItem>(
   if (params.filters) sp.set("filters", params.filters);
 
   const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? `${EVENT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`;
 
   const { data, isLoading, error, refetch } = useQuery<EventListResponse>({
     queryKey: ["events", qs],
     queryFn: () =>
-      apiClient.get<EventListResponse>(
-        `${EVENT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
-      ),
+      apiClient.get<EventListResponse>(endpoint),
     enabled: opts?.enabled ?? true,
     initialData: opts?.initialData,
   });

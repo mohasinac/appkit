@@ -30,19 +30,20 @@ interface UseCategoryDetailOptions {
   initialCategory?: CategoryItem;
   initialChildren?: CategoryItem[];
   enabled?: boolean;
+  categoryEndpoint?: string;
+  childrenEndpoint?: string;
 }
 
 export function useCategoryDetail(
   slug: string,
   opts?: UseCategoryDetailOptions,
 ) {
+  const categoryEndpoint = opts?.categoryEndpoint ?? CATEGORY_ENDPOINTS.BY_SLUG(encodeURIComponent(slug));
   const categoryQuery = useQuery<CategoryItem | null>({
     queryKey: ["categories", "slug", slug],
     queryFn: async () => {
       try {
-        return await apiClient.get<CategoryItem>(
-          CATEGORY_ENDPOINTS.BY_SLUG(encodeURIComponent(slug)),
-        );
+        return await apiClient.get<CategoryItem>(categoryEndpoint);
       } catch {
         return null;
       }
@@ -53,12 +54,11 @@ export function useCategoryDetail(
 
   const category = categoryQuery.data ?? null;
 
+  const childrenEndpoint = opts?.childrenEndpoint ?? CATEGORY_ENDPOINTS.BY_PARENT(encodeURIComponent(category!.id));
   const childrenQuery = useQuery<CategoryItem[]>({
     queryKey: ["categories", "children", category?.id ?? ""],
     queryFn: () =>
-      apiClient.get<CategoryItem[]>(
-        CATEGORY_ENDPOINTS.BY_PARENT(encodeURIComponent(category!.id)),
-      ),
+      apiClient.get<CategoryItem[]>(childrenEndpoint),
     enabled: !!category?.id,
     initialData: opts?.initialChildren,
   });

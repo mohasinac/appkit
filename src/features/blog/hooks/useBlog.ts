@@ -10,6 +10,7 @@ export type { BlogListResponse };
 interface UseBlogPostsOptions {
   initialData?: BlogListResponse;
   enabled?: boolean;
+  endpoint?: string;
 }
 
 export function useBlogPosts(

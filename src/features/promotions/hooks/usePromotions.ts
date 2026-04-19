@@ -11,7 +11,7 @@ import { PROMOTION_ENDPOINTS } from "../../../constants/api-endpoints";
 
 export function usePromotions(
   params: PromotionsListParams = {},
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
   const sp = new URLSearchParams();
   if (params.scope) sp.set("scope", params.scope);
@@ -23,13 +23,12 @@ export function usePromotions(
   if (params.sort) sp.set("sorts", params.sort);
   if (params.filters) sp.set("filters", params.filters);
   const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? `${PROMOTION_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`;
 
   const { data, isLoading, error, refetch } = useQuery<PromotionsListResponse>({
     queryKey: ["promotions", qs],
     queryFn: () =>
-      apiClient.get<PromotionsListResponse>(
-        `${PROMOTION_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
-      ),
+      apiClient.get<PromotionsListResponse>(endpoint),
     enabled: opts?.enabled ?? true,
   });
 
@@ -44,7 +43,7 @@ export function usePromotions(
   };
 }
 
-export function useCoupon(code: string, opts?: { enabled?: boolean }) {
+export function useCoupon(code: string, opts?: { enabled?: boolean; endpoint?: string }) {
   const { data, isLoading, error } = useQuery<CouponItem | null>({
     queryKey: ["coupon", code],
     queryFn: () =>

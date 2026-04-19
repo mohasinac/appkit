@@ -12,12 +12,13 @@ export interface BlogListResult {
   meta: { total: number; page: number; pageSize: number };
 }
 
-export function useBlogArticles() {
+export function useBlogArticles(options?: { endpoint?: string }) {
   return useQuery<BlogListResult>({
     queryKey: ["blog", "featured"],
     queryFn: async () => {
+      const featuredEndpoint = options?.endpoint ?? BLOG_ENDPOINTS.FEATURED(MIN_BLOG_COUNT);
       const featuredResult = await apiClient.get<BlogListResponse>(
-        BLOG_ENDPOINTS.FEATURED(MIN_BLOG_COUNT),
+        featuredEndpoint,
       );
       const featured = featuredResult.posts;
 

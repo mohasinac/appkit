@@ -69,7 +69,13 @@ export interface ProductsApiResponse {
   meta: { total: number; page: number; pageSize: number };
 }
 
-export function usePublicProfile(userId: string) {
+export interface PublicProfileOptions {
+  profileEndpoint?: string;
+  productsEndpoint?: string;
+  reviewsEndpoint?: string;
+}
+
+export function usePublicProfile(userId: string, options?: PublicProfileOptions) {
   const {
     data: profileData,
     isLoading: loading,
@@ -77,9 +83,8 @@ export function usePublicProfile(userId: string) {
   } = useQuery<{ user: PublicUserProfile }>({
     queryKey: ["public-profile", userId],
     queryFn: async () => {
-      const user = await apiClient.get<PublicUserProfile>(
-        ACCOUNT_ENDPOINTS.PUBLIC_PROFILE(userId),
-      );
+      const profileEndpoint = options?.profileEndpoint ?? ACCOUNT_ENDPOINTS.PUBLIC_PROFILE(userId);
+      const user = await apiClient.get<PublicUserProfile>(profileEndpoint);
       return { user };
     },
     enabled: !!userId,

@@ -7,6 +7,7 @@ import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseReviewsOptions {
   initialData?: ReviewListResponse;
   enabled?: boolean;
+  endpoint?: string;
 }
 
 export function useReviews(

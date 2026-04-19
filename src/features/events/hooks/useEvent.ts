@@ -12,6 +12,7 @@ import { EVENT_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseEventOptions<T extends EventItem = EventItem> {
   enabled?: boolean;
   initialData?: EventItem;
+  endpoint?: string;
   /**
    * Map the API item to a richer app-level type without forking the package.
    * @example
@@ -26,9 +27,10 @@ export function useEvent<T extends EventItem = EventItem>(
   id: string,
   opts?: UseEventOptions<T>,
 ) {
+  const endpoint = opts?.endpoint ?? EVENT_ENDPOINTS.BY_ID(id);
   const { data, isLoading, error, refetch } = useQuery<EventItem | null>({
     queryKey: ["event", id],
-    queryFn: () => apiClient.get<EventItem>(EVENT_ENDPOINTS.BY_ID(id)),
+    queryFn: () => apiClient.get<EventItem>(endpoint),
     enabled: (opts?.enabled ?? true) && !!id,
     initialData: opts?.initialData,
   });
@@ -47,20 +49,19 @@ export function useEvent<T extends EventItem = EventItem>(
 export function useEventEntries(
   eventId: string,
   params: { page?: number; pageSize?: number; reviewStatus?: string } = {},
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
   const sp = new URLSearchParams();
   if (params.page) sp.set("page", String(params.page));
   if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.reviewStatus) sp.set("reviewStatus", params.reviewStatus);
   const qs = sp.toString();
+  const endpoint = opts?.endpoint ?? `${EVENT_ENDPOINTS.ENTRIES(eventId)}${qs ? `?${qs}` : ""}`;
 
   const { data, isLoading, error, refetch } = useQuery<EventEntryListResponse>({
     queryKey: ["event-entries", eventId, qs],
     queryFn: () =>
-      apiClient.get<EventEntryListResponse>(
-        `${EVENT_ENDPOINTS.ENTRIES(eventId)}${qs ? `?${qs}` : ""}`,
-      ),
+      apiClient.get<EventEntryListResponse>(endpoint),
     enabled: (opts?.enabled ?? true) && !!eventId,
   });
 
@@ -76,7 +77,7 @@ export function useEventEntries(
 export function useEventLeaderboard(
   eventId: string,
   limit = 10,
-  opts?: { enabled?: boolean },
+  opts?: { enabled?: boolean; endpoint?: string },
 ) {
   const { data, isLoading, error } = useQuery<LeaderboardEntry[]>({
     queryKey: ["event-leaderboard", eventId, limit],
