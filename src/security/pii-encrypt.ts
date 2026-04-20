@@ -134,7 +134,7 @@ export function decryptPiiFields<T extends Record<string, unknown>>(
   return result as T;
 }
 
-// ─── Aliases for compatibility with existing code ───────────────────────────
+// --- Aliases for compatibility with existing code ---------------------------
 
 /** Alias for encryptValue — encrypts a PII plaintext string. */
 export function encryptPii(
@@ -182,7 +182,7 @@ export function addPiiIndices<T extends Record<string, unknown>>(
   return result;
 }
 
-// ─── Nested-object PII helpers ──────────────────────────────────────────────
+// --- Nested-object PII helpers ----------------------------------------------
 
 /**
  * Encrypt PII inside a shipping address stored in an order.
@@ -339,7 +339,7 @@ export function decryptPayoutBankAccount<T extends Record<string, unknown>>(
   return decryptPiiFields({ ...bank }, []);
 }
 
-// ─── Public display masking ─────────────────────────────────────────────────
+// --- Public display masking -------------------------------------------------
 
 /**
  * Mask a person's name for public display.

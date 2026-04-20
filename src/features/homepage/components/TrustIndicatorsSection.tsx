@@ -2,7 +2,7 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Heading, Section, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface TrustIndicatorItem {
   key?: string;
@@ -16,7 +16,7 @@ export interface TrustIndicatorsSectionProps {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function TrustIndicatorsSection({
   items,

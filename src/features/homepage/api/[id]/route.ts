@@ -15,7 +15,7 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { HomepageSection } from "../../types/index";
 
-// ──── GET /api/homepage-sections/[id] ────────────────────────────────────────
+// ---- GET /api/homepage-sections/[id] ----------------------------------------
 
 export async function GET(
   _request: Request,
@@ -56,7 +56,7 @@ export async function GET(
 
 export { GET as homepageSectionItemGET };
 
-// ──── PATCH /api/homepage-sections/[id] ───────────────────────────────────
+// ---- PATCH /api/homepage-sections/[id] -----------------------------------
 
 const homepageSectionUpdateSchema = z
   .object({
@@ -114,7 +114,7 @@ export const homepageSectionItemPATCH = createRouteHandler({
   },
 });
 
-// ──── DELETE /api/homepage-sections/[id] ─────────────────────────────────
+// ---- DELETE /api/homepage-sections/[id] ---------------------------------
 
 export const homepageSectionItemDELETE = createRouteHandler({
   auth: true,

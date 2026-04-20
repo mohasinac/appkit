@@ -107,7 +107,7 @@ export function createRouteHandler<
     context: { params: Promise<TParams> },
   ): Promise<Response> => {
     try {
-      // ── Auth ──────────────────────────────────────────────────────────────
+      // -- Auth --------------------------------------------------------------
       let user: RouteUser | undefined;
       const needsAuth =
         options.auth || (options.roles && options.roles.length > 0);
@@ -125,7 +125,7 @@ export function createRouteHandler<
         }
       }
 
-      // ── Body validation ───────────────────────────────────────────────────
+      // -- Body validation ---------------------------------------------------
       let body: TInput | undefined;
       if (options.schema) {
         let raw: unknown;
@@ -151,7 +151,7 @@ export function createRouteHandler<
         body = result.data;
       }
 
-      // ── Params ────────────────────────────────────────────────────────────
+      // -- Params ------------------------------------------------------------
       const params = context?.params ? await context.params : undefined;
 
       return await options.handler({

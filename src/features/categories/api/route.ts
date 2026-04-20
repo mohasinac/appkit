@@ -19,7 +19,7 @@ import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { CategoryItem } from "../types/index";
 
-// ─── Tree node (CategoryItem extended with nested children) ───────────────────
+// --- Tree node (CategoryItem extended with nested children) -------------------
 interface CategoryTreeNode extends CategoryItem {
   children: CategoryTreeNode[];
 }
@@ -80,7 +80,7 @@ function validateSieveFilters(
     .join(",");
 }
 
-// ─── GET /api/categories ──────────────────────────────────────────────────────
+// --- GET /api/categories ------------------------------------------------------
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
@@ -109,7 +109,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const repo = db.getRepository<CategoryItem>("categories");
 
-    // ── Single slug lookup ────────────────────────────────────────────────────
+    // -- Single slug lookup ----------------------------------------------------
     if (slug) {
       const result = await repo.findAll({
         filters: `slug==${slug}`,
@@ -125,7 +125,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return NextResponse.json({ success: true, data: category });
     }
 
-    // ── Build Sieve filter string from query params ────────────────────────────
+    // -- Build Sieve filter string from query params ----------------------------
     const parts: string[] = [];
     if (type) parts.push(`type==${type}`);
     if (parentId) parts.push(`parentIds@=${parentId}`);
@@ -139,7 +139,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
     const filters = parts.join(",");
 
-    // ── Filtered flat list modes ───────────────────────────────────────────────
+    // -- Filtered flat list modes -----------------------------------------------
     // If any filter is active, or ?flat=true → return flat array
     const isFiltered =
       flat === "true" ||
@@ -168,7 +168,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return res;
     }
 
-    // ── Tree mode (default or explicit ?tree=true) ────────────────────────────
+    // -- Tree mode (default or explicit ?tree=true) ----------------------------
     const allResult = await repo.findAll({
       filters,
       sort: "order",

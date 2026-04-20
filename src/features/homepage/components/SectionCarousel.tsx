@@ -12,7 +12,7 @@ import {
 } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 
-// ─── Props ───────────────────────────────────────────────────────────────────
+// --- Props -------------------------------------------------------------------
 
 export interface SectionCarouselProps<T = unknown> {
   /** Section heading */
@@ -107,7 +107,7 @@ export interface SectionCarouselProps<T = unknown> {
   minItemWidth?: number;
 }
 
-// ─── Skeleton ────────────────────────────────────────────────────────────────
+// --- Skeleton ----------------------------------------------------------------
 
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
@@ -127,7 +127,7 @@ function CarouselSkeleton({ count }: { count: number }) {
   );
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// --- Component ---------------------------------------------------------------
 
 export function SectionCarousel<T = unknown>({
   title,

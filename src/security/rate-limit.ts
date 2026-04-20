@@ -31,7 +31,7 @@ export interface RateLimitResult {
   error?: string;
 }
 
-// ─── IP extraction ────────────────────────────────────────────────────────────
+// --- IP extraction ------------------------------------------------------------
 
 function getClientIP(request: NextRequest | Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
@@ -41,7 +41,7 @@ function getClientIP(request: NextRequest | Request): string {
   return "unknown";
 }
 
-// ─── Upstash-backed limiter ───────────────────────────────────────────────────
+// --- Upstash-backed limiter ---------------------------------------------------
 
 let upstashLimiter:
   | ((ip: string, limit: number, window: number) => Promise<RateLimitResult>)
@@ -92,7 +92,7 @@ async function getUpstashLimiter() {
   return upstashLimiter;
 }
 
-// ─── In-memory fallback ───────────────────────────────────────────────────────
+// --- In-memory fallback -------------------------------------------------------
 
 const memStore = new Map<string, { count: number; resetAt: number }>();
 
@@ -123,7 +123,7 @@ function inMemoryLimit(
   return { success: true, limit, remaining, reset };
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+// --- Public API ---------------------------------------------------------------
 
 /**
  * Rate limit by request. Uses Upstash Redis when configured, in-memory otherwise.

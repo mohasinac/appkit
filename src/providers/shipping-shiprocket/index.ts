@@ -22,7 +22,7 @@
 
 const BASE_URL = "https://apiv2.shiprocket.in/v1/external";
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
+// --- Types ---------------------------------------------------------------------
 
 export interface ShiprocketAuthRequest {
   email: string;
@@ -235,7 +235,7 @@ export interface ShiprocketWebhookPayload {
   pickup_generated?: boolean;
 }
 
-// ─── Internal fetch helper ────────────────────────────────────────────────────
+// --- Internal fetch helper ----------------------------------------------------
 
 async function shiprocketFetch<T>(
   endpoint: string,
@@ -276,12 +276,12 @@ async function shiprocketFetch<T>(
   return json as T;
 }
 
-// ─── Re-export Provider Class ─────────────────────────────────────────────────
+// --- Re-export Provider Class -------------------------------------------------
 
 export { ShiprocketProvider } from "./shiprocket-provider";
 export type { ShiprocketProviderConfig } from "./shiprocket-provider";
 
-// ─── API Functions (prefer ShiprocketProvider class for new code) ─────────────
+// --- API Functions (prefer ShiprocketProvider class for new code) -------------
 
 /**
  * @deprecated Use `ShiprocketProvider.authenticate()` instead.

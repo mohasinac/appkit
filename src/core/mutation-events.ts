@@ -27,7 +27,7 @@
 import { eventBus } from "./EventBus";
 import type { EventSubscription } from "./EventBus";
 
-// ─── Typed event name registry ────────────────────────────────────────────────
+// --- Typed event name registry ------------------------------------------------
 
 /**
  * Canonical event name constants for all appkit feature mutations.
@@ -125,7 +125,7 @@ export interface MutationEventPayload<T = unknown> {
   data: T;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// --- Helpers ------------------------------------------------------------------
 
 /**
  * Emit a typed mutation event on the shared `eventBus`.

@@ -25,7 +25,7 @@ type ProductRecord = ProductItem & {
   sellerName?: string;
 };
 
-// ─── Mutation schemas ─────────────────────────────────────────────────────────
+// --- Mutation schemas ---------------------------------------------------------
 // Minimal schemas for secured mutations — consumer apps can extend as needed.
 
 const productMutateSchema = z
@@ -64,7 +64,7 @@ const productMutateSchema = z
   })
   .passthrough();
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// --- Helpers ------------------------------------------------------------------
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
@@ -149,7 +149,7 @@ function buildFilters(url: URL): string {
   return parts.join(",");
 }
 
-// ─── GET /api/products ────────────────────────────────────────────────────────
+// --- GET /api/products --------------------------------------------------------
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
@@ -200,7 +200,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 }
 
-// ─── POST /api/products ───────────────────────────────────────────────────────
+// --- POST /api/products -------------------------------------------------------
 // Requires seller, moderator, or admin role.
 
 export const POST = createRouteHandler({

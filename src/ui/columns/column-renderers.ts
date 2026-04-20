@@ -13,7 +13,7 @@ import {
   getDefaultLocale,
 } from "../../core/baseline-resolver";
 
-// ─── Boolean ──────────────────────────────────────────────────────────────────
+// --- Boolean ------------------------------------------------------------------
 
 export interface BooleanRenderOpts {
   trueLabel?: string;
@@ -30,7 +30,7 @@ export function renderBoolean(
   return value ? trueLabel : falseLabel;
 }
 
-// ─── Currency ─────────────────────────────────────────────────────────────────
+// --- Currency -----------------------------------------------------------------
 
 /** Render a monetary amount through the shared `formatCurrency` pipeline. */
 export function renderCurrency(
@@ -57,7 +57,7 @@ export function renderCurrencyCompact(
   return `${resolvedCurrency} ${amount.toLocaleString()}`;
 }
 
-// ─── Count ────────────────────────────────────────────────────────────────────
+// --- Count --------------------------------------------------------------------
 
 /** Render a numeric value with locale separators, with an optional fallback. */
 export function renderCount(
@@ -68,7 +68,7 @@ export function renderCount(
   return value.toLocaleString();
 }
 
-// ─── Nullable ─────────────────────────────────────────────────────────────────
+// --- Nullable -----------------------------------------------------------------
 
 /** Render a nullable value through an optional formatter, with em-dash fallback. */
 export function renderNullable<T>(
@@ -80,7 +80,7 @@ export function renderNullable<T>(
   return format ? format(value) : String(value);
 }
 
-// ─── Rating ───────────────────────────────────────────────────────────────────
+// --- Rating -------------------------------------------------------------------
 
 export type RatingMode = "numeric" | "stars";
 

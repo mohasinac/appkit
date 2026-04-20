@@ -65,7 +65,7 @@ function cn(...classes: (string | undefined | false | null)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-// ─── Small icon button used in the controls bar ───────────────────────────────
+// --- Small icon button used in the controls bar -------------------------------
 interface IconBtnProps {
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
@@ -100,7 +100,7 @@ function IconBtn({
   );
 }
 
-// ─── MediaLightbox ────────────────────────────────────────────────────────────
+// --- MediaLightbox ------------------------------------------------------------
 
 export function MediaLightbox({
   items,
@@ -348,7 +348,7 @@ export function MediaLightbox({
       aria-modal="true"
       aria-label={L.lightboxTitle}
     >
-      {/* ── Image area ── */}
+      {/* -- Image area -- */}
       <Div
         ref={imageAreaRef}
         className="flex-1 relative overflow-hidden select-none"
@@ -385,7 +385,7 @@ export function MediaLightbox({
         </Div>
       </Div>
 
-      {/* ── Controls bar ── */}
+      {/* -- Controls bar -- */}
       <Div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
         {/* Prev */}
         {items.length > 1 && (
@@ -481,7 +481,7 @@ export function MediaLightbox({
         )}
       </Div>
 
-      {/* ── Thumbnail strip ── */}
+      {/* -- Thumbnail strip -- */}
       {items.length > 1 && (
         <Div
           className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"

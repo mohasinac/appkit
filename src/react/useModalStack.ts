@@ -1,13 +1,13 @@
 import { useCallback, useRef, useState } from "react";
 
-// ─── ModalEntry ───────────────────────────────────────────────────────────────
+// --- ModalEntry ---------------------------------------------------------------
 
 export interface ModalEntry<T = unknown> {
   id: string;
   data?: T;
 }
 
-// ─── useModalStack ────────────────────────────────────────────────────────────
+// --- useModalStack ------------------------------------------------------------
 
 /**
  * useModalStack — manages a LIFO stack of modal/drawer instances.

@@ -39,7 +39,7 @@
  * ```
  */
 
-// ─── Field descriptor ─────────────────────────────────────────────────────────
+// --- Field descriptor ---------------------------------------------------------
 
 export interface ExtraFieldRenderArgs<TValue = unknown> {
   /** Current value for this field key from the parent form state. */
@@ -74,7 +74,7 @@ export interface ExtraFormField<TValue = unknown> {
   render: (args: ExtraFieldRenderArgs<TValue>) => unknown;
 }
 
-// ─── Global registry ──────────────────────────────────────────────────────────
+// --- Global registry ----------------------------------------------------------
 
 const _fieldRegistry = new Map<string, ExtraFormField[]>();
 

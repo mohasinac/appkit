@@ -1,4 +1,4 @@
-// ─── Store list item (public-facing, safe to send to client) ─────────────────
+// --- Store list item (public-facing, safe to send to client) -----------------
 
 export interface StoreListItem {
   id: string;
@@ -18,7 +18,7 @@ export interface StoreListItem {
   createdAt?: string;
 }
 
-// ─── Store detail (full public profile) ──────────────────────────────────────
+// --- Store detail (full public profile) --------------------------------------
 
 export interface StoreDetail extends StoreListItem {
   bio?: string;
@@ -36,7 +36,7 @@ export interface StoreDetail extends StoreListItem {
   vacationMessage?: string;
 }
 
-// ─── Store product / auction items (minimal shape for display) ───────────────
+// --- Store product / auction items (minimal shape for display) ---------------
 
 export interface StoreProductItem {
   id: string;
@@ -62,7 +62,7 @@ export interface StoreAuctionItem extends StoreProductItem {
   bidCount: number;
 }
 
-// ─── List responses ───────────────────────────────────────────────────────────
+// --- List responses -----------------------------------------------------------
 
 export interface StoreListResponse {
   items: StoreListItem[];
@@ -90,7 +90,7 @@ export interface StoreListParams {
   filters?: string;
 }
 
-// ─── Store auctions response ──────────────────────────────────────────────────
+// --- Store auctions response --------------------------------------------------
 
 export interface StoreAuctionsResponse {
   items: StoreAuctionItem[];
@@ -101,7 +101,7 @@ export interface StoreAuctionsResponse {
   hasMore: boolean;
 }
 
-// ─── Store reviews ────────────────────────────────────────────────────────────
+// --- Store reviews ------------------------------------------------------------
 
 export interface StoreReview {
   id: string;

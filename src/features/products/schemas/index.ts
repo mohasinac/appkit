@@ -2,7 +2,7 @@ export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const productImageSchema = z.object({
   url: z.string(),
@@ -17,7 +17,7 @@ export const productSeoSchema = z.object({
   keywords: z.array(z.string()).optional(),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a product item.

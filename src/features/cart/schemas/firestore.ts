@@ -5,7 +5,7 @@
  * for the cart feature.
  */
 
-// ── Cart Document ────────────────────────────────────────────────────────────
+// -- Cart Document ------------------------------------------------------------
 
 export interface CartItemDocument {
   itemId: string;

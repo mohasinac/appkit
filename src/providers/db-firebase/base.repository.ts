@@ -243,7 +243,7 @@ export abstract class BaseRepository<T extends DocumentData> {
         ...data,
         createdAt: now,
         updatedAt: now,
-      }) as FirebaseFirestore.WithFieldValue<DocumentData>,
+      }) as DocumentData,
     );
     return docRef as DocumentReference;
   }
@@ -261,7 +261,7 @@ export abstract class BaseRepository<T extends DocumentData> {
         ...data,
         createdAt: now,
         updatedAt: now,
-      }) as FirebaseFirestore.WithFieldValue<DocumentData>,
+      }) as DocumentData,
     );
     return docRef as DocumentReference;
   }
@@ -291,7 +291,7 @@ export abstract class BaseRepository<T extends DocumentData> {
         ...data,
         createdAt: now,
         updatedAt: now,
-      }) as FirebaseFirestore.WithFieldValue<DocumentData>,
+      }) as DocumentData,
     );
     return docRef as DocumentReference;
   }
@@ -309,7 +309,7 @@ export abstract class BaseRepository<T extends DocumentData> {
         ...data,
         createdAt: now,
         updatedAt: now,
-      }) as FirebaseFirestore.WithFieldValue<DocumentData>,
+      }) as DocumentData,
     );
   }
 

@@ -45,7 +45,7 @@ import React, {
 } from "react";
 import type { ButtonProps } from "../../ui";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export interface BottomAction {
   /** Stable unique key (used as React key). */
@@ -94,7 +94,7 @@ export interface BottomActionsState {
   infoLabel?: string;
 }
 
-// ─── Context ──────────────────────────────────────────────────────────────────
+// --- Context ------------------------------------------------------------------
 
 interface BottomActionsContextValue {
   state: BottomActionsState;
@@ -123,7 +123,7 @@ const BottomActionsContext = createContext<BottomActionsContextValue | null>(
   null,
 );
 
-// ─── Provider ─────────────────────────────────────────────────────────────────
+// --- Provider -----------------------------------------------------------------
 
 export function BottomActionsProvider({
   children,
@@ -208,7 +208,7 @@ export function BottomActionsProvider({
   );
 }
 
-// ─── Hook ─────────────────────────────────────────────────────────────────────
+// --- Hook ---------------------------------------------------------------------
 
 export function useBottomActionsContext(): BottomActionsContextValue {
   const ctx = useContext(BottomActionsContext);

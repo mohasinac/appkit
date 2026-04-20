@@ -2,6 +2,7 @@ import { DatabaseError, NotFoundError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
 import {
   deserializeTimestamps,
+  getFirestoreCount,
   getAdminDb,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
@@ -94,8 +95,7 @@ export class AddressRepository {
 
   async count(userId: string): Promise<number> {
     try {
-      const snapshot = await this.getCollection(userId).count().get();
-      return snapshot.data().count;
+      return await getFirestoreCount(this.getCollection(userId));
     } catch (error) {
       throw new DatabaseError(
         `Failed to count addresses for user: ${userId}`,

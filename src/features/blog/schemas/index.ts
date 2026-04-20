@@ -14,7 +14,7 @@ const blogCoverImageSchema = z
   .optional()
   .transform((value) => value ?? null);
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const blogPostCategorySchema = z.enum([
   "news",
@@ -26,7 +26,7 @@ export const blogPostCategorySchema = z.enum([
 
 export const blogPostStatusSchema = z.enum(["draft", "published", "archived"]);
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a blog post.

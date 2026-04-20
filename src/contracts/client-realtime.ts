@@ -30,7 +30,7 @@ export interface IClientRealtimeProvider {
   ): Unsubscribe;
 }
 
-// ─── Runtime registry ──────────────────────────────────────────────────────
+// --- Runtime registry ------------------------------------------------------
 let _provider: IClientRealtimeProvider | null = null;
 
 export function registerClientRealtimeProvider(

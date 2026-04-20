@@ -2,7 +2,7 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Heading, Section, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface SiteFeatureItem {
   id: string;
@@ -18,7 +18,7 @@ export interface SiteFeaturesSectionProps {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function SiteFeaturesSection({
   title,

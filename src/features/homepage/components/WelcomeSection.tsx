@@ -2,7 +2,7 @@ import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 
-// ─── Props ───────────────────────────────────────────────────────────────────
+// --- Props -------------------------------------------------------------------
 
 export interface WelcomeSectionChip {
   key: string;
@@ -25,7 +25,7 @@ export interface WelcomeSectionProps {
   className?: string;
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// --- Component ---------------------------------------------------------------
 
 export function WelcomeSection({
   title,

@@ -37,7 +37,7 @@ interface ReviewEntity {
   productTitle?: string;
 }
 
-// ─── GET /api/stores/[storeSlug]/reviews ──────────────────────────────────────
+// --- GET /api/stores/[storeSlug]/reviews --------------------------------------
 export async function GET(
   _request: Request,
   context: RouteContext,

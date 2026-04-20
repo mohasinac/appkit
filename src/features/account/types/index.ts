@@ -1,4 +1,4 @@
-// ─── Order types ─────────────────────────────────────────────────────────────
+// --- Order types -------------------------------------------------------------
 
 export type OrderStatus =
   | "placed"
@@ -33,7 +33,7 @@ export interface UserOrder {
   updatedAt?: string;
 }
 
-// ─── Notification types ───────────────────────────────────────────────────────
+// --- Notification types -------------------------------------------------------
 
 export type NotificationType =
   | "order"
@@ -52,7 +52,7 @@ export interface UserNotification {
   href?: string;
 }
 
-// ─── Offer types ──────────────────────────────────────────────────────────────
+// --- Offer types --------------------------------------------------------------
 
 export type OfferStatus =
   | "pending"
@@ -75,7 +75,7 @@ export interface UserOffer {
   updatedAt?: string;
 }
 
-// ─── Profile stats ────────────────────────────────────────────────────────────
+// --- Profile stats ------------------------------------------------------------
 
 export interface UserProfileStats {
   orders: number;

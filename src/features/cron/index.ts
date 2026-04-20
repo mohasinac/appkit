@@ -1,4 +1,4 @@
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 export type {
   JobContext,
   JobResult,
@@ -10,7 +10,7 @@ export type {
   CronRegistrySummary,
 } from "./types";
 
-// ─── Registry ─────────────────────────────────────────────────────────────────
+// --- Registry -----------------------------------------------------------------
 export {
   createCronJob,
   getCronRegistry,
@@ -20,9 +20,9 @@ export {
   _resetCronRegistry,
 } from "./registry";
 
-// ─── Firebase adapters ────────────────────────────────────────────────────────
+// --- Firebase adapters --------------------------------------------------------
 export { wrapScheduled, wrapPubSub } from "./firebase-adapters";
 
-// ─── Built-in jobs ────────────────────────────────────────────────────────────
+// --- Built-in jobs ------------------------------------------------------------
 export { createAuctionExpiryJob } from "./jobs/auction-expiry.job";
 export { createPreOrderReminderJob } from "./jobs/preorder-reminder.job";

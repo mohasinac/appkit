@@ -8,7 +8,7 @@
  * In CSS/Tailwind prefer `var(--appkit-*)` references over these constants.
  */
 
-// ─── Brand Colors ──────────────────────────────────────────────────────────
+// --- Brand Colors ----------------------------------------------------------
 
 export const COLORS = {
   primary: {
@@ -75,7 +75,7 @@ export const COLORS = {
   },
 } as const;
 
-// ─── Border Radius ─────────────────────────────────────────────────────────
+// --- Border Radius ---------------------------------------------------------
 
 export const RADIUS = {
   sm: "0.25rem",
@@ -89,7 +89,7 @@ export const RADIUS = {
   full: "9999px",
 } as const;
 
-// ─── Shadow ────────────────────────────────────────────────────────────────
+// --- Shadow ----------------------------------------------------------------
 
 export const SHADOWS = {
   sm: "0 1px 2px 0 rgba(0,0,0,0.05)",
@@ -101,7 +101,7 @@ export const SHADOWS = {
   glowPink: "0 0 20px rgba(233, 30, 140, 0.5)",
 } as const;
 
-// ─── Z-index ───────────────────────────────────────────────────────────────
+// --- Z-index ---------------------------------------------------------------
 
 export const Z_INDEX = {
   dropdown: 30,
@@ -115,7 +115,7 @@ export const Z_INDEX = {
   toast: 70,
 } as const;
 
-// ─── Token helper ──────────────────────────────────────────────────────────
+// --- Token helper ----------------------------------------------------------
 
 /**
  * Returns a CSS custom property reference for the given token name.
@@ -129,7 +129,7 @@ export function token(name: string): string {
   return `var(--appkit-${name})`;
 }
 
-// ─── Convenience groups ────────────────────────────────────────────────────
+// --- Convenience groups ----------------------------------------------------
 
 export const TOKENS = {
   colors: COLORS,
@@ -139,7 +139,7 @@ export const TOKENS = {
   token,
 } as const;
 
-// ─── LOCALE_CONFIG ─────────────────────────────────────────────────────────
+// --- LOCALE_CONFIG ---------------------------------------------------------
 
 import {
   getDefaultCurrency,
@@ -441,7 +441,7 @@ const GRID = {
     "grid grid-cols-1 lg:grid-cols-[220px_1fr] xl:grid-cols-[260px_1fr_200px] gap-4 xl:gap-6",
 } as const;
 
-// ─── FLUID GRID ─────────────────────────────────────────────────────────────
+// --- FLUID GRID -------------------------------------------------------------
 /**
  * Minimum item widths for auto-fill fluid grids matching the four
  * `fluid-grid-*` CSS utilities (defined in tailwind.config.js plugin).
@@ -649,13 +649,13 @@ const TRANSITIONS = {
  *   ```
  */
 const SKELETON = {
-  // ─ Pulse (fade) variant ────────────────────────────────────────────────────────────────
+  // - Pulse (fade) variant ----------------------------------------------------------------
   base: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60",
   text: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-4",
   heading: "animate-pulse rounded bg-zinc-200 dark:bg-slate-700/60 h-7",
   image: "animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700/60",
   card: "animate-pulse rounded-2xl bg-zinc-200 dark:bg-slate-700/60",
-  // ─ Shimmer (sweep) variant ──────────────────────────────────────────────────────────
+  // - Shimmer (sweep) variant ----------------------------------------------------------
   shimmer:
     "animate-shimmer bg-[length:400%_100%] rounded bg-gradient-to-r from-zinc-200 via-zinc-100 to-zinc-200 dark:from-slate-800 dark:via-slate-700/60 dark:to-slate-800",
   shimmerText:

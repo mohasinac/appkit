@@ -3,7 +3,7 @@ import { Button, Heading, Row, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface AdvertisementBannerProps {
   title: string;
@@ -18,7 +18,7 @@ export interface AdvertisementBannerProps {
   className?: string;
 }
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// --- Component ---------------------------------------------------------------
 
 export function AdvertisementBanner({
   title,
@@ -45,7 +45,7 @@ export function AdvertisementBanner({
     );
   }
 
-  // ── Split layout: when a backgroundImage is provided ──
+  // -- Split layout: when a backgroundImage is provided --
   if (backgroundImage) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
@@ -109,7 +109,7 @@ export function AdvertisementBanner({
     );
   }
 
-  // ── Full-width gradient layout ──
+  // -- Full-width gradient layout --
   return (
     <Section className={`p-8 ${wrapClass} ${className}`}>
       <div className="w-full max-w-7xl mx-auto">

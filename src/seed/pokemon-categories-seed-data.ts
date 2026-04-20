@@ -3,23 +3,23 @@
  *
  * Hierarchy:
  *   Pokémon Cards (root)
- *     ├─ Card Type (tier 1)
- *     │    ├─ Pokémon Cards (leaf)
- *     │    ├─ Trainer Cards (leaf)
- *     │    └─ Energy Cards (leaf)
- *     ├─ Element Type (tier 1)
- *     │    ├─ Water (leaf)
- *     │    ├─ Electric (leaf)
- *     │    ├─ Fire (leaf)
- *     │    ├─ Grass (leaf)
- *     │    ├─ Psychic (leaf)
- *     │    ├─ Fighting (leaf)
- *     │    └─ Colorless (leaf)
- *     ├─ Rarity (tier 1)
- *     │    ├─ Holographic Rare (leaf)
- *     │    ├─ Non-Holo Rare (leaf)
- *     │    ├─ Uncommon (leaf)
- *     │    └─ Common (leaf)
+ *     ├- Card Type (tier 1)
+ *     │    ├- Pokémon Cards (leaf)
+ *     │    ├- Trainer Cards (leaf)
+ *     │    └- Energy Cards (leaf)
+ *     ├- Element Type (tier 1)
+ *     │    ├- Water (leaf)
+ *     │    ├- Electric (leaf)
+ *     │    ├- Fire (leaf)
+ *     │    ├- Grass (leaf)
+ *     │    ├- Psychic (leaf)
+ *     │    ├- Fighting (leaf)
+ *     │    └- Colorless (leaf)
+ *     ├- Rarity (tier 1)
+ *     │    ├- Holographic Rare (leaf)
+ *     │    ├- Non-Holo Rare (leaf)
+ *     │    ├- Uncommon (leaf)
+ *     │    └- Common (leaf)
  *   Sealed Products (root, leaf)
  *   Accessories (root, leaf)
  */
@@ -32,7 +32,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const ADMIN = "user-admin-user-admin";
 
 export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
-  // ── ROOT: Pokémon Cards ─────────────────────────────────────────────────────
+  // -- ROOT: Pokémon Cards -----------------------------------------------------
   {
     id: "category-pokemon-cards",
     name: "Pokémon Cards",
@@ -85,7 +85,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── TIER 1: Card Type ───────────────────────────────────────────────────────
+  // -- TIER 1: Card Type -------------------------------------------------------
   {
     id: "category-card-type-pokemon-cards",
     name: "Card Type",
@@ -131,7 +131,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Pokémon-type cards ────────────────────────────────────────────────
+  // -- LEAF: Pokémon-type cards ------------------------------------------------
   {
     id: "category-pokemon-type-card-type",
     name: "Pokémon Cards",
@@ -185,7 +185,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Trainer cards ─────────────────────────────────────────────────────
+  // -- LEAF: Trainer cards -----------------------------------------------------
   {
     id: "category-trainer-type-card-type",
     name: "Trainer Cards",
@@ -234,7 +234,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Energy cards ──────────────────────────────────────────────────────
+  // -- LEAF: Energy cards ------------------------------------------------------
   {
     id: "category-energy-type-card-type",
     name: "Energy Cards",
@@ -288,7 +288,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── TIER 1: Element Type ────────────────────────────────────────────────────
+  // -- TIER 1: Element Type ----------------------------------------------------
   {
     id: "category-element-type-pokemon-cards",
     name: "Element Type",
@@ -343,7 +343,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Water ─────────────────────────────────────────────────────────────
+  // -- LEAF: Water -------------------------------------------------------------
   {
     id: "category-water-element-type",
     name: "Water",
@@ -399,7 +399,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Electric ──────────────────────────────────────────────────────────
+  // -- LEAF: Electric ----------------------------------------------------------
   {
     id: "category-electric-element-type",
     name: "Electric",
@@ -454,7 +454,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Fire ──────────────────────────────────────────────────────────────
+  // -- LEAF: Fire --------------------------------------------------------------
   {
     id: "category-fire-element-type",
     name: "Fire",
@@ -510,7 +510,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Grass ─────────────────────────────────────────────────────────────
+  // -- LEAF: Grass -------------------------------------------------------------
   {
     id: "category-grass-element-type",
     name: "Grass",
@@ -564,7 +564,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Psychic ───────────────────────────────────────────────────────────
+  // -- LEAF: Psychic -----------------------------------------------------------
   {
     id: "category-psychic-element-type",
     name: "Psychic",
@@ -619,7 +619,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Fighting ──────────────────────────────────────────────────────────
+  // -- LEAF: Fighting ----------------------------------------------------------
   {
     id: "category-fighting-element-type",
     name: "Fighting",
@@ -673,7 +673,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Colorless ─────────────────────────────────────────────────────────
+  // -- LEAF: Colorless ---------------------------------------------------------
   {
     id: "category-colorless-element-type",
     name: "Colorless",
@@ -727,7 +727,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── TIER 1: Rarity ──────────────────────────────────────────────────────────
+  // -- TIER 1: Rarity ----------------------------------------------------------
   {
     id: "category-rarity-pokemon-cards",
     name: "Rarity",
@@ -776,7 +776,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Holo Rare ─────────────────────────────────────────────────────────
+  // -- LEAF: Holo Rare ---------------------------------------------------------
   {
     id: "category-holo-rare-rarity",
     name: "Holographic Rare",
@@ -827,7 +827,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Non-Holo Rare ─────────────────────────────────────────────────────
+  // -- LEAF: Non-Holo Rare -----------------------------------------------------
   {
     id: "category-non-holo-rare-rarity",
     name: "Non-Holo Rare",
@@ -870,7 +870,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Uncommon ──────────────────────────────────────────────────────────
+  // -- LEAF: Uncommon ----------------------------------------------------------
   {
     id: "category-uncommon-rarity",
     name: "Uncommon",
@@ -913,7 +913,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── LEAF: Common ────────────────────────────────────────────────────────────
+  // -- LEAF: Common ------------------------------------------------------------
   {
     id: "category-common-rarity",
     name: "Common",
@@ -956,7 +956,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── ROOT: Sealed Products ───────────────────────────────────────────────────
+  // -- ROOT: Sealed Products ---------------------------------------------------
   {
     id: "category-sealed-products",
     name: "Sealed Products",
@@ -1005,7 +1005,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── ROOT: Accessories ───────────────────────────────────────────────────────
+  // -- ROOT: Accessories -------------------------------------------------------
   {
     id: "category-accessories",
     name: "Accessories",
@@ -1047,7 +1047,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── BRANDS ──────────────────────────────────────────────────────────────────
+  // -- BRANDS ------------------------------------------------------------------
   {
     id: "category-brand-wizards",
     name: "Wizards of the Coast",

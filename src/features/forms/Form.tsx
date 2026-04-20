@@ -2,7 +2,7 @@ import React from "react";
 import { Div } from "../../ui";
 import { cn } from "./utils";
 
-// ─── Form ─────────────────────────────────────────────────────────────────────
+// --- Form ---------------------------------------------------------------------
 
 export interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
   children: React.ReactNode;
@@ -16,7 +16,7 @@ export function Form({ children, className = "", ...props }: FormProps) {
   );
 }
 
-// ─── FormGroup ────────────────────────────────────────────────────────────────
+// --- FormGroup ----------------------------------------------------------------
 
 type GapToken = "none" | "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -56,7 +56,7 @@ export function FormGroup({
   );
 }
 
-// ─── FormFieldSpan ────────────────────────────────────────────────────────────
+// --- FormFieldSpan ------------------------------------------------------------
 
 /** Wraps a child so it spans full width inside a multi-column FormGroup. */
 export function FormFieldSpan({
@@ -69,7 +69,7 @@ export function FormFieldSpan({
   return <Div className={cn("col-span-full", className)}>{children}</Div>;
 }
 
-// ─── FormActions ─────────────────────────────────────────────────────────────
+// --- FormActions -------------------------------------------------------------
 
 export interface FormActionsProps {
   children: React.ReactNode;

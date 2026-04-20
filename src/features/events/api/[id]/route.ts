@@ -22,7 +22,7 @@ import { EVENT_FIELDS } from "../../schemas";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-// ─── GET /api/events/[id] ─────────────────────────────────────────────────────
+// --- GET /api/events/[id] -----------------------------------------------------
 export async function GET(
   _request: Request,
   context: RouteContext,

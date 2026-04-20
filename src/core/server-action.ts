@@ -40,13 +40,13 @@ import { inferMutationEvent, emitMutation } from "./mutation-events";
 
 const logger = Logger.getInstance();
 
-// ─── Result envelope ──────────────────────────────────────────────────────────
+// --- Result envelope ----------------------------------------------------------
 
 export type ActionResult<TOutput> =
   | { ok: true; data: TOutput }
   | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
 
-// ─── Middleware ───────────────────────────────────────────────────────────────
+// --- Middleware ---------------------------------------------------------------
 
 export interface ActionMiddlewareContext<TInput = unknown, TOutput = unknown> {
   actionName: string;
@@ -76,7 +76,7 @@ export function _resetActionMiddleware(): void {
   _globalMiddleware = {};
 }
 
-// ─── Schema helper type ───────────────────────────────────────────────────────
+// --- Schema helper type -------------------------------------------------------
 
 interface SafeParseSchema<TInput> {
   safeParse: (input: unknown) =>
@@ -90,7 +90,7 @@ interface SafeParseSchema<TInput> {
       };
 }
 
-// ─── Factory ──────────────────────────────────────────────────────────────────
+// --- Factory ------------------------------------------------------------------
 
 export interface ServerActionOptions<TInput, TOutput> {
   /**
@@ -137,7 +137,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
   return async function serverAction(
     rawInput: TInput,
   ): Promise<ActionResult<TOutput>> {
-    // ── 1. Validate input ──────────────────────────────────────────────────
+    // -- 1. Validate input --------------------------------------------------
     let input = rawInput;
     if (options.schema) {
       const parsed = options.schema.safeParse(rawInput);
@@ -150,7 +150,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
 
     const ctx: ActionMiddlewareContext<TInput> = { actionName, input };
 
-    // ── 2. Before hooks (global → per-action) ─────────────────────────────
+    // -- 2. Before hooks (global → per-action) -----------------------------
     try {
       await _globalMiddleware.beforeAction?.(ctx as ActionMiddlewareContext);
       await options.beforeAction?.(ctx);
@@ -161,7 +161,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       );
     }
 
-    // ── 3. Run handler ─────────────────────────────────────────────────────
+    // -- 3. Run handler -----------------------------------------------------
     let result: ActionResult<TOutput>;
     try {
       const data = await options.handler({ input });
@@ -175,7 +175,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       result = { ok: false, error: message };
     }
 
-    // ── 4. After hooks (per-action → global) ──────────────────────────────
+    // -- 4. After hooks (per-action → global) ------------------------------
     try {
       await options.afterAction?.({ ...ctx, result });
       await _globalMiddleware.afterAction?.({
@@ -189,7 +189,7 @@ export function createServerAction<TInput = unknown, TOutput = unknown>(
       );
     }
 
-    // ── 5. Auto-emit mutation event ───────────────────────────────────────
+    // -- 5. Auto-emit mutation event ---------------------------------------
     if (result.ok) {
       const eventName = inferMutationEvent(actionName);
       if (eventName) {

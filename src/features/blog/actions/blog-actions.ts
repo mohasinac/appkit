@@ -17,7 +17,7 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 
-// ─── Schemas ──────────────────────────────────────────────────────────────
+// --- Schemas --------------------------------------------------------------
 
 const singleImageMediaSchema = z
   .union([
@@ -68,7 +68,7 @@ export const updateBlogPostSchema = createBlogPostSchema.partial();
 export type CreateBlogPostInput = z.infer<typeof createBlogPostSchema>;
 export type UpdateBlogPostInput = z.infer<typeof updateBlogPostSchema>;
 
-// ─── Actions ──────────────────────────────────────────────────────────────
+// --- Actions --------------------------------------------------------------
 
 export async function createBlogPost(
   input: CreateBlogPostInput,

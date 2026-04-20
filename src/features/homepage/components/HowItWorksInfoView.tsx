@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Heading, Section, Span, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface HowItWorksInfoStep {
   number: number;
@@ -41,7 +41,7 @@ export interface HowItWorksInfoViewProps {
   className?: string;
 }
 
-// ─── View ─────────────────────────────────────────────────────────────────────
+// --- View ---------------------------------------------------------------------
 
 export function HowItWorksInfoView({
   title,

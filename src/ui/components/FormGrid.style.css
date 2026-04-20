@@ -6,7 +6,7 @@
   /* gap is driven by the inline style prop */
 }
 
-/* ── FormField ─────────────────────────────────────── */
+/* -- FormField --------------------------------------- */
 
 .appkit-form-field {
   display: flex;

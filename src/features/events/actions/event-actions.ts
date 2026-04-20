@@ -84,7 +84,7 @@ export interface EnterEventInput {
   pollComment?: string;
   formResponses?: Record<string, unknown>;
 }
-// ─── Admin: Create Event ──────────────────────────────────────────────────
+// --- Admin: Create Event --------------------------------------------------
 
 export async function createEvent(
   adminId: string,
@@ -127,7 +127,7 @@ export async function createEvent(
   return event;
 }
 
-// ─── Admin: Update Event ──────────────────────────────────────────────────
+// --- Admin: Update Event --------------------------------------------------
 
 export async function updateEvent(
   adminId: string,
@@ -180,7 +180,7 @@ export async function updateEvent(
   return updated;
 }
 
-// ─── Admin: Delete Event ──────────────────────────────────────────────────
+// --- Admin: Delete Event --------------------------------------------------
 
 export async function deleteEvent(adminId: string, id: string): Promise<void> {
   const existing = await eventRepository.findById(id);
@@ -189,7 +189,7 @@ export async function deleteEvent(adminId: string, id: string): Promise<void> {
   serverLogger.info("deleteEvent", { adminId, eventId: id });
 }
 
-// ─── Admin: Change Status ─────────────────────────────────────────────────
+// --- Admin: Change Status -------------------------------------------------
 
 export async function changeEventStatus(
   adminId: string,
@@ -203,7 +203,7 @@ export async function changeEventStatus(
   return updated;
 }
 
-// ─── Admin: Update Entry Review ───────────────────────────────────────────
+// --- Admin: Update Entry Review -------------------------------------------
 
 export async function adminUpdateEventEntry(
   adminId: string,
@@ -226,7 +226,7 @@ export async function adminUpdateEventEntry(
   });
 }
 
-// ─── Read Actions ──────────────────────────────────────────────────────────
+// --- Read Actions ----------------------------------------------------------
 
 export async function listPublicEvents(
   params?:
@@ -340,7 +340,7 @@ export async function adminGetEventStats(eventId: string): Promise<{
   };
 }
 
-// ─── Public: Enter Event ───────────────────────────────────────────────────
+// --- Public: Enter Event ---------------------------------------------------
 
 export async function enterEvent(
   eventId: string,

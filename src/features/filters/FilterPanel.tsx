@@ -5,7 +5,7 @@ import type { FacetOption } from "./FilterFacetSection";
 import { RangeFilter } from "./RangeFilter";
 import { SwitchFilter } from "./SwitchFilter";
 
-// ─── UrlTable interface ───────────────────────────────────────────────────────
+// --- UrlTable interface -------------------------------------------------------
 
 export interface UrlTable {
   get(key: string): string;
@@ -13,7 +13,7 @@ export interface UrlTable {
   setMany(updates: Record<string, string>): void;
 }
 
-// ─── FilterConfig discriminated union ────────────────────────────────────────
+// --- FilterConfig discriminated union ----------------------------------------
 
 export interface FacetSingleConfig {
   type: "facet-single";
@@ -75,7 +75,7 @@ export type FilterConfig =
   | RangeNumberConfig
   | RangeDateConfig;
 
-// ─── FilterPanel ─────────────────────────────────────────────────────────────
+// --- FilterPanel -------------------------------------------------------------
 
 export interface FilterPanelProps {
   config: FilterConfig[];

@@ -1,4 +1,4 @@
-// ─── Shipping Shared Types ────────────────────────────────────────────────────
+// --- Shipping Shared Types ----------------------------------------------------
 
 export interface ShippingAddress {
   name: string;
@@ -58,7 +58,7 @@ export interface ServiceabilityResult {
   }>;
 }
 
-// ─── Shipping Interface ───────────────────────────────────────────────────────
+// --- Shipping Interface -------------------------------------------------------
 
 /**
  * Shipping carrier adapter contract.

@@ -1,6 +1,6 @@
 import type { MediaField } from "../../media/types/index";
 
-// ─── Enums / union types ──────────────────────────────────────────────────────
+// --- Enums / union types ------------------------------------------------------
 
 export type EventType = "sale" | "offer" | "poll" | "survey" | "feedback";
 export type EventStatus = "draft" | "active" | "paused" | "ended";
@@ -21,7 +21,7 @@ export type FormFieldType =
   | "rating"
   | "file";
 
-// ─── Config sub-types ─────────────────────────────────────────────────────────
+// --- Config sub-types ---------------------------------------------------------
 
 export interface SurveyFormField {
   id: string;
@@ -74,7 +74,7 @@ export interface FeedbackConfig {
   anonymous: boolean;
 }
 
-// ─── Documents ────────────────────────────────────────────────────────────────
+// --- Documents ----------------------------------------------------------------
 
 export interface EventItem {
   id: string;
@@ -128,7 +128,7 @@ export interface LeaderboardEntry {
   points: number;
 }
 
-// ─── List response ────────────────────────────────────────────────────────────
+// --- List response ------------------------------------------------------------
 
 export interface EventListResponse {
   items: EventItem[];
@@ -148,7 +148,7 @@ export interface EventEntryListResponse {
   hasMore: boolean;
 }
 
-// ─── Inputs ───────────────────────────────────────────────────────────────────
+// --- Inputs -------------------------------------------------------------------
 
 export interface CreateEventEntryInput {
   eventId: string;

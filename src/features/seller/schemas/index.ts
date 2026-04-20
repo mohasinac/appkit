@@ -1,7 +1,7 @@
 export * from "./firestore";
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const storeStatusSchema = z.enum([
   "pending",
@@ -26,7 +26,7 @@ export const socialLinksSchema = z.object({
   linkedin: z.string().optional(),
 });
 
-// ─── SellerStore schema ───────────────────────────────────────────────────────
+// --- SellerStore schema -------------------------------------------------------
 
 /**
  * Base Zod schema for a seller's store.
@@ -72,7 +72,7 @@ export const sellerStoreSchema = z.object({
   updatedAt: z.string(),
 });
 
-// ─── PayoutRecord schema ──────────────────────────────────────────────────────
+// --- PayoutRecord schema ------------------------------------------------------
 
 export const payoutRecordSchema = z.object({
   id: z.string(),

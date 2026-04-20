@@ -28,7 +28,7 @@ export interface IClientAuthProvider {
   reloadCurrentUser(): Promise<void>;
 }
 
-// ─── Runtime registry ──────────────────────────────────────────────────────
+// --- Runtime registry ------------------------------------------------------
 let _provider: IClientAuthProvider | null = null;
 
 export function registerClientAuthProvider(

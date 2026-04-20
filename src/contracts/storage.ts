@@ -1,4 +1,4 @@
-// ─── Storage Shared Types ─────────────────────────────────────────────────────
+// --- Storage Shared Types -----------------------------------------------------
 
 export interface UploadOptions {
   contentType?: string;
@@ -16,7 +16,7 @@ export interface StorageFile {
   updatedAt: string; // ISO-8601
 }
 
-// ─── Storage Interface ────────────────────────────────────────────────────────
+// --- Storage Interface --------------------------------------------------------
 
 /**
  * File storage adapter contract.

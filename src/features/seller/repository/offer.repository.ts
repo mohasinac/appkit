@@ -49,7 +49,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     createdAt: { canFilter: false, canSort: true },
   } as const;
 
-  // ─── Create ──────────────────────────────────────────────────────────────
+  // --- Create --------------------------------------------------------------
 
   async create(input: OfferCreateInput): Promise<OfferDocument> {
     const now = new Date();
@@ -81,7 +81,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     return { id, ...data }; // return plaintext to caller
   }
 
-  // ─── Reads ───────────────────────────────────────────────────────────────
+  // --- Reads ---------------------------------------------------------------
 
   async findByBuyer(
     buyerUid: string,
@@ -191,7 +191,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     return snap.size;
   }
 
-  // ─── Mutations ───────────────────────────────────────────────────────────
+  // --- Mutations -----------------------------------------------------------
 
   async updateStatus(
     offerId: string,

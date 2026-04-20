@@ -30,7 +30,7 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 export { SESSION_COLLECTION };
 
 export const sessionsSeedData: SessionDocument[] = [
-  // ── Active: Admin — Chrome Desktop (Windows) ────────────────────────────
+  // -- Active: Admin — Chrome Desktop (Windows) ----------------------------
   {
     id: "session-admin-chrome-desktop-001",
     userId: "user-admin-user-admin",
@@ -49,7 +49,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: John Doe — Chrome Desktop ────────────────────────────────────
+  // -- Active: John Doe — Chrome Desktop ------------------------------------
   {
     id: "session-john-chrome-desktop-001",
     userId: "user-john-doe-johndoe",
@@ -68,7 +68,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: John Doe — Chrome Android (multi-device test) ───────────────
+  // -- Active: John Doe — Chrome Android (multi-device test) ---------------
   {
     id: "session-john-chrome-android-002",
     userId: "user-john-doe-johndoe",
@@ -87,7 +87,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Jane Smith — Safari iOS ─────────────────────────────────────
+  // -- Active: Jane Smith — Safari iOS -------------------------------------
   {
     id: "session-jane-safari-ios-001",
     userId: "user-jane-smith-janes",
@@ -106,7 +106,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: TechHub Seller — Chrome macOS Desktop ───────────────────────
+  // -- Active: TechHub Seller — Chrome macOS Desktop -----------------------
   {
     id: "session-techhub-chrome-mac-001",
     userId: "user-techhub-electronics-electron",
@@ -125,7 +125,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Content Moderator — Firefox Linux Desktop ───────────────────
+  // -- Active: Content Moderator — Firefox Linux Desktop -------------------
   {
     id: "session-moderator-firefox-linux-001",
     userId: "user-moderator-mod-user",
@@ -144,7 +144,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Priya Sharma — Chrome iPad (Tablet) ─────────────────────────
+  // -- Active: Priya Sharma — Chrome iPad (Tablet) -------------------------
   {
     id: "session-priya-chrome-ipad-001",
     userId: "user-priya-sharma-priya",
@@ -163,7 +163,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Artisan Crafts Co. seller — Edge Windows Desktop ─────────────
+  // -- Active: Artisan Crafts Co. seller — Edge Windows Desktop -------------
   {
     id: "session-artisan-edge-win-001",
     userId: "user-home-essentials-homeesse",
@@ -182,7 +182,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Expired: Mike Johnson — Safari macOS (expiresAt is in the past) ──────
+  // -- Expired: Mike Johnson — Safari macOS (expiresAt is in the past) ------
   // Tests: admin session list, cleanup queries, session expiry UI badge
   {
     id: "session-mike-safari-mac-expired-001",
@@ -202,7 +202,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: false,
   },
 
-  // ── Expired: Raj Patel — Chrome Android (natural expiry) ─────────────────
+  // -- Expired: Raj Patel — Chrome Android (natural expiry) -----------------
   {
     id: "session-raj-chrome-android-expired-001",
     userId: "user-raj-patel-rajpatel",
@@ -221,7 +221,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: false,
   },
 
-  // ── Revoked by User: Raj Patel — old laptop session he revoked manually ──
+  // -- Revoked by User: Raj Patel — old laptop session he revoked manually --
   // Tests: revoke session API, "Sign out all devices" flow
   {
     id: "session-raj-chrome-desktop-revoked-001",
@@ -243,7 +243,7 @@ export const sessionsSeedData: SessionDocument[] = [
     revokedBy: "user-raj-patel-rajpatel", // User revoked their own session
   },
 
-  // ── Revoked by Admin: Suspicious session on unknown device ───────────────
+  // -- Revoked by Admin: Suspicious session on unknown device ---------------
   // Tests: admin revoke session API, security audit UI
   {
     id: "session-meera-suspicious-revoked-admin-001",
@@ -265,7 +265,7 @@ export const sessionsSeedData: SessionDocument[] = [
     revokedBy: "admin", // Admin revoked after security review
   },
 
-  // ── Active: Fashion Boutique seller — Chrome Android ─────────────────────
+  // -- Active: Fashion Boutique seller — Chrome Android ---------------------
   {
     id: "session-fashion-chrome-android-001",
     userId: "user-fashion-boutique-fashionb",
@@ -284,7 +284,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Vikram Nair — Chrome Mobile ──────────────────────────────────
+  // -- Active: Vikram Nair — Chrome Mobile ----------------------------------
   {
     id: "session-vikram-chrome-mobile-001",
     userId: "user-vikram-nair-vikram",
@@ -303,7 +303,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Raj Patel — Chrome Desktop ───────────────────────────────────
+  // -- Active: Raj Patel — Chrome Desktop -----------------------------------
   {
     id: "session-raj-chrome-desktop-active-001",
     userId: "user-raj-patel-rajpatel",
@@ -322,7 +322,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Ananya Bose — Safari iOS ─────────────────────────────────────
+  // -- Active: Ananya Bose — Safari iOS -------------------------------------
   {
     id: "session-ananya-safari-ios-001",
     userId: "user-ananya-bose-ananya",
@@ -341,7 +341,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Pooja Mehta — Chrome Desktop ─────────────────────────────────
+  // -- Active: Pooja Mehta — Chrome Desktop ---------------------------------
   {
     id: "session-pooja-chrome-desktop-001",
     userId: "user-pooja-mehta-pooja",
@@ -360,7 +360,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Ravi Kumar — Chrome Android ──────────────────────────────────
+  // -- Active: Ravi Kumar — Chrome Android ----------------------------------
   {
     id: "session-ravi-chrome-android-001",
     userId: "user-ravi-kumar-ravi",
@@ -379,7 +379,7 @@ export const sessionsSeedData: SessionDocument[] = [
     isActive: true,
   },
 
-  // ── Active: Sneha Gupta — Firefox Desktop ────────────────────────────────
+  // -- Active: Sneha Gupta — Firefox Desktop --------------------------------
   {
     id: "session-sneha-firefox-desktop-001",
     userId: "user-sneha-gupta-sneha",

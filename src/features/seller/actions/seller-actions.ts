@@ -46,7 +46,7 @@ import type { OrderDocument } from "../../orders/schemas/firestore";
 import type { CouponDocument } from "../../promotions/schemas/firestore";
 import type { FirebaseSieveResult } from "../../../providers/db-firebase/index";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export interface BecomeSellerResult {
   storeStatus: "pending" | "approved" | "rejected";
@@ -130,7 +130,7 @@ export interface SellerListParams {
   pageSize?: number;
 }
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
+// --- Helper -------------------------------------------------------------------
 
 async function finalizeProductMediaReferences<
   T extends Record<string, unknown>,
@@ -170,7 +170,7 @@ function maskAccountNumber(accountNumber: string): string {
   return "X".repeat(accountNumber.length - 4) + accountNumber.slice(-4);
 }
 
-// ─── Become Seller ────────────────────────────────────────────────────────────
+// --- Become Seller ------------------------------------------------------------
 
 export async function becomeSeller(
   userId: string,
@@ -194,7 +194,7 @@ export async function becomeSeller(
   return { storeStatus: "pending" };
 }
 
-// ─── Create Store ─────────────────────────────────────────────────────────────
+// --- Create Store -------------------------------------------------------------
 
 export async function createStore(
   userId: string,
@@ -241,7 +241,7 @@ export async function createStore(
   return { store };
 }
 
-// ─── Update Store ─────────────────────────────────────────────────────────────
+// --- Update Store -------------------------------------------------------------
 
 export async function updateStore(
   userId: string,
@@ -292,7 +292,7 @@ export async function updateStore(
   return { store: updated };
 }
 
-// ─── Update Payout Settings ───────────────────────────────────────────────────
+// --- Update Payout Settings ---------------------------------------------------
 
 type SafePayoutDetails = Omit<SellerPayoutDetails, "bankAccount"> & {
   bankAccount?: Omit<
@@ -334,7 +334,7 @@ export async function updatePayoutSettings(
   return { payoutDetails: { ...payoutDetails, bankAccount: safeBank } };
 }
 
-// ─── Request Payout ───────────────────────────────────────────────────────────
+// --- Request Payout -----------------------------------------------------------
 
 async function computeSellerEarnings(sellerId: string) {
   const products = await productRepository.findBySeller(sellerId);
@@ -417,7 +417,7 @@ export async function requestPayout(
   return payout;
 }
 
-// ─── Bulk Seller Order ────────────────────────────────────────────────────────
+// --- Bulk Seller Order --------------------------------------------------------
 
 export async function bulkSellerOrder(
   userId: string,
@@ -533,7 +533,7 @@ export async function bulkSellerOrder(
   };
 }
 
-// ─── Create Seller Product ────────────────────────────────────────────────────
+// --- Create Seller Product ----------------------------------------------------
 
 export async function createSellerProduct(
   userId: string,
@@ -552,7 +552,7 @@ export async function createSellerProduct(
   serverLogger.info("createSellerProduct: product created", { userId });
 }
 
-// ─── Read Actions ─────────────────────────────────────────────────────────────
+// --- Read Actions -------------------------------------------------------------
 
 export async function getSellerStore(
   userId: string,
@@ -735,7 +735,7 @@ export async function sellerDeleteProduct(
   serverLogger.info("sellerDeleteProduct", { userId, productId });
 }
 
-// ─── Custom Ship Order ────────────────────────────────────────────────────────
+// --- Custom Ship Order --------------------------------------------------------
 
 export async function customShipOrder(
   userId: string,

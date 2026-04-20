@@ -13,7 +13,7 @@ import { getProviders } from "../../../contracts";
 import type { AuthUser as ContractsAuthUser } from "../../../contracts";
 import type { AuthUser, UserRole } from "../types/index";
 
-// ─── Transform ────────────────────────────────────────────────────────────────
+// --- Transform ----------------------------------------------------------------
 
 function toClientUser(u: ContractsAuthUser): AuthUser {
   return {
@@ -26,7 +26,7 @@ function toClientUser(u: ContractsAuthUser): AuthUser {
   };
 }
 
-// ─── GET /api/auth/me ─────────────────────────────────────────────────────────
+// --- GET /api/auth/me ---------------------------------------------------------
 
 /**
  * Return the currently authenticated user's profile.

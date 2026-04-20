@@ -1,3 +1,9 @@
+import type {
+  CollectionReference,
+  DocumentData,
+  Query,
+} from "firebase-admin/firestore";
+
 /**
  * Firestore serialisation helpers.
  *
@@ -5,7 +11,7 @@
  * documents and application-level objects.
  */
 
-// ─── Undefined removal ────────────────────────────────────────────────────────
+// --- Undefined removal --------------------------------------------------------
 
 /**
  * Recursively remove `undefined` values from an object.
@@ -51,7 +57,7 @@ export function prepareForFirestore<T extends Record<string, unknown>>(
   return removeUndefined(data);
 }
 
-// ─── Timestamp deserialisation ────────────────────────────────────────────────
+// --- Timestamp deserialisation ------------------------------------------------
 
 /**
  * Recursively convert Firestore `Timestamp` instances to plain `Date` objects.
@@ -85,4 +91,26 @@ export function deserializeTimestamps<T>(obj: T): T {
   }
 
   return obj;
+}
+
+type CountCapableQuery = Query<DocumentData> & {
+  count?: () => {
+    get: () => Promise<{
+      data: () => { count: number };
+    }>;
+  };
+};
+
+export async function getFirestoreCount(
+  query: Query<DocumentData> | CollectionReference<DocumentData>,
+): Promise<number> {
+  const countQuery = query as CountCapableQuery;
+
+  if (typeof countQuery.count === "function") {
+    const snapshot = await countQuery.count().get();
+    return snapshot.data().count;
+  }
+
+  const snapshot = await query.get();
+  return snapshot.size;
 }

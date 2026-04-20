@@ -12,7 +12,7 @@ import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
-// ─── ViewReviewModal ──────────────────────────────────────────────────────────
+// --- ViewReviewModal ----------------------------------------------------------
 
 export interface ViewReviewModalProps {
   review: Review | null;

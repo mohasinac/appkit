@@ -1,4 +1,4 @@
-// ─── Store ────────────────────────────────────────────────────────────────────
+// --- Store --------------------------------------------------------------------
 
 export type StoreStatus = "pending" | "active" | "suspended" | "rejected";
 
@@ -36,7 +36,7 @@ export interface SellerStore {
   updatedAt: string;
 }
 
-// ─── Payout ───────────────────────────────────────────────────────────────────
+// --- Payout -------------------------------------------------------------------
 
 export type PayoutStatus = "pending" | "processing" | "completed" | "failed";
 export type PayoutPaymentMethod = "bank_transfer" | "upi";
@@ -74,7 +74,7 @@ export interface PayoutRecord {
   updatedAt: string;
 }
 
-// ─── Payout settings ──────────────────────────────────────────────────────────
+// --- Payout settings ----------------------------------------------------------
 
 export interface SellerPayoutSettings {
   preferredMethod: PayoutPaymentMethod;
@@ -84,7 +84,7 @@ export interface SellerPayoutSettings {
   autoPayoutThreshold: number;
 }
 
-// ─── Dashboard stats ──────────────────────────────────────────────────────────
+// --- Dashboard stats ----------------------------------------------------------
 
 export interface SellerDashboardStats {
   totalRevenue: number;
@@ -96,7 +96,7 @@ export interface SellerDashboardStats {
   currency: string;
 }
 
-// ─── Analytics ────────────────────────────────────────────────────────────────
+// --- Analytics ----------------------------------------------------------------
 
 export interface SellerRevenueDataPoint {
   date: string;
@@ -137,7 +137,7 @@ export interface SellerAnalyticsTopProduct {
   mainImage?: string;
 }
 
-// ─── List responses ───────────────────────────────────────────────────────────
+// --- List responses -----------------------------------------------------------
 
 export interface PayoutListResponse {
   items: PayoutRecord[];
@@ -157,7 +157,7 @@ export interface SellerListResponse {
   hasMore: boolean;
 }
 
-// ─── Inputs ───────────────────────────────────────────────────────────────────
+// --- Inputs -------------------------------------------------------------------
 
 export interface UpdateSellerStoreInput {
   storeName?: string;

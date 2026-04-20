@@ -11,7 +11,7 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 
-// ─── Schemas ──────────────────────────────────────────────────────────────
+// --- Schemas --------------------------------------------------------------
 
 export const createSectionSchema = z.object({
   type: z.string().min(1),
@@ -29,7 +29,7 @@ export const updateSectionSchema = z.object({
 export type CreateHomepageSectionInput = z.infer<typeof createSectionSchema>;
 export type UpdateHomepageSectionInput = z.infer<typeof updateSectionSchema>;
 
-// ─── Actions ──────────────────────────────────────────────────────────────
+// --- Actions --------------------------------------------------------------
 
 export async function createHomepageSection(
   input: CreateHomepageSectionInput,

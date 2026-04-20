@@ -71,7 +71,7 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const repo = db.getRepository<Review>("reviews");
 
-    // ── ?featured=true ────────────────────────────────────────────────────────
+    // -- ?featured=true --------------------------------------------------------
     // Returns flat Review[] for homepage testimonial sections.
     if (featured) {
       const result = await repo.findAll({
@@ -87,7 +87,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return response;
     }
 
-    // ── ?latest=true ──────────────────────────────────────────────────────────
+    // -- ?latest=true ----------------------------------------------------------
     // Paginated latest approved reviews, no productId required.
     if (latest) {
       const latestPageSize = numParam(url, "pageSize", 24);
@@ -114,7 +114,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       return response;
     }
 
-    // ── ?productId=<id> ───────────────────────────────────────────────────────
+    // -- ?productId=<id> -------------------------------------------------------
     // Paginated reviews for a product with aggregate rating stats.
     const productId = param(url, "productId");
     if (!productId) {

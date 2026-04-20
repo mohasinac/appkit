@@ -7,7 +7,7 @@
  * No Firebase SDK imported here — types only.
  */
 
-// ─── Job context ──────────────────────────────────────────────────────────────
+// --- Job context --------------------------------------------------------------
 
 /** Context passed into every scheduled job at runtime. */
 export interface JobContext {
@@ -31,7 +31,7 @@ export interface JobResult {
   meta?: Record<string, unknown>;
 }
 
-// ─── Job definition ───────────────────────────────────────────────────────────
+// --- Job definition -----------------------------------------------------------
 
 /** The async function that runs when the job is triggered. */
 export type ScheduledJobFn = (ctx: JobContext) => Promise<JobResult>;
@@ -66,7 +66,7 @@ export interface CronJobDefinition {
 /** Options for createCronJob() factory. */
 export type CreateCronJobOptions = Omit<CronJobDefinition, "handler">;
 
-// ─── Registry types ───────────────────────────────────────────────────────────
+// --- Registry types -----------------------------------------------------------
 
 /** Map of job name → definition. */
 export type CronRegistry = Map<string, CronJobDefinition>;

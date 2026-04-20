@@ -3,7 +3,7 @@ import { Breadcrumb } from "../../../ui";
 import type { BreadcrumbItem } from "../../../ui";
 import type { CategoryItem, CategoryAncestor } from "../types";
 
-// ─── BreadcrumbTrail ──────────────────────────────────────────────────────────
+// --- BreadcrumbTrail ----------------------------------------------------------
 
 export interface BreadcrumbTrailProps {
   /**

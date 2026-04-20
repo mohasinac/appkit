@@ -2,7 +2,7 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 /** Minimal result item used by the featured results section. */
 export interface FeaturedResultItem {
@@ -22,7 +22,7 @@ export interface FeaturedResultsSectionProps {
   className?: string;
 }
 
-// ─── Sectmon ─────────────────────────────────────────────────────────────────
+// --- Sectmon -----------------------------------------------------------------
 
 export function FeaturedResultsSection({
   title,

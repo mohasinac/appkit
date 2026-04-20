@@ -7,11 +7,11 @@ import type {
   ScheduledJobFn,
 } from "./types";
 
-// ─── Global Registry ──────────────────────────────────────────────────────────
+// --- Global Registry ----------------------------------------------------------
 
 const registry: CronRegistry = new Map();
 
-// ─── createCronJob ────────────────────────────────────────────────────────────
+// --- createCronJob ------------------------------------------------------------
 
 /**
  * Factory that creates a fully-typed cron job definition and registers it
@@ -55,7 +55,7 @@ export function createCronJob(
   return definition;
 }
 
-// ─── Registry Accessors ───────────────────────────────────────────────────────
+// --- Registry Accessors -------------------------------------------------------
 
 /** Returns the global registry map (read-only view). */
 export function getCronRegistry(): ReadonlyMap<string, CronJobDefinition> {
@@ -86,7 +86,7 @@ export function _resetCronRegistry(): void {
   registry.clear();
 }
 
-// ─── runJob (test / CI helper) ────────────────────────────────────────────────
+// --- runJob (test / CI helper) ------------------------------------------------
 
 /**
  * Manually invoke any registered job by name.

@@ -1,4 +1,4 @@
-// ─── Repository Interfaces ────────────────────────────────────────────────────
+// --- Repository Interfaces ----------------------------------------------------
 // Segregated per ISP: features that only read never depend on IWriteRepository.
 
 /** Field comparison operators supported by Sieve-style query strings. */
@@ -41,14 +41,14 @@ export interface PagedResult<T> {
   totalPages: number;
 }
 
-// ─── Read contract ─────────────────────────────────────────────────────────
+// --- Read contract ---------------------------------------------------------
 export interface IReadRepository<T> {
   findById(id: string): Promise<T | null>;
   findAll(query?: SieveQuery): Promise<PagedResult<T>>;
   findWhere(field: keyof T, op: WhereOp, value: unknown): Promise<T[]>;
 }
 
-// ─── Write contract ────────────────────────────────────────────────────────
+// --- Write contract --------------------------------------------------------
 export interface IWriteRepository<T> {
   create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T>;
   update(id: string, data: Partial<T>): Promise<T>;
@@ -86,7 +86,7 @@ export interface IDbProvider {
   getRepository<T>(collection: string): IRepository<T>;
 }
 
-// ─── Repository lifecycle hooks ───────────────────────────────────────────────
+// --- Repository lifecycle hooks -----------------------------------------------
 
 /**
  * Optional lifecycle hooks that can be attached to any `IRepository<T>`.
@@ -148,7 +148,7 @@ export interface RepositoryLifecycleHooks<T> {
   afterDelete?: (id: string) => void | Promise<void>;
 }
 
-// ─── Global hooks registry ────────────────────────────────────────────────────
+// --- Global hooks registry ----------------------------------------------------
 
 const _hooksRegistry = new Map<string, RepositoryLifecycleHooks<unknown>>();
 

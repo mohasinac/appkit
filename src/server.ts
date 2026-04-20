@@ -1252,11 +1252,15 @@ export { getWishlistForUser } from "./features/wishlist/server";
 // removeFromWishlist - Helper for remove from wishlist.
 export { removeFromWishlist } from "./features/wishlist/server";
 
-// ── Monitoring ──────────────────────────────────────────────────────────────
+// -- Repositories ------------------------------------------------------------
+// siteSettingsRepository - Shared export for site settings repository.
+export { siteSettingsRepository } from "./repositories/index";
+
+// -- Monitoring --------------------------------------------------------------
 // serverLogger - Structured server-side logger.
 export { serverLogger } from "./monitoring/index";
 
-// ── Security / Rate limiting ────────────────────────────────────────────────
+// -- Security / Rate limiting ------------------------------------------------
 // applyRateLimit - Apply rate limiting middleware.
 export { applyRateLimit } from "./security/index";
 // rateLimitByIdentifier - Rate limit by a string identifier.
@@ -1266,10 +1270,10 @@ export { RateLimitPresets } from "./security/index";
 // maskPublicEventEntry - Redact PII from event entries before public exposure.
 export { maskPublicEventEntry } from "./security/index";
 
-// ── Instrumentation ─────────────────────────────────────────────────────────
+// -- Instrumentation ---------------------------------------------------------
 // createInstrumentation - Factory for Next.js instrumentation hooks.
 export { createInstrumentation } from "./instrumentation/index";
 
-// ── i18n / messages ─────────────────────────────────────────────────────────
+// -- i18n / messages ---------------------------------------------------------
 // mergeFeatureMessages - Merge per-feature message files into a single bundle.
 export { mergeFeatureMessages } from "./cli/index";

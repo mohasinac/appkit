@@ -10,7 +10,7 @@
 
 import type { PaymentGateway } from "../features/payments/schemas";
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// --- Types -----------------------------------------------------------------
 
 /** Vendor-neutral payment response returned after the user completes payment. */
 export interface GatewayPaymentResponse {
@@ -50,7 +50,7 @@ export interface OpenGatewayOptions {
   };
 }
 
-// ─── Contract ──────────────────────────────────────────────────────────────
+// --- Contract --------------------------------------------------------------
 
 export interface IClientPaymentGateway {
   /** Which gateway this adapter handles. */
@@ -71,7 +71,7 @@ export interface IClientPaymentGateway {
   openPayment(options: OpenGatewayOptions): Promise<GatewayPaymentResponse>;
 }
 
-// ─── Runtime Registry ──────────────────────────────────────────────────────
+// --- Runtime Registry ------------------------------------------------------
 
 const _gateways = new Map<PaymentGateway, IClientPaymentGateway>();
 

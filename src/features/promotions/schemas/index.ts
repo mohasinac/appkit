@@ -1,7 +1,7 @@
 export * from "./firestore";
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const couponTypeSchema = z.enum([
   "percentage",
@@ -12,7 +12,7 @@ export const couponTypeSchema = z.enum([
 
 export const couponScopeSchema = z.enum(["admin", "seller"]);
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a coupon/promotion.

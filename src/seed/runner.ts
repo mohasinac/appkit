@@ -6,8 +6,17 @@ import { encryptPiiFields } from "../security/pii-encrypt";
 const BATCH_SIZE = 400; // Firestore max batch is 500
 
 export async function runSeed(config: SeedConfig): Promise<SeedResult> {
+  const { getApp, getApps, initializeApp } = await import("firebase-admin/app");
   const { getFirestore } = await import("firebase-admin/firestore");
-  const db = config.projectId ? getFirestore(config.projectId) : getFirestore();
+  const app = config.projectId
+    ? (() => {
+        const appName = `seed-${config.projectId}`;
+        return getApps().some((candidate) => candidate.name === appName)
+          ? getApp(appName)
+          : initializeApp({ projectId: config.projectId }, appName);
+      })()
+    : getApps()[0];
+  const db = app ? getFirestore(app) : getFirestore();
   const start = Date.now();
   let totalDocuments = 0;
 

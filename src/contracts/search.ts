@@ -1,4 +1,4 @@
-// ─── Search Shared Types ──────────────────────────────────────────────────────
+// --- Search Shared Types ------------------------------------------------------
 
 export interface SearchOptions {
   page?: number;
@@ -34,7 +34,7 @@ export interface SuggestOptions {
   filters?: string;
 }
 
-// ─── Search Interface ─────────────────────────────────────────────────────────
+// --- Search Interface ---------------------------------------------------------
 
 /**
  * Full-text search adapter contract.

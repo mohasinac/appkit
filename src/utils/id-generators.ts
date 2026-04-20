@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SEO-Friendly ID Generators
  *
  * Every generator accepts an optional `customId` override. When supplied and
@@ -233,7 +233,7 @@ export function generatePayoutId(input: GeneratePayoutIdInput): string {
   return `payout-${sellerSlug}-${y}${m}${d}-${generateRandomString(6)}`;
 }
 
-// ─── Offer ────────────────────────────────────────────────────────────────────
+// --- Offer --------------------------------------------------------------------
 
 export interface GenerateOfferIdInput {
   productId: string;
@@ -257,7 +257,7 @@ export function generateOfferId(input: GenerateOfferIdInput): string {
   return `offer-${productPrefix}-${buyerPrefix}-${y}${m}${d}-${generateRandomString(6)}`;
 }
 
-// ─── ID existence helpers ─────────────────────────────────────────────────────
+// --- ID existence helpers -----------------------------------------------------
 
 export async function idExists(
   getExistingId: () => Promise<unknown>,
@@ -282,7 +282,7 @@ export async function generateUniqueId(
   return `${generateId(maxAttempts)}-${generateRandomString(4)}`;
 }
 
-// ─── Barcode / QR helpers ─────────────────────────────────────────────────────
+// --- Barcode / QR helpers -----------------------------------------------------
 
 export function generateBarcodeFromId(id: string): string {
   const digits = id.replace(/\D/g, "");
@@ -299,7 +299,7 @@ export function generateQRCodeData(id: string, baseUrl: string): string {
   return `${baseUrl}/${id}`;
 }
 
-// ─── Media filename generators ───────────────────────────────────────────────
+// --- Media filename generators -----------------------------------------------
 //
 // Naming patterns (all lowercase, hyphen-separated):
 //   product image  → product-{name}-{category}-{store}-image-{n}.{ext}
@@ -553,7 +553,7 @@ export function generatePayoutDocFilename(
   return `payout-doc-${seller}-${y}${m}${d}.pdf`;
 }
 
-// ─── Unified media filename dispatcher ───────────────────────────────────────
+// --- Unified media filename dispatcher ---------------------------------------
 
 export type MediaFilenameContext =
   | ({ type: "product-image" } & GenerateProductImageFilenameInput)

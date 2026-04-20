@@ -52,7 +52,7 @@ export type SellerUpdateCouponInput = Partial<
   Omit<SellerCreateCouponInput, "sellerCode" | "applicableToAuctions">
 >;
 
-// ─── Create ────────────────────────────────────────────────────────────────
+// --- Create ----------------------------------------------------------------
 
 export async function sellerCreateCoupon(
   userId: string,
@@ -105,7 +105,7 @@ export async function sellerCreateCoupon(
   return coupon;
 }
 
-// ─── Update ────────────────────────────────────────────────────────────────
+// --- Update ----------------------------------------------------------------
 
 export async function sellerUpdateCoupon(
   userId: string,
@@ -145,7 +145,7 @@ export async function sellerUpdateCoupon(
   return updated;
 }
 
-// ─── Delete ────────────────────────────────────────────────────────────────
+// --- Delete ----------------------------------------------------------------
 
 export async function sellerDeleteCoupon(
   userId: string,

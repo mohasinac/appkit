@@ -8,7 +8,7 @@ import {
   generateHomepageSectionId,
 } from "../../../utils/id-generators";
 
-// ─── Carousel Slides ──────────────────────────────────────────────────────────
+// --- Carousel Slides ----------------------------------------------------------
 
 export interface GridCard {
   id: string;
@@ -149,7 +149,7 @@ export function canActivateSlide(currentActiveCount: number): boolean {
   return currentActiveCount < MAX_ACTIVE_SLIDES;
 }
 
-// ─── Homepage Sections ────────────────────────────────────────────────────────
+// --- Homepage Sections --------------------------------------------------------
 
 export interface WelcomeSectionConfig {
   h1: string;

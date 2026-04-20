@@ -61,7 +61,7 @@ const productUpdateSchema = z
   })
   .passthrough();
 
-// ─── GET /api/products/[id] ───────────────────────────────────────────────────
+// --- GET /api/products/[id] ---------------------------------------------------
 
 export async function GET(
   _request: Request,
@@ -105,7 +105,7 @@ export async function GET(
   }
 }
 
-// ─── PATCH /api/products/[id] ─────────────────────────────────────────────────
+// --- PATCH /api/products/[id] -------------------------------------------------
 // Auth required; the caller must be the owner, a moderator, or an admin.
 
 export const PATCH = createRouteHandler<
@@ -151,7 +151,7 @@ export const PATCH = createRouteHandler<
   },
 });
 
-// ─── DELETE /api/products/[id] ────────────────────────────────────────────────
+// --- DELETE /api/products/[id] ------------------------------------------------
 // Soft-delete (sets status to "discontinued"). Auth required.
 
 export const DELETE = createRouteHandler<never, { id: string }>({

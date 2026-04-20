@@ -2,7 +2,7 @@ export * from "./firestore";
 
 import { z } from "zod";
 
-// ─── Form schemas ─────────────────────────────────────────────────────────────
+// --- Form schemas -------------------------------------------------------------
 
 /**
  * Login form schema — use with react-hook-form + zodResolver.
@@ -31,7 +31,7 @@ export const resetPasswordSchema = z.object({
   password: z.string().min(6),
 });
 
-// ─── Auth user schema ─────────────────────────────────────────────────────────
+// --- Auth user schema ---------------------------------------------------------
 
 export const userRoleSchema = z.enum([
   "customer",

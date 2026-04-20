@@ -9,7 +9,7 @@ const _CURRENCY = getDefaultCurrency();
 
 import type { BidDocument } from "../features/auctions/schemas";
 
-// ─── Dynamic date helpers ───────────────────────────────────────────────────
+// --- Dynamic date helpers ---------------------------------------------------
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
@@ -157,7 +157,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(29),
   },
 
-  // ─── MacBook Pro M3 Auction Bids ──────────────────────────────────────────
+  // --- MacBook Pro M3 Auction Bids ------------------------------------------
   // productId: product-macbook-pro-m3-auction-electronics-techhub-1
   // Starting: 100000, Current: 115000, Bids: 7
   {
@@ -270,7 +270,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(18),
   },
 
-  // ─── NGE Evangelion Signed Poster Auction Bids ────────────────────────────
+  // --- NGE Evangelion Signed Poster Auction Bids ----------------------------
   // productId: product-vintage-leica-camera-auction-artisan-1
   // Starting: 85000, Current: 97500, Bids: 5
   {
@@ -357,7 +357,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(19),
   },
 
-  // ─── Air Jordan Auction Bids ──────────────────────────────────────────────
+  // --- Air Jordan Auction Bids ----------------------------------------------
   // productId: product-limited-air-jordan-sneakers-auction-artisan-1
   // Starting: 25000, Current: 38000, Bids: 11
   {
@@ -534,7 +534,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(18),
   },
 
-  // ── CANCELLED bid — user withdrew before auction ended ───────────────────
+  // -- CANCELLED bid — user withdrew before auction ended -------------------
   // Tests: cancel bid API, bid list filtered by status, refund-on-cancel flow
   {
     id: "bid-jordan-chicago-raj-cancelled-20260215-x9z1a4",
@@ -556,7 +556,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
   // BIDS FOR NEW AUCTION PRODUCTS (16 new auctions)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  // ── PS5 Slim (closing March 7) — 9 bids ──────────────────────────────────
+  // -- PS5 Slim (closing March 7) — 9 bids ----------------------------------
   {
     id: "bid-ps5-slim-john-1-20260223",
     productId: "auction-ps5-slim-gaming-console-techhub-1",
@@ -619,7 +619,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(9),
   },
 
-  // ── AirPods Pro 2 (closing March 8) — 6 bids ─────────────────────────────
+  // -- AirPods Pro 2 (closing March 8) — 6 bids -----------------------------
   {
     id: "bid-airpods-pro2-sneha-1-20260225",
     productId: "auction-airpods-pro2-audio-techhub-1",
@@ -667,7 +667,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ── Swiss TAG Heuer Watch (closing March 8) — 4 bids ─────────────────────
+  // -- Swiss TAG Heuer Watch (closing March 8) — 4 bids ---------------------
   {
     id: "bid-tagheuer-john-1-20260220",
     productId: "auction-swiss-titanium-watch-fashion-1",
@@ -715,7 +715,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── Pioneer Hi-Fi System (closing March 9) — 5 bids ──────────────────────
+  // -- Pioneer Hi-Fi System (closing March 9) — 5 bids ----------------------
   {
     id: "bid-pioneer-hifi-vikram-1-20260226",
     productId: "auction-pioneer-hifi-system-homeessentials-1",
@@ -765,7 +765,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ── Vintage Denim Jacket (closing March 9) — 7 bids ──────────────────────
+  // -- Vintage Denim Jacket (closing March 9) — 7 bids ----------------------
   {
     id: "bid-denim-jacket-ananya-1-20260225",
     productId: "auction-vintage-denim-jacket-fashion-1",
@@ -812,7 +812,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── Bose 700 Headphones (closing March 8) — 5 bids ───────────────────────
+  // -- Bose 700 Headphones (closing March 8) — 5 bids -----------------------
   {
     id: "bid-bose700-priya-1-20260224",
     productId: "auction-bose700-headphones-homeessentials-1",
@@ -860,7 +860,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ── Supreme Box Logo Tee (March 11) — 5 bids ─────────────────────────────
+  // -- Supreme Box Logo Tee (March 11) — 5 bids -----------------------------
   {
     id: "bid-supreme-tee-ravi-1-20260228",
     productId: "auction-supreme-box-logo-tee-fashion-1",
@@ -876,7 +876,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     createdAt: daysAgo(9),
     updatedAt: daysAgo(7),
   },
-  // ── Makima 1/7 Kotobukiya (AnimeCraft Apparel) — 3 bids ──────────────────
+  // -- Makima 1/7 Kotobukiya (AnimeCraft Apparel) — 3 bids ------------------
   {
     id: "bid-supreme-tee-john-1-20260302",
     productId: "auction-chainsaw-man-makima-figure-fashion-1",
@@ -926,7 +926,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Sukuna 1/6 MegaHouse (OtakuShelf) — 3 bids ──────────────────────────
+  // -- Sukuna 1/6 MegaHouse (OtakuShelf) — 3 bids --------------------------
   {
     id: "bid-trek-bike-ravi-1-20260221",
     productId: "auction-jjk-sukuna-figure-homeessentials-1",
@@ -977,7 +977,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ── Saber Alter Wedding 1/7 (FigureVault JP) — 2 bids ───────────────────
+  // -- Saber Alter Wedding 1/7 (FigureVault JP) — 2 bids -------------------
   {
     id: "bid-hermes-scarf-jane-1-20260302",
     productId: "auction-fate-saber-alter-figure-techhub-1",
@@ -1011,7 +1011,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── Spirited Away Production Cel (OtakuShelf) — 3 bids ──────────────────
+  // -- Spirited Away Production Cel (OtakuShelf) — 3 bids ------------------
   {
     id: "bid-babolat-ravi-1-20260301",
     productId: "auction-spirited-away-cel-homeessentials-1",
@@ -1061,7 +1061,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── Charizard 1st Edition PSA 9 (AnimeCraft) — 2 bids ───────────────────
+  // -- Charizard 1st Edition PSA 9 (AnimeCraft) — 2 bids -------------------
   {
     id: "bid-sony-a7iv-john-1-20260226",
     productId: "auction-pokemon-charizard-1st-ed-fashion-1",
@@ -1095,7 +1095,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── PG Wing Zero Built (FigureVault JP) — 2 bids ────────────────────────
+  // -- PG Wing Zero Built (FigureVault JP) — 2 bids ------------------------
   {
     id: "bid-dyson-v15-pooja-1-20260302",
     productId: "auction-gunpla-pg-wing-zero-techhub-1",
@@ -1129,7 +1129,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── Rem Wedding 1/7 GSC (FigureVault JP) — 2 bids ───────────────────────
+  // -- Rem Wedding 1/7 GSC (FigureVault JP) — 2 bids -----------------------
   {
     id: "bid-nikon-z30-sneha-1-20260303",
     productId: "auction-rezero-rem-wedding-figure-techhub-1",
@@ -1163,7 +1163,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Oda Signed Artbook (FigureVault JP) — 2 bids ────────────────────────
+  // -- Oda Signed Artbook (FigureVault JP) — 2 bids ------------------------
   {
     id: "bid-iphone15-bundle-ravi-1-20260304",
     productId: "auction-one-piece-signed-artbook-techhub-1",
@@ -1197,7 +1197,7 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Makima figure 2nd wave (AnimeCraft) — 2 more bids ────────────────────
+  // -- Makima figure 2nd wave (AnimeCraft) — 2 more bids --------------------
   {
     id: "bid-kanjeevaram-ananya-1-20260304",
     productId: "auction-chainsaw-man-makima-figure-fashion-1",

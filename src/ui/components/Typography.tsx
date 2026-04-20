@@ -34,7 +34,7 @@ const TYPOGRAPHY = {
   },
 } as const;
 
-// ─── Heading ─────────────────────────────────────────────────────────────────
+// --- Heading -----------------------------------------------------------------
 
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -68,7 +68,7 @@ export function Heading({
   );
 }
 
-// ─── Text ─────────────────────────────────────────────────────────────────────
+// --- Text ---------------------------------------------------------------------
 
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
@@ -106,7 +106,7 @@ export function Text({
   );
 }
 
-// ─── Label ────────────────────────────────────────────────────────────────────
+// --- Label --------------------------------------------------------------------
 
 interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
   required?: boolean;
@@ -130,7 +130,7 @@ export function Label({
   );
 }
 
-// ─── Caption ─────────────────────────────────────────────────────────────────
+// --- Caption -----------------------------------------------------------------
 
 interface CaptionProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** "default" — muted grey (default); "accent" — indigo, semibold; "inverse" — light indigo for use on dark indigo backgrounds */
@@ -162,7 +162,7 @@ export function Caption({
   );
 }
 
-// ─── Span ─────────────────────────────────────────────────────────────────────
+// --- Span ---------------------------------------------------------------------
 /**
  * Inline wrapper for styled text fragments. Use instead of a raw `<span>`.
  * When `variant` is "inherit" (default) the element carries no colour classes

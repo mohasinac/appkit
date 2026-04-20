@@ -22,7 +22,7 @@ const EXPECTED_AUTH_CODES = new Set([
   "auth/user-not-found",
 ]);
 
-// ─── Token helpers ────────────────────────────────────────────────────────────
+// --- Token helpers ------------------------------------------------------------
 
 /** Verify a Firebase ID token. Returns null for expected auth failures. */
 export async function verifyIdToken(
@@ -156,7 +156,7 @@ export async function requireRole(
   return { ...user, role: userRole };
 }
 
-// ─── Server-action / RSC helpers (no-arg, reads Next.js cookie store) ─────────
+// --- Server-action / RSC helpers (no-arg, reads Next.js cookie store) ---------
 
 /**
  * Require authentication in a Server Action or RSC context.
@@ -182,7 +182,7 @@ export async function requireRoleUser(
   return requireRole(cookieStore, role, resolveRole);
 }
 
-// ─── Request-level helpers ────────────────────────────────────────────────────
+// --- Request-level helpers ----------------------------------------------------
 
 /**
  * Resolve the `__session` cookie from a `Request` or `NextRequest`.

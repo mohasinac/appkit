@@ -12,7 +12,7 @@
   outline: none;
 }
 
-/* ── Counter ───────────────────────────────────────── */
+/* -- Counter ----------------------------------------- */
 
 .appkit-lightbox__counter {
   position: absolute;
@@ -24,7 +24,7 @@
   font-weight: 500;
 }
 
-/* ── Image area ────────────────────────────────────── */
+/* -- Image area -------------------------------------- */
 
 .appkit-lightbox__image-wrap {
   flex: 1;
@@ -44,7 +44,7 @@
   user-select: none;
 }
 
-/* ── Zoom hint ─────────────────────────────────────── */
+/* -- Zoom hint --------------------------------------- */
 
 .appkit-lightbox__zoom-hint {
   position: absolute;

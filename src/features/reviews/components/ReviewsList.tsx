@@ -14,7 +14,7 @@ import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
-// ─── ReviewCard ───────────────────────────────────────────────────────────────
+// --- ReviewCard ---------------------------------------------------------------
 
 export interface ReviewCardProps {
   review: Review;
@@ -109,7 +109,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
   );
 }
 
-// ─── ReviewsList ──────────────────────────────────────────────────────────────
+// --- ReviewsList --------------------------------------------------------------
 
 export interface ReviewsListProps {
   reviews: Review[];

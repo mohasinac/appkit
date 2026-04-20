@@ -34,6 +34,7 @@ export {
   removeUndefined,
   prepareForFirestore,
   deserializeTimestamps,
+  getFirestoreCount,
 } from "./helpers";
 
 // Firebase field ops implementation

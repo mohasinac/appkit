@@ -27,7 +27,7 @@ import React from "react";
  * ```
  */
 
-// ─── Token maps ──────────────────────────────────────────────────────────────
+// --- Token maps --------------------------------------------------------------
 
 /**
  * Gap tokens — maps to `gap-*` Tailwind classes.
@@ -171,7 +171,7 @@ const JUSTIFY_MAP = {
 
 type JustifyContent = keyof typeof JUSTIFY_MAP;
 
-// ─── Container ────────────────────────────────────────────────────────────────
+// --- Container ----------------------------------------------------------------
 
 /**
  * Page-level container with max-width + centering + responsive horizontal padding.
@@ -222,7 +222,7 @@ export function Container({
   );
 }
 
-// ─── Stack ────────────────────────────────────────────────────────────────────
+// --- Stack --------------------------------------------------------------------
 
 /**
  * Vertical flex column. Use instead of `<div className="flex flex-col gap-4">`.
@@ -278,7 +278,7 @@ export function Stack({
   );
 }
 
-// ─── Row ─────────────────────────────────────────────────────────────────────
+// --- Row ---------------------------------------------------------------------
 
 /**
  * Horizontal flex row. Use instead of `<div className="flex items-center gap-3">`.
@@ -341,7 +341,7 @@ export function Row({
   );
 }
 
-// ─── Grid ─────────────────────────────────────────────────────────────────────
+// --- Grid ---------------------------------------------------------------------
 
 /**
  * Responsive CSS grid. Use instead of `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">`.

@@ -246,7 +246,7 @@ export function CharacterHotspotForm({
         ))}
       </Div>
 
-      {/* ── Step 1: Upload Image ── */}
+      {/* -- Step 1: Upload Image -- */}
       {step === "image" && (
         <Div
           className="space-y-4 rounded-lg border-2 p-6"
@@ -366,7 +366,7 @@ export function CharacterHotspotForm({
         </Div>
       )}
 
-      {/* ── Step 2: Place Pin ── */}
+      {/* -- Step 2: Place Pin -- */}
       {step === "place" && (
         <Div
           className="space-y-4 rounded-lg border-2 p-6"
@@ -586,7 +586,7 @@ export function CharacterHotspotForm({
         </Div>
       )}
 
-      {/* ── Step 3: Pin Details ── */}
+      {/* -- Step 3: Pin Details -- */}
       {step === "details" && (
         <Div
           className="space-y-4 rounded-lg border-2 p-6"
@@ -791,7 +791,7 @@ export function CharacterHotspotForm({
         </Div>
       )}
 
-      {/* ── Step 4: Review & Save ── */}
+      {/* -- Step 4: Review & Save -- */}
       {step === "review" && (
         <Div
           className="space-y-4 rounded-lg border-2 p-6"

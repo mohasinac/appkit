@@ -68,7 +68,7 @@ export function Tooltip({
     setVisible(false);
   };
 
-  // ── Long-press handlers for touch devices ──────────────────────────────────
+  // -- Long-press handlers for touch devices ----------------------------------
 
   const handleTouchStart = useCallback(() => {
     if (!mobileSheet) return;

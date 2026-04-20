@@ -1,6 +1,6 @@
 // Domain types for @mohasinac/feat-search
 
-// ─── Product card data used in search results ─────────────────────────────────
+// --- Product card data used in search results ---------------------------------
 
 export interface SearchProductItem {
   id: string;
@@ -19,7 +19,7 @@ export interface SearchProductItem {
   availableQuantity?: number;
 }
 
-// ─── Search API response ──────────────────────────────────────────────────────
+// --- Search API response ------------------------------------------------------
 
 export interface SearchResponse {
   items: SearchProductItem[];
@@ -31,7 +31,7 @@ export interface SearchResponse {
   hasMore: boolean;
 }
 
-// ─── Search query parameters ──────────────────────────────────────────────────
+// --- Search query parameters --------------------------------------------------
 
 export interface SearchQuery {
   q?: string;
@@ -49,7 +49,7 @@ export interface SearchQuery {
   pageSize?: number;
 }
 
-// ─── Category option for filter facets ───────────────────────────────────────
+// --- Category option for filter facets ---------------------------------------
 
 export interface SearchCategoryOption {
   id: string;

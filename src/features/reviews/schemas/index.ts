@@ -1,7 +1,7 @@
 export * from "./firestore";
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const reviewStatusSchema = z.enum(["pending", "approved", "rejected"]);
 
@@ -18,7 +18,7 @@ export const reviewVideoSchema = z.object({
   trimEnd: z.number().optional(),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a review.

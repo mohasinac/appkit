@@ -35,7 +35,7 @@ async function getRoleFromSession(request: Request): Promise<string | null> {
   }
 }
 
-// ─── GET /api/homepage-sections ───────────────────────────────────────────────
+// --- GET /api/homepage-sections -----------------------------------------------
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {

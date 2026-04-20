@@ -68,7 +68,7 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 }
 
-// ─── POST /api/pre-orders ──────────────────────────────────────────────────
+// --- POST /api/pre-orders --------------------------------------------------
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const input = (await request.json()) as Record<string, unknown>;

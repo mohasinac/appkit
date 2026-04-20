@@ -18,7 +18,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const payoutsSeedData: Partial<PayoutDocument>[] = [
-  // ── TechHub Electronics ───────────────────────────────────────────────
+  // -- TechHub Electronics -----------------------------------------------
 
   // Completed payout — January batch (delivered Goku + Vegeta + Zoro + Bleach figures)
   {
@@ -86,7 +86,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     updatedAt: daysAgo(17),
   },
 
-  // ── Fashion Boutique ──────────────────────────────────────────────────
+  // -- Fashion Boutique --------------------------------------------------
 
   // Completed payout — UPI
   {
@@ -143,7 +143,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     updatedAt: daysAgo(12),
   },
 
-  // ── Home Essentials ───────────────────────────────────────────────────
+  // -- Home Essentials ---------------------------------------------------
 
   // Failed payout (bank rejected)
   {
@@ -201,7 +201,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     updatedAt: daysAgo(15),
   },
 
-  // ── Home Essentials (was Sports Zone) ───────────────────────────────────
+  // -- Home Essentials (was Sports Zone) -----------------------------------
 
   {
     id: "payout-otakushelf-jan2-2026-completed",

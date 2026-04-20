@@ -8,7 +8,7 @@ import {
 } from "../../../ui/columns";
 import type { AuctionItem, BidRecord } from "../types";
 
-// ─── Auction columns ──────────────────────────────────────────────────────────
+// --- Auction columns ----------------------------------------------------------
 
 /**
  * Default admin column definitions for an auction table.
@@ -57,7 +57,7 @@ export function buildAuctionColumns<T extends AuctionItem = AuctionItem>(
   return buildColumns(auctionAdminColumns as TableColumn<T>[], opts);
 }
 
-// ─── Bid columns ──────────────────────────────────────────────────────────────
+// --- Bid columns --------------------------------------------------------------
 
 export const bidAdminColumns: TableColumn<BidRecord>[] = [
   { key: "bidderDisplayName", header: "Bidder" },

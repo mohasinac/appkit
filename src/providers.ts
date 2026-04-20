@@ -10,11 +10,11 @@
  * remain in `@mohasinac/appkit/client` because they require a browser environment.
  */
 
-// ── Registry & market baseline ─────────────────────────────────────────────────
+// Registry and market baseline
 export { registerProviders, getProviders } from "./contracts/index";
-export { configureMarketDefaults } from "./core/index";
+export { configureMarketDefaults } from "./core/baseline-resolver";
 
-// ── Auth (Firebase Admin) ──────────────────────────────────────────────────────
+// Auth (Firebase Admin)
 export {
   firebaseAuthProvider,
   firebaseSessionProvider,
@@ -33,7 +33,7 @@ export {
   revokeUserTokens,
 } from "./providers/auth-firebase/index";
 
-// ── Database (Firebase Firestore / RTDB) ───────────────────────────────────────
+// Database (Firebase Firestore / RTDB)
 export {
   firebaseDbProvider,
   getAdminApp,
@@ -54,14 +54,14 @@ export {
 } from "./providers/db-firebase/index";
 export type { DocumentSnapshot } from "firebase-admin/firestore";
 
-// ── Storage (Firebase Admin) ───────────────────────────────────────────────────
+// Storage (Firebase Admin)
 export { firebaseStorageProvider } from "./providers/storage-firebase/index";
 
-// ── Email (Resend) ─────────────────────────────────────────────────────────────
+// Email (Resend)
 export { createResendProvider } from "./providers/email-resend/index";
 export type { ResendProviderOptions } from "./providers/email-resend/index";
 
-// ── Payment (Razorpay) ─────────────────────────────────────────────────────────
+// Payment (Razorpay)
 export {
   RazorpayProvider,
   rupeesToPaise,
@@ -81,13 +81,13 @@ export type {
   RazorpayRefundResult,
 } from "./providers/payment-razorpay/index";
 
-// ── Shipping (Shiprocket) ──────────────────────────────────────────────────────
+// Shipping (Shiprocket)
 export { ShiprocketProvider } from "./providers/shipping-shiprocket/index";
 export type { ShiprocketProviderConfig } from "./providers/shipping-shiprocket/index";
 
-// ── Style adapter ──────────────────────────────────────────────────────────────
+// Style adapter
 export { tailwindAdapter } from "./style/tailwind/index";
 
-// ── Monitoring ─────────────────────────────────────────────────────────────────
+// Monitoring
 // serverLogger - Structured server-side logger (useful in instrumentation / provider setup).
 export { serverLogger } from "./monitoring/index";

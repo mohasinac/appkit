@@ -47,7 +47,7 @@ function loadDatabase() {
 }
 /* eslint-enable @typescript-eslint/no-require-imports */
 
-// ─── Private key normalisation ────────────────────────────────────────────────
+// --- Private key normalisation ------------------------------------------------
 //
 // Vercel (and other platforms) can store the private key in several formats:
 //   1. Literal \n sequences  (common — copied from JSON value)
@@ -66,7 +66,7 @@ function parsePrivateKey(raw: string): string {
     .trim();
 }
 
-// ─── Global singletons ────────────────────────────────────────────────────────
+// --- Global singletons --------------------------------------------------------
 // Stored on globalThis so all module instances (package-manager deduplication may create
 // multiple copies of this package in the same process) share one SDK instance.
 
@@ -90,7 +90,7 @@ function set<T>(key: keyof typeof globalThis, value: T): void {
   (globalThis as Record<string, unknown>)[key] = value;
 }
 
-// ─── App ──────────────────────────────────────────────────────────────────────
+// --- App ----------------------------------------------------------------------
 
 export function getAdminApp(): App {
   const cached = get<App>("__mohasinac_firebase_admin_app__");
@@ -154,7 +154,7 @@ export function getAdminApp(): App {
   return app;
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
+// --- Auth ---------------------------------------------------------------------
 
 export function getAdminAuth(): Auth {
   const cached = get<Auth>("__mohasinac_firebase_admin_auth__");
@@ -165,7 +165,7 @@ export function getAdminAuth(): Auth {
   return auth;
 }
 
-// ─── Firestore ────────────────────────────────────────────────────────────────
+// --- Firestore ----------------------------------------------------------------
 
 export function getAdminDb(): Firestore {
   const cached = get<Firestore>("__mohasinac_firebase_admin_db__");
@@ -183,7 +183,7 @@ export function getAdminDb(): Firestore {
   return db;
 }
 
-// ─── Cloud Storage ────────────────────────────────────────────────────────────
+// --- Cloud Storage ------------------------------------------------------------
 
 export function getAdminStorage(): Storage {
   const cached = get<Storage>("__mohasinac_firebase_admin_storage__");
@@ -194,7 +194,7 @@ export function getAdminStorage(): Storage {
   return storage;
 }
 
-// ─── Realtime DB ──────────────────────────────────────────────────────────────
+// --- Realtime DB --------------------------------------------------------------
 
 export function getAdminRealtimeDb(): Database {
   const cached = get<Database>("__mohasinac_firebase_admin_rtdb__");

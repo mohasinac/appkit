@@ -7,7 +7,7 @@ import type {
 } from "../types";
 import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
-// ─── useProducts ──────────────────────────────────────────────────────────────
+// --- useProducts --------------------------------------------------------------
 
 interface UseProductsOptions<T extends ProductItem = ProductItem> {
   initialData?: ProductListResponse;
@@ -75,7 +75,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
   };
 }
 
-// ─── useProduct ───────────────────────────────────────────────────────────────
+// --- useProduct ---------------------------------------------------------------
 
 interface UseProductOptions<T extends ProductItem = ProductItem> {
   initialData?: ProductItem;

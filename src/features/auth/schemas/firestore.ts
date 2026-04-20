@@ -112,7 +112,7 @@ export interface UserDocument {
   payoutDetails?: SellerPayoutDetails;
 }
 
-// ── Seller Shipping Config ──────────────────────────────────────────────────
+// -- Seller Shipping Config --------------------------------------------------
 
 export type SellerShippingMethod = "custom" | "shiprocket";
 
@@ -143,7 +143,7 @@ export interface SellerShippingConfig {
   isConfigured: boolean;
 }
 
-// ── Seller Payout Details ───────────────────────────────────────────────────
+// -- Seller Payout Details ---------------------------------------------------
 
 export type SellerPayoutMethod = "upi" | "bank_transfer";
 
@@ -256,7 +256,7 @@ export function createUserId(input: GenerateUserIdInput): string {
   return generateUserId(input);
 }
 
-// ── User field name constants ────────────────────────────────────────────────
+// -- User field name constants ------------------------------------------------
 
 export const USER_FIELDS = {
   ID: "id",
@@ -524,7 +524,7 @@ export const SESSION_FIELDS = {
   REVOKED_BY: "revokedBy",
 } as const;
 
-// ── SMS Counter (OTP rate-limiting) ─────────────────────────────────────────
+// -- SMS Counter (OTP rate-limiting) -----------------------------------------
 
 export interface SmsCounterDocument {
   /** Calendar date string — YYYY-MM-DD (= document ID) */

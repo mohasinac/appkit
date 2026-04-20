@@ -15,7 +15,7 @@ import { getProviders } from "../../../../../contracts";
 import { createRouteHandler } from "../../../../../next";
 import type { CarouselSlide } from "../../../types/index";
 
-// ──── GET /api/carousel/[id] ──────────────────────────────────────────────────
+// ---- GET /api/carousel/[id] --------------------------------------------------
 
 export async function GET(
   _request: Request,
@@ -53,7 +53,7 @@ export async function GET(
 
 export { GET as carouselItemGET };
 
-// ──── PATCH /api/carousel/[id] ─────────────────────────────────────────────────
+// ---- PATCH /api/carousel/[id] -------------------------------------------------
 
 const carouselSlideUpdateSchema = z
   .object({
@@ -138,7 +138,7 @@ export const carouselItemPATCH = createRouteHandler({
   },
 });
 
-// ──── DELETE /api/carousel/[id] ───────────────────────────────────────────────
+// ---- DELETE /api/carousel/[id] -----------------------------------------------
 
 export const carouselItemDELETE = createRouteHandler({
   auth: true,

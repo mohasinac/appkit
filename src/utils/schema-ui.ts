@@ -33,7 +33,7 @@
  * ```
  */
 
-// ─── Derived field config ─────────────────────────────────────────────────────
+// --- Derived field config -----------------------------------------------------
 
 export type DerivedFieldType =
   | "text"
@@ -68,7 +68,7 @@ export interface DerivedField {
   zodTypeName: string;
 }
 
-// ─── Zod introspection helpers (no Zod import — duck-typed) ──────────────────
+// --- Zod introspection helpers (no Zod import — duck-typed) ------------------
 
 interface ZodLike {
   _def?: {
@@ -207,7 +207,7 @@ function keyToLabel(key: string): string {
     .trim();
 }
 
-// ─── Public API ───────────────────────────────────────────────────────────────
+// --- Public API ---------------------------------------------------------------
 
 /**
  * Options for `deriveFormFields`.

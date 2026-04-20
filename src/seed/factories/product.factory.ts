@@ -8,7 +8,7 @@ import {
 
 let _seq = 1;
 
-// ─── Realistic data pools (from seed locale config) ───────────────────────────
+// --- Realistic data pools (from seed locale config) ---------------------------
 const PRODUCT_NAMES = [
   "Handloom Cotton Saree",
   "Silver Oxidised Jhumkas",

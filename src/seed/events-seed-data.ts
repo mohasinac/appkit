@@ -10,13 +10,13 @@ import type {
 import type { SurveyFormField } from "../features/events/types";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
 
-// ─── Dynamic date helpers ───────────────────────────────────────────────────
+// --- Dynamic date helpers ---------------------------------------------------
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000);
 
-// ── Events ────────────────────────────────────────────────────────────────────
+// -- Events --------------------------------------------------------------------
 
 export const eventsSeedData: EventDocument[] = [
   // 1. Ended Sale Event — Anime Winter Season Sale
@@ -475,7 +475,7 @@ export const eventsSeedData: EventDocument[] = [
   },
 ];
 
-// ── Event Entries ─────────────────────────────────────────────────────────────
+// -- Event Entries -------------------------------------------------------------
 
 export const eventEntriesSeedData: EventEntryDocument[] = [
   // Poll votes — anime franchise poll

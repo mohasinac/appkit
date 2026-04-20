@@ -37,7 +37,7 @@ async function getRoleFromSession(request: Request): Promise<string | null> {
 
 const MAX_ACTIVE_SLIDES = 5;
 
-// ─── GET /api/carousel ────────────────────────────────────────────────────────
+// --- GET /api/carousel --------------------------------------------------------
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {

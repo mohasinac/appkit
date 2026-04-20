@@ -35,7 +35,7 @@ export interface RazorpayConfig {
   webhookSecret?: string;
 }
 
-// ─── IPaymentProvider implementation ──────────────────────────────────────────
+// --- IPaymentProvider implementation ------------------------------------------
 
 export class RazorpayProvider implements IPaymentProvider {
   private readonly razorpay: Razorpay;
@@ -129,7 +129,7 @@ export class RazorpayProvider implements IPaymentProvider {
   }
 }
 
-// ─── Utility exports ──────────────────────────────────────────────────────────
+// --- Utility exports ----------------------------------------------------------
 
 /** Convert rupees (float) → paise (integer) for Razorpay amount field */
 export function rupeesToPaise(rupees: number): number {
@@ -166,7 +166,7 @@ export function verifyPaymentSignature(
   );
 }
 
-// ─── Standalone API helpers (auto-credential resolution via resolveKeys) ──────
+// --- Standalone API helpers (auto-credential resolution via resolveKeys) ------
 // These resolve credentials from Firestore → env fallback so callers don't
 // need to instantiate RazorpayProvider or pass credentials explicitly.
 

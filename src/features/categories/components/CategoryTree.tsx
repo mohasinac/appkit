@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Div, Span, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 
-// ─── CategoryTreeNode ──────────────────────────────────────────────────────────
+// --- CategoryTreeNode ----------------------------------------------------------
 
 interface CategoryTreeNodeProps {
   item: CategoryItem;
@@ -89,7 +89,7 @@ function CategoryTreeNode({
   );
 }
 
-// ─── CategoryTree ─────────────────────────────────────────────────────────────
+// --- CategoryTree -------------------------------------------------------------
 
 export interface CategoryTreeProps {
   /** Flat list of categories; the tree is built from `parentIds`/`childrenIds`. */

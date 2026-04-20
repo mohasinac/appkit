@@ -32,7 +32,7 @@ function numParam(url: URL, key: string, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-// ─── GET /api/promotions ──────────────────────────────────────────────────────
+// --- GET /api/promotions ------------------------------------------------------
 // Query params:
 //   isActive  — "true" | "false" (default: "true")
 //   isPublic  — "true" filters to public coupons only

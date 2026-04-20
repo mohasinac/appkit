@@ -11,7 +11,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const notificationsSeedData: Partial<NotificationDocument>[] = [
-  // ── John Doe — various notification types ─────────────────────────────
+  // -- John Doe — various notification types -----------------------------
 
   // Welcome notification
   {
@@ -200,7 +200,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(32),
   },
 
-  // ── Mike Johnson ─────────────────────────────────────────────────────
+  // -- Mike Johnson -----------------------------------------------------
 
   {
     id: "notif-welcome-mike-20240405",
@@ -250,7 +250,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(10),
   },
 
-  // ── TechHub Electronics (Seller) ──────────────────────────────────────
+  // -- TechHub Electronics (Seller) --------------------------------------
 
   {
     id: "notif-order-confirmed-figurevault-order1",
@@ -289,7 +289,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(17),
   },
 
-  // ── order_cancelled — Jane Smith's order was cancelled ──────────────────
+  // -- order_cancelled — Jane Smith's order was cancelled ------------------
   // Tests: cancellation notification template, cancelled-order badge in notification list
   {
     id: "notif-order-cancelled-jane-20260210",
@@ -309,7 +309,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(27),
   },
 
-  // ── bid_placed — Meera placed a bid on the Leica ─────────────────────────
+  // -- bid_placed — Meera placed a bid on the Leica -------------------------
   // Tests: bid placement confirmation notification, bid summary data in payload
   {
     id: "notif-bid-placed-vikram-evangelion-poster-20260219",
@@ -329,7 +329,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(18),
   },
 
-  // ── review_replied — seller replied to John's review ────────────────────
+  // -- review_replied — seller replied to John's review --------------------
   // Tests: review-reply notification, deep link to the review thread
   {
     id: "notif-review-replied-john-goku-figure-20260202",
@@ -349,7 +349,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(35),
   },
 
-  // ── Ananya Bose ───────────────────────────────────────────────────────
+  // -- Ananya Bose -------------------------------------------------------
 
   {
     id: "notif-welcome-ananya-20251015",
@@ -399,7 +399,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── Pooja Mehta ───────────────────────────────────────────────────────
+  // -- Pooja Mehta -------------------------------------------------------
 
   {
     id: "notif-welcome-pooja-20251110",
@@ -449,7 +449,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── Ravi Kumar ────────────────────────────────────────────────────────
+  // -- Ravi Kumar --------------------------------------------------------
 
   {
     id: "notif-welcome-ravi-20251201",
@@ -500,7 +500,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── Sneha Gupta ───────────────────────────────────────────────────────
+  // -- Sneha Gupta -------------------------------------------------------
 
   {
     id: "notif-welcome-sneha-20260105",
@@ -550,7 +550,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── TechHub Seller — new auction sale order notifications ─────────────
+  // -- TechHub Seller — new auction sale order notifications -------------
 
   {
     id: "notif-auction-ending-figurevault-ps5-20260301",

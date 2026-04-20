@@ -25,7 +25,7 @@ import {
   type ShiprocketTrackActivity,
 } from "./index";
 
-// ─── Shiprocket Provider Types ─────────────────────────────────────────────────
+// --- Shiprocket Provider Types -------------------------------------------------
 
 export interface ShiprocketProviderConfig {
   email: string;
@@ -37,7 +37,7 @@ export interface ShiprocketProviderConfig {
   onTokenRefresh?: (token: string, expiry: Date) => void | Promise<void>;
 }
 
-// ─── Shiprocket Provider Class ─────────────────────────────────────────────────
+// --- Shiprocket Provider Class -------------------------------------------------
 
 /**
  * `IShippingProvider` implementation backed by the Shiprocket REST API.
@@ -61,7 +61,7 @@ export class ShiprocketProvider implements IShippingProvider {
     this.tokenExpiry = config.tokenExpiry;
   }
 
-  // ─── Token Management ──────────────────────────────────────────────────────
+  // --- Token Management ------------------------------------------------------
 
   private async ensureToken(): Promise<string> {
     if (this.token && !isShiprocketTokenExpired(this.tokenExpiry)) {
@@ -77,7 +77,7 @@ export class ShiprocketProvider implements IShippingProvider {
     return this.token;
   }
 
-  // ─── IShippingProvider ─────────────────────────────────────────────────────
+  // --- IShippingProvider -----------------------------------------------------
 
   async createShipment(data: CreateShipmentInput): Promise<Shipment> {
     const token = await this.ensureToken();
@@ -185,7 +185,7 @@ export class ShiprocketProvider implements IShippingProvider {
     throw new Error("generateLabel not implemented for Shiprocket provider");
   }
 
-  // ─── Shiprocket-Specific Methods ──────────────────────────────────────────
+  // --- Shiprocket-Specific Methods ------------------------------------------
 
   /** Authenticate and obtain a fresh token. */
   async authenticate(

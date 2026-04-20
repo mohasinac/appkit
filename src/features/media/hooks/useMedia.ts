@@ -10,7 +10,7 @@ import { apiClient } from "../../../http";
 import type { MediaFilenameContext } from "../../../utils/id-generators";
 import { MEDIA_ENDPOINTS } from "../../../constants/api-endpoints";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export interface MediaUploadResult {
   url: string;
@@ -40,7 +40,7 @@ export interface MediaTrimInput {
   quality?: "low" | "medium" | "high";
 }
 
-// ─── Hooks ────────────────────────────────────────────────────────────────────
+// --- Hooks --------------------------------------------------------------------
 
 /**
  * useMediaUpload — uploads a file via FormData to /api/media/upload.

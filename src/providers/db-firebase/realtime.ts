@@ -42,7 +42,7 @@ export abstract class FirebaseRealtimeRepository<
     return id ? this.rtdb.ref(`${this.path}/${id}`) : this.rtdb.ref(this.path);
   }
 
-  // ── IReadRepository ────────────────────────────────────────────────────────
+  // -- IReadRepository --------------------------------------------------------
 
   async findById(id: string): Promise<T | null> {
     const snap = await this.nodeRef(id).get();
@@ -108,7 +108,7 @@ export abstract class FirebaseRealtimeRepository<
     );
   }
 
-  // ── IWriteRepository ───────────────────────────────────────────────────────
+  // -- IWriteRepository -------------------------------------------------------
 
   async create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T> {
     const now = Date.now();
@@ -138,7 +138,7 @@ export abstract class FirebaseRealtimeRepository<
     await Promise.all(ids.map((id) => this.delete(id)));
   }
 
-  // ── IRealtimeRepository ───────────────────────────────────────────────────
+  // -- IRealtimeRepository ---------------------------------------------------
 
   /**
    * Subscribe to a single RTDB node.

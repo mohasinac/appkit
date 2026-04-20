@@ -4,7 +4,7 @@ import { Button, Grid, Heading, Section, Span, Text } from "../../../ui";
 import { MessageCircle } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface WhatsAppCommunitySectionProps {
   title: string;
@@ -20,7 +20,7 @@ export interface WhatsAppCommunitySectionProps {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function WhatsAppCommunitySection({
   title,

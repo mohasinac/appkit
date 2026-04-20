@@ -6,7 +6,7 @@
  * This repository provides the persistent record of rooms and participants.
  *
  * Deletion semantics
- * ──────────────────
+ * ------------------
  * 1-1 rooms:
  *   - `softDeleteForUser(chatId, uid)` adds the uid to `deletedBy`.
  *   - When BOTH participants are in `deletedBy` the room is permanently deleted

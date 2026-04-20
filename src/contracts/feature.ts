@@ -1,4 +1,4 @@
-// ─── Feature Manifest ─────────────────────────────────────────────────────────
+// --- Feature Manifest ---------------------------------------------------------
 
 /**
  * Describes a page route stub that the CLI generates when `add <feature>` is run.
@@ -42,7 +42,7 @@ export interface FeatureManifest {
   apiRoutes: ApiRouteStub[];
 }
 
-// ─── Features Config ──────────────────────────────────────────────────────────
+// --- Features Config ----------------------------------------------------------
 
 /**
  * Shape of features.config.ts in consumer projects.

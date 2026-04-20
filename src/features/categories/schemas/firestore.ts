@@ -15,7 +15,7 @@ import type {
 
 export type { CategoryAncestor, CategoryMetrics };
 
-// ── Category Document ────────────────────────────────────────────────────────
+// -- Category Document --------------------------------------------------------
 
 /** Full Firestore category document (includes server-only fields) */
 export interface CategoryDocumentSEO {

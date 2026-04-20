@@ -1,4 +1,4 @@
-// ─── Auth Shared Types ────────────────────────────────────────────────────────
+// --- Auth Shared Types --------------------------------------------------------
 
 export interface AuthPayload {
   uid: string;
@@ -36,7 +36,7 @@ export interface CreateUserInput {
   emailVerified?: boolean;
 }
 
-// ─── Auth Interfaces ──────────────────────────────────────────────────────────
+// --- Auth Interfaces ----------------------------------------------------------
 
 /**
  * Server-side authentication operations.

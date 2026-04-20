@@ -7,7 +7,7 @@
 
 import { slugify } from "../../../utils/string.formatter";
 
-// ── Store Document ───────────────────────────────────────────────────────────
+// -- Store Document -----------------------------------------------------------
 
 export const StoreStatusValues = {
   PENDING: "pending",
@@ -113,7 +113,7 @@ export function generateStoreSlug(
   return `${name}-by-${owner}`;
 }
 
-// ── Store Address Subcollection ──────────────────────────────────────────────
+// -- Store Address Subcollection ----------------------------------------------
 
 export interface StoreAddressDocument {
   id: string;

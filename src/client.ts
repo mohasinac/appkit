@@ -96,7 +96,7 @@ export { useMediaTrim } from "./features/media/index";
 // useMediaUpload - React hook for use media upload.
 export { useMediaUpload } from "./features/media/index";
 
-// ── Client-side context providers ─────────────────────────────────────────────
+// Client-side context providers
 export { SessionProvider } from "./react/index";
 export type { SessionProviderProps } from "./react/index";
 export { ThemeProvider } from "./react/index";

@@ -15,7 +15,7 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { Review } from "../../types/index";
 
-// ──── GET /api/reviews/[id] ───────────────────────────────────────────────────
+// ---- GET /api/reviews/[id] ---------------------------------------------------
 
 export async function GET(
   _request: Request,
@@ -53,7 +53,7 @@ export async function GET(
 
 export { GET as reviewItemGET };
 
-// ──── PATCH /api/reviews/[id] ─────────────────────────────────────────────────
+// ---- PATCH /api/reviews/[id] -------------------------------------------------
 
 const reviewUpdateSchema = z
   .object({
@@ -122,7 +122,7 @@ export const reviewItemPATCH = createRouteHandler({
   },
 });
 
-// ──── DELETE /api/reviews/[id] ────────────────────────────────────────────────
+// ---- DELETE /api/reviews/[id] ------------------------------------------------
 
 export const reviewItemDELETE = createRouteHandler({
   auth: true,

@@ -222,7 +222,7 @@ export function createStorageHelpers(storage: FirebaseStorage): StorageHelpers {
   };
 }
 
-// ─── File validation helpers (pure, no storage instance needed) ───────────────
+// --- File validation helpers (pure, no storage instance needed) ---------------
 
 export function validateFileSize(file: File, maxSizeMB = 10): boolean {
   return file.size <= maxSizeMB * 1024 * 1024;

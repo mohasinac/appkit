@@ -25,7 +25,7 @@ function numParam(url: URL, key: string, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-// ─── GET /api/bids ────────────────────────────────────────────────────────────
+// --- GET /api/bids ------------------------------------------------------------
 // Query params:
 //   auctionId — filter bids for a specific auction product (recommended)
 //   bidderId  — filter bids placed by a specific user

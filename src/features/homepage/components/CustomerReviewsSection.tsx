@@ -8,7 +8,7 @@ import {
   TextLink,
 } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface CustomerReviewsSectionProps<T = unknown> {
   title: string;
@@ -22,7 +22,7 @@ export interface CustomerReviewsSectionProps<T = unknown> {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function CustomerReviewsSection<T = unknown>({
   title,

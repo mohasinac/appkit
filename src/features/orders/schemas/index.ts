@@ -1,7 +1,7 @@
 export * from "./firestore";
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const orderStatusSchema = z.enum([
   "pending",
@@ -33,7 +33,7 @@ export const orderTimelineSchema = z.object({
   actor: z.string().optional(),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for an order.

@@ -28,9 +28,9 @@ import { SieveProcessorBase } from "@mohasinac/sievejs/services";
 import { createFirebaseAdapter } from "@mohasinac/sievejs/adapters/firebase";
 
 import { FirebaseRepository } from "./base";
-import { deserializeTimestamps } from "./helpers";
+import { deserializeTimestamps, getFirestoreCount } from "./helpers";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// --- Types --------------------------------------------------------------------
 
 export type SieveFieldConfig = {
   /** Override the Firestore document field name. Defaults to the key name. */
@@ -101,7 +101,7 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   const filteredQ = processor.apply(model, baseQuery, {
     applyPagination: false,
   } as never) as unknown as Query;
-  const total: number = (await filteredQ.count().get()).data().count;
+  const total = await getFirestoreCount(filteredQ);
 
   const pagedQ = processor.apply(model, baseQuery) as unknown as Query;
   const snap = await pagedQ.get();
@@ -127,7 +127,7 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   };
 }
 
-// ─── Class ────────────────────────────────────────────────────────────────────
+// --- Class --------------------------------------------------------------------
 
 export abstract class FirebaseSieveRepository<
   T extends DocumentData,
@@ -159,7 +159,7 @@ export abstract class FirebaseSieveRepository<
     const filteredQ = processor.apply(model, base, {
       applyPagination: false,
     } as never) as unknown as Query;
-    const total: number = (await filteredQ.count().get()).data().count;
+    const total = await getFirestoreCount(filteredQ);
 
     // Paginated result
     const pagedQ = processor.apply(model, base) as unknown as Query;

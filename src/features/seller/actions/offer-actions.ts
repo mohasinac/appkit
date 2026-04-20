@@ -42,7 +42,7 @@ export interface BuyerCounterInput {
   buyerNote?: string;
 }
 
-// ─── Buyer: Make an Offer ──────────────────────────────────────────────────
+// --- Buyer: Make an Offer --------------------------------------------------
 
 export async function makeOffer(
   userId: string,
@@ -118,7 +118,7 @@ export async function makeOffer(
   return offer;
 }
 
-// ─── Seller: Respond ──────────────────────────────────────────────────────
+// --- Seller: Respond ------------------------------------------------------
 
 export async function respondToOffer(
   userId: string,
@@ -189,7 +189,7 @@ export async function respondToOffer(
   return updated;
 }
 
-// ─── Buyer: Accept counter ─────────────────────────────────────────────────
+// --- Buyer: Accept counter -------------------------------------------------
 
 export async function acceptCounterOffer(
   userId: string,
@@ -219,7 +219,7 @@ export async function acceptCounterOffer(
   return updated;
 }
 
-// ─── Buyer: Counter back ──────────────────────────────────────────────────
+// --- Buyer: Counter back --------------------------------------------------
 
 export async function counterOfferByBuyer(
   userId: string,
@@ -300,7 +300,7 @@ export async function counterOfferByBuyer(
   return newOffer;
 }
 
-// ─── Buyer: Withdraw offer ─────────────────────────────────────────────────
+// --- Buyer: Withdraw offer -------------------------------------------------
 
 export async function withdrawOffer(
   userId: string,
@@ -323,7 +323,7 @@ export async function withdrawOffer(
   serverLogger.info("withdrawOffer", { offerId, buyerUid: userId });
 }
 
-// ─── Read ──────────────────────────────────────────────────────────────────
+// --- Read ------------------------------------------------------------------
 
 export async function listBuyerOffers(
   userId: string,
@@ -339,7 +339,7 @@ export async function listSellerOffers(
   return result.items.map(maskOfferForSeller);
 }
 
-// ─── Buyer: Checkout accepted offer ────────────────────────────────────────
+// --- Buyer: Checkout accepted offer ----------------------------------------
 
 export async function checkoutOffer(
   userId: string,

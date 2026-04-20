@@ -108,7 +108,7 @@ export default function BottomActions() {
         .filter(Boolean)
         .join(" ")}
     >
-      {/* ── Bulk action type-picker panel (opens upward) ────────────────────── */}
+      {/* -- Bulk action type-picker panel (opens upward) ---------------------- */}
       {isBulkMode && (
         <div
           role="listbox"
@@ -177,12 +177,12 @@ export default function BottomActions() {
         </div>
       )}
 
-      {/* ── Bulk mode: 3 px accent stripe at top ──────────────────────────── */}
+      {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
         <div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-primary-400 to-primary-600 dark:from-secondary-600 dark:via-secondary-400 dark:to-secondary-600" />
       )}
 
-      {/* ── Info label row (page mode only) ───────────────────────────────── */}
+      {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
         <div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
           <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 leading-5 truncate">
@@ -191,11 +191,11 @@ export default function BottomActions() {
         </div>
       )}
 
-      {/* ── Main action row ────────────────────────────────────────────────── */}
+      {/* -- Main action row -------------------------------------------------- */}
       <Row className={`gap-2 px-3 ${BOTTOM_NAV_HEIGHT}`}>
         {isBulkMode && bulk ? (
           <>
-            {/* Selection count pill — tap to clear ─────────────────────── */}
+            {/* Selection count pill — tap to clear ----------------------- */}
             <Button
               type="button"
               variant="ghost"
@@ -211,7 +211,7 @@ export default function BottomActions() {
               </Span>
             </Button>
 
-            {/* Type picker trigger — flex-1 ─────────────────────────────── */}
+            {/* Type picker trigger — flex-1 ------------------------------- */}
             {bulkActions.length > 0 && (
               <Button
                 type="button"
@@ -255,7 +255,7 @@ export default function BottomActions() {
               </Button>
             )}
 
-            {/* Apply / submit button ────────────────────────────────────── */}
+            {/* Apply / submit button -------------------------------------- */}
             {bulkActions.length > 0 && (
               <Button
                 type="button"
@@ -275,7 +275,7 @@ export default function BottomActions() {
             )}
           </>
         ) : (
-          /* Page mode — action buttons inline ────────────────────────────── */
+          /* Page mode — action buttons inline ------------------------------ */
           pageActions.map((action) => {
             const isIconOnly = !action.label;
             const growClass =

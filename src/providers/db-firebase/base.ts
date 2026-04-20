@@ -33,7 +33,11 @@ import type {
   WhereOp,
 } from "../../contracts";
 import { getAdminDb } from "./admin";
-import { prepareForFirestore, deserializeTimestamps } from "./helpers";
+import {
+  prepareForFirestore,
+  deserializeTimestamps,
+  getFirestoreCount,
+} from "./helpers";
 
 export class FirebaseRepository<
   T extends DocumentData,
@@ -44,7 +48,7 @@ export class FirebaseRepository<
     this.collection = collectionName;
   }
 
-  // ── Internals ──────────────────────────────────────────────────────────────
+  // -- Internals --------------------------------------------------------------
 
   protected get db(): Firestore {
     return getAdminDb();
@@ -62,7 +66,7 @@ export class FirebaseRepository<
     }) as unknown as D;
   }
 
-  // ── IReadRepository ────────────────────────────────────────────────────────
+  // -- IReadRepository --------------------------------------------------------
 
   async findById(id: string): Promise<T | null> {
     const snap = await this.getCollection().doc(id).get();
@@ -76,7 +80,7 @@ export class FirebaseRepository<
 
     let q: Query = this.getCollection();
 
-    // ── Sort ──────────────────────────────────────────────────────────────────
+    // -- Sort ------------------------------------------------------------------
     // SieveQuery.sort supports a leading "-" prefix for descending order
     // (e.g. "-createdAt" means ORDER BY createdAt DESC).
     if (query?.sort) {
@@ -91,7 +95,7 @@ export class FirebaseRepository<
       q = q.orderBy(sortField, sortDir);
     }
 
-    // ── Basic Sieve filter parsing ────────────────────────────────────────────
+    // -- Basic Sieve filter parsing --------------------------------------------
     // Supports: ==, !=, <, <=, >, >=, @= (array-contains)
     if (query?.filters) {
       const clauses = query.filters
@@ -111,11 +115,10 @@ export class FirebaseRepository<
       }
     }
 
-    // ── Count ─────────────────────────────────────────────────────────────────
-    const countSnap = await q.count().get();
-    const total: number = countSnap.data().count;
+    // -- Count -----------------------------------------------------------------
+    const total = await getFirestoreCount(q);
 
-    // ── Paginate ──────────────────────────────────────────────────────────────
+    // -- Paginate --------------------------------------------------------------
     const offset = (page - 1) * perPage;
     const pagedSnap = await q.offset(offset).limit(perPage).get();
 
@@ -133,7 +136,7 @@ export class FirebaseRepository<
     return snap.docs.map((d) => this.mapDoc(d));
   }
 
-  // ── IWriteRepository ───────────────────────────────────────────────────────
+  // -- IWriteRepository -------------------------------------------------------
 
   async create(data: Omit<T, "id" | "createdAt" | "updatedAt">): Promise<T> {
     const now = new Date();
@@ -194,7 +197,7 @@ export class FirebaseRepository<
     await batch.commit();
   }
 
-  // ── Extended helpers (not in IRepository contract) ────────────────────────
+  // -- Extended helpers (not in IRepository contract) ------------------------
 
   /** Find by ID or throw `Error` with a descriptive message. */
   async findByIdOrFail(id: string): Promise<T> {
@@ -215,12 +218,11 @@ export class FirebaseRepository<
 
   /** Count all documents in the collection. */
   async count(): Promise<number> {
-    const snap = await this.getCollection().count().get();
-    return snap.data().count;
+    return getFirestoreCount(this.getCollection());
   }
 }
 
-// ─── Internal helpers ─────────────────────────────────────────────────────────
+// --- Internal helpers ---------------------------------------------------------
 
 const TOKEN_TO_OP: Record<string, FirebaseFirestore.WhereFilterOp> = {
   "==": "==",

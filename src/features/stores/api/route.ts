@@ -53,7 +53,7 @@ function validateSieveFilters(
     .join(",");
 }
 
-// ─── GET /api/stores ────────────────────────────────────────────────────────
+// --- GET /api/stores --------------------------------------------------------
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const url = new URL(request.url);

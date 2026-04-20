@@ -1,4 +1,4 @@
-// ─── Coupon types ─────────────────────────────────────────────────────────────
+// --- Coupon types -------------------------------------------------------------
 
 export type CouponType =
   | "percentage"
@@ -34,7 +34,7 @@ export interface CouponItem {
   updatedAt: string;
 }
 
-// ─── Apply coupon result ──────────────────────────────────────────────────────
+// --- Apply coupon result ------------------------------------------------------
 
 export interface ApplyCouponResult {
   valid: boolean;
@@ -43,7 +43,7 @@ export interface ApplyCouponResult {
   message?: string;
 }
 
-// ─── List response ────────────────────────────────────────────────────────────
+// --- List response ------------------------------------------------------------
 
 export interface PromotionsListResponse {
   items: CouponItem[];

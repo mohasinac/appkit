@@ -335,7 +335,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ─── Moderator ─────────────────────────────────────────────────────────────
+  // --- Moderator -------------------------------------------------------------
   {
     uid: "user-moderator-mod-user",
     email: "moderator@letitrip.in",
@@ -365,7 +365,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ─── Additional Regular Buyers ─────────────────────────────────────────────
+  // --- Additional Regular Buyers ---------------------------------------------
   {
     uid: "user-priya-sharma-priya",
     email: "priya@letitrip.in",
@@ -467,7 +467,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Unverified User — registered but email not yet confirmed ──────────────
+  // -- Unverified User — registered but email not yet confirmed --------------
   // Tests: email verification flow, /api/auth/verify-email, re-send verification,
   //        locked pages that require emailVerified: true, header badge UI
   {
@@ -503,7 +503,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Phone-Only User — signed up via phone OTP, no email ───────────────────
+  // -- Phone-Only User — signed up via phone OTP, no email -------------------
   // Tests: phone auth flow, profile completion prompt (missing email),
   //        checkout flow without email address
   {
@@ -539,7 +539,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Pending Seller — applied via BecomeSellerView, awaiting admin approval ──
+  // -- Pending Seller — applied via BecomeSellerView, awaiting admin approval --
   // Tests: admin review queue (GET /api/admin/stores?storeStatus=pending),
   //        BecomeSellerView success state, seller application flow
   {
@@ -578,7 +578,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Rejected Seller — application was rejected by admin ───────────────────
+  // -- Rejected Seller — application was rejected by admin -------------------
   // Tests: admin rejection flow (PATCH /api/admin/stores/[uid] action:"reject"),
   //        GET /api/admin/stores?storeStatus=rejected filter
   {
@@ -615,7 +615,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ─── New Buyers (added to reach 10 total regular users) ───────────────────
+  // --- New Buyers (added to reach 10 total regular users) -------------------
 
   // Buyer 6: Ananya Bose — vintage fashion collector
   {

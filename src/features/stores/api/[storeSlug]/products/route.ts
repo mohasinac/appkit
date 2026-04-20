@@ -58,7 +58,7 @@ function validateSieveFilters(
     .join(",");
 }
 
-// ─── GET /api/stores/[storeSlug]/products ─────────────────────────────────────
+// --- GET /api/stores/[storeSlug]/products -------------------------------------
 export async function GET(
   request: Request,
   context: RouteContext,

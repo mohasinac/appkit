@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Heading, Section, Span, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface TrustFeatureItem {
   iconName: string;
@@ -18,7 +18,7 @@ export interface TrustFeaturesSectionProps {
   className?: string;
 }
 
-// ─── Single cards-variant card ───────────────────────────────────────────────
+// --- Single cards-variant card -----------------------------------------------
 
 function TrustFeatureCard({
   item,
@@ -65,7 +65,7 @@ function TrustFeatureCard({
   );
 }
 
-// ─── Single strip-variant item ───────────────────────────────────────────────
+// --- Single strip-variant item -----------------------------------------------
 
 function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   return (
@@ -87,7 +87,7 @@ function TrustStripItem({ item }: { item: TrustFeatureItem }) {
   );
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function TrustFeaturesSection({
   items,

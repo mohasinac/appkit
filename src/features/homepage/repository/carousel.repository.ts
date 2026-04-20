@@ -6,6 +6,7 @@
 
 import {
   BaseRepository,
+  getFirestoreCount,
   prepareForFirestore,
   type SieveModel,
   type FirebaseSieveFields,
@@ -275,13 +276,9 @@ export class CarouselRepository extends BaseRepository<CarouselSlideDocument> {
    */
   async getActiveCount(): Promise<number> {
     try {
-      const snapshot = await this.db
-        .collection(this.collection)
-        .where("active", "==", true)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.db.collection(this.collection).where("active", "==", true),
+      );
     } catch (error) {
       throw new DatabaseError(
         `Failed to count active slides: ${error instanceof Error ? error.message : "Unknown error"}`,

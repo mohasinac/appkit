@@ -11,7 +11,7 @@ const _phonePrefix = getDefaultPhonePrefix();
  * All address documents mapped to users that exist in users-seed-data.ts.
  */
 
-// ─── Dynamic date helpers ───────────────────────────────────────────────────
+// --- Dynamic date helpers ---------------------------------------------------
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 

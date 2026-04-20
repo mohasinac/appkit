@@ -33,7 +33,7 @@ export interface PlaceBidResult {
   bid: BidDocument;
 }
 
-// ─── Domain Functions ──────────────────────────────────────────────────────────
+// --- Domain Functions ----------------------------------------------------------
 
 export async function placeBid(
   userId: string,

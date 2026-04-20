@@ -14,7 +14,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const ordersSeedData: Partial<OrderDocument>[] = [
-  // ── DELIVERED ─────────────────────────────────────────────────────────────
+  // -- DELIVERED -------------------------------------------------------------
   {
     id: "order-1-20260115-xk7m9p",
     productId:
@@ -314,7 +314,7 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(32),
   },
 
-  // ─── Pending Orders ────────────────────────────────────────────────────────
+  // --- Pending Orders --------------------------------------------------------
   {
     id: "order-pending-1-20260219-np3k7x",
     productId: "product-mens-oxford-shirt-fashion-new-fashionboutique-1",
@@ -355,7 +355,7 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(19),
   },
 
-  // ─── Confirmed Orders ──────────────────────────────────────────────────────
+  // --- Confirmed Orders ------------------------------------------------------
   {
     id: "order-confirmed-1-20260217-ck4t8w",
     productId: "product-prestige-pressure-cooker-home-new-homeessentials-1",
@@ -418,7 +418,7 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(22),
   },
 
-  // ─── Shipped Orders ────────────────────────────────────────────────────────
+  // --- Shipped Orders --------------------------------------------------------
   {
     id: "order-shipped-1-20260214-hn5u9z",
     productId: "product-cricket-bat-mrf-sports-new-sportszone-1",
@@ -486,7 +486,7 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(24),
   },
 
-  // ─── Cancelled Orders ──────────────────────────────────────────────────────
+  // --- Cancelled Orders ------------------------------------------------------
   {
     id: "order-cancelled-1-20260210-lv4x7c",
     productId: "product-apple-ipad-pro-electronics-new-techhub-1",
@@ -556,7 +556,7 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     updatedAt: daysAgo(38),
   },
 
-  // ─── Returned Orders ───────────────────────────────────────────────────────
+  // --- Returned Orders -------------------------------------------------------
   {
     id: "order-returned-1-20260120-pz6a8f",
     productId: "product-womens-casual-midi-dress-fashion-new-fashionboutique-1",

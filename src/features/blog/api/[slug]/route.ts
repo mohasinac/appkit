@@ -30,7 +30,7 @@ function toBlogPost(doc: BlogPostDocument): BlogPost {
   };
 }
 
-// ─── GET /api/blog/[slug] ─────────────────────────────────────────────────────
+// --- GET /api/blog/[slug] -----------------------------------------------------
 
 export async function GET(
   _request: Request,

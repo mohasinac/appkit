@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Grid, Heading, Section, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface HowItWorksStep {
   number: number;
@@ -25,7 +25,7 @@ export interface HowItWorksSectionProps {
   className?: string;
 }
 
-// ─── Single step card ─────────────────────────────────────────────────────────
+// --- Single step card ---------------------------------------------------------
 
 function StepCard({
   step,
@@ -95,7 +95,7 @@ function StepCard({
   );
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function HowItWorksSection({
   title,

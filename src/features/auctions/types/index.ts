@@ -1,6 +1,6 @@
 import type { MediaField } from "../../media/types/index";
 
-// ─── Auction product item ─────────────────────────────────────────────────────
+// --- Auction product item -----------------------------------------------------
 
 export interface AuctionItem {
   id: string;
@@ -28,7 +28,7 @@ export interface AuctionItem {
   updatedAt: string;
 }
 
-// ─── Bid record ───────────────────────────────────────────────────────────────
+// --- Bid record ---------------------------------------------------------------
 
 export interface BidRecord {
   id: string;
@@ -41,7 +41,7 @@ export interface BidRecord {
   isWinning: boolean;
 }
 
-// ─── List response ────────────────────────────────────────────────────────────
+// --- List response ------------------------------------------------------------
 
 export interface AuctionListResponse {
   items: AuctionItem[];

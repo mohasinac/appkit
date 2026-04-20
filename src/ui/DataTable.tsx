@@ -210,7 +210,7 @@ export function DataTable<T extends object>({
 
   const totalPages = Math.ceil(sortedData.length / pageSize);
 
-  // ─── Loading state ──────────────────────────────────────────────────────────
+  // --- Loading state ----------------------------------------------------------
   if (loading) {
     return (
       <div className="appkit-data-table__wrapper">
@@ -221,7 +221,7 @@ export function DataTable<T extends object>({
     );
   }
 
-  // ─── Empty state ────────────────────────────────────────────────────────────
+  // --- Empty state ------------------------------------------------------------
   if (data.length === 0) {
     if (emptyState) return <>{emptyState}</>;
     return (
@@ -342,7 +342,7 @@ export function DataTable<T extends object>({
     );
   };
 
-  // ─── Card views (grid / list) ────────────────────────────────────────────────
+  // --- Card views (grid / list) ------------------------------------------------
   const renderCardGrid = (mode: "grid" | "list") => {
     if (!mobileCardRender) return null;
     return (
@@ -375,7 +375,7 @@ export function DataTable<T extends object>({
     );
   };
 
-  // ─── Main render ─────────────────────────────────────────────────────────────
+  // --- Main render -------------------------------------------------------------
   return (
     <div className="appkit-data-table">
       {renderViewToggle()}
@@ -566,7 +566,7 @@ export function DataTable<T extends object>({
   );
 }
 
-// ─── SelectableCard (internal) ───────────────────────────────────────────────
+// --- SelectableCard (internal) -----------------------------------------------
 
 interface SelectableCardProps {
   id: string;

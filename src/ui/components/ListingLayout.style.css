@@ -1,6 +1,6 @@
 /* appkit/src/ui/components/ListingLayout.style.css */
 
-/* ── Root ──────────────────────────────────────────── */
+/* -- Root -------------------------------------------- */
 
 .appkit-listing-layout {
   width: 100%;
@@ -23,7 +23,7 @@
   }
 }
 
-/* ── Status tabs ───────────────────────────────────── */
+/* -- Status tabs ------------------------------------- */
 
 .appkit-listing-layout__status-tabs {
   overflow-x: auto;
@@ -40,7 +40,7 @@
   }
 }
 
-/* ── Sticky toolbar ────────────────────────────────── */
+/* -- Sticky toolbar ---------------------------------- */
 
 .appkit-listing-layout__toolbar {
   position: sticky;
@@ -83,7 +83,7 @@
   }
 }
 
-/* ── Toolbar rows ──────────────────────────────────── */
+/* -- Toolbar rows ------------------------------------ */
 
 .appkit-listing-layout__toolbar-row--desktop {
   display: none;
@@ -153,7 +153,7 @@
   }
 }
 
-/* ── Mobile toolbar rows ───────────────────────────── */
+/* -- Mobile toolbar rows ----------------------------- */
 
 .appkit-listing-layout__mobile-row-1 {
   display: flex;
@@ -177,7 +177,7 @@
   padding-bottom: 1px;
 }
 
-/* ── Filter button ─────────────────────────────────── */
+/* -- Filter button ----------------------------------- */
 
 .appkit-listing-layout__filter-btn {
   flex-shrink: 0;
@@ -216,7 +216,7 @@
   }
 }
 
-/* ── Filter badge ──────────────────────────────────── */
+/* -- Filter badge ------------------------------------ */
 
 .appkit-listing-layout__filter-badge {
   display: inline-flex;
@@ -238,7 +238,7 @@
   margin-left: 0.5rem;
 }
 
-/* ── Bulk action bar ───────────────────────────────── */
+/* -- Bulk action bar --------------------------------- */
 
 .appkit-listing-layout__bulk-bar {
   display: none;
@@ -259,7 +259,7 @@
   }
 }
 
-/* ── Body (sidebar + content) ──────────────────────── */
+/* -- Body (sidebar + content) ------------------------ */
 
 .appkit-listing-layout__body {
   display: flex;
@@ -273,7 +273,7 @@
   }
 }
 
-/* ── Desktop filter sidebar ────────────────────────── */
+/* -- Desktop filter sidebar -------------------------- */
 
 .appkit-listing-layout__sidebar {
   display: none;
@@ -317,7 +317,7 @@
   pointer-events: none;
 }
 
-/* ── Sidebar panel card ────────────────────────────── */
+/* -- Sidebar panel card ------------------------------ */
 
 .appkit-listing-layout__sidebar-panel {
   width: 15rem;
@@ -376,7 +376,7 @@
   }
 }
 
-/* ── Main content ──────────────────────────────────── */
+/* -- Main content ------------------------------------ */
 
 .appkit-listing-layout__content {
   flex: 1;
@@ -390,7 +390,7 @@
   padding-top: 0.5rem;
 }
 
-/* ── Mobile sticky pagination bar ─────────────────── */
+/* -- Mobile sticky pagination bar ------------------- */
 
 .appkit-listing-layout__mobile-pagination {
   position: fixed;
@@ -428,7 +428,7 @@
 .appkit-listing-layout__mobile-pagination--default   { bottom: 3.5rem; }
 .appkit-listing-layout__mobile-pagination--bulk      { bottom: 7rem; }
 
-/* ── Mobile filter overlay ─────────────────────────── */
+/* -- Mobile filter overlay --------------------------- */
 
 .appkit-listing-layout__mobile-overlay-backdrop {
   position: fixed;
@@ -504,7 +504,7 @@
   }
 }
 
-/* ── Close button in mobile overlay ───────────────── */
+/* -- Close button in mobile overlay ----------------- */
 
 .appkit-listing-layout__close-btn {
   border-radius: 9999px;

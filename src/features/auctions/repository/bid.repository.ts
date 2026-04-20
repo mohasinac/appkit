@@ -6,6 +6,7 @@
 
 import {
   BaseRepository,
+  getFirestoreCount,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
@@ -380,13 +381,9 @@ export class BidRepository extends BaseRepository<BidDocument> {
    */
   async countByProduct(productId: string): Promise<number> {
     try {
-      const snapshot = await this.db
-        .collection(this.collection)
-        .where("productId", "==", productId)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.db.collection(this.collection).where("productId", "==", productId),
+      );
     } catch (error) {
       throw new DatabaseError(
         `Failed to count bids for product: ${productId}`,
@@ -400,13 +397,9 @@ export class BidRepository extends BaseRepository<BidDocument> {
    */
   async countByUser(userId: string): Promise<number> {
     try {
-      const snapshot = await this.db
-        .collection(this.collection)
-        .where("userId", "==", userId)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.db.collection(this.collection).where("userId", "==", userId),
+      );
     } catch (error) {
       throw new DatabaseError(
         `Failed to count bids for user: ${userId}`,

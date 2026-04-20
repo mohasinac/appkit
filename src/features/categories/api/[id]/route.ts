@@ -15,7 +15,7 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { CategoryItem } from "../../types/index";
 
-// ──── GET /api/categories/[id] ────────────────────────────────────────────────
+// ---- GET /api/categories/[id] ------------------------------------------------
 
 export async function GET(
   _request: Request,
@@ -53,7 +53,7 @@ export async function GET(
 
 export { GET as categoryItemGET };
 
-// ──── PATCH /api/categories/[id] ──────────────────────────────────────────────
+// ---- PATCH /api/categories/[id] ----------------------------------------------
 
 const categoryUpdateSchema = z
   .object({
@@ -105,7 +105,7 @@ export const categoryItemPATCH = createRouteHandler({
   },
 });
 
-// ──── DELETE /api/categories/[id] ────────────────────────────────────────────
+// ---- DELETE /api/categories/[id] --------------------------------------------
 
 export const categoryItemDELETE = createRouteHandler({
   auth: true,

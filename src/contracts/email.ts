@@ -1,4 +1,4 @@
-// ─── Email Shared Types ───────────────────────────────────────────────────────
+// --- Email Shared Types -------------------------------------------------------
 
 export interface EmailAttachment {
   filename: string;
@@ -24,7 +24,7 @@ export interface EmailResult {
   rejected: string[];
 }
 
-// ─── Email Interface ──────────────────────────────────────────────────────────
+// --- Email Interface ----------------------------------------------------------
 
 /**
  * Transactional email sending contract.

@@ -8,6 +8,7 @@
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import {
   BaseRepository,
+  getFirestoreCount,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
 import {
@@ -102,13 +103,11 @@ export class NotificationRepository extends BaseRepository<NotificationDocument>
    */
   async getUnreadCount(userId: string): Promise<number> {
     try {
-      const snap = await this.getCollection()
-        .where(NOTIFICATION_FIELDS.USER_ID, "==", userId)
-        .where(NOTIFICATION_FIELDS.IS_READ, "==", false)
-        .count()
-        .get();
-
-      return snap.data().count;
+      return await getFirestoreCount(
+        this.getCollection()
+          .where(NOTIFICATION_FIELDS.USER_ID, "==", userId)
+          .where(NOTIFICATION_FIELDS.IS_READ, "==", false),
+      );
     } catch (error) {
       serverLogger.error("Failed to count unread notifications", {
         userId,

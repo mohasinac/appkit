@@ -11,7 +11,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
-  // ── Featured / Published ──────────────────────────────────────────────
+  // -- Featured / Published ----------------------------------------------
   {
     id: "blog-top-10-rarest-anime-figures-2026-guides",
     title: "Top 10 Rarest Anime Figures You Can Actually Buy in 2026",
@@ -164,7 +164,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     updatedAt: daysAgo(27),
   },
 
-  // ── Published — March Auction Spotlight ──────────────────────────────
+  // -- Published — March Auction Spotlight ------------------------------
   {
     id: "blog-march-2026-auction-spotlight-news",
     title: "March Auction Spotlight: Rare Figures, TCG Cards & Production Art",
@@ -197,7 +197,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // ── Draft ─────────────────────────────────────────────────────────────
+  // -- Draft -------------------------------------------------------------
   {
     id: "blog-guide-authenticating-anime-merchandise-draft",
     title: "The Complete Guide to Authenticating Anime Merchandise",
@@ -224,7 +224,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     updatedAt: daysAgo(17),
   },
 
-  // ── Archived ─────────────────────────────────────────────────────────
+  // -- Archived ---------------------------------------------------------
   {
     id: "blog-anicon-2025-haul-recap-community-archived",
     title: "AniCon 2025 Haul Recap — Community Picks of the Year",

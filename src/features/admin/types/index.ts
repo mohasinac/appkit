@@ -48,7 +48,7 @@ export interface AdminListResponse<T> {
   totalPages: number;
 }
 
-// ─── Analytics Types ──────────────────────────────────────────────────────────
+// --- Analytics Types ----------------------------------------------------------
 
 export interface AnalyticsMonthEntry {
   month: string;

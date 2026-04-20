@@ -2,7 +2,7 @@ import React from "react";
 import { Div, Grid, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 
-// ─── CategoryCard ─────────────────────────────────────────────────────────────
+// --- CategoryCard -------------------------------------------------------------
 
 export interface CategoryCardProps {
   category: CategoryItem;
@@ -58,7 +58,7 @@ export function CategoryCard({
   );
 }
 
-// ─── CategoryGrid ─────────────────────────────────────────────────────────────
+// --- CategoryGrid -------------------------------------------------------------
 
 export interface CategoryGridProps {
   categories: CategoryItem[];

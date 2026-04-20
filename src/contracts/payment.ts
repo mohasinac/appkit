@@ -1,4 +1,4 @@
-// ─── Payment Shared Types ─────────────────────────────────────────────────────
+// --- Payment Shared Types -----------------------------------------------------
 
 export interface PaymentOrder {
   id: string;
@@ -29,7 +29,7 @@ export interface Refund {
   createdAt: string; // ISO-8601
 }
 
-// ─── Payment Interface ────────────────────────────────────────────────────────
+// --- Payment Interface --------------------------------------------------------
 
 /**
  * Payment gateway adapter contract.

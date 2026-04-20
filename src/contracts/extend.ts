@@ -64,7 +64,7 @@ export interface GenericListResponse<T> {
   hasMore?: boolean;
 }
 
-// ─── Table column type (shared across feat packages) ─────────────────────────
+// --- Table column type (shared across feat packages) -------------------------
 
 /**
  * A single column definition for data tables.
@@ -98,7 +98,7 @@ export interface TableColumn<T = Record<string, unknown>> {
   hidden?: boolean;
 }
 
-// ─── Column extension helper ──────────────────────────────────────────────────
+// --- Column extension helper --------------------------------------------------
 
 /**
  * Options accepted by every feature's `buildXxxColumns<T>()` factory.
@@ -116,7 +116,7 @@ export interface ColumnExtensionOpts<T> {
   omit?: string[];
 }
 
-// ─── Layout slots ─────────────────────────────────────────────────────────────
+// --- Layout slots -------------------------------------------------------------
 
 /**
  * Render-prop slots accepted by every feature's list/detail view component.
@@ -145,7 +145,7 @@ export interface LayoutSlots<T> {
   renderFooter?: (meta: { page: number; totalPages: number }) => unknown;
 }
 
-// ─── Unified Feature Extension descriptor ────────────────────────────────────
+// --- Unified Feature Extension descriptor ------------------------------------
 
 /**
  * The single object an app passes to customise one feature.
@@ -195,7 +195,7 @@ export interface FeatureExtension<
   slots?: LayoutSlots<TExtended>;
 }
 
-// ─── Composable filter / sort builder ────────────────────────────────────────
+// --- Composable filter / sort builder ----------------------------------------
 
 /**
  * A single filter control descriptor used by the composable filter builder.

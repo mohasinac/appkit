@@ -24,7 +24,7 @@
 
 import type { CronJobDefinition, PubSubJobFn } from "./types";
 
-// ─── Minimal Firebase adapter interfaces ─────────────────────────────────────
+// --- Minimal Firebase adapter interfaces -------------------------------------
 // We only describe what we USE, not the full Firebase API surface.
 
 interface SchedulerOptions {
@@ -52,7 +52,7 @@ type PubSubFn = (
   }) => Promise<void>,
 ) => unknown;
 
-// ─── wrapScheduled ────────────────────────────────────────────────────────────
+// --- wrapScheduled ------------------------------------------------------------
 
 /**
  * Wraps a `CronJobDefinition` as a Firebase `onSchedule` Cloud Function.
@@ -80,7 +80,7 @@ export function wrapScheduled(
   );
 }
 
-// ─── wrapPubSub ───────────────────────────────────────────────────────────────
+// --- wrapPubSub ---------------------------------------------------------------
 
 /**
  * Wraps a `PubSubJobFn` as a Firebase Pub/Sub `onMessagePublished` function.

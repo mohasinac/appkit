@@ -2,7 +2,7 @@ export * from "./firestore";
 
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const categoryTypeSchema = z.enum([
   "category",
@@ -30,7 +30,7 @@ export const categoryMetricsSchema = z.object({
   lastUpdated: z.string().optional(),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a category item.

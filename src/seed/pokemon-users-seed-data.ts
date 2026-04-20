@@ -13,7 +13,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const pokemonUsersSeedData: Partial<UserDocument>[] = [
-  // ── Admin ─────────────────────────────────────────────────────────────────
+  // -- Admin -----------------------------------------------------------------
   {
     uid: "user-admin-user-admin",
     email: "admin@letitrip.in",
@@ -43,7 +43,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Sellers (Gym Leaders themed) ──────────────────────────────────────────
+  // -- Sellers (Gym Leaders themed) ------------------------------------------
 
   // Misty's Water Cards — Water type seller
   {
@@ -178,7 +178,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Buyers (classic trainers) ─────────────────────────────────────────────
+  // -- Buyers (classic trainers) ---------------------------------------------
 
   {
     uid: "user-ash-ketchum-pallet-ash",
@@ -384,7 +384,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Moderator ─────────────────────────────────────────────────────────────
+  // -- Moderator -------------------------------------------------------------
   {
     uid: "user-moderator-mod-user",
     email: "mod@letitrip.in",
@@ -414,7 +414,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     },
   },
 
-  // ── Edge-case users ───────────────────────────────────────────────────────
+  // -- Edge-case users -------------------------------------------------------
   {
     uid: "user-unverified-new-user",
     email: "newtrainer@example.com",

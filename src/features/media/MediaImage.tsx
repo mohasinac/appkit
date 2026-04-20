@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Div, Span } from "../../ui";
 
-// ─── Size presets ─────────────────────────────────────────────────────────────
+// --- Size presets -------------------------------------------------------------
 
 export type MediaImageSize =
   | "thumbnail"
@@ -30,7 +30,7 @@ const FALLBACK_ICONS: Record<MediaImageSize, string> = {
   avatar: "👤",
 };
 
-// ─── MediaImageProps ──────────────────────────────────────────────────────────
+// --- MediaImageProps ----------------------------------------------------------
 
 export interface MediaImageProps {
   /** Image URL. When undefined the fallback icon is rendered instead. */

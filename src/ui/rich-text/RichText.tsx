@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Div } from "../components/Div";
 
-// ─── Allowed HTML tags (safe subset — no script/iframe/object) ───────────────
+// --- Allowed HTML tags (safe subset — no script/iframe/object) ---------------
 
 const ALLOWED_TAGS = new Set([
   "p",
@@ -56,7 +56,7 @@ const ALLOWED_ATTRS: Record<string, string[]> = {
   ol: ["type", "start"],
 };
 
-// ─── Simple client-side sanitiser ────────────────────────────────────────────
+// --- Simple client-side sanitiser --------------------------------------------
 // We avoid a third-party sanitizer dependency to keep this module lightweight.
 // For user-supplied HTML, also sanitize server-side before storage.
 
@@ -118,7 +118,7 @@ function sanitiseHtml(dirty: string): string {
   return doc.body.innerHTML;
 }
 
-// ─── RichText component ──────────────────────────────────────────────────────
+// --- RichText component ------------------------------------------------------
 
 /** Adds interactive copy buttons to every `<pre>` block in a container. */
 function attachCopyButtons(container: HTMLDivElement) {

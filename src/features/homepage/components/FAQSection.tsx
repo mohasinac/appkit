@@ -3,7 +3,7 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Heading, Section, Span, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface FAQTab {
   value: string;
@@ -32,7 +32,7 @@ export interface FAQSectionProps {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function FAQSection({
   title,

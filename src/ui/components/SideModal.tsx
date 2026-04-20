@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Button, Div, Heading } from "..";
 
-// ─── SideModal ─────────────────────────────────────────────────────────────────
+// --- SideModal -----------------------------------------------------------------
 
 export interface SideModalProps {
   isOpen: boolean;

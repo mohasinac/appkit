@@ -53,7 +53,7 @@ function numParam(url: URL, key: string, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-// ─── GET /api/stores/[storeSlug]/auctions ─────────────────────────────────────
+// --- GET /api/stores/[storeSlug]/auctions -------------------------------------
 export async function GET(
   request: Request,
   context: RouteContext,

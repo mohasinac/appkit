@@ -8,7 +8,7 @@ import {
 } from "../../../ui/columns";
 import type { SellerStore, PayoutRecord } from "../types";
 
-// ─── Seller store columns ─────────────────────────────────────────────────────
+// --- Seller store columns -----------------------------------------------------
 
 /**
  * Default admin column definitions for the seller/store admin table.
@@ -58,7 +58,7 @@ export function buildSellerColumns<T extends SellerStore = SellerStore>(
   return buildColumns(sellerAdminColumns as TableColumn<T>[], opts);
 }
 
-// ─── Payout columns ───────────────────────────────────────────────────────────
+// --- Payout columns -----------------------------------------------------------
 
 /**
  * Default admin column definitions for the payout table.

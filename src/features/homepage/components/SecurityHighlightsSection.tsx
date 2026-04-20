@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Heading, Section, Span, Text, TextLink } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface SecurityHighlightItem {
   key: string;
@@ -23,7 +23,7 @@ export interface SecurityHighlightsSectionProps {
   className?: string;
 }
 
-// ─── Single card ─────────────────────────────────────────────────────────────
+// --- Single card -------------------------------------------------------------
 
 function SecurityCard({
   item,
@@ -63,7 +63,7 @@ function SecurityCard({
   );
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function SecurityHighlightsSection({
   title,

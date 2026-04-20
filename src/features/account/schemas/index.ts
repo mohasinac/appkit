@@ -2,7 +2,7 @@ export * from "./firestore";
 
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const userAddressSchema = z.object({
   id: z.string(),
@@ -25,7 +25,7 @@ export const notificationPreferencesSchema = z.object({
   push: z.boolean().optional(),
 });
 
-// ─── Base profile schema ──────────────────────────────────────────────────────
+// --- Base profile schema ------------------------------------------------------
 
 /**
  * Base Zod schema for a user profile.

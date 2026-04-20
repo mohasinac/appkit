@@ -28,7 +28,7 @@
  * const { products } = useProducts(params, { paginationConfig: myPaginationConfig });
  */
 
-// ─── Pagination ────────────────────────────────────────────────────────────────
+// --- Pagination ----------------------------------------------------------------
 
 /**
  * Composable pagination configuration.
@@ -64,7 +64,7 @@ export const DEFAULT_PAGINATION_CONFIG: Required<PaginationConfig> = {
   size: "md",
 };
 
-// ─── Sticky header ─────────────────────────────────────────────────────────────
+// --- Sticky header -------------------------------------------------------------
 
 /**
  * Sticky header configuration for data tables.
@@ -88,7 +88,7 @@ export const DEFAULT_STICKY_CONFIG: Required<StickyConfig> = {
   zIndex: 10,
 };
 
-// ─── Table ─────────────────────────────────────────────────────────────────────
+// --- Table ---------------------------------------------------------------------
 
 /** View mode options for DataTable. */
 export type TableViewMode = "table" | "grid" | "list";

@@ -2,7 +2,7 @@ import React from "react";
 import { Heading, Section, Text, TextLink } from "../../../ui";
 import { Mail } from "lucide-react";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface NewsletterSectionProps {
   title: string;
@@ -13,7 +13,7 @@ export interface NewsletterSectionProps {
   className?: string;
 }
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 
 export function NewsletterSection({
   title,

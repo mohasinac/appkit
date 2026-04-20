@@ -16,7 +16,7 @@ import {
 } from "../../payments/hooks/usePaymentEvent";
 import type { PaymentGateway } from "../../payments/schemas";
 
-// ─── Types ─────────────────────────────────────────────────────────────────
+// --- Types -----------------------------------------------------------------
 
 export type PaymentCheckoutStep =
   | "idle"
@@ -116,7 +116,7 @@ export interface UsePaymentCheckoutReturn {
   reset: () => void;
 }
 
-// ─── Hook ──────────────────────────────────────────────────────────────────
+// --- Hook ------------------------------------------------------------------
 
 const INITIAL_STATE: PaymentCheckoutState = {
   step: "idle",

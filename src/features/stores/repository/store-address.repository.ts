@@ -9,6 +9,7 @@
 
 import {
   getAdminDb,
+  getFirestoreCount,
   prepareForFirestore,
   deserializeTimestamps,
 } from "../../../providers/db-firebase";
@@ -125,8 +126,7 @@ class StoreAddressRepository {
    */
   async count(storeSlug: string): Promise<number> {
     try {
-      const snapshot = await this.getCollection(storeSlug).count().get();
-      return snapshot.data().count;
+      return await getFirestoreCount(this.getCollection(storeSlug));
     } catch (error) {
       throw new DatabaseError(
         `Failed to count addresses for store: ${storeSlug}`,

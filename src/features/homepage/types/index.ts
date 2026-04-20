@@ -39,7 +39,7 @@ export interface HomepageData {
   sections: HomepageSection[];
 }
 
-// ─── CharacterHotspot ────────────────────────────────────────────────────────
+// --- CharacterHotspot --------------------------------------------------------
 
 export interface HotspotPin {
   id: string;
@@ -67,7 +67,7 @@ export interface CharacterHotspotConfig {
   updatedAt?: string;
 }
 
-// ─── Hero Banner ─────────────────────────────────────────────────────────────
+// --- Hero Banner -------------------------------------------------------------
 
 export interface Banner {
   id: string;
@@ -82,7 +82,7 @@ export interface Banner {
   active: boolean;
 }
 
-// ─── Promo Grid ──────────────────────────────────────────────────────────────
+// --- Promo Grid --------------------------------------------------------------
 
 export interface PromoBanner {
   id: string;
@@ -94,7 +94,7 @@ export interface PromoBanner {
   active: boolean;
 }
 
-// ─── Trust Badges ────────────────────────────────────────────────────────────
+// --- Trust Badges ------------------------------------------------------------
 
 export type TrustBadgeIconKey = "shipping" | "support" | "rewards" | "secure";
 
@@ -107,7 +107,7 @@ export interface TrustBadge {
   active: boolean;
 }
 
-// ─── Testimonials ─────────────────────────────────────────────────────────────
+// --- Testimonials -------------------------------------------------------------
 
 export interface Testimonial {
   id: string;
@@ -120,7 +120,7 @@ export interface Testimonial {
   active: boolean;
 }
 
-// ─── Before / After Gallery ───────────────────────────────────────────────────
+// --- Before / After Gallery ---------------------------------------------------
 
 export interface BeforeAfterItem {
   id: string;
@@ -131,7 +131,7 @@ export interface BeforeAfterItem {
   sortOrder: number;
 }
 
-// ─── Carousel Slide ───────────────────────────────────────────────────────────
+// --- Carousel Slide -----------------------------------------------------------
 
 export interface CarouselSlideCard {
   id: string;

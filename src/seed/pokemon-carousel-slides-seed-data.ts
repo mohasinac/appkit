@@ -15,7 +15,7 @@ const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
 
 export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
-  // ── Slide 1: Welcome Hero — Charizard ──────────────────────────────────────
+  // -- Slide 1: Welcome Hero — Charizard --------------------------------------
   {
     id: "carousel-pokemon-welcome-hero-1707300000001",
     title: "Welcome — Charizard Hero",
@@ -54,7 +54,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 2: Holo Rare Sale ────────────────────────────────────────────────
+  // -- Slide 2: Holo Rare Sale ------------------------------------------------
   {
     id: "carousel-pokemon-holo-rare-sale-1707300000002",
     title: "Holo Rare Showcase",
@@ -136,7 +136,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 3: Auctions — 1st Edition Grail ─────────────────────────────────
+  // -- Slide 3: Auctions — 1st Edition Grail ---------------------------------
   {
     id: "carousel-pokemon-auction-grail-1707300000003",
     title: "Live Auction — 1st Edition Grail",
@@ -187,7 +187,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 4: Element Types Showcase ───────────────────────────────────────
+  // -- Slide 4: Element Types Showcase ---------------------------------------
   {
     id: "carousel-pokemon-element-types-1707300000004",
     title: "Element Types Showcase",
@@ -317,7 +317,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 5: Pikachu Fan Favourite ────────────────────────────────────────
+  // -- Slide 5: Pikachu Fan Favourite ----------------------------------------
   {
     id: "carousel-pokemon-pikachu-fan-fav-1707300000005",
     title: "Pikachu Fan Favourite",
@@ -360,7 +360,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 6: Sealed Products ──────────────────────────────────────────────
+  // -- Slide 6: Sealed Products ----------------------------------------------
   {
     id: "carousel-pokemon-sealed-products-1707300000006",
     title: "Sealed Products",
@@ -427,7 +427,7 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // ── Slide 7: Inactive placeholder ─────────────────────────────────────────
+  // -- Slide 7: Inactive placeholder -----------------------------------------
   {
     id: "carousel-pokemon-inactive-test-1707300000007",
     title: "Inactive Test Slide",

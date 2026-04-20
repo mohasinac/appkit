@@ -19,7 +19,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "App";
 import { ProductStatusValues } from "../features/products/schemas";
 import { getDefaultCurrency } from "../core/baseline-resolver";
 
-// ─── Input Types ──────────────────────────────────────────────────────────────
+// --- Input Types --------------------------------------------------------------
 
 export interface ProductJsonLdInput {
   id: string;
@@ -69,7 +69,7 @@ export interface BlogPostJsonLdInput {
   metaDescription?: string;
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// --- Helpers -----------------------------------------------------------------
 
 export function productJsonLd(
   product: ProductJsonLdInput,

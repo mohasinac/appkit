@@ -27,7 +27,7 @@ function numParam(url: URL, key: string, fallback: number): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
-// ─── GET /api/blog ────────────────────────────────────────────────────────────
+// --- GET /api/blog ------------------------------------------------------------
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {

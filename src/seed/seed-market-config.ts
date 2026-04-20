@@ -40,7 +40,7 @@ export interface SeedLocaleData {
   countryName: string;
 }
 
-// ─── Indian locale (default baseline) ───────────────────────────────────────
+// --- Indian locale (default baseline) ---------------------------------------
 
 const INDIAN_LOCALE: SeedLocaleData = {
   firstNames: [

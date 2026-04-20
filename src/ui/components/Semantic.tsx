@@ -32,7 +32,7 @@ import React from "react";
  * ```
  */
 
-// ─── Section ─────────────────────────────────────────────────────────────────
+// --- Section -----------------------------------------------------------------
 /**
  * Semantic `<section>` element.
  * Use for thematically grouped content that would appear in an outline.
@@ -51,7 +51,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
 );
 Section.displayName = "Section";
 
-// ─── Article ─────────────────────────────────────────────────────────────────
+// --- Article -----------------------------------------------------------------
 /**
  * Semantic `<article>` element.
  * Use for self-contained compositions: blog posts, product cards, reviews, forum posts.
@@ -68,7 +68,7 @@ export function Article({ className = "", children, ...props }: ArticleProps) {
   );
 }
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
+// --- Main ---------------------------------------------------------------------
 /**
  * Semantic `<main>` element.
  * Wraps the primary content of the document. Should appear only once per page.
@@ -85,7 +85,7 @@ export function Main({ className = "", children, ...props }: MainProps) {
   );
 }
 
-// ─── Aside ────────────────────────────────────────────────────────────────────
+// --- Aside --------------------------------------------------------------------
 /**
  * Semantic `<aside>` element.
  * Use for supplementary content tangentially related to the main content:
@@ -104,7 +104,7 @@ export const Aside = React.forwardRef<HTMLElement, AsideProps>(
 );
 Aside.displayName = "Aside";
 
-// ─── Nav ─────────────────────────────────────────────────────────────────────
+// --- Nav ---------------------------------------------------------------------
 /**
  * Semantic `<nav>` element with enforced `aria-label`.
  *
@@ -131,7 +131,7 @@ export function Nav({ className = "", children, ...props }: NavProps) {
   );
 }
 
-// ─── Header (block-level) ─────────────────────────────────────────────────────
+// --- Header (block-level) -----------------------------------------------------
 /**
  * Semantic `<header>` element for block-level component headers.
  * Use inside `Section`, `Article`, or card bodies — NOT as the page-level header.
@@ -161,7 +161,7 @@ export function BlockHeader({
   );
 }
 
-// ─── Footer (block-level) ─────────────────────────────────────────────────────
+// --- Footer (block-level) -----------------------------------------------------
 /**
  * Semantic `<footer>` element for block-level component footers.
  * Use inside `Section`, `Article`, or card bodies — NOT as the page-level footer.
@@ -182,7 +182,7 @@ export function BlockFooter({
   );
 }
 
-// ─── Ul ──────────────────────────────────────────────────────────────────────
+// --- Ul ----------------------------------------------------------------------
 /**
  * Semantic `<ul>` (unordered list) element.
  *
@@ -206,7 +206,7 @@ export function Ul({ className = "", children, ...props }: UlProps) {
   );
 }
 
-// ─── Ol ──────────────────────────────────────────────────────────────────────
+// --- Ol ----------------------------------------------------------------------
 /**
  * Semantic `<ol>` (ordered list) element.
  *
@@ -230,7 +230,7 @@ export function Ol({ className = "", children, ...props }: OlProps) {
   );
 }
 
-// ─── Li ──────────────────────────────────────────────────────────────────────
+// --- Li ----------------------------------------------------------------------
 /**
  * Semantic `<li>` (list item) element. Use inside `Ul` or `Ol`.
  */
@@ -246,7 +246,7 @@ export function Li({ className = "", children, ...props }: LiProps) {
   );
 }
 
-// ─── Header / Footer — convenience aliases ────────────────────────────────────
+// --- Header / Footer — convenience aliases ------------------------------------
 /**
  * Aliases for `BlockHeader` and `BlockFooter`.
  * Use when importing from the standard `<Header>` / `<Footer>` names.

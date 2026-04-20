@@ -7,7 +7,7 @@
  * at startup via `registerFieldOps()`.
  */
 
-// ─── Sentinel type ─────────────────────────────────────────────────────────
+// --- Sentinel type ---------------------------------------------------------
 /**
  * Opaque sentinel value returned by field operation helpers.
  * Each DB provider wraps its native sentinel (e.g. `FieldValue`) in this type.
@@ -15,7 +15,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type FieldSentinel = any;
 
-// ─── Operation interface ───────────────────────────────────────────────────
+// --- Operation interface ---------------------------------------------------
 export interface IFieldOps {
   /** Server-managed timestamp */
   serverTimestamp(): FieldSentinel;
@@ -29,7 +29,7 @@ export interface IFieldOps {
   deleteField(): FieldSentinel;
 }
 
-// ─── Runtime registry ──────────────────────────────────────────────────────
+// --- Runtime registry ------------------------------------------------------
 let _ops: IFieldOps | null = null;
 
 export function registerFieldOps(ops: IFieldOps): void {
@@ -45,7 +45,7 @@ function getOps(): IFieldOps {
   return _ops;
 }
 
-// ─── Public helpers (used by feature repositories) ─────────────────────────
+// --- Public helpers (used by feature repositories) -------------------------
 export function serverTimestamp(): FieldSentinel {
   return getOps().serverTimestamp();
 }

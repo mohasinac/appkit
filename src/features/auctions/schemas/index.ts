@@ -2,7 +2,7 @@ export * from "./firestore";
 import { z } from "zod";
 import { mediaFieldSchema } from "../../media/types/index";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const auctionStatusSchema = z.enum([
   "published",
@@ -11,7 +11,7 @@ export const auctionStatusSchema = z.enum([
   "sold",
 ]);
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for an auction item.

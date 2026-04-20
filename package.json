@@ -23,6 +23,42 @@
       "types": "./dist/providers.d.ts",
       "import": "./dist/providers.js"
     },
+    "./instrumentation": {
+      "types": "./dist/instrumentation/index.d.ts",
+      "import": "./dist/instrumentation/index.js"
+    },
+    "./contracts/registry": {
+      "types": "./dist/contracts/registry.d.ts",
+      "import": "./dist/contracts/registry.js"
+    },
+    "./core/baseline-resolver": {
+      "types": "./dist/core/baseline-resolver.d.ts",
+      "import": "./dist/core/baseline-resolver.js"
+    },
+    "./providers/auth-firebase": {
+      "types": "./dist/providers/auth-firebase/index.d.ts",
+      "import": "./dist/providers/auth-firebase/index.js"
+    },
+    "./providers/db-firebase": {
+      "types": "./dist/providers/db-firebase/index.d.ts",
+      "import": "./dist/providers/db-firebase/index.js"
+    },
+    "./providers/email-resend": {
+      "types": "./dist/providers/email-resend/index.d.ts",
+      "import": "./dist/providers/email-resend/index.js"
+    },
+    "./providers/storage-firebase": {
+      "types": "./dist/providers/storage-firebase/index.d.ts",
+      "import": "./dist/providers/storage-firebase/index.js"
+    },
+    "./style/tailwind": {
+      "types": "./dist/style/tailwind/index.d.ts",
+      "import": "./dist/style/tailwind/index.js"
+    },
+    "./repositories/site-settings": {
+      "types": "./dist/features/admin/repository/site-settings.repository.d.ts",
+      "import": "./dist/features/admin/repository/site-settings.repository.js"
+    },
     "./styles": "./dist/styles.css",
     "./tokens": "./dist/tokens/tokens.css",
     "./messages/*": "./dist/features/*/messages/en.json"

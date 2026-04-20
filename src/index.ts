@@ -8200,7 +8200,7 @@ export type { WelcomeSectionConfig } from "./features/homepage/schemas/index";
 // WhatsAppCommunitySectionConfig - Type contract for whats app community section config.
 export type { WhatsAppCommunitySectionConfig } from "./features/homepage/schemas/index";
 
-// ── Missing UI primitives ──────────────────────────────────────────────────────
+// -- Missing UI primitives ------------------------------------------------------
 export { Button } from "./ui/index";
 export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination } from "./ui/index";
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
@@ -8214,7 +8214,7 @@ export { buildColumns, createColumnBuilder } from "./ui/index";
 export { renderBoolean, renderCurrency, renderCurrencyCompact, renderCount, renderNullable } from "./ui/index";
 export { Ol } from "./ui/index";
 
-// ── Missing constants ──────────────────────────────────────────────────────────
+// -- Missing constants ----------------------------------------------------------
 export {
   API_ENDPOINTS, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
   NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, CHAT_ENDPOINTS, AUCTION_ENDPOINTS,
@@ -8227,7 +8227,7 @@ export {
   ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES,
 } from "./constants/index";
 
-// ── Missing React hooks & providers ───────────────────────────────────────────
+// Missing React hooks and providers
 export {
   useMediaQuery, useBreakpoint, useClickOutside, useKeyPress, useLongPress,
   useGesture, useSwipe, ThemeProvider, useTheme, useSession, useAuth, useCountdown,
@@ -8236,9 +8236,9 @@ export {
   useMessage, useVisibleItems, useModalStack, RTDBPayloadStatus,
 } from "./react/index";
 
-// ── Missing core types (already exported above; skipped to avoid duplicates) ───
+// Missing core types (already exported above; skipped to avoid duplicates)
 
-// ── Missing auth feature components ───────────────────────────────────────────
+// Missing auth feature components
 export {
   RoleGate, ProtectedRoute, SocialAuthButtons, AuthStatusPanel,
   LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView,
@@ -8249,24 +8249,24 @@ export type {
   ForgotPasswordViewProps, ResetPasswordViewProps, VerifyEmailViewProps,
 } from "./features/auth/index";
 
-// ── Missing cart / checkout feature components ────────────────────────────────
+// Missing cart and checkout feature components
 export { CartItemRow, CartDrawer, CartView, CartSummary } from "./features/cart/index";
 export { CheckoutView, CheckoutAddressStep, CheckoutOtpModal, CheckoutSuccessView } from "./features/cart/index";
 export { CheckoutStepper, useCheckout } from "./features/checkout/index";
 // PaymentGateway already exported from checkout types above
 
-// ── Missing account hooks ──────────────────────────────────────────────────────
+// Missing account hooks
 export { useProfile as useCurrentProfile, useUpdateProfile as useUpdateCurrentProfile } from "./features/account/index";
 
-// ── Missing auth hooks ────────────────────────────────────────────────────────
+// Missing auth hooks
 export { useLogout } from "./features/auth/index";
 
-// ── Missing UI semantic wrappers and typography ────────────────────────────────
+// Missing UI semantic wrappers and typography
 export { Text, Label, Span } from "./ui/index";
 export { Input } from "./ui/index";
 export { Section, Main, Nav, Header, Footer, Ul, Li } from "./ui/index";
 
-// ── Missing media helpers ──────────────────────────────────────────────────────
+// Missing media helpers
 export { coerceMediaField, coerceMediaFieldArray, getMediaUrl, mediaFieldSchema } from "./features/media/index";
 
 // -- Missing UI layout / typography components

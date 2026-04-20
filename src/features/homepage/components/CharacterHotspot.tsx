@@ -5,9 +5,9 @@ import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";
 
-/* ── Fallback when no Firestore config is saved yet ──────────────────────────
+/* -- Fallback when no Firestore config is saved yet --------------------------
    Consumers can override the full config via the `config` prop.
-───────────────────────────────────────────────────────────────── */
+----------------------------------------------------------------- */
 const FALLBACK_IMAGE = "/animevssuperhero.jpg";
 const FALLBACK_IMAGE_ALT = "DC, Marvel and Anime characters";
 

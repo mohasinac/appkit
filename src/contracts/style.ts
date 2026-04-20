@@ -1,4 +1,4 @@
-// ─── Style Adapter Interface ──────────────────────────────────────────────────
+// --- Style Adapter Interface --------------------------------------------------
 
 /**
  * CSS framework adapter contract.

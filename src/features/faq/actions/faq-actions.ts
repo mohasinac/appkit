@@ -7,7 +7,7 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 
-// ─── Schemas ──────────────────────────────────────────────────────────────
+// --- Schemas --------------------------------------------------------------
 
 const faqBaseSchema = z.object({
   question: z.string().min(10).max(500),
@@ -56,7 +56,7 @@ export interface VoteFaqActionResult {
   notHelpful: number;
 }
 
-// ─── Actions ──────────────────────────────────────────────────────────────
+// --- Actions --------------------------------------------------------------
 
 export async function voteFaq(
   input: VoteFaqActionInput,

@@ -10,7 +10,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[] =
   [
-    // ── 1. Welcome ────────────────────────────────────────────────────────────
+    // -- 1. Welcome ------------------------------------------------------------
     {
       id: "section-welcome-pokemon-1707300000001",
       type: "welcome",
@@ -43,7 +43,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 2. Trust Indicators ───────────────────────────────────────────────────
+    // -- 2. Trust Indicators ---------------------------------------------------
     {
       id: "section-trust-indicators-pokemon-1707300000002",
       type: "trust-indicators",
@@ -82,7 +82,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 3. Featured Categories ────────────────────────────────────────────────
+    // -- 3. Featured Categories ------------------------------------------------
     {
       id: "section-categories-pokemon-1707300000003",
       type: "categories",
@@ -98,7 +98,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 4. Featured Products — Holo Rares ─────────────────────────────────────
+    // -- 4. Featured Products — Holo Rares -------------------------------------
     {
       id: "section-products-pokemon-featured-1707300000004",
       type: "products",
@@ -118,7 +118,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 5. New Arrivals ───────────────────────────────────────────────────────
+    // -- 5. New Arrivals -------------------------------------------------------
     {
       id: "section-products-pokemon-new-arrivals-1707300000005",
       type: "products",
@@ -138,7 +138,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 6. Live Auctions ──────────────────────────────────────────────────────
+    // -- 6. Live Auctions ------------------------------------------------------
     {
       id: "section-auctions-pokemon-1707300000006",
       type: "auctions",
@@ -158,7 +158,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 7. Promotional Banner — Charizard ─────────────────────────────────────
+    // -- 7. Promotional Banner — Charizard -------------------------------------
     {
       id: "section-banner-pokemon-1707300000007",
       type: "banner",
@@ -193,7 +193,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(0),
     },
 
-    // ── 8. Features / Why Us ──────────────────────────────────────────────────
+    // -- 8. Features / Why Us --------------------------------------------------
     {
       id: "section-features-pokemon-1707300000008",
       type: "features",
@@ -207,7 +207,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 9. Reviews ────────────────────────────────────────────────────────────
+    // -- 9. Reviews ------------------------------------------------------------
     {
       id: "section-reviews-pokemon-1707300000009",
       type: "reviews",
@@ -225,7 +225,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 10. WhatsApp Community ────────────────────────────────────────────────
+    // -- 10. WhatsApp Community ------------------------------------------------
     {
       id: "section-whatsapp-community-pokemon-1707300000010",
       type: "whatsapp-community",
@@ -249,7 +249,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 11. FAQ ───────────────────────────────────────────────────────────────
+    // -- 11. FAQ ---------------------------------------------------------------
     {
       id: "section-faq-pokemon-1707300000011",
       type: "faq",
@@ -269,7 +269,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 12. Blog Articles ─────────────────────────────────────────────────────
+    // -- 12. Blog Articles -----------------------------------------------------
     {
       id: "section-blog-articles-pokemon-1707300000012",
       type: "blog-articles",
@@ -287,7 +287,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 13. Newsletter ────────────────────────────────────────────────────────
+    // -- 13. Newsletter --------------------------------------------------------
     {
       id: "section-newsletter-pokemon-1707300000013",
       type: "newsletter",
@@ -306,7 +306,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 14. Stores ────────────────────────────────────────────────────────────
+    // -- 14. Stores ------------------------------------------------------------
     {
       id: "section-stores-pokemon-1707300000014",
       type: "stores",
@@ -324,7 +324,7 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // ── 15. Events (disabled) ─────────────────────────────────────────────────
+    // -- 15. Events (disabled) -------------------------------------------------
     {
       id: "section-events-pokemon-1707300000015",
       type: "events",

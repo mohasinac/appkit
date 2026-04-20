@@ -1,6 +1,6 @@
 import "./components/index.style.css";
 
-// ─── Column utilities ─────────────────────────────────────────────────────────
+// --- Column utilities ---------------------------------------------------------
 export {
   buildColumns,
   createColumnBuilder,
@@ -17,7 +17,7 @@ export type {
   RatingRenderOpts,
 } from "./columns";
 
-// ─── Semantic HTML wrappers ───────────────────────────────────────────────────
+// --- Semantic HTML wrappers ---------------------------------------------------
 export type {
   SectionProps,
   ArticleProps,
@@ -50,17 +50,17 @@ export {
 export type { DivProps } from "./components/Div";
 export { Div } from "./components/Div";
 
-// ─── Typography primitives ────────────────────────────────────────────────────
+// --- Typography primitives ----------------------------------------------------
 export { Heading, Text, Label, Caption, Span } from "./components/Typography";
 
-// ─── Loading / Feedback ───────────────────────────────────────────────────────
+// --- Loading / Feedback -------------------------------------------------------
 export type { SpinnerProps } from "./components/Spinner";
 export { Spinner } from "./components/Spinner";
 
 export type { SkeletonProps } from "./components/Skeleton";
 export { Skeleton } from "./components/Skeleton";
 
-// ─── Interactive ──────────────────────────────────────────────────────────────
+// --- Interactive --------------------------------------------------------------
 export type { ButtonProps } from "./components/Button";
 export { Button } from "./components/Button";
 
@@ -91,22 +91,22 @@ export { Form, FormGroup, FormFieldSpan, FormActions } from "./components/Form";
 export type { BadgeProps, BadgeVariant } from "./components/Badge";
 export { Badge } from "./components/Badge";
 
-// ─── Feedback ─────────────────────────────────────────────────────────────────
+// --- Feedback -----------------------------------------------------------------
 export type { AlertProps } from "./components/Alert";
 export { Alert } from "./components/Alert";
 
-// ─── Layout helpers ───────────────────────────────────────────────────────────
+// --- Layout helpers -----------------------------------------------------------
 export type { DividerProps } from "./components/Divider";
 export { Divider } from "./components/Divider";
 
-// ─── Progress ─────────────────────────────────────────────────────────────────
+// --- Progress -----------------------------------------------------------------
 export type {
   ProgressProps,
   IndeterminateProgressProps,
 } from "./components/Progress";
 export { Progress, IndeterminateProgress } from "./components/Progress";
 
-// ─── S1-1: New Primitives ─────────────────────────────────────────────────────
+// --- S1-1: New Primitives -----------------------------------------------------
 
 export type { PaginationProps } from "./components/Pagination";
 export { Pagination } from "./components/Pagination";
@@ -315,11 +315,11 @@ export type {
 } from "./components/TablePagination";
 export { TablePagination } from "./components/TablePagination";
 
-// ─── S1-2: DataTable ──────────────────────────────────────────────────────────
+// --- S1-2: DataTable ----------------------------------------------------------
 export type { DataTableProps, DataTableColumn } from "./DataTable";
 export { DataTable } from "./DataTable";
 
-// ─── Table / Pagination / Sticky config (re-exported from @mohasinac/contracts) ──
+// --- Table / Pagination / Sticky config (re-exported from @mohasinac/contracts) --
 export type {
   TableConfig,
   TableViewMode,
@@ -333,7 +333,7 @@ export {
   mergeTableConfig,
 } from "../contracts";
 
-// ─── Layout Primitives ────────────────────────────────────────────────────────
+// --- Layout Primitives --------------------------------------------------------
 export type {
   GapKey,
   ContainerSize,
@@ -346,18 +346,18 @@ export type {
 } from "./components/Layout";
 export { Container, Stack, Row, Grid, GRID_MAP } from "./components/Layout";
 
-// ─── UI Helpers ───────────────────────────────────────────────────────────────
+// --- UI Helpers ---------------------------------------------------------------
 export { classNames, mergeTailwindClasses } from "./style.helper";
 
-// ─── SideModal ────────────────────────────────────────────────────────────────
+// --- SideModal ----------------------------------------------------------------
 export type { SideModalProps } from "./components/SideModal";
 export { SideModal } from "./components/SideModal";
 
-// ─── RichText ─────────────────────────────────────────────────────────────────
+// --- RichText -----------------------------------------------------------------
 export type { RichTextProps } from "./rich-text/RichText";
 export { RichText } from "./rich-text/RichText";
 
-// ─── ListingLayout + BulkActionBar ────────────────────────────────────────────
+// --- ListingLayout + BulkActionBar --------------------------------------------
 export type {
   ListingLayoutProps,
   ListingLayoutLabels,
@@ -409,10 +409,10 @@ export type {
 } from "./components/ImageGallery";
 export { default as ImageGallery } from "./components/ImageGallery";
 
-// ─── SideDrawer ──────────────────────────────────────────────────────────────
+// --- SideDrawer --------------------------------------------------------------
 export type { SideDrawerProps, DrawerMode } from "./components/SideDrawer";
 export { SideDrawer } from "./components/SideDrawer";
 
-// ─── ConfirmDeleteModal ──────────────────────────────────────────────────────
+// --- ConfirmDeleteModal ------------------------------------------------------
 export type { ConfirmDeleteModalProps } from "./components/ConfirmDeleteModal";
 export { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";

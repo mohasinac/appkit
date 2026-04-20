@@ -27,7 +27,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const cartsSeedData: CartDocument[] = [
-  // ── John Doe: multi-item, cross-seller cart ───────────────────────────────
+  // -- John Doe: multi-item, cross-seller cart -------------------------------
   // Tests: list cart items, remove single item, update quantity, checkout
   {
     id: "user-john-doe-johndoe",
@@ -87,7 +87,7 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(9),
   },
 
-  // ── Jane Smith: single-item cart ─────────────────────────────────────────
+  // -- Jane Smith: single-item cart -----------------------------------------
   // Tests: add item, checkout with single item, clear cart after order
   {
     id: "user-jane-smith-janes",
@@ -115,7 +115,7 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(10),
   },
 
-  // ── Mike Johnson: cart with auction item ──────────────────────────────────
+  // -- Mike Johnson: cart with auction item ----------------------------------
   // Tests: auction item add-to-cart display, checkout CTA blocked (must bid)
   // The Air Jordan auction closes 2026-03-01 20:00 so it's still active now.
   {
@@ -159,7 +159,7 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(12),
   },
 
-  // ── Priya Sharma: cart with quantity > 1 items ────────────────────────────
+  // -- Priya Sharma: cart with quantity > 1 items ----------------------------
   // Tests: increment/decrement quantity controls, cart total calculation
   {
     id: "user-priya-sharma-priya",
@@ -203,7 +203,7 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(11),
   },
 
-  // ── Raj Patel: empty cart (all items removed) ─────────────────────────────
+  // -- Raj Patel: empty cart (all items removed) -----------------------------
   // Tests: empty cart UI state, "Your cart is empty" message,
   //        add-to-cart starting from empty state
   {

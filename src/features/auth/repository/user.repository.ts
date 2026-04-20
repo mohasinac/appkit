@@ -3,6 +3,7 @@ import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import {
   BaseRepository,
+  getFirestoreCount,
   prepareForFirestore,
   type FirebaseSieveFields,
   type FirebaseSieveResult,
@@ -237,12 +238,9 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async countByRole(role: UserRole): Promise<number> {
     try {
-      const snapshot = await this.getCollection()
-        .where(USER_FIELDS.ROLE, "==", role)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.getCollection().where(USER_FIELDS.ROLE, "==", role),
+      );
     } catch (error) {
       throw new DatabaseError(`Failed to count users by role: ${role}`, error);
     }
@@ -250,12 +248,9 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async countActive(): Promise<number> {
     try {
-      const snapshot = await this.getCollection()
-        .where(USER_FIELDS.DISABLED, "==", false)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.getCollection().where(USER_FIELDS.DISABLED, "==", false),
+      );
     } catch (error) {
       throw new DatabaseError("Failed to count active users", error);
     }
@@ -263,12 +258,9 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async countDisabled(): Promise<number> {
     try {
-      const snapshot = await this.getCollection()
-        .where(USER_FIELDS.DISABLED, "==", true)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.getCollection().where(USER_FIELDS.DISABLED, "==", true),
+      );
     } catch (error) {
       throw new DatabaseError("Failed to count disabled users", error);
     }
@@ -276,12 +268,9 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async countNewSince(since: Date): Promise<number> {
     try {
-      const snapshot = await this.getCollection()
-        .where(USER_FIELDS.CREATED_AT, ">=", since)
-        .count()
-        .get();
-
-      return snapshot.data().count;
+      return await getFirestoreCount(
+        this.getCollection().where(USER_FIELDS.CREATED_AT, ">=", since),
+      );
     } catch (error) {
       throw new DatabaseError("Failed to count new users", error);
     }

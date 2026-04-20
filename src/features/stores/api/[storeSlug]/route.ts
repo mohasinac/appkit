@@ -50,7 +50,7 @@ interface StoreEntity {
   createdAt?: string;
 }
 
-// ─── GET /api/stores/[storeSlug] ─────────────────────────────────────────────
+// --- GET /api/stores/[storeSlug] ---------------------------------------------
 
 export async function GET(
   _request: Request,

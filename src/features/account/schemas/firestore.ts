@@ -5,7 +5,7 @@
  * for the account feature (user addresses).
  */
 
-// ── Address Subcollection ────────────────────────────────────────────────────
+// -- Address Subcollection ----------------------------------------------------
 
 export interface AddressDocument {
   id: string;

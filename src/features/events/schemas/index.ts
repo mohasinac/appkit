@@ -14,7 +14,7 @@ const eventCoverImageSchema = z
   .optional()
   .transform((value) => value ?? null);
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const eventTypeSchema = z.enum([
   "sale",
@@ -45,7 +45,7 @@ export const pollConfigSchema = z.object({
   resultsVisibility: z.enum(["always", "after_vote", "after_end"]),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for an event item.

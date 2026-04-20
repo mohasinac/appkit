@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
+// --- Sub-schemas --------------------------------------------------------------
 
 export const faqCategorySchema = z.enum([
   "orders_payment",
@@ -25,7 +25,7 @@ export const faqStatsSchema = z.object({
   notHelpful: z.number().optional(),
 });
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a FAQ item.

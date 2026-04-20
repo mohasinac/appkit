@@ -11,7 +11,7 @@ export const storeStatusSchema = z.enum([
   StoreStatusValues.REJECTED,
 ]);
 
-// ─── Base item schema ─────────────────────────────────────────────────────────
+// --- Base item schema ---------------------------------------------------------
 
 /**
  * Base Zod schema for a store list item.

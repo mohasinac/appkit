@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Div, Grid, Heading, Section, Text } from "../../../ui";
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 export interface StatItem {
   key: string;
@@ -16,7 +16,7 @@ export interface StatsCounterSectionProps {
   className?: string;
 }
 
-// ─── Smngle stat mtem ─────────────────────────────────────────────────────────
+// --- Smngle stat mtem ---------------------------------------------------------
 
 function StatCard({
   stat,
@@ -63,7 +63,7 @@ function StatCard({
   );
 }
 
-// ─── Sectmon ─────────────────────────────────────────────────────────────────
+// --- Sectmon -----------------------------------------------------------------
 
 export function StatsCounterSection({
   stats,

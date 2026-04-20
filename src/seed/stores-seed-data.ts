@@ -18,7 +18,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 export const storesSeedData: Partial<StoreDocument>[] = [
-  // ── FigureVault JP ────────────────────────────────────────────────────────
+  // -- FigureVault JP --------------------------------------------------------
   {
     id: "store-figurevault-jp-by-figurevault",
     storeSlug: "store-figurevault-jp-by-figurevault",
@@ -70,7 +70,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAhead(4),
   },
 
-  // ── AnimeCraft Apparel ───────────────────────────────────────────────────
+  // -- AnimeCraft Apparel ---------------------------------------------------
   {
     id: "store-animecraft-apparel-by-animecraft",
     storeSlug: "store-animecraft-apparel-by-animecraft",
@@ -112,7 +112,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAhead(4),
   },
 
-  // ── OtakuShelf Co ────────────────────────────────────────────────────────
+  // -- OtakuShelf Co --------------------------------------------------------
   {
     id: "store-otakushelf-co-by-otakushelf",
     storeSlug: "store-otakushelf-co-by-otakushelf",

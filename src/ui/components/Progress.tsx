@@ -75,7 +75,7 @@ export function Progress({
   );
 }
 
-// ─── IndeterminateProgress ─────────────────────────────────────────────────
+// --- IndeterminateProgress -------------------------------------------------
 
 export interface IndeterminateProgressProps {
   variant?: "primary" | "success" | "warning" | "error";

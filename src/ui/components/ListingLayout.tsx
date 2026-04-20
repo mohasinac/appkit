@@ -5,17 +5,17 @@
  * and user. Provides a sticky toolbar with search, sort, view-toggle, filter
  * sidebar (desktop), filter overlay (mobile), and bulk-action bar.
  *
- *  ┌──────────────────────────────────────────────────────────────────┐
+ *  ┌------------------------------------------------------------------┐
  *  │ [headerSlot — PageHeader / Heading + subtitle]                  │
- *  ├──────────────────────────────────────────────────────────────────┤
+ *  ├------------------------------------------------------------------┤
  *  │ [statusTabsSlot — status filter tabs]                           │
- *  ├──────────────────────────────────────────────────────────────────┤
- *  │ STICKY ─────────────────────────────────────────────────────── │
+ *  ├------------------------------------------------------------------┤
+ *  │ STICKY ------------------------------------------------------- │
  *  │ [Filters] [searchSlot] [viewToggle] [sortSlot] [acts] [page]   │
- *  ├──────────┬───────────────────────────────────────────────────────┤
+ *  ├----------┬-------------------------------------------------------┤
  *  │ Filters  │  [activeFiltersSlot — chips]                         │
  *  │ (sidebar)│  [DataTable / ProductGrid / card list — children]    │
- *  └──────────┴───────────────────────────────────────────────────────┘
+ *  └----------┴-------------------------------------------------------┘
  */
 
 import { ReactNode, useState, useEffect, useRef } from "react";
@@ -36,41 +36,41 @@ export interface ListingLayoutLabels {
 }
 
 export interface ListingLayoutProps {
-  // ── Header ──────────────────────────────────────────────────────────────
+  // -- Header --------------------------------------------------------------
   headerSlot?: ReactNode;
 
-  // ── Status tabs ─────────────────────────────────────────────────────────
+  // -- Status tabs ---------------------------------------------------------
   statusTabsSlot?: ReactNode;
 
-  // ── Filter ──────────────────────────────────────────────────────────────
+  // -- Filter --------------------------------------------------------------
   filterContent?: ReactNode;
   filterActiveCount?: number;
   onFilterApply?: () => void;
   onFilterClear?: () => void;
   filterTitle?: string;
 
-  // ── Active filters ──────────────────────────────────────────────────────
+  // -- Active filters ------------------------------------------------------
   activeFiltersSlot?: ReactNode;
 
-  // ── Toolbar slots ────────────────────────────────────────────────────────
+  // -- Toolbar slots --------------------------------------------------------
   searchSlot?: ReactNode;
   sortSlot?: ReactNode;
   viewToggleSlot?: ReactNode;
   actionsSlot?: ReactNode;
 
-  // ── Bulk selection ───────────────────────────────────────────────────────
+  // -- Bulk selection -------------------------------------------------------
   selectedCount?: number;
   onClearSelection?: () => void;
   bulkActionItems?: BulkActionItem[];
 
-  // ── Pagination ───────────────────────────────────────────────────────────
+  // -- Pagination -----------------------------------------------------------
   toolbarPaginationSlot?: ReactNode;
   paginationSlot?: ReactNode;
 
-  // ── Content ──────────────────────────────────────────────────────────────
+  // -- Content --------------------------------------------------------------
   children: ReactNode;
 
-  // ── Options ──────────────────────────────────────────────────────────────
+  // -- Options --------------------------------------------------------------
   /** When true, sticky toolbar sits at top-0 (inside overflow-y-auto container).
    *  When false, accounts for a top navbar above (top-14/top-[120px]). */
   isDashboard?: boolean;
@@ -79,7 +79,7 @@ export interface ListingLayoutProps {
   loading?: boolean;
   errorSlot?: ReactNode;
 
-  // ── i18n labels ──────────────────────────────────────────────────────────
+  // -- i18n labels ----------------------------------------------------------
   labels?: ListingLayoutLabels;
 }
 

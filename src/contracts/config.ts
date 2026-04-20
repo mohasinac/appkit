@@ -1,4 +1,4 @@
-// ─── Site Config ─────────────────────────────────────────────────────────────
+// --- Site Config -------------------------------------------------------------
 
 /**
  * Brand configuration injected into layout/nav shell components.
@@ -35,7 +35,7 @@ export interface SiteConfig {
   locales?: string[];
 }
 
-// ─── Navigation ───────────────────────────────────────────────────────────────
+// --- Navigation ---------------------------------------------------------------
 
 /**
  * A single nav item passed to NavbarLayout / Sidebar / BottomNavbar.

@@ -6,7 +6,7 @@ import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
-// ─── ProductCard ──────────────────────────────────────────────────────────────
+// --- ProductCard --------------------------------------------------------------
 
 interface ProductCardProps<T extends ProductItem = ProductItem> {
   product: T;
@@ -121,7 +121,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   );
 }
 
-// ─── ProductCardContext (passed to renderCard slot) ───────────────────────────
+// --- ProductCardContext (passed to renderCard slot) ---------------------------
 
 export interface ProductCardContext<T extends ProductItem = ProductItem> {
   onClick?: (product: T) => void;
@@ -129,7 +129,7 @@ export interface ProductCardContext<T extends ProductItem = ProductItem> {
   isWishlisted: boolean;
 }
 
-// ─── ProductGrid ──────────────────────────────────────────────────────────────
+// --- ProductGrid --------------------------------------------------------------
 
 interface ProductGridProps<T extends ProductItem = ProductItem> {
   products: T[];
@@ -182,13 +182,13 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
   view?: ViewMode;
 }
 
-// ─── Grid class maps ─────────────────────────────────────────────────────────
+// --- Grid class maps ---------------------------------------------------------
 
 const GRID_CLASSES: Record<"card", string> = {
   card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
 };
 
-// ─── ProductListRow (list-mode row) ──────────────────────────────────────────
+// --- ProductListRow (list-mode row) ------------------------------------------
 
 interface ProductListRowProps<T extends ProductItem = ProductItem> {
   product: T;
