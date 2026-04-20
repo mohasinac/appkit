@@ -1,5 +1,3 @@
-"use client";
-
 import { Span } from "./Typography";
 import { Row } from "./Layout";
 import {

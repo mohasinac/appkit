@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button, Div, Input, Label, Row, Select, Span } from "../../../ui";
 import type { SearchCategoryOption } from "../types";

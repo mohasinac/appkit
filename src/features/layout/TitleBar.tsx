@@ -1,5 +1,3 @@
-"use client";
-
 import { useCartCount } from "../cart/hooks/useCartCount";
 import { useDashboardNav } from "./DashboardNavContext";
 import { TitleBarLayout } from "./TitleBarLayout";

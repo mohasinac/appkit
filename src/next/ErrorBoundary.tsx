@@ -1,5 +1,3 @@
-"use client";
-
 import React, { Component, type ErrorInfo, type ReactNode } from "react";
 import { Button } from "../ui/components/Button";
 import { Heading, Text } from "../ui/components/Typography";

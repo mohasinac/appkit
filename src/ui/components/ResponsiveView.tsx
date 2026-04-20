@@ -1,5 +1,3 @@
-"use client";
-
 interface ResponsiveViewProps {
   mobile: React.ReactNode;
   desktop: React.ReactNode;

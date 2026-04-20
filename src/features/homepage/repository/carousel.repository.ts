@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Carousel Repository
  *

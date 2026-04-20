@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";

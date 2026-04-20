@@ -3,8 +3,6 @@
  *
  * Server-only entry point — repositories and API route handlers.
  */
-import "server-only";
-
 export * from "./actions";
 
 export { StoresRepository } from "./repository/stores.repository";

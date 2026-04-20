@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronUp } from "lucide-react";

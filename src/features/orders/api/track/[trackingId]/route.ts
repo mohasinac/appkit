@@ -8,7 +8,6 @@
  * export { GET } from "@mohasinac/appkit/features/orders";
  * ```
  */
-import "server-only";
 import { NextResponse } from "next/server.js";
 import { getTrackingInfo } from "../../../actions/order-actions";
 

@@ -1,5 +1,3 @@
-import "server-only";
-
 // Auto-register Firebase field operations on import
 import { registerFieldOps } from "../../contracts/field-ops";
 import { firebaseFieldOps } from "./field-ops";

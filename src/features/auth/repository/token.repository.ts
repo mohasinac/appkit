@@ -1,4 +1,3 @@
-import "server-only";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError } from "../../../errors";
 import { BaseRepository } from "../../../providers/db-firebase";

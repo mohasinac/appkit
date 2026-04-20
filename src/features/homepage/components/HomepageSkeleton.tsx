@@ -1,5 +1,3 @@
-"use client";
-
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Grid, Section } from "../../../ui";
 

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Button, Heading, Row, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";

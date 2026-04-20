@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation } from "@tanstack/react-query";
 
 export interface UseContactSubmitOptions<TInput, TResult> {

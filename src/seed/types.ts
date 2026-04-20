@@ -1,5 +1,3 @@
-import "server-only";
-
 // appkit/src/seed/types.ts
 
 export interface SeedCollection<T = unknown> {

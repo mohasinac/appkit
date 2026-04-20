@@ -1,4 +1,3 @@
-import "server-only";
 import {
   getStorage as getFirebaseStorage,
   type Storage,

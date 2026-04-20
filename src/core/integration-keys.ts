@@ -13,7 +13,6 @@
  *   const keys = await resolveKeys();
  *   const razorpay = new Razorpay({ key_id: keys.razorpayKeyId, key_secret: keys.razorpayKeySecret });
  */
-import "server-only";
 import { siteSettingsRepository } from "../repositories";
 
 export interface ResolvedKeys {

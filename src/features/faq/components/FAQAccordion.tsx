@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { Button, Div, Row, Span, Text } from "../../../ui";
 import type { FAQ, FAQCategory } from "../types";

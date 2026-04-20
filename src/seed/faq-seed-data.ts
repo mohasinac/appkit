@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Comprehensive FAQ Seed Data
  * 102 FAQs across 7 categories

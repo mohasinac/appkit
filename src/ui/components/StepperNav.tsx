@@ -1,5 +1,3 @@
-"use client";
-
 import { Li, Nav, Ol } from "./Semantic";
 import { Span } from "./Typography";
 import { classNames } from "../style.helper";

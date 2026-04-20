@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useEffect, useRef, RefObject } from "react";
 
 /**

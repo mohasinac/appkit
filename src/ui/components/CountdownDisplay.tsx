@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useEffect, useMemo, useState } from "react";
 import { Span } from "./Typography";
 import { classNames } from "../style.helper";

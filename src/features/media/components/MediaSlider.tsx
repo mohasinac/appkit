@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * MediaSlider — lightweight range-input wrapper used internally by media editing modals.
  * No external dependencies beyond React and Tailwind.

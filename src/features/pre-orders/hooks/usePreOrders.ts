@@ -1,5 +1,3 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import type { PreorderItem } from "../types";
 import { PREORDER_ENDPOINTS } from "../../../constants/api-endpoints";

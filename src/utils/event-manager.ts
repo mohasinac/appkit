@@ -1,5 +1,3 @@
-﻿import "client-only";
-
 /**
  * Event Manager Utilities
  *

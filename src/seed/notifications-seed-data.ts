@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Notifications Seed Data
  * Sample in-app notifications for various users and event types

@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Button, Input, Li, Row, Span, Text, Ul } from "../../../ui";

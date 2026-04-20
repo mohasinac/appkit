@@ -1,5 +1,3 @@
-"use client";
-
 import { Button, Div, Span } from "../../../ui";
 
 interface SocialAuthButtonsProps {

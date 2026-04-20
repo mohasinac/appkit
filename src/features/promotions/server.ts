@@ -3,8 +3,6 @@
  *
  * Server-only entry point for promotions repositories and API route handlers.
  */
-import "server-only";
-
 export * from "./actions";
 
 export { PromotionsRepository } from "./repository/promotions.repository";

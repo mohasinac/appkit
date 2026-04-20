@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * MediaUploadField — single-file upload field for @mohasinac/feat-media.
  *

@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useMediaQuery } from "../../../react";

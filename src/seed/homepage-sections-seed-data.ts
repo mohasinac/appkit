@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Homepage Sections Seed Data
  * Configurable sections for the homepage

@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { NOTIFICATIONS_ENDPOINTS } from "../../../constants/api-endpoints";

@@ -7,8 +7,6 @@
  *
  * All getters are lazy — the SDK is not touched until first use.
  */
-import "server-only";
-
 import type { App } from "firebase-admin/app";
 import type { Auth } from "firebase-admin/auth";
 import type { Firestore } from "firebase-admin/firestore";

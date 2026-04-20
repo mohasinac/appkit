@@ -1,5 +1,3 @@
-import "server-only";
-
 // appkit/src/seed/index.ts
 export type { SeedCollection, SeedConfig, SeedResult } from "./types";
 export { runSeed } from "./runner";

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div } from "./Div";
 import { Pagination } from "./Pagination";

@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * GlobalError — Next.js global-error.tsx template.
  *

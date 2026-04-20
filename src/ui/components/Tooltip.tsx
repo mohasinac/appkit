@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 const POSITION: Record<string, string> = {

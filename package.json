@@ -1,50 +1,23 @@
 {
   "name": "@mohasinac/appkit",
   "version": "2.3.0",
-  "description": "All-in-one application toolkit — consolidates all @mohasinac/* packages into a single, well-structured package with sub-path exports",
-  "author": "Mohasin AC",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mohasinac/appkit.git"
-  },
   "type": "module",
-  "main": "./dist/server.js",
-  "types": "./dist/server.d.ts",
   "exports": {
-    ".": {
-      "types": "./dist/server.d.ts",
-      "browser": "./dist/client.js",
-      "default": "./dist/server.js"
-    },
-    "./server": {
-      "types": "./dist/server.d.ts",
-      "default": "./dist/server.js"
-    },
-    "./client": {
-      "types": "./dist/client.d.ts",
-      "default": "./dist/client.js"
-    },
-    "./*": "./dist/*/index.js"
+    ".": "./dist/index.js"
   },
   "files": [
-    "dist",
-    "README.md"
+    "dist"
   ],
   "scripts": {
-    "build": "node scripts/generate-index.mjs && node scripts/generate-server.mjs && node scripts/generate-client.mjs && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
-    "generate": "node scripts/generate-index.mjs && node scripts/generate-server.mjs && node scripts/generate-client.mjs",
-    "watch": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint src"
+    "build": "tsc -p tsconfig.build.json",
+    "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
-    "client-only": "^0.0.1",
-    "server-only": "^0.0.1",
     "tailwind-merge": "^3.3.0",
     "zod": "^3.24.0"
   },

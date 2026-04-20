@@ -3,8 +3,6 @@
  *
  * Server-only entry point for seller repositories and API route handlers.
  */
-import "server-only";
-
 export * from "./actions";
 
 export {

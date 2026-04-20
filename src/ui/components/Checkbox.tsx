@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Label, Span, Text } from "./Typography";
 

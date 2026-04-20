@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useState } from "react";
 import { Button, Label, Select, SideDrawer } from "../../../ui";
 import { useAddressSelector } from "../hooks/useAddressSelector";

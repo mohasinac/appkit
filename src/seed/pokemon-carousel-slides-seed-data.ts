@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Pokemon Base Set 151 — Carousel Slides Seed Data
  * Hero slides for the LetItRip homepage using real pokemontcg.io card images

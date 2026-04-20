@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Pokemon Base Set 151 — Homepage Sections Seed Data
  * All 15 section slots configured for a Pokémon TCG marketplace

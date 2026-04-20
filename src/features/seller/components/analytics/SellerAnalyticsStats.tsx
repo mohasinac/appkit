@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div, Heading, Span, Text } from "../../../../ui";
 import type { SellerAnalyticsSummary } from "../../types";

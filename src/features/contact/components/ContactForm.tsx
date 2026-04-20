@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useCallback } from "react";
 import { Button, Div, Heading, Span, Text, Textarea } from "../../../ui";
 

@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Carousel Slides Seed Data
  * Homepage carousel/hero section slides with interactive grid cards

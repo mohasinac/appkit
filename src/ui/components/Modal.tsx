@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React from "react";
 import { createPortal } from "react-dom";
 import { Heading } from "./Typography";

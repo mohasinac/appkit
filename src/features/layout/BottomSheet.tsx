@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useEffect, useCallback } from "react";
 import { Button, Div, Row, Span } from "../../ui";
 

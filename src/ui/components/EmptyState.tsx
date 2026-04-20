@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Heading, Text } from "./Typography";
 import { Card } from "./Card";

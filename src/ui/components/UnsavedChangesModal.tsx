@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useEffect, useState } from "react";
 import { eventBus } from "../../core/EventBus";
 import { UNSAVED_CHANGES_EVENT } from "../../react";

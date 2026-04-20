@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Checkout Domain Actions (appkit)
  *

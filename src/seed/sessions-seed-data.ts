@@ -1,4 +1,3 @@
-import "server-only";
 import { getSeedLocale } from "./seed-market-config";
 
 const _locale = getSeedLocale();

@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useState, useEffect, useCallback, useRef } from "react";
 
 export const UNSAVED_CHANGES_EVENT = "unsaved-changes:confirm";

@@ -1,5 +1,3 @@
-import "server-only";
-
 // appkit/src/seed/runner.ts
 // Server-only — requires firebase-admin
 import type { SeedConfig, SeedResult } from "./types";

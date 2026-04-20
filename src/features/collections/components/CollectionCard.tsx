@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div, Heading, Text, TextLink } from "../../../ui";
 import type { CollectionListItem } from "../types";

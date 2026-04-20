@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button, Checkbox, FormField, FormGroup } from "../../../ui";
 import type { AddressFormData } from "../hooks/useAddresses";

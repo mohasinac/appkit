@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import type { PaginationConfig } from "../../contracts";
 import { DEFAULT_PAGINATION_CONFIG } from "../../contracts";

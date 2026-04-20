@@ -1,5 +1,3 @@
-"use client";
-
 import { ReactNode, useState, useMemo } from "react";
 import { Button } from "./components/Button";
 import { Spinner } from "./components/Spinner";

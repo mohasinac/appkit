@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, Div, Heading, Span, Text, TextLink } from "../../../ui";
 
 interface ContactCTAProps {

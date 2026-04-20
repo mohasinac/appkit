@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div, Grid, Text } from "../../../ui";
 import type { CategoryItem } from "../types";

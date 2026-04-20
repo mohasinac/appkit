@@ -1,5 +1,3 @@
-import "server-only";
-
 export * from "./actions";
 
 export { SearchRepository } from "./repository/search.repository";

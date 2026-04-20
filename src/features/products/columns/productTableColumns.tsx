@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import type { DataTableColumn } from "../../../ui/DataTable";
 import { Button, Div, Row, Span } from "../../../ui";

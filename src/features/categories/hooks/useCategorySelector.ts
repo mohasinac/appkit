@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import type { CategoryItem } from "../types";

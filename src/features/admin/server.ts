@@ -3,9 +3,6 @@
  *
  * Server-only entry point for admin API route handlers.
  */
-
-import "server-only";
-
 export * from "./actions";
 
 export { notificationRepository } from "./repository/notification.repository";

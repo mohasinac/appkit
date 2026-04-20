@@ -3,8 +3,6 @@
  *
  * Server-only entry point — repositories and API route handlers.
  */
-import "server-only";
-
 export { PreordersRepository } from "./repository/preorders.repository";
 
 export {

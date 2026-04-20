@@ -1,6 +1,4 @@
 // appkit/src/security/rbac/Can.tsx
-"use client";
-
 import React from "react";
 import type { Permission } from "./types";
 import type { RbacHookReturn } from "./hook";

@@ -1,5 +1,3 @@
-﻿"use client";
-
 import { useState } from "react";
 import { Button, Div, Input, Slider, Span, Stack, Text } from "../../ui";
 import { cn } from "./filterUtils";

@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { Button, Div, Input, Text, Textarea } from "../../../ui";
 import type { SubmitCorporateInquiryInput } from "../types";

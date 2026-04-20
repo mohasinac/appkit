@@ -1,5 +1,3 @@
-import "server-only";
-
 // appkit/src/seed/seed-market-config.ts
 // Locale-specific data pools for seed factories and fixtures.
 // Default pools match current letitrip.in baseline (Indian market).

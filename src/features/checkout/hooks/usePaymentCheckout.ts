@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useCallback, useRef, useState } from "react";
 import type {
   IClientPaymentGateway,

@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import type { StoreListItem } from "../types";
 import { Heading, Text, Span, Row, Button } from "../../../ui";

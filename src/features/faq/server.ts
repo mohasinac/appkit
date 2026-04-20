@@ -3,9 +3,6 @@
  *
  * Server-only entry point for FAQ API route handlers.
  */
-
-import "server-only";
-
 export * from "./actions";
 
 export {

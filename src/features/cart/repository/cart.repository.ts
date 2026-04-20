@@ -1,4 +1,3 @@
-import "server-only";
 import { randomUUID } from "crypto";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";

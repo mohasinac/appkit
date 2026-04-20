@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Input } from "./Input";
 

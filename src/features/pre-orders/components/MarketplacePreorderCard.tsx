@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { ProductItem } from "../../products";

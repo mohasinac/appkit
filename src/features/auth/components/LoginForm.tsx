@@ -1,5 +1,3 @@
-"use client";
-
 import React, { FormEvent, useCallback, useState } from "react";
 import { Alert, Div, Heading, Row, Text, Label } from "../../../ui";
 

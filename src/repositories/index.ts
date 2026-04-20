@@ -4,8 +4,6 @@
  * Canonical repository entrypoint for consumer apps.
  * Server-only — all repository instances use firebase-admin.
  */
-import "server-only";
-
 // Shared repository foundations
 export { BaseRepository } from "../providers/db-firebase";
 

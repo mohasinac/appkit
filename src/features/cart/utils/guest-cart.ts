@@ -1,4 +1,3 @@
-import "client-only";
 const DEFAULT_GUEST_CART_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_cart`
   : "guest_cart";

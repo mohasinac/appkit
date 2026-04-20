@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Article, Div, Heading, Row, Span, Text } from "../../../ui";
 import type { BlogPost, BlogPostCategory } from "../types";

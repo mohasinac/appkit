@@ -1,5 +1,3 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import type { LoyaltyBalance } from "../types";
 import { LOYALTY_ENDPOINTS } from "../../../constants/api-endpoints";

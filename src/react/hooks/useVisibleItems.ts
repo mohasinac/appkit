@@ -1,5 +1,4 @@
 // appkit/src/react/hooks/useVisibleItems.ts
-"use client";
 import { useRef, useState, useEffect, useCallback } from "react";
 
 export interface UseVisibleItemsOptions {

@@ -3,8 +3,6 @@
  *
  * Server-only entry point for account repositories.
  */
-import "server-only";
-
 export * from "./actions";
 
 export { AccountRepository } from "./repository/account.repository";

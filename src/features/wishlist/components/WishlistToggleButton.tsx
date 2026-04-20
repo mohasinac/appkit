@@ -1,5 +1,3 @@
-"use client";
-
 import type { MouseEvent } from "react";
 import { Button } from "../../../ui";
 

@@ -1,5 +1,3 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../http";
 import { SITE_SETTINGS_ENDPOINTS } from "../../constants/api-endpoints";

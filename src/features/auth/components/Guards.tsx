@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useMemo } from "react";
 import { Div, Heading, Text, Button } from "../../../ui";
 import type { UserRole } from "../types";

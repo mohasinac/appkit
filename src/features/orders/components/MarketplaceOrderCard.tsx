@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useCallback } from "react";
 import { Package } from "lucide-react";
 import {

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { createContext, useContext, useMemo, useState } from "react";
 import { Button } from "./Button";
 import { Div } from "./Div";

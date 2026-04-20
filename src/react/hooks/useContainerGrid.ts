@@ -1,5 +1,4 @@
 // appkit/src/react/hooks/useContainerGrid.ts
-"use client";
 import { useRef, useState, useEffect } from "react";
 
 export interface UseContainerGridOptions {

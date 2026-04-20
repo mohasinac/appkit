@@ -1,6 +1,4 @@
 // appkit/src/security/rbac/hook.ts
-"use client";
-
 import { useMemo } from "react";
 import type { RbacConfig, Permission } from "./types";
 import {

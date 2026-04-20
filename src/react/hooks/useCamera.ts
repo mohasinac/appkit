@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface UseCameraOptions {

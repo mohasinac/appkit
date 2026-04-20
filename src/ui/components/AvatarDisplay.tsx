@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Span } from "./Typography";
 import type { ImageCropData } from "../../features/media";

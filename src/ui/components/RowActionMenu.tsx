@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useRef, useState } from "react";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "./Button";

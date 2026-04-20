@@ -1,5 +1,3 @@
-import "server-only";
-
 import type { DocumentReference } from "firebase-admin/firestore";
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";

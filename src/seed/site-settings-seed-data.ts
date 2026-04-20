@@ -1,4 +1,3 @@
-import "server-only";
 import { getDefaultPhonePrefix, getSeedLocale } from "./seed-market-config";
 
 const _phonePrefix = getDefaultPhonePrefix();

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Heading, Section, Span, Text, TextLink } from "../../../ui";

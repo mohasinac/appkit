@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * ImageCropModal — focal-point editor for @mohasinac/feat-media.
  *

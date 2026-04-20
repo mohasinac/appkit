@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Alert, Button, Div, Label, Spinner, Text } from "../../../ui";
 import { MediaImage } from "../MediaImage";

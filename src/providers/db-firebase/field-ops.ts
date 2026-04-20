@@ -1,5 +1,3 @@
-import "server-only";
-
 import { FieldValue } from "firebase-admin/firestore";
 import type { IFieldOps } from "../../contracts/field-ops";
 

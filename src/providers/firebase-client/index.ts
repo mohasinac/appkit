@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * Firebase Client SDK provider implementations.
  *

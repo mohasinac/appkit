@@ -1,5 +1,3 @@
-"use client";
-
 import { Div, Row, Select, Span } from "../../../ui";
 import {
   getCategorySortOptions,

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Div, Heading, Row, Span, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";

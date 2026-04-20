@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Coupons Seed Data
  * Various types of discount coupons

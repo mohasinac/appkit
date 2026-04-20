@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * @mohasinac/payment-razorpay — Razorpay IPaymentProvider implementation
  *

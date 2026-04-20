@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Input, Progress, Text, useToast } from "../../ui";
 import { useMediaUpload } from "./hooks/useMedia";

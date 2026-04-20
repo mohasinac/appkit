@@ -1,5 +1,3 @@
-"use client";
-
 import type { IClientRealtimeProvider } from "../../../contracts/client-realtime";
 import { logger } from "../../../core/Logger";
 import {

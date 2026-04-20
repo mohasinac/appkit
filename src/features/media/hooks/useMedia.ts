@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * useMedia — upload/crop/trim hooks for @mohasinac/feat-media.
  *

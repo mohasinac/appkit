@@ -1,5 +1,3 @@
-"use client";
-
 import type { ReactNode } from "react";
 import { Div, Heading, Text } from "../../../ui";
 

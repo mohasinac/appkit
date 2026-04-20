@@ -1,5 +1,3 @@
-"use client";
-
 import { usePathname } from "next/navigation";
 import { NavbarLayout } from "./NavbarLayout";
 import type { NavbarLayoutItem } from "./NavbarLayout";

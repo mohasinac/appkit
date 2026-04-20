@@ -1,4 +1,3 @@
-import "server-only";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";

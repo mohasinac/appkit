@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Pokemon Base Set 151 — Categories Seed Data
  *

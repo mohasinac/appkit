@@ -3,9 +3,6 @@
  *
  * Server-only entry point — exports only the API route handlers.
  */
-
-import "server-only";
-
 export * from "./actions";
 
 export {

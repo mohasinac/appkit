@@ -1,5 +1,3 @@
-"use client";
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { useCheckoutReadQueries } from "../../cart";

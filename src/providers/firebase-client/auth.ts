@@ -1,5 +1,3 @@
-"use client";
-
 import {
   applyActionCode as fbApplyActionCode,
   confirmPasswordReset as fbConfirmPasswordReset,

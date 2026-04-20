@@ -1,5 +1,3 @@
-"use client";
-
 import { Heading, Nav, Text, Span, Button, Row } from "@mohasinac/appkit/ui";
 import { ChevronRight } from "lucide-react";
 

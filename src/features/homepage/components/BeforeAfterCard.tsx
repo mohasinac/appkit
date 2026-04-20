@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useRef, useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { Div, Span, Text } from "../../../ui";

@@ -1,5 +1,3 @@
-"use client";
-
 import { Card, Div, Heading, Text, TextLink } from "../../../ui";
 import type { FAQ } from "../types";
 

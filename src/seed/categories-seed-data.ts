@@ -1,5 +1,3 @@
-import "server-only";
-
 /**
  * Categories Seed Data
  * Hierarchical category structure for products

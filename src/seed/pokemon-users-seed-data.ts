@@ -1,4 +1,3 @@
-import "server-only";
 import { getDefaultPhonePrefix } from "./seed-market-config";
 
 /**

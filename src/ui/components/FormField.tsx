@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Input } from "./Input";
 import { Select, type SelectOption } from "./Select";

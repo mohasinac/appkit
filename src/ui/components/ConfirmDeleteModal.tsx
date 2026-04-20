@@ -1,6 +1,3 @@
-"use client";
-import "client-only";
-
 import { useEffect } from "react";
 import { Card } from "./Card";
 import { Heading, Text } from "./Typography";

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { Breadcrumb } from "../../../ui";
 import type { BreadcrumbItem } from "../../../ui";

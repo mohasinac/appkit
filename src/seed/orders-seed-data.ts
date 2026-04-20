@@ -1,4 +1,3 @@
-import "server-only";
 import { getDefaultCurrency } from "./seed-market-config";
 
 const _CURRENCY = getDefaultCurrency();

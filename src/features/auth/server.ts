@@ -13,9 +13,6 @@
  * export const GET = withProviders(authMeGET);
  * ```
  */
-
-import "server-only";
-
 export * from "./token-store";
 export * from "./consent-otp";
 export * from "./repository";

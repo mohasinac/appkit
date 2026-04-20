@@ -1,5 +1,3 @@
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import type { CollectionItem, CollectionListItem } from "../types";
 import { COLLECTION_ENDPOINTS } from "../../../constants/api-endpoints";

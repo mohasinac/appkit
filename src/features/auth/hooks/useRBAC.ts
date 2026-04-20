@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useMemo } from "react";
 import { AuthenticationError, AuthorizationError } from "../../../errors";
 import { hasRole as checkRoleHierarchy } from "../auth-helpers";
