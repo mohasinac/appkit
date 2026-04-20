@@ -17,6 +17,23 @@
 
 ---
 
+## Barrel File Contract (Critical)
+
+`src/index.ts`, `src/server.ts`, and `src/client.ts` are **auto-generated** — never edit them by hand.
+
+| Barrel | Generator | Subpath |
+|---|---|---|
+| `src/index.ts` | `scripts/generate-index.mjs` | `@mohasinac/appkit` |
+| `src/server.ts` | `scripts/generate-server.mjs` | `@mohasinac/appkit/server` |
+| `src/client.ts` | `scripts/generate-client.mjs` | `@mohasinac/appkit/client` |
+
+- After adding, removing, or renaming any exported symbol, run `npm run generate` (or `npm run build` which includes it).
+- `npm run build` always runs generation first — never run `tsc` directly in place of `npm run build`.
+- If a consumer reports `Module not found: @mohasinac/appkit/server` (or `/client`), the cause is a stale barrel — run `npm run build` and redeploy.
+- Do not create `export * from` wildcard re-exports in these three files; the generators produce explicit named exports.
+
+---
+
 ## Core Rules
 
 ### 1. Appkit-first — No Duplication Across Consumers

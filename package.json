@@ -29,7 +29,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "build": "node scripts/generate-index.mjs && node scripts/generate-server.mjs && node scripts/generate-client.mjs && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "generate": "node scripts/generate-index.mjs && node scripts/generate-server.mjs && node scripts/generate-client.mjs",
     "watch": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src"
