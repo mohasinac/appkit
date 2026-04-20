@@ -19,6 +19,7 @@ export type { NewsletterBannerProps } from "./NewsletterBanner";
 export { NewsletterBanner } from "./NewsletterBanner";
 export { HomepageView } from "./HomepageView";
 export type { HomepageViewProps } from "./HomepageView";
+export { MarketplaceHomepageView } from "./MarketplaceHomepageView";
 
 // ── Homepage section shells ──────────────────────────────────────────────────
 export type { SectionCarouselProps } from "./SectionCarousel";

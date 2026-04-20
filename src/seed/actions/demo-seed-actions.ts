@@ -41,6 +41,15 @@ export interface SeedOperationResult {
     skipped?: number;
     errors?: number;
     collections?: string[];
+    dryRun?: boolean;
+    collectionPlans?: Array<{
+      name: string;
+      seedCount: number;
+      existingCount: number;
+      wouldCreate?: number;
+      wouldDelete?: number;
+      wouldSkip?: number;
+    }>;
   };
 }
 
@@ -55,6 +64,7 @@ export async function demoSeed(
   vars: {
     action: "load" | "delete";
     collections?: SeedCollectionName[];
+    dryRun?: boolean;
   },
   apiBaseUrl: string,
 ): Promise<SeedOperationResult> {

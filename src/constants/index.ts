@@ -51,3 +51,5 @@ export {
 export { COLLECTION_CACHE_PATHS } from "./cache-invalidation";
 
 export { resolveEndpoint, resolveEndpointFn } from "./api-endpoint-resolver";
+
+export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "../next/routing/route-map";

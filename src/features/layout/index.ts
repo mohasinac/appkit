@@ -51,6 +51,9 @@ export type { ListingLayoutProps, ListingLayoutLabels } from "./ListingLayout";
 export { LayoutClient } from "./LayoutClient";
 export type { LayoutClientProps, LayoutProvider } from "./LayoutClient";
 
+export { AppLayoutShell } from "./AppLayoutShell";
+export type { AppLayoutShellProps } from "./AppLayoutShell";
+
 export {
   BottomActionsProvider,
   useBottomActionsContext,

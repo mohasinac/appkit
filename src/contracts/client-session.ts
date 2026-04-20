@@ -47,6 +47,23 @@ export interface IClientSessionAdapter {
 
 let _adapter: IClientSessionAdapter | null = null;
 
+/**
+ * No-op guest adapter used when no real adapter has been registered.
+ * Allows SessionProvider to render in "not signed in" mode without crashing.
+ */
+const GUEST_ADAPTER: IClientSessionAdapter = {
+  onAuthStateChanged(callback) {
+    callback(null);
+    return () => {};
+  },
+  getCurrentUser() {
+    return null;
+  },
+  signOut() {
+    return Promise.resolve();
+  },
+};
+
 export function registerClientSessionAdapter(
   adapter: IClientSessionAdapter,
 ): void {
@@ -54,11 +71,5 @@ export function registerClientSessionAdapter(
 }
 
 export function getClientSessionAdapter(): IClientSessionAdapter {
-  if (!_adapter) {
-    throw new Error(
-      "Client session adapter not registered. " +
-        "Call registerClientSessionAdapter() before using SessionProvider.",
-    );
-  }
-  return _adapter;
+  return _adapter ?? GUEST_ADAPTER;
 }

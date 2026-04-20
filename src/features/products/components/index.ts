@@ -1,4 +1,5 @@
 export { ProductCard, ProductGrid } from "./ProductGrid";
+export { ProductsIndexPageView } from "./ProductsIndexPageView";
 export {
   ProductFilters,
   PRODUCT_FILTER_KEYS,

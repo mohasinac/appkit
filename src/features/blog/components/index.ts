@@ -1,4 +1,5 @@
 export { BlogCard, BlogCategoryTabs, BlogListView } from "./BlogListView";
+export { BlogIndexPageView } from "./BlogIndexPageView";
 export {
   BlogFilters,
   BLOG_SORT_OPTIONS,
