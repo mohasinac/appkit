@@ -5,9 +5,12 @@ Appkit is a TypeScript package that provides shared contracts, feature modules, 
 ## Package Info
 
 - Name: `@mohasinac/appkit`
-- Current version: `2.3.0`
+- Current version: `2.3.1`
 - Module type: ESM
-- Main export: `dist/index.js`
+- Entrypoints:
+  - Root: `dist/index.js`
+  - Client-only: `dist/client.js`
+  - Server-only: `dist/server.js`
 
 ## Installation
 
@@ -48,7 +51,13 @@ import {
 } from "@mohasinac/appkit";
 ```
 
-Appkit currently exposes a single barrel entrypoint. Import from the package root unless a migration guideline in your app says otherwise.
+Appkit exposes three runtime-aware entrypoints:
+
+- `@mohasinac/appkit`: shared/runtime-safe exports
+- `@mohasinac/appkit/client`: browser-only exports
+- `@mohasinac/appkit/server`: server-only exports
+
+Use the smallest runtime-specific entrypoint possible.
 
 ## Runtime Handling for Consumers
 
@@ -65,9 +74,15 @@ Example for browser-only modules in an SSR page:
 import dynamic from "next/dynamic";
 
 const ClientWidget = dynamic(
-  () => import("@mohasinac/appkit").then((m) => m.ClientWidget),
+  () => import("@mohasinac/appkit/client").then((m) => m.ClientWidget),
   { ssr: false },
 );
+```
+
+Example for server-only modules:
+
+```ts
+import { createApiHandler } from "@mohasinac/appkit/server";
 ```
 
 ## Consumer Responsibilities
@@ -98,4 +113,4 @@ Use this checklist when contributing:
 
 - Only `dist/` is published (`files` field in `package.json`).
 - Ensure build output is up to date before release.
-- Validate exported API surface from `src/index.ts` before version bump.
+- Validate exported API surface from `src/index.ts`, `src/client.ts`, and `src/server.ts` before version bump.
