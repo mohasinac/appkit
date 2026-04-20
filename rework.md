@@ -18,21 +18,22 @@ export in `src/index.ts` carries the most permissive correct tag.
 
 ## Current Counts (post all phases)
 
-| Tag             | Count    | Change from baseline |
-| --------------- | -------- | -------------------- |
-| `[TYPE]`        | 1211     | —                    |
+| Tag             | Count    | Change from baseline    |
+| --------------- | -------- | ----------------------- |
+| `[TYPE]`        | 1211     | —                       |
 | `[CLIENT-SSR]`  | 987      | +128 (from CLIENT-ONLY) |
-| `[SERVER-ONLY]` | 417      | +4 (from DB)         |
-| `[UTIL]`        | 191      | +2 (from DB)         |
-| `[SCHEMA]`      | 146      | —                    |
-| `[DB]`          | 86       | −7 (reclassified)    |
-| `[CONFIG]`      | 55       | +1 (from DB)         |
-| `[CLIENT-ONLY]` | 31       | −128 from phases     |
-| **Total**       | **3124** |                      |
+| `[SERVER-ONLY]` | 417      | +4 (from DB)            |
+| `[UTIL]`        | 191      | +2 (from DB)            |
+| `[SCHEMA]`      | 146      | —                       |
+| `[DB]`          | 86       | −7 (reclassified)       |
+| `[CONFIG]`      | 55       | +1 (from DB)            |
+| `[CLIENT-ONLY]` | 31       | −128 from phases        |
+| **Total**       | **3124** |                         |
 
 The `[CLIENT-ONLY]` count dropped from 945 (original) → 159 (Phase 0 retag) → **31** (all phases done).
 
 The 31 remaining are the true irreducible set — all confirmed via source-code audit:
+
 - **DOM portal components:** `Modal`, `Drawer`, `SideDrawer`, `SideModal`, `FilterDrawer`, `ConfirmDeleteModal`, `UnsavedChangesModal`, `BottomSheet`, `EventFormDrawer`, `ImageCropModal`, `VideoTrimModal`
 - **Browser API hooks:** `useAuth` (window.open, localStorage), `useTheme` (localStorage, matchMedia), `useToast` (window.setTimeout), `useCamera` (navigator.mediaDevices), `useClickOutside` (document), `useContainerGrid` (ResizeObserver), `useGesture`, `useKeyPress`, `useMediaQuery` (matchMedia), `usePullToRefresh`, `useSwipe`, `useUnsavedChanges` (window.beforeunload), `useVisibleItems` (ResizeObserver)
 - **Media hooks:** `useMediaUpload`, `useMediaCrop`, `useMediaTrim`, `useMediaAbort`, `useMediaCleanup` (FileReader, Canvas, URL.createObjectURL)
@@ -75,7 +76,7 @@ constant misclassified as `[DB]`. Reclassified:
 - `applySieveToFirestore`, `buildFirebaseClientConfig`, `normalizeFirebaseConfigValue`,
   `prepareForFirestore` → `[SERVER-ONLY]` (Firestore-coupled, no admin class)
 
-All concrete repository classes remain `[DB]`. No I*Repository interfaces were found in
+All concrete repository classes remain `[DB]`. No I\*Repository interfaces were found in
 the DB export set — they are already in `[TYPE]` via `./contracts/index`.
 
 ---
@@ -97,6 +98,7 @@ APIs (`window`, `document`, `navigator`, `localStorage`, `sessionStorage`, `matc
 **Result:** 128 hooks reclassified `[CLIENT-ONLY]` → `[CLIENT-SSR]`.
 
 Hooks confirmed to use browser APIs and kept `[CLIENT-ONLY]`:
+
 - `useAuth` — `window.open`, `localStorage`
 - `useTheme` — `localStorage`, `document.cookie`, `matchMedia`
 - `useToast` — `window.setTimeout`
@@ -126,27 +128,27 @@ Some concerns cannot be made SSR-capable in appkit. These stay with the consumer
 
 ## Phased Execution Summary
 
-| Phase             | Work type                   | Status | Exports reclassified                         |
-| ----------------- | --------------------------- | ------ | -------------------------------------------- |
-| 0 — Retag ✓       | Tag normalization           | ✓ Done | ~786 correctly classified                    |
-| 2 — DB audit ✓    | Source audit + retag        | ✓ Done | 7 DB → CONFIG / UTIL / SERVER-ONLY           |
-| 3 — Util audit ✓  | Source audit                | ✓ Done | 0 (utils already clean)                      |
-| 4 — Hook audit ✓  | Per-hook source audit       | ✓ Done | 128 CLIENT-ONLY → CLIENT-SSR                 |
+| Phase            | Work type             | Status | Exports reclassified               |
+| ---------------- | --------------------- | ------ | ---------------------------------- |
+| 0 — Retag ✓      | Tag normalization     | ✓ Done | ~786 correctly classified          |
+| 2 — DB audit ✓   | Source audit + retag  | ✓ Done | 7 DB → CONFIG / UTIL / SERVER-ONLY |
+| 3 — Util audit ✓ | Source audit          | ✓ Done | 0 (utils already clean)            |
+| 4 — Hook audit ✓ | Per-hook source audit | ✓ Done | 128 CLIENT-ONLY → CLIENT-SSR       |
 
 ## Target State (after all phases)
 
 | Tag             | Current | Target |
 | --------------- | ------- | ------ |
-| Tag             | Target | Actual |
-| --------------- | ------ | ------ |
-| `[TYPE]`        | ~1235  | 1211   |
-| `[CLIENT-SSR]`  | ~900   | 987    |
-| `[SERVER-ONLY]` | ~413   | 417    |
-| `[UTIL]`        | ~220   | 191    |
-| `[CLIENT-ONLY]` | ~100   | **31** |
-| `[SCHEMA]`      | ~146   | 146    |
-| `[DB]`          | ~70    | 86     |
-| `[CONFIG]`      | ~54    | 55     |
+| Tag             | Target  | Actual |
+| --------------- | ------  | ------ |
+| `[TYPE]`        | ~1235   | 1211   |
+| `[CLIENT-SSR]`  | ~900    | 987    |
+| `[SERVER-ONLY]` | ~413    | 417    |
+| `[UTIL]`        | ~220    | 191    |
+| `[CLIENT-ONLY]` | ~100    | **31** |
+| `[SCHEMA]`      | ~146    | 146    |
+| `[DB]`          | ~70     | 86     |
+| `[CONFIG]`      | ~54     | 55     |
 
 All phases complete. `[CLIENT-ONLY]` target was ~100; actual result is **31** — well
 beyond target. The 31 are the verified-irreducible set (see Current Counts above).
