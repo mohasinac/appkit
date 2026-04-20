@@ -16,23 +16,27 @@ export in `src/index.ts` carries the most permissive correct tag.
 | `[SCHEMA]`      | Zod validator, default-value object, or Firestore collection/field name constant.                         | ✓          | ✓                   |
 | `[CONFIG]`      | Route path, API endpoint, design token, or feature flag constant.                                         | ✓          | ✓                   |
 
-## Current Counts (post Phase-0 retag)
+## Current Counts (post all phases)
 
-| Tag             | Count    |
-| --------------- | -------- |
-| `[TYPE]`        | 1211     |
-| `[CLIENT-SSR]`  | 859      |
-| `[SERVER-ONLY]` | 413      |
-| `[UTIL]`        | 189      |
-| `[CLIENT-ONLY]` | 159      |
-| `[SCHEMA]`      | 146      |
-| `[DB]`          | 93       |
-| `[CONFIG]`      | 54       |
-| **Total**       | **3124** |
+| Tag             | Count    | Change from baseline |
+| --------------- | -------- | -------------------- |
+| `[TYPE]`        | 1211     | —                    |
+| `[CLIENT-SSR]`  | 987      | +128 (from CLIENT-ONLY) |
+| `[SERVER-ONLY]` | 417      | +4 (from DB)         |
+| `[UTIL]`        | 191      | +2 (from DB)         |
+| `[SCHEMA]`      | 146      | —                    |
+| `[DB]`          | 86       | −7 (reclassified)    |
+| `[CONFIG]`      | 55       | +1 (from DB)         |
+| `[CLIENT-ONLY]` | 31       | −128 from phases     |
+| **Total**       | **3124** |                      |
 
-The `[CLIENT-ONLY]` count dropped from 945 → 159 through correct classification alone.
-The 159 remaining are the irreducible set: Modals, Drawers, Forms, Sheets, Sidebars, and
-client hooks that genuinely use browser APIs.
+The `[CLIENT-ONLY]` count dropped from 945 (original) → 159 (Phase 0 retag) → **31** (all phases done).
+
+The 31 remaining are the true irreducible set — all confirmed via source-code audit:
+- **DOM portal components:** `Modal`, `Drawer`, `SideDrawer`, `SideModal`, `FilterDrawer`, `ConfirmDeleteModal`, `UnsavedChangesModal`, `BottomSheet`, `EventFormDrawer`, `ImageCropModal`, `VideoTrimModal`
+- **Browser API hooks:** `useAuth` (window.open, localStorage), `useTheme` (localStorage, matchMedia), `useToast` (window.setTimeout), `useCamera` (navigator.mediaDevices), `useClickOutside` (document), `useContainerGrid` (ResizeObserver), `useGesture`, `useKeyPress`, `useMediaQuery` (matchMedia), `usePullToRefresh`, `useSwipe`, `useUnsavedChanges` (window.beforeunload), `useVisibleItems` (ResizeObserver)
+- **Media hooks:** `useMediaUpload`, `useMediaCrop`, `useMediaTrim`, `useMediaAbort`, `useMediaCleanup` (FileReader, Canvas, URL.createObjectURL)
+- **Firebase browser SDK:** `FirebaseClientAuthProvider`, `FirebaseClientRealtimeProvider`
 
 ---
 
@@ -61,50 +65,48 @@ Previously mislabelled paths (now `[SCHEMA]`):
 
 ---
 
-## Phase 2 — Repository / Interface Separation
+## Phase 2 — DB Reclassification ✓ (complete)
 
-**Problem:** `./repositories/index` is `[DB]` which is correct for concrete classes. However
-`IRepository<T>`, `IProductRepository`, etc. are pure TypeScript interfaces that should be `[TYPE]`.
+Audit of `./providers/db-firebase/index` found pure utility functions and a config
+constant misclassified as `[DB]`. Reclassified:
 
-**Action:**
+- `RTDB_PATHS` → `[CONFIG]`
+- `deserializeTimestamps`, `removeUndefined` → `[UTIL]` (pure object transforms)
+- `applySieveToFirestore`, `buildFirebaseClientConfig`, `normalizeFirebaseConfigValue`,
+  `prepareForFirestore` → `[SERVER-ONLY]` (Firestore-coupled, no admin class)
 
-1. Audit `./contracts/index` — confirm it contains only interfaces/types. Re-tag all `./contracts/` exports `[TYPE]` if not already.
-2. For each `I*Repository` interface currently exported from `./repositories/index`, move or co-export from `./contracts/index` so it gets `[TYPE]`.
-3. Concrete repository classes remain `[DB]`.
-
-**Expected gain:** ~20–30 exports reclassified `[DB]` → `[TYPE]`.
-
----
-
-## Phase 3 — Utility Audit
-
-**Problem:** Some utilities may still appear under `./ui/index` or `./react/index` and therefore carry `[CLIENT-SSR]` when they could be `[UTIL]`.
-
-**Action:**
-
-1. For every pure formatter/helper (`formatPrice`, `formatDate`, `slugify`, etc.) that currently lives inside `./ui/index`, move it to `./utils/` and re-export from there.
-2. Any function with zero React/browser/Node dependency gets tagged `[UTIL]`.
-
-**Expected gain:** ~20–40 exports reclassified `[CLIENT-SSR]` → `[UTIL]`.
+All concrete repository classes remain `[DB]`. No I*Repository interfaces were found in
+the DB export set — they are already in `[TYPE]` via `./contracts/index`.
 
 ---
 
-## Phase 4 — Client Hook Audit (Reduce CLIENT-ONLY Further)
+## Phase 3 — Utility Audit ✓ (complete, no-op)
 
-**Problem:** Not every `use[A-Z]*` hook actually uses browser APIs. Some are pure state machines or data-transformation hooks that are fine in SSR.
+Audit confirmed `./utils/index`, `./monitoring/index`, and `./errors/index` are already
+entirely tagged `[UTIL]`. No `[CLIENT-SSR]` exports from utility paths were found.
+No code change needed.
 
-**Action per hook:**
+---
 
-1. Grep each hook body for `window`, `document`, `navigator`, `localStorage`, `sessionStorage`, `matchMedia`, `IntersectionObserver`, `ResizeObserver`.
-2. If none found → retag `[CLIENT-SSR]`.
-3. If found → keep `[CLIENT-ONLY]` and note the specific API.
+## Phase 4 — Client Hook Audit ✓ (complete)
 
-**Candidate hooks to audit first:**
+Every `[CLIENT-ONLY]` hook was audited by grepping its source file for browser-only
+APIs (`window`, `document`, `navigator`, `localStorage`, `sessionStorage`, `matchMedia`,
+`IntersectionObserver`, `ResizeObserver`, `addEventListener`).
 
-- `useCart`, `useOrders`, `useProfile`, `useWishlist`, `useSearch`
-- `useFilters`, `useProductList`, `useBidding`
+**Result:** 128 hooks reclassified `[CLIENT-ONLY]` → `[CLIENT-SSR]`.
 
-**Expected gain:** ~30–50 exports reclassified `[CLIENT-ONLY]` → `[CLIENT-SSR]`.
+Hooks confirmed to use browser APIs and kept `[CLIENT-ONLY]`:
+- `useAuth` — `window.open`, `localStorage`
+- `useTheme` — `localStorage`, `document.cookie`, `matchMedia`
+- `useToast` — `window.setTimeout`
+- `useCamera` — `navigator.mediaDevices`
+- `useClickOutside`, `useKeyPress` — `document` event listener
+- `useContainerGrid`, `useVisibleItems` — `ResizeObserver`
+- `useGesture`, `usePullToRefresh`, `useSwipe` — touch `addEventListener`
+- `useMediaQuery` — `window.matchMedia`
+- `useUnsavedChanges` — `window.beforeunload`
+- `useMediaUpload/Crop/Trim/Abort/Cleanup` — `FileReader`, `Canvas`, `URL.createObjectURL`
 
 ---
 
@@ -124,27 +126,27 @@ Some concerns cannot be made SSR-capable in appkit. These stay with the consumer
 
 ## Phased Execution Summary
 
-| Phase                    | Work type                   | Effort | Exports reclassified         |
-| ------------------------ | --------------------------- | ------ | ---------------------------- |
-| 0 — Retag ✓              | Tag normalization           | Done   | ~786 correctly classified    |
-| 2 — Interface separation | Code refactor + retag       | Low    | ~25 DB → TYPE                |
-| 3 — Utility audit        | Retag / minor moves         | Low    | ~30 CLIENT-SSR → UTIL        |
-| 4 — Hook audit           | Per-hook code audit + retag | Medium | ~40 CLIENT-ONLY → CLIENT-SSR |
+| Phase             | Work type                   | Status | Exports reclassified                         |
+| ----------------- | --------------------------- | ------ | -------------------------------------------- |
+| 0 — Retag ✓       | Tag normalization           | ✓ Done | ~786 correctly classified                    |
+| 2 — DB audit ✓    | Source audit + retag        | ✓ Done | 7 DB → CONFIG / UTIL / SERVER-ONLY           |
+| 3 — Util audit ✓  | Source audit                | ✓ Done | 0 (utils already clean)                      |
+| 4 — Hook audit ✓  | Per-hook source audit       | ✓ Done | 128 CLIENT-ONLY → CLIENT-SSR                 |
 
 ## Target State (after all phases)
 
 | Tag             | Current | Target |
 | --------------- | ------- | ------ |
-| `[TYPE]`        | 1211    | ~1235  |
-| `[CLIENT-SSR]`  | 859     | ~900   |
-| `[SERVER-ONLY]` | 413     | ~413   |
-| `[UTIL]`        | 189     | ~220   |
-| `[CLIENT-ONLY]` | 159     | ~100   |
-| `[SCHEMA]`      | 146     | ~146   |
-| `[DB]`          | 93      | ~70    |
-| `[CONFIG]`      | 54      | ~54    |
+| Tag             | Target | Actual |
+| --------------- | ------ | ------ |
+| `[TYPE]`        | ~1235  | 1211   |
+| `[CLIENT-SSR]`  | ~900   | 987    |
+| `[SERVER-ONLY]` | ~413   | 417    |
+| `[UTIL]`        | ~220   | 191    |
+| `[CLIENT-ONLY]` | ~100   | **31** |
+| `[SCHEMA]`      | ~146   | 146    |
+| `[DB]`          | ~70    | 86     |
+| `[CONFIG]`      | ~54    | 55     |
 
-The irreducible `[CLIENT-ONLY]` core (~100) is: `Modal`, `Drawer`, `Sheet`, `SideDrawer`,
-`SideModal`, dialog primitives, the Firebase client SDK provider wrapper, and any hook
-that directly calls a browser-only API. Consumers use `next/dynamic({ ssr: false })` at
-the call site when they need to render these in an SSR page — no appkit split required.
+All phases complete. `[CLIENT-ONLY]` target was ~100; actual result is **31** — well
+beyond target. The 31 are the verified-irreducible set (see Current Counts above).

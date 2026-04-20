@@ -169,7 +169,7 @@ export { FlowDiagram } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // Footer - Shared export for footer.
 export { Footer } from "./ui/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // Form - Component for form.
 export { Form } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -942,13 +942,13 @@ export { UNSAVED_CHANGES_EVENT } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useAuth - React hook for use auth.
 export { useAuth } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBreakpoint - React hook for use breakpoint.
 export { useBreakpoint } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBulkAction - React hook for use bulk action.
 export { useBulkAction } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBulkSelection - React hook for use bulk selection.
 export { useBulkSelection } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
@@ -960,7 +960,7 @@ export { useClickOutside } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useContainerGrid - React hook for use container grid.
 export { useContainerGrid } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCountdown - React hook for use countdown.
 export { useCountdown } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
@@ -969,31 +969,31 @@ export { useGesture } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useKeyPress - React hook for use key press.
 export { useKeyPress } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useLongPress - React hook for use long press.
 export { useLongPress } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaQuery - React hook for use media query.
 export { useMediaQuery } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useMessage - React hook for use message.
 export { useMessage } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useModalStack - React hook for use modal stack.
 export { useModalStack } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePendingFilters - React hook for use pending filters.
 export { usePendingFilters } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePendingTable - React hook for use pending table.
 export { usePendingTable } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // usePullToRefresh - React hook for use pull to refresh.
 export { usePullToRefresh } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useRealtimeEvent - React hook for use realtime event.
 export { useRealtimeEvent } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSession - React hook for use session.
 export { useSession } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
@@ -1005,7 +1005,7 @@ export { useTheme } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useUnsavedChanges - React hook for use unsaved changes.
 export { useUnsavedChanges } from "./react/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useUrlTable - React hook for use url table.
 export { useUrlTable } from "./react/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
@@ -3730,19 +3730,19 @@ export { FirebaseRepository } from "./providers/db-firebase/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // FirebaseSieveRepository - Shared export for firebase sieve repository.
 export { FirebaseSieveRepository } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [CONFIG]-Application configuration constant — route path, API endpoint, design token, or feature flag.
 // RTDB_PATHS - Constant used across modules.
 export { RTDB_PATHS } from "./providers/db-firebase/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // _resetAdminSingletons - Shared export for reset admin singletons.
 export { _resetAdminSingletons } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // applySieveToFirestore - Helper for apply sieve to firestore.
 export { applySieveToFirestore } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildFirebaseClientConfig - Helper for build firebase client config.
 export { buildFirebaseClientConfig } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [UTIL]-Pure utility — no framework or runtime dependency; safe to import from any environment.
 // deserializeTimestamps - Shared export for deserialize timestamps.
 export { deserializeTimestamps } from "./providers/db-firebase/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -3766,13 +3766,13 @@ export { getAdminRealtimeDb } from "./providers/db-firebase/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // getAdminStorage - Helper for get admin storage.
 export { getAdminStorage } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // normalizeFirebaseConfigValue - Helper for normalize firebase config value.
 export { normalizeFirebaseConfigValue } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // prepareForFirestore - Shared export for prepare for firestore.
 export { prepareForFirestore } from "./providers/db-firebase/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// [UTIL]-Pure utility — no framework or runtime dependency; safe to import from any environment.
 // removeUndefined - Helper for remove undefined.
 export { removeUndefined } from "./providers/db-firebase/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -4130,7 +4130,7 @@ export { AddressBook } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AddressCard - Component for address card.
 export { AddressCard } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AddressForm - Component for address form.
 export { AddressForm } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -4199,43 +4199,43 @@ export { notificationPreferencesSchema } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // updateProfileSchema - Helper for update profile schema.
 export { updateProfileSchema } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAddress - React hook for use address.
 export { useAddress } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAddressForm - React hook for use address form.
 export { useAddressForm } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAddressSelector - React hook for use address selector.
 export { useAddressSelector } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAddresses - React hook for use addresses.
 export { useAddresses } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCreateAddress - React hook for use create address.
 export { useCreateAddress } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useDeleteAddress - React hook for use delete address.
 export { useDeleteAddress } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useNotifications - React hook for use notifications.
 export { useNotifications } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProfile - React hook for use profile.
 export { useProfile } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProfileStats - React hook for use profile stats.
 export { useProfileStats } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePublicProfile - React hook for use public profile.
 export { usePublicProfile } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSetDefaultAddress - React hook for use set default address.
 export { useSetDefaultAddress } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useUpdateAddress - React hook for use update address.
 export { useUpdateAddress } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useUpdateProfile - React hook for use update profile.
 export { useUpdateProfile } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -4244,7 +4244,7 @@ export { userAddressSchema } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // userProfileSchema - Model for user profile schema.
 export { userProfileSchema } from "./features/account/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // validateAddressForm - Helper for validate address form.
 export { validateAddressForm } from "./features/account/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -4539,7 +4539,7 @@ export { AdminSectionsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminSessionsManager - Shared export for admin sessions manager.
 export { AdminSessionsManager } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminSidebar - Shared export for admin sidebar.
 export { AdminSidebar } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -4623,19 +4623,19 @@ export { chatRoomQueryHelpers } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // notificationQueryHelpers - Shared export for notification query helpers.
 export { notificationQueryHelpers } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useChat - React hook for use chat.
 export { useChat } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useChatRooms - React hook for use chat rooms.
 export { useChatRooms } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCreateChatRoom - React hook for use create chat room.
 export { useCreateChatRoom } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useDashboardStats - React hook for use dashboard stats.
 export { useDashboardStats } from "./features/admin/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useDeleteChatRoom - React hook for use delete chat room.
 export { useDeleteChatRoom } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -5017,22 +5017,22 @@ export { buildBidColumns } from "./features/auctions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // createBidId - Helper for create bid id.
 export { createBidId } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAuction - React hook for use auction.
 export { useAuction } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAuctionBids - React hook for use auction bids.
 export { useAuctionBids } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAuctionDetail - React hook for use auction detail.
 export { useAuctionDetail } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useAuctions - React hook for use auctions.
 export { useAuctions } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePlaceBid - React hook for use place bid.
 export { usePlaceBid } from "./features/auctions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useRealtimeBids - React hook for use realtime bids.
 export { useRealtimeBids } from "./features/auctions/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -5415,7 +5415,7 @@ export { beforeAfterItemSchema } from "./features/before-after/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildBeforeAfterColumns - Helper for build before after columns.
 export { buildBeforeAfterColumns } from "./features/before-after/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBeforeAfter - React hook for use before after.
 export { useBeforeAfter } from "./features/before-after/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -5476,7 +5476,7 @@ export { BlogIndexPageView } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BlogListView - Component for blog list view.
 export { BlogListView } from "./features/blog/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BlogPostForm - Component for blog post form.
 export { BlogPostForm } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -5518,10 +5518,10 @@ export { getBlogFilterKeys } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // getBlogSortOptions - Helper for get blog sort options.
 export { getBlogSortOptions } from "./features/blog/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBlogPost - React hook for use blog post.
 export { useBlogPost } from "./features/blog/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBlogPosts - React hook for use blog posts.
 export { useBlogPosts } from "./features/blog/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -5724,7 +5724,7 @@ export { CategoryCard } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoryFilters - Shared export for category filters.
 export { CategoryFilters } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoryForm - Component for category form.
 export { CategoryForm } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -5811,19 +5811,19 @@ export { getCategoryTableColumns } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // isValidCategoryMove - Shared export for is valid category move.
 export { isValidCategoryMove } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCategories - React hook for use categories.
 export { useCategories } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCategoriesList - React hook for use categories list.
 export { useCategoriesList } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCategoryDetail - React hook for use category detail.
 export { useCategoryDetail } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCategorySelector - React hook for use category selector.
 export { useCategorySelector } from "./features/categories/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCreateCategory - React hook for use create category.
 export { useCreateCategory } from "./features/categories/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6043,10 +6043,10 @@ export { collectionItemSchema } from "./features/collections/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // collectionListItemSchema - Model for collection list item schema.
 export { collectionListItemSchema } from "./features/collections/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCollection - React hook for use collection.
 export { useCollection } from "./features/collections/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCollections - React hook for use collections.
 export { useCollections } from "./features/collections/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6062,7 +6062,7 @@ export type { CollectionListItem } from "./features/collections/index";
 export { CollectionsRepository } from "./features/collections/server";
 
 // ./features/consultation/index
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ConsultationForm - Component for consultation form.
 export { ConsultationForm } from "./features/consultation/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -6083,7 +6083,7 @@ export { consultationModeSchema } from "./features/consultation/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // consultationStatusSchema - Model for consultation status schema.
 export { consultationStatusSchema } from "./features/consultation/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBookConsultation - React hook for use book consultation.
 export { useBookConsultation } from "./features/consultation/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6108,13 +6108,13 @@ export type { ConsultationStatus } from "./features/consultation/index";
 export { ConsultationsRepository } from "./features/consultation/server";
 
 // ./features/contact/index
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ContactForm - Component for contact form.
 export { ContactForm } from "./features/contact/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ContactInfoSidebar - Shared export for contact info sidebar.
 export { ContactInfoSidebar } from "./features/contact/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useContactSubmit - React hook for use contact submit.
 export { useContactSubmit } from "./features/contact/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6157,10 +6157,10 @@ export type { OrderConfirmationEmailParams } from "./features/contact/server";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCopilotView - Component for admin copilot view.
 export { AdminCopilotView } from "./features/copilot/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCopilotChat - React hook for use copilot chat.
 export { useCopilotChat } from "./features/copilot/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCopilotFeedback - React hook for use copilot feedback.
 export { useCopilotFeedback } from "./features/copilot/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6177,7 +6177,7 @@ export type { CopilotMessage } from "./features/copilot/index";
 export type { UseCopilotFeedbackOptions } from "./features/copilot/index";
 
 // ./features/corporate/index
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CorporateInquiryForm - Component for corporate inquiry form.
 export { CorporateInquiryForm } from "./features/corporate/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -6195,7 +6195,7 @@ export { corporateInquiryStatusSchema } from "./features/corporate/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // submitCorporateInquirySchema - Model for submit corporate inquiry schema.
 export { submitCorporateInquirySchema } from "./features/corporate/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSubmitCorporateInquiry - React hook for use submit corporate inquiry.
 export { useSubmitCorporateInquiry } from "./features/corporate/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6375,19 +6375,19 @@ export { pollConfigSchema } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // saleConfigSchema - Model for sale config schema.
 export { saleConfigSchema } from "./features/events/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBulkEvent - React hook for use bulk event.
 export { useBulkEvent } from "./features/events/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useEvent - React hook for use event.
 export { useEvent } from "./features/events/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useEventEntries - React hook for use event entries.
 export { useEventEntries } from "./features/events/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useEventLeaderboard - React hook for use event leaderboard.
 export { useEventLeaderboard } from "./features/events/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useEvents - React hook for use events.
 export { useEvents } from "./features/events/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6562,7 +6562,7 @@ export { DEFAULT_FAQ_DATA } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // FAQAccordion - Shared export for faqaccordion.
 export { FAQAccordion } from "./features/faq/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // FAQCategorySidebar - Shared export for faqcategory sidebar.
 export { FAQCategorySidebar } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -6634,16 +6634,16 @@ export { isPopularFAQ } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // slugifyQuestion - Shared export for slugify question.
 export { slugifyQuestion } from "./features/faq/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFAQ - React hook for use faq.
 export { useFAQ } from "./features/faq/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFAQs - React hook for use faqs.
 export { useFAQs } from "./features/faq/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFaqList - React hook for use faq list.
 export { useFaqList } from "./features/faq/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFaqVote - React hook for use faq vote.
 export { useFaqVote } from "./features/faq/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -6828,7 +6828,7 @@ export { BeforeAfterCard } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CharacterHotspot - Shared export for character hotspot.
 export { CharacterHotspot } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CharacterHotspotForm - Component for character hotspot form.
 export { CharacterHotspotForm } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -6903,37 +6903,37 @@ export { WelcomeSection } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // WhatsAppCommunitySection - Shared export for whats app community section.
 export { WhatsAppCommunitySection } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBlogArticles - React hook for use blog articles.
 export { useBlogArticles } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFeaturedAuctions - React hook for use featured auctions.
 export { useFeaturedAuctions } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFeaturedPreOrders - React hook for use featured pre orders.
 export { useFeaturedPreOrders } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useFeaturedProducts - React hook for use featured products.
 export { useFeaturedProducts } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useHeroCarousel - React hook for use hero carousel.
 export { useHeroCarousel } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useHomepage - React hook for use homepage.
 export { useHomepage } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useHomepageReviews - React hook for use homepage reviews.
 export { useHomepageReviews } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useHomepageSections - React hook for use homepage sections.
 export { useHomepageSections } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useNewsletter - React hook for use newsletter.
 export { useNewsletter } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useTopBrands - React hook for use top brands.
 export { useTopBrands } from "./features/homepage/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useTopCategories - React hook for use top categories.
 export { useTopCategories } from "./features/homepage/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7246,13 +7246,13 @@ export { TitleBar } from "./features/layout/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // TitleBarLayout - Component for title bar layout.
 export { TitleBarLayout } from "./features/layout/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBottomActions - React hook for use bottom actions.
 export { useBottomActions } from "./features/layout/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBottomActionsContext - React hook for use bottom actions context.
 export { useBottomActionsContext } from "./features/layout/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useDashboardNav - React hook for use dashboard nav.
 export { useDashboardNav } from "./features/layout/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7383,7 +7383,7 @@ export { loyaltyBalanceSchema } from "./features/loyalty/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // loyaltyConfigSchema - Model for loyalty config schema.
 export { loyaltyConfigSchema } from "./features/loyalty/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useLoyaltyBalance - React hook for use loyalty balance.
 export { useLoyaltyBalance } from "./features/loyalty/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7640,13 +7640,13 @@ export { orderStatusSchema } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // orderTimelineSchema - Model for order timeline schema.
 export { orderTimelineSchema } from "./features/orders/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useOrder - React hook for use order.
 export { useOrder } from "./features/orders/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useOrders - React hook for use orders.
 export { useOrders } from "./features/orders/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useTrackOrder - React hook for use track order.
 export { useTrackOrder } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7785,10 +7785,10 @@ export { payoutQueryHelpers } from "./features/payments/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // payoutStatusSchema - Model for payout status schema.
 export { payoutStatusSchema } from "./features/payments/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePaymentEvent - React hook for use payment event.
 export { usePaymentEvent } from "./features/payments/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePaymentSettings - React hook for use payment settings.
 export { usePaymentSettings } from "./features/payments/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7852,10 +7852,10 @@ export { preorderAdminColumns } from "./features/pre-orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // preorderItemSchema - Model for preorder item schema.
 export { preorderItemSchema } from "./features/pre-orders/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePreorder - React hook for use preorder.
 export { usePreorder } from "./features/pre-orders/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePreorders - React hook for use preorders.
 export { usePreorders } from "./features/pre-orders/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7910,7 +7910,7 @@ export { DEFAULT_PRODUCT_DATA } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // InteractiveProductCard - Component for interactive product card.
 export { InteractiveProductCard } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // MakeOfferForm - Component for make offer form.
 export { MakeOfferForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -7943,7 +7943,7 @@ export { PRODUCT_STATUS_OPTIONS } from "./features/products/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
 // PRODUCT_UPDATABLE_FIELDS - Constant used across modules.
 export { PRODUCT_UPDATABLE_FIELDS } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PlaceBidForm - Component for place bid form.
 export { PlaceBidForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -7964,7 +7964,7 @@ export { ProductFeatureBadges } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFilters - Shared export for product filters.
 export { ProductFilters } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductForm - Component for product form.
 export { ProductForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8030,19 +8030,19 @@ export { productQueryHelpers } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // productSeoSchema - Model for product seo schema.
 export { productSeoSchema } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBrands - React hook for use brands.
 export { useBrands } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProduct - React hook for use product.
 export { useProduct } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProductDetail - React hook for use product detail.
 export { useProductDetail } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProducts - React hook for use products.
 export { useProducts } from "./features/products/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useRelatedProducts - React hook for use related products.
 export { useRelatedProducts } from "./features/products/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -8286,13 +8286,13 @@ export { promotionsListParamsSchema } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // sellerCouponCodePrefix - Shared export for seller coupon code prefix.
 export { sellerCouponCodePrefix } from "./features/promotions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCoupon - React hook for use coupon.
 export { useCoupon } from "./features/promotions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCouponValidate - React hook for use coupon validate.
 export { useCouponValidate } from "./features/promotions/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // usePromotions - React hook for use promotions.
 export { usePromotions } from "./features/promotions/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -8449,7 +8449,7 @@ export { ReviewsList } from "./features/reviews/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ReviewsListView - Component for reviews list view.
 export { ReviewsListView } from "./features/reviews/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ViewReviewModal - Component for view review modal.
 export { ViewReviewModal } from "./features/reviews/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8485,13 +8485,13 @@ export { reviewStatusSchema } from "./features/reviews/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // reviewVideoSchema - Model for review video schema.
 export { reviewVideoSchema } from "./features/reviews/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useCreateReview - React hook for use create review.
 export { useCreateReview } from "./features/reviews/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useProductReviews - React hook for use product reviews.
 export { useProductReviews } from "./features/reviews/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useReviews - React hook for use reviews.
 export { useReviews } from "./features/reviews/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -8633,10 +8633,10 @@ export { searchQuerySchema } from "./features/search/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // searchResultAdminColumns - Shared export for search result admin columns.
 export { searchResultAdminColumns } from "./features/search/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useNavSuggestions - React hook for use nav suggestions.
 export { useNavSuggestions } from "./features/search/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSearch - React hook for use search.
 export { useSearch } from "./features/search/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -8757,7 +8757,7 @@ export { SellerRevenueChart } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerShippingView - Component for seller shipping view.
 export { SellerShippingView } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerSidebar - Shared export for seller sidebar.
 export { SellerSidebar } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8817,25 +8817,25 @@ export { socialLinksSchema } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // storeStatusSchema - Model for store status schema.
 export { storeStatusSchema } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useBecomeSeller - React hook for use become seller.
 export { useBecomeSeller } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerAnalytics - React hook for use seller analytics.
 export { useSellerAnalytics } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerDashboard - React hook for use seller dashboard.
 export { useSellerDashboard } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerPayoutSettings - React hook for use seller payout settings.
 export { useSellerPayoutSettings } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerPayouts - React hook for use seller payouts.
 export { useSellerPayouts } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerStore - React hook for use seller store.
 export { useSellerStore } from "./features/seller/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useSellerStorefront - React hook for use seller storefront.
 export { useSellerStorefront } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -9178,22 +9178,22 @@ export { storeListItemSchema } from "./features/stores/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // storeListParamsSchema - Model for store list params schema.
 export { storeListParamsSchema } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStoreAddressSelector - React hook for use store address selector.
 export { useStoreAddressSelector } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStoreAuctions - React hook for use store auctions.
 export { useStoreAuctions } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStoreBySlug - React hook for use store by slug.
 export { useStoreBySlug } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStoreProducts - React hook for use store products.
 export { useStoreProducts } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStoreReviews - React hook for use store reviews.
 export { useStoreReviews } from "./features/stores/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useStores - React hook for use stores.
 export { useStores } from "./features/stores/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -9384,13 +9384,13 @@ export { WishlistView } from "./features/wishlist/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildWishlistColumns - Helper for build wishlist columns.
 export { buildWishlistColumns } from "./features/wishlist/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useUserWishlist - React hook for use user wishlist.
 export { useUserWishlist } from "./features/wishlist/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useWishlist - React hook for use wishlist.
 export { useWishlist } from "./features/wishlist/index";
-// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useWishlistToggle - React hook for use wishlist toggle.
 export { useWishlistToggle } from "./features/wishlist/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
