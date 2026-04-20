@@ -94,6 +94,10 @@ const CLIENT_FILES = [
   "core/baseline-resolver.ts",
   "next/routing/route-map.ts",
   "next/request-helpers.ts",
+  // ─── client-side features ─────────────────────────────────────────────────
+  "features/auth/index.ts",
+  "features/layout/index.ts",
+  "providers/firebase-client/index.ts",
 ];
 
 // Specific named exports from next/index (only the safe subset)
