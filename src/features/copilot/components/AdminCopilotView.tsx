@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Div, Heading, Span, Text } from "../../../ui";
 import { useCopilotChat } from "../hooks/useCopilotChat";

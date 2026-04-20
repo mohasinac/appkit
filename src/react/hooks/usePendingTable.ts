@@ -1,3 +1,4 @@
+"use client"
 import { useMemo } from "react";
 import { usePendingFilters } from "./usePendingFilters";
 import type { useUrlTable } from "./useUrlTable";

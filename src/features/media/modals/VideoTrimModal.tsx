@@ -1,3 +1,4 @@
+"use client"
 /**
  * VideoTrimModal — set-in/out trim for @mohasinac/feat-media.
  *

@@ -9,14 +9,35 @@
  * use `client-logger.ts`.
  */
 
-import { appendFile, mkdir, readdir, rename, stat, unlink } from "fs/promises";
-import { existsSync } from "fs";
-import path from "path";
 import { type NextRequest } from "next/server";
 import { redactPii } from "../security/pii-redact";
 import { AppError } from "../errors";
 
-const LOGS_DIR = path.join(process.cwd(), "logs");
+// fs/path are Node.js built-ins that must NOT be imported at the top level.
+// Doing so causes Next.js Edge bundler warnings because this file is reachable
+// from the instrumentation hook, which is compiled for both Edge and Node.
+// Using require() calls inside functions keeps the imports out of the static
+// analysis graph and prevents Edge Runtime warnings.
+/* eslint-disable @typescript-eslint/no-require-imports */
+function nodeFsPromises() {
+  return require("fs/promises") as typeof import("fs/promises");
+}
+function nodeFs() {
+  return require("fs") as typeof import("fs");
+}
+function nodePath() {
+  return require("path") as typeof import("path");
+}
+// process.cwd() is a Node.js-only API. Access it through module.require so
+// Next.js Edge static analysis does not flag this file.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function nodeCwd(): string { return (module as any).require("process").cwd(); }
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+function getLogsDir(): string {
+  return nodePath().join(nodeCwd(), "logs");
+}
+
 const MAX_LOG_FILE_SIZE = 10 * 1024 * 1024;
 const MAX_LOG_FILES = 10;
 const isFileLoggingEnabled = !process.env.VERCEL;
@@ -72,14 +93,15 @@ function normalizeLogData(data: unknown): unknown {
 }
 
 async function ensureLogsDir(): Promise<void> {
-  if (!existsSync(LOGS_DIR)) {
-    await mkdir(LOGS_DIR, { recursive: true });
+  const logsDir = getLogsDir();
+  if (!nodeFs().existsSync(logsDir)) {
+    await nodeFsPromises().mkdir(logsDir, { recursive: true });
   }
 }
 
 function getLogFilePath(level: LogLevel): string {
   const date = new Date().toISOString().split("T")[0];
-  return path.join(LOGS_DIR, `${level}-${date}.log`);
+  return nodePath().join(getLogsDir(), `${level}-${date}.log`);
 }
 
 function formatLogEntry(entry: LogEntry): string {
@@ -92,12 +114,13 @@ function formatLogEntry(entry: LogEntry): string {
 
 async function cleanOldLogFiles(logsDir: string): Promise<void> {
   try {
+    const { readdir, stat, unlink } = nodeFsPromises();
     const files = await readdir(logsDir);
     const logFiles = files
       .filter((file) => file.endsWith(".log"))
       .map((file) => ({
         name: file,
-        path: path.join(logsDir, file),
+        path: nodePath().join(logsDir, file),
       }));
 
     if (logFiles.length <= MAX_LOG_FILES) return;
@@ -124,15 +147,16 @@ async function cleanOldLogFiles(logsDir: string): Promise<void> {
 
 async function rotateLogFileIfNeeded(filePath: string): Promise<void> {
   try {
-    if (!existsSync(filePath)) return;
+    if (!nodeFs().existsSync(filePath)) return;
 
+    const { stat, rename } = nodeFsPromises();
     const fileStats = await stat(filePath);
     if (fileStats.size < MAX_LOG_FILE_SIZE) return;
 
     const timestamp = Date.now();
-    const dir = path.dirname(filePath);
-    const filename = path.basename(filePath, ".log");
-    const rotatedPath = path.join(dir, `${filename}.${timestamp}.log`);
+    const dir = nodePath().dirname(filePath);
+    const filename = nodePath().basename(filePath, ".log");
+    const rotatedPath = nodePath().join(dir, `${filename}.${timestamp}.log`);
 
     await rename(filePath, rotatedPath);
     await cleanOldLogFiles(dir);
@@ -146,7 +170,7 @@ async function writeLog(entry: LogEntry): Promise<void> {
     await ensureLogsDir();
     const filePath = getLogFilePath(entry.level);
     await rotateLogFileIfNeeded(filePath);
-    await appendFile(filePath, formatLogEntry(entry));
+    await nodeFsPromises().appendFile(filePath, formatLogEntry(entry));
   } catch (error) {
     console.error("Failed to write log:", error);
   }

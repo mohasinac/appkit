@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Container, Div, Heading, Row, Text } from "../../../ui";
 import { useReviews } from "../hooks/useReviews";

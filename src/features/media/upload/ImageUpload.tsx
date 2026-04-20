@@ -1,3 +1,4 @@
+"use client"
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
  *

@@ -1,9 +1,10 @@
+"use client";
+
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
-
 export interface WelcomeSectionChip {
   key: string;
   emoji: string;

@@ -1,3 +1,4 @@
+"use client"
 // appkit/src/ui/components/TabStrip.tsx
 import React, { useEffect } from "react";
 import { Span } from "./Typography";

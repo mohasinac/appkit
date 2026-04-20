@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * BottomActions Component
  *
@@ -27,7 +29,6 @@
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
@@ -41,8 +42,6 @@ const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
 
 export default function BottomActions() {
-  const tActions = useTranslations("actions");
-  const tBottom = useTranslations("bottomActions");
   const { state, actionCallbacksRef, bulkCallbacksRef, bulkClearRef } =
     useBottomActionsContext();
 
@@ -94,7 +93,7 @@ export default function BottomActions() {
       ref={containerRef}
       role="toolbar"
       aria-label={
-        isBulkMode ? tBottom("bulkActionsLabel") : tBottom("pageActionsLabel")
+        isBulkMode ? "Bulk actions" : "Page actions"
       }
       aria-hidden={!isVisible}
       className={[
@@ -112,7 +111,7 @@ export default function BottomActions() {
       {isBulkMode && (
         <div
           role="listbox"
-          aria-label={tBottom("bulkActionsLabel")}
+          aria-label="Bulk actions"
           className={[
             "absolute bottom-full left-0 right-0 overflow-hidden",
             BOTTOM_NAV_BG,
@@ -201,13 +200,13 @@ export default function BottomActions() {
               variant="ghost"
               onClick={dispatchBulkClear}
               className="inline-flex items-center gap-1.5 flex-shrink-0 bg-primary-50 hover:bg-primary-100 active:bg-primary-200 dark:bg-primary-950/30 dark:hover:bg-primary-900/50 text-primary-700 dark:text-primary-300 rounded-full pl-2 pr-3 h-8 border border-primary-200/70 dark:border-primary-800/50 transition-colors min-h-0"
-              aria-label={tActions("clearSelection")}
+              aria-label="Clear selection"
             >
               <X className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
               <Span className="text-xs font-semibold tabular-nums whitespace-nowrap leading-none">
                 {bulk.noun
                   ? `${bulk.selectedCount} ${bulk.noun}`
-                  : tBottom("selectedCount", { count: bulk.selectedCount })}
+                  : `${bulk.selectedCount} selected`}
               </Span>
             </Button>
 
@@ -239,7 +238,7 @@ export default function BottomActions() {
                   </Span>
                 )}
                 <Span className="flex-1 truncate text-left leading-none">
-                  {selectedAction?.label ?? tBottom("bulkActionsLabel")}
+                  {selectedAction?.label ?? "Bulk actions"}
                 </Span>
                 {pickerOpen ? (
                   <ChevronDown
@@ -270,7 +269,7 @@ export default function BottomActions() {
                 onClick={handleApply}
                 className="h-10 flex-shrink-0"
               >
-                <Span className="leading-none">{tBottom("apply")}</Span>
+                <Span className="leading-none">Apply</Span>
               </Button>
             )}
           </>

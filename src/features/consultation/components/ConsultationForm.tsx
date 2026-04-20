@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Button, Div, Input, Row, Select, Textarea } from "../../../ui";
 import type { BookConsultationInput } from "../types";

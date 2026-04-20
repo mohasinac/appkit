@@ -1,3 +1,4 @@
+"use client"
 import Image from "next/image";
 import { useState } from "react";
 import { Div, Span } from "../../ui";
@@ -44,6 +45,8 @@ export interface MediaImageProps {
   size?: MediaImageSize;
   /** Pass `true` for above-the-fold hero / banner images to skip lazy loading. */
   priority?: boolean;
+  /** Override browser loading strategy when needed (`eager` for LCP images). */
+  loading?: "lazy" | "eager";
   /** CSS object-fit applied to the underlying img element. Defaults to `'cover'`. */
   objectFit?: "cover" | "contain";
   /**
@@ -63,6 +66,7 @@ export function MediaImage({
   alt,
   size = "card",
   priority = false,
+  loading,
   objectFit = "cover",
   fallback,
   className,
@@ -75,7 +79,7 @@ export function MediaImage({
   if (!src || hasError) {
     return (
       <Div
-        className={`absolute inset-0 flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl${className ? ` ${className}` : ""}`}
+        className={`relative w-full h-full overflow-hidden flex items-center justify-center bg-zinc-100 dark:bg-slate-800 text-zinc-400 text-4xl${className ? ` ${className}` : ""}`}
         role="img"
         aria-label={alt}
       >
@@ -91,7 +95,7 @@ export function MediaImage({
 
   return (
     <Div
-      className={`absolute inset-0 overflow-hidden${className ? ` ${className}` : ""}`}
+      className={`relative w-full h-full overflow-hidden${className ? ` ${className}` : ""}`}
     >
       {!isLoaded && (
         <Div
@@ -104,6 +108,7 @@ export function MediaImage({
         alt={alt}
         fill
         priority={priority}
+        loading={loading ?? (priority ? "eager" : "lazy")}
         className={fitClass}
         sizes={SIZE_HINTS[size]}
         onLoad={() => setIsLoaded(true)}

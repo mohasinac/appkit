@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import { logger } from "../../../core/Logger";
 import { BID_ENDPOINTS } from "../../../constants/api-endpoints";

@@ -1,3 +1,4 @@
+"use client"
 /**
  * CameraCapture — live camera viewfinder for @mohasinac/feat-media.
  *

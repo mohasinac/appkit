@@ -1,5 +1,5 @@
+"use client"
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useTranslations } from "next-intl";
 import { useMediaQuery } from "../../../react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
@@ -29,8 +29,6 @@ function navigate(href: string, push?: (href: string) => void) {
 }
 
 export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
-  const tLoading = useTranslations("loading");
-  const tA11y = useTranslations("accessibility");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
@@ -90,7 +88,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
         className={`relative w-full ${homepage.heroMinH} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}
       >
         <Div className={`${position.fill} ${flex.center}`}>
-          <Text variant="secondary">{tLoading("default")}</Text>
+          <Text variant="secondary">Loading...</Text>
         </Div>
       </Div>
     );
@@ -127,7 +125,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       ref={sectionRef}
       className={`relative w-full ${homepage.heroMinH} overflow-hidden`}
       aria-roledescription="carousel"
-      aria-label={tA11y("heroCarouselAriaLabel")}
+      aria-label="Hero carousel"
       onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -136,10 +134,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
       tabIndex={0}
     >
       <Div aria-live="polite" aria-atomic="true" className="sr-only">
-        {tA11y("heroCarouselSlideOf", {
-          current: currentSlide + 1,
-          total: slides.length,
-        })}
+        {`Slide ${currentSlide + 1} of ${slides.length}`}
       </Div>
 
       {/* Snap Scroll Rail */}
@@ -371,7 +366,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                   : `${THEME_CONSTANTS.carousel.dotInactive} hover:bg-white/75`
               }`}
               onClick={() => goToSlide(index)}
-              aria-label={tA11y("heroCarouselGoToSlide", { number: index + 1 })}
+              aria-label={`Go to slide ${index + 1}`}
             >
               {index === currentSlide && (
                 <Span
@@ -397,7 +392,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             variant="ghost"
             className={`p-0 ${THEME_CONSTANTS.carousel.arrow}`}
             onClick={goPrev}
-            aria-label={tA11y("heroCarouselPrevSlide")}
+            aria-label="Previous slide"
           >
             <svg
               className="w-7 h-7"
@@ -417,7 +412,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             variant="ghost"
             className={`p-0 ${THEME_CONSTANTS.carousel.arrow}`}
             onClick={goNext}
-            aria-label={tA11y("heroCarouselNextSlide")}
+            aria-label="Next slide"
           >
             <svg
               className="w-7 h-7"

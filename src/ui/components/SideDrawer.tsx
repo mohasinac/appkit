@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "./Button";

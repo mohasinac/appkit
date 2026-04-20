@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import type { ReactNode } from "react";
 import { Div, Heading, Row } from "../../../ui";

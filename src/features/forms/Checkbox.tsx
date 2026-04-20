@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Div, Span } from "../../ui";
 import { cn, ERROR_BASE } from "./utils";

@@ -1,3 +1,4 @@
+"use client"
 import { useRef, useState, useCallback, useEffect, RefObject } from "react";
 
 export interface UsePullToRefreshOptions {

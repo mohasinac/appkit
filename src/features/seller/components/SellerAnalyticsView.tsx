@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { StackedViewShell } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";

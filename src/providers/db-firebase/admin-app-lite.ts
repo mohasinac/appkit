@@ -1,6 +1,13 @@
 import { initializeApp, getApps, cert, type App } from "firebase-admin/app";
-import * as path from "path";
-import * as fs from "fs";
+
+/* eslint-disable @typescript-eslint/no-require-imports */
+function nodePath() { return require("path") as typeof import("path"); }
+function nodeFs()   { return require("fs")   as typeof import("fs"); }
+// process.cwd() is Node.js-only; access via module.require so the Edge
+// static analyser does not flag this file.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function nodeCwd(): string { return (module as any).require("process").cwd(); }
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 function parsePrivateKey(raw: string): string {
   return raw
@@ -26,11 +33,11 @@ export function getAdminAppLite(): App {
     return existing;
   }
 
-  const keyPath = path.join(process.cwd(), "firebase-admin-key.json");
+  const keyPath = nodePath().join(nodeCwd(), "firebase-admin-key.json");
   let app: App;
 
-  if (fs.existsSync(keyPath)) {
-    const sa = JSON.parse(fs.readFileSync(keyPath, "utf8"));
+  if (nodeFs().existsSync(keyPath)) {
+    const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
     const dbUrl =
       process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
       `https://${sa.project_id}-default-rtdb.firebaseio.com`;

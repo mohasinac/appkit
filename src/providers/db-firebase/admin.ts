@@ -12,8 +12,14 @@ import type { Auth } from "firebase-admin/auth";
 import type { Firestore } from "firebase-admin/firestore";
 import type { Storage } from "firebase-admin/storage";
 import type { Database } from "firebase-admin/database";
-import * as path from "path";
-import * as fs from "fs";
+
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+function nodePath() { return require("path") as typeof import("path"); }
+function nodeFs()   { return require("fs")   as typeof import("fs"); }
+// process.cwd() is Node.js-only; access via module.require so the Edge
+// static analyser does not flag this file.
+function nodeCwd(): string { return (module as any).require("process").cwd(); }
 
 // Lazy loaders — prevents webpack from bundling firebase-admin into browser chunks.
 // (module as any).require() is used because webpack's static analysis does NOT trace
@@ -104,12 +110,12 @@ export function getAdminApp(): App {
     return existing;
   }
 
-  const keyPath = path.join(process.cwd(), "firebase-admin-key.json");
+  const keyPath = nodePath().join(nodeCwd(), "firebase-admin-key.json");
   let app: App;
 
   try {
-    if (fs.existsSync(keyPath)) {
-      const sa = JSON.parse(fs.readFileSync(keyPath, "utf8"));
+    if (nodeFs().existsSync(keyPath)) {
+      const sa = JSON.parse(nodeFs().readFileSync(keyPath, "utf8"));
       const dbUrl =
         process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
         `https://${sa.project_id}-default-rtdb.firebaseio.com`;

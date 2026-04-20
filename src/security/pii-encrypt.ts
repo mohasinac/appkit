@@ -9,12 +9,12 @@
  * Ciphertext format: "enc:v1:<iv_b64>:<ciphertext_b64>:<authtag_b64>"
  * Blind index format: "hmac-sha256:<sha256_hex>"
  */
-import {
-  createCipheriv,
-  createDecipheriv,
-  randomBytes,
-  createHmac,
-} from "crypto";
+
+// crypto is a Node.js built-in. Use require() to keep it out of the static
+// import graph so Next.js Edge bundler does not warn about this file.
+/* eslint-disable @typescript-eslint/no-require-imports */
+function nodeCrypto() { return require("crypto") as typeof import("crypto"); }
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 const ALGO = "aes-256-gcm";
 export const ENC_PREFIX = "enc:v1:";
@@ -59,6 +59,7 @@ function getHmacKey(): Buffer {
 
 /** Encrypt a plaintext string with AES-256-GCM. */
 export function encryptValue(plaintext: string): string {
+  const { randomBytes, createCipheriv } = nodeCrypto();
   const key = getEncKey();
   const iv = randomBytes(12);
   const cipher = createCipheriv(ALGO, key, iv);
@@ -75,6 +76,7 @@ export function decryptValue(ciphertext: string): string {
   if (parts.length !== 3)
     throw new Error(`Invalid PII ciphertext: ${ciphertext}`);
   const [ivB64, encB64, tagB64] = parts as [string, string, string];
+  const { createDecipheriv } = nodeCrypto();
   const key = getEncKey();
   const iv = Buffer.from(ivB64, "base64");
   const encrypted = Buffer.from(encB64, "base64");
@@ -91,6 +93,7 @@ export function decryptValue(ciphertext: string): string {
  * Used for equality lookups without decrypting (e.g. find-by-email).
  */
 export function hmacBlindIndex(value: string): string {
+  const { createHmac } = nodeCrypto();
   const key = getHmacKey();
   const hash = createHmac("sha256", key).update(value).digest("hex");
   return `${HMAC_PREFIX}${hash}`;

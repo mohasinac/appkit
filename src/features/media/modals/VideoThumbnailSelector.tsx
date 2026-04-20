@@ -1,3 +1,4 @@
+"use client"
 /**
  * VideoThumbnailSelector — frame-capture thumbnail picker for @mohasinac/feat-media.
  *

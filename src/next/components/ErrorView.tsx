@@ -1,3 +1,4 @@
+"use client"
 /**
  * ErrorView — Next.js per-route error.tsx template.
  *

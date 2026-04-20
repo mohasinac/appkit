@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Grid, Heading, Section, Span, Text } from "../../../ui";

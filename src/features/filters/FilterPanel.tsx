@@ -1,3 +1,4 @@
+"use client"
 import { useState } from "react";
 import { Div } from "../../ui";
 import { FilterFacetSection } from "./FilterFacetSection";

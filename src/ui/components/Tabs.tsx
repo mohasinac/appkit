@@ -1,3 +1,4 @@
+"use client"
 import React, { createContext, useContext, useMemo, useState } from "react";
 
 const UI_TABS = {

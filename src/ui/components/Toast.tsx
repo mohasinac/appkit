@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { Button } from "./Button";
 import { Text } from "./Typography";

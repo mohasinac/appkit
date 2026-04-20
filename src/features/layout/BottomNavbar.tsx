@@ -1,6 +1,6 @@
+"use client"
 import React from "react";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { AvatarDisplay, Button, Li, Span, TextLink } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
@@ -14,7 +14,7 @@ export interface BottomNavbarUser {
 }
 
 export interface BottomNavbarProps {
-  /** Authenticated user — if provided, shows profile slot with avatar */
+  /** Authenticated user ï¿½ if provided, shows profile slot with avatar */
   user?: BottomNavbarUser | null;
   /** href for the Home nav item */
   homeHref: string;
@@ -41,7 +41,7 @@ export interface BottomNavbarProps {
 }
 
 /**
- * BottomNavbar — mobile bottom navigation bar (5 slots: home, shop, search, cart, profile).
+ * BottomNavbar ï¿½ mobile bottom navigation bar (5 slots: home, shop, search, cart, profile).
  *
  * Pass `user` from your auth context to render the profile slot with avatar.
  */
@@ -60,17 +60,25 @@ export function BottomNavbar({
   getRoleBadgeClass,
 }: BottomNavbarProps) {
   const pathname = usePathname();
-  const t = useTranslations("nav");
+
+  const labels = {
+    mobileNav: "Mobile navigation",
+    home: "Home",
+    products: "Products",
+    search: "Search",
+    cart: "Cart",
+    profile: "Profile",
+  } as const;
 
   const itemStyle = { width: "20%" } as const;
 
   return (
-    <BottomNavLayout ariaLabel={t("mobileNav")}>
-      {/* 1 — Home */}
+    <BottomNavLayout ariaLabel={labels.mobileNav}>
+      {/* 1 ï¿½ Home */}
       <Li className="flex-1" style={itemStyle}>
         <NavItem
           href={homeHref}
-          label={t("home")}
+          label={labels.home}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -85,11 +93,11 @@ export function BottomNavbar({
         />
       </Li>
 
-      {/* 2 — Shop */}
+      {/* 2 ï¿½ Shop */}
       <Li className="flex-1" style={itemStyle}>
         <NavItem
           href={shopHref}
-          label={t("products")}
+          label={labels.products}
           icon={
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -104,22 +112,22 @@ export function BottomNavbar({
         />
       </Li>
 
-      {/* 3 — Search */}
+      {/* 3 ï¿½ Search */}
       <Li className="flex-1" style={itemStyle}>
         <Button
           variant="ghost"
           onClick={onSearchToggle}
           className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 ${inactiveClassName}`}
-          aria-label={t("search")}
+          aria-label={labels.search}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
-          <Span className={labelClassName}>{t("search")}</Span>
+          <Span className={labelClassName}>{labels.search}</Span>
         </Button>
       </Li>
 
-      {/* 4 — Cart */}
+      {/* 4 ï¿½ Cart */}
       <Li className="flex-1" style={itemStyle}>
         <TextLink
           href={cartHref}
@@ -127,16 +135,16 @@ export function BottomNavbar({
           className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 relative ${
             pathname === cartHref ? activeClassName : inactiveClassName
           }`}
-          aria-label={t("cart")}
+          aria-label={labels.cart}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
-          <Span className={labelClassName}>{t("cart")}</Span>
+          <Span className={labelClassName}>{labels.cart}</Span>
         </TextLink>
       </Li>
 
-      {/* 5 — Profile / Login */}
+      {/* 5 ï¿½ Profile / Login */}
       <Li className="flex-1" style={itemStyle}>
         {user ? (
           <TextLink
@@ -145,7 +153,7 @@ export function BottomNavbar({
             className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 ${
               pathname === profileHref ? activeClassName : inactiveClassName
             }`}
-            aria-label={t("profile")}
+            aria-label={labels.profile}
           >
             <AvatarDisplay
               cropData={
@@ -170,7 +178,7 @@ export function BottomNavbar({
         ) : (
           <NavItem
             href={loginHref}
-            label={t("profile")}
+            label={labels.profile}
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

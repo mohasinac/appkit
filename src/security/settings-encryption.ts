@@ -1,4 +1,8 @@
-import { createCipheriv, createDecipheriv, randomBytes } from "crypto";
+// crypto is a Node.js built-in. Use require() to keep it out of the static
+// import graph so Next.js Edge bundler does not warn about this file.
+/* eslint-disable @typescript-eslint/no-require-imports */
+function nodeCrypto() { return require("crypto") as typeof import("crypto"); }
+/* eslint-enable @typescript-eslint/no-require-imports */
 
 const ALGORITHM = "aes-256-gcm" as const;
 const IV_BYTES = 12;
@@ -17,6 +21,7 @@ function getMasterKey(): Buffer {
 
 export function encryptSecret(plaintext: string): string {
   const key = getMasterKey();
+  const { randomBytes, createCipheriv } = nodeCrypto();
   const iv = randomBytes(IV_BYTES);
   const cipher = createCipheriv(ALGORITHM, key, iv);
   const ciphertext = Buffer.concat([
@@ -39,6 +44,7 @@ export function decryptSecret(encrypted: string): string {
   }
 
   const [ivB64, tagB64, ciphertextB64] = parts;
+  const { createDecipheriv } = nodeCrypto();
   const decipher = createDecipheriv(
     ALGORITHM,
     getMasterKey(),

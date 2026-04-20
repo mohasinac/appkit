@@ -1,3 +1,4 @@
+"use client"
 import React, { FormEvent, useCallback, useState } from "react";
 import { Alert, Div, Heading, Label, Text } from "../../../ui";
 

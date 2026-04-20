@@ -1,3 +1,4 @@
+"use client"
 import { useState, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";

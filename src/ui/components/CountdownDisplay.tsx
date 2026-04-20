@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useMemo, useState } from "react";
 import { Span } from "./Typography";
 import { classNames } from "../style.helper";

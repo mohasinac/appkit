@@ -1,3 +1,4 @@
+"use client"
 // appkit/src/react/hooks/useContainerGrid.ts
 import { useRef, useState, useEffect } from "react";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { eventBus } from "../../core/EventBus";
 import { UNSAVED_CHANGES_EVENT } from "../../react";

@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
 import { Article, Button, Div, Heading, Row, Span, Text } from "../../../ui";

@@ -1274,6 +1274,37 @@ export { maskPublicEventEntry } from "./security/index";
 // createInstrumentation - Factory for Next.js instrumentation hooks.
 export { createInstrumentation } from "./instrumentation/index";
 
+// -- SEO ---------------------------------------------------------------------
+// SEO_CONFIG - Shared SEO defaults for server-rendered metadata.
+export { SEO_CONFIG } from "./seo/index";
+// createSeoConfig - Merge consumer SEO overrides with appkit defaults.
+export { createSeoConfig } from "./seo/index";
+// generateMetadata - Build page metadata in server contexts.
+export { generateMetadata } from "./seo/index";
+// generateProfileMetadata - Build profile metadata in server contexts.
+export { generateProfileMetadata } from "./seo/index";
+// generateProductMetadata - Build product metadata in server contexts.
+export { generateProductMetadata } from "./seo/index";
+// generateCategoryMetadata - Build category metadata in server contexts.
+export { generateCategoryMetadata } from "./seo/index";
+// generateBlogMetadata - Build blog metadata in server contexts.
+export { generateBlogMetadata } from "./seo/index";
+// generateAuctionMetadata - Build auction metadata in server contexts.
+export { generateAuctionMetadata } from "./seo/index";
+// generateSearchMetadata - Build search metadata in server contexts.
+export { generateSearchMetadata } from "./seo/index";
+// organizationJsonLd - Build organization structured data in server contexts.
+export { organizationJsonLd } from "./seo/index";
+// searchBoxJsonLd - Build search box structured data in server contexts.
+export { searchBoxJsonLd } from "./seo/index";
+export type {
+	SeoConfig,
+	ProductSeoInput,
+	CategorySeoInput,
+	BlogSeoInput,
+	AuctionSeoInput,
+} from "./seo/index";
+
 // -- i18n / messages ---------------------------------------------------------
 // mergeFeatureMessages - Merge per-feature message files into a single bundle.
 export { mergeFeatureMessages } from "./cli/index";

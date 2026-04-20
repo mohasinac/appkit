@@ -1,3 +1,4 @@
+"use client"
 import { Select, Label, Button, SideDrawer } from "../../../ui";
 import { useState, useCallback } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";

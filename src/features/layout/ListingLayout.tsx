@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Aside, Button, Div, Nav, Row, Span } from "../../ui";
 
