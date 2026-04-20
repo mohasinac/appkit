@@ -7,7 +7,7 @@ export type WishlistTab = "products" | "auctions" | "categories" | "stores";
 
 export interface WishlistViewProps {
   /** Authenticated user id — required to fetch wishlist */
-  userId: string;
+  userId?: string;
   /** Optional initial SSR data */
   initialData?: WishlistResponse;
   labels?: {
@@ -37,7 +37,7 @@ export interface WishlistViewProps {
     onToggle: (m: string) => void,
   ) => React.ReactNode;
   /** Render the products grid */
-  renderProducts: (
+  renderProducts?: (
     items: WishlistItem[],
     isLoading: boolean,
   ) => React.ReactNode;
@@ -73,7 +73,7 @@ export function WishlistView({
   const [viewMode, setViewMode] = React.useState("card");
   const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
 
-  const { items, total, isLoading } = useWishlist(userId, { initialData });
+  const { items, total, isLoading } = useWishlist(userId ?? "", { initialData });
 
   // Client-side filter + sort for products tab
   const displayedItems = React.useMemo(() => {
@@ -133,7 +133,7 @@ export function WishlistView({
 
         {/* Content */}
         {activeTab === "products"
-          ? renderProducts(displayedItems, isLoading)
+          ? renderProducts?.(displayedItems, isLoading)
           : (renderTabPlaceholder?.(activeTab) ?? (
               <Div className="py-16 text-center">
                 <Text variant="secondary">Coming soon</Text>

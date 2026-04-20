@@ -1251,3 +1251,25 @@ export { getWishlistForUser } from "./features/wishlist/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // removeFromWishlist - Helper for remove from wishlist.
 export { removeFromWishlist } from "./features/wishlist/server";
+
+// ── Monitoring ──────────────────────────────────────────────────────────────
+// serverLogger - Structured server-side logger.
+export { serverLogger } from "./monitoring/index";
+
+// ── Security / Rate limiting ────────────────────────────────────────────────
+// applyRateLimit - Apply rate limiting middleware.
+export { applyRateLimit } from "./security/index";
+// rateLimitByIdentifier - Rate limit by a string identifier.
+export { rateLimitByIdentifier } from "./security/index";
+// RateLimitPresets - Preset configurations for common rate-limit scenarios.
+export { RateLimitPresets } from "./security/index";
+// maskPublicEventEntry - Redact PII from event entries before public exposure.
+export { maskPublicEventEntry } from "./security/index";
+
+// ── Instrumentation ─────────────────────────────────────────────────────────
+// createInstrumentation - Factory for Next.js instrumentation hooks.
+export { createInstrumentation } from "./instrumentation/index";
+
+// ── i18n / messages ─────────────────────────────────────────────────────────
+// mergeFeatureMessages - Merge per-feature message files into a single bundle.
+export { mergeFeatureMessages } from "./cli/index";

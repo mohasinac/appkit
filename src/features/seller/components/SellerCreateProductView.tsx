@@ -7,7 +7,7 @@ export interface SellerCreateProductViewProps extends Omit<
   "sections"
 > {
   labels?: { title?: string; submitButton?: string };
-  renderForm: (isLoading: boolean) => React.ReactNode;
+  renderForm?: (isLoading: boolean) => React.ReactNode;
   isLoading?: boolean;
 }
 
@@ -22,7 +22,7 @@ export function SellerCreateProductView({
       portal="seller"
       {...rest}
       title={labels.title}
-      sections={[renderForm(isLoading)]}
+      sections={[renderForm?.(isLoading)]}
     />
   );
 }

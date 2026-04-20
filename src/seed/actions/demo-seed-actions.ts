@@ -30,9 +30,11 @@ export type SeedCollectionName =
   | "events"
   | "eventEntries"
   | "sessions"
+  | "storeAddresses"
   | "carts";
 
 export interface SeedOperationResult {
+  success?: boolean;
   message: string;
   details: {
     created?: number;

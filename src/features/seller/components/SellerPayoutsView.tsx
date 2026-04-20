@@ -11,7 +11,7 @@ export interface SellerPayoutsViewProps extends Omit<
   renderStats?: (isLoading: boolean) => React.ReactNode;
   renderFilters?: () => React.ReactNode;
   renderActiveFilters?: () => React.ReactNode;
-  renderTable: (isLoading: boolean) => React.ReactNode;
+  renderTable?: (isLoading: boolean) => React.ReactNode;
   renderPagination?: (total: number) => React.ReactNode;
   renderModal?: () => React.ReactNode;
   total?: number;
@@ -41,7 +41,7 @@ export function SellerPayoutsView({
         renderStats?.(isLoading),
         renderFilters?.(),
         renderActiveFilters?.(),
-        renderTable(isLoading),
+        renderTable?.(isLoading),
         renderPagination?.(total),
       ]}
       overlays={renderModal?.()}

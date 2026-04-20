@@ -20,21 +20,21 @@ export interface AboutMilestone {
 }
 
 export interface AboutViewProps {
-  labels: {
-    title: string;
-    subtitle: string;
-    missionTitle: string;
-    missionText: string;
-    howItWorksTitle: string;
-    valuesTitle: string;
-    milestonesTitle: string;
-    ctaTitle: string;
-    ctaSell: string;
-    ctaShop: string;
+  labels?: {
+    title?: string;
+    subtitle?: string;
+    missionTitle?: string;
+    missionText?: string;
+    howItWorksTitle?: string;
+    valuesTitle?: string;
+    milestonesTitle?: string;
+    ctaTitle?: string;
+    ctaSell?: string;
+    ctaShop?: string;
   };
-  howItems: AboutHowItem[];
-  valueItems: AboutValueItem[];
-  milestones: AboutMilestone[];
+  howItems?: AboutHowItem[];
+  valueItems?: AboutValueItem[];
+  milestones?: AboutMilestone[];
   heroBannerClass?: string;
   ctaBannerClass?: string;
   /** Render the CTA action buttons  */
@@ -42,10 +42,10 @@ export interface AboutViewProps {
 }
 
 export function AboutView({
-  labels,
-  howItems,
-  valueItems,
-  milestones,
+  labels = {},
+  howItems = [],
+  valueItems = [],
+  milestones = [],
   heroBannerClass = "bg-gradient-to-br from-violet-600 to-indigo-600",
   ctaBannerClass = "bg-gradient-to-br from-violet-600 to-indigo-600",
   renderCtaButtons,

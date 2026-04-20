@@ -3,6 +3,7 @@ import { SlottedListingView } from "../../../ui";
 import type { SlottedListingViewProps } from "../../../ui";
 
 export interface AdminCategoriesViewProps extends SlottedListingViewProps {
+  children?: React.ReactNode;
   /** @deprecated Use `overlays` instead. */
   renderDrawer?: () => React.ReactNode;
   /** @deprecated Use `overlays` instead. */

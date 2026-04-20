@@ -6,6 +6,7 @@ export interface AdminEventEntriesViewProps extends Omit<
   StackedViewShellProps,
   "sections"
 > {
+  children?: React.ReactNode;
   /** Back-link and event title header */
   renderHeader?: () => React.ReactNode;
   /** Stats banner (total / approved / flagged counts) */
@@ -13,7 +14,7 @@ export interface AdminEventEntriesViewProps extends Omit<
   /** Filter bar (status dropdown, sort, search) */
   renderFilters?: () => React.ReactNode;
   /** Entries data table */
-  renderTable: () => React.ReactNode;
+  renderTable?: () => React.ReactNode;
   /** Pagination footer */
   renderPagination?: () => React.ReactNode;
   /** Entry review side-drawer */
@@ -37,7 +38,7 @@ export function AdminEventEntriesView({
       sections={[
         renderStats?.(),
         renderFilters?.(),
-        renderTable(),
+        renderTable?.(),
         renderPagination?.(),
       ]}
       overlays={renderReviewDrawer?.()}

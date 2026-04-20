@@ -95,3 +95,8 @@ export { useMediaTrim } from "./features/media/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useMediaUpload - React hook for use media upload.
 export { useMediaUpload } from "./features/media/index";
+
+// ── Client-side context providers ─────────────────────────────────────────────
+export { SessionProvider } from "./react/index";
+export type { SessionProviderProps } from "./react/index";
+export { ThemeProvider } from "./react/index";

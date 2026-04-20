@@ -38,7 +38,7 @@ export interface ListingViewShellProps extends Omit<
   renderModal?: () => ReactNode;
   /** When provided, the entire layout is replaced with this view (detail/edit mode). */
   detailView?: ReactNode;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function ListingViewShell({

@@ -8199,3 +8199,98 @@ export type { WelcomeSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // WhatsAppCommunitySectionConfig - Type contract for whats app community section config.
 export type { WhatsAppCommunitySectionConfig } from "./features/homepage/schemas/index";
+
+// ── Missing UI primitives ──────────────────────────────────────────────────────
+export { Button } from "./ui/index";
+export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination } from "./ui/index";
+export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
+export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
+export { CountdownDisplay, ItemRow, HorizontalScroller, SectionTabs, TabStrip } from "./ui/index";
+export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
+export { TabsList, TabsContent, PasswordStrengthIndicator, DashboardStatsCard, TablePagination } from "./ui/index";
+export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText } from "./ui/index";
+export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";
+export { buildColumns, createColumnBuilder } from "./ui/index";
+export { renderBoolean, renderCurrency, renderCurrencyCompact, renderCount, renderNullable } from "./ui/index";
+export { Ol } from "./ui/index";
+
+// ── Missing constants ──────────────────────────────────────────────────────────
+export {
+  API_ENDPOINTS, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
+  NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, CHAT_ENDPOINTS, AUCTION_ENDPOINTS,
+  BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
+  PAYMENT_ENDPOINTS, COPILOT_ENDPOINTS, CORPORATE_ENDPOINTS, EVENT_ENDPOINTS,
+  FAQ_ENDPOINTS, HOMEPAGE_ENDPOINTS, LOYALTY_ENDPOINTS, MEDIA_ENDPOINTS,
+  ORDER_ENDPOINTS, PREORDER_ENDPOINTS, PRODUCT_ENDPOINTS, REVIEW_ENDPOINTS,
+  SEARCH_ENDPOINTS, SELLER_ENDPOINTS, BLOG_ENDPOINTS, WISHLIST_ENDPOINTS,
+  DEMO_ENDPOINTS, COLLECTION_CACHE_PATHS, resolveEndpoint, resolveEndpointFn,
+  ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES,
+} from "./constants/index";
+
+// ── Missing React hooks & providers ───────────────────────────────────────────
+export {
+  useMediaQuery, useBreakpoint, useClickOutside, useKeyPress, useLongPress,
+  useGesture, useSwipe, ThemeProvider, useTheme, useSession, useAuth, useCountdown,
+  useCamera, useBulkSelection, useUrlTable, usePendingFilters, usePendingTable,
+  useUnsavedChanges, UNSAVED_CHANGES_EVENT, useBulkAction, useContainerGrid,
+  useMessage, useVisibleItems, useModalStack, RTDBPayloadStatus,
+} from "./react/index";
+
+// ── Missing core types (already exported above; skipped to avoid duplicates) ───
+
+// ── Missing auth feature components ───────────────────────────────────────────
+export {
+  RoleGate, ProtectedRoute, SocialAuthButtons, AuthStatusPanel,
+  LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView,
+} from "./features/auth/index";
+export type {
+  RoleGateProps, ProtectedRouteProps, AuthGuardUser, AuthRouteConfig,
+  LoginFormProps, LoginFormValues, RegisterFormProps, RegisterFormValues,
+  ForgotPasswordViewProps, ResetPasswordViewProps, VerifyEmailViewProps,
+} from "./features/auth/index";
+
+// ── Missing cart / checkout feature components ────────────────────────────────
+export { CartItemRow, CartDrawer, CartView, CartSummary } from "./features/cart/index";
+export { CheckoutView, CheckoutAddressStep, CheckoutOtpModal, CheckoutSuccessView } from "./features/cart/index";
+export { CheckoutStepper, useCheckout } from "./features/checkout/index";
+// PaymentGateway already exported from checkout types above
+
+// ── Missing account hooks ──────────────────────────────────────────────────────
+export { useProfile as useCurrentProfile, useUpdateProfile as useUpdateCurrentProfile } from "./features/account/index";
+
+// ── Missing auth hooks ────────────────────────────────────────────────────────
+export { useLogout } from "./features/auth/index";
+
+// ── Missing UI semantic wrappers and typography ────────────────────────────────
+export { Text, Label, Span } from "./ui/index";
+export { Input } from "./ui/index";
+export { Section, Main, Nav, Header, Footer, Ul, Li } from "./ui/index";
+
+// ── Missing media helpers ──────────────────────────────────────────────────────
+export { coerceMediaField, coerceMediaFieldArray, getMediaUrl, mediaFieldSchema } from "./features/media/index";
+
+// -- Missing UI layout / typography components
+export { FlowDiagram } from "./ui/index";
+export { Grid, Row } from "./ui/index";
+export { TextLink } from "./ui/index";
+
+// -- Missing react context types
+export type { SessionUser } from "./react/index";
+export type { UseUrlTableOptions } from "./react/index";
+
+// -- Missing values
+export { SUCCESS_MESSAGES } from "./values/index";
+
+// -- Missing order utils
+export { splitCartIntoOrderGroups } from "./features/orders/index";
+
+// -- Missing utils
+export { buildSieveFilters } from "./utils/filter.helper";
+export { formatFileSize } from "./utils/number.formatter";
+export { formatMonthYear } from "./utils/date.formatter";
+export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
+export type { MediaFilenameContext } from "./utils/id-generators";
+
+export { generateFAQId } from "./utils/id-generators";
+export type { GenerateFAQIdInput } from "./utils/id-generators";
+export { generateCroppedImageFilename } from "./utils/id-generators";

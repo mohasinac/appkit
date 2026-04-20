@@ -1,0 +1,20 @@
+/*
+ * @mohasinac/appkit/styles
+ *
+ * Full stylesheet — design tokens + all UI component styles.
+ *
+ * Import once in your app root (e.g. app/globals.css or app/layout.tsx):
+ *
+ *   @import "@mohasinac/appkit/styles";
+ *
+ * or in a layout component:
+ *
+ *   import "@mohasinac/appkit/styles";
+ *
+ * To import only the design tokens:
+ *
+ *   @import "@mohasinac/appkit/tokens";
+ */
+
+@import "./tokens/tokens.css";
+@import "./ui/components/index.style.css";

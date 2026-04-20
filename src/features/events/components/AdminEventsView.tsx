@@ -6,10 +6,11 @@ export interface AdminEventsViewProps extends Omit<
   SlottedListingViewProps,
   "renderTable"
 > {
+  children?: React.ReactNode;
   /** Toolbar: search + sort controls */
   renderToolbar?: () => React.ReactNode;
   /** Data table / grid */
-  renderTable: () => React.ReactNode;
+  renderTable?: () => React.ReactNode;
   /** Create / edit event form drawer */
   renderFormDrawer?: () => React.ReactNode;
 }
@@ -25,7 +26,7 @@ export function AdminEventsView({
       portal="admin"
       {...rest}
       renderSearch={renderToolbar ? () => renderToolbar() : undefined}
-      renderTable={renderTable}
+      renderTable={renderTable ?? (() => null)}
       overlays={
         <>
           {rest.overlays}

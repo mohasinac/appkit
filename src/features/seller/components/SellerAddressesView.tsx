@@ -8,7 +8,7 @@ export interface SellerAddressesViewProps extends Omit<
 > {
   labels?: { title?: string; addButton?: string };
   renderHeader?: (onAdd: () => void) => React.ReactNode;
-  renderAddressList: (isLoading: boolean) => React.ReactNode;
+  renderAddressList?: (isLoading: boolean) => React.ReactNode;
   renderModal?: () => React.ReactNode;
   isLoading?: boolean;
 }
@@ -27,7 +27,7 @@ export function SellerAddressesView({
       {...rest}
       title={labels.title}
       renderHeader={renderHeader ? () => renderHeader(() => {}) : undefined}
-      sections={[renderAddressList(isLoading)]}
+      sections={[renderAddressList?.(isLoading)]}
       overlays={renderModal?.()}
     />
   );

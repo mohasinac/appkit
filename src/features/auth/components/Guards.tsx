@@ -8,7 +8,7 @@ import type { UserRole } from "../types";
  */
 export interface AuthGuardUser {
   id?: string;
-  role?: UserRole;
+  role?: UserRole | string;
   disabled?: boolean;
   emailVerified?: boolean;
 }
@@ -55,7 +55,7 @@ export function RoleGate({
   }
 
   const allowed = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
-  if (!allowed.includes(user.role)) {
+  if (!allowed.some((role) => role === user.role)) {
     return <>{fallback}</>;
   }
 
@@ -160,7 +160,7 @@ export function ProtectedRoute({
       if (requireRole) {
         const roles = Array.isArray(requireRole) ? requireRole : [requireRole];
         const userRole = user.role;
-        if (!userRole || !roles.includes(userRole)) {
+        if (!userRole || !roles.some((role) => role === userRole)) {
           return { isAuthorized: false, redirectPath: unauthorizedPath };
         }
       }

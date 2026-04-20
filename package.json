@@ -18,13 +18,20 @@
     "./server": {
       "types": "./dist/server.d.ts",
       "import": "./dist/server.js"
-    }
+    },
+    "./providers": {
+      "types": "./dist/providers.d.ts",
+      "import": "./dist/providers.js"
+    },
+    "./styles": "./dist/styles.css",
+    "./tokens": "./dist/tokens/tokens.css",
+    "./messages/*": "./dist/features/*/messages/en.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
@@ -34,7 +41,7 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",
-    "firebase-admin": ">=12.0.0",
+    "firebase-admin": "^10.3.0",
     "next": ">=14",
     "next-intl": ">=3",
     "razorpay": ">=2.9.0",
@@ -65,7 +72,7 @@
     "@upstash/redis": "^1.37.0",
     "eslint": "^9.37.0",
     "firebase": "^11.6.0",
-    "firebase-admin": "^13.8.0",
+    "firebase-admin": "^10.3.0",
     "lucide-react": "^1.7.0",
     "next": "^15.0.0",
     "next-intl": "^4.9.1",

@@ -42,7 +42,7 @@ export interface SlottedListingViewProps {
   renderFilters?: () => ReactNode;
   renderActiveFilters?: () => ReactNode;
   renderBulkActions?: (selectedIds: string[], onClear: () => void) => ReactNode;
-  renderTable:
+  renderTable?:
     | (() => ReactNode)
     | ((
         selectedIds: string[],
@@ -130,8 +130,8 @@ export function SlottedListingView({
         ? renderBulkActions(selectedIds, () => setSelectedIds([]))
         : renderBulkActions?.(selectedIds, () => setSelectedIds([]))}
       {effectiveManageSelection
-        ? (renderTable as Function)(selectedIds, setSelectedIds, isLoading)
-        : (renderTable as Function)()}
+        ? renderTable && (renderTable as Function)(selectedIds, setSelectedIds, isLoading)
+        : renderTable && (renderTable as Function)()}
       {renderPagination ? (renderPagination as Function)(total) : null}
       {overlays}
     </Div>

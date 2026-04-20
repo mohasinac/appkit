@@ -4,7 +4,7 @@ import { Div } from "../../../ui";
 export interface SellerStoreViewProps {
   renderHeader?: () => React.ReactNode;
   renderNavTabs?: (activeTab: string, onChange: (t: string) => void) => React.ReactNode;
-  renderContent: (activeTab: string) => React.ReactNode;
+  renderContent?: (activeTab: string) => React.ReactNode;
   className?: string;
 }
 
@@ -19,7 +19,7 @@ export function SellerStoreView({
     <Div className={className}>
       {renderHeader?.()}
       {renderNavTabs?.(tab, setTab)}
-      {renderContent(tab)}
+      {renderContent?.(tab)}
     </Div>
   );
 }
