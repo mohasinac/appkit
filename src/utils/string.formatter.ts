@@ -176,3 +176,20 @@ export function proseMirrorToHtml(value: string): string {
     return value;
   }
 }
+
+/**
+ * Normalizes rich-text-like input into safe HTML-ready markup.
+ * Supports ProseMirror JSON strings, existing HTML, and plain text.
+ */
+export function normalizeRichTextHtml(value: string): string {
+  if (!value) return "";
+
+  const normalized = proseMirrorToHtml(value).trim();
+  if (!normalized) return "";
+
+  if (/<\/?[a-z][\s\S]*>/i.test(normalized)) {
+    return normalized;
+  }
+
+  return `<p>${escapeHtml(normalized).replace(/\r?\n/g, "<br />")}</p>`;
+}

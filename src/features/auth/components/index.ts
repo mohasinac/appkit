@@ -17,3 +17,4 @@ export { ResetPasswordView } from "./ResetPasswordView";
 export type { ResetPasswordViewProps } from "./ResetPasswordView";
 export { VerifyEmailView } from "./VerifyEmailView";
 export type { VerifyEmailViewProps } from "./VerifyEmailView";
+export { OAuthLoadingView } from "./OAuthLoadingView";

@@ -20,14 +20,14 @@ export function SellerStatCard({
 }: SellerStatCardProps) {
   return (
     <Div
-      className={`rounded-xl border border-gray-200 bg-white p-5 shadow-sm ${className}`}
+      className={`rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 shadow-sm ${className}`}
     >
       <Div className="flex items-start justify-between gap-2">
         <Div className="flex-1 min-w-0">
-          <Text className="text-sm text-gray-500 mb-1 truncate">{label}</Text>
-          <Text className="text-2xl font-bold text-gray-900">{value}</Text>
+          <Text className="text-sm text-gray-500 dark:text-zinc-400 mb-1 truncate">{label}</Text>
+          <Text className="text-2xl font-bold text-gray-900 dark:text-zinc-100">{value}</Text>
           {subLabel && (
-            <Text className="text-xs text-gray-400 mt-0.5">{subLabel}</Text>
+            <Text className="text-xs text-gray-400 dark:text-zinc-500 mt-0.5">{subLabel}</Text>
           )}
           {trend && (
             <Text
@@ -37,7 +37,7 @@ export function SellerStatCard({
             </Text>
           )}
         </Div>
-        {icon && <Div className="shrink-0 text-gray-400 text-2xl">{icon}</Div>}
+        {icon && <Div className="shrink-0 text-gray-400 dark:text-zinc-500 text-2xl">{icon}</Div>}
       </Div>
     </Div>
   );

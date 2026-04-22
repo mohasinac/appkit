@@ -8,6 +8,7 @@ import {
   BaseRepository,
   prepareForFirestore,
 } from "../../../providers/db-firebase";
+import { cacheManager } from "../../../core";
 import {
   SITE_SETTINGS_COLLECTION,
   SiteSettingsDocument,
@@ -29,9 +30,14 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
    * Singleton document ID
    */
   private readonly SINGLETON_ID = "global";
+  private static readonly CACHE_TTL_MS = 60_000;
 
   constructor() {
     super(SITE_SETTINGS_COLLECTION);
+  }
+
+  private cacheKey(): string {
+    return `repo:site-settings:${this.SINGLETON_ID}`;
   }
 
   /**
@@ -41,6 +47,9 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
    * @returns Promise<SiteSettingsDocument>
    */
   async getSingleton(): Promise<SiteSettingsDocument> {
+    const cached = cacheManager.get<SiteSettingsDocument>(this.cacheKey());
+    if (cached) return cached;
+
     try {
       const doc = await this.db
         .collection(this.collection)
@@ -65,10 +74,18 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
             ),
           );
 
+        cacheManager.set(this.cacheKey(), defaultSettings, {
+          ttl: SiteSettingsRepository.CACHE_TTL_MS,
+        });
+
         return defaultSettings;
       }
 
-      return this.mapDoc<SiteSettingsDocument>(doc);
+      const mapped = this.mapDoc<SiteSettingsDocument>(doc);
+      cacheManager.set(this.cacheKey(), mapped, {
+        ttl: SiteSettingsRepository.CACHE_TTL_MS,
+      });
+      return mapped;
     } catch (error) {
       throw new DatabaseError(
         `Failed to retrieve site settings: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -89,6 +106,8 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
     updates: SiteSettingsUpdateInput,
   ): Promise<SiteSettingsDocument> {
     try {
+      cacheManager.delete(this.cacheKey());
+
       let finalUpdates: SiteSettingsUpdateInput = updates;
 
       if (updates.credentials) {
@@ -121,7 +140,11 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
         .doc(this.SINGLETON_ID)
         .update(updateData);
 
-      return await this.getSingleton();
+      const latest = await this.getSingleton();
+      cacheManager.set(this.cacheKey(), latest, {
+        ttl: SiteSettingsRepository.CACHE_TTL_MS,
+      });
+      return latest;
     } catch (error) {
       throw new DatabaseError(
         `Failed to update site settings: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -271,6 +294,10 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
           defaultSettings as unknown as Record<string, unknown>,
         ),
       );
+
+    cacheManager.set(this.cacheKey(), defaultSettings, {
+      ttl: SiteSettingsRepository.CACHE_TTL_MS,
+    });
 
     return defaultSettings;
   }

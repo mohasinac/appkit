@@ -48,6 +48,17 @@ interface RouteHandlerOptions<
   roles?: string[];
   /** Zod schema to validate + parse the JSON request body. */
   schema?: ParseableSchema<TInput>;
+  /**
+   * Response cache policy for unauthenticated GET routes.
+   * Use `false` to disable default public cache headers.
+   */
+  cache?:
+    | false
+    | {
+        maxAge?: number;
+        sMaxAge?: number;
+        staleWhileRevalidate?: number;
+      };
   /** Route handler. `user` is present when `auth: true`. */
   handler: (ctx: {
     request: Request;
@@ -55,6 +66,17 @@ interface RouteHandlerOptions<
     body?: TInput;
     params?: TParams;
   }) => Promise<Response>;
+}
+
+function buildPublicCacheControl(policy?: {
+  maxAge?: number;
+  sMaxAge?: number;
+  staleWhileRevalidate?: number;
+}): string {
+  const maxAge = policy?.maxAge ?? 30;
+  const sMaxAge = policy?.sMaxAge ?? 300;
+  const staleWhileRevalidate = policy?.staleWhileRevalidate ?? 600;
+  return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
 }
 
 /** Read the `__session` HTTP-only cookie from request headers. */
@@ -154,12 +176,30 @@ export function createRouteHandler<
       // -- Params ------------------------------------------------------------
       const params = context?.params ? await context.params : undefined;
 
-      return await options.handler({
+      const response = await options.handler({
         request,
         user,
         body,
         params: params as TParams | undefined,
       });
+
+      const hasCredentialHeaders =
+        !!request.headers.get("authorization") || !!request.headers.get("cookie");
+      const canApplyDefaultPublicCache =
+        request.method === "GET" &&
+        !needsAuth &&
+        options.cache !== false &&
+        !hasCredentialHeaders &&
+        response.status >= 200 &&
+        response.status < 300 &&
+        !response.headers.has("Cache-Control");
+
+      if (canApplyDefaultPublicCache) {
+        const policy = typeof options.cache === "object" ? options.cache : undefined;
+        response.headers.set("Cache-Control", buildPublicCacheControl(policy));
+      }
+
+      return response;
     } catch (err: unknown) {
       // Structured errors thrown with .status
       const status =
@@ -168,7 +208,14 @@ export function createRouteHandler<
           : 500;
       const message =
         err instanceof Error ? err.message : "Internal server error";
-      console.error(`[createRouteHandler] ${request.method} failed`, err);
+
+      // 401/403 are expected for protected routes and should not be error-noisy.
+      if (status >= 500) {
+        console.error(`[createRouteHandler] ${request.method} failed`, err);
+      } else if (status >= 400 && status !== 401 && status !== 403) {
+        console.warn(`[createRouteHandler] ${request.method} failed (${status})`, err);
+      }
+
       return NextResponse.json({ success: false, error: message }, { status });
     }
   };

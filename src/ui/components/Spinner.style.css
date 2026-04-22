@@ -57,6 +57,14 @@
   border-top-color: transparent;
 }
 
+/* Pokéball-style: red top/right, white bottom/left */
+.appkit-spinner__indicator--pokeball {
+  border-top-color: #CC0000;
+  border-right-color: #CC0000;
+  border-bottom-color: #ffffff;
+  border-left-color: #ffffff;
+}
+
 .appkit-sr-only {
   position: absolute;
   width: 1px;

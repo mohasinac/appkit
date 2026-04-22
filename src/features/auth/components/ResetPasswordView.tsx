@@ -63,7 +63,7 @@ export function ResetPasswordView({
             {labels.title ?? "Reset Password"}
           </Heading>
           {labels.description && (
-            <Text className="mt-2 text-sm text-neutral-600">
+            <Text className="mt-2 text-sm text-neutral-600 dark:text-zinc-400">
               {labels.description}
             </Text>
           )}
@@ -98,7 +98,7 @@ export function ResetPasswordView({
                 placeholder={labels.passwordPlaceholder ?? "••••••••"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </Div>
             <Div>
@@ -117,13 +117,13 @@ export function ResetPasswordView({
                 placeholder={labels.confirmPasswordPlaceholder ?? "••••••••"}
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </Div>
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-primary/90 transition-colors"
+              className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
             >
               {isLoading
                 ? (labels.submittingLabel ?? "Resetting…")

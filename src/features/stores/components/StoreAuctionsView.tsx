@@ -1,11 +1,11 @@
 import React from "react";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { SlottedListingView } from "../../../ui";
+import type { SlottedListingViewProps } from "../../../ui";
 import type { StoreAuctionItem } from "../types";
 
 export interface StoreAuctionsViewProps extends Omit<
-  StackedViewShellProps,
-  "sections"
+  SlottedListingViewProps,
+  "renderTable"
 > {
   storeSlug: string;
   labels?: {
@@ -33,12 +33,15 @@ export function StoreAuctionsView({
   ...rest
 }: StoreAuctionsViewProps) {
   return (
-    <StackedViewShell
+    <SlottedListingView
       portal="public"
       {...rest}
       title={labels.title}
       className={`py-4 ${rest.className ?? ""}`}
-      sections={[renderAuctions(items, isLoading), renderPagination?.(total)]}
+      renderTable={() => renderAuctions(items, isLoading)}
+      renderPagination={() => renderPagination?.(total) ?? null}
+      total={total}
+      isLoading={isLoading}
     />
   );
 }

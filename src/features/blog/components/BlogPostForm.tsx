@@ -3,6 +3,7 @@ import {
   Div,
   Input,
   Label,
+  RichTextEditor,
   Select,
   Stack,
   TagInput,
@@ -17,6 +18,7 @@ import {
   type MediaField,
   type MediaFieldInput,
 } from "../../media/types/index";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 export interface BlogPostFormValue {
   title?: string;
@@ -146,12 +148,18 @@ export function BlogPostForm({
         ) : isReadonly && renderContentReadonly ? (
           renderContentReadonly(value.content || "")
         ) : (
-          <Textarea
-            value={value.content || ""}
-            onChange={(event) => update({ content: event.target.value })}
-            rows={10}
-            disabled={isReadonly}
-          />
+          <Stack gap="xs">
+            <RichTextEditor
+              value={normalizeRichTextHtml(value.content || "")}
+              onChange={(content) => update({ content })}
+              disabled={isReadonly}
+              minHeightClassName="min-h-[240px]"
+              placeholder="Write blog content"
+            />
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+              Rich text is supported for blog content.
+            </Text>
+          </Stack>
         )}
       </Stack>
 

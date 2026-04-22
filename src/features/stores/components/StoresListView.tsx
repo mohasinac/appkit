@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { Div, Grid, Heading, Row, Span, Text } from "../../../ui";
-import { stripHtml } from "../../../utils/string.formatter";
+import { Div, Grid, Heading, RichText, Row, Span, Text } from "../../../ui";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { StoreListItem } from "../types";
 
 interface StoreCardProps {
@@ -15,10 +15,10 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
   return (
     <Link
       href={`/stores/${store.storeSlug}`}
-      className={`block rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`block rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {store.storeBannerURL ? (
-        <Div className="h-24 overflow-hidden bg-gray-100">
+        <Div className="h-24 overflow-hidden bg-gray-100 dark:bg-slate-800">
           <Div
             role="img"
             aria-label={`${store.storeName} banner`}
@@ -27,7 +27,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
           />
         </Div>
       ) : (
-        <Div className="h-24 bg-gradient-to-br from-orange-50 to-orange-100" />
+        <Div className="h-24 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20" />
       )}
       <Div className="px-4 pb-4">
         <Div className="-mt-6 mb-3">
@@ -35,27 +35,29 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
             <Div
               role="img"
               aria-label={store.storeName}
-              className="h-12 w-12 rounded-lg border-2 border-white bg-center bg-cover shadow-sm"
+              className="h-12 w-12 rounded-lg border-2 border-white dark:border-slate-800 bg-center bg-cover shadow-sm"
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (
-            <Div className="h-12 w-12 rounded-lg border-2 border-white bg-orange-100 flex items-center justify-center text-orange-600 font-bold shadow-sm">
+            <Div className="h-12 w-12 rounded-lg border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold shadow-sm">
               {store.storeName[0]?.toUpperCase()}
             </Div>
           )}
         </Div>
         <Heading
           level={3}
-          className="font-semibold text-gray-900 text-sm truncate"
+          className="font-semibold text-gray-900 dark:text-zinc-100 text-sm truncate"
         >
           {store.storeName}
         </Heading>
         {store.storeDescription && (
-          <Text className="text-xs text-gray-500 mt-0.5 line-clamp-2">
-            {stripHtml(store.storeDescription)}
-          </Text>
+          <RichText
+            html={normalizeRichTextHtml(store.storeDescription)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="mt-0.5 text-xs text-gray-500 dark:text-zinc-400 line-clamp-2"
+          />
         )}
-        <Row className="gap-3 mt-2 text-xs text-gray-400">
+        <Row className="gap-3 mt-2 text-xs text-gray-400 dark:text-zinc-500">
           {store.totalProducts != null && (
             <Span>
               {store.totalProducts} {labels.products ?? "products"}
@@ -105,7 +107,7 @@ export function StoresListView<T extends StoreListItem = StoreListItem>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text className="text-center text-gray-500 py-12">
+      <Text className="text-center text-gray-500 dark:text-zinc-400 py-12">
         {labels.empty ?? "No stores found."}
       </Text>
     );

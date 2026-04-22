@@ -277,6 +277,9 @@ export { RoleBadge } from "./components/RoleBadge";
 export type { SkipToMainProps } from "./components/SkipToMain";
 export { SkipToMain } from "./components/SkipToMain";
 
+export type { NavigationLoaderProps } from "./components/NavigationLoader";
+export { NavigationLoader } from "./components/NavigationLoader";
+
 export type {
   TabsProps,
   TabsListProps,
@@ -356,6 +359,8 @@ export { SideModal } from "./components/SideModal";
 // --- RichText -----------------------------------------------------------------
 export type { RichTextProps } from "./rich-text/RichText";
 export { RichText } from "./rich-text/RichText";
+export type { RichTextEditorProps } from "./components/RichTextEditor";
+export { RichTextEditor } from "./components/RichTextEditor";
 
 // --- ListingLayout + BulkActionBar --------------------------------------------
 export type {

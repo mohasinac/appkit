@@ -167,7 +167,7 @@ export function WhatsAppCommunitySection({
                   size="lg"
                   aria-label={buttonText}
                   onClick={handleJoin}
-                  className="relative bg-white text-green-600 hover:bg-zinc-100 shadow-xl hover:shadow-2xl"
+                  className="relative !bg-white !text-green-700 hover:!bg-zinc-100 shadow-xl hover:shadow-2xl"
                 >
                   <svg
                     className="w-6 h-6 mr-2"

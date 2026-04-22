@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Main,
@@ -24,6 +24,7 @@ import { MainNavbar, type MainNavbarItem } from "./MainNavbar";
 import { SidebarLayout } from "./SidebarLayout";
 import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
+import { useDashboardNav } from "./DashboardNavContext";
 
 export interface AppLayoutShellSidebarLink {
   href: string;
@@ -61,6 +62,8 @@ export interface AppLayoutShellProps {
   shopHref: string;
   footer: FooterLayoutProps;
   searchSlot?: React.ReactNode;
+  /** Render-prop alternative to searchSlot — receives onClose so the slot can close the overlay. */
+  searchSlotRenderer?: (onClose: () => void) => React.ReactNode;
   titleBarNavSlot?: React.ReactNode;
   titleBarNotificationSlot?: React.ReactNode;
   titleBarDevSlot?: React.ReactNode;
@@ -141,6 +144,7 @@ export function AppLayoutShell({
   shopHref,
   footer,
   searchSlot,
+  searchSlotRenderer,
   titleBarNavSlot,
   titleBarNotificationSlot,
   titleBarDevSlot,
@@ -165,7 +169,20 @@ export function AppLayoutShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const { closeNav: closeDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();
+
+  const handleTogglePublicSidebar = useCallback(() => {
+    setSidebarOpen((prev) => {
+      const next = !prev;
+      if (next) closeDashboardNav();
+      return next;
+    });
+  }, [closeDashboardNav]);
+
+  const handleBeforeDashboardNavToggle = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
 
   const hasBottomActions =
     bottomActionsState.actions.length > 0 ||
@@ -230,62 +247,43 @@ export function AppLayoutShell({
             </Div>
           )}
 
-        {/* PROFILE section — auto-generated when user is authenticated */}
-        {isAuthenticated &&
-          (profileHref ||
-            userOrdersHref ||
-            userWishlistHref ||
-            userSettingsHref) && (
-            <Div className="space-y-1">
-              <Text className={sectionLabelClass}>{labels.sectionTitle}</Text>
-              <Ul className="space-y-0.5">
-                {profileHref && (
-                  <Li>
-                    <TextLink
-                      href={profileHref}
-                      variant="none"
-                      className={navItemClass}
-                    >
-                      {labels.profile}
-                    </TextLink>
-                  </Li>
-                )}
-                {userOrdersHref && (
-                  <Li>
-                    <TextLink
-                      href={userOrdersHref}
-                      variant="none"
-                      className={navItemClass}
-                    >
-                      {labels.orders}
-                    </TextLink>
-                  </Li>
-                )}
-                {userWishlistHref && (
-                  <Li>
-                    <TextLink
-                      href={userWishlistHref}
-                      variant="none"
-                      className={navItemClass}
-                    >
-                      {labels.wishlist}
-                    </TextLink>
-                  </Li>
-                )}
-                {userSettingsHref && (
-                  <Li>
-                    <TextLink
-                      href={userSettingsHref}
-                      variant="none"
-                      className={navItemClass}
-                    >
-                      {labels.settings}
-                    </TextLink>
-                  </Li>
-                )}
-              </Ul>
-            </Div>
-          )}
+        {/* PROFILE section — stat summary when authenticated */}
+        {isAuthenticated && user?.stats && (
+          <Div className="grid grid-cols-2 gap-2">
+            {user.stats.totalOrders != null && (
+              <Div className="rounded-lg bg-zinc-100 dark:bg-slate-800 px-3 py-2.5 text-center">
+                <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">
+                  {user.stats.totalOrders}
+                </Text>
+                <Text className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">Orders</Text>
+              </Div>
+            )}
+            {user.stats.reviewsCount != null && (
+              <Div className="rounded-lg bg-zinc-100 dark:bg-slate-800 px-3 py-2.5 text-center">
+                <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">
+                  {user.stats.reviewsCount}
+                </Text>
+                <Text className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">Reviews</Text>
+              </Div>
+            )}
+            {user.stats.auctionsWon != null && (
+              <Div className="rounded-lg bg-zinc-100 dark:bg-slate-800 px-3 py-2.5 text-center">
+                <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">
+                  {user.stats.auctionsWon}
+                </Text>
+                <Text className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">Auctions Won</Text>
+              </Div>
+            )}
+            {user.stats.itemsSold != null && (
+              <Div className="rounded-lg bg-zinc-100 dark:bg-slate-800 px-3 py-2.5 text-center">
+                <Text className="text-lg font-bold text-zinc-900 dark:text-zinc-100 leading-none">
+                  {user.stats.itemsSold}
+                </Text>
+                <Text className="mt-0.5 text-[11px] text-zinc-500 dark:text-zinc-400">Items Sold</Text>
+              </Div>
+            )}
+          </Div>
+        )}
 
         {/* DASHBOARD section — shown to admin/seller roles */}
         {isAuthenticated && isAdminOrSeller && (adminHref || sellerHref) && (
@@ -424,7 +422,7 @@ export function AppLayoutShell({
 
         <Div className="sticky top-0 z-50 w-full">
           <TitleBar
-            onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+            onToggleSidebar={handleTogglePublicSidebar}
             sidebarOpen={sidebarOpen}
             onSearchToggle={() => setSearchOpen((prev) => !prev)}
             searchOpen={searchOpen}
@@ -441,11 +439,12 @@ export function AppLayoutShell({
             promoStripText={titleBarPromoStripText}
             isDark={theme === "dark"}
             onToggleTheme={showThemeToggle ? toggleTheme : undefined}
+            onBeforeToggleDashboardNav={handleBeforeDashboardNavToggle}
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
           <MainNavbar navItems={navItems} hiddenNavItems={hiddenNavItems} />
-          {searchOpen && searchSlot}
+          {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
         </Div>
 
         {eventBannerSlot}

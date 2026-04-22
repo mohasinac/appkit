@@ -8,7 +8,7 @@ import {
   Span,
   Text,
 } from "../../../ui";
-import { proseMirrorToHtml } from "../../../utils/string.formatter";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { StoreDetail } from "../types";
 
 interface StoreHeaderProps {
@@ -31,9 +31,9 @@ export function StoreHeader({
   className = "",
 }: StoreHeaderProps) {
   return (
-    <Section className={`bg-white border-b border-gray-200 ${className}`}>
+    <Section className={`bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 ${className}`}>
       {store.storeBannerURL && (
-        <Div className="h-40 md:h-56 overflow-hidden bg-gray-100">
+          <Div className="h-40 md:h-56 overflow-hidden bg-gray-100 dark:bg-slate-800">
           <Div
             role="img"
             aria-label={`${store.storeName} banner`}
@@ -48,26 +48,26 @@ export function StoreHeader({
             <Div
               role="img"
               aria-label={store.storeName}
-              className="-mt-8 h-16 w-16 rounded-xl border-2 border-white bg-center bg-cover shadow-sm"
+              className="-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-center bg-cover shadow-sm"
               style={{ backgroundImage: `url(${store.storeLogoURL})` }}
             />
           ) : (
-            <Div className="-mt-8 h-16 w-16 rounded-xl border-2 border-white bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-2xl shadow-sm">
+            <Div className="-mt-8 h-16 w-16 rounded-xl border-2 border-white dark:border-slate-800 bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-2xl shadow-sm">
               {store.storeName[0]?.toUpperCase()}
             </Div>
           )}
           <Div className="flex-1 min-w-0">
             <Heading
               level={1}
-              className="text-xl font-bold text-gray-900 truncate"
+              className="text-xl font-bold text-gray-900 dark:text-zinc-100 truncate"
             >
               {store.storeName}
             </Heading>
             {store.storeDescription && (
               <RichText
-                html={proseMirrorToHtml(store.storeDescription)}
+                html={normalizeRichTextHtml(store.storeDescription)}
                 copyableCode
-                className="text-sm text-gray-500 mt-0.5"
+                className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5"
               />
             )}
           </Div>
@@ -85,14 +85,14 @@ export function StoreHeader({
         </Div>
 
         {store.isVacationMode && (
-          <Text className="mt-3 rounded-lg bg-yellow-50 border border-yellow-200 px-3 py-2 text-sm text-yellow-700">
+          <Text className="mt-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 px-3 py-2 text-sm text-yellow-700 dark:text-yellow-300">
             {store.vacationMessage ??
               labels.vacationMode ??
               "Store is on vacation mode"}
           </Text>
         )}
 
-        <Row className="gap-4 mt-3 text-sm text-gray-500">
+        <Row className="gap-4 mt-3 text-sm text-gray-500 dark:text-zinc-400">
           {store.totalProducts != null && (
             <Span>
               {store.totalProducts} {labels.products ?? "products"}

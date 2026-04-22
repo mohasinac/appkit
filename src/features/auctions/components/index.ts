@@ -10,3 +10,4 @@ export {
   type MarketplaceAuctionGridLabels,
   type MarketplaceAuctionGridProps,
 } from "./MarketplaceAuctionGrid";
+export { AuctionsListView } from "./AuctionsListView";

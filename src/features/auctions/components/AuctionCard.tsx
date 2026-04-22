@@ -50,15 +50,15 @@ export function AuctionCountdown({
 
   return (
     <Row className={`gap-1 text-sm font-mono ${className}`}>
-      <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
+      <Span className="rounded bg-gray-900 dark:bg-slate-700 px-1.5 py-0.5 text-white">
         {pad(countdown.h)}
       </Span>
-      <Span className="text-gray-400">:</Span>
-      <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
+      <Span className="text-gray-400 dark:text-zinc-500">:</Span>
+      <Span className="rounded bg-gray-900 dark:bg-slate-700 px-1.5 py-0.5 text-white">
         {pad(countdown.m)}
       </Span>
-      <Span className="text-gray-400">:</Span>
-      <Span className="rounded bg-gray-900 px-1.5 py-0.5 text-white">
+      <Span className="text-gray-400 dark:text-zinc-500">:</Span>
+      <Span className="rounded bg-gray-900 dark:bg-slate-700 px-1.5 py-0.5 text-white">
         {pad(countdown.s)}
       </Span>
     </Row>
@@ -89,7 +89,7 @@ export function AuctionCard({
 
   return (
     <Article
-      className={`rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {auction.mainImage && (
         <Div className="aspect-square overflow-hidden relative">
@@ -107,17 +107,17 @@ export function AuctionCard({
       <Div className="p-4">
         <Heading
           level={3}
-          className="font-semibold text-gray-900 text-sm leading-snug mb-2 line-clamp-2"
+          className="font-semibold text-gray-900 dark:text-zinc-100 text-sm leading-snug mb-2 line-clamp-2"
         >
           {auction.title}
         </Heading>
 
         <Row justify="between" className="mb-2">
           <Div>
-            <Text className="text-xs text-gray-400">
+            <Text className="text-xs text-gray-400 dark:text-zinc-500">
               {labels.currentBid ?? "Current bid"}
             </Text>
-            <Text className="text-base font-bold text-gray-900">
+            <Text className="text-base font-bold text-gray-900 dark:text-zinc-100">
               {formatCurrency(
                 displayBid,
                 auction.currency ?? getDefaultCurrency(),
@@ -125,7 +125,7 @@ export function AuctionCard({
             </Text>
           </Div>
           <Div className="text-right">
-            <Text className="text-xs text-gray-400">
+            <Text className="text-xs text-gray-400 dark:text-zinc-500">
               {auction.bidCount} {labels.bids ?? "bids"}
             </Text>
           </Div>

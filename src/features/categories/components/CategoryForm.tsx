@@ -1,8 +1,9 @@
 import { FormGroup } from "../../../ui";
-import { Label, Span, Checkbox } from "../../../ui";
+import { Label, Span, Checkbox, RichTextEditor, Text } from "../../../ui";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";
 import { flattenCategories, type Category } from "../types";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 export interface CategoryFormLabels {
   name?: string;
@@ -83,15 +84,19 @@ export function CategoryForm({
         />
       </FormGroup>
 
-      <FormField
-        name="description"
-        label={L.description}
-        type="textarea"
-        rows={3}
-        value={category.description || ""}
-        onChange={(value) => update({ description: value })}
-        disabled={isReadonly}
-      />
+      <div className="appkit-form-field">
+        <Label className="appkit-form-field__label">{L.description}</Label>
+        <RichTextEditor
+          value={normalizeRichTextHtml(category.description || "")}
+          onChange={(value) => update({ description: value })}
+          disabled={isReadonly}
+          minHeightClassName="min-h-[140px]"
+          placeholder="Enter category description"
+        />
+        <Text size="sm" variant="secondary" className="appkit-form-field__hint">
+          Rich text is supported for category descriptions.
+        </Text>
+      </div>
 
       {!isReadonly && (
         <ImageUpload

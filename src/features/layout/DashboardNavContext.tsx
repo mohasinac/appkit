@@ -14,8 +14,16 @@ export interface DashboardNavState {
   hasNav: boolean;
   /** Open the registered dashboard navigation drawer. */
   openNav: () => void;
-  /** Register a callback that opens the dashboard nav drawer. */
-  registerNav: (opener: () => void) => void;
+  /** Close the registered dashboard navigation drawer. */
+  closeNav: () => void;
+  /** Toggle the registered dashboard navigation drawer. */
+  toggleNav: () => void;
+  /** Register dashboard navigation handlers. */
+  registerNav: (handlers: (() => void) | {
+    open: () => void;
+    close?: () => void;
+    toggle?: () => void;
+  }) => void;
   /** Unregister the dashboard nav (on unmount). */
   unregisterNav: () => void;
 }
@@ -24,15 +32,33 @@ const DashboardNavContext = createContext<DashboardNavState | null>(null);
 
 export function DashboardNavProvider({ children }: { children: ReactNode }) {
   const openerRef = useRef<(() => void) | null>(null);
+  const closerRef = useRef<(() => void) | null>(null);
+  const togglerRef = useRef<(() => void) | null>(null);
   const [hasNav, setHasNav] = useState(false);
 
-  const registerNav = useCallback((opener: () => void) => {
-    openerRef.current = opener;
+  const registerNav = useCallback((handlers: (() => void) | {
+    open: () => void;
+    close?: () => void;
+    toggle?: () => void;
+  }) => {
+    if (typeof handlers === "function") {
+      openerRef.current = handlers;
+      closerRef.current = null;
+      togglerRef.current = null;
+      setHasNav(true);
+      return;
+    }
+
+    openerRef.current = handlers.open;
+    closerRef.current = handlers.close ?? null;
+    togglerRef.current = handlers.toggle ?? null;
     setHasNav(true);
   }, []);
 
   const unregisterNav = useCallback(() => {
     openerRef.current = null;
+    closerRef.current = null;
+    togglerRef.current = null;
     setHasNav(false);
   }, []);
 
@@ -40,9 +66,28 @@ export function DashboardNavProvider({ children }: { children: ReactNode }) {
     openerRef.current?.();
   }, []);
 
+  const closeNav = useCallback(() => {
+    closerRef.current?.();
+  }, []);
+
+  const toggleNav = useCallback(() => {
+    if (togglerRef.current) {
+      togglerRef.current();
+      return;
+    }
+    openerRef.current?.();
+  }, []);
+
   return (
     <DashboardNavContext.Provider
-      value={{ hasNav, openNav, registerNav, unregisterNav }}
+      value={{
+        hasNav,
+        openNav,
+        closeNav,
+        toggleNav,
+        registerNav,
+        unregisterNav,
+      }}
     >
       {children}
     </DashboardNavContext.Provider>
@@ -59,6 +104,8 @@ export function useDashboardNav(): DashboardNavState {
     return {
       hasNav: false,
       openNav: () => {},
+      closeNav: () => {},
+      toggleNav: () => {},
       registerNav: () => {},
       unregisterNav: () => {},
     };

@@ -40,10 +40,10 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
           : undefined
       }
       onClick={onClick ? () => onClick(post) : undefined}
-      className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
+      className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
     >
       {coverImageUrl && (
-        <Div className="aspect-video w-full overflow-hidden bg-neutral-100">
+        <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-slate-800">
           <Div
             role="img"
             aria-label={post.title}
@@ -58,19 +58,19 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             {post.category}
           </Span>
           {post.readTimeMinutes && (
-            <Span className="text-xs text-neutral-400">
+            <Span className="text-xs text-neutral-400 dark:text-zinc-500">
               {post.readTimeMinutes} min read
             </Span>
           )}
         </Row>
         <Heading
           level={3}
-          className="line-clamp-2 text-base font-semibold text-neutral-900 group-hover:text-primary"
+          className="line-clamp-2 text-base font-semibold text-neutral-900 dark:text-zinc-100 group-hover:text-primary"
         >
           {post.title}
         </Heading>
         {post.excerpt && (
-          <Text className="mt-2 line-clamp-3 flex-1 text-sm text-neutral-500">
+          <Text className="mt-2 line-clamp-3 flex-1 text-sm text-neutral-500 dark:text-zinc-400">
             {post.excerpt}
           </Text>
         )}
@@ -83,9 +83,9 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
           )}
-          <Text className="text-xs text-neutral-500">
+          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
             {post.authorName && (
-              <Span className="font-medium text-neutral-700">
+              <Span className="font-medium text-neutral-700 dark:text-zinc-300">
                 {post.authorName}
               </Span>
             )}
@@ -116,7 +116,7 @@ export function BlogCategoryTabs({
         onClick={() => onSelect(null)}
         variant={!active ? "primary" : "ghost"}
         size="sm"
-        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
+        className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -126,7 +126,7 @@ export function BlogCategoryTabs({
           onClick={() => onSelect(cat)}
           variant={active === cat ? "primary" : "ghost"}
           size="sm"
-          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
+          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat}
         </Button>
@@ -165,13 +165,13 @@ export function BlogListView<T extends BlogPost = BlogPost>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100"
+            className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-neutral-100 dark:bg-slate-800"
           >
-            <Div className="aspect-video bg-neutral-200" />
+            <Div className="aspect-video bg-neutral-200 dark:bg-slate-700" />
             <Div className="space-y-2 p-5">
-              <Div className="h-4 w-16 rounded bg-neutral-200" />
-              <Div className="h-5 w-full rounded bg-neutral-200" />
-              <Div className="h-4 w-3/4 rounded bg-neutral-200" />
+              <Div className="h-4 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-5 w-full rounded bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-slate-700" />
             </Div>
           </Div>
         ))}

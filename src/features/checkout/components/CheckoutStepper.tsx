@@ -23,19 +23,19 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
                     ? "bg-green-500 text-white"
                     : isActive
                       ? "bg-neutral-900 text-white"
-                      : "bg-neutral-200 text-neutral-500"
+                      : "bg-neutral-200 dark:bg-slate-700 text-neutral-500 dark:text-zinc-400"
                 }`}
               >
                 {isDone ? "✓" : idx + 1}
               </Span>
               <Span
-                className={`text-sm font-medium ${isActive ? "text-neutral-900" : isDone ? "text-neutral-500" : "text-neutral-400"}`}
+                className={`text-sm font-medium ${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-neutral-400 dark:text-zinc-500"}`}
               >
                 {step.label}
               </Span>
             </Row>
             {idx < steps.length - 1 && (
-              <Span className="h-px flex-1 bg-neutral-200" />
+              <Span className="h-px flex-1 bg-neutral-200 dark:bg-slate-700" />
             )}
           </React.Fragment>
         );

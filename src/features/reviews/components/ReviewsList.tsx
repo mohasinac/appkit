@@ -4,6 +4,7 @@ import {
   Div,
   Heading,
   Pagination,
+  RichText,
   Row,
   Skeleton,
   Span,
@@ -13,6 +14,7 @@ import {
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 // --- ReviewCard ---------------------------------------------------------------
 
@@ -81,9 +83,11 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
       )}
 
       {review.comment && (
-        <Text className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400">
-          {review.comment}
-        </Text>
+        <RichText
+          html={normalizeRichTextHtml(review.comment)}
+          proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+          className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
+        />
       )}
 
       {review.images && review.images.length > 0 && (

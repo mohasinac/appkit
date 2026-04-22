@@ -84,7 +84,7 @@ export function RegisterForm({
             {labels.title ?? "Create Account"}
           </Heading>
           {(labels.subtitle || renderLoginLink) && (
-            <Text className="mt-2 text-sm text-neutral-600">
+            <Text className="mt-2 text-sm text-neutral-600 dark:text-zinc-400">
               {labels.subtitle ?? "Already have an account?"}{" "}
               {renderLoginLink?.()}
             </Text>
@@ -142,7 +142,7 @@ export function RegisterForm({
               placeholder={labels.emailPlaceholder ?? "you@example.com"}
               value={values.email}
               onChange={(e) => setValues({ ...values, email: e.target.value })}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </Div>
 
@@ -164,7 +164,7 @@ export function RegisterForm({
               onChange={(e) =>
                 setValues({ ...values, password: e.target.value })
               }
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
             {renderPasswordStrength?.(values.password)}
           </Div>
@@ -187,7 +187,7 @@ export function RegisterForm({
               onChange={(e) =>
                 setValues({ ...values, confirmPassword: e.target.value })
               }
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </Div>
 
@@ -200,7 +200,7 @@ export function RegisterForm({
               onChange={(e) =>
                 setValues({ ...values, acceptTerms: e.target.checked })
               }
-              className="mt-0.5 h-4 w-4 rounded border-neutral-300 accent-primary"
+              className="mt-0.5 h-4 w-4 rounded border-neutral-300 dark:border-slate-600 accent-primary"
             />
             <Label htmlFor="reg-terms" className="text-sm leading-snug">
               {labels.acceptTermsLabel ?? "I accept the"} {renderTermsLink?.()}
@@ -210,7 +210,7 @@ export function RegisterForm({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-primary/90 transition-colors"
+            className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
           >
             {isLoading
               ? (labels.submittingLabel ?? "Creating account…")

@@ -1,5 +1,5 @@
-import { Article, Button, Div, Heading, Span, Text } from "../../../ui";
-import { stripHtml } from "../../../utils/string.formatter";
+import { Article, Button, Div, Heading, RichText, Span, Text } from "../../../ui";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
 import { EventStatusBadge } from "./EventStatusBadge";
@@ -36,7 +36,7 @@ export function EventCard({
 
   return (
     <Article
-      className={`flex flex-col h-full rounded-xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`flex flex-col h-full rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {event.coverImageUrl && (
         <Div className="aspect-video overflow-hidden">
@@ -57,15 +57,17 @@ export function EventCard({
         </Div>
         <Heading
           level={3}
-          className="font-semibold text-gray-900 text-base leading-snug mb-1"
+          className="font-semibold text-gray-900 dark:text-zinc-100 text-base leading-snug mb-1"
         >
           {event.title}
         </Heading>
-        <Text className="text-sm text-gray-500 line-clamp-2 mb-3">
-          {stripHtml(event.description ?? "")}
-        </Text>
+        <RichText
+          html={normalizeRichTextHtml(event.description ?? "")}
+          proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+          className="text-sm text-gray-500 dark:text-zinc-400 line-clamp-2 mb-3"
+        />
 
-        <Div className="flex items-center justify-between text-xs text-gray-400 mb-3">
+        <Div className="flex items-center justify-between text-xs text-gray-400 dark:text-zinc-500 mb-3">
           {event.status === EVENT_FIELDS.STATUS_VALUES.ACTIVE &&
             daysLeft > 0 && <Span>{daysLeft}d remaining</Span>}
           <Span>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { Heading, Text, Span, Row, Button } from "../../../ui";
+import { Heading, Text, Span, Row, Button, RichText } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
-import { stripHtml } from "../../../utils";
+import { normalizeRichTextHtml } from "../../../utils";
 
 export interface InteractiveStoreCardProps {
   store: StoreListItem;
@@ -86,9 +86,11 @@ export function InteractiveStoreCard({
             {store.storeName}
           </Heading>
           {store.storeDescription && (
-            <Text className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 line-clamp-2">
-              {stripHtml(store.storeDescription)}
-            </Text>
+            <RichText
+              html={normalizeRichTextHtml(store.storeDescription)}
+              proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+              className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2"
+            />
           )}
           <Row gap="sm" className="mt-2 text-xs text-gray-400">
             {store.totalProducts != null && store.totalProducts > 0 && (

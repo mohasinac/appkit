@@ -1,11 +1,11 @@
 import React from "react";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+import { SlottedListingView } from "../../../ui";
+import type { SlottedListingViewProps } from "../../../ui";
 import type { Review } from "../../reviews/types";
 
 export interface StoreReviewsViewProps extends Omit<
-  StackedViewShellProps,
-  "sections"
+  SlottedListingViewProps,
+  "renderTable"
 > {
   storeSlug: string;
   labels?: {
@@ -31,16 +31,16 @@ export function StoreReviewsView({
   ...rest
 }: StoreReviewsViewProps) {
   return (
-    <StackedViewShell
+    <SlottedListingView
       portal="public"
       {...rest}
       title={labels.title}
       className={`py-4 ${rest.className ?? ""}`}
-      sections={[
-        renderSummary?.(),
-        renderReviews(items, isLoading),
-        renderPagination?.(total),
-      ]}
+      renderFilters={() => renderSummary?.() ?? null}
+      renderTable={() => renderReviews(items, isLoading)}
+      renderPagination={() => renderPagination?.(total) ?? null}
+      total={total}
+      isLoading={isLoading}
     />
   );
 }

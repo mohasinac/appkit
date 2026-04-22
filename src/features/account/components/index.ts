@@ -1,3 +1,5 @@
+export { UserSidebar } from "./UserSidebar";
+export type { UserSidebarProps, UserNavItem } from "./UserSidebar";
 export { AddressCard, AddressBook } from "./AddressBook";
 export type { AddressCardAddress, AddressCardProps } from "./AddressBook";
 export { AddressForm } from "./AddressForm";

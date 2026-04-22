@@ -42,7 +42,7 @@ export function Breadcrumbs({
             {item}
             {index < items.length - 1 && (
               <Span
-                className="text-zinc-400 dark:text-zinc-500 select-none"
+                className="text-zinc-500 dark:text-zinc-400/90 select-none"
                 aria-hidden="true"
               >
                 {separator}
@@ -65,7 +65,7 @@ export function BreadcrumbItem({
     return (
       <Span
         aria-current={current ? "page" : undefined}
-        className={`text-zinc-500 dark:text-zinc-400 ${className}`}
+        className={`text-zinc-700 dark:text-zinc-200 ${className}`}
       >
         {children}
       </Span>
@@ -75,7 +75,7 @@ export function BreadcrumbItem({
   return (
     <Link
       href={href}
-      className={`text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors ${className}`}
+      className={`text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors ${className}`}
     >
       {children}
     </Link>

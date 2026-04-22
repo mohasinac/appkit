@@ -8,6 +8,7 @@ import {
   type FirebaseSieveResult,
   type SieveModel,
 } from "../../../providers/db-firebase";
+import { cacheManager } from "../../../core";
 import { decryptPiiFields, encryptPiiFields } from "../../../security";
 import { generateUniqueId, slugify } from "../../../utils";
 import {
@@ -40,14 +41,51 @@ const PRODUCT_FIELDS = {
 const PRODUCT_PII_FIELDS = ["sellerName", "sellerEmail"] as const;
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
+  private static readonly CACHE_TTL_MS = 30_000;
+
   constructor() {
     super(PRODUCT_COLLECTION);
+  }
+
+  private cacheKeyById(id: string): string {
+    return `repo:products:id:${id}`;
+  }
+
+  private cacheKeyBySlug(slug: string): string {
+    return `repo:products:slug:${slug}`;
+  }
+
+  private cacheSet(product: ProductDocument): void {
+    if (!product?.id) return;
+    cacheManager.set(this.cacheKeyById(product.id), product, {
+      ttl: ProductRepository.CACHE_TTL_MS,
+    });
+    if (product.slug) {
+      cacheManager.set(this.cacheKeyBySlug(product.slug), product, {
+        ttl: ProductRepository.CACHE_TTL_MS,
+      });
+    }
+  }
+
+  private cacheInvalidateForId(id: string): void {
+    cacheManager.delete(this.cacheKeyById(id));
+  }
+
+  override async findById(id: string): Promise<ProductDocument | null> {
+    const key = this.cacheKeyById(id);
+    const cached = cacheManager.get<ProductDocument>(key);
+    if (cached) return cached;
+
+    const product = await super.findById(id);
+    if (product) this.cacheSet(product);
+    return product;
   }
 
   protected override mapDoc<D = ProductDocument>(snap: DocumentSnapshot): D {
     const raw = super.mapDoc<ProductDocument>(snap);
     return decryptPiiFields(raw as unknown as Record<string, unknown>, [
       ...PRODUCT_PII_FIELDS,
+      "title", // decrypt legacy records where title was encrypted; passthrough if not encrypted
     ]) as unknown as D;
   }
 
@@ -55,11 +93,15 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     id: string,
     data: Partial<ProductDocument>,
   ): Promise<ProductDocument> {
+    this.cacheInvalidateForId(id);
+
     const encrypted = encryptPiiFields(
       data as unknown as Record<string, unknown>,
       [...PRODUCT_PII_FIELDS],
     );
-    return super.update(id, encrypted as Partial<ProductDocument>);
+    const updated = await super.update(id, encrypted as Partial<ProductDocument>);
+    this.cacheSet(updated);
+    return updated;
   }
 
   async create(input: ProductCreateInput): Promise<ProductDocument> {
@@ -121,7 +163,9 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       .doc(id)
       .set(prepareForFirestore(encrypted));
 
-    return { id, ...productData };
+    const created = { id, ...productData };
+    this.cacheSet(created);
+    return created;
   }
 
   async findBySeller(sellerId: string): Promise<ProductDocument[]> {
@@ -141,8 +185,14 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async findBySlug(slug: string): Promise<ProductDocument | undefined> {
+    const key = this.cacheKeyBySlug(slug);
+    const cached = cacheManager.get<ProductDocument>(key);
+    if (cached) return cached;
+
     const docs = await this.findBy(PRODUCT_FIELDS.SLUG, slug);
-    return docs[0] as ProductDocument | undefined;
+    const product = docs[0] as ProductDocument | undefined;
+    if (product) this.cacheSet(product);
+    return product;
   }
 
   async findByIdOrSlug(idOrSlug: string): Promise<ProductDocument | undefined> {
@@ -246,6 +296,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         error,
       );
     }
+  }
+
+  override async delete(id: string): Promise<void> {
+    this.cacheInvalidateForId(id);
+    return super.delete(id);
   }
 
   static readonly SIEVE_FIELDS = {

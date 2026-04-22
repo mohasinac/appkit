@@ -22,12 +22,34 @@ export interface ApiHandlerOptions<
   roles?: TRole[];
   rateLimit?: TRateLimitConfig;
   schema?: SafeParseSchema<TInput>;
+  /**
+   * Response cache policy for unauthenticated GET handlers.
+   * Use `false` to disable default public cache headers.
+   */
+  cache?:
+    | false
+    | {
+        maxAge?: number;
+        sMaxAge?: number;
+        staleWhileRevalidate?: number;
+      };
   handler: (ctx: {
     request: Request;
     user?: TUser;
     body?: TInput;
     params?: TParams;
   }) => Promise<Response>;
+}
+
+function buildPublicCacheControl(policy?: {
+  maxAge?: number;
+  sMaxAge?: number;
+  staleWhileRevalidate?: number;
+}): string {
+  const maxAge = policy?.maxAge ?? 30;
+  const sMaxAge = policy?.sMaxAge ?? 300;
+  const staleWhileRevalidate = policy?.staleWhileRevalidate ?? 600;
+  return `public, max-age=${maxAge}, s-maxage=${sMaxAge}, stale-while-revalidate=${staleWhileRevalidate}`;
 }
 
 export interface ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser> {
@@ -153,6 +175,24 @@ export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
           for (const [key, value] of Object.entries(rateLimitHeaders)) {
             response.headers.set(key, value);
           }
+        }
+
+        const hasCredentialHeaders =
+          !!request.headers.get("authorization") || !!request.headers.get("cookie");
+        const hasRoleGuards = !!options.roles && options.roles.length > 0;
+        const canApplyDefaultPublicCache =
+          request.method === "GET" &&
+          !options.auth &&
+          !hasRoleGuards &&
+          options.cache !== false &&
+          !hasCredentialHeaders &&
+          response.status >= 200 &&
+          response.status < 300 &&
+          !response.headers.has("Cache-Control");
+
+        if (canApplyDefaultPublicCache) {
+          const policy = typeof options.cache === "object" ? options.cache : undefined;
+          response.headers.set("Cache-Control", buildPublicCacheControl(policy));
         }
 
         deps.logTiming({

@@ -37,8 +37,8 @@ export interface TitleBarLayoutProps {
   onToggleTheme?: () => void;
   /** Whether a dashboard section has registered a secondary navigation drawer. */
   hasDashboardNav?: boolean;
-  /** Callback to open the registered dashboard navigation drawer. */
-  onOpenDashboardNav?: () => void;
+  /** Callback to toggle the registered dashboard navigation drawer. */
+  onToggleDashboardNav?: () => void;
   /** Hide the public sidebar toggle button when nested layouts own navigation. */
   hideSidebarToggle?: boolean;
   id?: string;
@@ -71,7 +71,7 @@ export function TitleBarLayout({
   isDark = false,
   onToggleTheme,
   hasDashboardNav = false,
-  onOpenDashboardNav,
+  onToggleDashboardNav,
   hideSidebarToggle = false,
   id = "titlebar",
   className = "",
@@ -92,53 +92,16 @@ export function TitleBarLayout({
 
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
         <Row justify="between" gap="none" className="h-12">
-          {/* Left: hamburger (mobile) + logo */}
+          {/* Left: logo + dashboard nav toggle */}
           <Row gap="3">
-            {!hideSidebarToggle && (
+            {hasDashboardNav && onToggleDashboardNav && (
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                aria-label={sidebarOpen ? "Close menu" : "Open menu"}
-                aria-expanded={sidebarOpen}
-                aria-controls="secondary-sidebar"
-                onClick={onToggleSidebar}
+                aria-label="Toggle dashboard navigation"
+                onClick={onToggleDashboardNav}
                 className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  {sidebarOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
-              </Button>
-            )}
-
-            {hasDashboardNav && onOpenDashboardNav && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label="Open dashboard navigation"
-                onClick={onOpenDashboardNav}
-                className="hidden md:flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <svg
                   className="w-5 h-5"
@@ -292,6 +255,44 @@ export function TitleBarLayout({
                   </Span>
                 )}
               </Link>
+            )}
+
+            {/* Public sidebar toggle — always right */}
+            {!hideSidebarToggle && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+                aria-expanded={sidebarOpen}
+                aria-controls="secondary-sidebar"
+                onClick={onToggleSidebar}
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  {sidebarOpen ? (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  ) : (
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  )}
+                </svg>
+              </Button>
             )}
 
             {/* Profile */}

@@ -54,10 +54,10 @@ const DEFAULT_TYPE_ICONS: Record<NavSuggestionRecord["type"], string> = {
 };
 
 const DEFAULT_TYPE_BADGES: Record<NavSuggestionRecord["type"], string> = {
-  page: "bg-zinc-100 text-zinc-600",
-  category: "bg-blue-100 text-blue-600",
-  blog: "bg-fuchsia-100 text-fuchsia-600",
-  event: "bg-amber-100 text-amber-600",
+  page: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
+  category: "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300",
+  blog: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
+  event: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300",
 };
 
 export function Search({

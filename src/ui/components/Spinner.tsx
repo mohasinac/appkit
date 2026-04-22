@@ -7,7 +7,7 @@
 
 export interface SpinnerProps {
   size?: "sm" | "md" | "lg" | "xl";
-  variant?: "primary" | "white" | "current";
+  variant?: "primary" | "white" | "current" | "pokeball";
   className?: string;
   label?: string;
 }
@@ -29,6 +29,7 @@ export function Spinner({
     primary: "appkit-spinner__indicator--primary",
     white: "appkit-spinner__indicator--white",
     current: "appkit-spinner__indicator--current",
+    pokeball: "appkit-spinner__indicator--pokeball",
   };
 
   return (

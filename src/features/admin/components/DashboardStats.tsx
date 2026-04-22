@@ -12,19 +12,19 @@ interface StatCardProps {
 
 function StatCard({ label, value, sub, color = "default" }: StatCardProps) {
   const colorClass = {
-    default: "bg-white",
-    blue: "bg-blue-50",
-    green: "bg-green-50",
-    amber: "bg-amber-50",
-    red: "bg-red-50",
+    default: "bg-white dark:bg-slate-900",
+    blue: "bg-blue-50 dark:bg-blue-900/20",
+    green: "bg-green-50 dark:bg-green-900/20",
+    amber: "bg-amber-50 dark:bg-amber-900/20",
+    red: "bg-red-50 dark:bg-red-900/20",
   }[color];
   return (
-    <Div className={`rounded-xl border border-neutral-200 p-5 ${colorClass}`}>
-      <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+    <Div className={`rounded-xl border border-neutral-200 dark:border-slate-700 p-5 ${colorClass}`}>
+      <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-zinc-400">
         {label}
       </Text>
-      <Text className="mt-2 text-2xl font-bold text-neutral-900">{value}</Text>
-      {sub && <Text className="mt-1 text-xs text-neutral-500">{sub}</Text>}
+      <Text className="mt-2 text-2xl font-bold text-neutral-900 dark:text-zinc-100">{value}</Text>
+      {sub && <Text className="mt-1 text-xs text-neutral-500 dark:text-zinc-400">{sub}</Text>}
     </Div>
   );
 }
@@ -46,10 +46,10 @@ export function DashboardStatsGrid({
         {Array.from({ length: 4 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse rounded-xl border border-neutral-200 p-5"
+            className="animate-pulse rounded-xl border border-neutral-200 dark:border-slate-700 p-5"
           >
-            <Div className="h-3 w-20 rounded bg-neutral-200" />
-            <Div className="mt-2 h-8 w-24 rounded bg-neutral-200" />
+            <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
+            <Div className="mt-2 h-8 w-24 rounded bg-neutral-200 dark:bg-slate-700" />
           </Div>
         ))}
       </Grid>

@@ -1,6 +1,13 @@
 "use client"
 import React from "react";
-import { Container, Div, Heading, Text } from "../../../ui";
+import {
+  Container,
+  Div,
+  Heading,
+  Input,
+  SlottedListingView,
+  Text,
+} from "../../../ui";
 import type { CategoryItem } from "../types";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { CategoryFilters } from "./CategoryFilters";
@@ -85,40 +92,56 @@ export function CategoriesListView({
   return (
     <Div className={`min-h-screen ${className}`}>
       <Container size="full" className="py-8">
-        {(labels.title || labels.subtitle) && (
-          <Div className="mb-6">
-            {labels.title && (
-              <Heading level={1} className="text-2xl font-bold">
-                {labels.title}
-              </Heading>
-            )}
-            {labels.subtitle && (
-              <Text variant="secondary" className="mt-1">
-                {labels.subtitle}
-              </Text>
-            )}
-          </Div>
-        )}
-
-        {renderSearch?.(search, setSearch)}
-
-        {renderSort ? (
-          renderSort(resolvedSort, handleSortChange)
-        ) : (
-          <CategorySortSelect
-            value={resolvedSort}
-            onChange={handleSortChange}
-            variant={filterVariant}
-          />
-        )}
-
-        {renderFilters?.() ??
-          (table ? (
-            <CategoryFilters table={table} variant={filterVariant} />
-          ) : null)}
-
-        {renderCategories(filtered, isLoading)}
-        {renderPagination?.(total)}
+        <SlottedListingView
+          portal="public"
+          inlineToolbar
+          className="space-y-4"
+          renderHeader={() =>
+            labels.title || labels.subtitle ? (
+              <Div className="mb-2">
+                {labels.title ? (
+                  <Heading level={1} className="text-2xl font-bold">
+                    {labels.title}
+                  </Heading>
+                ) : null}
+                {labels.subtitle ? (
+                  <Text variant="secondary" className="mt-1">
+                    {labels.subtitle}
+                  </Text>
+                ) : null}
+              </Div>
+            ) : null
+          }
+          renderSearch={() =>
+            renderSearch?.(search, setSearch) ?? (
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search categories"
+                className="max-w-sm"
+              />
+            )
+          }
+          renderSort={() =>
+            renderSort ? (
+              renderSort(resolvedSort, handleSortChange)
+            ) : (
+              <CategorySortSelect
+                value={resolvedSort}
+                onChange={handleSortChange}
+                variant={filterVariant}
+              />
+            )
+          }
+          renderFilters={() =>
+            renderFilters?.() ??
+            (table ? <CategoryFilters table={table} variant={filterVariant} /> : null)
+          }
+          renderTable={() => renderCategories(filtered, isLoading)}
+          renderPagination={() => renderPagination?.(total) ?? null}
+          total={total}
+          isLoading={isLoading}
+        />
       </Container>
     </Div>
   );

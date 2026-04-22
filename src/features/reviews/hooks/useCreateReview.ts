@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
 import { REVIEW_ENDPOINTS } from "../../../constants/api-endpoints";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 export interface CreateReviewHookInput {
   productId: string;
@@ -22,6 +23,7 @@ export function useCreateReview(
       }
       return apiClient.post(REVIEW_ENDPOINTS.LIST, {
         ...data,
+        comment: normalizeRichTextHtml(data.comment),
         images: data.images ?? [],
         videoUrl: data.videoUrl,
       });

@@ -125,7 +125,12 @@ export function WelcomeSection({
                 gap="md"
                 className="mt-8 justify-center lg:justify-start"
               >
-                <Button variant="primary" size="lg" onClick={onCtaClick}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={onCtaClick}
+                  className="!bg-zinc-900 !text-white hover:!bg-zinc-800 dark:!bg-zinc-100 dark:!text-zinc-900 dark:hover:!bg-zinc-200"
+                >
                   {ctaLabel}
                 </Button>
                 <Button

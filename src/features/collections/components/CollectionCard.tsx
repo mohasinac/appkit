@@ -11,7 +11,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
   return (
     <TextLink
       href={href}
-      className="group relative block overflow-hidden rounded-xl bg-gray-100 transition-shadow hover:shadow-lg"
+      className="group relative block overflow-hidden rounded-xl bg-gray-100 dark:bg-slate-800 transition-shadow hover:shadow-lg"
     >
       {collection.image ? (
         <Div
@@ -21,19 +21,19 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (
-        <Div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100" />
+        <Div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30" />
       )}
-      <Div className="p-4">
-        <Heading level={3} className="font-semibold text-gray-900">
+      <Div className="p-4 bg-white dark:bg-slate-900">
+          <Heading level={3} className="font-semibold text-gray-900 dark:text-zinc-100">
           {collection.title}
         </Heading>
         {collection.subtitle && (
-          <Text className="mt-1 text-sm text-gray-500">
+            <Text className="mt-1 text-sm text-gray-500 dark:text-zinc-400">
             {collection.subtitle}
           </Text>
         )}
         {collection.productCount !== undefined && (
-          <Text className="mt-2 text-xs text-gray-400">
+            <Text className="mt-2 text-xs text-gray-400 dark:text-zinc-500">
             {collection.productCount}{" "}
             {collection.productCount === 1 ? "item" : "items"}
           </Text>

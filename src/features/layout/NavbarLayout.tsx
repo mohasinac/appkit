@@ -33,8 +33,8 @@ function DefaultNavItem({
   const activeClasses = item.highlighted
     ? "border border-primary-500/30 dark:border-secondary-400/30 text-primary-600 dark:text-secondary-400 bg-primary-50/60 dark:bg-secondary-900/30 px-3"
     : isActive
-      ? "bg-zinc-100 dark:bg-slate-800 text-zinc-900 dark:text-zinc-50 font-semibold px-3"
-      : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-50 transition-colors px-3";
+      ? "bg-zinc-100 dark:bg-slate-800 text-zinc-950 dark:text-white font-semibold px-3"
+      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-950 dark:hover:text-white transition-colors px-3";
 
   return (
     <Link

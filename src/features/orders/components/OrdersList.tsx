@@ -42,15 +42,15 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           : undefined
       }
       onClick={onClick ? () => onClick(order) : undefined}
-      className={`rounded-xl border border-neutral-200 bg-white p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`}
+      className={`rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 ${onClick ? "cursor-pointer transition hover:shadow-md" : ""}`}
     >
       <Row wrap align="start" justify="between" gap="3">
         <Div>
-          <Text className="text-xs text-neutral-500">
+          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
-            <Text className="mt-0.5 text-xs text-neutral-400">{date}</Text>
+            <Text className="mt-0.5 text-xs text-neutral-400 dark:text-zinc-500">{date}</Text>
           )}
         </Div>
         <Span
@@ -71,24 +71,24 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               />
             )}
             <Div>
-              <Text className="text-sm font-medium text-neutral-900 line-clamp-1">
+              <Text className="text-sm font-medium text-neutral-900 dark:text-zinc-100 line-clamp-1">
                 {item.title}
               </Text>
-              <Text className="text-xs text-neutral-400">×{item.quantity}</Text>
+              <Text className="text-xs text-neutral-400 dark:text-zinc-500">×{item.quantity}</Text>
             </Div>
           </Row>
         ))}
         {order.items.length > 3 && (
-          <Span className="self-center text-xs text-neutral-400">
+          <Span className="self-center text-xs text-neutral-400 dark:text-zinc-500">
             +{order.items.length - 3} more
           </Span>
         )}
       </Row>
-      <Row justify="between" className="mt-4 border-t border-neutral-100 pt-3">
-        <Span className="text-sm text-neutral-500">
+        <Row justify="between" className="mt-4 border-t border-neutral-100 dark:border-slate-700 pt-3">
+          <Span className="text-sm text-neutral-500 dark:text-zinc-400">
           {order.currency ?? ""} Total
         </Span>
-        <Span className="font-semibold text-neutral-900">
+          <Span className="font-semibold text-neutral-900 dark:text-zinc-100">
           {formatCurrency(order.total, order.currency)}
         </Span>
       </Row>
@@ -121,18 +121,18 @@ export function OrdersList({
         {Array.from({ length: 3 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse rounded-xl border border-neutral-200 p-5"
+            className="animate-pulse rounded-xl border border-neutral-200 dark:border-slate-700 p-5"
           >
             <Div className="flex justify-between">
               <Stack gap="xs">
-                <Div className="h-3 w-20 rounded bg-neutral-200" />
-                <Div className="h-3 w-16 rounded bg-neutral-200" />
+                <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
+                <Div className="h-3 w-16 rounded bg-neutral-200 dark:bg-slate-700" />
               </Stack>
-              <Div className="h-6 w-20 rounded-full bg-neutral-200" />
+              <Div className="h-6 w-20 rounded-full bg-neutral-200 dark:bg-slate-700" />
             </Div>
             <Div className="mt-4 flex gap-3">
-              <Div className="h-10 w-10 rounded-lg bg-neutral-200" />
-              <Div className="h-10 w-10 rounded-lg bg-neutral-200" />
+              <Div className="h-10 w-10 rounded-lg bg-neutral-200 dark:bg-slate-700" />
+              <Div className="h-10 w-10 rounded-lg bg-neutral-200 dark:bg-slate-700" />
             </Div>
           </Div>
         ))}

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Heading, Text } from "../../../ui";
+import { Heading, Input, SlottedListingView, Text } from "../../../ui";
 import type { FAQCategory, FAQ } from "../types";
 import { FAQCategorySidebar, type FAQCategoryItem } from "./FAQCategorySidebar";
 import { FAQSortDropdown, type FAQSortOption } from "./FAQSortDropdown";
@@ -48,6 +48,9 @@ interface FAQPageContentProps {
   onSearchChange: (value: string) => void;
   sortOption: FAQSortOption;
   onSortChange: (sort: FAQSortOption) => void;
+  page?: number;
+  pageSize?: number;
+  renderPagination?: (total: number) => React.ReactNode;
   renderMobileCategoryTabs: (input: {
     selectedCategory: FAQCategory | "all";
     total: number;
@@ -67,6 +70,9 @@ export function FAQPageContent({
   onSearchChange,
   sortOption,
   onSortChange,
+  page = 1,
+  pageSize = 100,
+  renderPagination,
   renderMobileCategoryTabs,
   renderAccordion,
 }: FAQPageContentProps) {
@@ -83,8 +89,8 @@ export function FAQPageContent({
     category: selectedCategory === "all" ? undefined : selectedCategory,
     search: searchValue.trim() || undefined,
     sorts,
-    page: 1,
-    pageSize: 100,
+    page,
+    pageSize,
   });
 
   const { faqs: allMatchingFaqs } = useFaqList({
@@ -123,15 +129,6 @@ export function FAQPageContent({
         </Text>
       </div>
 
-      <div className="mb-8">
-        <input
-          value={searchValue}
-          onChange={(e) => onSearchChange(e.target.value)}
-          placeholder={labels.searchPlaceholder}
-          className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-4 text-sm text-zinc-900 outline-none ring-primary/20 transition focus:ring-2 dark:border-slate-700 dark:bg-slate-800 dark:text-zinc-100"
-        />
-      </div>
-
       <div className="mb-8 lg:hidden">
         {renderMobileCategoryTabs({
           selectedCategory,
@@ -161,34 +158,52 @@ export function FAQPageContent({
         </div>
 
         <div className="col-span-1 lg:col-span-8 xl:col-span-9">
-          <div className="mb-8 flex items-center justify-between gap-4">
-            <Text className="text-sm text-zinc-600 dark:text-zinc-300">
-              {labels.resultCount(total)}
-              {selectedCategory !== "all"
-                ? ` ${labels.inCategory(categories.find((c) => c.key === selectedCategory)?.label ?? selectedCategory)}`
-                : ""}
-            </Text>
-            <FAQSortDropdown
-              selectedSort={sortOption}
-              onSortChange={onSortChange}
-              labels={{
-                label: labels.sortLabel,
-                helpful: labels.sortHelpful,
-                newest: labels.sortNewest,
-                alphabetical: labels.sortAlphabetical,
-              }}
-            />
-          </div>
-
-          {isLoading ? (
-            <Text className="text-zinc-500 dark:text-zinc-400">
-              {labels.loading}
-            </Text>
-          ) : renderAccordion ? (
-            renderAccordion(faqs)
-          ) : (
-            <FAQAccordion faqs={faqs} />
-          )}
+          <SlottedListingView
+            portal="public"
+            inlineToolbar
+            className="space-y-6"
+            renderHeader={() => (
+              <Text className="text-sm text-zinc-600 dark:text-zinc-300">
+                {labels.resultCount(total)}
+                {selectedCategory !== "all"
+                  ? ` ${labels.inCategory(categories.find((c) => c.key === selectedCategory)?.label ?? selectedCategory)}`
+                  : ""}
+              </Text>
+            )}
+            renderSearch={() => (
+              <Input
+                value={searchValue}
+                onChange={(event) => onSearchChange(event.target.value)}
+                placeholder={labels.searchPlaceholder}
+              />
+            )}
+            renderSort={() => (
+              <FAQSortDropdown
+                selectedSort={sortOption}
+                onSortChange={onSortChange}
+                labels={{
+                  label: labels.sortLabel,
+                  helpful: labels.sortHelpful,
+                  newest: labels.sortNewest,
+                  alphabetical: labels.sortAlphabetical,
+                }}
+              />
+            )}
+            renderTable={() =>
+              isLoading ? (
+                <Text className="text-zinc-500 dark:text-zinc-400">
+                  {labels.loading}
+                </Text>
+              ) : renderAccordion ? (
+                renderAccordion(faqs)
+              ) : (
+                <FAQAccordion faqs={faqs} />
+              )
+            }
+            renderPagination={() => renderPagination?.(total) ?? null}
+            total={total}
+            isLoading={isLoading}
+          />
 
           {faqs.length > 0 ? (
             <div className="mt-12">

@@ -1,6 +1,12 @@
 "use client"
 import React from "react";
-import { Div, Heading, Row, Text } from "../../../ui";
+import {
+  Div,
+  Heading,
+  Input,
+  SlottedListingView,
+  Text,
+} from "../../../ui";
 import type { CategoryItem } from "../types";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { CategoryFilters } from "./CategoryFilters";
@@ -119,33 +125,42 @@ export function CategoryProductsView({
         {/* Child categories */}
         {childCategories.length > 0 && renderChildCategories?.(childCategories)}
 
-        {/* Toolbar */}
-        <Row wrap gap="3">
-          {renderSearch?.(search, setSearch)}
-          {renderSort ? (
-            renderSort(resolvedSort, handleSortChange)
-          ) : (
-            <CategorySortSelect
-              value={resolvedSort}
-              onChange={handleSortChange}
-              variant={filterVariant}
-            />
-          )}
-          {renderFilters?.() ??
-            (table ? (
-              <CategoryFilters table={table} variant={filterVariant} />
-            ) : null)}
-          {renderViewToggle?.(viewMode, setViewMode)}
-        </Row>
-
-        {/* Active filters */}
-        {renderActiveFilters?.()}
-
-        {/* Products */}
-        {renderProducts(isLoading)}
-
-        {/* Pagination */}
-        {renderPagination?.(total)}
+        <SlottedListingView
+          portal="public"
+          inlineToolbar
+          className="space-y-4"
+          renderSearch={() =>
+            renderSearch?.(search, setSearch) ?? (
+              <Input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search in category"
+                className="max-w-sm"
+              />
+            )
+          }
+          renderSort={() =>
+            renderSort ? (
+              renderSort(resolvedSort, handleSortChange)
+            ) : (
+              <CategorySortSelect
+                value={resolvedSort}
+                onChange={handleSortChange}
+                variant={filterVariant}
+              />
+            )
+          }
+          renderFilters={() =>
+            renderFilters?.() ??
+            (table ? <CategoryFilters table={table} variant={filterVariant} /> : null)
+          }
+          renderActiveFilters={renderActiveFilters}
+          renderBulkActions={() => renderViewToggle?.(viewMode, setViewMode) ?? null}
+          renderTable={() => renderProducts(isLoading)}
+          renderPagination={() => renderPagination?.(total) ?? null}
+          total={total}
+          isLoading={isLoading}
+        />
       </Div>
     </Div>
   );

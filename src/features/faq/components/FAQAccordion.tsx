@@ -17,11 +17,11 @@ function FAQAccordionItem({
   renderExpandedFooter,
 }: FAQAccordionItemProps) {
   return (
-    <Div className="border-b border-neutral-200 last:border-0">
+    <Div className="border-b border-neutral-200 dark:border-slate-700 last:border-0">
       <Button
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 transition hover:text-primary"
+        className="flex w-full items-center justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"
       >
         <Span>{faq.question}</Span>
         <Span
@@ -45,13 +45,13 @@ function FAQAccordionItem({
         </Span>
       </Button>
       {isOpen && (
-        <Div className="pb-4 text-sm text-neutral-600">
+        <Div className="pb-4 text-sm text-neutral-600 dark:text-zinc-300">
           {faq.tags && faq.tags.length > 0 && (
             <Row wrap gap="sm" className="mb-3">
               {faq.tags.map((tag) => (
                 <Span
                   key={tag}
-                  className="rounded-md bg-neutral-100 px-2 py-1 text-xs text-neutral-600"
+                  className="rounded-md bg-neutral-100 dark:bg-slate-700 px-2 py-1 text-xs text-neutral-600 dark:text-zinc-300"
                 >
                   {tag}
                 </Span>
@@ -93,15 +93,15 @@ export function FAQAccordion({
 
   if (faqs.length === 0 && labels?.noResults) {
     return (
-      <Div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
-        <Text className="text-neutral-600">{labels.noResults}</Text>
+      <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center">
+        <Text className="text-neutral-600 dark:text-zinc-300">{labels.noResults}</Text>
       </Div>
     );
   }
 
   return (
     <Div
-      className={`divide-y divide-neutral-100 rounded-xl border border-neutral-200 bg-white px-5 ${className}`}
+      className={`divide-y divide-neutral-100 dark:divide-slate-700 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 ${className}`}
     >
       {faqs.map((faq) => (
         <FAQAccordionItem
@@ -133,7 +133,7 @@ export function FAQCategoryTabs({
     <Row wrap gap="sm" className="scrollbar-none">
       <Button
         onClick={() => onSelect(null)}
-        className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
+        className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${!active ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
       >
         {labels.all ?? "All"}
       </Button>
@@ -141,7 +141,7 @@ export function FAQCategoryTabs({
         <Button
           key={cat}
           onClick={() => onSelect(cat)}
-          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"}`}
+          className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium capitalize transition ${active === cat ? "bg-neutral-900 text-white" : "bg-neutral-100 dark:bg-slate-800 text-neutral-600 dark:text-zinc-300 hover:bg-neutral-200 dark:hover:bg-slate-700"}`}
         >
           {labels[cat] ?? cat.replace(/_/g, " ")}
         </Button>

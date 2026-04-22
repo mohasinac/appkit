@@ -47,7 +47,7 @@ export function ForgotPasswordView({
           <Heading level={1} className="text-3xl font-extrabold">
             {labels.title ?? "Forgot Password"}
           </Heading>
-          <Text className="mt-2 text-sm text-neutral-600">
+          <Text className="mt-2 text-sm text-neutral-600 dark:text-zinc-400">
             {labels.description ??
               "Enter your email and we'll send you a reset link."}
           </Text>
@@ -83,7 +83,7 @@ export function ForgotPasswordView({
                 placeholder={labels.emailPlaceholder ?? "you@example.com"}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </Div>
             <button

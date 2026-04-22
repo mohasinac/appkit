@@ -1,11 +1,12 @@
 import React from "react";
-import { Div, Heading, Row, Span, Text } from "../../../ui";
+import { Div, Heading, RichText, Row, Span, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
 import type { BlogPost, BlogPostCategory } from "../types";
 import type { BlogPostDetailResponse } from "../api/[slug]/route";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",
@@ -181,9 +182,10 @@ export function BlogPostView({
           {renderContent ? (
             renderContent(post)
           ) : (
-            <Div
-              className="prose max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
+            <RichText
+              html={normalizeRichTextHtml(post.content ?? "")}
+              proseClass="prose max-w-none dark:prose-invert"
+              className="text-neutral-800 dark:text-neutral-100"
             />
           )}
         </Div>

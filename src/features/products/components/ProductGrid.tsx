@@ -1,15 +1,19 @@
 import React from "react";
+import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { Button, Div, Grid, Row, Span, Text } from "../../../ui";
+import { Button, Div, Grid, RichText, Row, Span, Text } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 // --- ProductCard --------------------------------------------------------------
 
 interface ProductCardProps<T extends ProductItem = ProductItem> {
   product: T;
+  /** When provided, wraps the card in a Link for navigation. */
+  href?: string;
   onClick?: (product: T) => void;
   onAddToWishlist?: (productId: string) => void;
   isWishlisted?: boolean;
@@ -18,6 +22,7 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
 
 export function ProductCard<T extends ProductItem = ProductItem>({
   product,
+  href,
   onClick,
   onAddToWishlist,
   isWishlisted,
@@ -31,19 +36,19 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
-  return (
+  const cardBody = (
     <Div
       role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
+      tabIndex={onClick && !href ? 0 : undefined}
       onKeyDown={
-        onClick
+        onClick && !href
           ? (e) => (e.key === "Enter" || e.key === " ") && onClick(product)
           : undefined
       }
-      onClick={onClick ? () => onClick(product) : undefined}
-      className={`group relative flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
+      onClick={onClick && !href ? () => onClick(product) : undefined}
+      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${onClick || href ? "cursor-pointer" : ""} ${className}`}
     >
-      <Div className="relative aspect-square overflow-hidden bg-neutral-100">
+      <Div className="relative aspect-square overflow-hidden bg-neutral-100 dark:bg-slate-800">
         {product.mainImage ? (
           <Div
             role="img"
@@ -52,7 +57,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             style={{ backgroundImage: `url(${product.mainImage})` }}
           />
         ) : (
-          <Div className="h-full w-full bg-neutral-200" />
+          <Div className="h-full w-full bg-neutral-200 dark:bg-slate-700" />
         )}
         {discount && (
           <Span className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
@@ -76,30 +81,37 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             aria-label={
               isWishlisted ? "Remove from wishlist" : "Add to wishlist"
             }
-            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-neutral-600 shadow transition hover:bg-white hover:text-red-500"
+            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 dark:bg-slate-800/90 text-neutral-600 dark:text-zinc-300 shadow transition hover:bg-white dark:hover:bg-slate-700 hover:text-red-500"
           >
             {isWishlisted ? "♥" : "♡"}
           </Button>
         )}
       </Div>
-      <Div className="flex flex-1 flex-col p-3">
-        <Text className="line-clamp-2 text-sm font-medium text-neutral-900">
+      <Div className="flex flex-1 flex-col border-t border-zinc-200/80 bg-zinc-50 p-3 dark:border-slate-700/80 dark:bg-slate-900">
+        <Text className="line-clamp-2 text-sm font-medium text-zinc-950 dark:text-white">
           {product.title}
         </Text>
+        {product.description && (
+          <RichText
+            html={normalizeRichTextHtml(product.description)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="mt-1 line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400"
+          />
+        )}
         {product.sellerName && (
-          <Text className="mt-0.5 text-xs text-neutral-400">
+          <Text className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
             {product.sellerName}
           </Text>
         )}
         <Div className="mt-2 flex items-baseline gap-2">
-          <Span className="font-semibold text-neutral-900">
+          <Span className="font-semibold text-zinc-950 dark:text-white">
             {formatCurrency(
               product.price,
               product.currency ?? getDefaultCurrency(),
             )}
           </Span>
           {product.originalPrice && (
-            <Span className="text-xs text-neutral-400 line-through">
+            <Span className="text-xs text-zinc-500 line-through dark:text-zinc-400">
               {formatCurrency(
                 product.originalPrice,
                 product.currency ?? getDefaultCurrency(),
@@ -110,7 +122,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {product.rating !== undefined && (
           <Row className="mt-1 gap-1">
             <Span className="text-xs text-yellow-500">★</Span>
-            <Span className="text-xs text-neutral-500">
+            <Span className="text-xs text-neutral-500 dark:text-zinc-400">
               {product.rating.toFixed(1)}
               {product.reviewCount ? ` (${product.reviewCount})` : ""}
             </Span>
@@ -119,6 +131,16 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       </Div>
     </Div>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block h-full">
+        {cardBody}
+      </Link>
+    );
+  }
+
+  return cardBody;
 }
 
 // --- ProductCardContext (passed to renderCard slot) ---------------------------
@@ -147,6 +169,8 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
    */
   renderCard?: (product: T, ctx: ProductCardContext<T>) => React.ReactNode;
   onProductClick?: (product: T) => void;
+  /** When provided, each card is wrapped in a Link using this href generator. */
+  getProductHref?: (product: T) => string;
   onWishlistToggle?: (productId: string) => void;
   wishlistedIds?: Set<string>;
   /** Text shown when the list is empty and no `emptySlot` is provided. */
@@ -245,9 +269,18 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       </Div>
 
       {/* Title — flex-1 */}
-      <Text className="flex-1 min-w-0 truncate text-sm font-medium text-neutral-900 dark:text-zinc-100">
-        {product.title}
-      </Text>
+      <Div className="flex-1 min-w-0">
+        <Text className="truncate text-sm font-medium text-neutral-900 dark:text-zinc-100">
+          {product.title}
+        </Text>
+        {product.description && (
+          <RichText
+            html={normalizeRichTextHtml(product.description)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="line-clamp-1 text-xs text-neutral-500 dark:text-zinc-400"
+          />
+        )}
+      </Div>
 
       {/* Category — hidden on mobile */}
       {product.categoryName && (
@@ -301,6 +334,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   products,
   renderCard,
   onProductClick,
+  getProductHref,
   onWishlistToggle,
   wishlistedIds,
   emptyLabel = "No products found",
@@ -372,9 +406,10 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
                   : (slots!.renderCard!(p, i) as React.ReactNode)}
               </React.Fragment>
             ) : (
-              <ProductCard<T>
+            <ProductCard<T>
                 key={p.id}
                 product={p}
+                href={getProductHref ? getProductHref(p) : undefined}
                 onClick={onProductClick}
                 onAddToWishlist={onWishlistToggle}
                 isWishlisted={ctx.isWishlisted}
@@ -405,6 +440,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
             <ProductCard<T>
               key={p.id}
               product={p}
+              href={getProductHref ? getProductHref(p) : undefined}
               onClick={onProductClick}
               onAddToWishlist={onWishlistToggle}
               isWishlisted={ctx.isWishlisted}

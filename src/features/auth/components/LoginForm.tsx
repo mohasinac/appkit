@@ -109,7 +109,7 @@ export function LoginForm({
               placeholder={labels.emailPlaceholder ?? "you@example.com"}
               value={values.email}
               onChange={(e) => setValues({ ...values, email: e.target.value })}
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-neutral-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-zinc-900 dark:text-zinc-50 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </Div>
 
@@ -131,7 +131,7 @@ export function LoginForm({
               onChange={(e) =>
                 setValues({ ...values, password: e.target.value })
               }
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full rounded-lg border border-neutral-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-zinc-900 dark:text-zinc-50 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </Div>
 
@@ -144,7 +144,7 @@ export function LoginForm({
                 onChange={(e) =>
                   setValues({ ...values, rememberMe: e.target.checked })
                 }
-                className="h-4 w-4 rounded border-neutral-300 accent-primary"
+                className="h-4 w-4 rounded border-neutral-300 dark:border-slate-600 accent-primary"
               />
               <Label htmlFor="login-remember" className="text-sm">
                 {labels.rememberMe ?? "Remember me"}

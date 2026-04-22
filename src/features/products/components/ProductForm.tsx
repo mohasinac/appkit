@@ -7,6 +7,7 @@ import {
   FormField,
   FormGroup,
   Heading,
+  RichTextEditor,
   Stack,
   Text,
 } from "../../../ui";
@@ -18,6 +19,7 @@ import {
 } from "../../media";
 import { useMediaUpload } from "../../media";
 import { resolveDate } from "../../../utils/date.formatter";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { ProductItem, ProductStatus } from "../types";
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
@@ -140,16 +142,20 @@ export function ProductForm({
           })
         }</>
       ) : (
-        <FormField
-          name="description"
-          label={t("formDescription")}
-          type="textarea"
-          value={product.description || ""}
-          onChange={(value) => update({ description: value })}
-          disabled={isReadonly}
-          placeholder="Enter product description"
-          rows={6}
-        />
+        <Stack gap="xs">
+          <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            {t("formDescription")}
+          </Text>
+          <RichTextEditor
+            value={normalizeRichTextHtml(product.description || "")}
+            onChange={(value) => update({ description: value })}
+            disabled={isReadonly}
+            placeholder="Enter product description"
+          />
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            Rich text is supported for product descriptions.
+          </Text>
+        </Stack>
       )}
 
       <FormGroup columns={2}>

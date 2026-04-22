@@ -1,5 +1,6 @@
 import React from "react";
 import { productRepository } from "../../../repositories";
+import { ROUTES } from "../../../constants";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { ProductGrid } from "./ProductGrid";
 
@@ -22,7 +23,12 @@ export async function ProductsIndexPageView() {
           <Heading level={1} className="mb-8 text-3xl font-semibold text-zinc-900">
             Products
           </Heading>
-          <ProductGrid products={products as any[]} />
+          <ProductGrid
+            products={products as any[]}
+            getProductHref={(p) =>
+              String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
+            }
+          />
         </Container>
       </Section>
     </Main>

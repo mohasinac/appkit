@@ -12,11 +12,13 @@ import {
   Button,
   Caption,
   Div,
+  RichText,
   Row,
   Span,
   Text,
   TextLink,
 } from "../../../ui";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 export interface MarketplaceAuctionCardData {
   id: string;
@@ -324,9 +326,11 @@ export function MarketplaceAuctionCard({
         </Div>
 
         {variant === "list" && product.description ? (
-          <Text className="line-clamp-2 text-xs text-zinc-500">
-            {product.description}
-          </Text>
+          <RichText
+            html={normalizeRichTextHtml(product.description)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="line-clamp-2 text-xs text-zinc-500"
+          />
         ) : null}
 
         <Div>

@@ -8,17 +8,19 @@ export interface TitleBarProps
     TitleBarLayoutProps,
     | "cartCount"
     | "hasDashboardNav"
-    | "onOpenDashboardNav"
+    | "onToggleDashboardNav"
   > {
   /**
    * When true, hides the dashboard nav PanelLeft button so that nested
    * admin/seller/user layouts can own their sidebar controls exclusively.
    */
   suppressDashboardNav?: boolean;
+  /** Optional hook invoked immediately before toggling the dashboard nav drawer. */
+  onBeforeToggleDashboardNav?: () => void;
 }
 
 /**
- * TitleBar — domain shell over TitleBarLayout.
+ * TitleBar ï¿½ domain shell over TitleBarLayout.
  *
  * Reads `useCartCount` and `useDashboardNav` from appkit.
  * Pass `user` from your consumer`s auth context.
@@ -26,9 +28,13 @@ export interface TitleBarProps
  * Wrap with `DashboardNavProvider` at the app root to enable the
  * dashboard nav button in nested admin/seller/user routes.
  */
-export function TitleBar({ suppressDashboardNav, ...rest }: TitleBarProps) {
+export function TitleBar({
+  suppressDashboardNav,
+  onBeforeToggleDashboardNav,
+  ...rest
+}: TitleBarProps) {
   const cartCount = useCartCount();
-  const { hasNav: hasDashboardNav, openNav: openDashboardNav } =
+  const { hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } =
     useDashboardNav();
 
   return (
@@ -36,7 +42,14 @@ export function TitleBar({ suppressDashboardNav, ...rest }: TitleBarProps) {
       {...rest}
       cartCount={cartCount}
       hasDashboardNav={suppressDashboardNav ? false : hasDashboardNav}
-      onOpenDashboardNav={suppressDashboardNav ? undefined : openDashboardNav}
+      onToggleDashboardNav={
+        suppressDashboardNav
+          ? undefined
+          : () => {
+              onBeforeToggleDashboardNav?.();
+              toggleDashboardNav();
+            }
+      }
       hideSidebarToggle={rest.hideSidebarToggle ?? suppressDashboardNav}
     />
   );

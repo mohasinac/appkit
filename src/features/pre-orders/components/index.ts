@@ -5,3 +5,4 @@ export {
   type MarketplacePreorderCardLabels,
   type MarketplacePreorderCardProps,
 } from "./MarketplacePreorderCard";
+export { PreOrdersListView } from "./PreOrdersListView";

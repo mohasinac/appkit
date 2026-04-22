@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react";
 import type { ReactNode } from "react";
-import { Div, Heading, Row } from "../../../ui";
+import { Div, Heading, Input, Select, SlottedListingView } from "../../../ui";
 import type { StoreProductItem } from "../types";
 
 export interface StoreProductsViewProps {
@@ -55,22 +55,50 @@ export function StoreProductsView({
 
   return (
     <Div className={`py-4 ${className}`}>
-      {labels.title && (
-        <Heading level={2} className="mb-4 text-xl font-semibold">
-          {labels.title}
-        </Heading>
-      )}
-
-      <Row wrap gap="3" className="mb-4">
-        {renderSearch?.(search, setSearch)}
-        {renderSort?.(sort, setSort)}
-        {renderFilters?.()}
-        {renderViewToggle?.(viewMode, setViewMode)}
-      </Row>
-
-      {renderActiveFilters?.()}
-      {renderProducts(items, isLoading)}
-      {renderPagination?.(total)}
+      <SlottedListingView
+        portal="public"
+        inlineToolbar
+        className="space-y-4"
+        renderHeader={() =>
+          labels.title ? (
+            <Heading level={2} className="mb-1 text-xl font-semibold">
+              {labels.title}
+            </Heading>
+          ) : null
+        }
+        renderSearch={() =>
+          renderSearch?.(search, setSearch) ?? (
+            <Input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search store products"
+              className="max-w-sm"
+            />
+          )
+        }
+        renderSort={() =>
+          renderSort?.(sort, setSort) ?? (
+            <Select
+              value={sort}
+              onValueChange={setSort}
+              options={[
+                { value: "-createdAt", label: "Newest" },
+                { value: "createdAt", label: "Oldest" },
+                { value: "price", label: "Price: Low to High" },
+                { value: "-price", label: "Price: High to Low" },
+              ]}
+              className="min-w-44"
+            />
+          )
+        }
+        renderFilters={renderFilters}
+        renderActiveFilters={renderActiveFilters}
+        renderBulkActions={() => renderViewToggle?.(viewMode, setViewMode) ?? null}
+        renderTable={() => renderProducts(items, isLoading)}
+        renderPagination={() => renderPagination?.(total) ?? null}
+        total={total}
+        isLoading={isLoading}
+      />
     </Div>
   );
 }

@@ -6,12 +6,14 @@ import {
   Heading,
   IconButton,
   Modal,
+  RichText,
   Row,
   Text,
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 // --- ViewReviewModal ----------------------------------------------------------
 
@@ -91,9 +93,11 @@ export function ViewReviewModal({
           </Heading>
         )}
         {review.comment && (
-          <Text className="text-sm leading-relaxed text-neutral-600 dark:text-zinc-400">
-            {review.comment}
-          </Text>
+          <RichText
+            html={normalizeRichTextHtml(review.comment)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
+          />
         )}
 
         {/* Images */}

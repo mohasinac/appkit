@@ -71,7 +71,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {

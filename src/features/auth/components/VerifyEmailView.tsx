@@ -32,7 +32,7 @@ export function VerifyEmailView({
     <Div
       className={`flex items-center justify-center min-h-[60vh] px-4 ${className}`}
     >
-      <Div className="max-w-md w-full bg-white rounded-2xl border border-neutral-200 shadow-sm p-8 text-center">
+      <Div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-2xl border border-neutral-200 dark:border-slate-700 shadow-sm p-8 text-center">
         {status === "loading" && (
           <>
             <Div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-6" />

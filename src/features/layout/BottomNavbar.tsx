@@ -11,6 +11,13 @@ export interface BottomNavbarUser {
   photoURL: string | null;
   role?: string;
   avatarMetadata?: { url: string; position: { x: number; y: number }; zoom: number } | null;
+  stats?: {
+    totalOrders?: number;
+    auctionsWon?: number;
+    itemsSold?: number;
+    reviewsCount?: number;
+    rating?: number;
+  } | null;
 }
 
 export interface BottomNavbarProps {
