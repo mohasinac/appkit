@@ -2,6 +2,7 @@ import React from "react";
 import { blogRepository } from "../../../repositories";
 import { Button, Container, Heading, Main, Section, Row } from "../../../ui";
 import { BlogListView } from "./BlogListView";
+import { AdSlot } from "../../homepage/components/AdSlot";
 
 function serializeDate(value: unknown): string | undefined {
   if (!value) return undefined;
@@ -40,7 +41,9 @@ export async function BlogIndexPageView() {
               Filters
             </Button>
           </Row>
+          <AdSlot id="listing-sidebar-top" className="mb-6" />
           <BlogListView posts={posts as any[]} total={result?.total ?? 0} />
+          <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>
     </Main>

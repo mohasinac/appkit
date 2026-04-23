@@ -2,6 +2,7 @@ import { productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
+import { AdSlot } from "../../homepage/components/AdSlot";
 
 export async function AuctionsListView() {
   const result = await productRepository
@@ -39,6 +40,7 @@ export async function AuctionsListView() {
           <Heading level={1} className="mb-8 text-3xl font-semibold text-zinc-900">
             Live Auctions
           </Heading>
+          <AdSlot id="listing-sidebar-top" className="mb-6" />
           <MarketplaceAuctionGrid
             auctions={auctions}
             labels={{
@@ -46,6 +48,7 @@ export async function AuctionsListView() {
               emptyDescription: "Check back soon for new listings.",
             }}
           />
+          <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>
     </Main>

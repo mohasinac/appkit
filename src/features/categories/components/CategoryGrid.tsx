@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { Div, Grid, Text } from "../../../ui";
 import type { CategoryItem } from "../types";
 
@@ -6,27 +7,21 @@ import type { CategoryItem } from "../types";
 
 export interface CategoryCardProps {
   category: CategoryItem;
+  href?: string;
   onClick?: (category: CategoryItem) => void;
   className?: string;
 }
 
 export function CategoryCard({
   category,
+  href,
   onClick,
   className = "",
 }: CategoryCardProps) {
-  return (
-    <Div
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      onKeyDown={
-        onClick
-          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(category)
-          : undefined
-      }
-      onClick={onClick ? () => onClick(category) : undefined}
-      className={`group relative overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
-    >
+  const cardClass = `group relative overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md ${onClick || href ? "cursor-pointer" : ""} ${className}`;
+
+  const inner = (
+    <>
       {category.display?.coverImage ? (
         <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-zinc-800">
           <Div
@@ -54,6 +49,30 @@ export function CategoryCard({
           </Text>
         )}
       </Div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={cardClass}>
+        {inner}
+      </Link>
+    );
+  }
+
+  return (
+    <Div
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => (e.key === "Enter" || e.key === " ") && onClick(category)
+          : undefined
+      }
+      onClick={onClick ? () => onClick(category) : undefined}
+      className={cardClass}
+    >
+      {inner}
     </Div>
   );
 }

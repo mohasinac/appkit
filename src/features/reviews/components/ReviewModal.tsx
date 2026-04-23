@@ -12,6 +12,7 @@ import {
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
+import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
@@ -36,6 +37,7 @@ export function ViewReviewModal({
 
   if (!review) return null;
 
+  const displayName = maskName(review.userName);
   const date = review.createdAt
     ? new Date(review.createdAt).toLocaleDateString(getDefaultLocale(), {
         year: "numeric",
@@ -52,19 +54,19 @@ export function ViewReviewModal({
           {review.userAvatar ? (
             <Div
               role="img"
-              aria-label={review.userName}
+              aria-label={displayName}
               className="h-10 w-10 flex-shrink-0 rounded-full bg-center bg-cover"
               style={{ backgroundImage: `url(${review.userAvatar})` }}
             />
           ) : (
             <Div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300">
-              {review.userName.charAt(0).toUpperCase()}
+              {displayName.charAt(0).toUpperCase()}
             </Div>
           )}
           <Div>
             <Row className="gap-2">
               <Text className="font-medium text-neutral-900 dark:text-white">
-                {review.userName}
+                {displayName}
               </Text>
               {review.verified && (
                 <Text className="text-xs text-green-600 dark:text-green-400">

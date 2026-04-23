@@ -13,6 +13,7 @@ import {
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
+import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
@@ -32,7 +33,8 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
       })
     : "";
 
-  const initials = review.userName.charAt(0).toUpperCase();
+  const displayName = maskName(review.userName);
+  const initials = displayName.charAt(0).toUpperCase();
 
   return (
     <Div
@@ -42,7 +44,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
         {review.userAvatar ? (
           <Div
             role="img"
-            aria-label={review.userName}
+            aria-label={displayName}
             className="h-9 w-9 flex-shrink-0 rounded-full bg-center bg-cover"
             style={{ backgroundImage: `url(${review.userAvatar})` }}
           />
@@ -54,7 +56,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
         <Div className="flex-1 min-w-0">
           <Row wrap gap="sm">
             <Span className="font-medium text-neutral-900 dark:text-white">
-              {review.userName}
+              {displayName}
             </Span>
             {review.verified && (
               <Span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">

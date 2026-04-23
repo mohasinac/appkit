@@ -3,6 +3,7 @@ import { ROUTES } from "../../../next";
 import { Container, Heading, Main, Section, Grid, Text, Stack } from "../../../ui";
 import { ShoppingBag } from "lucide-react";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
+import { AdSlot } from "../../homepage/components/AdSlot";
 
 export async function PreOrdersListView() {
   const result = await productRepository
@@ -23,6 +24,7 @@ export async function PreOrdersListView() {
           <Heading level={1} className="mb-8 text-3xl font-semibold text-zinc-900">
             Pre-Orders
           </Heading>
+          <AdSlot id="listing-sidebar-top" className="mb-6" />
           {items.length === 0 ? (
             <Stack align="center" gap="3" className="justify-center py-24 text-center">
               <ShoppingBag className="h-16 w-16 text-zinc-300" />
@@ -40,6 +42,7 @@ export async function PreOrdersListView() {
               ))}
             </Grid>
           )}
+          <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>
     </Main>
