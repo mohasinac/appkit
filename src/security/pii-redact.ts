@@ -126,3 +126,41 @@ export function redactPii(data: unknown, depth = 0): unknown {
   }
   return result;
 }
+
+// ---------------------------------------------------------------------------
+// UI display helpers
+// ---------------------------------------------------------------------------
+
+const ENC_TOKEN_PREFIX = "enc:v1:";
+
+/**
+ * Safe display name for untrusted / possibly-encrypted PII fields.
+ *
+ * When a field value is an encrypted token (`enc:v1:...`) — i.e. the server
+ * forgot to decrypt before serialising — it must never be shown to the user.
+ * This function returns a readable `fallback` string instead.
+ *
+ * @example
+ * safeDisplayName(product.sellerName)        // → "John" or "Seller"
+ * safeDisplayName("enc:v1:abc...", "Seller") // → "Seller"
+ */
+export function safeDisplayName(
+  value: string | null | undefined,
+  fallback = "Seller",
+): string {
+  if (!value) return fallback;
+  if (value.startsWith(ENC_TOKEN_PREFIX)) return fallback;
+  return value;
+}
+
+/**
+ * Safe display email — returns fallback if encrypted or missing.
+ */
+export function safeDisplayEmail(
+  value: string | null | undefined,
+  fallback = "—",
+): string {
+  if (!value) return fallback;
+  if (value.startsWith(ENC_TOKEN_PREFIX)) return fallback;
+  return value;
+}

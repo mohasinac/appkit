@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Grid, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Button, Grid, Heading, Row, Section, Span, Text, TextLink } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
 export interface WelcomeSectionChip {
@@ -17,8 +17,10 @@ export interface WelcomeSectionProps {
   pillLabel?: string;
   showCTA?: boolean;
   ctaLabel?: string;
+  ctaHref?: string;
   onCtaClick?: () => void;
   secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   onSecondaryCtaClick?: () => void;
   trustChips?: WelcomeSectionChip[];
   isLoading?: boolean;
@@ -34,8 +36,10 @@ export function WelcomeSection({
   pillLabel,
   showCTA = true,
   ctaLabel = "Shop now",
+  ctaHref,
   onCtaClick,
   secondaryCtaLabel = "Browse products",
+  secondaryCtaHref,
   onSecondaryCtaClick,
   trustChips = [],
   isLoading = false,
@@ -64,15 +68,15 @@ export function WelcomeSection({
 
   return (
     <Section
-      className={`relative overflow-hidden py-16 md:py-24 px-4 ${className}`}
+      className={`relative overflow-hidden py-20 md:py-28 px-4 ${className}`}
     >
-      {/* Decorative rings */}
+      {/* Decorative ambient glows */}
       <div
-        className="pointer-events-none absolute -top-24 -left-24 w-96 h-96 rounded-full border border-dashed border-primary/10 animate-spin [animation-duration:60s]"
+        className="pointer-events-none absolute -top-32 -left-32 w-[28rem] h-[28rem] rounded-full bg-primary/10 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -bottom-32 -right-32 w-[32rem] h-[32rem] rounded-full border border-dashed border-cobalt/10 animate-spin [animation-duration:80s] [animation-direction:reverse]"
+        className="pointer-events-none absolute -bottom-40 -right-40 w-[36rem] h-[36rem] rounded-full bg-secondary/10 dark:bg-secondary/15 blur-3xl"
         aria-hidden="true"
       />
 
@@ -104,7 +108,7 @@ export function WelcomeSection({
             <Heading
               level={1}
               variant="none"
-              className="mt-4 font-display text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-primary via-cobalt to-secondary dark:from-secondary dark:via-cobalt dark:to-primary bg-clip-text text-transparent leading-tight"
+              className="mt-4 font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-primary-600 via-cobalt to-primary-400 dark:from-secondary dark:via-cobalt-400 dark:to-secondary-300 bg-clip-text text-transparent leading-[1.1] tracking-tight"
             >
               {title}
             </Heading>
@@ -125,21 +129,38 @@ export function WelcomeSection({
                 gap="md"
                 className="mt-8 justify-center lg:justify-start"
               >
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={onCtaClick}
-                  className="!bg-zinc-900 !text-white hover:!bg-zinc-800 dark:!bg-zinc-100 dark:!text-zinc-900 dark:hover:!bg-zinc-200"
-                >
-                  {ctaLabel}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={onSecondaryCtaClick}
-                >
-                  {secondaryCtaLabel}
-                </Button>
+                {ctaHref ? (
+                  <TextLink
+                    href={ctaHref}
+                    className="inline-flex items-center justify-center rounded-xl px-8 py-3.5 text-base font-bold !bg-primary hover:!bg-primary-500 !text-zinc-900 dark:!bg-secondary dark:hover:!bg-secondary-600 dark:!text-white shadow-lg shadow-primary/25 dark:shadow-secondary/25 transition-all hover:scale-[1.02]"
+                  >
+                    {ctaLabel}
+                  </TextLink>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={onCtaClick}
+                  >
+                    {ctaLabel}
+                  </Button>
+                )}
+                {secondaryCtaHref ? (
+                  <TextLink
+                    href={secondaryCtaHref}
+                    className="inline-flex items-center justify-center rounded-xl border-2 border-cobalt/40 dark:border-cobalt-400/40 px-8 py-3.5 text-base font-semibold text-cobalt-700 dark:text-cobalt-300 hover:bg-cobalt-50 dark:hover:bg-cobalt-900/20 transition-all hover:scale-[1.02]"
+                  >
+                    {secondaryCtaLabel}
+                  </TextLink>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={onSecondaryCtaClick}
+                  >
+                    {secondaryCtaLabel}
+                  </Button>
+                )}
               </Row>
             )}
 
@@ -153,7 +174,7 @@ export function WelcomeSection({
                 {trustChips.map((chip) => (
                   <Span
                     key={chip.key}
-                    className="bg-zinc-100 dark:bg-slate-800 rounded-full px-3 py-1 text-xs text-zinc-600 dark:text-zinc-400"
+                    className="inline-flex items-center gap-1.5 bg-zinc-100 dark:bg-slate-800 border border-zinc-200 dark:border-slate-700 rounded-full px-3.5 py-1.5 text-xs font-medium text-zinc-700 dark:text-zinc-300"
                   >
                     {chip.emoji} {chip.label}
                   </Span>
@@ -165,11 +186,11 @@ export function WelcomeSection({
           {/* Right: brand placeholder (desktop only) */}
           <div className="hidden lg:block">
             <div
-              className={`relative rounded-3xl overflow-hidden aspect-[4/3] bg-gradient-to-br from-primary/10 via-cobalt/10 to-secondary/10 border ${themed.border}`}
+              className={`relative rounded-3xl overflow-hidden aspect-[4/3] bg-gradient-to-br from-primary-100 via-cobalt-100/60 to-secondary-100 dark:from-primary-950/60 dark:via-cobalt-950/40 dark:to-secondary-950/60 border ${themed.border} shadow-2xl`}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-cobalt/5" />
               <div className={`absolute inset-0 ${flex.center}`}>
-                <Span className="font-display text-8xl text-primary/20 select-none">
+                <Span className="font-display text-9xl font-black text-primary-400/30 dark:text-secondary-400/30 select-none">
                   {brandLogoText}
                 </Span>
               </div>

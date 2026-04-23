@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Aside, Button, Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
+import { Aside, Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
+import { BottomSheet } from "../../layout/BottomSheet";
 
 export interface SellerNavItem {
   href: string;
@@ -104,34 +105,14 @@ export function SellerSidebar({
         <SellerNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} />
       </Aside>
 
-      {/* Mobile overlay drawer */}
-      {mobileOpen && (
-        <>
-          <Div
-            role="presentation"
-            className="fixed inset-0 z-40 bg-black/40 md:hidden"
-            onClick={onCloseMobile}
-          />
-          <Aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white dark:bg-slate-900 shadow-xl md:hidden">
-            <Div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-slate-700">
-              <Span className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">Seller Panel</Span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label="Close menu"
-                onClick={onCloseMobile}
-                className="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </Button>
-            </Div>
-            <SellerNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={onCloseMobile} />
-          </Aside>
-        </>
-      )}
+      {/* Mobile: BottomSheet slides up from bottom */}
+      <BottomSheet
+        open={mobileOpen}
+        onClose={onCloseMobile ?? (() => {})}
+        title={storeName ?? "Seller Panel"}
+      >
+        <SellerNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={onCloseMobile} />
+      </BottomSheet>
     </>
   );
 }

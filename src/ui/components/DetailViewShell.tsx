@@ -50,6 +50,21 @@ export interface DetailViewShellProps {
   belowFold?: (ReactNode | (() => ReactNode))[];
   /** Extra content rendered between main grid and belowFold (e.g. mobile bid form). */
   afterMain?: ReactNode;
+  /**
+   * When true and `layout="grid-3"`, makes the 3rd column (action rail) sticky
+   * on desktop. The sticky column stays fixed relative to the viewport as the
+   * user scrolls, aligned to the top of the content area (below the title bar).
+   * On mobile the action rail renders inline; the `BottomActions` bar handles
+   * quick actions via `useBottomActions`.
+   *
+   * @default false
+   */
+  stickyActionRail?: boolean;
+  /**
+   * Top offset for the sticky action rail (e.g. `"top-16"` for a 64px title
+   * bar). Defaults to `"top-6"` (24px, for pages without a sticky header).
+   */
+  stickyRailOffset?: string;
   className?: string;
 }
 
@@ -68,6 +83,8 @@ export function DetailViewShell({
   mainSlots = [],
   belowFold = [],
   afterMain,
+  stickyActionRail = false,
+  stickyRailOffset = "top-6",
   className = "",
 }: DetailViewShellProps) {
   if (isLoading && renderSkeleton) {
@@ -83,9 +100,21 @@ export function DetailViewShell({
       case "grid-3":
         return (
           <Grid cols="productDetailTriplet" className="mt-6">
-            {mainSlots.map((slot, i) => (
-              <Div key={i}>{resolveSlot(slot)}</Div>
-            ))}
+            {mainSlots.map((slot, i) => {
+              const isRailSlot = i === 2 && stickyActionRail;
+              return (
+                <Div
+                  key={i}
+                  className={
+                    isRailSlot
+                      ? `self-start sticky ${stickyRailOffset}`
+                      : undefined
+                  }
+                >
+                  {resolveSlot(slot)}
+                </Div>
+              );
+            })}
           </Grid>
         );
       case "grid-2":

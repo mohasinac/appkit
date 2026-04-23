@@ -6,6 +6,7 @@ import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   BaseListingCard,
   Button,
@@ -23,6 +24,7 @@ export type MarketplacePreorderCardData = ProductItem;
 
 export interface MarketplacePreorderCardLabels {
   preOrderBadge?: string;
+  featuredBadge?: string;
   reserveNow?: string;
   addToWishlist?: string;
   removeFromWishlist?: string;
@@ -45,6 +47,7 @@ export interface MarketplacePreorderCardProps {
 
 const DEFAULT_LABELS: Required<MarketplacePreorderCardLabels> = {
   preOrderBadge: "Pre-order",
+  featuredBadge: "Featured",
   reserveNow: "Reserve now",
   addToWishlist: "Add to wishlist",
   removeFromWishlist: "Remove from wishlist",
@@ -122,10 +125,15 @@ export function MarketplacePreorderCard({
           />
         </TextLink>
 
-        <Div className="absolute right-2 top-2">
+        <Div className="absolute right-2 top-2 flex flex-col items-end gap-1">
           <Span className="inline-flex items-center rounded-full bg-cobalt px-2 py-0.5 text-xs font-medium text-white">
             {mergedLabels.preOrderBadge}
           </Span>
+          {product.featured && (
+            <Span className="inline-flex items-center rounded-full bg-amber-500 px-2 py-0.5 text-xs font-medium text-white">
+              {mergedLabels.featuredBadge}
+            </Span>
+          )}
         </Div>
 
         {selectable && (
@@ -155,7 +163,7 @@ export function MarketplacePreorderCard({
 
         <Row justify="between" className="mt-1 gap-2">
           <Text className="text-sm font-semibold text-zinc-900">
-            {formatCurrency(product.price, product.currency)}
+            {formatCurrency(product.price, getDefaultCurrency())}
           </Text>
           {shipDate && <PreorderBadge shipDate={shipDate} />}
         </Row>

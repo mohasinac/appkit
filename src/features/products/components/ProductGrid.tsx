@@ -5,8 +5,9 @@ import { Button, Div, Grid, RichText, Row, Span, Text } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { getDefaultCurrency, getDefaultCurrencySymbol } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { safeDisplayName } from "../../../security";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -100,21 +101,21 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
         {product.sellerName && (
           <Text className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
-            {product.sellerName}
+            {safeDisplayName(product.sellerName, "Seller")}
           </Text>
         )}
         <Div className="mt-2 flex items-baseline gap-2">
           <Span className="font-semibold text-zinc-950 dark:text-white">
             {formatCurrency(
               product.price,
-              product.currency ?? getDefaultCurrency(),
+              getDefaultCurrency(),
             )}
           </Span>
           {product.originalPrice && (
             <Span className="text-xs text-zinc-500 line-through dark:text-zinc-400">
               {formatCurrency(
                 product.originalPrice,
-                product.currency ?? getDefaultCurrency(),
+                getDefaultCurrency(),
               )}
             </Span>
           )}
@@ -300,8 +301,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       {/* Price */}
       <Div className="w-[80px] text-right flex-shrink-0">
         <Span className="text-sm font-semibold text-neutral-900 dark:text-zinc-100">
-          {product.currency ?? "₹"}
-          {product.price.toLocaleString()}
+          {getDefaultCurrencySymbol()}{product.price.toLocaleString()}
         </Span>
         {discount && (
           <Span className="block text-[10px] text-neutral-400 dark:text-zinc-500">

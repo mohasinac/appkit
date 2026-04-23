@@ -1,5 +1,11 @@
+"use client";
+
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Div, Heading } from "../../../ui";
+import { Alert } from "../../../ui";
+import { apiClient } from "../../../http";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { AdminAnalyticsData, AnalyticsTopProduct } from "../types";
 import { AdminStatCard } from "./analytics/AdminStatCard";
 import {
@@ -32,6 +38,7 @@ export interface AdminAnalyticsViewProps {
   renderSummaryCards?: () => React.ReactNode;
   renderCharts?: () => React.ReactNode;
   renderTable?: () => React.ReactNode;
+  endpoint?: string;
   isLoading?: boolean;
   className?: string;
 }
@@ -46,12 +53,23 @@ export function AdminAnalyticsView({
   renderSummaryCards,
   renderCharts,
   renderTable,
+  endpoint = ADMIN_ENDPOINTS.ANALYTICS,
   isLoading = false,
   className = "",
 }: AdminAnalyticsViewProps) {
-  const summary = data?.summary;
-  const ordersByMonth = data?.ordersByMonth ?? [];
-  const topProducts = data?.topProducts ?? [];
+  const shouldFetch = !data;
+  const query = useQuery<AdminAnalyticsData>({
+    queryKey: ["admin-analytics", endpoint],
+    queryFn: () => apiClient.get<AdminAnalyticsData>(endpoint),
+    enabled: shouldFetch,
+    staleTime: 60_000,
+  });
+
+  const resolvedData = data ?? query.data;
+  const busy = isLoading || query.isLoading;
+  const summary = resolvedData?.summary;
+  const ordersByMonth = resolvedData?.ordersByMonth ?? [];
+  const topProducts = resolvedData?.topProducts ?? [];
 
   return (
     <Div className={className}>
@@ -63,10 +81,25 @@ export function AdminAnalyticsView({
         </Heading>
       ) : null}
 
+      {query.error ? (
+        <Alert variant="error" title="Could not load analytics">
+          {query.error instanceof Error ? query.error.message : "Unknown error"}
+        </Alert>
+      ) : null}
+
       {renderDateRange?.()}
 
       {renderSummaryCards ? (
         renderSummaryCards()
+      ) : busy ? (
+        <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Div
+              key={index}
+              className="h-28 rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 animate-pulse"
+            />
+          ))}
+        </Div>
       ) : summary ? (
         <Div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <AdminStatCard

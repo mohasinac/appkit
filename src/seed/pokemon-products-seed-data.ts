@@ -872,9 +872,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-base-set-booster-pack-sealed-blaine-1",
     title: "Pokémon Base Set Booster Pack (Sealed, Random Art)",
     description:
-      "One sealed Base Set booster pack — 11 cards including guaranteed 1 rare. " +
-      "Art varies (Charizard, Blastoise, or Venusaur wrapper). Authenticity guaranteed.",
-    slug: "base-set-booster-pack-sealed",
+      "Sealed Pokémon TCG Base Set booster pack with 11 cards and one guaranteed rare. " +
+      "Perfect for vintage collectors searching for authentic Base Set pack openings and long-term sealed investments.",
+    slug: "pokemon-tcg-base-set-sealed-booster-pack-random-art",
     category: "category-sealed-products",
     subcategory: "Booster Pack",
     brand: "Wizards of the Coast",
@@ -882,11 +882,8 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     currency: _CURRENCY,
     stockQuantity: 10,
     availableQuantity: 10,
-    mainImage:
-      "https://upload.wikimedia.org/wikipedia/en/4/4a/Pokemon_Base_Set_Booster_Pack.jpg",
-    images: [
-      "https://upload.wikimedia.org/wikipedia/en/4/4a/Pokemon_Base_Set_Booster_Pack.jpg",
-    ],
+    mainImage: cardImg(4),
+    images: [cardImg(4), cardImg(2), cardImg(15)],
     status: "published",
     ...BLAINE,
     featured: true,
@@ -918,8 +915,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-zap-theme-deck-sealed-surge-1",
     title: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
     description:
-      "Sealed Zap! Theme Deck from Base Set — the Electric-themed starter deck featuring Raichu and friends.",
-    slug: "zap-theme-deck-sealed",
+      "Factory-sealed Pokémon Base Set Zap! Theme Deck featuring Electric-type strategy cards led by Raichu. " +
+      "Ideal for collectors who want original sealed WOTC era deck products.",
+    slug: "pokemon-base-set-zap-theme-deck-sealed-raichu",
     category: "category-sealed-products",
     subcategory: "Theme Deck",
     brand: "Wizards of the Coast",
@@ -927,8 +925,8 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     currency: _CURRENCY,
     stockQuantity: 3,
     availableQuantity: 3,
-    mainImage: "https://images.pokemontcg.io/base1/logo.png",
-    images: ["https://images.pokemontcg.io/base1/logo.png"],
+    mainImage: cardImg(14),
+    images: [cardImg(14), cardImg(16), cardImg(58)],
     status: "published",
     ...SURGE,
     featured: false,

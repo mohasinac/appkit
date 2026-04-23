@@ -196,6 +196,15 @@ export interface ProductsSectionConfig {
   scrollInterval: number;
 }
 
+export interface StatsSectionConfig {
+  title?: string;
+  stats: Array<{
+    key: string;
+    label: string;
+    value: string;
+  }>;
+}
+
 export interface AuctionsSectionConfig {
   title: string;
   subtitle?: string;
@@ -282,6 +291,17 @@ export interface EventsSectionConfig {
   scrollInterval: number;
 }
 
+export interface PreOrdersSectionConfig {
+  title: string;
+  subtitle?: string;
+  maxItems: number;
+  rows: 2;
+  itemsPerRow: 3;
+  mobileItemsPerRow: 1;
+  autoScroll: boolean;
+  scrollInterval: number;
+}
+
 export interface BannerSectionConfig {
   height: "sm" | "md" | "lg" | "xl";
   backgroundImage?: string;
@@ -299,10 +319,12 @@ export interface BannerSectionConfig {
 
 export type SectionType =
   | "welcome"
+  | "stats"
   | "trust-indicators"
   | "categories"
   | "brands"
   | "products"
+  | "pre-orders"
   | "auctions"
   | "banner"
   | "features"
@@ -316,10 +338,12 @@ export type SectionType =
 
 export type SectionConfig =
   | WelcomeSectionConfig
+  | StatsSectionConfig
   | TrustIndicatorsSectionConfig
   | CategoriesSectionConfig
   | BrandsSectionConfig
   | ProductsSectionConfig
+  | PreOrdersSectionConfig
   | AuctionsSectionConfig
   | BannerSectionConfig
   | FeaturesSectionConfig
@@ -350,20 +374,22 @@ export const HOMEPAGE_SECTIONS_INDEXED_FIELDS = [
 
 export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   welcome: 1,
+  stats: 2,
   "trust-indicators": 3,
   categories: 2,
   brands: 2,
   products: 4,
-  auctions: 5,
+  "pre-orders": 5,
+  auctions: 6,
   banner: 4,
-  features: 5,
-  reviews: 6,
-  "whatsapp-community": 6,
+  features: 7,
+  reviews: 8,
+  "whatsapp-community": 8,
   faq: 4,
-  "blog-articles": 5,
-  newsletter: 6,
-  stores: 7,
-  events: 8,
+  "blog-articles": 9,
+  newsletter: 9,
+  stores: 10,
+  events: 11,
 };
 
 export const BANNER_HEIGHTS: Record<BannerSectionConfig["height"], string> = {

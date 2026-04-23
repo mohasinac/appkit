@@ -17,7 +17,7 @@ export {
   getRoleLevel,
 } from "./authorization";
 export type { UserRole } from "./authorization";
-export { redactPii } from "./pii-redact";
+export { redactPii, safeDisplayName, safeDisplayEmail } from "./pii-redact";
 export {
   encryptValue,
   decryptValue,

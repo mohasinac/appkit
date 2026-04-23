@@ -26,9 +26,12 @@ import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
 import { useDashboardNav } from "./DashboardNavContext";
 
+/** A single sidebar link. */
 export interface AppLayoutShellSidebarLink {
   href: string;
   label: string;
+  /** Optional icon rendered before the label (emoji string or ReactNode). */
+  icon?: React.ReactNode;
 }
 
 export interface AppLayoutShellSidebarSection {
@@ -124,6 +127,76 @@ const DEFAULT_DARK_BG = {
   overlay: { enabled: false, color: "#000000", opacity: 0 },
 };
 
+/** Collapsible accordion section for the public sidebar. */
+function CollapsibleSidebarSection({
+  section,
+  navItemClass,
+}: {
+  section: AppLayoutShellSidebarSection;
+  navItemClass: string;
+}) {
+  const [open, setOpen] = useState(true);
+  const hasTitle = !!section.title;
+
+  if (!hasTitle) {
+    return (
+      <Ul className="space-y-0.5">
+        {section.items.map((item) => (
+          <Li key={`${item.href}-${item.label}`}>
+            <TextLink href={item.href} variant="none" className={navItemClass}>
+              {item.icon && (
+                <span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                  {item.icon}
+                </span>
+              )}
+              {item.label}
+            </TextLink>
+          </Li>
+        ))}
+      </Ul>
+    );
+  }
+
+  return (
+    <Div className="space-y-0.5">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      >
+        <span>{section.title}</span>
+        <svg
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+        <Ul className="space-y-0.5">
+          {section.items.map((item) => (
+            <Li key={`${item.href}-${item.label}`}>
+              <TextLink href={item.href} variant="none" className={navItemClass}>
+                {item.icon && (
+                  <span className="flex-shrink-0 w-5 text-center" aria-hidden="true">
+                    {item.icon}
+                  </span>
+                )}
+                {item.label}
+              </TextLink>
+            </Li>
+          ))}
+        </Ul>
+      )}
+    </Div>
+  );
+}
+
+
+
 export function AppLayoutShell({
   children,
   navItems,
@@ -214,7 +287,7 @@ export function AppLayoutShell({
     const sectionLabelClass =
       "px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400";
     const navItemClass =
-      "block rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-zinc-50";
+      "block rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300";
 
     const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
       ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -238,7 +311,7 @@ export function AppLayoutShell({
                     "block w-full rounded-lg px-3 py-2.5 text-center text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                     action.variant === "outline"
                       ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-slate-700 dark:text-zinc-100 dark:hover:bg-slate-800"
-                      : "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200",
+                      : "bg-primary !text-zinc-900 hover:bg-primary-500 dark:bg-secondary dark:!text-white dark:hover:bg-secondary-600 shadow-lg shadow-primary/20 dark:shadow-secondary/20",
                   ].join(" ")}
                 >
                   {action.label}
@@ -248,6 +321,40 @@ export function AppLayoutShell({
           )}
 
         {/* PROFILE section — stat summary when authenticated */}
+        {isAuthenticated && (
+          <Div className="space-y-1">
+            <Text className={sectionLabelClass}>{labels.sectionTitle}</Text>
+            <Ul className="space-y-0.5">
+              <Li>
+                <TextLink href={profileHref} variant="none" className={navItemClass}>
+                  {labels.profile}
+                </TextLink>
+              </Li>
+              {userOrdersHref && (
+                <Li>
+                  <TextLink href={userOrdersHref} variant="none" className={navItemClass}>
+                    {labels.orders}
+                  </TextLink>
+                </Li>
+              )}
+              {userWishlistHref && (
+                <Li>
+                  <TextLink href={userWishlistHref} variant="none" className={navItemClass}>
+                    {labels.wishlist}
+                  </TextLink>
+                </Li>
+              )}
+              {userSettingsHref && (
+                <Li>
+                  <TextLink href={userSettingsHref} variant="none" className={navItemClass}>
+                    {labels.settings}
+                  </TextLink>
+                </Li>
+              )}
+            </Ul>
+          </Div>
+        )}
+
         {isAuthenticated && user?.stats && (
           <Div className="grid grid-cols-2 gap-2">
             {user.stats.totalOrders != null && (
@@ -318,26 +425,13 @@ export function AppLayoutShell({
           </Div>
         )}
 
-        {/* Consumer-provided sections (Browse, Support, etc.) */}
+        {/* Consumer-provided sections (Browse, Support, Settings, etc.) — collapsible */}
         {normalizedSections.map((section, sectionIndex) => (
-          <Div key={`sidebar-section-${sectionIndex}`} className="space-y-1">
-            {section.title ? (
-              <Text className={sectionLabelClass}>{section.title}</Text>
-            ) : null}
-            <Ul className="space-y-0.5">
-              {section.items.map((item) => (
-                <Li key={`${item.href}-${item.label}`}>
-                  <TextLink
-                    href={item.href}
-                    variant="none"
-                    className={navItemClass}
-                  >
-                    {item.label}
-                  </TextLink>
-                </Li>
-              ))}
-            </Ul>
-          </Div>
+          <CollapsibleSidebarSection
+            key={`sidebar-section-${sectionIndex}`}
+            section={section}
+            navItemClass={navItemClass}
+          />
         ))}
 
         {/* Sidebar footer: locale, theme toggle, logout */}
@@ -350,7 +444,7 @@ export function AppLayoutShell({
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-zinc-50"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300"
               >
                 <span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</span>
                 {theme === "dark" ? "Light mode" : "Dark mode"}
@@ -458,7 +552,7 @@ export function AppLayoutShell({
               user ? (
                 <Div className="flex items-center justify-between gap-3">
                   <Div className="flex items-center gap-3 flex-1 min-w-0">
-                    <Div className="flex-shrink-0">
+                    <Div className="flex-shrink-0 relative">
                       <AvatarDisplay
                         cropData={
                           user.avatarMetadata
@@ -483,6 +577,11 @@ export function AppLayoutShell({
                         displayName={user.displayName}
                         email={user.email}
                       />
+                      {user.role && (
+                        <Div className="absolute -bottom-1 -right-1">
+                          <RoleBadge role={user.role} />
+                        </Div>
+                      )}
                     </Div>
                     <Div className="flex-1 min-w-0">
                       <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
@@ -492,7 +591,6 @@ export function AppLayoutShell({
                         {user.email || ""}
                       </Text>
                     </Div>
-                    {user.role && <RoleBadge role={user.role} />}
                   </Div>
                   <button
                     type="button"

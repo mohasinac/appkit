@@ -1,7 +1,7 @@
 "use client"
 import React from "react";
 import { usePathname } from "next/navigation";
-import { AvatarDisplay, Button, Li, Span, TextLink } from "../../ui";
+import { AvatarDisplay, Li, Span, TextLink } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
 
@@ -63,7 +63,7 @@ export function BottomNavbar({
   activeClassName = "text-primary-600 dark:text-primary-400",
   inactiveClassName = "text-zinc-500 dark:text-slate-400",
   iconClassName,
-  labelClassName = "text-[10px] leading-none",
+  labelClassName = "text-[11px] leading-tight font-medium",
   getRoleBadgeClass,
 }: BottomNavbarProps) {
   const pathname = usePathname();
@@ -78,6 +78,7 @@ export function BottomNavbar({
   } as const;
 
   const itemStyle = { width: "20%" } as const;
+  const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-1 transition-colors duration-200";
 
   return (
     <BottomNavLayout ariaLabel={labels.mobileNav}>
@@ -121,17 +122,17 @@ export function BottomNavbar({
 
       {/* 3 � Search */}
       <Li className="flex-1" style={itemStyle}>
-        <Button
-          variant="ghost"
+        <button
+          type="button"
           onClick={onSearchToggle}
-          className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 ${inactiveClassName}`}
+          className={`${slotClassName} ${inactiveClassName}`}
           aria-label={labels.search}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <Span className={labelClassName}>{labels.search}</Span>
-        </Button>
+        </button>
       </Li>
 
       {/* 4 � Cart */}
@@ -139,7 +140,7 @@ export function BottomNavbar({
         <TextLink
           href={cartHref}
           variant="none"
-          className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 relative ${
+          className={`${slotClassName} ${
             pathname === cartHref ? activeClassName : inactiveClassName
           }`}
           aria-label={labels.cart}
@@ -157,7 +158,7 @@ export function BottomNavbar({
           <TextLink
             href={profileHref}
             variant="none"
-            className={`flex flex-col items-center justify-center gap-1 w-full h-full transition-colors duration-200 ${
+            className={`${slotClassName} ${
               pathname === profileHref ? activeClassName : inactiveClassName
             }`}
             aria-label={labels.profile}

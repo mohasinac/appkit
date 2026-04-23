@@ -79,11 +79,29 @@ export const SITE_SETTINGS_ENDPOINTS = {
 
 export const ADMIN_ENDPOINTS = {
   STATS: "/api/admin/stats",
+  DASHBOARD: "/api/admin/dashboard",
+  ANALYTICS: "/api/admin/analytics",
+  ADS: "/api/admin/ads",
+  AD_BY_ID: (id: string) => `/api/admin/ads/${id}`,
   REALTIME_TOKEN: "/api/realtime/token",
   PAYMENTS_SETTINGS: "/api/admin/payments/settings",
+  PRODUCTS: "/api/admin/products",
+  ORDERS: "/api/admin/orders",
+  USERS: "/api/admin/users",
+  REVIEWS: "/api/admin/reviews",
+  BIDS: "/api/admin/bids",
   BLOG: "/api/admin/blog",
+  CATEGORIES: "/api/admin/categories",
+  FAQS: "/api/admin/faqs",
+  STORES: "/api/admin/stores",
+  PAYOUTS: "/api/admin/payouts",
   EVENTS: "/api/admin/events",
+  EVENT_STATS: (id: string) => `/api/admin/events/${id}/stats`,
+  EVENT_ENTRIES: (id: string) => `/api/admin/events/${id}/entries`,
+  EVENT_ENTRY_BY_ID: (eventId: string, entryId: string) =>
+    `/api/admin/events/${eventId}/entries/${entryId}`,
   COUPONS: "/api/admin/coupons",
+  SECTIONS: "/api/admin/sections",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -307,6 +325,12 @@ export const SEARCH_ENDPOINTS = {
 
 export const SELLER_ENDPOINTS = {
   BECOME: "/api/seller/become",
+  PRODUCTS: "/api/seller/products",
+  ORDERS: "/api/seller/orders",
+  ORDERS_BY_ID: (orderId: string) => `/api/seller/orders/${orderId}`,
+  AUCTIONS: "/api/seller/auctions",
+  COUPONS: "/api/seller/coupons",
+  OFFERS: "/api/seller/offers",
   PAYOUTS: "/api/seller/payouts",
   PAYOUT_SETTINGS: "/api/seller/payout-settings",
   STORE: "/api/seller/store",

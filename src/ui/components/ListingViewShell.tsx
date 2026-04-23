@@ -52,7 +52,7 @@ export function ListingViewShell({
   isDashboard,
   ...listingProps
 }: ListingViewShellProps) {
-  const effectiveIsDashboard = isDashboard ?? (portal === "admin" || portal === "seller" || portal === undefined ? true : false);
+  const effectiveIsDashboard = isDashboard ?? (portal === "admin" || portal === "seller");
   if (detailView) {
     return <>{detailView}</>;
   }

@@ -76,25 +76,25 @@ export function FooterLayout({
   return (
     <BlockFooter
       id={id}
-      className="bg-zinc-50 dark:bg-slate-900 border-t border-zinc-200 dark:border-slate-800"
+      className="bg-zinc-50 dark:bg-slate-950 border-t border-zinc-200 dark:border-slate-800"
     >
       {/* Trust bar */}
       {showTrustBar && visibleTrustItems.length > 0 && (
-        <Div className="border-b border-zinc-200 dark:border-slate-800 py-6">
+              <Div className="border-b border-zinc-100 dark:border-slate-800 py-8">
           <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
             <Row as="ul" wrap justify="center" gap="lg" className="lg:gap-10">
               {visibleTrustItems.map((item, i) => (
                 <Li key={item.id ?? String(i)}>
                   <Row gap="sm" className="text-sm min-w-[160px]">
-                    <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400">
+                    <Span className="flex-shrink-0 text-primary-600 dark:text-secondary-400 w-5 h-5">
                       {item.icon}
                     </Span>
                     <Span>
-                      <Span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                      <Span className="font-bold text-zinc-900 dark:text-zinc-100 block text-sm">
                         {item.label}
                       </Span>
                       {item.subtitle && (
-                        <Span className="text-zinc-500 dark:text-zinc-400 text-xs">
+                        <Span className="text-zinc-500 dark:text-zinc-400 text-xs block">
                           {item.subtitle}
                         </Span>
                       )}
@@ -111,7 +111,7 @@ export function FooterLayout({
         <Div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           {/* Brand column */}
           <Div className="lg:col-span-2 space-y-4">
-            <Heading level={5} className="text-zinc-900 dark:text-zinc-100">
+            <Heading level={5} className="text-zinc-900 dark:text-zinc-50 font-bold text-xl">
               {brandName}
             </Heading>
             <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-sm">
@@ -128,7 +128,7 @@ export function FooterLayout({
                       aria-label={link.ariaLabel}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 dark:border-slate-700 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:border-zinc-300 dark:hover:border-slate-600 transition-colors"
+                      className="flex items-center justify-center w-9 h-9 rounded-full border border-zinc-200 dark:border-slate-700 text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary hover:border-primary/40 dark:hover:border-secondary/40 transition-colors"
                     >
                       {link.icon}
                     </Link>
@@ -144,14 +144,18 @@ export function FooterLayout({
           </Div>
 
           {/* Link groups — desktop: columns, mobile: accordions */}
-          <Div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-0 sm:gap-8">
+          <Div className={`lg:col-span-3 grid grid-cols-1 gap-0 lg:gap-8 ${
+            linkGroups.length <= 3 ? "lg:grid-cols-3" :
+            linkGroups.length === 4 ? "lg:grid-cols-4" :
+            "lg:grid-cols-5"
+          }`}>
             {linkGroups.map((group, idx) => (
               <Div key={idx}>
                 {/* Mobile accordion header */}
                 <button
                   type="button"
                   onClick={() => toggleGroup(idx)}
-                  className="flex w-full items-center justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white sm:hidden"
+                  className="flex w-full items-center justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white lg:hidden"
                   aria-expanded={!!openGroups[idx]}
                 >
                   {group.heading}
@@ -162,13 +166,13 @@ export function FooterLayout({
 
                 {/* Mobile content */}
                 <Ul
-                  className={`sm:hidden overflow-hidden transition-all duration-200 ${openGroups[idx] ? "max-h-96 py-3" : "max-h-0"} space-y-2.5`}
+                  className={`lg:hidden overflow-hidden transition-all duration-200 ${openGroups[idx] ? "max-h-96 py-3" : "max-h-0"} space-y-2.5`}
                 >
                   {group.links.map((link) => (
                     <Li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+                        className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors"
                       >
                         {link.label}
                       </Link>
@@ -177,7 +181,7 @@ export function FooterLayout({
                 </Ul>
 
                 {/* Desktop column */}
-                <Div className="hidden sm:block">
+                <Div className="hidden lg:block">
                   <Text className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
                     {group.heading}
                   </Text>
@@ -186,7 +190,7 @@ export function FooterLayout({
                       <Li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
+                          className="text-sm text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors"
                         >
                           {link.label}
                         </Link>

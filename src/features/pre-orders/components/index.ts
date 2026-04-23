@@ -6,3 +6,5 @@ export {
   type MarketplacePreorderCardProps,
 } from "./MarketplacePreorderCard";
 export { PreOrdersListView } from "./PreOrdersListView";
+export { PreOrderDetailPageView } from "./PreOrderDetailPageView";
+export type { PreOrderDetailPageViewProps } from "./PreOrderDetailPageView";

@@ -7,11 +7,11 @@
  *
  * Section order follows DEFAULT_SECTION_ORDER from schema:
  * welcome(1) → trust-indicators(2) → categories(3) → products(4,5) →
- * auctions(6) → banner(7) → features(8) → reviews(9) →
- * whatsapp-community(10) → faq(11) → blog-articles(12) → newsletter(13) →
- * stores(14) → events(15)
+ * pre-orders(6) → auctions(7) → banner(8) → features(9) → reviews(10) →
+ * whatsapp-community(11) → faq(12) → blog-articles(13) → newsletter(14) →
+ * stores(15) → events(16) → brands(17, disabled)
  *
- * 15 total sections (14 enabled, 1 disabled for testing)
+ * 17 total sections (15 enabled, 2 disabled)
  */
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
@@ -158,12 +158,34 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 6. LIVE AUCTIONS
+  // 6. PRE-ORDERS
   // ============================================
   {
-    id: "section-auctions-1707300000006",
-    type: "auctions",
+    id: "section-pre-orders-1707300000006",
+    type: "pre-orders",
     order: 6,
+    enabled: true,
+    config: {
+      title: "Pre-Order Now",
+      subtitle: "Reserve upcoming anime figures & collector editions before they sell out",
+      maxItems: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 5000,
+    },
+    createdAt: daysAgo(180),
+    updatedAt: daysAgo(7),
+  },
+
+  // ============================================
+  // 7. LIVE AUCTIONS
+  // ============================================
+  {
+    id: "section-auctions-1707300000007",
+    type: "auctions",
+    order: 7,
     enabled: true,
     config: {
       title: "Live Auctions",
@@ -181,12 +203,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 7. PROMOTIONAL BANNER
+  // 8. PROMOTIONAL BANNER
   // ============================================
   {
-    id: "section-banner-1707300000007",
+    id: "section-banner-1707300000008",
     type: "banner",
-    order: 7,
+    order: 8,
     enabled: true,
     config: {
       height: "md",
@@ -211,12 +233,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 8. FEATURES SECTION
+  // 9. FEATURES SECTION
   // ============================================
   {
-    id: "section-features-1707300000008",
+    id: "section-features-1707300000009",
     type: "features",
-    order: 8,
+    order: 9,
     enabled: true,
     config: {
       title: "Platform Features",
@@ -227,12 +249,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 9. CUSTOMER REVIEWS
+  // 10. CUSTOMER REVIEWS
   // ============================================
   {
-    id: "section-reviews-1707300000009",
+    id: "section-reviews-1707300000010",
     type: "reviews",
-    order: 9,
+    order: 10,
     enabled: true,
     config: {
       title: "What Our Customers Say",
@@ -247,12 +269,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 10. WHATSAPP COMMUNITY
+  // 11. WHATSAPP COMMUNITY
   // ============================================
   {
-    id: "section-whatsapp-community-1707300000010",
+    id: "section-whatsapp-community-1707300000011",
     type: "whatsapp-community",
-    order: 10,
+    order: 11,
     enabled: true,
     config: {
       title: "Join Our Community",
@@ -273,12 +295,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 11. FAQ SECTION
+  // 12. FAQ SECTION
   // ============================================
   {
-    id: "section-faq-1707300000011",
+    id: "section-faq-1707300000012",
     type: "faq",
-    order: 11,
+    order: 12,
     enabled: true,
     config: {
       title: "Frequently Asked Questions",
@@ -294,12 +316,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 12. BLOG ARTICLES
+  // 13. BLOG ARTICLES
   // ============================================
   {
-    id: "section-blog-articles-1707300000012",
+    id: "section-blog-articles-1707300000013",
     type: "blog-articles",
-    order: 12,
+    order: 13,
     enabled: true,
     config: {
       title: "From Our Blog",
@@ -315,12 +337,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 13. NEWSLETTER SIGNUP
+  // 14. NEWSLETTER SIGNUP
   // ============================================
   {
-    id: "section-newsletter-1707300000013",
+    id: "section-newsletter-1707300000014",
     type: "newsletter",
-    order: 13,
+    order: 14,
     enabled: true,
     config: {
       title: "Stay Updated",
@@ -336,12 +358,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 14. FEATURED STORES
+  // 15. FEATURED STORES
   // ============================================
   {
-    id: "section-stores-1707300000014",
+    id: "section-stores-1707300000015",
     type: "stores",
-    order: 14,
+    order: 15,
     enabled: true,
     config: {
       title: "Featured Stores",
@@ -356,12 +378,12 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 15. UPCOMING EVENTS
+  // 16. UPCOMING EVENTS
   // ============================================
   {
-    id: "section-events-1707300000015",
+    id: "section-events-1707300000016",
     type: "events",
-    order: 15,
+    order: 16,
     enabled: true,
     config: {
       title: "Upcoming Events",
@@ -373,5 +395,24 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     },
     createdAt: daysAgo(799),
     updatedAt: daysAgo(30),
+  },
+
+  // ============================================
+  // 17. BRANDS (disabled — no brand catalogue yet)
+  // ============================================
+  {
+    id: "section-brands-1707300000017",
+    type: "brands",
+    order: 17,
+    enabled: false,
+    config: {
+      title: "Shop by Brand",
+      subtitle: "Explore figure lines from top anime studios and manufacturers",
+      maxBrands: 12,
+      autoScroll: true,
+      scrollInterval: 4000,
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(7),
   },
 ];

@@ -123,7 +123,10 @@ function BaseListingCardCheckbox({
     <Button
       type="button"
       aria-label={label ?? (selected ? "Deselect" : "Select")}
-      onClick={onSelect}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect?.(e);
+      }}
       className={[
         UI_LISTING_CARD.checkbox,
         selected ? UI_LISTING_CARD.checkboxSelected : "",

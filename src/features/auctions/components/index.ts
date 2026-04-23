@@ -11,3 +11,5 @@ export {
   type MarketplaceAuctionGridProps,
 } from "./MarketplaceAuctionGrid";
 export { AuctionsListView } from "./AuctionsListView";
+export { AuctionDetailPageView } from "./AuctionDetailPageView";
+export type { AuctionDetailPageViewProps } from "./AuctionDetailPageView";

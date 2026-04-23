@@ -120,7 +120,7 @@ export function AuctionCard({
             <Text className="text-base font-bold text-gray-900 dark:text-zinc-100">
               {formatCurrency(
                 displayBid,
-                auction.currency ?? getDefaultCurrency(),
+                getDefaultCurrency(),
               )}
             </Text>
           </Div>

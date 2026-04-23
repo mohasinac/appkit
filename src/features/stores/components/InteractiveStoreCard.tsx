@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { Heading, Text, Span, Row, Button, RichText } from "../../../ui";
+import { Heading, Text, Span, Row, Button, RichText, Div } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 
@@ -11,7 +11,12 @@ export interface InteractiveStoreCardProps {
   selectable?: boolean;
   selected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
-  labels?: { products?: string; sold?: string; reviews?: string };
+  labels?: {
+    products?: string;
+    sold?: string;
+    reviews?: string;
+    visitStore?: string;
+  };
   className?: string;
 }
 
@@ -29,8 +34,8 @@ export function InteractiveStoreCard({
   className = "",
 }: InteractiveStoreCardProps) {
   return (
-    <div
-      className={`relative flex flex-col h-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow min-w-[160px] min-h-[200px] ${className}`}
+    <Div
+      className={`relative flex min-h-[320px] min-w-[190px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
     >
       {selectable && (
         <Button
@@ -52,20 +57,20 @@ export function InteractiveStoreCard({
 
       <Link href={href} className="block">
         {store.storeBannerURL ? (
-          <div className="overflow-hidden bg-gray-100 min-h-[80px] max-h-[120px]">
+          <Div className="aspect-video overflow-hidden bg-zinc-100 dark:bg-slate-800">
             <MediaImage
               src={store.storeBannerURL}
               alt={`${store.storeName} banner`}
               size="banner"
               className="h-full w-full object-cover"
             />
-          </div>
+          </Div>
         ) : (
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 min-h-[80px] max-h-[120px]" />
+          <Div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700" />
         )}
 
-        <div className="px-4 pb-4 flex-1 flex flex-col justify-between">
-          <div className="-mt-6 mb-3">
+        <Div className="flex flex-1 flex-col px-4 pb-4">
+          <Div className="-mt-6 mb-3">
             {store.storeLogoURL ? (
               <MediaImage
                 src={store.storeLogoURL}
@@ -74,25 +79,23 @@ export function InteractiveStoreCard({
                 className="h-12 w-12 rounded-lg border-2 border-white object-cover shadow-sm"
               />
             ) : (
-              <div className="h-12 w-12 rounded-lg border-2 border-white bg-orange-100 dark:bg-orange-900/40 flex items-center justify-center text-orange-600 font-bold text-lg shadow-sm">
+              <Div className="flex h-12 w-12 items-center justify-center rounded-lg border-2 border-white bg-primary-100 text-lg font-bold text-primary-700 shadow-sm dark:bg-primary-900/40 dark:text-primary-300">
                 {store.storeName[0]?.toUpperCase()}
-              </div>
+              </Div>
             )}
-          </div>
+          </Div>
           <Heading
             level={3}
-            className="font-semibold text-gray-900 dark:text-gray-100 text-sm truncate"
+            className="line-clamp-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100"
           >
             {store.storeName}
           </Heading>
-          {store.storeDescription && (
-            <RichText
-              html={normalizeRichTextHtml(store.storeDescription)}
-              proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-              className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-2"
-            />
-          )}
-          <Row gap="sm" className="mt-2 text-xs text-gray-400">
+          <RichText
+            html={normalizeRichTextHtml(store.storeDescription ?? "")}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="mt-1 line-clamp-2 min-h-9 text-xs text-zinc-500 dark:text-zinc-400"
+          />
+          <Row gap="sm" className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
             {store.totalProducts != null && store.totalProducts > 0 && (
               <Span>
                 {store.totalProducts} {labels.products ?? "products"}
@@ -107,8 +110,11 @@ export function InteractiveStoreCard({
               <Span>★ {store.averageRating.toFixed(1)}</Span>
             )}
           </Row>
-        </div>
+          <Text className="mt-auto pt-3 text-xs font-medium text-primary dark:text-primary-400">
+            {labels.visitStore ?? "Visit store"} →
+          </Text>
+        </Div>
       </Link>
-    </div>
+    </Div>
   );
 }

@@ -343,7 +343,14 @@ async function wipeAllDataResources({ db, rtdb, auth, storage, projectId }) {
   await deleteAllStorageFiles(storage);
 
   logStep("Deleting all deployed Cloud Functions...");
-  deleteAllCloudFunctions(projectId);
+  try {
+    deleteAllCloudFunctions(projectId);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(
+      `[firebase:reset] Warning: Cloud Functions deletion failed, continuing with rules/index reset.\n${message}`,
+    );
+  }
 
   logStep("Phase 1/2 complete: all data resources deleted.");
 }
@@ -355,7 +362,7 @@ function resetRulesAndIndexes(projectId) {
       "deploy",
       "--force",
       "--only",
-      "firestore:rules,storage,database:rules,firestore:indexes",
+      "firestore:rules,storage,database,firestore:indexes",
       "--config",
       resetConfigPath,
     ],

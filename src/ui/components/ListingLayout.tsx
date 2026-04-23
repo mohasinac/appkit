@@ -19,10 +19,11 @@
  *  └----------┴-------------------------------------------------------┘
  */
 
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState } from "react";
 import { Aside, Nav } from "./Semantic";
 import { Text, Span } from "./Typography";
 import { Button } from "./Button";
+import { Drawer } from "./Drawer";
 import { BulkActionBar } from "./BulkActionBar";
 import type { BulkActionItem } from "./BulkActionBar";
 
@@ -64,6 +65,10 @@ export interface ListingLayoutProps {
   onClearSelection?: () => void;
   bulkActionItems?: BulkActionItem[];
 
+  // -- Result count ---------------------------------------------------------
+  /** "Showing 1-24 of 128" or similar — rendered above content, below active filters. */
+  resultCountSlot?: ReactNode;
+
   // -- Pagination -----------------------------------------------------------
   toolbarPaginationSlot?: ReactNode;
   paginationSlot?: ReactNode;
@@ -76,6 +81,8 @@ export interface ListingLayoutProps {
    *  When false, accounts for a top navbar above (top-14/top-[120px]). */
   isDashboard?: boolean;
   defaultSidebarOpen?: boolean;
+  /** Count of filter changes staged but not yet committed. Shows in Apply button. */
+  filterPendingCount?: number;
   className?: string;
   loading?: boolean;
   errorSlot?: ReactNode;
@@ -103,6 +110,7 @@ export function ListingLayout({
   onFilterClear,
   filterTitle,
   activeFiltersSlot,
+  resultCountSlot,
   searchSlot,
   sortSlot,
   viewToggleSlot,
@@ -115,6 +123,7 @@ export function ListingLayout({
   children,
   isDashboard = false,
   defaultSidebarOpen = false,
+  filterPendingCount,
   className = "",
   loading = false,
   errorSlot,
@@ -123,36 +132,9 @@ export function ListingLayout({
   const l = { ...DEFAULT_LABELS, ...labels };
   const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const mobileOverlayRef = useRef<HTMLDivElement>(null);
 
   const hasFilter = Boolean(filterContent);
   const panelTitle = filterTitle ?? l.filtersTitle;
-
-  // Close mobile overlay on Escape key
-  useEffect(() => {
-    if (!mobileFilterOpen) return;
-    const handle = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMobileFilterOpen(false);
-    };
-    document.addEventListener("keydown", handle);
-    return () => document.removeEventListener("keydown", handle);
-  }, [mobileFilterOpen]);
-
-  // Lock body scroll while mobile filter is open
-  useEffect(() => {
-    if (mobileFilterOpen) {
-      const w = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = `${w}px`;
-    } else {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.body.style.paddingRight = "";
-    };
-  }, [mobileFilterOpen]);
 
   const handleMobileApply = () => {
     onFilterApply?.();
@@ -352,7 +334,9 @@ export function ListingLayout({
                   size="sm"
                   onClick={onFilterApply}
                 >
-                  {l.applyFilters}
+                  {filterPendingCount != null && filterPendingCount > 0
+                    ? `${l.applyFilters} (${filterPendingCount})`
+                    : l.applyFilters}
                 </Button>
               </div>
             </div>
@@ -362,6 +346,11 @@ export function ListingLayout({
         {/* Main content */}
         <div className="appkit-listing-layout__content">
           {activeFiltersSlot}
+          {resultCountSlot && (
+            <div className="appkit-listing-layout__result-count">
+              {resultCountSlot}
+            </div>
+          )}
 
           {errorSlot ? (
             errorSlot
@@ -395,62 +384,18 @@ export function ListingLayout({
         </Nav>
       )}
 
-      {/* Mobile fullscreen filter overlay */}
-      {hasFilter && mobileFilterOpen && (
-        <>
-          <div
-            className="appkit-listing-layout__mobile-overlay-backdrop"
-            onClick={() => setMobileFilterOpen(false)}
-            aria-hidden="true"
-          />
-          <div
-            ref={mobileOverlayRef}
-            className="appkit-listing-layout__mobile-overlay"
-            role="dialog"
-            aria-modal="true"
-            aria-label={panelTitle}
-          >
-            {/* Header */}
-            <div className="appkit-listing-layout__mobile-overlay-header">
-              <Text weight="semibold">
-                {panelTitle}
-                {filterActiveCount > 0 && (
-                  <Span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-[11px] font-bold rounded-full bg-primary text-white">
-                    {filterActiveCount}
-                  </Span>
-                )}
-              </Text>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setMobileFilterOpen(false)}
-                aria-label={l.close}
-                className="appkit-listing-layout__close-btn"
-              >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </Button>
-            </div>
-
-            {/* Scrollable facets */}
-            <div className="appkit-listing-layout__mobile-overlay-facets">
-              {filterContent}
-            </div>
-
-            {/* Footer actions */}
+      {/* Mobile filter drawer — slides up from bottom */}
+      {hasFilter && (
+        <Drawer
+          isOpen={mobileFilterOpen}
+          onClose={() => setMobileFilterOpen(false)}
+          side="bottom"
+          title={
+            filterActiveCount > 0
+              ? `${panelTitle} (${filterActiveCount})`
+              : panelTitle
+          }
+          footer={
             <div className="appkit-listing-layout__mobile-overlay-footer">
               <Button
                 type="button"
@@ -466,11 +411,15 @@ export function ListingLayout({
                 className="flex-1 rounded-xl"
                 onClick={handleMobileApply}
               >
-                {l.applyFilters}
+                {filterPendingCount != null && filterPendingCount > 0
+                  ? `${l.applyFilters} (${filterPendingCount})`
+                  : l.applyFilters}
               </Button>
             </div>
-          </div>
-        </>
+          }
+        >
+          {filterContent}
+        </Drawer>
       )}
     </div>
   );

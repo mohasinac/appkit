@@ -90,7 +90,8 @@ export function HorizontalScroller<T = unknown>({
     return () => clearInterval(autoScrollTimer.current);
   }, [autoScroll, autoScrollInterval, scrollBy]);
 
-  const itemsMode = items != null && renderItem != null;
+  const normalizedItems = Array.isArray(items) ? items : [];
+  const itemsMode = Array.isArray(items) && renderItem != null;
 
   const scrollerCls = [
     "appkit-hscroller__track",
@@ -101,7 +102,7 @@ export function HorizontalScroller<T = unknown>({
     .join(" ");
 
   const content = itemsMode
-    ? items.map((item, i) => (
+    ? normalizedItems.map((item, i) => (
         <div
           key={keyExtractor ? keyExtractor(item, i) : i}
           className={[

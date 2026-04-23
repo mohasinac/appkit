@@ -46,3 +46,5 @@ export { MakeOfferForm } from "./MakeOfferForm";
 export type { MakeOfferFormProps } from "./MakeOfferForm";
 export { RelatedProducts } from "./RelatedProducts";
 export type { RelatedProductsProps } from "./RelatedProducts";
+export { ProductDetailPageView } from "./ProductDetailPageView";
+export type { ProductDetailPageViewProps } from "./ProductDetailPageView";

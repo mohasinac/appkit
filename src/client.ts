@@ -2,6 +2,29 @@
 
 // Client-only public exports
 
+// Provider registration — pure contract modules with zero server dependencies.
+// Exported here so consumers can import registration functions from
+// @mohasinac/appkit/client without pulling in firebase-admin or other server code.
+export {
+  registerClientAuthProvider,
+  getClientAuthProvider,
+  type IClientAuthProvider,
+} from "./contracts/client-auth";
+export {
+  registerClientRealtimeProvider,
+  getClientRealtimeProvider,
+  type IClientRealtimeProvider,
+  type RealtimeSnapshot,
+  type Unsubscribe,
+} from "./contracts/client-realtime";
+export {
+  registerClientSessionAdapter,
+  getClientSessionAdapter,
+  type IClientSessionAdapter,
+  type AdapterAuthUser,
+  type AuthUnsubscribe,
+} from "./contracts/client-session";
+
 // [CLIENT-ONLY]-Cannot run in SSR mode â€” uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ConfirmDeleteModal - Component for confirm delete modal.
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
@@ -139,7 +162,8 @@ export type {
 	ResetPasswordViewProps,
 	VerifyEmailViewProps,
 } from "./features/auth/index";
-export { useLogout } from "./features/auth/index";
+export { useLogout, useLogin, useGoogleLogin, useRegister, useForgotPassword, useResetPassword, useVerifyEmail } from "./features/auth/index";
+export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData } from "./features/auth/index";
 export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, useGuestCart, useCartCount, useAddToCart } from "./features/cart/index";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
 export { CategoryProductsView, CategoriesListView } from "./features/categories/index";
@@ -150,4 +174,15 @@ export { SellerSidebar } from "./features/seller/components/SellerSidebar";
 export type { SellerNavItem } from "./features/seller/components/SellerSidebar";
 export { StoreProductsView } from "./features/stores/index";
 export type { StoreProductItem } from "./features/stores/index";
+export { AdSlot } from "./features/homepage/components/AdSlot";
+export {
+  registerAdSlot,
+  registerAdSlots,
+  unregisterAdSlot,
+  clearAdRegistry,
+  setAdConsentGranted,
+  isAdConsentGranted,
+  isAdSlotRenderable,
+} from "./features/homepage/ad-registry";
+export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-registry";
 

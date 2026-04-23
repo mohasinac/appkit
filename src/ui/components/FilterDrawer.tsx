@@ -17,6 +17,8 @@ export interface FilterDrawerProps {
   triggerLabel?: string;
   triggerClassName?: string;
   hideTrigger?: boolean;
+  /** Which side the drawer slides in from. Default: "bottom" (slides up, mobile-first). */
+  side?: "left" | "right" | "bottom";
 }
 
 export function FilterDrawer({
@@ -32,6 +34,7 @@ export function FilterDrawer({
   triggerLabel = "Filters",
   triggerClassName = "",
   hideTrigger = false,
+  side = "bottom",
 }: FilterDrawerProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
   const isControlled = open !== undefined;
@@ -85,7 +88,7 @@ export function FilterDrawer({
         isOpen={isOpen}
         onClose={handleClose}
         title={title}
-        side="left"
+        side={side}
         footer={
           <div className="appkit-filter-drawer__footer">
             <Button type="button" variant="ghost" onClick={onReset}>

@@ -21,6 +21,8 @@ export interface TitleBarLayoutProps {
   brandShortName?: string;
   logoHref: string;
   promotionsHref?: string;
+  /** Href for the compare page/drawer. When provided, renders a Compare icon button. */
+  compareHref?: string;
   cartHref?: string;
   cartCount?: number;
   profileHref?: string;
@@ -60,6 +62,7 @@ export function TitleBarLayout({
   brandShortName,
   logoHref,
   promotionsHref,
+  compareHref,
   cartHref,
   cartCount = 0,
   profileHref,
@@ -81,7 +84,7 @@ export function TitleBarLayout({
   return (
     <BlockHeader
       id={id}
-      className={`sticky top-0 z-50 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-zinc-200/80 dark:border-slate-800/80 ${className}`}
+      className={`sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800 shadow-sm ${className}`}
     >
       {/* Promo strip */}
       {promoStripText && (
@@ -91,7 +94,7 @@ export function TitleBarLayout({
       )}
 
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
-        <Row justify="between" gap="none" className="h-12">
+        <Row justify="between" gap="none" className="h-14">
           {/* Left: logo + dashboard nav toggle */}
           <Row gap="3">
             {hasDashboardNav && onToggleDashboardNav && (
@@ -101,7 +104,7 @@ export function TitleBarLayout({
                 size="sm"
                 aria-label="Toggle dashboard navigation"
                 onClick={onToggleDashboardNav}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 <svg
                   className="w-5 h-5"
@@ -122,7 +125,7 @@ export function TitleBarLayout({
 
             <Link
               href={logoHref}
-              className="font-bold text-lg text-zinc-900 dark:text-zinc-50 hover:opacity-80 transition-opacity"
+              className="font-bold text-xl tracking-tight text-zinc-900 dark:text-zinc-50 hover:text-primary dark:hover:text-secondary transition-colors"
             >
               {brandShortName ? (
                 <>
@@ -140,14 +143,30 @@ export function TitleBarLayout({
 
           {/* Right: actions */}
           <Row gap="xs">
-            {/* Promotions */}
+            {/* Today's Deals — green pill */}
             {promotionsHref && (
               <Link
                 href={promotionsHref}
                 aria-label="Today's deals"
-                className="hidden lg:flex items-center px-2.5 py-1.5 rounded-lg text-xs font-semibold text-pink-600 dark:text-pink-400 hover:bg-pink-50 dark:hover:bg-pink-950/30 transition-colors"
+                className="hidden lg:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-primary-100 text-primary-700 dark:bg-secondary-900/40 dark:text-secondary-400 hover:bg-primary-200 dark:hover:bg-secondary-900/60 transition-colors border border-primary-200/60 dark:border-secondary-700/40"
               >
-                Deals
+                <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.37.86.58 1.41.58.55 0 1.05-.21 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z" />
+                </svg>
+                Today&apos;s Deals
+              </Link>
+            )}
+
+            {/* Compare */}
+            {compareHref && (
+              <Link
+                href={compareHref}
+                aria-label="Compare items"
+                className="hidden lg:flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
               </Link>
             )}
 
@@ -158,7 +177,7 @@ export function TitleBarLayout({
               size="sm"
               aria-label="Search"
               onClick={onSearchToggle}
-              className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
             >
               <svg
                 className="w-5 h-5"
@@ -192,7 +211,7 @@ export function TitleBarLayout({
                   isDark ? "Switch to light mode" : "Switch to dark mode"
                 }
                 onClick={onToggleTheme}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 {isDark ? (
                   <svg
@@ -233,7 +252,7 @@ export function TitleBarLayout({
               <Link
                 href={cartHref}
                 aria-label={`Cart${cartCount > 0 ? `, ${cartCount} items` : ""}`}
-                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="relative flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 <svg
                   className="w-5 h-5"
@@ -267,7 +286,7 @@ export function TitleBarLayout({
                 aria-expanded={sidebarOpen}
                 aria-controls="secondary-sidebar"
                 onClick={onToggleSidebar}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 <svg
                   className="w-5 h-5"
@@ -304,7 +323,7 @@ export function TitleBarLayout({
                     ? `Profile — ${user.displayName ?? user.email}`
                     : "Sign in"
                 }
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 {user?.photoURL ? (
                   <Image

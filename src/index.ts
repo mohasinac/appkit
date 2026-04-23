@@ -1392,7 +1392,7 @@ export { rateLimit } from "./security/index";
 export { rateLimitByIdentifier } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // redactPii - Shared export for redact pii.
-export { redactPii } from "./security/index";
+export { redactPii, safeDisplayName, safeDisplayEmail } from "./security/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // requireActiveAccount - Shared export for require active account.
 export { requireActiveAccount } from "./security/index";
@@ -3117,6 +3117,12 @@ export { ADMIN_PRODUCT_STATUS_OPTIONS } from "./features/admin/index";
 // AdminAnalyticsView - Component for admin analytics view.
 export { AdminAnalyticsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AdminAdsView - Component for admin ads inventory view.
+export { AdminAdsView } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AdminAdEditorView - Component for admin ad create/edit view.
+export { AdminAdEditorView } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminBidsView - Component for admin bids view.
 export { AdminBidsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -3284,6 +3290,12 @@ export type { AdminAnalyticsViewLabels } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminAnalyticsViewProps - Type contract for admin analytics view props.
 export type { AdminAnalyticsViewProps } from "./features/admin/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// AdminAdsViewProps - Type contract for admin ads inventory view props.
+export type { AdminAdsViewProps } from "./features/admin/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// AdminAdEditorViewProps - Type contract for admin ad editor view props.
+export type { AdminAdEditorViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminBidsViewProps - Type contract for admin bids view props.
 export type { AdminBidsViewProps } from "./features/admin/index";
@@ -4355,6 +4367,9 @@ export { CATEGORY_SELLER_SORT_OPTIONS } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoriesListView - Component for categories list view.
 export { CategoriesListView } from "./features/categories/index";
+// [SERVER-RSC]-Self-fetching index/detail page views for categories.
+export { CategoriesIndexPageView } from "./features/categories/components/CategoriesIndexPageView";
+export { CategoryDetailPageView } from "./features/categories/components/CategoryDetailPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoryCard - Component for category card.
 export { CategoryCard } from "./features/categories/index";
@@ -4751,6 +4766,9 @@ export { ContactForm } from "./features/contact/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ContactInfoSidebar - Shared export for contact info sidebar.
 export { ContactInfoSidebar } from "./features/contact/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// ContactPageView - Shared export for contact page view.
+export { ContactPageView } from "./features/contact/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useContactSubmit - React hook for use contact submit.
 export { useContactSubmit } from "./features/contact/index";
@@ -5440,6 +5458,15 @@ export type { SwitchFilterProps } from "./features/filters/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // UrlTable - Type contract for url table.
 export type { UrlTable } from "./features/filters/index";
+export type { UsePendingFiltersOptions, UsePendingFiltersResult } from "./features/filters/index";
+export {
+  parseRouteFilterSegments,
+  serializeRouteFilterSegments,
+  buildFilterUrl,
+  extractFilterStateFromParams,
+  mergeFilterUpdate,
+} from "./features/filters/index";
+export type { RouteFilterState } from "./features/filters/index";
 
 // ./features/forms/index
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -5459,6 +5486,28 @@ export { INPUT_SUCCESS } from "./features/forms/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdvertisementBanner - Shared export for advertisement banner.
 export { AdvertisementBanner } from "./features/homepage/index";
+// AdSlot - Ad placement slot renderer.
+export { AdSlot } from "./features/homepage/index";
+export type { AdSlotProps } from "./features/homepage/index";
+// Ad registry API
+export {
+  registerAdSlot,
+  registerAdSlots,
+  getAdSlot,
+  getAllAdSlots,
+  unregisterAdSlot,
+  clearAdRegistry,
+  setAdConsentGranted,
+  isAdConsentGranted,
+  isAdSlotRenderable,
+} from "./features/homepage/index";
+export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/index";
+// MarketplaceHomepageView - Server component with optional ad slot injection.
+export { MarketplaceHomepageView } from "./features/homepage/index";
+export type {
+  MarketplaceHomepageViewProps,
+  MarketplaceHomepageViewAdSlots,
+} from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BeforeAfterCard - Component for before after card.
 export { BeforeAfterCard } from "./features/homepage/index";
@@ -5498,9 +5547,7 @@ export { HowItWorksInfoView } from "./features/homepage/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // HowItWorksSection - Shared export for how it works section.
 export { HowItWorksSection } from "./features/homepage/index";
-// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
-// MarketplaceHomepageView - Component for marketplace homepage view.
-export { MarketplaceHomepageView } from "./features/homepage/index";
+
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // NewsletterBanner - Shared export for newsletter banner.
 export { NewsletterBanner } from "./features/homepage/index";
@@ -6477,6 +6524,9 @@ export { PreorderBadge } from "./features/pre-orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PreorderCard - Component for preorder card.
 export { PreorderCard } from "./features/pre-orders/index";
+// [SERVER-RSC]-Self-fetching index/detail page views for pre-orders.
+export { PreOrdersListView } from "./features/pre-orders/index";
+export { PreOrderDetailPageView } from "./features/pre-orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildPreorderColumns - Helper for build preorder columns.
 export { buildPreorderColumns } from "./features/pre-orders/index";
@@ -6532,6 +6582,10 @@ export { preOrdersPOST } from "./features/pre-orders/server";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AuctionDetailView - Component for auction detail view.
 export { AuctionDetailView } from "./features/products/index";
+// [SERVER-RSC]-Self-fetching detail page view for auctions.
+export { AuctionDetailPageView } from "./features/auctions/index";
+// [SERVER-RSC]-Self-fetching index page view for auctions.
+export { AuctionsListView } from "./features/auctions/components/AuctionsListView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AuctionsView - Component for auctions view.
 export { AuctionsView } from "./features/products/index";
@@ -6595,6 +6649,8 @@ export { ProductCard } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductDetailView - Component for product detail view.
 export { ProductDetailView } from "./features/products/index";
+// [SERVER-RSC]-Self-fetching detail page view for products.
+export { ProductDetailPageView } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFeatureBadges - Shared export for product feature badges.
 export { ProductFeatureBadges } from "./features/products/index";
@@ -7086,6 +7142,8 @@ export { ReviewsList } from "./features/reviews/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ReviewsListView - Component for reviews list view.
 export { ReviewsListView } from "./features/reviews/index";
+// [SERVER-RSC]-Self-fetching index page view for reviews.
+export { ReviewsIndexPageView } from "./features/reviews/components/ReviewsIndexPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ViewReviewModal - Component for view review modal.
 export { ViewReviewModal } from "./features/reviews/index";
@@ -7800,6 +7858,12 @@ export { StoreStatusValues } from "./features/stores/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // StoresListView - Component for stores list view.
 export { StoresListView } from "./features/stores/index";
+// [SERVER-RSC] — Self-fetching RSC page views for store tab pages.
+export { StoresIndexPageView } from "./features/stores/components/StoresIndexPageView";
+export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailLayoutView";
+export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
+export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
+export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildStoreColumns - Helper for build store columns.
 export { buildStoreColumns } from "./features/stores/index";
@@ -8241,7 +8305,7 @@ export {
 // Missing auth feature components
 export {
   RoleGate, ProtectedRoute, SocialAuthButtons, AuthStatusPanel,
-  LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView,
+  LoginForm, RegisterForm, ForgotPasswordView, ResetPasswordView, VerifyEmailView, OAuthLoadingView,
 } from "./features/auth/index";
 export type {
   RoleGateProps, ProtectedRouteProps, AuthGuardUser, AuthRouteConfig,

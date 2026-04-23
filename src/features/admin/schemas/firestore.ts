@@ -403,6 +403,10 @@ export interface SiteSettingsDocument {
     };
     newsletterEnabled?: boolean;
   };
+  announcementBar?: {
+    enabled: boolean;
+    message: string;
+  };
   /** Encrypted provider credentials � never return raw to the client. */
   credentials?: SiteSettingsCredentials;
   featuredResults?: FeaturedResult[];
@@ -460,6 +464,10 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
   returns: {
     windowDays: 7,
   },
+  announcementBar: {
+    enabled: true,
+    message: "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15",
+  },
 };
 
 export const SITE_SETTINGS_PUBLIC_FIELDS = [
@@ -476,6 +484,7 @@ export const SITE_SETTINGS_PUBLIC_FIELDS = [
   "features",
   "featureFlags",
   "faq.variables",
+  "announcementBar",
 ] as const;
 
 export type SiteSettingsUpdateInput = Partial<

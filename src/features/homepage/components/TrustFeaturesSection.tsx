@@ -40,12 +40,12 @@ function TrustFeatureCard({
       style={{ transitionDelay: `${delay}ms` }}
     >
       {/* Icon box */}
-      <div className="from-primary-500/10 to-cobalt-500/10 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br flex-shrink-0">
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-100 dark:border-primary-900/30 flex-shrink-0">
         {item.renderIcon ? (
           item.renderIcon({ className: "w-7 h-7" })
         ) : (
           <Span
-            className="text-primary-600 dark:text-primary-400 text-2xl"
+            className="text-primary-600 dark:text-secondary-400 text-2xl"
             aria-hidden="true"
           >
             ✓
@@ -55,7 +55,7 @@ function TrustFeatureCard({
 
       <Heading
         level={3}
-        className="mt-3 mb-1 text-sm font-semibold tracking-wide uppercase text-zinc-800 dark:text-zinc-100"
+        className="mt-3 mb-1 text-sm font-bold tracking-wide uppercase text-zinc-900 dark:text-zinc-100"
       >
         {item.title}
       </Heading>
@@ -135,14 +135,14 @@ export function TrustFeaturesSection({
   return (
     <Section
       ref={sectionRef}
-      className={`py-10 px-4 ${themed.bgSecondary} ${className}`}
+      className={`py-14 px-4 bg-zinc-50 dark:bg-slate-900/80 ${className}`}
     >
       <div className="max-w-6xl mx-auto">
         {title && (
           <div className="text-center mb-8">
             <Heading
               level={2}
-              className={`text-3xl md:text-4xl font-bold ${themed.textPrimary}`}
+              className="text-3xl md:text-4xl font-bold text-zinc-900 dark:text-zinc-100"
             >
               {title}
             </Heading>

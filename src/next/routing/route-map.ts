@@ -33,6 +33,8 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_REVIEWS: (storeSlug: string) => `/stores/${storeSlug}/reviews`,
     STORE_ABOUT: (storeSlug: string) => `/stores/${storeSlug}/about`,
     CATEGORIES: "/categories",
+    CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
+    REVIEWS: "/reviews",
     SEARCH: "/search",
     PROMOTIONS: "/promotions",
     ABOUT: "/about",
@@ -58,7 +60,6 @@ export const DEFAULT_ROUTE_MAP = {
     EVENTS: "/events",
     EVENT_DETAIL: (id: string) => `/events/${id}`,
     EVENT_PARTICIPATE: (id: string) => `/events/${id}/participate`,
-    REVIEWS: "/reviews",
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",

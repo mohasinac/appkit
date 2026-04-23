@@ -7,6 +7,7 @@ import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
 import { useCountdown, type CountdownRemaining } from "../../../react";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
   BaseListingCard,
   Button,
@@ -338,7 +339,7 @@ export function MarketplaceAuctionCard({
             {hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}
           </Caption>
           <Text className="text-base font-bold leading-none text-primary">
-            {formatCurrency(displayBid, product.currency)}
+            {formatCurrency(displayBid, getDefaultCurrency())}
           </Text>
         </Div>
 

@@ -3,7 +3,7 @@ import React from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Li, Nav, Ol, Span } from "../../ui";
+import { Div, Li, Nav, Ol, Span } from "../../ui";
 
 /** Map of path segments → human-readable labels. */
 const DEFAULT_PATH_LABELS: Record<string, string> = {
@@ -107,41 +107,45 @@ export function AutoBreadcrumbs({
   const allCrumbs = [{ label: "Home", href: localePrefix || "/" }, ...crumbs];
 
   return (
-    <Nav aria-label="Breadcrumb" className={className}>
-      <Ol className="flex items-center gap-2 text-sm flex-wrap">
-        {allCrumbs.map((crumb, index) => {
-          const isLast = index === allCrumbs.length - 1;
-          return (
-            <Li key={crumb.href} className="flex items-center gap-2">
-              {isLast ? (
-                <Span
-                  aria-current="page"
-                  className="text-zinc-700 dark:text-zinc-200"
-                >
-                  {crumb.label}
-                </Span>
-              ) : renderLink ? (
-                renderLink(crumb.href, crumb.label)
-              ) : (
-                <Link
-                  href={crumb.href}
-                  className="text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
-                >
-                  {crumb.label}
-                </Link>
-              )}
-              {!isLast && (
-                <Span
-                  className="text-zinc-500 dark:text-zinc-400/90 select-none"
-                  aria-hidden="true"
-                >
-                  {separator}
-                </Span>
-              )}
-            </Li>
-          );
-        })}
-      </Ol>
-    </Nav>
+    <Div className="border-y border-zinc-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/85">
+      <Div className="container mx-auto max-w-[1920px] px-4 py-2 sm:px-6 lg:px-8">
+        <Nav aria-label="Breadcrumb" className={className}>
+          <Ol className="flex items-center gap-2 text-sm flex-wrap">
+            {allCrumbs.map((crumb, index) => {
+              const isLast = index === allCrumbs.length - 1;
+              return (
+                <Li key={crumb.href} className="flex items-center gap-2">
+                  {isLast ? (
+                    <Span
+                      aria-current="page"
+                      className="text-zinc-700 dark:text-zinc-200"
+                    >
+                      {crumb.label}
+                    </Span>
+                  ) : renderLink ? (
+                    renderLink(crumb.href, crumb.label)
+                  ) : (
+                    <Link
+                      href={crumb.href}
+                      className="text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-white transition-colors"
+                    >
+                      {crumb.label}
+                    </Link>
+                  )}
+                  {!isLast && (
+                    <Span
+                      className="text-zinc-500 dark:text-zinc-400/90 select-none"
+                      aria-hidden="true"
+                    >
+                      {separator}
+                    </Span>
+                  )}
+                </Li>
+              );
+            })}
+          </Ol>
+        </Nav>
+      </Div>
+    </Div>
   );
 }

@@ -24,9 +24,9 @@ export function BottomNavLayout({
     <Nav
       id={id}
       aria-label={ariaLabel}
-      className={`fixed bottom-0 left-0 right-0 md:hidden z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-zinc-200/80 dark:border-slate-800/80 shadow-2xl pb-safe${className ? ` ${className}` : ""}`}
+      className={`fixed bottom-0 left-0 right-0 lg:hidden z-40 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-zinc-200/80 dark:border-slate-800/80 shadow-2xl pb-safe${className ? ` ${className}` : ""}`}
     >
-      <Ul className="flex items-stretch h-14">{children}</Ul>
+      <Ul className="flex items-stretch h-16">{children}</Ul>
     </Nav>
   );
 }

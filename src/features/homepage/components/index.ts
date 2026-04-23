@@ -20,6 +20,10 @@ export { NewsletterBanner } from "./NewsletterBanner";
 export { HomepageView } from "./HomepageView";
 export type { HomepageViewProps } from "./HomepageView";
 export { MarketplaceHomepageView } from "./MarketplaceHomepageView";
+export type {
+  MarketplaceHomepageViewProps,
+  MarketplaceHomepageViewAdSlots,
+} from "./MarketplaceHomepageView";
 
 // -- Homepage section shells --------------------------------------------------
 export type { SectionCarouselProps } from "./SectionCarousel";
@@ -90,3 +94,40 @@ export type {
   HowItWorksInfoViewProps,
 } from "./HowItWorksInfoView";
 export { HowItWorksInfoView } from "./HowItWorksInfoView";
+
+// -- New marketplace homepage sections ----------------------------------------
+
+export type { AnnouncementBarProps } from "./AnnouncementBar";
+export { AnnouncementBar } from "./AnnouncementBar";
+
+export type { ShopByCategorySectionProps } from "./ShopByCategorySection";
+export { ShopByCategorySection } from "./ShopByCategorySection";
+
+export type { FeaturedProductsSectionProps } from "./FeaturedProductsSection";
+export { FeaturedProductsSection } from "./FeaturedProductsSection";
+
+export type { FeaturedAuctionsSectionProps } from "./FeaturedAuctionsSection";
+export { FeaturedAuctionsSection } from "./FeaturedAuctionsSection";
+
+export type { FeaturedPreOrdersSectionProps } from "./FeaturedPreOrdersSection";
+export { FeaturedPreOrdersSection } from "./FeaturedPreOrdersSection";
+
+export type { FeaturedStoresSectionProps } from "./FeaturedStoresSection";
+export { FeaturedStoresSection } from "./FeaturedStoresSection";
+
+export type { EventsSectionProps } from "./EventsSection";
+export { EventsSection } from "./EventsSection";
+
+export type { CTABannerSectionProps } from "./CTABannerSection";
+export { CTABannerSection } from "./CTABannerSection";
+
+export type { HomepageCustomerReviewsSectionProps } from "./HomepageCustomerReviewsSection";
+export { HomepageCustomerReviewsSection } from "./HomepageCustomerReviewsSection";
+
+export type { BlogArticlesSectionProps } from "./BlogArticlesSection";
+export { BlogArticlesSection } from "./BlogArticlesSection";
+
+// -- Ad slot renderer ---------------------------------------------------------
+
+export type { AdSlotProps } from "./AdSlot";
+export { AdSlot } from "./AdSlot";

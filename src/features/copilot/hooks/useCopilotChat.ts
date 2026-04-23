@@ -27,12 +27,15 @@ function generateConversationId(): string {
 
 interface UseCopilotChatOptions {
   endpoint?: string;
+  initialConversationId?: string;
 }
 
 export function useCopilotChat(options?: UseCopilotChatOptions) {
   const endpoint = options?.endpoint ?? COPILOT_ENDPOINTS.CHAT;
   const [messages, setMessages] = useState<CopilotMessage[]>([]);
-  const [conversationId, setConversationId] = useState(generateConversationId);
+  const [conversationId, setConversationId] = useState(
+    () => options?.initialConversationId ?? generateConversationId(),
+  );
 
   const mutation = useMutation({
     mutationFn: async (prompt: string) => {
@@ -76,10 +79,18 @@ export function useCopilotChat(options?: UseCopilotChatOptions) {
     setConversationId(generateConversationId());
   }, []);
 
+  const loadConversation = useCallback((nextConversationId: string) => {
+    if (!nextConversationId.trim()) return;
+    setMessages([]);
+    setConversationId(nextConversationId.trim());
+  }, []);
+
   return {
     messages,
+    conversationId,
     sendMessage,
     startNewConversation,
+    loadConversation,
     isLoading: mutation.isPending,
     error: mutation.error,
   };

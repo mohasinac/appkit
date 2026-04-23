@@ -23,7 +23,6 @@ export interface FAQSectionProps {
   subtitle?: string;
   tabs: FAQTab[];
   activeTab: string;
-  onTabChange: (tab: string) => void;
   items: FAQItem[];
   viewMoreHref?: string;
   viewMoreLabel?: string;

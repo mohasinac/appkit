@@ -40,7 +40,7 @@ export function NavItem({
       <Link
         href={href}
         className={[
-          "relative flex flex-col items-center gap-1 py-2 transition-colors",
+          "relative flex h-full w-full flex-col items-center justify-center gap-1 py-1 text-center transition-colors",
           stateClass,
           className,
         ]
@@ -54,7 +54,9 @@ export function NavItem({
           />
         )}
         <Row className={["relative", iconClassName].join(" ")}>{icon}</Row>
-        <Span className={["relative", labelClassName].join(" ")}>{label}</Span>
+        <Span className={["relative whitespace-nowrap", labelClassName].join(" ")}>
+          {label}
+        </Span>
       </Link>
     );
   }

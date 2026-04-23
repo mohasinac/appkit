@@ -138,11 +138,31 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 6. Live Auctions ------------------------------------------------------
+    // -- 6. Pre-Orders -------------------------------------------------------
     {
-      id: "section-auctions-pokemon-1707300000006",
-      type: "auctions",
+      id: "section-pre-orders-pokemon-1707300000006",
+      type: "pre-orders",
       order: 6,
+      enabled: true,
+      config: {
+        title: "🎴 Pre-Order Incoming Sets",
+        subtitle: "Reserve the next wave of Base Set reprints and sealed product before they ship",
+        maxItems: 18,
+        rows: 2,
+        itemsPerRow: 3,
+        mobileItemsPerRow: 1,
+        autoScroll: false,
+        scrollInterval: 5000,
+      },
+      createdAt: daysAgo(14),
+      updatedAt: daysAgo(1),
+    },
+
+    // -- 7. Live Auctions ------------------------------------------------------
+    {
+      id: "section-auctions-pokemon-1707300000007",
+      type: "auctions",
+      order: 7,
       enabled: true,
       config: {
         title: "🔥 Live Auctions",
@@ -158,11 +178,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 7. Promotional Banner — Charizard -------------------------------------
+    // -- 8. Promotional Banner — Charizard -------------------------------------
     {
-      id: "section-banner-pokemon-1707300000007",
+      id: "section-banner-pokemon-1707300000008",
       type: "banner",
-      order: 7,
+      order: 8,
       enabled: true,
       config: {
         height: "md",
@@ -193,11 +213,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(0),
     },
 
-    // -- 8. Features / Why Us --------------------------------------------------
+    // -- 9. Features / Why Us --------------------------------------------------
     {
-      id: "section-features-pokemon-1707300000008",
+      id: "section-features-pokemon-1707300000009",
       type: "features",
-      order: 8,
+      order: 9,
       enabled: true,
       config: {
         title: "Everything a Pokémon Collector Needs",
@@ -207,11 +227,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 9. Reviews ------------------------------------------------------------
+    // -- 10. Reviews ----------------------------------------------------------
     {
-      id: "section-reviews-pokemon-1707300000009",
+      id: "section-reviews-pokemon-1707300000010",
       type: "reviews",
-      order: 9,
+      order: 10,
       enabled: true,
       config: {
         title: "What Trainers Are Saying",
@@ -225,11 +245,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 10. WhatsApp Community ------------------------------------------------
+    // -- 11. WhatsApp Community -----------------------------------------------
     {
-      id: "section-whatsapp-community-pokemon-1707300000010",
+      id: "section-whatsapp-community-pokemon-1707300000011",
       type: "whatsapp-community",
-      order: 10,
+      order: 11,
       enabled: true,
       config: {
         title: "Join the Pokémon Collectors Community",
@@ -249,11 +269,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 11. FAQ ---------------------------------------------------------------
+    // -- 12. FAQ --------------------------------------------------------------
     {
-      id: "section-faq-pokemon-1707300000011",
+      id: "section-faq-pokemon-1707300000012",
       type: "faq",
-      order: 11,
+      order: 12,
       enabled: true,
       config: {
         title: "Frequently Asked Questions",
@@ -269,11 +289,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 12. Blog Articles -----------------------------------------------------
+    // -- 13. Blog Articles ----------------------------------------------------
     {
-      id: "section-blog-articles-pokemon-1707300000012",
+      id: "section-blog-articles-pokemon-1707300000013",
       type: "blog-articles",
-      order: 12,
+      order: 13,
       enabled: true,
       config: {
         title: "From the Collectors' Corner",
@@ -287,11 +307,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 13. Newsletter --------------------------------------------------------
+    // -- 14. Newsletter -------------------------------------------------------
     {
-      id: "section-newsletter-pokemon-1707300000013",
+      id: "section-newsletter-pokemon-1707300000014",
       type: "newsletter",
-      order: 13,
+      order: 14,
       enabled: true,
       config: {
         title: "Stay Ahead of the Rares",
@@ -306,11 +326,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 14. Stores ------------------------------------------------------------
+    // -- 15. Stores -----------------------------------------------------------
     {
-      id: "section-stores-pokemon-1707300000014",
+      id: "section-stores-pokemon-1707300000015",
       type: "stores",
-      order: 14,
+      order: 15,
       enabled: true,
       config: {
         title: "Meet Our Top Sellers",
@@ -324,11 +344,11 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       updatedAt: daysAgo(1),
     },
 
-    // -- 15. Events (disabled) -------------------------------------------------
+    // -- 16. Events (disabled) ------------------------------------------------
     {
-      id: "section-events-pokemon-1707300000015",
+      id: "section-events-pokemon-1707300000016",
       type: "events",
-      order: 15,
+      order: 16,
       enabled: false,
       config: {
         title: "Upcoming Pokémon Events",
@@ -338,6 +358,23 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
         scrollInterval: 4000,
       },
       createdAt: daysAgo(30),
+      updatedAt: daysAgo(1),
+    },
+
+    // -- 17. Brands (disabled) ------------------------------------------------
+    {
+      id: "section-brands-pokemon-1707300000017",
+      type: "brands",
+      order: 17,
+      enabled: false,
+      config: {
+        title: "Shop by Brand",
+        subtitle: "WOTC, Wizards of the Coast, The Pokémon Company — explore by publisher",
+        maxBrands: 8,
+        autoScroll: true,
+        scrollInterval: 4000,
+      },
+      createdAt: daysAgo(14),
       updatedAt: daysAgo(1),
     },
   ];
