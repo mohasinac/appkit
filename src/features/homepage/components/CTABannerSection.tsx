@@ -23,7 +23,7 @@ export function CTABannerSection({
 }: CTABannerSectionProps) {
   return (
     <Section className={`bg-gradient-to-r from-primary-600 to-primary-700 py-16 px-4 ${className}`}>
-      <div className="mx-auto max-w-3xl text-center">
+      <div className="mx-auto max-w-3xl text-center" data-section="ctabannersection-div-313">
         <span className="mb-4 inline-block text-2xl" aria-hidden="true">
           ✨
         </span>
@@ -33,7 +33,7 @@ export function CTABannerSection({
         {subtitle && (
           <p className="mt-3 text-base text-white/80">{subtitle}</p>
         )}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4" data-section="ctabannersection-div-314">
           <Link
             href={primaryHref}
             className="inline-flex items-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-primary-700 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"

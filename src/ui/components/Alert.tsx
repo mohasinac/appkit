@@ -121,15 +121,15 @@ export function Alert({
     <div
       className={`appkit-alert ${styles.container} ${className}`}
       role="alert"
-    >
-      <div className="appkit-alert__content">
+     data-section="alert-div-448">
+      <div className="appkit-alert__content" data-section="alert-div-449">
         {!compact && (
-          <div className={`appkit-alert__icon ${styles.icon}`}>
+          <div className={`appkit-alert__icon ${styles.icon}`} data-section="alert-div-450">
             {ICONS[variant]}
           </div>
         )}
 
-        <div className="appkit-alert__body">
+        <div className="appkit-alert__body" data-section="alert-div-451">
           {title && (
             <Heading
               level={3}
@@ -138,7 +138,7 @@ export function Alert({
               {title}
             </Heading>
           )}
-          <div className={`appkit-alert__text ${styles.text}`}>{children}</div>
+          <div className={`appkit-alert__text ${styles.text}`} data-section="alert-div-452">{children}</div>
         </div>
 
         {onClose && (

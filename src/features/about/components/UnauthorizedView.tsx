@@ -34,14 +34,14 @@ export async function UnauthorizedView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="unauthorizedview-div-218">
       <Section
         className={`${heroBannerClass} text-white min-h-[60vh] flex flex-col items-center justify-center py-20 text-center`}
       >
-        <div className={`${page.container.sm}`}>
+        <div className={`${page.container.sm}`} data-section="unauthorizedview-div-219">
           <div
             className={`w-20 h-20 rounded-2xl bg-white/20 ${flex.center} mx-auto mb-6`}
-          >
+           data-section="unauthorizedview-div-220">
             <ShieldAlert className="w-10 h-10 text-white" />
           </div>
           <Heading
@@ -57,7 +57,7 @@ export async function UnauthorizedView({
           >
             {t("subtitle")}
           </Text>
-          <div className={`${flex.center} gap-4 flex-wrap`}>
+          <div className={`${flex.center} gap-4 flex-wrap`} data-section="unauthorizedview-div-221">
             {LINKS.map(({ icon: Icon, label, href, isPrimary }) => (
               <TextLink
                 key={href}
@@ -78,7 +78,7 @@ export async function UnauthorizedView({
         </div>
       </Section>
 
-      <div className={`${page.container.sm} py-10`}>
+      <div className={`${page.container.sm} py-10`} data-section="unauthorizedview-div-222">
         <Section
           className={`rounded-2xl p-6 text-center border ${themed.border} ${themed.bgSecondary}`}
         >

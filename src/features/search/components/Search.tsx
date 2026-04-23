@@ -328,7 +328,7 @@ export function Search({
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
             className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
-            onMouseDown={(event) => event.preventDefault()}
+            onMouseDown={(event) = data-section="search-div-430"> event.preventDefault()}
           >
             {filteredQuickLinks.length > 0 && (
               <Ul>
@@ -360,7 +360,7 @@ export function Search({
             )}
 
             {query && suggestionsLoading && (
-              <div className="px-4 py-3">
+              <div className="px-4 py-3" data-section="search-div-431">
                 <Text variant="secondary" size="sm">
                   {labels.searching}
                 </Text>
@@ -384,7 +384,7 @@ export function Search({
                     <Span className="text-sm">
                       {typeIcons[suggestion.type]}
                     </Span>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0" data-section="search-div-432">
                       <Text size="sm" className="font-medium truncate">
                         {suggestion.title}
                       </Text>
@@ -512,10 +512,10 @@ export function Search({
   if (!isOpen) return null;
 
   return (
-    <div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]">
-      <div className="container mx-auto px-4 py-3 md:py-4 relative">
+    <div className="border-b border-zinc-200 bg-white shadow-md dark:border-slate-800 dark:bg-slate-950 animate-[fadeIn_150ms_ease-out]" data-section="search-div-433">
+      <div className="container mx-auto px-4 py-3 md:py-4 relative" data-section="search-div-434">
         <Row gap="sm" className="md:gap-3">
-          <div className="flex-1 relative">
+          <div className="flex-1 relative" data-section="search-div-435">
             <Input
               ref={inputRef}
               bare
@@ -573,10 +573,10 @@ export function Search({
         </Row>
 
         {(filteredSiteLinks.length > 0 || query) && (
-          <div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50">
+          <div className="absolute top-full left-0 right-0 px-4 pt-2 pb-4 space-y-2 z-50" data-section="search-div-436">
             {filteredSiteLinks.length > 0 && !suggestionsLoading && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
-                <div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700">
+              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900" data-section="search-div-437">
+                <div className="px-4 py-2 border-b border-zinc-200 dark:border-slate-700" data-section="search-div-438">
                   <Text
                     variant="secondary"
                     size="xs"
@@ -617,9 +617,9 @@ export function Search({
             )}
 
             {query && (
-              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900">
+              <div className="rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900" data-section="search-div-439">
                 {suggestionsLoading ? (
-                  <div className="px-4 py-3">
+                  <div className="px-4 py-3" data-section="search-div-440">
                     <Text variant="secondary" size="sm">
                       {labels.searching}
                     </Text>
@@ -641,7 +641,7 @@ export function Search({
                             <Span className="text-sm">
                               {typeIcons[suggestion.type]}
                             </Span>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0" data-section="search-div-441">
                               <Text size="sm" className="font-medium truncate">
                                 {suggestion.title}
                               </Text>

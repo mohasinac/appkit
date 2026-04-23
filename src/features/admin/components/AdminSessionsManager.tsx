@@ -16,7 +16,7 @@ export function AdminSessionsManager({
   className = "",
 }: AdminSessionsManagerProps) {
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-6 ${className}`} data-section="adminsessionsmanager-div-256">
       {renderHeader?.()}
       {renderStats()}
       {renderTable()}

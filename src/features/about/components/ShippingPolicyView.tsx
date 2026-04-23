@@ -77,12 +77,12 @@ export async function ShippingPolicyView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="shippingpolicyview-div-205">
       {/* Header */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.sm}`}>
+        <div className={`${page.container.sm}`} data-section="shippingpolicyview-div-206">
           <Heading level={1} variant="none" className="mb-3 text-white">
             {t("title")}
           </Heading>
@@ -92,7 +92,7 @@ export async function ShippingPolicyView({
         </div>
       </Section>
 
-      <div className={`${page.container.sm} py-10 md:py-12 lg:py-16`}>
+      <div className={`${page.container.sm} py-10 md:py-12 lg:py-16`} data-section="shippingpolicyview-div-207">
         <Text size="lg" variant="secondary" className="mb-8">
           {t("subtitle")}
         </Text>
@@ -131,7 +131,7 @@ export async function ShippingPolicyView({
 
         <div
           className={`mt-12 pt-8 border-t ${themed.border} flex gap-6 text-sm`}
-        >
+         data-section="shippingpolicyview-div-208">
           <TextLink
             href={String(ROUTES.PUBLIC.TRACK_ORDER)}
             className="text-sky-600 dark:text-sky-400 hover:underline"

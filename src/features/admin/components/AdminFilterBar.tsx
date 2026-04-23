@@ -85,9 +85,9 @@ export function AdminFilterBar({
 
   const innerContent = (
     <>
-      <div className={`grid ${gridCols[columns]} gap-4`}>{children}</div>
+      <div className={`grid ${gridCols[columns]} gap-4`} data-section="adminfilterbar-div-249">{children}</div>
       {deferred && (
-        <div className={`${themeConfig.flexEnd} gap-2 mt-3`}>
+        <div className={`${themeConfig.flexEnd} gap-2 mt-3`} data-section="adminfilterbar-div-250">
           {pendingCount > 0 && (
             <Button variant="ghost" size="sm" onClick={onReset}>
               {labels.reset}
@@ -114,11 +114,11 @@ export function AdminFilterBar({
     );
   }
 
-  if (!withCard) return <div className={className}>{innerContent}</div>;
+  if (!withCard) return <div className={className} data-section="adminfilterbar-div-251">{innerContent}</div>;
 
   // Fallback: render as plain div if no Card provided but withCard=true
   return (
-    <div className={`${themeConfig.cardPadding} ${className}`}>
+    <div className={`${themeConfig.cardPadding} ${className}`} data-section="adminfilterbar-div-252">
       {innerContent}
     </div>
   );

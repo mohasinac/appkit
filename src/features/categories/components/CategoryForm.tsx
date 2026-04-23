@@ -64,7 +64,7 @@ export function CategoryForm({
   };
 
   return (
-    <div className={stackClassName}>
+    <div className={stackClassName} data-section="categoryform-div-262">
       <FormGroup columns={2}>
         <FormField
           name="name"
@@ -84,7 +84,7 @@ export function CategoryForm({
         />
       </FormGroup>
 
-      <div className="appkit-form-field">
+      <div className="appkit-form-field" data-section="categoryform-div-263">
         <Label className="appkit-form-field__label">{L.description}</Label>
         <RichTextEditor
           value={normalizeRichTextHtml(category.description || "")}
@@ -116,11 +116,11 @@ export function CategoryForm({
       )}
 
       {category.display?.coverImage && isReadonly && (
-        <div>
+        <div data-section="categoryform-div-264">
           <Label className="block text-sm font-medium mb-2">
             {L.categoryImage}
           </Label>
-          <div className="relative h-32 w-40 overflow-hidden rounded">
+          <div className="relative h-32 w-40 overflow-hidden rounded" data-section="categoryform-div-265">
             <MediaImage
               src={category.display.coverImage}
               alt={category.name || ""}

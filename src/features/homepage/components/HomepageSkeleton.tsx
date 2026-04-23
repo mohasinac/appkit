@@ -12,7 +12,7 @@ export function HomepageSkeleton() {
   const newsletterH = "h-[clamp(220px,28vh,320px)]";
 
   return (
-    <div className="w-full overflow-hidden">
+    <div className="w-full overflow-hidden" data-section="homepageskeleton-div-328">
       {/* Hero Carousel skeleton */}
       <div
         className={`${skeleton.card} w-full ${heroSkeletonH}`}
@@ -43,13 +43,13 @@ export function HomepageSkeleton() {
 
       {/* Featured Products skeleton — 5 cards */}
       <Section className={`p-8 ${themed.bgPrimary}`}>
-        <div className={`${flex.between} mb-6`}>
+        <div className={`${flex.between} mb-6`} data-section="homepageskeleton-div-329">
           <div className={`${skeleton.heading} w-52`} />
           <div className={`${skeleton.text} w-24`} />
         </div>
         <Grid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-2">
+            <div key={i} className="flex flex-col gap-2" data-section="homepageskeleton-div-330">
               <div className={`${skeleton.image} w-full pb-[100%]`} />
               <div className={`${skeleton.text} w-3/4`} />
               <div className={`${skeleton.text} w-1/2`} />
@@ -60,13 +60,13 @@ export function HomepageSkeleton() {
 
       {/* Featured Auctions skeleton — 5 cards */}
       <Section className={`p-8 ${themed.bgSecondary}`}>
-        <div className={`${flex.between} mb-6`}>
+        <div className={`${flex.between} mb-6`} data-section="homepageskeleton-div-331">
           <div className={`${skeleton.heading} w-56`} />
           <div className={`${skeleton.text} w-24`} />
         </div>
         <Grid className="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-2">
+            <div key={i} className="flex flex-col gap-2" data-section="homepageskeleton-div-332">
               <div className={`${skeleton.image} w-full pb-[100%]`} />
               <div className={`${skeleton.text} w-3/4`} />
               <div className={`${skeleton.text} w-1/2`} />

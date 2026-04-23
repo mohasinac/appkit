@@ -106,7 +106,7 @@ export default function BottomActions() {
       ]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="bottomactions-div-401">
       {/* -- Bulk action type-picker panel (opens upward) ---------------------- */}
       {isBulkMode && (
         <div
@@ -124,7 +124,7 @@ export default function BottomActions() {
           ]
             .filter(Boolean)
             .join(" ")}
-        >
+         data-section="bottomactions-div-402">
           {bulkActions.map((action, i) => {
             const isSelected = action.id === selectedActionId;
             return (
@@ -183,7 +183,7 @@ export default function BottomActions() {
 
       {/* -- Info label row (page mode only) --------------------------------- */}
       {infoLabel && !isBulkMode && (
-        <div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80">
+        <div className="px-4 pt-2 pb-0 border-b border-zinc-100/80 dark:border-slate-800/80" data-section="bottomactions-div-403">
           <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 leading-5 truncate">
             {infoLabel}
           </Text>

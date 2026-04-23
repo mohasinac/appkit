@@ -47,7 +47,7 @@ export function EmptyState({
       variant="outlined"
       className={[UI_EMPTY.base, className].filter(Boolean).join(" ")}
     >
-      {icon ? <div className={UI_EMPTY.icon}>{icon}</div> : null}
+      {icon ? <div className={UI_EMPTY.icon} data-section="emptystate-div-492">{icon}</div> : null}
       <Heading level={3}>{title}</Heading>
       {description ? (
         <Text variant="secondary" className={UI_EMPTY.description}>
@@ -55,7 +55,7 @@ export function EmptyState({
         </Text>
       ) : null}
       {resolvedAction ? (
-        <div className={UI_EMPTY.action}>{resolvedAction}</div>
+        <div className={UI_EMPTY.action} data-section="emptystate-div-493">{resolvedAction}</div>
       ) : null}
     </Card>
   );

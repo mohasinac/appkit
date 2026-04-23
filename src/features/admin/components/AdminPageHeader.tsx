@@ -75,7 +75,7 @@ export function AdminPageHeader({
   },
 }: AdminPageHeaderProps) {
   return (
-    <div className={`${themeConfig.gradient} p-6 ${className}`}>
+    <div className={`${themeConfig.gradient} p-6 ${className}`} data-section="adminpageheader-div-253">
       {breadcrumb && breadcrumb.length > 0 && (
         <Nav
           aria-label="Breadcrumb"
@@ -100,8 +100,8 @@ export function AdminPageHeader({
           ))}
         </Nav>
       )}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className={themeConfig.spacingClass}>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4" data-section="adminpageheader-div-254">
+        <div className={themeConfig.spacingClass} data-section="adminpageheader-div-255">
           <Row gap="sm" wrap>
             <Heading level={2} className={themeConfig.titleClass}>
               {title}

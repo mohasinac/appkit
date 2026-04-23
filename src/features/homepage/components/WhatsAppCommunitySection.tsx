@@ -41,7 +41,7 @@ export function WhatsAppCommunitySection({
   if (isLoading) {
     return (
       <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full max-w-7xl mx-auto" data-section="whatsappcommunitysection-div-390">
           <div className="h-80 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
         </div>
       </Section>
@@ -56,10 +56,10 @@ export function WhatsAppCommunitySection({
 
   return (
     <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto">
-        <div className="bg-gradient-to-br from-green-700 to-green-800 dark:from-emerald-800 dark:to-emerald-900 rounded-2xl p-8 text-white overflow-hidden relative">
+      <div className="w-full max-w-7xl mx-auto" data-section="whatsappcommunitysection-div-391">
+        <div className="bg-gradient-to-br from-green-700 to-green-800 dark:from-emerald-800 dark:to-emerald-900 rounded-2xl p-8 text-white overflow-hidden relative" data-section="whatsappcommunitysection-div-392">
           {/* Decorative Pattern */}
-          <div className="absolute inset-0 opacity-10" aria-hidden>
+          <div className="absolute inset-0 opacity-10" aria-hidden data-section="whatsappcommunitysection-div-393">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern
@@ -77,11 +77,11 @@ export function WhatsAppCommunitySection({
             </svg>
           </div>
 
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center" data-section="whatsappcommunitysection-div-394">
             {/* WhatsApp Icon */}
             <div
               className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm mb-6 mx-auto`}
-            >
+             data-section="whatsappcommunitysection-div-395">
               <MessageCircle className="w-10 h-10 text-white" />
             </div>
 
@@ -99,13 +99,13 @@ export function WhatsAppCommunitySection({
 
             {/* Facepile + member counter */}
             {memberCount && (
-              <div className={`${flex.center} gap-3 mb-4`}>
-                <div className="flex -space-x-2">
+              <div className={`${flex.center} gap-3 mb-4`} data-section="whatsappcommunitysection-div-396">
+                <div className="flex -space-x-2" data-section="whatsappcommunitysection-div-397">
                   {["A", "R", "S", "M", "P"].map((initial, i) => (
                     <div
                       key={i}
                       className={`w-8 h-8 rounded-full border-2 border-white bg-green-700 ${flex.center} text-white text-xs font-bold`}
-                    >
+                     data-section="whatsappcommunitysection-div-398">
                       {initial}
                     </div>
                   ))}
@@ -137,7 +137,7 @@ export function WhatsAppCommunitySection({
                   <div
                     key={index}
                     className="flex items-start gap-3 text-left bg-white/10 backdrop-blur-sm p-4 rounded-lg"
-                  >
+                   data-section="whatsappcommunitysection-div-399">
                     <svg
                       className="w-6 h-6 mt-0.5 flex-shrink-0"
                       fill="currentColor"
@@ -157,7 +157,7 @@ export function WhatsAppCommunitySection({
 
             {/* CTA Button */}
             {groupLink && (
-              <div className="relative inline-block">
+              <div className="relative inline-block" data-section="whatsappcommunitysection-div-400">
                 <div
                   className="absolute inset-0 rounded-full bg-lime-400/30 animate-pulse blur-md scale-110"
                   aria-hidden

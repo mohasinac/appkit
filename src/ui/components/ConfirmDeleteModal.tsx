@@ -104,16 +104,16 @@ export function ConfirmDeleteModal({
       className={UI_CONFIRM_MODAL.backdrop}
       onClick={onClose}
     >
-      <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+      <div onClick={(e: React.MouseEvent) = data-section="confirmdeletemodal-div-468"> e.stopPropagation()}>
         <Card className={UI_CONFIRM_MODAL.body}>
           {/* Icon */}
-          <div className={UI_CONFIRM_MODAL.iconWrap}>
+          <div className={UI_CONFIRM_MODAL.iconWrap} data-section="confirmdeletemodal-div-469">
             <div
               className={[
                 UI_CONFIRM_MODAL.icon,
                 UI_CONFIRM_MODAL.iconVariant[variant],
               ].join(" ")}
-            >
+             data-section="confirmdeletemodal-div-470">
               <svg
                 className={UI_CONFIRM_MODAL.iconSvg}
                 fill="none"
@@ -131,13 +131,13 @@ export function ConfirmDeleteModal({
           </div>
 
           {/* Content */}
-          <div className={UI_CONFIRM_MODAL.content}>
+          <div className={UI_CONFIRM_MODAL.content} data-section="confirmdeletemodal-div-471">
             <Heading level={4}>{title}</Heading>
             <Text className={UI_CONFIRM_MODAL.message}>{message}</Text>
           </div>
 
           {/* Actions */}
-          <div className={UI_CONFIRM_MODAL.actions}>
+          <div className={UI_CONFIRM_MODAL.actions} data-section="confirmdeletemodal-div-472">
             <Button
               variant="secondary"
               onClick={onClose}

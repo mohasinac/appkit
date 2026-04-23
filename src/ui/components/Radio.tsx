@@ -60,7 +60,7 @@ export function RadioGroup({
   const stackClass = UI_RADIO.stack[orientation];
 
   return (
-    <div className={UI_RADIO.group}>
+    <div className={UI_RADIO.group} data-section="radio-div-574">
       {label && (
         <Label className="mb-2 block" required={required}>
           {label}
@@ -71,7 +71,7 @@ export function RadioGroup({
         className={stackClass}
         role="radiogroup"
         aria-label={typeof label === "string" ? label : undefined}
-      >
+       data-section="radio-div-575">
         {options.map((option) => {
           const selected = option.value === value;
           if (variant === "classic") {

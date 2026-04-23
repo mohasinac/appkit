@@ -33,7 +33,7 @@ export function Divider({
       <div
         className={`appkit-divider appkit-divider--labeled ${className}`}
         role="separator"
-      >
+       data-section="divider-div-479">
         <div className="appkit-divider__line" />
         <Span className="appkit-divider__label">{label}</Span>
         <div className="appkit-divider__line" />

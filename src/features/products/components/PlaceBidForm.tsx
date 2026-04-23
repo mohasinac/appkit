@@ -31,7 +31,7 @@ export function PlaceBidForm({
   if (renderAuthGate) return <>{renderAuthGate()}</>;
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className}`} data-section="placebidform-div-424">
       {renderCountdown?.()}
       {renderBidInfo?.()}
       {renderError?.()}

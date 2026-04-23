@@ -46,12 +46,12 @@ export async function FAQPageView({
   const activeCategory = categories.find((c) => c.slug === category);
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="faqpageview-div-93">
       {/* Hero */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.md} text-center`}>
+        <div className={`${page.container.md} text-center`} data-section="faqpageview-div-94">
           <Heading level={1} variant="none" className="mb-3 text-white">
             {activeCategory ? activeCategory.label : t("title")}
           </Heading>
@@ -61,8 +61,8 @@ export async function FAQPageView({
         </div>
       </Section>
 
-      <div className={`${page.container.md} py-10 md:py-12 lg:py-16`}>
-        <div className="flex flex-col md:flex-row gap-8">
+      <div className={`${page.container.md} py-10 md:py-12 lg:py-16`} data-section="faqpageview-div-95">
+        <div className="flex flex-col md:flex-row gap-8" data-section="faqpageview-div-96">
           {/* Category sidebar */}
           {categories.length > 0 && (
             <aside className="md:w-56 flex-shrink-0">
@@ -109,7 +109,7 @@ export async function FAQPageView({
           )}
 
           {/* FAQ items */}
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0" data-section="faqpageview-div-97">
             {visibleItems.length === 0 ? (
               <Section
                 className={`text-center py-16 rounded-2xl border ${themed.border} ${themed.bgSecondary}`}
@@ -135,7 +135,7 @@ export async function FAQPageView({
                       <span>{item.question}</span>
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </summary>
-                    <div className="px-5 pb-5 pt-1">
+                    <div className="px-5 pb-5 pt-1" data-section="faqpageview-div-98">
                       <Text
                         variant="secondary"
                         className="text-sm leading-relaxed whitespace-pre-line"
@@ -158,7 +158,7 @@ export async function FAQPageView({
               <Text variant="secondary" className="text-sm mb-4">
                 {t("stillNeedHelpText")}
               </Text>
-              <div className={`${flex.center} gap-4 flex-wrap`}>
+              <div className={`${flex.center} gap-4 flex-wrap`} data-section="faqpageview-div-99">
                 <TextLink href={String(ROUTES.PUBLIC.HELP)}>
                   {t("helpCenter")}
                 </TextLink>

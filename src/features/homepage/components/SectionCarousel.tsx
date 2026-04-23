@@ -112,12 +112,12 @@ export interface SectionCarouselProps<T = unknown> {
 function CarouselSkeleton({ count }: { count: number }) {
   const { skeleton } = THEME_CONSTANTS;
   return (
-    <div className="flex gap-4 overflow-hidden px-4">
+    <div className="flex gap-4 overflow-hidden px-4" data-section="sectioncarousel-div-349">
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
           className="flex-none min-w-[clamp(150px,18vw,260px)] max-w-[clamp(240px,36vw,380px)] h-[clamp(180px,26vh,260px)] space-y-2"
-        >
+         data-section="sectioncarousel-div-350">
           <div className={`aspect-square rounded-xl ${skeleton.image}`} />
           <div className={`${skeleton.text} w-3/4`} />
           <div className={`${skeleton.text} w-1/2`} />
@@ -182,7 +182,7 @@ export function SectionCarousel<T = unknown>({
       {/* Background image + overlay */}
       {hasBg && backgroundImage && (
         <>
-          <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden" data-section="sectioncarousel-div-351">
             <MediaImage src={backgroundImage} alt="" size="hero" />
           </div>
           <div className="absolute inset-0 bg-black/55" />
@@ -190,12 +190,12 @@ export function SectionCarousel<T = unknown>({
       )}
 
       {/* Content — sits above the background */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto">
+      <div className="relative z-10 w-full max-w-7xl mx-auto" data-section="sectioncarousel-div-352">
         {/* Header */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-6" data-section="sectioncarousel-div-353">
           {/* Editorial pill */}
           {headingVariant === "editorial" && pillLabel && (
-            <div className="mb-4">
+            <div className="mb-4" data-section="sectioncarousel-div-354">
               <Span className={pillClass}>
                 <Span
                   className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
@@ -230,7 +230,7 @@ export function SectionCarousel<T = unknown>({
             <div
               className={`${flex.center} gap-2 mt-1 text-zinc-400 dark:text-zinc-500 text-xs select-none`}
               aria-hidden="true"
-            >
+             data-section="sectioncarousel-div-355">
               <Span className="h-px w-6 bg-current" />
               <Span className="text-xs">✶</Span>
               <Span className="h-px w-6 bg-current" />
@@ -263,7 +263,7 @@ export function SectionCarousel<T = unknown>({
 
         {/* View More button */}
         {viewMoreHref && !isLoading && (
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center" data-section="sectioncarousel-div-356">
             <TextLink
               href={viewMoreHref}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${

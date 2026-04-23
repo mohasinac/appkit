@@ -79,10 +79,10 @@ export function StoreAddressSelectorCreate({
 
   return (
     <>
-      <div>
+      <div data-section="storeaddressselectorcreate-div-442">
         {label && <Label className="mb-1.5">{label}</Label>}
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
+        <div className="flex items-center gap-2" data-section="storeaddressselectorcreate-div-443">
+          <div className="flex-1" data-section="storeaddressselectorcreate-div-444">
             <Select
               value={value}
               onChange={(e) => onChange(e.target.value)}

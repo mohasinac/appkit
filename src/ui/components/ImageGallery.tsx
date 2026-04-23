@@ -122,21 +122,21 @@ export default function ImageGallery({
     return (
       <div
         className={`appkit-image-gallery ${flex.center} p-8 ${themed.bgTertiary} rounded-lg ${className}`}
-      >
+       data-section="imagegallery-div-515">
         <Text className={themed.textMuted}>No images to display</Text>
       </div>
     );
   }
 
   return (
-    <div className={`appkit-image-gallery ${className}`}>
+    <div className={`appkit-image-gallery ${className}`} data-section="imagegallery-div-516">
       {/* Main Image Container */}
       <div
         ref={imageContainerRef}
         className={`appkit-image-gallery__viewport ${themed.bgSecondary}`}
-      >
+       data-section="imagegallery-div-517">
         {/* Image */}
-        <div className="appkit-image-gallery__image-frame">
+        <div className="appkit-image-gallery__image-frame" data-section="imagegallery-div-518">
           <div
             role="img"
             aria-label={currentImage.alt}
@@ -205,7 +205,7 @@ export default function ImageGallery({
           {images.length > 1 && (
             <div
               className={`appkit-image-gallery__counter ${themed.bgSecondary} ${themed.textPrimary}`}
-            >
+             data-section="imagegallery-div-519">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -214,7 +214,7 @@ export default function ImageGallery({
           {allowZoom && isZoomed && (
             <div
               className={`appkit-image-gallery__zoom-indicator ${themed.bgSecondary} ${themed.textPrimary}`}
-            >
+             data-section="imagegallery-div-520">
               {Math.round(scale * 100)}%
             </div>
           )}
@@ -222,7 +222,7 @@ export default function ImageGallery({
 
         {/* Caption */}
         {showCaptions && currentImage.caption && (
-          <div className={`appkit-image-gallery__caption ${themed.border}`}>
+          <div className={`appkit-image-gallery__caption ${themed.border}`} data-section="imagegallery-div-521">
             <Text className={themed.textSecondary}>{currentImage.caption}</Text>
           </div>
         )}
@@ -255,7 +255,7 @@ export default function ImageGallery({
       )}
 
       {/* Mobile Help Text */}
-      <div className={`appkit-image-gallery__help ${themed.textMuted}`}>
+      <div className={`appkit-image-gallery__help ${themed.textMuted}`} data-section="imagegallery-div-522">
         {allowZoom
           ? "Swipe to navigate • Double tap to zoom"
           : "Swipe to navigate"}

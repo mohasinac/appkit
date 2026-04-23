@@ -1796,6 +1796,16 @@ export { payoutsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsSeedData - Model for products seed data.
 export { productsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed users.
+export { pokemonUsersSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed categories.
+export { pokemonCategoriesSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed products.
+export { pokemonProductsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed carousel slides.
+export { pokemonCarouselSlidesSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed homepage sections.
+export { pokemonHomepageSectionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
@@ -1820,9 +1830,14 @@ export { storeAddressesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // storesSeedData - Model for stores seed data.
 export { storesSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed stores.
+export { pokemonStoresSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // usersSeedData - Model for users seed data.
 export { usersSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// wishlistsSeedData - Model for wishlists seed data.
+export { wishlistsSeedData } from "./seed/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.
 export type { CouponDiscountType } from "./seed/index";

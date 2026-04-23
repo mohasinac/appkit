@@ -151,6 +151,7 @@ export { usersSeedData } from "./users-seed-data";
 export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storesSeedData } from "./stores-seed-data";
+export { pokemonStoresSeedData } from "./pokemon-stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { categoriesSeedData } from "./categories-seed-data";
 export { productsSeedData } from "./products-seed-data";
@@ -167,6 +168,14 @@ export { faqSeedData } from "./faq-seed-data";
 export { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 export { siteSettingsSeedData } from "./site-settings-seed-data";
 export { carouselSlidesSeedData } from "./carousel-slides-seed-data";
+export { wishlistsSeedData } from "./wishlists-seed-data";
+
+// Pokemon-themed seed datasets
+export { pokemonUsersSeedData } from "./pokemon-users-seed-data";
+export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
+export { pokemonProductsSeedData } from "./pokemon-products-seed-data";
+export { pokemonCarouselSlidesSeedData } from "./pokemon-carousel-slides-seed-data";
+export { pokemonHomepageSectionsSeedData } from "./pokemon-homepage-sections-seed-data";
 
 // Firestore index helpers
 export type { FirestoreIndexConfig } from "./firestore-indexes";

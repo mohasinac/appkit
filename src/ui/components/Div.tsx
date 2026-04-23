@@ -5,7 +5,7 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Semantic `<div>` wrapper for general-purpose layout containers.
+ * Semantic `<div data-section="div-div-477">` wrapper for general-purpose layout containers.
  *
  * Use when no more specific semantic element applies
  * (`<Section>`, `<Article>`, `<Main>`, `<Aside>` etc). Enables
@@ -21,7 +21,7 @@ export interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
  */
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
   ({ className = "", children, ...props }, ref) => (
-    <div ref={ref} className={className} {...props}>
+    <div ref={ref} className={className} {...props} data-section="div-div-478">
       {children}
     </div>
   ),

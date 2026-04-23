@@ -33,7 +33,7 @@ export function MakeOfferForm({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className}`} data-section="makeofferform-div-423">
       {renderError?.()}
       {renderInput?.()}
       {renderTerms?.()}

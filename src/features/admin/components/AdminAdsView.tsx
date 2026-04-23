@@ -135,7 +135,7 @@ export function AdminAdsView({
       key: "name",
       header: "Ad",
       render: (row) => (
-        <div>
+        <div data-section="adminadsview-div-241">
           <Text className="font-medium">{row.name}</Text>
           <Text className="text-xs text-neutral-500 dark:text-zinc-400">{row.id}</Text>
         </div>
@@ -150,7 +150,7 @@ export function AdminAdsView({
       key: "status",
       header: "Status",
       render: (row) => (
-        <div>
+        <div data-section="adminadsview-div-242">
           <Text className="text-xs uppercase tracking-wide">{row.status}</Text>
           {row.publishReady === false ? (
             <Text className="text-[11px] text-red-600 dark:text-red-300">Publish blocked</Text>
@@ -172,7 +172,7 @@ export function AdminAdsView({
         const nextStatus: AdminAdStatus = row.status === "active" ? "paused" : "active";
         const cannotPublish = nextStatus === "active" && row.publishReady === false;
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" data-section="adminadsview-div-243">
             {renderEditLink ? renderEditLink(row) : (
               <a
                 className="inline-flex h-8 items-center rounded-md border border-neutral-200 px-3 text-xs dark:border-slate-700"
@@ -238,7 +238,7 @@ export function AdminAdsView({
       {...rest}
       title={labels.title ?? "Ad Inventory"}
       sections={[
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-244">
           <Text variant="secondary">Manage ad inventory, placement mapping, and publishing state.</Text>
           <a
             href={createHref}
@@ -252,7 +252,7 @@ export function AdminAdsView({
             {adsQuery.error instanceof Error ? adsQuery.error.message : "Unknown error"}
           </Alert>
         ) : null,
-        <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3">
+        <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3" data-section="adminadsview-div-245">
           <Text className="text-sm font-semibold">Provider and publish settings</Text>
           <Text className="text-xs text-neutral-500 dark:text-zinc-400">
             Save provider credentials here before publishing AdSense or third-party inventory.
@@ -262,7 +262,7 @@ export function AdminAdsView({
               {serverCredentialIssues.join("; ")}
             </Alert>
           ) : null}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadsview-div-246">
             <Input
               label="AdSense client id"
               value={adsenseClientId}
@@ -279,7 +279,7 @@ export function AdminAdsView({
           <Text className="text-xs text-neutral-500 dark:text-zinc-400">
             Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
           </Text>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-247">
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
@@ -308,7 +308,7 @@ export function AdminAdsView({
             </Alert>
           ) : null}
         </div>,
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3" data-section="adminadsview-div-248">
           <Input
             label="Search"
             value={q}

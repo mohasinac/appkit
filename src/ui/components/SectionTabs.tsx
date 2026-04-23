@@ -75,7 +75,7 @@ export function SectionTabs({
         ]
           .filter(Boolean)
           .join(" ")}
-      >
+       data-section="sectiontabs-div-587">
         <div
           className={[
             "appkit-section-tabs__track",
@@ -83,7 +83,7 @@ export function SectionTabs({
           ]
             .filter(Boolean)
             .join(" ")}
-        >
+         data-section="sectiontabs-div-588">
           {tabs.map((tab) => {
             const key = getTabKey(tab);
             const isActive = isActiveTab(tab);
@@ -143,7 +143,7 @@ export function SectionTabs({
   );
 
   if (inline) {
-    return <div className={className}>{strip}</div>;
+    return <div className={className} data-section="sectiontabs-div-589">{strip}</div>;
   }
 
   return (
@@ -156,8 +156,8 @@ export function SectionTabs({
       ]
         .filter(Boolean)
         .join(" ")}
-    >
-      <div className="appkit-section-tabs__container">{strip}</div>
+     data-section="sectiontabs-div-590">
+      <div className="appkit-section-tabs__container" data-section="sectiontabs-div-591">{strip}</div>
     </div>
   );
 }

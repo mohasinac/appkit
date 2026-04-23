@@ -46,9 +46,9 @@ export function Progress({
   };
 
   return (
-    <div className={`appkit-progress ${className}`}>
+    <div className={`appkit-progress ${className}`} data-section="progress-div-569">
       {(label || showValue) && (
-        <div className="appkit-progress__meta">
+        <div className="appkit-progress__meta" data-section="progress-div-570">
           {label && <Span className="appkit-progress__label">{label}</Span>}
           {showValue && (
             <Span className="appkit-progress__value">
@@ -65,7 +65,7 @@ export function Progress({
         aria-valuemin={0}
         aria-valuemax={max}
         aria-label={label || `Progress: ${Math.round(percentage)}%`}
-      >
+       data-section="progress-div-571">
         <div
           className={`appkit-progress__bar ${variantClasses[variant]}`}
           style={{ width: `${percentage}%` }}
@@ -110,7 +110,7 @@ export function IndeterminateProgress({
   };
 
   return (
-    <div className={`appkit-progress ${className}`}>
+    <div className={`appkit-progress ${className}`} data-section="progress-div-572">
       {label && (
         <Span className="appkit-progress__label appkit-progress__label--block">
           {label}
@@ -121,7 +121,7 @@ export function IndeterminateProgress({
         className={`appkit-progress__track appkit-progress__track--indeterminate ${sizeClasses[size]}`}
         role="progressbar"
         aria-label={label || "Loading..."}
-      >
+       data-section="progress-div-573">
         <div
           className={`appkit-progress__bar appkit-progress__bar--indeterminate ${variantClasses[variant]}`}
           style={{ width: "40%" }}

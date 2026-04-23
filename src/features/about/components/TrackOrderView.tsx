@@ -50,12 +50,12 @@ export async function TrackOrderView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="trackorderview-div-209">
       {/* Header */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.sm} text-center`}>
+        <div className={`${page.container.sm} text-center`} data-section="trackorderview-div-210">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {t("title")}
           </Heading>
@@ -67,20 +67,20 @@ export async function TrackOrderView({
 
       <div
         className={`${page.container.md} py-14 md:py-16 space-y-14 md:space-y-16`}
-      >
+       data-section="trackorderview-div-211">
         {/* Sign-in prompt */}
         <Section
           className={`${themed.bgSecondary} rounded-2xl border ${themed.border} p-8 text-center`}
         >
           <div
             className={`w-16 h-16 bg-primary/10 dark:bg-primary/15 rounded-full ${flex.center} mx-auto mb-4`}
-          >
+           data-section="trackorderview-div-212">
             <ShoppingBag className="w-8 h-8 text-primary" />
           </div>
           <Heading level={2} className="mb-3">
             {t("signInPrompt")}
           </Heading>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6" data-section="trackorderview-div-213">
             <TextLink
               href={String(ROUTES.AUTH.LOGIN)}
               className={`inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-medium px-6 py-3 rounded-lg transition-colors`}
@@ -106,13 +106,13 @@ export async function TrackOrderView({
               <div
                 key={title}
                 className={`${themed.bgSecondary} rounded-xl border ${themed.border} p-6 relative`}
-              >
+               data-section="trackorderview-div-214">
                 <Caption className="absolute top-4 right-4 font-bold">
                   {String(index + 1).padStart(2, "0")}
                 </Caption>
                 <div
                   className={`w-12 h-12 ${bg} rounded-xl ${flex.center} mb-4`}
-                >
+                 data-section="trackorderview-div-215">
                   <Icon className={`w-6 h-6 ${color}`} />
                 </div>
                 <Heading level={3} className="mb-2">
@@ -130,7 +130,7 @@ export async function TrackOrderView({
         <Section
           className={`${themed.bgSecondary} rounded-xl border ${themed.border} p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4`}
         >
-          <div>
+          <div data-section="trackorderview-div-216">
             <Heading level={2} className="mb-1">
               {t("needHelpTitle")}
             </Heading>
@@ -138,7 +138,7 @@ export async function TrackOrderView({
               {t("needHelpText")}
             </Text>
           </div>
-          <div className="flex gap-3 flex-shrink-0">
+          <div className="flex gap-3 flex-shrink-0" data-section="trackorderview-div-217">
             <TextLink
               href={String(ROUTES.PUBLIC.HELP)}
               className={`text-sm ${themed.textSecondary} hover:text-primary underline underline-offset-4 transition-colors`}

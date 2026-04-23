@@ -42,7 +42,7 @@ export function DescriptionField({
       ]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="descriptionfield-div-476">
       <dt className="appkit-description-field__label">{label}</dt>
       <dd className="appkit-description-field__value">{value}</dd>
     </div>

@@ -119,8 +119,8 @@ export function FAQPageContent({
   };
 
   return (
-    <div className="py-12">
-      <div className="mb-12 text-center">
+    <div className="py-12" data-section="faqpagecontent-div-287">
+      <div className="mb-12 text-center" data-section="faqpagecontent-div-288">
         <Heading level={1} className="mb-4 text-3xl font-bold sm:text-4xl">
           {labels.title}
         </Heading>
@@ -129,7 +129,7 @@ export function FAQPageContent({
         </Text>
       </div>
 
-      <div className="mb-8 lg:hidden">
+      <div className="mb-8 lg:hidden" data-section="faqpagecontent-div-289">
         {renderMobileCategoryTabs({
           selectedCategory,
           total,
@@ -138,8 +138,8 @@ export function FAQPageContent({
         })}
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        <div className="hidden lg:col-span-4 lg:block xl:col-span-3">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12" data-section="faqpagecontent-div-290">
+        <div className="hidden lg:col-span-4 lg:block xl:col-span-3" data-section="faqpagecontent-div-291">
           <FAQCategorySidebar
             selectedCategory={selectedCategory}
             onCategorySelect={handleCategorySelect}
@@ -157,7 +157,7 @@ export function FAQPageContent({
           />
         </div>
 
-        <div className="col-span-1 lg:col-span-8 xl:col-span-9">
+        <div className="col-span-1 lg:col-span-8 xl:col-span-9" data-section="faqpagecontent-div-292">
           <SlottedListingView
             portal="public"
             inlineToolbar
@@ -206,7 +206,7 @@ export function FAQPageContent({
           />
 
           {faqs.length > 0 ? (
-            <div className="mt-12">
+            <div className="mt-12" data-section="faqpagecontent-div-293">
               <ContactCTA
                 email={contact.email}
                 phone={contact.phone}

@@ -328,7 +328,7 @@ export function AdminAdEditorView({
             onChange={(event) => setName(event.target.value)}
             placeholder="Summer Campaign"
           />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-section="adminadeditorview-div-235">
             <Select
               label="Provider"
               value={provider}
@@ -364,9 +364,9 @@ export function AdminAdEditorView({
             label="Require user ad-consent for this ad"
           />
 
-          <div className="space-y-2">
+          <div className="space-y-2" data-section="adminadeditorview-div-236">
             <Text className="text-sm font-medium">Placements</Text>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2" data-section="adminadeditorview-div-237">
               {placements.map((placement) => (
                 <label
                   key={placement.id}
@@ -383,7 +383,7 @@ export function AdminAdEditorView({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-238">
             <Input
               label="Start at (ISO)"
               value={startAt}
@@ -398,7 +398,7 @@ export function AdminAdEditorView({
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-239">
             <Input
               label="Creative title"
               value={title}
@@ -447,7 +447,7 @@ export function AdminAdEditorView({
             ) : null}
           </div>
 
-          <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3">
+          <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3" data-section="adminadeditorview-div-240">
             <Text className="text-sm font-medium mb-1">Preview</Text>
             <Text className="text-xs text-neutral-500 dark:text-zinc-400">
               {title || name || "Untitled ad"}

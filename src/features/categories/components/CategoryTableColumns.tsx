@@ -37,7 +37,7 @@ export function getCategoryTableColumns(
         key: "image",
         header: "",
         render: (cat: Category) => (
-          <div className="relative w-9 h-9 rounded overflow-hidden flex-shrink-0">
+          <div className="relative w-9 h-9 rounded overflow-hidden flex-shrink-0" data-section="categorytablecolumns-div-270">
             {cat.display?.coverImage ? (
               <MediaImage
                 src={cat.display.coverImage}
@@ -49,7 +49,7 @@ export function getCategoryTableColumns(
               <div
                 className="w-full h-full flex items-center justify-center text-base"
                 style={{ backgroundColor: cat.display?.color ?? "#94a3b8" }}
-              >
+               data-section="categorytablecolumns-div-271">
                 {cat.display?.icon ?? "🗂️"}
               </div>
             )}
@@ -61,7 +61,7 @@ export function getCategoryTableColumns(
         header: L.colName,
         sortable: true,
         render: (cat: Category) => (
-          <div style={{ paddingLeft: `${cat.tier * 20}px` }}>
+          <div style={{ paddingLeft: `${cat.tier * 20}px` }} data-section="categorytablecolumns-div-272">
             {cat.name}
             {cat.tier > 0 && (
               <Span className="text-zinc-400 text-xs ml-2">
@@ -98,7 +98,7 @@ export function getCategoryTableColumns(
       },
     ],
     actions: (cat: Category) => (
-      <div className="flex gap-2">
+      <div className="flex gap-2" data-section="categorytablecolumns-div-273">
         <Button
           variant="ghost"
           onClick={(e) => {

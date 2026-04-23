@@ -26,7 +26,7 @@ export function RelatedProducts({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse" data-section="relatedproducts-div-428">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="aspect-square rounded-xl bg-neutral-100" />
         ))}
@@ -37,7 +37,7 @@ export function RelatedProducts({
   if (isEmpty) return null;
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className}`} data-section="relatedproducts-div-429">
       {renderTitle ? (
         renderTitle()
       ) : labels.title ? (

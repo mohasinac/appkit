@@ -50,7 +50,7 @@ export function Skeleton({
       style={style}
       role="status"
       aria-label="Loading"
-    >
+     data-section="skeleton-div-606">
       <span className="appkit-sr-only">Loading...</span>
     </div>
   );

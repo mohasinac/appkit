@@ -84,12 +84,12 @@ export async function HelpPageView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="helppageview-div-107">
       {/* Hero */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.md} text-center`}>
+        <div className={`${page.container.md} text-center`} data-section="helppageview-div-108">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {t("title")}
           </Heading>
@@ -101,13 +101,13 @@ export async function HelpPageView({
 
       <div
         className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}
-      >
+       data-section="helppageview-div-109">
         {/* Topic cards */}
         <Section>
           <Heading level={2} className="mb-6 text-center">
             {t("browseTopics")}
           </Heading>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-section="helppageview-div-110">
             {TOPICS.map(
               ({ icon: Icon, title, desc, href, color, iconColor }) => (
                 <TextLink
@@ -117,11 +117,11 @@ export async function HelpPageView({
                 >
                   <div
                     className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}
-                  >
+                   data-section="helppageview-div-111">
                     <Icon className={`w-5 h-5 ${iconColor}`} />
                   </div>
-                  <div className={`${flex.row} justify-between items-start`}>
-                    <div>
+                  <div className={`${flex.row} justify-between items-start`} data-section="helppageview-div-112">
+                    <div data-section="helppageview-div-113">
                       <Text className="font-semibold mb-1">{title}</Text>
                       <Text
                         variant="secondary"
@@ -142,7 +142,7 @@ export async function HelpPageView({
         <Section
           className={`rounded-2xl p-6 border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}
         >
-          <div className="flex-1">
+          <div className="flex-1" data-section="helppageview-div-114">
             <Heading level={3} className="mb-1 text-base">
               {t("trackOrderTitle")}
             </Heading>

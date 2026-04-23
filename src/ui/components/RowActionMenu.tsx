@@ -32,7 +32,7 @@ export function RowActionMenu({
     <div
       ref={ref}
       className="appkit-row-action-menu"
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) = data-section="rowactionmenu-div-584"> e.stopPropagation()}
     >
       <Button
         type="button"
@@ -50,9 +50,9 @@ export function RowActionMenu({
         <div
           role="menu"
           className={`appkit-row-action-menu__dropdown ${align === "right" ? "appkit-row-action-menu__dropdown--right" : "appkit-row-action-menu__dropdown--left"}`}
-        >
+         data-section="rowactionmenu-div-585">
           {actions.map((action, idx) => (
-            <div key={`${action.label}-${idx}`}>
+            <div key={`${action.label}-${idx}`} data-section="rowactionmenu-div-586">
               {action.separator && idx > 0 ? (
                 <div className="appkit-row-action-menu__separator" />
               ) : null}

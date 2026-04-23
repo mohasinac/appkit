@@ -32,7 +32,7 @@ export interface AuthRouteConfig {
  * <RoleGate
  *   user={currentUser}
  *   allowedRoles="admin"
- *   fallback={<div>Not authorized</div>}
+ *   fallback={<div data-section="guards-div-259">Not authorized</div>}
  * >
  *   <AdminPanel />
  * </RoleGate>

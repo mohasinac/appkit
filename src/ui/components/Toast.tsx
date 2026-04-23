@@ -99,7 +99,7 @@ export function ToastProvider({
         className={[UI_TOAST.container, UI_TOAST.positions[position]]
           .filter(Boolean)
           .join(" ")}
-      >
+       data-section="toast-div-623">
         {toasts.map((toast) => (
           <ToastRow key={toast.id} toast={toast} onClose={hideToast} />
         ))}
@@ -126,8 +126,8 @@ function ToastRow({
     <div
       role="alert"
       className={[UI_TOAST.row, UI_TOAST.variants[toast.variant]].join(" ")}
-    >
-      <div className={UI_TOAST.icon}>{iconMap[toast.variant]}</div>
+     data-section="toast-div-624">
+      <div className={UI_TOAST.icon} data-section="toast-div-625">{iconMap[toast.variant]}</div>
       <Text as="div" size="sm" weight="medium" className="flex-1 pr-1">
         {toast.message}
       </Text>

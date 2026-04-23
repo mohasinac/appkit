@@ -79,10 +79,10 @@ export function AddressSelectorCreate({
 
   return (
     <>
-      <div>
+      <div data-section="addressselectorcreate-div-224">
         {label && <Label className="mb-1.5">{label}</Label>}
-        <div className="flex items-center gap-2">
-          <div className="flex-1">
+        <div className="flex items-center gap-2" data-section="addressselectorcreate-div-225">
+          <div className="flex-1" data-section="addressselectorcreate-div-226">
             <Select
               value={value}
               onChange={(e) => onChange(e.target.value)}

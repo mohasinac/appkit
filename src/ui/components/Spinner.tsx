@@ -37,7 +37,7 @@ export function Spinner({
       className={`appkit-spinner ${className}`}
       role="status"
       aria-label={label}
-    >
+     data-section="spinner-div-611">
       <div
         className={`appkit-spinner__indicator ${sizeClasses[size]} ${variantClasses[variant]}`}
       />

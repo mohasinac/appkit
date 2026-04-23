@@ -195,7 +195,7 @@ export function SideDrawer({
         role="dialog"
         aria-modal="true"
         aria-labelledby="drawer-title"
-      >
+       data-section="sidedrawer-div-598">
         {/* Header */}
         <Row
           justify="between"
@@ -238,19 +238,19 @@ export function SideDrawer({
         </Row>
 
         {/* Content */}
-        <div className={UI_SIDE_DRAWER.content}>{children}</div>
+        <div className={UI_SIDE_DRAWER.content} data-section="sidedrawer-div-599">{children}</div>
 
         {/* Footer */}
-        {footer && <div className={UI_SIDE_DRAWER.footer}>{footer}</div>}
+        {footer && <div className={UI_SIDE_DRAWER.footer} data-section="sidedrawer-div-600">{footer}</div>}
       </div>
 
       {/* Unsaved changes warning overlay */}
       {showUnsavedWarning && (
         <>
           <div className={UI_SIDE_DRAWER.warnBackdrop} onClick={cancelClose} />
-          <div className={UI_SIDE_DRAWER.warnDialog}>
-            <div className={UI_SIDE_DRAWER.warnHeader}>
-              <div className={UI_SIDE_DRAWER.warnIcon}>
+          <div className={UI_SIDE_DRAWER.warnDialog} data-section="sidedrawer-div-601">
+            <div className={UI_SIDE_DRAWER.warnHeader} data-section="sidedrawer-div-602">
+              <div className={UI_SIDE_DRAWER.warnIcon} data-section="sidedrawer-div-603">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
@@ -260,7 +260,7 @@ export function SideDrawer({
                   />
                 </svg>
               </div>
-              <div>
+              <div data-section="sidedrawer-div-604">
                 <Heading level={4} className="mb-1">
                   {tConfirm("unsavedChangesTitle")}
                 </Heading>
@@ -269,7 +269,7 @@ export function SideDrawer({
                 </p>
               </div>
             </div>
-            <div className={UI_SIDE_DRAWER.warnActions}>
+            <div className={UI_SIDE_DRAWER.warnActions} data-section="sidedrawer-div-605">
               <Button variant="outline" onClick={cancelClose} size="sm">
                 {tActions("keepEditing")}
               </Button>

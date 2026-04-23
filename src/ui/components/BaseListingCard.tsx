@@ -67,7 +67,7 @@ function BaseListingCardRoot({
       ]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="baselistingcard-div-457">
       {children}
     </div>
   );
@@ -93,7 +93,7 @@ function BaseListingCardHero({
         .join(" ")}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-    >
+     data-section="baselistingcard-div-458">
       {children}
     </div>
   );
@@ -106,7 +106,7 @@ function BaseListingCardInfo({
   return (
     <div
       className={[UI_LISTING_CARD.info, className].filter(Boolean).join(" ")}
-    >
+     data-section="baselistingcard-div-459">
       {children}
     </div>
   );

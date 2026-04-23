@@ -43,7 +43,7 @@ export function BidHistory({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <div className="animate-pulse space-y-2">
+      <div className="animate-pulse space-y-2" data-section="bidhistory-div-419">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="h-10 rounded-lg bg-neutral-100" />
         ))}
@@ -60,10 +60,10 @@ export function BidHistory({
     );
   }
 
-  if (renderList) return <div className={className}>{renderList()}</div>;
+  if (renderList) return <div className={className} data-section="bidhistory-div-420">{renderList()}</div>;
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2 ${className}`} data-section="bidhistory-div-421">
       {bids.map((bid, i) =>
         renderBid ? (
           <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
@@ -71,7 +71,7 @@ export function BidHistory({
           <div
             key={bid.id}
             className="flex items-center justify-between p-3 rounded-lg border text-sm"
-          >
+           data-section="bidhistory-div-422">
             <Span>{bid.bidderName ?? bid.bidderId}</Span>
             <Span className="font-medium">{bid.amount}</Span>
             <Span className="text-neutral-500">{bid.placedAt}</Span>

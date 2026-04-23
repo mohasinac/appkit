@@ -30,9 +30,9 @@ export function SiteFeaturesSection({
 
   return (
     <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full">
+      <div className="w-full" data-section="sitefeaturessection-div-369">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-12" data-section="sitefeaturessection-div-370">
           <Heading
             level={2}
             className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
@@ -57,9 +57,9 @@ export function SiteFeaturesSection({
             <div
               key={feature.id}
               className="p-6 text-center hover:shadow-lg transition-all group rounded-2xl bg-white dark:bg-slate-900 border border-zinc-100 dark:border-slate-800"
-            >
+             data-section="sitefeaturessection-div-371">
               {/* Icon */}
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform">
+              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform" data-section="sitefeaturessection-div-372">
                 {feature.icon}
               </div>
 

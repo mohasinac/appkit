@@ -55,7 +55,7 @@ export function Select<V extends string = string>({
         : "appkit-select__trigger--default";
 
   return (
-    <div className="appkit-select">
+    <div className="appkit-select" data-section="select-div-592">
       {label && (
         <Label
           htmlFor={inputId}
@@ -66,7 +66,7 @@ export function Select<V extends string = string>({
         </Label>
       )}
 
-      <div className="relative group">
+      <div className="relative group" data-section="select-div-593">
         <select
           {...props}
           id={inputId}
@@ -102,7 +102,7 @@ export function Select<V extends string = string>({
           ))}
         </select>
 
-        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-500">
+        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-500" data-section="select-div-594">
           <svg
             className="h-4 w-4"
             viewBox="0 0 20 20"

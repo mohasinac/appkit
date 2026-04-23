@@ -13,6 +13,40 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
+function toRichTextDoc(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return value;
+
+  // Keep existing rich values unchanged (HTML or serialized ProseMirror docs).
+  if (/<\/?[a-z][\s\S]*>/i.test(trimmed)) return value;
+  try {
+    const parsed = JSON.parse(trimmed) as { type?: string };
+    if (parsed?.type === "doc") return value;
+  } catch {
+    // Not JSON, continue conversion.
+  }
+
+  return JSON.stringify({
+    type: "doc",
+    content: [
+      {
+        type: "paragraph",
+        content: [{ type: "text", text: value }],
+      },
+    ],
+  });
+}
+
+function withRichTextDescription(
+  item: Partial<ProductDocument>,
+): Partial<ProductDocument> {
+  if (typeof item.description !== "string") return item;
+  return {
+    ...item,
+    description: toRichTextDoc(item.description),
+  };
+}
+
 // --- Seller shortcuts -------------------------------------------------------
 const FV = {
   sellerId: "user-techhub-electronics-electron",
@@ -2568,4 +2602,4 @@ export const productsSeedData: Partial<ProductDocument>[] = [
   ...draftProducts,
   ...discontinuedAndSold,
   ...generatedProducts,
-];
+].map(withRichTextDescription);

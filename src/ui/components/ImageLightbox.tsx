@@ -107,7 +107,7 @@ export function ImageLightbox({
       aria-modal="true"
       aria-label="Image lightbox"
       onKeyDown={handleKeyDown}
-    >
+     data-section="imagelightbox-div-523">
       {/* Close button */}
       <Button
         variant="ghost"
@@ -122,7 +122,7 @@ export function ImageLightbox({
 
       {/* Counter */}
       {hasMultiple && (
-        <div className="appkit-lightbox__counter">
+        <div className="appkit-lightbox__counter" data-section="imagelightbox-div-524">
           {currentIndex + 1} / {images.length}
         </div>
       )}
@@ -142,7 +142,7 @@ export function ImageLightbox({
       )}
 
       {/* Image */}
-      <div className="appkit-lightbox__image-wrap">
+      <div className="appkit-lightbox__image-wrap" data-section="imagelightbox-div-525">
         <img
           src={image.src}
           alt={image.alt ?? ""}
@@ -150,7 +150,7 @@ export function ImageLightbox({
           draggable={false}
         />
         {/* Zoom icon hint */}
-        <div className="appkit-lightbox__zoom-hint">
+        <div className="appkit-lightbox__zoom-hint" data-section="imagelightbox-div-526">
           <ZoomIn className="w-4 h-4" />
           <Span className="text-xs">Scroll to zoom</Span>
         </div>

@@ -108,7 +108,7 @@ export function Modal({
       aria-modal="true"
       aria-labelledby={title ? titleId : undefined}
       onKeyDown={handleKeyDown}
-    >
+     data-section="modal-div-561">
       <div
         className="appkit-modal__backdrop"
         aria-hidden="true"
@@ -121,9 +121,9 @@ export function Modal({
         className={["appkit-modal__panel", SIZE_CLASSES[size], className]
           .filter(Boolean)
           .join(" ")}
-      >
+       data-section="modal-div-562">
         {(title || showCloseButton) && (
-          <div className="appkit-modal__header">
+          <div className="appkit-modal__header" data-section="modal-div-563">
             {title ? (
               <Heading level={2} id={titleId} className="appkit-modal__title">
                 {title}
@@ -148,7 +148,7 @@ export function Modal({
           </div>
         )}
 
-        <div className="appkit-modal__body">{children}</div>
+        <div className="appkit-modal__body" data-section="modal-div-564">{children}</div>
         {actions ? <ModalFooter>{actions}</ModalFooter> : null}
       </div>
     </div>,
@@ -171,7 +171,7 @@ export function ModalFooter({
       ]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="modal-div-565">
       {children}
     </div>
   );

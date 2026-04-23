@@ -14,10 +14,10 @@ import React from "react";
  * @example
  * ```tsx
  * // Before
- * <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
- * <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
- * <div className="flex flex-row items-center justify-between gap-2">
- * <div className="flex flex-col gap-4">
+ * <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-section="layout-div-531">
+ * <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-section="layout-div-532">
+ * <div className="flex flex-row items-center justify-between gap-2" data-section="layout-div-533">
+ * <div className="flex flex-col gap-4" data-section="layout-div-534">
  *
  * // After
  * <Container>
@@ -225,7 +225,7 @@ export function Container({
 // --- Stack --------------------------------------------------------------------
 
 /**
- * Vertical flex column. Use instead of `<div className="flex flex-col gap-4">`.
+ * Vertical flex column. Use instead of `<div className="flex flex-col gap-4" data-section="layout-div-535">`.
  *
  * @example
  * ```tsx
@@ -281,7 +281,7 @@ export function Stack({
 // --- Row ---------------------------------------------------------------------
 
 /**
- * Horizontal flex row. Use instead of `<div className="flex items-center gap-3">`.
+ * Horizontal flex row. Use instead of `<div className="flex items-center gap-3" data-section="layout-div-536">`.
  *
  * @example
  * ```tsx
@@ -344,7 +344,7 @@ export function Row({
 // --- Grid ---------------------------------------------------------------------
 
 /**
- * Responsive CSS grid. Use instead of `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">`.
+ * Responsive CSS grid. Use instead of `<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" data-section="layout-div-537">`.
  *
  * @example
  * ```tsx

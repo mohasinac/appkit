@@ -44,7 +44,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           : "";
 
     return (
-      <div className="w-full">
+      <div className="w-full" data-section="textarea-div-620">
         {label && (
           <Label htmlFor={inputId} required={required}>
             {label}
@@ -65,8 +65,8 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         />
 
         {(error || helperText || (showCharCount && maxLength)) && (
-          <div className="mt-1.5 flex items-start justify-between gap-3">
-            <div className="min-w-0 flex-1">
+          <div className="mt-1.5 flex items-start justify-between gap-3" data-section="textarea-div-621">
+            <div className="min-w-0 flex-1" data-section="textarea-div-622">
               {error ? (
                 <Text size="sm" variant="error" role="alert">
                   {error}

@@ -90,7 +90,7 @@ export function FilterDrawer({
         title={title}
         side={side}
         footer={
-          <div className="appkit-filter-drawer__footer">
+          <div className="appkit-filter-drawer__footer" data-section="filterdrawer-div-494">
             <Button type="button" variant="ghost" onClick={onReset}>
               Reset all
             </Button>
@@ -102,7 +102,7 @@ export function FilterDrawer({
           </div>
         }
       >
-        <div className="appkit-filter-drawer__body">{children}</div>
+        <div className="appkit-filter-drawer__body" data-section="filterdrawer-div-495">{children}</div>
       </Drawer>
     </>
   );

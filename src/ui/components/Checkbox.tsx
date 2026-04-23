@@ -47,7 +47,7 @@ export function Checkbox({
   }, [indeterminate]);
 
   return (
-    <div className={UI_CHECKBOX.base}>
+    <div className={UI_CHECKBOX.base} data-section="checkbox-div-467">
       <Label
         htmlFor={inputId}
         className={[

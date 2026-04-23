@@ -31,7 +31,8 @@ export type SeedCollectionName =
   | "eventEntries"
   | "sessions"
   | "storeAddresses"
-  | "carts";
+  | "carts"
+  | "wishlists";
 
 export interface SeedOperationResult {
   success?: boolean;

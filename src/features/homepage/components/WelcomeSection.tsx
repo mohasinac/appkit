@@ -53,11 +53,11 @@ export function WelcomeSection({
       <Section
         className={`relative overflow-hidden py-16 md:py-24 px-4 ${className}`}
       >
-        <div className="animate-pulse max-w-4xl mx-auto text-center">
+        <div className="animate-pulse max-w-4xl mx-auto text-center" data-section="welcomesection-div-382">
           <div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded-full w-52 mx-auto mb-6" />
           <div className="h-20 bg-zinc-200 dark:bg-slate-700 rounded-lg mb-4 max-w-2xl mx-auto" />
           <div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded-lg mb-8 max-w-lg mx-auto" />
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4" data-section="welcomesection-div-383">
             <div className="h-12 bg-zinc-200 dark:bg-slate-700 rounded-xl w-36" />
             <div className="h-12 bg-zinc-200 dark:bg-slate-700 rounded-xl w-36" />
           </div>
@@ -80,16 +80,16 @@ export function WelcomeSection({
         aria-hidden="true"
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 max-w-7xl mx-auto" data-section="welcomesection-div-384">
         <Grid
           gap="2xl"
           className="grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 items-center"
         >
           {/* Left: text content */}
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left" data-section="welcomesection-div-385">
             {/* Pill badge */}
             {pillLabel && (
-              <div>
+              <div data-section="welcomesection-div-386">
                 <Span className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
                   <Span
                     className="w-1.5 h-1.5 rounded-full bg-primary-500 inline-block"
@@ -184,12 +184,12 @@ export function WelcomeSection({
           </div>
 
           {/* Right: brand placeholder (desktop only) */}
-          <div className="hidden lg:block">
+          <div className="hidden lg:block" data-section="welcomesection-div-387">
             <div
               className={`relative rounded-3xl overflow-hidden aspect-[4/3] bg-gradient-to-br from-primary-100 via-cobalt-100/60 to-secondary-100 dark:from-primary-950/60 dark:via-cobalt-950/40 dark:to-secondary-950/60 border ${themed.border} shadow-2xl`}
-            >
+             data-section="welcomesection-div-388">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-cobalt/5" />
-              <div className={`absolute inset-0 ${flex.center}`}>
+              <div className={`absolute inset-0 ${flex.center}`} data-section="welcomesection-div-389">
                 <Span className="font-display text-9xl font-black text-primary-400/30 dark:text-secondary-400/30 select-none">
                   {brandLogoText}
                 </Span>

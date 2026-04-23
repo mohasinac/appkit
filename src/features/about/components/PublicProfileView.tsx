@@ -27,18 +27,18 @@ export async function PublicProfileView({
   // The view renders a consistent shell; in Phase 3 consumers pass data.
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="publicprofileview-div-186">
       {/* Profile hero banner */}
       <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
-        <div className={`${page.container.md}`}>
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5">
+        <div className={`${page.container.md}`} data-section="publicprofileview-div-187">
+          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5" data-section="publicprofileview-div-188">
             {/* Avatar placeholder */}
             <div
               className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0`}
-            >
+             data-section="publicprofileview-div-189">
               <User className="w-10 h-10 text-white/60" />
             </div>
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left" data-section="publicprofileview-div-190">
               <Heading level={1} variant="none" className="text-white mb-1">
                 {t("profileTitle")}
               </Heading>
@@ -50,9 +50,9 @@ export async function PublicProfileView({
         </div>
       </Section>
 
-      <div className={`${page.container.md} py-10 md:py-12 space-y-10`}>
+      <div className={`${page.container.md} py-10 md:py-12 space-y-10`} data-section="publicprofileview-div-191">
         {/* Stats row */}
-        <div className={`grid grid-cols-3 gap-4`}>
+        <div className={`grid grid-cols-3 gap-4`} data-section="publicprofileview-div-192">
           {[
             { icon: ShoppingBag, label: t("statListings"), value: "—" },
             { icon: Star, label: t("statReviews"), value: "—" },
@@ -61,8 +61,8 @@ export async function PublicProfileView({
             <div
               key={label}
               className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-4 text-center`}
-            >
-              <div className={`${flex.center} mb-1`}>
+             data-section="publicprofileview-div-193">
+              <div className={`${flex.center} mb-1`} data-section="publicprofileview-div-194">
                 <Icon className="w-4 h-4 text-neutral-400" />
               </div>
               <Text className="text-lg font-bold">{value}</Text>
@@ -80,7 +80,7 @@ export async function PublicProfileView({
           </Heading>
           <div
             className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}
-          >
+           data-section="publicprofileview-div-195">
             <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
             <Text variant="secondary" className="text-sm">
               {t("noListings")}
@@ -95,7 +95,7 @@ export async function PublicProfileView({
           </Heading>
           <div
             className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}
-          >
+           data-section="publicprofileview-div-196">
             <Star className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
             <Text variant="secondary" className="text-sm">
               {t("noReviews")}
@@ -104,7 +104,7 @@ export async function PublicProfileView({
         </Section>
 
         {/* Back link */}
-        <div className="flex justify-center pt-2">
+        <div className="flex justify-center pt-2" data-section="publicprofileview-div-197">
           <TextLink
             href={String(ROUTES.HOME)}
             variant="muted"

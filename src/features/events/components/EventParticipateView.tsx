@@ -31,7 +31,7 @@ export function EventParticipateView({
 }: EventParticipateViewProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <div className="flex justify-center py-20">Loading…</div>;
+    return <div className="flex justify-center py-20" data-section="eventparticipateview-div-283">Loading…</div>;
   }
 
   if (renderAuthGate) return <>{renderAuthGate()}</>;
@@ -39,7 +39,7 @@ export function EventParticipateView({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <div className={`max-w-xl mx-auto space-y-6 ${className}`}>
+    <div className={`max-w-xl mx-auto space-y-6 ${className}`} data-section="eventparticipateview-div-284">
       {renderEventInfo?.()}
       {renderForm?.()}
       {renderAction?.()}

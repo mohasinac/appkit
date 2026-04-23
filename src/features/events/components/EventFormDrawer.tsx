@@ -35,7 +35,7 @@ export function EventFormDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-6 ${className}`} data-section="eventformdrawer-div-278">
       {renderHeader?.()}
       {renderTypeSelector?.()}
       {renderBaseFields?.()}

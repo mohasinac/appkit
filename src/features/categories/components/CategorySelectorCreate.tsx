@@ -67,7 +67,7 @@ function CreateCategoryContent({
   }, [draft, mutate]);
 
   return (
-    <div className={stackClassName}>
+    <div className={stackClassName} data-section="categoryselectorcreate-div-266">
       <CategoryForm
         category={draft}
         allCategories={allCategories}
@@ -112,10 +112,10 @@ export function CategorySelectorCreate({
 
   return (
     <>
-      <div>
+      <div data-section="categoryselectorcreate-div-267">
         {label && <Label className="mb-1.5">{label}</Label>}
-        <div className="flex gap-2 items-center">
-          <div className="flex-1">
+        <div className="flex gap-2 items-center" data-section="categoryselectorcreate-div-268">
+          <div className="flex-1" data-section="categoryselectorcreate-div-269">
             <Select
               value={value}
               onChange={(e) => onChange(e.target.value)}

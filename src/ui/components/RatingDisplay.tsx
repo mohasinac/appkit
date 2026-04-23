@@ -25,8 +25,8 @@ export function RatingDisplay({
   const starSize = sizeClass[size];
 
   return (
-    <div className={classNames("appkit-rating-display", className)}>
-      <div className="appkit-rating-display__stars">
+    <div className={classNames("appkit-rating-display", className)} data-section="ratingdisplay-div-576">
+      <div className="appkit-rating-display__stars" data-section="ratingdisplay-div-577">
         {Array.from({ length: maxRating }, (_, i) => i + 1).map((star) => (
           <svg
             key={star}

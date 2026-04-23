@@ -31,7 +31,7 @@ export function ProductInfo({
   className = "",
 }: ProductInfoProps) {
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className}`} data-section="productinfo-div-425">
       {renderTitle?.(isLoading)}
       {renderRating?.()}
       {renderPrice?.(isLoading)}

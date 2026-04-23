@@ -72,7 +72,7 @@ export function DrawerFormFooter({
       className={`flex items-center gap-3${
         variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
       } ${className}`}
-    >
+     data-section="drawerformfooter-div-257">
       {onDelete && (
         <Button
           variant="danger"
@@ -84,7 +84,7 @@ export function DrawerFormFooter({
         </Button>
       )}
 
-      <div className={`flex items-center gap-3${!onDelete ? " ml-auto" : ""}`}>
+      <div className={`flex items-center gap-3${!onDelete ? " ml-auto" : ""}`} data-section="drawerformfooter-div-258">
         <Button
           variant="outline"
           onClick={onCancel}

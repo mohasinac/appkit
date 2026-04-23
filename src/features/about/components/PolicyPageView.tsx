@@ -44,12 +44,12 @@ export async function PolicyPageView({
   ].filter((l) => !l.href.includes(`/${policy}`));
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="policypageview-div-181">
       {/* Hero */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.sm}`}>
+        <div className={`${page.container.sm}`} data-section="policypageview-div-182">
           <Heading level={1} variant="none" className="mb-3 text-white">
             {t("title")}
           </Heading>
@@ -59,7 +59,7 @@ export async function PolicyPageView({
         </div>
       </Section>
 
-      <div className={`${page.container.sm} py-10 md:py-12 lg:py-16`}>
+      <div className={`${page.container.sm} py-10 md:py-12 lg:py-16`} data-section="policypageview-div-183">
         {/* Intro */}
         {t("intro") && (
           <Text variant="secondary" className="mb-10 text-base leading-relaxed">
@@ -86,14 +86,14 @@ export async function PolicyPageView({
 
         {/* Related policies footer */}
         {relatedLinks.length > 0 && (
-          <div className={`mt-14 pt-8 border-t ${themed.border}`}>
+          <div className={`mt-14 pt-8 border-t ${themed.border}`} data-section="policypageview-div-184">
             <Heading
               level={3}
               className="text-sm font-semibold mb-3 uppercase tracking-wide text-neutral-500"
             >
               {t("relatedTitle")}
             </Heading>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4" data-section="policypageview-div-185">
               {relatedLinks.map((l) => (
                 <TextLink
                   key={l.href}

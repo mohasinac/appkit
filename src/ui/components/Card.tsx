@@ -82,7 +82,7 @@ export function Card({
         .join(" ")}
       style={style}
       onClick={onClick}
-    >
+     data-section="card-div-463">
       {children}
     </div>
   );
@@ -97,21 +97,21 @@ export function CardHeader({ children, className = "" }: CardSectionProps) {
   return (
     <div
       className={["appkit-card__header", className].filter(Boolean).join(" ")}
-    >
+     data-section="card-div-464">
       {children}
     </div>
   );
 }
 
 export function CardBody({ children, className = "" }: CardSectionProps) {
-  return <div className={className}>{children}</div>;
+  return <div className={className} data-section="card-div-465">{children}</div>;
 }
 
 export function CardFooter({ children, className = "" }: CardSectionProps) {
   return (
     <div
       className={["appkit-card__footer", className].filter(Boolean).join(" ")}
-    >
+     data-section="card-div-466">
       {children}
     </div>
   );

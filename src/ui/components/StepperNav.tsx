@@ -27,7 +27,7 @@ export function StepperNav({ steps, currentStep, className }: StepperNavProps) {
 
           return (
             <Li key={step.number} className="appkit-stepper-nav__item">
-              <div className="appkit-stepper-nav__step">
+              <div className="appkit-stepper-nav__step" data-section="steppernav-div-612">
                 <div
                   className={classNames(
                     "appkit-stepper-nav__bubble",
@@ -37,7 +37,7 @@ export function StepperNav({ steps, currentStep, className }: StepperNavProps) {
                         ? "appkit-stepper-nav__bubble--active"
                         : "appkit-stepper-nav__bubble--pending",
                   )}
-                >
+                 data-section="steppernav-div-613">
                   {isComplete ? (
                     <svg
                       className="appkit-stepper-nav__check"

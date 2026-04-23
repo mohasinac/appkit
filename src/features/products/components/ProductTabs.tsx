@@ -56,11 +56,11 @@ export function ProductTabs({
   const tabs = allTabs.length > 0 ? allTabs : DEFAULT_TABS;
 
   return (
-    <div className={className}>
+    <div className={className} data-section="producttabs-div-426">
       {renderTabBar ? (
         renderTabBar(activeTab, setActiveTab, tabs)
       ) : (
-        <div className="flex gap-4 border-b mb-4">
+        <div className="flex gap-4 border-b mb-4" data-section="producttabs-div-427">
           {tabs.map((t) => (
             <button
               key={t.value}

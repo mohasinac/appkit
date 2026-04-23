@@ -85,8 +85,8 @@ export function RichTextEditor({
   return (
     <div
       className={`rounded-lg border border-zinc-200 bg-white dark:border-slate-700 dark:bg-slate-900 ${className}`}
-    >
-      <div className="flex flex-wrap gap-1 border-b border-zinc-200 p-2 dark:border-slate-700">
+     data-section="richtexteditor-div-582">
+      <div className="flex flex-wrap gap-1 border-b border-zinc-200 p-2 dark:border-slate-700" data-section="richtexteditor-div-583">
         {toolbarActions.map((action) => (
           <button
             key={action.title}

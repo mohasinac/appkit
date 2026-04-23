@@ -102,10 +102,10 @@ export function BulkActionBar({
       role="region"
       aria-live="polite"
       aria-label={l.bulkActions}
-    >
+     data-section="bulkactionbar-div-460">
       <div className="appkit-bulk-bar__stripe" />
 
-      <div className="appkit-bulk-bar__row">
+      <div className="appkit-bulk-bar__row" data-section="bulkactionbar-div-461">
         <Button
           type="button"
           variant="ghost"
@@ -186,7 +186,7 @@ export function BulkActionBar({
           ]
             .filter(Boolean)
             .join(" ")}
-        >
+         data-section="bulkactionbar-div-462">
           {actions.map((action) => (
             <button
               key={action.id}

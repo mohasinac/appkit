@@ -71,7 +71,7 @@ function renderLegacyAccordion({
           ▾
         </span>
       </summary>
-      <div className={`appkit-accordion__content ${contentClassName}`}>
+      <div className={`appkit-accordion__content ${contentClassName}`} data-section="accordion-div-447">
         {children}
       </div>
     </details>

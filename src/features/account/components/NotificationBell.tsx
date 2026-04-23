@@ -153,7 +153,7 @@ export function NotificationBell({
     ));
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef} data-section="notificationbell-div-227">
       <Button
         onClick={handleToggle}
         className={`${hideOnMobile ? "hidden md:flex" : "flex"} p-2.5 md:p-3 rounded-xl transition-colors relative text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-white ${buttonClassName}`}
@@ -185,7 +185,7 @@ export function NotificationBell({
       {isOpen && (
         <div
           className={`absolute right-0 top-full mt-2 w-80 sm:w-96 rounded-xl shadow-2xl border border-zinc-200 bg-white dark:border-slate-800 dark:bg-slate-950 z-50 overflow-hidden ${dropdownClassName}`}
-        >
+         data-section="notificationbell-div-228">
           <Row
             justify="between"
             gap="none"
@@ -213,13 +213,13 @@ export function NotificationBell({
             )}
           </Row>
 
-          <div className="max-h-96 overflow-y-auto">
+          <div className="max-h-96 overflow-y-auto" data-section="notificationbell-div-229">
             {isLoading ? (
-              <div className="flex items-center justify-center py-10">
+              <div className="flex items-center justify-center py-10" data-section="notificationbell-div-230">
                 <Spinner size="md" />
               </div>
             ) : notifications.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
+              <div className="flex flex-col items-center justify-center py-10 px-4 text-center" data-section="notificationbell-div-231">
                 <svg
                   className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-3"
                   fill="none"
@@ -253,8 +253,8 @@ export function NotificationBell({
                     <Span className="text-xl flex-shrink-0 mt-0.5">
                       {notificationIcons[notification.type] ?? "🔔"}
                     </Span>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0" data-section="notificationbell-div-232">
+                      <div className="flex items-start justify-between gap-2" data-section="notificationbell-div-233">
                         <Text
                           size="sm"
                           className="font-medium text-zinc-900 dark:text-white leading-tight"
@@ -307,7 +307,7 @@ export function NotificationBell({
           </div>
 
           {viewAllHref && (
-            <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center">
+            <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center" data-section="notificationbell-div-234">
               {renderActionLink({
                 href: viewAllHref,
                 onClick: () => setIsOpen(false),

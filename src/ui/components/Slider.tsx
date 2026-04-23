@@ -59,9 +59,9 @@ export function Slider({
   };
 
   return (
-    <div className={["w-full", className].filter(Boolean).join(" ")}>
+    <div className={["w-full", className].filter(Boolean).join(" ")} data-section="slider-div-607">
       {(label || showValue) && (
-        <div className="mb-2 flex items-center justify-between gap-3">
+        <div className="mb-2 flex items-center justify-between gap-3" data-section="slider-div-608">
           {label ? <Label htmlFor={inputId}>{label}</Label> : <span />}
           {showValue ? (
             <Span className="text-sm tabular-nums text-zinc-600 dark:text-zinc-300">
@@ -71,14 +71,14 @@ export function Slider({
         </div>
       )}
 
-      <div className="relative">
+      <div className="relative" data-section="slider-div-609">
         <div
           aria-hidden="true"
           className={[
             "pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 overflow-hidden rounded-full bg-zinc-200 dark:bg-slate-700",
             SIZE_CLASSES[size],
           ].join(" ")}
-        >
+         data-section="slider-div-610">
           <div
             className={[
               "h-full rounded-full bg-lime-600 dark:bg-pink-500",

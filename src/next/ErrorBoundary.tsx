@@ -24,7 +24,7 @@ function DefaultFallback({
   onReset: () => void;
 }) {
   return (
-    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-zinc-200 bg-white p-6 text-center dark:border-slate-700 dark:bg-slate-900">
+    <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 rounded-xl border border-zinc-200 bg-white p-6 text-center dark:border-slate-700 dark:bg-slate-900" data-section="errorboundary-div-445">
       <Heading level={2}>Something went wrong</Heading>
       <Text variant="secondary">
         An unexpected error occurred. Please try again.

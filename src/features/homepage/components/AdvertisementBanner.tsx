@@ -38,7 +38,7 @@ export function AdvertisementBanner({
   if (isLoading) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-297">
           <div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
         </div>
       </Section>
@@ -49,11 +49,11 @@ export function AdvertisementBanner({
   if (backgroundImage) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 min-h-[clamp(300px,40vh,420px)]">
+        <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-298">
+          <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl" data-section="advertisementbanner-div-299">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 min-h-[clamp(300px,40vh,420px)]" data-section="advertisementbanner-div-300">
               {/* Left: image */}
-              <div className="relative aspect-[4/3] md:aspect-auto order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]">
+              <div className="relative aspect-[4/3] md:aspect-auto order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]" data-section="advertisementbanner-div-301">
                 <MediaImage
                   src={backgroundImage}
                   alt={title}
@@ -64,13 +64,13 @@ export function AdvertisementBanner({
               </div>
 
               {/* Right: content */}
-              <div className="relative flex flex-col justify-center px-8 py-10 md:px-12 md:py-14">
+              <div className="relative flex flex-col justify-center px-8 py-10 md:px-12 md:py-14" data-section="advertisementbanner-div-302">
                 <div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden
                 />
                 {tagLabel && (
-                  <div className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm">
+                  <div className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm" data-section="advertisementbanner-div-303">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
                   </div>
@@ -112,7 +112,7 @@ export function AdvertisementBanner({
   // -- Full-width gradient layout --
   return (
     <Section className={`p-8 ${wrapClass} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-304">
         <div
           className={[
             "relative overflow-hidden rounded-2xl flex items-center",
@@ -121,7 +121,7 @@ export function AdvertisementBanner({
               : "min-h-[clamp(240px,34vh,360px)]",
           ].join(" ")}
           style={backgroundColor ? { backgroundColor } : undefined}
-        >
+         data-section="advertisementbanner-div-305">
           {/* Gradient background */}
           {!backgroundColor && (
             <div
@@ -131,7 +131,7 @@ export function AdvertisementBanner({
           )}
 
           {/* Decorative blobs */}
-          <div className="absolute inset-0 overflow-hidden" aria-hidden>
+          <div className="absolute inset-0 overflow-hidden" aria-hidden data-section="advertisementbanner-div-306">
             <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse" />
             <div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full bg-cobalt/20 blur-3xl animate-pulse" />
           </div>
@@ -142,7 +142,7 @@ export function AdvertisementBanner({
               justify="between"
               className="relative z-10 w-full px-6 py-4 gap-4 flex-wrap"
             >
-              <div className="inline-flex items-center gap-2">
+              <div className="inline-flex items-center gap-2" data-section="advertisementbanner-div-307">
                 <Sparkles className="w-4 h-4 text-white/80" />
                 <Span className="text-white font-semibold text-sm">
                   {title}
@@ -161,9 +161,9 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center">
+            <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center" data-section="advertisementbanner-div-308">
               {tagLabel && (
-                <div className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm">
+                <div className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm" data-section="advertisementbanner-div-309">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
                 </div>

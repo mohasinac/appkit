@@ -51,7 +51,7 @@ function DefaultFallback({
         padding: "2rem",
         textAlign: "center",
       }}
-    >
+     data-section="errorboundary-div-446">
       <h1 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
         Something went wrong
       </h1>

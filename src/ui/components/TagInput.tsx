@@ -70,11 +70,11 @@ export function TagInput({
   };
 
   return (
-    <div className={["appkit-tag-input", className].filter(Boolean).join(" ")}>
+    <div className={["appkit-tag-input", className].filter(Boolean).join(" ")} data-section="taginput-div-618">
       {label && <Label className="appkit-tag-input__label">{label}</Label>}
 
       <div
-        onClick={() => !disabled && inputRef.current?.focus()}
+        onClick={() = data-section="taginput-div-619"> !disabled && inputRef.current?.focus()}
         className={[
           "appkit-tag-input__field",
           disabled ? "appkit-tag-input__field--disabled" : "",

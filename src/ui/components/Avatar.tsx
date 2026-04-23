@@ -84,7 +84,7 @@ export function AvatarGroup({
   const extra = avatars.length - visible.length;
 
   return (
-    <div className={[UI_AVATAR.group, className].filter(Boolean).join(" ")}>
+    <div className={[UI_AVATAR.group, className].filter(Boolean).join(" ")} data-section="avatar-div-453">
       {visible.map((avatar, index) => (
         <Avatar
           key={`${avatar.src ?? avatar.name ?? "avatar"}-${index}`}

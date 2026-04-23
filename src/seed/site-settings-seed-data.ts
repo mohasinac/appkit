@@ -14,7 +14,71 @@ import type { SiteSettingsDocument } from "../features/admin/schemas";
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
+const adPlacementsSeed = [
+  {
+    id: "homepage-hero-banner",
+    label: "Homepage Hero Banner",
+    enabled: true,
+    reservedHeight: 90,
+  },
+  {
+    id: "listing-sidebar-top",
+    label: "Listing Sidebar Top",
+    enabled: true,
+    reservedHeight: 90,
+  },
+  {
+    id: "listing-sidebar-bottom",
+    label: "Listing Sidebar Bottom",
+    enabled: true,
+    reservedHeight: 90,
+  },
+  {
+    id: "search-inline",
+    label: "Search Inline",
+    enabled: true,
+    reservedHeight: 90,
+  },
+] as const;
+
+export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
+  adSettings: {
+    consentRequired: boolean;
+    placements: readonly {
+      id: string;
+      label: string;
+      enabled: boolean;
+      reservedHeight: number;
+    }[];
+    providerCredentials: {
+      adsenseClientId: string;
+      thirdPartyScriptUrl: string;
+    };
+    inventory: {
+      id: string;
+      name: string;
+      provider: "manual" | "adsense" | "thirdParty";
+      status: "draft" | "active" | "scheduled" | "paused";
+      placementIds: string[];
+      requiresConsent: boolean;
+      priority: number;
+      startAt?: string;
+      endAt?: string;
+      createdAt: string;
+      updatedAt: string;
+      updatedBy: string;
+      creative: {
+        title?: string;
+        body?: string;
+        imageUrl?: string;
+        ctaLabel?: string;
+        ctaHref?: string;
+        adsenseSlot?: string;
+        thirdPartyUrl?: string;
+      };
+    }[];
+  };
+} = {
   id: "global",
   siteName: "LetItRip",
   motto: "India’s Home for Rare Anime Collectibles",
@@ -247,6 +311,75 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> = {
       ],
     },
     newsletterEnabled: true,
+  },
+  adSettings: {
+    consentRequired: true,
+    placements: adPlacementsSeed,
+    providerCredentials: {
+      adsenseClientId: "ca-pub-0000000000000000",
+      thirdPartyScriptUrl: "https://cdn.example-ads.com/ad-runtime.js",
+    },
+    inventory: [
+      {
+        id: "ad-homepage-hero-anicon",
+        name: "AniCon Hero Banner",
+        provider: "manual",
+        status: "active",
+        placementIds: ["homepage-hero-banner"],
+        requiresConsent: true,
+        priority: 100,
+        createdAt: daysAgo(20).toISOString(),
+        updatedAt: daysAgo(2).toISOString(),
+        updatedBy: "user-admin-user-admin",
+        creative: {
+          title: "AniCon 2026 Mega Drop",
+          body: "Limited card drops and weekend-only collectibles.",
+          imageUrl: "https://picsum.photos/seed/anicon-hero-ad/1200/300",
+          ctaLabel: "Explore Deals",
+          ctaHref: "/promotions/deals",
+        },
+      },
+      {
+        id: "ad-listing-sidebar-boost",
+        name: "Sidebar Seller Boost",
+        provider: "manual",
+        status: "active",
+        placementIds: ["listing-sidebar-top", "listing-sidebar-bottom"],
+        requiresConsent: true,
+        priority: 80,
+        createdAt: daysAgo(12).toISOString(),
+        updatedAt: daysAgo(1).toISOString(),
+        updatedBy: "user-admin-user-admin",
+        creative: {
+          title: "Boosted Listings",
+          body: "Promoted auctions ending this week.",
+          imageUrl: "https://picsum.photos/seed/sidebar-ad-boost/600/300",
+          ctaLabel: "View Auctions",
+          ctaHref: "/auctions",
+        },
+      },
+      {
+        id: "ad-search-inline-spotlight",
+        name: "Search Spotlight Slot",
+        provider: "manual",
+        status: "scheduled",
+        placementIds: ["search-inline"],
+        requiresConsent: true,
+        priority: 70,
+        startAt: daysAgo(-3).toISOString(),
+        endAt: daysAgo(-10).toISOString(),
+        createdAt: daysAgo(1).toISOString(),
+        updatedAt: daysAgo(1).toISOString(),
+        updatedBy: "user-admin-user-admin",
+        creative: {
+          title: "Search Spotlight",
+          body: "Sponsored picks based on active search filters.",
+          imageUrl: "https://picsum.photos/seed/search-spotlight-ad/960/240",
+          ctaLabel: "Browse Sponsored",
+          ctaHref: "/search/pokemon/tab/products/sort/relevance/page/1",
+        },
+      },
+    ],
   },
   commissions: {
     razorpayFeePercent: 2,

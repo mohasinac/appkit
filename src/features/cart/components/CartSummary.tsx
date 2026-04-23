@@ -27,7 +27,7 @@ export function CartSummary({
   className = "",
 }: CartSummaryProps) {
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 ${className}`} data-section="cartsummary-div-260">
       {labels.title && (
         <Heading level={2} className="text-base font-bold" variant="none">
           {labels.title}

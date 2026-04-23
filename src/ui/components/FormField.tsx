@@ -73,7 +73,7 @@ export function FormField({
 
   if (type === "image" && onUpload) {
     return (
-      <div className="appkit-form-field">
+      <div className="appkit-form-field" data-section="formfield-div-505">
         <ImageUpload
           currentImage={value || undefined}
           onUpload={onUpload}
@@ -101,7 +101,7 @@ export function FormField({
 
   if (type === "media" && onUpload) {
     return (
-      <div className="appkit-form-field">
+      <div className="appkit-form-field" data-section="formfield-div-506">
         <MediaUploadField
           label={`${label || name}${required ? " *" : ""}`}
           value={value}
@@ -130,7 +130,7 @@ export function FormField({
   }
 
   return (
-    <div className="appkit-form-field">
+    <div className="appkit-form-field" data-section="formfield-div-507">
       {label ? (
         <Label htmlFor={inputId} className="appkit-form-field__label">
           {label}

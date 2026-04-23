@@ -59,9 +59,9 @@ export function PasswordStrengthIndicator({
       className="appkit-password-strength"
       aria-live="polite"
       aria-atomic="true"
-    >
+     data-section="passwordstrengthindicator-div-567">
       <Row gap="sm" className="mb-2">
-        <div className="appkit-password-strength__track">
+        <div className="appkit-password-strength__track" data-section="passwordstrengthindicator-div-568">
           <div
             className={`appkit-password-strength__fill ${strengthColor}`}
             style={{ width: `${strength}%` }}

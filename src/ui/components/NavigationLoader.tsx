@@ -165,7 +165,7 @@ export function NavigationLoader({
       role="status"
       aria-label={label}
       className={`appkit-nav-loader ${className}`}
-    >
+     data-section="navigationloader-div-566">
       <Spinner size="xl" variant={spinnerVariant} label={label} />
       <span className="appkit-nav-loader__timer" aria-hidden="true">
         {elapsed.toFixed(1)}s

@@ -48,9 +48,9 @@ function SecurityCard({
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
       ].join(" ")}
       style={{ transitionDelay: `${delay}ms` }}
-    >
+     data-section="securityhighlightssection-div-357">
       {item.renderIcon && (
-        <div className="w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3">
+        <div className="w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 flex items-center justify-center mb-3" data-section="securityhighlightssection-div-358">
           <span className={iconColorClass} aria-hidden="true">
             {item.renderIcon({ className: "w-6 h-6" })}
           </span>
@@ -100,9 +100,9 @@ export function SecurityHighlightsSection({
       ref={sectionRef}
       className={`py-14 px-4 ${themed.bgPrimary} ${className}`}
     >
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" data-section="securityhighlightssection-div-359">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-10" data-section="securityhighlightssection-div-360">
           {pillLabel && (
             <Span className="inline-flex items-center gap-2 rounded-full border border-primary-500/30 bg-primary-500/10 px-5 py-1.5 text-xs font-medium tracking-[0.2em] uppercase text-primary-700 dark:text-primary-400 backdrop-blur-sm">
               {pillLabel}
@@ -138,7 +138,7 @@ export function SecurityHighlightsSection({
 
         {/* CTA link */}
         {learnMoreHref && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-8" data-section="securityhighlightssection-div-361">
             <TextLink href={learnMoreHref}>{learnMoreLabel}</TextLink>
           </div>
         )}

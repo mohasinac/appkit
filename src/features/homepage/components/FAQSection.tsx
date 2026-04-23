@@ -54,9 +54,9 @@ export function FAQSection({
 
   return (
     <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-7xl mx-auto" data-section="faqsection-div-320">
         {/* Section Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8" data-section="faqsection-div-321">
           <Heading
             level={2}
             variant="none"
@@ -72,10 +72,10 @@ export function FAQSection({
         </div>
 
         {/* Category Tabs (rendered externally) */}
-        {renderTabs && <div className="mb-8 -mx-8">{renderTabs()}</div>}
+        {renderTabs && <div className="mb-8 -mx-8" data-section="faqsection-div-322">{renderTabs()}</div>}
 
         {/* FAQ Accordion */}
-        <div className={`${spacing.stack} max-w-5xl mx-auto`}>
+        <div className={`${spacing.stack} max-w-5xl mx-auto`} data-section="faqsection-div-323">
           {items.length === 0 && (
             <Text className={`text-center py-8 ${themed.textSecondary}`}>
               No FAQs found.
@@ -91,7 +91,7 @@ export function FAQSection({
                     ? "border-primary bg-primary/5 dark:bg-primary/10"
                     : "border-transparent"
                 }`}
-              >
+               data-section="faqsection-div-324">
                 {/* Question Button */}
                 <Button
                   variant="ghost"
@@ -116,8 +116,8 @@ export function FAQSection({
                   className={`overflow-hidden transition-all duration-300 ease-out ${
                     isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                   }`}
-                >
-                  <div className="p-6 pt-0">
+                 data-section="faqsection-div-325">
+                  <div className="p-6 pt-0" data-section="faqsection-div-326">
                     <Text
                       className={`text-base ${themed.textSecondary} rounded-md ${themed.bgTertiary} p-4`}
                     >
@@ -132,7 +132,7 @@ export function FAQSection({
 
         {/* View More link */}
         {viewMoreHref && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-8" data-section="faqsection-div-327">
             <TextLink
               href={viewMoreHref}
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 dark:text-primary-400 transition-colors"

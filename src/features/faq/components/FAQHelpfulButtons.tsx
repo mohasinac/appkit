@@ -60,14 +60,14 @@ export function FAQHelpfulButtons({
   };
 
   return (
-    <div className="rounded-lg bg-zinc-100 p-6 dark:bg-slate-700">
+    <div className="rounded-lg bg-zinc-100 p-6 dark:bg-slate-700" data-section="faqhelpfulbuttons-div-285">
       <Text className="mb-3 text-sm text-zinc-600 dark:text-zinc-300">
         {userVote
           ? (labels?.thanksForFeedback ?? "Thanks for your feedback")
           : (labels?.wasThisHelpful ?? "Was this helpful?")}
       </Text>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3" data-section="faqhelpfulbuttons-div-286">
         <Button
           variant="ghost"
           onClick={() => handleVote(true)}

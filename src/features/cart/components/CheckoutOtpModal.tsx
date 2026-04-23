@@ -30,7 +30,7 @@ export function CheckoutOtpModal({
         isOpen,
         title,
         onClose,
-        children: <div className={className}>{renderBody()}</div>,
+        children: <div className={className} data-section="checkoutotpmodal-div-261">{renderBody()}</div>,
       })}
     </>
   );

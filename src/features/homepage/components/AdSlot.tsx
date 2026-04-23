@@ -38,7 +38,7 @@ function AdsenseAd({ config }: { config: AdSlotConfig }) {
   }, []);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} data-section="adslot-div-296">
       <ins
         className="adsbygoogle"
         style={{ display: "block" }}

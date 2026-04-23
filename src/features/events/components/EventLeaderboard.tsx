@@ -36,7 +36,7 @@ export function EventLeaderboard({
 }: EventLeaderboardProps) {
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
-    return <div className="flex justify-center py-8">Loading…</div>;
+    return <div className="flex justify-center py-8" data-section="eventleaderboard-div-279">Loading…</div>;
   }
 
   if (isEmpty) {
@@ -48,10 +48,10 @@ export function EventLeaderboard({
     );
   }
 
-  if (renderList) return <div className={className}>{renderList()}</div>;
+  if (renderList) return <div className={className} data-section="eventleaderboard-div-280">{renderList()}</div>;
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2 ${className}`} data-section="eventleaderboard-div-281">
       {entries.map((entry, i) =>
         renderEntry ? (
           <React.Fragment key={entry.userId}>
@@ -61,7 +61,7 @@ export function EventLeaderboard({
           <div
             key={entry.userId}
             className="flex items-center justify-between p-3 rounded-xl border"
-          >
+           data-section="eventleaderboard-div-282">
             <Span className="font-medium">
               #{entry.rank} {entry.userDisplayName}
             </Span>

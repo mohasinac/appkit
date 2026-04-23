@@ -49,27 +49,27 @@ export function FlowDiagram({
   children,
 }: FlowDiagramProps) {
   return (
-    <div className={`appkit-flow-diagram ${themed.border} ${className}`}>
+    <div className={`appkit-flow-diagram ${themed.border} ${className}`} data-section="flowdiagram-div-496">
       <div
         className={`appkit-flow-diagram__header ${themed.bgSecondary} ${themed.border}`}
-      >
+       data-section="flowdiagram-div-497">
         <Text weight="semibold" size="sm" className={titleClass}>
           {title}
         </Text>
       </div>
-      <div className={`appkit-flow-diagram__body ${themed.bgPrimary}`}>
+      <div className={`appkit-flow-diagram__body ${themed.bgPrimary}`} data-section="flowdiagram-div-498">
         <div
           className={`appkit-flow-diagram__chain ${centered ? "appkit-flow-diagram__chain--centered" : "appkit-flow-diagram__chain--scroll"}`}
-        >
+         data-section="flowdiagram-div-499">
           {steps.flatMap((step, i) => {
             const nodes: ReactNode[] = [
               <div
                 key={`s-${i}`}
                 className={`appkit-flow-diagram__step ${stepWidth}`}
-              >
+               data-section="flowdiagram-div-500">
                 <div
                   className={`appkit-flow-diagram__circle ${step.circleClass}`}
-                >
+                 data-section="flowdiagram-div-501">
                   {step.emoji}
                 </div>
                 {step.title && (
@@ -104,7 +104,7 @@ export function FlowDiagram({
         </div>
         {children}
         {note && (
-          <div className="appkit-flow-diagram__note">
+          <div className="appkit-flow-diagram__note" data-section="flowdiagram-div-502">
             <Text size="xs" variant="secondary">
               {note}
             </Text>

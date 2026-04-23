@@ -119,7 +119,7 @@ export function MarketplaceOrderCard({
   return (
     <div
       className={`relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
-    >
+     data-section="marketplaceordercard-div-411">
       {selectable && (
         <Button
           variant="ghost"
@@ -148,14 +148,14 @@ export function MarketplaceOrderCard({
 
       <div
         className={`flex gap-4 p-4 ${isListVariant ? "flex-row items-center justify-between" : "flex-col"}`}
-      >
+       data-section="marketplaceordercard-div-412">
         <div
           className={`flex items-start gap-3 ${selectable ? "pl-8" : ""} ${isListVariant ? "min-w-0 flex-1" : ""}`}
-        >
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-slate-800">
+         data-section="marketplaceordercard-div-413">
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-zinc-100 dark:bg-slate-800" data-section="marketplaceordercard-div-414">
             <Package className="h-5 w-5 text-zinc-500 dark:text-slate-400" />
           </div>
-          <div className="min-w-0 space-y-1">
+          <div className="min-w-0 space-y-1" data-section="marketplaceordercard-div-415">
             <TextLink href={detailHref} className="leading-tight">
               <Text weight="semibold" className="truncate">
                 {order.productTitle ?? shortId}
@@ -177,17 +177,17 @@ export function MarketplaceOrderCard({
 
         <div
           className={`flex ${isListVariant ? "flex-shrink-0 items-center gap-4" : "flex-col gap-3"}`}
-        >
+         data-section="marketplaceordercard-div-416">
           <div
             className={`flex ${isListVariant ? "items-center gap-4" : "flex-wrap items-center justify-between gap-3"}`}
-          >
+           data-section="marketplaceordercard-div-417">
             <StatusBadge status={status} label={statusLabel} />
             <Text weight="semibold" className="tabular-nums">
               {formatCurrency(order.totalPrice, order.currency)}
             </Text>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2" data-section="marketplaceordercard-div-418">
             {(isShipped || isDelivered) &&
               trackHref &&
               order.trackingNumber && (

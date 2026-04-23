@@ -34,9 +34,9 @@ import React from "react";
 
 // --- Section -----------------------------------------------------------------
 /**
- * Semantic `<section>` element.
+ * Semantic `<section data-section="semantic-section-595">` element.
  * Use for thematically grouped content that would appear in an outline.
- * Prefer this over a plain `<div>` when the block has a heading.
+ * Prefer this over a plain `<div data-section="semantic-div-596">` when the block has a heading.
  */
 export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
   ({ className = "", children, ...props }, ref) => (
-    <section className={className} ref={ref} {...props}>
+    <section className={className} ref={ref} {...props} data-section="semantic-section-597">
       {children}
     </section>
   ),

@@ -46,13 +46,13 @@ export function DashboardStatsCard({
         isDark ? UI_STATS_CARD.dark : "",
         className,
       ].join(" ")}
-    >
+     data-section="dashboardstatscard-div-473">
       {Icon ? (
-        <div className={[UI_STATS_CARD.iconWrap, iconBg].join(" ")}>
+        <div className={[UI_STATS_CARD.iconWrap, iconBg].join(" ")} data-section="dashboardstatscard-div-474">
           <Icon className={`h-5 w-5 ${iconColor}`} />
         </div>
       ) : null}
-      <div className={UI_STATS_CARD.body}>
+      <div className={UI_STATS_CARD.body} data-section="dashboardstatscard-div-475">
         <Text className={UI_STATS_CARD.label}>{label}</Text>
         <Text className={UI_STATS_CARD.value}>{value}</Text>
         {trend ? (

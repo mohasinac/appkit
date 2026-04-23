@@ -77,7 +77,7 @@ export function TabStrip({
 
   return (
     <div
-      ref={containerRef as React.RefObject<HTMLDivElement>}
+      ref={containerRef as React.RefObject<HTMLDivElement data-section="tabstrip-div-617">}
       role="tablist"
       className={["appkit-tab-strip", className ?? ""].join(" ").trim()}
     >

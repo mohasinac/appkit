@@ -214,8 +214,8 @@ export function DataTable<T extends object>({
   // --- Loading state ----------------------------------------------------------
   if (loading) {
     return (
-      <div className="appkit-data-table__wrapper">
-        <div className="appkit-data-table__loading">
+      <div className="appkit-data-table__wrapper" data-section="datatable-div-630">
+        <div className="appkit-data-table__loading" data-section="datatable-div-631">
           <Spinner size="lg" label={labelLoading} />
         </div>
       </div>
@@ -226,9 +226,9 @@ export function DataTable<T extends object>({
   if (data.length === 0) {
     if (emptyState) return <>{emptyState}</>;
     return (
-      <div className="appkit-data-table__wrapper">
-        <div className="appkit-data-table__empty">
-          <div className="text-center px-4">
+      <div className="appkit-data-table__wrapper" data-section="datatable-div-632">
+        <div className="appkit-data-table__empty" data-section="datatable-div-633">
+          <div className="text-center px-4" data-section="datatable-div-634">
             {emptyIcon ?? (
               <svg
                 className="mx-auto h-12 w-12 text-zinc-400"
@@ -264,7 +264,7 @@ export function DataTable<T extends object>({
         className="appkit-data-table__view-toggle"
         role="toolbar"
         aria-label="View mode"
-      >
+       data-section="datatable-div-635">
         {showTableView && (
           <Button
             type="button"
@@ -353,7 +353,7 @@ export function DataTable<T extends object>({
             ? `${GRID_MAP[gridCols]} gap-6`
             : "flex flex-col gap-4"
         }
-      >
+       data-section="datatable-div-636">
         {paginatedData.map((item) => (
           <SelectableCard
             key={keyExtractor(item)}
@@ -378,7 +378,7 @@ export function DataTable<T extends object>({
 
   // --- Main render -------------------------------------------------------------
   return (
-    <div className="appkit-data-table">
+    <div className="appkit-data-table" data-section="datatable-div-637">
       {renderViewToggle()}
 
       {/* Non-table views */}
@@ -388,7 +388,7 @@ export function DataTable<T extends object>({
 
       {/* Mobile cards in table mode */}
       {activeViewMode === "table" && mobileCardRender && (
-        <div className="appkit-data-table__mobile-cards">
+        <div className="appkit-data-table__mobile-cards" data-section="datatable-div-638">
           {paginatedData.map((item) => (
             <SelectableCard
               key={keyExtractor(item)}
@@ -411,10 +411,10 @@ export function DataTable<T extends object>({
 
       {/* Desktop table */}
       {activeViewMode === "table" && (
-        <div className="appkit-data-table__wrapper">
+        <div className="appkit-data-table__wrapper" data-section="datatable-div-639">
           <div
             className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
-          >
+           data-section="datatable-div-640">
             <table className="appkit-data-table__table">
               <thead
                 className={`appkit-data-table__thead ${stickyHeader ? "appkit-data-table__thead--sticky" : ""}`}
@@ -551,7 +551,7 @@ export function DataTable<T extends object>({
 
       {/* Pagination */}
       {!externalPagination && totalPages > 1 && (
-        <div className="appkit-data-table__pagination">
+        <div className="appkit-data-table__pagination" data-section="datatable-div-641">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -586,20 +586,20 @@ function SelectableCard({
   children,
   listMode = false,
 }: SelectableCardProps) {
-  if (!selectable) return <div className="h-full">{children}</div>;
+  if (!selectable) return <div className="h-full" data-section="datatable-div-642">{children}</div>;
   return (
-    <div className="relative group h-full">
+    <div className="relative group h-full" data-section="datatable-div-643">
       {/* Checkbox overlay — always visible, bg/shadow ensures contrast over any card background */}
       <div
         className={[
           "absolute z-10",
           listMode ? "left-2 top-1/2 -translate-y-1/2" : "top-2 left-2",
         ].join(" ")}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) = data-section="datatable-div-644"> e.stopPropagation()}
       >
-        <div className="w-6 h-6 rounded-md bg-white/95 dark:bg-slate-800/95 shadow-md flex items-center justify-center">
+        <div className="w-6 h-6 rounded-md bg-white/95 dark:bg-slate-800/95 shadow-md flex items-center justify-center" data-section="datatable-div-645">
           {/* relative wrapper ensures checkmark SVG centers over the input */}
-          <div className="relative flex items-center justify-center">
+          <div className="relative flex items-center justify-center" data-section="datatable-div-646">
             <input
               type="checkbox"
               className={[

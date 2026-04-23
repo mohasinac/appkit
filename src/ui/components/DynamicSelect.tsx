@@ -118,7 +118,7 @@ export function DynamicSelect<V = string>({
       ref={containerRef}
       className={[UI_DYNAMIC_SELECT.root, className].filter(Boolean).join(" ")}
       aria-label={ariaLabel}
-    >
+     data-section="dynamicselect-div-490">
       <button
         type="button"
         disabled={disabled}
@@ -137,7 +137,7 @@ export function DynamicSelect<V = string>({
       </button>
 
       {open ? (
-        <div className={UI_DYNAMIC_SELECT.dropdown}>
+        <div className={UI_DYNAMIC_SELECT.dropdown} data-section="dynamicselect-div-491">
           <Input
             autoFocus
             value={query}

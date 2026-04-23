@@ -113,7 +113,7 @@ export function HorizontalScroller<T = unknown>({
             .filter(Boolean)
             .join(" ")}
           style={minItemWidth ? { minWidth: minItemWidth } : undefined}
-        >
+         data-section="horizontalscroller-div-510">
           {renderItem(item, i)}
         </div>
       ))
@@ -125,7 +125,7 @@ export function HorizontalScroller<T = unknown>({
         className={["appkit-hscroller appkit-hscroller--with-arrows", className]
           .filter(Boolean)
           .join(" ")}
-      >
+       data-section="horizontalscroller-div-511">
         {showFadeEdges && (
           <>
             <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
@@ -145,7 +145,7 @@ export function HorizontalScroller<T = unknown>({
           onScroll={onScroll}
           className={scrollerCls}
           style={{ gap: `${gap}px`, paddingLeft: 36, paddingRight: 36 }}
-        >
+         data-section="horizontalscroller-div-512">
           {content}
         </div>
         <button
@@ -161,7 +161,7 @@ export function HorizontalScroller<T = unknown>({
   }
 
   return (
-    <div className={["appkit-hscroller", className].filter(Boolean).join(" ")}>
+    <div className={["appkit-hscroller", className].filter(Boolean).join(" ")} data-section="horizontalscroller-div-513">
       {showFadeEdges && (
         <>
           <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
@@ -173,7 +173,7 @@ export function HorizontalScroller<T = unknown>({
         onScroll={onScroll}
         className={scrollerCls}
         style={{ gap: `${gap}px` }}
-      >
+       data-section="horizontalscroller-div-514">
         {content}
       </div>
     </div>

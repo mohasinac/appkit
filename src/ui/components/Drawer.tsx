@@ -100,7 +100,7 @@ export function Drawer({
     <div
       className={`appkit-drawer ${isOpen ? "appkit-drawer--open" : "appkit-drawer--closed"}`}
       onKeyDown={handleKeyDown}
-    >
+     data-section="drawer-div-480">
       {/* Backdrop */}
       <div
         className={`appkit-drawer__backdrop ${isOpen ? "appkit-drawer__backdrop--open" : "appkit-drawer__backdrop--closed"}`}
@@ -123,17 +123,17 @@ export function Drawer({
           isOpen ? open : closed,
           className,
         ].join(" ")}
-      >
+       data-section="drawer-div-481">
         {/* Drag handle (bottom drawer only) */}
         {isBottom && (
-          <div className="appkit-drawer__drag-wrap">
+          <div className="appkit-drawer__drag-wrap" data-section="drawer-div-482">
             <div className="appkit-drawer__drag" aria-hidden="true" />
           </div>
         )}
 
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="appkit-drawer__header">
+          <div className="appkit-drawer__header" data-section="drawer-div-483">
             {title && (
               <Heading level={2} className="appkit-drawer__title">
                 {title}
@@ -155,10 +155,10 @@ export function Drawer({
         )}
 
         {/* Scrollable body */}
-        <div className="appkit-drawer__body">{children}</div>
+        <div className="appkit-drawer__body" data-section="drawer-div-484">{children}</div>
 
         {/* Footer */}
-        {footer && <div className="appkit-drawer__footer">{footer}</div>}
+        {footer && <div className="appkit-drawer__footer" data-section="drawer-div-485">{footer}</div>}
       </div>
     </div>,
     document.body,

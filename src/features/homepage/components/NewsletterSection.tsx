@@ -40,9 +40,9 @@ export function NewsletterSection({
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-2xl mx-auto text-center">
+      <div className="relative z-10 max-w-2xl mx-auto text-center" data-section="newslettersection-div-347">
         {/* Icon badge */}
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 dark:bg-primary/20 border border-primary/20 mb-5 mx-auto" data-section="newslettersection-div-348">
           <Mail className="w-7 h-7 text-primary" />
         </div>
 

@@ -68,7 +68,7 @@ export function Tabs({
 
   return (
     <TabsContext.Provider value={contextValue}>
-      <div className={className}>{children}</div>
+      <div className={className} data-section="tabs-div-614">{children}</div>
     </TabsContext.Provider>
   );
 }
@@ -78,7 +78,7 @@ export function TabsList({ className = "", children }: TabsListProps) {
     <div
       role="tablist"
       className={[UI_TABS.list, className].filter(Boolean).join(" ")}
-    >
+     data-section="tabs-div-615">
       {children}
     </div>
   );
@@ -116,7 +116,7 @@ export function TabsContent({
   if (active !== value) return null;
 
   return (
-    <div className={[UI_TABS.content, className].join(" ")}>{children}</div>
+    <div className={[UI_TABS.content, className].join(" ")} data-section="tabs-div-616">{children}</div>
   );
 }
 

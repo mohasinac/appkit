@@ -196,9 +196,9 @@ export function AvatarUpload({
 
   return (
     <>
-      <div className="space-y-4">
-        <div className="flex items-start gap-6">
-          <div className="shrink-0">
+      <div className="space-y-4" data-section="avatarupload-div-404">
+        <div className="flex items-start gap-6" data-section="avatarupload-div-405">
+          <div className="shrink-0" data-section="avatarupload-div-406">
             <AvatarDisplay
               cropData={hasPending ? pendingCropData : cropData}
               size="2xl"
@@ -207,7 +207,7 @@ export function AvatarUpload({
             />
           </div>
 
-          <div className="flex-1 space-y-3">
+          <div className="flex-1 space-y-3" data-section="avatarupload-div-407">
             <Text variant="secondary" className="text-xs">
               JPG, PNG, WEBP or GIF up to 10MB.
             </Text>
@@ -222,11 +222,11 @@ export function AvatarUpload({
             ) : null}
 
             {hasPending && !isUploading ? (
-              <div className="space-y-2">
+              <div className="space-y-2" data-section="avatarupload-div-408">
                 <Text variant="secondary" className="text-xs text-primary">
                   {t.readyToSave}
                 </Text>
-                <div className="flex gap-3">
+                <div className="flex gap-3" data-section="avatarupload-div-409">
                   <Button type="button" onClick={handleConfirmSave} size="sm">
                     {t.saveAvatar}
                   </Button>
@@ -243,7 +243,7 @@ export function AvatarUpload({
             ) : null}
 
             {!hasPending && !isUploading ? (
-              <div className="flex gap-3">
+              <div className="flex gap-3" data-section="avatarupload-div-410">
                 <Button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}

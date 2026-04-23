@@ -59,7 +59,7 @@ export function AvatarDisplay({
         ]
           .filter(Boolean)
           .join(" ")}
-      >
+       data-section="avatardisplay-div-454">
         <Span className={UI_AVATAR_DISPLAY.initialsText}>{initials}</Span>
       </div>
     );
@@ -77,7 +77,7 @@ export function AvatarDisplay({
       ]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="avatardisplay-div-455">
       <div
         className={UI_AVATAR_DISPLAY.imageInner}
         style={{

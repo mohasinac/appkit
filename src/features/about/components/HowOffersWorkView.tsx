@@ -77,12 +77,12 @@ export async function HowOffersWorkView({
   ];
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
+    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="howoffersworkview-div-135">
       {/* Hero */}
       <Section
         className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
       >
-        <div className={`${page.container.md} text-center`}>
+        <div className={`${page.container.md} text-center`} data-section="howoffersworkview-div-136">
           <Heading level={1} variant="none" className="mb-4 text-white">
             {t("title")}
           </Heading>
@@ -94,7 +94,7 @@ export async function HowOffersWorkView({
 
       <div
         className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}
-      >
+       data-section="howoffersworkview-div-137">
         {/* Steps */}
         <Section>
           <Heading level={2} className="mb-8 text-center">
@@ -105,13 +105,13 @@ export async function HowOffersWorkView({
               <div
                 key={number}
                 className={`flex items-start gap-4 p-5 rounded-xl border ${themed.border} ${themed.bgPrimary}`}
-              >
+               data-section="howoffersworkview-div-138">
                 <div
                   className={`flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/15 ${flex.center} text-xl`}
-                >
+                 data-section="howoffersworkview-div-139">
                   {icon}
                 </div>
-                <div>
+                <div data-section="howoffersworkview-div-140">
                   <Text className="font-semibold mb-0.5">
                     {number}. {title}
                   </Text>
@@ -162,7 +162,7 @@ export async function HowOffersWorkView({
           <Text variant="secondary" className="mb-6 max-w-lg mx-auto">
             {t("ctaText")}
           </Text>
-          <div className={`${flex.center} gap-4 flex-wrap`}>
+          <div className={`${flex.center} gap-4 flex-wrap`} data-section="howoffersworkview-div-141">
             <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>
               {t("ctaBrowse")}
             </TextLink>

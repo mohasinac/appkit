@@ -40,9 +40,9 @@ export function CustomerReviewsSection<T = unknown>({
   if (isLoading) {
     return (
       <Section className={`p-8 ${themed.bgPrimary} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full max-w-7xl mx-auto" data-section="customerreviewssection-div-315">
           <div className={`h-8 ${skeleton.base} mb-8 max-w-xs mx-auto`} />
-          <div className="flex gap-6 overflow-hidden">
+          <div className="flex gap-6 overflow-hidden" data-section="customerreviewssection-div-316">
             {[...Array(3)].map((_, i) => (
               <div
                 key={i}
@@ -59,9 +59,9 @@ export function CustomerReviewsSection<T = unknown>({
 
   return (
     <Section className={`py-12 ${themed.bgPrimary} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-8">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-8" data-section="customerreviewssection-div-317">
         {/* Section Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-10" data-section="customerreviewssection-div-318">
           <Heading
             level={2}
             className={`text-3xl md:text-4xl font-bold ${themed.textPrimary} mb-3`}
@@ -91,7 +91,7 @@ export function CustomerReviewsSection<T = unknown>({
 
         {/* See all link */}
         {viewMoreHref && (
-          <div className="text-center mt-8">
+          <div className="text-center mt-8" data-section="customerreviewssection-div-319">
             <TextLink
               href={viewMoreHref}
               className="text-sm font-medium text-primary hover:text-primary/80"

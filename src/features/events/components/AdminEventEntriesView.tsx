@@ -163,7 +163,7 @@ export function AdminEventEntriesView({
       key: "actions",
       header: "Actions",
       render: (row) => (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-section="adminevententriesview-div-274">
           <Button
             size="sm"
             variant="secondary"
@@ -186,7 +186,7 @@ export function AdminEventEntriesView({
   ], [reviewMutation]);
 
   const statsSection = (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" data-section="adminevententriesview-div-275">
       <Alert variant="info" title="Total entries">
         {String(statsQuery.data?.stats?.totalEntries ?? 0)}
       </Alert>
@@ -200,7 +200,7 @@ export function AdminEventEntriesView({
   );
 
   const filtersSection = (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3" data-section="adminevententriesview-div-276">
       <Input
         label="Search entries"
         value={searchQuery}

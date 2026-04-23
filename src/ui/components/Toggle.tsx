@@ -60,7 +60,7 @@ export function Toggle({
       className={[UI_TOGGLE.base, UI_TOGGLE.sizes[size], className]
         .filter(Boolean)
         .join(" ")}
-    >
+     data-section="toggle-div-626">
       <button
         id={toggleId}
         type="button"

@@ -62,7 +62,7 @@ export function BackgroundRenderer({
 
   return (
     <>
-      <div className="appkit-bg-renderer" style={getBackgroundStyle()}>
+      <div className="appkit-bg-renderer" style={getBackgroundStyle()} data-section="backgroundrenderer-div-456">
         {config.type === "video" && (
           <video
             ref={videoRef}

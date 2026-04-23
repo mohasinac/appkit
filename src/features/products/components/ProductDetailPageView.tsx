@@ -9,6 +9,7 @@ import {
   Div,
   Heading,
   Main,
+  RichText,
   Row,
   Section,
   Skeleton,
@@ -16,6 +17,7 @@ import {
   Stack,
   Text,
 } from "../../../ui";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ProductDetailView } from "./ProductDetailView";
 
 export interface ProductDetailPageViewProps {
@@ -109,9 +111,10 @@ export async function ProductDetailPageView({ slug }: ProductDetailPageViewProps
             </Row>
           )}
           {p.description && (
-            <Text className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              {typeof p.description === "string" ? p.description : ""}
-            </Text>
+            <RichText
+              html={normalizeRichTextHtml(String(p.description))}
+              className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
+            />
           )}
           {p.sellerName && (
             <Row align="center" gap="xs">
