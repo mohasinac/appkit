@@ -248,8 +248,6 @@ const THEMED = {
   placeholder: "placeholder-zinc-400 dark:placeholder-zinc-500",
 } as const;
 
-} as const;
-
 /**
  * Layout dimension constants (height, width strings for Tailwind).
  */
