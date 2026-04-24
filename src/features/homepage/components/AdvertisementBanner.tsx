@@ -51,9 +51,9 @@ export function AdvertisementBanner({
       <Section className={`p-8 ${wrapClass} ${className}`}>
         <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-298">
           <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl" data-section="advertisementbanner-div-299">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 min-h-[clamp(300px,40vh,420px)]" data-section="advertisementbanner-div-300">
+            <div className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-300">
               {/* Left: image */}
-              <div className="relative aspect-[4/3] md:aspect-auto order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]" data-section="advertisementbanner-div-301">
+              <div className={`relative ${THEME_CONSTANTS.media.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-301">
                 <MediaImage
                   src={backgroundImage}
                   alt={title}

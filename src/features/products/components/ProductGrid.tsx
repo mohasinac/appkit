@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import { Button, Div, Grid, RichText, Row, Span, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -89,14 +90,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
       </Div>
       <Div className="flex flex-1 flex-col border-t border-zinc-200/80 bg-zinc-50 p-3 dark:border-slate-700/80 dark:bg-slate-900">
-        <Text className="line-clamp-2 text-sm font-medium text-zinc-950 dark:text-white">
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-950 dark:text-white`}>
           {product.title}
         </Text>
         {product.description && (
           <RichText
             html={normalizeRichTextHtml(product.description)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-1 line-clamp-2 text-xs text-zinc-600 dark:text-zinc-400"
+            className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-600 dark:text-zinc-400`}
           />
         )}
         {product.sellerName && (
@@ -278,7 +279,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
           <RichText
             html={normalizeRichTextHtml(product.description)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="line-clamp-1 text-xs text-neutral-500 dark:text-zinc-400"
+            className={`${THEME_CONSTANTS.utilities.textClamp1} text-xs text-neutral-500 dark:text-zinc-400`}
           />
         )}
       </Div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading, Span } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface MessagesViewLabels {
   title?: string;
@@ -42,7 +43,7 @@ export function MessagesView({
 
       {/* Chat window */}
       {chatId ? (
-        <Div className="flex flex-col gap-3">
+        <Div className={`flex flex-col ${THEME_CONSTANTS.spacing.gap.xs}`}>
           {renderMobileBack?.()}
           {renderChatWindow?.()}
         </Div>

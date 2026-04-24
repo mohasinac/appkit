@@ -139,7 +139,7 @@ export function SectionCarousel<T = unknown>({
   viewMoreLabel = "View all →",
   items,
   renderItem,
-  perView = { base: 1, sm: 2, md: 3 },
+  perView = THEME_CONSTANTS.carousel.perView.default,
   gap = 16,
   autoScroll = false,
   autoScrollInterval = 3500,

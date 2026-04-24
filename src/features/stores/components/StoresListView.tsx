@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import { Div, Grid, Heading, RichText, Row, Span, Text } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { THEME_CONSTANTS } from "../../../tokens";
 import type { StoreListItem } from "../types";
 
 interface StoreCardProps {
@@ -54,7 +55,7 @@ function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
           <RichText
             html={normalizeRichTextHtml(store.storeDescription)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-0.5 text-xs text-gray-500 dark:text-zinc-400 line-clamp-2"
+            className={`mt-0.5 text-xs text-gray-500 dark:text-zinc-400 ${THEME_CONSTANTS.utilities.textClamp2}`}
           />
         )}
         <Row className="gap-3 mt-2 text-xs text-gray-400 dark:text-zinc-500">

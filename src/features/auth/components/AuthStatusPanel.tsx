@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Div, Heading, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 type AuthStatusTone = "success" | "error" | "loading";
 
@@ -11,8 +12,8 @@ interface AuthStatusPanelProps {
 }
 
 function toneClass(tone: AuthStatusTone): string {
-  if (tone === "success") return "text-green-500 dark:text-green-400";
-  if (tone === "error") return "text-red-500 dark:text-red-400";
+  if (tone === "success") return THEME_CONSTANTS.themed.textSuccess;
+  if (tone === "error") return THEME_CONSTANTS.themed.textError;
   return "text-primary";
 }
 

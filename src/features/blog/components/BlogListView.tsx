@@ -11,6 +11,7 @@ import {
   Span,
   Text,
 } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
 
@@ -65,12 +66,12 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
         </Row>
         <Heading
           level={3}
-          className="line-clamp-2 text-base font-semibold text-neutral-900 dark:text-zinc-100 group-hover:text-primary"
+          className={`${THEME_CONSTANTS.utilities.textClamp2} text-base font-semibold text-neutral-900 dark:text-zinc-100 group-hover:text-primary`}
         >
           {post.title}
         </Heading>
         {post.excerpt && (
-          <Text className="mt-2 line-clamp-3 flex-1 text-sm text-neutral-500 dark:text-zinc-400">
+          <Text className={`mt-2 ${THEME_CONSTANTS.utilities.textClamp3} flex-1 text-sm text-neutral-500 dark:text-zinc-400`}>
             {post.excerpt}
           </Text>
         )}

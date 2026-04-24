@@ -44,7 +44,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       <Section className="bg-zinc-50 py-4 dark:bg-zinc-900">
         <Container size="xl">
           <Row align="center" gap="xs" className="text-sm text-zinc-500">
-            <Link href="/" className="hover:text-primary-600">Home</Link>
+            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600">Home</Link>
             <Span>/</Span>
             <Link href={String(ROUTES.PUBLIC.CATEGORIES)} className="hover:text-primary-600">
               Categories

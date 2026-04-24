@@ -1,5 +1,6 @@
 import type { CategoryItem } from "../types";
 import { Button, Div, Heading, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface ConcernCardProps {
   concern: CategoryItem;
@@ -35,7 +36,7 @@ export function ConcernCard({
           {concern.name}
         </Heading>
         {concern.description && (
-          <Text className="mt-1 text-xs text-neutral-500 line-clamp-2">
+          <Text className={`mt-1 text-xs ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500`}>
             {concern.description}
           </Text>
         )}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { StoreListItem } from "../types";
 import { Heading, Text, Span, Row, Button, RichText, Div } from "../../../ui";
+import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import { MediaImage } from "../../media/MediaImage";
 import { normalizeRichTextHtml } from "../../../utils";
 
@@ -35,7 +36,7 @@ export function InteractiveStoreCard({
 }: InteractiveStoreCardProps) {
   return (
     <Div
-      className={`relative flex min-h-[320px] min-w-[190px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
+      className={`relative flex ${LAYOUT.cardHeight.store} min-w-[190px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
     >
       {selectable && (
         <Button
@@ -86,14 +87,14 @@ export function InteractiveStoreCard({
           </Div>
           <Heading
             level={3}
-            className="line-clamp-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100"
+            className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-900 dark:text-zinc-100`}
           >
             {store.storeName}
           </Heading>
           <RichText
             html={normalizeRichTextHtml(store.storeDescription ?? "")}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="mt-1 line-clamp-2 min-h-9 text-xs text-zinc-500 dark:text-zinc-400"
+            className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} min-h-9 text-xs text-zinc-500 dark:text-zinc-400`}
           />
           <Row gap="sm" className="mt-2 text-xs text-zinc-500 dark:text-zinc-500">
             {store.totalProducts != null && store.totalProducts > 0 && (

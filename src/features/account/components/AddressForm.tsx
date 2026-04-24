@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button, Checkbox, FormField, FormGroup } from "../../../ui";
 import type { AddressFormData } from "../hooks/useAddresses";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AddressFormLabels {
   label: string;
@@ -208,7 +209,7 @@ export function AddressForm({
         label={mergedLabels.setDefault}
       />
 
-      <div className="flex items-center justify-start gap-3 pt-2" data-section="addressform-div-223">
+      <div className={`flex items-center justify-start ${THEME_CONSTANTS.spacing.gap.xs} pt-2`} data-section="addressform-div-223">
         <Button
           type="button"
           variant="outline"

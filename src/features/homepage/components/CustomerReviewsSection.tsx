@@ -79,7 +79,7 @@ export function CustomerReviewsSection<T = unknown>({
         <HorizontalScroller
           items={items}
           renderItem={(item) => renderItem(item)}
-          perView={{ base: 1, sm: 2, md: 3, lg: 3, "2xl": 4 }}
+          perView={THEME_CONSTANTS.carousel.perView.reviews}
           gap={24}
           autoScroll
           autoScrollInterval={4500}

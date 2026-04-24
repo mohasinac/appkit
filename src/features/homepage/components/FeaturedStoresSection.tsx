@@ -34,7 +34,7 @@ export function FeaturedStoresSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={{ base: 1, sm: 2, md: 3, lg: 4 }}
+      perView={THEME_CONSTANTS.carousel.perView.cards}
       gap={16}
       keyExtractor={(store: StoreListItem) => store.id}
       renderItem={(store: StoreListItem) => (

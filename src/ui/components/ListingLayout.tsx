@@ -146,7 +146,7 @@ export function ListingLayout({
       className={[
         "appkit-listing-layout",
         toolbarPaginationSlot
-          ? selectedCount  data-section="listinglayout-div-538"> 0
+          ? selectedCount > 0
             ? "appkit-listing-layout--bulk-offset"
             : "appkit-listing-layout--page-offset"
           : "",

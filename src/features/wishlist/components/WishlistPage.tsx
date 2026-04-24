@@ -1,6 +1,7 @@
 import { Button, Div, Stack, Text } from "../../../ui";
 import type { WishlistItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface WishlistCardProps {
   item: WishlistItem;
@@ -36,7 +37,7 @@ export function WishlistCard({
         )}
       </Div>
       <Div className="flex flex-1 flex-col justify-between">
-        <Text className="font-medium text-neutral-900 dark:text-zinc-100 line-clamp-2">
+        <Text className={`font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp2}`}>
           {item.productTitle}
         </Text>
         {item.productPrice !== undefined && (

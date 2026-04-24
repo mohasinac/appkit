@@ -1,6 +1,7 @@
 import React from "react";
 import type { CheckoutStep } from "../types";
 import { Div, Nav, Row, Span } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface CheckoutStepperProps {
   steps: { id: CheckoutStep; label: string }[];
@@ -10,13 +11,13 @@ interface CheckoutStepperProps {
 export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
   const currentIdx = steps.findIndex((s) => s.id === current);
   return (
-    <Nav aria-label="Checkout steps" className="flex items-center gap-2">
+    <Nav aria-label="Checkout steps" className={`flex items-center ${THEME_CONSTANTS.spacing.gap.xs}`}>
       {steps.map((step, idx) => {
         const isDone = idx < currentIdx;
         const isActive = step.id === current;
         return (
           <React.Fragment key={step.id}>
-            <Row className="gap-1.5">
+            <Row className={THEME_CONSTANTS.spacing.gap["2.5"]}>
               <Span
                 className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
                   isDone

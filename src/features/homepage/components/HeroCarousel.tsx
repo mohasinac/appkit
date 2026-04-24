@@ -286,13 +286,13 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                           {card.content?.title && (
                             <Heading
                               level={2}
-                              className="text-[11px] md:text-2xl lg:text-3xl font-bold !text-white mb-0.5 md:mb-3 line-clamp-1 md:line-clamp-2 drop-shadow-md"
+                              className={`text-[11px] md:text-2xl lg:text-3xl font-bold !text-white mb-0.5 md:mb-3 ${THEME_CONSTANTS.utilities.textClamp1} md:${THEME_CONSTANTS.utilities.textClamp2} drop-shadow-md`}
                             >
                               {card.content.title}
                             </Heading>
                           )}
                           {card.content?.description && (
-                            <Text className="text-[10px] md:text-sm lg:text-base !text-white/80 mb-1 md:mb-4 line-clamp-1 drop-shadow-sm">
+                            <Text className={`text-[10px] md:text-sm lg:text-base !text-white/80 mb-1 md:mb-4 ${THEME_CONSTANTS.utilities.textClamp1} drop-shadow-sm`}>
                               {card.content.description}
                             </Text>
                           )}

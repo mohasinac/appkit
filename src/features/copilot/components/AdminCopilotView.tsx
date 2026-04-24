@@ -15,6 +15,7 @@ import {
 import { apiClient } from "../../../http";
 import { useCopilotChat } from "../hooks/useCopilotChat";
 import type { CopilotMessage } from "../hooks/useCopilotChat";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AdminCopilotViewProps {
   endpoint?: string;
@@ -209,8 +210,8 @@ export function AdminCopilotView({
                   <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
                     {new Date(log.createdAt).toLocaleString()}
                   </Text>
-                  <Text className="text-sm mt-1 line-clamp-3">Q: {log.prompt}</Text>
-                  <Text className="text-sm mt-1 line-clamp-3 text-neutral-600 dark:text-zinc-300">
+                  <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3}`}>Q: {log.prompt}</Text>
+                  <Text className={`text-sm mt-1 ${THEME_CONSTANTS.utilities.textClamp3} text-neutral-600 dark:text-zinc-300`}>
                     A: {log.response}
                   </Text>
                 </Div>

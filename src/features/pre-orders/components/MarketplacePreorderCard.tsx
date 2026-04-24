@@ -18,6 +18,7 @@ import {
   TextLink,
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { PreorderBadge } from "./PreorderCard";
 
 export type MarketplacePreorderCardData = ProductItem;
@@ -149,7 +150,7 @@ export function MarketplacePreorderCard({
 
       <BaseListingCard.Info variant={variant}>
         <TextLink href={detailHref}>
-          <Text className="line-clamp-2 text-sm font-medium text-zinc-900">
+          <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900`}>
             {product.title}
           </Text>
         </TextLink>
@@ -157,7 +158,7 @@ export function MarketplacePreorderCard({
           <RichText
             html={normalizeRichTextHtml(product.description)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="line-clamp-2 text-xs text-zinc-500"
+            className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
           />
         ) : null}
 

@@ -1,5 +1,6 @@
 import type { UserAddress } from "../types";
 import { Button, Div, Span, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface AddressCardAddress {
   id: string;
@@ -75,7 +76,7 @@ export function AddressCard({
       {address.phone && (
         <Text className="mt-1 text-sm text-neutral-500 dark:text-zinc-400">{address.phone}</Text>
       )}
-      <Div className="mt-3 flex gap-3">
+      <Div className={`mt-3 flex ${THEME_CONSTANTS.spacing.gap.xs}`}>
         {onEdit && (
           <Button
             onClick={() => onEdit(address)}
@@ -124,7 +125,7 @@ export function AddressBook({
       {addresses.length === 0 && (
         <Text className="text-sm text-neutral-500 dark:text-zinc-400">{emptyLabel}</Text>
       )}
-      <Div className="grid gap-4 sm:grid-cols-2">
+      <Div className={`grid ${THEME_CONSTANTS.spacing.gap.md} sm:grid-cols-2`}>
         {addresses.map((addr) => (
           <AddressCard
             key={addr.id}

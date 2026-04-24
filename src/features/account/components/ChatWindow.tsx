@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading, Row, Span } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface ChatWindowLabels {
   title?: string;
@@ -34,7 +35,7 @@ export function ChatWindow({
         justify="between"
         className="pb-3 border-b border-neutral-200 dark:border-neutral-700 mb-3"
       >
-        <Row className="gap-2">
+        <Row className={THEME_CONSTANTS.spacing.gap.xs}>
           {labels.title && <Heading level={4}>{labels.title}</Heading>}
           <Span
             className={`w-2 h-2 rounded-full ${isConnected ? "bg-emerald-500" : "bg-zinc-400"}`}

@@ -4,6 +4,7 @@ import type { AuctionItem } from "../types";
 import { Article, Button, Div, Heading, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface AuctionCountdownProps {
   endsAt: string;
@@ -107,7 +108,7 @@ export function AuctionCard({
       <Div className="p-4">
         <Heading
           level={3}
-          className="font-semibold text-gray-900 dark:text-zinc-100 text-sm leading-snug mb-2 line-clamp-2"
+          className={`font-semibold text-gray-900 dark:text-zinc-100 text-sm leading-snug mb-2 ${THEME_CONSTANTS.utilities.textClamp2}`}
         >
           {auction.title}
         </Heading>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading, Text, TextLink } from "../../../ui";
+import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import type { CollectionListItem } from "../types";
 
 interface CollectionCardProps {
@@ -17,11 +18,11 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
         <Div
           role="img"
           aria-label={collection.title}
-          className="h-48 w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+          className={`${LAYOUT.cardHeight.md} w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105`}
           style={{ backgroundImage: `url(${collection.image})` }}
         />
       ) : (
-        <Div className="h-48 w-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30" />
+        <Div className={`${LAYOUT.cardHeight.md} w-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30`} />
       )}
       <Div className="p-4 bg-white dark:bg-slate-900">
           <Heading level={3} className="font-semibold text-gray-900 dark:text-zinc-100">

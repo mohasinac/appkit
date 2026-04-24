@@ -1,4 +1,5 @@
 import { Article, Button, Div, Heading, RichText, Span, TextLink } from "../../../ui";
+import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
@@ -39,7 +40,7 @@ export function EventCard({
 
   return (
     <Article
-      className={`flex h-full min-h-[320px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
+      className={`flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
     >
       {event.coverImageUrl ? (
         <Div className="aspect-video overflow-hidden">
@@ -69,7 +70,7 @@ export function EventCard({
         <RichText
           html={normalizeRichTextHtml(event.description ?? "")}
           proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="mb-3 line-clamp-3 text-sm text-zinc-600 dark:text-zinc-400"
+          className={`mb-3 ${THEME_CONSTANTS.utilities.textClamp3} text-sm text-zinc-600 dark:text-zinc-400`}
         />
 
         <Div className="mb-3 mt-auto flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500">

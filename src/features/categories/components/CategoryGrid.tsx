@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { Div, Grid, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
 // --- CategoryCard -------------------------------------------------------------
@@ -35,11 +36,11 @@ export function CategoryCard({
         <Div className="aspect-video w-full bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700" />
       )}
       <Div className="p-4">
-        <Text className="font-semibold text-neutral-900 dark:text-white line-clamp-2">
+        <Text className={`font-semibold ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`}>
           {category.name}
         </Text>
         {category.description && (
-          <Text className="mt-1 text-sm text-neutral-500 dark:text-zinc-400 line-clamp-2">
+          <Text className={`mt-1 text-sm ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400`}>
             {category.description}
           </Text>
         )}

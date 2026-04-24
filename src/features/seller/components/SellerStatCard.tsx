@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Text } from "../../../ui";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface SellerStatCardProps {
   label: string;
@@ -31,7 +32,7 @@ export function SellerStatCard({
           )}
           {trend && (
             <Text
-              className={`text-xs mt-1 font-medium ${trend.positive ? "text-green-600" : "text-red-500"}`}
+              className={`text-xs mt-1 font-medium ${trend.positive ? THEME_CONSTANTS.themed.textSuccess : THEME_CONSTANTS.themed.textError}`}
             >
               {trend.positive ? "▲" : "▼"} {Math.abs(trend.value)}%
             </Text>

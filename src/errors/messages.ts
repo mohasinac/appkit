@@ -144,6 +144,7 @@ export const ERROR_MESSAGES = {
     NOT_IMPLEMENTED: "This feature is not yet implemented",
     TRY_AGAIN: "Something went wrong. Please try again in a moment.",
     RATE_LIMIT_EXCEEDED: "Too many requests. Please try again later.",
+    UNSAVED_CHANGES: "You have unsaved changes. Leave without saving?",
   },
 
   // Network Errors

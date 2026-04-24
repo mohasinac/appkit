@@ -148,7 +148,7 @@ export function Dropdown({
         ref={containerRef}
         className={[UI_DROPDOWN.root, className].filter(Boolean).join(" ")}
         onKeyDown={onKeyDown}
-        onClick={() = data-section="dropdown-div-486"> {
+        onClick={() => {
           if (trigger) return;
           setIsOpen((prev) => !prev);
         }}
@@ -180,7 +180,7 @@ export function Dropdown({
             ]
               .filter(Boolean)
               .join(" ")}
-            onClick={(event) = data-section="dropdown-div-487"> event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
           >
             {menuItems.map((item, index) => {
               const isActive = index === activeIndex;
@@ -244,7 +244,7 @@ export function DropdownMenu({
     <div
       role="menu"
       className={[UI_DROPDOWN.composedMenu, className ?? ""].join(" ")}
-      onClick={(event) = data-section="dropdown-div-489"> event.stopPropagation()}
+      onClick={(event) => event.stopPropagation()}
     >
       {children}
     </div>

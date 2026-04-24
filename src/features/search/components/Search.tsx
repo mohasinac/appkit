@@ -328,7 +328,7 @@ export function Search({
         {isInlineOpen && (filteredQuickLinks.length > 0 || query) && (
           <div
             className="absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden border border-zinc-200 bg-white shadow-lg dark:border-slate-700 dark:bg-slate-900"
-            onMouseDown={(event) = data-section="search-div-430"> event.preventDefault()}
+            onMouseDown={(event) => event.preventDefault()}
           >
             {filteredQuickLinks.length > 0 && (
               <Ul>

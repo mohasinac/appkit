@@ -104,7 +104,7 @@ export function ConfirmDeleteModal({
       className={UI_CONFIRM_MODAL.backdrop}
       onClick={onClose}
     >
-      <div onClick={(e: React.MouseEvent) = data-section="confirmdeletemodal-div-468"> e.stopPropagation()}>
+      <div onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         <Card className={UI_CONFIRM_MODAL.body}>
           {/* Icon */}
           <div className={UI_CONFIRM_MODAL.iconWrap} data-section="confirmdeletemodal-div-469">

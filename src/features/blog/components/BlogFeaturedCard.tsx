@@ -1,5 +1,6 @@
 import React from "react";
 import { Article, Div, Heading, Row, Span, Text } from "../../../ui";
+import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
@@ -50,7 +51,7 @@ export function BlogFeaturedCard({
     <Article
       className={`overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-lg transition-shadow duration-200 md:flex ${className}`}
     >
-      <Div className="md:w-1/2 relative h-64 md:min-h-[320px] overflow-hidden">
+      <Div className={`md:w-1/2 relative ${LAYOUT.cardHeight.blog} overflow-hidden`}>
         {renderImage ? (
           renderImage(post)
         ) : (
@@ -90,7 +91,7 @@ export function BlogFeaturedCard({
           {safeTitle}
         </Heading>
         {post.excerpt && (
-          <Text className="text-neutral-500 dark:text-zinc-400 mb-4 line-clamp-3 text-sm">
+          <Text className={`text-neutral-500 dark:text-zinc-400 mb-4 ${THEME_CONSTANTS.utilities.textClamp3} text-sm`}>
             {post.excerpt}
           </Text>
         )}

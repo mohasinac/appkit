@@ -13,6 +13,7 @@ import {
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
 import { maskName } from "../../../security";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
@@ -69,7 +70,7 @@ export function ViewReviewModal({
                 {displayName}
               </Text>
               {review.verified && (
-                <Text className="text-xs text-green-600 dark:text-green-400">
+                <Text className={`text-xs ${THEME_CONSTANTS.themed.textSuccess}`}>
                   ✓ Verified purchase
                 </Text>
               )}

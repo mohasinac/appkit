@@ -33,8 +33,9 @@ export function FeaturedProductsSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={{ base: 2, sm: 3, md: 4, lg: 4, xl: 5 }}
+      perView={1} // 1 slide at a time
       gap={16}
+      rows={2} // 2 rows per slide
       keyExtractor={(product) => product.id}
       renderItem={(product: ProductItem) => (
         <InteractiveProductCard

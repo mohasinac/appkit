@@ -689,7 +689,7 @@ function CharacterHotspotInner({
 
       {/* Universe quick-browse row */}
       <Div
-        className="mx-auto max-w-7xl px-4 py-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"
+        className={`mx-auto max-w-7xl px-4 py-6 ${THEME_CONSTANTS.grid.cols6Lg} gap-3`}
         style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
       >
         {universeLinks.map(({ label, href, color, icon }) => (

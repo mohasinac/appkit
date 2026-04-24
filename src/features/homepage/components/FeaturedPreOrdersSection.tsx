@@ -31,7 +31,7 @@ export function FeaturedPreOrdersSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={{ base: 2, sm: 3, md: 4, lg: 4, xl: 5 }}
+      perView={THEME_CONSTANTS.carousel.perView.compact}
       gap={16}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (

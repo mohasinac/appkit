@@ -20,6 +20,7 @@ import {
   TextLink,
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface MarketplaceAuctionCardData {
   id: string;
@@ -330,7 +331,7 @@ export function MarketplaceAuctionCard({
           <RichText
             html={normalizeRichTextHtml(product.description)}
             proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className="line-clamp-2 text-xs text-zinc-500"
+            className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
           />
         ) : null}
 

@@ -32,7 +32,7 @@ export function RowActionMenu({
     <div
       ref={ref}
       className="appkit-row-action-menu"
-      onClick={(e) = data-section="rowactionmenu-div-584"> e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
     >
       <Button
         type="button"

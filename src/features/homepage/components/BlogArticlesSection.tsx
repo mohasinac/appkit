@@ -33,7 +33,7 @@ export function BlogArticlesSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={{ base: 1, sm: 2, md: 3, lg: 4 }}
+      perView={THEME_CONSTANTS.carousel.perView.cards}
       gap={16}
       keyExtractor={(post: BlogPost) => post.id}
       renderItem={(post: BlogPost) => (

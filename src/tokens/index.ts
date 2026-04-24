@@ -248,10 +248,12 @@ const THEMED = {
   placeholder: "placeholder-zinc-400 dark:placeholder-zinc-500",
 } as const;
 
+} as const;
+
 /**
  * Layout dimension constants (height, width strings for Tailwind).
  */
-const LAYOUT = {
+export const LAYOUT = {
   titleBarHeight: "h-12",
   navbarHeight: "h-10 md:h-12",
   sidebarWidth: "w-80",
@@ -297,6 +299,25 @@ const LAYOUT = {
     "fixed bottom-0 inset-x-0 z-50 flex justify-around items-center h-16 bg-white dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 lg:hidden pb-[env(safe-area-inset-bottom)]",
   /** Main content bottom padding to clear the bottom nav on mobile */
   mainPadBottomNav: "pb-20 lg:pb-0",
+  /** Standard card heights for consistency */
+  cardHeight: {
+    sm: "h-32",
+    md: "h-48",
+    lg: "h-64",
+    xl: "h-80",
+    product: "h-72",
+    store: "h-56",
+    event: "h-80",
+    blog: "h-96",
+  },
+  /** Standard card widths for consistency */
+  cardWidth: {
+    sm: "w-32",
+    md: "w-48",
+    lg: "w-64",
+    xl: "w-80",
+    full: "w-full",
+  },
 } as const;
 
 /**
@@ -377,6 +398,8 @@ const GRID = {
   cols1: "grid grid-cols-1",
   /** 1 → 2 */
   cols2: "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
+  /** 1 → 2 (md breakpoint) */
+  cols2Md: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2",
   /** 1 → 2 → 3 → 4 on widescreen */
   cols3:
     "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4",
@@ -389,6 +412,8 @@ const GRID = {
   /** 2 → 3 → 4 → 5 → 6 */
   cols6:
     "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+  /** 2 → 3 → 6 (lg breakpoint) */
+  cols6Lg: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6",
   /**
    * Generic card grid — 1 col on portrait mobile → 5 on ultrawide.
    * Starts at 1 (not 2) so product cards with title+image+price are readable
@@ -546,6 +571,8 @@ const CARD = {
   /** Square image wrapper */
   imageSquare:
     "relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-800",
+  /** Banner aspect ratio — 4:3 on mobile, auto on md+ */
+  aspectBanner: "aspect-[4/3] md:aspect-auto",
   /** Card body — flex-column, responsive padding */
   body: "flex flex-col flex-1 gap-1 p-3 sm:p-4",
   /** Card footer — responsive padding */
@@ -700,6 +727,12 @@ const UTILITIES = {
     "px-[env(safe-area-inset-left)] px-[env(safe-area-inset-right)]",
   gradientText:
     "bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent",
+  /** Text truncation utilities */
+  textTruncate: "truncate",
+  textClamp1: "line-clamp-1",
+  textClamp2: "line-clamp-2",
+  textClamp3: "line-clamp-3",
+  textClamp4: "line-clamp-4",
 } as const;
 
 /**
@@ -873,6 +906,19 @@ export const THEME_CONSTANTS = {
   },
   /** Carousel navigation tokens — shared by HeroCarousel and SectionCarousel. */
   carousel: {
+    /** Standard responsive per-view configs for carousels */
+    perView: {
+      /** Default: 1 on mobile, 2 on sm, 3 on md+ */
+      default: { base: 1, sm: 2, md: 3 } as const,
+      /** Cards: 1 on mobile, 2 on sm, 3 on md, 4 on lg+ */
+      cards: { base: 1, sm: 2, md: 3, lg: 4 } as const,
+      /** Compact cards: 2 on mobile, 3 on sm, 4 on md, 5 on xl+ */
+      compact: { base: 2, sm: 3, md: 4, xl: 5 } as const,
+      /** Reviews: 1 on mobile, 2 on sm, 3 on md/lg, 4 on 2xl+ */
+      reviews: { base: 1, sm: 2, md: 3, lg: 3, "2xl": 4 } as const,
+      /** Events: 1 on mobile, 2 on sm, 3 on md/lg */
+      events: { base: 1, sm: 2, md: 3, lg: 3 } as const,
+    } as const,
     arrow:
       "w-10 h-10 rounded-2xl bg-white/85 dark:bg-slate-800/90 backdrop-blur-sm shadow-lg border border-zinc-300/70 dark:border-slate-600 text-zinc-800 dark:text-zinc-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-xl hover:border-zinc-400 dark:hover:border-slate-500 active:scale-95 transition-all duration-200 flex items-center justify-center" as const,
     dotActive:

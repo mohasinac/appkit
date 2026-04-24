@@ -30,11 +30,11 @@
 .appkit-side-drawer--right { right: 0; width: 100%; }
 
 @media (min-width: 640px) {
-  .appkit-side-drawer--left { width: 24rem; }
+  .appkit-side-drawer--left { width: 100%; }
 }
 @media (min-width: 768px) {
   .appkit-side-drawer--left { width: 420px; }
-  .appkit-side-drawer--right { min-width: 50%; }
+  .appkit-side-drawer--right { width: 60%; }
 }
 
 /* Header */

@@ -33,7 +33,7 @@ export function EventsSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={3}
-      perView={{ base: 1, sm: 2, md: 3, lg: 3 }}
+      perView={THEME_CONSTANTS.carousel.perView.events}
       gap={16}
       keyExtractor={(event: EventItem) => event.id}
       renderItem={(event: EventItem) => (

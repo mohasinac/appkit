@@ -595,7 +595,7 @@ function SelectableCard({
           "absolute z-10",
           listMode ? "left-2 top-1/2 -translate-y-1/2" : "top-2 left-2",
         ].join(" ")}
-        onClick={(e) = data-section="datatable-div-644"> e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="w-6 h-6 rounded-md bg-white/95 dark:bg-slate-800/95 shadow-md flex items-center justify-center" data-section="datatable-div-645">
           {/* relative wrapper ensures checkmark SVG centers over the input */}

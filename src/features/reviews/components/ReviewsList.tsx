@@ -13,6 +13,7 @@ import {
 } from "../../../ui";
 import { StarRating } from "../../../ui";
 import type { Review } from "../types";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -59,7 +60,7 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
               {displayName}
             </Span>
             {review.verified && (
-              <Span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
+              <Span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
                 Verified
               </Span>
             )}

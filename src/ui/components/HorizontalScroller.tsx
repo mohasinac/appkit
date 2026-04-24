@@ -3,9 +3,12 @@ import {
   useRef,
   useEffect,
   useCallback,
+  ReactElement,
+  ReactNode,
   type RefObject,
   type ReactNode,
 } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export interface PerViewConfig {
   base?: number;
@@ -101,8 +104,62 @@ export function HorizontalScroller<T = unknown>({
     .filter(Boolean)
     .join(" ");
 
-  const content = itemsMode
-    ? normalizedItems.map((item, i) => (
+  const content = itemsMode ? (
+    rows > 1 ? (
+      // Grid mode: group items into slides with rows x cols
+      // On mobile: 1 card centered, on larger screens: 2x3 grid
+      normalizedItems.reduce<ReactNode[]>((slides, item, i) => {
+        const cardsPerSlide = 6; // Always 6 cards per slide (2x3 grid)
+        const slideIndex = Math.floor(i / cardsPerSlide);
+        const itemInSlide = i % cardsPerSlide;
+        const rowIndex = Math.floor(itemInSlide / 3);
+        const colIndex = itemInSlide % 3;
+
+        if (!slides[slideIndex]) {
+          slides[slideIndex] = (
+            <div
+              key={`slide-${slideIndex}`}
+              className="appkit-hscroller__slide grid grid-cols-1 sm:grid-cols-3 gap-4 place-items-center sm:place-items-start"
+              style={{ gap: `${gap}px` }}
+            >
+              {Array.from({ length: 6 }, (_, idx) => (
+                <div key={`placeholder-${idx}`} className="appkit-hscroller__item-placeholder w-full sm:w-auto" />
+              ))}
+            </div>
+          );
+        }
+
+        // Replace placeholder with actual item
+        const slideElement = slides[slideIndex] as ReactElement;
+        const gridIndex = rowIndex * 3 + colIndex;
+        if (slideElement.props.children[gridIndex]) {
+          const newChildren = [...slideElement.props.children];
+          newChildren[gridIndex] = (
+            <div
+              key={keyExtractor ? keyExtractor(item, i) : i}
+              className={[
+                "appkit-hscroller__item",
+                snapToItems ? "appkit-hscroller__item--snap" : "",
+                itemClassName,
+                "w-full sm:w-auto",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              style={minItemWidth ? { minWidth: minItemWidth } : undefined}
+            >
+              {renderItem(item, i)}
+            </div>
+          );
+          slides[slideIndex] = React.cloneElement(slideElement, {
+            children: newChildren,
+          });
+        }
+
+        return slides;
+      }, [])
+    ) : (
+      // Single row mode
+      normalizedItems.map((item, i) => (
         <div
           key={keyExtractor ? keyExtractor(item, i) : i}
           className={[
@@ -113,11 +170,12 @@ export function HorizontalScroller<T = unknown>({
             .filter(Boolean)
             .join(" ")}
           style={minItemWidth ? { minWidth: minItemWidth } : undefined}
-         data-section="horizontalscroller-div-510">
+        >
           {renderItem(item, i)}
         </div>
       ))
-    : children;
+    )
+  ) : children;
 
   if (showArrows) {
     return (
@@ -138,7 +196,7 @@ export function HorizontalScroller<T = unknown>({
           aria-label="Previous"
           className={`appkit-hscroller__arrow appkit-hscroller__arrow--prev appkit-hscroller__arrow--${arrowSize}`}
         >
-          {"<"}
+          <ChevronLeft className="w-4 h-4" />
         </button>
         <div
           ref={containerRef}
@@ -154,7 +212,7 @@ export function HorizontalScroller<T = unknown>({
           aria-label="Next"
           className={`appkit-hscroller__arrow appkit-hscroller__arrow--next appkit-hscroller__arrow--${arrowSize}`}
         >
-          {">"}
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     );

@@ -13,6 +13,7 @@ import {
 } from "../../../ui";
 import { useClickOutside, useMessage } from "../../../react";
 import { formatRelativeTime } from "../../../utils";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { useNotifications } from "../hooks/useNotifications";
 
 interface NotificationItem {
@@ -254,7 +255,7 @@ export function NotificationBell({
                       {notificationIcons[notification.type] ?? "🔔"}
                     </Span>
                     <div className="flex-1 min-w-0" data-section="notificationbell-div-232">
-                      <div className="flex items-start justify-between gap-2" data-section="notificationbell-div-233">
+                      <div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`} data-section="notificationbell-div-233">
                         <Text
                           size="sm"
                           className="font-medium text-zinc-900 dark:text-white leading-tight"
@@ -270,7 +271,7 @@ export function NotificationBell({
                       </div>
                       <Text
                         size="sm"
-                        className="text-zinc-600 dark:text-zinc-300 mt-0.5 line-clamp-2"
+                        className={`text-zinc-600 dark:text-zinc-300 mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`}
                       >
                         {notification.message}
                       </Text>

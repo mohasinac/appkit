@@ -51,7 +51,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
             initial
           )}
         </div>
-        <Text className="line-clamp-2 text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-800 dark:text-zinc-200`}>
           {category.name}
         </Text>
         <Text className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
@@ -105,7 +105,7 @@ export function ShopByCategorySection({
           <HorizontalScroller
             items={categories}
             renderItem={(cat) => <CategoryChip category={cat} />}
-            perView={{ base: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
+            perView={THEME_CONSTANTS.carousel.perView.compact}
             gap={16}
             keyExtractor={(cat) => cat.id}
             minItemWidth={180}

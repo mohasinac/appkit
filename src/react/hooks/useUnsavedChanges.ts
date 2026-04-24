@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from "react";
+import { ERROR_MESSAGES } from "../../errors/messages";
 
 export const UNSAVED_CHANGES_EVENT = "unsaved-changes:confirm";
 
@@ -51,7 +52,7 @@ export function useUnsavedChanges({
   initialValues,
   extraDirty = false,
   confirmFn,
-  beforeUnloadWarning = "You have unsaved changes. Leave?",
+  beforeUnloadWarning = ERROR_MESSAGES.GENERIC.UNSAVED_CHANGES,
 }: UseUnsavedChangesOptions): UseUnsavedChangesReturn {
   const [savedSnapshot, setSavedSnapshot] = useState<Record<
     string,
@@ -95,7 +96,7 @@ export function useUnsavedChanges({
     if (!isDirty) return Promise.resolve(true);
     if (confirmFn) return confirmFn();
     return Promise.resolve(
-      window.confirm("You have unsaved changes. Leave without saving?"),
+      window.confirm(beforeUnloadWarning),
     );
   }, [isDirty, confirmFn]);
 

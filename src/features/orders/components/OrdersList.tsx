@@ -2,6 +2,7 @@ import { Div, Pagination, Row, Span, Stack, Text } from "../../../ui";
 import type { Order, OrderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
   pending: "bg-yellow-100 text-yellow-700",
@@ -71,7 +72,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               />
             )}
             <Div>
-              <Text className="text-sm font-medium text-neutral-900 dark:text-zinc-100 line-clamp-1">
+              <Text className={`text-sm font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp1}`}>
                 {item.title}
               </Text>
               <Text className="text-xs text-neutral-400 dark:text-zinc-500">×{item.quantity}</Text>

@@ -10,6 +10,7 @@
  */
 
 import { AuthenticationError, AuthorizationError } from "../errors";
+import { ERROR_MESSAGES } from "../errors/messages";
 
 export type UserRole = "admin" | "moderator" | "seller" | "user";
 
@@ -20,16 +21,9 @@ const ROLE_HIERARCHY: Record<UserRole, number> = {
   user: 1,
 };
 
-const MSG = {
-  NOT_AUTHENTICATED: "Please log in to continue",
-  FORBIDDEN: "You do not have permission to perform this action",
-  EMAIL_NOT_VERIFIED: "Please verify your email address before logging in",
-  ACCOUNT_DISABLED: "Your account has been disabled. Please contact support",
-};
-
 export function requireAuth(user: unknown): void {
   if (!user) {
-    throw new AuthenticationError(MSG.NOT_AUTHENTICATED);
+    throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
   }
 }
 
@@ -37,11 +31,11 @@ export function requireRole(
   user: Record<string, unknown> | null | undefined,
   roles: UserRole | UserRole[],
 ): void {
-  if (!user) throw new AuthenticationError(MSG.NOT_AUTHENTICATED);
+  if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
   const requiredRoles = Array.isArray(roles) ? roles : [roles];
   const userRole = (user.role as UserRole) || "user";
   if (!requiredRoles.includes(userRole)) {
-    throw new AuthorizationError(MSG.FORBIDDEN);
+    throw new AuthorizationError(ERROR_MESSAGES.AUTH.FORBIDDEN);
   }
 }
 
@@ -49,24 +43,24 @@ export function requireOwnership(
   user: Record<string, unknown> | null | undefined,
   resourceOwnerId: string,
 ): void {
-  if (!user) throw new AuthenticationError(MSG.NOT_AUTHENTICATED);
+  if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
   if (user.uid !== resourceOwnerId) {
-    throw new AuthorizationError(MSG.FORBIDDEN);
+    throw new AuthorizationError(ERROR_MESSAGES.AUTH.FORBIDDEN);
   }
 }
 
 export function requireEmailVerified(
   user: Record<string, unknown> | null | undefined,
 ): void {
-  if (!user) throw new AuthenticationError(MSG.NOT_AUTHENTICATED);
-  if (!user.emailVerified) throw new AuthorizationError(MSG.EMAIL_NOT_VERIFIED);
+  if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
+  if (!user.emailVerified) throw new AuthorizationError(ERROR_MESSAGES.AUTH.EMAIL_NOT_VERIFIED);
 }
 
 export function requireActiveAccount(
   user: Record<string, unknown> | null | undefined,
 ): void {
-  if (!user) throw new AuthenticationError(MSG.NOT_AUTHENTICATED);
-  if (user.disabled) throw new AuthorizationError(MSG.ACCOUNT_DISABLED);
+  if (!user) throw new AuthenticationError(ERROR_MESSAGES.AUTH.UNAUTHORIZED);
+  if (user.disabled) throw new AuthorizationError(ERROR_MESSAGES.AUTH.ACCOUNT_DISABLED);
 }
 
 /**

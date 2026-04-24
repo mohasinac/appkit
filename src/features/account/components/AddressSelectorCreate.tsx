@@ -4,6 +4,7 @@ import { Button, Label, Select, SideDrawer } from "../../../ui";
 import { useAddressSelector } from "../hooks/useAddressSelector";
 import type { AddressFormData } from "../hooks/useAddresses";
 import { AddressForm } from "./AddressForm";
+import { THEME_CONSTANTS } from "../../../tokens";
 
 interface SavedAddress {
   id: string;
@@ -81,7 +82,7 @@ export function AddressSelectorCreate({
     <>
       <div data-section="addressselectorcreate-div-224">
         {label && <Label className="mb-1.5">{label}</Label>}
-        <div className="flex items-center gap-2" data-section="addressselectorcreate-div-225">
+        <div className={`flex items-center ${THEME_CONSTANTS.spacing.gap.xs}`} data-section="addressselectorcreate-div-225">
           <div className="flex-1" data-section="addressselectorcreate-div-226">
             <Select
               value={value}
