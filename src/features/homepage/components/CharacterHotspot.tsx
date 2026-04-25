@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { useMediaQuery } from "../../../react";
 import { Button, Div, Heading, Row, Section, Span, Text } from "../../../ui";
 import type { CharacterHotspotConfig, HotspotPin } from "../types";

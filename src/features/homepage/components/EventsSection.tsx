@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "./SectionCarousel";
 import { useHomepageEvents } from "../hooks/useHomepageEvents";
 import { EventCard } from "../../events/components/EventCard";

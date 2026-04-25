@@ -3,10 +3,10 @@ import {
   useRef,
   useEffect,
   useCallback,
-  ReactElement,
-  ReactNode,
-  type RefObject,
+  type ReactElement,
   type ReactNode,
+  type RefObject,
+  cloneElement,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -130,11 +130,12 @@ export function HorizontalScroller<T = unknown>({
         }
 
         // Replace placeholder with actual item
-        const slideElement = slides[slideIndex] as ReactElement;
-        const gridIndex = rowIndex * 3 + colIndex;
-        if (slideElement.props.children[gridIndex]) {
-          const newChildren = [...slideElement.props.children];
-          newChildren[gridIndex] = (
+          const slideElement = slides[slideIndex] as ReactElement<{ children?: ReactNode[] }>;
+          const gridIndex = rowIndex * 3 + colIndex;
+          const childrenArr = (slideElement.props as { children?: ReactNode[] }).children ?? [];
+          if (childrenArr[gridIndex]) {
+            const newChildren = [...childrenArr];
+            newChildren[gridIndex] = (
             <div
               key={keyExtractor ? keyExtractor(item, i) : i}
               className={[
@@ -150,9 +151,9 @@ export function HorizontalScroller<T = unknown>({
               {renderItem(item, i)}
             </div>
           );
-          slides[slideIndex] = React.cloneElement(slideElement, {
+          slides[slideIndex] = cloneElement(slideElement as any, {
             children: newChildren,
-          });
+          }) as ReactElement;
         }
 
         return slides;

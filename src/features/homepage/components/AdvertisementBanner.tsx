@@ -1,4 +1,5 @@
 import React from "react";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Heading, Row, Section, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -53,7 +54,7 @@ export function AdvertisementBanner({
           <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl" data-section="advertisementbanner-div-299">
             <div className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-300">
               {/* Left: image */}
-              <div className={`relative ${THEME_CONSTANTS.media.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-301">
+              <div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-301">
                 <MediaImage
                   src={backgroundImage}
                   alt={title}

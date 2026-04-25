@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "./SectionCarousel";
 import { useFeaturedPreOrders } from "../hooks/useFeaturedPreOrders";
 import { MarketplacePreorderCard } from "../../pre-orders/components/MarketplacePreorderCard";

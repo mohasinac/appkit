@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { THEME_CONSTANTS } from "../../../tokens";
 import { SectionCarousel } from "./SectionCarousel";
 import { useBlogArticles } from "../hooks/useBlogArticles";
 import { BlogFeaturedCard } from "../../blog/components/BlogFeaturedCard";

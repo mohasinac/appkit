@@ -33,7 +33,7 @@ export function FeaturedProductsSection({
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={1} // 1 slide at a time
+      perView={{ base: 1 }} // 1 slide at a time
       gap={16}
       rows={2} // 2 rows per slide
       keyExtractor={(product) => product.id}
