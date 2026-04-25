@@ -128,13 +128,19 @@ function parseWelcomeDescription(description: string | undefined): string {
 /**
  * Render a single homepage section based on its type and config
  */
+const AD_SLOT_MAP: Record<string, string> = {
+  products: "afterFeaturedProducts",
+  reviews: "afterReviews",
+  faq: "afterFAQ",
+};
+
 function renderSection(
   section: HomepageSectionDocument,
   adSlots: MarketplaceHomepageViewAdSlots | undefined,
   newsletterFormSlot: React.ReactNode,
 ): React.ReactNode {
   const { type, config } = section;
-  const adSlotKey = `after${section.order}` as keyof typeof adSlots;
+  const adSlotKey = AD_SLOT_MAP[type] as keyof MarketplaceHomepageViewAdSlots | undefined;
 
   const sectionElement = (() => {
     switch (type) {
@@ -368,7 +374,7 @@ function renderSection(
   return (
     <React.Fragment key={section.id}>
       {sectionElement}
-      {adSlots && adSlotKey in adSlots && adSlots[adSlotKey]}
+      {adSlots && adSlotKey !== undefined && adSlotKey in adSlots && adSlots[adSlotKey]}
     </React.Fragment>
   );
 }
