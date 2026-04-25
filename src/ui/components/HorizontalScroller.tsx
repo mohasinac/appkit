@@ -1,6 +1,7 @@
 "use client"
 import {
   useRef,
+  useState,
   useEffect,
   useCallback,
   type ReactElement,
@@ -43,6 +44,29 @@ export interface HorizontalScrollerProps<T = unknown> {
   itemClassName?: string;
 }
 
+const BREAKPOINTS: [keyof PerViewConfig, number][] = [
+  ["2xl", 1536],
+  ["xl", 1280],
+  ["lg", 1024],
+  ["md", 768],
+  ["sm", 640],
+  ["xs", 480],
+  ["base", 0],
+];
+
+function resolvePerView(
+  perView: number | PerViewConfig,
+  containerWidth: number,
+): number {
+  if (typeof perView === "number") return perView;
+  for (const [key, minWidth] of BREAKPOINTS) {
+    if (containerWidth >= minWidth && perView[key] !== undefined) {
+      return perView[key] as number;
+    }
+  }
+  return 1;
+}
+
 export function HorizontalScroller<T = unknown>({
   children,
   className = "",
@@ -64,8 +88,7 @@ export function HorizontalScroller<T = unknown>({
   minItemWidth,
   itemClassName = "",
 }: HorizontalScrollerProps<T>) {
-  void perView;
-  void rows;
+  const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
 
   const internalRef = useRef<HTMLDivElement>(null);
   const containerRef = (externalRef ??
@@ -92,6 +115,21 @@ export function HorizontalScroller<T = unknown>({
     );
     return () => clearInterval(autoScrollTimer.current);
   }, [autoScroll, autoScrollInterval, scrollBy]);
+
+  useEffect(() => {
+    if (!perView) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      const count = resolvePerView(perView, w);
+      if (count > 0) {
+        setItemWidth((w - (count - 1) * gap) / count);
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [perView, gap, containerRef]);
 
   const normalizedItems = Array.isArray(items) ? items : [];
   const itemsMode = Array.isArray(items) && renderItem != null;
@@ -170,7 +208,13 @@ export function HorizontalScroller<T = unknown>({
           ]
             .filter(Boolean)
             .join(" ")}
-          style={minItemWidth ? { minWidth: minItemWidth } : undefined}
+          style={
+            itemWidth !== undefined
+              ? { width: itemWidth, flexShrink: 0 }
+              : minItemWidth
+              ? { minWidth: minItemWidth }
+              : undefined
+          }
         >
           {renderItem(item, i)}
         </div>
