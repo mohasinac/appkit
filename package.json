@@ -15,6 +15,14 @@
       "types": "./dist/client.d.ts",
       "import": "./dist/client.js"
     },
+    "./next": {
+      "types": "./dist/next/index.d.ts",
+      "import": "./dist/next/index.js"
+    },
+    "./features/events": {
+      "types": "./dist/features/events/index.d.ts",
+      "import": "./dist/features/events/index.js"
+    },
     "./ui": {
       "types": "./dist/ui/index.d.ts",
       "import": "./dist/ui/index.js"
@@ -64,7 +72,21 @@
       "import": "./dist/features/admin/repository/site-settings.repository.js"
     },
     "./styles": "./dist/styles.css",
-    "./tokens": "./dist/tokens/tokens.css",
+    "./tokens": {
+      "types": "./dist/tokens/index.d.ts",
+      "import": "./dist/tokens/index.js",
+      "style": "./dist/tokens/tokens.css"
+    },
+    "./tokens/*": {
+      "types": "./dist/tokens/*.d.ts",
+      "import": "./dist/tokens/*.js",
+      "require": "./dist/tokens/*.js",
+      "style": "./dist/tokens/*.css"
+    },
+    "./tokens/tokens.css": {
+      "style": "./dist/tokens/tokens.css",
+      "default": "./dist/tokens/tokens.css"
+    },
     "./messages/*": "./dist/features/*/messages/en.json"
   },
   "files": [

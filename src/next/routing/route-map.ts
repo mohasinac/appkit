@@ -132,6 +132,7 @@ export const DEFAULT_ROUTE_MAP = {
     STORES: "/admin/stores",
     FEATURE_FLAGS: "/admin/feature-flags",
     COPILOT: "/admin/copilot",
+    ADS: "/admin/ads",
   },
   DEMO: {
     SEED: "/demo/seed",

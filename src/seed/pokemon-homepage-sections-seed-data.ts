@@ -377,4 +377,23 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
       createdAt: daysAgo(14),
       updatedAt: daysAgo(1),
     },
+
+    // -- 18. Stats counter -------------------------------------------------------
+    {
+      id: "section-stats-pokemon-1707300000018",
+      type: "stats",
+      order: 18,
+      enabled: true,
+      config: {
+        title: "Trusted by Collectors Across India",
+        stats: [
+          { key: "products", label: "Products Listed", value: "10,000+" },
+          { key: "sellers", label: "Verified Sellers", value: "2,000+" },
+          { key: "buyers", label: "Happy Buyers", value: "50,000+" },
+          { key: "rating", label: "Avg. Rating", value: "4.8/5" },
+        ],
+      },
+      createdAt: daysAgo(14),
+      updatedAt: daysAgo(1),
+    },
   ];
