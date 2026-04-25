@@ -68,14 +68,12 @@
 .appkit-hscroller__arrow--md { width: 2.25rem;  height: 2.25rem;  font-size: 1rem; }
 .appkit-hscroller__arrow--lg { width: 2.75rem;  height: 2.75rem;  font-size: 1.125rem; }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-hscroller__arrow {
-    background: rgba(31, 41, 55, 0.9); /* gray-800/90 */
-    border-color: #374151; /* gray-700 */
-  }
-  .appkit-hscroller__arrow:hover {
-    background: #374151;
-  }
+.dark .appkit-hscroller__arrow {
+  background: rgba(31, 41, 55, 0.9); /* gray-800/90 */
+  border-color: #374151; /* gray-700 */
+}
+.dark .appkit-hscroller__arrow:hover {
+  background: #374151;
 }
 
 /* -- Fade edges -------------------------------------- */
@@ -99,11 +97,9 @@
   background: linear-gradient(to left, white, transparent);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-hscroller__fade--left {
-    background: linear-gradient(to right, #111827, transparent); /* gray-900 */
-  }
-  .appkit-hscroller__fade--right {
-    background: linear-gradient(to left, #111827, transparent);
-  }
+.dark .appkit-hscroller__fade--left {
+  background: linear-gradient(to right, #111827, transparent); /* gray-900 */
+}
+.dark .appkit-hscroller__fade--right {
+  background: linear-gradient(to left, #111827, transparent);
 }
