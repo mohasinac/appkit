@@ -21,6 +21,7 @@ import { FAQSection } from "./FAQSection";
 import { NewsletterSection } from "./NewsletterSection";
 import { BlogArticlesSection } from "./BlogArticlesSection";
 import { WelcomeSection } from "./WelcomeSection";
+import { BrandsSection } from "./BrandsSection";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import type {
   HomepageSectionDocument,
@@ -40,6 +41,7 @@ import type {
   FAQSectionConfig,
   BlogArticlesSectionConfig,
   NewsletterSectionConfig,
+  BrandsSectionConfig,
 } from "../schemas";
 
 const DEFAULT_TRUST_FEATURES = [
@@ -358,6 +360,19 @@ function renderSection(
             title={cfg?.title || "Stay Updated"}
             subtitle={cfg?.description || "Get the latest drops, auctions, and deals in your inbox."}
             renderForm={() => newsletterFormSlot ?? null}
+          />
+        );
+      }
+
+      case "brands": {
+        const cfg = config as BrandsSectionConfig;
+        return (
+          <BrandsSection
+            title={cfg?.title || "Top Brands"}
+            subtitle={cfg?.subtitle}
+            limit={cfg?.maxBrands || 12}
+            viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
+            viewMoreLabel="All brands →"
           />
         );
       }
