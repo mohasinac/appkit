@@ -1,6 +1,6 @@
 import React from "react";
 import { Main } from "../../../ui";
-import { carouselRepository, siteSettingsRepository } from "../../../repositories";
+import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { HeroCarousel } from "./HeroCarousel";
@@ -138,6 +138,7 @@ function renderSection(
   section: HomepageSectionDocument,
   adSlots: MarketplaceHomepageViewAdSlots | undefined,
   newsletterFormSlot: React.ReactNode,
+  faqItems: Array<{ id: string; question: string; answer: string }>,
 ): React.ReactNode {
   const { type, config } = section;
   const adSlotKey = AD_SLOT_MAP[type] as keyof MarketplaceHomepageViewAdSlots | undefined;
@@ -332,7 +333,7 @@ function renderSection(
             title={cfg?.title || "Frequently Asked Questions"}
             tabs={[]}
             activeTab=""
-            items={[]}
+            items={faqItems}
             viewMoreHref={ROUTES.PUBLIC.FAQS}
             viewMoreLabel="View all FAQs →"
           />
@@ -421,9 +422,10 @@ export async function MarketplaceHomepageView({
     siteSettings?.announcementBar?.message?.trim() ||
     "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15";
   const showAnnouncement = siteSettings?.announcementBar?.enabled ?? true;
-  const enabledSections = await homepageSectionsRepository
-    .getEnabledSections()
-    .catch(() => [] as HomepageSectionDocument[]);
+  const [enabledSections, rawFaqItems] = await Promise.all([
+    homepageSectionsRepository.getEnabledSections().catch(() => [] as HomepageSectionDocument[]),
+    faqsRepository.getHomepageFAQs().catch(() => []),
+  ]);
   const orderedSections = [...enabledSections].sort((a, b) => {
     if (a.order !== b.order) return a.order - b.order;
     const aUpdated = new Date(a.updatedAt).getTime();
@@ -431,6 +433,11 @@ export async function MarketplaceHomepageView({
     if (aUpdated !== bUpdated) return aUpdated - bUpdated;
     return a.id.localeCompare(b.id);
   });
+  const faqItems = rawFaqItems.map((faq) => ({
+    id: faq.id,
+    question: faq.question,
+    answer: typeof faq.answer === "string" ? faq.answer : faq.answer.text,
+  }));
 
   // Render with dynamic sections from DB
   return (
@@ -439,7 +446,7 @@ export async function MarketplaceHomepageView({
       <HeroCarousel initialSlides={slides as any[]} />
       {adSlots?.afterHero}
       {orderedSections.map((section) =>
-        renderSection(section, adSlots, newsletterFormSlot ?? null),
+        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems),
       )}
     </Main>
   );
