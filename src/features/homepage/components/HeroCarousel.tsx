@@ -95,7 +95,18 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   }
 
   if (!slides || slides.length === 0) {
-    return null;
+    return (
+      <Div
+        className={`relative w-full ${homepage.heroMinH} bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}
+      >
+        <Heading level={2} className="text-2xl font-bold text-primary">
+          Coming Soon
+        </Heading>
+        <Text variant="secondary" className="text-center max-w-md px-4">
+          Amazing deals are on their way. Stay tuned!
+        </Text>
+      </Div>
+    );
   }
 
   const getBackgroundStyle = (card: CarouselSlideCard) => {
