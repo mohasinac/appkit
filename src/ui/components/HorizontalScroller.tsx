@@ -158,7 +158,7 @@ export function HorizontalScroller<T = unknown>({
             <div
               key={`slide-${slideIndex}`}
               className="appkit-hscroller__slide grid grid-cols-1 sm:grid-cols-3 gap-4 place-items-center sm:place-items-start"
-              style={{ gap: `${gap}px` }}
+              style={{ gap: `${gap}px`, width: "100%", flexShrink: 0 }}
             >
               {Array.from({ length: 6 }, (_, idx) => (
                 <div key={`placeholder-${idx}`} className="appkit-hscroller__item-placeholder w-full sm:w-auto" />
