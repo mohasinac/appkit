@@ -1,5 +1,5 @@
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Div, Grid, Heading, Section, Span, Text } from "../../../ui";
+import { Div, Heading, Section, Span, Text, HorizontalScroller } from "../../../ui";
 import { BeforeAfterCard } from "./BeforeAfterCard";
 
 // --- Types -------------------------------------------------------------------
@@ -75,23 +75,32 @@ export function FeaturedResultsSection({
         )}
       </Div>
 
-      <Grid
-        gap="lg"
-        className="mx-auto max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4"
-      >
-        {items.map((item, i) => (
-          <BeforeAfterCard
-            key={item.id ?? `result-${i}`}
-            item={{
-              id: item.id ?? `result-${i}`,
-              beforeImage: item.beforeImage,
-              afterImage: item.afterImage,
-              caption: item.caption ?? "",
-              sortOrder: item.sortOrder ?? i,
-            }}
-          />
-        ))}
-      </Grid>
+      <div className="mx-auto max-w-7xl">
+        <HorizontalScroller
+          items={items}
+          renderItem={(item: FeaturedResultItem, i: number) => (
+            <div className="w-full sm:w-auto">
+              <BeforeAfterCard
+                key={item.id ?? `result-${i}`}
+                item={{
+                  id: item.id ?? `result-${i}`,
+                  beforeImage: item.beforeImage,
+                  afterImage: item.afterImage,
+                  caption: item.caption ?? "",
+                  sortOrder: item.sortOrder ?? i,
+                }}
+              />
+            </div>
+          )}
+          keyExtractor={(item, i) => item.id ?? `result-${i}`}
+          perView={THEME_CONSTANTS.carousel.perView.cards}
+          gap={24}
+          minItemWidth={260}
+          snapToItems
+          showArrows
+          showFadeEdges
+        />
+      </div>
     </Section>
   );
 }

@@ -16,8 +16,12 @@ export type MediaImageSize =
 const SIZE_HINTS: Record<MediaImageSize, string> = {
   thumbnail: "(max-width: 640px) 80px, (max-width: 1024px) 96px, 112px",
   card: "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw",
-  hero: "100vw",
-  banner: "100vw",
+  // Use a constrained fallback instead of unconditional 100vw to avoid
+  // the Next.js runtime warning when `fill` is used inside non-viewport
+  // width containers (cards, sliders). This still provides a helpful
+  // responsive hint while avoiding false-positive perf warnings.
+  hero: "(max-width: 768px) 100vw, 1200px",
+  banner: "(max-width: 768px) 100vw, 1200px",
   gallery: "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
   avatar: "(max-width: 640px) 48px, 56px",
 };

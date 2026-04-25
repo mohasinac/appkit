@@ -278,13 +278,22 @@ export class UserRepository extends BaseRepository<UserDocument> {
 
   async updateLoginMetadata(uid: string): Promise<void> {
     try {
-      await this.getCollection()
-        .doc(uid)
-        .update({
-          [USER_FIELDS.META.LAST_SIGN_IN_TIME]: serverTimestamp(),
-          [USER_FIELDS.META.LOGIN_COUNT]: increment(1),
-          [USER_FIELDS.UPDATED_AT]: serverTimestamp(),
+      const docRef = this.getCollection().doc(uid);
+
+      await this.db.runTransaction(async (tx) => {
+        const snapAny = (await tx.get(docRef as any)) as any;
+        // support both DocumentSnapshot and other shapes defensively
+        const docData =
+          (typeof snapAny?.data === "function"
+            ? snapAny.data()
+            : snapAny?.data) ?? {};
+        const currentLoginCount = (docData?.metadata?.loginCount as number) || 0;
+        tx.update(docRef as any, {
+          [USER_FIELDS.META.LAST_SIGN_IN_TIME]: new Date(),
+          [USER_FIELDS.META.LOGIN_COUNT]: Number(currentLoginCount) + 1,
+          [USER_FIELDS.UPDATED_AT]: new Date(),
         });
+      });
     } catch (error) {
       throw new DatabaseError("Failed to update login metadata", error);
     }
