@@ -13,6 +13,8 @@ import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
 interface UseStoresOptions {
   enabled?: boolean;
   endpoint?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  initialData?: any;
 }
 
 export function useStores(
@@ -32,6 +34,7 @@ export function useStores(
     queryKey: ["stores", qs],
     queryFn: () =>
       apiClient.get<StoreListResponse>(endpoint),
+    initialData: opts?.initialData,
     enabled: opts?.enabled ?? true,
   });
 

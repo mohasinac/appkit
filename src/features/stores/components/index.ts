@@ -17,3 +17,5 @@ export { StoreReviewsView } from "./StoreReviewsView";
 export type { StoreReviewsViewProps } from "./StoreReviewsView";
 export { InteractiveStoreCard } from "./InteractiveStoreCard";
 export type { InteractiveStoreCardProps } from "./InteractiveStoreCard";
+export { StoresIndexListing } from "./StoresIndexListing";
+export type { StoresIndexListingProps } from "./StoresIndexListing";

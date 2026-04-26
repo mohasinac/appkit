@@ -1,9 +1,7 @@
 import { productRepository } from "../../../repositories";
-import { ROUTES } from "../../../next";
-import { Container, Heading, Main, Section, Grid, Text, Stack } from "../../../ui";
-import { ShoppingBag } from "lucide-react";
-import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
+import { Container, Main, Heading, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
+import { PreOrdersIndexListing } from "./PreOrdersIndexListing";
 
 export async function PreOrdersListView() {
   const result = await productRepository
@@ -15,8 +13,6 @@ export async function PreOrdersListView() {
     })
     .catch(() => null);
 
-  const items = result?.items ?? [];
-
   return (
     <Main>
       <Section className="py-10">
@@ -25,23 +21,7 @@ export async function PreOrdersListView() {
             Pre-Orders
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          {items.length === 0 ? (
-            <Stack align="center" gap="3" className="justify-center py-24 text-center">
-              <ShoppingBag className="h-16 w-16 text-zinc-300" />
-              <Text className="text-xl font-medium text-zinc-900">No pre-orders available</Text>
-              <Text className="text-sm text-zinc-500">Check back soon for upcoming releases.</Text>
-            </Stack>
-          ) : (
-            <Grid cols={4} gap="md">
-              {items.map((item: any) => (
-                <MarketplacePreorderCard
-                  key={item.id}
-                  product={item}
-                  hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
-                />
-              ))}
-            </Grid>
-          )}
+          <PreOrdersIndexListing initialData={result ?? undefined} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

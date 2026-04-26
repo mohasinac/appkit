@@ -6541,6 +6541,8 @@ export { PreorderBadge } from "./features/pre-orders/index";
 export { PreorderCard } from "./features/pre-orders/index";
 // [SERVER-RSC]-Self-fetching index/detail page views for pre-orders.
 export { PreOrdersListView } from "./features/pre-orders/index";
+export { PreOrdersIndexListing } from "./features/pre-orders/index";
+export type { PreOrdersIndexListingProps } from "./features/pre-orders/index";
 export { PreOrderDetailPageView } from "./features/pre-orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildPreorderColumns - Helper for build preorder columns.
@@ -7875,6 +7877,8 @@ export { StoreStatusValues } from "./features/stores/index";
 export { StoresListView } from "./features/stores/index";
 // [SERVER-RSC] — Self-fetching RSC page views for store tab pages.
 export { StoresIndexPageView } from "./features/stores/components/StoresIndexPageView";
+export { StoresIndexListing } from "./features/stores/index";
+export type { StoresIndexListingProps } from "./features/stores/index";
 export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailLayoutView";
 export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
 export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
