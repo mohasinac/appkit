@@ -8,7 +8,9 @@ import {
   Div,
   Heading,
   Main,
+  Row,
   Section,
+  Span,
   Stack,
   Text,
 } from "../../../ui";
@@ -52,6 +54,11 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
 
   const images: string[] = Array.isArray(p.images) ? p.images : p.imageUrl ? [p.imageUrl] : [];
   const primaryImage = images[0];
+
+  const reservedCount = typeof p.reservedCount === "number" ? p.reservedCount : 0;
+  const reserveTarget = typeof p.reserveTarget === "number" ? p.reserveTarget
+    : typeof p.preOrderTarget === "number" ? p.preOrderTarget : 0;
+  const progressPct = reserveTarget > 0 ? Math.min(100, Math.round((reservedCount / reserveTarget) * 100)) : 0;
 
   return (
     <PreOrderDetailView
@@ -103,6 +110,24 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
       renderBuyBar={() => (
         <Div className="rounded-xl border border-zinc-100 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
           <Stack gap="sm">
+            {reserveTarget > 0 && (
+              <Stack gap="xs">
+                <Row justify="between" align="center">
+                  <Span className="text-xs text-zinc-500">
+                    {reservedCount} of {reserveTarget} reserved
+                  </Span>
+                  <Span className="text-xs font-medium text-primary-600">
+                    {progressPct}%
+                  </Span>
+                </Row>
+                <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                  <Div
+                    className="h-full rounded-full bg-primary"
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </Div>
+              </Stack>
+            )}
             {price && (
               <Text className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{price}</Text>
             )}

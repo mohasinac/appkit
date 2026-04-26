@@ -19,6 +19,9 @@ import {
 } from "../../../ui";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
 import { BidHistory } from "../../products/components/BidHistory";
+import { RelatedProducts } from "../../products/components/RelatedProducts";
+import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
+import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -29,6 +32,12 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
     productRepository.findByIdOrSlug(id).catch(() => undefined),
     listBidsByProduct(id, { pageSize: 20 }).catch(() => null),
   ]);
+
+  const relatedDocs: Record<string, any>[] = product
+    ? await productRepository
+        .findByCategory((product as Record<string, any>).category ?? "")
+        .catch(() => [])
+    : [];
 
   if (!product) {
     return (
@@ -191,6 +200,36 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
             bids={bids}
             isEmpty={bids.length === 0}
             labels={{ title: "Bid History" }}
+          />
+        );
+      }}
+      renderRelated={() => {
+        const related: MarketplaceAuctionCardData[] = relatedDocs
+          .filter((r) => r.id !== product!.id && r.isAuction !== false)
+          .slice(0, 4)
+          .map((r) => ({
+            id: String(r.id ?? ""),
+            title: String(r.name ?? r.title ?? "Auction Item"),
+            price: typeof r.price === "number" ? r.price : 0,
+            currency: typeof r.currency === "string" ? r.currency : undefined,
+            mainImage: Array.isArray(r.images) ? r.images[0] : typeof r.imageUrl === "string" ? r.imageUrl : undefined,
+            isAuction: true,
+            auctionEndDate: r.auctionEndDate,
+            startingBid: typeof r.startingBid === "number" ? r.startingBid : undefined,
+            currentBid: typeof r.currentBid === "number" ? r.currentBid : undefined,
+            bidCount: typeof r.bidCount === "number" ? r.bidCount : undefined,
+            slug: typeof r.slug === "string" ? r.slug : undefined,
+          }));
+        if (related.length === 0) return null;
+        return (
+          <RelatedProducts
+            labels={{ title: "Similar Auctions" }}
+            renderGrid={() => (
+              <MarketplaceAuctionGrid
+                auctions={related}
+                gridClassName="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+              />
+            )}
           />
         );
       }}
