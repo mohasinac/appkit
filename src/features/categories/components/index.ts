@@ -32,6 +32,9 @@ export type { CategorySortSelectProps } from "./CategorySortSelect";
 export { CategoryProductsView } from "./CategoryProductsView";
 export type { CategoryProductsViewProps } from "./CategoryProductsView";
 
+export { CategoryProductsListing } from "./CategoryProductsListing";
+export type { CategoryProductsListingProps } from "./CategoryProductsListing";
+
 export { CategoryForm } from "./CategoryForm";
 export type { CategoryFormProps, CategoryFormLabels } from "./CategoryForm";
 

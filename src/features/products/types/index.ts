@@ -128,6 +128,7 @@ export interface ProductListResponse {
 export interface ProductListParams {
   q?: string;
   category?: string;
+  categorySlug?: string;
   status?: ProductStatus;
   condition?: ProductCondition;
   minPrice?: number;

@@ -32,6 +32,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
   const sp = new URLSearchParams();
   if (params.q) sp.set("q", params.q);
   if (params.category) sp.set("category", params.category);
+  if (params.categorySlug) sp.set("categorySlug", params.categorySlug);
   if (params.status) sp.set("status", params.status);
   if (params.condition) sp.set("condition", params.condition);
   if (params.minPrice !== undefined)

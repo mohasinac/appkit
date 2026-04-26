@@ -4400,6 +4400,9 @@ export { CategoryGrid } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoryProductsView - Component for category products view.
 export { CategoryProductsView } from "./features/categories/index";
+// CategoryProductsListing - Client toolbar listing for category detail pages.
+export { CategoryProductsListing } from "./features/categories/index";
+export type { CategoryProductsListingProps } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategorySelectorCreate - Shared export for category selector create.
 export { CategorySelectorCreate } from "./features/categories/index";
@@ -7879,6 +7882,12 @@ export { StoresListView } from "./features/stores/index";
 export { StoresIndexPageView } from "./features/stores/components/StoresIndexPageView";
 export { StoresIndexListing } from "./features/stores/index";
 export type { StoresIndexListingProps } from "./features/stores/index";
+export { StoreProductsListing } from "./features/stores/components/StoreProductsListing";
+export type { StoreProductsListingProps } from "./features/stores/components/StoreProductsListing";
+export { StoreAuctionsListing } from "./features/stores/components/StoreAuctionsListing";
+export type { StoreAuctionsListingProps } from "./features/stores/components/StoreAuctionsListing";
+export { StoreReviewsListing } from "./features/stores/components/StoreReviewsListing";
+export type { StoreReviewsListingProps } from "./features/stores/components/StoreReviewsListing";
 export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailLayoutView";
 export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
 export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";

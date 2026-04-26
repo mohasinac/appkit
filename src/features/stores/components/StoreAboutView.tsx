@@ -1,7 +1,8 @@
 import React from "react";
-import { Div, Heading, Text } from "../../../ui";
+import { Div, Heading, RichText, Text } from "../../../ui";
 import type { StoreDetail } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 
 export interface StoreAboutViewProps {
   store: StoreDetail;
@@ -97,9 +98,7 @@ export function StoreAboutView({
           <Heading level={3} className="text-base font-semibold mb-2">
             {labels.returnPolicyLabel ?? "Return Policy"}
           </Heading>
-          <Text className="text-neutral-600 whitespace-pre-line">
-            {store.returnPolicy}
-          </Text>
+          <RichText html={normalizeRichTextHtml(store.returnPolicy)} className="text-neutral-600" />
         </Div>
       )}
 
@@ -109,9 +108,7 @@ export function StoreAboutView({
           <Heading level={3} className="text-base font-semibold mb-2">
             {labels.shippingPolicyLabel ?? "Shipping Policy"}
           </Heading>
-          <Text className="text-neutral-600 whitespace-pre-line">
-            {store.shippingPolicy}
-          </Text>
+          <RichText html={normalizeRichTextHtml(store.shippingPolicy)} className="text-neutral-600" />
         </Div>
       )}
 

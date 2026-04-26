@@ -2,18 +2,18 @@ import React from "react";
 import Link from "next/link";
 import { categoriesRepository, productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import {
   Container,
-  Grid,
+  Div,
   Heading,
   Main,
   Row,
+  RichText,
   Section,
   Span,
-  Stack,
-  Text,
 } from "../../../ui";
-import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
+import { CategoryProductsListing } from "./CategoryProductsListing";
 
 export interface CategoryDetailPageViewProps {
   slug: string;
@@ -36,7 +36,6 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   ]);
 
   const category = categoryResult as Record<string, any> | undefined;
-  const products = (productsResult?.items ?? []) as Array<Record<string, any>>;
 
   return (
     <Main>
@@ -61,34 +60,15 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             {category?.name ?? slug}
           </Heading>
           {category?.description && (
-            <Text className="mb-8 text-zinc-500">{category.description}</Text>
+            <Div className="mb-8 text-zinc-600 dark:text-zinc-400">
+              <RichText html={normalizeRichTextHtml(category.description)} />
+            </Div>
           )}
 
-          {products.length === 0 ? (
-            <Stack align="center" gap="3" className="justify-center py-24 text-center">
-              <Text className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
-                No products in this category yet
-              </Text>
-              <Text className="text-sm text-zinc-500">
-                Check back soon or browse other categories.
-              </Text>
-            </Stack>
-          ) : (
-            <>
-              <Text className="mb-6 text-sm text-zinc-500">
-                {products.length} {products.length === 1 ? "product" : "products"}
-              </Text>
-              <Grid cols="productCards" gap="md">
-                {products.map((p) => (
-                  <InteractiveProductCard
-                    key={p.id}
-                    product={p as any}
-                    href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(p.slug ?? p.id))}
-                  />
-                ))}
-              </Grid>
-            </>
-          )}
+          <CategoryProductsListing
+            categorySlug={slug}
+            initialData={productsResult ?? undefined}
+          />
         </Container>
       </Section>
     </Main>
