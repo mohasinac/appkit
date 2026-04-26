@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Grid, Heading, Section, Span, Text } from "../../../ui";
+import { Button, Grid, Heading, RichText, Section, Span, Text } from "../../../ui";
 import { MessageCircle } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
@@ -91,9 +91,9 @@ export function WhatsAppCommunitySection({
             </Heading>
 
             {descriptionHtml && (
-              <div
-                className="text-lg md:text-xl mb-2 opacity-90 prose prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+              <RichText
+                html={descriptionHtml}
+                className="text-lg md:text-xl mb-2 opacity-90 prose-invert prose-sm"
               />
             )}
 

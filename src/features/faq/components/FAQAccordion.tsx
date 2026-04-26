@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react";
-import { Button, Div, Row, Span, Text } from "../../../ui";
+import { Button, Div, RichText, Row, Span, Text } from "../../../ui";
 import type { FAQ, FAQCategory } from "../types";
 
 interface FAQAccordionItemProps {
@@ -59,10 +59,7 @@ function FAQAccordionItem({
             </Row>
           )}
           {faq.answer.format === "html" ? (
-            <Div
-              className="prose prose-sm max-w-none"
-              dangerouslySetInnerHTML={{ __html: faq.answer.text }}
-            />
+            <RichText html={faq.answer.text} className="prose-sm" />
           ) : (
             <Text className="whitespace-pre-line">{faq.answer.text}</Text>
           )}
