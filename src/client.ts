@@ -93,7 +93,8 @@ export { FirebaseClientAuthProvider } from "./providers/firebase-client/index";
 export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€” uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // EventFormDrawer - Component for event form drawer.
-export { EventFormDrawer } from "./features/events/index";
+export { EventFormDrawer, EventParticipateView } from "./features/events/index";
+export type { EventParticipateViewProps } from "./features/events/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€” uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.
 export { BottomSheet } from "./features/layout/index";
@@ -148,6 +149,8 @@ export type { NavigationLoaderProps } from "./ui/index";
 export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
+export { AdminDashboardView } from "./features/admin/index";
+export type { AdminDashboardViewProps } from "./features/admin/index";
 export { UserSidebar } from "./features/account/components/UserSidebar";
 export type { UserSidebarProps, UserNavItem } from "./features/account/components/UserSidebar";
 export { NotificationBell } from "./features/account/components/NotificationBell";
@@ -185,4 +188,13 @@ export {
   isAdSlotRenderable,
 } from "./features/homepage/ad-registry";
 export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-registry";
+export { WishlistView } from "./features/wishlist/index";
+export type { WishlistViewProps } from "./features/wishlist/index";
+export { InteractiveProductCard } from "./features/products/index";
+export type { InteractiveProductCardProps } from "./features/products/index";
+export { SellerDashboardView, useSellerDashboard } from "./features/seller/index";
+export type { SellerDashboardViewProps } from "./features/seller/index";
+export { UserAccountHubView, UserOrdersView } from "./features/account/index";
+export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels } from "./features/account/index";
+export { useOrders, OrdersList } from "./features/orders/index";
 

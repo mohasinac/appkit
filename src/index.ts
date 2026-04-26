@@ -6672,7 +6672,7 @@ export { ProductCard } from "./features/products/index";
 // ProductDetailView - Component for product detail view.
 export { ProductDetailView } from "./features/products/index";
 // [SERVER-RSC]-Self-fetching detail page view for products.
-export { ProductDetailPageView } from "./features/products/index";
+export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFeatureBadges - Shared export for product feature badges.
 export { ProductFeatureBadges } from "./features/products/index";
@@ -6696,7 +6696,7 @@ export { ProductStatusValues } from "./features/products/index";
 export { ProductTabs } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductsIndexPageView - Component for products index page view.
-export { ProductsIndexPageView } from "./features/products/index";
+export { ProductsIndexPageView } from "./features/products/components/ProductsIndexPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductsView - Component for products view.
 export { ProductsView } from "./features/products/index";

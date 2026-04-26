@@ -1,5 +1,4 @@
 export { ProductCard, ProductGrid } from "./ProductGrid";
-export { ProductsIndexPageView } from "./ProductsIndexPageView";
 export {
   ProductFilters,
   PRODUCT_FILTER_KEYS,
@@ -46,8 +45,6 @@ export { MakeOfferForm } from "./MakeOfferForm";
 export type { MakeOfferFormProps } from "./MakeOfferForm";
 export { RelatedProducts } from "./RelatedProducts";
 export type { RelatedProductsProps } from "./RelatedProducts";
-export { ProductDetailPageView } from "./ProductDetailPageView";
-export type { ProductDetailPageViewProps } from "./ProductDetailPageView";
 export { ProductGalleryClient } from "./ProductGalleryClient";
 export type { ProductGalleryClientProps } from "./ProductGalleryClient";
 export { ProductTabsShell } from "./ProductTabsShell";

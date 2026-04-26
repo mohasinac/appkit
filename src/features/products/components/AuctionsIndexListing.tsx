@@ -10,7 +10,7 @@ import {
   SlottedListingView,
 } from "../../../ui";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
-import { ProductFilters } from ".";
+import { ProductFilters } from "./ProductFilters";
 
 export interface AuctionsIndexListingProps {
   initialData?: any;
