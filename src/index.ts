@@ -4403,6 +4403,8 @@ export { CategoryProductsView } from "./features/categories/index";
 // CategoryProductsListing - Client toolbar listing for category detail pages.
 export { CategoryProductsListing } from "./features/categories/index";
 export type { CategoryProductsListingProps } from "./features/categories/index";
+export { CategoriesIndexListing } from "./features/categories/index";
+export type { CategoriesIndexListingProps } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategorySelectorCreate - Shared export for category selector create.
 export { CategorySelectorCreate } from "./features/categories/index";
