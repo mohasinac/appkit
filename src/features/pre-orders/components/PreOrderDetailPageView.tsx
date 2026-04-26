@@ -55,9 +55,11 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
   const images: string[] = Array.isArray(p.images) ? p.images : p.imageUrl ? [p.imageUrl] : [];
   const primaryImage = images[0];
 
-  const reservedCount = typeof p.reservedCount === "number" ? p.reservedCount : 0;
+  const reservedCount = typeof p.reservedCount === "number" ? p.reservedCount
+    : typeof p.preOrderCurrentCount === "number" ? p.preOrderCurrentCount : 0;
   const reserveTarget = typeof p.reserveTarget === "number" ? p.reserveTarget
-    : typeof p.preOrderTarget === "number" ? p.preOrderTarget : 0;
+    : typeof p.preOrderTarget === "number" ? p.preOrderTarget
+    : typeof p.preOrderMaxQuantity === "number" ? p.preOrderMaxQuantity : 0;
   const progressPct = reserveTarget > 0 ? Math.min(100, Math.round((reservedCount / reserveTarget) * 100)) : 0;
 
   return (
