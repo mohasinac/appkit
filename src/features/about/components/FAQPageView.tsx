@@ -2,7 +2,6 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -19,6 +18,7 @@ export async function FAQPageView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: FAQPageViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("faqs");
 
   // Each FAQ namespace must export:

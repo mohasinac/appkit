@@ -3,7 +3,6 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import {
   Shield,
   Lock,
@@ -28,6 +27,7 @@ export async function SecurityPrivacyView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: SecurityPrivacyViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("securityPage");
 
   const SECTIONS = [

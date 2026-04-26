@@ -3,8 +3,6 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
-
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -16,6 +14,7 @@ export async function HowOffersWorkView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: HowOffersWorkViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howOffersWork");
 
   const STEPS = [

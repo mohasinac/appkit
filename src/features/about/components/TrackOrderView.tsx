@@ -2,7 +2,6 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Caption, Grid, Section } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import { ShoppingBag, Truck, MapPin, CheckCircle2 } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -16,6 +15,7 @@ export async function TrackOrderView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: TrackOrderViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("trackOrder");
 
   const STEPS = [

@@ -2,7 +2,6 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import { User, Star, ShoppingBag, MessageCircle } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -18,6 +17,7 @@ export async function PublicProfileView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: PublicProfileViewProps) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("publicProfile");
 
   void userId; // userId used by consumer to fetch profile data and pass as props

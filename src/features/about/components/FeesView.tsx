@@ -1,8 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Caption } from "../../../ui";
-import { getTranslations } from "next-intl/server";
-
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -14,6 +12,7 @@ export async function FeesView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: FeesViewProps = {}) {
   const { themed, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("fees");
 
   const FEE_ROWS = [

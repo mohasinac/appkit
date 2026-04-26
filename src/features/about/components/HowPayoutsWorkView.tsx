@@ -3,7 +3,6 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Stack, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import { DollarSign, Calendar, Banknote, ShieldCheck } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -17,6 +16,7 @@ export async function HowPayoutsWorkView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: HowPayoutsWorkViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howPayoutsWork");
 
   const STEPS = [

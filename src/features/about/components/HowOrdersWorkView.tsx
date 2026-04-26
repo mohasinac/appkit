@@ -3,7 +3,6 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Span, Row, FlowDiagram } from "../../../ui";
 import type { FlowStep } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import { PackageSearch, MapPinned, FileText, XCircle } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -17,6 +16,7 @@ export async function HowOrdersWorkView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: HowOrdersWorkViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("howOrdersWork");
 
   const ORDER_STATUSES = [

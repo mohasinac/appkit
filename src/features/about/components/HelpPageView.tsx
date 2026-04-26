@@ -2,7 +2,6 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
-import { getTranslations } from "next-intl/server";
 import {
   BookOpen,
   MessageCircle,
@@ -25,6 +24,7 @@ export async function HelpPageView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: HelpPageViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
+  const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("helpPage");
 
   const TOPICS = [
