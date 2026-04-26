@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
+import { listBidsByProduct } from "../../auctions/actions/bid-actions";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -17,13 +18,17 @@ import {
   Text,
 } from "../../../ui";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
+import { BidHistory } from "../../products/components/BidHistory";
 
 export interface AuctionDetailPageViewProps {
   id: string;
 }
 
 export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) {
-  const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
+  const [product, bidsResult] = await Promise.all([
+    productRepository.findByIdOrSlug(id).catch(() => undefined),
+    listBidsByProduct(id, { pageSize: 20 }).catch(() => null),
+  ]);
 
   if (!product) {
     return (
@@ -173,6 +178,22 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
           </Div>
         ) : null
       }
+      renderBidHistory={() => {
+        const bids = (bidsResult?.items ?? []).map((b: any) => ({
+          id: b.id,
+          bidderId: b.userId ?? b.bidderId ?? "",
+          bidderName: b.bidderName ?? b.userName,
+          amount: b.bidAmount ?? b.amount ?? 0,
+          placedAt: b.createdAt ?? b.bidAt ?? "",
+        }));
+        return (
+          <BidHistory
+            bids={bids}
+            isEmpty={bids.length === 0}
+            labels={{ title: "Bid History" }}
+          />
+        );
+      }}
     />
   );
 }
