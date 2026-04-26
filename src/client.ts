@@ -167,8 +167,10 @@ export type {
 } from "./features/auth/index";
 export { useLogout, useLogin, useGoogleLogin, useRegister, useForgotPassword, useResetPassword, useVerifyEmail } from "./features/auth/index";
 export type { LoginCredentials, RegisterData, ForgotPasswordData, ResetPasswordData, VerifyEmailData } from "./features/auth/index";
-export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, useGuestCart, useCartCount, useAddToCart } from "./features/cart/index";
+export { CartView, CartItemRow, CartSummary, CartDrawer, CheckoutView, CheckoutSuccessView, CheckoutAddressStep, useGuestCart, useCartCount, useAddToCart, useCart, useGuestCartMerge, useCartQuery } from "./features/cart/index";
 export type { CartItem, CartItemMeta, CartData, GuestCartItem } from "./features/cart/index";
+export { useAddresses } from "./features/account/index";
+export type { Address, AddressFormData } from "./features/account/index";
 export { CategoryProductsView, CategoriesListView } from "./features/categories/index";
 export type { CategoryItem } from "./features/categories/index";
 export { MediaImage } from "./features/media/index";
