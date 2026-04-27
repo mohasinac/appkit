@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 
@@ -89,6 +89,16 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
  * <AdSlot id="listing-between-rows" manualContent={<PromoBanner />} />
  */
 export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  if (!hydrated) {
+    return null;
+  }
+
   const config = getAdSlot(id);
   const renderable = isAdSlotRenderable(id);
 
