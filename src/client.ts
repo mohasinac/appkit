@@ -199,4 +199,4 @@ export type { SellerDashboardViewProps } from "./features/seller/index";
 export { UserAccountHubView, UserOrdersView } from "./features/account/index";
 export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels } from "./features/account/index";
 export { useOrders, OrdersList } from "./features/orders/index";
-
+export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";
