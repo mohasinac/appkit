@@ -120,9 +120,9 @@ export function DetailViewShell({
         );
       case "grid-2":
         return (
-          <Div className={`flex ${THEME_CONSTANTS.spacing.gap.lg} my-6`}>
+          <Div className={`flex flex-col md:flex-row ${THEME_CONSTANTS.spacing.gap.lg} my-6`}>
             {mainSlots.map((slot, i) => (
-              <Div key={i} className={i === 0 ? "w-1/2" : "flex-1"}>
+              <Div key={i} className={i === 0 ? "w-full md:w-1/2" : "flex-1"}>
                 {resolveSlot(slot)}
               </Div>
             ))}

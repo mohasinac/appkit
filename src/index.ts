@@ -4137,6 +4137,9 @@ export { BlogFilters } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BlogIndexPageView - Component for blog index page view.
 export { BlogIndexPageView } from "./features/blog/index";
+// BlogIndexListing - Client listing component with search/sort/filter/pagination.
+export { BlogIndexListing } from "./features/blog/index";
+export type { BlogIndexListingProps } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BlogListView - Component for blog list view.
 export { BlogListView } from "./features/blog/index";
@@ -5014,6 +5017,11 @@ export { EventStatusBadge } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // EventsListView - Component for events list view.
 export { EventsListView } from "./features/events/index";
+// EventsListPageView - Server component for public events listing with toolbar.
+export { EventsListPageView } from "./features/events/index";
+// EventsIndexListing - Client listing component with search/sort/filter/pagination.
+export { EventsIndexListing } from "./features/events/index";
+export type { EventsIndexListingProps } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildEventColumns - Helper for build event columns.
 export { buildEventColumns } from "./features/events/index";
@@ -7166,6 +7174,9 @@ export { ReviewsList } from "./features/reviews/index";
 export { ReviewsListView } from "./features/reviews/index";
 // [SERVER-RSC]-Self-fetching index page view for reviews.
 export { ReviewsIndexPageView } from "./features/reviews/components/ReviewsIndexPageView";
+// ReviewsIndexListing - Client listing component with sort/filter/pagination.
+export { ReviewsIndexListing } from "./features/reviews/components/ReviewsIndexListing";
+export type { ReviewsIndexListingProps } from "./features/reviews/components/ReviewsIndexListing";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ViewReviewModal - Component for view review modal.
 export { ViewReviewModal } from "./features/reviews/index";

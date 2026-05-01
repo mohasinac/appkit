@@ -58,10 +58,10 @@ export function CheckoutView({
         </Heading>
       )}
       {renderStepIndicator?.(step, totalSteps, setStep)}
-      <Div className="flex gap-8">
+      <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
         <Div className="flex-1">{renderStep(step, setStep)}</Div>
         {renderOrderSummary && (
-          <Div className="w-80">{renderOrderSummary()}</Div>
+          <Div className="w-full lg:w-80">{renderOrderSummary()}</Div>
         )}
       </Div>
     </Div>

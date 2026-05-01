@@ -30,12 +30,12 @@ export function CartView({
       {labels.title && (
         <Heading level={1} className="text-2xl font-bold mb-6">{labels.title}</Heading>
       )}
-      <Div className="flex gap-8">
+      <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
         <Div className="flex-1">
           {renderItems(isLoading)}
           {renderPromoCode?.()}
         </Div>
-        <Div className="w-80">
+        <Div className="w-full lg:w-80">
           {renderSummary?.()}
           {renderCheckoutButton?.(() => {}, isLoading)}
         </Div>

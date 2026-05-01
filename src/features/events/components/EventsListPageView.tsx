@@ -1,22 +1,28 @@
 import React from "react";
-import { reviewRepository } from "../../../repositories";
-import { Container, Heading, Main, Section } from "../../../ui";
-import type { Review } from "../types";
+import { eventRepository } from "../../../repositories";
 import { AdSlot } from "../../homepage/components/AdSlot";
-import { ReviewsIndexListing } from "./ReviewsIndexListing";
+import { Container, Heading, Main, Section } from "../../../ui";
+import { EventsIndexListing } from "./EventsIndexListing";
 
-export async function ReviewsIndexPageView() {
-  const reviews = await reviewRepository.findByStatus("approved").catch(() => [] as Review[]);
+export async function EventsListPageView() {
+  const result = await eventRepository
+    .list({
+      filters: "status==published",
+      sorts: "startsAt",
+      page: 1,
+      pageSize: 24,
+    })
+    .catch(() => null);
 
   return (
     <Main>
       <Section className="py-10">
         <Container size="xl">
           <Heading level={1} className="mb-8 text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Reviews
+            Events
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <ReviewsIndexListing reviews={reviews as Review[]} />
+          <EventsIndexListing initialData={result} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>
