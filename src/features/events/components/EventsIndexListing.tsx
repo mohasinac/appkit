@@ -8,6 +8,8 @@ import {
   Pagination,
   SlottedListingView,
   SortDropdown,
+  Stack,
+  Text,
 } from "../../../ui";
 import { EventCard } from "./EventCard";
 import {
@@ -65,13 +67,21 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         renderFilters={() => (
           <EventFilters table={table as unknown as UrlTable} variant="public" />
         )}
-        renderTable={() => (
-          <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </Div>
-        )}
+        renderTable={() =>
+          events.length === 0 && !isLoading ? (
+            <Stack align="center" gap="3" className="justify-center py-24 text-center">
+              <Text className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
+                No events found
+              </Text>
+            </Stack>
+          ) : (
+            <Div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </Div>
+          )
+        }
         renderPagination={() =>
           totalPages > 1 ? (
             <Pagination
