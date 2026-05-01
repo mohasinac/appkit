@@ -224,6 +224,27 @@ export interface ShiprocketCourierServiceabilityResponse {
   message?: string;
 }
 
+export interface ShiprocketCancelOrderResponse {
+  message: string;
+  status: number;
+}
+
+export interface ShiprocketOrderDetailResponse {
+  data?: {
+    shipments?: Array<{
+      id: number;
+      awb: string;
+      status: string;
+    }>;
+  };
+}
+
+export interface ShiprocketLabelResponse {
+  label_created: number;
+  label_url: string;
+  others?: string;
+}
+
 export interface ShiprocketWebhookPayload {
   awb: string;
   order_id: string;
@@ -432,6 +453,54 @@ export async function shiprocketCheckServiceability(
     `/courier/serviceability/?${sp.toString()}`,
     { token },
   );
+}
+
+/**
+ * Cancel one or more Shiprocket orders by their order IDs.
+ * @deprecated Use `ShiprocketProvider.cancelShipment()` instead.
+ * @internal
+ */
+export async function shiprocketCancelOrder(
+  token: string,
+  orderIds: number[],
+): Promise<ShiprocketCancelOrderResponse> {
+  return shiprocketFetch<ShiprocketCancelOrderResponse>("/orders/cancel", {
+    method: "POST",
+    token,
+    body: JSON.stringify({ ids: orderIds }),
+  });
+}
+
+/**
+ * Fetch full order details (including nested shipment IDs) for a Shiprocket order.
+ * @deprecated Use `ShiprocketProvider.generateLabel()` instead (calls this internally).
+ * @internal
+ */
+export async function shiprocketGetOrderDetail(
+  token: string,
+  orderId: number,
+): Promise<ShiprocketOrderDetailResponse> {
+  return shiprocketFetch<ShiprocketOrderDetailResponse>(
+    `/orders/show/${orderId}`,
+    { token },
+  );
+}
+
+/**
+ * Request a shipping label PDF for one or more Shiprocket shipment IDs.
+ * Returns a label URL — fetch that URL separately to get the raw PDF bytes.
+ * @deprecated Use `ShiprocketProvider.generateLabel()` instead.
+ * @internal
+ */
+export async function shiprocketPrintLabel(
+  token: string,
+  shipmentIds: number[],
+): Promise<ShiprocketLabelResponse> {
+  return shiprocketFetch<ShiprocketLabelResponse>("/orders/print/label", {
+    method: "POST",
+    token,
+    body: JSON.stringify({ shipment_id: shipmentIds }),
+  });
 }
 
 /** Shiprocket tokens are valid for approx. 10 days */

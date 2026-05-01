@@ -15,6 +15,9 @@ import {
   shiprocketGetPickupLocations,
   shiprocketAddPickupLocation,
   shiprocketVerifyPickupOTP,
+  shiprocketCancelOrder,
+  shiprocketGetOrderDetail,
+  shiprocketPrintLabel,
   isShiprocketTokenExpired,
   SHIPROCKET_TOKEN_TTL_MS,
   type ShiprocketAuthRequest,
@@ -155,9 +158,10 @@ export class ShiprocketProvider implements IShippingProvider {
     };
   }
 
-  async cancelShipment(_shipmentId: string): Promise<void> {
-    // Shiprocket cancel API not implemented in HTTP client yet
-    throw new Error("cancelShipment not implemented for Shiprocket provider");
+  async cancelShipment(shipmentId: string): Promise<void> {
+    const token = await this.ensureToken();
+    // shipmentId is Shipment.id = String(orderRes.order_id)
+    await shiprocketCancelOrder(token, [parseInt(shipmentId, 10)]);
   }
 
   async checkServiceability(
@@ -180,9 +184,25 @@ export class ShiprocketProvider implements IShippingProvider {
     return { isServiceable: couriers.length > 0, couriers };
   }
 
-  async generateLabel(_shipmentId: string): Promise<ArrayBuffer> {
-    // Shiprocket label API not implemented in HTTP client yet
-    throw new Error("generateLabel not implemented for Shiprocket provider");
+  async generateLabel(shipmentId: string): Promise<ArrayBuffer> {
+    const token = await this.ensureToken();
+    // shipmentId is Shipment.id = String(orderRes.order_id); label API needs the
+    // Shiprocket shipment_id (different numeric field), so look it up first.
+    const orderId = parseInt(shipmentId, 10);
+    const detail = await shiprocketGetOrderDetail(token, orderId);
+    const srShipmentId = detail.data?.shipments?.[0]?.id;
+    if (!srShipmentId) {
+      throw new Error(`No shipment found for Shiprocket order ${orderId}`);
+    }
+    const labelRes = await shiprocketPrintLabel(token, [srShipmentId]);
+    if (!labelRes.label_url) {
+      throw new Error("Shiprocket did not return a label URL");
+    }
+    const pdfRes = await fetch(labelRes.label_url);
+    if (!pdfRes.ok) {
+      throw new Error(`Failed to download label PDF: ${pdfRes.status}`);
+    }
+    return pdfRes.arrayBuffer();
   }
 
   // --- Shiprocket-Specific Methods ------------------------------------------
