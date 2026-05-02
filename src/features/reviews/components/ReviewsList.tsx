@@ -37,13 +37,14 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
 
   const displayName = maskName(review.userName);
   const initials = displayName.charAt(0).toUpperCase();
+  const reviewHref = String(ROUTES.PUBLIC.REVIEW_DETAIL(review.id));
   const productHref = review.productId
     ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
     : null;
 
   const card = (
     <Div
-      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md ${className}`}
+      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md cursor-pointer ${className}`}
     >
       <Div className="flex items-start gap-3">
         {review.userAvatar ? (
@@ -118,25 +119,22 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
       )}
 
       {productHref && (
-        <Div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-medium text-primary group-hover:text-primary-600 transition-colors border-t border-neutral-100 dark:border-zinc-800">
+        <Div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 border-t border-neutral-100 dark:border-zinc-800">
           <span aria-hidden="true">📦</span>
           <span className={THEME_CONSTANTS.utilities.textClamp1}>
             {review.productTitle ?? "View Product"}
           </span>
-          <span aria-hidden="true" className="ml-auto">→</span>
+          <span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</span>
         </Div>
       )}
     </Div>
   );
 
-  if (productHref) {
-    return (
-      <Link href={productHref} className="block h-full">
-        {card}
-      </Link>
-    );
-  }
-  return card;
+  return (
+    <Link href={reviewHref} className="block h-full">
+      {card}
+    </Link>
+  );
 }
 
 // --- ReviewsList --------------------------------------------------------------

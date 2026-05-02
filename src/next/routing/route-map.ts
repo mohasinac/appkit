@@ -36,6 +36,7 @@ export const DEFAULT_ROUTE_MAP = {
     CATEGORIES: "/categories",
     CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
     REVIEWS: "/reviews",
+    REVIEW_DETAIL: (id: string) => `/reviews/${id}`,
     SEARCH: "/search",
     PROMOTIONS: "/promotions",
     ABOUT: "/about",

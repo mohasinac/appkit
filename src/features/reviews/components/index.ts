@@ -23,3 +23,5 @@ export type { ReviewsListViewProps } from "./ReviewsListView";
 
 export { ReviewsIndexListing } from "./ReviewsIndexListing";
 export type { ReviewsIndexListingProps } from "./ReviewsIndexListing";
+// ReviewDetailPageView is RSC — exported from src/index.ts directly (server barrel only)
+export type { ReviewDetailPageViewProps } from "./ReviewDetailPageView";

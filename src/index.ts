@@ -7174,6 +7174,9 @@ export { ReviewsList } from "./features/reviews/index";
 export { ReviewsListView } from "./features/reviews/index";
 // [SERVER-RSC]-Self-fetching index page view for reviews.
 export { ReviewsIndexPageView } from "./features/reviews/components/ReviewsIndexPageView";
+// [SERVER-RSC]-Self-fetching review detail page view.
+export { ReviewDetailPageView } from "./features/reviews/components/ReviewDetailPageView";
+export type { ReviewDetailPageViewProps } from "./features/reviews/components/ReviewDetailPageView";
 // ReviewsIndexListing - Client listing component with sort/filter/pagination.
 export { ReviewsIndexListing } from "./features/reviews/components/ReviewsIndexListing";
 export type { ReviewsIndexListingProps } from "./features/reviews/components/ReviewsIndexListing";
