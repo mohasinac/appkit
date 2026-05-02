@@ -96,13 +96,23 @@ export class FirebaseRepository<
     }
 
     // -- Basic Sieve filter parsing --------------------------------------------
-    // Supports: ==, !=, <, <=, >, >=, @= (array-contains)
+    // Supports: ==, !=, <, <=, >, >=, @= (array-contains), @=* (prefix/starts-with)
     if (query?.filters) {
       const clauses = query.filters
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
       for (const clause of clauses) {
+        // Try @=* (string prefix) before the generic @= match
+        const prefixMatch = clause.match(/^([^<>=!@]+)\s*@=\*\s*(.+)$/);
+        if (prefixMatch) {
+          const field = prefixMatch[1].trim();
+          const prefix = prefixMatch[2].trim();
+          q = (q as Query)
+            .where(field, ">=", prefix)
+            .where(field, "<=", prefix + "");
+          continue;
+        }
         const match = clause.match(
           /^([^<>=!@]+)\s*(==|!=|<=|>=|<|>|@=)\s*(.+)$/,
         );

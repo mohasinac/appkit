@@ -14,7 +14,6 @@ export { EventCard } from "./EventCard";
 export { EventsListView } from "./EventsListView";
 export { EventsIndexListing } from "./EventsIndexListing";
 export type { EventsIndexListingProps } from "./EventsIndexListing";
-export { EventsListPageView } from "./EventsListPageView";
 export { EventDetailView } from "./EventDetailView";
 export type { EventDetailViewProps } from "./EventDetailView";
 export { EventParticipateView } from "./EventParticipateView";

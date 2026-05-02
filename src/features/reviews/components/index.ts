@@ -23,4 +23,3 @@ export type { ReviewsListViewProps } from "./ReviewsListView";
 
 export { ReviewsIndexListing } from "./ReviewsIndexListing";
 export type { ReviewsIndexListingProps } from "./ReviewsIndexListing";
-export { ReviewsIndexPageView } from "./ReviewsIndexPageView";

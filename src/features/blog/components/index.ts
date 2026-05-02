@@ -1,5 +1,4 @@
 export { BlogCard, BlogCategoryTabs, BlogListView } from "./BlogListView";
-export { BlogIndexPageView } from "./BlogIndexPageView";
 export { BlogIndexListing } from "./BlogIndexListing";
 export type { BlogIndexListingProps } from "./BlogIndexListing";
 export {

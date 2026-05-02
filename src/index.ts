@@ -4136,7 +4136,7 @@ export { BlogFeaturedCard } from "./features/blog/index";
 export { BlogFilters } from "./features/blog/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // BlogIndexPageView - Component for blog index page view.
-export { BlogIndexPageView } from "./features/blog/index";
+export { BlogIndexPageView } from "./features/blog/components/BlogIndexPageView";
 // BlogIndexListing - Client listing component with search/sort/filter/pagination.
 export { BlogIndexListing } from "./features/blog/index";
 export type { BlogIndexListingProps } from "./features/blog/index";
@@ -5018,7 +5018,7 @@ export { EventStatusBadge } from "./features/events/index";
 // EventsListView - Component for events list view.
 export { EventsListView } from "./features/events/index";
 // EventsListPageView - Server component for public events listing with toolbar.
-export { EventsListPageView } from "./features/events/index";
+export { EventsListPageView } from "./features/events/components/EventsListPageView";
 // EventsIndexListing - Client listing component with search/sort/filter/pagination.
 export { EventsIndexListing } from "./features/events/index";
 export type { EventsIndexListingProps } from "./features/events/index";
