@@ -54,6 +54,7 @@ export function SortDropdown({
         onValueChange={onChange}
         options={options}
         className="appkit-sort-dropdown__select"
+        aria-label={label ?? "Sort by"}
       />
     </Row>
   );

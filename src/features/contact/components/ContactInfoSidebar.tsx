@@ -43,7 +43,7 @@ export function ContactInfoSidebar({
                 {item.href ? (
                   <a
                     href={item.href}
-                    className="text-sm text-primary hover:underline"
+                    className="text-sm text-primary-800 dark:text-primary-300 hover:underline"
                   >
                     {item.value}
                   </a>

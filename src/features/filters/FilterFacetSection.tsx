@@ -164,6 +164,7 @@ export function FilterFacetSection({
                     type="radio"
                     checked={isSelected}
                     onChange={() => toggle(option.value)}
+                    aria-label={option.label}
                     className={cn(
                       "flex-shrink-0 border-zinc-300 dark:border-slate-600 cursor-pointer",
                       "w-4 h-4 rounded-full text-primary-600 dark:text-secondary-500",
@@ -175,6 +176,7 @@ export function FilterFacetSection({
                     type="checkbox"
                     checked={isSelected}
                     onChange={() => toggle(option.value)}
+                    aria-label={option.label}
                     className={cn(
                       "flex-shrink-0 border-zinc-300 dark:border-slate-600 cursor-pointer",
                       "w-4 h-4 rounded text-primary-600 dark:text-secondary-500 checked:bg-primary-600 dark:checked:bg-secondary-500",
