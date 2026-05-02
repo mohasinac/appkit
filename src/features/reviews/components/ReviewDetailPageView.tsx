@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { reviewRepository } from "../../../repositories";
+import { reviewRepository, storeRepository } from "../../../repositories";
 import { Container, Main, Section } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { Review } from "../types";
@@ -12,6 +12,14 @@ export interface ReviewDetailPageViewProps {
 
 export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
   const review = await reviewRepository.findById(id).catch(() => null) as Review | null;
+
+  // Resolve store slug from sellerId so the shell can link to the store page
+  const storeSlug: string | null = review?.sellerId
+    ? await storeRepository
+        .findAll({ filters: `ownerId==${review.sellerId}`, pageSize: 1 } as any)
+        .then((r: any) => r?.items?.[0]?.storeSlug ?? null)
+        .catch(() => null)
+    : null;
 
   if (!review || review.status !== "approved") {
     return (
@@ -58,7 +66,10 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
         </nav>
       </div>
 
-      <ReviewDetailShell review={review} />
+      <ReviewDetailShell
+        review={review}
+        storeHref={storeSlug ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug)) : null}
+      />
     </Main>
   );
 }

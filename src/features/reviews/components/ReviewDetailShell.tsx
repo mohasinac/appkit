@@ -13,9 +13,10 @@ import type { Review } from "../types";
 
 interface ReviewDetailShellProps {
   review: Review;
+  storeHref?: string | null;
 }
 
-export function ReviewDetailShell({ review }: ReviewDetailShellProps) {
+export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps) {
   const displayName = maskName(review.userName);
   const initials = displayName.charAt(0).toUpperCase();
   const date = review.createdAt
@@ -80,9 +81,7 @@ export function ReviewDetailShell({ review }: ReviewDetailShellProps) {
   const productHref = review.productId
     ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
     : null;
-  const sellerHref = review.sellerId
-    ? String(ROUTES.PUBLIC.PROFILE(review.sellerId))
-    : null;
+  const sellerHref = storeHref ?? null;
   const reviewerHref = String(ROUTES.PUBLIC.PROFILE(review.userId));
 
   const currentImage = lightboxIdx !== null ? images[lightboxIdx] : null;

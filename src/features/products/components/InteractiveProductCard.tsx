@@ -13,12 +13,10 @@ export interface InteractiveProductCardProps {
   selectable?: boolean;
   isSelected?: boolean;
   onSelect?: (id: string, selected: boolean) => void;
-  /** Whether this product is currently in the user's wishlist */
   isWishlisted?: boolean;
-  /** Called when the wishlist icon is toggled */
   onToggleWishlist?: (productId: string) => void;
-  /** Called when the card body is clicked in non-selectable mode */
   onAddToCart?: (product: ProductItem) => void;
+  onBuyNow?: (product: ProductItem) => void;
 }
 
 export function InteractiveProductCard({
@@ -31,6 +29,7 @@ export function InteractiveProductCard({
   isWishlisted = false,
   onToggleWishlist,
   onAddToCart,
+  onBuyNow,
 }: InteractiveProductCardProps) {
   return (
     <Link
@@ -56,9 +55,8 @@ export function InteractiveProductCard({
         className={className}
         isWishlisted={isWishlisted}
         onAddToWishlist={onToggleWishlist}
-        onClick={
-          !selectable && onAddToCart ? () => onAddToCart(product) : undefined
-        }
+        onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
       />
     </Link>
   );

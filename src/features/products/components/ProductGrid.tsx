@@ -19,6 +19,8 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
   onClick?: (product: T) => void;
   onAddToWishlist?: (productId: string) => void;
   isWishlisted?: boolean;
+  onAddToCart?: (product: T) => void;
+  onBuyNow?: (product: T) => void;
   className?: string;
 }
 
@@ -28,6 +30,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   onClick,
   onAddToWishlist,
   isWishlisted,
+  onAddToCart,
+  onBuyNow,
   className = "",
 }: ProductCardProps<T>) {
   const discount =
@@ -133,6 +137,37 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             </Span>
           </Row>
         )}
+
+        {(onAddToCart || onBuyNow) && (
+          <Row className="mt-3 gap-1.5">
+            {onBuyNow && (
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onBuyNow(product);
+                }}
+                className="flex-1 rounded-lg bg-primary py-1.5 text-xs font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                ⚡ Buy Now
+              </Button>
+            )}
+            {onAddToCart && (
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onAddToCart(product);
+                }}
+                className="flex-1 rounded-lg border border-primary py-1.5 text-xs font-semibold text-primary hover:bg-primary/5 transition-colors"
+              >
+                🛒 Add to Cart
+              </Button>
+            )}
+          </Row>
+        )}
       </Div>
     </Div>
   );
@@ -153,6 +188,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 export interface ProductCardContext<T extends ProductItem = ProductItem> {
   onClick?: (product: T) => void;
   onWishlistToggle?: (productId: string) => void;
+  onAddToCart?: (product: T) => void;
+  onBuyNow?: (product: T) => void;
   isWishlisted: boolean;
 }
 
@@ -177,6 +214,8 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
   /** When provided, each card is wrapped in a Link using this href generator. */
   getProductHref?: (product: T) => string;
   onWishlistToggle?: (productId: string) => void;
+  onAddToCart?: (product: T) => void;
+  onBuyNow?: (product: T) => void;
   wishlistedIds?: Set<string>;
   /** Text shown when the list is empty and no `emptySlot` is provided. */
   emptyLabel?: string;
@@ -340,6 +379,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   onProductClick,
   getProductHref,
   onWishlistToggle,
+  onAddToCart,
+  onBuyNow,
   wishlistedIds,
   emptyLabel = "No products found",
   emptySlot,
@@ -400,6 +441,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
             const ctx: ProductCardContext<T> = {
               onClick: onProductClick,
               onWishlistToggle,
+              onAddToCart,
+              onBuyNow,
               isWishlisted: wishlistedIds?.has(p.id) ?? false,
             };
             const cardRenderer = renderCard ?? slots?.renderCard;
@@ -410,12 +453,14 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
                   : (slots!.renderCard!(p, i) as React.ReactNode)}
               </React.Fragment>
             ) : (
-            <ProductCard<T>
+              <ProductCard<T>
                 key={p.id}
                 product={p}
                 href={getProductHref ? getProductHref(p) : undefined}
                 onClick={onProductClick}
                 onAddToWishlist={onWishlistToggle}
+                onAddToCart={onAddToCart}
+                onBuyNow={onBuyNow}
                 isWishlisted={ctx.isWishlisted}
               />
             );
@@ -431,6 +476,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
           const ctx: ProductCardContext<T> = {
             onClick: onProductClick,
             onWishlistToggle,
+            onAddToCart,
+            onBuyNow,
             isWishlisted: wishlistedIds?.has(p.id) ?? false,
           };
           const cardRenderer = renderCard ?? slots?.renderCard;
@@ -447,6 +494,8 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               href={getProductHref ? getProductHref(p) : undefined}
               onClick={onProductClick}
               onAddToWishlist={onWishlistToggle}
+              onAddToCart={onAddToCart}
+              onBuyNow={onBuyNow}
               isWishlisted={ctx.isWishlisted}
             />
           );
