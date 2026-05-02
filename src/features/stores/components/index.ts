@@ -27,5 +27,6 @@ export { StoreReviewsListing } from "./StoreReviewsListing";
 export type { StoreReviewsListingProps } from "./StoreReviewsListing";
 export { StorePreOrdersListing } from "./StorePreOrdersListing";
 export type { StorePreOrdersListingProps } from "./StorePreOrdersListing";
-export { StorePreOrdersPageView } from "./StorePreOrdersPageView";
+// StorePreOrdersPageView is an RSC — exported directly from src/index.ts, NOT here
+// (this barrel is pulled into client.ts via stores/index.ts → client.ts)
 export type { StorePreOrdersPageViewProps } from "./StorePreOrdersPageView";
