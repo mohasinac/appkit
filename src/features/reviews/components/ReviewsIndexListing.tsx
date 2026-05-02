@@ -1,14 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import {
-  Div,
-  Grid,
-  Pagination,
-  SlottedListingView,
-  SortDropdown,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Pagination, SortDropdown } from "../../../ui";
 import { ReviewCard } from "./ReviewsList";
 import type { Review } from "../types";
 
@@ -21,13 +13,13 @@ const SORT_OPTIONS = [
   { value: "rating", label: "Lowest Rating" },
 ];
 
-const STAR_OPTIONS = [
-  { value: "", label: "All Ratings" },
-  { value: "5", label: "5 Stars" },
-  { value: "4", label: "4 Stars" },
-  { value: "3", label: "3 Stars" },
-  { value: "2", label: "2 Stars" },
-  { value: "1", label: "1 Star" },
+const STAR_FILTERS = [
+  { value: "", label: "All" },
+  { value: "5", label: "★★★★★" },
+  { value: "4", label: "★★★★" },
+  { value: "3", label: "★★★" },
+  { value: "2", label: "★★" },
+  { value: "1", label: "★" },
 ];
 
 export interface ReviewsIndexListingProps {
@@ -58,78 +50,67 @@ export function ReviewsIndexListing({ reviews }: ReviewsIndexListingProps) {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const handleSort = (val: string) => {
-    setSort(val);
-    setPage(1);
-  };
-
-  const handleStarFilter = (val: string) => {
-    setStarFilter(val);
-    setPage(1);
-  };
+  const handleSort = (val: string) => { setSort(val); setPage(1); };
+  const handleStarFilter = (val: string) => { setStarFilter(val); setPage(1); };
 
   return (
-    <Div className="min-h-screen">
-      <SlottedListingView
-        portal="public"
-        manageSearch={false}
-        manageSort={false}
-        inlineToolbar
-        renderSort={() => (
-          <SortDropdown
-            value={sort}
-            onChange={handleSort}
-            options={SORT_OPTIONS}
-          />
-        )}
-        renderFilters={() => (
-          <Div className="space-y-2 p-4">
-            <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              Filter by Rating
-            </Text>
-            {STAR_OPTIONS.map((opt) => (
+    <div className="min-h-screen">
+      {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
+      <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
+        <div className="flex flex-wrap items-center gap-2.5">
+          {/* Star rating filter chips */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {STAR_FILTERS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 onClick={() => handleStarFilter(opt.value)}
-                className={`block w-full rounded-lg px-3 py-2 text-left text-sm transition ${
+                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                   starFilter === opt.value
-                    ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                    : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-slate-800"
+                    ? "border-primary bg-primary text-white"
+                    : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:border-primary hover:text-primary"
                 }`}
               >
                 {opt.label}
               </button>
             ))}
-          </Div>
+          </div>
+
+          <div className="flex ml-auto shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="hidden md:inline whitespace-nowrap">Sort by</span>
+            <SortDropdown
+              value={sort}
+              onChange={handleSort}
+              options={SORT_OPTIONS}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Reviews grid ───────────────────────────────────────────────── */}
+      <div className="py-6">
+        {paginated.length === 0 ? (
+          <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            No reviews found.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {paginated.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
         )}
-        renderTable={() =>
-          paginated.length === 0 ? (
-            <Stack align="center" gap="3" className="justify-center py-24 text-center">
-              <Text className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
-                No reviews found
-              </Text>
-            </Stack>
-          ) : (
-            <Grid cols={3} gap="md">
-              {paginated.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </Grid>
-          )
-        }
-        renderPagination={() =>
-          totalPages > 1 ? (
+
+        {totalPages > 1 && (
+          <div className="mt-8 flex justify-center">
             <Pagination
               currentPage={page}
               totalPages={totalPages}
               onPageChange={setPage}
             />
-          ) : null
-        }
-        total={filtered.length}
-        isLoading={false}
-      />
-    </Div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

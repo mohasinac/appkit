@@ -1,6 +1,6 @@
 import React from "react";
+import Link from "next/link";
 import {
-  Button,
   Div,
   Heading,
   Pagination,
@@ -17,6 +17,7 @@ import { THEME_CONSTANTS } from "../../../tokens";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { ROUTES } from "../../../next";
 
 // --- ReviewCard ---------------------------------------------------------------
 
@@ -36,10 +37,13 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
 
   const displayName = maskName(review.userName);
   const initials = displayName.charAt(0).toUpperCase();
+  const productHref = review.productId
+    ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
+    : null;
 
-  return (
+  const card = (
     <Div
-      className={`rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 ${className}`}
+      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md ${className}`}
     >
       <Div className="flex items-start gap-3">
         {review.userAvatar ? (
@@ -112,8 +116,27 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
           {review.helpfulCount} found this helpful
         </Text>
       )}
+
+      {productHref && (
+        <Div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-medium text-primary group-hover:text-primary-600 transition-colors border-t border-neutral-100 dark:border-zinc-800">
+          <span aria-hidden="true">📦</span>
+          <span className={THEME_CONSTANTS.utilities.textClamp1}>
+            {review.productTitle ?? "View Product"}
+          </span>
+          <span aria-hidden="true" className="ml-auto">→</span>
+        </Div>
+      )}
     </Div>
   );
+
+  if (productHref) {
+    return (
+      <Link href={productHref} className="block h-full">
+        {card}
+      </Link>
+    );
+  }
+  return card;
 }
 
 // --- ReviewsList --------------------------------------------------------------

@@ -27,12 +27,14 @@ export function FeaturedPreOrdersSection({
     <SectionCarousel
       title={title}
       description={description}
+      pillLabel="Pre-Order Incoming"
+      headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.compact}
+      perView={THEME_CONSTANTS.carousel.perView.standard}
       gap={16}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (

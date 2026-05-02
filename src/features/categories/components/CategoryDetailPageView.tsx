@@ -2,18 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { categoriesRepository, productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
-import {
-  Container,
-  Div,
-  Heading,
-  Main,
-  Row,
-  RichText,
-  Section,
-  Span,
-} from "../../../ui";
-import { CategoryProductsListing } from "./CategoryProductsListing";
+import { Container, Main, Section } from "../../../ui";
+import { CategoryDetailTabs } from "./CategoryDetailTabs";
+import type { CategoryItem } from "../types";
 
 export interface CategoryDetailPageViewProps {
   slug: string;
@@ -27,7 +18,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       .catch(() => undefined),
     productRepository
       .list({
-        filters: `status==published,categorySlug==${slug}`,
+        filters: `status==published,categorySlug==${slug},isAuction==false`,
         sorts: "-createdAt",
         page: 1,
         pageSize: 24,
@@ -35,39 +26,108 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       .catch(() => null),
   ]);
 
-  const category = categoryResult as Record<string, any> | undefined;
+  const category = categoryResult as CategoryItem | undefined;
+
+  const childCategories: CategoryItem[] = category?.id
+    ? await categoriesRepository.getChildren(category.id).catch(() => []) as CategoryItem[]
+    : [];
+
+  const productCount = category?.metrics?.productCount ?? 0;
+  const coverImage = category?.display?.coverImage;
+  const hasCover = Boolean(coverImage);
 
   return (
     <Main>
-      {/* Breadcrumb */}
-      <Section className="bg-zinc-50 py-4 dark:bg-zinc-900">
-        <Container size="xl">
-          <Row align="center" gap="xs" className="text-sm text-zinc-500">
-            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600">Home</Link>
-            <Span>/</Span>
-            <Link href={String(ROUTES.PUBLIC.CATEGORIES)} className="hover:text-primary-600">
+      {/* ── Hero / Banner ───────────────────────────────────────────────── */}
+      <section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+        {hasCover && (
+          <>
+            <div
+              className="absolute inset-0 bg-center bg-cover"
+              style={{ backgroundImage: `url(${coverImage})` }}
+            />
+            <div className="absolute inset-0 bg-black/55" />
+          </>
+        )}
+
+        <div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
+            <Link
+              href={String(ROUTES.HOME)}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+            >
+              Home
+            </Link>
+            <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
+            <Link
+              href={String(ROUTES.PUBLIC.CATEGORIES)}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+            >
               Categories
             </Link>
-            <Span>/</Span>
-            <Span className="text-zinc-900 dark:text-zinc-100">{category?.name ?? slug}</Span>
-          </Row>
-        </Container>
-      </Section>
+            <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
+            <span className={hasCover ? "text-white font-medium" : "text-zinc-900 dark:text-zinc-100 font-medium"}>
+              {category?.name ?? slug}
+            </span>
+          </nav>
 
-      <Section className="py-10">
-        <Container size="xl">
-          <Heading level={1} className="mb-2 text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
+          {/* Title + metrics */}
+          <h1 className={`text-3xl md:text-4xl font-bold mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
             {category?.name ?? slug}
-          </Heading>
-          {category?.description && (
-            <Div className="mb-8 text-zinc-600 dark:text-zinc-400">
-              <RichText html={normalizeRichTextHtml(category.description)} />
-            </Div>
+          </h1>
+
+          {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
+            <p className={`text-base max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
+              {category.description}
+            </p>
           )}
 
-          <CategoryProductsListing
+          {productCount > 0 && (
+            <span className={`inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full ${
+              hasCover
+                ? "bg-white/20 text-white backdrop-blur-sm"
+                : "bg-primary/10 text-primary-700 dark:text-primary-400"
+            }`}>
+              {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
+            </span>
+          )}
+        </div>
+      </section>
+
+      {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
+      {childCategories.length > 0 && (
+        <section className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
+              {childCategories.map((child) => (
+                <Link
+                  key={child.id}
+                  href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(child.slug))}
+                  className="flex-shrink-0 flex items-center gap-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
+                >
+                  {child.display?.icon && (
+                    <span className="text-base leading-none">{child.display.icon}</span>
+                  )}
+                  {child.name}
+                  {(child.metrics?.productCount ?? 0) > 0 && (
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                      {(child.metrics?.productCount ?? 0).toLocaleString()}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
+      <Section className="py-6">
+        <Container size="xl">
+          <CategoryDetailTabs
             categorySlug={slug}
-            initialData={productsResult ?? undefined}
+            initialProductsData={productsResult ?? undefined}
           />
         </Container>
       </Section>

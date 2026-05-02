@@ -908,6 +908,8 @@ export const THEME_CONSTANTS = {
     perView: {
       /** Default: 1 on mobile, 2 on sm, 3 on md+ */
       default: { base: 1, sm: 2, md: 3 } as const,
+      /** Standard: 1 on mobile, 3 on md, 4 on lg+ — the canonical homepage carousel preset */
+      standard: { base: 1, md: 3, lg: 4 } as const,
       /** Cards: 1 on mobile, 2 on sm, 3 on md, 4 on lg+ */
       cards: { base: 1, sm: 2, md: 3, lg: 4 } as const,
       /** Compact cards: 2 on mobile, 3 on sm, 4 on md, 5 on xl+ */

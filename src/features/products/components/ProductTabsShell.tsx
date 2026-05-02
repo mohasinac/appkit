@@ -1,44 +1,42 @@
 "use client";
 import React, { useState } from "react";
 
-const TABS = [
+const ALL_TABS = [
   { id: "description", label: "Description" },
   { id: "specs", label: "Specifications" },
+  { id: "ingredients", label: "Ingredients" },
+  { id: "howToUse", label: "How to Use" },
   { id: "reviews", label: "Reviews" },
 ] as const;
 
-type TabId = (typeof TABS)[number]["id"];
+type TabId = (typeof ALL_TABS)[number]["id"];
 
 export interface ProductTabsShellProps {
-  /** Pre-rendered description content (server RSC node) */
   descriptionContent?: React.ReactNode;
-  /** Pre-rendered specifications content (server RSC node) */
   specsContent?: React.ReactNode;
-  /** Pre-rendered reviews content (server RSC node) */
+  ingredientsContent?: React.ReactNode;
+  howToUseContent?: React.ReactNode;
   reviewsContent?: React.ReactNode;
   className?: string;
 }
 
-/**
- * RSC-safe tab shell for product detail pages.
- *
- * Accepts pre-rendered ReactNode children instead of render functions so the
- * component can be used inside a server component tree. (Functions cannot cross
- * the RSC serialisation boundary to a "use client" component.)
- */
 export function ProductTabsShell({
   descriptionContent,
   specsContent,
+  ingredientsContent,
+  howToUseContent,
   reviewsContent,
   className = "",
 }: ProductTabsShellProps) {
-  const visibleTabs = TABS.filter(
-    (t) =>
-      (t.id === "description" && descriptionContent != null) ||
-      (t.id === "specs" && specsContent != null) ||
-      (t.id === "reviews" && reviewsContent != null),
-  );
+  const contentMap: Record<TabId, React.ReactNode | undefined> = {
+    description: descriptionContent,
+    specs: specsContent,
+    ingredients: ingredientsContent,
+    howToUse: howToUseContent,
+    reviews: reviewsContent,
+  };
 
+  const visibleTabs = ALL_TABS.filter((t) => contentMap[t.id] != null);
   const [activeTab, setActiveTab] = useState<TabId>(
     visibleTabs[0]?.id ?? "description",
   );
@@ -46,17 +44,17 @@ export function ProductTabsShell({
   if (visibleTabs.length === 0) return null;
 
   return (
-    <div className={className}>
-      <div className="mb-6 flex gap-4 border-b border-zinc-200 dark:border-zinc-700">
+    <div className={`mt-8 ${className}`}>
+      <div className="mb-6 flex gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-700 pb-px">
         {visibleTabs.map((t) => (
           <button
             key={t.id}
             type="button"
             onClick={() => setActiveTab(t.id)}
-            className={`-mb-px pb-2.5 text-sm font-medium border-b-2 transition-colors ${
+            className={`flex-shrink-0 -mb-px pb-3 px-4 text-sm font-medium border-b-2 transition-colors ${
               activeTab === t.id
                 ? "border-primary-500 text-primary-600 dark:text-primary-400"
-                : "border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-zinc-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             }`}
           >
             {t.label}
@@ -64,9 +62,11 @@ export function ProductTabsShell({
         ))}
       </div>
       <div>
-        {activeTab === "description" && descriptionContent}
-        {activeTab === "specs" && specsContent}
-        {activeTab === "reviews" && reviewsContent}
+        {visibleTabs.map((t) => (
+          <div key={t.id} hidden={activeTab !== t.id}>
+            {contentMap[t.id]}
+          </div>
+        ))}
       </div>
     </div>
   );

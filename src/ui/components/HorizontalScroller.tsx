@@ -7,6 +7,7 @@ import {
   type ReactElement,
   type ReactNode,
   type RefObject,
+  type KeyboardEvent,
   cloneElement,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -86,9 +87,11 @@ export function HorizontalScroller<T = unknown>({
   autoScroll,
   autoScrollInterval = 3500,
   minItemWidth,
+  pauseOnHover = false,
   itemClassName = "",
 }: HorizontalScrollerProps<T>) {
   const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
+  const [isPaused, setIsPaused] = useState(false);
 
   const internalRef = useRef<HTMLDivElement>(null);
   const containerRef = (externalRef ??
@@ -107,14 +110,19 @@ export function HorizontalScroller<T = unknown>({
     [containerRef],
   );
 
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "ArrowRight") { e.preventDefault(); scrollBy(1); }
+    else if (e.key === "ArrowLeft") { e.preventDefault(); scrollBy(-1); }
+  }, [scrollBy]);
+
   useEffect(() => {
-    if (!autoScroll) return;
+    if (!autoScroll || isPaused) return;
     autoScrollTimer.current = setInterval(
       () => scrollBy(1),
       autoScrollInterval,
     );
     return () => clearInterval(autoScrollTimer.current);
-  }, [autoScroll, autoScrollInterval, scrollBy]);
+  }, [autoScroll, isPaused, autoScrollInterval, scrollBy]);
 
   useEffect(() => {
     if (!perView) return;
@@ -222,12 +230,19 @@ export function HorizontalScroller<T = unknown>({
     )
   ) : children;
 
+  const hoverHandlers = pauseOnHover
+    ? { onMouseEnter: () => setIsPaused(true), onMouseLeave: () => setIsPaused(false) }
+    : {};
+
   if (showArrows) {
     return (
       <div
         className={["appkit-hscroller appkit-hscroller--with-arrows", className]
           .filter(Boolean)
           .join(" ")}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        {...hoverHandlers}
        data-section="horizontalscroller-div-511">
         {showFadeEdges && (
           <>
@@ -264,7 +279,13 @@ export function HorizontalScroller<T = unknown>({
   }
 
   return (
-    <div className={["appkit-hscroller", className].filter(Boolean).join(" ")} data-section="horizontalscroller-div-513">
+    <div
+      className={["appkit-hscroller", className].filter(Boolean).join(" ")}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+      {...hoverHandlers}
+      data-section="horizontalscroller-div-513"
+    >
       {showFadeEdges && (
         <>
           <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />

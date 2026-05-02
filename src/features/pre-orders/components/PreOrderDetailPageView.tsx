@@ -2,12 +2,16 @@ import Link from "next/link";
 import { productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+import { formatCurrency } from "../../../utils/number.formatter";
+import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { safeDisplayName } from "../../../security";
 import {
   Button,
   Container,
   Div,
   Heading,
   Main,
+  RichText,
   Row,
   Section,
   Span,
@@ -15,10 +19,24 @@ import {
   Text,
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
+import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
+import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
 }
+
+function toDescriptionHtml(raw: unknown): string {
+  if (!raw) return "";
+  const s = typeof raw === "string" ? raw : JSON.stringify(raw);
+  return normalizeRichTextHtml(s);
+}
+
+const PRODUCTION_STATUS_LABELS: Record<string, string> = {
+  upcoming: "Coming Soon",
+  in_production: "In Production",
+  ready_to_ship: "Ready to Ship",
+};
 
 export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps) {
   const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
@@ -45,100 +63,255 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
     );
   }
 
-  const p = product as Record<string, any>;
-  const currency = p.currency || getDefaultCurrency();
-  const price =
-    typeof p.price === "number"
-      ? new Intl.NumberFormat(undefined, { style: "currency", currency }).format(p.price)
+  const p = product as unknown as Record<string, unknown>;
+  const currency = (p.currency as string | undefined) || getDefaultCurrency();
+
+  const title = String(p.title ?? p.name ?? "Pre-Order Item");
+  const price = typeof p.price === "number" ? p.price : null;
+
+  const images: string[] = Array.isArray(p.images)
+    ? (p.images as string[])
+    : typeof p.mainImage === "string"
+      ? [p.mainImage]
+      : [];
+
+  const reservedCount =
+    typeof p.preOrderCurrentCount === "number"
+      ? p.preOrderCurrentCount
+      : typeof p.reservedCount === "number"
+        ? p.reservedCount
+        : 0;
+  const reserveTarget =
+    typeof p.preOrderMaxQuantity === "number"
+      ? p.preOrderMaxQuantity
+      : typeof p.preOrderTarget === "number"
+        ? p.preOrderTarget
+        : typeof p.reserveTarget === "number"
+          ? p.reserveTarget
+          : 0;
+  const progressPct =
+    reserveTarget > 0
+      ? Math.min(100, Math.round((reservedCount / reserveTarget) * 100))
+      : 0;
+
+  const depositPercent =
+    typeof p.preOrderDepositPercent === "number" ? p.preOrderDepositPercent : null;
+  const depositAmount =
+    typeof p.preOrderDepositAmount === "number"
+      ? p.preOrderDepositAmount
+      : price !== null && depositPercent !== null
+        ? Math.round((price * depositPercent) / 100)
+        : null;
+
+  const deliveryDate = p.preOrderDeliveryDate
+    ? new Date(p.preOrderDeliveryDate as string)
+    : null;
+  const productionStatus =
+    typeof p.preOrderProductionStatus === "string"
+      ? (p.preOrderProductionStatus as string)
       : null;
+  const isCancellable = p.preOrderCancellable === true;
 
-  const images: string[] = Array.isArray(p.images) ? p.images : p.imageUrl ? [p.imageUrl] : [];
-  const primaryImage = images[0];
-
-  const reservedCount = typeof p.reservedCount === "number" ? p.reservedCount
-    : typeof p.preOrderCurrentCount === "number" ? p.preOrderCurrentCount : 0;
-  const reserveTarget = typeof p.reserveTarget === "number" ? p.reserveTarget
-    : typeof p.preOrderTarget === "number" ? p.preOrderTarget
-    : typeof p.preOrderMaxQuantity === "number" ? p.preOrderMaxQuantity : 0;
-  const progressPct = reserveTarget > 0 ? Math.min(100, Math.round((reservedCount / reserveTarget) * 100)) : 0;
+  const condition = typeof p.condition === "string" ? p.condition : null;
+  const featured = p.featured === true;
+  const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
+  const freeShipping = shippingPaidBy === "seller";
+  const sellerName = typeof p.sellerName === "string" ? p.sellerName : null;
+  const safeSeller = sellerName ? safeDisplayName(sellerName, "") : null;
+  const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
+  const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
+  const descriptionHtml = toDescriptionHtml(p.description);
 
   return (
-    <PreOrderDetailView
-      renderGallery={() =>
-        primaryImage ? (
-          <Div className="overflow-hidden rounded-xl border border-zinc-100 dark:border-zinc-800">
-            <Div
-              role="img"
-              aria-label={p.name ?? "Pre-order image"}
-              className="aspect-square w-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${primaryImage})` }}
-            />
-          </Div>
-        ) : (
-          <Div className="overflow-hidden rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-            <Div className="flex aspect-square items-center justify-center text-zinc-300 dark:text-zinc-700">
-              <svg
-                width="64"
-                height="64"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                aria-hidden="true"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <path d="M21 15l-5-5L5 21" />
-              </svg>
-            </Div>
-          </Div>
-        )
-      }
-      renderInfo={() => (
-        <Stack gap="md">
-          <Heading level={1} className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-            {p.name ?? "Pre-Order Item"}
-          </Heading>
-          {price && (
-            <Text className="text-2xl font-semibold text-primary-600 dark:text-primary-400">{price}</Text>
+    <Main>
+      <Container size="xl" className="px-4 py-6">
+        {/* Breadcrumb */}
+        <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+          <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">Home</Link>
+          <Span aria-hidden>/</Span>
+          <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="hover:text-primary-600 transition-colors">Pre-Orders</Link>
+          <Span aria-hidden>/</Span>
+          <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
+        </nav>
+
+        <PreOrderDetailView
+          renderGallery={() => (
+            <ProductGalleryClient images={images} productName={title} />
           )}
-          {p.description && (
-            <Text className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-              {typeof p.description === "string" ? p.description : ""}
-            </Text>
-          )}
-        </Stack>
-      )}
-      renderBuyBar={() => (
-        <Div className="rounded-xl border border-zinc-100 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
-          <Stack gap="sm">
-            {reserveTarget > 0 && (
-              <Stack gap="xs">
-                <Row justify="between" align="center">
-                  <Span className="text-xs text-zinc-500">
-                    {reservedCount} of {reserveTarget} reserved
+          renderInfo={() => (
+            <Stack gap="sm">
+              {/* Pre-order badge + title */}
+              <Div>
+                <Row gap="xs" className="mb-1.5 flex-wrap">
+                  <Span className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+                    Pre-Order
                   </Span>
-                  <Span className="text-xs font-medium text-primary-600">
-                    {progressPct}%
+                  {productionStatus && (
+                    <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                      {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
+                    </Span>
+                  )}
+                </Row>
+                <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+                  {title}
+                </Heading>
+              </Div>
+
+              {/* Price */}
+              {price !== null && (
+                <Span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                  {formatCurrency(price, currency)}
+                </Span>
+              )}
+
+              {/* Delivery date */}
+              {deliveryDate && (
+                <Row align="center" gap="xs" className="text-sm text-zinc-600 dark:text-zinc-400">
+                  <Span>📅</Span>
+                  <Span>Estimated delivery:</Span>
+                  <Span className="font-medium">
+                    {deliveryDate.toLocaleDateString(undefined, { year: "numeric", month: "long" })}
                   </Span>
                 </Row>
-                <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                  <Div
-                    className="h-full rounded-full bg-primary"
-                    style={{ width: `${progressPct}%` }}
-                  />
+              )}
+
+              {/* Feature badges */}
+              <ProductFeatureBadges
+                featured={featured}
+                freeShipping={freeShipping}
+                condition={condition ?? undefined}
+                returnable={isCancellable}
+                labels={{
+                  featured: "Featured",
+                  fasterDelivery: "Faster Delivery",
+                  ratedSeller: "Rated Seller",
+                  condition: "Condition",
+                  conditionNew: "New",
+                  conditionUsed: "Used",
+                  conditionBroken: "For Parts",
+                  conditionRefurbished: "Refurbished",
+                  returnable: "Cancellable",
+                  freeShipping: "Free Shipping",
+                  codAvailable: "Cash on Delivery",
+                  wishlistCount: (n) => `${n} wishlisted`,
+                  categoryProductCount: (n, cat) => `${n} in ${cat}`,
+                }}
+              />
+
+              {/* Highlights */}
+              {features.length > 0 && (
+                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
+                  <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                    About this product
+                  </Text>
+                  <ul className="space-y-1.5">
+                    {features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                        <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
                 </Div>
+              )}
+
+              {/* Description preview */}
+              {descriptionHtml && (
+                <RichText
+                  html={descriptionHtml}
+                  proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+                />
+              )}
+
+              {/* Seller */}
+              {safeSeller && (
+                <Row align="center" gap="xs" className="border-t border-zinc-100 dark:border-zinc-800 pt-3">
+                  <Span className="text-xs text-zinc-500">Sold by</Span>
+                  <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{safeSeller}</Span>
+                </Row>
+              )}
+            </Stack>
+          )}
+          renderBuyBar={() => (
+            <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+              {/* Progress bar */}
+              {reserveTarget > 0 && (
+                <Div className="space-y-2">
+                  <Row justify="between" align="center">
+                    <Text className="text-xs text-zinc-500">
+                      {reservedCount} of {reserveTarget} reserved
+                    </Text>
+                    <Span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
+                      {progressPct}%
+                    </Span>
+                  </Row>
+                  <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+                    <Div
+                      className="h-full rounded-full bg-primary transition-all"
+                      style={{ width: `${progressPct}%` }}
+                    />
+                  </Div>
+                </Div>
+              )}
+
+              {/* Price */}
+              {price !== null && (
+                <Div>
+                  <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                    {formatCurrency(price, currency)}
+                  </Text>
+                  {depositAmount !== null && (
+                    <Text className="mt-0.5 text-xs text-zinc-500">
+                      Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
+                    </Text>
+                  )}
+                </Div>
+              )}
+
+              <Stack gap="sm">
+                <Button variant="primary" size="md" className="w-full">
+                  Reserve Now
+                </Button>
+                {isCancellable && (
+                  <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+                    ✓ Free cancellation before production
+                  </Text>
+                )}
               </Stack>
-            )}
-            {price && (
-              <Text className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{price}</Text>
-            )}
-            <Button variant="primary" size="md" className="w-full">
-              Reserve Now
-            </Button>
-          </Stack>
-        </Div>
-      )}
-    />
+
+              {/* Tags */}
+              {tags.length > 0 && (
+                <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                  <Row wrap gap="xs">
+                    {tags.map((tag) => (
+                      <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                        {tag}
+                      </Span>
+                    ))}
+                  </Row>
+                </Div>
+              )}
+
+              {/* Trust badges */}
+              <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                <Row wrap gap="sm" className="justify-center text-center">
+                  {[
+                    { icon: "🔒", label: "Secure\nPayment" },
+                    { icon: "📅", label: "Guaranteed\nDelivery" },
+                    { icon: "↩", label: "Free\nCancellation" },
+                  ].map(({ icon, label }) => (
+                    <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                      <Span className="text-base">{icon}</Span>
+                      <Span className="whitespace-pre-line leading-tight">{label}</Span>
+                    </Div>
+                  ))}
+                </Row>
+              </Div>
+            </Div>
+          )}
+        />
+      </Container>
+    </Main>
   );
 }

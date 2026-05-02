@@ -30,6 +30,7 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_DETAIL: (storeSlug: string) => `/stores/${storeSlug}`,
     STORE_PRODUCTS: (storeSlug: string) => `/stores/${storeSlug}/products`,
     STORE_AUCTIONS: (storeSlug: string) => `/stores/${storeSlug}/auctions`,
+    STORE_PRE_ORDERS: (storeSlug: string) => `/stores/${storeSlug}/pre-orders`,
     STORE_REVIEWS: (storeSlug: string) => `/stores/${storeSlug}/reviews`,
     STORE_ABOUT: (storeSlug: string) => `/stores/${storeSlug}/about`,
     CATEGORIES: "/categories",

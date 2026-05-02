@@ -24,7 +24,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
-      className="group flex min-h-[220px] min-w-[180px] max-w-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
+      className="group flex w-full min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
     >
       {coverImage ? (
         <div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800" data-section="shopbycategorysection-div-362">
@@ -105,10 +105,16 @@ export function ShopByCategorySection({
           <HorizontalScroller
             items={categories}
             renderItem={(cat) => <CategoryChip category={cat} />}
-            perView={THEME_CONSTANTS.carousel.perView.compact}
+            perView={THEME_CONSTANTS.carousel.perView.standard}
             gap={16}
             keyExtractor={(cat) => cat.id}
-            minItemWidth={180}
+            autoScroll
+            autoScrollInterval={3500}
+            showArrows
+            snapToItems
+            showFadeEdges
+            showScrollbar={false}
+            pauseOnHover
           />
         )}
 

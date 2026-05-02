@@ -390,12 +390,6 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
         </Div>
       )}
 
-      {/* Bottom gradient bleed */}
-      <Div
-        className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-950 to-transparent pointer-events-none z-[5]"
-        aria-hidden="true"
-      />
-
       {/* Navigation Arrows */}
       {slides.length > 1 && (
         <Div className="absolute bottom-4 right-4 z-20 flex gap-2">

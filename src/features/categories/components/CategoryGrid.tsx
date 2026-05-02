@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { Div, Grid, Text } from "../../../ui";
+import { ArrowRight } from "lucide-react";
+import { Div, Span, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { CategoryItem } from "../types";
 
@@ -19,39 +20,63 @@ export function CategoryCard({
   onClick,
   className = "",
 }: CategoryCardProps) {
-  const cardClass = `group relative overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md ${onClick || href ? "cursor-pointer" : ""} ${className}`;
+  const productCount =
+    category.metrics?.productCount ?? (category as any).productCount ?? 0;
 
   const inner = (
-    <>
-      {category.display?.coverImage ? (
-        <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-zinc-800">
+    <Div className="flex h-full flex-col">
+      {/* Image area — fixed aspect ratio */}
+      <Div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700 flex-shrink-0">
+        {category.display?.coverImage ? (
           <Div
             role="img"
             aria-label={category.name}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundImage: `url(${category.display.coverImage})` }}
           />
-        </Div>
-      ) : (
-        <Div className="aspect-video w-full bg-gradient-to-br from-neutral-100 to-neutral-200 dark:from-zinc-800 dark:to-zinc-700" />
-      )}
-      <Div className="p-4">
-        <Text className={`font-semibold ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`}>
+        ) : category.display?.color ? (
+          <Div
+            className="h-full w-full opacity-80"
+            style={{ backgroundColor: category.display.color }}
+          />
+        ) : null}
+        {/* Icon overlay */}
+        {category.display?.icon && (
+          <Div className="absolute inset-0 flex items-center justify-center text-4xl">
+            {category.display.icon}
+          </Div>
+        )}
+        {/* Featured badge */}
+        {category.isFeatured && (
+          <Span className="absolute left-2 top-2 rounded-full bg-amber-400 p-1 text-xs leading-none">
+            ★
+          </Span>
+        )}
+      </Div>
+
+      {/* Content */}
+      <Div className="flex flex-1 flex-col p-3.5">
+        <Text className={`font-semibold text-sm leading-snug ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-900 dark:text-white`}>
           {category.name}
         </Text>
         {category.description && (
-          <Text className={`mt-1 text-sm ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400`}>
+          <Text className={`mt-1 text-xs ${THEME_CONSTANTS.utilities.textClamp2} text-neutral-500 dark:text-zinc-400 flex-1`}>
             {category.description}
           </Text>
         )}
-        {category.metrics && (
-          <Text className="mt-2 text-xs text-neutral-400 dark:text-zinc-500">
-            {category.metrics.productCount.toLocaleString()} items
+        <Div className="mt-2 flex items-center justify-between gap-2">
+          <Text className="text-xs text-neutral-400 dark:text-zinc-500">
+            {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
           </Text>
-        )}
+          <Span className="inline-flex items-center gap-1 rounded-md border border-zinc-200 dark:border-zinc-700 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 group-hover:bg-primary group-hover:border-primary group-hover:text-white transition-colors">
+            Browse <ArrowRight className="h-3 w-3" />
+          </Span>
+        </Div>
       </Div>
-    </>
+    </Div>
   );
+
+  const cardClass = `group relative flex flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-zinc-700 dark:bg-zinc-900 shadow-sm transition hover:shadow-md h-full ${className}`;
 
   if (href) {
     return (
@@ -82,6 +107,7 @@ export function CategoryCard({
 
 export interface CategoryGridProps {
   categories: CategoryItem[];
+  getHref?: (category: CategoryItem) => string;
   onCategoryClick?: (category: CategoryItem) => void;
   emptyLabel?: string;
   className?: string;
@@ -89,6 +115,7 @@ export interface CategoryGridProps {
 
 export function CategoryGrid({
   categories,
+  getHref,
   onCategoryClick,
   emptyLabel = "No categories found",
   className = "",
@@ -102,10 +129,15 @@ export function CategoryGrid({
   }
 
   return (
-    <Grid cols="categoryCards" className={className}>
+    <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ${className}`}>
       {categories.map((cat) => (
-        <CategoryCard key={cat.id} category={cat} onClick={onCategoryClick} />
+        <CategoryCard
+          key={cat.id}
+          category={cat}
+          href={getHref ? getHref(cat) : undefined}
+          onClick={!getHref ? onCategoryClick : undefined}
+        />
       ))}
-    </Grid>
+    </div>
   );
 }

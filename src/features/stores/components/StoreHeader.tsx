@@ -57,12 +57,31 @@ export function StoreHeader({
             </Div>
           )}
           <Div className="flex-1 min-w-0">
-            <Heading
-              level={1}
-              className="text-xl font-bold text-gray-900 dark:text-zinc-100 truncate"
-            >
-              {store.storeName}
-            </Heading>
+            <Div className="flex flex-wrap items-center gap-2 mb-0.5">
+              <Heading
+                level={1}
+                className="text-xl font-bold text-gray-900 dark:text-zinc-100"
+              >
+                {store.storeName}
+              </Heading>
+              {store.averageRating != null && store.averageRating > 0 && (
+                <Span className="inline-flex items-center gap-1 text-sm font-medium text-amber-500">
+                  ★ {store.averageRating.toFixed(1)}
+                </Span>
+              )}
+            </Div>
+            <Row className="gap-3 text-xs text-gray-500 dark:text-zinc-400 mb-0.5">
+              {(store as any).category && <Span className="capitalize">{(store as any).category}</Span>}
+              {store.totalProducts != null && store.totalProducts > 0 && (
+                <Span>{store.totalProducts} {labels.products ?? "products"}</Span>
+              )}
+              {store.totalReviews != null && store.totalReviews > 0 && (
+                <Span>{store.totalReviews} {labels.reviews ?? "reviews"}</Span>
+              )}
+              {store.itemsSold != null && store.itemsSold > 0 && (
+                <Span>{store.itemsSold} {labels.sold ?? "sold"}</Span>
+              )}
+            </Row>
             {store.storeDescription && (
               <RichText
                 html={normalizeRichTextHtml(store.storeDescription)}
@@ -92,24 +111,6 @@ export function StoreHeader({
           </Text>
         )}
 
-        <Row className="gap-4 mt-3 text-sm text-gray-500 dark:text-zinc-400">
-          {store.totalProducts != null && (
-            <Span>
-              {store.totalProducts} {labels.products ?? "products"}
-            </Span>
-          )}
-          {store.itemsSold != null && (
-            <Span>
-              {store.itemsSold} {labels.sold ?? "sold"}
-            </Span>
-          )}
-          {store.averageRating != null && (
-            <Span>
-              ★ {store.averageRating.toFixed(1)} ({store.totalReviews}{" "}
-              {labels.reviews ?? "reviews"})
-            </Span>
-          )}
-        </Row>
       </Div>
     </Section>
   );

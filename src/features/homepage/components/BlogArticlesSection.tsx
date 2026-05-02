@@ -29,12 +29,14 @@ export function BlogArticlesSection({
     <SectionCarousel
       title={title}
       description={description}
+      pillLabel="From Our Blog"
+      headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.cards}
+      perView={THEME_CONSTANTS.carousel.perView.standard}
       gap={16}
       keyExtractor={(post: BlogPost) => post.id}
       renderItem={(post: BlogPost) => (

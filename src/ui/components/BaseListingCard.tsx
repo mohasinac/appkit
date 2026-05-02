@@ -2,20 +2,6 @@ import type { ReactNode, MouseEvent } from "react";
 import { Button } from "./Button";
 import { Span } from "./Typography";
 
-const UI_LISTING_CARD = {
-  root: "appkit-listing-card",
-  selected: "appkit-listing-card--selected",
-  disabled: "appkit-listing-card--disabled",
-  clickable: "appkit-listing-card--clickable",
-  hero: "appkit-listing-card__hero",
-  heroSquare: "appkit-listing-card__hero--square",
-  heroLandscape: "appkit-listing-card__hero--landscape",
-  info: "appkit-listing-card__info",
-  checkbox: "appkit-listing-card__checkbox",
-  checkboxSelected: "appkit-listing-card__checkbox--selected",
-  checkboxIcon: "appkit-listing-card__checkbox-icon",
-} as const;
-
 export interface BaseListingCardRootProps {
   className?: string;
   isSelected?: boolean;
@@ -59,15 +45,17 @@ function BaseListingCardRoot({
     <div
       onClick={onClick}
       className={[
-        UI_LISTING_CARD.root,
-        isSelected ? UI_LISTING_CARD.selected : "",
-        isDisabled ? UI_LISTING_CARD.disabled : "",
-        onClick ? UI_LISTING_CARD.clickable : "",
+        "relative flex flex-col w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
+        isSelected
+          ? "border-primary outline outline-2 outline-primary shadow-sm"
+          : "border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-md",
+        isDisabled ? "opacity-60" : "",
+        onClick ? "cursor-pointer" : "",
         className,
       ]
         .filter(Boolean)
         .join(" ")}
-     data-section="baselistingcard-div-457">
+    >
       {children}
     </div>
   );
@@ -82,18 +70,22 @@ function BaseListingCardHero({
 }: BaseListingCardHeroProps) {
   const aspectClass =
     aspect === "square"
-      ? UI_LISTING_CARD.heroSquare
+      ? "aspect-square"
       : aspect === "4/3" || !aspect
-        ? UI_LISTING_CARD.heroLandscape
+        ? "aspect-[4/3]"
         : `aspect-[${aspect}]`;
   return (
     <div
-      className={[UI_LISTING_CARD.hero, aspectClass, className]
+      className={[
+        "relative overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0",
+        aspectClass,
+        className,
+      ]
         .filter(Boolean)
         .join(" ")}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-     data-section="baselistingcard-div-458">
+    >
       {children}
     </div>
   );
@@ -105,8 +97,13 @@ function BaseListingCardInfo({
 }: BaseListingCardInfoProps) {
   return (
     <div
-      className={[UI_LISTING_CARD.info, className].filter(Boolean).join(" ")}
-     data-section="baselistingcard-div-459">
+      className={[
+        "p-3 flex flex-col flex-1 gap-1.5",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
       {children}
     </div>
   );
@@ -128,15 +125,15 @@ function BaseListingCardCheckbox({
         onSelect?.(e);
       }}
       className={[
-        UI_LISTING_CARD.checkbox,
-        selected ? UI_LISTING_CARD.checkboxSelected : "",
+        "absolute z-10 h-5 w-5 rounded border-2 flex items-center justify-center bg-white/90",
+        selected ? "bg-primary border-primary" : "border-zinc-300",
         position,
         className,
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      {selected && <Span className={UI_LISTING_CARD.checkboxIcon}>✓</Span>}
+      {selected && <Span className="text-white text-xs leading-none">✓</Span>}
     </Button>
   );
 }

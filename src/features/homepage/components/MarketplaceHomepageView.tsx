@@ -110,6 +110,13 @@ const DEFAULT_SECURITY_ITEMS = [
 
 // --- Helpers -----------------------------------------------------------------
 
+/** Strip leading emoji/symbols that admins sometimes prefix onto DB titles. */
+function cleanTitle(raw: string | undefined): string | undefined {
+  if (!raw) return raw;
+  const cleaned = raw.replace(/^[^\p{L}\p{N}]+/u, "").trim();
+  return cleaned || raw;
+}
+
 function parseWelcomeDescription(description: string | undefined): string {
   if (!description) return "";
   try {
@@ -131,6 +138,7 @@ function parseWelcomeDescription(description: string | undefined): string {
  * Render a single homepage section based on its type and config
  */
 const AD_SLOT_MAP: Record<string, string> = {
+  carousel: "afterHero",
   products: "afterFeaturedProducts",
   reviews: "afterReviews",
   faq: "afterFAQ",
@@ -141,15 +149,19 @@ function renderSection(
   adSlots: MarketplaceHomepageViewAdSlots | undefined,
   newsletterFormSlot: React.ReactNode,
   faqItems: Array<{ id: string; question: string; answer: string }>,
+  slides: any[],
 ): React.ReactNode {
   const { type, config } = section;
   const adSlotKey = AD_SLOT_MAP[type] as keyof MarketplaceHomepageViewAdSlots | undefined;
 
   const sectionElement = (() => {
     switch (type) {
+      case "carousel":
+        return <HeroCarousel initialSlides={slides} />;
+
       case "welcome": {
         const cfg = config as WelcomeSectionConfig;
-        const title = cfg?.h1 || "Discover Amazing Products";
+        const title = cleanTitle(cfg?.h1) || "Discover Amazing Products";
         const subtitle = parseWelcomeDescription(cfg?.description);
         const ctaText = cfg?.ctaText || "Shop Now";
         const ctaLink = cfg?.ctaLink || ROUTES.PUBLIC.PRODUCTS;
@@ -178,7 +190,7 @@ function renderSection(
         const cfg = config as CategoriesSectionConfig;
         return (
           <ShopByCategorySection
-            title={cfg?.title || "Shop by Category"}
+            title={cleanTitle(cfg?.title) || "Shop by Category"}
             viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
             viewMoreLabel="All categories →"
           />
@@ -215,7 +227,7 @@ function renderSection(
         const cfg = config as ProductsSectionConfig;
         return (
           <FeaturedProductsSection
-            title={cfg?.title || "Featured Products"}
+            title={cleanTitle(cfg?.title) || "Featured Products"}
             viewMoreHref={ROUTES.PUBLIC.PRODUCTS}
             viewMoreLabel="View all products →"
           />
@@ -226,7 +238,7 @@ function renderSection(
         const cfg = config as AuctionsSectionConfig;
         return (
           <FeaturedAuctionsSection
-            title={cfg?.title || "Live Auctions"}
+            title={cleanTitle(cfg?.title) || "Live Auctions"}
             viewMoreHref={ROUTES.PUBLIC.AUCTIONS}
             viewMoreLabel="View all auctions →"
           />
@@ -237,7 +249,7 @@ function renderSection(
         const cfg = config as PreOrdersSectionConfig;
         return (
           <FeaturedPreOrdersSection
-            title={cfg?.title || "Reserve Before It Ships"}
+            title={cleanTitle(cfg?.title) || "Reserve Before It Ships"}
             viewMoreHref={ROUTES.PUBLIC.PRE_ORDERS}
             viewMoreLabel="View all pre-orders →"
           />
@@ -248,7 +260,7 @@ function renderSection(
         const cfg = config as StoresSectionConfig;
         return (
           <FeaturedStoresSection
-            title={cfg?.title || "Featured Stores"}
+            title={cleanTitle(cfg?.title) || "Featured Stores"}
             viewMoreHref={ROUTES.PUBLIC.STORES}
             viewMoreLabel="View all stores →"
           />
@@ -259,7 +271,7 @@ function renderSection(
         const cfg = config as EventsSectionConfig;
         return (
           <EventsSection
-            title={cfg?.title || "Events & Offers"}
+            title={cleanTitle(cfg?.title) || "Events & Offers"}
             viewMoreHref={ROUTES.PUBLIC.EVENTS}
             viewMoreLabel="View all events →"
           />
@@ -270,7 +282,7 @@ function renderSection(
         const cfg = config as ReviewsSectionConfig;
         return (
           <HomepageCustomerReviewsSection
-            title={cfg?.title || "What Our Customers Say"}
+            title={cleanTitle(cfg?.title) || "What Our Customers Say"}
             viewMoreHref={ROUTES.PUBLIC.REVIEWS}
             viewMoreLabel="See all reviews →"
           />
@@ -294,7 +306,7 @@ function renderSection(
         const cfg = config as TrustIndicatorsSectionConfig;
         return (
           <TrustFeaturesSection
-            title={cfg?.title || "Why Buyers Trust LetiTrip"}
+            title={cleanTitle(cfg?.title) || "Why Buyers Trust LetiTrip"}
             items={DEFAULT_TRUST_FEATURES}
           />
         );
@@ -304,7 +316,7 @@ function renderSection(
         const cfg = config as FeaturesSectionConfig;
         return (
           <SecurityHighlightsSection
-            title={cfg?.title || "Security You Can Trust"}
+            title={cleanTitle(cfg?.title) || "Security You Can Trust"}
             pillLabel="Built for trust"
             items={DEFAULT_SECURITY_ITEMS}
             learnMoreHref={ROUTES.PUBLIC.SECURITY}
@@ -317,7 +329,7 @@ function renderSection(
         const cfg = config as WhatsAppCommunitySectionConfig;
         return (
           <WhatsAppCommunitySection
-            title={cfg?.title || "Join Our WhatsApp Community"}
+            title={cleanTitle(cfg?.title) || "Join Our WhatsApp Community"}
             descriptionHtml={cfg?.description || "5,000+ members. Get deal alerts, auction updates, and exclusive drops before anyone else."}
             memberCount={cfg?.memberCount || 5000}
             groupLink={cfg?.groupLink || "https://chat.whatsapp.com/"}
@@ -332,7 +344,7 @@ function renderSection(
         }
         return (
           <FAQSection
-            title={cfg?.title || "Frequently Asked Questions"}
+            title={cleanTitle(cfg?.title) || "Frequently Asked Questions"}
             tabs={[]}
             activeTab=""
             items={faqItems}
@@ -346,7 +358,7 @@ function renderSection(
         const cfg = config as BlogArticlesSectionConfig;
         return (
           <BlogArticlesSection
-            title={cfg?.title || "From Our Blog"}
+            title={cleanTitle(cfg?.title) || "From Our Blog"}
             viewMoreHref={ROUTES.BLOG.LIST}
             viewMoreLabel="View all posts →"
           />
@@ -357,7 +369,7 @@ function renderSection(
         const cfg = config as NewsletterSectionConfig;
         return (
           <NewsletterSection
-            title={cfg?.title || "Stay Updated"}
+            title={cleanTitle(cfg?.title) || "Stay Updated"}
             subtitle={cfg?.description || "Get the latest drops, auctions, and deals in your inbox."}
             renderForm={() => newsletterFormSlot ?? null}
           />
@@ -368,7 +380,7 @@ function renderSection(
         const cfg = config as BrandsSectionConfig;
         return (
           <BrandsSection
-            title={cfg?.title || "Top Brands"}
+            title={cleanTitle(cfg?.title) || "Top Brands"}
             subtitle={cfg?.subtitle}
             limit={cfg?.maxBrands || 12}
             viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
@@ -458,10 +470,8 @@ export async function MarketplaceHomepageView({
   return (
     <Main>
       {showAnnouncement ? <AnnouncementBar message={announcementMessage} /> : null}
-      <HeroCarousel initialSlides={slides as any[]} />
-      {adSlots?.afterHero}
       {orderedSections.map((section) =>
-        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems),
+        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, slides as any[]),
       )}
     </Main>
   );

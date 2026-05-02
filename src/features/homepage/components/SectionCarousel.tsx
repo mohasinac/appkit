@@ -132,14 +132,14 @@ function CarouselSkeleton({ count }: { count: number }) {
 export function SectionCarousel<T = unknown>({
   title,
   description,
-  headingVariant = "default",
+  headingVariant = "editorial",
   pillLabel,
   backgroundImage,
   viewMoreHref,
   viewMoreLabel = "View all →",
   items,
   renderItem,
-  perView = THEME_CONSTANTS.carousel.perView.default,
+  perView = THEME_CONSTANTS.carousel.perView.standard,
   gap = 16,
   autoScroll = false,
   autoScrollInterval = 3500,
@@ -274,13 +274,13 @@ export function SectionCarousel<T = unknown>({
 
         {/* View More button */}
         {viewMoreHref && !isLoading && (
-          <div className="mt-6 text-center" data-section="sectioncarousel-div-356">
+          <div className="mt-6 flex justify-center" data-section="sectioncarousel-div-356">
             <TextLink
               href={viewMoreHref}
-              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-colors ${
+              className={`inline-flex items-center gap-1.5 rounded-lg border px-6 py-2.5 text-sm font-medium transition-colors ${
                 useLightText
-                  ? "bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-                  : "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 dark:text-primary-400"
+                  ? "border-white/40 text-white hover:bg-white/10"
+                  : "border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
               }`}
             >
               {viewMoreLabel}

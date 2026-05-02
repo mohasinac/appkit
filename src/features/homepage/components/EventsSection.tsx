@@ -29,6 +29,8 @@ export function EventsSection({
     <SectionCarousel
       title={title}
       description={description}
+      pillLabel="Events & Offers"
+      headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}
       items={items}

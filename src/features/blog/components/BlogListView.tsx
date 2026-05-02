@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import type { BlogPost, BlogPostCategory } from "../types";
 import {
@@ -14,14 +15,16 @@ import {
 import { THEME_CONSTANTS } from "../../../tokens";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { getMediaUrl } from "../../media/types/index";
+import { safeDisplayName } from "../../../security";
 
 interface BlogCardProps {
   post: BlogPost;
+  href?: string;
   onClick?: (post: BlogPost) => void;
   className?: string;
 }
 
-export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
+export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps) {
   const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
     ? new Date(post.publishedAt).toLocaleDateString(getDefaultLocale(), {
@@ -31,33 +34,44 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
       })
     : "";
 
-  return (
+  const isInteractive = !!(href || onClick);
+
+  const card = (
     <Article
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
+      role={onClick && !href ? "button" : undefined}
+      tabIndex={onClick && !href ? 0 : undefined}
       onKeyDown={
-        onClick
+        onClick && !href
           ? (e) => (e.key === "Enter" || e.key === " ") && onClick(post)
           : undefined
       }
-      onClick={onClick ? () => onClick(post) : undefined}
-      className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${onClick ? "cursor-pointer" : ""} ${className}`}
+      onClick={onClick && !href ? () => onClick(post) : undefined}
+      className={`group flex flex-col h-full overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm transition hover:shadow-md ${isInteractive ? "cursor-pointer" : ""} ${className}`}
     >
-      {coverImageUrl && (
-        <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-slate-800">
+      <Div className="aspect-video w-full overflow-hidden bg-neutral-100 dark:bg-slate-800 flex-shrink-0">
+        {coverImageUrl ? (
           <Div
             role="img"
             aria-label={post.title}
             className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
             style={{ backgroundImage: `url(${coverImageUrl})` }}
           />
-        </Div>
-      )}
+        ) : (
+          <Div className="h-full w-full bg-gradient-to-br from-zinc-200 via-zinc-100 to-zinc-300 dark:from-slate-800 dark:via-slate-700 dark:to-slate-900 flex items-center justify-center">
+            <span className="text-4xl opacity-30" aria-hidden="true">✍️</span>
+          </Div>
+        )}
+      </Div>
       <Div className="flex flex-1 flex-col p-5">
-        <Row className="mb-2 gap-2">
+        <Row className="mb-2 gap-2 flex-wrap">
           <Span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium capitalize text-primary">
             {post.category}
           </Span>
+          {post.isFeatured && (
+            <Span className="rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300">
+              Featured
+            </Span>
+          )}
           {post.readTimeMinutes && (
             <Span className="text-xs text-neutral-400 dark:text-zinc-500">
               {post.readTimeMinutes} min read
@@ -75,27 +89,40 @@ export function BlogCard({ post, onClick, className = "" }: BlogCardProps) {
             {post.excerpt}
           </Text>
         )}
-        <Row className="mt-4 gap-3">
-          {post.authorAvatar && (
+        <Row className="mt-auto pt-3 gap-3 items-center">
+          {post.authorAvatar ? (
             <Div
               role="img"
               aria-label={post.authorName ?? "author"}
-              className="h-7 w-7 rounded-full bg-center bg-cover"
+              className="h-7 w-7 flex-shrink-0 rounded-full bg-center bg-cover"
               style={{ backgroundImage: `url(${post.authorAvatar})` }}
             />
-          )}
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+          ) : post.authorName ? (
+            <Div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
+              {post.authorName.charAt(0).toUpperCase()}
+            </Div>
+          ) : null}
+          <Text className="text-xs text-neutral-500 dark:text-zinc-400 min-w-0">
             {post.authorName && (
               <Span className="font-medium text-neutral-700 dark:text-zinc-300">
-                {post.authorName}
+                {safeDisplayName(post.authorName, "Author")}
               </Span>
             )}
-            {date && <Span className="ml-1">· {date}</Span>}
+            {date && <Span className="ml-1 text-neutral-400">· {date}</Span>}
           </Text>
         </Row>
       </Div>
     </Article>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block h-full">
+        {card}
+      </Link>
+    );
+  }
+  return card;
 }
 
 interface BlogCategoryTabsProps {

@@ -28,14 +28,14 @@ export function FeaturedProductsSection({
     <SectionCarousel
       title={title}
       description={description}
+      pillLabel="Featured Products"
+      headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={{ base: 1 }} // 1 slide at a time
       gap={16}
-      rows={2} // 2 rows per slide
       keyExtractor={(product) => product.id}
       renderItem={(product: ProductItem) => (
         <InteractiveProductCard

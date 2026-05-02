@@ -49,3 +49,6 @@ export type { CategoryTableColumnsLabels } from "./CategoryTableColumns";
 
 export { CategoriesIndexListing } from "./CategoriesIndexListing";
 export type { CategoriesIndexListingProps } from "./CategoriesIndexListing";
+
+export { CategoryDetailTabs } from "./CategoryDetailTabs";
+export type { CategoryDetailTabsProps } from "./CategoryDetailTabs";

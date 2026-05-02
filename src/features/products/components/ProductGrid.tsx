@@ -100,11 +100,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-600 dark:text-zinc-400`}
           />
         )}
-        {product.sellerName && (
-          <Text className="mt-0.5 text-xs text-zinc-600 dark:text-zinc-400">
-            {safeDisplayName(product.sellerName, "Seller")}
-          </Text>
-        )}
+        {(() => {
+          const seller = safeDisplayName(product.sellerName, "");
+          return seller ? (
+            <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+              by {seller}
+            </Text>
+          ) : null;
+        })()}
         <Div className="mt-2 flex items-baseline gap-2">
           <Span className="font-semibold text-zinc-950 dark:text-white">
             {formatCurrency(

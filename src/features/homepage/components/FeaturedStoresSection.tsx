@@ -30,12 +30,14 @@ export function FeaturedStoresSection({
     <SectionCarousel
       title={title}
       description={description}
+      pillLabel="Top Stores"
+      headingVariant="editorial"
       viewMoreHref={viewMoreHref}
       viewMoreLabel={viewMoreLabel}
       items={items}
       isLoading={isLoading}
       skeletonCount={4}
-      perView={THEME_CONSTANTS.carousel.perView.cards}
+      perView={THEME_CONSTANTS.carousel.perView.standard}
       gap={16}
       keyExtractor={(store: StoreListItem) => store.id}
       renderItem={(store: StoreListItem) => (

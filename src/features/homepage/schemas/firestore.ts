@@ -319,6 +319,7 @@ export interface BannerSectionConfig {
 
 export type SectionType =
   | "welcome"
+  | "carousel"
   | "stats"
   | "trust-indicators"
   | "categories"
@@ -374,7 +375,8 @@ export const HOMEPAGE_SECTIONS_INDEXED_FIELDS = [
 
 export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   welcome: 1,
-  stats: 2,
+  carousel: 2,
+  stats: 3,
   "trust-indicators": 3,
   categories: 2,
   brands: 2,

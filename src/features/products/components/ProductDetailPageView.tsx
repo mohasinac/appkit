@@ -16,15 +16,17 @@ import {
   Text,
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { formatCurrency } from "../../../utils/number.formatter";
+import { safeDisplayName } from "../../../security";
 import type { ProductItem } from "../types";
 import type { Review } from "../../reviews/types";
 import { ReviewsList } from "../../reviews/components/ReviewsList";
-import { ProductGrid } from "./ProductGrid";
-import { RelatedProducts } from "./RelatedProducts";
-import { BuyBar } from "./BuyBar";
 import { ProductDetailView } from "./ProductDetailView";
 import { ProductGalleryClient } from "./ProductGalleryClient";
 import { ProductTabsShell } from "./ProductTabsShell";
+import { ProductFeatureBadges } from "./ProductFeatureBadges";
+import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
+import { BuyBar } from "./BuyBar";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -34,63 +36,105 @@ export interface ProductDetailPageViewProps {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function mapToProductItem(doc: Record<string, unknown>): ProductItem {
+function toProductItem(doc: Record<string, unknown>): ProductItem {
   return {
     id: String(doc.id ?? ""),
-    title: String(doc.name ?? doc.title ?? "Product"),
+    title: String(doc.title ?? doc.name ?? ""),
     price: typeof doc.price === "number" ? doc.price : 0,
+    originalPrice:
+      typeof doc.originalPrice === "number" ? doc.originalPrice : undefined,
     mainImage: Array.isArray(doc.images)
       ? (doc.images[0] as string | undefined)
-      : typeof doc.imageUrl === "string"
-        ? doc.imageUrl
+      : typeof doc.mainImage === "string"
+        ? doc.mainImage
         : undefined,
     status: (doc.status as ProductItem["status"]) ?? "published",
     slug: typeof doc.slug === "string" ? doc.slug : undefined,
     sellerName: typeof doc.sellerName === "string" ? doc.sellerName : undefined,
     rating: typeof doc.rating === "number" ? doc.rating : undefined,
-    reviewCount: typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,
+    reviewCount:
+      typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,
   };
 }
 
-function mapToReview(doc: Record<string, unknown>): Review {
+function toReview(doc: Record<string, unknown>): Review {
   const images = Array.isArray(doc.images)
     ? (doc.images as string[]).map((url) => ({ url }))
     : undefined;
-
   const createdAt =
     doc.createdAt instanceof Date
       ? doc.createdAt.toISOString()
       : typeof doc.createdAt === "string"
         ? doc.createdAt
         : undefined;
-
   const rawRating = typeof doc.rating === "number" ? doc.rating : 3;
-  const rating = (Math.min(5, Math.max(1, Math.round(rawRating))) as 1 | 2 | 3 | 4 | 5);
+  const rating = Math.min(5, Math.max(1, Math.round(rawRating))) as
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5;
 
   return {
     id: String(doc.id ?? ""),
     productId: String(doc.productId ?? ""),
     userId: String(doc.userId ?? ""),
     userName: String(doc.userName ?? "Anonymous"),
-    userAvatar: typeof doc.userAvatar === "string" ? doc.userAvatar : undefined,
+    userAvatar:
+      typeof doc.userAvatar === "string" ? doc.userAvatar : undefined,
     rating,
     title: typeof doc.title === "string" ? doc.title : undefined,
     comment: typeof doc.comment === "string" ? doc.comment : undefined,
     images,
     status: (doc.status as Review["status"]) ?? "approved",
-    helpfulCount: typeof doc.helpfulCount === "number" ? doc.helpfulCount : undefined,
+    helpfulCount:
+      typeof doc.helpfulCount === "number" ? doc.helpfulCount : undefined,
     verified: doc.verified === true,
     featured: doc.featured === true,
     createdAt,
   };
 }
 
+function toDescriptionHtml(raw: unknown): string {
+  if (!raw) return "";
+  const s =
+    typeof raw === "string" ? raw : JSON.stringify(raw);
+  return normalizeRichTextHtml(s);
+}
+
+function StarRating({ value }: { value: number }) {
+  const full = Math.floor(value);
+  const half = value - full >= 0.5;
+  return (
+    <Row align="center" gap="xs">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Span
+          key={i}
+          className={
+            i < full
+              ? "text-yellow-400 text-sm"
+              : i === full && half
+                ? "text-yellow-300 text-sm"
+                : "text-zinc-300 dark:text-zinc-600 text-sm"
+          }
+        >
+          ★
+        </Span>
+      ))}
+    </Row>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export async function ProductDetailPageView({ slug }: ProductDetailPageViewProps) {
-  const product = await productRepository.findByIdOrSlug(slug).catch(() => undefined);
+export async function ProductDetailPageView({
+  slug,
+}: ProductDetailPageViewProps) {
+  const product = await productRepository
+    .findByIdOrSlug(slug)
+    .catch(() => undefined);
 
   if (!product) {
     return (
@@ -98,13 +142,20 @@ export async function ProductDetailPageView({ slug }: ProductDetailPageViewProps
         <Section className="py-20">
           <Container size="md">
             <Stack align="center" gap="md" className="text-center">
-              <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+              <Heading
+                level={1}
+                className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50"
+              >
                 Product Not Found
               </Heading>
               <Text className="text-zinc-500">
-                The product you are looking for may have been removed or the link is incorrect.
+                The product you are looking for may have been removed or the
+                link is incorrect.
               </Text>
-              <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className="text-sm font-medium text-primary-600 hover:underline">
+              <Link
+                href={String(ROUTES.PUBLIC.PRODUCTS)}
+                className="text-sm font-medium text-primary-600 hover:underline"
+              >
                 Browse Products
               </Link>
             </Stack>
@@ -115,166 +166,477 @@ export async function ProductDetailPageView({ slug }: ProductDetailPageViewProps
   }
 
   const p = product as unknown as Record<string, unknown>;
-  const currency = (p.currency as string | undefined) || getDefaultCurrency();
+  const currency =
+    (p.currency as string | undefined) || getDefaultCurrency();
+
+  // -- Derived values ---------------------------------------------------------
+  const title = String(p.title ?? p.name ?? "");
   const price =
-    typeof p.price === "number"
-      ? new Intl.NumberFormat(undefined, { style: "currency", currency }).format(p.price)
+    typeof p.price === "number" ? (p.price as number) : null;
+  const originalPrice =
+    typeof p.originalPrice === "number" ? (p.originalPrice as number) : null;
+  const discount =
+    price && originalPrice && originalPrice > price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
       : null;
 
   const images: string[] = Array.isArray(p.images)
     ? (p.images as string[])
-    : typeof p.imageUrl === "string"
-      ? [p.imageUrl]
+    : typeof p.mainImage === "string"
+      ? [p.mainImage]
       : [];
-  const inStock =
-    typeof p.stockQuantity === "number" ? p.stockQuantity > 0 : p.status === "published";
 
-  const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
-    ? (p.specifications as { name: string; value: string; unit?: string }[])
+  const stockQuantity =
+    typeof p.stockQuantity === "number" ? (p.stockQuantity as number) : null;
+  const availableQuantity =
+    typeof p.availableQuantity === "number"
+      ? (p.availableQuantity as number)
+      : null;
+  const effectiveStock = availableQuantity ?? stockQuantity;
+  const inStock =
+    effectiveStock !== null ? effectiveStock > 0 : p.status === "published";
+
+  const avgRating =
+    typeof p.avgRating === "number" ? (p.avgRating as number) : null;
+  const reviewCount =
+    typeof p.reviewCount === "number" ? (p.reviewCount as number) : null;
+
+  const category =
+    typeof p.category === "string" ? (p.category as string) : null;
+  const subcategory =
+    typeof p.subcategory === "string" ? (p.subcategory as string) : null;
+  const brand = typeof p.brand === "string" ? (p.brand as string) : null;
+  const condition =
+    typeof p.condition === "string" ? (p.condition as string) : null;
+
+  const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
+  const features: string[] = Array.isArray(p.features)
+    ? (p.features as string[])
+    : [];
+  const ingredients: string[] = Array.isArray(p.ingredients)
+    ? (p.ingredients as string[])
+    : [];
+  const howToUse: string[] = Array.isArray(p.howToUse)
+    ? (p.howToUse as string[])
     : [];
 
-  // Fetch reviews and related products in parallel
+  const specs: { name: string; value: string; unit?: string }[] =
+    Array.isArray(p.specifications)
+      ? (p.specifications as { name: string; value: string; unit?: string }[])
+      : [];
+
+  const shippingInfo =
+    typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
+  const returnPolicy =
+    typeof p.returnPolicy === "string" ? (p.returnPolicy as string) : null;
+  const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
+  const freeShipping = shippingPaidBy === "seller";
+  const featured = p.featured === true;
+  const sellerName =
+    typeof p.sellerName === "string" ? (p.sellerName as string) : null;
+  const safeSeller = sellerName
+    ? safeDisplayName(sellerName, "")
+    : null;
+
+  const descriptionHtml = toDescriptionHtml(p.description);
+
+  // -- Fetch reviews + related in parallel ------------------------------------
   const [reviewDocs, relatedDocs] = await Promise.all([
-    reviewRepository.findApprovedByProduct(product.id).catch(() => []),
-    typeof p.category === "string" && p.category
-      ? productRepository.findByCategory(p.category).catch(() => [])
-      : Promise.resolve([]),
+    reviewRepository
+      .findApprovedByProduct(product.id)
+      .catch(() => [] as unknown[]),
+    category
+      ? productRepository.findByCategory(category).catch(() => [] as unknown[])
+      : Promise.resolve([] as unknown[]),
   ]);
 
-  const reviews: Review[] = reviewDocs.map((doc) =>
-    mapToReview(doc as unknown as Record<string, unknown>),
+  const reviews: Review[] = (reviewDocs as Record<string, unknown>[]).map(
+    toReview,
   );
-
-  const relatedItems: ProductItem[] = (relatedDocs as unknown as Record<string, unknown>[])
+  const relatedItems: ProductItem[] = (
+    relatedDocs as Record<string, unknown>[]
+  )
     .filter((r) => r.id !== product.id)
-    .slice(0, 4)
-    .map(mapToProductItem);
+    .slice(0, 8)
+    .map(toProductItem);
+
+  const formattedPrice = price !== null ? formatCurrency(price, currency) : null;
+  const formattedOriginal =
+    originalPrice !== null ? formatCurrency(originalPrice, currency) : null;
 
   return (
-    <>
-      <ProductDetailView
-        renderGallery={() => (
-          <ProductGalleryClient
-            images={images}
-            productName={typeof p.name === "string" ? p.name : undefined}
-          />
-        )}
-        renderInfo={() => (
-          <Stack gap="md">
-            <Heading level={1} className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-              {typeof p.name === "string" ? p.name : "Product"}
-            </Heading>
-            {price && (
-              <Row align="center" gap="sm">
-                <Span className="text-2xl font-semibold text-primary-600 dark:text-primary-400">
-                  {price}
-                </Span>
-                {!inStock && (
-                  <Span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                    Out of stock
+    <Main>
+      <Container size="xl" className="px-4 py-6">
+        <ProductDetailView
+          renderBreadcrumb={() => (
+            <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+              <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
+                Home
+              </Link>
+              <Span aria-hidden>/</Span>
+              <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className="hover:text-primary-600 transition-colors">
+                Products
+              </Link>
+              {category && (
+                <>
+                  <Span aria-hidden>/</Span>
+                  <Span className="capitalize">{category}</Span>
+                </>
+              )}
+              {subcategory && (
+                <>
+                  <Span aria-hidden>/</Span>
+                  <Span className="capitalize">{subcategory}</Span>
+                </>
+              )}
+            </nav>
+          )}
+          renderGallery={() => (
+            <ProductGalleryClient images={images} productName={title || undefined} />
+          )}
+          renderInfo={() => (
+            <Stack gap="sm">
+              {/* Title + condition */}
+              <Div>
+                {condition && (
+                  <Span className="mb-1.5 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:text-zinc-300">
+                    {condition === "new"
+                      ? "Brand New"
+                      : condition === "like_new"
+                        ? "Like New"
+                        : condition === "refurbished"
+                          ? "Refurbished"
+                          : condition === "used"
+                            ? "Used"
+                            : condition}
                   </Span>
                 )}
-              </Row>
-            )}
-            {typeof p.description === "string" && p.description && (
-              <RichText
-                html={normalizeRichTextHtml(p.description)}
-                className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
-              />
-            )}
-            {typeof p.sellerName === "string" && p.sellerName && (
-              <Row align="center" gap="xs">
-                <Span className="text-xs text-zinc-500">Sold by</Span>
-                <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                  {p.sellerName}
-                </Span>
-              </Row>
-            )}
-          </Stack>
-        )}
-        renderActions={() => (
-          <Div className="rounded-xl border border-zinc-100 bg-zinc-50 p-5 dark:border-zinc-800 dark:bg-zinc-900">
-            <Stack gap="sm">
-              {price && (
-                <Text className="text-xl font-bold text-zinc-900 dark:text-zinc-50">{price}</Text>
-              )}
-              <Button variant="primary" size="md" className="w-full" disabled={!inStock}>
-                {inStock ? "Add to Cart" : "Out of Stock"}
-              </Button>
-              <Button variant="secondary" size="md" className="w-full">
-                Add to Wishlist
-              </Button>
-            </Stack>
-          </Div>
-        )}
-        renderTabs={() => (
-          <ProductTabsShell
-            descriptionContent={
-              typeof p.description === "string" && p.description ? (
-                <RichText
-                  html={normalizeRichTextHtml(p.description)}
-                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400"
-                />
-              ) : undefined
-            }
-            specsContent={
-              specs.length > 0 ? (
-                <dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
-                  {specs.map((s, i) => (
-                    <div key={i} className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50">
-                      <dt className="w-40 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
-                        {s.name}
-                      </dt>
-                      <dd className="flex-1 text-zinc-600 dark:text-zinc-400">
-                        {s.value}{s.unit ? ` ${s.unit}` : ""}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              ) : undefined
-            }
-            reviewsContent={
-              <ReviewsList
-                reviews={reviews}
-                emptyLabel="No reviews yet — be the first to review this product."
-              />
-            }
-          />
-        )}
-        renderRelated={() =>
-          relatedItems.length > 0 ? (
-            <RelatedProducts
-              labels={{ title: "You might also like" }}
-              renderGrid={() => (
-                <ProductGrid
-                  products={relatedItems}
-                  getProductHref={(item) =>
-                    String(
-                      ROUTES.PUBLIC.PRODUCT_DETAIL(
-                        (item as unknown as Record<string, unknown>).slug
-                          ? String((item as unknown as Record<string, unknown>).slug)
-                          : item.id,
-                      ),
-                    )
-                  }
-                />
-              )}
-            />
-          ) : null
-        }
-      />
+                <Heading
+                  level={1}
+                  className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl"
+                >
+                  {title || "Untitled Product"}
+                </Heading>
+              </Div>
 
-      {/* Mobile sticky buy bar — hidden on lg+ (desktop uses inline action rail) */}
-      <BuyBar>
-        {price && (
-          <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
-            {price}
-          </Span>
-        )}
-        <Button variant="primary" size="sm" className="flex-1" disabled={!inStock}>
-          {inStock ? "Add to Cart" : "Out of Stock"}
-        </Button>
-      </BuyBar>
-    </>
+              {/* Rating row */}
+              {avgRating !== null && (
+                <Row align="center" gap="sm">
+                  <StarRating value={avgRating} />
+                  <Span className="text-sm text-zinc-600 dark:text-zinc-400">
+                    {avgRating.toFixed(1)}
+                    {reviewCount ? ` (${reviewCount} reviews)` : ""}
+                  </Span>
+                  <Span
+                    className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      inStock
+                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                        : "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                    }`}
+                  >
+                    {inStock ? "✓ In Stock" : "✗ Out of Stock"}
+                    {inStock && effectiveStock !== null && effectiveStock <= 10
+                      ? ` — only ${effectiveStock} left`
+                      : ""}
+                  </Span>
+                </Row>
+              )}
+
+              {/* Price row */}
+              {formattedPrice && (
+                <Row align="baseline" gap="sm">
+                  <Span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                    {formattedPrice}
+                  </Span>
+                  {formattedOriginal && discount && (
+                    <>
+                      <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500">
+                        {formattedOriginal}
+                      </Span>
+                      <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
+                        -{discount}%
+                      </Span>
+                    </>
+                  )}
+                </Row>
+              )}
+
+              {/* In-stock (when no rating row) */}
+              {avgRating === null && (
+                <Span
+                  className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
+                    inStock
+                      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                      : "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                  }`}
+                >
+                  {inStock ? "✓ In Stock" : "✗ Out of Stock"}
+                  {inStock && effectiveStock !== null && effectiveStock <= 10
+                    ? ` — only ${effectiveStock} left`
+                    : ""}
+                </Span>
+              )}
+
+              {/* Category + brand path */}
+              {(category || brand) && (
+                <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
+                  {category && <Span className="capitalize">{category}</Span>}
+                  {category && brand && <Span>›</Span>}
+                  {brand && <Span className="font-medium text-zinc-600 dark:text-zinc-300">{brand}</Span>}
+                </Row>
+              )}
+
+              {/* Feature badges */}
+              <ProductFeatureBadges
+                featured={featured}
+                freeShipping={freeShipping}
+                condition={condition ?? undefined}
+                returnable={returnPolicy != null && returnPolicy.length > 0}
+                labels={{
+                  featured: "Featured",
+                  fasterDelivery: "Faster Delivery",
+                  ratedSeller: "Rated Seller",
+                  condition: "Condition",
+                  conditionNew: "New",
+                  conditionUsed: "Used",
+                  conditionBroken: "For Parts",
+                  conditionRefurbished: "Refurbished",
+                  returnable: "Returnable",
+                  freeShipping: "Free Shipping",
+                  codAvailable: "Cash on Delivery",
+                  wishlistCount: (n) => `${n} wishlisted`,
+                  categoryProductCount: (n, cat) => `${n} in ${cat}`,
+                }}
+              />
+
+              {/* About this product / highlights */}
+              {features.length > 0 && (
+                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
+                  <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                    About this product
+                  </Text>
+                  <ul className="space-y-1.5">
+                    {features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                        <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </Div>
+              )}
+
+              {/* Short description preview */}
+              {descriptionHtml && (
+                <RichText
+                  html={descriptionHtml}
+                  proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+                />
+              )}
+
+              {/* Seller */}
+              {safeSeller && (
+                <Row align="center" gap="xs" className="border-t border-zinc-100 dark:border-zinc-800 pt-3">
+                  <Span className="text-xs text-zinc-500">Sold by</Span>
+                  <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    {safeSeller}
+                  </Span>
+                </Row>
+              )}
+            </Stack>
+          )}
+          renderActions={() => (
+            <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+              {/* Price */}
+              {formattedPrice && (
+                <Div>
+                  <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                    {formattedPrice}
+                  </Text>
+                  {inStock && effectiveStock !== null && effectiveStock <= 10 && (
+                    <Text className="mt-0.5 text-xs text-amber-600 dark:text-amber-400">
+                      Only {effectiveStock} left — order soon!
+                    </Text>
+                  )}
+                </Div>
+              )}
+
+              {/* Actions */}
+              <Stack gap="sm">
+                <Button
+                  variant="primary"
+                  size="md"
+                  className="w-full"
+                  disabled={!inStock}
+                >
+                  {inStock ? "Add to Cart" : "Out of Stock"}
+                </Button>
+                <Button variant="secondary" size="md" className="w-full">
+                  ♡ Add to Wishlist
+                </Button>
+              </Stack>
+
+              {/* Delivery & Returns */}
+              {(shippingInfo || returnPolicy || freeShipping) && (
+                <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4 space-y-2.5">
+                  {freeShipping && (
+                    <Row align="start" gap="sm">
+                      <Span className="mt-0.5 flex-shrink-0 text-emerald-500">🚚</Span>
+                      <Div>
+                        <Text className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                          Free Delivery
+                        </Text>
+                        {shippingInfo && (
+                          <Text className="text-xs text-zinc-500">{shippingInfo}</Text>
+                        )}
+                      </Div>
+                    </Row>
+                  )}
+                  {!freeShipping && shippingInfo && (
+                    <Row align="start" gap="sm">
+                      <Span className="mt-0.5 flex-shrink-0 text-zinc-400">📦</Span>
+                      <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+                        {shippingInfo}
+                      </Text>
+                    </Row>
+                  )}
+                  {returnPolicy && (
+                    <Row align="start" gap="sm">
+                      <Span className="mt-0.5 flex-shrink-0 text-zinc-400">↺</Span>
+                      <Text className="text-xs text-zinc-600 dark:text-zinc-400">
+                        {returnPolicy}
+                      </Text>
+                    </Row>
+                  )}
+                </Div>
+              )}
+
+              {/* Tags */}
+              {tags.length > 0 && (
+                <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                  <Text className="mb-2 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                    Tags
+                  </Text>
+                  <Row wrap gap="xs">
+                    {tags.map((tag) => (
+                      <Span
+                        key={tag}
+                        className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300"
+                      >
+                        {tag}
+                      </Span>
+                    ))}
+                  </Row>
+                </Div>
+              )}
+
+              {/* Trust badges */}
+              <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                <Row wrap gap="sm" className="justify-center text-center">
+                  {[
+                    { icon: "🔒", label: "Secure\nPayment" },
+                    { icon: "✓", label: "Verified\nSeller" },
+                    { icon: "⭐", label: "Quality\nGuarantee" },
+                  ].map(({ icon, label }) => (
+                    <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                      <Span className="text-base">{icon}</Span>
+                      <Span className="whitespace-pre-line leading-tight">{label}</Span>
+                    </Div>
+                  ))}
+                </Row>
+              </Div>
+            </Div>
+          )}
+          renderTabs={() => (
+            <ProductTabsShell
+              descriptionContent={
+                descriptionHtml ? (
+                  <RichText
+                    html={descriptionHtml}
+                    proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
+                    className="text-zinc-700 dark:text-zinc-300"
+                  />
+                ) : undefined
+              }
+              specsContent={
+                specs.length > 0 ? (
+                  <dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
+                    {specs.map((s, i) => (
+                      <div
+                        key={i}
+                        className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50"
+                      >
+                        <dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
+                          {s.name}
+                        </dt>
+                        <dd className="flex-1 text-zinc-600 dark:text-zinc-400">
+                          {s.value}
+                          {s.unit ? ` ${s.unit}` : ""}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : undefined
+              }
+              ingredientsContent={
+                ingredients.length > 0 ? (
+                  <ul className="space-y-2">
+                    {ingredients.map((item, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                        <Span className="mt-1 flex-shrink-0 h-1.5 w-1.5 rounded-full bg-primary-400" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                ) : undefined
+              }
+              howToUseContent={
+                howToUse.length > 0 ? (
+                  <ol className="space-y-3">
+                    {howToUse.map((step, i) => (
+                      <li key={i} className="flex items-start gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+                        <Span className="flex-shrink-0 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900/30 text-xs font-bold text-primary-700 dark:text-primary-300">
+                          {i + 1}
+                        </Span>
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                ) : undefined
+              }
+              reviewsContent={
+                <ReviewsList
+                  reviews={reviews}
+                  emptyLabel="No reviews yet — be the first to review this product."
+                />
+              }
+            />
+          )}
+          renderRelated={() =>
+            relatedItems.length > 0 ? (
+              <RelatedProductsCarousel items={relatedItems} />
+            ) : null
+          }
+        />
+
+        {/* Mobile sticky buy bar */}
+        <BuyBar>
+          {formattedPrice && (
+            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              {formattedPrice}
+            </Span>
+          )}
+          <Button
+            variant="primary"
+            size="sm"
+            className="flex-1"
+            disabled={!inStock}
+          >
+            {inStock ? "Add to Cart" : "Out of Stock"}
+          </Button>
+        </BuyBar>
+      </Container>
+    </Main>
   );
 }

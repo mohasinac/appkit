@@ -4,13 +4,13 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
+  min-width: 0;
   border-radius: 0.75rem;
   border: 1px solid #e5e7eb;
   overflow: hidden;
   transition: box-shadow 0.2s ease;
-  min-width: clamp(150px, 18vw, 260px);
-  min-height: clamp(220px, 26vh, 360px);
+  background-color: #ffffff;
 }
 
 :is(.dark) .appkit-listing-card {
@@ -39,8 +39,7 @@
   position: relative;
   overflow: hidden;
   background-color: #f3f4f6;
-  min-height: clamp(120px, 14vh, 200px);
-  max-height: clamp(160px, 24vh, 280px);
+  flex-shrink: 0;
 }
 
 :is(.dark) .appkit-listing-card__hero {
@@ -56,6 +55,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  gap: 0.375rem;
 }
 
 /* Checkbox overlay */

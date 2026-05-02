@@ -49,3 +49,4 @@ export { ProductGalleryClient } from "./ProductGalleryClient";
 export type { ProductGalleryClientProps } from "./ProductGalleryClient";
 export { ProductTabsShell } from "./ProductTabsShell";
 export type { ProductTabsShellProps } from "./ProductTabsShell";
+export { RelatedProductsCarousel } from "./RelatedProductsCarousel";
