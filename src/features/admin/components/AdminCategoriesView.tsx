@@ -25,13 +25,25 @@ export function AdminCategoriesView({
   ...props
 }: AdminCategoriesViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [q, setQ] = React.useState("");
+  const [activeFilter, setActiveFilter] = React.useState("");
+  const [featuredFilter, setFeaturedFilter] = React.useState("");
+
+  const filterParts: string[] = [];
+  if (activeFilter && activeFilter !== "All") {
+    filterParts.push(activeFilter === "Active" ? "isActive==true" : "isActive==false");
+  }
+  if (featuredFilter && featuredFilter !== "All") filterParts.push("isFeatured==true");
+  const filters = filterParts.join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminCategoriesResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "categories", "listing"],
+    queryKey: ["admin", "categories", "listing", q, filters ?? ""],
     endpoint: `${CATEGORY_ENDPOINTS.LIST}?flat=true`,
+    filters,
+    q,
     mapRows: (response) => {
       const sourceItems = Array.isArray(response.data)
         ? response.data
@@ -74,11 +86,27 @@ export function AdminCategoriesView({
       subtitle="Organize taxonomy hierarchy, slug readiness, and active visibility from the shared listing scaffold."
       actionLabel="New category"
       searchPlaceholder="Search categories, slugs, or parent category"
+      onSearch={setQ}
+      searchValue={q}
       rows={rows}
       isLoading={isLoading}
       errorMessage={errorMessage}
       emptyLabel="No categories found"
       resultSummary={`Showing ${rows.length} of ${total} categories`}
+      filterGroups={[
+        {
+          title: "Active",
+          options: ["All", "Active", "Inactive"],
+          active: activeFilter || "All",
+          onSelect: (opt) => setActiveFilter(opt === "All" ? "" : opt),
+        },
+        {
+          title: "Featured",
+          options: ["All", "Featured Only"],
+          active: featuredFilter || "All",
+          onSelect: (opt) => setFeaturedFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }

@@ -22,6 +22,7 @@ export function useStores(
   opts?: UseStoresOptions,
 ) {
   const sp = new URLSearchParams();
+  if (params.q) sp.set("q", params.q);
   if (params.category) sp.set("category", params.category);
   if (params.page) sp.set("page", String(params.page));
   if (params.pageSize) sp.set("pageSize", String(params.pageSize));

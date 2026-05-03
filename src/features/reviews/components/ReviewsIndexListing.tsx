@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Pagination, SortDropdown } from "../../../ui";
 import { ReviewCard } from "./ReviewsList";
 import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "./ReviewFilters";
@@ -14,62 +15,42 @@ export interface ReviewsIndexListingProps {
   variant?: "admin" | "seller" | "public";
 }
 
-interface SimpleUrlTable {
-  get: (key: string) => string;
-  set: (key: string, value: string) => void;
-  getNumber: (key: string, def: number) => number;
-  setPage: (page: number) => void;
-}
-
-function createSimpleUrlTable(
-  params: Record<string, string>,
-  setParams: (params: Record<string, string>) => void,
-): SimpleUrlTable {
-  return {
-    get: (key: string) => params[key] || "",
-    set: (key: string, value: string) => {
-      const updated = { ...params, [key]: value };
-      setParams(updated);
-    },
-    getNumber: (key: string, def: number) => {
-      const val = params[key];
-      return val ? parseInt(val, 10) : def;
-    },
-    setPage: (page: number) => {
-      setParams({ ...params, page: String(page) });
-    },
-  };
-}
-
-export function ReviewsIndexListing({ 
-  reviews, 
-  variant = "public" 
+export function ReviewsIndexListing({
+  reviews,
+  variant = "public",
 }: ReviewsIndexListingProps) {
-  const [params, setParams] = useState<Record<string, string>>({
-    q: "",
-    sort: "-createdAt",
-    rating: "",
-    page: "1",
-  });
-  const [searchInput, setSearchInput] = useState("");
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "-createdAt" } });
+  const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
-  const table = createSimpleUrlTable(params, setParams);
+  const commitSearch = useCallback(() => {
+    table.set("q", searchInput.trim());
+  }, [searchInput, table]);
+
+  const closeFilters = () => setFilterOpen(false);
+
+  const activeSearch = table.get("q");
+  const ratingFilter = table.get("rating");
+  const dateFrom = table.get("dateFrom");
+  const dateTo = table.get("dateTo");
+  const minVotes = table.get("minVotes") ? Number(table.get("minVotes")) : undefined;
+  const sort = table.get("sort") || "-createdAt";
+  const currentPage = table.getNumber("page", 1);
 
   const filtered = useMemo(() => {
     let result = [...reviews];
 
-    // Apply search filter
-    const searchQuery = table.get("q").toLowerCase();
-    if (searchQuery) {
-      result = result.filter((r) => 
-        r.title?.toLowerCase().includes(searchQuery) ||
-        r.comment?.toLowerCase().includes(searchQuery)
+    const q = activeSearch.toLowerCase();
+    if (q) {
+      result = result.filter(
+        (r) =>
+          r.title?.toLowerCase().includes(q) ||
+          r.comment?.toLowerCase().includes(q) ||
+          (r as any).productTitle?.toLowerCase().includes(q) ||
+          (r as any).userName?.toLowerCase().includes(q),
       );
     }
 
-    // Apply rating filter
-    const ratingFilter = table.get("rating");
     if (ratingFilter) {
       const ratings = ratingFilter.split("|").filter(Boolean).map(Number);
       if (ratings.length > 0) {
@@ -77,9 +58,6 @@ export function ReviewsIndexListing({
       }
     }
 
-    // Apply date range filter
-    const dateFrom = table.get("dateFrom");
-    const dateTo = table.get("dateTo");
     if (dateFrom) {
       const fromTime = new Date(dateFrom).getTime();
       result = result.filter((r) => {
@@ -95,8 +73,10 @@ export function ReviewsIndexListing({
       });
     }
 
-    // Apply sort
-    const sort = table.get("sort") || "-createdAt";
+    if (minVotes !== undefined) {
+      result = result.filter((r) => ((r as any).helpfulCount ?? 0) >= minVotes);
+    }
+
     result.sort((a, b) => {
       if (sort === "-rating") return b.rating - a.rating;
       if (sort === "rating") return a.rating - b.rating;
@@ -106,20 +86,12 @@ export function ReviewsIndexListing({
     });
 
     return result;
-  }, [reviews, params, table]);
+  }, [reviews, activeSearch, ratingFilter, dateFrom, dateTo, minVotes, sort]);
 
-  const currentPage = table.getNumber("page", 1);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-    table.setPage(1);
-  }, [searchInput, table]);
-
-  const closeFilters = () => setFilterOpen(false);
-
-  const sortOptions = REVIEW_PUBLIC_SORT_OPTIONS.map(opt => ({
+  const sortOptions = REVIEW_PUBLIC_SORT_OPTIONS.map((opt) => ({
     value: opt.value,
     label: opt.key,
   }));
@@ -129,6 +101,7 @@ export function ReviewsIndexListing({
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
         <div className="flex items-center gap-2.5 max-w-full">
+
           {/* Filter button */}
           <button
             type="button"
@@ -146,9 +119,19 @@ export function ReviewsIndexListing({
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && commitSearch()}
-              placeholder="Search reviews..."
+              placeholder="Search reviews by product, store, or user..."
               className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => { setSearchInput(""); table.set("q", ""); }}
+                className="px-2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
             <button
               type="button"
               onClick={commitSearch}
@@ -163,7 +146,7 @@ export function ReviewsIndexListing({
           <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="hidden md:inline whitespace-nowrap">Sort by</span>
             <SortDropdown
-              value={table.get("sort") || "-createdAt"}
+              value={sort}
               onChange={(v) => { table.set("sort", v); table.setPage(1); }}
               options={sortOptions}
             />
@@ -199,10 +182,10 @@ export function ReviewsIndexListing({
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (
         <>
-          <div 
-            className="fixed inset-0 z-40 bg-black/40" 
-            aria-hidden="true" 
-            onClick={closeFilters} 
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            aria-hidden="true"
+            onClick={closeFilters}
           />
           <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
@@ -210,10 +193,10 @@ export function ReviewsIndexListing({
                 <SlidersHorizontal className="h-4 w-4" />
                 Filters
               </span>
-              <button 
-                type="button" 
-                onClick={closeFilters} 
-                aria-label="Close filters" 
+              <button
+                type="button"
+                onClick={closeFilters}
+                aria-label="Close filters"
                 className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
               >
                 <X className="h-5 w-5" />
@@ -223,9 +206,9 @@ export function ReviewsIndexListing({
               <ReviewFilters table={table as unknown as UrlTable} variant={variant} />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button 
-                type="button" 
-                onClick={closeFilters} 
+              <button
+                type="button"
+                onClick={closeFilters}
                 className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
               >
                 Apply filters

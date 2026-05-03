@@ -4,11 +4,11 @@ const _locale = getSeedLocale();
 const _phonePrefix = getDefaultPhonePrefix();
 
 /**
- * Addresses Seed Data
- * Sample user addresses for development and testing
+ * Addresses Seed Data — Pokemon TCG Themed
  *
+ * Sample user addresses for development and testing.
  * Addresses stored as subcollection: users/{userId}/addresses/{addressId}
- * All address documents mapped to users that exist in users-seed-data.ts.
+ * All address documents mapped to users that exist in pokemon-users-seed-data.ts.
  */
 
 // --- Dynamic date helpers ---------------------------------------------------
@@ -30,19 +30,19 @@ export interface AddressSeedData {
   isDefault: boolean;
   createdAt: Date;
   updatedAt: Date;
-  userId: string; // Parent user reference
+  userId: string;
 }
 
 export const addressesSeedData: AddressSeedData[] = [
   // ============================================
-  // John Doe's Addresses
+  // Ash Ketchum's Addresses
   // ============================================
   {
-    id: "addr-john-home-1707400001",
-    userId: "user-john-doe-johndoe",
+    id: "addr-ash-home-1707400001",
+    userId: "user-ash-ketchum-pallet-ash",
     label: "Home",
-    fullName: "John Doe",
-    phone: `${_phonePrefix}9876543211`,
+    fullName: "Ash Ketchum",
+    phone: `${_phonePrefix}9111111111`,
     addressLine1: "Flat 302, Crystal Towers",
     addressLine2: "MG Road, Andheri East",
     city: "Mumbai",
@@ -54,47 +54,30 @@ export const addressesSeedData: AddressSeedData[] = [
     updatedAt: daysAgo(753),
   },
   {
-    id: "addr-john-office-1707400002",
-    userId: "user-john-doe-johndoe",
-    label: "Office",
-    fullName: "John Doe",
-    phone: `${_phonePrefix}9876543211`,
-    addressLine1: "Tech Park, 5th Floor",
-    addressLine2: "Powai Link Road",
-    city: "Mumbai",
+    id: "addr-ash-office-1707400002",
+    userId: "user-ash-ketchum-pallet-ash",
+    label: "Pallet Town",
+    fullName: "Ash Ketchum",
+    phone: `${_phonePrefix}9111111111`,
+    addressLine1: "1, Pallet Town Road",
+    addressLine2: "Near Pokemon Lab",
+    city: "Pune",
     state: "Maharashtra",
-    postalCode: "400076",
+    postalCode: "411001",
     country: _locale.countryName,
     isDefault: false,
     createdAt: daysAgo(738),
     updatedAt: daysAgo(738),
   },
-  {
-    id: "addr-john-parents-1707400003",
-    userId: "user-john-doe-johndoe",
-    label: "Parents' Home",
-    fullName: "Rakesh Doe",
-    phone: `${_phonePrefix}2066554433`,
-    addressLine1: "House No. 45, Sector 12",
-    addressLine2: "Near Central Park",
-    landmark: "Opposite State Bank",
-    city: "Pune",
-    state: "Maharashtra",
-    postalCode: "411038",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(698),
-    updatedAt: daysAgo(698),
-  },
 
   // ============================================
-  // Jane Smith's Addresses
+  // Gary Oak's Addresses
   // ============================================
   {
-    id: "addr-jane-home-1707400004",
-    userId: "user-jane-smith-janes",
+    id: "addr-gary-home-1707400004",
+    userId: "user-gary-oak-gary",
     label: "Home",
-    fullName: "Jane Smith",
+    fullName: "Gary Oak",
     phone: `${_phonePrefix}9876543212`,
     addressLine1: "Villa 23, Whitefield Gardens",
     addressLine2: "Marathahalli",
@@ -107,13 +90,13 @@ export const addressesSeedData: AddressSeedData[] = [
     updatedAt: daysAgo(729),
   },
   {
-    id: "addr-jane-work-1707400005",
-    userId: "user-jane-smith-janes",
-    label: "Work",
-    fullName: "Jane Smith",
+    id: "addr-gary-research-1707400005",
+    userId: "user-gary-oak-gary",
+    label: "Research Lab",
+    fullName: "Gary Oak",
     phone: `${_phonePrefix}9876543212`,
-    addressLine1: "Block C, Tech Hub",
-    addressLine2: "Outer Ring Road",
+    addressLine1: "Oak Pokemon Research Lab",
+    addressLine2: "Pallet Town Research District",
     city: "Bangalore",
     state: "Karnataka",
     postalCode: "560103",
@@ -124,17 +107,17 @@ export const addressesSeedData: AddressSeedData[] = [
   },
 
   // ============================================
-  // Mike Johnson's Addresses
+  // Brock's Addresses
   // ============================================
   {
-    id: "addr-mike-home-1707400006",
-    userId: "user-mike-johnson-mikejohn",
-    label: "Home",
-    fullName: "Mike Johnson",
+    id: "addr-brock-home-1707400006",
+    userId: "user-brock-pewter-brock",
+    label: "Gym",
+    fullName: "Brock",
     phone: `${_phonePrefix}9876543213`,
-    addressLine1: "78, MG Road",
-    addressLine2: "Brigade Road Area",
-    landmark: "Near Forum Mall",
+    addressLine1: "Pewter City Gym, MG Road",
+    addressLine2: "Rock Type District",
+    landmark: "Near Boulder Badge Museum",
     city: "Bangalore",
     state: "Karnataka",
     postalCode: "560001",
@@ -144,10 +127,10 @@ export const addressesSeedData: AddressSeedData[] = [
     updatedAt: daysAgo(688),
   },
   {
-    id: "addr-mike-shipping-1707400007",
-    userId: "user-mike-johnson-mikejohn",
-    label: "Alternative Shipping",
-    fullName: "Mike Johnson",
+    id: "addr-brock-home2-1707400007",
+    userId: "user-brock-pewter-brock",
+    label: "Family Home",
+    fullName: "Brock",
     phone: `${_phonePrefix}9876543213`,
     addressLine1: "56, Indiranagar 100ft Road",
     addressLine2: "Near CMH Hospital",
@@ -161,17 +144,17 @@ export const addressesSeedData: AddressSeedData[] = [
   },
 
   // ============================================
-  // Priya Sharma's Addresses
+  // Sabrina's Addresses
   // ============================================
   {
-    id: "addr-priya-home-1707400008",
-    userId: "user-priya-sharma-priya",
-    label: "Home",
-    fullName: "Priya Sharma",
+    id: "addr-sabrina-home-1707400008",
+    userId: "user-sabrina-psychic-sabrina",
+    label: "Gym",
+    fullName: "Sabrina",
     phone: `${_phonePrefix}9876543260`,
-    addressLine1: "34, Banjara Hills",
-    addressLine2: "Road No. 12",
-    landmark: "Near Café Coffee Day",
+    addressLine1: "Saffron City Gym",
+    addressLine2: "Psychic Street",
+    landmark: "Near Silph Co.",
     city: "Hyderabad",
     state: "Telangana",
     postalCode: "500034",
@@ -180,34 +163,18 @@ export const addressesSeedData: AddressSeedData[] = [
     createdAt: daysAgo(360),
     updatedAt: daysAgo(360),
   },
-  {
-    id: "addr-priya-work-1707400009",
-    userId: "user-priya-sharma-priya",
-    label: "Office",
-    fullName: "Priya Sharma",
-    phone: `${_phonePrefix}9876543260`,
-    addressLine1: "DLF Cyber City, Tower 11",
-    addressLine2: "HITEC City",
-    city: "Hyderabad",
-    state: "Telangana",
-    postalCode: "500081",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(342),
-    updatedAt: daysAgo(342),
-  },
 
   // ============================================
-  // Raj Patel's Addresses
+  // Erika's Addresses
   // ============================================
   {
-    id: "addr-raj-home-1707400010",
-    userId: "user-raj-patel-rajpatel",
-    label: "Home",
-    fullName: "Raj Patel",
+    id: "addr-erika-home-1707400010",
+    userId: "user-erika-celadon-erika",
+    label: "Gym",
+    fullName: "Erika",
     phone: `${_phonePrefix}9876543270`,
-    addressLine1: "12, MG Road",
-    addressLine2: "Navrangpura",
+    addressLine1: "Celadon City Gym",
+    addressLine2: "Grass Type Garden District",
     city: "Ahmedabad",
     state: "Gujarat",
     postalCode: "380009",
@@ -216,35 +183,19 @@ export const addressesSeedData: AddressSeedData[] = [
     createdAt: daysAgo(294),
     updatedAt: daysAgo(294),
   },
-  {
-    id: "addr-raj-business-1707400011",
-    userId: "user-raj-patel-rajpatel",
-    label: "Business",
-    fullName: "Raj Patel Enterprises",
-    phone: `${_phonePrefix}2712233445`,
-    addressLine1: "Shop 45, GIDC Industrial Estate",
-    addressLine2: "Phase 2, Vatva",
-    city: "Ahmedabad",
-    state: "Gujarat",
-    postalCode: "382445",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(267),
-    updatedAt: daysAgo(267),
-  },
 
   // ============================================
-  // Vikram Nair's Addresses
+  // Professor Oak's Addresses
   // ============================================
   {
-    id: "addr-meera-home-1707400012",
-    userId: "user-vikram-nair-vikram",
-    label: "Home",
-    fullName: "Vikram Nair",
+    id: "addr-oak-lab-1707400012",
+    userId: "user-professor-oak-prof",
+    label: "Lab",
+    fullName: "Professor Samuel Oak",
     phone: `${_phonePrefix}9876543280`,
-    addressLine1: "88/4, MG Road",
-    addressLine2: "Near Broadway",
-    landmark: "Opposite Ernakulam Junction",
+    addressLine1: "Oak Pokemon Research Lab",
+    addressLine2: "North of Pallet Town",
+    landmark: "Opposite Pallet Town Entrance",
     city: "Kochi",
     state: "Kerala",
     postalCode: "682001",
@@ -252,22 +203,6 @@ export const addressesSeedData: AddressSeedData[] = [
     isDefault: true,
     createdAt: daysAgo(221),
     updatedAt: daysAgo(221),
-  },
-  {
-    id: "addr-meera-parents-1707400013",
-    userId: "user-vikram-nair-vikram",
-    label: "Parents",
-    fullName: "Suresh Nair",
-    phone: `${_phonePrefix}4842334455`,
-    addressLine1: "TC 25/1104, Pulimoodu",
-    addressLine2: "Near Padmatheertham",
-    city: "Thiruvananthapuram",
-    state: "Kerala",
-    postalCode: "695001",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(180),
-    updatedAt: daysAgo(180),
   },
 
   // ============================================
@@ -309,146 +244,4 @@ export const addressesSeedData: AddressSeedData[] = [
     createdAt: daysAgo(799),
     updatedAt: daysAgo(799),
   },
-
-  // ============================================
-  // Jane Smith — Delhi address (matches her orders)
-  // ============================================
-  {
-    id: "addr-jane-delhi-1707400018",
-    userId: "user-jane-smith-janes",
-    label: "Delhi Flat",
-    fullName: "Jane Smith",
-    phone: `${_phonePrefix}9876543212`,
-    addressLine1: "Flat 7B, Lajpat Nagar II",
-    addressLine2: "Near Central Market",
-    city: "New Delhi",
-    state: "Delhi",
-    postalCode: "110024",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(128),
-    updatedAt: daysAgo(128),
-  },
-
-  // ============================================
-  // Fashion Boutique's Business Address
-  // ============================================
-  {
-    id: "addr-fashion-boutique-biz-1707400019",
-    userId: "user-fashion-boutique-fashionb",
-    label: "Studio",
-    fullName: "Fashion Boutique",
-    phone: `${_phonePrefix}9876543240`,
-    addressLine1: "Studio 14, Linking Road",
-    addressLine2: "Bandra West",
-    city: "Mumbai",
-    state: "Maharashtra",
-    postalCode: "400050",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(646),
-    updatedAt: daysAgo(646),
-  },
-
-  // ============================================
-  // Home Essentials' Warehouse Address
-  // ============================================
-  {
-    id: "addr-home-essentials-warehouse-1707400020",
-    userId: "user-home-essentials-homeesse",
-    label: "Warehouse",
-    fullName: "Home Essentials",
-    phone: `${_phonePrefix}9876543250`,
-    addressLine1: "Plot 22, RIICO Industrial Area",
-    addressLine2: "Sitapura",
-    city: "Jaipur",
-    state: "Rajasthan",
-    postalCode: "302022",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(616),
-    updatedAt: daysAgo(616),
-  },
-
-  // ============================================
-  // Ananya Bose's Address
-  // ============================================
-  {
-    id: "addr-ananya-home-1707400021",
-    userId: "user-ananya-bose-ananya",
-    label: "Home",
-    fullName: "Ananya Bose",
-    phone: `${_phonePrefix}9876543291`,
-    addressLine1: "43, Lake Town, Block B",
-    addressLine2: "Near Bidhan Nagar",
-    city: "Kolkata",
-    state: "West Bengal",
-    postalCode: "700089",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(145),
-    updatedAt: daysAgo(145),
-  },
-
-  // ============================================
-  // Pooja Mehta's Address
-  // ============================================
-  {
-    id: "addr-pooja-home-1707400022",
-    userId: "user-pooja-mehta-pooja",
-    label: "Home",
-    fullName: "Pooja Mehta",
-    phone: `${_phonePrefix}9876543292`,
-    addressLine1: "15, Pali Hill",
-    addressLine2: "Bandra West",
-    city: "Mumbai",
-    state: "Maharashtra",
-    postalCode: "400050",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(119),
-    updatedAt: daysAgo(119),
-  },
-
-  // ============================================
-  // Ravi Kumar's Address
-  // ============================================
-  {
-    id: "addr-ravi-home-1707400023",
-    userId: "user-ravi-kumar-ravi",
-    label: "Home",
-    fullName: "Ravi Kumar",
-    phone: `${_phonePrefix}9876543293`,
-    addressLine1: "78, Sector 20, Chandigarh",
-    addressLine2: "",
-    landmark: "Near Elante Mall",
-    city: "Chandigarh",
-    state: "Punjab",
-    postalCode: "160020",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(98),
-    updatedAt: daysAgo(98),
-  },
-
-  // ============================================
-  // Sneha Gupta's Address
-  // ============================================
-  {
-    id: "addr-sneha-home-1707400024",
-    userId: "user-sneha-gupta-sneha",
-    label: "Home",
-    fullName: "Sneha Gupta",
-    phone: `${_phonePrefix}9876543294`,
-    addressLine1: "32, Gomti Nagar, Sector 3",
-    addressLine2: "",
-    city: "Lucknow",
-    state: "Uttar Pradesh",
-    postalCode: "226010",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(63),
-    updatedAt: daysAgo(63),
-  },
 ];
-

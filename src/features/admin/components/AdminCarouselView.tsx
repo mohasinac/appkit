@@ -25,13 +25,23 @@ export function AdminCarouselView({
   ...props
 }: AdminCarouselViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [q, setQ] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("");
+
+  const filterParts: string[] = [];
+  if (statusFilter && statusFilter !== "All") {
+    filterParts.push(statusFilter === "Active" ? "active==true" : "active==false");
+  }
+  const filters = filterParts.join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminCarouselResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "carousel", "listing"],
+    queryKey: ["admin", "carousel", "listing", q, filters ?? ""],
     endpoint: `${HOMEPAGE_ENDPOINTS.CAROUSEL}?includeInactive=true`,
+    filters,
+    q,
     mapRows: (response) => {
       const sourceItems = Array.isArray(response.data)
         ? response.data
@@ -73,11 +83,21 @@ export function AdminCarouselView({
       subtitle="Manage hero slide ordering, activation state, and destination links in one listing workflow."
       actionLabel="New slide"
       searchPlaceholder="Search slide titles or link URLs"
+      onSearch={setQ}
+      searchValue={q}
       rows={rows}
       isLoading={isLoading}
       errorMessage={errorMessage}
       emptyLabel="No carousel slides found"
       resultSummary={`Showing ${rows.length} of ${total} slides`}
+      filterGroups={[
+        {
+          title: "Status",
+          options: ["All", "Active", "Inactive"],
+          active: statusFilter || "All",
+          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }

@@ -3,10 +3,30 @@ import { blogRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { BlogIndexListing } from "./BlogIndexListing";
+import type { BlogPostCategory } from "../types";
 
-export async function BlogIndexPageView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+export interface BlogIndexPageViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function BlogIndexPageView({ searchParams = {} }: BlogIndexPageViewProps) {
+  const sort = sp(searchParams, "sort") || "-publishedAt";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const category = sp(searchParams, "category") as BlogPostCategory | undefined;
+
   const result = await blogRepository
-    .listPublished({}, { sorts: "-publishedAt", page: 1, pageSize: 24 })
+    .listPublished(
+      { ...(category ? { category } : {}) },
+      { sorts: sort, page, pageSize },
+    )
     .catch(() => null);
 
   return (

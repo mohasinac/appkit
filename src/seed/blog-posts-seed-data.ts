@@ -1,6 +1,6 @@
 /**
- * Blog Posts Seed Data — Anime / Otaku Marketplace
- * Sample blog posts across all categories for development and testing
+ * Blog Posts Seed Data — Pokemon TCG Card Collecting
+ * Sample blog posts covering Pokemon card collecting, grading, investing, and authentication.
  */
 
 import type { BlogPostDocument } from "../features/blog/schemas";
@@ -11,206 +11,278 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
-  // -- Featured / Published ----------------------------------------------
+  // -- Featured / Published -----------------------------------------------
+
   {
-    id: "blog-top-10-rarest-anime-figures-2026-guides",
-    title: "Top 10 Rarest Anime Figures You Can Actually Buy in 2026",
-    slug: "top-10-rarest-anime-figures-2026",
+    id: "blog-top-10-valuable-base-set-pokemon-cards-2026-guides",
+    title: "Top 10 Most Valuable Base Set Pokemon Cards in 2026",
+    slug: "top-10-valuable-base-set-pokemon-cards-2026",
     excerpt:
-      "From limited-run Kotobukiya ARTFX statues to out-of-print Good Smile Company Nendoroids — we rank the 10 most coveted figures that still occasionally surface on the secondary market.",
-    content: `<h2>1. Evangelion Unit-01 Ver. Ka — MegaHouse Master Grade</h2><p>Originally released in 2012 as a convention exclusive, this 1/60-scale articulated statue regularly commands ₹50,000+ at auction. Its translucent AT-Field base and hand-painted panel lines make it the crown jewel of any Eva collection.</p><h2>2. Good Smile Company — Rem Wedding Dress 1/7 Scale</h2><p>First sold exclusively at Wonder Festival 2019, Rem's wedding version shipped only to Japan-based buyers and sold out in minutes. Secondary market prices hover around ₹25,000–35,000 worldwide.</p><h2>3. Kotobukiya ARTFX J — Makima 1/7 (Chainsaw Man)</h2><p>Released in early 2025, this figure sold out globally in 48 hours. Sculpted by Takashi Tanaka, its flowing coat and hypnotic eye detail set a new bar for Chainsaw Man merchandise.</p><h2>4. Alter — Frieren 1/7 Scale (Beyond Journey's End)</h2><p>Alter's 2025 announcement caused the internet to collectively lose its mind. Pre-orders sold out in under two hours, and secondary listings are already appearing at 2× retail.</p><h2>5. Max Factory — Saber Alter Wedding Dress (Fate/Stay Night)</h2><p>A Wonder Festival exclusive from 2017, this 1/7-scale figure features hand-applied gold leaf details on the gown trim and is considered one of the finest Fate figures ever produced.</p><h2>6–10: The Rest of Our List</h2><p>Spots 6 through 10 include the Neon Genesis Evangelion Production Models by Gainax (hand-autographed by Anno), a sealed 1st-edition Pokémon Charizard PSA-10, the Spirited Away No-Face resin limited run, and more. <a href="/products">Browse our current listings</a> — some of these have just appeared on LetItRip.</p>`,
-    coverImage: "https://picsum.photos/seed/anime-figures-top10/1200/630",
+      "From the iconic 1st Edition Charizard to the sleeper hit Chansey — we rank the 10 most valuable original Base Set cards and what they're fetching on the market in 2026.",
+    content: `<h2>1. 1st Edition Charizard — Base Set #4 (PSA 10)</h2><p>The undisputed king of Pokemon TCG collecting. A PSA 10 1st Edition Charizard crossed ₹75 lakh at auction in 2025 and continues to appreciate. Even a raw Near Mint copy commands ₹80,000–₹1,20,000 depending on centering. This card alone defines the hobby for an entire generation.</p><h2>2. 1st Edition Blastoise — Base Set #2 (PSA 9)</h2><p>Blastoise is the sleeper pick of the set. PSA 9 copies have climbed to ₹18,000–₹30,000 as collectors who couldn't afford Charizard turned their attention here. The turtle shell holo pattern is stunning in high grade.</p><h2>3. 1st Edition Venusaur — Base Set #15 (PSA 8+)</h2><p>Venusaur has historically been the weakest of the three starter holos, but 2026 has seen renewed interest. A PSA 8 now trades around ₹8,000–₹14,000 — still highly accessible compared to its Fire rival.</p><h2>4. Mewtwo — Base Set #10 (PSA 9)</h2><p>The Genetic Pokemon. Mewtwo's holo is sharp, clean, and one of the most recognisable in all of TCG history. PSA 9 copies fetch ₹40,000–₹65,000 in 2026. Its Psychic-type exclusivity makes it a must for theme collectors.</p><h2>5. Gyarados — Base Set #6 (PSA 8)</h2><p>Gyarados has some of the most dramatic full-art holo artwork in the entire Base Set. PSA 8 copies are trading around ₹7,000–₹12,000, making this an excellent entry point for new collectors.</p><h2>6. Zapdos — Base Set #16 (PSA 9)</h2><p>The legendary Electric bird is the most undervalued of the three Birds trio. Near Mint raw copies are available for ₹5,000–₹9,000 — a relative bargain if you expect the gap to close versus Articuno and Moltres.</p><h2>7. Chansey — Base Set #3</h2><p>Chansey is the surprise entry. At 120 HP it had the highest HP in the original set, and its Colorless type kept it playable. Raw NM copies trade around ₹3,500–₹7,000 — a card with significant upside as awareness grows.</p><h2>8. Professor Oak — Base Set #88 (Trainer)</h2><p>The most powerful Trainer card ever printed in the original format. Draw 7 cards and restart your hand. NM copies are surprisingly affordable at ₹1,500–₹3,500, and PSA 9 graded copies regularly sell for ₹8,000+.</p><h2>9. Pikachu — Base Set #58 (Red Cheeks / Yellow Cheeks Variant)</h2><p>The mascot card exists in two variants — Red Cheeks (more common) and Yellow Cheeks (rarer, higher value). Yellow Cheeks PSA 9 copies fetch ₹6,000–₹12,000. Always check the variant before grading.</p><h2>10. 1st Edition Nidoking — Base Set #11</h2><p>Nidoking rounds out our list. Consistently overlooked, a PSA 9 1st Edition copy has been trading upward and represents excellent value for a complete Base Set holo rare collection.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/4_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
     tags: [
-      "figures",
-      "rare",
-      "collectibles",
-      "gunpla",
-      "nendoroid",
-      "scale-figures",
+      "base-set",
+      "charizard",
+      "valuable",
+      "investment",
+      "1st-edition",
+      "top-10",
     ],
     isFeatured: true,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(58),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
-    readTimeMinutes: 8,
-    views: 4723,
-    metaTitle: "Top 10 Rarest Anime Figures to Buy in 2026 | LetItRip",
+    readTimeMinutes: 9,
+    views: 6241,
+    metaTitle:
+      "Top 10 Most Valuable Pokemon Base Set Cards in 2026 | LetItRip",
     metaDescription:
-      "Discover the 10 rarest anime figures still available on the secondary market in 2026 — with prices, rarity scores, and buying tips.",
+      "Discover the 10 most valuable original Base Set Pokemon cards in 2026 — with prices, grading tips, and why Charizard still reigns supreme.",
     createdAt: daysAgo(60),
     updatedAt: daysAgo(58),
   },
 
   {
-    id: "blog-how-to-start-your-gunpla-journey-tips",
-    title: "How to Start Your Gunpla Journey: A Complete Beginner's Guide",
-    slug: "how-to-start-gunpla-journey-beginners-guide",
+    id: "blog-how-to-grade-pokemon-cards-psa-vs-beckett-tips",
+    title: "How to Grade Your Pokemon Cards — PSA vs. Beckett Guide",
+    slug: "how-to-grade-pokemon-cards-psa-vs-beckett",
     excerpt:
-      "Overwhelmed by High Grade, Master Grade, and Perfect Grade? This guide walks you through every Gunpla grade, the tools you need, and how to pick your first kit without regret.",
-    content: `<h2>What Is Gunpla?</h2><p>Gunpla (Gundam Plastic Models) are injection-moulded model kits produced by Bandai since 1980. They require no glue, snap together perfectly, and come in grades ranging from beginner-friendly to achingly complex.</p><h2>Understanding the Grades</h2><ul><li><strong>SD (Super Deformed)</strong> — Chibi-proportioned, ~50 pieces, great for kids and first-timers.</li><li><strong>HG (High Grade, 1/144)</strong> — The sweet spot for beginners. Affordable (₹800–₹2,500), articulated, and plentiful.</li><li><strong>RG (Real Grade, 1/144)</strong> — Advanced inner-frame detail in a small footprint. Not for absolute beginners.</li><li><strong>MG (Master Grade, 1/100)</strong> — Rich inner skeleton, panel lines, and accessories. 3–6 hours build time.</li><li><strong>PG (Perfect Grade, 1/60)</strong> — The mountain to climb. LED-lit options, 400+ pieces, 15–30 hours. Our Gundam Wing Zero Custom is an example.</li></ul><h2>Essential First-Time Tools</h2><p>You only need three things to start: a pair of Tamiya side-cutters (₹600), a hobby knife (₹300), and a grey panel-lining pen (₹350). Everything else is optional.</p><h2>Your First Kit Recommendation</h2><p>Start with an HG RX-78-2 or an HG Zaku II — both are ~₹900, have clean designs, and teach you the fundamentals without frustration.</p><h2>Where to Buy</h2><p>LetItRip lists both new and second-hand Gunpla, including rare PG builds like our <a href="/products">Wing Zero Custom</a>. Pre-orders are available for upcoming Bandai releases.</p>`,
-    coverImage: "https://picsum.photos/seed/gunpla-beginner-guide/1200/630",
+      "Grading transforms a raw card into a certified, tradeable asset. This guide walks you through PSA and Beckett grading — costs, timelines, what graders look for, and which scale suits your collection goals.",
+    content: `<h2>Why Grade Your Pokemon Cards?</h2><p>A PSA 9 Charizard isn't just a beautiful card — it's a verified asset. Grading encases the card in a tamper-evident holder, assigns a standardised grade, and dramatically increases resale value and buyer confidence. A raw NM Charizard might fetch ₹40,000; the same card in a PSA 9 slab regularly sells for ₹90,000–₹1,50,000.</p><h2>PSA — Professional Sports Authenticator</h2><p>PSA is the world's most recognised grading authority for Pokemon TCG. Their 1–10 scale is widely understood by buyers and sellers globally, making PSA-graded cards the most liquid on the secondary market.</p><ul><li><strong>PSA 10 (Gem Mint):</strong> Perfect centering, four sharp corners, no scratches or print defects. The holy grail.</li><li><strong>PSA 9 (Mint):</strong> One minor imperfection allowed — often a tiny corner bevel or 55/45 centering. Excellent investment grade.</li><li><strong>PSA 8 (Near Mint-Mint):</strong> Light wear on 1–2 corners, or centering up to 65/35. Still highly collectible.</li><li><strong>PSA 7 (Near Mint):</strong> Light surface marks, slightly miscut. Good entry-level investment.</li></ul><h2>Beckett (BGS / BVG)</h2><p>Beckett grades on four sub-scores — Centering, Corners, Edges, and Surface — then averages them to a 1–10 scale. Their ultra-rare BGS 9.5 "Black Label" (all four sub-scores at 9.5) commands significant premiums. Beckett is preferred by high-end collectors who want detailed condition breakdowns.</p><h2>Preparation: What to Do Before Submitting</h2><ol><li>Clean the card with a microfibre cloth — no liquids.</li><li>Store in a penny sleeve then a top-loader for transit.</li><li>Photograph both sides under bright light to document condition pre-submission.</li><li>Use a submission service or send directly via the PSA/Beckett website.</li></ol><h2>Current Turnaround Times (2026)</h2><p>PSA Economy (slowest): 6–9 months. PSA Standard: 3–4 months. PSA Express: 4–6 weeks. Beckett Standard: 4–8 weeks. Budget for grading costs of ₹1,500–₹8,000 per card depending on declared value and tier.</p><h2>Which Should You Choose?</h2><p>For most Base Set singles, choose PSA — the liquidity premium and global recognition justify it. For modern cards or slabs where you want sub-scores, Beckett is the better choice.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/10_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.TIPS,
-    tags: ["gunpla", "beginners", "model-kits", "bandai", "how-to", "guide"],
+    tags: ["grading", "psa", "beckett", "how-to", "guide", "authentication"],
     isFeatured: true,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(50),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
     readTimeMinutes: 10,
-    views: 6891,
-    metaTitle: "Complete Beginner's Guide to Gunpla 2026 | LetItRip",
+    views: 7823,
+    metaTitle:
+      "How to Grade Pokemon Cards — PSA vs Beckett 2026 Guide | LetItRip",
     metaDescription:
-      "New to Gunpla? Learn every grade from SD to Perfect Grade, the tools you need, and which kit to buy first.",
+      "Complete guide to grading your Pokemon cards with PSA and Beckett — costs, timelines, what graders check, and which service to choose.",
     createdAt: daysAgo(52),
     updatedAt: daysAgo(50),
   },
 
   {
-    id: "blog-letitrip-launches-auction-feature-news",
-    title: "LetItRip Launches Live Auction Feature for Rare Anime Collectibles",
-    slug: "letitrip-launches-live-auction-feature-anime-collectibles",
+    id: "blog-pokemon-card-investment-market-analysis-2026-news",
+    title: "The Rise of Pokemon Card Investment — Market Analysis 2026",
+    slug: "pokemon-card-investment-market-analysis-2026",
     excerpt:
-      "Today we're thrilled to announce our live auction platform — the best way to score rare figures, TCG cards, and production art at prices set by the community.",
-    content: `<h2>Introducing Live Auctions</h2><p>LetItRip's auction feature lets verified sellers list rare anime collectibles — from out-of-print Nendoroids to original Studio Ghibli production cels — and buyers bid in real time. Every listing is authenticated by our team before going live.</p><h2>How It Works</h2><ol><li>Browse open auctions on the <a href="/auctions">Auctions page</a>.</li><li>Place a bid — you'll be instantly notified by push notification if outbid.</li><li>Win the auction and check out securely within 24 hours.</li><li>Receive a Certificate of Authenticity with every winning lot.</li></ol><h2>What Can Be Auctioned?</h2><p>Scale figures, Nendoroids, Funko Pop vaulted editions, Pokemon TCG graded cards, original anime production art, autographed merchandise, limited-run apparel, and complete manga sets.</p><h2>Seller Benefits</h2><p>Sellers get competitive, market-driven prices without constantly dropping their asking price. Payouts are processed within 3–5 business days after buyer confirmation. Our Auction Escrow service protects both parties throughout.</p>`,
-    coverImage: "https://picsum.photos/seed/auction-launch-anime/1200/630",
+      "Pokemon cards have outperformed many traditional asset classes over the past five years. We analyse the 2026 market, identify the strongest investment segments, and examine what's driving demand.",
+    content: `<h2>The Numbers Don't Lie</h2><p>Between 2020 and 2026, PSA 10 Base Set Charizard has appreciated from approximately ₹5 lakh to over ₹75 lakh — a 1,400% return. Even common Base Set cards in top grade have seen 300–500% gains. The Pokemon TCG market is no longer a hobby curiosity; it is a genuine alternative asset class attracting institutional attention.</p><h2>Why Pokemon Cards?</h2><p>Three forces drive the market. First, nostalgia — millennials who grew up with these cards now have disposable income and want to reclaim childhood. Second, scarcity — Base Set print runs were not infinite, and high-grade copies become rarer each year as cards remain in play or degrade. Third, grading infrastructure — the existence of PSA and Beckett as trusted third parties has created a liquid, standardised market where price discovery is possible.</p><h2>The Strongest Investment Segments in 2026</h2><ul><li><strong>1st Edition Base Set Holos (PSA 8+):</strong> The blue-chip end of the market. Illiquid, expensive, but the most inflation-resistant.</li><li><strong>Shadowless Base Set Holos (PSA 9):</strong> Printed after 1st Edition but before the Unlimited print run, Shadowless cards are undersupplied relative to demand. Strong upside.</li><li><strong>Sealed Base Set Booster Packs:</strong> WOTC-era sealed product is mathematically finite. Each box opened reduces supply. Prices have tripled since 2022.</li><li><strong>Base Set Pikachu Variants (Red Cheeks / Yellow Cheeks):</strong> Mascot appeal plus genuine scarcity for Yellow Cheeks creates collector demand independent of competitive play.</li></ul><h2>Risks to Consider</h2><p>No investment is risk-free. The Pokemon card market is illiquid compared to stocks, has high transaction costs (grading fees, marketplace commissions of 8–15%), and is subject to trend cycles. New print runs of modern sets occasionally draw investment capital away from vintage. Always buy what you love — financial returns are a bonus, not a guarantee.</p><h2>LetItRip's Role</h2><p>Our marketplace connects serious sellers of authenticated Pokemon singles and sealed product with buyers who understand the market. Every auction listing goes through our verification process. <a href="/auctions">Browse active auctions</a> to see current market pricing in real time.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/2_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.NEWS,
-    tags: ["auctions", "platform", "feature", "launch", "news", "collectibles"],
+    tags: [
+      "investment",
+      "market",
+      "2026",
+      "base-set",
+      "pokemon-tcg",
+      "analysis",
+    ],
     isFeatured: false,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(43),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
-    readTimeMinutes: 4,
-    views: 3210,
-    metaTitle: "LetItRip Launches Anime Collectible Auction Platform | News",
+    readTimeMinutes: 7,
+    views: 4318,
+    metaTitle:
+      "Pokemon Card Investment Market Analysis 2026 | LetItRip",
     metaDescription:
-      "LetItRip announces its live auction feature for rare anime figures, TCG cards, and production art. Bid, win, and collect.",
+      "Comprehensive 2026 analysis of the Pokemon card investment market — performance data, top segments, and risk factors for serious collectors.",
     createdAt: daysAgo(44),
     updatedAt: daysAgo(43),
   },
 
   {
-    id: "blog-buyer-seller-protection-policy-updates-updates",
-    title: "Updated Buyer & Seller Protection Policies for Anime Merchandise",
-    slug: "updated-buyer-seller-protection-policies-anime-2026",
+    id: "blog-1st-edition-vs-unlimited-base-set-how-to-identify-guides",
+    title:
+      "Identifying First Edition vs. Unlimited Base Set Cards — The Complete Guide",
+    slug: "identifying-first-edition-vs-unlimited-base-set-pokemon",
     excerpt:
-      "We've strengthened our protection policies for collectible merchandise — here's a clear breakdown of what changed for figures, TCG cards, artbooks, and cosplay.",
-    content: `<h2>Key Changes Effective 1 February 2026</h2><p><strong>Buyers:</strong> The return window for sealed collectibles is extended from 7 to 14 days. For opened figures, the window remains 7 days — but now includes a condition-based partial refund option if items arrive damaged.</p><p><strong>Authentication Guarantee:</strong> All auction lots now ship with a QR-coded Certificate of Authenticity, verified against our seller registry. If an item is found to be inauthentic, you receive a full refund plus ₹500 store credit.</p><p><strong>Sellers:</strong> We've introduced a dispute resolution SLA; all buyer claims are reviewed within 48 hours. Sellers maintaining a dispute rate below 0.5% automatically earn a 'Verified Otaku Seller' badge.</p><h2>Graded Card Policy</h2><p>PSA/BGS-graded cards must ship in rigid mailers inside bubble wrap. Any damage in transit is covered by our ₹5,000 Shipping Protection policy at no extra cost.</p><h2>Why We Made These Changes</h2><p>Over 2,400 survey responses from our anime collector community guided these updates. Faster refunds and clearer authentication processes topped the wishlist — and we delivered.</p>`,
-    coverImage: "https://picsum.photos/seed/policy-update-anime/1200/630",
-    category: BLOG_POST_FIELDS.CATEGORY_VALUES.UPDATES,
-    tags: ["policy", "protection", "returns", "authentication", "collectibles"],
+      "The difference between a 1st Edition Charizard and an Unlimited copy can be worth lakhs of rupees. Learn exactly how to identify print runs — 1st Edition, Shadowless, and Unlimited — and never overpay again.",
+    content: `<h2>The Three Print Runs of Base Set</h2><p>Base Set was printed in three distinct runs, each with observable differences. Understanding them is essential before buying or selling any Base Set card.</p><h2>1st Edition (Most Valuable)</h2><p>First Edition Base Set cards have two definitive identifiers:</p><ul><li><strong>1st Edition Stamp:</strong> A small black circular stamp reading "Edition 1" appears on the left side of the card, below the Pokemon's artwork and above the card description box.</li><li><strong>No Drop Shadow:</strong> On First Edition and Shadowless prints, there is no drop shadow behind the right side and bottom of the Pokemon's image box. The box appears to sit directly against the background.</li></ul><p>The First Edition stamp is impossible to fake convincingly under a loupe — look for crisp edges and correct font weight.</p><h2>Shadowless (Intermediate, Still Premium)</h2><p>Shadowless Base Set cards do not have the 1st Edition stamp but also lack the drop shadow. They were printed in very limited quantities after the First Edition run and before WOTC standardised the Unlimited printing. Shadowless cards trade at a significant premium over Unlimited but are typically 40–70% the value of the equivalent 1st Edition copy.</p><h2>Unlimited (Most Common)</h2><p>Unlimited Base Set cards have:</p><ul><li>No 1st Edition stamp</li><li>A visible drop shadow on the right side and bottom of the Pokemon artwork box</li><li>Slightly different colour saturation in some print runs (often more yellow-shifted)</li></ul><p>Unlimited cards are still collectible and beautiful — they simply don't command the same premium as First Edition or Shadowless.</p><h2>Quick Identification Checklist</h2><ol><li>Look for the 1st Edition stamp below the artwork → If present: 1st Edition</li><li>No stamp but no drop shadow → Shadowless</li><li>No stamp with drop shadow → Unlimited</li></ol><h2>Why This Matters When Buying</h2><p>Always request high-resolution photos of both the stamp area and the artwork box edge before purchasing any Base Set holo raw. On LetItRip, our seller guidelines require clear photos of these areas. <a href="/products">Browse verified Base Set listings</a> — all our featured sellers document print run in their specifications.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/4_hires.png",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: [
+      "1st-edition",
+      "shadowless",
+      "unlimited",
+      "base-set",
+      "identification",
+      "authentication",
+    ],
     isFeatured: false,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(36),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
-    readTimeMinutes: 5,
-    views: 1845,
-    metaTitle: "Updated Collectibles Protection Policies Feb 2026 | LetItRip",
+    readTimeMinutes: 8,
+    views: 5102,
+    metaTitle:
+      "1st Edition vs Unlimited Base Set Pokemon Cards — How to Identify | LetItRip",
     metaDescription:
-      "LetItRip updates buyer and seller protection policies for anime merchandise — authentication guarantees, extended returns, and a Verified Otaku Seller programme.",
+      "Learn to identify 1st Edition, Shadowless, and Unlimited Base Set Pokemon cards with our definitive visual guide — avoid overpaying on the secondary market.",
     createdAt: daysAgo(38),
     updatedAt: daysAgo(36),
   },
 
   {
-    id: "blog-figure-photography-tips-collection-tips",
-    title: "Photography Tips for Showcasing Your Figure Collection Online",
-    slug: "photography-tips-anime-figure-collection",
+    id: "blog-pokemon-card-conditions-guide-mint-nm-played-tips",
+    title:
+      "Guide to Pokemon Card Conditions: Mint, Near Mint, Lightly Played, and Beyond",
+    slug: "pokemon-card-conditions-guide-mint-near-mint-played",
     excerpt:
-      "Great photos move listings faster and command higher bids. Learn how to use natural light, dioramas, and your phone camera to make your figures look gallery-worthy.",
-    content: `<h2>Tip 1 — Use a Lightbox or North-Facing Window</h2><p>Hard shadows kill figure photos. A ₹500 collapsible lightbox from Amazon, or a north-facing window at midday, gives you the soft, even light that makes paint apps and sculpt details pop without blown-out highlights.</p><h2>Tip 2 — Match the Base to the Series</h2><p>Place a Dragon Ball figure on a rocky terrain texture sheet, or put a Ghibli figure on green moss. Context shots like these dramatically increase click-through rates on listings.</p><h2>Tip 3 — Shoot at Eye Level or Below</h2><p>Shooting at the figure's eye level (or up at it slightly) creates a heroic, dimensional look. Shooting down makes figures look like cheap toys — avoid it.</p><h2>Tip 4 — Document Every Flaw Clearly</h2><p>Pre-owned collectibles must have honest photos of every scuff, paint chip, and joint wear. Buyers who receive items matching the photos leave 5-star reviews. Surprises create disputes.</p><h2>Tip 5 — Include Scale Reference</h2><p>Place a coin, a ruler, or a known-size item beside the figure. Buyers need to understand size relative to their display shelf before committing to a ₹15,000 bid.</p><h2>Tip 6 — Edit Minimally</h2><p>Adjust brightness and contrast only — never change colours. The buyer should receive exactly what they see in your listing photos.</p>`,
-    coverImage: "https://picsum.photos/seed/figure-photography-tips/1200/630",
+      "Condition is everything in Pokemon card collecting. Understanding the difference between Near Mint and Lightly Played can mean a price difference of 30–50%. Here's how to assess and communicate condition accurately.",
+    content: `<h2>Why Condition Matters So Much</h2><p>A PSA 9 Charizard is worth roughly twice a PSA 8 Charizard. That gap exists because of a fraction of a millimetre of corner wear or a subtle surface scratch. Understanding card condition before you buy — or grade — is the single most important skill a Pokemon collector can develop.</p><h2>The Standard Condition Scale</h2><p>The hobby uses a relatively standardised condition scale, though terminology varies slightly between sellers, graders, and regions. Here's the definitive guide:</p><h3>Gem Mint / Mint (PSA 10 / PSA 9.5)</h3><p>Perfect in every observable way. Four sharp, perfectly square corners. No whitening, no scratches on the holo surface, perfect or near-perfect centering (50/50 to 55/45). Surface is clean under bright light and a loupe. This condition is extremely rare for Base Set cards — most were well-played as children.</p><h3>Near Mint (PSA 8–9)</h3><p>The highest condition most collectors will realistically encounter in a raw Base Set card. Allows for one minor imperfection — light corner wear on one corner, centering up to 60/40, or a tiny surface mark invisible to the naked eye. This is the sweet spot for value and appearance.</p><h3>Lightly Played (LP) — (PSA 6–7)</h3><p>Visible but minor wear: light whitening on 2–3 corners, centering up to 65/35, light scratches on the holo surface that are only visible under direct light at an angle. Still a beautiful card in hand.</p><h3>Moderately Played (MP) — (PSA 4–5)</h3><p>Obvious wear: creasing on corners, visible holo scratching, potentially a very light bend. Cards in this range are generally collected for playability or as placeholders, not investment.</p><h3>Heavily Played (HP) / Poor (PSA 1–3)</h3><p>Significant damage: deep creases, heavy corner wear, water damage, major holo scratching, tears. These cards are valued for their artwork and sentimental significance only.</p><h2>Assessing Condition: Practical Steps</h2><ol><li>Examine corners under bright light — use a 10x loupe for accuracy.</li><li>Tilt the card under a lamp to check holo surface for scratches.</li><li>Hold the card face-down and check for creases by gently flexing (don't stress the card).</li><li>Check centering: measure the white borders on all four sides. Greater than 60/40 starts to affect grade.</li></ol><h2>Condition Descriptions on LetItRip</h2><p>All LetItRip sellers are required to use standardised condition terminology and provide photos that clearly show any wear. If a card arrives in worse condition than described, our buyer protection policy covers you. <a href="/products">Browse graded and raw listings</a> with verified condition reports.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/15_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.TIPS,
-    tags: ["seller", "photography", "figures", "listing", "tips", "display"],
-    isFeatured: false,
-    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
-    publishedAt: daysAgo(32),
-    authorId: "user-admin-user-admin",
-    authorName: "Admin User",
-    readTimeMinutes: 6,
-    views: 2234,
-    metaTitle: "Figure Photography Tips for Anime Sellers | LetItRip",
-    metaDescription:
-      "6 actionable tips for photographing anime figures and collectibles to create listings that sell faster and attract higher bids.",
-    createdAt: daysAgo(34),
-    updatedAt: daysAgo(32),
-  },
-
-  {
-    id: "blog-community-spotlight-jan-2026-community",
-    title: "Community Spotlight: January 2026 Top Collectors & Bidders",
-    slug: "community-spotlight-january-2026-collectors",
-    excerpt:
-      "Meet the outstanding community members who made January 2026 a record month — from our top-rated sellers to the most passionate collectors and highest bidders.",
-    content: `<h2>Top Sellers of January</h2><p><strong>FigureVault JP</strong> — 47 orders fulfilled at a 4.9-star average. Their Dragon Ball and Evangelion auction listings consistently sell above estimate, thanks to meticulous authentication and same-day shipping.</p><p><strong>AnimeCraft Apparel</strong> — Specialising in licensed cosplay, they earned the 'Verified Otaku Seller' badge in January with a zero-dispute month. Their Charizard PSA-9 lot received 28 bids before close.</p><p><strong>OtakuShelf Co</strong> — January's hidden gem. Their Spirited Away production cel auction attracted 19 unique bidders and set a new platform record for production art.</p><h2>Top Bidders</h2><p><strong>Raj Patel</strong> — 6 winning bids in January alone. Raj is building an extraordinary Gundam collection and his attention to build quality details in bid notes helps sellers trust him.</p><p><strong>Vikram Nair</strong> — Won the Charizard 1st-Edition PSA-9 lot in our inaugural TCG auction. His detailed review of the item helped 31 community members understand graded card authentication.</p><h2>Growing Community</h2><p>412 new collectors joined LetItRip in January — a 34% month-on-month increase. The anime collectibles niche is the fastest-growing category on the platform. Welcome to every new member!</p>`,
-    coverImage:
-      "https://picsum.photos/seed/community-spotlight-jan2026/1200/630",
-    category: BLOG_POST_FIELDS.CATEGORY_VALUES.COMMUNITY,
-    tags: ["community", "spotlight", "collectors", "bidders", "january-2026"],
+    tags: [
+      "condition",
+      "grading",
+      "mint",
+      "near-mint",
+      "played",
+      "guide",
+      "buying",
+    ],
     isFeatured: false,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(27),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
-    readTimeMinutes: 5,
-    views: 987,
-    metaTitle: "Community Spotlight January 2026 — Top Collectors | LetItRip",
+    readTimeMinutes: 7,
+    views: 3847,
+    metaTitle:
+      "Pokemon Card Conditions Explained — Mint, NM, LP Guide | LetItRip",
     metaDescription:
-      "Celebrating LetItRip's top sellers, bidders, and collectors from January 2026 and welcoming hundreds of new anime enthusiasts to the platform.",
+      "Master Pokemon card condition grading — from Gem Mint to Heavily Played. Learn to assess, buy, and describe conditions accurately to avoid disputes.",
     createdAt: daysAgo(29),
     updatedAt: daysAgo(27),
   },
 
-  // -- Published — March Auction Spotlight ------------------------------
+  // -- Published — Auction Spotlight ----------------------------------------
   {
-    id: "blog-march-2026-auction-spotlight-news",
-    title: "March Auction Spotlight: Rare Figures, TCG Cards & Production Art",
-    slug: "march-2026-auction-spotlight-anime-collectibles",
+    id: "blog-may-2026-pokemon-auction-spotlight-news",
+    title:
+      "May 2026 Auction Spotlight: 1st Edition Charizard, PSA 9 Mewtwo & Sealed Booster Packs",
+    slug: "may-2026-pokemon-tcg-auction-spotlight",
     excerpt:
-      "From a PSA-9 Charizard to a Good Smile Company Rem Wedding figure — March 2026 brings our biggest and most diverse anime auction lineup yet. Everything live right now.",
-    content: `<h2>Why March 2026 Is Special</h2><p>March marks the most diverse auction month in LetItRip's history. We have 10 active auctions spanning scale figures, Gunpla, TCG, and original production art — with competitive opening bids and items that simply can't be found at retail.</p><h2>Scale Figures — One for Every Fan</h2><p><strong>Chainsaw Man Makima 1/7 — Kotobukiya ARTFX J</strong> — 3 active bids, closing March 10. This soldout figure retails for ₹18,000 online when you can find one.</p><p><strong>Jujutsu Kaisen Sukuna 1/6 — MegaHouse</strong> — closing March 12 with competitive bidding from Gunpla collectors eyeing their shelf space wisely.</p><p><strong>Fate/Stay Night Saber Alter Wedding 1/7</strong> — closing March 13. A Wonder Festival exclusive rarely seen outside Japan dealers.</p><p><strong>Re:Zero Rem Wedding 1/7 — Good Smile Company</strong> — closing March 15. GSC's best Rem figure, bar none.</p><h2>TCG & Trading Cards</h2><p><strong>Pokémon 1st Edition Base Set Charizard Holo — PSA 9</strong> — closing March 14. Already 2 active bids above ₹30,000. This is the holy grail of Pokémon TCG.</p><h2>Production Art & Artbooks</h2><p><strong>Spirited Away 2001 Original Production Cel</strong> — a Studio Ghibli hand-inked cel from the film's production, with gallery COA. Closing March 14.</p><p><strong>One Piece 25th Anniversary Artbook — Signed by Eiichiro Oda</strong> — 2 bids already, closing March 16. Authenticated by publisher Shueisha.</p><h2>Gunpla Corner</h2><p><strong>PG Wing Zero Custom — Full Build & Paint</strong> — FigureVault JP's custom-built Perfect Grade kit, closing March 15. A gallery-quality display piece.</p><h2>How to Bid</h2><p>Visit the <a href="/auctions">Auctions page</a>, sign in, and place your bid. You'll be notified instantly by app push notification if you're outbid.</p>`,
-    coverImage: "https://picsum.photos/seed/march2026-auction-anime/1200/630",
+      "May brings our biggest Pokemon TCG auction lineup yet — a 1st Edition Charizard PSA 7, a Mewtwo PSA 9, a sealed Booster Pack, and the iconic Zap! Theme Deck. All live now on LetItRip.",
+    content: `<h2>Why May 2026 Is a Landmark Auction Month</h2><p>We have assembled the most significant collection of authenticated Base Set Pokemon cards and sealed product ever listed on LetItRip in a single month. Two active auctions, multiple buy-now listings, and three verified sellers — this is the month that defines our Pokemon TCG marketplace.</p><h2>The Crown Jewel: 1st Edition Charizard PSA 7</h2><p>Our flagship listing. Blaine's Fire Shoppe has consigned a 1st Edition Base Set Charizard in a PSA 7 slab — an authenticated, tamper-evident grade with clear provenance. Opening bid: ₹2,99,999. Reserve: ₹3,50,000. Buy-Now: ₹6,99,999. This card has already attracted 11 active bids — Professor Oak, Gary Oak, and Ash Ketchum are in a three-way battle with days remaining.</p><h2>Mewtwo PSA 9 Auction</h2><p>Surge's Electric Emporium presents a PSA 9 Mewtwo from the original Base Set — one of the finest Psychic-type collectibles in TCG history. Opening bid: ₹49,999. Currently at ₹64,999 with Gary Oak leading. The auction closes in 5 days.</p><h2>Sealed Product Available Now</h2><p>For collectors who prefer the anticipation of a pack opening, Blaine's Fire Shoppe has 10 factory-sealed Base Set Booster Packs (₹12,999 each) and 3 sealed Zap! Theme Decks (₹18,999 each) — both verified WOTC era sealed product.</p><h2>How to Participate</h2><p>Visit the <a href="/auctions">Auctions page</a>, sign in, and place your bid. You will receive an instant notification if you are outbid. All winning lots are shipped in insured courier with tracking within 3 business days of payment confirmation.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/4_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.NEWS,
     tags: [
       "auctions",
-      "march-2026",
-      "figures",
-      "tcg",
-      "production-art",
+      "may-2026",
+      "charizard",
+      "mewtwo",
+      "base-set",
       "spotlight",
     ],
     isFeatured: true,
     status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
     publishedAt: daysAgo(8),
     authorId: "user-moderator-mod-user",
-    authorName: "Riya Sharma",
+    authorName: "Moderator",
     readTimeMinutes: 5,
-    views: 2104,
+    views: 2891,
     metaTitle:
-      "March 2026 Auction Spotlight — Anime Figures & TCG Live Now | LetItRip",
+      "May 2026 Pokemon TCG Auction Spotlight — Charizard & Mewtwo Live | LetItRip",
     metaDescription:
-      "Explore LetItRip's biggest anime auction month: rare figures, PSA-graded Pokémon cards, Ghibli production art, and more. Bid now.",
+      "LetItRip's May 2026 Pokemon TCG auctions are live — 1st Edition Charizard PSA 7, Mewtwo PSA 9, sealed packs and theme decks. Bid now.",
     createdAt: daysAgo(9),
     updatedAt: daysAgo(8),
   },
 
-  // -- Draft -------------------------------------------------------------
+  // -- Updated policy post ---------------------------------------------------
   {
-    id: "blog-guide-authenticating-anime-merchandise-draft",
-    title: "The Complete Guide to Authenticating Anime Merchandise",
-    slug: "complete-guide-authenticating-anime-merchandise-2026",
+    id: "blog-pokemon-tcg-buyer-seller-protection-2026-updates",
+    title:
+      "Updated Buyer & Seller Protection Policies for Pokemon TCG Cards",
+    slug: "updated-buyer-seller-protection-pokemon-tcg-2026",
     excerpt:
-      "With bootleg figures and fake TCG cards flooding the secondary market, authentication is a must-have skill for any serious collector. This guide covers how to spot fakes for figures, Nendoroids, Gunpla, and graded cards.",
-    content: `<h2>Why Authentication Matters</h2><p>The anime collectibles market loses an estimated ₹20 crore annually to counterfeit goods. Bootleg figures look convincing at thumbnail resolution — this guide gives you the tools to tell the difference before bidding.</p><h2>Scale Figures: What to Check</h2><ul><li><strong>Box Print Quality:</strong> Official releases have crisp, high-contrast printing. Bootlegs show banding, colour shift, and blurred kanji.</li><li><strong>Seam Lines:</strong> Authentic figures have nearly invisible seam lines. Bootlegs show gaps and misalignment of 1–3 mm.</li><li><strong>Paint Applications:</strong> Check the eyes under a macro lens — official eye decals are perfectly centered; bootlegs are usually off by 0.5–1 mm on at least one axis.</li><li><strong>Weight:</strong> Authentic figures use denser PVC. Bootlegs are noticeably lighter and feel hollow.</li></ul><h2>Nendoroid Specifics</h2><p>[Draft — Nendoroid section in progress]</p><h2>Graded TCG Cards</h2><p>PSA and BGS holders can be verified at psacard.com using the certification number on the label. Any holder not verifiable online is counterfeit.</p><h2>Gunpla: Official vs. Knockoff</h2><p>[Draft — Gunpla section in progress]</p>`,
+      "We have strengthened our protection policies for Pokemon card transactions — here is a clear breakdown of what changed for raw singles, graded slabs, and sealed products.",
+    content: `<h2>Key Changes Effective 1 March 2026</h2><p><strong>Buyers:</strong> The return window for sealed product is extended from 7 to 14 days. For raw singles, the window remains 7 days with a condition-based partial refund option if items arrive in materially worse condition than described.</p><p><strong>Authentication Guarantee:</strong> All PSA/BGS-graded slabs auctioned on LetItRip are verified against official grading service databases before going live. If a certification number does not verify, the listing is removed immediately and any deposits refunded.</p><p><strong>Sellers:</strong> A dispute resolution SLA ensures all buyer claims are reviewed within 48 hours. Sellers maintaining a dispute rate below 0.5% automatically earn a 'Verified Pokemon Seller' badge on their store profile.</p><h2>Graded Card Shipping Policy</h2><p>All PSA/BGS-graded cards must ship in rigid team bags inside a padded mailer with at least 2 cm of bubble wrap around the slab. Damage in transit to a graded slab is covered by our ₹10,000 Shipping Protection at no extra cost on verified listings.</p><h2>Raw Card Condition Dispute Process</h2><p>If you receive a raw card in a condition materially below what was described and photographed, open a dispute within 7 days via your order page. Include close-up photos of the condition discrepancy. Resolution is typically within 24–48 hours.</p><h2>Why We Made These Changes</h2><p>Over 1,800 survey responses from the LetItRip Pokemon TCG community guided these updates. Faster dispute resolution and stronger graded card authentication topped the wishlist — and we delivered.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/88_hires.png",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.UPDATES,
+    tags: [
+      "policy",
+      "protection",
+      "returns",
+      "authentication",
+      "graded-cards",
+    ],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(36),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 5,
+    views: 2103,
+    metaTitle:
+      "Updated Pokemon TCG Protection Policies Mar 2026 | LetItRip",
+    metaDescription:
+      "LetItRip updates buyer and seller protection for Pokemon TCG cards — authentication guarantees, extended returns, and a Verified Pokemon Seller programme.",
+    createdAt: daysAgo(38),
+    updatedAt: daysAgo(36),
+  },
+
+  // -- Community Spotlight --------------------------------------------------
+  {
+    id: "blog-community-spotlight-april-2026-community",
+    title:
+      "Community Spotlight: April 2026 Top Pokemon Collectors & Bidders",
+    slug: "community-spotlight-april-2026-pokemon-collectors",
+    excerpt:
+      "Meet the outstanding community members who made April 2026 a record month — top-rated Pokemon card sellers, highest bidders, and our most reviewed listings.",
+    content: `<h2>Top Sellers of April</h2><p><strong>Blaine's Fire Shoppe</strong> — 42 orders fulfilled at a 4.9-star average. Blaine's 1st Edition Charizard auction set a new LetItRip record for most bids on a single lot. His authentication photography standards are now used as a reference for all new sellers.</p><p><strong>Surge's Electric Emporium</strong> — Specialising in Electric-type Base Set singles and sealed Zap! decks, Surge earned the 'Verified Pokemon Seller' badge in April with zero disputes. Their Mewtwo PSA 9 auction attracted 6 bidders and strong community commentary.</p><p><strong>Misty's Water Cards</strong> — April's discovery store. Their Blastoise Holo Near Mint listing sold out within 48 hours and their Water Energy x10 lot became our best-selling energy card of the month.</p><h2>Top Bidders</h2><p><strong>Professor Oak</strong> — Currently leading the 1st Edition Charizard auction with an auto-bid of ₹5,00,000. Professor Oak has won 10 auctions this year and his condition review posts have helped hundreds of community members learn grading fundamentals.</p><p><strong>Gary Oak</strong> — Won the Mewtwo PSA 9 auction and is bidding competitively on the Charizard. Gary's detailed condition notes and punctual payment processing make him one of our highest-trust buyers.</p><h2>Growing Community</h2><p>380 new Pokemon card collectors joined LetItRip in April — a 28% month-on-month increase. The Base Set vintage segment is now the fastest-growing category on the platform. Welcome to every new trainer!</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/58_hires.png",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.COMMUNITY,
+    tags: [
+      "community",
+      "spotlight",
+      "collectors",
+      "bidders",
+      "april-2026",
+    ],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(3),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 5,
+    views: 1124,
+    metaTitle:
+      "Community Spotlight April 2026 — Top Pokemon Collectors | LetItRip",
+    metaDescription:
+      "Celebrating LetItRip's top Pokemon TCG sellers, bidders, and collectors from April 2026 and welcoming hundreds of new trainers to the platform.",
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(3),
+  },
+
+  // -- Draft ----------------------------------------------------------------
+  {
+    id: "blog-guide-spotting-fake-pokemon-cards-draft",
+    title: "The Complete Guide to Spotting Counterfeit Pokemon Cards",
+    slug: "complete-guide-spotting-fake-counterfeit-pokemon-cards-2026",
+    excerpt:
+      "With convincing bootleg Base Set cards flooding online marketplaces, authentication is a must-have skill for any serious Pokemon TCG collector. This guide covers the definitive physical tests for spotting fakes.",
+    content: `<h2>Why Counterfeits Are a Growing Problem</h2><p>The explosion of Pokemon card values has made counterfeiting economically viable. Modern printing technology allows bootleggers to produce cards that look convincing at thumbnail resolution. This guide gives you the physical and optical tests to detect fakes before you pay.</p><h2>The Light Test</h2><p>Hold the card up to a bright light source. Authentic Base Set cards have a distinct layered construction — you should see a dark inner layer (the black core) sandwiched between the front and back printing layers. Counterfeit cards often show uniform light transmission without a black core, or the core is unevenly distributed.</p><h2>The Bend Test (Non-Destructive)</h2><p>[Draft — section in progress]</p><h2>Holo Pattern Examination</h2><p>Under a magnifying loupe, authentic Base Set holo foil has a specific starburst/diamond pattern. Counterfeit holo patterns are typically coarser — you'll see larger, less intricate grid or dot patterns when magnified.</p><h2>Weight and Feel</h2><p>Authentic WOTC-era cards have a specific tactile quality — a slight firmness and weight that counterfeit cards rarely replicate. A precision digital scale shows authentic Base Set cards weigh approximately 1.78 g. Most counterfeits are measurably lighter or heavier.</p><h2>Verifying Graded Slabs</h2><p>PSA certification numbers can be verified at psacard.com. BGS numbers verify at beckett.com/grading. Any slab whose number does not verify is counterfeit.</p>`,
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
     tags: [
       "authentication",
-      "figures",
-      "tcg",
-      "gunpla",
+      "fake",
+      "counterfeit",
+      "base-set",
       "guide",
       "anti-counterfeit",
     ],
@@ -218,30 +290,30 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     status: BLOG_POST_FIELDS.STATUS_VALUES.DRAFT,
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
-    readTimeMinutes: 12,
+    readTimeMinutes: 11,
     views: 0,
     createdAt: daysAgo(17),
     updatedAt: daysAgo(17),
   },
 
-  // -- Archived ---------------------------------------------------------
+  // -- Archived -------------------------------------------------------------
   {
-    id: "blog-anicon-2025-haul-recap-community-archived",
-    title: "AniCon 2025 Haul Recap — Community Picks of the Year",
-    slug: "anicon-2025-haul-recap-community",
+    id: "blog-pokemon-day-2026-recap-community-archived",
+    title: "Pokemon Day 2026 — Community Picks and Best Deals",
+    slug: "pokemon-day-2026-recap-community-picks",
     excerpt:
-      "December's AniCon online event was our biggest ever — here's a look at the top picks, best-value lots, and the items the community loved most.",
+      "Pokemon Day 2026 was our biggest promotional event ever. Here's a look at the top deals, best-value lots, and the cards our community loved most.",
     content: `<p>This post has been archived. For current deals and updates, visit our <a href="/blog">blog</a>.</p>`,
-    coverImage: "https://picsum.photos/seed/anicon2025-recap/1200/630",
+    coverImage: "https://images.pokemontcg.io/base1/58_hires.png",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.COMMUNITY,
-    tags: ["anicon", "december", "2025", "recap", "haul"],
+    tags: ["pokemon-day", "february", "2026", "recap", "deals"],
     isFeatured: false,
     status: BLOG_POST_FIELDS.STATUS_VALUES.ARCHIVED,
     publishedAt: daysAgo(71),
     authorId: "user-admin-user-admin",
     authorName: "Admin User",
     readTimeMinutes: 3,
-    views: 5602,
+    views: 4821,
     createdAt: daysAgo(72),
     updatedAt: daysAgo(53),
   },

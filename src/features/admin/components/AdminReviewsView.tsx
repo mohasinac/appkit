@@ -29,13 +29,23 @@ export function AdminReviewsView({
 }: AdminReviewsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const hasDetailView = Boolean(renderDetailView);
+  const [q, setQ] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("");
+  const [ratingFilter, setRatingFilter] = React.useState("");
+
+  const filterParts: string[] = [];
+  if (statusFilter && statusFilter !== "All") filterParts.push(`status==${statusFilter}`);
+  if (ratingFilter && ratingFilter !== "All") filterParts.push(`rating==${ratingFilter}`);
+  const filters = filterParts.join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminReviewsResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "reviews", "listing"],
+    queryKey: ["admin", "reviews", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.REVIEWS,
+    filters,
+    q,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `review-${index}`),
@@ -60,11 +70,27 @@ export function AdminReviewsView({
       subtitle="Moderate customer feedback, seller responses, and featured review placement from one queue."
       actionLabel="Review policies"
       searchPlaceholder="Search reviews, products, or seller names"
+      onSearch={setQ}
+      searchValue={q}
       rows={rows}
       isLoading={isLoading}
       errorMessage={errorMessage}
       emptyLabel="No reviews found"
       resultSummary={`Showing ${rows.length} of ${total} reviews`}
+      filterGroups={[
+        {
+          title: "Status",
+          options: ["All", "approved", "pending", "rejected"],
+          active: statusFilter || "All",
+          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+        },
+        {
+          title: "Rating",
+          options: ["All", "5", "4", "3", "2", "1"],
+          active: ratingFilter || "All",
+          onSelect: (opt) => setRatingFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }

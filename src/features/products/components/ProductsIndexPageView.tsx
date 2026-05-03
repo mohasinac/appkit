@@ -5,13 +5,48 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 
-export async function ProductsIndexPageView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+function buildProductFilters(params: SearchParams): string {
+  const parts: string[] = ["status==published", "isAuction==false"];
+  const condition = sp(params, "condition");
+  if (condition) {
+    const values = condition.split("|").filter(Boolean);
+    if (values.length === 1) parts.push(`condition==${values[0]}`);
+    else if (values.length > 1) parts.push(`condition==${values.join("|")}`);
+  }
+  const minPrice = sp(params, "minPrice");
+  const maxPrice = sp(params, "maxPrice");
+  if (minPrice) parts.push(`price>=${minPrice}`);
+  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  const sellerId = sp(params, "seller");
+  if (sellerId) parts.push(`sellerId==${sellerId}`);
+  const freeShipping = sp(params, "freeShipping");
+  if (freeShipping === "true") parts.push("freeShipping==true");
+  return parts.join(",");
+}
+
+export interface ProductsIndexPageViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndexPageViewProps) {
+  const sort = sp(searchParams, "sort") || "-createdAt";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const filters = buildProductFilters(searchParams);
+
   const result = await productRepository
     .list({
-      filters: "status==published,isAuction==false",
-      sorts: "-createdAt",
-      page: 1,
-      pageSize: 24,
+      filters,
+      sorts: sort,
+      page,
+      pageSize,
     })
     .catch(() => null);
 

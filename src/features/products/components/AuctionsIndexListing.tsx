@@ -5,7 +5,8 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
 import { Pagination, SortDropdown } from "../../../ui";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
-import { ProductFilters } from "./ProductFilters";
+import { AuctionFilters } from "../../auctions/components/AuctionFilters";
+import type { UrlTable } from "../../filters/FilterPanel";
 import { useSession } from "../../../react/contexts/SessionContext";
 import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
 import { apiClient } from "../../../http";
@@ -37,9 +38,8 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
     categorySlug: categorySlug || undefined,
-    minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
-    maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
-    condition: table.get("condition") || undefined,
+    minPrice: table.get("minBid") ? Number(table.get("minBid")) : undefined,
+    maxPrice: table.get("maxBid") ? Number(table.get("maxBid")) : undefined,
     sort: table.get("sort") || "auctionEndDate",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
@@ -212,7 +212,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <ProductFilters table={table as any} currencyPrefix="₹" />
+              <AuctionFilters table={table as unknown as UrlTable} currencyPrefix="₹" />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button

@@ -1,16 +1,50 @@
 import { productRepository } from "../../../repositories";
-import { ROUTES } from "../../../next";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 
-export async function AuctionsListView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+function buildAuctionFilters(params: SearchParams): string {
+  const parts: string[] = ["status==published", "isAuction==true"];
+  const minBid = sp(params, "minBid");
+  const maxBid = sp(params, "maxBid");
+  if (minBid) parts.push(`currentBid>=${minBid}`);
+  if (maxBid) parts.push(`currentBid<=${maxBid}`);
+  const store = sp(params, "store");
+  if (store) {
+    const values = store.split("|").filter(Boolean);
+    if (values.length === 1) parts.push(`sellerId==${values[0]}`);
+    else if (values.length > 1) parts.push(`sellerId==${values.join("|")}`);
+  }
+  const dateFrom = sp(params, "dateFrom");
+  const dateTo = sp(params, "dateTo");
+  if (dateFrom) parts.push(`auctionEndDate>=${dateFrom}`);
+  if (dateTo) parts.push(`auctionEndDate<=${dateTo}`);
+  return parts.join(",");
+}
+
+export interface AuctionsListViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function AuctionsListView({ searchParams = {} }: AuctionsListViewProps) {
+  const sort = sp(searchParams, "sort") || "auctionEndDate";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const filters = buildAuctionFilters(searchParams);
+
   const result = await productRepository
     .list({
-      filters: "status==published,isAuction==true",
-      sorts: "auctionEndDate",
-      page: 1,
-      pageSize: 24,
+      filters,
+      sorts: sort,
+      page,
+      pageSize,
     })
     .catch(() => null);
 

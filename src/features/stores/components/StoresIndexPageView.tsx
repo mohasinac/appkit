@@ -4,9 +4,24 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { StoresIndexListing } from "./StoresIndexListing";
 
-export async function StoresIndexPageView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+export interface StoresIndexPageViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function StoresIndexPageView({ searchParams = {} }: StoresIndexPageViewProps) {
+  const sort = sp(searchParams, "sort") || "-createdAt";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+
   const result = await storeRepository
-    .listStores({ page: 1, pageSize: 24, sorts: "-createdAt" }, true)
+    .listStores({ page, pageSize, sorts: sort }, true)
     .catch(() => null);
 
   return (

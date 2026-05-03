@@ -11,17 +11,17 @@ function createLocalTable(
   setParams: (p: Record<string, string>) => void,
 ): UrlTable {
   return {
-    get: (key) => params[key] ?? "",
-    set: (key, value) => setParams({ ...params, [key]: value }),
-    setMany: (updates) => setParams({ ...params, ...updates }),
-    getNumber: (key, def) => {
+    get: (key: string) => params[key] ?? "",
+    set: (key: string, value: string) => setParams({ ...params, [key]: value }),
+    setMany: (updates: Record<string, string>) => setParams({ ...params, ...updates }),
+    getNumber: (key: string, def: number) => {
       const v = params[key];
       return v ? Number(v) : def;
     },
-    setPage: (page) => setParams({ ...params, page: String(page) }),
-    setSort: (sort) => setParams({ ...params, sort }),
-    setPageSize: (size) => setParams({ ...params, pageSize: String(size) }),
-    clear: (keys) => {
+    setPage: (page: number) => setParams({ ...params, page: String(page) }),
+    setSort: (sort: string) => setParams({ ...params, sort }),
+    setPageSize: (size: number) => setParams({ ...params, pageSize: String(size) }),
+    clear: (keys: string | string[]) => {
       const next = { ...params };
       (Array.isArray(keys) ? keys : [keys]).forEach((k) => delete next[k]);
       setParams(next);

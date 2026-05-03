@@ -83,6 +83,7 @@ export interface StoreProductsResponse {
 }
 
 export interface StoreListParams {
+  q?: string;
   category?: string;
   page?: number;
   pageSize?: number;

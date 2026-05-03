@@ -19,13 +19,32 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
+  // Build client-side filter string from URL params
+  const typeRaw = table.get("type");
+  const statusRaw = table.get("status");
+  const dateFrom = table.get("dateFrom");
+  const dateTo = table.get("dateTo");
+
+  const filterParts: string[] = [];
+  if (typeRaw) {
+    const types = typeRaw.split("|").filter(Boolean);
+    if (types.length === 1) filterParts.push(`type==${types[0]}`);
+    else if (types.length > 1) filterParts.push(`type==${types.join("|")}`);
+  }
+  if (statusRaw) {
+    const statuses = statusRaw.split("|").filter(Boolean);
+    if (statuses.length === 1) filterParts.push(`status==${statuses[0]}`);
+    else if (statuses.length > 1) filterParts.push(`status==${statuses.join("|")}`);
+  }
+  if (dateFrom) filterParts.push(`startsAt>=${dateFrom}`);
+  if (dateTo) filterParts.push(`endsAt<=${dateTo}`);
+
   const params = {
     q: table.get("q") || undefined,
     page: table.getNumber("page", 1),
     pageSize: table.getNumber("pageSize", PAGE_SIZE),
     sort: table.get("sort") || "startsAt",
-    type: table.get("type") || undefined,
-    status: table.get("status") || "published",
+    filters: filterParts.length > 0 ? filterParts.join(",") : undefined,
   };
 
   const { events, total, totalPages, isLoading } = useEvents(params as any, { initialData });
@@ -62,6 +81,16 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
               placeholder="Search events..."
               className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
             />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => { setSearchInput(""); table.set("q", ""); }}
+                className="px-2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                aria-label="Clear search"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
             <button
               type="button"
               onClick={commitSearch}

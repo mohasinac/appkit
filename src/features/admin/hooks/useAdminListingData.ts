@@ -11,6 +11,8 @@ interface UseAdminListingDataOptions<TResponse, TRow extends { id: string }> {
   page?: number;
   pageSize?: number;
   sorts?: string;
+  filters?: string;
+  q?: string;
   mapRows: (response: TResponse) => TRow[];
   getTotal?: (response: TResponse, rows: TRow[]) => number;
 }
@@ -34,19 +36,23 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
   page = 1,
   pageSize = 25,
   sorts = "-createdAt",
+  filters,
+  q,
   mapRows,
   getTotal,
 }: UseAdminListingDataOptions<TResponse, TRow>): UseAdminListingDataResult<TRow> {
+  const params: Record<string, string> = {
+    page: String(page),
+    pageSize: String(pageSize),
+    sorts,
+  };
+  if (filters) params.filters = filters;
+  if (q) params.q = q;
+
   const query = useQuery<TResponse>({
-    queryKey: [...queryKey, page, pageSize, sorts],
+    queryKey: [...queryKey, page, pageSize, sorts, filters ?? "", q ?? ""],
     queryFn: () =>
-      apiClient.get<TResponse>(
-        withQueryParams(endpoint, {
-          page: String(page),
-          pageSize: String(pageSize),
-          sorts,
-        }),
-      ),
+      apiClient.get<TResponse>(withQueryParams(endpoint, params)),
     staleTime: 60_000,
   });
 

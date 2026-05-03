@@ -5,9 +5,50 @@ import { AdSlot } from "../../homepage/components/AdSlot";
 import { CategoriesIndexListing } from "./CategoriesIndexListing";
 import type { CategoryItem } from "../types";
 
-export async function CategoriesIndexPageView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+function buildCategoryFilters(params: SearchParams): string {
+  const parts: string[] = [];
+  const isFeatured = sp(params, "isFeatured");
+  if (isFeatured === "true") parts.push("isFeatured==true");
+  const isBrand = sp(params, "isBrand");
+  if (isBrand === "true") parts.push("isBrand==true");
+  const rootOnly = sp(params, "rootOnly");
+  if (rootOnly === "true") parts.push("tier==0");
+  const minItemCount = sp(params, "minItemCount");
+  const maxItemCount = sp(params, "maxItemCount");
+  if (minItemCount) parts.push(`metrics.totalItemCount>=${minItemCount}`);
+  if (maxItemCount) parts.push(`metrics.totalItemCount<=${maxItemCount}`);
+  const tier = sp(params, "tier");
+  if (tier) {
+    const values = tier.split("|").filter(Boolean);
+    if (values.length === 1) parts.push(`tier==${values[0]}`);
+    else if (values.length > 1) parts.push(`tier==${values.join("|")}`);
+  }
+  return parts.join(",");
+}
+
+export interface CategoriesIndexPageViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function CategoriesIndexPageView({ searchParams = {} }: CategoriesIndexPageViewProps) {
+  const sort = sp(searchParams, "sort") || "name";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const filters = buildCategoryFilters(searchParams);
+
   const result = await categoriesRepository
-    .list({ page: 1, pageSize: 200, sorts: "name" })
+    .list({
+      page,
+      pageSize: 200,
+      sorts: sort,
+      ...(filters ? { filters } : {}),
+    })
     .catch(() => null);
 
   const initialData = (result?.items ?? []) as unknown as CategoryItem[];

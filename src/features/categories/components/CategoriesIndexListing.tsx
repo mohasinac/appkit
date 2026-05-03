@@ -1,11 +1,14 @@
 "use client";
 import React, { useState, useMemo, useCallback } from "react";
-import { Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useCategoriesList } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
 import { Pagination } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
+import { CategoryFilters } from "./CategoryFilters";
+import type { UrlTable } from "../../filters/FilterPanel";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 
 const PAGE_SIZE = 24;
 
@@ -20,25 +23,38 @@ export interface CategoriesIndexListingProps {
 }
 
 export function CategoriesIndexListing({ initialData }: CategoriesIndexListingProps) {
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "name" } });
   const { categories, isLoading } = useCategoriesList({ initialData });
-  const [searchInput, setSearchInput] = useState("");
-  const [activeSearch, setActiveSearch] = useState("");
-  const [sort, setSort] = useState("name");
-  const [page, setPage] = useState(1);
+  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const sort = table.get("sort") || "name";
+  const activeSearch = table.get("q") || "";
+  const page = table.getNumber("page", 1);
 
   const commitSearch = useCallback(() => {
-    setActiveSearch(searchInput.trim());
-    setPage(1);
-  }, [searchInput]);
+    table.set("q", searchInput.trim());
+  }, [searchInput, table]);
 
   const clearSearch = () => {
     setSearchInput("");
-    setActiveSearch("");
-    setPage(1);
+    table.set("q", "");
   };
+
+  const closeFilters = () => setFilterOpen(false);
+
+  // Client-side filter: search + tier + featured + brand + rootOnly + itemCount
+  const isFeatured = table.get("isFeatured") === "true";
+  const isBrand = table.get("isBrand") === "true";
+  const rootOnly = table.get("rootOnly") === "true";
+  const minItemCount = table.get("minItemCount") ? Number(table.get("minItemCount")) : undefined;
+  const maxItemCount = table.get("maxItemCount") ? Number(table.get("maxItemCount")) : undefined;
+  const tierRaw = table.get("tier");
+  const selectedTiers = tierRaw ? tierRaw.split("|").filter(Boolean) : [];
 
   const filtered = useMemo(() => {
     let result = [...categories];
+
     const q = activeSearch.toLowerCase();
     if (q) {
       result = result.filter(
@@ -47,6 +63,26 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
           (c.description ?? "").toLowerCase().includes(q),
       );
     }
+
+    if (isFeatured) result = result.filter((c) => (c as any).isFeatured === true);
+    if (isBrand) result = result.filter((c) => (c as any).isBrand === true);
+    if (rootOnly) result = result.filter((c) => (c as any).tier === 0 || !(c as any).parentId);
+    if (selectedTiers.length > 0) {
+      result = result.filter((c) => selectedTiers.includes(String((c as any).tier ?? "")));
+    }
+    if (minItemCount !== undefined) {
+      result = result.filter((c) => {
+        const count = (c as any).metrics?.totalItemCount ?? (c as any).productCount ?? 0;
+        return count >= minItemCount;
+      });
+    }
+    if (maxItemCount !== undefined) {
+      result = result.filter((c) => {
+        const count = (c as any).metrics?.totalItemCount ?? (c as any).productCount ?? 0;
+        return count <= maxItemCount;
+      });
+    }
+
     result.sort((a, b) => {
       if (sort === "-productCount") {
         const aCount = a.metrics?.productCount ?? (a as any).productCount ?? 0;
@@ -56,8 +92,9 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
       if (sort === "-name") return b.name.localeCompare(a.name);
       return a.name.localeCompare(b.name);
     });
+
     return result;
-  }, [categories, activeSearch, sort]);
+  }, [categories, activeSearch, sort, isFeatured, isBrand, rootOnly, selectedTiers, minItemCount, maxItemCount]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -67,6 +104,17 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4 -mx-4">
         <div className="flex items-center gap-2.5 max-w-full">
+
+          {/* Filters button */}
+          <button
+            type="button"
+            onClick={() => setFilterOpen(true)}
+            className="flex shrink-0 items-center gap-2 rounded-lg border border-zinc-300 dark:border-slate-600 px-3.5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span className="hidden sm:inline">Filters</span>
+          </button>
+
           {/* Search */}
           <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
             <input
@@ -102,7 +150,7 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
             <span className="hidden md:inline whitespace-nowrap">Sort</span>
             <select
               value={sort}
-              onChange={(e) => { setSort(e.target.value); setPage(1); }}
+              onChange={(e) => { table.set("sort", e.target.value); table.setPage(1); }}
               className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-primary/30"
             >
               {SORT_OPTIONS.map((o) => (
@@ -149,11 +197,50 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
             <Pagination
               currentPage={page}
               totalPages={totalPages}
-              onPageChange={setPage}
+              onPageChange={(p) => table.setPage(p)}
             />
           </div>
         )}
       </div>
+
+      {/* ── Filter drawer ──────────────────────────────────────────────── */}
+      {filterOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            aria-hidden="true"
+            onClick={closeFilters}
+          />
+          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+              <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filters
+              </span>
+              <button
+                type="button"
+                onClick={closeFilters}
+                aria-label="Close filters"
+                className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-4 py-4">
+              <CategoryFilters table={table as unknown as UrlTable} variant="public" />
+            </div>
+            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+              <button
+                type="button"
+                onClick={closeFilters}
+                className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                Apply filters
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

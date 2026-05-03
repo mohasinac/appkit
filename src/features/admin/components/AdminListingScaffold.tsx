@@ -32,9 +32,14 @@ interface AdminListingScaffoldProps extends ListingViewShellProps {
   filterGroups?: ReadonlyArray<{
     title: string;
     options: ReadonlyArray<string>;
+    active?: string;
+    onSelect?: (option: string) => void;
   }>;
   activeFilters?: string[];
   resultSummary?: string;
+  onSearch?: (query: string) => void;
+  searchValue?: string;
+  onClearFilters?: () => void;
 }
 
 const DEFAULT_FILTER_GROUPS = [
@@ -101,13 +106,14 @@ function renderFilterContent(
             {group.title}
           </Text>
           <Div className="flex flex-wrap gap-2">
-            {group.options.map((option, index) => (
+            {group.options.map((option) => (
               <Button
                 key={`${group.title}-${option}`}
                 type="button"
-                variant="outline"
+                variant={group.active === option ? "primary" : "outline"}
                 size="sm"
                 className="rounded-full"
+                onClick={() => group.onSelect?.(option)}
               >
                 {option}
               </Button>
@@ -150,6 +156,9 @@ export function AdminListingScaffold({
   filterGroups,
   activeFilters,
   resultSummary,
+  onSearch,
+  searchValue,
+  onClearFilters,
   children,
   headerSlot,
   filterContent,
@@ -160,6 +169,7 @@ export function AdminListingScaffold({
   actionsSlot,
   ...props
 }: AdminListingScaffoldProps) {
+  const [localSearch, setLocalSearch] = React.useState(searchValue ?? "");
   const hasChildren = React.Children.count(children) > 0;
 
   return (
@@ -195,11 +205,18 @@ export function AdminListingScaffold({
       searchSlot={
         searchSlot ?? (
           <Input
-            readOnly
-            value=""
+            value={localSearch}
             placeholder={searchPlaceholder}
             aria-label={searchPlaceholder}
             className="min-w-[240px]"
+            onChange={(e) => {
+              setLocalSearch(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onSearch?.(localSearch);
+              }
+            }}
           />
         )
       }

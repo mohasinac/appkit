@@ -25,6 +25,7 @@ export function useEvents<T extends EventItem = EventItem>(
   opts?: UseEventsOptions<T>,
 ) {
   const sp = new URLSearchParams();
+  if (params.q) sp.set("q", params.q);
   if (params.status) sp.set("status", params.status);
   if (params.type) sp.set("type", params.type);
   if (params.page) sp.set("page", String(params.page));

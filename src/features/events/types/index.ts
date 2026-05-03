@@ -158,6 +158,7 @@ export interface CreateEventEntryInput {
 }
 
 export interface EventListParams {
+  q?: string;
   status?: EventStatus;
   type?: EventType;
   page?: number;

@@ -23,12 +23,27 @@ interface AdminEventsApiResponse {
 export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
 
+  const [q, setQ] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("");
+  const [typeFilter, setTypeFilter] = React.useState("");
+
+  const filterParts: string[] = [];
+  if (statusFilter && statusFilter !== "All") {
+    filterParts.push(`status==${statusFilter}`);
+  }
+  if (typeFilter && typeFilter !== "All") {
+    filterParts.push(`type==${typeFilter}`);
+  }
+  const filters = filterParts.join(",") || undefined;
+
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminEventsApiResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "events", "listing"],
+    queryKey: ["admin", "events", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.EVENTS,
+    filters,
+    q: q || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `event-${index}`),
@@ -65,6 +80,22 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       errorMessage={errorMessage}
       emptyLabel="No events found"
       resultSummary={`Showing ${rows.length} of ${total} events`}
+      onSearch={setQ}
+      searchValue={q}
+      filterGroups={[
+        {
+          title: "Status",
+          options: ["All", "published", "draft", "active", "ended"],
+          active: statusFilter || "All",
+          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+        },
+        {
+          title: "Type",
+          options: ["All", "contest", "giveaway", "sale", "poll", "survey", "flash-sale"],
+          active: typeFilter || "All",
+          onSelect: (opt) => setTypeFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }

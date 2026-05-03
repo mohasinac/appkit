@@ -1,40 +1,87 @@
 /**
- * Reviews Seed Data
- * Sample product reviews with various ratings and statuses
+ * Reviews Seed Data — Pokémon Base Set 151 Theme
+ *
+ * 22 reviews written by Pokémon trainers (buyers) for Base Set TCG singles,
+ * sealed products, and accessories sold by Misty, Lt. Surge, and Blaine.
+ *
+ * Seller IDs:
+ *   Misty  → user-misty-water-gym-misty   / store-mistys-water-cards
+ *   Surge  → user-lt-surge-electric-surge / store-surges-electric-emporium
+ *   Blaine → user-blaine-fire-gym-blaine  / store-blaines-fire-shoppe
+ *
+ * Buyer IDs:
+ *   ash      → user-ash-ketchum-pallet-ash
+ *   gary     → user-gary-oak-pallet-gary
+ *   brock    → user-brock-pewter-brock
+ *   oak      → user-prof-oak-pallet-oak
+ *   sabrina  → user-sabrina-saffron-sabrina
+ *   erika    → user-erika-celadon-erika
  */
 
 import type { ReviewDocument } from "../features/reviews/schemas";
 
-// Dynamic date helpers
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
+// Card image helper (mirrors pokemon-products-seed-data.ts)
+const cardImg = (num: number) =>
+  `https://images.pokemontcg.io/base1/${num}_hires.png`;
+
 export const reviewsSeedData: Partial<ReviewDocument>[] = [
-  // Approved reviews
+  // ══════════════════════════════════════════════════════════════
+  // APPROVED — FEATURED (highest helpfulCount)
+  // ══════════════════════════════════════════════════════════════
+
+  // 1. Ash reviews the 1st-Ed Charizard auction win
   {
-    id: "review-iphone-15-pro-max-john-20260120",
-    productId:
-      "product-iphone-15-pro-max-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Dragon Ball Super Saiyan Blue Goku 1/4 Scale Figure",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
+    id: "review-charizard-base1-4-ash-20260310",
+    productId: "product-charizard-base1-4-holo-rare-fire-blaine-1",
+    productTitle: "Charizard — Base Set #4 Holo Rare (Near Mint)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-ash-ketchum-pallet-ash",
+    userName: "Ash Ketchum",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
     rating: 5,
-    title: "Absolutely Amazing!",
+    title: "The crown jewel of my collection — absolutely perfect!",
     comment:
-      "Exceeded expectations. Camera and battery are outstanding. Worth it!",
-    images: [
-      "https://picsum.photos/seed/iphone15/800/800",
-      "https://picsum.photos/seed/apple-phone/800/800",
-    ],
-    video: {
-      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-      thumbnailUrl: "https://picsum.photos/seed/iphone15/800/450",
-      duration: 15,
-    },
+      "I've been searching for a Near Mint Charizard for years and Blaine's Fire Shoppe delivered beyond my expectations. " +
+      "The card arrived in a rigid top-loader inside a bubble mailer with tracking — zero movement during transit. " +
+      "Centering is near-perfect, holo surface is pristine with that iconic shimmer, and corners are sharp. " +
+      "Blaine even included a thank-you note handwritten on a Pokémon postcard. " +
+      "This is THE card that started it all and I finally have one worthy of my collection. Five stars without hesitation!",
+    images: [cardImg(4)],
     status: "approved",
-    helpfulCount: 24,
+    helpfulCount: 87,
+    reportCount: 0,
+    verified: true,
+    featured: true,
+    createdAt: daysAgo(52),
+    updatedAt: daysAgo(52),
+    approvedAt: daysAgo(52),
+  },
+
+  // 2. Professor Oak reviews Mewtwo Holo — surge
+  {
+    id: "review-mewtwo-base1-10-oak-20260312",
+    productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
+    productTitle: "Mewtwo — Base Set #10 Holo Rare (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-prof-oak-pallet-oak",
+    userName: "Professor Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
+    rating: 5,
+    title: "Scientifically the finest Mewtwo specimen I've catalogued",
+    comment:
+      "As a Pokémon researcher I have handled hundreds of Base Set cards. This Mewtwo Holo Rare from Surge's Emporium is " +
+      "among the cleanest copies I have ever examined. Holo pattern is full and rich with no scratches, corners are NM+, " +
+      "and the card was shipped in a penny sleeve, top-loader, and team bag — triple protection. " +
+      "Surge responded to my pre-purchase grading questions within the hour. " +
+      "For Psychic-type collectors: this is the one to own. The Genetic Pokémon belongs in every serious Pokédex binder.",
+    images: [cardImg(10)],
+    status: "approved",
+    helpfulCount: 63,
     reportCount: 0,
     verified: true,
     featured: true,
@@ -42,636 +89,648 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     updatedAt: daysAgo(48),
     approvedAt: daysAgo(48),
   },
+
+  // 3. Gary Oak reviews Blastoise
   {
-    id: "review-samsung-galaxy-s24-ultra-jane-20260125",
-    productId:
-      "product-samsung-galaxy-s24-ultra-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Super Saiyan Vegeta Final Flash 1/4 Scale Statue",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
+    id: "review-blastoise-base1-2-gary-20260315",
+    productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
+    productTitle: "Blastoise — Base Set #2 Holo Rare (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-gary-oak-pallet-gary",
+    userName: "Gary Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
     rating: 5,
-    title: "Best Android Phone Yet",
+    title: "Misty knows her Water cards — flawless Blastoise",
     comment:
-      "S Pen is useful, camera is stunning, AI features are helpful. Great for power users.",
-    images: [],
+      "Look, I don't give five stars easily, but Misty's Water Cards has earned it. " +
+      "The Blastoise is everything described — near-mint centering, brilliant holo shimmer, and not a single whitened corner. " +
+      "It shipped tracked in 24 hours and arrived two days later perfectly protected. " +
+      "My collection is already better than Ash's and this card proves it. " +
+      "Ordering the Gyarados next.",
+    images: [cardImg(2)],
     status: "approved",
-    helpfulCount: 18,
+    helpfulCount: 54,
     reportCount: 0,
     verified: true,
     featured: true,
-    createdAt: daysAgo(43),
-    updatedAt: daysAgo(43),
-    approvedAt: daysAgo(43),
+    createdAt: daysAgo(44),
+    updatedAt: daysAgo(44),
+    approvedAt: daysAgo(44),
   },
+
+  // 4. Sabrina reviews the sealed booster pack (Blaine)
   {
-    id: "review-google-pixel-8-pro-mike-20260131",
-    productId:
-      "product-google-pixel-8-pro-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Ultra Instinct Goku Premium 1/6 Scale Figure",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 4,
-    title: "Great Camera, Pure Android",
+    id: "review-sealed-booster-sabrina-20260318",
+    productId: "product-base-set-booster-pack-sealed-blaine-1",
+    productTitle: "Pokémon Base Set Booster Pack (Sealed, Random Art)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-sabrina-saffron-sabrina",
+    userName: "Sabrina",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
+    rating: 5,
+    title: "Authentic vintage sealed pack — psychically verified genuine!",
     comment:
-      "Love the camera and clean Android. Magic Eraser is fun. Battery could be better.",
+      "I can sense deception in sellers a mile away, and Blaine's aura is completely honest. " +
+      "The sealed booster pack arrived in immaculate condition — factory seal intact, pack fresh and firm, " +
+      "no signs of weighing or tampering. Blaine wrapped it in bubble wrap inside a rigid card box — " +
+      "the pack couldn't shift even a millimetre. " +
+      "I'm keeping it sealed as a long-term investment. Vintage sealed WOTC product at this quality is increasingly rare. " +
+      "Highly recommend for serious collectors. Will be ordering more.",
+    images: [],
+    status: "approved",
+    helpfulCount: 41,
+    reportCount: 0,
+    verified: true,
+    featured: true,
+    createdAt: daysAgo(40),
+    updatedAt: daysAgo(40),
+    approvedAt: daysAgo(40),
+  },
+
+  // 5. Ash reviews Pikachu common (Surge)
+  {
+    id: "review-pikachu-base1-58-ash-20260320",
+    productId: "product-pikachu-base1-58-common-electric-surge-1",
+    productTitle: "Pikachu — Base Set #58 Common (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-ash-ketchum-pallet-ash",
+    userName: "Ash Ketchum",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    rating: 5,
+    title: "My best friend in card form — yellow cheeks and all!",
+    comment:
+      "Obviously I had to own the Base Set Pikachu. The yellow-cheeks variant is the correct one — " +
+      "Surge knows this and stocks only the best copy available. " +
+      "Near Mint condition, sharp corners, vivid yellow, and that iconic expression. " +
+      "Shipped in a penny sleeve inside a top-loader. Fast delivery. " +
+      "Pikachu, I choose you — and I choose Surge's Electric Emporium!",
+    images: [cardImg(58)],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      thumbnailUrl: cardImg(58),
+      duration: 18,
+    },
+    status: "approved",
+    helpfulCount: 38,
+    reportCount: 0,
+    verified: true,
+    featured: true,
+    createdAt: daysAgo(37),
+    updatedAt: daysAgo(37),
+    approvedAt: daysAgo(37),
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // APPROVED — NON-FEATURED
+  // ══════════════════════════════════════════════════════════════
+
+  // 6. Brock reviews Zapdos (Surge)
+  {
+    id: "review-zapdos-base1-16-brock-20260322",
+    productId: "product-zapdos-base1-16-holo-rare-electric-surge-1",
+    productTitle: "Zapdos — Base Set #16 Holo Rare (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-brock-pewter-brock",
+    userName: "Brock",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
+    rating: 4,
+    title: "Rock-solid purchase — legendary bird delivered safely",
+    comment:
+      "I'm a Rock-type guy at heart but every collector needs the legendary birds. " +
+      "Zapdos arrived in excellent NM condition — great centering, clean holo, minimal border wear. " +
+      "Surge shipped quickly with tracking. The only reason for 4 stars is I'd have liked a slightly heavier " +
+      "top-loader for a card at this price point, but honestly it arrived perfectly fine. " +
+      "Would buy from Surge's Emporium again — competitive prices and honest descriptions.",
+    images: [],
+    status: "approved",
+    helpfulCount: 22,
+    reportCount: 0,
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(35),
+    updatedAt: daysAgo(35),
+    approvedAt: daysAgo(35),
+  },
+
+  // 7. Erika reviews Venusaur (Blaine — LP)
+  {
+    id: "review-venusaur-base1-15-erika-20260324",
+    productId: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
+    productTitle: "Venusaur — Base Set #15 Holo Rare (Lightly Played)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-erika-celadon-erika",
+    userName: "Erika",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
+    rating: 4,
+    title: "Grass-type glory — condition exactly as described",
+    comment:
+      "As a Grass-type Gym Leader, a Venusaur Holo is essential for my collection. " +
+      "The card is Lightly Played as listed — minor corner wear, but the holo face is absolutely gorgeous with no scratches. " +
+      "Blaine's description was accurate and honest, which I appreciate deeply. " +
+      "Shipped well protected. A lovely card at a fair price for LP condition. " +
+      "I'd give five stars if this were NM, but the LP grade is reflected in the price and the condition matches perfectly.",
+    images: [cardImg(15)],
+    status: "approved",
+    helpfulCount: 19,
+    reportCount: 0,
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(32),
+    updatedAt: daysAgo(32),
+    approvedAt: daysAgo(32),
+  },
+
+  // 8. Gary reviews Professor Oak Trainer (Surge)
+  {
+    id: "review-professor-oak-trainer-gary-20260325",
+    productId: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
+    productTitle: "Professor Oak — Base Set #88 Trainer (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-gary-oak-pallet-gary",
+    userName: "Gary Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
+    rating: 5,
+    title: "Draw 7 — the greatest trainer card, sold by a great seller",
+    comment:
+      "The irony of Gary Oak buying a Professor Oak card is not lost on me. " +
+      "But sentiment aside, this NM copy from Surge is excellent — crisp edges, vibrant artwork, and " +
+      "not a single bend or crease. For competitive players and collectors alike, Professor Oak is non-negotiable. " +
+      "Surge had the lowest price I found for a properly graded NM copy. Shipped fast, tracked. " +
+      "Staple card in every era — pick one up while they're available.",
+    images: [],
+    status: "approved",
+    helpfulCount: 17,
+    reportCount: 0,
+    verified: false,
+    featured: false,
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(30),
+    approvedAt: daysAgo(30),
+  },
+
+  // 9. Sabrina reviews Haunter Non-Holo (Surge)
+  {
+    id: "review-haunter-base1-24-sabrina-20260327",
+    productId: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
+    productTitle: "Haunter — Base Set #24 Non-Holo Rare (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-sabrina-saffron-sabrina",
+    userName: "Sabrina",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
+    rating: 5,
+    title: "Psychic perfection — Haunter's mischievous grin in NM condition",
+    comment:
+      "I adore Haunter. That tongue-out artwork from Ken Sugimori is timeless. " +
+      "Surge's copy arrived in genuine Near Mint — the card feels fresh, no whitening on corners, " +
+      "and the classic Lick attack text is perfectly legible with no print defects. " +
+      "Penny sleeved and shipped in a tracked bubble mailer. Fast shipping from Vermilion City. " +
+      "A must-have Psychic-type for any serious Base Set collection.",
+    images: [],
+    status: "approved",
+    helpfulCount: 15,
+    reportCount: 0,
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(28),
+    updatedAt: daysAgo(28),
+    approvedAt: daysAgo(28),
+  },
+
+  // 10. Oak reviews Water Energy lot (Misty)
+  {
+    id: "review-water-energy-lot-oak-20260328",
+    productId: "product-water-energy-base1-99-common-energy-misty-lot",
+    productTitle: "Water Energy — Base Set #99 x10 Lot (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-prof-oak-pallet-oak",
+    userName: "Professor Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
+    rating: 5,
+    title: "Perfect lot for research-grade deck documentation",
+    comment:
+      "I ordered three sets of 10 for my Blastoise research deck. Every single card from Misty arrived in " +
+      "Near Mint condition — consistent print quality, clean artwork, and no duplicates with bent corners. " +
+      "They were shipped in a team bag inside a bubble mailer — the correct way to ship bulk energy lots. " +
+      "At this price per card the value is outstanding. Misty clearly understands both Water-type Pokémon and proper card care.",
+    images: [],
+    status: "approved",
+    helpfulCount: 14,
+    reportCount: 0,
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(26),
+    updatedAt: daysAgo(26),
+    approvedAt: daysAgo(26),
+  },
+
+  // 11. Brock reviews Charizard 9-Pocket Binder (Misty)
+  {
+    id: "review-charizard-binder-brock-20260329",
+    productId: "product-pokemon-9-pocket-binder-misty-1",
+    productTitle: "Pokémon 9-Pocket Binder (360 cards, Charizard Cover)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-brock-pewter-brock",
+    userName: "Brock",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
+    rating: 5,
+    title: "Rock-solid binder — Charizard on the cover, perfection inside",
+    comment:
+      "Finally a binder worthy of my Base Set collection. 360-card capacity means my entire set fits comfortably " +
+      "with room for extras. The side-loading pockets are excellent — cards slide in easily and stay secure. " +
+      "The lay-flat design means I can view two pages simultaneously without straining the spine. " +
+      "And the Charizard cover art? Chef's kiss. Shipped in a proper box so the binder arrived undamaged. " +
+      "Misty ships card accessories as well as she ships Water singles. Highly recommended.",
     images: [],
     status: "approved",
     helpfulCount: 12,
     reportCount: 0,
     verified: false,
-    createdAt: daysAgo(36),
-    updatedAt: daysAgo(36),
-    approvedAt: daysAgo(36),
+    featured: false,
+    createdAt: daysAgo(24),
+    updatedAt: daysAgo(24),
+    approvedAt: daysAgo(24),
   },
+
+  // 12. Erika reviews Fire Energy lot (Blaine)
   {
-    id: "review-macbook-pro-16-m3-max-john-20260126",
-    productId:
-      "product-macbook-pro-16-m3-max-laptops-computers-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Monkey D. Luffy Gear 5 Sun God 1/4 Scale Scene Figure",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
-    rating: 5,
-    title: "Perfect for Professionals",
-    comment:
-      "Handles 4K editing smoothly. Display is gorgeous, battery life incredible. Best laptop ever.",
-    images: [
-      "https://picsum.photos/seed/macbook-laptop/800/800",
-      "https://picsum.photos/seed/laptop-apple/800/800",
-    ],
-    status: "approved",
-    helpfulCount: 31,
-    reportCount: 0,
-    verified: false,
-    featured: true,
-    createdAt: daysAgo(30),
-    updatedAt: daysAgo(30),
-    approvedAt: daysAgo(30),
-  },
-  {
-    id: "review-dell-xps-15-jane-20260201",
-    productId:
-      "product-dell-xps-15-laptops-computers-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Roronoa Zoro Enma Slash Diorama 1/7 Scale",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
+    id: "review-fire-energy-lot-erika-20260330",
+    productId: "product-fire-energy-base1-100-common-energy-blaine-lot",
+    productTitle: "Fire Energy — Base Set #100 x10 Lot (Near Mint)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-erika-celadon-erika",
+    userName: "Erika",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
     rating: 4,
-    title: "Powerful Windows Laptop",
+    title: "Good value fire energy lot — perfect for trading away",
     comment:
-      "Excellent build and performance. RTX 4060 handles design work perfectly. Webcam could be better.",
+      "I bought these to trade with Blaine's buyers at local meetups — everyone needs Fire Energy for Charizard decks. " +
+      "Cards are Near Mint as described, arrived in a team bag, no bent corners. " +
+      "Took 3 days to arrive from Cinnabar Island which is fair given the distance. " +
+      "One star off only because the bubble mailer had slight external scuffing though the cards inside were fine. " +
+      "Blaine's descriptions are honest and the price is right for bulk lots.",
     images: [],
     status: "approved",
-    helpfulCount: 15,
-    reportCount: 0,
-    verified: false,
-    createdAt: daysAgo(34),
-    updatedAt: daysAgo(34),
-    approvedAt: daysAgo(34),
-  },
-  {
-    id: "review-mens-cotton-casual-shirt-mike-20260205",
-    productId:
-      "product-mens-cotton-casual-shirt-mens-fashion-new-fashion-boutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Demon Slayer Tanjiro Kamado Graphic T-Shirt",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 4,
-    title: "Good Quality, Comfortable Fit",
-    comment: "Nice cotton shirt, breathable and true to size. Good value.",
-    images: [],
-    status: "approved",
-    helpfulCount: 8,
+    helpfulCount: 10,
     reportCount: 0,
     verified: true,
-    createdAt: daysAgo(38),
-    updatedAt: daysAgo(38),
-    approvedAt: daysAgo(38),
+    featured: false,
+    createdAt: daysAgo(22),
+    updatedAt: daysAgo(22),
+    approvedAt: daysAgo(22),
   },
+
+  // 13. Gary reviews Chansey Holo (Misty)
   {
-    id: "review-womens-ethnic-kurti-jane-20260207",
-    productId:
-      "product-womens-ethnic-kurti-womens-fashion-new-fashion-boutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Nezuko Kamado Pink Kimono Hoodie Dress",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
-    rating: 5,
-    title: "Beautiful Design and Quality",
-    comment:
-      "Love this kurti! Beautiful print, excellent quality, perfect fit. Will buy more.",
-    images: ["https://picsum.photos/seed/ethnic-kurti/800/800"],
-    status: "approved",
-    helpfulCount: 14,
-    reportCount: 0,
-    verified: false,
-    createdAt: daysAgo(29),
-    updatedAt: daysAgo(29),
-    approvedAt: daysAgo(29),
-  },
-  {
-    id: "review-non-stick-cookware-set-john-20260208",
-    productId:
-      "product-non-stick-cookware-set-home-kitchen-new-home-essentials-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "My Neighbour Totoro Nendoroid No.1234 Deluxe Set",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
+    id: "review-chansey-base1-3-gary-20260401",
+    productId: "product-chansey-base1-3-holo-rare-colorless-misty-1",
+    productTitle: "Chansey — Base Set #3 Holo Rare (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-gary-oak-pallet-gary",
+    userName: "Gary Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
     rating: 4,
-    title: "Good Value Cookware Set",
+    title: "120 HP tank card — great condition, great price",
     comment:
-      "Good set for the price. Non-stick works well, heats evenly. Handles could be better.",
+      "Chansey is the tankiest card in Base Set and this NM copy does it justice. " +
+      "Holo shimmer is vivid, centering is slightly left-heavy but well within NM range, " +
+      "corners are sharp. Misty ships Water Gym quality even for Colorless cards — " +
+      "tracked, top-loaded, fast. I'd prefer 5★ centering at this price but it's a solid purchase. " +
+      "Recommended for completionists and healing-deck enthusiasts.",
     images: [],
     status: "approved",
     helpfulCount: 9,
     reportCount: 0,
     verified: false,
-    createdAt: daysAgo(32),
-    updatedAt: daysAgo(32),
-    approvedAt: daysAgo(32),
-  },
-  {
-    id: "review-yoga-mat-with-carrying-bag-jane-20260209",
-    productId:
-      "product-yoga-mat-with-carrying-bag-sports-outdoors-new-home-essentials-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "Gundam RX-78-2 Perfect Grade 1/60 Model Kit",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
-    rating: 5,
-    title: "Perfect for Daily Practice",
-    comment:
-      "Great mat with excellent grip and cushioning. No slip during intense sessions. Carrying bag is convenient.",
-    images: [],
-    status: "approved",
-    helpfulCount: 11,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(31),
-    updatedAt: daysAgo(31),
-    approvedAt: daysAgo(31),
+    featured: false,
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(20),
+    approvedAt: daysAgo(20),
   },
 
-  // Medium rating reviews
+  // 14. Ash reviews Pikachu sleeves (Blaine)
   {
-    id: "review-vintage-canon-ae-1-film-camera-mike-20260203",
-    productId:
-      "auction-vintage-canon-ae-1-film-camera-cameras-photography-used-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Gainax Evangelion Unit-01 Original Production Art",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 4,
-    title: "Classic Beauty",
+    id: "review-pikachu-sleeves-ash-20260402",
+    productId: "product-pokemon-card-sleeves-standard-blaine-1",
+    productTitle: "Pokémon-Art Card Sleeves (100-pack, Pikachu)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-ash-ketchum-pallet-ash",
+    userName: "Ash Ketchum",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    rating: 5,
+    title: "Pikachu sleeves for my Pikachu card — perfect symmetry!",
     comment:
-      "Authentic vintage camera in excellent condition. Film photography at its finest.",
-    images: ["https://picsum.photos/seed/film-camera/800/800"],
+      "I sleeve all my cards in Pikachu sleeves. Obviously. These Ultra PRO standard-size sleeves fit " +
+      "Base Set cards perfectly — snug, not tight, easy to insert and remove. " +
+      "100 sleeves in the pack, all came intact with no tears or pre-bent edges. " +
+      "Archival quality means I can trust them for long-term storage of my NM cards. " +
+      "Blaine had the best price I found for genuine Ultra PRO. Quick shipping. 10/10.",
+    images: [],
     status: "approved",
     helpfulCount: 7,
     reportCount: 0,
-    verified: false,
-    featured: true,
-    createdAt: daysAgo(35),
-    updatedAt: daysAgo(35),
-    approvedAt: daysAgo(35),
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(18),
+    updatedAt: daysAgo(18),
+    approvedAt: daysAgo(18),
   },
+
+  // 15. Brock reviews Magneton Holo LP (Surge)
   {
-    id: "review-iphone-15-pro-max-jane-20260204",
-    productId:
-      "product-iphone-15-pro-max-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Dragon Ball Super Saiyan Blue Goku 1/4 Scale Figure",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
-    rating: 4,
-    title: "Impressive Performance",
+    id: "review-magneton-base1-9-brock-20260403",
+    productId: "product-magneton-base1-9-holo-rare-electric-surge-1",
+    productTitle: "Magneton — Base Set #9 Holo Rare (Lightly Played)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-brock-pewter-brock",
+    userName: "Brock",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
+    rating: 3,
+    title: "Holo is clean but corners are more worn than I expected",
     comment:
-      "Camera quality is outstanding. Battery life is solid. Slightly heavy but worth it.",
+      "I was hoping for a Lightly Played card closer to NM range. The holo face is genuinely clean — " +
+      "no scratches and a nice pattern — but the corner whitening is more pronounced than the photos suggested, " +
+      "putting this closer to Moderately Played in my assessment. " +
+      "Surge's shipping was excellent and response time was fast. " +
+      "The price reflects LP so it's fair, but I'd recommend asking for additional photos before ordering a Lightly Played holo at this price. " +
+      "Not a bad purchase — just calibrate expectations on the LP condition grading.",
+    images: [cardImg(9)],
+    status: "approved",
+    helpfulCount: 8,
+    reportCount: 0,
+    verified: true,
+    featured: false,
+    createdAt: daysAgo(16),
+    updatedAt: daysAgo(16),
+    approvedAt: daysAgo(16),
+  },
+
+  // 16. Erika reviews Clefairy uncommon (Misty)
+  {
+    id: "review-clefairy-base1-35-erika-20260405",
+    productId: "product-clefairy-base1-35-uncommon-colorless-misty-1",
+    productTitle: "Clefairy — Base Set #35 Uncommon (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-erika-celadon-erika",
+    userName: "Erika",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
+    rating: 5,
+    title: "Metronome magic in Near Mint — cute card, great seller",
+    comment:
+      "Clefairy's Metronome is one of the most charming moves in the entire Base Set. " +
+      "Misty's copy is excellent — Near Mint with tight corners and clean text. " +
+      "At this price for an uncommon, the quality is impressive. Shipped in a penny sleeve. " +
+      "Delivery was fast. Misty's attention to card condition even on lower-value uncommons says a lot " +
+      "about her shop's standards. Will buy my remaining Celadon Pokédex cards here.",
     images: [],
     status: "approved",
     helpfulCount: 5,
     reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(46),
-    updatedAt: daysAgo(46),
-    approvedAt: daysAgo(46),
-  },
-
-  // Pending reviews (awaiting moderation)
-  {
-    id: "review-samsung-galaxy-s24-ultra-mike-20260206",
-    productId:
-      "product-samsung-galaxy-s24-ultra-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Super Saiyan Vegeta Final Flash 1/4 Scale Statue",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 4,
-    title: "Solid Upgrade",
-    comment:
-      "Upgraded from S22 Ultra. Camera improvements are noticeable, AI is cool. Wish it had charger.",
-    images: [],
-    status: "pending",
-    helpfulCount: 0,
-    reportCount: 0,
     verified: false,
-    createdAt: daysAgo(29),
-    updatedAt: daysAgo(29),
-  },
-  {
-    id: "review-google-pixel-8-pro-jane-20260207",
-    productId:
-      "product-google-pixel-8-pro-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Ultra Instinct Goku Premium 1/6 Scale Figure",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
-    rating: 4,
-    title: "Great Camera and Software",
-    comment:
-      "Pure Android experience is refreshing. AI features are useful. Battery is decent.",
-    images: [],
-    status: "pending",
-    helpfulCount: 0,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(29),
-    updatedAt: daysAgo(29),
+    featured: false,
+    createdAt: daysAgo(14),
+    updatedAt: daysAgo(14),
+    approvedAt: daysAgo(14),
   },
 
-  // Rejected review (spam/inappropriate)
+  // 17. Oak reviews Gyarados Holo (Misty)
   {
-    id: "review-macbook-pro-16-m3-max-mike-20260207",
-    productId:
-      "product-macbook-pro-16-m3-max-laptops-computers-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Monkey D. Luffy Gear 5 Sun God 1/4 Scale Scene Figure",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 1,
-    title: "Fake Product",
-    comment: "This is a scam! Check out my website for real deals. [SPAM URL]",
-    images: [],
-    status: "rejected",
-    moderatorId: "user-admin-user-admin",
-    moderatorNote: "Spam content with promotional links",
-    rejectionReason: "Contains spam and inappropriate promotional content",
-    helpfulCount: 0,
-    reportCount: 3,
-    verified: false,
-    createdAt: daysAgo(33),
-    updatedAt: daysAgo(33),
-    rejectedAt: daysAgo(33),
-  },
-
-  // Review with multiple helpful votes
-  {
-    id: "review-dell-xps-15-john-20260208",
-    productId:
-      "product-dell-xps-15-laptops-computers-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Roronoa Zoro Enma Slash Diorama 1/7 Scale",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
+    id: "review-gyarados-base1-6-oak-20260407",
+    productId: "product-gyarados-base1-6-holo-rare-water-misty-1",
+    productTitle: "Gyarados — Base Set #6 Holo Rare (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-prof-oak-pallet-oak",
+    userName: "Professor Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
     rating: 5,
-    title: "Powerful Windows Laptop",
+    title: "A fearsome sea-serpent in pristine scholarly condition",
     comment:
-      "Excellent build quality and performance. Display is stunning. Perfect for development work.",
-    images: ["https://picsum.photos/seed/dell-xps/800/800"],
-    status: "approved",
-    helpfulCount: 42,
-    reportCount: 0,
-    verified: false,
-    featured: true,
-    createdAt: daysAgo(29),
-    updatedAt: daysAgo(29),
-    approvedAt: daysAgo(29),
-  },
-
-  // --- Reviews for new products ----------------------------------------------
-  {
-    id: "review-oxford-shirt-priya-20260205",
-    productId: "product-mens-oxford-shirt-fashion-new-fashionboutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Attack on Titan Scout Regiment Cosplay Jacket",
-    userId: "user-priya-sharma-priya",
-    userName: "Priya Sharma",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya-sharma",
-    rating: 5,
-    title: "Bought for my husband \u2014 perfect fit!",
-    comment:
-      "Ordered the medium and it fits perfectly. The fabric is thick but breathable. The colour is exactly as shown in pictures. Will definitely order more colours.",
-    images: ["https://picsum.photos/seed/oxford-shirt/800/800"],
-    status: "approved",
-    helpfulCount: 18,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(32),
-    updatedAt: daysAgo(32),
-    approvedAt: daysAgo(32),
-  },
-  {
-    id: "review-oxford-shirt-raj-20260207",
-    productId: "product-mens-oxford-shirt-fashion-new-fashionboutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Attack on Titan Scout Regiment Cosplay Jacket",
-    userId: "user-raj-patel-rajpatel",
-    userName: "Raj Patel",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=raj-patel",
-    rating: 4,
-    title: "Good quality, runs slightly large",
-    comment:
-      "Nice shirt for the price. I usually wear M but ordered M and it was a bit loose \u2014 would suggest sizing down for a fitted look.",
+      "The Gyarados Holo Rare is a fascinating specimen — a Dragon-type Pokémon on a Water energy card, " +
+      "reflecting the original design era before Dragon became its own type. " +
+      "Misty's copy is genuinely Near Mint: deep holo shimmer, tight centering, not a blemish on it. " +
+      "She shipped it tracked with a rigid top-loader and it arrived within two days. " +
+      "I've now ordered Blastoise, Gyarados, Lapras, and Starmie from Misty — she is my go-to Water specialist.",
     images: [],
     status: "approved",
     helpfulCount: 11,
     reportCount: 0,
     verified: true,
-    createdAt: daysAgo(30),
-    updatedAt: daysAgo(30),
-    approvedAt: daysAgo(30),
-  },
-  {
-    id: "review-anarkali-meera-20260210",
-    productId: "product-womens-anarkali-kurta-fashion-new-fashionboutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Sailor Moon Neo Queen Serenity Cosplay Dress Set",
-    userId: "user-vikram-nair-vikram",
-    userName: "Vikram Nair",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vikram-nair",
-    rating: 5,
-    title: "Absolutely stunning \u2014 worth every rupee",
-    comment:
-      "The embroidery is detailed and the georgette is of premium quality. I wore this to a wedding and got so many compliments. Stitching is clean and the dupatta is beautiful. Deliverd in 3 days!",
-    images: [
-      "https://picsum.photos/seed/anarkali-kurta/800/800",
-      "https://picsum.photos/seed/anarkali-detail/800/800",
-    ],
-    status: "approved",
-    helpfulCount: 34,
-    reportCount: 0,
-    verified: true,
-    featured: true,
-    createdAt: daysAgo(27),
-    updatedAt: daysAgo(27),
-    approvedAt: daysAgo(27),
-  },
-  {
-    id: "review-pressure-cooker-jane-20260115",
-    productId: "product-prestige-pressure-cooker-home-new-homeessentials-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "Rem & Ram Re:Zero Nendoroid Duo Set",
-    userId: "user-jane-smith-janes",
-    userName: "Jane Smith",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=jane-smith",
-    rating: 5,
-    title: "Best pressure cooker I've owned",
-    comment:
-      "The clip-on system makes it so much safer than my old one. Works perfectly on my glass-top induction as well. Cooks dal in 8 minutes flat. Great value for money.",
-    images: ["https://picsum.photos/seed/pressure-cooker/800/800"],
-    status: "approved",
-    helpfulCount: 27,
-    reportCount: 0,
-    verified: true,
-    featured: true,
-    createdAt: daysAgo(53),
-    updatedAt: daysAgo(53),
-    approvedAt: daysAgo(53),
-  },
-  {
-    id: "review-pressure-cooker-john-20260120",
-    productId: "product-prestige-pressure-cooker-home-new-homeessentials-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "Rem & Ram Re:Zero Nendoroid Duo Set",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
-    rating: 4,
-    title: "Solid product, delivery was fast",
-    comment:
-      "Great cooker. The only reason for 4 stars is the whistle is a bit loud. Everything else \u2014 build quality, weight, handles \u2014 is excellent.",
-    images: [],
-    status: "approved",
-    helpfulCount: 9,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(48),
-    updatedAt: daysAgo(48),
-    approvedAt: daysAgo(48),
-  },
-  {
-    id: "review-yoga-mat-priya-20260212",
-    productId: "product-premium-yoga-mat-sports-new-sportszone-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "Naruto Sage Mode Toad Sage 1/7 Scale PVC Figure",
-    userId: "user-priya-sharma-priya",
-    userName: "Priya Sharma",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=priya-sharma",
-    rating: 5,
-    title: "The alignment lines are a game changer",
-    comment:
-      "I've used 4 yoga mats over the years and this is by far the best. The grip is excellent even during hot yoga. The alignment marks helped me fix my Warrior II pose. Not cheap but absolutely worth it.",
-    images: [
-      "https://picsum.photos/seed/yoga-fitness/800/800",
-      "https://picsum.photos/seed/yoga-practice/800/800",
-    ],
-    status: "approved",
-    helpfulCount: 45,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(25),
-    updatedAt: daysAgo(25),
-    approvedAt: daysAgo(25),
-  },
-  {
-    id: "review-yoga-mat-meera-20260214",
-    productId: "product-premium-yoga-mat-sports-new-sportszone-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "Naruto Sage Mode Toad Sage 1/7 Scale PVC Figure",
-    userId: "user-vikram-nair-vikram",
-    userName: "Vikram Nair",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=vikram-nair",
-    rating: 4,
-    title: "Premium quality, slightly heavy",
-    comment:
-      "Love the mat \u2014 grip is outstanding and it doesn't slip at all. The only con is it's heavier than other mats so carrying to class is a bit of a workout itself. But for home use it's perfect.",
-    images: [],
-    status: "approved",
-    helpfulCount: 16,
-    reportCount: 0,
-    verified: false,
-    createdAt: daysAgo(23),
-    updatedAt: daysAgo(23),
-    approvedAt: daysAgo(23),
-  },
-  {
-    id: "review-ipad-pro-mike-20260118",
-    productId: "product-apple-ipad-pro-electronics-new-techhub-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Bleach Ichigo Bankai Tensa Zangetsu 1/6 Scale Figure",
-    userId: "user-mike-johnson-mikejohn",
-    userName: "Mike Johnson",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=mike-johnson",
-    rating: 5,
-    title: "Best tablet for creative work",
-    comment:
-      "Paired with the Apple Pencil, this is an absolute dream for digital illustration. The ProMotion display is silky smooth. Battery lasts all day. Fast delivery and came well packaged.",
-    images: ["https://picsum.photos/seed/ipad-tablet/800/800"],
-    status: "approved",
-    helpfulCount: 52,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(50),
-    updatedAt: daysAgo(50),
-    approvedAt: daysAgo(50),
-  },
-  {
-    id: "review-galaxy-watch6-john-20260208",
-    productId: "product-samsung-galaxy-watch6-electronics-new-techhub-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Samsung Galaxy Watch 6 Classic 47mm",
-    userId: "user-john-doe-johndoe",
-    userName: "John Doe",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=john-doe",
-    rating: 5,
-    title: "Best Android smartwatch period",
-    comment:
-      "Switched from Apple Watch and couldn't be happier. The rotating bezel is genius \u2014 much easier than swiping. Health tracking is accurate, sleep analysis is detailed. Battery lasts 2 days.",
-    images: ["https://picsum.photos/seed/classic-watch/800/800"],
-    status: "approved",
-    helpfulCount: 38,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(29),
-    updatedAt: daysAgo(29),
-    approvedAt: daysAgo(29),
-  },
-  {
-    id: "review-anker-charger-raj-20260205",
-    productId: "product-anker-usbc-charger-electronics-new-techhub-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Anker 65W USB-C GaN II Charger",
-    userId: "user-raj-patel-rajpatel",
-    userName: "Raj Patel",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=raj-patel",
-    rating: 5,
-    title: "Charges everything I own",
-    comment:
-      "Charges my laptop, phone, and earbuds simultaneously. The 65W output means my MacBook charges at full speed. The foldable plug is great for travel. Compact and well built.",
-    images: ["https://picsum.photos/seed/usb-charger/800/800"],
-    status: "approved",
-    helpfulCount: 29,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(32),
-    updatedAt: daysAgo(32),
-    approvedAt: daysAgo(32),
+    featured: false,
+    createdAt: daysAgo(12),
+    updatedAt: daysAgo(12),
+    approvedAt: daysAgo(12),
   },
 
-  // -- New buyer reviews (Ananya, Pooja, Ravi, Sneha) ------------------------
+  // 18. Sabrina reviews Zap! Theme Deck (Surge)
   {
-    id: "review-iphone15-ananya-20260228",
-    productId:
-      "product-iphone-15-pro-max-smartphones-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Dragon Ball Super Saiyan Blue Goku 1/4 Scale Figure",
-    userId: "user-ananya-bose-ananya",
-    userName: "Ananya Bose",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ananya-bose",
-    rating: 5,
-    title: "Switched from Android \u2014 no regrets!",
+    id: "review-zap-theme-deck-sabrina-20260408",
+    productId: "product-zap-theme-deck-sealed-surge-1",
+    productTitle: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-sabrina-saffron-sabrina",
+    userName: "Sabrina",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
+    rating: 4,
+    title: "Genuine sealed WOTC deck — Electric chaos in a box",
     comment:
-      "Finally made the switch and this phone is simply stunning. The titanium frame feels premium, the Action Button is super handy, and the USB-C connection is a lifesaver. The camera does incredible things in low light. Super happy with this purchase.",
-    images: ["https://picsum.photos/seed/iphone15/800/800"],
-    status: "approved",
-    helpfulCount: 21,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(9),
-    updatedAt: daysAgo(9),
-    approvedAt: daysAgo(9),
-  },
-  {
-    id: "review-kurti-pooja-20260301",
-    productId:
-      "product-womens-ethnic-kurti-womens-fashion-new-fashion-boutique-1",
-    sellerId: "user-fashion-boutique-fashionb",
-    productTitle: "Nezuko Kamado Pink Kimono Hoodie Dress",
-    userId: "user-pooja-mehta-pooja",
-    userName: "Pooja Mehta",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pooja-mehta",
-    rating: 5,
-    title: "Gorgeous \u2014 wore it to my cousin's engagement!",
-    comment:
-      "Ordered this for a family function and it was the perfect choice. The print is vibrant, the fabric is soft and doesn't crease easily. Sizing was spot on. Got loads of compliments. Will order again!",
+      "I purchased this as a sealed collectible for display. The factory seal is original and uncompromised — " +
+      "I psychically verified no one has opened it. Surge packaged it excellently: rigid box, bubble wrap, " +
+      "outer box for shipping. Arrived in perfect shape. " +
+      "Four stars because the outer box had minor corner denting from transit, but the sealed deck inside is flawless. " +
+      "For sealed vintage WOTC product this is excellent value. Surge is a trustworthy source.",
     images: [],
     status: "approved",
-    helpfulCount: 19,
+    helpfulCount: 6,
     reportCount: 0,
     verified: true,
+    featured: false,
+    createdAt: daysAgo(10),
+    updatedAt: daysAgo(10),
+    approvedAt: daysAgo(10),
+  },
+
+  // 19. Gary reviews Growlithe uncommon (Blaine)
+  {
+    id: "review-growlithe-base1-40-gary-20260409",
+    productId: "product-growlithe-base1-40-uncommon-fire-blaine-1",
+    productTitle: "Growlithe — Base Set #40 Uncommon (Near Mint)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-gary-oak-pallet-gary",
+    userName: "Gary Oak",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
+    rating: 4,
+    title: "Cheap filler done right — NM condition, fast PWE delivery",
+    comment:
+      "I ordered 5 Growlithe for a casual Fire deck. All 5 arrived NM — crisp, clean, and no damage. " +
+      "Blaine ships uncommons via PWE which is fine for low-value cards; I'd prefer tracking for higher-stakes cards " +
+      "but for ₹699 uncommons the PWE is completely appropriate. " +
+      "Good honest seller with accurate condition descriptions. Quick to answer questions. " +
+      "Solid choice for deck-playable Fire-type singles.",
+    images: [],
+    status: "approved",
+    helpfulCount: 4,
+    reportCount: 0,
+    verified: true,
+    featured: false,
     createdAt: daysAgo(8),
     updatedAt: daysAgo(8),
     approvedAt: daysAgo(8),
   },
+
+  // ══════════════════════════════════════════════════════════════
+  // PENDING (awaiting moderation)
+  // ══════════════════════════════════════════════════════════════
+
+  // 20. Ash — pending review of Lightning Energy lot (Surge)
   {
-    id: "review-macbook-ravi-20260302",
-    productId:
-      "product-macbook-pro-16-m3-max-laptops-computers-new-techhub-electronics-1",
-    sellerId: "user-techhub-electronics-electron",
-    productTitle: "Monkey D. Luffy Gear 5 Sun God 1/4 Scale Scene Figure",
-    userId: "user-ravi-kumar-ravi",
-    userName: "Ravi Kumar",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=ravi-kumar",
+    id: "review-lightning-energy-ash-20260428",
+    productId: "product-lightning-energy-base1-101-common-energy-surge-lot",
+    productTitle: "Lightning Energy — Base Set #101 x10 Lot (Near Mint)",
+    sellerId: "user-lt-surge-electric-surge",
+    userId: "user-ash-ketchum-pallet-ash",
+    userName: "Ash Ketchum",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
     rating: 5,
-    title: "Monster performance for developers",
+    title: "Shocked by the quality — Surge delivers again!",
     comment:
-      "I run Docker, multiple JetBrains IDEs, and local LLM models simultaneously \u2014 this machine handles it all without breaking a sweat. The fan barely spins under normal load. Battery life is insane for a 16-inch. Best developer laptop I've ever owned.",
-    images: ["https://picsum.photos/seed/macbook-laptop/800/800"],
-    status: "approved",
-    helpfulCount: 14,
-    reportCount: 0,
-    verified: true,
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(7),
-    approvedAt: daysAgo(7),
-  },
-  {
-    id: "review-cookware-sneha-20260303",
-    productId:
-      "product-non-stick-cookware-set-home-kitchen-new-home-essentials-1",
-    sellerId: "user-home-essentials-homeesse",
-    productTitle: "My Neighbour Totoro Nendoroid No.1234 Deluxe Set",
-    userId: "user-sneha-gupta-sneha",
-    userName: "Sneha Gupta",
-    userAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sneha-gupta",
-    rating: 4,
-    title: "Great everyday cookware set",
-    comment:
-      "Really happy with this set \u2014 the non-stick coating is genuinely good and the pans heat very evenly. I deducted one star only because the handles get warm after extended cooking. For the price, this is outstanding value. Using it daily for 3 weeks and no issues.",
+      "Ordered two lots of 10 Lightning Energy for my Pikachu-themed deck build. All 20 cards arrived NM — " +
+      "perfect for powering up Thunderbolt. Surge shipped them in a team bag in a bubble mailer. " +
+      "Honestly these are the nicest Base Set commons I've received. " +
+      "Fast delivery, great condition, fair price. Pika pika approved!",
     images: [],
-    status: "approved",
-    helpfulCount: 8,
+    status: "pending",
+    helpfulCount: 0,
     reportCount: 0,
     verified: true,
-    createdAt: daysAgo(6),
-    updatedAt: daysAgo(6),
-    approvedAt: daysAgo(6),
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(5),
+  },
+
+  // 21. Brock — pending review of Beedrill non-holo (Blaine)
+  {
+    id: "review-beedrill-base1-17-brock-20260429",
+    productId: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
+    productTitle: "Beedrill — Base Set #17 Non-Holo Rare (Near Mint)",
+    sellerId: "user-blaine-fire-gym-blaine",
+    userId: "user-brock-pewter-brock",
+    userName: "Brock",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
+    rating: 3,
+    title: "NM as listed, but Beedrill deserves a Grass-type seller",
+    comment:
+      "The card itself is fine — Near Mint, clean print, arrived safely in a penny sleeve. " +
+      "My slight hesitation is philosophical: Beedrill is a Grass-type and Blaine runs a Fire-type shop. " +
+      "Nothing wrong with the sale, just a curious choice. If you need a NM Beedrill quickly, " +
+      "Blaine has it and ships fast. Three stars because the card is technically correct but I'm still thinking about it.",
+    images: [],
+    status: "pending",
+    helpfulCount: 0,
+    reportCount: 0,
+    verified: false,
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(4),
+  },
+
+  // 22. Erika — pending review of Energy Retrieval trainer (Misty)
+  {
+    id: "review-energy-retrieval-erika-20260430",
+    productId: "product-energy-retrieval-base1-91-common-trainer-misty-1",
+    productTitle: "Energy Retrieval — Base Set #91 Trainer (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-erika-celadon-erika",
+    userName: "Erika",
+    userAvatar:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
+    rating: 5,
+    title: "Deck staple in mint condition — Misty's Water selection impresses",
+    comment:
+      "I needed four Energy Retrieval for my Venusaur-Vileplume combo deck and Misty had them all in NM. " +
+      "Cards are crisp and clean, no sleeve marks. Shipped together in a PWE which is totally fine for ₹599 cards. " +
+      "Misty stocks trainer cards that synergise with her Water lineup — smart curation. " +
+      "Will be ordering more trainer staples from here.",
+    images: [],
+    status: "pending",
+    helpfulCount: 0,
+    reportCount: 0,
+    verified: true,
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(3),
+  },
+
+  // ══════════════════════════════════════════════════════════════
+  // REJECTED (spam / inappropriate)
+  // ══════════════════════════════════════════════════════════════
+
+  // 23. Fake review — spam link on Dugtrio (Misty)
+  {
+    id: "review-dugtrio-base1-19-spam-20260415",
+    productId: "product-dugtrio-base1-19-non-holo-rare-fighting-misty-1",
+    productTitle: "Dugtrio — Base Set #19 Non-Holo Rare (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-unverified-new-user",
+    userName: "New Trainer",
+    userAvatar: undefined,
+    rating: 1,
+    title: "Fake card!! Buy real cards at cheapcardz.biz",
+    comment:
+      "This card is counterfeit!!! I can prove it. Visit cheapcardz.biz for AUTHENTIC Base Set cards at 90% off. " +
+      "Don't trust this seller — click my link for the real deal. Promo code PIKA50 saves 50%!!!",
+    images: [],
+    status: "rejected",
+    moderatorId: "user-moderator-mod-user",
+    moderatorNote: "Spam comment with external promotional link and promo code",
+    rejectionReason: "Contains spam links and promotional content",
+    helpfulCount: 0,
+    reportCount: 5,
+    verified: false,
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(14),
+    rejectedAt: daysAgo(14),
+  },
+
+  // 24. Hostile/off-topic review on Blastoise (Misty)
+  {
+    id: "review-blastoise-base1-2-hostile-20260418",
+    productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
+    productTitle: "Blastoise — Base Set #2 Holo Rare (Near Mint)",
+    sellerId: "user-misty-water-gym-misty",
+    userId: "user-unverified-new-user",
+    userName: "New Trainer",
+    userAvatar: undefined,
+    rating: 2,
+    title: "Water types are WEAK — why does anyone collect these",
+    comment:
+      "Fire types beat Water types. Charizard destroys Blastoise. " +
+      "This shop is a waste of time. Misty is the worst Gym Leader. " +
+      "Nobody should buy Water cards when Fire exists. Grow up collectors.",
+    images: [],
+    status: "rejected",
+    moderatorId: "user-moderator-mod-user",
+    moderatorNote: "Hostile, off-topic, and does not review the product",
+    rejectionReason: "Abusive and off-topic content unrelated to the product",
+    helpfulCount: 0,
+    reportCount: 4,
+    verified: false,
+    createdAt: daysAgo(12),
+    updatedAt: daysAgo(11),
+    rejectedAt: daysAgo(11),
   },
 ];

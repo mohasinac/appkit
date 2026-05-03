@@ -21,13 +21,22 @@ interface AdminFaqsResponse {
 
 export function AdminFaqsView({ children, ...props }: AdminFaqsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [q, setQ] = React.useState("");
+  const [activeFilter, setActiveFilter] = React.useState("");
+
+  const filterParts: string[] = [];
+  if (activeFilter === "Active") filterParts.push("isActive==true");
+  else if (activeFilter === "Inactive") filterParts.push("isActive==false");
+  const filters = filterParts.join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminFaqsResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "faqs", "listing"],
+    queryKey: ["admin", "faqs", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.FAQS,
+    filters,
+    q,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `faq-${index}`),
@@ -52,11 +61,21 @@ export function AdminFaqsView({ children, ...props }: AdminFaqsViewProps) {
       subtitle="Keep support answers organized by category, visibility, and homepage priority."
       actionLabel="New FAQ"
       searchPlaceholder="Search questions, categories, or tokens"
+      onSearch={setQ}
+      searchValue={q}
       rows={rows}
       isLoading={isLoading}
       errorMessage={errorMessage}
       emptyLabel="No FAQs found"
       resultSummary={`Showing ${rows.length} of ${total} FAQs`}
+      filterGroups={[
+        {
+          title: "Status",
+          options: ["All", "Active", "Inactive"],
+          active: activeFilter || "All",
+          onSelect: (opt) => setActiveFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }
