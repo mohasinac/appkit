@@ -65,3 +65,6 @@ export function useSellerAnalytics(
     refetch,
   };
 }
+
+/** @deprecated Use useStoreDashboard */
+export { useSellerDashboard as useStoreDashboard };

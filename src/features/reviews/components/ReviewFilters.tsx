@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
+import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -8,9 +9,9 @@ import { Div } from "../../../ui";
 export type ReviewFilterVariant = "admin" | "seller" | "public";
 
 export const REVIEW_FILTER_KEYS = {
-  admin: ["status", "rating", "brand", "verified", "featured"],
-  seller: ["status", "rating", "brand"],
-  public: ["rating", "brand"],
+  admin: ["status", "rating", "brand", "verified", "featured", "dateFrom", "dateTo"],
+  seller: ["status", "rating", "brand", "dateFrom", "dateTo"],
+  public: ["rating", "brand", "dateFrom", "dateTo"],
 } as const;
 
 export const REVIEW_ADMIN_SORT_OPTIONS = [
@@ -120,6 +121,18 @@ export function ReviewFilters({
         />
       )}
 
+      <RangeFilter
+        title={t("dateRange")}
+        type="date"
+        minValue={table.get("dateFrom")}
+        maxValue={table.get("dateTo")}
+        onMinChange={(v) => table.set("dateFrom", v)}
+        onMaxChange={(v) => table.set("dateTo", v)}
+        minPlaceholder={t("minDate")}
+        maxPlaceholder={t("maxDate")}
+        defaultCollapsed={true}
+      />
+
       {isAdmin && (
         <>
           <SwitchFilter
@@ -139,6 +152,20 @@ export function ReviewFilters({
           />
         </>
       )}
+
+      <RangeFilter
+        title={t("votesRange")}
+        minValue={table.get("minVotes")}
+        maxValue={table.get("maxVotes")}
+        onMinChange={(v) => table.set("minVotes", v)}
+        onMaxChange={(v) => table.set("maxVotes", v)}
+        minBound={0}
+        maxBound={10000}
+        step={1}
+        minPlaceholder={t("minVotes")}
+        maxPlaceholder={t("maxVotes")}
+        defaultCollapsed={true}
+      />
     </Div>
   );
 }

@@ -6,6 +6,9 @@ import { useProducts } from "../hooks/useProducts";
 import { Pagination, SortDropdown } from "../../../ui";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
 import { ProductFilters } from "./ProductFilters";
+import { useSession } from "../../../react/contexts/SessionContext";
+import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
+import { apiClient } from "../../../http";
 
 const AUCTION_SORT_OPTIONS = [
   { value: "auctionEndDate", label: "Ending Soonest" },
@@ -27,6 +30,8 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
+  const { user } = useSession();
+  const wl = useWishlistWithGuest(user?.uid ?? null);
 
   const params = {
     q: table.get("q") || undefined,
@@ -62,7 +67,18 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
 
   const closeFilters = () => setFilterOpen(false);
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+  const wishlistActions = {
+    addToWishlist: async (productId: string) => {
+      if (wl.isGuest) (wl as any).guestWishlist?.add(productId, "auction");
+      else await apiClient.post("/api/user/wishlist", { productId });
+    },
+    removeFromWishlist: async (productId: string) => {
+      if (wl.isGuest) (wl as any).guestWishlist?.remove(productId, "auction");
+      else await apiClient.delete(`/api/user/wishlist/${productId}`);
+    },
+  };
+
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4";
 
   return (
     <div className="min-h-screen">
@@ -157,6 +173,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
             auctions={auctions as any[]}
             variant={view === "list" ? "list" : "grid"}
             gridClassName={view === "list" ? "flex flex-col gap-4" : gridClass}
+            wishlistActions={wishlistActions}
           />
         )}
 

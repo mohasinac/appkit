@@ -1,42 +1,102 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Pagination, SortDropdown } from "../../../ui";
 import { ReviewCard } from "./ReviewsList";
+import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "./ReviewFilters";
 import type { Review } from "../types";
+import type { UrlTable } from "../../filters/FilterPanel";
 
 const PAGE_SIZE = 12;
 
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "-rating", label: "Highest Rating" },
-  { value: "rating", label: "Lowest Rating" },
-];
-
-const STAR_FILTERS = [
-  { value: "", label: "All" },
-  { value: "5", label: "★★★★★" },
-  { value: "4", label: "★★★★" },
-  { value: "3", label: "★★★" },
-  { value: "2", label: "★★" },
-  { value: "1", label: "★" },
-];
-
 export interface ReviewsIndexListingProps {
   reviews: Review[];
+  variant?: "admin" | "seller" | "public";
 }
 
-export function ReviewsIndexListing({ reviews }: ReviewsIndexListingProps) {
-  const [sort, setSort] = useState("-createdAt");
-  const [starFilter, setStarFilter] = useState("");
-  const [page, setPage] = useState(1);
+interface SimpleUrlTable {
+  get: (key: string) => string;
+  set: (key: string, value: string) => void;
+  getNumber: (key: string, def: number) => number;
+  setPage: (page: number) => void;
+}
+
+function createSimpleUrlTable(
+  params: Record<string, string>,
+  setParams: (params: Record<string, string>) => void,
+): SimpleUrlTable {
+  return {
+    get: (key: string) => params[key] || "",
+    set: (key: string, value: string) => {
+      const updated = { ...params, [key]: value };
+      setParams(updated);
+    },
+    getNumber: (key: string, def: number) => {
+      const val = params[key];
+      return val ? parseInt(val, 10) : def;
+    },
+    setPage: (page: number) => {
+      setParams({ ...params, page: String(page) });
+    },
+  };
+}
+
+export function ReviewsIndexListing({ 
+  reviews, 
+  variant = "public" 
+}: ReviewsIndexListingProps) {
+  const [params, setParams] = useState<Record<string, string>>({
+    q: "",
+    sort: "-createdAt",
+    rating: "",
+    page: "1",
+  });
+  const [searchInput, setSearchInput] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+
+  const table = createSimpleUrlTable(params, setParams);
 
   const filtered = useMemo(() => {
     let result = [...reviews];
-    if (starFilter) {
-      const star = parseInt(starFilter, 10);
-      result = result.filter((r) => r.rating === star);
+
+    // Apply search filter
+    const searchQuery = table.get("q").toLowerCase();
+    if (searchQuery) {
+      result = result.filter((r) => 
+        r.title?.toLowerCase().includes(searchQuery) ||
+        r.comment?.toLowerCase().includes(searchQuery)
+      );
     }
+
+    // Apply rating filter
+    const ratingFilter = table.get("rating");
+    if (ratingFilter) {
+      const ratings = ratingFilter.split("|").filter(Boolean).map(Number);
+      if (ratings.length > 0) {
+        result = result.filter((r) => ratings.includes(r.rating));
+      }
+    }
+
+    // Apply date range filter
+    const dateFrom = table.get("dateFrom");
+    const dateTo = table.get("dateTo");
+    if (dateFrom) {
+      const fromTime = new Date(dateFrom).getTime();
+      result = result.filter((r) => {
+        const rTime = r.createdAt ? new Date(r.createdAt).getTime() : 0;
+        return rTime >= fromTime;
+      });
+    }
+    if (dateTo) {
+      const toTime = new Date(dateTo).getTime();
+      result = result.filter((r) => {
+        const rTime = r.createdAt ? new Date(r.createdAt).getTime() : Infinity;
+        return rTime <= toTime;
+      });
+    }
+
+    // Apply sort
+    const sort = table.get("sort") || "-createdAt";
     result.sort((a, b) => {
       if (sort === "-rating") return b.rating - a.rating;
       if (sort === "rating") return a.rating - b.rating;
@@ -44,44 +104,68 @@ export function ReviewsIndexListing({ reviews }: ReviewsIndexListingProps) {
       const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return sort === "createdAt" ? aTime - bTime : bTime - aTime;
     });
+
     return result;
-  }, [reviews, sort, starFilter]);
+  }, [reviews, params, table]);
 
+  const currentPage = table.getNumber("page", 1);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
-  const handleSort = (val: string) => { setSort(val); setPage(1); };
-  const handleStarFilter = (val: string) => { setStarFilter(val); setPage(1); };
+  const commitSearch = useCallback(() => {
+    table.set("q", searchInput.trim());
+    table.setPage(1);
+  }, [searchInput, table]);
+
+  const closeFilters = () => setFilterOpen(false);
+
+  const sortOptions = REVIEW_PUBLIC_SORT_OPTIONS.map(opt => ({
+    value: opt.value,
+    label: opt.key,
+  }));
 
   return (
     <div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
-        <div className="flex flex-wrap items-center gap-2.5">
-          {/* Star rating filter chips */}
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {STAR_FILTERS.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => handleStarFilter(opt.value)}
-                className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
-                  starFilter === opt.value
-                    ? "border-primary bg-primary text-white"
-                    : "border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:border-primary hover:text-primary"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        <div className="flex items-center gap-2.5 max-w-full">
+          {/* Filter button */}
+          <button
+            type="button"
+            onClick={() => setFilterOpen(true)}
+            className="flex shrink-0 items-center gap-2 rounded-lg border border-zinc-300 dark:border-slate-600 px-3.5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+          >
+            <SlidersHorizontal className="h-4 w-4" />
+            <span className="hidden sm:inline">Filters</span>
+          </button>
+
+          {/* Search input */}
+          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && commitSearch()}
+              placeholder="Search reviews..."
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
+            />
+            <button
+              type="button"
+              onClick={commitSearch}
+              className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-4 w-4" />
+            </button>
           </div>
 
-          <div className="flex ml-auto shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+          {/* Sort dropdown */}
+          <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="hidden md:inline whitespace-nowrap">Sort by</span>
             <SortDropdown
-              value={sort}
-              onChange={handleSort}
-              options={SORT_OPTIONS}
+              value={table.get("sort") || "-createdAt"}
+              onChange={(v) => { table.set("sort", v); table.setPage(1); }}
+              options={sortOptions}
             />
           </div>
         </div>
@@ -104,13 +188,52 @@ export function ReviewsIndexListing({ reviews }: ReviewsIndexListingProps) {
         {totalPages > 1 && (
           <div className="mt-8 flex justify-center">
             <Pagination
-              currentPage={page}
+              currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={setPage}
+              onPageChange={(p) => table.setPage(p)}
             />
           </div>
         )}
       </div>
+
+      {/* ── Filter drawer ──────────────────────────────────────────────── */}
+      {filterOpen && (
+        <>
+          <div 
+            className="fixed inset-0 z-40 bg-black/40" 
+            aria-hidden="true" 
+            onClick={closeFilters} 
+          />
+          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+              <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
+                <SlidersHorizontal className="h-4 w-4" />
+                Filters
+              </span>
+              <button 
+                type="button" 
+                onClick={closeFilters} 
+                aria-label="Close filters" 
+                className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto px-4 py-4">
+              <ReviewFilters table={table as unknown as UrlTable} variant={variant} />
+            </div>
+            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+              <button 
+                type="button" 
+                onClick={closeFilters} 
+                className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                Apply filters
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

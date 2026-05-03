@@ -192,7 +192,7 @@ export async function HowPayoutsWorkView({
             {t("ctaText")}
           </Text>
           <div className={`${flex.center} gap-4 flex-wrap`} data-section="howpayoutsworkview-div-160">
-            <TextLink href={String(ROUTES.SELLER.PAYOUT_SETTINGS)}>
+            <TextLink href={String(ROUTES.STORE.PAYOUT_SETTINGS)}>
               {t("ctaPayoutSettings")}
             </TextLink>
             <TextLink href={String(ROUTES.PUBLIC.FEES)} variant="muted">

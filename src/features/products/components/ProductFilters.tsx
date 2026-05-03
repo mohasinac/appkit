@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
+import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
@@ -89,37 +90,35 @@ export function getProductSortOptions(
 
 export interface ProductFiltersProps {
   table: UrlTable;
-  /** Pass category options loaded from the API */
   categoryOptions?: FacetOption[];
-  /** Pass brand options loaded from the API */
   brandOptions?: FacetOption[];
-  /** Pass seller name options */
+  /** Store options (formerly sellerOptions) */
+  storeOptions?: FacetOption[];
+  /** @deprecated use storeOptions */
   sellerOptions?: FacetOption[];
-  /** Override defaults with dynamic tag options */
   tagOptions?: FacetOption[];
-  /** Show status filter (admin / seller only) */
   showStatus?: boolean;
-  /** Preferred variant contract (overrides showStatus defaults). */
   variant?: ProductFilterVariant;
   statusOptions?: FacetOption[];
-  /**
-   * Currency prefix shown in price range labels (e.g. "₹", "$", "€").
-   * Injected by the consumer app — never hard-coded in appkit.
-   */
   currencyPrefix?: string;
+  /** Show free-shipping toggle */
+  showShipping?: boolean;
 }
 
 export function ProductFilters({
   table,
   categoryOptions = [],
   brandOptions = [],
-  sellerOptions = [],
+  storeOptions = [],
+  sellerOptions,
   tagOptions = [],
   showStatus = false,
   variant,
   statusOptions,
   currencyPrefix = "",
+  showShipping = true,
 }: ProductFiltersProps) {
+  const resolvedStoreOptions = storeOptions.length > 0 ? storeOptions : (sellerOptions ?? []);
   const t = useTranslations("filters");
 
   const conditionOptions: FacetOption[] = [
@@ -202,13 +201,23 @@ export function ProductFilters({
         />
       )}
 
-      {sellerOptions.length > 0 && (
+      {resolvedStoreOptions.length > 0 && (
         <FilterFacetSection
-          title={t("seller")}
-          options={sellerOptions}
+          title={t("store")}
+          options={resolvedStoreOptions}
           selected={selectedSellers}
           onChange={(vals) => table.set("seller", vals[0] ?? "")}
-          searchable={sellerOptions.length > 6}
+          searchable={resolvedStoreOptions.length > 6}
+          defaultCollapsed={true}
+        />
+      )}
+
+      {showShipping && (
+        <SwitchFilter
+          title={t("shipping")}
+          label={t("freeShippingOnly")}
+          checked={table.get("freeShipping") === "true"}
+          onChange={(v) => table.set("freeShipping", v ? "true" : "")}
           defaultCollapsed={true}
         />
       )}

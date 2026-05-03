@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
+import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
@@ -157,6 +158,28 @@ export function CategoryFilters({
           />
         </>
       )}
+
+      <SwitchFilter
+        title={tr("rootLevelOnly", "Root Level")}
+        label={tr("showRootLevelOnly", "Top level only")}
+        checked={table.get("rootOnly") === "true"}
+        onChange={(v: boolean) => table.set("rootOnly", v ? "true" : "")}
+        defaultCollapsed={true}
+      />
+
+      <RangeFilter
+        title={tr("itemCount", "Item Count")}
+        minValue={table.get("minItemCount")}
+        maxValue={table.get("maxItemCount")}
+        onMinChange={(v) => table.set("minItemCount", v)}
+        onMaxChange={(v) => table.set("maxItemCount", v)}
+        minBound={0}
+        maxBound={10000}
+        step={10}
+        minPlaceholder={tr("minItemCount", "Min items")}
+        maxPlaceholder={tr("maxItemCount", "Max items")}
+        defaultCollapsed={true}
+      />
     </Div>
   );
 }

@@ -175,8 +175,8 @@ export { CategoryProductsView, CategoriesListView } from "./features/categories/
 export type { CategoryItem } from "./features/categories/index";
 export { MediaImage } from "./features/media/index";
 export { ReviewsListView } from "./features/reviews/index";
-export { SellerSidebar } from "./features/seller/components/SellerSidebar";
-export type { SellerNavItem } from "./features/seller/components/SellerSidebar";
+export { StoreSidebar, SellerSidebar } from "./features/seller/components/SellerSidebar";
+export type { StoreNavItem, SellerNavItem } from "./features/seller/components/SellerSidebar";
 export { StoreProductsView } from "./features/stores/index";
 export type { StoreProductItem } from "./features/stores/index";
 export { AdSlot } from "./features/homepage/components/AdSlot";
@@ -190,12 +190,21 @@ export {
   isAdSlotRenderable,
 } from "./features/homepage/ad-registry";
 export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-registry";
-export { WishlistView } from "./features/wishlist/index";
-export type { WishlistViewProps } from "./features/wishlist/index";
+export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
+export type { WishlistViewProps, GuestWishlistItem } from "./features/wishlist/index";
+export {
+  getGuestWishlistItems,
+  addToGuestWishlist,
+  removeFromGuestWishlist,
+  isInGuestWishlist,
+  clearGuestWishlist,
+  getGuestWishlistCount,
+  getGuestWishlistByType,
+} from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
-export { SellerDashboardView, useSellerDashboard } from "./features/seller/index";
-export type { SellerDashboardViewProps } from "./features/seller/index";
+export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSellerDashboard as useStoreDashboard, useSellerDashboard } from "./features/seller/index";
+export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/index";
 export { UserAccountHubView, UserOrdersView } from "./features/account/index";
 export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels } from "./features/account/index";
 export { useOrders, OrdersList } from "./features/orders/index";

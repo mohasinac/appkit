@@ -78,7 +78,9 @@ export interface AppLayoutShellProps {
   onLogout?: () => void;
   /** Href for the admin dashboard — shown in sidebar Dashboard section when user.role is admin. */
   adminHref?: string;
-  /** Href for the seller dashboard — shown in sidebar Dashboard section when user.role is admin or seller. */
+  /** Href for the store management dashboard — shown in sidebar Dashboard section when user.role is admin or seller. */
+  storeHref?: string;
+  /** @deprecated Use storeHref */
   sellerHref?: string;
   /** Href for the user orders page — auto-generates PROFILE section in sidebar. */
   userOrdersHref?: string;
@@ -99,6 +101,8 @@ export interface AppLayoutShellProps {
     settings?: string;
     dashboardSectionTitle?: string;
     adminDashboard?: string;
+    storeDashboard?: string;
+    /** @deprecated Use storeDashboard */
     sellerDashboard?: string;
     logout?: string;
   };
@@ -227,6 +231,7 @@ export function AppLayoutShell({
   hideSidebarToggle = false,
   onLogout,
   adminHref,
+  storeHref,
   sellerHref,
   userOrdersHref,
   userWishlistHref,
@@ -268,6 +273,7 @@ export function AppLayoutShell({
     const isAuthenticated = !!user;
     const role = user?.role ?? "user";
     const isAdminOrSeller = role === "admin" || role === "seller";
+    const resolvedStoreHref = storeHref ?? sellerHref;
 
     // Labels with defaults
     const labels = {
@@ -279,8 +285,10 @@ export function AppLayoutShell({
       dashboardSectionTitle:
         sidebarProfileLabels?.dashboardSectionTitle ?? "Dashboard",
       adminDashboard: sidebarProfileLabels?.adminDashboard ?? "Admin Dashboard",
-      sellerDashboard:
-        sidebarProfileLabels?.sellerDashboard ?? "Seller Dashboard",
+      storeDashboard:
+        sidebarProfileLabels?.storeDashboard ??
+        sidebarProfileLabels?.sellerDashboard ??
+        "Store Dashboard",
       logout: sidebarProfileLabels?.logout ?? "Logout",
     };
 
@@ -393,7 +401,7 @@ export function AppLayoutShell({
         )}
 
         {/* DASHBOARD section — shown to admin/seller roles */}
-        {isAuthenticated && isAdminOrSeller && (adminHref || sellerHref) && (
+        {isAuthenticated && isAdminOrSeller && (adminHref || resolvedStoreHref) && (
           <Div className="space-y-1">
             <Text className={sectionLabelClass}>
               {labels.dashboardSectionTitle}
@@ -410,14 +418,14 @@ export function AppLayoutShell({
                   </TextLink>
                 </Li>
               )}
-              {sellerHref && isAdminOrSeller && (
+              {resolvedStoreHref && isAdminOrSeller && (
                 <Li>
                   <TextLink
-                    href={sellerHref}
+                    href={resolvedStoreHref}
                     variant="none"
                     className={navItemClass}
                   >
-                    {labels.sellerDashboard}
+                    {labels.storeDashboard}
                   </TextLink>
                 </Li>
               )}
@@ -476,6 +484,7 @@ export function AppLayoutShell({
     userWishlistHref,
     userSettingsHref,
     adminHref,
+    storeHref,
     sellerHref,
     sidebarLocaleSlot,
     showThemeToggleInSidebar,

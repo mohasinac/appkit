@@ -7,6 +7,9 @@ import { Pagination, SortDropdown } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
+import { useSession } from "../../../react/contexts/SessionContext";
+import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
+import { apiClient } from "../../../http";
 
 export interface ProductsIndexListingProps {
   initialData?: any;
@@ -19,6 +22,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const [view, setView] = useState<ViewMode>(
     (table.get("view") as ViewMode) || "card",
   );
+  const { user } = useSession();
+  const wl = useWishlistWithGuest(user?.uid ?? null);
 
   const params = {
     q: table.get("q") || undefined,
@@ -53,6 +58,18 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   };
 
   const closeFilters = () => setFilterOpen(false);
+
+  const handleWishlistToggle = useCallback(async (productId: string) => {
+    const isWishlisted = wl.wishlistedIds?.has(productId) ?? false;
+    if (wl.isGuest) {
+      const guestWl = (wl as any).guestWishlist;
+      if (isWishlisted) guestWl?.remove(productId, "product");
+      else guestWl?.add(productId, "product");
+    } else {
+      if (isWishlisted) await apiClient.delete(`/api/user/wishlist/${productId}`);
+      else await apiClient.post("/api/user/wishlist", { productId });
+    }
+  }, [wl]);
 
   return (
     <div className="min-h-screen">
@@ -133,7 +150,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       {/* ── Product grid ───────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 10 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
                 <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
@@ -152,6 +169,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
               String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
             }
             view={view}
+            onWishlistToggle={handleWishlistToggle}
+            wishlistedIds={wl.wishlistedIds}
           />
         )}
 

@@ -6,7 +6,8 @@ export interface RouteMap {
   ERRORS: Record<string, string>;
   AUTH: Record<string, string>;
   USER: Record<string, RoutePath>;
-  SELLER: Record<string, RoutePath>;
+  /** Store management dashboard (requires seller role). Replaces the old SELLER section. */
+  STORE: Record<string, RoutePath>;
   ADMIN: Record<string, RoutePath>;
   DEMO: Record<string, RoutePath>;
   BLOG: Record<string, RoutePath>;
@@ -93,23 +94,23 @@ export const DEFAULT_ROUTE_MAP = {
     CHECKOUT_SUCCESS: "/checkout/success",
     OFFERS: "/user/offers",
   },
-  SELLER: {
-    DASHBOARD: "/seller",
-    PRODUCTS: "/seller/products",
-    PRODUCTS_NEW: "/seller/products/new",
-    PRODUCTS_EDIT: (id: string) => `/seller/products/${id}/edit`,
-    ORDERS: "/seller/orders",
-    AUCTIONS: "/seller/auctions",
-    PRE_ORDERS: "/seller/pre-orders",
-    ANALYTICS: "/seller/analytics",
-    PAYOUTS: "/seller/payouts",
-    STORE: "/seller/store",
-    SHIPPING: "/seller/shipping",
-    PAYOUT_SETTINGS: "/seller/payout-settings",
-    ADDRESSES: "/seller/addresses",
-    COUPONS: "/seller/coupons",
-    COUPONS_NEW: "/seller/coupons/new",
-    OFFERS: "/seller/offers",
+  STORE: {
+    DASHBOARD: "/store",
+    PRODUCTS: "/store/products",
+    PRODUCTS_NEW: "/store/products/new",
+    PRODUCTS_EDIT: (id: string) => `/store/products/${id}/edit`,
+    ORDERS: "/store/orders",
+    AUCTIONS: "/store/auctions",
+    PRE_ORDERS: "/store/pre-orders",
+    ANALYTICS: "/store/analytics",
+    PAYOUTS: "/store/payouts",
+    STOREFRONT: "/store/storefront",
+    SHIPPING: "/store/shipping",
+    PAYOUT_SETTINGS: "/store/payout-settings",
+    ADDRESSES: "/store/addresses",
+    COUPONS: "/store/coupons",
+    COUPONS_NEW: "/store/coupons/new",
+    OFFERS: "/store/offers",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
@@ -165,9 +166,9 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
       ...DEFAULT_ROUTE_MAP.USER,
       ...(overrides.USER ?? {}),
     },
-    SELLER: {
-      ...DEFAULT_ROUTE_MAP.SELLER,
-      ...(overrides.SELLER ?? {}),
+    STORE: {
+      ...DEFAULT_ROUTE_MAP.STORE,
+      ...(overrides.STORE ?? {}),
     },
     ADMIN: {
       ...DEFAULT_ROUTE_MAP.ADMIN,
@@ -185,6 +186,9 @@ export function createRouteMap(overrides: Partial<RouteMap> = {}): RouteMap {
 }
 
 export const ROUTES = DEFAULT_ROUTE_MAP;
+
+/** @deprecated Use ROUTES.STORE instead */
+export const SELLER_ROUTES = ROUTES.STORE;
 
 export const PUBLIC_ROUTES = [
   ROUTES.HOME,

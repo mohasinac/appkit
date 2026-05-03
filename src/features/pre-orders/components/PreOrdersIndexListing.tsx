@@ -7,6 +7,9 @@ import { Pagination, SortDropdown } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { ProductFilters } from "../../products/components/ProductFilters";
+import { useSession } from "../../../react/contexts/SessionContext";
+import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
+import { apiClient } from "../../../http";
 
 const PREORDER_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -27,6 +30,8 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
+  const { user } = useSession();
+  const wl = useWishlistWithGuest(user?.uid ?? null);
 
   const params = {
     q: table.get("q") || undefined,
@@ -61,7 +66,18 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
 
   const closeFilters = () => setFilterOpen(false);
 
-  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4";
+  const wishlistActions = {
+    addToWishlist: async (productId: string) => {
+      if (wl.isGuest) (wl as any).guestWishlist?.add(productId, "preorder");
+      else await apiClient.post("/api/user/wishlist", { productId });
+    },
+    removeFromWishlist: async (productId: string) => {
+      if (wl.isGuest) (wl as any).guestWishlist?.remove(productId, "preorder");
+      else await apiClient.delete(`/api/user/wishlist/${productId}`);
+    },
+  };
+
+  const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
 
   return (
     <div className="min-h-screen">
@@ -163,6 +179,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
                 product={product}
                 variant="list"
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
+                wishlistActions={wishlistActions}
               />
             ))}
           </div>
@@ -174,6 +191,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
                 product={product}
                 variant="grid"
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
+                wishlistActions={wishlistActions}
               />
             ))}
           </div>

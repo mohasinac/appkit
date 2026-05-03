@@ -45,3 +45,36 @@ export type { SellerAddressesViewProps } from "./SellerAddressesView";
 export { SellerGuideView } from "./SellerGuideView";
 export type { SellerGuideViewProps } from "./SellerGuideView";
 export * from "./analytics";
+
+// Store* aliases — same components, renamed for store-centric terminology
+export { StoreSidebar } from "./SellerSidebar";
+export type { StoreNavItem } from "./SellerSidebar";
+export { SellerDashboardView as StoreDashboardView } from "./SellerDashboardView";
+export type { SellerDashboardViewProps as StoreDashboardViewProps } from "./SellerDashboardView";
+// SellerProductsView aliased as StoreProductListingsView (StoreProductsView is the public customer-facing store listing)
+export { SellerProductsView as StoreProductListingsView } from "./SellerProductsView";
+export type { SellerProductsViewProps as StoreProductListingsViewProps } from "./SellerProductsView";
+export { SellerAuctionsView as StoreAuctionsView } from "./SellerAuctionsView";
+export type { SellerAuctionsViewProps as StoreAuctionsViewProps } from "./SellerAuctionsView";
+export { SellerOrdersView as StoreOrdersView } from "./SellerOrdersView";
+export type { SellerOrdersViewProps as StoreOrdersViewProps } from "./SellerOrdersView";
+export { SellerOffersView as StoreOffersView } from "./SellerOffersView";
+export type { SellerOffersViewProps as StoreOffersViewProps } from "./SellerOffersView";
+export { SellerCouponsView as StoreCouponsView } from "./SellerCouponsView";
+export type { SellerCouponsViewProps as StoreCouponsViewProps } from "./SellerCouponsView";
+export { SellerPayoutsView as StorePayoutsView } from "./SellerPayoutsView";
+export type { SellerPayoutsViewProps as StorePayoutsViewProps } from "./SellerPayoutsView";
+export { SellerPayoutSettingsView as StorePayoutSettingsView } from "./SellerPayoutSettingsView";
+export type { SellerPayoutSettingsViewProps as StorePayoutSettingsViewProps } from "./SellerPayoutSettingsView";
+export { SellerAnalyticsView as StoreAnalyticsView } from "./SellerAnalyticsView";
+export type { SellerAnalyticsViewProps as StoreAnalyticsViewProps } from "./SellerAnalyticsView";
+export { SellerCreateProductView as StoreCreateProductView } from "./SellerCreateProductView";
+export type { SellerCreateProductViewProps as StoreCreateProductViewProps } from "./SellerCreateProductView";
+export { SellerEditProductView as StoreEditProductView } from "./SellerEditProductView";
+export type { SellerEditProductViewProps as StoreEditProductViewProps } from "./SellerEditProductView";
+export { SellerStoreView as StoreStorefrontView } from "./SellerStoreView";
+export type { SellerStoreViewProps as StoreStorefrontViewProps } from "./SellerStoreView";
+export { SellerShippingView as StoreShippingView } from "./SellerShippingView";
+export type { SellerShippingViewProps as StoreShippingViewProps } from "./SellerShippingView";
+export { SellerAddressesView as StoreAddressesView } from "./SellerAddressesView";
+export type { SellerAddressesViewProps as StoreAddressesViewProps } from "./SellerAddressesView";

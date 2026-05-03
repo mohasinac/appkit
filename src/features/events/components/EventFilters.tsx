@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
+import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
 
@@ -126,6 +127,14 @@ export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
         onMaxChange={(v) => table.set("dateTo", v)}
         minPlaceholder={t("minDate")}
         maxPlaceholder={t("maxDate")}
+        defaultCollapsed={true}
+      />
+
+      <SwitchFilter
+        title={t("expired")}
+        label={t("showExpiredOnly")}
+        checked={table.get("showExpired") === "true"}
+        onChange={(v) => table.set("showExpired", v ? "true" : "")}
         defaultCollapsed={true}
       />
     </Div>

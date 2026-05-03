@@ -4,15 +4,15 @@ import Link from "next/link";
 import { Aside, Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 
-export interface SellerNavItem {
+export interface StoreNavItem {
   href: string;
   label: string;
   icon?: React.ReactNode;
   badge?: number;
 }
 
-interface SellerSidebarProps {
-  items: SellerNavItem[];
+interface StoreSidebarProps {
+  items: StoreNavItem[];
   activeHref: string;
   storeName?: string;
   storeLogoURL?: string;
@@ -23,13 +23,13 @@ interface SellerSidebarProps {
   className?: string;
 }
 
-function SellerNavContent({
+function StoreNavContent({
   items,
   activeHref,
   storeName,
   storeLogoURL,
   onItemClick,
-}: Pick<SellerSidebarProps, "items" | "activeHref" | "storeName" | "storeLogoURL"> & {
+}: Pick<StoreSidebarProps, "items" | "activeHref" | "storeName" | "storeLogoURL"> & {
   onItemClick?: () => void;
 }) {
   return (
@@ -53,7 +53,7 @@ function SellerNavContent({
           </Text>
         </Row>
       )}
-      <Nav aria-label="Seller navigation" className="flex-1 overflow-y-auto py-3">
+      <Nav aria-label="Store navigation" className="flex-1 overflow-y-auto py-3">
         <Ul className="space-y-0.5 px-2">
           {items.map((item) => {
             const isActive = activeHref === item.href;
@@ -87,7 +87,7 @@ function SellerNavContent({
   );
 }
 
-export function SellerSidebar({
+export function StoreSidebar({
   items,
   activeHref,
   storeName,
@@ -95,24 +95,29 @@ export function SellerSidebar({
   mobileOpen = false,
   onCloseMobile,
   className = "",
-}: SellerSidebarProps) {
+}: StoreSidebarProps) {
   return (
     <>
       {/* Desktop sidebar — always visible on md+ */}
       <Aside
         className={`hidden md:flex w-64 shrink-0 flex-col bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 ${className}`}
       >
-        <SellerNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} />
+        <StoreNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} />
       </Aside>
 
       {/* Mobile: BottomSheet slides up from bottom */}
       <BottomSheet
         open={mobileOpen}
         onClose={onCloseMobile ?? (() => {})}
-        title={storeName ?? "Seller Panel"}
+        title={storeName ?? "Store Panel"}
       >
-        <SellerNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={onCloseMobile} />
+        <StoreNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={onCloseMobile} />
       </BottomSheet>
     </>
   );
 }
+
+/** @deprecated Use StoreSidebar */
+export const SellerSidebar = StoreSidebar;
+/** @deprecated Use StoreNavItem */
+export type SellerNavItem = StoreNavItem;

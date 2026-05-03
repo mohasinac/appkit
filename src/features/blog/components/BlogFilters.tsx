@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
+import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
@@ -118,6 +119,32 @@ export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {
           defaultCollapsed={true}
         />
       )}
+
+      <RangeFilter
+        title={t("dateRange")}
+        type="date"
+        minValue={table.get("dateFrom")}
+        maxValue={table.get("dateTo")}
+        onMinChange={(v) => table.set("dateFrom", v)}
+        onMaxChange={(v) => table.set("dateTo", v)}
+        minPlaceholder={t("minDate")}
+        maxPlaceholder={t("maxDate")}
+        defaultCollapsed={true}
+      />
+
+      <RangeFilter
+        title={t("votesRange")}
+        minValue={table.get("minVotes")}
+        maxValue={table.get("maxVotes")}
+        onMinChange={(v) => table.set("minVotes", v)}
+        onMaxChange={(v) => table.set("maxVotes", v)}
+        minBound={0}
+        maxBound={100000}
+        step={10}
+        minPlaceholder={t("minVotes")}
+        maxPlaceholder={t("maxVotes")}
+        defaultCollapsed={true}
+      />
     </Div>
   );
 }
