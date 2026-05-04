@@ -1835,6 +1835,14 @@ export { storeAddressesSeedData } from "./seed/index";
 export { storesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — Server-side seed dataset for Pokemon-themed stores.
 export { pokemonStoresSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Combined seed dataset for all 4 franchises (Pokemon, Hot Wheels, Beyblade, Transformers).
+export { allProductsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Hot Wheels franchise seed data.
+export { hotWheelsProductsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Beyblade Burst franchise seed data.
+export { beybladeProductsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — Transformers franchise seed data.
+export { transformersProductsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // usersSeedData - Model for users seed data.
 export { usersSeedData } from "./seed/index";
