@@ -317,4 +317,125 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     createdAt: daysAgo(72),
     updatedAt: daysAgo(53),
   },
+
+  // -- Developer / API post with code blocks ---------------------------------
+  {
+    id: "blog-how-to-query-pokemon-tcg-api-card-prices-tips",
+    title: "How to Query the Pokemon TCG API for Real-Time Card Prices",
+    slug: "how-to-query-pokemon-tcg-api-card-prices",
+    excerpt:
+      "The Pokemon TCG API is a free, open dataset of every card ever printed. This guide shows you how to query it with JavaScript, filter by set and rarity, and cross-reference prices with recent LetItRip auction results.",
+    content: `<h2>Why Use the Pokemon TCG API?</h2>
+<p>The <a href="https://pokemontcg.io" rel="noopener noreferrer">Pokemon TCG API</a> provides structured data on every officially printed Pokemon card — set codes, rarity, artwork, legality, and market price snapshots from major resale platforms. Combined with live auction data from LetItRip, you can build surprisingly accurate price models for graded and raw singles.</p>
+
+<h2>Getting Started — Fetch a Card by Set and Number</h2>
+<p>You can query any card by its set ID and number. Here's how to fetch the Base Set Charizard (base1-4) using the <code>fetch</code> API:</p>
+
+<pre><code class="language-javascript">const response = await fetch(
+  'https://api.pokemontcg.io/v2/cards/base1-4',
+  { headers: { 'X-Api-Key': 'YOUR_API_KEY' } }
+);
+const { data } = await response.json();
+
+console.log(data.name);         // "Charizard"
+console.log(data.set.name);     // "Base"
+console.log(data.rarity);       // "Rare Holo"
+console.log(data.tcgplayer?.prices?.holofoil?.market); // e.g. 450.00 (USD)
+</code></pre>
+
+<h2>Search All Holos in Base Set</h2>
+<p>To list every holo rare in the original Base Set, use the <code>q</code> query parameter with <code>set.id:base1 rarity:"Rare Holo"</code>:</p>
+
+<pre><code class="language-javascript">const params = new URLSearchParams({
+  q: 'set.id:base1 rarity:"Rare Holo"',
+  orderBy: '-tcgplayer.prices.holofoil.market',
+  pageSize: '20',
+});
+
+const res = await fetch(
+  \`https://api.pokemontcg.io/v2/cards?\${params}\`,
+  { headers: { 'X-Api-Key': 'YOUR_API_KEY' } }
+);
+const { data, totalCount } = await res.json();
+
+data.forEach(card => {
+  const price = card.tcgplayer?.prices?.holofoil?.market ?? 'N/A';
+  console.log(\`\${card.name} #\${card.number} — $\${price}\`);
+});
+// Charizard #4 — $450.00
+// Mewtwo #10 — $120.00
+// Blastoise #2 — $95.00
+// ...
+</code></pre>
+
+<h2>Cross-Referencing With LetItRip Auction History</h2>
+<p>Indian market prices differ from USD TCGPlayer values due to import costs, grading premiums, and local collector demand. To get a LetItRip-accurate estimate, compare the TCG API price with recent sold lots via our public auction feed:</p>
+
+<pre><code class="language-javascript">// Example: fetch last 10 sold auctions for Charizard on LetItRip
+const lirRes = await fetch('/api/auctions?q=charizard&status=ended&pageSize=10');
+const { data: auctionLots } = await lirRes.json();
+
+const avgINR = auctionLots.reduce((sum, lot) => sum + lot.currentBid, 0)
+             / auctionLots.length;
+
+console.log(\`Average LetItRip sold price: ₹\${avgINR.toLocaleString('en-IN')}\`);
+</code></pre>
+
+<h2>Building a Price Alert</h2>
+<p>You can combine both APIs into a simple price-alert script. Run it on a cron job and notify yourself when a card crosses a target price:</p>
+
+<pre><code class="language-javascript">async function checkPriceAlert({ cardId, targetUSD }) {
+  const res = await fetch(
+    \`https://api.pokemontcg.io/v2/cards/\${cardId}\`,
+    { headers: { 'X-Api-Key': process.env.POKEMON_API_KEY } }
+  );
+  const { data } = await res.json();
+  const market = data.tcgplayer?.prices?.holofoil?.market;
+
+  if (market && market >= targetUSD) {
+    console.log(
+      \`ALERT: \${data.name} is now $\${market} (target: $\${targetUSD})\`
+    );
+    // → send yourself a notification via email, Slack, etc.
+  }
+}
+
+// Example usage
+checkPriceAlert({ cardId: 'base1-4', targetUSD: 500 });
+</code></pre>
+
+<h2>Rate Limits and Best Practices</h2>
+<ul>
+  <li>The free Pokemon TCG API tier allows 1,000 requests/day. Register for a free API key to unlock 20,000 requests/day.</li>
+  <li>Cache responses locally — card data changes infrequently; only price snapshots need frequent polling.</li>
+  <li>Combine with Firestore or a local SQLite database to persist historical price data for trend analysis.</li>
+  <li>Remember that TCGPlayer prices are USD-denominated; apply an exchange rate and import premium (typically 15–25%) for INR estimates.</li>
+</ul>
+
+<h2>Next Steps</h2>
+<p>The Pokemon TCG API documentation covers advanced queries including artist name search, legality filters, and set release date ordering. For live Indian market prices, LetItRip's own auction feed is the most accurate source — use both together for the most complete picture.</p>`,
+    coverImage: "https://images.pokemontcg.io/base1/10_hires.png",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.TIPS,
+    tags: [
+      "api",
+      "developer",
+      "price-guide",
+      "javascript",
+      "tutorial",
+      "tools",
+    ],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(12),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 8,
+    views: 1847,
+    metaTitle:
+      "How to Query the Pokemon TCG API for Real-Time Card Prices | LetItRip",
+    metaDescription:
+      "Step-by-step guide to using the Pokemon TCG API with JavaScript — fetch cards by set, filter holos, and cross-reference prices with LetItRip auction data.",
+    createdAt: daysAgo(14),
+    updatedAt: daysAgo(12),
+  },
 ];

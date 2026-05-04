@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Button,
@@ -23,7 +25,10 @@ export interface AdminListingScaffoldRow {
 interface AdminListingScaffoldProps extends ListingViewShellProps {
   title: string;
   subtitle: string;
-  actionLabel: string;
+  actionLabel?: string;
+  actionHref?: string;
+  columns?: AdminTableColumn<AdminListingScaffoldRow>[];
+  getRowHref?: (row: AdminListingScaffoldRow) => string;
   searchPlaceholder: string;
   rows: AdminListingScaffoldRow[];
   isLoading?: boolean;
@@ -148,6 +153,9 @@ export function AdminListingScaffold({
   title,
   subtitle,
   actionLabel,
+  actionHref,
+  columns,
+  getRowHref,
   searchPlaceholder,
   rows,
   isLoading,
@@ -228,11 +236,25 @@ export function AdminListingScaffold({
         )
       }
       actionsSlot={
-        actionsSlot ?? (
-          <Button type="button" variant="primary" size="sm">
-            {actionLabel}
-          </Button>
-        )
+        actionsSlot ??
+        (actionLabel ? (
+          actionHref ? (
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={() => {
+                window.location.href = actionHref;
+              }}
+            >
+              {actionLabel}
+            </Button>
+          ) : (
+            <Button type="button" variant="primary" size="sm">
+              {actionLabel}
+            </Button>
+          )
+        ) : undefined)
       }
       filterActiveCount={activeFilters?.length ?? 0}
       filterPendingCount={0}
@@ -248,10 +270,11 @@ export function AdminListingScaffold({
         children
       ) : (
         <DataTable
-          columns={buildColumns()}
+          columns={columns ?? buildColumns()}
           rows={rows}
           isLoading={isLoading}
           emptyLabel={emptyLabel}
+          getRowHref={getRowHref}
         />
       )}
     </ListingViewShell>

@@ -1088,6 +1088,9 @@ export { logger } from "./core/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // newsletterRepository - Shared export for newsletter repository.
 export { newsletterRepository } from "./core/index";
+// contactSubmissionsRepository - Firestore repository for contact form submissions.
+export { contactSubmissionsRepository, CONTACT_SUBMISSIONS_COLLECTION } from "./core/index";
+export type { ContactSubmissionDocument, ContactSubmissionCreateInput } from "./core/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // onMutation - Shared export for on mutation.
 export { onMutation } from "./core/index";
@@ -3161,6 +3164,10 @@ export { AdminFaqsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminFeatureFlagsView - Component for admin feature flags view.
 export { AdminFeatureFlagsView } from "./features/admin/index";
+// AdminNewsletterView - Admin view for newsletter subscribers.
+export { AdminNewsletterView } from "./features/admin/index";
+// AdminContactView - Admin view for contact form submissions.
+export { AdminContactView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminFilterBar - Shared export for admin filter bar.
 export { AdminFilterBar } from "./features/admin/index";
@@ -3350,6 +3357,8 @@ export type { AdminFaqsViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminFeatureFlagsViewProps - Type contract for admin feature flags view props.
 export type { AdminFeatureFlagsViewProps } from "./features/admin/index";
+export type { AdminNewsletterViewProps } from "./features/admin/index";
+export type { AdminContactViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminFilterBarProps - Type contract for admin filter bar props.
 export type { AdminFilterBarProps } from "./features/admin/index";
@@ -7533,8 +7542,6 @@ export { SellersListView } from "./features/seller/index";
 export { SellerAddressesView as StoreAddressesView } from "./features/seller/index";
 // StoreAnalyticsView - Alias for SellerAnalyticsView.
 export { SellerAnalyticsView as StoreAnalyticsView } from "./features/seller/index";
-// StoreAuctionsView - Alias for SellerAuctionsView.
-export { SellerAuctionsView as StoreAuctionsView } from "./features/seller/index";
 // StoreCouponsView - Alias for SellerCouponsView.
 export { SellerCouponsView as StoreCouponsView } from "./features/seller/index";
 // StoreCreateProductView - Alias for SellerCreateProductView.
@@ -7749,8 +7756,6 @@ export type { SellersListViewProps } from "./features/seller/index";
 export type { SellerAddressesViewProps as StoreAddressesViewProps } from "./features/seller/index";
 // StoreAnalyticsViewProps - Type alias for SellerAnalyticsViewProps.
 export type { SellerAnalyticsViewProps as StoreAnalyticsViewProps } from "./features/seller/index";
-// StoreAuctionsViewProps - Type alias for SellerAuctionsViewProps.
-export type { SellerAuctionsViewProps as StoreAuctionsViewProps } from "./features/seller/index";
 // StoreCouponsViewProps - Type alias for SellerCouponsViewProps.
 export type { SellerCouponsViewProps as StoreCouponsViewProps } from "./features/seller/index";
 // StoreCreateProductViewProps - Type alias for SellerCreateProductViewProps.

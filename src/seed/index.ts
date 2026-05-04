@@ -176,6 +176,7 @@ export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
 export { pokemonProductsSeedData } from "./pokemon-products-seed-data";
 export { pokemonCarouselSlidesSeedData } from "./pokemon-carousel-slides-seed-data";
 export { pokemonHomepageSectionsSeedData } from "./pokemon-homepage-sections-seed-data";
+export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";
 
 // Firestore index helpers
 export type { FirestoreIndexConfig } from "./firestore-indexes";

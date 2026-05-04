@@ -40,3 +40,4 @@ export { blogPostsSeedData } from "./blog-posts-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
+export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";

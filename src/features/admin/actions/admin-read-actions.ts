@@ -12,6 +12,8 @@ import { blogRepository } from "../../blog/repository/blog.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { bidRepository } from "../../auctions/repository/bid.repository";
 import { payoutRepository } from "../../payments/repository/payout.repository";
+import { newsletterRepository } from "../../../core/newsletter.repository";
+import { contactSubmissionsRepository } from "../../../core/contact-submissions.repository";
 import { formatMonthYear } from "../../../utils";
 import type {
   FirebaseSieveResult,
@@ -263,5 +265,33 @@ export async function listAdminSessions(params?: {
   return sessionRepository.findAllForAdmin({
     userId: params?.userId,
     limit: params?.limit ?? 100,
+  });
+}
+
+export async function listAdminNewsletterSubscribers(params?: {
+  filters?: string;
+  sorts?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  return newsletterRepository.list({
+    filters: params?.filters,
+    sorts: params?.sorts,
+    page: String(params?.page ?? 1),
+    pageSize: String(params?.pageSize ?? 50),
+  });
+}
+
+export async function listAdminContactSubmissions(params?: {
+  filters?: string;
+  sorts?: string;
+  page?: number;
+  pageSize?: number;
+}) {
+  return contactSubmissionsRepository.list({
+    filters: params?.filters,
+    sorts: params?.sorts,
+    page: String(params?.page ?? 1),
+    pageSize: String(params?.pageSize ?? 50),
   });
 }

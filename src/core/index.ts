@@ -58,6 +58,15 @@ export type {
 } from "./newsletter.repository";
 
 export {
+  CONTACT_SUBMISSIONS_COLLECTION,
+  contactSubmissionsRepository,
+} from "./contact-submissions.repository";
+export type {
+  ContactSubmissionDocument,
+  ContactSubmissionCreateInput,
+} from "./contact-submissions.repository";
+
+export {
   subscribeNewsletter,
   type SubscribeNewsletterActionInput,
   type SupportedNewsletterSource,

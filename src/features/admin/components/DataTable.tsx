@@ -1,3 +1,5 @@
+"use client";
+
 import type { AdminTableColumn } from "../types";
 import { Button, Div, Span } from "../../../ui";
 
@@ -5,6 +7,7 @@ interface DataTableProps<T extends { id: string }> {
   columns: AdminTableColumn<T>[];
   rows: T[];
   isLoading?: boolean;
+  getRowHref?: (row: T) => string;
   sortKey?: string;
   sortDir?: "asc" | "desc";
   onSort?: (key: string) => void;
@@ -25,6 +28,7 @@ export function DataTable<T extends { id: string }>({
   currentPage = 1,
   onPageChange,
   emptyLabel = "No records found",
+  getRowHref,
 }: DataTableProps<T>) {
   return (
     <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
@@ -72,25 +76,46 @@ export function DataTable<T extends { id: string }>({
                 </td>
               </tr>
             ) : (
-              rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800"
-                >
-                  {columns.map((col) => (
-                    <td
-                      key={col.key}
-                      className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
-                    >
-                      {col.render
-                        ? col.render(row)
-                        : String(
-                            (row as Record<string, unknown>)[col.key] ?? "",
-                          )}
-                    </td>
-                  ))}
-                </tr>
-              ))
+              rows.map((row) => {
+                const rowHref = getRowHref?.(row);
+                return (
+                  <tr
+                    key={row.id}
+                    onClick={
+                      rowHref
+                        ? () => {
+                            window.location.href = rowHref;
+                          }
+                        : undefined
+                    }
+                    onKeyDown={
+                      rowHref
+                        ? (event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              window.location.href = rowHref;
+                            }
+                          }
+                        : undefined
+                    }
+                    role={rowHref ? "link" : undefined}
+                    tabIndex={rowHref ? 0 : undefined}
+                    className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${rowHref ? "cursor-pointer" : ""}`}
+                  >
+                    {columns.map((col) => (
+                      <td
+                        key={col.key}
+                        className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
+                      >
+                        {col.render
+                          ? col.render(row)
+                          : String(
+                              (row as Record<string, unknown>)[col.key] ?? "",
+                            )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
