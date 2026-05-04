@@ -13,6 +13,18 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
+function slugify(text: string): string {
+  return text
+    .replace(/\s*[–—]\s*(SOLD OUT|AUCTION|ENDED|DISCONTINUED|CLOSED.*|DRAFT|\[DRAFT\]|\(Pre-Order\)|SOLD)\s*$/i, "")
+    .replace(/\s*\[DRAFT\]\s*$/i, "")
+    .replace(/\s*\(Pre-Order\)\s*$/i, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .replace(/-{2,}/g, "-")
+    .slice(0, 80);
+}
+
 function toRichTextDoc(value: string): string {
   const trimmed = value.trim();
   if (!trimmed) return value;
@@ -2602,4 +2614,9 @@ export const productsSeedData: Partial<ProductDocument>[] = [
   ...draftProducts,
   ...discontinuedAndSold,
   ...generatedProducts,
-].map(withRichTextDescription);
+]
+  .map(withRichTextDescription)
+  .map((p) => ({
+    ...p,
+    slug: p.slug ?? slugify(p.title ?? p.id ?? ""),
+  }));

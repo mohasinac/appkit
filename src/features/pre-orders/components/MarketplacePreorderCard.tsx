@@ -64,7 +64,7 @@ function resolveHref(
 ) {
   if (href) return href;
   if (hrefBuilder) return hrefBuilder(product);
-  return ROUTES.PUBLIC.PRE_ORDER_DETAIL(product.id);
+  return ROUTES.PUBLIC.PRE_ORDER_DETAIL(product.slug ?? product.id);
 }
 
 export function MarketplacePreorderCard({

@@ -18,7 +18,8 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
     enabled: true,
     config: {
       h1: "India's #1 Collectibles Marketplace",
-      description: "Pokémon TCG · Hot Wheels · Beyblade · Transformers · Anime Figures — all in one place. Buy, bid, and pre-order from verified sellers across India.",
+      subtitle: "Pokémon · Hot Wheels · Beyblade · Transformers · Anime Figures",
+      description: "Buy, bid, and pre-order from verified sellers across India.",
       ctaText: "Shop Now",
       ctaLink: "/products",
       showCTA: true,

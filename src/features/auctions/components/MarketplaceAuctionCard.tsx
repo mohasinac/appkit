@@ -102,7 +102,7 @@ function resolveHref(
   if (href) return href;
   if (hrefBuilder) return hrefBuilder(product);
   if (!product.id) return undefined;
-  return ROUTES.PUBLIC.AUCTION_DETAIL(product.id);
+  return ROUTES.PUBLIC.AUCTION_DETAIL(product.slug ?? product.id);
 }
 
 function formatCountdownLabel(
