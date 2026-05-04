@@ -138,7 +138,7 @@ export function ProductFilters({
     ? table.get("category").split("|").filter(Boolean)
     : [];
   const selectedBrands = table.get("brand") ? [table.get("brand")] : [];
-  const selectedSellers = table.get("seller") ? [table.get("seller")] : [];
+  const selectedSellers = table.get("storeId") ? [table.get("storeId")] : [];
   const selectedConditions = table.get("condition")
     ? table.get("condition").split("|").filter(Boolean)
     : [];
@@ -206,7 +206,7 @@ export function ProductFilters({
           title={t("store")}
           options={resolvedStoreOptions}
           selected={selectedSellers}
-          onChange={(vals) => table.set("seller", vals[0] ?? "")}
+          onChange={(vals) => table.set("storeId", vals[0] ?? "")}
           searchable={resolvedStoreOptions.length > 6}
           defaultCollapsed={true}
         />

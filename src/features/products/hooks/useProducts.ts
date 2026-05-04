@@ -42,12 +42,22 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.inStock !== undefined) sp.set("inStock", String(params.inStock));
   if (params.isAuction !== undefined)
     sp.set("isAuction", String(params.isAuction));
+  if (params.isPreOrder !== undefined)
+    sp.set("isPreOrder", String(params.isPreOrder));
   if (params.sellerId) sp.set("sellerId", params.sellerId);
+  if (params.storeId) sp.set("storeId", params.storeId);
   if (params.sort) sp.set("sorts", params.sort);
   if (params.page) sp.set("page", String(params.page));
   if (params.perPage) sp.set("pageSize", String(params.perPage));
   if (params.featured !== undefined)
     sp.set("featured", String(params.featured));
+  if (params.minBid !== undefined) sp.set("minBid", String(params.minBid));
+  if (params.maxBid !== undefined) sp.set("maxBid", String(params.maxBid));
+  if (params.dateFrom) sp.set("dateFrom", params.dateFrom);
+  if (params.dateTo) sp.set("dateTo", params.dateTo);
+  if (params.preOrderStatus) sp.set("preOrderStatus", params.preOrderStatus);
+  if (params.freeShipping !== undefined)
+    sp.set("freeShipping", String(params.freeShipping));
   const qs = sp.toString();
 
   const query = useQuery<ProductListResponse>({

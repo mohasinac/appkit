@@ -135,9 +135,21 @@ export interface ProductListParams {
   maxPrice?: number;
   inStock?: boolean;
   isAuction?: boolean;
+  isPreOrder?: boolean;
   sellerId?: string;
+  storeId?: string;
   sort?: string;
   page?: number;
   perPage?: number;
   featured?: boolean;
+  /** Auction-specific: current bid range */
+  minBid?: number;
+  maxBid?: number;
+  /** Auction: end date range / Pre-order: delivery date range */
+  dateFrom?: string;
+  dateTo?: string;
+  /** Pre-order production status */
+  preOrderStatus?: string;
+  /** Shipping / free shipping */
+  freeShipping?: boolean;
 }

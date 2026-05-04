@@ -313,6 +313,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     condition: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: true },
     sellerId: { canFilter: true, canSort: false },
+    storeId: { canFilter: true, canSort: false },
     sellerName: { canFilter: true, canSort: true },
     featured: { canFilter: true, canSort: false },
     isAuction: { canFilter: true, canSort: false },
@@ -342,6 +343,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     features: { canFilter: true, canSort: false },
     insurance: { canFilter: true, canSort: false },
     currency: { canFilter: true, canSort: false },
+    freeShipping: { canFilter: true, canSort: false },
   };
 
   async list(

@@ -17,12 +17,21 @@ export function useReviews(
   if (params.productId) sp.set("productId", params.productId);
   if (params.userId) sp.set("userId", params.userId);
   if (params.status) sp.set("status", params.status);
-  if (params.rating) sp.set("rating", String(params.rating));
+  if (params.rating !== undefined) sp.set("rating", String(params.rating));
   if (params.featured !== undefined)
     sp.set("featured", String(params.featured));
   if (params.page) sp.set("page", String(params.page));
   if (params.perPage) sp.set("perPage", String(params.perPage));
   if (params.sort) sp.set("sort", params.sort);
+  if (params.q) sp.set("q", params.q);
+  if (params.dateFrom) sp.set("dateFrom", params.dateFrom);
+  if (params.dateTo) sp.set("dateTo", params.dateTo);
+  if (params.minVotes !== undefined) sp.set("minVotes", String(params.minVotes));
+  if (params.maxVotes !== undefined) sp.set("maxVotes", String(params.maxVotes));
+  // General listing mode (no productId)
+  if (!params.productId && !params.userId && !params.sellerId) {
+    sp.set("latest", "true");
+  }
   const qs = sp.toString();
 
   const query = useQuery<ReviewListResponse>({

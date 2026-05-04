@@ -51,11 +51,16 @@ export interface ReviewListParams {
   userId?: string;
   sellerId?: string;
   status?: ReviewStatus;
-  rating?: number;
+  rating?: number | string;
   featured?: boolean;
   page?: number;
   perPage?: number;
   sort?: string;
+  q?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  minVotes?: number;
+  maxVotes?: number;
 }
 
 export interface CreateReviewInput {

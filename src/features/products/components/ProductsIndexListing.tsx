@@ -37,6 +37,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     condition: table.get("condition") || undefined,
     brand: table.get("brand") || undefined,
+    storeId: table.get("storeId") || undefined,
+    freeShipping: table.get("freeShipping") === "true" ? true : undefined,
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),

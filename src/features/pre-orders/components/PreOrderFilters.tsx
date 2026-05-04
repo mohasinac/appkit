@@ -19,17 +19,17 @@ export function PreOrderFilters({
   const t = useTranslations("filters");
 
   const statusOptions: FacetOption[] = [
-    { value: "active", label: t("preOrderStatusActive") },
-    { value: "upcoming", label: t("preOrderStatusUpcoming") },
-    { value: "closed", label: t("preOrderStatusClosed") },
-    { value: "cancelled", label: t("preOrderStatusCancelled") },
+    { value: "upcoming", label: "Upcoming" },
+    { value: "in_production", label: "In Production" },
+    { value: "ready_to_ship", label: "Ready to Ship" },
+    { value: "shipped", label: "Shipped" },
   ];
 
   const selectedStatuses = table.get("preOrderStatus")
     ? table.get("preOrderStatus").split("|").filter(Boolean)
     : [];
-  const selectedStores = table.get("store")
-    ? table.get("store").split("|").filter(Boolean)
+  const selectedStores = table.get("storeId")
+    ? table.get("storeId").split("|").filter(Boolean)
     : [];
 
   return (
@@ -38,8 +38,9 @@ export function PreOrderFilters({
         title={t("preOrderStatus")}
         options={statusOptions}
         selected={selectedStatuses}
-        onChange={(vals) => table.set("preOrderStatus", vals.join("|"))}
+        onChange={(vals) => table.set("preOrderStatus", vals[0] ?? "")}
         searchable={false}
+        selectionMode="single"
         defaultCollapsed={false}
       />
 
@@ -53,10 +54,10 @@ export function PreOrderFilters({
         showSlider
         minBound={0}
         maxBound={500000}
-        step={500}
+        step={100}
         minPlaceholder={t("minPrice")}
         maxPlaceholder={t("maxPrice")}
-        defaultCollapsed={true}
+        defaultCollapsed={false}
       />
 
       {storeOptions.length > 0 && (
@@ -64,14 +65,15 @@ export function PreOrderFilters({
           title={t("store")}
           options={storeOptions}
           selected={selectedStores}
-          onChange={(vals) => table.set("store", vals.join("|"))}
+          onChange={(vals) => table.set("storeId", vals[0] ?? "")}
           searchable={storeOptions.length > 6}
+          selectionMode="single"
           defaultCollapsed={true}
         />
       )}
 
       <RangeFilter
-        title={t("dateRange")}
+        title="Delivery Date Range"
         type="date"
         minValue={table.get("dateFrom")}
         maxValue={table.get("dateTo")}

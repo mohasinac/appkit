@@ -18,8 +18,8 @@ export function AuctionFilters({
 }: AuctionFiltersProps) {
   const t = useTranslations("filters");
 
-  const selectedStores = table.get("store")
-    ? table.get("store").split("|").filter(Boolean)
+  const selectedStores = table.get("storeId")
+    ? table.get("storeId").split("|").filter(Boolean)
     : [];
 
   return (
@@ -45,7 +45,7 @@ export function AuctionFilters({
           title={t("store")}
           options={storeOptions}
           selected={selectedStores}
-          onChange={(vals) => table.set("store", vals.join("|"))}
+          onChange={(vals) => table.set("storeId", vals[0] ?? "")}
           searchable={storeOptions.length > 6}
           defaultCollapsed={true}
         />

@@ -1,7 +1,7 @@
 import React from "react";
 import { reviewRepository } from "../../../repositories";
 import { Container, Heading, Main, Section } from "../../../ui";
-import type { Review } from "../types";
+import type { ReviewListResponse } from "../types";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { ReviewsIndexListing } from "./ReviewsIndexListing";
 
@@ -13,7 +13,6 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildReviewFilters(params: SearchParams): string {
-  // Always scope to approved reviews on the public page
   const parts: string[] = ["status==approved"];
   const rating = sp(params, "rating");
   if (rating) {
@@ -23,10 +22,14 @@ function buildReviewFilters(params: SearchParams): string {
   }
   const minVotes = sp(params, "minVotes");
   if (minVotes) parts.push(`helpfulCount>=${minVotes}`);
+  const maxVotes = sp(params, "maxVotes");
+  if (maxVotes) parts.push(`helpfulCount<=${maxVotes}`);
   const dateFrom = sp(params, "dateFrom");
   const dateTo = sp(params, "dateTo");
   if (dateFrom) parts.push(`createdAt>=${dateFrom}`);
   if (dateTo) parts.push(`createdAt<=${dateTo}`);
+  const q = sp(params, "q");
+  if (q) parts.push(`productTitle@=*${q}`);
   return parts.join(",");
 }
 
@@ -40,10 +43,19 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
   const filters = buildReviewFilters(searchParams);
 
   const result = await reviewRepository
-    .listAll({ filters, sorts: sort, page, pageSize: 48 })
+    .listAll({ filters, sorts: sort, page, pageSize: 12 })
     .catch(() => null);
 
-  const reviews = (result?.items ?? []) as unknown as Review[];
+  const initialData: ReviewListResponse | undefined = result
+    ? {
+        items: result.items as any[],
+        total: result.total,
+        page: result.page,
+        pageSize: result.pageSize,
+        totalPages: result.totalPages,
+        hasMore: result.hasMore,
+      }
+    : undefined;
 
   return (
     <Main>
@@ -53,7 +65,7 @@ export async function ReviewsIndexPageView({ searchParams = {} }: ReviewsIndexPa
             Reviews
           </Heading>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <ReviewsIndexListing reviews={reviews as Review[]} />
+          <ReviewsIndexListing initialData={initialData} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

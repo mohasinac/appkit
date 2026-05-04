@@ -6,7 +6,7 @@ import { useProducts } from "../../products/hooks/useProducts";
 import { Pagination, SortDropdown } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
-import { ProductFilters } from "../../products/components/ProductFilters";
+import { PreOrderFilters } from "./PreOrderFilters";
 import { useSession } from "../../../react/contexts/SessionContext";
 import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
 import { apiClient } from "../../../http";
@@ -39,6 +39,10 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
     categorySlug: categorySlug || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
+    storeId: table.get("storeId") || undefined,
+    preOrderStatus: table.get("preOrderStatus") || undefined,
+    dateFrom: table.get("dateFrom") || undefined,
+    dateTo: table.get("dateTo") || undefined,
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
@@ -242,7 +246,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
               </button>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <ProductFilters table={table as any} currencyPrefix="₹" />
+              <PreOrderFilters table={table as any} currencyPrefix="₹" />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button
