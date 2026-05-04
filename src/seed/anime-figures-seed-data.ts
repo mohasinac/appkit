@@ -20,9 +20,21 @@ const AV = {
   sellerEmail: "animevault@letitrip.in",
 } as const;
 
+const AF_IMGS = [
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nendoroid.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Anime_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Action_figure_collection.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Collectible_figurine.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Anime_merchandise.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Figurine.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Plastic_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Dragon_Ball_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nendoroid_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/PVC_anime_figure.jpg?width=640",
+];
 const img = (seed: string) => {
   let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
-  return `https://loremflickr.com/600/600/anime,figure,collectible?lock=${h % 800}`;
+  return AF_IMGS[h % AF_IMGS.length];
 };
 
 export const animeFiguresSeedData: Partial<ProductDocument>[] = [
@@ -43,6 +55,11 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 18,
     mainImage: img("dbz-goku-ultra-instinct"),
     images: [img("dbz-goku-ultra-instinct"), img("dbz-goku-ki-effect")],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      thumbnailUrl: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nendoroid.jpg?width=640",
+      duration: 15,
+    },
     status: "published",
     ...AV,
     featured: true,

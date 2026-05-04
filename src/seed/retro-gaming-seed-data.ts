@@ -20,9 +20,23 @@ const RV = {
   sellerEmail: "retrovault@letitrip.in",
 } as const;
 
+const RG_IMGS = [
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nintendo_Entertainment_System.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Super_Nintendo_Entertainment_System.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Game_Boy_original.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nintendo_64.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Sega_Mega_Drive_PAL_version.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Game_Boy_Advance.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Game_Boy_Color.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Atari_2600.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Neo_Geo_AES.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/PlayStation_(console).jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Sega_Saturn.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Game_cartridge.jpg?width=640",
+];
 const img = (seed: string) => {
   let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
-  return `https://loremflickr.com/600/400/retro,game,console,vintage?lock=${h % 800}`;
+  return RG_IMGS[h % RG_IMGS.length];
 };
 
 export const retroGamingSeedData: Partial<ProductDocument>[] = [
@@ -43,6 +57,11 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 3,
     mainImage: img("nintendo-nes-console"),
     images: [img("nintendo-nes-console"), img("nintendo-nes-box"), img("nintendo-nes-contents")],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      thumbnailUrl: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Nintendo_Entertainment_System.jpg?width=640",
+      duration: 30,
+    },
     status: "published",
     ...RV,
     featured: true,

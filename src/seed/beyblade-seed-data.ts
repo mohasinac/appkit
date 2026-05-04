@@ -19,9 +19,20 @@ const BP = {
   sellerEmail: "bladers@letitrip.in",
 } as const;
 
+const BB_IMGS = [
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Spinning_top.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Beyblade.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Spinning_top_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Top_(toy).jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Japanese_spinning_top.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Koma_(top).jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Spinning_top_collection.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Beyblades.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Toy_spinning_top.jpg?width=640",
+];
 const img = (seed: string) => {
   let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
-  return `https://loremflickr.com/600/600/beyblade,spinning-top,toy?lock=${h % 800}`;
+  return BB_IMGS[h % BB_IMGS.length];
 };
 
 export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
@@ -42,6 +53,11 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 17,
     mainImage: img("bb-valtryek-v5"),
     images: [img("bb-valtryek-v5"), img("bb-valtryek-v5-2")],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      thumbnailUrl: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Spinning_top.jpg?width=640",
+      duration: 15,
+    },
     status: "published",
     ...BP,
     featured: true,

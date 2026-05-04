@@ -19,9 +19,21 @@ const SK = {
   sellerEmail: "speedking@letitrip.in",
 } as const;
 
+const TF_IMGS = [
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Optimus_Prime_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Transformers_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Action_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Robot_action_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Transformer_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hasbro_Transformers_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Megatron_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Transformers_action_figure.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Robot_toy.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Converting_robot_toy.jpg?width=640",
+];
 const img = (seed: string) => {
   let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
-  return `https://loremflickr.com/600/400/transformers,robot,action-figure?lock=${h % 800}`;
+  return TF_IMGS[h % TF_IMGS.length];
 };
 
 export const transformersProductsSeedData: Partial<ProductDocument>[] = [
@@ -42,6 +54,11 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 12,
     mainImage: img("tf-optimus-prime-ss"),
     images: [img("tf-optimus-prime-ss"), img("tf-optimus-prime-ss-truck")],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      thumbnailUrl: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Optimus_Prime_toy.jpg?width=640",
+      duration: 15,
+    },
     status: "published",
     ...SK,
     featured: true,

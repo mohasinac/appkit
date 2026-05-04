@@ -19,9 +19,23 @@ const SK = {
   sellerEmail: "speedking@letitrip.in",
 } as const;
 
+const HW_IMGS = [
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/HotWheels.svg/640px-HotWheels.svg.png",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Die-cast_toy_automobiles.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Toy_Cars_Hot_Wheels.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Matchbox_cars.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hot_Wheels_-_Twin_Mill.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Diecast_toy_car.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Toy_car.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hot_Wheels_cars_collection.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Miniature_diecast_car.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hot_Wheels_Deora_II.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Diecast_model_car.jpg?width=640",
+  "https://commons.wikimedia.org/wiki/Special:Redirect/file/Toy_sports_car.jpg?width=640",
+];
 const img = (seed: string) => {
   let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
-  return `https://loremflickr.com/600/400/hot-wheels,diecast,toy?lock=${h % 800}`;
+  return HW_IMGS[h % HW_IMGS.length];
 };
 
 export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
@@ -42,6 +56,11 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     availableQuantity: 24,
     mainImage: img("hw-corvette-zr1"),
     images: [img("hw-corvette-zr1"), img("hw-corvette-zr1-2")],
+    video: {
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+      thumbnailUrl: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Hot_Wheels_Deora_II.jpg?width=640",
+      duration: 47,
+    },
     status: "published",
     ...SK,
     featured: true,
