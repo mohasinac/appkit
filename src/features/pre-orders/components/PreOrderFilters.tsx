@@ -45,7 +45,7 @@ export function PreOrderFilters({
           options={categoryOptions}
           selected={selectedCategories}
           onChange={(vals) => table.set("category", vals.join("|"))}
-          searchable={categoryOptions.length > 6}
+          searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
         />
       )}
@@ -82,7 +82,7 @@ export function PreOrderFilters({
           options={storeOptions}
           selected={selectedStores}
           onChange={(vals) => table.set("storeId", vals[0] ?? "")}
-          searchable={storeOptions.length > 6}
+          searchable={storeOptions.length > 4}
           selectionMode="single"
           defaultCollapsed={storeOptions.length > 6}
         />

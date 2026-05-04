@@ -73,8 +73,30 @@ export function ListingToolbar({
       {/* ── Mobile: two rows; sm+: single row ─────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
 
-        {/* Row 1 (mobile) / main row (desktop): Filters + Search */}
-        <div className="flex items-center gap-2 sm:gap-2.5 flex-1 min-w-0">
+        {/* Row 1 (mobile) / main row (desktop): Search — full width on mobile */}
+        {onSearchChange && (
+          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 min-w-0">
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={searchPlaceholder}
+              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
+            />
+            <button
+              type="button"
+              onClick={onSearchCommit}
+              className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
+        {/* Row 2 (mobile) / right side (desktop): Filters + Sort + View + Extra */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
           {/* Filters button */}
           {onFiltersClick && (
@@ -92,32 +114,6 @@ export function ListingToolbar({
               )}
             </button>
           )}
-
-          {/* Search bar */}
-          {onSearchChange && (
-            <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 min-w-0">
-              <input
-                type="text"
-                value={searchValue}
-                onChange={(e) => onSearchChange(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={searchPlaceholder}
-                className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
-              />
-              <button
-                type="button"
-                onClick={onSearchCommit}
-                className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
-                aria-label="Search"
-              >
-                <Search className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Row 2 (mobile) / right side (desktop): Sort + View + Extra */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
           {/* Sort dropdown */}
           {sortOptions && sortValue !== undefined && onSortChange && (

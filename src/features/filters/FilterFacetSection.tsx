@@ -26,6 +26,7 @@ export interface FilterFacetSectionProps {
 /**
  * FilterFacetSection — collapsible checkbox/radio filter section.
  * Supports single-select and multi-select modes.
+ * When searchable, the search input is always visible and typing auto-expands.
  */
 export function FilterFacetSection({
   title,
@@ -50,6 +51,14 @@ export function FilterFacetSection({
     else setInternalCollapsed((c) => !c);
   };
 
+  // When typing in the search box, auto-expand options
+  function handleSearch(value: string) {
+    setSearch(value);
+    if (value && internalCollapsed && !isControlled) {
+      setInternalCollapsed(false);
+    }
+  }
+
   const filtered = search
     ? options.filter((o) =>
         o.label.toLowerCase().includes(search.toLowerCase()),
@@ -69,6 +78,11 @@ export function FilterFacetSection({
   };
 
   const hasValue = selected.length > 0;
+
+  // Selected labels for inline chips (shown when collapsed)
+  const selectedLabels = selected
+    .map((v) => options.find((o) => o.value === v)?.label ?? v)
+    .slice(0, 3);
 
   return (
     <Div
@@ -140,17 +154,40 @@ export function FilterFacetSection({
         )}
       </Row>
 
+      {/* Selected chips — visible when collapsed */}
+      {isCollapsed && hasValue && (
+        <Div className="mt-2 flex flex-wrap gap-1">
+          {selectedLabels.map((label) => (
+            <Span
+              key={label}
+              className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-zinc-100 dark:bg-slate-700 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-slate-600"
+            >
+              {label}
+            </Span>
+          ))}
+          {selected.length > 3 && (
+            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-500">
+              +{selected.length - 3} more
+            </Span>
+          )}
+        </Div>
+      )}
+
+      {/* Search input — always visible when searchable */}
+      {searchable && (
+        <Div className="mt-2">
+          <Input
+            type="search"
+            placeholder="Search…"
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20"
+          />
+        </Div>
+      )}
+
       {!isCollapsed && (
         <Div className="mt-3 space-y-1">
-          {searchable && (
-            <Input
-              type="search"
-              placeholder="Search…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-md border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 px-2.5 py-1.5 text-xs text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500/20 dark:focus:ring-secondary-400/20 mb-2"
-            />
-          )}
           {filtered.map((option) => {
             const isSelected = selected.includes(option.value);
             return (

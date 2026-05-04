@@ -160,7 +160,7 @@ export function ProductFilters({
           options={categoryOptions}
           selected={selectedCategories}
           onChange={(vals) => table.set("category", vals.join("|"))}
-          searchable={categoryOptions.length > 6}
+          searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
         />
       )}
@@ -196,7 +196,7 @@ export function ProductFilters({
           options={brandOptions}
           selected={selectedBrands}
           onChange={(vals) => table.set("brand", vals[0] ?? "")}
-          searchable={brandOptions.length > 6}
+          searchable={brandOptions.length > 4}
           defaultCollapsed={brandOptions.length > 6}
         />
       )}
@@ -207,7 +207,7 @@ export function ProductFilters({
           options={resolvedStoreOptions}
           selected={selectedSellers}
           onChange={(vals) => table.set("storeId", vals[0] ?? "")}
-          searchable={resolvedStoreOptions.length > 6}
+          searchable={resolvedStoreOptions.length > 4}
           defaultCollapsed={resolvedStoreOptions.length > 6}
         />
       )}
@@ -228,7 +228,7 @@ export function ProductFilters({
           options={tagOptions}
           selected={selectedTags}
           onChange={(vals) => table.set("tags", vals.join("|"))}
-          searchable={tagOptions.length > 6}
+          searchable={tagOptions.length > 4}
           defaultCollapsed={tagOptions.length > 6}
         />
       )}
