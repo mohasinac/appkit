@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useCallback } from "react";
 import { Search, SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
 import { Pagination, SortDropdown } from "../../../ui";
@@ -10,12 +11,14 @@ import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useSession } from "../../../react/contexts/SessionContext";
 import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
 import { apiClient } from "../../../http";
+import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 
 export interface ProductsIndexListingProps {
   initialData?: any;
 }
 
 export function ProductsIndexListing({ initialData }: ProductsIndexListingProps) {
+  const router = useRouter();
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -24,6 +27,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   );
   const { user } = useSession();
   const wl = useWishlistWithGuest(user?.uid ?? null);
+  const { categories } = useCategoryTree();
+  const categoryOptions = categoriesToFacetOptions(categories);
 
   const params = {
     q: table.get("q") || undefined,
@@ -70,6 +75,23 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       else await apiClient.post("/api/user/wishlist", { productId });
     }
   }, [wl]);
+
+  const handleAddToCart = useCallback(async (product: any) => {
+    try {
+      await apiClient.post("/api/cart", { productId: product.id, quantity: 1 });
+    } catch {
+      // silently ignore cart errors on listing page
+    }
+  }, []);
+
+  const handleBuyNow = useCallback(async (product: any) => {
+    try {
+      await apiClient.post("/api/cart", { productId: product.id, quantity: 1 });
+    } catch {
+      // silently ignore cart errors; still navigate
+    }
+    router.push("/cart");
+  }, [router]);
 
   return (
     <div className="min-h-screen">
@@ -171,6 +193,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             view={view}
             onWishlistToggle={handleWishlistToggle}
             wishlistedIds={wl.wishlistedIds}
+            onAddToCart={handleAddToCart}
+            onBuyNow={handleBuyNow}
           />
         )}
 
@@ -215,7 +239,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
             {/* Scrollable filter body */}
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <ProductFilters table={table as any} currencyPrefix="₹" />
+              <ProductFilters table={table as any} currencyPrefix="₹" categoryOptions={categoryOptions} />
             </div>
 
             {/* Apply button — sticky at bottom */}

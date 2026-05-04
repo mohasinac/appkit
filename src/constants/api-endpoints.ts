@@ -102,6 +102,8 @@ export const ADMIN_ENDPOINTS = {
     `/api/admin/events/${eventId}/entries/${entryId}`,
   COUPONS: "/api/admin/coupons",
   SECTIONS: "/api/admin/sections",
+  NEWSLETTER: "/api/admin/newsletter",
+  CONTACT_SUBMISSIONS: "/api/admin/contact-submissions",
 } as const;
 
 // ---------------------------------------------------------------------------

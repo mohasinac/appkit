@@ -1,4 +1,6 @@
 export { DataTable } from "./DataTable";
+export { AdminListingScaffold } from "./AdminListingScaffold";
+export type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 export { DashboardStatsGrid } from "./DashboardStats";
 export { AdminUsersView } from "./AdminUsersView";
 export type { AdminUsersViewProps } from "./AdminUsersView";
@@ -73,6 +75,10 @@ export type {
 } from "./analytics/AdminTopProductsTable";
 export { AdminFeatureFlagsView } from "./AdminFeatureFlagsView";
 export type { AdminFeatureFlagsViewProps } from "./AdminFeatureFlagsView";
+export { AdminNewsletterView } from "./AdminNewsletterView";
+export type { AdminNewsletterViewProps } from "./AdminNewsletterView";
+export { AdminContactView } from "./AdminContactView";
+export type { AdminContactViewProps } from "./AdminContactView";
 export { AdminSidebar } from "./AdminSidebar";
 export type { AdminSidebarProps } from "./AdminSidebar";
 export { AdminTopBar } from "./AdminTopBar";

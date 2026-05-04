@@ -12,9 +12,7 @@ export interface PromotionProductItem {
 export interface PromotionsViewProductSectionProps {
   title: string;
   subtitle?: string;
-  /** Render the product grid — use your app's ProductGrid/ProductCard here */
   renderProducts: () => React.ReactNode;
-  /** If false/undefined, the section is hidden */
   hasProducts?: boolean;
 }
 
@@ -40,6 +38,39 @@ export function PromotionsViewProductSection({
   );
 }
 
+export interface PromotionsHeroProps {
+  labels: {
+    exclusiveOffersBadge: string;
+    title: string;
+    subtitle: string;
+  };
+  heroBannerClass?: string;
+}
+
+/** Slim hero banner for the promotions page — tabs + content live in the page. */
+export function PromotionsHero({
+  labels,
+  heroBannerClass = "bg-gradient-to-br from-rose-500 to-orange-500",
+}: PromotionsHeroProps) {
+  return (
+    <Div className={`${heroBannerClass} text-white py-14`}>
+      <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <Text className="text-white font-medium mb-2 uppercase tracking-widest text-sm">
+          🎉 {labels.exclusiveOffersBadge}
+        </Text>
+        <Heading level={1} variant="none" className="text-white mb-4">
+          {labels.title}
+        </Heading>
+        <Text variant="none" className="text-lg text-white/90 max-w-2xl mx-auto">
+          {labels.subtitle}
+        </Text>
+      </Div>
+    </Div>
+  );
+}
+
+// ---- Legacy PromotionsView kept for backward-compat ----------------------------
+
 export interface PromotionsViewProps {
   labels: {
     exclusiveOffersBadge: string;
@@ -57,15 +88,13 @@ export interface PromotionsViewProps {
   };
   hasContent: boolean;
   heroBannerClass?: string;
-  /** Render the coupon grid */
   renderCoupons?: () => React.ReactNode;
   couponsCount?: number;
-  /** Render the promoted products section */
   renderDealsSection?: () => React.ReactNode;
-  /** Render the featured products section */
   renderFeaturedSection?: () => React.ReactNode;
 }
 
+/** @deprecated Use PromotionsHero + per-tab content in your page instead. */
 export function PromotionsView({
   labels,
   hasContent,
@@ -77,19 +106,7 @@ export function PromotionsView({
 }: PromotionsViewProps) {
   return (
     <Div className="min-h-screen bg-white dark:bg-slate-900">
-      <Div className={`${heroBannerClass} text-white py-16`}>
-        <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <Text className="text-white font-medium mb-2 uppercase tracking-widest text-sm">
-            🎉 {labels.exclusiveOffersBadge}
-          </Text>
-          <Heading level={1} variant="none" className="text-white mb-4">
-            {labels.title}
-          </Heading>
-          <Text variant="none" className="text-lg text-white/90 max-w-2xl mx-auto">
-            {labels.subtitle}
-          </Text>
-        </Div>
-      </Div>
+      <PromotionsHero labels={labels} heroBannerClass={heroBannerClass} />
 
       <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
         {!hasContent && (
@@ -101,23 +118,26 @@ export function PromotionsView({
 
         {hasContent && (
           <Div className="space-y-12">
-            <Section>
-              <Div className="mb-6">
-                <Heading level={2}>{labels.couponsTitle}</Heading>
-                {couponsCount > 0 && (
-                  <Text variant="secondary" className="mt-1">
-                    {labels.couponsSubtitle}
+            {/* Coupons section — only rendered if renderCoupons is provided */}
+            {renderCoupons && (
+              <Section>
+                <Div className="mb-6">
+                  <Heading level={2}>{labels.couponsTitle}</Heading>
+                  {couponsCount > 0 && (
+                    <Text variant="secondary" className="mt-1">
+                      {labels.couponsSubtitle}
+                    </Text>
+                  )}
+                </Div>
+                {couponsCount > 0 ? (
+                  renderCoupons()
+                ) : (
+                  <Text variant="secondary" size="sm">
+                    {labels.emptyCoupons}
                   </Text>
                 )}
-              </Div>
-              {couponsCount > 0 ? (
-                renderCoupons?.()
-              ) : (
-                <Text variant="secondary" size="sm">
-                  {labels.emptyCoupons}
-                </Text>
-              )}
-            </Section>
+              </Section>
+            )}
 
             {renderDealsSection?.()}
             {renderFeaturedSection?.()}

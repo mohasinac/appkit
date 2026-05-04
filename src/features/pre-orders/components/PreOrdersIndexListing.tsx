@@ -77,6 +77,14 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
     },
   };
 
+  const handleAddToCart = useCallback(async (product: any) => {
+    try {
+      await apiClient.post("/api/cart", { productId: product.id, quantity: 1, isPreOrder: true });
+    } catch {
+      // silently ignore cart errors on listing page
+    }
+  }, []);
+
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
 
   return (
@@ -179,6 +187,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
                 product={product}
                 variant="list"
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
+                onAddToCart={handleAddToCart}
                 wishlistActions={wishlistActions}
               />
             ))}
@@ -191,6 +200,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
                 product={product}
                 variant="grid"
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
+                onAddToCart={handleAddToCart}
                 wishlistActions={wishlistActions}
               />
             ))}

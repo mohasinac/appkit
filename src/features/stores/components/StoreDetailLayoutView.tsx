@@ -37,6 +37,7 @@ export async function StoreDetailLayoutView({
     { value: "products", label: "Products", href: String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug)) },
     { value: "auctions", label: "Auctions", href: String(ROUTES.PUBLIC.STORE_AUCTIONS(storeSlug)) },
     { value: "pre-orders", label: "Pre-Orders", href: String(ROUTES.PUBLIC.STORE_PRE_ORDERS(storeSlug)) },
+    { value: "coupons", label: "Coupons", href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
     { value: "reviews", label: "Reviews", href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },
   ];

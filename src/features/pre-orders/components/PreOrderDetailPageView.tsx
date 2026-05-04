@@ -19,6 +19,7 @@ import {
   Text,
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
+import { BuyBar } from "../../products/components/BuyBar";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 
@@ -311,6 +312,18 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
             </Div>
           )}
         />
+
+        {/* Mobile sticky buy bar */}
+        <BuyBar>
+          {price !== null && (
+            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              {formatCurrency(price, currency)}
+            </Span>
+          )}
+          <Button variant="primary" size="sm" className="flex-1">
+            Reserve Now
+          </Button>
+        </BuyBar>
       </Container>
     </Main>
   );

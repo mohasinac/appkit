@@ -23,6 +23,7 @@ import {
 } from "../../../ui";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
 import { BidHistory } from "../../products/components/BidHistory";
+import { BuyBar } from "../../products/components/BuyBar";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
@@ -359,6 +360,21 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
             );
           }}
         />
+
+        {/* Mobile sticky buy bar */}
+        {!isEnded && (
+          <BuyBar>
+            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
+              {formatCurrency(currentBid, currency)}
+            </Span>
+            <Span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">
+              {bidCount} bid{bidCount !== 1 ? "s" : ""}
+            </Span>
+            <Button variant="primary" size="sm" className="shrink-0">
+              Place Bid
+            </Button>
+          </BuyBar>
+        )}
       </Container>
     </Main>
   );

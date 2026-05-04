@@ -152,7 +152,9 @@ export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export { AdminDashboardView, AdminAnalyticsView } from "./features/admin/index";
 export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels } from "./features/admin/index";
 export { UserSidebar } from "./features/account/components/UserSidebar";
-export type { UserSidebarProps, UserNavItem } from "./features/account/components/UserSidebar";
+export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/account/components/UserSidebar";
+export { CouponsIndexListing } from "./features/promotions/components/CouponsIndexListing";
+export type { CouponsIndexListingProps } from "./features/promotions/components/CouponsIndexListing";
 export { NotificationBell } from "./features/account/components/NotificationBell";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
 export type {

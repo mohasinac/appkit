@@ -3296,6 +3296,21 @@ export { useDashboardStats } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // useDeleteChatRoom - React hook for use delete chat room.
 export { useDeleteChatRoom } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// useAdminListingData - React hook for admin listing data fetching.
+export { useAdminListingData } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AdminListingScaffold - Component for admin listing scaffold.
+export { AdminListingScaffold } from "./features/admin/index";
+// [CLIENT-SSR]-Utility function for converting values to record array.
+// toRecordArray - Helper for converting values to record array.
+export { toRecordArray } from "./features/admin/index";
+// [CLIENT-SSR]-Utility function for converting values to string with fallback.
+// toStringValue - Helper for converting values to string.
+export { toStringValue } from "./features/admin/index";
+// [CLIENT-SSR]-Utility function for converting date values to relative date string.
+// toRelativeDate - Helper for converting date to relative date string.
+export { toRelativeDate } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminAnalyticsData - Type contract for admin analytics data.
 export type { AdminAnalyticsData } from "./features/admin/index";
@@ -6955,12 +6970,16 @@ export { COUPON_USAGE_SUBCOLLECTION } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CouponCard - Component for coupon card.
 export { CouponCard } from "./features/promotions/index";
+// CouponsIndexListing - Client component for browsing coupons with search/filter/sort.
+export { CouponsIndexListing } from "./features/promotions/index";
+export type { CouponsIndexListingProps } from "./features/promotions/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_COUPON_DATA - Constant used across modules.
 export { DEFAULT_COUPON_DATA } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PromotionsView - Component for promotions view.
-export { PromotionsView } from "./features/promotions/index";
+export { PromotionsView, PromotionsHero } from "./features/promotions/index";
+export type { PromotionsHeroProps } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PromotionsViewProductSection - Shared export for promotions view product section.
 export { PromotionsViewProductSection } from "./features/promotions/index";
@@ -7509,6 +7528,33 @@ export { SellerTopProducts } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellersListView - Component for sellers list view.
 export { SellersListView } from "./features/seller/index";
+// [CLIENT-SSR]-Store* aliases — same components, renamed for store-centric terminology
+// StoreAddressesView - Alias for SellerAddressesView.
+export { SellerAddressesView as StoreAddressesView } from "./features/seller/index";
+// StoreAnalyticsView - Alias for SellerAnalyticsView.
+export { SellerAnalyticsView as StoreAnalyticsView } from "./features/seller/index";
+// StoreAuctionsView - Alias for SellerAuctionsView.
+export { SellerAuctionsView as StoreAuctionsView } from "./features/seller/index";
+// StoreCouponsView - Alias for SellerCouponsView.
+export { SellerCouponsView as StoreCouponsView } from "./features/seller/index";
+// StoreCreateProductView - Alias for SellerCreateProductView.
+export { SellerCreateProductView as StoreCreateProductView } from "./features/seller/index";
+// StoreEditProductView - Alias for SellerEditProductView.
+export { SellerEditProductView as StoreEditProductView } from "./features/seller/index";
+// StoreOffersView - Alias for SellerOffersView.
+export { SellerOffersView as StoreOffersView } from "./features/seller/index";
+// StoreOrdersView - Alias for SellerOrdersView.
+export { SellerOrdersView as StoreOrdersView } from "./features/seller/index";
+// StorePayoutSettingsView - Alias for SellerPayoutSettingsView.
+export { SellerPayoutSettingsView as StorePayoutSettingsView } from "./features/seller/index";
+// StorePayoutsView - Alias for SellerPayoutsView.
+export { SellerPayoutsView as StorePayoutsView } from "./features/seller/index";
+// StoreProductListingsView - Alias for SellerProductsView.
+export { SellerProductsView as StoreProductListingsView } from "./features/seller/index";
+// StoreShippingView - Alias for SellerShippingView.
+export { SellerShippingView as StoreShippingView } from "./features/seller/index";
+// StoreStorefrontView - Alias for SellerStorefrontView.
+export { SellerStorefrontView as StoreStorefrontView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // buildPayoutColumns - Helper for build payout columns.
 export { buildPayoutColumns } from "./features/seller/index";
@@ -7698,6 +7744,33 @@ export type { SellerTopProductsProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // SellersListViewProps - Type contract for sellers list view props.
 export type { SellersListViewProps } from "./features/seller/index";
+// [TYPE]-Store*ViewProps aliases — same types, renamed for store-centric terminology
+// StoreAddressesViewProps - Type alias for SellerAddressesViewProps.
+export type { SellerAddressesViewProps as StoreAddressesViewProps } from "./features/seller/index";
+// StoreAnalyticsViewProps - Type alias for SellerAnalyticsViewProps.
+export type { SellerAnalyticsViewProps as StoreAnalyticsViewProps } from "./features/seller/index";
+// StoreAuctionsViewProps - Type alias for SellerAuctionsViewProps.
+export type { SellerAuctionsViewProps as StoreAuctionsViewProps } from "./features/seller/index";
+// StoreCouponsViewProps - Type alias for SellerCouponsViewProps.
+export type { SellerCouponsViewProps as StoreCouponsViewProps } from "./features/seller/index";
+// StoreCreateProductViewProps - Type alias for SellerCreateProductViewProps.
+export type { SellerCreateProductViewProps as StoreCreateProductViewProps } from "./features/seller/index";
+// StoreEditProductViewProps - Type alias for SellerEditProductViewProps.
+export type { SellerEditProductViewProps as StoreEditProductViewProps } from "./features/seller/index";
+// StoreOffersViewProps - Type alias for SellerOffersViewProps.
+export type { SellerOffersViewProps as StoreOffersViewProps } from "./features/seller/index";
+// StoreOrdersViewProps - Type alias for SellerOrdersViewProps.
+export type { SellerOrdersViewProps as StoreOrdersViewProps } from "./features/seller/index";
+// StorePayoutSettingsViewProps - Type alias for SellerPayoutSettingsViewProps.
+export type { SellerPayoutSettingsViewProps as StorePayoutSettingsViewProps } from "./features/seller/index";
+// StorePayoutsViewProps - Type alias for SellerPayoutsViewProps.
+export type { SellerPayoutsViewProps as StorePayoutsViewProps } from "./features/seller/index";
+// StoreProductListingsViewProps - Type alias for SellerProductsViewProps.
+export type { SellerProductsViewProps as StoreProductListingsViewProps } from "./features/seller/index";
+// StoreShippingViewProps - Type alias for SellerShippingViewProps.
+export type { SellerShippingViewProps as StoreShippingViewProps } from "./features/seller/index";
+// StoreStorefrontViewProps - Type alias for SellerStorefrontViewProps.
+export type { SellerStorefrontViewProps as StoreStorefrontViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // StoreStatus - Type contract for store status.
 export type { StoreStatus } from "./features/seller/index";

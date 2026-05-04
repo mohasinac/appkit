@@ -27,6 +27,7 @@ export interface MarketplacePreorderCardLabels {
   preOrderBadge?: string;
   featuredBadge?: string;
   reserveNow?: string;
+  addToCart?: string;
   addToWishlist?: string;
   removeFromWishlist?: string;
 }
@@ -42,6 +43,7 @@ export interface MarketplacePreorderCardProps {
   href?: string;
   hrefBuilder?: (product: MarketplacePreorderCardData) => string;
   onNavigate?: (href: string) => void;
+  onAddToCart?: (product: MarketplacePreorderCardData) => void;
   wishlistActions?: WishlistToggleActions;
   labels?: MarketplacePreorderCardLabels;
 }
@@ -50,6 +52,7 @@ const DEFAULT_LABELS: Required<MarketplacePreorderCardLabels> = {
   preOrderBadge: "Pre-order",
   featuredBadge: "Featured",
   reserveNow: "Reserve now",
+  addToCart: "Add to Cart",
   addToWishlist: "Add to wishlist",
   removeFromWishlist: "Remove from wishlist",
 };
@@ -75,6 +78,7 @@ export function MarketplacePreorderCard({
   href,
   hrefBuilder,
   onNavigate,
+  onAddToCart,
   wishlistActions,
   labels,
 }: MarketplacePreorderCardProps) {
@@ -179,6 +183,20 @@ export function MarketplacePreorderCard({
           >
             {mergedLabels.reserveNow}
           </Button>
+          {onAddToCart ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="flex-1 text-xs"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToCart(product);
+              }}
+            >
+              {mergedLabels.addToCart}
+            </Button>
+          ) : null}
           {wishlistActions ? (
             <Button
               type="button"

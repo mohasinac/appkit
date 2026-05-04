@@ -1255,6 +1255,8 @@ export { removeFromWishlist } from "./features/wishlist/server";
 // -- Repositories ------------------------------------------------------------
 // siteSettingsRepository - Shared export for site settings repository.
 export { siteSettingsRepository } from "./repositories/index";
+// storeRepository - Shared export for store repository.
+export { storeRepository } from "./repositories/index";
 
 // -- Monitoring --------------------------------------------------------------
 // serverLogger - Structured server-side logger.
