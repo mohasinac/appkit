@@ -312,6 +312,9 @@ export { ActiveFilterChips } from "./components/ActiveFilterChips";
 export type { SortOption, SortDropdownProps } from "./components/SortDropdown";
 export { SortDropdown } from "./components/SortDropdown";
 
+export type { ListingToolbarProps, ListingToolbarSortOption } from "./components/ListingToolbar";
+export { ListingToolbar } from "./components/ListingToolbar";
+
 export type {
   TablePaginationProps,
   TablePaginationLabels,

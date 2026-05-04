@@ -55,7 +55,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.maxBid !== undefined) sp.set("maxBid", String(params.maxBid));
   if (params.dateFrom) sp.set("dateFrom", params.dateFrom);
   if (params.dateTo) sp.set("dateTo", params.dateTo);
-  if (params.preOrderStatus) sp.set("preOrderStatus", params.preOrderStatus);
+  if (params.preOrderProductionStatus) sp.set("preOrderProductionStatus", params.preOrderProductionStatus);
   if (params.freeShipping !== undefined)
     sp.set("freeShipping", String(params.freeShipping));
   const qs = sp.toString();

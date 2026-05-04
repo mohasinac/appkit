@@ -18,8 +18,8 @@ function buildPreOrderFilters(params: SearchParams): string {
   if (maxPrice) parts.push(`price<=${maxPrice}`);
   const store = sp(params, "storeId");
   if (store) parts.push(`sellerId==${store}`);
-  const preOrderStatus = sp(params, "preOrderStatus");
-  if (preOrderStatus) parts.push(`preOrderStatus==${preOrderStatus}`);
+  const preOrderProductionStatus = sp(params, "preOrderProductionStatus");
+  if (preOrderProductionStatus) parts.push(`preOrderProductionStatus==${preOrderProductionStatus}`);
   return parts.join(",");
 }
 

@@ -24,15 +24,14 @@ export function PreOrderFilters({
     ? table.get("category").split("|").filter(Boolean)
     : [];
 
-  const statusOptions: FacetOption[] = [
+  const productionStatusOptions: FacetOption[] = [
     { value: "upcoming", label: "Upcoming" },
     { value: "in_production", label: "In Production" },
     { value: "ready_to_ship", label: "Ready to Ship" },
-    { value: "shipped", label: "Shipped" },
   ];
 
-  const selectedStatuses = table.get("preOrderStatus")
-    ? table.get("preOrderStatus").split("|").filter(Boolean)
+  const selectedProductionStatuses = table.get("preOrderProductionStatus")
+    ? table.get("preOrderProductionStatus").split("|").filter(Boolean)
     : [];
   const selectedStores = table.get("storeId")
     ? table.get("storeId").split("|").filter(Boolean)
@@ -52,10 +51,10 @@ export function PreOrderFilters({
       )}
 
       <FilterFacetSection
-        title={t("preOrderStatus")}
-        options={statusOptions}
-        selected={selectedStatuses}
-        onChange={(vals) => table.set("preOrderStatus", vals[0] ?? "")}
+        title={t("productionStatus")}
+        options={productionStatusOptions}
+        selected={selectedProductionStatuses}
+        onChange={(vals) => table.set("preOrderProductionStatus", vals[0] ?? "")}
         searchable={false}
         selectionMode="single"
         defaultCollapsed={false}

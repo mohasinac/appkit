@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { Search, SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, SortDropdown, useToast } from "../../../ui";
+import { Pagination, useToast, ListingToolbar } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { PreOrderFilters } from "./PreOrderFilters";
@@ -19,7 +19,7 @@ const PREORDER_SORT_OPTIONS = [
   { value: "-price", label: "Price: High to Low" },
 ] as const;
 
-const FILTER_KEYS = ["category", "minPrice", "maxPrice", "storeId", "preOrderStatus", "dateFrom", "dateTo"];
+const FILTER_KEYS = ["category", "minPrice", "maxPrice", "storeId", "preOrderProductionStatus", "dateFrom", "dateTo"];
 
 export interface PreOrdersIndexListingProps {
   initialData?: any;
@@ -101,7 +101,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     storeId: table.get("storeId") || undefined,
-    preOrderStatus: table.get("preOrderStatus") || undefined,
+    preOrderProductionStatus: (table.get("preOrderProductionStatus") || undefined) as "upcoming" | "in_production" | "ready_to_ship" | undefined,
     dateFrom: table.get("dateFrom") || undefined,
     dateTo: table.get("dateTo") || undefined,
     sort: table.get("sort") || "-createdAt",
@@ -160,79 +160,20 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
   return (
     <div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
-        <div className="flex items-center gap-2.5 max-w-full">
-
-          <button
-            type="button"
-            onClick={openFilters}
-            className="relative flex shrink-0 items-center gap-2 rounded-lg border border-zinc-300 dark:border-slate-600 px-3.5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-
-          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={handleSearchKeyDown}
-              placeholder="Search pre-orders..."
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
-            />
-            <button
-              type="button"
-              onClick={commitSearch}
-              className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
-              aria-label="Search"
-            >
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-            <span className="hidden md:inline whitespace-nowrap">Sort by</span>
-            <SortDropdown
-              value={table.get("sort") || "-createdAt"}
-              onChange={(v) => { table.set("sort", v); table.setPage(1); }}
-              options={PREORDER_SORT_OPTIONS as any}
-            />
-          </div>
-
-          <div className="flex shrink-0 items-center rounded-lg border border-zinc-300 dark:border-slate-600 overflow-hidden">
-            <button
-              type="button"
-              onClick={() => handleViewToggle("grid")}
-              aria-label="Grid view"
-              className={`p-2 transition-colors ${
-                view === "grid"
-                  ? "bg-primary text-white"
-                  : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
-              }`}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => handleViewToggle("list")}
-              aria-label="List view"
-              className={`p-2 transition-colors ${
-                view === "list"
-                  ? "bg-primary text-white"
-                  : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
-              }`}
-            >
-              <List className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <ListingToolbar
+        filterCount={activeFilterCount}
+        onFiltersClick={openFilters}
+        searchValue={searchInput}
+        searchPlaceholder="Search pre-orders..."
+        onSearchChange={setSearchInput}
+        onSearchCommit={commitSearch}
+        onSearchKeyDown={handleSearchKeyDown}
+        sortValue={table.get("sort") || "-createdAt"}
+        sortOptions={PREORDER_SORT_OPTIONS}
+        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        view={view}
+        onViewChange={handleViewToggle}
+      />
 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
       <div className="py-6">

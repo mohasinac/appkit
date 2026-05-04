@@ -1,6 +1,7 @@
 "use client"
 import React, { FormEvent, useCallback, useState } from "react";
 import { Alert, Div, Heading, Row, Text, Label } from "../../../ui";
+import { SocialAuthButtons } from "./SocialAuthButtons";
 
 export interface LoginFormValues {
   email: string;
@@ -168,8 +169,17 @@ export function LoginForm({
           )}
         </form>
 
-        {/* Social buttons */}
-        {renderSocialButtons?.()}
+        {/* Social buttons — built-in Google button or custom slot */}
+        {onGoogleLogin && !renderSocialButtons ? (
+          <SocialAuthButtons
+            onGoogle={onGoogleLogin}
+            disabled={isLoading}
+            dividerLabel={labels.orSeparator ?? "Or continue with"}
+            googleLabel="Sign in with Google"
+          />
+        ) : (
+          renderSocialButtons?.()
+        )}
       </Div>
     </Div>
   );

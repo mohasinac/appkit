@@ -149,7 +149,7 @@ export interface ProductListParams {
   dateFrom?: string;
   dateTo?: string;
   /** Pre-order production status */
-  preOrderStatus?: string;
+  preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   /** Shipping / free shipping */
   freeShipping?: boolean;
 }

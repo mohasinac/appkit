@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getClientAuthProvider } from "../../../contracts/client-auth";
+import { getClientSessionAdapter } from "../../../contracts/client-session";
 import { apiClient } from "../../../http";
 import { NotFoundError } from "../../../errors";
 import type { AuthUser } from "../types";
@@ -81,15 +82,19 @@ export function useLogin(options?: {
 }) {
   return useMutation<unknown, Error, LoginCredentials>({
     mutationFn: async (credentials) => {
-      await apiClient.post(AUTH_ENDPOINTS.LOGIN, {
-        email: credentials.email.trim(),
-        password: credentials.password,
-      });
-
+      // Client Firebase SDK authenticates first (handles password verification)
       await getClientAuthProvider().signInWithEmailAndPassword(
         credentials.email.trim(),
         credentials.password,
       );
+
+      // Exchange the fresh ID token for a server-side session cookie
+      const currentUser = getClientSessionAdapter().getCurrentUser();
+      if (!currentUser) {
+        throw new Error("Sign-in succeeded but no current user found.");
+      }
+      const idToken = await currentUser.getIdToken(true);
+      await apiClient.post(AUTH_ENDPOINTS.SESSION, { idToken });
 
       return { success: true };
     },
@@ -190,6 +195,7 @@ export function useRegister(options?: {
 }) {
   return useMutation<unknown, Error, RegisterData>({
     mutationFn: async (data) => {
+      // Create the user account on the server
       const response = await apiClient.post<Record<string, unknown>>(
         AUTH_ENDPOINTS.REGISTER,
         {
@@ -200,10 +206,18 @@ export function useRegister(options?: {
         },
       );
 
+      // Sign in via client SDK and exchange ID token for a server session cookie
       await getClientAuthProvider().signInWithEmailAndPassword(
         data.email.trim(),
         data.password,
       );
+
+      const currentUser = getClientSessionAdapter().getCurrentUser();
+      if (currentUser) {
+        const idToken = await currentUser.getIdToken(true);
+        await apiClient.post(AUTH_ENDPOINTS.SESSION, { idToken });
+      }
+
       return { success: true, ...response };
     },
     onSuccess: options?.onSuccess,
