@@ -24,6 +24,8 @@ export interface UserSidebarProps {
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
   className?: string;
+  /** "sidebar" = persistent inline aside on desktop; "overlay" = slide-over portal (default) */
+  variant?: "sidebar" | "overlay";
 }
 
 function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {
@@ -58,7 +60,10 @@ function DrawerContent({
     if (!groups) return {};
     return Object.fromEntries(groups.map((g) => [
       g.title,
-      g.defaultOpen ?? g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
+      // Auto-expand only the group that contains the active page; collapse all others
+      g.defaultOpen === true
+        ? true
+        : g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
     ]));
   });
 
@@ -168,7 +173,7 @@ function DrawerPanel({
   );
 }
 
-export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile }: UserSidebarProps) {
+export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, variant = "overlay" }: UserSidebarProps) {
   const pathname = usePathname();
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -176,10 +181,34 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile }
   useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen]);
+    if (variant !== "sidebar") {
+      document.body.style.overflow = mobileOpen ? "hidden" : "";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [mobileOpen, variant]);
 
+  // ── Persistent sidebar variant (desktop inline, mobile bottom-sheet) ──────
+  if (variant === "sidebar") {
+    return (
+      <>
+        {/* Desktop — inline aside, always visible */}
+        <aside className="hidden md:flex flex-col w-52 lg:w-56 shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto">
+          <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">My Account</span>
+          </div>
+          <DrawerContent groups={groups} items={items} activeHref={pathname} />
+        </aside>
+        {/* Mobile — BottomSheet triggered by external mobileOpen state */}
+        <div className="md:hidden">
+          <BottomSheet open={mobileOpen} onClose={close} title="My Account">
+            <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
+          </BottomSheet>
+        </div>
+      </>
+    );
+  }
+
+  // ── Overlay variant (default) — portal on desktop, bottom-sheet on mobile ─
   const content = (
     <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
   );
