@@ -51,7 +51,7 @@ Get-Content $envPath | ForEach-Object {
 
   Write-Host "Updating $key"
   if ($Yes) {
-    $value | vercel env add $key $Environment --yes --cwd $projectPath | Out-Null
+    $value | vercel env add $key $Environment --force --cwd $projectPath | Out-Null
   } else {
     $value | vercel env add $key $Environment --cwd $projectPath | Out-Null
   }
