@@ -54,7 +54,7 @@ export function useGuestCartMerge(options: UseGuestCartMergeOptions): void {
       (async (payload: GuestCartItem[]) => {
         await apiClient.post(
           options.mergeEndpoint ?? CART_ENDPOINTS.MERGE,
-          payload,
+          { items: payload },
         );
       });
 
