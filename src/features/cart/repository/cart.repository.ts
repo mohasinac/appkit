@@ -10,6 +10,7 @@ import { decryptPii } from "../../../security";
 import {
   CART_COLLECTION,
   type AddToCartInput,
+  type CartAppliedCoupon,
   type CartDocument,
   type CartItemDocument,
   type UpdateCartItemInput,
@@ -250,6 +251,20 @@ export class CartRepository extends BaseRepository<CartDocument> {
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
+  }
+
+  async setCoupon(userId: string, coupon: CartAppliedCoupon): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set({ appliedCoupon: coupon, updatedAt: new Date() }, { merge: true });
+  }
+
+  async clearCoupon(userId: string): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set({ appliedCoupon: null, updatedAt: new Date() }, { merge: true });
   }
 
   /**

@@ -43,6 +43,8 @@ export interface HorizontalScrollerProps<T = unknown> {
   minItemWidth?: number;
   pauseOnHover?: boolean;
   itemClassName?: string;
+  /** Infinite-loop mode: clones first slides at end, jumps seamlessly when reached */
+  loop?: boolean;
 }
 
 const BREAKPOINTS: [keyof PerViewConfig, number][] = [
@@ -89,6 +91,7 @@ export function HorizontalScroller<T = unknown>({
   minItemWidth,
   pauseOnHover = false,
   itemClassName = "",
+  loop = false,
 }: HorizontalScrollerProps<T>) {
   const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
   const [isPaused, setIsPaused] = useState(false);
@@ -104,10 +107,26 @@ export function HorizontalScroller<T = unknown>({
     (direction: 1 | -1) => {
       const el = containerRef.current;
       if (!el) return;
+      if (loop && items && items.length > 0) {
+        const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+        const atStart = el.scrollLeft <= 1;
+        if (direction === 1 && atEnd) {
+          el.style.scrollBehavior = "auto";
+          el.scrollLeft = 0;
+          requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
+          return;
+        }
+        if (direction === -1 && atStart) {
+          el.style.scrollBehavior = "auto";
+          el.scrollLeft = el.scrollWidth - el.clientWidth;
+          requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
+          return;
+        }
+      }
       const width = el.clientWidth;
       el.scrollBy({ left: direction * width * 0.8, behavior: "smooth" });
     },
-    [containerRef],
+    [containerRef, loop, items],
   );
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
@@ -122,8 +141,10 @@ export function HorizontalScroller<T = unknown>({
       if (!el) return;
       const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
       if (atEnd) {
-        // Instant jump back to start for seamless loop
+        // Instantly jump to start (seamless because clones make start = current end view)
+        el.style.scrollBehavior = "auto";
         el.scrollLeft = 0;
+        requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
       } else {
         el.scrollBy({ left: el.clientWidth * 0.8, behavior: "smooth" });
       }
@@ -148,6 +169,12 @@ export function HorizontalScroller<T = unknown>({
 
   const normalizedItems = Array.isArray(items) ? items : [];
   const itemsMode = Array.isArray(items) && renderItem != null;
+
+  // In loop mode, clone the first perViewCount items and append to end for seamless wrap
+  const loopCloneCount = loop && itemsMode ? (typeof perView === "number" ? perView : 3) : 0;
+  const loopItems: T[] = loopCloneCount > 0
+    ? [...normalizedItems, ...normalizedItems.slice(0, loopCloneCount)]
+    : normalizedItems;
 
   const scrollerCls = [
     "appkit-hscroller__track",
@@ -212,10 +239,10 @@ export function HorizontalScroller<T = unknown>({
         return slides;
       }, [])
     ) : (
-      // Single row mode
-      normalizedItems.map((item, i) => (
+      // Single row mode (uses loopItems to include clones when loop=true)
+      loopItems.map((item, i) => (
         <div
-          key={keyExtractor ? keyExtractor(item, i) : i}
+          key={keyExtractor ? `${keyExtractor(item, i % normalizedItems.length)}-${i}` : i}
           className={[
             "appkit-hscroller__item",
             snapToItems ? "appkit-hscroller__item--snap" : "",
@@ -230,8 +257,9 @@ export function HorizontalScroller<T = unknown>({
               ? { minWidth: minItemWidth }
               : undefined
           }
+          aria-hidden={i >= normalizedItems.length ? true : undefined}
         >
-          {renderItem(item, i)}
+          {renderItem(item, i % normalizedItems.length)}
         </div>
       ))
     )

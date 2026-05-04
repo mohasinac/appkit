@@ -28,10 +28,17 @@ export interface CartItemDocument {
   updatedAt: Date;
 }
 
+export interface CartAppliedCoupon {
+  code: string;
+  discountAmount: number;
+  couponId?: string;
+}
+
 export interface CartDocument {
   id: string; // = userId
   userId: string;
   items: CartItemDocument[];
+  appliedCoupon?: CartAppliedCoupon;
   createdAt: Date;
   updatedAt: Date;
 }
