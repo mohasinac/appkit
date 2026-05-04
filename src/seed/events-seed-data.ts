@@ -141,6 +141,7 @@ export const eventsSeedData: EventDocument[] = [
       allowMultiSelect: false,
       allowComment: true,
       resultsVisibility: "after_end",
+      requireLogin: true,
     },
     tags: ["contest", "psa", "grading", "base-set", "community"],
     stats: {

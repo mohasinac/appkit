@@ -57,6 +57,7 @@ export interface PollConfig {
   allowComment: boolean;
   options: { id: string; label: string }[];
   resultsVisibility: PollResultsVisibility;
+  requireLogin?: boolean;
 }
 
 export interface SurveyConfig {
