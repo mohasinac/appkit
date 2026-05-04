@@ -183,7 +183,7 @@ export type { CategoryItem } from "./features/categories/index";
 export { MediaImage } from "./features/media/index";
 export { ReviewsListView } from "./features/reviews/index";
 export { StoreSidebar, SellerSidebar } from "./features/seller/components/SellerSidebar";
-export type { StoreNavItem, SellerNavItem } from "./features/seller/components/SellerSidebar";
+export type { StoreNavItem, StoreNavGroup, SellerNavItem } from "./features/seller/components/SellerSidebar";
 export { StoreProductsView } from "./features/stores/index";
 export type { StoreProductItem } from "./features/stores/index";
 export { AdSlot } from "./features/homepage/components/AdSlot";
