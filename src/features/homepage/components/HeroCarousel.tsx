@@ -85,7 +85,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (isLoading) {
     return (
       <Div
-        className={`relative w-full ${homepage.heroMinH} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}
+        className={`relative w-full min-h-[260px] md:min-h-[clamp(420px,72vh,680px)] ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}
       >
         <Div className={`${position.fill} ${flex.center}`}>
           <Text variant="secondary">Loading...</Text>
@@ -97,7 +97,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   if (!slides || slides.length === 0) {
     return (
       <Div
-        className={`relative w-full ${homepage.heroMinH} bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}
+        className={`relative w-full min-h-[260px] md:min-h-[clamp(420px,72vh,680px)] bg-gradient-to-br from-primary/10 to-secondary/10 ${flex.center} flex-col gap-4`}
       >
         <Heading level={2} className="text-2xl font-bold text-primary">
           Coming Soon
@@ -118,7 +118,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   };
 
   const getGridPosition = (card: CarouselSlideCard) => ({
-    gridRow: String(card.gridRow),
+    gridRow: isMobile ? "auto" : String(card.gridRow),
     gridColumn: isMobile ? "1" : String(card.gridCol),
   });
 
@@ -134,7 +134,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   return (
     <Section
       ref={sectionRef}
-      className={`relative w-full ${homepage.heroMinH} overflow-hidden`}
+      className={`relative w-full min-h-[260px] md:min-h-[clamp(420px,72vh,680px)] overflow-hidden`}
       aria-roledescription="carousel"
       aria-label="Hero carousel"
       onKeyDown={handleKeyDown}
@@ -242,8 +242,9 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 <Div
                   className={`${position.fill} grid gap-2 md:gap-4 p-4 md:p-8`}
                   style={{
-                    gridTemplateRows: "repeat(2, 1fr)",
+                    gridTemplateRows: isMobile ? "auto" : "repeat(2, 1fr)",
                     gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                    alignContent: isMobile ? "center" : undefined,
                     justifyItems: isMobile ? "center" : undefined,
                     alignItems: isMobile ? "center" : undefined,
                   }}
@@ -255,16 +256,17 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       style={{
                         ...getGridPosition(card),
                         ...getBackgroundStyle(card),
-                        width: card.sizing?.widthPct
-                          ? `${isMobile ? Math.min(card.sizing.widthPct, 65) : card.sizing.widthPct}%`
-                          : isMobile
-                            ? "65%"
+                        width: isMobile
+                          ? "90%"
+                          : card.sizing?.widthPct
+                            ? `${card.sizing.widthPct}%`
                             : "100%",
-                        height: card.sizing?.heightPct
-                          ? `${isMobile ? Math.min(card.sizing.heightPct, 55) : card.sizing.heightPct}%`
-                          : isMobile
-                            ? "55%"
+                        height: isMobile
+                          ? "auto"
+                          : card.sizing?.heightPct
+                            ? `${card.sizing.heightPct}%`
                             : "100%",
+                        minHeight: isMobile ? 110 : undefined,
                         justifySelf: "center",
                         alignSelf: "center",
                       }}

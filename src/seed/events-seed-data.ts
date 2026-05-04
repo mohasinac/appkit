@@ -66,6 +66,7 @@ export const eventsSeedData: EventDocument[] = [
       allowMultiSelect: false,
       allowComment: true,
       resultsVisibility: "after_end",
+      requireLogin: false,
     },
     tags: ["poll", "starter-pokemon", "base-set", "community"],
     stats: {
