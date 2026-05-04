@@ -7,23 +7,39 @@ import { Div } from "../../../ui";
 
 export interface AuctionFiltersProps {
   table: UrlTable;
+  categoryOptions?: FacetOption[];
   storeOptions?: FacetOption[];
   currencyPrefix?: string;
 }
 
 export function AuctionFilters({
   table,
+  categoryOptions = [],
   storeOptions = [],
   currencyPrefix = "",
 }: AuctionFiltersProps) {
   const t = useTranslations("filters");
 
+  const selectedCategories = table.get("category")
+    ? table.get("category").split("|").filter(Boolean)
+    : [];
   const selectedStores = table.get("storeId")
     ? table.get("storeId").split("|").filter(Boolean)
     : [];
 
   return (
     <Div>
+      {categoryOptions.length > 0 && (
+        <FilterFacetSection
+          title={t("category")}
+          options={categoryOptions}
+          selected={selectedCategories}
+          onChange={(vals) => table.set("category", vals.join("|"))}
+          searchable={categoryOptions.length > 8}
+          defaultCollapsed={false}
+        />
+      )}
+
       <RangeFilter
         title={t("bidPriceRange")}
         minValue={table.get("minBid")}

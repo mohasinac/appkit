@@ -7,9 +7,10 @@ import { Pagination, SortDropdown, useToast } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { PreOrderFilters } from "./PreOrderFilters";
-import { useSession } from "../../../react/contexts/SessionContext";
-import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
-import { apiClient } from "../../../http";
+import { useGuestCart } from "../../cart/hooks/useGuestCart";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
+import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 
 const PREORDER_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -33,8 +34,13 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
-  const { user } = useSession();
-  const wl = useWishlistWithGuest(user?.uid ?? null);
+  const localCart = useGuestCart();
+  const localWishlist = useGuestWishlist();
+  const { categories } = useCategoryTree();
+  const categoryOptions = categoriesToFacetOptions(categories);
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "preorder").map((i) => i.itemId),
+  );
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -124,26 +130,30 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
   };
 
   const wishlistActions = {
-    addToWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.add(productId, "preorder");
-      else await apiClient.post("/api/user/wishlist", { productId });
+    addToWishlist: (productId: string) => {
+      localWishlist.add(productId, "preorder");
+      pushWishlistOp({ op: "add", itemId: productId, type: "preorder" });
       showToast("Added to wishlist", "success");
+      return Promise.resolve();
     },
-    removeFromWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.remove(productId, "preorder");
-      else await apiClient.delete(`/api/user/wishlist/${productId}`);
+    removeFromWishlist: (productId: string) => {
+      localWishlist.remove(productId, "preorder");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "preorder" });
       showToast("Removed from wishlist", "info");
+      return Promise.resolve();
     },
+    isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
-  const handleAddToCart = useCallback(async (product: any) => {
-    try {
-      await apiClient.post("/api/cart", { productId: product.id, quantity: 1, isPreOrder: true });
-      showToast("Added to cart", "success");
-    } catch {
-      showToast("Could not add to cart", "error");
-    }
-  }, [showToast]);
+  const handleAddToCart = useCallback((product: any) => {
+    localCart.add(product.id, 1, {
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+    showToast("Added to cart", "success");
+  }, [localCart, showToast]);
 
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
 
@@ -318,7 +328,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <PreOrderFilters table={pendingTable} currencyPrefix="₹" />
+              <PreOrderFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button

@@ -16,11 +16,13 @@ const PREORDER_SORT_OPTIONS = [
 ] as const;
 
 export interface StorePreOrdersListingProps {
-  sellerId: string;
+  storeId?: string;
+  /** @deprecated Use storeId */
+  sellerId?: string;
   initialData?: any;
 }
 
-export function StorePreOrdersListing({ sellerId, initialData }: StorePreOrdersListingProps) {
+export function StorePreOrdersListing({ storeId, sellerId, initialData }: StorePreOrdersListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -33,7 +35,8 @@ export function StorePreOrdersListing({ sellerId, initialData }: StorePreOrdersL
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    sellerId,
+    storeId: storeId || undefined,
+    sellerId: !storeId ? sellerId : undefined,
     isPreOrder: true,
   };
 

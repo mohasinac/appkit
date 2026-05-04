@@ -397,6 +397,9 @@ export type {
 } from "./components/BulkActionBar";
 export { BulkActionBar } from "./components/BulkActionBar";
 
+export type { BulkActionsBarProps, BulkAction } from "./components/BulkActionsBar";
+export { BulkActionsBar } from "./components/BulkActionsBar";
+
 export type { FlowStep, FlowDiagramProps } from "./components/FlowDiagram";
 export { FlowDiagram } from "./components/FlowDiagram";
 

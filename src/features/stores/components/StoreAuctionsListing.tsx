@@ -7,9 +7,8 @@ import { Pagination, SortDropdown, useToast } from "../../../ui";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
-import { useSession } from "../../../react/contexts/SessionContext";
-import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
-import { apiClient } from "../../../http";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushWishlistOp } from "../../cart/utils/pending-ops";
 
 const AUCTION_SORT_OPTIONS = [
   { value: "auctionEndDate", label: "Ending Soonest" },
@@ -22,18 +21,23 @@ const AUCTION_SORT_OPTIONS = [
 const FILTER_KEYS = ["minPrice", "maxPrice"];
 
 export interface StoreAuctionsListingProps {
-  sellerId: string;
+  /** Store document ID — preferred for filtering */
+  storeId?: string;
+  /** @deprecated Use storeId */
+  sellerId?: string;
   initialData?: any;
 }
 
-export function StoreAuctionsListing({ sellerId, initialData }: StoreAuctionsListingProps) {
+export function StoreAuctionsListing({ storeId, sellerId, initialData }: StoreAuctionsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "auctionEndDate" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">((table.get("view") as "grid" | "list") || "grid");
-  const { user } = useSession();
-  const wl = useWishlistWithGuest(user?.uid ?? null);
+  const localWishlist = useGuestWishlist();
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "auction").map((i) => i.itemId),
+  );
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -94,7 +98,8 @@ export function StoreAuctionsListing({ sellerId, initialData }: StoreAuctionsLis
     sort: table.get("sort") || "auctionEndDate",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    sellerId,
+    storeId: storeId || undefined,
+    sellerId: !storeId ? sellerId : undefined,
     isAuction: true,
   };
 
@@ -125,16 +130,19 @@ export function StoreAuctionsListing({ sellerId, initialData }: StoreAuctionsLis
   }, [searchInput, table]);
 
   const wishlistActions = {
-    addToWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.add(productId, "auction");
-      else await apiClient.post("/api/user/wishlist", { productId });
+    addToWishlist: (productId: string) => {
+      localWishlist.add(productId, "auction");
+      pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
       showToast("Added to wishlist", "success");
+      return Promise.resolve();
     },
-    removeFromWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.remove(productId, "auction");
-      else await apiClient.delete(`/api/user/wishlist/${productId}`);
+    removeFromWishlist: (productId: string) => {
+      localWishlist.remove(productId, "auction");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
       showToast("Removed from wishlist", "info");
+      return Promise.resolve();
     },
+    isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";

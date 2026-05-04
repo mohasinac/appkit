@@ -1,16 +1,17 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { Search, SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
+import { Search, SlidersHorizontal, LayoutGrid, List, X, ShoppingCart, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, SortDropdown, useToast } from "../../../ui";
+import { Pagination, SortDropdown, useToast, BulkActionsBar } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
-import { useSession } from "../../../react/contexts/SessionContext";
-import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
-import { apiClient } from "../../../http";
+import { useGuestCart } from "../../cart/hooks/useGuestCart";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 
 const FILTER_KEYS = ["category", "condition", "minPrice", "maxPrice", "brand", "storeId", "freeShipping", "tags"];
@@ -82,8 +83,11 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
 
-  const { user } = useSession();
-  const wl = useWishlistWithGuest(user?.uid ?? null);
+  const localCart = useGuestCart();
+  const localWishlist = useGuestWishlist();
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
+  );
   const { categories } = useCategoryTree();
   const categoryOptions = categoriesToFacetOptions(categories);
 
@@ -107,6 +111,10 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     { initialData },
   );
 
+  const [selectionMode, setSelectionMode] = useState(false);
+  const selection = useBulkSelection({ items: products as any[], keyExtractor: (p: any) => p.id });
+  const selectedSet = new Set(selection.selectedIds);
+
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
     table.setPage(1);
@@ -121,46 +129,38 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     table.set("view", next);
   };
 
-  const handleWishlistToggle = useCallback(async (productId: string) => {
-    const isWishlisted = wl.wishlistedIds?.has(productId) ?? false;
-    if (wl.isGuest) {
-      const guestWl = (wl as any).guestWishlist;
-      if (isWishlisted) {
-        guestWl?.remove(productId, "product");
-        showToast("Removed from wishlist", "info");
-      } else {
-        guestWl?.add(productId, "product");
-        showToast("Added to wishlist", "success");
-      }
+  const handleWishlistToggle = useCallback((productId: string) => {
+    const isWishlisted = wishlistedIds.has(productId);
+    if (isWishlisted) {
+      localWishlist.remove(productId, "product");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+      showToast("Removed from wishlist", "info");
     } else {
-      if (isWishlisted) {
-        await apiClient.delete(`/api/user/wishlist/${productId}`);
-        showToast("Removed from wishlist", "info");
-      } else {
-        await apiClient.post("/api/user/wishlist", { productId });
-        showToast("Added to wishlist", "success");
-      }
+      localWishlist.add(productId, "product");
+      pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+      showToast("Added to wishlist", "success");
     }
-  }, [wl, showToast]);
+  }, [wishlistedIds, localWishlist, showToast]);
 
-  const handleAddToCart = useCallback(async (product: any) => {
-    try {
-      await apiClient.post("/api/cart", { productId: product.id, quantity: 1 });
-      showToast("Added to cart", "success");
-    } catch {
-      showToast("Could not add to cart", "error");
-    }
-  }, [showToast]);
+  const handleAddToCart = useCallback((product: any) => {
+    localCart.add(product.id, 1, {
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+    showToast("Added to cart", "success");
+  }, [localCart, showToast]);
 
-  const handleBuyNow = useCallback(async (product: any) => {
-    try {
-      await apiClient.post("/api/cart", { productId: product.id, quantity: 1 });
-    } catch {
-      showToast("Could not add to cart", "error");
-      return;
-    }
+  const handleBuyNow = useCallback((product: any) => {
+    localCart.add(product.id, 1, {
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
     router.push("/cart");
-  }, [router, showToast]);
+  }, [localCart, router]);
 
   return (
     <div className="min-h-screen">
@@ -240,6 +240,19 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
               <List className="h-4 w-4" />
             </button>
           </div>
+
+          {/* Select toggle */}
+          <button
+            type="button"
+            onClick={() => { setSelectionMode((m) => !m); selection.clearSelection(); }}
+            className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
+              selectionMode
+                ? "border-primary bg-primary/10 text-primary dark:text-primary-400"
+                : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+            }`}
+          >
+            {selectionMode ? "Cancel" : "Select"}
+          </button>
         </div>
       </div>
 
@@ -266,9 +279,12 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             }
             view={view}
             onWishlistToggle={handleWishlistToggle}
-            wishlistedIds={wl.wishlistedIds}
+            wishlistedIds={wishlistedIds}
             onAddToCart={handleAddToCart}
             onBuyNow={handleBuyNow}
+            selectionMode={selectionMode}
+            selectedIds={selectedSet}
+            onToggleSelect={selection.toggle}
           />
         )}
 
@@ -282,6 +298,44 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
           </div>
         )}
       </div>
+
+      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
+      <BulkActionsBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={() => { selection.clearSelection(); setSelectionMode(false); }}
+        actions={[
+          {
+            label: "Add to Cart",
+            icon: <ShoppingCart className="h-3.5 w-3.5" />,
+            variant: "primary",
+            onClick: () => {
+              const selected = (products as any[]).filter((p) => selectedSet.has(p.id));
+              selected.forEach((p) => {
+                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
+              });
+              showToast(`${selected.length} items added to cart`, "success");
+              selection.clearSelection();
+              setSelectionMode(false);
+            },
+          },
+          {
+            label: "Wishlist",
+            icon: <Heart className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            onClick: () => {
+              const selected = (products as any[]).filter((p) => selectedSet.has(p.id));
+              selected.forEach((p) => {
+                localWishlist.add(p.id, "product");
+                pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+              });
+              showToast(`${selected.length} items added to wishlist`, "success");
+              selection.clearSelection();
+              setSelectionMode(false);
+            },
+          },
+        ]}
+      />
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (

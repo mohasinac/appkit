@@ -9,12 +9,12 @@ export interface StoreAuctionsPageViewProps {
 
 export async function StoreAuctionsPageView({ storeSlug }: StoreAuctionsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
-  const ownerId = (store as Record<string, any>)?.ownerId;
+  const storeId = (store as Record<string, any>)?.id;
 
-  const result = ownerId
+  const result = storeId
     ? await productRepository
         .list({
-          filters: `sellerId==${ownerId},status==published,isAuction==true`,
+          filters: `storeId==${storeId},status==published,isAuction==true`,
           sorts: "auctionEndDate",
           page: 1,
           pageSize: 24,
@@ -22,13 +22,13 @@ export async function StoreAuctionsPageView({ storeSlug }: StoreAuctionsPageView
         .catch(() => null)
     : null;
 
-  if (!ownerId) {
+  if (!storeId) {
     return null;
   }
 
   return (
     <StoreAuctionsListing
-      sellerId={ownerId}
+      storeId={storeId}
       initialData={result ?? undefined}
     />
   );

@@ -7,16 +7,22 @@ import { Div } from "../../../ui";
 
 export interface PreOrderFiltersProps {
   table: UrlTable;
+  categoryOptions?: FacetOption[];
   storeOptions?: FacetOption[];
   currencyPrefix?: string;
 }
 
 export function PreOrderFilters({
   table,
+  categoryOptions = [],
   storeOptions = [],
   currencyPrefix = "",
 }: PreOrderFiltersProps) {
   const t = useTranslations("filters");
+
+  const selectedCategories = table.get("category")
+    ? table.get("category").split("|").filter(Boolean)
+    : [];
 
   const statusOptions: FacetOption[] = [
     { value: "upcoming", label: "Upcoming" },
@@ -34,6 +40,17 @@ export function PreOrderFilters({
 
   return (
     <Div>
+      {categoryOptions.length > 0 && (
+        <FilterFacetSection
+          title={t("category")}
+          options={categoryOptions}
+          selected={selectedCategories}
+          onChange={(vals) => table.set("category", vals.join("|"))}
+          searchable={categoryOptions.length > 8}
+          defaultCollapsed={false}
+        />
+      )}
+
       <FilterFacetSection
         title={t("preOrderStatus")}
         options={statusOptions}

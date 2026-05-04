@@ -9,12 +9,12 @@ export interface StoreProductsPageViewProps {
 
 export async function StoreProductsPageView({ storeSlug }: StoreProductsPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
-  const ownerId = (store as Record<string, any>)?.ownerId;
+  const storeId = (store as Record<string, any>)?.id;
 
-  const result = ownerId
+  const result = storeId
     ? await productRepository
         .list({
-          filters: `sellerId==${ownerId},status==published,isAuction==false`,
+          filters: `storeId==${storeId},status==published,isAuction==false`,
           sorts: "-createdAt",
           page: 1,
           pageSize: 24,
@@ -22,13 +22,13 @@ export async function StoreProductsPageView({ storeSlug }: StoreProductsPageView
         .catch(() => null)
     : null;
 
-  if (!ownerId) {
+  if (!storeId) {
     return null;
   }
 
   return (
     <StoreProductsListing
-      sellerId={ownerId}
+      storeId={storeId}
       initialData={result ?? undefined}
     />
   );

@@ -8,25 +8,31 @@ import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid } from "../../products/components/ProductGrid";
 import { ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from "../../products/components/ProductFilters";
-import { useSession } from "../../../react/contexts/SessionContext";
-import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
-import { apiClient } from "../../../http";
+import { useGuestCart } from "../../cart/hooks/useGuestCart";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 
 const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];
 
 export interface StoreProductsListingProps {
-  sellerId: string;
+  /** Store document ID — preferred for filtering */
+  storeId?: string;
+  /** @deprecated Use storeId */
+  sellerId?: string;
   initialData?: any;
 }
 
-export function StoreProductsListing({ sellerId, initialData }: StoreProductsListingProps) {
+export function StoreProductsListing({ storeId, sellerId, initialData }: StoreProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<ViewMode>((table.get("view") as ViewMode) || "card");
-  const { user } = useSession();
-  const wl = useWishlistWithGuest(user?.uid ?? null);
+  const localCart = useGuestCart();
+  const localWishlist = useGuestWishlist();
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
+  );
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -89,7 +95,8 @@ export function StoreProductsListing({ sellerId, initialData }: StoreProductsLis
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    sellerId,
+    storeId: storeId || undefined,
+    sellerId: !storeId ? sellerId : undefined,
     isAuction: false,
   };
 
@@ -105,36 +112,35 @@ export function StoreProductsListing({ sellerId, initialData }: StoreProductsLis
     table.set("view", next);
   };
 
-  const handleWishlistToggle = useCallback(async (productId: string) => {
-    const isWishlisted = wl.wishlistedIds?.has(productId) ?? false;
-    if (wl.isGuest) {
-      const guestWl = (wl as any).guestWishlist;
-      if (isWishlisted) {
-        guestWl?.remove(productId, "product");
-        showToast("Removed from wishlist", "info");
-      } else {
-        guestWl?.add(productId, "product");
-        showToast("Added to wishlist", "success");
-      }
+  const handleWishlistToggle = useCallback((productId: string) => {
+    const isWishlisted = wishlistedIds.has(productId);
+    if (isWishlisted) {
+      localWishlist.remove(productId, "product");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+      showToast("Removed from wishlist", "info");
     } else {
-      if (isWishlisted) {
-        await apiClient.delete(`/api/user/wishlist/${productId}`);
-        showToast("Removed from wishlist", "info");
-      } else {
-        await apiClient.post("/api/user/wishlist", { productId });
-        showToast("Added to wishlist", "success");
-      }
+      localWishlist.add(productId, "product");
+      pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+      showToast("Added to wishlist", "success");
     }
-  }, [wl, showToast]);
+  }, [wishlistedIds, localWishlist, showToast]);
 
-  const handleAddToCart = useCallback(async (product: any) => {
-    try {
-      await apiClient.post("/api/cart", { productId: product.id, quantity: 1 });
-      showToast("Added to cart", "success");
-    } catch {
-      showToast("Could not add to cart", "error");
-    }
-  }, [showToast]);
+  const handleAddToCart = useCallback((product: any) => {
+    localCart.add(product.id, 1, {
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    pushCartOp({
+      op: "add",
+      productId: product.id,
+      quantity: 1,
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    showToast("Added to cart", "success");
+  }, [localCart, showToast]);
 
   return (
     <div className="min-h-[200px]">
@@ -227,7 +233,7 @@ export function StoreProductsListing({ sellerId, initialData }: StoreProductsLis
             view={view}
             emptyLabel="This store has no products yet."
             onWishlistToggle={handleWishlistToggle}
-            wishlistedIds={wl.wishlistedIds}
+            wishlistedIds={wishlistedIds}
             onAddToCart={handleAddToCart}
           />
         )}

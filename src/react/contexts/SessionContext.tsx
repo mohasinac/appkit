@@ -349,34 +349,27 @@ export function SessionProvider({
 
   const signOut = useCallback(async () => {
     const adapter = getClientSessionAdapter();
-    try {
-      try {
-        await apiClient.post(ep.logout, {});
-      } catch (error) {
-        logger.error("Server logout failed", { error });
-      }
-      await adapter.signOut();
 
-      if (onSignOutInvalidate) {
-        for (const key of signOutInvalidationKeys) {
-          onSignOutInvalidate(key);
-        }
-      }
-
-      setUser(null);
-      setSessionId(null);
-      if (activityUpdateRef.current) {
-        clearInterval(activityUpdateRef.current);
-        activityUpdateRef.current = null;
-      }
-      deleteCookie(SESSION_COOKIE);
-      deleteCookie(SESSION_ID_COOKIE);
-    } catch (error) {
-      logger.error("Sign out failed", { error });
-      setUser(null);
-      setSessionId(null);
-      throw error;
+    // Clear UI state immediately — user sees logout happen at once
+    setUser(null);
+    setSessionId(null);
+    if (activityUpdateRef.current) {
+      clearInterval(activityUpdateRef.current);
+      activityUpdateRef.current = null;
     }
+    deleteCookie(SESSION_COOKIE);
+    deleteCookie(SESSION_ID_COOKIE);
+    if (onSignOutInvalidate) {
+      for (const key of signOutInvalidationKeys) {
+        onSignOutInvalidate(key);
+      }
+    }
+
+    // Server revocation and Firebase sign-out fire-and-forget (non-blocking)
+    Promise.all([
+      apiClient.post(ep.logout, {}).catch((err) => logger.error("Server logout failed", { err })),
+      adapter.signOut().catch((err) => logger.error("Firebase sign-out failed", { err })),
+    ]);
   }, [ep.logout, onSignOutInvalidate, signOutInvalidationKeys]);
 
   useEffect(() => {

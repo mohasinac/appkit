@@ -7,9 +7,9 @@ import { Pagination, SortDropdown, useToast } from "../../../ui";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
 import { AuctionFilters } from "../../auctions/components/AuctionFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
-import { useSession } from "../../../react/contexts/SessionContext";
-import { useWishlistWithGuest } from "../../wishlist/hooks/useWishlistWithGuest";
-import { apiClient } from "../../../http";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushWishlistOp } from "../../cart/utils/pending-ops";
+import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 
 const AUCTION_SORT_OPTIONS = [
   { value: "auctionEndDate", label: "Ending Soonest" },
@@ -19,7 +19,7 @@ const AUCTION_SORT_OPTIONS = [
   { value: "-price", label: "Price: High to Low" },
 ] as const;
 
-const FILTER_KEYS = ["category", "minBid", "maxBid", "storeId", "dateFrom", "dateTo"];
+const FILTER_KEYS = ["category", "minBid", "maxBid", "storeId", "dateFrom", "dateTo", "condition"];
 
 export interface AuctionsIndexListingProps {
   initialData?: any;
@@ -34,8 +34,12 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
-  const { user } = useSession();
-  const wl = useWishlistWithGuest(user?.uid ?? null);
+  const localWishlist = useGuestWishlist();
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "auction").map((i) => i.itemId),
+  );
+  const { categories } = useCategoryTree();
+  const categoryOptions = categoriesToFacetOptions(categories);
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -124,16 +128,19 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
   };
 
   const wishlistActions = {
-    addToWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.add(productId, "auction");
-      else await apiClient.post("/api/user/wishlist", { productId });
+    addToWishlist: (productId: string) => {
+      localWishlist.add(productId, "auction");
+      pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
       showToast("Added to wishlist", "success");
+      return Promise.resolve();
     },
-    removeFromWishlist: async (productId: string) => {
-      if (wl.isGuest) (wl as any).guestWishlist?.remove(productId, "auction");
-      else await apiClient.delete(`/api/user/wishlist/${productId}`);
+    removeFromWishlist: (productId: string) => {
+      localWishlist.remove(productId, "auction");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
       showToast("Removed from wishlist", "info");
+      return Promise.resolve();
     },
+    isWishlisted: (productId: string) => wishlistedIds.has(productId),
   };
 
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4";
@@ -286,7 +293,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <AuctionFilters table={pendingTable} currencyPrefix="₹" />
+              <AuctionFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button

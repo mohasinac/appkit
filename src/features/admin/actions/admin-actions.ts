@@ -12,6 +12,7 @@ import { payoutRepository } from "../../payments/repository/payout.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
+import { getProviders } from "../../../contracts";
 import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
 import type { UserAdminUpdateInput, UserDocument } from "../../auth";
@@ -149,6 +150,16 @@ export async function adminUpdateUser(
   }
 
   const updated = await userRepository.update(uid, input);
+
+  // Sync role to Firebase custom claims so it takes effect on next token refresh
+  if (input.role !== undefined) {
+    try {
+      const providers = getProviders();
+      await providers.auth.updateUser(uid, { role: input.role });
+    } catch (err) {
+      serverLogger.warn("adminUpdateUser: custom claims sync failed", { uid, err });
+    }
+  }
 
   serverLogger.info("adminUpdateUser", {
     adminId,

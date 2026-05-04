@@ -3,12 +3,15 @@ import React, { useState, useCallback } from "react";
 import { Search, SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, SortDropdown } from "../../../ui";
+import { Pagination, SortDropdown, useToast } from "../../../ui";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid } from "../../products/components/ProductGrid";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { PRODUCT_PUBLIC_SORT_OPTIONS } from "../../products/components/ProductFilters";
+import { useGuestCart } from "../../cart/hooks/useGuestCart";
+import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
+import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 
 export interface CategoryProductsListingProps {
   categorySlug: string;
@@ -22,10 +25,16 @@ export function CategoryProductsListing({
   initialData,
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
+  const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<ViewMode>(
     (table.get("view") as ViewMode) || "card",
+  );
+  const localCart = useGuestCart();
+  const localWishlist = useGuestWishlist();
+  const wishlistedIds = new Set(
+    localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
   );
 
   const params = {
@@ -50,6 +59,29 @@ export function CategoryProductsListing({
     table.set("q", searchInput.trim());
     table.setPage(1);
   }, [searchInput, table]);
+
+  const handleWishlistToggle = useCallback((productId: string) => {
+    const isWishlisted = wishlistedIds.has(productId);
+    if (isWishlisted) {
+      localWishlist.remove(productId, "product");
+      pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+      showToast("Removed from wishlist", "info");
+    } else {
+      localWishlist.add(productId, "product");
+      pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+      showToast("Added to wishlist", "success");
+    }
+  }, [wishlistedIds, localWishlist, showToast]);
+
+  const handleAddToCart = useCallback((product: any) => {
+    localCart.add(product.id, 1, {
+      productTitle: product.title,
+      productImage: product.mainImage,
+      price: product.price,
+    });
+    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+    showToast("Added to cart", "success");
+  }, [localCart, showToast]);
 
   const handleViewToggle = (next: ViewMode) => {
     setView(next);
@@ -144,7 +176,10 @@ export function CategoryProductsListing({
               String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
             }
             view={view}
-            emptyLabel={`No products found in this category.`}
+            emptyLabel="No products found in this category."
+            onWishlistToggle={handleWishlistToggle}
+            wishlistedIds={wishlistedIds}
+            onAddToCart={handleAddToCart}
           />
         )}
 

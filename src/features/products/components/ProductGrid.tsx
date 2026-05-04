@@ -22,6 +22,10 @@ interface ProductCardProps<T extends ProductItem = ProductItem> {
   onAddToCart?: (product: T) => void;
   onBuyNow?: (product: T) => void;
   className?: string;
+  /** Bulk selection */
+  selectionMode?: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string) => void;
 }
 
 export function ProductCard<T extends ProductItem = ProductItem>({
@@ -33,6 +37,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
   onAddToCart,
   onBuyNow,
   className = "",
+  selectionMode = false,
+  isSelected = false,
+  onSelect,
 }: ProductCardProps<T>) {
   const discount =
     product.originalPrice && product.originalPrice > product.price
@@ -51,23 +58,33 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       ? { label: "Pre-Order", cls: "bg-violet-600 text-white" }
       : null;
 
+  const handleCardClick = selectionMode
+    ? (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }
+    : onClick && !href ? () => onClick(product) : undefined;
+
   const cardBody = (
     <Div
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick && !href ? 0 : undefined}
+      role={selectionMode ? "checkbox" : onClick ? "button" : undefined}
+      aria-checked={selectionMode ? isSelected : undefined}
+      tabIndex={selectionMode || (onClick && !href) ? 0 : undefined}
       onKeyDown={
-        onClick && !href
+        selectionMode
+          ? (e) => (e.key === "Enter" || e.key === " ") && onSelect?.(product.id)
+          : onClick && !href
           ? (e) => (e.key === "Enter" || e.key === " ") && onClick(product)
           : undefined
       }
-      onClick={onClick && !href ? () => onClick(product) : undefined}
+      onClick={handleCardClick}
       className={[
         "group relative flex h-full flex-col overflow-hidden",
-        "rounded-2xl border border-zinc-200/80 bg-white",
+        "rounded-2xl border bg-white",
         "shadow-sm transition-all duration-200",
-        "hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5",
-        "dark:border-slate-700/60 dark:bg-slate-900",
-        onClick || href ? "cursor-pointer" : "",
+        isSelected
+          ? "border-primary ring-2 ring-primary/30 shadow-md"
+          : "border-zinc-200/80 hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5",
+        "dark:bg-slate-900",
+        isSelected ? "dark:border-primary dark:ring-primary/30" : "dark:border-slate-700/60",
+        selectionMode || onClick || href ? "cursor-pointer" : "",
         className,
       ]
         .filter(Boolean)
@@ -88,17 +105,37 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           </Div>
         )}
 
-        {/* Top-left badges */}
+        {/* Top-left: checkbox (selection mode) or badges */}
         <Div className="absolute left-2 top-2 flex flex-col gap-1">
-          {discount && (
-            <Span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
-              -{discount}%
-            </Span>
-          )}
-          {typeBadge && (
-            <Span className={`rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${typeBadge.cls}`}>
-              {typeBadge.label}
-            </Span>
+          {selectionMode ? (
+            <Div
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }}
+              className={[
+                "flex h-6 w-6 items-center justify-center rounded-md border-2 shadow-sm transition-all",
+                isSelected
+                  ? "bg-primary border-primary text-white"
+                  : "bg-white/90 dark:bg-slate-800/90 border-zinc-300 dark:border-slate-500",
+              ].join(" ")}
+            >
+              {isSelected && (
+                <svg className="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2 6l3 3 5-5" />
+                </svg>
+              )}
+            </Div>
+          ) : (
+            <>
+              {discount && (
+                <Span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+                  -{discount}%
+                </Span>
+              )}
+              {typeBadge && (
+                <Span className={`rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${typeBadge.cls}`}>
+                  {typeBadge.label}
+                </Span>
+              )}
+            </>
           )}
         </Div>
 
@@ -220,7 +257,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
     </Div>
   );
 
-  if (href) {
+  if (href && !selectionMode) {
     return (
       <Link href={href} className="block h-full">
         {cardBody}
@@ -296,6 +333,10 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
    * @default "card"
    */
   view?: ViewMode;
+  /** Bulk selection */
+  selectionMode?: boolean;
+  selectedIds?: Set<string>;
+  onToggleSelect?: (id: string) => void;
 }
 
 // --- Grid class maps ---------------------------------------------------------
@@ -447,6 +488,9 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
   currentPage = 1,
   totalPages = 1,
   view = "card",
+  selectionMode = false,
+  selectedIds,
+  onToggleSelect,
 }: ProductGridProps<T>) {
   const isEmpty = products.length === 0;
 
@@ -517,6 +561,9 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
                 onAddToCart={onAddToCart}
                 onBuyNow={onBuyNow}
                 isWishlisted={ctx.isWishlisted}
+                selectionMode={selectionMode}
+                isSelected={selectedIds?.has(p.id) ?? false}
+                onSelect={onToggleSelect}
               />
             );
           })}
@@ -552,6 +599,9 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               onAddToCart={onAddToCart}
               onBuyNow={onBuyNow}
               isWishlisted={ctx.isWishlisted}
+              selectionMode={selectionMode}
+              isSelected={selectedIds?.has(p.id) ?? false}
+              onSelect={onToggleSelect}
             />
           );
         })}

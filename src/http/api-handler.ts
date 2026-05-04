@@ -81,7 +81,14 @@ async function getUserFromRequest(
   }
 
   const userRepo = db.getRepository<UserDocument>("users");
-  return userRepo.findById(decoded.uid);
+  const userDoc = await userRepo.findById(decoded.uid);
+  if (!userDoc) return null;
+
+  // Firestore is the authoritative source for role. Session cookie claims are
+  // created from the ID token at login time, which predates the setCustomUserClaims
+  // call in the session route — so claims can carry a stale role (e.g. "user"
+  // instead of "admin"). Always use the Firestore value.
+  return userDoc;
 }
 
 async function requireAuthFromRequest(request: Request): Promise<UserDocument> {

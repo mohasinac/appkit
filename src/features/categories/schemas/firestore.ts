@@ -57,6 +57,20 @@ export interface CategoryDocument {
   order: number;
   isLeaf: boolean;
 
+  /**
+   * Global DFS pre-order position across the entire category tree (1-indexed).
+   * Set and maintained by the onCategoryWrite Cloud Function.
+   * Enables ordered range queries without loading the whole tree.
+   */
+  position: number;
+
+  /**
+   * Count of this node plus all its descendants.
+   * The range [position, position + subtreeSize - 1] covers the full subtree.
+   * Used to efficiently locate insertion points and shift sibling positions.
+   */
+  subtreeSize: number;
+
   metrics: CategoryDocumentMetrics;
 
   isFeatured: boolean;
@@ -102,6 +116,8 @@ export const DEFAULT_CATEGORY_DATA: Partial<CategoryDocument> = {
   childrenIds: [],
   isLeaf: true,
   order: 0,
+  position: 0,
+  subtreeSize: 1,
   isFeatured: false,
   isBrand: false,
   isActive: true,
@@ -133,6 +149,8 @@ export const CATEGORIES_PUBLIC_FIELDS = [
   "tier",
   "path",
   "order",
+  "position",
+  "subtreeSize",
   "isLeaf",
   "metrics.totalProductCount",
   "metrics.totalAuctionCount",
@@ -269,6 +287,8 @@ export const CATEGORY_FIELDS = {
   TIER: "tier",
   PATH: "path",
   ORDER: "order",
+  POSITION: "position",
+  SUBTREE_SIZE: "subtreeSize",
   IS_LEAF: "isLeaf",
   METRICS: "metrics",
   METRIC: {
