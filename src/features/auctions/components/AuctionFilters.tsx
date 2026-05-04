@@ -8,6 +8,7 @@ import { Div } from "../../../ui";
 export interface AuctionFiltersProps {
   table: UrlTable;
   categoryOptions?: FacetOption[];
+  brandOptions?: FacetOption[];
   storeOptions?: FacetOption[];
   currencyPrefix?: string;
 }
@@ -15,6 +16,7 @@ export interface AuctionFiltersProps {
 export function AuctionFilters({
   table,
   categoryOptions = [],
+  brandOptions = [],
   storeOptions = [],
   currencyPrefix = "",
 }: AuctionFiltersProps) {
@@ -23,6 +25,7 @@ export function AuctionFilters({
   const selectedCategories = table.get("category")
     ? table.get("category").split("|").filter(Boolean)
     : [];
+  const selectedBrands = table.get("brand") ? [table.get("brand")] : [];
   const selectedStores = table.get("storeId")
     ? table.get("storeId").split("|").filter(Boolean)
     : [];
@@ -37,6 +40,17 @@ export function AuctionFilters({
           onChange={(vals) => table.set("category", vals.join("|"))}
           searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
+        />
+      )}
+
+      {brandOptions.length > 0 && (
+        <FilterFacetSection
+          title={t("brand")}
+          options={brandOptions}
+          selected={selectedBrands}
+          onChange={(vals) => table.set("brand", vals[0] ?? "")}
+          searchable={brandOptions.length > 4}
+          defaultCollapsed={brandOptions.length > 6}
         />
       )}
 

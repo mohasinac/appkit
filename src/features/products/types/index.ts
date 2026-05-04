@@ -150,6 +150,8 @@ export interface ProductListParams {
   dateTo?: string;
   /** Pre-order production status */
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
+  /** Filter by brand name */
+  brand?: string;
   /** Shipping / free shipping */
   freeShipping?: boolean;
 }

@@ -56,6 +56,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.dateFrom) sp.set("dateFrom", params.dateFrom);
   if (params.dateTo) sp.set("dateTo", params.dateTo);
   if (params.preOrderProductionStatus) sp.set("preOrderProductionStatus", params.preOrderProductionStatus);
+  if (params.brand) sp.set("brand", params.brand);
   if (params.freeShipping !== undefined)
     sp.set("freeShipping", String(params.freeShipping));
   const qs = sp.toString();

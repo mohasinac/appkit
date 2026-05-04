@@ -11,6 +11,7 @@ import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
+import { useBrands } from "../../products/hooks/useBrands";
 
 const PREORDER_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -19,7 +20,7 @@ const PREORDER_SORT_OPTIONS = [
   { value: "-price", label: "Price: High to Low" },
 ] as const;
 
-const FILTER_KEYS = ["category", "minPrice", "maxPrice", "storeId", "preOrderProductionStatus", "dateFrom", "dateTo"];
+const FILTER_KEYS = ["category", "brand", "minPrice", "maxPrice", "storeId", "preOrderProductionStatus", "dateFrom", "dateTo"];
 
 export interface PreOrdersIndexListingProps {
   initialData?: any;
@@ -38,6 +39,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
   const localWishlist = useGuestWishlist();
   const { categories } = useCategoryTree();
   const categoryOptions = categoriesToFacetOptions(categories);
+  const { brandOptions } = useBrands();
   const wishlistedIds = new Set(
     localWishlist.items.filter((i) => i.type === "preorder").map((i) => i.itemId),
   );
@@ -98,6 +100,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
     categorySlug: categorySlug || undefined,
+    brand: table.get("brand") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     storeId: table.get("storeId") || undefined,
@@ -269,7 +272,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <PreOrderFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} />
+              <PreOrderFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} brandOptions={brandOptions} />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button

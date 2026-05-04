@@ -62,6 +62,7 @@ export function useCategoriesFiltered(params: CategoriesFilteredParams = {}) {
     let items = query.data ?? [];
     const lq = q.toLowerCase();
     if (lq) items = items.filter((c) => c.name.toLowerCase().includes(lq) || (c.description ?? "").toLowerCase().includes(lq));
+    if (params.isBrand === false) items = items.filter((c) => !c.isBrand);
     if (minProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) >= minProductCount);
     if (maxProductCount !== undefined) items = items.filter((c) => ((c as any).productCount ?? 0) <= maxProductCount);
 

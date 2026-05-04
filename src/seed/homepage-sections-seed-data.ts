@@ -398,22 +398,22 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ============================================
-  // 17. BRANDS (disabled — no brand catalogue yet)
+  // 17. BRANDS
   // ============================================
   {
     id: "section-brands-1707300000017",
     type: "brands",
     order: 17,
-    enabled: false,
+    enabled: true,
     config: {
       title: "Shop by Brand",
-      subtitle: "Explore figure lines from top anime studios and manufacturers",
+      subtitle: "Explore collectibles from Takara Tomy, Bandai, Good Smile Company, and more",
       maxBrands: 12,
       autoScroll: true,
       scrollInterval: 4000,
     },
     createdAt: daysAgo(90),
-    updatedAt: daysAgo(7),
+    updatedAt: daysAgo(1),
   },
 
   // ============================================

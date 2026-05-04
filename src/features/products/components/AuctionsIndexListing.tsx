@@ -10,6 +10,7 @@ import type { UrlTable } from "../../filters/FilterPanel";
 import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
+import { useBrands } from "../hooks/useBrands";
 
 const AUCTION_SORT_OPTIONS = [
   { value: "auctionEndDate", label: "Ending Soonest" },
@@ -19,7 +20,7 @@ const AUCTION_SORT_OPTIONS = [
   { value: "-price", label: "Price: High to Low" },
 ] as const;
 
-const FILTER_KEYS = ["category", "minBid", "maxBid", "storeId", "dateFrom", "dateTo", "condition"];
+const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFrom", "dateTo", "condition"];
 
 export interface AuctionsIndexListingProps {
   initialData?: any;
@@ -40,6 +41,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
   );
   const { categories } = useCategoryTree();
   const categoryOptions = categoriesToFacetOptions(categories);
+  const { brandOptions } = useBrands();
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -97,6 +99,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
     categorySlug: categorySlug || undefined,
+    brand: table.get("brand") || undefined,
     minBid: table.get("minBid") ? Number(table.get("minBid")) : undefined,
     maxBid: table.get("maxBid") ? Number(table.get("maxBid")) : undefined,
     storeId: table.get("storeId") || undefined,
@@ -234,7 +237,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <AuctionFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} />
+              <AuctionFilters table={pendingTable} currencyPrefix="₹" categoryOptions={categoryOptions} brandOptions={brandOptions} />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button

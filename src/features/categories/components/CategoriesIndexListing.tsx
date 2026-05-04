@@ -43,10 +43,15 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
 
   const closeFilters = () => setFilterOpen(false);
 
+  const activeTab = table.get("tab") || "all";
+
+  const isBrandParam =
+    activeTab === "brands" ? true : activeTab === "categories" ? false : undefined;
+
   const { categories, total, totalPages, isLoading } = useCategoriesFiltered({
     q: table.get("q") || undefined,
     isFeatured: table.get("isFeatured") === "true" || undefined,
-    isBrand: table.get("isBrand") === "true" || undefined,
+    isBrand: isBrandParam,
     rootOnly: table.get("rootOnly") === "true" || undefined,
     tier: table.get("tier") ? Number(table.get("tier")) : undefined,
     minProductCount: table.get("minItemCount") ? Number(table.get("minItemCount")) : undefined,
@@ -58,8 +63,38 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
 
   const activeSearch = table.get("q") || "";
 
+  const TABS = [
+    { key: "all", label: "All" },
+    { key: "categories", label: "Categories" },
+    { key: "brands", label: "Brands" },
+  ] as const;
+
+  const switchTab = (key: string) => {
+    table.set("tab", key);
+    table.setPage(1);
+  };
+
   return (
     <div className="min-h-screen">
+      {/* ── Tab bar ────────────────────────────────────────────────────── */}
+      <div className="mb-4 flex gap-1 border-b border-zinc-200 dark:border-slate-700">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            onClick={() => switchTab(tab.key)}
+            className={[
+              "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
+              activeTab === tab.key
+                ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
+                : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200",
+            ].join(" ")}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4 -mx-4">
         <div className="flex items-center gap-2.5 max-w-full">
@@ -79,7 +114,7 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && commitSearch()}
-              placeholder="Search categories..."
+              placeholder={activeTab === "brands" ? "Search brands..." : "Search categories..."}
               className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
             />
             {searchInput && (
@@ -121,7 +156,11 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
           </div>
         ) : categories.length === 0 ? (
           <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            {activeSearch ? `No categories matching "${activeSearch}"` : "No categories found"}
+            {activeSearch
+            ? `No ${activeTab === "brands" ? "brands" : "categories"} matching "${activeSearch}"`
+            : activeTab === "brands"
+              ? "No brands found"
+              : "No categories found"}
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
