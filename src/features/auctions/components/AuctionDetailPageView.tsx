@@ -30,6 +30,8 @@ import { ProductGalleryClient } from "../../products/components/ProductGalleryCl
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
+import { listReviewsBySeller } from "../../reviews/actions/review-actions";
+import type { ReviewDocument } from "../../reviews/schemas/firestore";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -46,6 +48,11 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
     productRepository.findByIdOrSlug(id).catch(() => undefined),
     listBidsByProduct(id, { pageSize: 20 }).catch(() => null),
   ]);
+
+  const sellerId = (product as unknown as Record<string, unknown>)?.sellerId as string | undefined;
+  const storeReviews: ReviewDocument[] = sellerId
+    ? await listReviewsBySeller(sellerId).catch(() => [])
+    : [];
 
   if (!product) {
     return (
@@ -397,6 +404,79 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
             );
           }}
         />
+
+        {/* Store reviews section */}
+        {storeReviews.length > 0 && (
+          <Section className="mt-10">
+            <Heading level={2} className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+              Store Reviews
+            </Heading>
+            {/* Rating summary */}
+            {(() => {
+              const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
+              return (
+                <Div className="mb-4 flex items-center gap-3">
+                  <Span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+                    {avg.toFixed(1)}
+                  </Span>
+                  <Div>
+                    <Row gap="xs">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Span
+                          key={star}
+                          className={star <= Math.round(avg) ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}
+                        >
+                          ★
+                        </Span>
+                      ))}
+                    </Row>
+                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                      {storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}
+                    </Text>
+                  </Div>
+                </Div>
+              );
+            })()}
+            {/* Review list — up to 10 most recent */}
+            <Stack gap="sm">
+              {storeReviews.slice(0, 10).map((review) => (
+                <Div
+                  key={review.id}
+                  className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 p-4 space-y-1.5"
+                >
+                  <Row justify="between" align="center">
+                    <Row gap="xs" align="center">
+                      <Span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                        {review.userName}
+                      </Span>
+                      <Row gap="xs">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Span
+                            key={star}
+                            className={`text-xs ${star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}`}
+                          >
+                            ★
+                          </Span>
+                        ))}
+                      </Row>
+                    </Row>
+                  </Row>
+                  {review.title && (
+                    <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+                      {review.title}
+                    </Text>
+                  )}
+                  <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                    {review.comment}
+                  </Text>
+                  <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+                    {review.productTitle}
+                  </Text>
+                </Div>
+              ))}
+            </Stack>
+          </Section>
+        )}
 
         {/* Mobile sticky buy bar */}
         {!isEnded && (
