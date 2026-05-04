@@ -20,7 +20,7 @@ import BottomActions from "./BottomActions";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
 import { BottomNavbar, type BottomNavbarUser } from "./BottomNavbar";
 import { FooterLayout, type FooterLayoutProps } from "./FooterLayout";
-import { MainNavbar, type MainNavbarItem } from "./MainNavbar";
+import { type MainNavbarItem } from "./MainNavbar";
 import { SidebarLayout } from "./SidebarLayout";
 import { TitleBar } from "./TitleBar";
 import { BackToTop } from "./BackToTop";
@@ -587,19 +587,31 @@ export function AppLayoutShell({
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
-          <MainNavbar
-            navItems={navItems}
-            hiddenNavItems={hiddenNavItems}
-            hasDashboardNav={!suppressDashboardNav && hasDashboardNav}
-            onToggleDashboardNav={!suppressDashboardNav && hasDashboardNav ? () => {
-              handleBeforeDashboardNavToggle();
-              toggleDashboardNav();
-            } : undefined}
-          />
-          {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
+            {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
         </Div>
 
         {eventBannerSlot}
+
+        {/* Desktop: floating hamburger anchored just below the sticky header */}
+        <button
+          type="button"
+          className="hidden lg:flex fixed z-30 w-9 h-9 items-center justify-center rounded-r-xl bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border border-l-0 border-zinc-200 dark:border-slate-800 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shadow-sm"
+          style={{ top: "calc(var(--header-height, 3.5rem) + 6px)", left: 0 }}
+          onClick={handleTogglePublicSidebar}
+          aria-label="Open navigation menu"
+          aria-expanded={sidebarOpen}
+        >
+          {sidebarOpen ? (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
+        </button>
+
         <AutoBreadcrumbs />
 
         <Div className="relative flex w-full flex-1 overflow-x-clip">
@@ -727,6 +739,8 @@ export function AppLayoutShell({
           profileHref={profileHref}
           loginHref={loginHref}
           onSearchToggle={() => setSearchOpen((prev) => !prev)}
+          navItems={navItems}
+          onMoreToggle={handleTogglePublicSidebar}
         />
         <UnsavedChangesModal />
       </Div>

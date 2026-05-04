@@ -5,6 +5,13 @@ import { AvatarDisplay, Li, Span, TextLink } from "../../ui";
 import { BottomNavLayout } from "./BottomNavLayout";
 import { NavItem } from "./NavItem";
 
+export interface BottomNavItem {
+  key: string;
+  href: string;
+  label: string;
+  icon?: React.ReactNode;
+}
+
 export interface BottomNavbarUser {
   displayName: string | null;
   email: string | null;
@@ -35,6 +42,13 @@ export interface BottomNavbarProps {
   loginHref: string;
   /** Called when the Search slot is tapped */
   onSearchToggle?: () => void;
+  /**
+   * When provided, renders these items in the bottom nav (first 4 shown, 5th slot = "More" button).
+   * Overrides the hardcoded Home/Shop/Search/Cart/Profile layout.
+   */
+  navItems?: BottomNavItem[];
+  /** Called when the "More" slot is tapped (typically opens the sidebar drawer). */
+  onMoreToggle?: () => void;
   /** CSS class applied to the active nav item. Default: "text-primary-600 dark:text-primary-400" */
   activeClassName?: string;
   /** CSS class applied to inactive nav items. Default: "text-zinc-500 dark:text-slate-400" */
@@ -60,6 +74,8 @@ export function BottomNavbar({
   profileHref,
   loginHref,
   onSearchToggle,
+  navItems,
+  onMoreToggle,
   activeClassName = "text-primary-600 dark:text-primary-400",
   inactiveClassName = "text-zinc-500 dark:text-slate-400",
   iconClassName,
@@ -75,14 +91,57 @@ export function BottomNavbar({
     search: "Search",
     cart: "Cart",
     profile: "Profile",
+    more: "More",
   } as const;
 
-  const itemStyle = { width: "20%" } as const;
   const slotClassName = "relative flex h-full w-full flex-col items-center justify-center gap-1 transition-colors duration-200";
+  const defaultIcon = (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+
+  if (navItems && navItems.length > 0) {
+    const visibleItems = navItems.slice(0, 4);
+    return (
+      <BottomNavLayout ariaLabel={labels.mobileNav}>
+        {visibleItems.map((item) => (
+          <Li key={item.key} className="flex-1">
+            <NavItem
+              href={item.href}
+              label={item.label}
+              icon={item.icon ?? defaultIcon}
+              isActive={pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"))}
+              variant="vertical"
+              activeClassName={activeClassName}
+              inactiveClassName={inactiveClassName}
+              iconClassName={iconClassName}
+              labelClassName={labelClassName}
+            />
+          </Li>
+        ))}
+        <Li className="flex-1">
+          <button
+            type="button"
+            onClick={onMoreToggle}
+            className={`${slotClassName} ${inactiveClassName}`}
+            aria-label={labels.more}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <Span className={labelClassName}>{labels.more}</Span>
+          </button>
+        </Li>
+      </BottomNavLayout>
+    );
+  }
+
+  const itemStyle = { width: "20%" } as const;
 
   return (
     <BottomNavLayout ariaLabel={labels.mobileNav}>
-      {/* 1 � Home */}
+      {/* 1 — Home */}
       <Li className="flex-1" style={itemStyle}>
         <NavItem
           href={homeHref}
@@ -101,7 +160,7 @@ export function BottomNavbar({
         />
       </Li>
 
-      {/* 2 � Shop */}
+      {/* 2 — Shop */}
       <Li className="flex-1" style={itemStyle}>
         <NavItem
           href={shopHref}
@@ -120,7 +179,7 @@ export function BottomNavbar({
         />
       </Li>
 
-      {/* 3 � Search */}
+      {/* 3 — Search */}
       <Li className="flex-1" style={itemStyle}>
         <button
           type="button"
@@ -135,7 +194,7 @@ export function BottomNavbar({
         </button>
       </Li>
 
-      {/* 4 � Cart */}
+      {/* 4 — Cart */}
       <Li className="flex-1" style={itemStyle}>
         <TextLink
           href={cartHref}
@@ -152,7 +211,7 @@ export function BottomNavbar({
         </TextLink>
       </Li>
 
-      {/* 5 � Profile / Login */}
+      {/* 5 — Profile / Login */}
       <Li className="flex-1" style={itemStyle}>
         {user ? (
           <TextLink
