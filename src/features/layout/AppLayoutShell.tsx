@@ -132,6 +132,37 @@ const DEFAULT_DARK_BG = {
 };
 
 /** Collapsible accordion section for the public sidebar. */
+function CollapsibleNavGroup({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <Div className="space-y-0.5">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between px-1 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      >
+        <span>{title}</span>
+        <svg
+          className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && <Div className="space-y-0.5">{children}</Div>}
+    </Div>
+  );
+}
+
 function CollapsibleSidebarSection({
   section,
   navItemClass,
@@ -139,7 +170,7 @@ function CollapsibleSidebarSection({
   section: AppLayoutShellSidebarSection;
   navItemClass: string;
 }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const hasTitle = !!section.title;
 
   if (!hasTitle) {
@@ -342,8 +373,7 @@ export function AppLayoutShell({
 
         {/* PROFILE section — stat summary when authenticated */}
         {isAuthenticated && (
-          <Div className="space-y-1">
-            <Text className={sectionLabelClass}>{labels.sectionTitle}</Text>
+          <CollapsibleNavGroup title={labels.sectionTitle}>
             <Ul className="space-y-0.5">
               <Li>
                 <TextLink href={profileHref} variant="none" className={navItemClass}>
@@ -372,7 +402,7 @@ export function AppLayoutShell({
                 </Li>
               )}
             </Ul>
-          </Div>
+          </CollapsibleNavGroup>
         )}
 
         {isAuthenticated && user?.stats && (
@@ -414,10 +444,7 @@ export function AppLayoutShell({
 
         {/* DASHBOARD section — shown to admin/seller roles */}
         {isAuthenticated && isAdminOrSeller && (adminHref || resolvedStoreHref) && (
-          <Div className="space-y-1">
-            <Text className={sectionLabelClass}>
-              {labels.dashboardSectionTitle}
-            </Text>
+          <CollapsibleNavGroup title={labels.dashboardSectionTitle}>
             <Ul className="space-y-0.5">
               {adminHref && role === "admin" && (
                 <Li>
@@ -442,7 +469,7 @@ export function AppLayoutShell({
                 </Li>
               )}
             </Ul>
-          </Div>
+          </CollapsibleNavGroup>
         )}
 
         {/* Consumer-provided sections (Browse, Support, Settings, etc.) — collapsible */}

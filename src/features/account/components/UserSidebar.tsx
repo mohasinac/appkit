@@ -1,11 +1,10 @@
 "use client";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Aside, Li, Nav, Span, Ul } from "../../../ui";
+import { Li, Nav, Span, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
-
-const STORAGE_KEY = "user-sidebar-collapsed";
 
 export interface UserNavItem {
   href: string;
@@ -27,63 +26,24 @@ export interface UserSidebarProps {
   className?: string;
 }
 
-function NavLink({
-  item,
-  isActive,
-  collapsed,
-  onClick,
-}: {
-  item: UserNavItem;
-  isActive: boolean;
-  collapsed?: boolean;
-  onClick?: () => void;
-}) {
+function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {
   return (
     <Link
       href={item.href}
       onClick={onClick}
-      title={collapsed ? item.label : undefined}
-      className={`flex items-center rounded-lg py-2 text-sm transition-colors ${
-        collapsed ? "justify-center px-2" : "gap-3 px-3"
-      } ${
+      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
         isActive
-          ? "bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium"
-          : "text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+          ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
+          : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
       }`}
     >
-      {item.icon && <Span className="shrink-0 text-[1.1rem]">{item.icon}</Span>}
-      {!collapsed && <Span className="flex-1 truncate">{item.label}</Span>}
+      {item.icon && <Span className="shrink-0 text-base opacity-70">{item.icon}</Span>}
+      <Span className="flex-1 truncate">{item.label}</Span>
     </Link>
   );
 }
 
-function DesktopContent({
-  items,
-  activeHref,
-  collapsed,
-}: {
-  items: UserNavItem[];
-  activeHref: string;
-  collapsed: boolean;
-}) {
-  return (
-    <Nav aria-label="User navigation" className="flex-1 overflow-y-auto py-2">
-      <Ul className={`space-y-0.5 ${collapsed ? "px-1" : "px-2"}`}>
-        {items.map((item) => {
-          const isActive =
-            activeHref === item.href || activeHref.startsWith(item.href + "/");
-          return (
-            <Li key={item.href}>
-              <NavLink item={item} isActive={isActive} collapsed={collapsed} />
-            </Li>
-          );
-        })}
-      </Ul>
-    </Nav>
-  );
-}
-
-function MobileContent({
+function DrawerContent({
   groups,
   items,
   activeHref,
@@ -96,24 +56,20 @@ function MobileContent({
 }) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     if (!groups) return {};
-    return Object.fromEntries(
-      groups.map((g) => [g.title, g.defaultOpen ?? true])
-    );
+    return Object.fromEntries(groups.map((g) => [g.title, g.defaultOpen ?? false]));
   });
 
   const toggle = useCallback(
-    (title: string) =>
-      setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] })),
+    (title: string) => setOpenGroups((prev) => ({ ...prev, [title]: !prev[title] })),
     []
   );
 
   if (!groups || groups.length === 0) {
     return (
-      <Nav aria-label="User navigation" className="py-2">
-        <Ul className="space-y-0.5 px-2">
+      <Nav aria-label="User navigation" className="py-3">
+        <Ul className="space-y-0.5 px-3">
           {items.map((item) => {
-            const isActive =
-              activeHref === item.href || activeHref.startsWith(item.href + "/");
+            const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
             return (
               <Li key={item.href}>
                 <NavLink item={item} isActive={isActive} onClick={onItemClick} />
@@ -126,36 +82,38 @@ function MobileContent({
   }
 
   return (
-    <Nav aria-label="User navigation" className="py-2 space-y-1">
+    <Nav aria-label="User navigation" className="py-2">
       {groups.map((group) => {
-        const isOpen = openGroups[group.title] ?? true;
+        const isOpen = openGroups[group.title] ?? false;
+        const hasActive = group.items.some(
+          (i) => activeHref === i.href || activeHref.startsWith(i.href + "/")
+        );
         return (
-          <div key={group.title}>
+          <div key={group.title} className="mb-0.5">
             <button
               type="button"
               onClick={() => toggle(group.title)}
-              className="flex w-full items-center justify-between px-4 py-2 text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+              className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
+                hasActive && !isOpen
+                  ? "text-primary-600 dark:text-primary-400"
+                  : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
+              }`}
             >
               <span>{group.title}</span>
-              <span
-                className={`transition-transform duration-150 text-[0.65rem] ${isOpen ? "rotate-180" : ""}`}
+              <svg
+                className={`w-3 h-3 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+                fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
               >
-                ▾
-              </span>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+              </svg>
             </button>
             {isOpen && (
-              <Ul className="space-y-0.5 px-2 pb-2">
+              <Ul className="space-y-0.5 px-3 pb-1">
                 {group.items.map((item) => {
-                  const isActive =
-                    activeHref === item.href ||
-                    activeHref.startsWith(item.href + "/");
+                  const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
                   return (
                     <Li key={item.href}>
-                      <NavLink
-                        item={item}
-                        isActive={isActive}
-                        onClick={onItemClick}
-                      />
+                      <NavLink item={item} isActive={isActive} onClick={onItemClick} />
                     </Li>
                   );
                 })}
@@ -168,72 +126,75 @@ function MobileContent({
   );
 }
 
-export function UserSidebar({
-  items,
-  groups,
-  mobileOpen = false,
-  onCloseMobile,
-  className = "",
-}: UserSidebarProps) {
+function DrawerPanel({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="hidden md:block">
+      {/* Backdrop */}
+      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      {/* Panel — slides in from RIGHT */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
+      >
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{title}</span>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile }: UserSidebarProps) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const close = onCloseMobile ?? (() => {});
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
-    try {
-      setCollapsed(localStorage.getItem(STORAGE_KEY) === "true");
-    } catch {
-      // ignore
-    }
-  }, []);
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
 
-  const toggleCollapsed = useCallback(() => {
-    setCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(STORAGE_KEY, String(next));
-      } catch {
-        // ignore
-      }
-      return next;
-    });
-  }, []);
+  const content = (
+    <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
+  );
 
   return (
     <>
-      {/* Desktop — right side, collapsible */}
-      <Aside
-        className={`hidden md:flex flex-col bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 shrink-0 transition-[width] duration-200 overflow-hidden ${
-          collapsed ? "w-12" : "w-56"
-        } ${className}`}
-      >
-        <div
-          className={`flex pt-3 pb-1 ${collapsed ? "justify-center px-1" : "justify-end px-3"}`}
-        >
-          <button
-            type="button"
-            onClick={toggleCollapsed}
-            title={collapsed ? "Expand menu" : "Collapse menu"}
-            className="rounded-md p-1.5 text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors text-xs leading-none"
-          >
-            {collapsed ? "›" : "‹"}
-          </button>
-        </div>
-        <DesktopContent items={items} activeHref={pathname} collapsed={collapsed} />
-      </Aside>
-
-      {/* Mobile — BottomSheet with accordion groups */}
-      <BottomSheet
-        open={mobileOpen}
-        onClose={onCloseMobile ?? (() => {})}
-        title="My Account"
-      >
-        <MobileContent
-          groups={groups}
-          items={items}
-          activeHref={pathname}
-          onItemClick={onCloseMobile}
-        />
-      </BottomSheet>
+      {/* Desktop — right overlay drawer via portal */}
+      {mounted && mobileOpen &&
+        createPortal(
+          <DrawerPanel title="My Account" onClose={close}>{content}</DrawerPanel>,
+          document.body
+        )}
+      {/* Mobile — BottomSheet */}
+      <div className="md:hidden">
+        <BottomSheet open={mobileOpen} onClose={close} title="My Account">
+          <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
+        </BottomSheet>
+      </div>
     </>
   );
 }

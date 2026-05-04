@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
-import { Aside, Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
+import { Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 
 export interface StoreNavItem {
@@ -11,73 +12,73 @@ export interface StoreNavItem {
   badge?: number;
 }
 
+export interface StoreNavGroup {
+  title: string;
+  items: StoreNavItem[];
+  defaultOpen?: boolean;
+}
+
 interface StoreSidebarProps {
   items: StoreNavItem[];
+  groups?: StoreNavGroup[];
   activeHref: string;
   storeName?: string;
   storeLogoURL?: string;
-  /** Whether the mobile drawer is open */
   mobileOpen?: boolean;
-  /** Called when the mobile drawer should close */
   onCloseMobile?: () => void;
   className?: string;
 }
 
-function StoreNavContent({
+function NavLink({ item, isActive, onClick }: { item: StoreNavItem; isActive: boolean; onClick?: () => void }) {
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
+        isActive
+          ? "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300"
+          : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800/60 hover:text-zinc-800 dark:hover:text-zinc-200"
+      }`}
+    >
+      {item.icon && <Span className="shrink-0 text-base opacity-60">{item.icon}</Span>}
+      <Span className="flex-1 truncate">{item.label}</Span>
+      {item.badge != null && item.badge > 0 && (
+        <Span className="shrink-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] font-bold text-white leading-none">
+          {item.badge}
+        </Span>
+      )}
+    </Link>
+  );
+}
+
+function FlatContent({
   items,
   activeHref,
   storeName,
   storeLogoURL,
   onItemClick,
-}: Pick<StoreSidebarProps, "items" | "activeHref" | "storeName" | "storeLogoURL"> & {
-  onItemClick?: () => void;
-}) {
+}: Pick<StoreSidebarProps, "items" | "activeHref" | "storeName" | "storeLogoURL"> & { onItemClick?: () => void }) {
   return (
     <>
       {storeName && (
-        <Row gap="3" className="px-5 py-4 border-b border-gray-100 dark:border-slate-700">
+        <Row gap="3" className="px-4 py-3 border-b border-zinc-100 dark:border-slate-700">
           {storeLogoURL ? (
-            <Div
-              role="img"
-              aria-label={storeName}
-              className="h-8 w-8 rounded-full bg-center bg-cover"
-              style={{ backgroundImage: `url(${storeLogoURL})` }}
-            />
+            <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
           ) : (
-            <Div className="h-8 w-8 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-sm">
+            <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
               {storeName[0]?.toUpperCase()}
             </Div>
           )}
-          <Text className="font-semibold text-gray-900 dark:text-zinc-100 text-sm truncate">
-            {storeName}
-          </Text>
+          <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName}</Text>
         </Row>
       )}
-      <Nav aria-label="Store navigation" className="flex-1 overflow-y-auto py-3">
-        <Ul className="space-y-0.5 px-2">
+      <Nav aria-label="Store navigation" className="py-3">
+        <Ul className="space-y-0.5 px-3">
           {items.map((item) => {
             const isActive = activeHref === item.href;
             return (
               <Li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={onItemClick}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors ${
-                    isActive
-                      ? "bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 font-medium"
-                      : "text-gray-600 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-zinc-100"
-                  }`}
-                >
-                  {item.icon && (
-                    <Span className="shrink-0 text-[1.1rem]">{item.icon}</Span>
-                  )}
-                  <Span className="flex-1 truncate">{item.label}</Span>
-                  {item.badge != null && item.badge > 0 && (
-                    <Span className="shrink-0 rounded-full bg-orange-500 px-1.5 py-0.5 text-[10px] font-bold text-white">
-                      {item.badge}
-                    </Span>
-                  )}
-                </Link>
+                <NavLink item={item} isActive={isActive} onClick={onItemClick} />
               </Li>
             );
           })}
@@ -87,32 +88,153 @@ function StoreNavContent({
   );
 }
 
+function GroupsContent({
+  groups,
+  activeHref,
+  storeName,
+  storeLogoURL,
+  onItemClick,
+}: {
+  groups: StoreNavGroup[];
+  activeHref: string;
+  storeName?: string;
+  storeLogoURL?: string;
+  onItemClick?: () => void;
+}) {
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(groups.map((g) => [g.title, g.defaultOpen ?? false]))
+  );
+  const toggle = useCallback((title: string) => setOpenGroups((p) => ({ ...p, [title]: !p[title] })), []);
+
+  return (
+    <>
+      {storeName && (
+        <Row gap="3" className="px-4 py-3 border-b border-zinc-100 dark:border-slate-700">
+          {storeLogoURL ? (
+            <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
+          ) : (
+            <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
+              {storeName[0]?.toUpperCase()}
+            </Div>
+          )}
+          <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName}</Text>
+        </Row>
+      )}
+      <Nav aria-label="Store navigation" className="py-2">
+        {groups.map((group) => {
+          const isOpen = openGroups[group.title] ?? false;
+          const hasActive = group.items.some((i) => activeHref === i.href);
+          return (
+            <div key={group.title} className="mb-0.5">
+              <button
+                type="button"
+                onClick={() => toggle(group.title)}
+                className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
+                  hasActive && !isOpen
+                    ? "text-orange-600 dark:text-orange-400"
+                    : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
+                }`}
+              >
+                <span>{group.title}</span>
+                <svg
+                  className={`w-3 h-3 transition-transform duration-150 ${isOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {isOpen && (
+                <Ul className="space-y-0.5 px-3 pb-1">
+                  {group.items.map((item) => {
+                    const isActive = activeHref === item.href;
+                    return (
+                      <Li key={item.href}>
+                        <NavLink item={item} isActive={isActive} onClick={onItemClick} />
+                      </Li>
+                    );
+                  })}
+                </Ul>
+              )}
+            </div>
+          );
+        })}
+      </Nav>
+    </>
+  );
+}
+
+function DrawerPanel({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
+  return (
+    <div className="hidden md:block">
+      <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
+      >
+        <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{title}</span>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">{children}</div>
+      </div>
+    </div>
+  );
+}
+
 export function StoreSidebar({
   items,
+  groups,
   activeHref,
   storeName,
   storeLogoURL,
   mobileOpen = false,
   onCloseMobile,
-  className = "",
 }: StoreSidebarProps) {
+  const close = onCloseMobile ?? (() => {});
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  const panelTitle = storeName ?? "Store Panel";
+
+  const navContent = groups ? (
+    <GroupsContent groups={groups} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
+  ) : (
+    <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
+  );
+
   return (
     <>
-      {/* Desktop sidebar — always visible on md+ */}
-      <Aside
-        className={`hidden md:flex w-64 shrink-0 flex-col bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 ${className}`}
-      >
-        <StoreNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} />
-      </Aside>
-
-      {/* Mobile: BottomSheet slides up from bottom */}
-      <BottomSheet
-        open={mobileOpen}
-        onClose={onCloseMobile ?? (() => {})}
-        title={storeName ?? "Store Panel"}
-      >
-        <StoreNavContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={onCloseMobile} />
-      </BottomSheet>
+      {mounted && mobileOpen &&
+        createPortal(
+          <DrawerPanel title={panelTitle} onClose={close}>{navContent}</DrawerPanel>,
+          document.body
+        )}
+      <div className="md:hidden">
+        <BottomSheet open={mobileOpen} onClose={close} title={panelTitle}>
+          {groups ? (
+            <GroupsContent groups={groups} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
+          ) : (
+            <FlatContent items={items} activeHref={activeHref} storeName={storeName} storeLogoURL={storeLogoURL} onItemClick={close} />
+          )}
+        </BottomSheet>
+      </div>
     </>
   );
 }

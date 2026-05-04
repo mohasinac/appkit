@@ -80,7 +80,7 @@ export type { AdminNewsletterViewProps } from "./AdminNewsletterView";
 export { AdminContactView } from "./AdminContactView";
 export type { AdminContactViewProps } from "./AdminContactView";
 export { AdminSidebar } from "./AdminSidebar";
-export type { AdminSidebarProps } from "./AdminSidebar";
+export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./AdminSidebar";
 export { AdminTopBar } from "./AdminTopBar";
 export type { AdminTopBarProps } from "./AdminTopBar";
 export { DemoSeedView } from "./DemoSeedView";

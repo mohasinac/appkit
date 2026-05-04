@@ -48,7 +48,7 @@ export * from "./analytics";
 
 // Store* aliases — same components, renamed for store-centric terminology
 export { StoreSidebar } from "./SellerSidebar";
-export type { StoreNavItem } from "./SellerSidebar";
+export type { StoreNavItem, StoreNavGroup } from "./SellerSidebar";
 export { SellerDashboardView as StoreDashboardView } from "./SellerDashboardView";
 export type { SellerDashboardViewProps as StoreDashboardViewProps } from "./SellerDashboardView";
 // SellerProductsView aliased as StoreProductListingsView (StoreProductsView is the public customer-facing store listing)

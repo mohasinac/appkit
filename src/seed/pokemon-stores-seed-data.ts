@@ -113,4 +113,67 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
     createdAt: daysAgo(120),
     updatedAt: daysAgo(2),
   },
+
+  // 6. Anime Vault India — Anime Figures (DBZ, Naruto, One Piece, MHA)
+  {
+    id: "store-anime-vault-india",
+    storeSlug: "anime-vault-india",
+    ownerId: "user-anime-vault-owner",
+    storeName: "Anime Vault India",
+    storeDescription:
+      "India's premier destination for authentic anime figures — S.H.Figuarts, DXF, Ichibansho, and rare vintage collectibles from Dragon Ball Z, Naruto, One Piece, and My Hero Academia. Every figure authenticated.",
+    storeCategory: "anime-figures",
+    storeLogoURL: "https://picsum.photos/seed/animevault-logo/200/200",
+    storeBannerURL: "https://picsum.photos/seed/animevault-banner/1200/400",
+    status: "active",
+    bio: "Dragon Ball Z · Naruto · One Piece · My Hero Academia — all fandoms covered.",
+    location: "Mumbai, India",
+    isPublic: true,
+    isVacationMode: false,
+    stats: { totalProducts: 60, itemsSold: 182, totalReviews: 74, averageRating: 4.8 },
+    createdAt: daysAgo(100),
+    updatedAt: daysAgo(1),
+  },
+
+  // 7. Retro Vault India — Vintage Gaming & Classic Diecast
+  {
+    id: "store-retro-vault-india",
+    storeSlug: "retro-vault-india",
+    ownerId: "user-retro-vault-owner",
+    storeName: "Retro Vault India",
+    storeDescription:
+      "Curated vintage gaming and classic diecast — original Nintendo, SEGA consoles, Corgi, Matchbox, Dinky, and Schuco from their golden eras. Every item authenticity-checked and condition-graded before listing.",
+    storeCategory: "vintage-collectibles",
+    storeLogoURL: "https://picsum.photos/seed/retrovault-logo/200/200",
+    storeBannerURL: "https://picsum.photos/seed/retrovault-banner/1200/400",
+    status: "active",
+    bio: "Nintendo · SEGA · Corgi · Matchbox · Dinky — all from the golden age.",
+    location: "Delhi, India",
+    isPublic: true,
+    isVacationMode: false,
+    stats: { totalProducts: 35, itemsSold: 94, totalReviews: 38, averageRating: 4.7 },
+    createdAt: daysAgo(150),
+    updatedAt: daysAgo(2),
+  },
+
+  // 8. CosPlay India Hub — Cosplay Props & TCG Accessories
+  {
+    id: "store-cosplay-india-hub",
+    storeSlug: "cosplay-india-hub",
+    ownerId: "user-cosplay-india-owner",
+    storeName: "CosPlay India Hub",
+    storeDescription:
+      "Convention-ready cosplay props, TCG card accessories, and premium collector display solutions. Anime headbands, replica weapons, card sleeves, toploaders, display cases, and enamel pins — everything the modern collector needs.",
+    storeCategory: "cosplay-accessories",
+    storeLogoURL: "https://picsum.photos/seed/cosplay-logo/200/200",
+    storeBannerURL: "https://picsum.photos/seed/cosplay-banner/1200/400",
+    status: "active",
+    bio: "Props · Card Accessories · Display Solutions · Enamel Pins",
+    location: "Hyderabad, India",
+    isPublic: true,
+    isVacationMode: false,
+    stats: { totalProducts: 45, itemsSold: 341, totalReviews: 112, averageRating: 4.7 },
+    createdAt: daysAgo(80),
+    updatedAt: daysAgo(1),
+  },
 ];

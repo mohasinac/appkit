@@ -149,6 +149,7 @@ export type { NavigationLoaderProps } from "./ui/index";
 export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
+export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
 export { AdminDashboardView, AdminAnalyticsView, AdminListingScaffold, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
 export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels } from "./features/admin/index";
 export { ADMIN_ENDPOINTS } from "./constants/index";

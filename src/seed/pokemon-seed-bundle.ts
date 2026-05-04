@@ -26,13 +26,19 @@ import { pokemonProductsSeedData } from "./pokemon-products-seed-data";
 import { hotWheelsProductsSeedData } from "./hot-wheels-seed-data";
 import { beybladeProductsSeedData } from "./beyblade-seed-data";
 import { transformersProductsSeedData } from "./transformers-seed-data";
+import { animeFiguresSeedData } from "./anime-figures-seed-data";
+import { retroGamingSeedData } from "./retro-gaming-seed-data";
+import { cosplayAccessoriesSeedData } from "./cosplay-accessories-seed-data";
 
-/** All products across all 4 franchises — use this as the `products` seed collection. */
+/** All products across all 7 franchises — use this as the `products` seed collection. */
 export const allProductsSeedData = [
   ...pokemonProductsSeedData,
   ...hotWheelsProductsSeedData,
   ...beybladeProductsSeedData,
   ...transformersProductsSeedData,
+  ...animeFiguresSeedData,
+  ...retroGamingSeedData,
+  ...cosplayAccessoriesSeedData,
 ];
 
 export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
@@ -53,3 +59,6 @@ export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";
+export { animeFiguresSeedData } from "./anime-figures-seed-data";
+export { retroGamingSeedData } from "./retro-gaming-seed-data";
+export { cosplayAccessoriesSeedData } from "./cosplay-accessories-seed-data";
