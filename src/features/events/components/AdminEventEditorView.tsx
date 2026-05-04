@@ -8,6 +8,7 @@ import {
   Form,
   FormActions,
   Input,
+  RichTextEditor,
   Select,
   StackedViewShell,
   Text,
@@ -270,11 +271,10 @@ export function AdminEventEditorView({
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
               Description
             </label>
-            <textarea
+            <RichTextEditor
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-              className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30"
+              onChange={setDescription}
+              minHeightClassName="min-h-[120px]"
               placeholder="Describe this event…"
             />
           </div>
