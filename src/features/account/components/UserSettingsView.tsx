@@ -17,6 +17,7 @@ export interface UserSettingsViewProps extends Omit<
   renderPhoneVerification?: () => React.ReactNode;
   renderPasswordForm?: () => React.ReactNode;
   renderMessage?: () => React.ReactNode;
+  renderAppearance?: () => React.ReactNode;
 }
 
 export function UserSettingsView({
@@ -27,6 +28,7 @@ export function UserSettingsView({
   renderPhoneVerification,
   renderPasswordForm,
   renderMessage,
+  renderAppearance,
   ...rest
 }: UserSettingsViewProps) {
   return (
@@ -36,6 +38,7 @@ export function UserSettingsView({
       title={labels.title}
       sections={[
         renderMessage?.(),
+        renderAppearance?.(),
         renderAccountInfo?.(),
         renderProfileForm?.(),
         renderEmailVerification?.(),
