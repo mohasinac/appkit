@@ -161,7 +161,7 @@ export function ProductFilters({
           selected={selectedCategories}
           onChange={(vals) => table.set("category", vals.join("|"))}
           searchable={categoryOptions.length > 6}
-          defaultCollapsed={true}
+          defaultCollapsed={categoryOptions.length > 6}
         />
       )}
 
@@ -171,7 +171,7 @@ export function ProductFilters({
         selected={selectedConditions}
         onChange={(vals) => table.set("condition", vals.join("|"))}
         searchable={false}
-        defaultCollapsed={true}
+        defaultCollapsed={false}
       />
 
       <RangeFilter
@@ -187,7 +187,7 @@ export function ProductFilters({
         step={500}
         minPlaceholder={t("minPrice")}
         maxPlaceholder={t("maxPrice")}
-        defaultCollapsed={true}
+        defaultCollapsed={false}
       />
 
       {brandOptions.length > 0 && (
@@ -197,7 +197,7 @@ export function ProductFilters({
           selected={selectedBrands}
           onChange={(vals) => table.set("brand", vals[0] ?? "")}
           searchable={brandOptions.length > 6}
-          defaultCollapsed={true}
+          defaultCollapsed={brandOptions.length > 6}
         />
       )}
 
@@ -208,7 +208,7 @@ export function ProductFilters({
           selected={selectedSellers}
           onChange={(vals) => table.set("storeId", vals[0] ?? "")}
           searchable={resolvedStoreOptions.length > 6}
-          defaultCollapsed={true}
+          defaultCollapsed={resolvedStoreOptions.length > 6}
         />
       )}
 
@@ -218,7 +218,7 @@ export function ProductFilters({
           label={t("freeShippingOnly")}
           checked={table.get("freeShipping") === "true"}
           onChange={(v) => table.set("freeShipping", v ? "true" : "")}
-          defaultCollapsed={true}
+          defaultCollapsed={false}
         />
       )}
 
@@ -229,7 +229,7 @@ export function ProductFilters({
           selected={selectedTags}
           onChange={(vals) => table.set("tags", vals.join("|"))}
           searchable={tagOptions.length > 6}
-          defaultCollapsed={true}
+          defaultCollapsed={tagOptions.length > 6}
         />
       )}
 
@@ -240,7 +240,7 @@ export function ProductFilters({
           selected={selectedStatuses}
           onChange={(vals) => table.set("status", vals.join("|"))}
           searchable={false}
-          defaultCollapsed={true}
+          defaultCollapsed={false}
         />
       )}
     </Div>

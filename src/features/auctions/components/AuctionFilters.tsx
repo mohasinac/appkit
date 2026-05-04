@@ -35,8 +35,8 @@ export function AuctionFilters({
           options={categoryOptions}
           selected={selectedCategories}
           onChange={(vals) => table.set("category", vals.join("|"))}
-          searchable={categoryOptions.length > 8}
-          defaultCollapsed={false}
+          searchable={categoryOptions.length > 6}
+          defaultCollapsed={categoryOptions.length > 6}
         />
       )}
 
@@ -63,7 +63,7 @@ export function AuctionFilters({
           selected={selectedStores}
           onChange={(vals) => table.set("storeId", vals[0] ?? "")}
           searchable={storeOptions.length > 6}
-          defaultCollapsed={true}
+          defaultCollapsed={storeOptions.length > 6}
         />
       )}
 
@@ -76,7 +76,7 @@ export function AuctionFilters({
         onMaxChange={(v) => table.set("dateTo", v)}
         minPlaceholder={t("minDate")}
         maxPlaceholder={t("maxDate")}
-        defaultCollapsed={true}
+        defaultCollapsed={false}
       />
     </Div>
   );
