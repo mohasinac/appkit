@@ -2618,5 +2618,15 @@ export const productsSeedData: Partial<ProductDocument>[] = [
   .map(withRichTextDescription)
   .map((p) => {
     const slug = p.slug ?? slugify(p.title ?? p.id ?? "");
-    return { ...p, id: slug, slug };
+    const isSimplePublished =
+      !p.isAuction &&
+      !p.isPreOrder &&
+      p.status === "published" &&
+      (p.availableQuantity ?? p.stockQuantity ?? 1) > 0;
+    return {
+      ...p,
+      id: slug,
+      slug,
+      allowOffers: isSimplePublished ? true : (p.allowOffers ?? false),
+    };
   });

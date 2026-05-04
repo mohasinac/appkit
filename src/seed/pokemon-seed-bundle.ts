@@ -30,6 +30,15 @@ import { animeFiguresSeedData } from "./anime-figures-seed-data";
 import { retroGamingSeedData } from "./retro-gaming-seed-data";
 import { cosplayAccessoriesSeedData } from "./cosplay-accessories-seed-data";
 
+function withAllowOffers<T extends { isAuction?: boolean; isPreOrder?: boolean; status?: string; availableQuantity?: number; stockQuantity?: number; allowOffers?: boolean }>(p: T): T {
+  const eligible =
+    !p.isAuction &&
+    !p.isPreOrder &&
+    p.status === "published" &&
+    (p.availableQuantity ?? p.stockQuantity ?? 1) > 0;
+  return { ...p, allowOffers: eligible ? true : (p.allowOffers ?? false) };
+}
+
 /** All products across all 7 franchises — use this as the `products` seed collection. */
 export const allProductsSeedData = [
   ...pokemonProductsSeedData,
@@ -39,7 +48,7 @@ export const allProductsSeedData = [
   ...animeFiguresSeedData,
   ...retroGamingSeedData,
   ...cosplayAccessoriesSeedData,
-];
+].map(withAllowOffers);
 
 export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
 export { pokemonUsersSeedData } from "./pokemon-users-seed-data";

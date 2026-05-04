@@ -11,6 +11,8 @@ export { SellerOrdersView } from "./SellerOrdersView";
 export type { SellerOrdersViewProps } from "./SellerOrdersView";
 export { SellerOffersView } from "./SellerOffersView";
 export type { SellerOffersViewProps } from "./SellerOffersView";
+export { SellerOffersPanel } from "./SellerOffersPanel";
+export type { SellerOffersPanelProps, SellerOfferAction } from "./SellerOffersPanel";
 export { SellerCouponsView } from "./SellerCouponsView";
 export type { SellerCouponsViewProps } from "./SellerCouponsView";
 export { SellersListView } from "./SellersListView";

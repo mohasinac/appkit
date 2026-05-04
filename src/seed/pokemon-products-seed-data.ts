@@ -1732,7 +1732,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Cards per Pack", value: "11" },
       { name: "Condition", value: "Sealed" },
     ],
-    features: ["Factory sealed", "36 packs", "Double-box shipped", "Insurance included"],
+    features: ["Factory sealed", "36 packs", "Double-box shipped", "Insurance included"],
     shippingInfo: "Double-boxed, insured, signature required.",
     returnPolicy: "No returns on sealed products.",
     condition: "new",
@@ -1779,7 +1779,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Condition", value: "Pre-Order / Sealed" },
       { name: "Language", value: "English" },
     ],
-    features: ["All 151 original Pokémon represented", "Modern card stock", "ETBs also available"],
+    features: ["All 151 original Pokémon represented", "Modern card stock", "ETBs also available"],
     shippingInfo: "Ships within 7 days of street date via tracked courier.",
     returnPolicy: "No returns on pre-ordered sealed products once dispatched.",
     condition: "new",
@@ -1888,4 +1888,15 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     createdAt: daysAgo(3),
     updatedAt: daysAgo(1),
   },
-].map((item) => withRichTextDescription(item as Partial<ProductDocument>));
+].map((item) => {
+  const p = withRichTextDescription(item as Partial<ProductDocument>);
+  const isSimplePublished =
+    !p.isAuction &&
+    !p.isPreOrder &&
+    p.status === "published" &&
+    (p.availableQuantity ?? p.stockQuantity ?? 1) > 0;
+  return {
+    ...p,
+    allowOffers: isSimplePublished ? true : (p.allowOffers ?? false),
+  };
+});

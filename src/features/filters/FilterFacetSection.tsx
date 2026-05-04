@@ -142,7 +142,7 @@ export function FilterFacetSection({
 
       {!isCollapsed && (
         <Div className="mt-3 space-y-1">
-          {searchable && options.length > 8 && (
+          {searchable && (
             <Input
               type="search"
               placeholder="Search…"

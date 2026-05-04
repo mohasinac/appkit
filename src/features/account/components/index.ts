@@ -52,6 +52,8 @@ export type {
   UserOffersViewProps,
   UserOffersViewLabels,
 } from "./UserOffersView";
+export { UserOffersPanel } from "./UserOffersPanel";
+export type { UserOffersPanelProps } from "./UserOffersPanel";
 export { MessagesView } from "./MessagesView";
 export type { MessagesViewProps, MessagesViewLabels } from "./MessagesView";
 export { ChatList } from "./ChatList";

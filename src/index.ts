@@ -2838,6 +2838,10 @@ export { UserNotificationsView } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // UserOffersView - Component for user offers view.
 export { UserOffersView } from "./features/account/index";
+// [CLIENT]-Runs in browser only — interactive buyer offers panel with accept/withdraw actions.
+// UserOffersPanel - Interactive buyer offers panel.
+export { UserOffersPanel } from "./features/account/index";
+export type { UserOffersPanelProps } from "./features/account/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // UserOrderTrackView - Component for user order track view.
 export { UserOrderTrackView } from "./features/account/index";
@@ -7504,6 +7508,10 @@ export { SellerGuideView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerOffersView - Component for seller offers view.
 export { SellerOffersView } from "./features/seller/index";
+// [CLIENT]-Runs in browser only — uses useState/useEffect/fetch.
+// SellerOffersPanel - Interactive panel with accept/decline/counter actions for seller offers.
+export { SellerOffersPanel } from "./features/seller/index";
+export type { SellerOffersPanelProps, SellerOfferAction } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerOrdersView - Component for seller orders view.
 export { SellerOrdersView } from "./features/seller/index";
