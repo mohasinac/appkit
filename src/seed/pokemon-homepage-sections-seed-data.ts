@@ -10,6 +10,23 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
+  // -- 0. Welcome Hero ----------------------------------------------------------
+  {
+    id: "section-welcome-multifranchise-0",
+    type: "welcome",
+    order: 0,
+    enabled: true,
+    config: {
+      h1: "India's #1 Collectibles Marketplace",
+      description: "Pokémon TCG · Hot Wheels · Beyblade · Transformers · Anime Figures — all in one place. Buy, bid, and pre-order from verified sellers across India.",
+      ctaText: "Shop Now",
+      ctaLink: "/products",
+      showCTA: true,
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
   // -- 1. Hero Carousel ---------------------------------------------------------
   {
     id: "section-carousel-multifranchise-1",
