@@ -5,10 +5,8 @@
   accent-color: var(--color-primary, #6366f1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-slider {
-    accent-color: var(--color-secondary, #818cf8);
-  }
+.dark .appkit-slider {
+  accent-color: var(--color-secondary, #818cf8);
 }
 
 .appkit-slider--disabled {

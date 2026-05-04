@@ -116,40 +116,38 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-radio-classic__circle {
-    border-color: #475569;
-  }
-  .appkit-radio-classic__circle--selected {
-    border-color: #ec4899;
-  }
-  .appkit-radio-classic__dot--selected {
-    background: #ec4899;
-  }
-  .appkit-radio-toggle__pill {
-    border-color: #334155;
-    background: #0f172a;
-    color: #e4e4e7;
-  }
-  .appkit-radio-toggle__pill:hover {
-    border-color: #ec4899;
-  }
-  .appkit-radio-toggle__pill--selected {
-    border-color: #ec4899;
-    background: rgba(236, 72, 153, 0.1);
-    color: #fce7f3;
-  }
-  .appkit-radio-toggle__pill--error {
-    border-color: rgba(239, 68, 68, 0.6);
-  }
-  .appkit-radio-toggle__dot-ring {
-    border-color: #475569;
-  }
-  .appkit-radio-toggle__dot-ring--selected {
-    border-color: #ec4899;
-    background: #ec4899;
-  }
-  .appkit-radio-toggle__dot-inner {
-    background: #020617;
-  }
+.dark .appkit-radio-classic__circle {
+  border-color: #475569;
+}
+.dark .appkit-radio-classic__circle--selected {
+  border-color: #ec4899;
+}
+.dark .appkit-radio-classic__dot--selected {
+  background: #ec4899;
+}
+.dark .appkit-radio-toggle__pill {
+  border-color: #334155;
+  background: #0f172a;
+  color: #e4e4e7;
+}
+.dark .appkit-radio-toggle__pill:hover {
+  border-color: #ec4899;
+}
+.dark .appkit-radio-toggle__pill--selected {
+  border-color: #ec4899;
+  background: rgba(236, 72, 153, 0.1);
+  color: #fce7f3;
+}
+.dark .appkit-radio-toggle__pill--error {
+  border-color: rgba(239, 68, 68, 0.6);
+}
+.dark .appkit-radio-toggle__dot-ring {
+  border-color: #475569;
+}
+.dark .appkit-radio-toggle__dot-ring--selected {
+  border-color: #ec4899;
+  background: #ec4899;
+}
+.dark .appkit-radio-toggle__dot-inner {
+  background: #020617;
 }

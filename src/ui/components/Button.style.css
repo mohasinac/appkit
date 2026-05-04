@@ -48,79 +48,79 @@
 }
 
 .appkit-button--primary {
-  background: #3e7708;
-  color: #ffffff;
+  background: var(--appkit-color-primary-700, #3e7708);
+  color: var(--appkit-color-text-on-primary, #ffffff);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .appkit-button--primary:hover:not(:disabled) {
-  background: #2f5a06;
+  background: var(--appkit-color-primary-800, #2f5a06);
 }
 
 .dark .appkit-button--primary {
-  background: #e91e8c;
+  background: var(--appkit-color-secondary, #e91e8c);
 }
 
 .dark .appkit-button--primary:hover:not(:disabled) {
-  background: #f063b9;
+  background: var(--appkit-color-secondary-400, #f063b9);
 }
 
 .appkit-button--secondary {
-  background: #3e7708;
-  color: #ffffff;
+  background: var(--appkit-color-primary-700, #3e7708);
+  color: var(--appkit-color-text-on-primary, #ffffff);
 }
 
 .appkit-button--secondary:hover:not(:disabled) {
-  background: #509c02;
+  background: var(--appkit-color-primary-600, #509c02);
 }
 
 .dark .appkit-button--secondary {
-  background: #b00d66;
+  background: var(--appkit-color-secondary-700, #b00d66);
 }
 
 .dark .appkit-button--secondary:hover:not(:disabled) {
-  background: #d4107a;
+  background: var(--appkit-color-secondary-600, #d4107a);
 }
 
 .appkit-button--outline {
-  background: #ffffff;
-  border-color: #e4e4e7;
-  color: #18181b;
+  background: var(--appkit-color-surface, #ffffff);
+  border-color: var(--appkit-color-border, #e4e4e7);
+  color: var(--appkit-color-text, #18181b);
 }
 
 .appkit-button--outline:hover:not(:disabled) {
-  background: #fafafa;
+  background: var(--appkit-color-bg, #fafafa);
 }
 
 .dark .appkit-button--outline {
   background: transparent;
-  border-color: #334155;
-  color: #f8fafc;
+  border-color: var(--appkit-color-border, #334155);
+  color: var(--appkit-color-text, #f8fafc);
 }
 
 .dark .appkit-button--outline:hover:not(:disabled) {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.5);
 }
 
 .appkit-button--ghost {
   background: transparent;
-  color: #3f3f46;
+  color: var(--appkit-color-text, #3f3f46);
 }
 
 .appkit-button--ghost:hover:not(:disabled) {
-  background: #f4f4f5;
+  background: var(--appkit-color-border-subtle, #f4f4f5);
 }
 
 .dark .appkit-button--ghost {
-  color: #cbd5e1;
+  color: var(--appkit-color-text-muted, #cbd5e1);
 }
 
 .dark .appkit-button--ghost:hover:not(:disabled) {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.5);
 }
 
 .appkit-button--danger {
-  background: #dc2626;
+  background: var(--appkit-color-error, #dc2626);
   color: #ffffff;
 }
 
@@ -129,7 +129,7 @@
 }
 
 .appkit-button--warning {
-  background: #f59e0b;
+  background: var(--appkit-color-warning, #f59e0b);
   color: #ffffff;
 }
 

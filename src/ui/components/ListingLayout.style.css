@@ -61,12 +61,10 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__toolbar {
-    background: rgba(2, 6, 23, 0.8); /* slate-950/80 */
-    border-bottom-color: rgba(30, 41, 59, 0.7); /* slate-800/70 */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  }
+.dark .appkit-listing-layout__toolbar {
+  background: rgba(2, 6, 23, 0.8); /* slate-950/80 */
+  border-bottom-color: rgba(30, 41, 59, 0.7); /* slate-800/70 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .appkit-listing-layout__toolbar--dashboard {
@@ -133,11 +131,9 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__view-toggle-wrap {
-    border-color: #1e293b; /* slate-700 */
-    background: #0f172a; /* slate-900 */
-  }
+.dark .appkit-listing-layout__view-toggle-wrap {
+  border-color: #1e293b; /* slate-700 */
+  background: #0f172a; /* slate-900 */
 }
 
 .appkit-listing-layout__toolbar-pagination {
@@ -147,10 +143,8 @@
   border-left: 1px solid rgba(161, 161, 170, 0.35);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__toolbar-pagination {
-    border-left-color: rgba(30, 41, 59, 0.7);
-  }
+.dark .appkit-listing-layout__toolbar-pagination {
+  border-left-color: rgba(30, 41, 59, 0.7);
 }
 
 /* -- Mobile toolbar rows ----------------------------- */
@@ -205,15 +199,13 @@
   color: var(--color-primary, #6366f1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__filter-btn {
-    border-color: #1e293b; /* slate-700 */
-    color: #cbd5e1; /* slate-300 */
-  }
-  .appkit-listing-layout__filter-btn:hover {
-    border-color: #334155; /* slate-600 */
-    background: rgba(30, 41, 59, 0.6);
-  }
+.dark .appkit-listing-layout__filter-btn {
+  border-color: #1e293b; /* slate-700 */
+  color: #cbd5e1; /* slate-300 */
+}
+.dark .appkit-listing-layout__filter-btn:hover {
+  border-color: #334155; /* slate-600 */
+  background: rgba(30, 41, 59, 0.6);
 }
 
 /* -- Filter badge ------------------------------------ */
@@ -253,10 +245,8 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__bulk-bar {
-    border-top-color: #1e293b; /* slate-800 */
-  }
+.dark .appkit-listing-layout__bulk-bar {
+  border-top-color: #1e293b; /* slate-800 */
 }
 
 /* -- Body (sidebar + content) ------------------------ */
@@ -331,11 +321,9 @@
   .appkit-listing-layout__sidebar-panel { width: 18rem; }
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__sidebar-panel {
-    border-color: rgba(51, 65, 85, 0.6); /* slate-700/60 */
-    background: #0f172a; /* slate-900 */
-  }
+.dark .appkit-listing-layout__sidebar-panel {
+  border-color: rgba(51, 65, 85, 0.6); /* slate-700/60 */
+  background: #0f172a; /* slate-900 */
 }
 
 .appkit-listing-layout__sidebar-header {
@@ -346,10 +334,8 @@
   border-bottom: 1px solid #f4f4f5; /* zinc-100 */
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__sidebar-header {
-    border-bottom-color: #1e293b; /* slate-800 */
-  }
+.dark .appkit-listing-layout__sidebar-header {
+  border-bottom-color: #1e293b; /* slate-800 */
 }
 
 .appkit-listing-layout__sidebar-facets {
@@ -366,10 +352,8 @@
   border-top: 1px solid #f4f4f5;
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__sidebar-footer {
-    border-top-color: #1e293b;
-  }
+.dark .appkit-listing-layout__sidebar-footer {
+  border-top-color: #1e293b;
 }
 
 /* -- Main content ------------------------------------ */
@@ -412,12 +396,10 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__mobile-pagination {
-    background: rgba(2, 6, 23, 0.9);
-    border-top-color: rgba(30, 41, 59, 0.8);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-  }
+.dark .appkit-listing-layout__mobile-pagination {
+  background: rgba(2, 6, 23, 0.9);
+  border-top-color: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .appkit-listing-layout__mobile-pagination--dashboard { bottom: 0; }
@@ -454,10 +436,8 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__mobile-overlay {
-    background: #020617; /* slate-950 */
-  }
+.dark .appkit-listing-layout__mobile-overlay {
+  background: #020617; /* slate-950 */
 }
 
 .appkit-listing-layout__mobile-overlay-header {
@@ -469,10 +449,8 @@
   flex-shrink: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__mobile-overlay-header {
-    border-bottom-color: #1e293b;
-  }
+.dark .appkit-listing-layout__mobile-overlay-header {
+  border-bottom-color: #1e293b;
 }
 
 .appkit-listing-layout__mobile-overlay-facets {
@@ -493,11 +471,9 @@
   background: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__mobile-overlay-footer {
-    border-top-color: #1e293b;
-    background: #020617;
-  }
+.dark .appkit-listing-layout__mobile-overlay-footer {
+  border-top-color: #1e293b;
+  background: #020617;
 }
 
 /* -- Close button in mobile overlay ----------------- */
@@ -516,8 +492,6 @@
   background: #f4f4f5; /* zinc-100 */
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-listing-layout__close-btn:hover {
-    background: #1e293b; /* slate-800 */
-  }
+.dark .appkit-listing-layout__close-btn:hover {
+  background: #1e293b; /* slate-800 */
 }

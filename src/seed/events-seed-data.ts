@@ -20,7 +20,8 @@ const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000);
 export const eventsSeedData: EventDocument[] = [
   // 1. Ended Sale Event
   {
-    id: "event-pokemon-summer-holo-sale-2026-sale",
+    id: "pokemon-summer-holo-sale-2026",
+    slug: "pokemon-summer-holo-sale-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
     title: "Pokemon Summer Holo Sale 2026 — 15% Off All Holo Rares",
     description:
@@ -46,7 +47,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 2. Active Poll Event — Favourite Gen 1 Starter
   {
-    id: "event-favourite-gen1-starter-poll-2026-poll",
+    id: "gen1-starter-poll-2026",
+    slug: "gen1-starter-poll-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Vote: Which Gen 1 Starter Has the Best Base Set Card?",
     description:
@@ -78,7 +80,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 3. Active Feedback Event — Best Pull Story (giveaway-style)
   {
-    id: "event-1st-edition-booster-giveaway-2026-feedback",
+    id: "1st-edition-booster-giveaway-2026",
+    slug: "1st-edition-booster-giveaway-2026",
     type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
     title: "Share Your Best Pull Story — Win a Sealed 1st Edition Booster Pack!",
     description:
@@ -119,7 +122,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 4. Upcoming Poll Event — Best PSA Submission
   {
-    id: "event-best-psa-submission-contest-2026-poll",
+    id: "best-psa-submission-contest-2026",
+    slug: "best-psa-submission-contest-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Best PSA Submission — Community Vote for Top Grade!",
     description:
@@ -151,7 +155,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 5. Active Survey — Buyer Experience
   {
-    id: "event-buyer-experience-survey-2026-survey",
+    id: "buyer-experience-survey-2026",
+    slug: "buyer-experience-survey-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
     title: "Pokemon TCG Buyer Experience Survey",
     description:
@@ -203,7 +208,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 6. Ended Offer Event
   {
-    id: "event-new-trainer-welcome-offer-2026-offer",
+    id: "new-trainer-welcome-offer-2026",
+    slug: "new-trainer-welcome-offer-2026",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
     title: "New Trainer Welcome Offer — 10% Off Your First Order",
     description:
@@ -230,7 +236,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 7. Active Sale — Hot Wheels Car Culture Flash Sale
   {
-    id: "event-hot-wheels-car-culture-flash-sale-2026-sale",
+    id: "hot-wheels-car-culture-flash-sale-2026",
+    slug: "hot-wheels-car-culture-flash-sale-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
     title: "Hot Wheels Car Culture Flash Sale — 20% Off 5-Car Packs",
     description:
@@ -257,7 +264,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 8. Active Poll — Best Beyblade Burst Series
   {
-    id: "event-best-beyblade-burst-series-poll-2026-poll",
+    id: "best-beyblade-burst-series-poll-2026",
+    slug: "best-beyblade-burst-series-poll-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Vote: Which Is the Best Beyblade Burst Series?",
     description:
@@ -292,7 +300,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 9. Active Feedback — Transformers Figure Wishlist Survey
   {
-    id: "event-transformers-figure-wishlist-survey-2026-survey",
+    id: "transformers-figure-wishlist-survey-2026",
+    slug: "transformers-figure-wishlist-survey-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
     title: "Tell Us: Which Transformers Figures Do You Want Listed?",
     description:
@@ -344,7 +353,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 10. Active Offer — Beyblade Burst Bundle Deal
   {
-    id: "event-beyblade-burst-bundle-offer-2026-offer",
+    id: "beyblade-burst-bundle-offer-2026",
+    slug: "beyblade-burst-bundle-offer-2026",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
     title: "Bladers Paradise Bundle Deal — Buy 2 Tops, Get Free Stadium",
     description:
@@ -371,7 +381,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 11. Active Feedback — Hot Wheels Collector Community Survey
   {
-    id: "event-hot-wheels-collector-survey-2026-feedback",
+    id: "hot-wheels-collector-survey-2026",
+    slug: "hot-wheels-collector-survey-2026",
     type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
     title: "Hot Wheels Collectors Survey — Win a Super Treasure Hunt!",
     description:
@@ -419,7 +430,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 12. Active Sale — Pokémon Multi-Set Clearance
   {
-    id: "event-pokemon-multiseries-clearance-2026-sale",
+    id: "pokemon-multiseries-clearance-2026",
+    slug: "pokemon-multiseries-clearance-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
     title: "Pokémon TCG Multi-Series Clearance — Up to 25% Off Non-Holo Rares & Uncommons",
     description:
@@ -446,7 +458,8 @@ export const eventsSeedData: EventDocument[] = [
 
   // 13. Cancelled — Transformers Convention Live Event (cancelled due to venue issue)
   {
-    id: "event-transformers-convention-mumbai-2026-cancelled",
+    id: "transformers-convention-mumbai-2026",
+    slug: "transformers-convention-mumbai-2026",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
     title: "Transformers Collector Meet-Up Mumbai 2026 [CANCELLED]",
     description:
@@ -478,7 +491,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
   // Poll entries — Gen 1 Starter poll
   {
     id: "entry-gen1-poll-ash-ketchum",
-    eventId: "event-favourite-gen1-starter-poll-2026-poll",
+    eventId: "gen1-starter-poll-2026",
     userId: "user-ash-ketchum-ash",
     userDisplayName: "Ash Ketchum",
     pollVotes: ["charizard"],
@@ -489,7 +502,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
   },
   {
     id: "entry-gen1-poll-gary-oak",
-    eventId: "event-favourite-gen1-starter-poll-2026-poll",
+    eventId: "gen1-starter-poll-2026",
     userId: "user-gary-oak-gary",
     userDisplayName: "Gary Oak",
     pollVotes: ["blastoise"],
@@ -500,7 +513,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
   },
   {
     id: "entry-gen1-poll-brock",
-    eventId: "event-favourite-gen1-starter-poll-2026-poll",
+    eventId: "gen1-starter-poll-2026",
     userId: "user-brock-pewter-brock",
     userDisplayName: "Brock",
     pollVotes: ["venusaur"],
@@ -513,7 +526,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
   // Feedback entries — 1st Edition booster pull story
   {
     id: "entry-feedback-1sted-ash-ketchum",
-    eventId: "event-1st-edition-booster-giveaway-2026-feedback",
+    eventId: "1st-edition-booster-giveaway-2026",
     userId: "user-ash-ketchum-ash",
     userDisplayName: "Ash Ketchum",
     formResponses: {
@@ -526,7 +539,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
   },
   {
     id: "entry-feedback-1sted-sabrina",
-    eventId: "event-1st-edition-booster-giveaway-2026-feedback",
+    eventId: "1st-edition-booster-giveaway-2026",
     userId: "user-sabrina-psychic-sabrina",
     userDisplayName: "Sabrina",
     formResponses: {

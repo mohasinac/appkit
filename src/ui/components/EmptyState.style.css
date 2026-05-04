@@ -23,8 +23,6 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-empty-state__icon {
-    color: #64748b;
-  }
+.dark .appkit-empty-state__icon {
+  color: #64748b;
 }

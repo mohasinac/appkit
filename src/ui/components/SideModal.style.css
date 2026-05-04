@@ -45,10 +45,8 @@
   transform: translateX(0);
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-side-modal__panel {
-    background: #18181b; /* zinc-900 */
-  }
+.dark .appkit-side-modal__panel {
+  background: #18181b; /* zinc-900 */
 }
 
 /* -- Header ------------------------------------------ */
@@ -62,10 +60,8 @@
   flex-shrink: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-side-modal__header {
-    border-bottom-color: #3f3f46; /* zinc-700 */
-  }
+.dark .appkit-side-modal__header {
+  border-bottom-color: #3f3f46; /* zinc-700 */
 }
 
 /* -- Body -------------------------------------------- */

@@ -53,18 +53,16 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-stats-card {
-    border-color: #334155;
-    background: #0f172a;
-  }
-  .appkit-stats-card__label {
-    color: #a1a1aa;
-  }
-  .appkit-stats-card__trend--up {
-    color: #34d399;
-  }
-  .appkit-stats-card__trend--down {
-    color: #f87171;
-  }
+.dark .appkit-stats-card {
+  border-color: #334155;
+  background: #0f172a;
+}
+.dark .appkit-stats-card__label {
+  color: #a1a1aa;
+}
+.dark .appkit-stats-card__trend--up {
+  color: #34d399;
+}
+.dark .appkit-stats-card__trend--down {
+  color: #f87171;
 }

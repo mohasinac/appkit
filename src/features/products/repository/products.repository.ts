@@ -105,36 +105,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async create(input: ProductCreateInput): Promise<ProductDocument> {
+    // Slug = document ID: derive slug from title first, then ensure uniqueness.
+    const baseSlug = input.slug || slugify(input.title);
+
     const id = await generateUniqueId(
-      (count) => {
-        if (input.isAuction) {
-          return createAuctionId({
-            name: input.title,
-            category: input.category,
-            condition: "new",
-            sellerName: input.sellerName,
-            count,
-          });
-        }
-
-        if (input.isPreOrder) {
-          return createPreOrderId({
-            name: input.title,
-            category: input.category,
-            condition: "new",
-            sellerName: input.sellerName,
-            count,
-          });
-        }
-
-        return createProductId({
-          name: input.title,
-          category: input.category,
-          condition: "new",
-          sellerName: input.sellerName,
-          count,
-        });
-      },
+      (count) => (count === 0 ? baseSlug : `${baseSlug}-${count}`),
       async (candidateId) => {
         try {
           const doc = await this.findById(candidateId);
@@ -147,7 +122,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
     const productData: Omit<ProductDocument, "id"> = {
       ...input,
-      slug: input.slug || `${slugify(input.title)}-${Date.now()}`,
+      slug: id,
       availableQuantity: input.stockQuantity,
       createdAt: new Date(),
       updatedAt: new Date(),

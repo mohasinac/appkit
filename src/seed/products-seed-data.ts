@@ -2616,7 +2616,7 @@ export const productsSeedData: Partial<ProductDocument>[] = [
   ...generatedProducts,
 ]
   .map(withRichTextDescription)
-  .map((p) => ({
-    ...p,
-    slug: p.slug ?? slugify(p.title ?? p.id ?? ""),
-  }));
+  .map((p) => {
+    const slug = p.slug ?? slugify(p.title ?? p.id ?? "");
+    return { ...p, id: slug, slug };
+  });

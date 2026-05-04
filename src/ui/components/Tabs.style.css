@@ -33,14 +33,12 @@
   padding-bottom: 1rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .appkit-tabs-list {
-    border-color: #334155;
-  }
-  .appkit-tabs-trigger:not([aria-selected="true"]) {
-    color: #94a3b8;
-  }
-  .appkit-tabs-trigger:not([aria-selected="true"]):hover {
-    color: #fff;
-  }
+.dark .appkit-tabs-list {
+  border-color: #334155;
+}
+.dark .appkit-tabs-trigger:not([aria-selected="true"]) {
+  color: #94a3b8;
+}
+.dark .appkit-tabs-trigger:not([aria-selected="true"]):hover {
+  color: #fff;
 }

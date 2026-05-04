@@ -58,16 +58,14 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-avatar {
-    background: #1e293b;
-  }
-  .appkit-avatar--fallback {
-    background: #334155;
-    color: #e2e8f0;
-  }
-  .appkit-avatar-group__overflow {
-    background: #475569;
-    color: #e2e8f0;
-  }
+.dark .appkit-avatar {
+  background: #1e293b;
+}
+.dark .appkit-avatar--fallback {
+  background: #334155;
+  color: #e2e8f0;
+}
+.dark .appkit-avatar-group__overflow {
+  background: #475569;
+  color: #e2e8f0;
 }

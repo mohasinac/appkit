@@ -7,29 +7,29 @@
 
 /* Variants */
 .appkit-card--flat {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
 }
 .appkit-card--default {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
 }
 .appkit-card--primary {
   background: var(--color-primary);
   color: var(--color-primary-foreground, white);
 }
 .appkit-card--outlined {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
   border: 1px solid #e4e4e7;
 }
 .appkit-card--bordered {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
   border: 2px solid #e4e4e7;
 }
 .appkit-card--elevated {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
   box-shadow: 0 4px 6px -1px rgba(228, 228, 231, 0.5);
 }
 .appkit-card--interactive {
-  background: white;
+  background: var(--appkit-color-surface, #ffffff);
   border: 1px solid #e4e4e7;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
