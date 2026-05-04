@@ -89,25 +89,23 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-checkbox__input {
-    border-color: #475569;
-    background: #0f172a;
-  }
-  .appkit-checkbox__input:focus-visible {
-    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
-  }
-  .appkit-checkbox__input:not(:disabled):hover {
-    border-color: #ec4899;
-  }
-  .appkit-checkbox__input:checked {
-    border-color: #ec4899;
-    background-color: #ec4899;
-  }
-  .appkit-checkbox__input--error {
-    border-color: #ef4444;
-  }
-  .appkit-checkbox__text {
-    color: #e4e4e7;
-  }
+.dark .appkit-checkbox__input {
+  border-color: #475569;
+  background: #0f172a;
+}
+.dark .appkit-checkbox__input:focus-visible {
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
+}
+.dark .appkit-checkbox__input:not(:disabled):hover {
+  border-color: #ec4899;
+}
+.dark .appkit-checkbox__input:checked {
+  border-color: #ec4899;
+  background-color: #ec4899;
+}
+.dark .appkit-checkbox__input--error {
+  border-color: #ef4444;
+}
+.dark .appkit-checkbox__text {
+  color: #e4e4e7;
 }

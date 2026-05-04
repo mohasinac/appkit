@@ -1,5 +1,6 @@
 import { DatabaseError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
+import { slugify } from "../../../utils";
 import type {
   FirebaseSieveFields,
   FirebaseSieveResult,
@@ -71,8 +72,10 @@ class EventRepository extends BaseRepository<EventDocument> {
   async createEvent(input: EventCreateInput): Promise<EventDocument> {
     try {
       const now = new Date();
+      const slug = (input as EventDocument).slug || slugify(input.title);
       const data = prepareForFirestore({
         ...input,
+        slug,
         stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
         createdAt: now,
         updatedAt: now,

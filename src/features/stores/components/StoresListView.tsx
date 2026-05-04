@@ -15,7 +15,7 @@ interface StoreCardProps {
 function StoreCard({ store, labels = {}, className = "" }: StoreCardProps) {
   return (
     <Link
-      href={`/stores/${store.storeSlug}`}
+      href={`/stores/${store.storeSlug ?? store.id}`}
       className={`block rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
     >
       {store.storeBannerURL ? (

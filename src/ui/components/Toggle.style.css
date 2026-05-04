@@ -91,17 +91,15 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-toggle__track:focus-visible {
-    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
-  }
-  .appkit-toggle__track--off {
-    background-color: #334155;
-  }
-  .appkit-toggle__track--on {
-    background-color: #ec4899;
-  }
-  .appkit-toggle__thumb {
-    background: #020617;
-  }
+.dark .appkit-toggle__track:focus-visible {
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
+}
+.dark .appkit-toggle__track--off {
+  background-color: #334155;
+}
+.dark .appkit-toggle__track--on {
+  background-color: #ec4899;
+}
+.dark .appkit-toggle__thumb {
+  background: #020617;
 }

@@ -21,6 +21,7 @@ export const EVENTS_COLLECTION = "events" as const;
 export const EVENT_ENTRIES_COLLECTION = "eventEntries" as const;
 export interface EventDocument {
   id: string;
+  slug?: string;
   type: EventType;
   title: string;
   description: string;

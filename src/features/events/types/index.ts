@@ -78,6 +78,7 @@ export interface FeedbackConfig {
 
 export interface EventItem {
   id: string;
+  slug?: string;
   type: EventType;
   title: string;
   description: string;

@@ -82,31 +82,29 @@
 }
 
 /* Dark mode */
-@media (prefers-color-scheme: dark) {
-  .appkit-dropdown__menu {
-    border-color: #334155;
-    background: #0f172a;
-  }
-  .appkit-dropdown__item {
-    color: #e2e8f0;
-  }
-  .appkit-dropdown__item--active {
-    background: #1e293b;
-  }
-  .appkit-dropdown__item--destructive {
-    color: #f87171;
-  }
-  .appkit-dropdown__composed-menu {
-    border-color: #334155;
-    background: #0f172a;
-  }
-  .appkit-dropdown__composed-item {
-    color: #e2e8f0;
-  }
-  .appkit-dropdown__composed-item:hover {
-    background: #1e293b;
-  }
-  .appkit-dropdown__separator {
-    border-color: #334155;
-  }
+.dark .appkit-dropdown__menu {
+  border-color: #334155;
+  background: #0f172a;
+}
+.dark .appkit-dropdown__item {
+  color: #e2e8f0;
+}
+.dark .appkit-dropdown__item--active {
+  background: #1e293b;
+}
+.dark .appkit-dropdown__item--destructive {
+  color: #f87171;
+}
+.dark .appkit-dropdown__composed-menu {
+  border-color: #334155;
+  background: #0f172a;
+}
+.dark .appkit-dropdown__composed-item {
+  color: #e2e8f0;
+}
+.dark .appkit-dropdown__composed-item:hover {
+  background: #1e293b;
+}
+.dark .appkit-dropdown__separator {
+  border-color: #334155;
 }

@@ -39,7 +39,7 @@ export function EventCard({
   const msLeft = endsAt.getTime() - now.getTime();
   const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
 
-  const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.id));
+  const detailHref = String(ROUTES.PUBLIC.EVENT_DETAIL(event.slug ?? event.id));
 
   return (
     <Article
