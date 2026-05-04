@@ -21,6 +21,8 @@ export interface NavbarLayoutProps {
   inline?: boolean;
   /** Render a custom nav item — defaults to an <a> anchor link. */
   renderItem?: (item: NavbarLayoutItem, isActive: boolean) => React.ReactNode;
+  /** Optional slot rendered at the far right of the navbar row. */
+  rightSlot?: React.ReactNode;
 }
 
 function DefaultNavItem({
@@ -61,6 +63,7 @@ export function NavbarLayout({
   ariaLabel = "Main navigation",
   inline = false,
   renderItem,
+  rightSlot,
 }: NavbarLayoutProps) {
   if (inline) {
     return (
@@ -87,8 +90,8 @@ export function NavbarLayout({
       aria-label={ariaLabel}
       className="hidden lg:block bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-zinc-100 dark:border-slate-800"
     >
-      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
-        <Ul className="flex items-center gap-0.5 lg:gap-1 h-10">
+      <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px] flex items-center h-10">
+        <Ul className="flex items-center gap-0.5 lg:gap-1 flex-1">
           {items.map((item) => (
             <Li key={item.href}>
               {renderItem ? (
@@ -102,6 +105,7 @@ export function NavbarLayout({
             </Li>
           ))}
         </Ul>
+        {rightSlot && <Div className="shrink-0 ml-2">{rightSlot}</Div>}
       </Div>
     </Nav>
   );

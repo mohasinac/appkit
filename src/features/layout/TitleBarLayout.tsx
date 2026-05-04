@@ -250,23 +250,7 @@ export function TitleBarLayout({
               </Link>
             )}
 
-            {/* Dashboard nav toggle — rightmost, only when a dashboard layout is active */}
-            {hasDashboardNav && onToggleDashboardNav && (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                aria-label="Toggle dashboard navigation"
-                onClick={onToggleDashboardNav}
-                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h18M3 6h18M3 18h18" />
-                </svg>
-              </Button>
-            )}
-
-            {/* Public sidebar toggle — always right */}
+            {/* Public sidebar toggle */}
             {!hideSidebarToggle && (
               <Button
                 type="button"

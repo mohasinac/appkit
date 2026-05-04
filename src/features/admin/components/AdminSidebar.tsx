@@ -57,7 +57,10 @@ function GroupsContent({
   onItemClick?: () => void;
 }) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(groups.map((g) => [g.title, g.defaultOpen ?? false]))
+    Object.fromEntries(groups.map((g) => [
+      g.title,
+      g.defaultOpen ?? g.items.some((i) => activePath === i.href || activePath.startsWith(i.href + "/")),
+    ]))
   );
   const toggle = useCallback((title: string) => setOpenGroups((p) => ({ ...p, [title]: !p[title] })), []);
 

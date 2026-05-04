@@ -56,7 +56,10 @@ function DrawerContent({
 }) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     if (!groups) return {};
-    return Object.fromEntries(groups.map((g) => [g.title, g.defaultOpen ?? false]));
+    return Object.fromEntries(groups.map((g) => [
+      g.title,
+      g.defaultOpen ?? g.items.some((i) => activeHref === i.href || activeHref.startsWith(i.href + "/")),
+    ]));
   });
 
   const toggle = useCallback(

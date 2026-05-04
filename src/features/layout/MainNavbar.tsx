@@ -1,4 +1,5 @@
 "use client"
+import React from "react";
 import { usePathname } from "next/navigation";
 import { NavbarLayout } from "./NavbarLayout";
 import type { NavbarLayoutItem } from "./NavbarLayout";
@@ -21,25 +22,18 @@ export interface MainNavbarProps {
   hiddenNavItems?: string[];
   /** When true, renders the navbar inline instead of sticky */
   inline?: boolean;
+  /** Whether a dashboard section has registered a secondary nav drawer. */
+  hasDashboardNav?: boolean;
+  /** Callback to toggle the dashboard nav drawer (already closes the public sidebar first). */
+  onToggleDashboardNav?: () => void;
 }
 
-/**
- * MainNavbar — horizontal desktop navigation bar.
- *
- * Accepts pre-translated nav items from the consumer config and delegates
- * rendering to the generic NavbarLayout primitive.
- *
- * @example
- * ```tsx
- * const t = useTranslations("nav");
- * const items = MAIN_NAV_ITEMS.map(item => ({ ...item, label: t(item.key) }));
- * <MainNavbar navItems={items} />
- * ```
- */
 export function MainNavbar({
   navItems,
   hiddenNavItems = [],
   inline = false,
+  hasDashboardNav = false,
+  onToggleDashboardNav,
 }: MainNavbarProps) {
   const pathname = usePathname();
 
@@ -52,5 +46,26 @@ export function MainNavbar({
       highlighted: item.highlighted,
     }));
 
-  return <NavbarLayout items={items} activeHref={pathname} inline={inline} />;
+  const dashboardToggle =
+    hasDashboardNav && onToggleDashboardNav ? (
+      <button
+        type="button"
+        onClick={onToggleDashboardNav}
+        aria-label="Toggle dashboard navigation"
+        className="flex items-center justify-center w-8 h-8 rounded-lg text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-800 dark:hover:text-zinc-100 transition-colors"
+      >
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    ) : undefined;
+
+  return (
+    <NavbarLayout
+      items={items}
+      activeHref={pathname}
+      inline={inline}
+      rightSlot={dashboardToggle}
+    />
+  );
 }

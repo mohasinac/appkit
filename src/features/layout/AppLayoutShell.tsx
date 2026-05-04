@@ -37,6 +37,8 @@ export interface AppLayoutShellSidebarLink {
 export interface AppLayoutShellSidebarSection {
   title?: string;
   items: AppLayoutShellSidebarLink[];
+  /** When true, this section is expanded by default. */
+  defaultOpen?: boolean;
 }
 
 export interface AppLayoutShellSidebarAction {
@@ -170,7 +172,7 @@ function CollapsibleSidebarSection({
   section: AppLayoutShellSidebarSection;
   navItemClass: string;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(section.defaultOpen ?? false);
   const hasTitle = !!section.title;
 
   if (!hasTitle) {
@@ -278,7 +280,7 @@ export function AppLayoutShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { closeNav: closeDashboardNav } = useDashboardNav();
+  const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();
 
   const headerRef = useRef<HTMLDivElement>(null);
@@ -585,7 +587,15 @@ export function AppLayoutShell({
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
-          <MainNavbar navItems={navItems} hiddenNavItems={hiddenNavItems} />
+          <MainNavbar
+            navItems={navItems}
+            hiddenNavItems={hiddenNavItems}
+            hasDashboardNav={!suppressDashboardNav && hasDashboardNav}
+            onToggleDashboardNav={!suppressDashboardNav && hasDashboardNav ? () => {
+              handleBeforeDashboardNavToggle();
+              toggleDashboardNav();
+            } : undefined}
+          />
           {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
         </Div>
 
