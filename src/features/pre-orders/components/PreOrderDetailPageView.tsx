@@ -20,6 +20,7 @@ import {
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { BuyBar } from "../../products/components/BuyBar";
+import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 
@@ -121,6 +122,9 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
   const safeSeller = sellerName ? safeDisplayName(sellerName, "") : null;
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
+  const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
+    ? (p.specifications as { name: string; value: string; unit?: string }[])
+    : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
   return (
@@ -234,6 +238,38 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
               )}
             </Stack>
           )}
+          renderTabs={() => (
+            <ProductTabsShell
+              descriptionContent={
+                descriptionHtml ? (
+                  <RichText
+                    html={descriptionHtml}
+                    proseClass="prose prose-sm sm:prose max-w-none dark:prose-invert"
+                    className="text-zinc-700 dark:text-zinc-300"
+                  />
+                ) : undefined
+              }
+              specsContent={
+                specs.length > 0 ? (
+                  <dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
+                    {specs.map((s, i) => (
+                      <div
+                        key={i}
+                        className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50"
+                      >
+                        <dt className="w-36 flex-shrink-0 font-medium text-zinc-700 dark:text-zinc-300">
+                          {s.name}
+                        </dt>
+                        <dd className="flex-1 text-zinc-600 dark:text-zinc-400">
+                          {s.value}{s.unit ? ` ${s.unit}` : ""}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : undefined
+              }
+            />
+          )}
           renderBuyBar={() => (
             <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
               {/* Progress bar */}
@@ -273,6 +309,9 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
               <Stack gap="sm">
                 <Button variant="primary" size="md" className="w-full">
                   Reserve Now
+                </Button>
+                <Button variant="secondary" size="md" className="w-full">
+                  Add to Cart
                 </Button>
                 {isCancellable && (
                   <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
@@ -320,6 +359,9 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
               {formatCurrency(price, currency)}
             </Span>
           )}
+          <Button variant="secondary" size="sm" className="shrink-0">
+            Add to Cart
+          </Button>
           <Button variant="primary" size="sm" className="flex-1">
             Reserve Now
           </Button>

@@ -12,6 +12,7 @@ export interface AuctionDetailViewProps extends Omit<
   renderBidForm?: () => React.ReactNode;
   /** Mobile bid form shown below the grid on small screens */
   renderMobileBidForm?: () => React.ReactNode;
+  renderTabs?: () => React.ReactNode;
   renderBidHistory?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
 }
@@ -21,6 +22,7 @@ export function AuctionDetailView({
   renderInfo,
   renderBidForm,
   renderMobileBidForm,
+  renderTabs,
   renderBidHistory,
   renderRelated,
   isLoading = false,
@@ -40,7 +42,7 @@ export function AuctionDetailView({
         </Div>,
       ]}
       afterMain={renderMobileBidForm?.()}
-      belowFold={[renderBidHistory?.(), renderRelated?.()]}
+      belowFold={[renderTabs?.(), renderBidHistory?.(), renderRelated?.()]}
     />
   );
 }

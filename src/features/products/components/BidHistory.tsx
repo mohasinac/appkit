@@ -1,5 +1,6 @@
 import React from "react";
 import { Span, Text } from "../../../ui";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {
   id: string;
@@ -19,6 +20,7 @@ export interface BidHistoryProps {
   bids?: BidHistoryEntry[];
   renderEmpty?: () => React.ReactNode;
   renderSkeleton?: () => React.ReactNode;
+  currency?: string;
   labels?: {
     title?: string;
     noHistory?: string;
@@ -29,6 +31,20 @@ export interface BidHistoryProps {
   className?: string;
 }
 
+function formatBidDate(raw: string): string {
+  if (!raw) return "";
+  try {
+    return new Date(raw).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return raw;
+  }
+}
+
 export function BidHistory({
   isLoading = false,
   isEmpty = false,
@@ -37,6 +53,7 @@ export function BidHistory({
   bids = [],
   renderEmpty,
   renderSkeleton,
+  currency,
   labels = {},
   className = "",
 }: BidHistoryProps) {
@@ -63,21 +80,34 @@ export function BidHistory({
   if (renderList) return <div className={className} data-section="bidhistory-div-420">{renderList()}</div>;
 
   return (
-    <div className={`space-y-2 ${className}`} data-section="bidhistory-div-421">
-      {bids.map((bid, i) =>
-        renderBid ? (
-          <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
-        ) : (
-          <div
-            key={bid.id}
-            className="flex items-center justify-between p-3 rounded-lg border text-sm"
-           data-section="bidhistory-div-422">
-            <Span>{bid.bidderName ?? bid.bidderId}</Span>
-            <Span className="font-medium">{bid.amount}</Span>
-            <Span className="text-neutral-500">{bid.placedAt}</Span>
-          </div>
-        ),
+    <div className={className} data-section="bidhistory-div-421">
+      {labels.title && (
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          {labels.title}
+        </h3>
       )}
+      <div className="space-y-2">
+        {bids.map((bid, i) =>
+          renderBid ? (
+            <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
+          ) : (
+            <div
+              key={bid.id}
+              className="flex items-center justify-between rounded-lg border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 text-sm"
+             data-section="bidhistory-div-422">
+              <Span className="font-medium text-zinc-700 dark:text-zinc-300 truncate max-w-[40%]">
+                {bid.bidderName ?? bid.bidderId}
+              </Span>
+              <Span className="font-bold text-primary-600 dark:text-primary-400">
+                {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
+              </Span>
+              <Span className="text-xs text-zinc-400 dark:text-zinc-500">
+                {formatBidDate(bid.placedAt)}
+              </Span>
+            </div>
+          ),
+        )}
+      </div>
     </div>
   );
 }

@@ -470,9 +470,17 @@ export async function ProductDetailPageView({
                   className="w-full"
                   disabled={!inStock}
                 >
+                  {inStock ? "Buy Now" : "Out of Stock"}
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="md"
+                  className="w-full"
+                  disabled={!inStock}
+                >
                   {inStock ? "Add to Cart" : "Out of Stock"}
                 </Button>
-                <Button variant="secondary" size="md" className="w-full">
+                <Button variant="ghost" size="md" className="w-full">
                   ♡ Add to Wishlist
                 </Button>
               </Stack>
@@ -628,12 +636,20 @@ export async function ProductDetailPageView({
             </Span>
           )}
           <Button
+            variant="secondary"
+            size="sm"
+            className="shrink-0"
+            disabled={!inStock}
+          >
+            Add to Cart
+          </Button>
+          <Button
             variant="primary"
             size="sm"
             className="flex-1"
             disabled={!inStock}
           >
-            {inStock ? "Add to Cart" : "Out of Stock"}
+            {inStock ? "Buy Now" : "Out of Stock"}
           </Button>
         </BuyBar>
       </Container>
