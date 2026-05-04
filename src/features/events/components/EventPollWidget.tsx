@@ -1,0 +1,156 @@
+"use client";
+
+import { useState } from "react";
+import type { PollConfig, EventStatus } from "../types";
+import { useAuth } from "../../../react/contexts/SessionContext";
+
+interface EventPollWidgetProps {
+  eventId: string;
+  pollConfig: PollConfig;
+  eventStatus: EventStatus;
+  totalEntries?: number;
+  /** Override the POST endpoint — defaults to /api/events/{eventId}/entries */
+  entriesEndpoint?: string;
+  className?: string;
+}
+
+export function EventPollWidget({
+  eventId,
+  pollConfig,
+  eventStatus,
+  totalEntries,
+  entriesEndpoint,
+  className = "",
+}: EventPollWidgetProps) {
+  const { user } = useAuth();
+  const endpoint = entriesEndpoint ?? `/api/events/${eventId}/entries`;
+  const isEnded = eventStatus === "ended";
+  const isMulti = pollConfig.allowMultiSelect;
+
+  const [selectedVotes, setSelectedVotes] = useState<string[]>([]);
+  const [comment, setComment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const toggleVote = (id: string) => {
+    if (isMulti) {
+      setSelectedVotes((prev) =>
+        prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id],
+      );
+    } else {
+      setSelectedVotes([id]);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (selectedVotes.length === 0) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      const body: Record<string, unknown> = { pollVotes: selectedVotes };
+      if (comment.trim()) body.pollComment = comment.trim();
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(data.error ?? "Failed to submit vote");
+      }
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isEnded) {
+    return (
+      <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`} data-section="eventpollwidget-div-1">
+        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">This poll has closed.</p>
+        {totalEntries !== undefined && (
+          <p className="text-sm text-zinc-400 dark:text-zinc-500">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</p>
+        )}
+        <div className="space-y-2" data-section="eventpollwidget-div-2">
+          {pollConfig.options.map((opt) => (
+            <div key={opt.id} className="rounded-lg border border-zinc-100 dark:border-zinc-800 px-4 py-2.5 text-sm text-zinc-600 dark:text-zinc-400" data-section="eventpollwidget-div-3">
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (pollConfig.requireLogin && !user) {
+    return (
+      <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-6 py-8 text-center space-y-3 ${className}`} data-section="eventpollwidget-div-4">
+        <p className="font-semibold text-zinc-900 dark:text-zinc-100">Login to vote</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">You need an account to participate in this poll.</p>
+        <a
+          href="/login"
+          className="inline-block rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-600"
+        >
+          Log In
+        </a>
+      </div>
+    );
+  }
+
+  if (isSubmitted) {
+    return (
+      <div className={`rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 px-6 py-8 text-center space-y-2 ${className}`} data-section="eventpollwidget-div-5">
+        <p className="font-semibold text-green-700 dark:text-green-300">Vote recorded!</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">Thanks for participating.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`space-y-4 ${className}`} data-section="eventpollwidget-div-6">
+      <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
+        {isMulti ? "Select all that apply:" : "Choose one:"}
+      </p>
+      <div className="space-y-2" data-section="eventpollwidget-div-7">
+        {pollConfig.options.map((opt) => (
+          <label
+            key={opt.id}
+            className="flex items-center gap-3 cursor-pointer rounded-lg border border-zinc-200 dark:border-zinc-700 px-4 py-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+          >
+            <input
+              type={isMulti ? "checkbox" : "radio"}
+              name={`poll-${eventId}`}
+              value={opt.id}
+              checked={selectedVotes.includes(opt.id)}
+              onChange={() => toggleVote(opt.id)}
+              className="accent-primary"
+            />
+            <span className="text-sm text-zinc-700 dark:text-zinc-300">{opt.label}</span>
+          </label>
+        ))}
+      </div>
+      {pollConfig.allowComment && (
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Add a comment (optional)"
+          rows={3}
+          className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+      )}
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <button
+        type="button"
+        onClick={handleSubmit}
+        disabled={isLoading || selectedVotes.length === 0}
+        className="w-full rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-white hover:bg-primary-600 disabled:opacity-60"
+      >
+        {isLoading ? "Submitting…" : "Submit Vote"}
+      </button>
+    </div>
+  );
+}

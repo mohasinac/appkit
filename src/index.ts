@@ -4375,6 +4375,8 @@ export { cartSummarySchema } from "./features/cart/schemas/index";
 // AddToCartInput - Type contract for add to cart input.
 export type { AddToCartInput } from "./features/cart/schemas/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// CartAppliedCoupon - Type contract for applied cart coupon.
+export type { CartAppliedCoupon } from "./features/cart/schemas/index";
 // CartCreateInput - Type contract for cart create input.
 export type { CartCreateInput } from "./features/cart/schemas/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -5050,6 +5052,8 @@ export { EventLeaderboard } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // EventParticipateView - Component for event participate view.
 export { EventParticipateView } from "./features/events/index";
+// EventPollWidget - Inline poll voting widget for event detail pages.
+export { EventPollWidget } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // EventStatusBadge - Component for event status badge.
 export { EventStatusBadge } from "./features/events/index";
@@ -6419,6 +6423,8 @@ export type { Order } from "./features/orders/index";
 // OrderAdminUpdateInput - Type contract for order admin update input.
 export type { OrderAdminUpdateInput } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// AppliedOrderDiscount - Type contract for applied order discount.
+export type { AppliedOrderDiscount } from "./features/orders/index";
 // OrderCreateInput - Type contract for order create input.
 export type { OrderCreateInput } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -6721,6 +6727,8 @@ export { ProductDetailView } from "./features/products/index";
 // [SERVER-RSC]-Self-fetching detail page view for products.
 export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
 export type { ProductDetailPageViewProps } from "./features/products/components/ProductDetailPageView";
+// [CLIENT]-Share button with native Web Share API + clipboard fallback.
+export { ShareButton } from "./features/products/components/ShareButton";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFeatureBadges - Shared export for product feature badges.
 export { ProductFeatureBadges } from "./features/products/index";

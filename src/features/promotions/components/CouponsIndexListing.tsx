@@ -39,7 +39,6 @@ export function CouponsIndexListing({
   const table = useUrlTable({ defaults: { pageSize: "12", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   // Build Sieve filter string
   const buildFilters = () => {
@@ -78,11 +77,6 @@ export function CouponsIndexListing({
     if (e.key === "Enter") commitSearch();
   };
 
-  const handleCopy = useCallback((code: string) => {
-    navigator.clipboard.writeText(code).catch(() => {});
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(null), 2000);
-  }, []);
 
   const activeType = table.get("type") as CouponType | "";
   const hasActiveFilters = !!activeType || !!table.get("dateFrom") || !!table.get("dateTo");
@@ -218,14 +212,13 @@ export function CouponsIndexListing({
                 key={coupon.id}
                 coupon={coupon}
                 labels={{
-                  copy: copiedCode === coupon.code ? "Copied!" : "Copy",
+                  copy: "Copy",
                   copied: "Copied!",
                   expires: "Expires",
                   minOrder: "Min. order",
                   off: "OFF",
                   freeShipping: "Free Shipping",
                 }}
-                onCopy={handleCopy}
               />
             ))}
           </div>

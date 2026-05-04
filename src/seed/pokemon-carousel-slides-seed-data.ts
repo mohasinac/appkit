@@ -15,8 +15,10 @@ const ADMIN = "user-admin-user-admin";
 
 const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
-const picsumImg = (seed: string, w = 1200, h = 500) =>
-  `https://picsum.photos/seed/${seed}/${w}/${h}`;
+const picsumImg = (seed: string, w = 1200, h = 500) => {
+  let hash = 0; for (const c of seed) hash = (hash * 31 + c.charCodeAt(0)) & 0x7fff;
+  return `https://loremflickr.com/${w}/${h}/collectibles,toy,merchandise?lock=${hash % 800}`;
+};
 
 export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
   // ── Slide 1 — Multi-Franchise Welcome Hero (ACTIVE) ──────────────────────

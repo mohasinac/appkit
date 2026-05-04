@@ -19,7 +19,10 @@ const BP = {
   sellerEmail: "bladers@letitrip.in",
 } as const;
 
-const img = (seed: string) => `https://picsum.photos/seed/${seed}/600/600`;
+const img = (seed: string) => {
+  let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
+  return `https://loremflickr.com/600/600/beyblade,spinning-top,toy?lock=${h % 800}`;
+};
 
 export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 

@@ -20,7 +20,10 @@ const RV = {
   sellerEmail: "retrovault@letitrip.in",
 } as const;
 
-const img = (seed: string) => `https://picsum.photos/seed/${seed}/600/400`;
+const img = (seed: string) => {
+  let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) & 0x7fff;
+  return `https://loremflickr.com/600/400/retro,game,console,vintage?lock=${h % 800}`;
+};
 
 export const retroGamingSeedData: Partial<ProductDocument>[] = [
 

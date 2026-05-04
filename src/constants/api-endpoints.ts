@@ -298,7 +298,7 @@ export const PRODUCT_ENDPOINTS = {
 // ---------------------------------------------------------------------------
 
 export const PROMOTION_ENDPOINTS = {
-  LIST: "/api/promotions",
+  LIST: "/api/coupons",
   COUPON_BY_CODE: (code: string) => `/api/coupons/${code}`,
   COUPON_VALIDATE: "/api/coupons/validate",
 } as const;

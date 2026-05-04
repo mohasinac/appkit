@@ -478,7 +478,7 @@ checkPriceAlert({ cardId: 'base1-4', targetUSD: 500 });
   <li>Check for card creases — the card condition affects resale value as much as the car itself</li>
   <li>Join the LetItRip Hot Wheels community group for hunting reports and tips</li>
 </ul>`,
-    coverImage: "https://picsum.photos/seed/hw-treasure-hunt-blog/1200/630",
+    coverImage: "https://loremflickr.com/1200/630/hot-wheels,diecast,treasure-hunt?lock=10",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
     tags: ["hot-wheels", "treasure-hunt", "sth", "hunting-guide", "collecting", "investment"],
     isFeatured: true,
@@ -536,7 +536,7 @@ checkPriceAlert({ cardId: 'base1-4', targetUSD: 500 });
   <li>Random Booster (Level 6 or higher) for variety builds (₹599–₹899)</li>
 </ul>
 <blockquote><p>"The best part of Beyblade Burst is customisation. Once you've got two or three tops, start swapping parts to build your own custom combination."</p></blockquote>`,
-    coverImage: "https://picsum.photos/seed/beyblade-beginners-blog/1200/630",
+    coverImage: "https://loremflickr.com/1200/630/beyblade,spinning-top,toy?lock=11",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.TIPS,
     tags: ["beyblade", "burst", "beginners-guide", "types", "launcher", "starter"],
     isFeatured: false,
@@ -596,7 +596,7 @@ checkPriceAlert({ cardId: 'base1-4', targetUSD: 500 });
 <p>For investment: MISB G1 continues to outperform modern figures in value appreciation. A limited budget is best allocated to sealed G1 Autobots or Decepticons with full cardback condition.</p>
 <h2>Shop on LetItRip</h2>
 <p>Both G1 vintage and modern Transformers are available from <strong>Speed King Diecast</strong> on LetItRip. Check their store for current stock including the live auction of a <a href="/auctions">G1 Optimus Prime MISB</a> — current bids open now.</p>`,
-    coverImage: "https://picsum.photos/seed/transformers-g1-blog/1200/630",
+    coverImage: "https://loremflickr.com/1200/630/transformers,robot,collectible?lock=12",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
     tags: ["transformers", "g1", "studio-series", "collecting", "investment", "masterpiece", "legacy"],
     isFeatured: true,

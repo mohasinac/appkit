@@ -43,7 +43,7 @@ export interface HorizontalScrollerProps<T = unknown> {
   minItemWidth?: number;
   pauseOnHover?: boolean;
   itemClassName?: string;
-  /** Infinite-loop mode: clones first slides at end, jumps seamlessly when reached */
+  /** Infinite-loop mode: circular slot rendering with scroll teleport — no array cloning */
   loop?: boolean;
 }
 
@@ -102,52 +102,99 @@ export function HorizontalScroller<T = unknown>({
   const autoScrollTimer = useRef<ReturnType<typeof setInterval> | undefined>(
     undefined,
   );
+  // Prevents re-entrant teleports during the instantaneous scrollLeft reset
+  const isJumping = useRef(false);
+  // Prevents re-running the initial scroll-to-real-start on every itemWidth update
+  const loopInitialized = useRef(false);
+
+  const normalizedItems = Array.isArray(items) ? items : [];
+  const itemsMode = Array.isArray(items) && renderItem != null;
+  const itemCount = normalizedItems.length;
+
+  // Number of clone slots on each side — fixed size, computed once from perView hint.
+  // Using Math.min so tiny lists don't double-render more slots than they have items.
+  const loopCloneCount =
+    loop && itemsMode && itemCount > 0
+      ? Math.min(itemCount, typeof perView === "number" ? perView : 3)
+      : 0;
+
+  // On first paint after itemWidth resolves, scroll to the first *real* item
+  // (skipping the left clone slots that provide backward-wrap buffer).
+  useEffect(() => {
+    if (!loop || loopCloneCount === 0 || itemWidth === undefined) return;
+    const el = containerRef.current;
+    if (!el || loopInitialized.current) return;
+    loopInitialized.current = true;
+    el.style.scrollBehavior = "auto";
+    el.scrollLeft = loopCloneCount * (itemWidth + gap);
+    requestAnimationFrame(() => {
+      el.style.scrollBehavior = "";
+    });
+  }, [loop, loopCloneCount, itemWidth, gap, containerRef]);
+
+  // Circular teleporter: when scroll enters a clone zone, jump by exactly one
+  // full cycle so the viewport content is unchanged but we're back in real territory.
+  const handleScrollLoop = useCallback(() => {
+    if (!loop || loopCloneCount === 0 || itemWidth === undefined) return;
+    const el = containerRef.current;
+    if (!el || isJumping.current) return;
+    const stride = itemWidth + gap;
+    const cycleWidth = itemCount * stride;
+    // scrollLeft where real items start and end
+    const realStart = loopCloneCount * stride;
+    const realEnd = realStart + cycleWidth;
+
+    if (el.scrollLeft < realStart - stride * 0.5) {
+      // Entered left clone zone — jump forward one cycle
+      isJumping.current = true;
+      el.style.scrollBehavior = "auto";
+      el.scrollLeft += cycleWidth;
+      requestAnimationFrame(() => {
+        isJumping.current = false;
+        el.style.scrollBehavior = "";
+      });
+    } else if (el.scrollLeft > realEnd - el.clientWidth + stride * 0.5) {
+      // Entered right clone zone — jump backward one cycle
+      isJumping.current = true;
+      el.style.scrollBehavior = "auto";
+      el.scrollLeft -= cycleWidth;
+      requestAnimationFrame(() => {
+        isJumping.current = false;
+        el.style.scrollBehavior = "";
+      });
+    }
+  }, [loop, loopCloneCount, itemWidth, gap, itemCount, containerRef]);
 
   const scrollBy = useCallback(
     (direction: 1 | -1) => {
       const el = containerRef.current;
       if (!el) return;
-      if (loop && items && items.length > 0) {
-        const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
-        const atStart = el.scrollLeft <= 1;
-        if (direction === 1 && atEnd) {
-          el.style.scrollBehavior = "auto";
-          el.scrollLeft = 0;
-          requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
-          return;
-        }
-        if (direction === -1 && atStart) {
-          el.style.scrollBehavior = "auto";
-          el.scrollLeft = el.scrollWidth - el.clientWidth;
-          requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
-          return;
-        }
-      }
       const width = el.clientWidth;
       el.scrollBy({ left: direction * width * 0.8, behavior: "smooth" });
     },
-    [containerRef, loop, items],
+    [containerRef],
   );
 
-  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "ArrowRight") { e.preventDefault(); scrollBy(1); }
-    else if (e.key === "ArrowLeft") { e.preventDefault(); scrollBy(-1); }
-  }, [scrollBy]);
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        scrollBy(1);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        scrollBy(-1);
+      }
+    },
+    [scrollBy],
+  );
 
   useEffect(() => {
     if (!autoScroll || isPaused) return;
     autoScrollTimer.current = setInterval(() => {
       const el = containerRef.current;
       if (!el) return;
-      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
-      if (atEnd) {
-        // Instantly jump to start (seamless because clones make start = current end view)
-        el.style.scrollBehavior = "auto";
-        el.scrollLeft = 0;
-        requestAnimationFrame(() => { el.style.scrollBehavior = ""; });
-      } else {
-        el.scrollBy({ left: el.clientWidth * 0.8, behavior: "smooth" });
-      }
+      // Always advance; handleScrollLoop teleports when clone zone is reached
+      el.scrollBy({ left: el.clientWidth * 0.8, behavior: "smooth" });
     }, autoScrollInterval);
     return () => clearInterval(autoScrollTimer.current);
   }, [autoScroll, isPaused, autoScrollInterval, containerRef]);
@@ -167,29 +214,11 @@ export function HorizontalScroller<T = unknown>({
     return () => observer.disconnect();
   }, [perView, gap, containerRef]);
 
-  const normalizedItems = Array.isArray(items) ? items : [];
-  const itemsMode = Array.isArray(items) && renderItem != null;
-
-  // In loop mode, clone the first perViewCount items and append to end for seamless wrap
-  const loopCloneCount = loop && itemsMode ? (typeof perView === "number" ? perView : 3) : 0;
-  const loopItems: T[] = loopCloneCount > 0
-    ? [...normalizedItems, ...normalizedItems.slice(0, loopCloneCount)]
-    : normalizedItems;
-
-  const scrollerCls = [
-    "appkit-hscroller__track",
-    snapToItems ? "appkit-hscroller__track--snap" : "",
-    !showScrollbar ? "appkit-hscroller__track--no-scrollbar" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   const content = itemsMode ? (
     rows > 1 ? (
       // Grid mode: group items into slides with rows x cols
-      // On mobile: 1 card centered, on larger screens: 2x3 grid
       normalizedItems.reduce<ReactNode[]>((slides, item, i) => {
-        const cardsPerSlide = 6; // Always 6 cards per slide (2x3 grid)
+        const cardsPerSlide = 6;
         const slideIndex = Math.floor(i / cardsPerSlide);
         const itemInSlide = i % cardsPerSlide;
         const rowIndex = Math.floor(itemInSlide / 3);
@@ -203,19 +232,24 @@ export function HorizontalScroller<T = unknown>({
               style={{ gap: `${gap}px`, width: "100%", flexShrink: 0 }}
             >
               {Array.from({ length: 6 }, (_, idx) => (
-                <div key={`placeholder-${idx}`} className="appkit-hscroller__item-placeholder w-full sm:w-auto" />
+                <div
+                  key={`placeholder-${idx}`}
+                  className="appkit-hscroller__item-placeholder w-full sm:w-auto"
+                />
               ))}
             </div>
           );
         }
 
-        // Replace placeholder with actual item
-          const slideElement = slides[slideIndex] as ReactElement<{ children?: ReactNode[] }>;
-          const gridIndex = rowIndex * 3 + colIndex;
-          const childrenArr = (slideElement.props as { children?: ReactNode[] }).children ?? [];
-          if (childrenArr[gridIndex]) {
-            const newChildren = [...childrenArr];
-            newChildren[gridIndex] = (
+        const slideElement = slides[slideIndex] as ReactElement<{
+          children?: ReactNode[];
+        }>;
+        const gridIndex = rowIndex * 3 + colIndex;
+        const childrenArr =
+          (slideElement.props as { children?: ReactNode[] }).children ?? [];
+        if (childrenArr[gridIndex]) {
+          const newChildren = [...childrenArr];
+          newChildren[gridIndex] = (
             <div
               key={keyExtractor ? keyExtractor(item, i) : i}
               className={[
@@ -238,11 +272,49 @@ export function HorizontalScroller<T = unknown>({
 
         return slides;
       }, [])
+    ) : loop && itemCount > 0 ? (
+      // Circular loop: fixed (itemCount + 2×loopCloneCount) DOM slots.
+      // Each slot maps to a real item via modulo — no array cloning, no list growth.
+      // Left slots  [0 .. loopCloneCount-1]              → tail of real list (left buffer)
+      // Real slots  [loopCloneCount .. loopCloneCount+n-1] → items[0..n-1]
+      // Right slots [loopCloneCount+n .. end]             → head of real list (right buffer)
+      Array.from(
+        { length: itemCount + 2 * loopCloneCount },
+        (_, i) => {
+          const realIndex =
+            ((i - loopCloneCount) % itemCount + itemCount) % itemCount;
+          const item = normalizedItems[realIndex];
+          const isClone =
+            i < loopCloneCount || i >= loopCloneCount + itemCount;
+          return (
+            <div
+              key={`loop-slot-${i}`}
+              className={[
+                "appkit-hscroller__item",
+                snapToItems ? "appkit-hscroller__item--snap" : "",
+                itemClassName,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              style={
+                itemWidth !== undefined
+                  ? { width: itemWidth, flexShrink: 0 }
+                  : minItemWidth
+                  ? { minWidth: minItemWidth }
+                  : undefined
+              }
+              aria-hidden={isClone ? true : undefined}
+            >
+              {renderItem(item, realIndex)}
+            </div>
+          );
+        },
+      )
     ) : (
-      // Single row mode (uses loopItems to include clones when loop=true)
-      loopItems.map((item, i) => (
+      // Normal single row (no loop)
+      normalizedItems.map((item, i) => (
         <div
-          key={keyExtractor ? `${keyExtractor(item, i % normalizedItems.length)}-${i}` : i}
+          key={keyExtractor ? keyExtractor(item, i) : i}
           className={[
             "appkit-hscroller__item",
             snapToItems ? "appkit-hscroller__item--snap" : "",
@@ -257,17 +329,28 @@ export function HorizontalScroller<T = unknown>({
               ? { minWidth: minItemWidth }
               : undefined
           }
-          aria-hidden={i >= normalizedItems.length ? true : undefined}
         >
-          {renderItem(item, i % normalizedItems.length)}
+          {renderItem(item, i)}
         </div>
       ))
     )
-  ) : children;
+  ) : (
+    children
+  );
 
   const hoverHandlers = pauseOnHover
-    ? { onMouseEnter: () => setIsPaused(true), onMouseLeave: () => setIsPaused(false) }
+    ? {
+        onMouseEnter: () => setIsPaused(true),
+        onMouseLeave: () => setIsPaused(false),
+      }
     : {};
+
+  const combinedOnScroll = loop
+    ? () => {
+        handleScrollLoop();
+        onScroll?.();
+      }
+    : onScroll;
 
   if (showArrows) {
     return (
@@ -278,7 +361,8 @@ export function HorizontalScroller<T = unknown>({
         tabIndex={0}
         onKeyDown={handleKeyDown}
         {...hoverHandlers}
-       data-section="horizontalscroller-div-511">
+        data-section="horizontalscroller-div-511"
+      >
         {showFadeEdges && (
           <>
             <div className="appkit-hscroller__fade appkit-hscroller__fade--left" />
@@ -295,10 +379,11 @@ export function HorizontalScroller<T = unknown>({
         </button>
         <div
           ref={containerRef}
-          onScroll={onScroll}
-          className={scrollerCls}
+          onScroll={combinedOnScroll}
+          className={scrollerCls(snapToItems, showScrollbar)}
           style={{ gap: `${gap}px`, paddingLeft: 36, paddingRight: 36 }}
-         data-section="horizontalscroller-div-512">
+          data-section="horizontalscroller-div-512"
+        >
           {content}
         </div>
         <button
@@ -329,12 +414,23 @@ export function HorizontalScroller<T = unknown>({
       )}
       <div
         ref={containerRef}
-        onScroll={onScroll}
-        className={scrollerCls}
+        onScroll={combinedOnScroll}
+        className={scrollerCls(snapToItems, showScrollbar)}
         style={{ gap: `${gap}px` }}
-       data-section="horizontalscroller-div-514">
+        data-section="horizontalscroller-div-514"
+      >
         {content}
       </div>
     </div>
   );
+}
+
+function scrollerCls(snapToItems?: boolean, showScrollbar?: boolean) {
+  return [
+    "appkit-hscroller__track",
+    snapToItems ? "appkit-hscroller__track--snap" : "",
+    !showScrollbar ? "appkit-hscroller__track--no-scrollbar" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 }

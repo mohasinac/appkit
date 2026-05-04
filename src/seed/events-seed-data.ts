@@ -247,7 +247,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(2),
     endsAt: daysAhead(5),
-    coverImageUrl: "https://picsum.photos/seed/hw-car-culture-sale/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/hot-wheels,diecast,sale?lock=1",
     saleConfig: {
       discountPercent: 20,
       bannerText: "Hot Wheels Car Culture Flash Sale — 20% Off This Weekend!",
@@ -275,7 +275,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(5),
     endsAt: daysAhead(9),
-    coverImageUrl: "https://picsum.photos/seed/beyblade-poll/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/beyblade,spinning-top,toy?lock=2",
     pollConfig: {
       options: [
         { id: "classic", label: "Classic / Original Burst" },
@@ -311,7 +311,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(10),
     endsAt: daysAhead(20),
-    coverImageUrl: "https://picsum.photos/seed/tf-wishlist-survey/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/transformers,robot,toy?lock=3",
     surveyConfig: {
       requireLogin: true,
       maxEntriesPerUser: 1,
@@ -364,7 +364,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(1),
     endsAt: daysAhead(13),
-    coverImageUrl: "https://picsum.photos/seed/beyblade-bundle-offer/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/beyblade,spinning-top,toy?lock=4",
     offerConfig: {
       couponId: "coupon-bbbundle2",
       displayCode: "BBBUNDLE2",
@@ -392,7 +392,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(4),
     endsAt: daysAhead(10),
-    coverImageUrl: "https://picsum.photos/seed/hw-survey-event/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/hot-wheels,diecast,toy?lock=5",
     feedbackConfig: {
       formFields: [
         {
@@ -469,7 +469,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
     startsAt: daysAhead(15),
     endsAt: daysAhead(16),
-    coverImageUrl: "https://picsum.photos/seed/tf-meet-cancelled/800/400",
+    coverImageUrl: "https://loremflickr.com/800/400/transformers,robot,toy?lock=6",
     offerConfig: {
       couponId: "coupon-tfmeet-cancelled",
       displayCode: "TFMEET500",

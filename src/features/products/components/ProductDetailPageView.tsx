@@ -27,6 +27,7 @@ import { ProductTabsShell } from "./ProductTabsShell";
 import { ProductFeatureBadges } from "./ProductFeatureBadges";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 import { BuyBar } from "./BuyBar";
+import { ShareButton } from "./ShareButton";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -254,6 +255,13 @@ export async function ProductDetailPageView({
   const safeSeller = sellerName
     ? safeDisplayName(sellerName, "")
     : null;
+  const storeSlug = typeof p.storeSlug === "string" ? (p.storeSlug as string) : null;
+  const sellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
+  const storeHref = storeSlug
+    ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
+    : sellerId
+      ? String(ROUTES.PUBLIC.SELLER_DETAIL(sellerId))
+      : null;
 
   const descriptionHtml = toDescriptionHtml(p.description);
 
@@ -286,27 +294,32 @@ export async function ProductDetailPageView({
       <Container size="xl" className="px-4 py-6">
         <ProductDetailView
           renderBreadcrumb={() => (
-            <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
-              <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
-                Home
-              </Link>
-              <Span aria-hidden>/</Span>
-              <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className="hover:text-primary-600 transition-colors">
-                Products
-              </Link>
-              {category && (
-                <>
-                  <Span aria-hidden>/</Span>
-                  <Span className="capitalize">{category}</Span>
-                </>
-              )}
-              {subcategory && (
-                <>
-                  <Span aria-hidden>/</Span>
-                  <Span className="capitalize">{subcategory}</Span>
-                </>
-              )}
-            </nav>
+            <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+              <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+                <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
+                  Home
+                </Link>
+                <Span aria-hidden>/</Span>
+                <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className="hover:text-primary-600 transition-colors">
+                  Products
+                </Link>
+                {category && (
+                  <>
+                    <Span aria-hidden>/</Span>
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 transition-colors">
+                      {category}
+                    </Link>
+                  </>
+                )}
+                {subcategory && (
+                  <>
+                    <Span aria-hidden>/</Span>
+                    <Span className="capitalize">{subcategory}</Span>
+                  </>
+                )}
+              </nav>
+              <ShareButton title={title || undefined} />
+            </div>
           )}
           renderGallery={() => (
             <ProductGalleryClient images={images} productName={title || undefined} />
@@ -397,7 +410,11 @@ export async function ProductDetailPageView({
               {/* Category + brand path */}
               {(category || brand) && (
                 <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
-                  {category && <Span className="capitalize">{category}</Span>}
+                  {category && (
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {category}
+                    </Link>
+                  )}
                   {category && brand && <Span>›</Span>}
                   {brand && <Span className="font-medium text-zinc-600 dark:text-zinc-300">{brand}</Span>}
                 </Row>
@@ -456,9 +473,13 @@ export async function ProductDetailPageView({
               {safeSeller && (
                 <Row align="center" gap="xs" className="border-t border-zinc-100 dark:border-zinc-800 pt-3">
                   <Span className="text-xs text-zinc-500">Sold by</Span>
-                  <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                    {safeSeller}
-                  </Span>
+                  {storeHref ? (
+                    <Link href={storeHref} className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline">
+                      {safeSeller}
+                    </Link>
+                  ) : (
+                    <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{safeSeller}</Span>
+                  )}
                 </Row>
               )}
             </Stack>

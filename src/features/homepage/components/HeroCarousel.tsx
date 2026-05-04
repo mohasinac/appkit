@@ -242,33 +242,33 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 <Div
                   className={`${position.fill} grid gap-2 md:gap-4 p-4 md:p-8`}
                   style={{
-                    gridTemplateRows: isMobile ? "auto" : "repeat(2, 1fr)",
+                    gridTemplateRows: isMobile ? "repeat(2, 1fr)" : "repeat(2, 1fr)",
                     gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
-                    alignContent: isMobile ? "center" : undefined,
-                    justifyItems: isMobile ? "center" : undefined,
-                    alignItems: isMobile ? "center" : undefined,
+                    alignContent: "center",
+                    justifyItems: "center",
+                    alignItems: "center",
                   }}
                 >
-                  {slide.cards.map((card) => (
+                  {slide.cards.slice(0, isMobile ? 2 : undefined).map((card) => (
                     <Div
                       key={card.id}
-                      className="relative rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105"
+                      className="relative rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105 w-full"
                       style={{
                         ...getGridPosition(card),
                         ...getBackgroundStyle(card),
                         width: isMobile
-                          ? "90%"
+                          ? "100%"
                           : card.sizing?.widthPct
                             ? `${card.sizing.widthPct}%`
                             : "100%",
                         height: isMobile
-                          ? "auto"
+                          ? "100%"
                           : card.sizing?.heightPct
                             ? `${card.sizing.heightPct}%`
                             : "100%",
-                        minHeight: isMobile ? 110 : undefined,
+                        minHeight: isMobile ? 100 : undefined,
                         justifySelf: "center",
-                        alignSelf: "center",
+                        alignSelf: "stretch",
                       }}
                     >
                       {card.background.type === "image" &&

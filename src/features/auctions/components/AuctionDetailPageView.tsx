@@ -28,6 +28,7 @@ import { BuyBar } from "../../products/components/BuyBar";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
+import { ShareButton } from "../../products/components/ShareButton";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
 import { listReviewsBySeller } from "../../reviews/actions/review-actions";
@@ -115,6 +116,14 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
   const freeShipping = shippingPaidBy === "seller";
   const sellerName = typeof p.sellerName === "string" ? p.sellerName : null;
   const safeSeller = sellerName ? safeDisplayName(sellerName, "") : null;
+  const storeSlug = typeof p.storeSlug === "string" ? (p.storeSlug as string) : null;
+  const auctionSellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
+  const storeHref = storeSlug
+    ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
+    : auctionSellerId
+      ? String(ROUTES.PUBLIC.SELLER_DETAIL(auctionSellerId))
+      : null;
+  const category = typeof p.category === "string" ? (p.category as string) : null;
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
@@ -129,14 +138,25 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
   return (
     <Main>
       <Container size="xl" className="px-4 py-6">
-        {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
-          <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">Home</Link>
-          <Span aria-hidden>/</Span>
-          <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="hover:text-primary-600 transition-colors">Auctions</Link>
-          <Span aria-hidden>/</Span>
-          <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
-        </nav>
+        {/* Breadcrumb + share */}
+        <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
+            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">Home</Link>
+            <Span aria-hidden>/</Span>
+            <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="hover:text-primary-600 transition-colors">Auctions</Link>
+            {category && (
+              <>
+                <Span aria-hidden>/</Span>
+                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 transition-colors">
+                  {category}
+                </Link>
+              </>
+            )}
+            <Span aria-hidden>/</Span>
+            <Span className="text-zinc-700 dark:text-zinc-300 truncate max-w-[200px]">{title}</Span>
+          </nav>
+          <ShareButton title={title} />
+        </div>
 
         <AuctionDetailView
           renderGallery={() => (
@@ -246,7 +266,13 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
               {safeSeller && (
                 <Row align="center" gap="xs" className="border-t border-zinc-100 dark:border-zinc-800 pt-3">
                   <Span className="text-xs text-zinc-500">Listed by</Span>
-                  <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{safeSeller}</Span>
+                  {storeHref ? (
+                    <Link href={storeHref} className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline">
+                      {safeSeller}
+                    </Link>
+                  ) : (
+                    <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{safeSeller}</Span>
+                  )}
                 </Row>
               )}
             </Stack>

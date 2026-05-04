@@ -253,18 +253,48 @@ export class CartRepository extends BaseRepository<CartDocument> {
     );
   }
 
-  async setCoupon(userId: string, coupon: CartAppliedCoupon): Promise<void> {
+  async addCoupon(userId: string, coupon: CartAppliedCoupon): Promise<void> {
+    const cart = await this.getOrCreate(userId);
+    const existing = cart.appliedCoupons ?? [];
+    // Replace if same code already applied (re-apply updates discount amount)
+    const filtered = existing.filter((c) => c.code !== coupon.code);
     await this.db
       .collection(this.collection)
       .doc(userId)
-      .set({ appliedCoupon: coupon, updatedAt: new Date() }, { merge: true });
+      .set(
+        { appliedCoupons: [...filtered, coupon], updatedAt: new Date() },
+        { merge: true },
+      );
   }
 
-  async clearCoupon(userId: string): Promise<void> {
+  async removeCoupon(userId: string, code: string): Promise<void> {
+    const cart = await this.getOrCreate(userId);
+    const updated = (cart.appliedCoupons ?? []).filter((c) => c.code !== code);
     await this.db
       .collection(this.collection)
       .doc(userId)
-      .set({ appliedCoupon: null, updatedAt: new Date() }, { merge: true });
+      .set({ appliedCoupons: updated, updatedAt: new Date() }, { merge: true });
+  }
+
+  async clearAllCoupons(userId: string): Promise<void> {
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set({ appliedCoupons: [], updatedAt: new Date() }, { merge: true });
+  }
+
+  async setSelectedItems(
+    userId: string,
+    itemIds: string[] | null,
+  ): Promise<void> {
+    // null means "all items selected" — clears the field
+    await this.db
+      .collection(this.collection)
+      .doc(userId)
+      .set(
+        { selectedItemIds: itemIds ?? null, updatedAt: new Date() },
+        { merge: true },
+      );
   }
 
   /**

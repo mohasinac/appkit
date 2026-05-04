@@ -102,33 +102,17 @@ export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
   const config = getAdSlot(id);
   const renderable = isAdSlotRenderable(id);
 
-  const reservedStyle = config?.reservedHeight
-    ? { minHeight: config.reservedHeight }
-    : undefined;
-
   if (!config || !renderable) {
-    // Preserve reserved space even when ad is not shown (avoids layout jumps
-    // when ads are re-enabled after consent grant in the same session).
-    if (config?.reservedHeight && config?.enabled !== false) {
-      return (
-        <div
-          className={className}
-          style={reservedStyle}
-          aria-hidden="true"
-          data-ad-slot-id={id}
-          data-ad-slot-state="awaiting-consent"
-        />
-      );
-    }
     return null;
   }
 
   const content = renderProvider(config.provider, config, manualContent);
 
+  if (!content) return null;
+
   return (
     <div
       className={className}
-      style={reservedStyle}
       data-ad-slot-id={id}
       aria-label="Advertisement"
     >

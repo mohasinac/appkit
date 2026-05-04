@@ -17,6 +17,8 @@ export interface CartItemDocument {
   quantity: number;
   sellerId: string;
   sellerName: string;
+  /** Store slug used to build the clickable seller link (/stores/[storeSlug]) */
+  sellerSlug?: string;
   isAuction: boolean;
   isPreOrder: boolean;
   /** True when item was added from an accepted Make-an-Offer */
@@ -32,13 +34,24 @@ export interface CartAppliedCoupon {
   code: string;
   discountAmount: number;
   couponId?: string;
+  /** "admin" coupons apply across all sellers; "seller" coupons apply to one seller's items */
+  scope?: "admin" | "seller";
+  /** For seller-scoped coupons, the seller whose items this applies to */
+  sellerId?: string;
+  /** Item IDs (CartItemDocument.itemId) this coupon was calculated against */
+  applicableItemIds?: string[];
+  /** Mirrors CouponDocument.restrictions.combineWithSellerCoupons — used for conflict detection when adding future coupons */
+  combineWithSellerCoupons?: boolean;
 }
 
 export interface CartDocument {
   id: string; // = userId
   userId: string;
   items: CartItemDocument[];
-  appliedCoupon?: CartAppliedCoupon;
+  /** Multiple coupons/deals applied at cart level */
+  appliedCoupons?: CartAppliedCoupon[];
+  /** Item IDs the user has selected for the next checkout (undefined = all items) */
+  selectedItemIds?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -89,6 +102,7 @@ export type AddToCartInput = {
   quantity: number;
   sellerId: string;
   sellerName: string;
+  sellerSlug?: string;
   isAuction?: boolean;
   isPreOrder?: boolean;
   isOffer?: boolean;

@@ -30,3 +30,5 @@ export { EventFormDrawer } from "./EventFormDrawer";
 export type { EventFormDrawerProps } from "./EventFormDrawer";
 export { EventBanner } from "./EventBanner";
 export type { EventBannerProps } from "./EventBanner";
+export { EventPollWidget } from "./EventPollWidget";
+export type { } from "./EventPollWidget";

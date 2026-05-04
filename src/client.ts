@@ -93,7 +93,7 @@ export { FirebaseClientAuthProvider } from "./providers/firebase-client/index";
 export { FirebaseClientRealtimeProvider } from "./providers/firebase-client/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€” uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // EventFormDrawer - Component for event form drawer.
-export { EventFormDrawer, EventParticipateView } from "./features/events/index";
+export { EventFormDrawer, EventParticipateView, EventPollWidget } from "./features/events/index";
 export type { EventParticipateViewProps } from "./features/events/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€” uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // BottomSheet - Shared export for bottom sheet.

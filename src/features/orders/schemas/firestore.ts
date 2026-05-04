@@ -64,6 +64,16 @@ export interface OrderDocumentItem {
   totalPrice: number;
 }
 
+/** One applied discount/coupon saved on the order for accounting and display */
+export interface AppliedOrderDiscount {
+  code: string;
+  couponId?: string;
+  type: "coupon" | "deal" | "auto";
+  discountAmount: number;
+  scope?: "admin" | "seller";
+  sellerId?: string;
+}
+
 export interface OrderDocument {
   id: string;
   productId: string;
@@ -97,6 +107,10 @@ export interface OrderDocument {
   refundFeeDeducted?: number;
   refundNetAmount?: number;
   refundNote?: string;
+  couponCode?: string;
+  couponDiscount?: number;
+  /** Full list of all applied coupons/discounts for this order group */
+  appliedDiscounts?: AppliedOrderDiscount[];
   platformFee?: number;
   depositAmount?: number;
   codRemainingAmount?: number;

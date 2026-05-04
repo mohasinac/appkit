@@ -9,6 +9,7 @@ import {
   Text,
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { ShareButton } from "../../products/components/ShareButton";
 import type { StoreDetail } from "../types";
 
 interface StoreHeaderProps {
@@ -90,17 +91,20 @@ export function StoreHeader({
               />
             )}
           </Div>
-          {onFollow && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => onFollow(store.storeSlug)}
-              className="shrink-0 rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors"
-            >
-              {labels.follow ?? "Follow"}
-            </Button>
-          )}
+          <Row gap="sm" align="center" className="shrink-0">
+            <ShareButton title={store.storeName} />
+            {onFollow && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onFollow(store.storeSlug)}
+                className="rounded-lg border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors"
+              >
+                {labels.follow ?? "Follow"}
+              </Button>
+            )}
+          </Row>
         </Div>
 
         {store.isVacationMode && (
