@@ -16,6 +16,10 @@ export interface ShopByCategorySectionProps {
   className?: string;
 }
 
+function isImageUrl(s: string): boolean {
+  return s.startsWith("http") || s.startsWith("/") || s.startsWith("data:");
+}
+
 function CategoryChip({ category }: { category: CategoryItem }) {
   const iconSrc = category.display?.icon;
   const coverImage = category.display?.coverImage;
@@ -26,7 +30,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
       className="group flex w-full min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
     >
-      {coverImage ? (
+      {coverImage && isImageUrl(coverImage) ? (
         <div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800" data-section="shopbycategorysection-div-362">
           <img
             src={coverImage}
@@ -40,13 +44,15 @@ function CategoryChip({ category }: { category: CategoryItem }) {
 
       <div className="flex flex-1 flex-col p-3 text-left" data-section="shopbycategorysection-div-363">
         <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300" data-section="shopbycategorysection-div-364">
-          {iconSrc ? (
+          {iconSrc && isImageUrl(iconSrc) ? (
             <img
               src={iconSrc}
               alt=""
               className="h-6 w-6 rounded object-cover"
               aria-hidden="true"
             />
+          ) : iconSrc ? (
+            <span aria-hidden="true" className="text-lg leading-none">{iconSrc}</span>
           ) : (
             initial
           )}

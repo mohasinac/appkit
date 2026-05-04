@@ -12,11 +12,13 @@ import { PRODUCT_PUBLIC_SORT_OPTIONS } from "../../products/components/ProductFi
 
 export interface CategoryProductsListingProps {
   categorySlug: string;
+  categoryId?: string;
   initialData?: any;
 }
 
 export function CategoryProductsListing({
   categorySlug,
+  categoryId,
   initialData,
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
@@ -28,7 +30,7 @@ export function CategoryProductsListing({
 
   const params = {
     q: table.get("q") || undefined,
-    categorySlug,
+    category: categoryId || undefined,
     condition: table.get("condition") || undefined,
     brand: table.get("brand") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
@@ -59,7 +61,7 @@ export function CategoryProductsListing({
   return (
     <div className="min-h-[200px]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
+      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
         <div className="flex items-center gap-2.5 max-w-full">
 
           <button
@@ -123,8 +125,8 @@ export function CategoryProductsListing({
       {/* ── Product grid ───────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {Array.from({ length: 10 }).map((_, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
                 <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">

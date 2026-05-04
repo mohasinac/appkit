@@ -186,6 +186,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .collection(this.collection)
         .where("isLeaf", "==", true)
         .where("isActive", "==", true)
+        .limit(500)
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CategoryDocument>(doc));
@@ -238,10 +239,8 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         .collection(this.collection)
         .where("parentIds", "array-contains", parentId)
         .orderBy("order", "asc")
+        .limit(100)
         .get();
-
-      const parent = await this.findById(parentId);
-      if (!parent) return [];
 
       return snapshot.docs
         .map((doc) => this.mapDoc<CategoryDocument>(doc))

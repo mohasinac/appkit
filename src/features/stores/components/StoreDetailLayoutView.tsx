@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cache } from "react";
 import type { ReactNode } from "react";
 import { storeRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
@@ -6,6 +6,10 @@ import { Container, Main, Section } from "../../../ui";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
 import type { StoreDetail } from "../types";
+
+export const getStoreBySlug = cache((slug: string) =>
+  storeRepository.findBySlug(slug).catch(() => undefined),
+);
 
 export interface StoreDetailLayoutViewProps {
   storeSlug: string;
@@ -19,7 +23,7 @@ export async function StoreDetailLayoutView({
   activeTab,
   children,
 }: StoreDetailLayoutViewProps) {
-  const store = await storeRepository.findBySlug(storeSlug).catch(() => undefined);
+  const store = await getStoreBySlug(storeSlug);
 
   if (!store) {
     return (

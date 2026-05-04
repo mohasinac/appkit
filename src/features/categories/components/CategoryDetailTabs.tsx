@@ -14,10 +14,11 @@ const TABS: { id: TabId; label: string }[] = [
 
 export interface CategoryDetailTabsProps {
   categorySlug: string;
+  categoryId?: string;
   initialProductsData?: any;
 }
 
-export function CategoryDetailTabs({ categorySlug, initialProductsData }: CategoryDetailTabsProps) {
+export function CategoryDetailTabs({ categorySlug, categoryId, initialProductsData }: CategoryDetailTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>("products");
 
   return (
@@ -44,6 +45,7 @@ export function CategoryDetailTabs({ categorySlug, initialProductsData }: Catego
       {activeTab === "products" && (
         <CategoryProductsListing
           categorySlug={categorySlug}
+          categoryId={categoryId}
           initialData={initialProductsData}
         />
       )}

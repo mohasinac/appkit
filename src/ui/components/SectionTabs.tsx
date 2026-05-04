@@ -32,7 +32,7 @@ export function SectionTabs({
   value,
   onChange,
   inline = false,
-  stickyTopClassName = "top-12 md:top-[108px]",
+  stickyTopClassName = "top-[var(--header-height,0px)]",
   currentPath,
 }: SectionTabsProps) {
   const pathname = usePathname();

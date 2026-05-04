@@ -42,6 +42,15 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
+  const isAuction = product.isAuction || product.listingType === "auction";
+  const isPreOrder = product.isPreOrder || product.listingType === "pre-order";
+
+  const typeBadge = isAuction
+    ? { label: "Auction", cls: "bg-amber-500 text-white" }
+    : isPreOrder
+      ? { label: "Pre-Order", cls: "bg-violet-600 text-white" }
+      : null;
+
   const cardBody = (
     <Div
       role={onClick ? "button" : undefined}
@@ -52,29 +61,48 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           : undefined
       }
       onClick={onClick && !href ? () => onClick(product) : undefined}
-      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${onClick || href ? "cursor-pointer" : ""} ${className}`}
+      className={[
+        "group relative flex h-full flex-col overflow-hidden",
+        "rounded-2xl border border-zinc-200/80 bg-white",
+        "shadow-sm transition-all duration-200",
+        "hover:shadow-lg hover:border-primary/30 hover:-translate-y-0.5",
+        "dark:border-slate-700/60 dark:bg-slate-900",
+        onClick || href ? "cursor-pointer" : "",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
     >
-      <Div className="relative aspect-square overflow-hidden bg-neutral-100 dark:bg-slate-800">
+      {/* Image area */}
+      <Div className="relative overflow-hidden bg-zinc-100 dark:bg-slate-800 aspect-square">
         {product.mainImage ? (
           <Div
             role="img"
             aria-label={product.title}
-            className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full bg-center bg-cover transition-transform duration-500 group-hover:scale-105"
             style={{ backgroundImage: `url(${product.mainImage})` }}
           />
         ) : (
-          <Div className="h-full w-full bg-neutral-200 dark:bg-slate-700" />
+          <Div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700">
+            <Span className="text-4xl opacity-30">🛍️</Span>
+          </Div>
         )}
-        {discount && (
-          <Span className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-            -{discount}%
-          </Span>
-        )}
-        {product.isAuction && (
-          <Span className="absolute right-2 top-2 rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
-            Auction
-          </Span>
-        )}
+
+        {/* Top-left badges */}
+        <Div className="absolute left-2 top-2 flex flex-col gap-1">
+          {discount && (
+            <Span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">
+              -{discount}%
+            </Span>
+          )}
+          {typeBadge && (
+            <Span className={`rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${typeBadge.cls}`}>
+              {typeBadge.label}
+            </Span>
+          )}
+        </Div>
+
+        {/* Wishlist button — always visible */}
         {onAddToWishlist && (
           <Button
             type="button"
@@ -82,92 +110,112 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               onAddToWishlist(product.id);
             }}
-            aria-label={
-              isWishlisted ? "Remove from wishlist" : "Add to wishlist"
-            }
-            className="absolute bottom-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 dark:bg-slate-800/90 text-neutral-600 dark:text-zinc-300 shadow transition hover:bg-white dark:hover:bg-slate-700 hover:text-red-500"
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            className={[
+              "absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full shadow-sm",
+              "transition-all duration-150",
+              isWishlisted
+                ? "bg-rose-500 text-white hover:bg-rose-600"
+                : "bg-white/90 dark:bg-slate-800/90 text-zinc-500 dark:text-zinc-400 hover:text-rose-500 hover:bg-white dark:hover:bg-slate-800",
+            ].join(" ")}
           >
-            {isWishlisted ? "♥" : "♡"}
+            <svg
+              className="h-4 w-4"
+              fill={isWishlisted ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+              />
+            </svg>
           </Button>
         )}
       </Div>
-      <Div className="flex flex-1 flex-col border-t border-zinc-200/80 bg-zinc-50 p-3 dark:border-slate-700/80 dark:bg-slate-900">
-        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-950 dark:text-white`}>
+
+      {/* Content area */}
+      <Div className="flex flex-1 flex-col p-3 pt-2.5">
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-semibold text-zinc-900 dark:text-white leading-snug`}>
           {product.title}
         </Text>
-        {product.description && (
-          <RichText
-            html={normalizeRichTextHtml(product.description)}
-            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className={`mt-1 ${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-600 dark:text-zinc-400`}
-          />
-        )}
+
         {(() => {
           const seller = safeDisplayName(product.sellerName, "");
           return seller ? (
-            <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
               by {seller}
             </Text>
           ) : null;
         })()}
-        <Div className="mt-2 flex items-baseline gap-2">
-          <Span className="font-semibold text-zinc-950 dark:text-white">
-            {formatCurrency(
-              product.price,
-              getDefaultCurrency(),
-            )}
-          </Span>
-          {product.originalPrice && (
-            <Span className="text-xs text-zinc-500 line-through dark:text-zinc-400">
-              {formatCurrency(
-                product.originalPrice,
-                getDefaultCurrency(),
-              )}
-            </Span>
-          )}
-        </Div>
+
         {product.rating !== undefined && (
-          <Row className="mt-1 gap-1">
-            <Span className="text-xs text-yellow-500">★</Span>
-            <Span className="text-xs text-neutral-500 dark:text-zinc-400">
+          <Row className="mt-1 gap-1 items-center">
+            <Span className="text-[11px] text-amber-400">★</Span>
+            <Span className="text-[11px] text-zinc-500 dark:text-zinc-400">
               {product.rating.toFixed(1)}
               {product.reviewCount ? ` (${product.reviewCount})` : ""}
             </Span>
           </Row>
         )}
 
-        {(onAddToCart || onBuyNow) && (
-          <Row className="mt-3 gap-1.5">
-            {onBuyNow && (
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  onBuyNow(product);
-                }}
-                className="flex-1 rounded-lg bg-primary py-1.5 text-xs font-semibold text-white hover:bg-primary-600 transition-colors"
-              >
-                ⚡ Buy Now
-              </Button>
-            )}
-            {onAddToCart && (
-              <Button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  onAddToCart(product);
-                }}
-                className="flex-1 rounded-lg border border-primary py-1.5 text-xs font-semibold text-primary hover:bg-primary/5 transition-colors"
-              >
-                🛒 Add to Cart
-              </Button>
+        {/* Price row */}
+        <Div className="mt-auto pt-2">
+          <Row className="items-baseline gap-2">
+            <Span className="text-base font-bold text-primary dark:text-primary-400">
+              {formatCurrency(product.price, getDefaultCurrency())}
+            </Span>
+            {product.originalPrice && product.originalPrice > product.price && (
+              <Span className="text-xs text-zinc-400 line-through dark:text-zinc-500">
+                {formatCurrency(product.originalPrice, getDefaultCurrency())}
+              </Span>
             )}
           </Row>
-        )}
+
+          {/* Action buttons */}
+          {(onAddToCart || onBuyNow) && (
+            <Div className="mt-2 grid gap-1.5" style={{ gridTemplateColumns: onBuyNow && onAddToCart ? "1fr 1fr" : "1fr" }}>
+              {onBuyNow && (
+                <Button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onBuyNow(product);
+                  }}
+                  className="flex items-center justify-center gap-1 rounded-xl bg-primary py-2 text-xs font-semibold text-white hover:bg-primary/90 active:scale-[0.97] transition-all duration-150 shadow-sm shadow-primary/20"
+                >
+                  <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Buy Now
+                </Button>
+              )}
+              {onAddToCart && (
+                <Button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onAddToCart(product);
+                  }}
+                  className="flex items-center justify-center gap-1 rounded-xl border-2 border-primary/30 py-2 text-xs font-semibold text-primary hover:bg-primary/5 hover:border-primary/50 active:scale-[0.97] transition-all duration-150 dark:text-primary-400 dark:border-primary-400/30 dark:hover:bg-primary/10"
+                >
+                  <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v7a1 1 0 001 1h8a1 1 0 001-1v-7M9 21h6" />
+                  </svg>
+                  Cart
+                </Button>
+              )}
+            </Div>
+          )}
+        </Div>
       </Div>
     </Div>
   );
@@ -253,7 +301,7 @@ interface ProductGridProps<T extends ProductItem = ProductItem> {
 // --- Grid class maps ---------------------------------------------------------
 
 const GRID_CLASSES: Record<"card", string> = {
-  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4",
+  card: "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6",
 };
 
 // --- ProductListRow (list-mode row) ------------------------------------------
@@ -373,6 +421,13 @@ function ProductListRow<T extends ProductItem = ProductItem>({
   );
 }
 
+function safeHref(href: string | undefined): string | undefined {
+  if (!href) return undefined;
+  // drop any href that would navigate to a literal "/undefined" segment
+  if (href.includes("/undefined") || href.includes("/null")) return undefined;
+  return href;
+}
+
 export function ProductGrid<T extends ProductItem = ProductItem>({
   products,
   renderCard,
@@ -456,7 +511,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
               <ProductCard<T>
                 key={p.id}
                 product={p}
-                href={getProductHref ? getProductHref(p) : undefined}
+                href={safeHref(getProductHref ? getProductHref(p) : undefined)}
                 onClick={onProductClick}
                 onAddToWishlist={onWishlistToggle}
                 onAddToCart={onAddToCart}
@@ -491,7 +546,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
             <ProductCard<T>
               key={p.id}
               product={p}
-              href={getProductHref ? getProductHref(p) : undefined}
+              href={safeHref(getProductHref ? getProductHref(p) : undefined)}
               onClick={onProductClick}
               onAddToWishlist={onWishlistToggle}
               onAddToCart={onAddToCart}

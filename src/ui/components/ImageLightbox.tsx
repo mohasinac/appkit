@@ -1,19 +1,9 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, X, ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut, RotateCw, Maximize2 } from "lucide-react";
 import { Button } from "./Button";
 import { Text, Span } from "./Typography";
-
-/**
- * ImageLightbox — full-screen image overlay with keyboard navigation.
- *
- * Standalone @mohasinac/ui primitive. No app-specific imports.
- * Navigation: ← / → arrow keys, Esc to close. Displays item counter.
- *
- * Uses a standard <img> tag for framework portability.
- * In a Next.js app, callers may swap src with a blurDataURL if desired.
- */
 
 export interface LightboxImage {
   src: string;
@@ -29,6 +19,10 @@ export interface ImageLightboxProps {
   onNavigate?: (index: number) => void;
 }
 
+const MIN_ZOOM = 10;
+const MAX_ZOOM = 300;
+const ZOOM_STEP = 20;
+
 export function ImageLightbox({
   images,
   activeIndex,
@@ -36,12 +30,16 @@ export function ImageLightbox({
   onNavigate,
 }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(activeIndex ?? 0);
+  const [zoom, setZoom] = useState(100);
+  const [rotation, setRotation] = useState(0);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Sync external activeIndex
+  // Sync external activeIndex and reset transforms
   useEffect(() => {
     if (activeIndex !== null && activeIndex >= 0) {
       setCurrentIndex(activeIndex);
+      setZoom(100);
+      setRotation(0);
     }
   }, [activeIndex]);
 
@@ -52,9 +50,7 @@ export function ImageLightbox({
     if (!isOpen) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return () => { document.body.style.overflow = prev; };
   }, [isOpen]);
 
   const navigate = useCallback(
@@ -64,39 +60,46 @@ export function ImageLightbox({
         onNavigate?.(next);
         return next;
       });
+      setZoom(100);
+      setRotation(0);
     },
     [images.length, onNavigate],
   );
 
+  const adjustZoom = useCallback((delta: number) => {
+    setZoom((z) => Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, z + delta)));
+  }, []);
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    adjustZoom(e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP);
+  }, [adjustZoom]);
+
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (e.key === "ArrowLeft") {
-        navigate(-1);
-        return;
-      }
-      if (e.key === "ArrowRight") {
-        navigate(1);
-        return;
-      }
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "ArrowLeft") { navigate(-1); return; }
+      if (e.key === "ArrowRight") { navigate(1); return; }
+      if (e.key === "+") { adjustZoom(ZOOM_STEP); return; }
+      if (e.key === "-") { adjustZoom(-ZOOM_STEP); return; }
+      if (e.key === "r" || e.key === "R") { setRotation((r) => (r + 90) % 360); return; }
+      if (e.key === "0") { setZoom(100); setRotation(0); return; }
     },
-    [onClose, navigate],
+    [onClose, navigate, adjustZoom],
   );
 
   // Focus overlay on open for keyboard to work
   useEffect(() => {
-    if (isOpen) {
-      requestAnimationFrame(() => overlayRef.current?.focus());
-    }
+    if (isOpen) requestAnimationFrame(() => overlayRef.current?.focus());
   }, [isOpen]);
 
   if (!isOpen || typeof document === "undefined") return null;
 
   const image = images[currentIndex];
   const hasMultiple = images.length > 1;
+
+  const iconBtnClass =
+    "w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-white/30 text-white flex items-center justify-center";
 
   return createPortal(
     <div
@@ -107,32 +110,74 @@ export function ImageLightbox({
       aria-modal="true"
       aria-label="Image lightbox"
       onKeyDown={handleKeyDown}
-     data-section="imagelightbox-div-523">
-      {/* Close button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        type="button"
-        onClick={onClose}
-        className="absolute top-4 right-4 z-10 w-12 h-12 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/50 text-white flex items-center justify-center"
-        aria-label="Close lightbox"
-      >
-        <X className="w-7 h-7" />
-      </Button>
+      onWheel={handleWheel}
+    >
+      {/* Top bar */}
+      <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-4 py-3 bg-gradient-to-b from-black/60 to-transparent">
+        {/* Counter */}
+        <Span className="text-white/70 text-sm font-medium">
+          {hasMultiple ? `${currentIndex + 1} / ${images.length}` : ""}
+        </Span>
 
-      {/* Counter */}
-      {hasMultiple && (
-        <div className="appkit-lightbox__counter" data-section="imagelightbox-div-524">
-          {currentIndex + 1} / {images.length}
+        {/* Controls */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost" size="sm" type="button"
+            onClick={() => adjustZoom(-ZOOM_STEP)}
+            className={iconBtnClass}
+            aria-label="Zoom out"
+            disabled={zoom <= MIN_ZOOM}
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+          <button
+            type="button"
+            onClick={() => { setZoom(100); setRotation(0); }}
+            className="text-white/70 hover:text-white text-xs font-mono min-w-[3rem] text-center"
+            aria-label="Reset zoom"
+          >
+            {zoom}%
+          </button>
+          <Button
+            variant="ghost" size="sm" type="button"
+            onClick={() => adjustZoom(ZOOM_STEP)}
+            className={iconBtnClass}
+            aria-label="Zoom in"
+            disabled={zoom >= MAX_ZOOM}
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost" size="sm" type="button"
+            onClick={() => setRotation((r) => (r + 90) % 360)}
+            className={iconBtnClass}
+            aria-label="Rotate 90°"
+          >
+            <RotateCw className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost" size="sm" type="button"
+            onClick={() => { setZoom(100); setRotation(0); }}
+            className={iconBtnClass}
+            aria-label="Reset"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </Button>
+          <Button
+            variant="ghost" size="sm" type="button"
+            onClick={onClose}
+            className="w-10 h-10 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-red-500/60 text-white flex items-center justify-center"
+            aria-label="Close lightbox"
+          >
+            <X className="w-5 h-5" />
+          </Button>
         </div>
-      )}
+      </div>
 
       {/* Prev button */}
       {hasMultiple && (
         <Button
-          variant="ghost"
-          size="sm"
-          type="button"
+          variant="ghost" size="sm" type="button"
           onClick={() => navigate(-1)}
           className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-white/30 text-white z-10 flex items-center justify-center"
           aria-label="Previous image"
@@ -142,18 +187,17 @@ export function ImageLightbox({
       )}
 
       {/* Image */}
-      <div className="appkit-lightbox__image-wrap" data-section="imagelightbox-div-525">
+      <div className="appkit-lightbox__image-wrap" style={{ cursor: zoom > 100 ? "grab" : "default" }}>
         <img
           src={image.src}
           alt={image.alt ?? ""}
           className="appkit-lightbox__img"
           draggable={false}
+          style={{
+            transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+            transition: "transform 0.2s ease",
+          }}
         />
-        {/* Zoom icon hint */}
-        <div className="appkit-lightbox__zoom-hint" data-section="imagelightbox-div-526">
-          <ZoomIn className="w-4 h-4" />
-          <Span className="text-xs">Scroll to zoom</Span>
-        </div>
       </div>
 
       {/* Caption */}
@@ -170,9 +214,7 @@ export function ImageLightbox({
       {/* Next button */}
       {hasMultiple && (
         <Button
-          variant="ghost"
-          size="sm"
-          type="button"
+          variant="ghost" size="sm" type="button"
           onClick={() => navigate(1)}
           className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 p-0 !min-h-0 rounded-full bg-white/15 hover:bg-white/30 text-white z-10 flex items-center justify-center"
           aria-label="Next image"
@@ -180,6 +222,14 @@ export function ImageLightbox({
           <ChevronRight className="w-7 h-7" />
         </Button>
       )}
+
+      {/* Keyboard hint */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/30 text-[11px] flex gap-4">
+        <span>← → navigate</span>
+        <span>scroll to zoom</span>
+        <span>R to rotate</span>
+        <span>0 to reset</span>
+      </div>
     </div>,
     document.body,
   );

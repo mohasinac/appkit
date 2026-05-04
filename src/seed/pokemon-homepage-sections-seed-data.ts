@@ -1,5 +1,5 @@
 /**
- * Multi-Franchise Collectibles — Homepage Sections Seed Data (5 sections)
+ * Multi-Franchise Collectibles — Homepage Sections Seed Data
  *
  * Covers Pokémon TCG · Hot Wheels · Beyblade Burst · Transformers
  */
@@ -10,36 +10,12 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
-  // -- 1. Welcome ---------------------------------------------------------------
+  // -- 1. Hero Carousel ---------------------------------------------------------
   {
-    id: "section-welcome-multifranchise-1",
-    type: "welcome",
+    id: "section-carousel-multifranchise-1",
+    type: "carousel",
     order: 1,
     enabled: true,
-    config: {
-      h1: "India's #1 Collectibles Marketplace",
-      subtitle: "Pokémon TCG · Hot Wheels · Beyblade Burst · Transformers",
-      description: JSON.stringify({
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text:
-                  "Shop authentic collectibles from verified sellers across India. " +
-                  "Original Pokémon Base Set singles, Hot Wheels Treasure Hunts, Beyblade Burst tops, " +
-                  "and vintage Transformers — all in one place.",
-              },
-            ],
-          },
-        ],
-      }),
-      showCTA: true,
-      ctaText: "Explore All Collectibles",
-      ctaLink: "/products",
-    },
     createdAt: daysAgo(30),
     updatedAt: daysAgo(1),
   },
@@ -150,6 +126,111 @@ export const pokemonHomepageSectionsSeedData: Partial<HomepageSectionDocument>[]
           description: "7-day return policy on eligible items — no questions asked",
         },
       ],
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 6. Categories -----------------------------------------------------------
+  {
+    id: "section-categories-multifranchise-6",
+    type: "categories",
+    order: 6,
+    enabled: true,
+    config: {
+      title: "Shop by Category",
+      maxCategories: 4,
+      autoScroll: false,
+      scrollInterval: 4000,
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 7. Featured Stores ------------------------------------------------------
+  {
+    id: "section-stores-multifranchise-7",
+    type: "stores",
+    order: 7,
+    enabled: true,
+    config: {
+      title: "Top Collector Stores",
+      subtitle: "Curated stores from verified sellers across India",
+      maxStores: 8,
+      autoScroll: false,
+      scrollInterval: 4000,
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 8. Reviews --------------------------------------------------------------
+  {
+    id: "section-reviews-multifranchise-8",
+    type: "reviews",
+    order: 8,
+    enabled: true,
+    config: {
+      title: "What Collectors Are Saying",
+      maxReviews: 18,
+      itemsPerView: 3,
+      mobileItemsPerView: 1,
+      autoScroll: true,
+      scrollInterval: 5000,
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 9. FAQ ------------------------------------------------------------------
+  {
+    id: "section-faq-multifranchise-9",
+    type: "faq",
+    order: 9,
+    enabled: true,
+    config: {
+      title: "Frequently Asked Questions",
+      subtitle: "Everything you need to know about buying collectibles on LetItRip",
+      showOnHomepage: true,
+      displayCount: 8,
+      expandedByDefault: false,
+      linkToFullPage: true,
+      categories: ["general", "shipping", "returns", "payment"],
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 10. Newsletter ----------------------------------------------------------
+  {
+    id: "section-newsletter-multifranchise-10",
+    type: "newsletter",
+    order: 10,
+    enabled: true,
+    config: {
+      title: "Stay Ahead of Every Drop",
+      description: "Get early access to rare auctions, new pre-orders, and exclusive deals. Join 5,000+ collectors.",
+      placeholder: "Enter your email address",
+      buttonText: "Subscribe",
+      privacyText: "We respect your privacy. Unsubscribe at any time.",
+      privacyLink: "/privacy",
+    },
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // -- 11. Blog Articles -------------------------------------------------------
+  {
+    id: "section-blog-multifranchise-11",
+    type: "blog-articles",
+    order: 11,
+    enabled: true,
+    config: {
+      title: "From the Collector's Corner",
+      maxArticles: 4,
+      showReadTime: true,
+      showAuthor: true,
+      showThumbnails: true,
     },
     createdAt: daysAgo(30),
     updatedAt: daysAgo(1),

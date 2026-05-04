@@ -83,7 +83,7 @@ export const productItemSchema = z.object({
   rating: z.number().optional(),
   reviewCount: z.number().optional(),
   tags: z.array(z.string()).optional(),
-  attributes: z.record(z.string()).optional(),
+  attributes: z.record(z.string(), z.string()).optional(),
   seo: productSeoSchema.optional(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),

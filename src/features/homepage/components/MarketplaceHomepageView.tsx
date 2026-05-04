@@ -339,7 +339,7 @@ function renderSection(
 
       case "faq": {
         const cfg = config as FAQSectionConfig;
-        if (!cfg?.showOnHomepage) {
+        if (!cfg?.showOnHomepage || faqItems.length === 0) {
           return null;
         }
         return (

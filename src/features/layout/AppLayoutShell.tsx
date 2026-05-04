@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Main,
@@ -249,6 +249,18 @@ export function AppLayoutShell({
   const { theme, toggleTheme } = useTheme();
   const { closeNav: closeDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();
+
+  const headerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      document.documentElement.style.setProperty("--header-height", `${el.offsetHeight}px`);
+    });
+    observer.observe(el);
+    document.documentElement.style.setProperty("--header-height", `${el.offsetHeight}px`);
+    return () => observer.disconnect();
+  }, []);
 
   const handleTogglePublicSidebar = useCallback(() => {
     setSidebarOpen((prev) => {
@@ -523,7 +535,7 @@ export function AppLayoutShell({
           darkMode={normalizedDarkBackground}
         />
 
-        <Div className="sticky top-0 z-50 w-full">
+        <Div ref={headerRef} className="sticky top-0 z-50 w-full">
           <TitleBar
             onToggleSidebar={handleTogglePublicSidebar}
             sidebarOpen={sidebarOpen}

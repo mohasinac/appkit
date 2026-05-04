@@ -23,7 +23,7 @@ export const orderItemSchema = z.object({
   quantity: z.number(),
   currency: z.string().optional(),
   sellerId: z.string().optional(),
-  attributes: z.record(z.string()).optional(),
+  attributes: z.record(z.string(), z.string()).optional(),
 });
 
 export const orderTimelineSchema = z.object({
@@ -53,7 +53,7 @@ export const orderSchema = z.object({
   userId: z.string(),
   items: z.array(orderItemSchema),
   // address shape is intentionally open to allow extending apps
-  address: z.record(z.unknown()),
+  address: z.record(z.string(), z.unknown()),
   orderStatus: orderStatusSchema,
   paymentStatus: z.string(),
   paymentGateway: z.string().optional(),

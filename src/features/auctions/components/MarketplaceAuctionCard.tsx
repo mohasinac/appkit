@@ -101,6 +101,7 @@ function resolveHref(
 ) {
   if (href) return href;
   if (hrefBuilder) return hrefBuilder(product);
+  if (!product.id) return undefined;
   return ROUTES.PUBLIC.AUCTION_DETAIL(product.id);
 }
 
@@ -174,6 +175,7 @@ export function MarketplaceAuctionCard({
   }, [hovered, images.length]);
 
   const handleNavigate = useCallback(() => {
+    if (!auctionHref) return;
     if (onNavigate) {
       onNavigate(auctionHref);
       return;
@@ -221,7 +223,7 @@ export function MarketplaceAuctionCard({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <TextLink href={auctionHref} className="absolute inset-0 block">
+        <TextLink href={auctionHref ?? "#"} className="absolute inset-0 block">
           <MediaImage
             src={currentSrc}
             alt={product.title}
@@ -302,7 +304,7 @@ export function MarketplaceAuctionCard({
       <BaseListingCard.Info variant={baseVariant}>
         <Div className="flex items-start gap-2">
           <TextLink
-            href={auctionHref}
+            href={auctionHref ?? "#"}
             className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 transition-colors hover:text-primary"
           >
             {product.title}

@@ -1,5 +1,6 @@
 import React from "react";
-import { productRepository, storeRepository } from "../../../repositories";
+import { productRepository } from "../../../repositories";
+import { getStoreBySlug } from "./StoreDetailLayoutView";
 import { StoreProductsListing } from "./StoreProductsListing";
 
 export interface StoreProductsPageViewProps {
@@ -7,7 +8,7 @@ export interface StoreProductsPageViewProps {
 }
 
 export async function StoreProductsPageView({ storeSlug }: StoreProductsPageViewProps) {
-  const store = await storeRepository.findBySlug(storeSlug).catch(() => undefined);
+  const store = await getStoreBySlug(storeSlug);
   const ownerId = (store as Record<string, any>)?.ownerId;
 
   const result = ownerId

@@ -131,7 +131,7 @@ export function ListingLayout({
       <Div
         className={[
           "sticky z-20 -mx-4 px-4 md:-mx-6 md:px-6",
-          isDashboard ? "top-0" : "top-14 md:top-[120px]",
+          "top-[var(--header-height,0px)]",
           "bg-white/80 dark:bg-slate-950/80 backdrop-blur-md",
           "border-b border-zinc-200/70 dark:border-slate-800/70",
           "shadow-[0_1px_3px_rgba(0,0,0,0.04)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2)]",
@@ -239,7 +239,7 @@ export function ListingLayout({
             aria-label={panelTitle}
             className={[
               "hidden lg:block flex-shrink-0 self-start",
-              isDashboard ? "sticky top-16" : "sticky top-[176px]",
+              "sticky top-[var(--header-height,0px)]",
               "transition-all duration-200 ease-in-out overflow-hidden",
               sidebarOpen
                 ? "w-60 xl:w-64 2xl:w-72 opacity-100"

@@ -8,7 +8,7 @@ export const cartItemMetaSchema = z.object({
   price: z.number(),
   currency: z.string().default(getDefaultCurrency()),
   slug: z.string().optional(),
-  attributes: z.record(z.string()).optional(),
+  attributes: z.record(z.string(), z.string()).optional(),
 });
 
 /**

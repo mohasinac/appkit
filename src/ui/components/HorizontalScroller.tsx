@@ -117,12 +117,19 @@ export function HorizontalScroller<T = unknown>({
 
   useEffect(() => {
     if (!autoScroll || isPaused) return;
-    autoScrollTimer.current = setInterval(
-      () => scrollBy(1),
-      autoScrollInterval,
-    );
+    autoScrollTimer.current = setInterval(() => {
+      const el = containerRef.current;
+      if (!el) return;
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+      if (atEnd) {
+        // Instant jump back to start for seamless loop
+        el.scrollLeft = 0;
+      } else {
+        el.scrollBy({ left: el.clientWidth * 0.8, behavior: "smooth" });
+      }
+    }, autoScrollInterval);
     return () => clearInterval(autoScrollTimer.current);
-  }, [autoScroll, isPaused, autoScrollInterval, scrollBy]);
+  }, [autoScroll, isPaused, autoScrollInterval, containerRef]);
 
   useEffect(() => {
     if (!perView) return;

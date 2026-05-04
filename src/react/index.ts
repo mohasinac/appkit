@@ -59,6 +59,9 @@ export type {
   UseBulkSelectionReturn,
 } from "./hooks/useBulkSelection";
 
+// Local-first cart + wishlist sync
+export { useSyncManager } from "../core/hooks/useSyncManager";
+
 // URL-driven table / list state
 export { useUrlTable } from "./hooks/useUrlTable";
 export type { UseUrlTableOptions } from "./hooks/useUrlTable";

@@ -29,7 +29,7 @@ export function RelatedProductsCarousel({
       renderItem={(item: ProductItem) => (
         <ProductCard
           product={item}
-          href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(item.slug || item.id))}
+          href={item.slug || item.id ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(item.slug || item.id)) : undefined}
         />
       )}
     />

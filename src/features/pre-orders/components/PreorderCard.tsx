@@ -49,11 +49,11 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
         <Div
           role="img"
           aria-label={item.name}
-          className="h-56 w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+          className="aspect-square w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
           style={{ backgroundImage: `url(${item.images[0]})` }}
         />
       ) : (
-        <Div className="h-56 w-full bg-gray-100" />
+        <Div className="aspect-square w-full bg-gray-100" />
       )}
       <Div className="p-4">
         <PreorderBadge shipDate={item.preorderShipDate} />

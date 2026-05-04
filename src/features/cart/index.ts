@@ -11,4 +11,5 @@ export * from "./hooks/useAddToCart";
 export * from "./hooks/useGuestCartMerge";
 export * from "./components";
 export * from "./utils/guest-cart";
+export * from "./utils/pending-ops";
 export { manifest } from "./manifest";

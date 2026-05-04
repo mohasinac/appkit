@@ -42,7 +42,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
   return (
     <div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
+      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
         <div className="flex items-center gap-2.5 max-w-full">
 
           <button

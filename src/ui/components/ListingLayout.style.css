@@ -289,14 +289,10 @@
   }
 }
 
-.appkit-listing-layout__sidebar--page {
-  position: sticky;
-  top: 11rem; /* top-[176px] */
-}
-
+.appkit-listing-layout__sidebar--page,
 .appkit-listing-layout__sidebar--dashboard {
   position: sticky;
-  top: 4rem; /* top-16 */
+  top: var(--header-height, 0px);
 }
 
 .appkit-listing-layout__sidebar--open {

@@ -152,6 +152,8 @@ export function SectionCarousel<T = unknown>({
   showPeek = false,
   minItemWidth = 220,
 }: SectionCarouselProps<T>) {
+  if (!isLoading && items.length === 0) return null;
+
   const hasBg = Boolean(backgroundImage);
   const useLightText = lightText ?? hasBg;
 

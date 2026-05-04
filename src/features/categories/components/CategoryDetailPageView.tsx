@@ -11,26 +11,25 @@ export interface CategoryDetailPageViewProps {
 }
 
 export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewProps) {
-  const [categoryResult, productsResult] = await Promise.all([
-    categoriesRepository
-      .findBy("slug", slug)
-      .then((items: any[]) => items[0])
-      .catch(() => undefined),
-    productRepository
-      .list({
-        filters: `status==published,categorySlug==${slug},isAuction==false`,
-        sorts: "-createdAt",
-        page: 1,
-        pageSize: 24,
-      })
-      .catch(() => null),
+  const category = await categoriesRepository
+    .getCategoryBySlug(slug)
+    .catch(() => undefined) as CategoryItem | undefined;
+
+  const [productsResult, childCategories] = await Promise.all([
+    category?.id
+      ? productRepository
+          .list({
+            filters: `status==published,category==${category.id},isAuction==false`,
+            sorts: "-createdAt",
+            page: 1,
+            pageSize: 24,
+          })
+          .catch(() => null)
+      : Promise.resolve(null),
+    category?.id
+      ? categoriesRepository.getChildren(category.id).catch(() => []) as Promise<CategoryItem[]>
+      : Promise.resolve([] as CategoryItem[]),
   ]);
-
-  const category = categoryResult as CategoryItem | undefined;
-
-  const childCategories: CategoryItem[] = category?.id
-    ? await categoriesRepository.getChildren(category.id).catch(() => []) as CategoryItem[]
-    : [];
 
   const productCount = category?.metrics?.productCount ?? 0;
   const coverImage = category?.display?.coverImage;
@@ -127,6 +126,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
         <Container size="xl">
           <CategoryDetailTabs
             categorySlug={slug}
+            categoryId={category?.id}
             initialProductsData={productsResult ?? undefined}
           />
         </Container>

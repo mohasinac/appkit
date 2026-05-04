@@ -106,9 +106,14 @@ function getLogFilePath(level: LogLevel): string {
 
 function formatLogEntry(entry: LogEntry): string {
   const sanitized = entry.data ? redactPii(entry.data) : undefined;
-  const dataStr = sanitized
-    ? `\n  Data: ${JSON.stringify(sanitized, null, 2)}`
-    : "";
+  let dataStr = "";
+  if (sanitized !== undefined) {
+    try {
+      dataStr = `\n  Data: ${JSON.stringify(sanitized, null, 2)}`;
+    } catch {
+      dataStr = `\n  Data: [non-serializable — ${typeof sanitized}]`;
+    }
+  }
   return `[${entry.level.toUpperCase()}] ${entry.timestamp} - ${entry.message}${dataStr}\n\n`;
 }
 

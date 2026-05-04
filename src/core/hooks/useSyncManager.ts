@@ -1,0 +1,91 @@
+"use client"
+/**
+ * useSyncManager
+ *
+ * Local-first cart + wishlist architecture.
+ *
+ * Every SYNC_INTERVAL_MS (30 s default), if the user is logged in, replays all
+ * pending cart/wishlist ops against the server and clears the queue.
+ *
+ * If not logged in: ops stay in the queue (persisted to localStorage) and
+ * will be replayed the next time the user logs in.
+ *
+ * This hook NEVER makes GET /api/cart or GET /api/user/wishlist calls.
+ * The local store (guest-cart / guest-wishlist) is always the source of truth.
+ */
+
+import { useEffect, useRef } from "react";
+import { apiClient } from "../../http";
+import {
+  getCartOps,
+  clearCartOps,
+  getWishlistOps,
+  clearWishlistOps,
+} from "../../features/cart/utils/pending-ops";
+
+const SYNC_INTERVAL_MS = 30_000;
+
+async function replayCartOps(): Promise<void> {
+  const ops = getCartOps();
+  if (ops.length === 0) return;
+
+  // Replay in chronological order; ignore individual failures (non-fatal)
+  for (const op of ops) {
+    if (op.op === "add") {
+      await apiClient
+        .post("/api/cart", {
+          productId: op.productId,
+          quantity: op.quantity ?? 1,
+        })
+        .catch(() => {});
+    } else if (op.op === "remove") {
+      await apiClient
+        .delete(`/api/cart/${op.productId}`)
+        .catch(() => {});
+    }
+  }
+  clearCartOps();
+}
+
+async function replayWishlistOps(): Promise<void> {
+  const ops = getWishlistOps();
+  if (ops.length === 0) return;
+
+  for (const op of ops) {
+    if (op.type !== "product") continue; // server wishlist is product-only
+    if (op.op === "add") {
+      await apiClient
+        .post("/api/user/wishlist", { productId: op.itemId })
+        .catch(() => {});
+    } else if (op.op === "remove") {
+      await apiClient
+        .delete(`/api/user/wishlist/${op.itemId}`)
+        .catch(() => {});
+    }
+  }
+  clearWishlistOps();
+}
+
+export function useSyncManager(userId: string | null | undefined): void {
+  const isSyncing = useRef(false);
+
+  useEffect(() => {
+    if (!userId) return; // Guest — keep ops in queue, don't sync
+
+    const sync = async () => {
+      if (isSyncing.current) return;
+      isSyncing.current = true;
+      try {
+        await Promise.all([replayCartOps(), replayWishlistOps()]);
+      } finally {
+        isSyncing.current = false;
+      }
+    };
+
+    // Sync once immediately on login so the server is updated right away
+    sync();
+
+    const id = setInterval(sync, SYNC_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, [userId]);
+}

@@ -17,6 +17,8 @@ export function useWishlist(userId: string, opts?: UseWishlistOptions) {
       apiClient.get<WishlistResponse>(endpoint),
     initialData: opts?.initialData,
     enabled: opts?.enabled !== false && !!userId,
+    retry: 1,
+    staleTime: 30_000,
   });
 
   const ids = new Set((query.data?.items ?? []).map((i) => i.productId));

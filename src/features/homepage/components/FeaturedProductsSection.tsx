@@ -40,7 +40,7 @@ export function FeaturedProductsSection({
       renderItem={(product: ProductItem) => (
         <InteractiveProductCard
           product={product}
-          href={ROUTES.PUBLIC.PRODUCT_DETAIL(product.slug ?? product.id)}
+          href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(product.slug ?? product.id ?? ""))}
         />
       )}
       className={className}
