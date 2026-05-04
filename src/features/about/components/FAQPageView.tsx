@@ -18,26 +18,21 @@ export async function FAQPageView({
   heroBannerClass = DEFAULT_HERO_CLASS,
 }: FAQPageViewProps = {}) {
   const { themed, flex, page } = THEME_CONSTANTS;
-  const { getTranslations } = await import("next-intl/server");
+  const { getTranslations, getMessages } = await import("next-intl/server");
   const t = await getTranslations("faqs");
+  const messages = await getMessages();
 
-  // Each FAQ namespace must export:
-  //   title, subtitle, searchPlaceholder
-  //   categories: [{ slug, label, icon }]
-  //   items (or per-category items keyed by category slug): [{ question, answer }]
-  const rawCategories = t.raw("categories") as Array<{
-    slug: string;
-    label: string;
-    icon: string;
-  }>;
-  const categories = Array.isArray(rawCategories) ? rawCategories : [];
+  const faqMessages = (messages as Record<string, unknown>).faqs as
+    | {
+        categories: Array<{ slug: string; label: string; icon: string }>;
+        items: Array<{ category: string; question: string; answer: string }>;
+      }
+    | undefined;
 
-  const rawItems = t.raw("items") as Array<{
-    category: string;
-    question: string;
-    answer: string;
-  }>;
-  const allItems = Array.isArray(rawItems) ? rawItems : [];
+  const categories = Array.isArray(faqMessages?.categories)
+    ? faqMessages.categories
+    : [];
+  const allItems = Array.isArray(faqMessages?.items) ? faqMessages.items : [];
 
   const visibleItems = category
     ? allItems.filter((item) => item.category === category)

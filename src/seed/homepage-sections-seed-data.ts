@@ -11,7 +11,7 @@
  * whatsapp-community(11) → faq(12) → blog-articles(13) → newsletter(14) →
  * stores(15) → events(16) → brands(17, disabled)
  *
- * 17 total sections (15 enabled, 2 disabled)
+ * 26 total sections (24 enabled, 2 disabled) — includes 9 franchise-specific sections
  */
 
 import type { HomepageSectionDocument } from "../features/homepage/schemas";
@@ -414,5 +414,212 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(7),
+  },
+
+  // ============================================
+  // 18. HOT WHEELS — Franchise Products Section
+  // ============================================
+  {
+    id: "section-products-hw-1746400000018",
+    type: "products",
+    order: 18,
+    enabled: true,
+    config: {
+      title: "Hot Wheels Diecast",
+      subtitle: "Treasure Hunts, Car Culture, and mainline cars — all scales",
+      maxProducts: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 4500,
+      filterByBrand: "Hot Wheels",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 19. BEYBLADE BURST — Franchise Products Section
+  // ============================================
+  {
+    id: "section-products-bb-1746400000019",
+    type: "products",
+    order: 19,
+    enabled: true,
+    config: {
+      title: "Beyblade Burst",
+      subtitle: "Attack, Defense, Stamina & Balance — QuadDrive, GT and beyond",
+      maxProducts: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 4500,
+      filterByBrand: "Beyblade Burst",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 20. TRANSFORMERS — Franchise Products Section
+  // ============================================
+  {
+    id: "section-products-tf-1746400000020",
+    type: "products",
+    order: 20,
+    enabled: true,
+    config: {
+      title: "Transformers",
+      subtitle: "Studio Series, Masterpiece, Legacy — Autobots & Decepticons",
+      maxProducts: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 4500,
+      filterByBrand: "Transformers",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 21. ANIME FIGURES — Franchise Products Section
+  // ============================================
+  {
+    id: "section-products-af-1746400000021",
+    type: "products",
+    order: 21,
+    enabled: true,
+    config: {
+      title: "Anime Figures",
+      subtitle: "Dragon Ball Z, Naruto, One Piece & My Hero Academia — scale figures and Nendoroids",
+      maxProducts: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 4500,
+      filterByBrand: "Dragon Ball Z",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 22. POKEMON TCG — Franchise Products Section
+  // ============================================
+  {
+    id: "section-products-pk-1746400000022",
+    type: "products",
+    order: 22,
+    enabled: true,
+    config: {
+      title: "Pokémon TCG",
+      subtitle: "Base Set, Fossil, Jungle — singles, sealed packs, and graded slabs",
+      maxProducts: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 4500,
+      filterByBrand: "The Pokémon Company",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 23. HOT WHEELS — Auctions Section
+  // ============================================
+  {
+    id: "section-auctions-hw-1746400000023",
+    type: "auctions",
+    order: 23,
+    enabled: true,
+    config: {
+      title: "Hot Wheels Live Auctions",
+      subtitle: "Bid on Super Treasure Hunts, vintage redlines, and rare finds",
+      maxAuctions: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 5000,
+      filterByBrand: "Hot Wheels",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 24. ANIME — Auctions Section
+  // ============================================
+  {
+    id: "section-auctions-af-1746400000024",
+    type: "auctions",
+    order: 24,
+    enabled: true,
+    config: {
+      title: "Anime Figure Auctions",
+      subtitle: "Rare scale figures, signed art, and limited editions up for bid",
+      maxAuctions: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 5000,
+      filterByBrand: "Dragon Ball Z",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 25. TRANSFORMERS — Pre-Orders Section
+  // ============================================
+  {
+    id: "section-pre-orders-tf-1746400000025",
+    type: "pre-orders",
+    order: 25,
+    enabled: true,
+    config: {
+      title: "Transformers Pre-Orders",
+      subtitle: "Reserve upcoming Studio Series and Masterpiece figures before release",
+      maxItems: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 5000,
+      filterByBrand: "Transformers",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ============================================
+  // 26. BEYBLADE — Pre-Orders Section
+  // ============================================
+  {
+    id: "section-pre-orders-bb-1746400000026",
+    type: "pre-orders",
+    order: 26,
+    enabled: true,
+    config: {
+      title: "Beyblade Burst Pre-Orders",
+      subtitle: "Secure upcoming QuadDrive and MCC sets before they sell out",
+      maxItems: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: true,
+      scrollInterval: 5000,
+      filterByBrand: "Beyblade Burst",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
   },
 ];

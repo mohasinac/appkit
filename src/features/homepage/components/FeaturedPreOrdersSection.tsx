@@ -12,6 +12,7 @@ export interface FeaturedPreOrdersSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  filterByBrand?: string;
 }
 
 export function FeaturedPreOrdersSection({
@@ -20,8 +21,9 @@ export function FeaturedPreOrdersSection({
   viewMoreHref,
   viewMoreLabel = "View all pre-orders →",
   className = "",
+  filterByBrand,
 }: FeaturedPreOrdersSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedPreOrders();
+  const { data: items = [], isLoading } = useFeaturedPreOrders({ filterByBrand });
 
   return (
     <SectionCarousel

@@ -12,6 +12,7 @@ export interface FeaturedProductsSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  filterByBrand?: string;
 }
 
 export function FeaturedProductsSection({
@@ -20,8 +21,9 @@ export function FeaturedProductsSection({
   viewMoreHref,
   viewMoreLabel = "View all products →",
   className = "",
+  filterByBrand,
 }: FeaturedProductsSectionProps) {
-  const { data, isLoading } = useFeaturedProducts();
+  const { data, isLoading } = useFeaturedProducts({ filterByBrand });
   const items = data?.items ?? [];
 
   return (

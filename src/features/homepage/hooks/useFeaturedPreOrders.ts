@@ -8,12 +8,16 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
-export function useFeaturedPreOrders() {
+export function useFeaturedPreOrders(options?: { filterByBrand?: string }) {
+  const brandFilter = options?.filterByBrand
+    ? `%2Cbrand%3D%3D${encodeURIComponent(options.filterByBrand)}`
+    : "";
+
   return useQuery<ProductItem[]>({
-    queryKey: ["pre-orders", "featured"],
+    queryKey: ["pre-orders", "featured", options?.filterByBrand ?? "all"],
     queryFn: async () => {
       const featuredRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=preOrderDeliveryDate&pageSize=6`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=preOrderDeliveryDate&pageSize=6`,
       );
       const featured = featuredRes?.items ?? [];
 
@@ -21,7 +25,7 @@ export function useFeaturedPreOrders() {
 
       const remaining = MIN_COUNT - featured.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + featured.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + featured.length}`,
       );
       const latest = latestRes?.items ?? [];
 

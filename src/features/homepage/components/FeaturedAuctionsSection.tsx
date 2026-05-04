@@ -12,6 +12,7 @@ export interface FeaturedAuctionsSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  filterByBrand?: string;
 }
 
 export function FeaturedAuctionsSection({
@@ -20,8 +21,9 @@ export function FeaturedAuctionsSection({
   viewMoreHref,
   viewMoreLabel = "View all auctions →",
   className = "",
+  filterByBrand,
 }: FeaturedAuctionsSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedAuctions();
+  const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand });
 
   return (
     <SectionCarousel

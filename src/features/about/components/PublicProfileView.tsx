@@ -1,3 +1,4 @@
+import { getPublicUserProfile, getSellerProducts, getSellerReviews } from "../../auth/actions/profile-actions";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section } from "../../../ui";
@@ -20,11 +21,19 @@ export async function PublicProfileView({
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("publicProfile");
 
-  void userId; // userId used by consumer to fetch profile data and pass as props
+  const [profile, products, reviews] = await Promise.all([
+    getPublicUserProfile(userId).catch(() => null),
+    getSellerProducts(userId).catch(() => []),
+    getSellerReviews(userId).catch(() => []),
+  ]);
 
-  // This is a layout shell — data (displayName, avatarUrl, reviewCount, listingCount, joinedAt)
-  // is injected by the consumer page via server-fetched props.
-  // The view renders a consistent shell; in Phase 3 consumers pass data.
+  const displayName = profile?.displayName ?? t("profileTitle");
+  const photoURL = profile?.photoURL ?? null;
+  const listingCount = products.length;
+  const reviewCount = reviews.length;
+  const memberSince = profile?.createdAt
+    ? `Member since ${profile.createdAt.toLocaleDateString("en", { month: "long", year: "numeric" })}`
+    : t("memberSince");
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="publicprofileview-div-186">
@@ -32,18 +41,22 @@ export async function PublicProfileView({
       <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
         <div className={`${page.container.md}`} data-section="publicprofileview-div-187">
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5" data-section="publicprofileview-div-188">
-            {/* Avatar placeholder */}
+            {/* Avatar */}
             <div
-              className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0`}
+              className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}
              data-section="publicprofileview-div-189">
-              <User className="w-10 h-10 text-white/60" />
+              {photoURL ? (
+                <img src={photoURL} alt={displayName} className="w-full h-full object-cover" />
+              ) : (
+                <User className="w-10 h-10 text-white/60" />
+              )}
             </div>
             <div className="text-center sm:text-left" data-section="publicprofileview-div-190">
               <Heading level={1} variant="none" className="text-white mb-1">
-                {t("profileTitle")}
+                {displayName}
               </Heading>
               <Text variant="none" className="text-white/60 text-sm">
-                {t("memberSince")}
+                {memberSince}
               </Text>
             </div>
           </div>
@@ -54,8 +67,8 @@ export async function PublicProfileView({
         {/* Stats row */}
         <div className={`grid grid-cols-3 gap-4`} data-section="publicprofileview-div-192">
           {[
-            { icon: ShoppingBag, label: t("statListings"), value: "—" },
-            { icon: Star, label: t("statReviews"), value: "—" },
+            { icon: ShoppingBag, label: t("statListings"), value: String(listingCount) },
+            { icon: Star, label: t("statReviews"), value: String(reviewCount) },
             { icon: MessageCircle, label: t("statMessages"), value: "—" },
           ].map(({ icon: Icon, label, value }) => (
             <div

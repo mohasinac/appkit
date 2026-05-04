@@ -230,6 +230,7 @@ function renderSection(
             title={cleanTitle(cfg?.title) || "Featured Products"}
             viewMoreHref={ROUTES.PUBLIC.PRODUCTS}
             viewMoreLabel="View all products →"
+            filterByBrand={cfg?.filterByBrand}
           />
         );
       }
@@ -241,6 +242,7 @@ function renderSection(
             title={cleanTitle(cfg?.title) || "Live Auctions"}
             viewMoreHref={ROUTES.PUBLIC.AUCTIONS}
             viewMoreLabel="View all auctions →"
+            filterByBrand={cfg?.filterByBrand}
           />
         );
       }
@@ -252,6 +254,7 @@ function renderSection(
             title={cleanTitle(cfg?.title) || "Reserve Before It Ships"}
             viewMoreHref={ROUTES.PUBLIC.PRE_ORDERS}
             viewMoreLabel="View all pre-orders →"
+            filterByBrand={cfg?.filterByBrand}
           />
         );
       }

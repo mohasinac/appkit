@@ -7,12 +7,17 @@ const MIN_COUNT = 12;
 
 export function useFeaturedProducts(options?: {
   initialData?: ProductListResponse;
+  filterByBrand?: string;
 }) {
+  const brandFilter = options?.filterByBrand
+    ? `%2Cbrand%3D%3D${encodeURIComponent(options.filterByBrand)}`
+    : "";
+
   return useQuery<ProductListResponse>({
-    queryKey: ["products", "featured"],
+    queryKey: ["products", "featured", options?.filterByBrand ?? "all"],
     queryFn: async () => {
       const promotedRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isPromoted%3D%3Dtrue%2Cstatus%3D%3Dpublished&pageSize=18`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=isPromoted%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&pageSize=18`,
       );
       const promoted = promotedRes?.items ?? [];
 
@@ -20,7 +25,7 @@ export function useFeaturedProducts(options?: {
 
       const remaining = MIN_COUNT - promoted.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=status%3D%3Dpublished&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=status%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
       );
       const latest = latestRes?.items ?? [];
 

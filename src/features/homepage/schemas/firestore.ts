@@ -194,6 +194,7 @@ export interface ProductsSectionConfig {
   mobileItemsPerRow: 1;
   autoScroll: boolean;
   scrollInterval: number;
+  filterByBrand?: string;
 }
 
 export interface StatsSectionConfig {
@@ -214,6 +215,7 @@ export interface AuctionsSectionConfig {
   mobileItemsPerRow: 1;
   autoScroll: boolean;
   scrollInterval: number;
+  filterByBrand?: string;
 }
 
 export interface ReviewsSectionConfig {
@@ -300,6 +302,7 @@ export interface PreOrdersSectionConfig {
   mobileItemsPerRow: 1;
   autoScroll: boolean;
   scrollInterval: number;
+  filterByBrand?: string;
 }
 
 export interface BannerSectionConfig {
