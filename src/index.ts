@@ -4981,6 +4981,9 @@ export { AdminEventEntriesView } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminEventsView - Component for admin events view.
 export { AdminEventsView } from "./features/events/index";
+// AdminEventEditorView - Component for admin event create/edit form.
+export { AdminEventEditorView } from "./features/events/index";
+export type { AdminEventEditorViewProps } from "./features/events/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
 // EVENTS_COLLECTION - Constant used across modules.
 export { EVENTS_COLLECTION } from "./features/events/index";

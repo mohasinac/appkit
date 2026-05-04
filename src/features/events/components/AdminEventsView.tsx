@@ -74,6 +74,8 @@ export function AdminEventsView({ children, ...props }: AdminEventsViewProps) {
       title="Events"
       subtitle="Manage sales events, offers, polls, surveys, and feedback campaigns."
       actionLabel="New event"
+      actionHref="/admin/events/new"
+      getRowHref={(row) => `/admin/events/${row.id}/edit`}
       searchPlaceholder="Search events by title or type"
       rows={rows}
       isLoading={isLoading}

@@ -22,6 +22,8 @@ export { EventLeaderboard } from "./EventLeaderboard";
 export type { EventLeaderboardProps } from "./EventLeaderboard";
 export { AdminEventsView } from "./AdminEventsView";
 export type { AdminEventsViewProps } from "./AdminEventsView";
+export { AdminEventEditorView } from "./AdminEventEditorView";
+export type { AdminEventEditorViewProps } from "./AdminEventEditorView";
 export { AdminEventEntriesView } from "./AdminEventEntriesView";
 export type { AdminEventEntriesViewProps } from "./AdminEventEntriesView";
 export { EventFormDrawer } from "./EventFormDrawer";
