@@ -30,6 +30,16 @@ import { BuyBar } from "./BuyBar";
 
 export interface ProductDetailPageViewProps {
   slug: string;
+  /**
+   * Render prop for offer UI. Receives the resolved product fields.
+   * Only called when product.allowOffers is true and product.type is "simple".
+   */
+  renderOfferAction?: (opts: {
+    productId: string;
+    price: number;
+    currency: string;
+    minOfferPercent: number;
+  }) => React.ReactNode;
 }
 
 // ---------------------------------------------------------------------------
@@ -131,6 +141,7 @@ function StarRating({ value }: { value: number }) {
 
 export async function ProductDetailPageView({
   slug,
+  renderOfferAction,
 }: ProductDetailPageViewProps) {
   const product = await productRepository
     .findByIdOrSlug(slug)
@@ -224,6 +235,12 @@ export async function ProductDetailPageView({
     Array.isArray(p.specifications)
       ? (p.specifications as { name: string; value: string; unit?: string }[])
       : [];
+
+  const allowOffers = p.allowOffers === true;
+  const productType =
+    typeof p.type === "string" ? (p.type as string) : "simple";
+  const minOfferPercent =
+    typeof p.minOfferPercent === "number" ? (p.minOfferPercent as number) : 70;
 
   const shippingInfo =
     typeof p.shippingInfo === "string" ? (p.shippingInfo as string) : null;
@@ -483,6 +500,12 @@ export async function ProductDetailPageView({
                 <Button variant="ghost" size="md" className="w-full">
                   ♡ Add to Wishlist
                 </Button>
+                {allowOffers && productType === "simple" && price !== null && renderOfferAction?.({
+                  productId: product.id,
+                  price,
+                  currency,
+                  minOfferPercent,
+                })}
               </Stack>
 
               {/* Delivery & Returns */}

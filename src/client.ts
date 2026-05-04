@@ -210,6 +210,8 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
+export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
 export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSellerDashboard as useStoreDashboard, useSellerDashboard } from "./features/seller/index";
 export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/index";
 export { UserAccountHubView, UserOrdersView } from "./features/account/index";

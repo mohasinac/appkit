@@ -43,6 +43,8 @@ export { PlaceBidForm } from "./PlaceBidForm";
 export type { PlaceBidFormProps } from "./PlaceBidForm";
 export { MakeOfferForm } from "./MakeOfferForm";
 export type { MakeOfferFormProps } from "./MakeOfferForm";
+export { MakeOfferButton } from "./MakeOfferButton";
+export type { MakeOfferButtonProps } from "./MakeOfferButton";
 export { RelatedProducts } from "./RelatedProducts";
 export type { RelatedProductsProps } from "./RelatedProducts";
 export { ProductGalleryClient } from "./ProductGalleryClient";

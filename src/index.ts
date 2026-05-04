@@ -6716,6 +6716,7 @@ export { ProductCard } from "./features/products/index";
 export { ProductDetailView } from "./features/products/index";
 // [SERVER-RSC]-Self-fetching detail page view for products.
 export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
+export type { ProductDetailPageViewProps } from "./features/products/components/ProductDetailPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFeatureBadges - Shared export for product feature badges.
 export { ProductFeatureBadges } from "./features/products/index";
