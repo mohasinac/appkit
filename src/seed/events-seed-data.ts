@@ -247,7 +247,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(2),
     endsAt: daysAhead(5),
-    coverImageUrl: "https://loremflickr.com/800/400/hot-wheels,diecast,sale?lock=1",
+    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_620d08fa-a8ad-49c2-acca-e8807910d25c?wid=800&hei=800&fmt=pjpeg",
     saleConfig: {
       discountPercent: 20,
       bannerText: "Hot Wheels Car Culture Flash Sale — 20% Off This Weekend!",
@@ -275,7 +275,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(5),
     endsAt: daysAhead(9),
-    coverImageUrl: "https://loremflickr.com/800/400/beyblade,spinning-top,toy?lock=2",
+    coverImageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Beyblade.jpg",
     pollConfig: {
       options: [
         { id: "classic", label: "Classic / Original Burst" },
@@ -311,7 +311,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(10),
     endsAt: daysAhead(20),
-    coverImageUrl: "https://loremflickr.com/800/400/transformers,robot,toy?lock=3",
+    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_effc13c6-bb7c-4f90-9d93-952fd3ff52c0?wid=800&hei=800&fmt=pjpeg",
     surveyConfig: {
       requireLogin: true,
       maxEntriesPerUser: 1,
@@ -364,7 +364,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(1),
     endsAt: daysAhead(13),
-    coverImageUrl: "https://loremflickr.com/800/400/beyblade,spinning-top,toy?lock=4",
+    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_0f30a098-b05e-4692-830a-44aae2e6dfa8?wid=800&hei=800&fmt=pjpeg",
     offerConfig: {
       couponId: "coupon-bbbundle2",
       displayCode: "BBBUNDLE2",
@@ -392,7 +392,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(4),
     endsAt: daysAhead(10),
-    coverImageUrl: "https://loremflickr.com/800/400/hot-wheels,diecast,toy?lock=5",
+    coverImageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mycars.JPG",
     feedbackConfig: {
       formFields: [
         {
@@ -469,7 +469,7 @@ export const eventsSeedData: EventDocument[] = [
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
     startsAt: daysAhead(15),
     endsAt: daysAhead(16),
-    coverImageUrl: "https://loremflickr.com/800/400/transformers,robot,toy?lock=6",
+    coverImageUrl: "https://www.seibertron.com/images/toys/files/01/r_optimusprime001.jpg",
     offerConfig: {
       couponId: "coupon-tfmeet-cancelled",
       displayCode: "TFMEET500",

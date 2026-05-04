@@ -33,9 +33,12 @@ import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
 import { listReviewsBySeller } from "../../reviews/actions/review-actions";
 import type { ReviewDocument } from "../../reviews/schemas/firestore";
+import { PlaceBidFormClient } from "./PlaceBidFormClient";
+import type { PlaceBidInput } from "./PlaceBidFormClient";
 
 export interface AuctionDetailPageViewProps {
   id: string;
+  onPlaceBid?: (input: PlaceBidInput) => Promise<unknown>;
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -44,7 +47,7 @@ function toDescriptionHtml(raw: unknown): string {
   return normalizeRichTextHtml(s);
 }
 
-export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) {
+export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPageViewProps) {
   const [product, bidsResult] = await Promise.all([
     productRepository.findByIdOrSlug(id).catch(() => undefined),
     listBidsByProduct(id, { pageSize: 20 }).catch(() => null),
@@ -277,62 +280,89 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
               )}
             </Stack>
           )}
-          renderBidForm={() => (
-            <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
-              {/* Current bid summary */}
-              <Div className="space-y-1">
-                <Row justify="between" align="center">
-                  <Text className="text-xs text-zinc-500">Current bid</Text>
-                  <Text className="text-xs text-zinc-500">Starting bid</Text>
-                </Row>
-                <Row justify="between" align="baseline">
-                  <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                    {formatCurrency(currentBid, currency)}
-                  </Span>
-                  <Span className="text-sm text-zinc-500">
-                    {formatCurrency(startingBid, currency)}
-                  </Span>
-                </Row>
-                <Text className="text-xs text-zinc-400 dark:text-zinc-500">
-                  {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
-                </Text>
-              </Div>
-
-              {/* Bid input + CTA */}
-              <Stack gap="sm">
-                <Input
-                  type="number"
-                  placeholder={`At least ${formatCurrency(currentBid + minBidIncrement, currency)}`}
-                  min={currentBid + minBidIncrement}
-                  aria-label="Your bid amount"
-                  disabled={isEnded}
+          renderBidForm={() =>
+            onPlaceBid ? (
+              <Div id="auction-bid-form">
+                <PlaceBidFormClient
+                  productId={String(product.id)}
+                  currentBid={currentBid}
+                  startingBid={startingBid}
+                  minBidIncrement={minBidIncrement}
+                  currency={currency}
+                  isEnded={isEnded}
+                  buyNowPrice={buyNowPrice}
+                  bidCount={bidCount}
+                  tags={tags}
+                  onPlaceBid={onPlaceBid}
                 />
-                <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
-                  {isEnded ? "Auction Ended" : "Place Bid"}
-                </Button>
-                {buyNowPrice !== null && !isEnded && (
-                  <Button variant="secondary" size="md" className="w-full">
-                    Buy Now — {formatCurrency(buyNowPrice, currency)}
-                  </Button>
-                )}
-              </Stack>
-
-              {/* Tags */}
-              {tags.length > 0 && (
-                <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                  <Row wrap gap="xs">
-                    {tags.map((tag) => (
-                      <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
-                        {tag}
-                      </Span>
-                    ))}
+              </Div>
+            ) : (
+              <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+                <Div className="space-y-1">
+                  <Row justify="between" align="center">
+                    <Text className="text-xs text-zinc-500">Current bid</Text>
+                    <Text className="text-xs text-zinc-500">Starting bid</Text>
                   </Row>
+                  <Row justify="between" align="baseline">
+                    <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
+                      {formatCurrency(currentBid, currency)}
+                    </Span>
+                    <Span className="text-sm text-zinc-500">
+                      {formatCurrency(startingBid, currency)}
+                    </Span>
+                  </Row>
+                  <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+                    {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
+                  </Text>
                 </Div>
-              )}
-            </Div>
-          )}
+                <Stack gap="sm">
+                  <Input
+                    type="number"
+                    placeholder={`At least ${formatCurrency(currentBid + minBidIncrement, currency)}`}
+                    min={currentBid + minBidIncrement}
+                    aria-label="Your bid amount"
+                    disabled={isEnded}
+                  />
+                  <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
+                    {isEnded ? "Auction Ended" : "Place Bid"}
+                  </Button>
+                  {buyNowPrice !== null && !isEnded && (
+                    <Button variant="secondary" size="md" className="w-full">
+                      Buy Now — {formatCurrency(buyNowPrice, currency)}
+                    </Button>
+                  )}
+                </Stack>
+                {tags.length > 0 && (
+                  <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                    <Row wrap gap="xs">
+                      {tags.map((tag) => (
+                        <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                          {tag}
+                        </Span>
+                      ))}
+                    </Row>
+                  </Div>
+                )}
+              </Div>
+            )
+          }
           renderMobileBidForm={() =>
-            !isEnded ? (
+            !isEnded && onPlaceBid ? (
+              <Div className="lg:hidden">
+                <PlaceBidFormClient
+                  productId={String(product.id)}
+                  currentBid={currentBid}
+                  startingBid={startingBid}
+                  minBidIncrement={minBidIncrement}
+                  currency={currency}
+                  isEnded={isEnded}
+                  buyNowPrice={buyNowPrice}
+                  bidCount={bidCount}
+                  tags={tags}
+                  onPlaceBid={onPlaceBid}
+                />
+              </Div>
+            ) : !isEnded ? (
               <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 lg:hidden">
                 <Row align="center" gap="sm" className="mb-3">
                   <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
@@ -513,9 +543,12 @@ export async function AuctionDetailPageView({ id }: AuctionDetailPageViewProps) 
             <Span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">
               {bidCount} bid{bidCount !== 1 ? "s" : ""}
             </Span>
-            <Button variant="primary" size="sm" className="shrink-0">
-              Place Bid
-            </Button>
+            <a
+              href="#auction-bid-form"
+              className="appkit-button appkit-button--primary appkit-button--sm shrink-0"
+            >
+              <span className="appkit-button__content">Place Bid</span>
+            </a>
           </BuyBar>
         )}
       </Container>

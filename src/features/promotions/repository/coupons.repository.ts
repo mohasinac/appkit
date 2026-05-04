@@ -516,23 +516,25 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       };
     }
 
-    // Determine eligible items
-    // Pre-order items are always excluded
-    let eligible = cartItems.filter((item) => !item.isPreOrder);
+    // Determine eligible items — no blanket exclusion by product type.
+    // Coupon flags (applicableToAuctions) decide type eligibility below.
+    let eligible = [...cartItems];
 
     const scope = coupon.scope ?? "admin";
 
     if (scope === "seller") {
-      // Restrict to this seller's items
+      // Restrict to this seller's items (auctions carry sellerId too)
       eligible = eligible.filter((item) => item.sellerId === coupon.sellerId);
+    }
 
-      if (coupon.applicableToAuctions === true) {
-        // Auction-only coupon
-        eligible = eligible.filter((item) => item.isAuction);
-      } else {
-        // Regular (fixed-price) items only — exclude auctions
-        eligible = eligible.filter((item) => !item.isAuction);
-      }
+    // Apply product-type filter based on the coupon's own flag:
+    //   true  → auction-only coupon
+    //   false → explicitly excludes auctions (but includes pre-orders & simple)
+    //   undefined → no restriction; applies to all product types
+    if (coupon.applicableToAuctions === true) {
+      eligible = eligible.filter((item) => item.isAuction);
+    } else if (coupon.applicableToAuctions === false) {
+      eligible = eligible.filter((item) => !item.isAuction);
     }
 
     // Apply product/category restrictions from the coupon itself
@@ -557,9 +559,11 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         valid: false,
         coupon,
         message:
-          scope === "seller"
-            ? "This coupon is not valid for the items in your cart from this store"
-            : "No eligible items found for this coupon",
+          coupon.applicableToAuctions === true
+            ? "This coupon only applies to auction items"
+            : scope === "seller"
+              ? "This coupon is not valid for the items in your cart from this seller"
+              : "No eligible items found for this coupon",
       };
     }
 

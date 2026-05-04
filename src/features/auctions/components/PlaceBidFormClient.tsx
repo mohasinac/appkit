@@ -1,0 +1,148 @@
+"use client";
+
+import React, { useState, useTransition } from "react";
+import { formatCurrency } from "../../../utils/number.formatter";
+import { Button, Div, Input, Row, Span, Stack, Text } from "../../../ui";
+
+export interface PlaceBidInput {
+  productId: string;
+  bidAmount: number;
+  autoMaxBid?: number;
+}
+
+export interface PlaceBidFormClientProps {
+  productId: string;
+  currentBid: number;
+  startingBid: number;
+  minBidIncrement: number;
+  currency: string;
+  isEnded: boolean;
+  buyNowPrice: number | null;
+  bidCount: number;
+  tags?: string[];
+  onPlaceBid: (input: PlaceBidInput) => Promise<unknown>;
+}
+
+export function PlaceBidFormClient({
+  productId,
+  currentBid,
+  startingBid,
+  minBidIncrement,
+  currency,
+  isEnded,
+  buyNowPrice,
+  bidCount,
+  tags = [],
+  onPlaceBid,
+}: PlaceBidFormClientProps) {
+  const minBid = currentBid + minBidIncrement;
+  const [bidAmount, setBidAmount] = useState<string>(String(minBid));
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const amount = Number(bidAmount);
+    if (!amount || amount < minBid) {
+      setError(`Bid must be at least ${formatCurrency(minBid, currency)}`);
+      return;
+    }
+    setError(null);
+    setSuccess(false);
+    startTransition(async () => {
+      try {
+        await onPlaceBid({ productId, bidAmount: amount });
+        setSuccess(true);
+        setBidAmount(String(amount + minBidIncrement));
+      } catch (err: unknown) {
+        setError(
+          err instanceof Error ? err.message : "Failed to place bid. Please try again.",
+        );
+      }
+    });
+  }
+
+  return (
+    <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+      {/* Current / starting bid summary */}
+      <Div className="space-y-1">
+        <Row justify="between" align="center">
+          <Text className="text-xs text-zinc-500">Current bid</Text>
+          <Text className="text-xs text-zinc-500">Starting bid</Text>
+        </Row>
+        <Row justify="between" align="baseline">
+          <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
+            {formatCurrency(currentBid, currency)}
+          </Span>
+          <Span className="text-sm text-zinc-500">
+            {formatCurrency(startingBid, currency)}
+          </Span>
+        </Row>
+        <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+          {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment{" "}
+          {formatCurrency(minBidIncrement, currency)}
+        </Text>
+      </Div>
+
+      {/* Bid form */}
+      <form onSubmit={handleSubmit}>
+        <Stack gap="sm">
+          <Input
+            type="number"
+            value={bidAmount}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setBidAmount(e.target.value)
+            }
+            placeholder={`At least ${formatCurrency(minBid, currency)}`}
+            min={minBid}
+            step={minBidIncrement}
+            aria-label="Your bid amount"
+            disabled={isEnded || isPending}
+          />
+
+          {error && (
+            <Text className="text-xs text-red-600 dark:text-red-400">{error}</Text>
+          )}
+          {success && (
+            <Text className="text-xs text-emerald-600 dark:text-emerald-400">
+              ✓ Bid placed successfully!
+            </Text>
+          )}
+
+          <Button
+            variant="primary"
+            size="md"
+            className="w-full"
+            disabled={isEnded || isPending}
+            type="submit"
+          >
+            {isPending ? "Placing Bid…" : isEnded ? "Auction Ended" : "Place Bid"}
+          </Button>
+
+          {buyNowPrice !== null && !isEnded && (
+            <Button variant="secondary" size="md" className="w-full" type="button">
+              Buy Now — {formatCurrency(buyNowPrice, currency)}
+            </Button>
+          )}
+        </Stack>
+      </form>
+
+      {/* Tags */}
+      {tags.length > 0 && (
+        <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+          <Row wrap gap="xs">
+            {tags.map((tag) => (
+              <Span
+                key={tag}
+                className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300"
+              >
+                {tag}
+              </Span>
+            ))}
+          </Row>
+        </Div>
+      )}
+    </Div>
+  );
+}
