@@ -32,15 +32,12 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
   const [ratingFilter, setRatingFilter] = useState(0);
   const [page, setPage] = useState(1);
 
-  const { reviews, averageRating, totalReviews, isLoading } = useStoreReviews(storeSlug);
+  const { reviews, averageRating, totalReviews, totalPages, isLoading } = useStoreReviews(
+    storeSlug,
+    { rating: ratingFilter || undefined, page, pageSize: PAGE_SIZE },
+  );
 
-  const filtered = ratingFilter > 0
-    ? reviews.filter((r) => Math.round(r.rating) === ratingFilter)
-    : reviews;
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const start = (page - 1) * PAGE_SIZE;
-  const paginated = filtered.slice(start, start + PAGE_SIZE);
+  const paginated = reviews;
 
   return (
     <Section>

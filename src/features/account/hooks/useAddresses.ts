@@ -39,11 +39,27 @@ const DEFAULT_ENDPOINTS = {
   setDefault: ACCOUNT_ENDPOINTS.ADDRESS_SET_DEFAULT,
 };
 
+export interface AddressFilterParams {
+  q?: string;
+  addressType?: string;
+  verified?: boolean;
+  activeOnly?: boolean;
+}
+
 export function useAddresses(options?: {
   enabled?: boolean;
   listEndpoint?: string;
+  filters?: AddressFilterParams;
 }) {
-  const endpoint = options?.listEndpoint ?? DEFAULT_ENDPOINTS.list;
+  const sp = new URLSearchParams();
+  if (options?.filters?.q) sp.set("q", options.filters.q);
+  if (options?.filters?.addressType) sp.set("addressType", options.filters.addressType);
+  if (options?.filters?.verified) sp.set("verified", "true");
+  if (options?.filters?.activeOnly) sp.set("activeOnly", "true");
+  const qs = sp.toString();
+  const base = options?.listEndpoint ?? DEFAULT_ENDPOINTS.list;
+  const endpoint = qs ? `${base}?${qs}` : base;
+
   return useQuery<Address[]>({
     queryKey: ["addresses", endpoint],
     queryFn: () => apiClient.get<Address[]>(endpoint),

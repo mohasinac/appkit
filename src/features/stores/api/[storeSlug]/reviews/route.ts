@@ -39,11 +39,16 @@ interface ReviewEntity {
 
 // --- GET /api/stores/[storeSlug]/reviews --------------------------------------
 export async function GET(
-  _request: Request,
+  request: Request,
   context: RouteContext,
 ): Promise<NextResponse> {
   try {
     const { storeSlug } = await context.params;
+    const url = new URL(request.url);
+    const ratingParam = url.searchParams.get("rating");
+    const ratingFilter = ratingParam ? Number(ratingParam) : 0;
+    const page = Math.max(1, Number(url.searchParams.get("page") || "1"));
+    const pageSize = Math.min(50, Math.max(1, Number(url.searchParams.get("pageSize") || "12")));
 
     const { db } = getProviders();
     if (!db) {
@@ -92,24 +97,8 @@ export async function GET(
       ),
     );
 
-    // Flatten, sort by date desc, cap to 10 most recent
-    const allReviews: ReviewEntity[] = reviewArrays
-      .flat()
-      .sort(
-        (a, b) =>
-          new Date(b.createdAt ?? 0).getTime() -
-          new Date(a.createdAt ?? 0).getTime(),
-      )
-      .slice(0, 10);
-
-    // Compute aggregate metrics
-    const ratingDistribution: Record<number, number> = {
-      1: 0,
-      2: 0,
-      3: 0,
-      4: 0,
-      5: 0,
-    };
+    // Compute aggregate metrics from ALL reviews (unfiltered)
+    const ratingDistribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     let ratingSum = 0;
     let totalReviews = 0;
 
@@ -117,19 +106,31 @@ export async function GET(
       for (const review of reviews) {
         totalReviews++;
         ratingSum += review.rating;
-        ratingDistribution[review.rating] =
-          (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
       }
     }
 
     const averageRating = totalReviews > 0 ? ratingSum / totalReviews : 0;
 
-    // Enrich reviews with product title + main image
+    // Flatten and sort all reviews by date desc
     const productMap = new Map(products.map((p) => [p.id, p]));
-    const reviewsWithProduct = allReviews.map((review) => ({
+    const allSorted: ReviewEntity[] = reviewArrays
+      .flat()
+      .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
+
+    // Apply rating filter
+    const filtered = ratingFilter > 0
+      ? allSorted.filter((r) => Math.round(r.rating) === ratingFilter)
+      : allSorted;
+
+    const totalFiltered = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));
+    const pageSlice = filtered.slice((page - 1) * pageSize, page * pageSize);
+
+    // Enrich with product title + main image
+    const reviewsWithProduct = pageSlice.map((review) => ({
       ...review,
-      productTitle:
-        productMap.get(review.productId)?.title ?? review.productTitle,
+      productTitle: productMap.get(review.productId)?.title ?? review.productTitle,
       productMainImage: productMap.get(review.productId)?.mainImage ?? null,
     }));
 
@@ -139,6 +140,8 @@ export async function GET(
         reviews: reviewsWithProduct,
         averageRating: Math.round(averageRating * 10) / 10,
         totalReviews,
+        totalFiltered,
+        totalPages,
         ratingDistribution,
       },
     });

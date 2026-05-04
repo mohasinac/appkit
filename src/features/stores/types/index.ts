@@ -120,5 +120,7 @@ export interface StoreReviewsData {
   reviews: StoreReview[];
   averageRating: number;
   totalReviews: number;
+  totalFiltered: number;
+  totalPages: number;
   ratingDistribution: Record<number, number>;
 }

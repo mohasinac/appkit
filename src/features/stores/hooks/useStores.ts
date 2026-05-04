@@ -117,13 +117,20 @@ export function useStoreAuctions(
 
 export function useStoreReviews(
   storeSlug: string,
+  params?: { rating?: number; page?: number; pageSize?: number },
   opts?: { enabled?: boolean; endpoint?: string },
 ) {
-  const endpoint = opts?.endpoint ?? STORE_ENDPOINTS.REVIEWS(storeSlug);
+  const sp = new URLSearchParams();
+  if (params?.rating) sp.set("rating", String(params.rating));
+  if (params?.page && params.page > 1) sp.set("page", String(params.page));
+  if (params?.pageSize) sp.set("pageSize", String(params.pageSize));
+  const qs = sp.toString();
+  const baseEndpoint = opts?.endpoint ?? STORE_ENDPOINTS.REVIEWS(storeSlug);
+  const endpoint = qs ? `${baseEndpoint}?${qs}` : baseEndpoint;
+
   const { data, isLoading, error, refetch } = useQuery<StoreReviewsData>({
-    queryKey: ["store-reviews", storeSlug],
-    queryFn: () =>
-      apiClient.get<StoreReviewsData>(endpoint),
+    queryKey: ["store-reviews", storeSlug, qs],
+    queryFn: () => apiClient.get<StoreReviewsData>(endpoint),
     enabled: (opts?.enabled ?? true) && !!storeSlug,
   });
 
@@ -131,6 +138,8 @@ export function useStoreReviews(
     reviews: data?.reviews ?? [],
     averageRating: data?.averageRating ?? 0,
     totalReviews: data?.totalReviews ?? 0,
+    totalFiltered: data?.totalFiltered ?? 0,
+    totalPages: data?.totalPages ?? 1,
     ratingDistribution: data?.ratingDistribution ?? {},
     isLoading,
     error: error instanceof Error ? error.message : null,

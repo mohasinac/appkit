@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
-import { useCategoriesList } from "../hooks/useCategories";
+import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
 import { Pagination } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
@@ -22,82 +22,41 @@ export interface CategoriesIndexListingProps {
   initialData?: CategoryItem[];
 }
 
-export function CategoriesIndexListing({ initialData }: CategoriesIndexListingProps) {
+export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "name" } });
-  const { categories, isLoading } = useCategoriesList({ initialData });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
   const sort = table.get("sort") || "name";
-  const activeSearch = table.get("q") || "";
   const page = table.getNumber("page", 1);
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
+    table.setPage(1);
   }, [searchInput, table]);
 
   const clearSearch = () => {
     setSearchInput("");
     table.set("q", "");
+    table.setPage(1);
   };
 
   const closeFilters = () => setFilterOpen(false);
 
-  // Client-side filter: search + tier + featured + brand + rootOnly + itemCount
-  const isFeatured = table.get("isFeatured") === "true";
-  const isBrand = table.get("isBrand") === "true";
-  const rootOnly = table.get("rootOnly") === "true";
-  const minItemCount = table.get("minItemCount") ? Number(table.get("minItemCount")) : undefined;
-  const maxItemCount = table.get("maxItemCount") ? Number(table.get("maxItemCount")) : undefined;
-  const tierRaw = table.get("tier");
-  const selectedTiers = tierRaw ? tierRaw.split("|").filter(Boolean) : [];
+  const { categories, total, totalPages, isLoading } = useCategoriesFiltered({
+    q: table.get("q") || undefined,
+    isFeatured: table.get("isFeatured") === "true" || undefined,
+    isBrand: table.get("isBrand") === "true" || undefined,
+    rootOnly: table.get("rootOnly") === "true" || undefined,
+    tier: table.get("tier") ? Number(table.get("tier")) : undefined,
+    minProductCount: table.get("minItemCount") ? Number(table.get("minItemCount")) : undefined,
+    maxProductCount: table.get("maxItemCount") ? Number(table.get("maxItemCount")) : undefined,
+    sort,
+    page,
+    pageSize: PAGE_SIZE,
+  });
 
-  const filtered = useMemo(() => {
-    let result = [...categories];
-
-    const q = activeSearch.toLowerCase();
-    if (q) {
-      result = result.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          (c.description ?? "").toLowerCase().includes(q),
-      );
-    }
-
-    if (isFeatured) result = result.filter((c) => (c as any).isFeatured === true);
-    if (isBrand) result = result.filter((c) => (c as any).isBrand === true);
-    if (rootOnly) result = result.filter((c) => (c as any).tier === 0 || !(c as any).parentId);
-    if (selectedTiers.length > 0) {
-      result = result.filter((c) => selectedTiers.includes(String((c as any).tier ?? "")));
-    }
-    if (minItemCount !== undefined) {
-      result = result.filter((c) => {
-        const count = (c as any).metrics?.totalItemCount ?? (c as any).productCount ?? 0;
-        return count >= minItemCount;
-      });
-    }
-    if (maxItemCount !== undefined) {
-      result = result.filter((c) => {
-        const count = (c as any).metrics?.totalItemCount ?? (c as any).productCount ?? 0;
-        return count <= maxItemCount;
-      });
-    }
-
-    result.sort((a, b) => {
-      if (sort === "-productCount") {
-        const aCount = a.metrics?.productCount ?? (a as any).productCount ?? 0;
-        const bCount = b.metrics?.productCount ?? (b as any).productCount ?? 0;
-        return bCount - aCount;
-      }
-      if (sort === "-name") return b.name.localeCompare(a.name);
-      return a.name.localeCompare(b.name);
-    });
-
-    return result;
-  }, [categories, activeSearch, sort, isFeatured, isBrand, rootOnly, selectedTiers, minItemCount, maxItemCount]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const activeSearch = table.get("q") || "";
 
   return (
     <div className="min-h-screen">
@@ -105,7 +64,6 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
       <div className="sticky top-0 z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4 -mx-4">
         <div className="flex items-center gap-2.5 max-w-full">
 
-          {/* Filters button */}
           <button
             type="button"
             onClick={() => setFilterOpen(true)}
@@ -115,7 +73,6 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
             <span className="hidden sm:inline">Filters</span>
           </button>
 
-          {/* Search */}
           <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
             <input
               type="text"
@@ -126,26 +83,15 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
               className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
             />
             {searchInput && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                className="px-2 text-zinc-400 hover:text-zinc-600 transition-colors"
-                aria-label="Clear search"
-              >
+              <button type="button" onClick={clearSearch} className="px-2 text-zinc-400 hover:text-zinc-600 transition-colors" aria-label="Clear search">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
-            <button
-              type="button"
-              onClick={commitSearch}
-              className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
-              aria-label="Search"
-            >
+            <button type="button" onClick={commitSearch} className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors" aria-label="Search">
               <Search className="h-4 w-4" />
             </button>
           </div>
 
-          {/* Sort */}
           <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="hidden md:inline whitespace-nowrap">Sort</span>
             <select
@@ -153,9 +99,7 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
               onChange={(e) => { table.set("sort", e.target.value); table.setPage(1); }}
               className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-primary/30"
             >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
+              {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
           </div>
         </div>
@@ -171,34 +115,25 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
                 <div className="p-3.5 space-y-2">
                   <div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
                   <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <div className="h-7 bg-zinc-200 dark:bg-slate-700 rounded" />
                 </div>
               </div>
             ))}
           </div>
-        ) : paginated.length === 0 ? (
+        ) : categories.length === 0 ? (
           <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             {activeSearch ? `No categories matching "${activeSearch}"` : "No categories found"}
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {paginated.map((category) => (
-              <CategoryCard
-                key={category.id}
-                category={category}
-                href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))}
-              />
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />
             ))}
           </div>
         )}
 
         {totalPages > 1 && (
           <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
+            <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
           </div>
         )}
       </div>
@@ -206,23 +141,14 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (
         <>
-          <div
-            className="fixed inset-0 z-40 bg-black/40"
-            aria-hidden="true"
-            onClick={closeFilters}
-          />
+          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={closeFilters} />
           <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 <SlidersHorizontal className="h-4 w-4" />
                 Filters
               </span>
-              <button
-                type="button"
-                onClick={closeFilters}
-                aria-label="Close filters"
-                className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-              >
+              <button type="button" onClick={closeFilters} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -230,11 +156,7 @@ export function CategoriesIndexListing({ initialData }: CategoriesIndexListingPr
               <CategoryFilters table={table as unknown as UrlTable} variant="public" />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button
-                type="button"
-                onClick={closeFilters}
-                className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
-              >
+              <button type="button" onClick={closeFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors">
                 Apply filters
               </button>
             </div>

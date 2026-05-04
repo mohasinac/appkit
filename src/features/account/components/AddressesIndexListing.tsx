@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useAddresses } from "../hooks/useAddresses";
 import { AddressBook } from "./AddressBook";
@@ -42,7 +42,6 @@ export function AddressesIndexListing({
   onEdit,
   onDelete,
 }: AddressesIndexListingProps) {
-  const { data: addresses = [], isLoading } = useAddresses();
   const [searchInput, setSearchInput] = useState("");
   const [activeSearch, setActiveSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -50,45 +49,14 @@ export function AddressesIndexListing({
 
   const table = createLocalTable(filterParams, setFilterParams);
 
-  const filtered = useMemo(() => {
-    let result = [...addresses];
-    const q = activeSearch.toLowerCase();
-
-    if (q) {
-      result = result.filter((a) => {
-        const line1 = (a.addressLine1 ?? "").toLowerCase();
-        const line2 = (a.addressLine2 ?? "").toLowerCase();
-        const postal = (a.postalCode ?? "").toLowerCase();
-        const label = (a.label ?? "").toLowerCase();
-        return (
-          line1.includes(q) ||
-          line2.includes(q) ||
-          postal.includes(q) ||
-          label.includes(q)
-        );
-      });
-    }
-
-    const types = filterParams.addressType
-      ? filterParams.addressType.split("|").filter(Boolean)
-      : [];
-    if (types.length > 0) {
-      result = result.filter((a) => {
-        const t = ((a as any).type ?? (a as any).addressType ?? "").toLowerCase();
-        return types.includes(t);
-      });
-    }
-
-    if (filterParams.verified === "true") {
-      result = result.filter((a) => (a as any).verified === true);
-    }
-
-    if (filterParams.activeOnly === "true") {
-      result = result.filter((a) => (a as any).active !== false);
-    }
-
-    return result;
-  }, [addresses, activeSearch, filterParams]);
+  const { data: addresses = [], isLoading } = useAddresses({
+    filters: {
+      q: activeSearch || undefined,
+      addressType: filterParams.addressType || undefined,
+      verified: filterParams.verified === "true" || undefined,
+      activeOnly: filterParams.activeOnly === "true" || undefined,
+    },
+  });
 
   const commitSearch = () => {
     setActiveSearch(searchInput.trim());
@@ -157,13 +125,13 @@ export function AddressesIndexListing({
       </div>
 
       {/* ── Address list ────────────────────────────────────────────────── */}
-      {filtered.length === 0 ? (
+      {addresses.length === 0 ? (
         <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
           {activeSearch ? `No addresses matching "${activeSearch}"` : "No saved addresses."}
         </p>
       ) : (
         <AddressBook
-          addresses={filtered as any}
+          addresses={addresses as any}
           onEdit={onEdit}
           onDelete={onDelete}
           onAdd={onAdd}
