@@ -3,7 +3,7 @@
 .appkit-side-drawer__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 40;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   transition: opacity 0.2s ease;
@@ -13,7 +13,7 @@
   position: fixed;
   top: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 40;
   background: white;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -25,17 +25,9 @@
   background: #0f172a;
 }
 
-/* Position */
+/* Full-viewport width on all breakpoints — navbars (z-50) render over this */
 .appkit-side-drawer--left { left: 0; width: 100%; }
 .appkit-side-drawer--right { right: 0; width: 100%; }
-
-@media (min-width: 640px) {
-  .appkit-side-drawer--left { width: 100%; }
-}
-@media (min-width: 768px) {
-  .appkit-side-drawer--left { width: 420px; }
-  .appkit-side-drawer--right { width: 60%; }
-}
 
 /* Header */
 .appkit-side-drawer__header {

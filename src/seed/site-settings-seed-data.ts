@@ -81,10 +81,10 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
 } = {
   id: "global",
   siteName: "LetItRip",
-  motto: "India’s Home for Rare Anime Collectibles",
+  motto: "India’s #1 Collectibles Marketplace — Pokémon · Hot Wheels · Beyblade · Transformers",
   announcementBar: {
     enabled: true,
-    message: "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15",
+    message: "🎉 Up to 25% off Pokémon non-holos + Free stadium with 2 Beyblade tops — See Events for codes",
   },
   logo: {
     url: "/favicon.svg",
@@ -136,24 +136,24 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
   },
   seo: {
     defaultTitle:
-      "LetItRip — Anime Figures, Auctions & Rare Collectibles Marketplace",
+      "LetItRip — Pokemon TCG, Hot Wheels, Beyblade, Transformers | India's Collectibles Marketplace",
     defaultDescription:
       "Shop rare anime figures, Nendoroids, Gunpla, Pok\u00e9mon TCG, and cosplay on India\u2019s premier otaku marketplace. Live auctions, pre-orders, and verified sellers.",
     keywords: [
-      "anime figures",
-      "nendoroid",
-      "gunpla",
-      "scale figures",
-      "cosplay",
-      "pokemon tcg",
+      "pokemon tcg india",
+      "hot wheels treasure hunt",
+      "beyblade burst",
+      "transformers figures",
       "trading cards",
-      "pre-orders",
+      "collectibles marketplace india",
       "live auction",
-      "otaku marketplace",
-      "anime collectibles india",
-      "figure import india",
+      "pre-orders",
+      "graded cards psa",
+      "base set charizard",
+      "diecast cars india",
+      "beyblade tops",
     ],
-    ogImage: "https://picsum.photos/seed/letitrip-anime-og/1200/630",
+    ogImage: "https://picsum.photos/seed/letitrip-collectibles-og/1200/630",
   },
   features: [
     {

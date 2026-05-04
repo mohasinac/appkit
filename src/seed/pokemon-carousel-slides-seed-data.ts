@@ -1,6 +1,8 @@
 /**
- * Pokemon Base Set 151 — Carousel Slides Seed Data
- * Hero slides for the LetItRip homepage using real pokemontcg.io card images
+ * Multi-Franchise Collectibles — Carousel Slides Seed Data
+ *
+ * 3 active + 2 disabled slides. Each slide has at most 2 cards with buttons.
+ * Covers Pokémon TCG · Hot Wheels · Beyblade Burst · Transformers
  */
 
 import type { CarouselSlideDocument } from "../features/homepage/schemas";
@@ -13,12 +15,14 @@ const ADMIN = "user-admin-user-admin";
 
 const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
+const picsumImg = (seed: string, w = 1200, h = 500) =>
+  `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
 export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
-  // -- Slide 1: Welcome Hero — Charizard --------------------------------------
+  // ── Slide 1 — Multi-Franchise Welcome Hero (ACTIVE) ──────────────────────
   {
-    id: "carousel-pokemon-welcome-hero-1707300000001",
-    title: "Welcome — Charizard Hero",
+    id: "carousel-welcome-hero-multifranchise-1",
+    title: "Welcome — Multi-Franchise Collectibles",
     order: 1,
     active: true,
     media: {
@@ -31,22 +35,47 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
       url: cardImg(4),
       alt: "Charizard — Pokémon Base Set #4 Holo Rare",
     },
-    cards: [],
+    cards: [
+      {
+        id: "card-welcome-cta",
+        gridRow: 2,
+        gridCol: 3,
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #1E40AF 0%, #7C3AED 100%)",
+        },
+        content: {
+          title: "India's #1 Collectibles Marketplace",
+          subtitle: "Pokémon · Hot Wheels · Beyblade · Transformers",
+          description: "Authentic products from verified sellers. Graded slabs, sealed packs, rare singles & more.",
+        },
+        buttons: [
+          {
+            id: "btn-welcome-shop",
+            text: "Shop Now",
+            link: "/products",
+            variant: "primary",
+            openInNewTab: false,
+          },
+          {
+            id: "btn-welcome-auctions",
+            text: "Live Auctions",
+            link: "/auctions",
+            variant: "secondary",
+            openInNewTab: false,
+          },
+        ],
+        isButtonOnly: false,
+      },
+    ],
     overlay: {
       enabled: true,
       color: "#000000",
-      opacity: 0.45,
-      subtitle: "Pokémon Base Set 151",
+      opacity: 0.4,
       title: "Own a Piece of History",
+      subtitle: "Collectibles for Every Fan",
       description:
-        "Browse authentic Base Set singles, sealed packs, and graded gems — from Pikachu to Charizard.",
-      button: {
-        id: "hero-cta-shop",
-        text: "Start Collecting",
-        link: "/products",
-        variant: "primary",
-        openInNewTab: false,
-      },
+        "From 1st Edition Charizard to G1 Optimus Prime — browse, bid, and collect.",
     },
     analytics: { views: 0 },
     createdAt: daysAgo(30),
@@ -54,127 +83,62 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // -- Slide 2: Holo Rare Sale ------------------------------------------------
+  // ── Slide 2 — Live Auctions Spotlight (ACTIVE) ───────────────────────────
   {
-    id: "carousel-pokemon-holo-rare-sale-1707300000002",
-    title: "Holo Rare Showcase",
+    id: "carousel-live-auctions-spotlight-2",
+    title: "Live Auctions Spotlight",
     order: 2,
     active: true,
     media: {
       type: "image",
-      url: cardImg(10), // Mewtwo
-      alt: "Mewtwo — Pokémon Base Set #10 Holo Rare",
-    },
-    cards: [
-      {
-        id: "card-holo-rare-charizard",
-        gridRow: 1,
-        gridCol: 1,
-        background: { type: "image", value: cardImg(4) },
-        content: {
-          title: "Charizard #4",
-          subtitle: "Holo Rare",
-          description: "From ₹89,999",
-        },
-        buttons: [
-          {
-            id: "btn-charizard",
-            text: "View",
-            link: "/products/charizard-base1-4-holo-rare",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-holo-rare-blastoise",
-        gridRow: 1,
-        gridCol: 2,
-        background: { type: "image", value: cardImg(2) },
-        content: {
-          title: "Blastoise #2",
-          subtitle: "Holo Rare",
-          description: "From ₹34,999",
-        },
-        buttons: [
-          {
-            id: "btn-blastoise",
-            text: "View",
-            link: "/products/blastoise-base1-2-holo-rare",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-holo-rare-zapdos",
-        gridRow: 1,
-        gridCol: 3,
-        background: { type: "image", value: cardImg(16) },
-        content: {
-          title: "Zapdos #16",
-          subtitle: "Holo Rare",
-          description: "From ₹12,999",
-        },
-        buttons: [
-          {
-            id: "btn-zapdos",
-            text: "View",
-            link: "/products/zapdos-base1-16-holo-rare",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-    ],
-    analytics: { views: 0 },
-    createdAt: daysAgo(28),
-    updatedAt: daysAgo(1),
-    createdBy: ADMIN,
-  },
-
-  // -- Slide 3: Auctions — 1st Edition Grail ---------------------------------
-  {
-    id: "carousel-pokemon-auction-grail-1707300000003",
-    title: "Live Auction — 1st Edition Grail",
-    order: 3,
-    active: true,
-    media: {
-      type: "image",
-      url: cardImg(4),
-      alt: "1st Edition Charizard Auction",
+      url: cardImg(10),
+      alt: "Mewtwo — Live Auction spotlight",
     },
     link: { url: "/auctions", openInNewTab: false },
     cards: [
       {
-        id: "card-auction-banner",
+        id: "card-auction-charizard",
         gridRow: 2,
-        gridCol: 3,
+        gridCol: 2,
         background: {
           type: "gradient",
-          value: "linear-gradient(135deg, #FF6B35 0%, #F7C59F 100%)",
+          value: "linear-gradient(135deg, #FF6B35 0%, #FFCB05 100%)",
         },
         content: {
-          title: "🔥 Live Auction",
-          subtitle: "1st Edition Charizard PSA 7",
-          description: "Current bid: ₹3,49,999 — ends in 7 days",
+          title: "🔥 1st Ed. Charizard PSA 7",
+          subtitle: "Current Bid: ₹3,49,999",
+          description: "Ends in 7 days · Buy Now at ₹6,99,999",
         },
         buttons: [
           {
-            id: "btn-bid-now",
+            id: "btn-bid-charizard",
             text: "Bid Now",
             link: "/auctions",
             variant: "primary",
             openInNewTab: false,
           },
+        ],
+        isButtonOnly: false,
+      },
+      {
+        id: "card-auction-optimus",
+        gridRow: 2,
+        gridCol: 3,
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #1D4ED8 0%, #64748B 100%)",
+        },
+        content: {
+          title: "🤖 G1 Optimus Prime MISB",
+          subtitle: "Starting Bid: ₹99,999",
+          description: "Factory sealed · 1984 vintage",
+        },
+        buttons: [
           {
-            id: "btn-view-all-auctions",
-            text: "All Auctions",
+            id: "btn-bid-optimus",
+            text: "Place Bid",
             link: "/auctions",
-            variant: "secondary",
+            variant: "primary",
             openInNewTab: false,
           },
         ],
@@ -187,106 +151,36 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // -- Slide 4: Element Types Showcase ---------------------------------------
+  // ── Slide 3 — Hot Wheels & Beyblade (ACTIVE) ─────────────────────────────
   {
-    id: "carousel-pokemon-element-types-1707300000004",
-    title: "Element Types Showcase",
-    order: 4,
+    id: "carousel-hw-beyblade-featured-3",
+    title: "Hot Wheels & Beyblade Featured",
+    order: 3,
     active: true,
     media: {
       type: "image",
-      url: cardImg(16), // Zapdos
-      alt: "Zapdos — Electric Type",
+      url: picsumImg("hotwheels-hero", 1200, 500),
+      alt: "Hot Wheels and Beyblade Burst collectibles",
     },
     cards: [
       {
-        id: "card-water-type",
-        gridRow: 1,
-        gridCol: 1,
-        background: { type: "color", value: "#6DB6D4" },
-        content: {
-          title: "💧 Water",
-          subtitle: "Blastoise · Lapras · Starmie",
-        },
-        buttons: [
-          {
-            id: "btn-water",
-            text: "Browse Water",
-            link: "/categories/water",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-fire-type",
-        gridRow: 1,
-        gridCol: 2,
-        background: { type: "color", value: "#EE8130" },
-        content: {
-          title: "🔥 Fire",
-          subtitle: "Charizard · Arcanine · Ninetales",
-        },
-        buttons: [
-          {
-            id: "btn-fire",
-            text: "Browse Fire",
-            link: "/categories/fire",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-electric-type",
-        gridRow: 1,
-        gridCol: 3,
-        background: { type: "color", value: "#F7D02C" },
-        content: {
-          title: "⚡ Electric",
-          subtitle: "Pikachu · Raichu · Zapdos",
-        },
-        buttons: [
-          {
-            id: "btn-electric",
-            text: "Browse Electric",
-            link: "/categories/electric",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-psychic-type",
-        gridRow: 2,
-        gridCol: 1,
-        background: { type: "color", value: "#F95587" },
-        content: { title: "🔮 Psychic", subtitle: "Mewtwo · Gengar · Jynx" },
-        buttons: [
-          {
-            id: "btn-psychic",
-            text: "Browse Psychic",
-            link: "/categories/psychic",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-grass-type",
+        id: "card-hot-wheels-th",
         gridRow: 2,
         gridCol: 2,
-        background: { type: "color", value: "#7AC74C" },
-        content: { title: "🌿 Grass", subtitle: "Venusaur · Scyther · Pinsir" },
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #DC2626 0%, #F59E0B 100%)",
+        },
+        content: {
+          title: "🚗 Treasure Hunts",
+          subtitle: "Hot Wheels TH & Super TH",
+          description: "India's largest Hot Wheels collector store. Premium, Car Culture & STHs.",
+        },
         buttons: [
           {
-            id: "btn-grass",
-            text: "Browse Grass",
-            link: "/categories/grass",
+            id: "btn-hw-shop",
+            text: "Browse Hot Wheels",
+            link: "/products?category=hot-wheels",
             variant: "primary",
             openInNewTab: false,
           },
@@ -294,16 +188,23 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         isButtonOnly: false,
       },
       {
-        id: "card-fighting-type",
+        id: "card-beyblade-launch",
         gridRow: 2,
         gridCol: 3,
-        background: { type: "color", value: "#C22E28" },
-        content: { title: "🥊 Fighting", subtitle: "Machamp · Hitmonchan" },
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #7C3AED 0%, #06B6D4 100%)",
+        },
+        content: {
+          title: "🌀 Let It Rip!",
+          subtitle: "Beyblade Burst — All Series",
+          description: "Attack · Defense · Stamina · Balance · Stadiums",
+        },
         buttons: [
           {
-            id: "btn-fighting",
-            text: "Browse Fighting",
-            link: "/categories/fighting",
+            id: "btn-bb-shop",
+            text: "Browse Beyblade",
+            link: "/products?category=beyblade-burst",
             variant: "primary",
             openInNewTab: false,
           },
@@ -317,36 +218,60 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     createdBy: ADMIN,
   },
 
-  // -- Slide 5: Pikachu Fan Favourite ----------------------------------------
+  // ── Slide 4 — Pre-Orders (DISABLED) ──────────────────────────────────────
   {
-    id: "carousel-pokemon-pikachu-fan-fav-1707300000005",
-    title: "Pikachu Fan Favourite",
-    order: 5,
-    active: true,
+    id: "carousel-pre-orders-incoming-4",
+    title: "Pre-Orders — Incoming Sets",
+    order: 4,
+    active: false,
     media: {
       type: "image",
-      url: cardImg(58), // Pikachu
-      alt: "Pikachu — Pokémon Base Set #58 Common",
+      url: cardImg(58),
+      alt: "Pre-Order — upcoming Pokémon TCG sets",
     },
     cards: [
       {
-        id: "card-pikachu-promo",
+        id: "card-preorder-151",
+        gridRow: 2,
+        gridCol: 2,
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #059669 0%, #10B981 100%)",
+        },
+        content: {
+          title: "📦 SV: 151 Booster Box",
+          subtitle: "Pre-Order Now — ₹14,999",
+          description: "All 151 original Pokémon · Ships in 60 days",
+        },
+        buttons: [
+          {
+            id: "btn-preorder-151",
+            text: "Pre-Order",
+            link: "/pre-orders",
+            variant: "primary",
+            openInNewTab: false,
+          },
+        ],
+        isButtonOnly: false,
+      },
+      {
+        id: "card-preorder-hw",
         gridRow: 2,
         gridCol: 3,
         background: {
           type: "gradient",
-          value: "linear-gradient(135deg, #FFCB05 0%, #FFB300 100%)",
+          value: "linear-gradient(135deg, #0369A1 0%, #38BDF8 100%)",
         },
         content: {
-          title: "⚡ Pikachu #58",
-          subtitle: "Base Set Common",
-          description: "Yellow Cheeks variant — from ₹1,999",
+          title: "🚗 HW 2025 Mainline Cases",
+          subtitle: "Pre-Order · ₹2,499",
+          description: "72-car assortment case · Ships when available",
         },
         buttons: [
           {
-            id: "btn-pikachu-shop",
-            text: "Get Yours",
-            link: "/products/pikachu-base1-58-common",
+            id: "btn-preorder-hw",
+            text: "Pre-Order",
+            link: "/pre-orders",
             variant: "primary",
             openInNewTab: false,
           },
@@ -355,93 +280,51 @@ export const pokemonCarouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
       },
     ],
     analytics: { views: 0 },
-    createdAt: daysAgo(15),
-    updatedAt: daysAgo(1),
+    createdAt: daysAhead(1),
+    updatedAt: daysAhead(1),
     createdBy: ADMIN,
   },
 
-  // -- Slide 6: Sealed Products ----------------------------------------------
+  // ── Slide 5 — Seasonal Promo (DISABLED) ──────────────────────────────────
   {
-    id: "carousel-pokemon-sealed-products-1707300000006",
-    title: "Sealed Products",
-    order: 6,
-    active: true,
-    media: {
-      type: "image",
-      url: "https://images.pokemontcg.io/base1/logo.png",
-      alt: "Pokémon Base Set sealed products",
-    },
-    cards: [
-      {
-        id: "card-booster-pack",
-        gridRow: 1,
-        gridCol: 1,
-        background: {
-          type: "gradient",
-          value: "linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%)",
-        },
-        content: {
-          title: "📦 Booster Pack",
-          subtitle: "Factory Sealed",
-          description: "11 cards · 1 guaranteed Rare · ₹12,999",
-        },
-        buttons: [
-          {
-            id: "btn-booster",
-            text: "Buy Sealed Pack",
-            link: "/products/base-set-booster-pack-sealed",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-theme-deck",
-        gridRow: 1,
-        gridCol: 2,
-        background: {
-          type: "gradient",
-          value: "linear-gradient(135deg, #6B21A8 0%, #A855F7 100%)",
-        },
-        content: {
-          title: "🗲 Zap! Theme Deck",
-          subtitle: "Sealed",
-          description: "Electric starter deck · ₹18,999",
-        },
-        buttons: [
-          {
-            id: "btn-zap-deck",
-            text: "Buy Zap! Deck",
-            link: "/products/zap-theme-deck-sealed",
-            variant: "primary",
-            openInNewTab: false,
-          },
-        ],
-        isButtonOnly: false,
-      },
-    ],
-    analytics: { views: 0 },
-    createdAt: daysAgo(10),
-    updatedAt: daysAgo(1),
-    createdBy: ADMIN,
-  },
-
-  // -- Slide 7: Inactive placeholder -----------------------------------------
-  {
-    id: "carousel-pokemon-inactive-test-1707300000007",
-    title: "Inactive Test Slide",
-    order: 7,
+    id: "carousel-seasonal-promo-5",
+    title: "Seasonal Promo — Summer Sale",
+    order: 5,
     active: false,
     media: {
       type: "image",
-      url: cardImg(1),
-      alt: "Alakazam — inactive slide",
+      url: picsumImg("summer-sale-banner", 1200, 500),
+      alt: "Summer Sale — up to 20% off select collectibles",
     },
-    cards: [],
+    cards: [
+      {
+        id: "card-summer-sale-cta",
+        gridRow: 2,
+        gridCol: 3,
+        background: {
+          type: "gradient",
+          value: "linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)",
+        },
+        content: {
+          title: "☀️ Summer Sale",
+          subtitle: "Up to 20% off select items",
+          description: "Pokémon · Hot Wheels · Beyblade · Transformers — limited time",
+        },
+        buttons: [
+          {
+            id: "btn-summer-sale",
+            text: "Shop the Sale",
+            link: "/products?promoted=true",
+            variant: "primary",
+            openInNewTab: false,
+          },
+        ],
+        isButtonOnly: false,
+      },
+    ],
     analytics: { views: 0 },
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(5),
+    createdAt: daysAhead(30),
+    updatedAt: daysAhead(30),
     createdBy: ADMIN,
   },
 ];

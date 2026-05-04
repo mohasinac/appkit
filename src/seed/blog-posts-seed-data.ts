@@ -438,4 +438,178 @@ checkPriceAlert({ cardId: 'base1-4', targetUSD: 500 });
     createdAt: daysAgo(14),
     updatedAt: daysAgo(12),
   },
+
+  // -- Multi-franchise posts with YouTube embeds ----------------------------
+
+  {
+    id: "blog-hot-wheels-treasure-hunt-hunting-guide-2026",
+    title: "The Complete Guide to Hunting Hot Wheels Treasure Hunts in 2026",
+    slug: "hot-wheels-treasure-hunt-hunting-guide-2026",
+    excerpt:
+      "Treasure Hunts (TH) and Super Treasure Hunts (STH) are the most sought-after Hot Wheels cars. This guide covers everything — how to spot them, when to hunt, and how to build a collection without overspending.",
+    content: `<h2>What Makes a Treasure Hunt Special?</h2>
+<p>A <strong>Treasure Hunt</strong> is a limited-edition Hot Wheels car hidden within standard mainline assortments. Two variants exist:</p>
+<ul>
+  <li><strong>Regular TH (Treasure Hunt)</strong> — Features the flame TH logo on the card, metallic paint, and typically collector-grade details. Found in standard pegs.</li>
+  <li><strong>Super Treasure Hunt (STH)</strong> — The ultimate find: spectraflame metallic finish, <em>real rider rubber tires</em>, and premium casting details. Extremely rare — roughly 1 per 2–3 cases.</li>
+</ul>
+<h2>How to Identify a Treasure Hunt at Retail</h2>
+<p>To spot a TH on the peg:</p>
+<ol>
+  <li>Look for the <strong>green flame logo</strong> printed on the card's upper left corner</li>
+  <li>Check for a hidden 'TH' mark on the car body (often in the window, roof, or underside)</li>
+  <li>For STHs — the real rubber tires are visually distinct from the plastic tires on standard cars</li>
+  <li>Spectraflame paint catches light differently than standard factory paint</li>
+</ol>
+<blockquote><p>"The best time to hunt is Tuesday–Thursday when most stores receive weekly shipments. Be there when the cases are opened."</p></blockquote>
+<h2>Watch: Super Treasure Hunt Unboxing (Real Riders)</h2>
+<p>This video covers a live STH unboxing from a freshly opened case — showing exactly what separates a Super TH from a regular TH and what to look for on the card:</p>
+<div class="relative aspect-video w-full overflow-hidden rounded-lg my-4">
+  <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="Hot Wheels Super Treasure Hunt Guide" loading="lazy"></iframe>
+</div>
+<h2>Where to Buy Treasure Hunts Online (If You Can't Hunt Retail)</h2>
+<p>If hunting retail isn't an option, LetItRip has a curated selection of Treasure Hunts from verified collectors including <strong>Speed King Diecast</strong> (Mumbai) who stocks premium STHs. Expect to pay a 3–5× premium over MRP for STHs and 1.5–2× for regular THs — this is standard market pricing.</p>
+<h2>Investment Perspective: Do TH Cars Appreciate?</h2>
+<p>Super Treasure Hunts have historically appreciated 15–25% year-over-year for popular castings (e.g., Supra, Golf GTI, Lamborghini Countach). Condition matters enormously — keep on card in an acrylic protector. Regular THs rarely exceed 3× MRP in value unless they feature a highly sought casting.</p>
+<h2>Tips for Building a TH Collection on a Budget</h2>
+<ul>
+  <li>Focus on <strong>one or two theme series</strong> rather than collecting all THs</li>
+  <li>Buy from trusted LetItRip sellers who include photos of all four sides</li>
+  <li>Check for card creases — the card condition affects resale value as much as the car itself</li>
+  <li>Join the LetItRip Hot Wheels community group for hunting reports and tips</li>
+</ul>`,
+    coverImage: "https://picsum.photos/seed/hw-treasure-hunt-blog/1200/630",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["hot-wheels", "treasure-hunt", "sth", "hunting-guide", "collecting", "investment"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(8),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 8,
+    views: 2340,
+    metaTitle: "Hot Wheels Treasure Hunt Hunting Guide 2026 | LetItRip Blog",
+    metaDescription:
+      "How to find Hot Wheels Treasure Hunts and Super THs at retail — identification tips, best hunting times, and investment perspective.",
+    createdAt: daysAgo(10),
+    updatedAt: daysAgo(8),
+  },
+
+  {
+    id: "blog-beyblade-burst-beginners-complete-guide-2026",
+    title: "Beyblade Burst: The Complete Beginner's Guide (2026 Edition)",
+    slug: "beyblade-burst-beginners-guide-2026",
+    excerpt:
+      "New to Beyblade Burst? This guide covers the four types, how to choose your first top, launcher basics, and the best beginner-friendly sets available on LetItRip.",
+    content: `<h2>What Is Beyblade Burst?</h2>
+<p>Beyblade Burst is a spinning-top combat game published by Takara Tomy (Japan) and Hasbro (international). Two players launch customisable tops into a stadium — the winner is the top still spinning after its opponent is knocked out, rings out, or <em>bursts</em> (separates into pieces).</p>
+<p>The <strong>Burst mechanic</strong> is what sets this generation apart from classic Beyblade: a defeated top's energy layer can detach mid-battle, awarding 2 points to the attacker (vs. 1 for a standard knockdown).</p>
+<h2>The Four Types at a Glance</h2>
+<table>
+  <thead><tr><th>Type</th><th>Goal</th><th>Best For</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Attack</strong></td><td>Knock out opponent</td><td>Aggressive players</td></tr>
+    <tr><td><strong>Defense</strong></td><td>Absorb hits, stay spinning</td><td>Patient players</td></tr>
+    <tr><td><strong>Stamina</strong></td><td>Outlast opponent</td><td>Strategic players</td></tr>
+    <tr><td><strong>Balance</strong></td><td>Mixed attributes</td><td>Versatile build</td></tr>
+  </tbody>
+</table>
+<h2>Watch: Beyblade Burst Battle — Attack vs Stamina</h2>
+<p>See the dramatic difference between an Attack type and a Stamina type in a real match. Pay attention to how the Attack type's burst risk plays out:</p>
+<div class="relative aspect-video w-full overflow-hidden rounded-lg my-4">
+  <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="Beyblade Burst Battle Demo" loading="lazy"></iframe>
+</div>
+<h2>Choosing Your First Beyblade</h2>
+<p>For beginners, we recommend starting with a <strong>Balance type</strong> (like Spriggan or Cho-Z Valkyrie) — they're forgiving, versatile, and competitive across different match-ups. Avoid pure Stamina types as your first top since they can feel passive for new players.</p>
+<h2>Launcher Guide for Beginners</h2>
+<p>The launcher is as important as the Beyblade itself. For beginners:</p>
+<ul>
+  <li><strong>Grip String Launcher</strong> — pull cord mechanism, comfortable for kids and adults</li>
+  <li><strong>Light Launcher</strong> — compact, good for beginners, included in most starter packs</li>
+  <li>Always match <strong>spin direction</strong>: check if your top is R (right), L (left), or LR (both)</li>
+</ul>
+<h2>Recommended Starter Sets on LetItRip</h2>
+<p>Available from <strong>Bladers Paradise</strong> (Bangalore) on LetItRip:</p>
+<ul>
+  <li>Beyblade Burst QuadDrive Starter Sets (₹1,499–₹2,499)</li>
+  <li>Bladers Paradise Beginner Bundle: 2 tops + stadium + launcher (₹3,999)</li>
+  <li>Random Booster (Level 6 or higher) for variety builds (₹599–₹899)</li>
+</ul>
+<blockquote><p>"The best part of Beyblade Burst is customisation. Once you've got two or three tops, start swapping parts to build your own custom combination."</p></blockquote>`,
+    coverImage: "https://picsum.photos/seed/beyblade-beginners-blog/1200/630",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.TIPS,
+    tags: ["beyblade", "burst", "beginners-guide", "types", "launcher", "starter"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(5),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 7,
+    views: 1680,
+    metaTitle: "Beyblade Burst Complete Beginner's Guide 2026 | LetItRip",
+    metaDescription:
+      "New to Beyblade Burst? Learn types, launcher basics, and which starter set to buy in this complete 2026 beginner's guide.",
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(5),
+  },
+
+  {
+    id: "blog-transformers-g1-vs-modern-collecting-guide-2026",
+    title: "Collecting Transformers: G1 Vintage vs Modern Lines — Which is Right for You?",
+    slug: "transformers-g1-vs-modern-collecting-guide",
+    excerpt:
+      "Should you chase vintage G1 Transformers or focus on modern lines like Legacy, Studio Series, and Masterpiece? We break down the pros, cons, costs, and where to start.",
+    content: `<h2>The Case for G1 Vintage Transformers</h2>
+<p>Generation 1 Transformers (1984–1990) are the original toys that started it all. Characters like Optimus Prime, Megatron, and Bumblebee in their original diecast and chrome-laden glory are irreplaceable artifacts of toy history.</p>
+<p><strong>Why collect G1:</strong></p>
+<ul>
+  <li>Historical significance — these are the originals, not remakes</li>
+  <li>Diecast metal construction on larger figures (Megatron, Soundwave)</li>
+  <li>Chrome and rubber tires that modern figures replicate but can't match in feel</li>
+  <li>MISB (Mint in Sealed Box) G1 figures have appreciated dramatically — 200–400% in the last decade</li>
+</ul>
+<p><strong>The challenges:</strong></p>
+<ul>
+  <li>Rubber parts yellow and crack over time (known as 'yellowing')</li>
+  <li>Joints loosen with age — transformation can be difficult on loose figures</li>
+  <li>Authentic condition MISB figures command premium prices (₹30,000–₹3,00,000+ for iconic characters)</li>
+</ul>
+<h2>The Case for Modern Lines</h2>
+<p>Modern Transformers lines like <strong>Studio Series</strong>, <strong>Legacy</strong>, and <strong>Masterpiece</strong> offer engineering that would have been impossible in the '80s — ultra-accurate transformations, screen-accurate proportions, and premium materials.</p>
+<blockquote><p>"Studio Series Optimus Prime achieves film-accurate detail that would have taken 1,000 parts to replicate in the G1 era — all in a figure that fits on a standard shelf."</p></blockquote>
+<h2>Watch: G1 Optimus Prime vs Studio Series Comparison</h2>
+<p>This side-by-side video review compares the 1984 G1 Optimus Prime with the 2024 Studio Series Leader Class — transformation complexity, articulation, and display value:</p>
+<div class="relative aspect-video w-full overflow-hidden rounded-lg my-4">
+  <iframe class="absolute inset-0 h-full w-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" title="G1 vs Studio Series Transformers Comparison" loading="lazy"></iframe>
+</div>
+<h2>Price Comparison: G1 vs Modern</h2>
+<table>
+  <thead><tr><th>Figure</th><th>G1 Vintage (Loose)</th><th>G1 MISB</th><th>Modern Equivalent</th></tr></thead>
+  <tbody>
+    <tr><td>Optimus Prime</td><td>₹8,000–₹18,000</td><td>₹1,50,000+</td><td>₹4,999 (Studio Series)</td></tr>
+    <tr><td>Megatron (P38)</td><td>₹12,000–₹25,000</td><td>₹2,50,000+</td><td>₹6,499 (Legacy)</td></tr>
+    <tr><td>Soundwave + Cassettes</td><td>₹9,000–₹20,000</td><td>₹1,80,000+</td><td>₹4,999 (Kingdom)</td></tr>
+  </tbody>
+</table>
+<h2>Our Recommendation</h2>
+<p>For new collectors on a budget: start with <strong>modern lines</strong>. Studio Series and Legacy deliver exceptional quality at accessible prices. Once you've built appreciation for the characters and lore, graduate to G1 hunting — starting with key characters in Complete-with-Instructions grade.</p>
+<p>For investment: MISB G1 continues to outperform modern figures in value appreciation. A limited budget is best allocated to sealed G1 Autobots or Decepticons with full cardback condition.</p>
+<h2>Shop on LetItRip</h2>
+<p>Both G1 vintage and modern Transformers are available from <strong>Speed King Diecast</strong> on LetItRip. Check their store for current stock including the live auction of a <a href="/auctions">G1 Optimus Prime MISB</a> — current bids open now.</p>`,
+    coverImage: "https://picsum.photos/seed/transformers-g1-blog/1200/630",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["transformers", "g1", "studio-series", "collecting", "investment", "masterpiece", "legacy"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(3),
+    authorId: "user-admin-user-admin",
+    authorName: "Admin User",
+    readTimeMinutes: 9,
+    views: 1420,
+    metaTitle: "Collecting Transformers: G1 vs Modern Lines Guide 2026 | LetItRip",
+    metaDescription:
+      "G1 vintage Transformers vs modern Studio Series, Legacy, and Masterpiece — which is right for your collection and budget?",
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(3),
+  },
 ];

@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { Div } from "../components/Div";
 
-// --- Allowed HTML tags (safe subset — no script/iframe/object) ---------------
+// --- Allowed HTML tags (safe subset — no script/object; iframe allowed for YouTube only) -------
 
 const ALLOWED_TAGS = new Set([
   "p",
@@ -45,6 +45,7 @@ const ALLOWED_TAGS = new Set([
   "div",
   "section",
   "article",
+  "iframe",
 ]);
 
 /** Attributes allowed per tag. "*" means allowed on any tag. */
@@ -55,6 +56,7 @@ const ALLOWED_ATTRS: Record<string, string[]> = {
   td: ["colspan", "rowspan"],
   th: ["colspan", "rowspan", "scope"],
   ol: ["type", "start"],
+  iframe: ["src", "width", "height", "frameborder", "allowfullscreen", "allow", "title", "loading"],
 };
 
 // --- Simple client-side sanitiser --------------------------------------------
@@ -109,6 +111,24 @@ function sanitiseHtml(dirty: string): string {
         if (/^data:/i.test(src.trim())) {
           child.removeAttribute("src");
         }
+      }
+
+      if (tag === "iframe") {
+        const src = child.getAttribute("src") ?? "";
+        const isYoutube =
+          /^https:\/\/(www\.)?(youtube\.com\/embed\/|youtube-nocookie\.com\/embed\/)/.test(src.trim());
+        if (!isYoutube) {
+          node.replaceChild(document.createTextNode(""), child);
+          continue;
+        }
+        // Wrap in responsive 16:9 container if parent isn't already one
+        const wrapper = document.createElement("div");
+        wrapper.className = "relative aspect-video w-full overflow-hidden rounded-lg my-4";
+        child.setAttribute("class", "absolute inset-0 h-full w-full");
+        child.setAttribute("loading", "lazy");
+        node.replaceChild(wrapper, child);
+        wrapper.appendChild(child);
+        continue;
       }
 
       walk(child);

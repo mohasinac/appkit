@@ -332,4 +332,150 @@ export const pokemonCouponsSeedData: Partial<CouponDocument>[] = [
       totalDiscount: 0,
     },
   },
+
+  // Hot Wheels — Treasure Hunt bundle deal
+  {
+    id: "coupon-HWTHBUNDLE",
+    code: "HWTHBUNDLE",
+    name: "Hot Wheels TH Bundle Discount",
+    description: "Buy 3 or more Hot Wheels cars and get 12% off — includes THs and STHs.",
+    type: "percentage",
+    discount: {
+      value: 12,
+      maxDiscount: 3000,
+      minPurchase: 2000,
+    },
+    usage: {
+      totalLimit: 500,
+      perUserLimit: 3,
+      currentUsage: 87,
+    },
+    validity: {
+      startDate: daysAgo(30),
+      endDate: daysAhead(60),
+      isActive: true,
+    },
+    restrictions: {
+      applicableSellers: ["store-speed-king-diecast"],
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(5),
+    stats: {
+      totalUses: 87,
+      totalRevenue: 435000,
+      totalDiscount: 52200,
+    },
+  },
+
+  // Beyblade — Bundle event coupon (referenced in event seed)
+  {
+    id: "coupon-bbbundle2",
+    code: "BBBUNDLE2",
+    name: "Bladers Paradise — Buy 2 Tops, Get Free Stadium",
+    description: "Order 2+ Beyblade Burst tops from Bladers Paradise and receive a free standard battle stadium (auto-added at checkout).",
+    type: "buy_x_get_y",
+    discount: {
+      value: 0,
+      maxDiscount: 1299,
+      minPurchase: 2000,
+    },
+    usage: {
+      totalLimit: 100,
+      perUserLimit: 2,
+      currentUsage: 23,
+    },
+    validity: {
+      startDate: daysAgo(1),
+      endDate: daysAhead(13),
+      isActive: true,
+    },
+    restrictions: {
+      applicableSellers: ["store-bladers-paradise"],
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+    stats: {
+      totalUses: 23,
+      totalRevenue: 115000,
+      totalDiscount: 29877,
+    },
+  },
+
+  // Transformers — cancelled event compensation coupon
+  {
+    id: "coupon-tfmeet-cancelled",
+    code: "TFMEET500",
+    name: "Transformers Convention Cancellation Compensation",
+    description: "₹500 store credit for registered participants of the cancelled Transformers Convention Mumbai 2026.",
+    type: "fixed",
+    discount: {
+      value: 500,
+      maxDiscount: 500,
+      minPurchase: 0,
+    },
+    usage: {
+      totalLimit: 500,
+      perUserLimit: 1,
+      currentUsage: 0,
+    },
+    validity: {
+      startDate: daysAgo(1),
+      endDate: daysAhead(90),
+      isActive: true,
+    },
+    restrictions: {
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: true,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
+    stats: {
+      totalUses: 0,
+      totalRevenue: 0,
+      totalDiscount: 0,
+    },
+  },
+
+  // New user welcome coupon — all franchises
+  {
+    id: "coupon-newtrainer10",
+    code: "NEWTRAINER10",
+    name: "New Collector Welcome — 10% Off First Order",
+    description: "Welcome to LetItRip! Get 10% off your first order across any franchise — Pokémon, Hot Wheels, Beyblade, or Transformers.",
+    type: "percentage",
+    discount: {
+      value: 10,
+      maxDiscount: 2000,
+      minPurchase: 500,
+    },
+    usage: {
+      totalLimit: 5000,
+      perUserLimit: 1,
+      currentUsage: 1240,
+    },
+    validity: {
+      startDate: daysAgo(60),
+      endDate: daysAhead(365),
+      isActive: false,
+    },
+    restrictions: {
+      firstTimeUserOnly: true,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(65),
+    updatedAt: daysAgo(30),
+    stats: {
+      totalUses: 1240,
+      totalRevenue: 6200000,
+      totalDiscount: 620000,
+    },
+  },
 ];

@@ -1,13 +1,12 @@
 /**
- * Pokemon Base Set 151 — Seed Data Bundle
+ * Multi-Franchise Collectibles — Seed Data Bundle
  *
- * A complete themed seed dataset for the LetItRip marketplace,
- * themed around the original Pokémon Base Set 151 cards.
+ * Covers: Pokémon TCG · Hot Wheels · Beyblade Burst · Transformers
  *
  * Collections covered:
  *   - categories       (pokemonCategoriesSeedData)
  *   - users            (pokemonUsersSeedData)
- *   - products         (pokemonProductsSeedData)
+ *   - products         (allProductsSeedData — all 4 franchises combined)
  *   - stores           (pokemonStoresSeedData)
  *   - reviews          (reviewsSeedData)
  *   - carouselSlides   (pokemonCarouselSlidesSeedData)
@@ -20,15 +19,28 @@
  *   - eventEntries     (eventEntriesSeedData)
  *   - addresses        (addressesSeedData)
  *   - storeAddresses   (storeAddressesSeedData)
- *
- * Usage:
- *   import { pokemonProductsSeedData, reviewsSeedData } from "./pokemon-seed-bundle";
- *   // or import individual arrays and pass them to runSeed()
+ *   - coupons          (pokemonCouponsSeedData)
  */
+
+import { pokemonProductsSeedData } from "./pokemon-products-seed-data";
+import { hotWheelsProductsSeedData } from "./hot-wheels-seed-data";
+import { beybladeProductsSeedData } from "./beyblade-seed-data";
+import { transformersProductsSeedData } from "./transformers-seed-data";
+
+/** All products across all 4 franchises — use this as the `products` seed collection. */
+export const allProductsSeedData = [
+  ...pokemonProductsSeedData,
+  ...hotWheelsProductsSeedData,
+  ...beybladeProductsSeedData,
+  ...transformersProductsSeedData,
+];
 
 export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
 export { pokemonUsersSeedData } from "./pokemon-users-seed-data";
 export { pokemonProductsSeedData } from "./pokemon-products-seed-data";
+export { hotWheelsProductsSeedData } from "./hot-wheels-seed-data";
+export { beybladeProductsSeedData } from "./beyblade-seed-data";
+export { transformersProductsSeedData } from "./transformers-seed-data";
 export { pokemonStoresSeedData } from "./pokemon-stores-seed-data";
 export { reviewsSeedData } from "./reviews-seed-data";
 export { pokemonCarouselSlidesSeedData } from "./pokemon-carousel-slides-seed-data";

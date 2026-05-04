@@ -227,6 +227,249 @@ export const eventsSeedData: EventDocument[] = [
     createdAt: daysAgo(65),
     updatedAt: daysAgo(29),
   },
+
+  // 7. Active Sale — Hot Wheels Car Culture Flash Sale
+  {
+    id: "event-hot-wheels-car-culture-flash-sale-2026-sale",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Hot Wheels Car Culture Flash Sale — 20% Off 5-Car Packs",
+    description:
+      "<p>Limited-time flash sale — <strong>20% off all Hot Wheels Car Culture 5-car assortments</strong> at Speed King Diecast. Japan Historics, Germany or Bust, and more. Ends Sunday!</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(2),
+    endsAt: daysAhead(5),
+    coverImageUrl: "https://picsum.photos/seed/hw-car-culture-sale/800/400",
+    saleConfig: {
+      discountPercent: 20,
+      bannerText: "Hot Wheels Car Culture Flash Sale — 20% Off This Weekend!",
+      affectedCategories: ["category-hw-premium"],
+    },
+    tags: ["hot-wheels", "car-culture", "flash-sale", "discount", "speed-king"],
+    stats: {
+      totalEntries: 0,
+      approvedEntries: 0,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(2),
+  },
+
+  // 8. Active Poll — Best Beyblade Burst Series
+  {
+    id: "event-best-beyblade-burst-series-poll-2026-poll",
+    type: EVENT_FIELDS.TYPE_VALUES.POLL,
+    title: "Vote: Which Is the Best Beyblade Burst Series?",
+    description:
+      "<p>From Classic to MCC — which series introduced your favourite mechanics and best tops? Cast your vote and join the discussion. Results revealed when the poll closes.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(5),
+    endsAt: daysAhead(9),
+    coverImageUrl: "https://picsum.photos/seed/beyblade-poll/800/400",
+    pollConfig: {
+      options: [
+        { id: "classic", label: "Classic / Original Burst" },
+        { id: "turbo", label: "Burst Turbo / Cho-Z" },
+        { id: "gt", label: "Burst GT / Gachi" },
+        { id: "superking", label: "Burst Superking / Sparking" },
+        { id: "quaddrive", label: "QuadDrive" },
+        { id: "mcc", label: "DB / MCC" },
+      ],
+      allowMultiSelect: false,
+      allowComment: true,
+      resultsVisibility: "after_end",
+    },
+    tags: ["beyblade", "poll", "series", "community", "burst"],
+    stats: {
+      totalEntries: 214,
+      approvedEntries: 214,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(6),
+    updatedAt: daysAgo(1),
+  },
+
+  // 9. Active Feedback — Transformers Figure Wishlist Survey
+  {
+    id: "event-transformers-figure-wishlist-survey-2026-survey",
+    type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
+    title: "Tell Us: Which Transformers Figures Do You Want Listed?",
+    description:
+      "<p>Help us stock what you actually want. Share your Transformers wishlist — Studio Series, Legacy, G1 vintage, or Masterpiece? We'll use these results to prioritise our Speed King Diecast stock requests.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(10),
+    endsAt: daysAhead(20),
+    coverImageUrl: "https://picsum.photos/seed/tf-wishlist-survey/800/400",
+    surveyConfig: {
+      requireLogin: true,
+      maxEntriesPerUser: 1,
+      hasLeaderboard: false,
+      hasPointSystem: false,
+      entryReviewRequired: false,
+      formFields: [
+        {
+          id: "line",
+          type: "text",
+          label: "Which Transformers line do you prefer? (Studio Series, Legacy, Masterpiece, G1 vintage)",
+          required: true,
+          order: 1,
+        },
+        {
+          id: "wishlist",
+          type: "textarea",
+          label: "List up to 5 specific figures you'd like to see available on LetItRip",
+          required: true,
+          order: 2,
+        },
+        {
+          id: "budget",
+          type: "text",
+          label: "What's your typical budget per Transformers figure?",
+          required: false,
+          order: 3,
+        },
+      ],
+    },
+    tags: ["transformers", "survey", "wishlist", "studio-series", "legacy"],
+    stats: {
+      totalEntries: 98,
+      approvedEntries: 98,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(11),
+    updatedAt: daysAgo(1),
+  },
+
+  // 10. Active Offer — Beyblade Burst Bundle Deal
+  {
+    id: "event-beyblade-burst-bundle-offer-2026-offer",
+    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
+    title: "Bladers Paradise Bundle Deal — Buy 2 Tops, Get Free Stadium",
+    description:
+      "<p>Order any 2 Beyblade Burst starter/individual tops from Bladers Paradise and get a <strong>free standard stadium</strong> (worth ₹1,299). Use code <strong>BBBUNDLE2</strong> at checkout. While stocks last!</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(1),
+    endsAt: daysAhead(13),
+    coverImageUrl: "https://picsum.photos/seed/beyblade-bundle-offer/800/400",
+    offerConfig: {
+      couponId: "coupon-bbbundle2",
+      displayCode: "BBBUNDLE2",
+      bannerText: "Buy 2 Beyblade Tops → Free Stadium! Use BBBUNDLE2",
+    },
+    tags: ["beyblade", "offer", "bundle", "stadium", "bladers-paradise"],
+    stats: {
+      totalEntries: 0,
+      approvedEntries: 0,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+  },
+
+  // 11. Active Feedback — Hot Wheels Collector Community Survey
+  {
+    id: "event-hot-wheels-collector-survey-2026-feedback",
+    type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
+    title: "Hot Wheels Collectors Survey — Win a Super Treasure Hunt!",
+    description:
+      "<p>Complete this 2-minute survey about your Hot Wheels collecting habits and be entered to <strong>win a Super Treasure Hunt</strong> of our choice (value ₹2,000–₹5,000). One lucky winner drawn when entries close.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(4),
+    endsAt: daysAhead(10),
+    coverImageUrl: "https://picsum.photos/seed/hw-survey-event/800/400",
+    feedbackConfig: {
+      formFields: [
+        {
+          id: "collecting_focus",
+          type: "text",
+          label: "What's your Hot Wheels collecting focus? (TH hunting, Car Culture, mainline, track sets)",
+          required: true,
+          order: 1,
+        },
+        {
+          id: "most_wanted_casting",
+          type: "text",
+          label: "Name your most-wanted Hot Wheels casting currently",
+          required: true,
+          order: 2,
+        },
+        {
+          id: "monthly_spend",
+          type: "text",
+          label: "Roughly how much do you spend on Hot Wheels per month?",
+          required: false,
+          order: 3,
+        },
+      ],
+      anonymous: false,
+    },
+    tags: ["hot-wheels", "survey", "giveaway", "super-th", "community"],
+    stats: {
+      totalEntries: 183,
+      approvedEntries: 180,
+      flaggedEntries: 3,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(1),
+  },
+
+  // 12. Active Sale — Pokémon Multi-Set Clearance
+  {
+    id: "event-pokemon-multiseries-clearance-2026-sale",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Pokémon TCG Multi-Series Clearance — Up to 25% Off Non-Holo Rares & Uncommons",
+    description:
+      "<p>Clearance sale across all three LetItRip Pokémon TCG stores. <strong>Up to 25% off</strong> non-holo rares, uncommons, and common energy lots. Perfect for completing your Base Set playset.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(3),
+    endsAt: daysAhead(7),
+    coverImageUrl: "https://images.pokemontcg.io/base1/2_hires.png",
+    saleConfig: {
+      discountPercent: 25,
+      bannerText: "Pokémon Clearance Sale — Up to 25% Off Non-Holo Rares & Uncommons!",
+      affectedCategories: ["category-non-holo-rare-rarity", "category-uncommon-rarity", "category-common-rarity"],
+    },
+    tags: ["pokemon", "clearance", "sale", "non-holo", "uncommon", "common"],
+    stats: {
+      totalEntries: 0,
+      approvedEntries: 0,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(3),
+  },
+
+  // 13. Cancelled — Transformers Convention Live Event (cancelled due to venue issue)
+  {
+    id: "event-transformers-convention-mumbai-2026-cancelled",
+    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
+    title: "Transformers Collector Meet-Up Mumbai 2026 [CANCELLED]",
+    description:
+      "<p><strong>This event has been cancelled</strong> due to unforeseen venue circumstances. We apologise for the inconvenience. All registered participants will receive a ₹500 store credit coupon as compensation. Thank you for your understanding.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
+    startsAt: daysAhead(15),
+    endsAt: daysAhead(16),
+    coverImageUrl: "https://picsum.photos/seed/tf-meet-cancelled/800/400",
+    offerConfig: {
+      couponId: "coupon-tfmeet-cancelled",
+      displayCode: "TFMEET500",
+      bannerText: "Convention cancelled — ₹500 compensation coupon issued to all registrants",
+    },
+    tags: ["transformers", "event", "cancelled", "convention", "mumbai"],
+    stats: {
+      totalEntries: 0,
+      approvedEntries: 0,
+      flaggedEntries: 0,
+    },
+    createdBy: "user-admin-user-admin",
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(1),
+  },
 ];
 
 // -- Event Entries -------------------------------------------------------------

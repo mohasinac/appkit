@@ -3,14 +3,38 @@ import { Container, Main, Heading, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { PreOrdersIndexListing } from "./PreOrdersIndexListing";
 
-export async function PreOrdersListView() {
+type SearchParams = Record<string, string | string[]>;
+
+function sp(params: SearchParams, key: string): string {
+  const v = params[key];
+  return Array.isArray(v) ? v[0] ?? "" : v ?? "";
+}
+
+function buildPreOrderFilters(params: SearchParams): string {
+  const parts: string[] = ["status==published", "isPreOrder==true"];
+  const minPrice = sp(params, "minPrice");
+  const maxPrice = sp(params, "maxPrice");
+  if (minPrice) parts.push(`price>=${minPrice}`);
+  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  const store = sp(params, "storeId");
+  if (store) parts.push(`sellerId==${store}`);
+  const preOrderStatus = sp(params, "preOrderStatus");
+  if (preOrderStatus) parts.push(`preOrderStatus==${preOrderStatus}`);
+  return parts.join(",");
+}
+
+export interface PreOrdersListViewProps {
+  searchParams?: SearchParams;
+}
+
+export async function PreOrdersListView({ searchParams = {} }: PreOrdersListViewProps) {
+  const sort = sp(searchParams, "sort") || "-createdAt";
+  const page = Number(sp(searchParams, "page")) || 1;
+  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const filters = buildPreOrderFilters(searchParams);
+
   const result = await productRepository
-    .list({
-      filters: "status==published,isPreOrder==true",
-      sorts: "-createdAt",
-      page: 1,
-      pageSize: 24,
-    })
+    .list({ filters, sorts: sort, page, pageSize })
     .catch(() => null);
 
   return (
