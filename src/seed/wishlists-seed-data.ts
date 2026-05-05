@@ -19,41 +19,41 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 export const wishlistsSeedData: WishlistSeedDocument[] = [
   // Ash wants Charizard and Blastoise — the classic rivalry cards
   {
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     productId: "product-charizard-base1-4-holo-rare-fire-blaine-1",
     addedAt: daysAgo(7),
   },
   {
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
     addedAt: daysAgo(5),
   },
   {
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
     addedAt: daysAgo(3),
   },
 
   // Gary wants the rarest — the 1st edition auction Charizard and Mewtwo PSA 9
   {
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     productId: "auction-charizard-1st-ed-base1-4-fire-blaine-auction-1",
     addedAt: daysAgo(6),
   },
   {
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     productId: "auction-mewtwo-base1-10-psychic-surge-auction-1",
     addedAt: daysAgo(4),
   },
 
   // Brock wants solid Rock-type adjacent picks and sealed product
   {
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     productId: "product-base-set-booster-pack-sealed-blaine-1",
     addedAt: daysAgo(8),
   },
   {
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     productId: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
     addedAt: daysAgo(4),
   },
@@ -96,36 +96,36 @@ export const wishlistsSeedData: WishlistSeedDocument[] = [
 
   // Professor Oak wants everything for research — the binder and trainer cards
   {
-    userId: "user-prof-oak-pallet-oak",
+    userId: "user-dawn-sinnoh-buyer",
     productId: "product-pokemon-9-pocket-binder-misty-1",
     addedAt: daysAgo(10),
   },
   {
-    userId: "user-prof-oak-pallet-oak",
+    userId: "user-dawn-sinnoh-buyer",
     productId: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
     addedAt: daysAgo(6),
   },
 
   // Sabrina loves Psychic — and the Haunter is a natural fit
   {
-    userId: "user-sabrina-saffron-sabrina",
+    userId: "user-may-hoenn-buyer",
     productId: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
     addedAt: daysAgo(5),
   },
   {
-    userId: "user-sabrina-saffron-sabrina",
+    userId: "user-may-hoenn-buyer",
     productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
     addedAt: daysAgo(3),
   },
 
   // Erika loves Grass — Beedrill and Clefairy are her targets
   {
-    userId: "user-erika-celadon-erika",
+    userId: "user-dawn-sinnoh-buyer",
     productId: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
     addedAt: daysAgo(3),
   },
   {
-    userId: "user-erika-celadon-erika",
+    userId: "user-dawn-sinnoh-buyer",
     productId: "product-clefairy-base1-35-uncommon-colorless-misty-1",
     addedAt: daysAgo(1),
   },

@@ -38,7 +38,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-charizard-base1-4-holo-rare-fire-blaine-1",
     productTitle: "Charizard — Base Set #4 Holo Rare (Near Mint)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     userName: "Ash Ketchum",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
@@ -96,7 +96,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
     productTitle: "Blastoise — Base Set #2 Holo Rare (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     userName: "Gary Oak",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
@@ -155,7 +155,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-pikachu-base1-58-common-electric-surge-1",
     productTitle: "Pikachu — Base Set #58 Common (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     userName: "Ash Ketchum",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
@@ -193,7 +193,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-zapdos-base1-16-holo-rare-electric-surge-1",
     productTitle: "Zapdos — Base Set #16 Holo Rare (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     userName: "Brock",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
@@ -251,7 +251,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
     productTitle: "Professor Oak — Base Set #88 Trainer (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     userName: "Gary Oak",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
@@ -337,7 +337,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-pokemon-9-pocket-binder-misty-1",
     productTitle: "Pokémon 9-Pocket Binder (360 cards, Charizard Cover)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     userName: "Brock",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
@@ -395,7 +395,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-chansey-base1-3-holo-rare-colorless-misty-1",
     productTitle: "Chansey — Base Set #3 Holo Rare (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     userName: "Gary Oak",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
@@ -424,7 +424,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-pokemon-card-sleeves-standard-blaine-1",
     productTitle: "Pokémon-Art Card Sleeves (100-pack, Pikachu)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     userName: "Ash Ketchum",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
@@ -453,7 +453,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-magneton-base1-9-holo-rare-electric-surge-1",
     productTitle: "Magneton — Base Set #9 Holo Rare (Lightly Played)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     userName: "Brock",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
@@ -570,7 +570,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-growlithe-base1-40-uncommon-fire-blaine-1",
     productTitle: "Growlithe — Base Set #40 Uncommon (Near Mint)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-gary-oak-pallet-gary",
+    userId: "user-gary-oak-buyer",
     userName: "Gary Oak",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png",
@@ -603,7 +603,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-lightning-energy-base1-101-common-energy-surge-lot",
     productTitle: "Lightning Energy — Base Set #101 x10 Lot (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-ash-ketchum-pallet-ash",
+    userId: "user-ash-ketchum-buyer",
     userName: "Ash Ketchum",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
@@ -629,7 +629,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
     productTitle: "Beedrill — Base Set #17 Non-Holo Rare (Near Mint)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-brock-pewter-brock",
+    userId: "user-brock-pewter-buyer",
     userName: "Brock",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",

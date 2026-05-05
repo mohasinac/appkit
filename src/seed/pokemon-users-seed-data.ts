@@ -55,7 +55,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(180),
     updatedAt: daysAgo(2),
-    storeId: "store-mistys-water-cards",
+    storeId: "mistys-water-cards",
     storeSlug: "mistys-water-cards",
     storeStatus: "approved",
     publicProfile: {
@@ -86,7 +86,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(200),
     updatedAt: daysAgo(3),
-    storeId: "store-surges-electric-emporium",
+    storeId: "surges-electric-emporium",
     storeSlug: "surges-electric-emporium",
     storeStatus: "approved",
     publicProfile: {
@@ -117,7 +117,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(220),
     updatedAt: daysAgo(1),
-    storeId: "store-blaines-fire-shoppe",
+    storeId: "blaines-fire-shoppe",
     storeSlug: "blaines-fire-shoppe",
     storeStatus: "approved",
     publicProfile: {
@@ -148,7 +148,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(90),
     updatedAt: daysAgo(1),
-    storeId: "store-speed-king-diecast",
+    storeId: "speed-king-diecast",
     storeSlug: "speed-king-diecast",
     storeStatus: "approved",
     publicProfile: {
@@ -179,7 +179,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(120),
     updatedAt: daysAgo(2),
-    storeId: "store-bladers-paradise",
+    storeId: "bladers-paradise",
     storeSlug: "bladers-paradise",
     storeStatus: "approved",
     publicProfile: {
@@ -422,7 +422,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(100),
     updatedAt: daysAgo(1),
-    storeId: "store-anime-vault-india",
+    storeId: "anime-vault-india",
     storeSlug: "anime-vault-india",
     storeStatus: "approved",
     publicProfile: {
@@ -453,7 +453,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(150),
     updatedAt: daysAgo(2),
-    storeId: "store-retro-vault-india",
+    storeId: "retro-vault-india",
     storeSlug: "retro-vault-india",
     storeStatus: "approved",
     publicProfile: {
@@ -484,7 +484,7 @@ export const pokemonUsersSeedData: Partial<UserDocument>[] = [
     disabled: false,
     createdAt: daysAgo(80),
     updatedAt: daysAgo(1),
-    storeId: "store-cosplay-india-hub",
+    storeId: "cosplay-india-hub",
     storeSlug: "cosplay-india-hub",
     storeStatus: "approved",
     publicProfile: {

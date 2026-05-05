@@ -78,7 +78,7 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       filterGroups={[
         {
           title: "Status",
-          options: ["All", "published", "draft", "archived"],
+          options: ["All", "pending", "published", "draft", "archived"],
           active: statusFilter || "All",
           onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
         },

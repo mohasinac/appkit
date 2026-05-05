@@ -30,6 +30,57 @@ export function StorePreOrdersListing({ storeId, sellerId, initialData }: StoreP
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">((table.get("view") as "grid" | "list") || "grid");
 
+  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
+    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
+  );
+
+  const pendingTable = useMemo(() => ({
+    get: (key: string) => pendingFilters[key] ?? "",
+    getNumber: (key: string, fallback = 0) => {
+      const v = pendingFilters[key];
+      if (!v) return fallback;
+      const n = Number(v);
+      return isNaN(n) ? fallback : n;
+    },
+    set: (key: string, value: string) =>
+      setPendingFilters((p) => ({ ...p, [key]: value })),
+    setMany: (updates: Record<string, string>) =>
+      setPendingFilters((p) => ({ ...p, ...updates })),
+    clear: (keys?: string[]) => {
+      const ks = keys ?? FILTER_KEYS;
+      setPendingFilters((p) => ({
+        ...p,
+        ...Object.fromEntries(ks.map((k) => [k, ""])),
+      }));
+    },
+    setPage: (_: number) => {},
+    setPageSize: (_: number) => {},
+    setSort: (_: string) => {},
+    buildSieveParams: () => "",
+    buildSearchParams: () => "",
+    params: new URLSearchParams(),
+  }), [pendingFilters]) as any;
+
+  const openFilters = useCallback(() => {
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
+    setFilterOpen(true);
+  }, [table]);
+
+  const applyFilters = useCallback(() => {
+    const updates: Record<string, string> = { page: "1" };
+    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
+    table.setMany(updates);
+    setFilterOpen(false);
+  }, [pendingFilters, table]);
+
+  const clearFilters = useCallback(() => {
+    const empty = Object.fromEntries(FILTER_KEYS.map((k) => [k, ""]));
+    setPendingFilters(empty);
+    table.setMany({ ...empty, page: "1" });
+  }, [table]);
+
+  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
+
   const params = {
     q: table.get("q") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
@@ -49,14 +100,14 @@ export function StorePreOrdersListing({ storeId, sellerId, initialData }: StoreP
     table.setPage(1);
   }, [searchInput, table]);
 
-  const closeFilters = () => setFilterOpen(false);
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4";
 
   return (
     <div className="min-h-[200px]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
-        onFiltersClick={() => setFilterOpen(true)}
+        filterCount={activeFilterCount}
+        onFiltersClick={openFilters}
         searchValue={searchInput}
         searchPlaceholder="Search store pre-orders..."
         onSearchChange={setSearchInput}
@@ -67,6 +118,17 @@ export function StorePreOrdersListing({ storeId, sellerId, initialData }: StoreP
         view={view}
         onViewChange={(v) => { setView(v); table.set("view", v); }}
       />
+
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
+        </div>
+      )}
 
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
       <div className="py-6">
@@ -111,37 +173,35 @@ export function StorePreOrdersListing({ storeId, sellerId, initialData }: StoreP
           </div>
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
       </div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={closeFilters} />
+          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
           <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
                 <SlidersHorizontal className="h-4 w-4" />
                 Filters
               </span>
-              <button type="button" onClick={closeFilters} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {activeFilterCount > 0 && (
+                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">
+                    Clear all
+                  </button>
+                )}
+                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <ProductFilters table={table as any} currencyPrefix="₹" />
+              <ProductFilters table={pendingTable} currencyPrefix="₹" />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={closeFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors">
-                Apply filters
+              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </button>
             </div>
           </div>

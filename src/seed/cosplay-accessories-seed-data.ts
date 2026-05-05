@@ -15,7 +15,7 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const CP = {
   sellerId: "user-cosplay-india-owner",
-  storeId: "store-cosplay-india-hub",
+  storeId: "cosplay-india-hub",
   sellerName: "CosPlay India Hub",
   sellerEmail: "cosplay@letitrip.in",
 } as const;

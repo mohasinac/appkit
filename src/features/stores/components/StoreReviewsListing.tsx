@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { useStoreReviews } from "../hooks/useStores";
 import {
   Container,
-  Div,
   Grid,
+  Pagination,
   Row,
   Section,
   Span,
@@ -95,26 +95,8 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
             </Grid>
 
             {totalPages > 1 && (
-              <Row gap="xs" className="mt-8 justify-center">
-                <button
-                  type="button"
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => p - 1)}
-                  className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40"
-                >
-                  ‹
-                </button>
-                <Div className="flex items-center px-3 text-sm text-zinc-600 dark:text-zinc-400">
-                  {page} / {totalPages}
-                </Div>
-                <button
-                  type="button"
-                  disabled={page === totalPages}
-                  onClick={() => setPage((p) => p + 1)}
-                  className="rounded-lg border px-3 py-1.5 text-sm disabled:opacity-40"
-                >
-                  ›
-                </button>
+              <Row className="mt-8 justify-center">
+                <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
               </Row>
             )}
           </>

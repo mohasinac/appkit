@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { Pagination, SortDropdown } from "../../../ui";
+import { Pagination, ListingToolbar } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
 import { StoreFilters } from "./StoreFilters";
@@ -87,6 +87,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const clearSearch = useCallback(() => {
     setSearchInput("");
     table.set("q", "");
+    table.setPage(1);
   }, [table]);
 
   // Build sieve filters from applied URL params
@@ -119,73 +120,29 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   return (
     <div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
-        <div className="flex items-center gap-2.5 max-w-full">
+      <ListingToolbar
+        filterCount={activeFilterCount}
+        onFiltersClick={openFilters}
+        searchValue={searchInput}
+        searchPlaceholder="Search stores..."
+        onSearchChange={setSearchInput}
+        onSearchCommit={commitSearch}
+        sortValue={table.get("sort") || "-createdAt"}
+        sortOptions={STORE_SORT_OPTIONS}
+        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        hideViewToggle
+      />
 
-          {/* Filter button */}
-          <button
-            type="button"
-            onClick={openFilters}
-            className="relative flex shrink-0 items-center gap-2 rounded-lg border border-zinc-300 dark:border-slate-600 px-3.5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters</span>
-            {activeFilterCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-
-          {/* Search */}
-          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
-            <Search className="ml-3 h-4 w-4 flex-shrink-0 text-zinc-400" />
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && commitSearch()}
-              placeholder="Search stores…"
-              className="min-w-0 flex-1 bg-transparent px-2.5 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
-            />
-            {searchInput && (
-              <button
-                type="button"
-                onClick={clearSearch}
-                className="mr-2 flex-shrink-0 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
-                aria-label="Clear search"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={commitSearch}
-              className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
-              aria-label="Search"
-            >
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* Sort */}
-          <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-            <span className="hidden md:inline whitespace-nowrap">Sort by</span>
-            <SortDropdown
-              value={table.get("sort") || "-createdAt"}
-              onChange={(v) => { table.set("sort", v); table.setPage(1); }}
-              options={STORE_SORT_OPTIONS as any}
-            />
-          </div>
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination
+            currentPage={table.getNumber("page", 1)}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
         </div>
-
-        {/* Result count */}
-        {!isLoading && (
-          <p className="mt-1.5 text-xs text-zinc-400 dark:text-zinc-500">
-            {total} store{total !== 1 ? "s" : ""}
-          </p>
-        )}
-      </div>
+      )}
 
       {/* ── Store grid ─────────────────────────────────────────────────── */}
       <div className="py-6">
@@ -221,15 +178,6 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
           </div>
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={table.getNumber("page", 1)}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
       </div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}

@@ -30,8 +30,8 @@ export const cartsSeedData: CartDocument[] = [
   // -- Ash Ketchum: multi-item, cross-seller cart ----------------------------
   // Tests: list cart items, remove single item, update quantity, checkout
   {
-    id: "user-ash-ketchum-pallet-ash",
-    userId: "user-ash-ketchum-pallet-ash",
+    id: "user-ash-ketchum-buyer",
+    userId: "user-ash-ketchum-buyer",
     items: [
       {
         itemId: "cartitem-ash-charizard-001",
@@ -86,8 +86,8 @@ export const cartsSeedData: CartDocument[] = [
   // -- Gary Oak: single-item cart -------------------------------------------
   // Tests: add item, checkout with single item, clear cart after order
   {
-    id: "user-gary-oak-pallet-gary",
-    userId: "user-gary-oak-pallet-gary",
+    id: "user-gary-oak-buyer",
+    userId: "user-gary-oak-buyer",
     items: [
       {
         itemId: "cartitem-gary-mewtwo-001",
@@ -112,8 +112,8 @@ export const cartsSeedData: CartDocument[] = [
   // -- Brock: cart with auction item ----------------------------------------
   // Tests: auction item add-to-cart display, checkout CTA blocked (must bid)
   {
-    id: "user-brock-pewter-brock",
-    userId: "user-brock-pewter-brock",
+    id: "user-brock-pewter-buyer",
+    userId: "user-brock-pewter-buyer",
     items: [
       {
         itemId: "cartitem-brock-charizard-auction-001",
@@ -154,8 +154,8 @@ export const cartsSeedData: CartDocument[] = [
   // -- Sabrina: cart with quantity > 1 items ---------------------------------
   // Tests: increment/decrement quantity controls, cart total calculation
   {
-    id: "user-sabrina-saffron-sabrina",
-    userId: "user-sabrina-saffron-sabrina",
+    id: "user-may-hoenn-buyer",
+    userId: "user-may-hoenn-buyer",
     items: [
       {
         itemId: "cartitem-sabrina-haunter-001",
@@ -197,8 +197,8 @@ export const cartsSeedData: CartDocument[] = [
   // Tests: empty cart UI state, "Your cart is empty" message,
   //        add-to-cart starting from empty state
   {
-    id: "user-erika-celadon-erika",
-    userId: "user-erika-celadon-erika",
+    id: "user-dawn-sinnoh-buyer",
+    userId: "user-dawn-sinnoh-buyer",
     items: [],
     createdAt: daysAgo(27),
     updatedAt: daysAgo(9),

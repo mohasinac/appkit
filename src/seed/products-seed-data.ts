@@ -68,14 +68,14 @@ const FV = {
 } as const;
 const AC = {
   sellerId: "user-fashion-boutique-fashionb",
-  storeId: "store-beygear-pro-shop-by-beygear",
-  sellerName: "BeyGear Pro Shop",
+  storeId: "store-animecraft-apparel-by-animecraft",
+  sellerName: "AnimeCraft Apparel",
   sellerEmail: "fashion@letitrip.in",
 } as const;
 const OS = {
   sellerId: "user-home-essentials-homeesse",
-  storeId: "store-spincore-arena-by-spincore",
-  sellerName: "SpinCore Arena",
+  storeId: "store-otakushelf-co-by-otakushelf",
+  sellerName: "OtakuShelf Co",
   sellerEmail: "home@letitrip.in",
 } as const;
 

@@ -1,6 +1,7 @@
 "use client"
 import { useMemo } from "react";
 import { Div } from "../components/Div";
+import { normalizeRichTextHtml } from "../../utils/string.formatter";
 
 // --- Allowed HTML tags (safe subset — no script/object; iframe allowed for YouTube only) -------
 
@@ -230,7 +231,7 @@ export function RichText({
   highlightCode,
 }: RichTextProps) {
   const safe = useMemo(() => {
-    const sanitized = sanitiseHtml(html);
+    const sanitized = sanitiseHtml(normalizeRichTextHtml(html));
 
     if (!highlightCode || typeof document === "undefined") return sanitized;
 

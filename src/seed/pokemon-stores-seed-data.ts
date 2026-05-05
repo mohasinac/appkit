@@ -158,7 +158,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 8. CosPlay India Hub — Cosplay Props & TCG Accessories
   {
-    id: "store-cosplay-india-hub",
+    id: "cosplay-india-hub",
     storeSlug: "cosplay-india-hub",
     ownerId: "user-cosplay-india-owner",
     storeName: "CosPlay India Hub",

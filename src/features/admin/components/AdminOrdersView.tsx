@@ -24,13 +24,21 @@ interface AdminOrdersResponse {
 
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [q, setQ] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState("");
+
+  const filters = statusFilter && statusFilter !== "All"
+    ? `status==${statusFilter}`
+    : undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminOrdersResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
-    queryKey: ["admin", "orders", "listing"],
+    queryKey: ["admin", "orders", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.ORDERS,
+    filters,
+    q,
     mapRows: (response) =>
       toRecordArray(response.orders).map((item, index) => ({
         id: toStringValue(item.id, `order-${index}`),
@@ -60,11 +68,21 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       subtitle="Track payment, fulfillment, and delivery exceptions across the marketplace."
       actionLabel="Export orders"
       searchPlaceholder="Search orders, buyers, or tracking IDs"
+      onSearch={setQ}
+      searchValue={q}
       rows={rows}
       isLoading={isLoading}
       errorMessage={errorMessage}
       emptyLabel="No orders found"
       resultSummary={`Showing ${rows.length} of ${total} orders`}
+      filterGroups={[
+        {
+          title: "Status",
+          options: ["All", "pending", "processing", "shipped", "delivered", "cancelled"],
+          active: statusFilter || "All",
+          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+        },
+      ]}
     />
   );
 }

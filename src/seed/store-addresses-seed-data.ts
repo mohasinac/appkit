@@ -39,7 +39,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   // ============================================
   {
     id: "saddr-misty-main-1707400001",
-    storeSlug: "store-mistys-water-cards-by-misty",
+    storeSlug: "mistys-water-cards",
     label: "Cerulean Gym Vault",
     fullName: "Misty",
     phone: `${_phonePrefix}9876543211`,
@@ -56,7 +56,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   },
   {
     id: "saddr-misty-pickup-1707400002",
-    storeSlug: "store-mistys-water-cards-by-misty",
+    storeSlug: "mistys-water-cards",
     label: "Card Pickup Point",
     fullName: "Misty",
     phone: `${_phonePrefix}9876543211`,
@@ -76,7 +76,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   // ============================================
   {
     id: "saddr-surge-main-1707400003",
-    storeSlug: "store-surges-electric-gym-by-surge",
+    storeSlug: "surges-electric-emporium",
     label: "Vermilion Gym Storage",
     fullName: "Lt. Surge",
     phone: `${_phonePrefix}9988776655`,
@@ -93,7 +93,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   },
   {
     id: "saddr-surge-warehouse-1707400004",
-    storeSlug: "store-surges-electric-gym-by-surge",
+    storeSlug: "surges-electric-emporium",
     label: "Warehouse",
     fullName: "Lt. Surge",
     phone: `${_phonePrefix}9988776655`,
@@ -113,7 +113,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   // ============================================
   {
     id: "saddr-blaine-main-1707400005",
-    storeSlug: "store-blaines-fire-shoppe-by-blaine",
+    storeSlug: "blaines-fire-shoppe",
     label: "Cinnabar Volcano Vault",
     fullName: "Blaine",
     phone: `${_phonePrefix}9876543213`,
@@ -130,7 +130,7 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
   },
   {
     id: "saddr-blaine-pickup-1707400006",
-    storeSlug: "store-blaines-fire-shoppe-by-blaine",
+    storeSlug: "blaines-fire-shoppe",
     label: "Fire Stone Pickup",
     fullName: "Blaine",
     phone: `${_phonePrefix}9876543213`,
