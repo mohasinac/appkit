@@ -116,7 +116,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 6. Anime Vault India — Anime Figures (DBZ, Naruto, One Piece, MHA)
   {
-    id: "store-anime-vault-india",
+    id: "anime-vault-india",
     storeSlug: "anime-vault-india",
     ownerId: "user-anime-vault-owner",
     storeName: "Anime Vault India",
@@ -137,7 +137,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 7. Retro Vault India — Vintage Gaming & Classic Diecast
   {
-    id: "store-retro-vault-india",
+    id: "retro-vault-india",
     storeSlug: "retro-vault-india",
     ownerId: "user-retro-vault-owner",
     storeName: "Retro Vault India",
