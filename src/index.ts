@@ -1531,6 +1531,10 @@ export { carouselRepository } from "./repositories/index";
 // cartRepository - Shared export for cart repository.
 export { cartRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// brandsRepository - Shared export for brands repository.
+export { brandsRepository } from "./repositories/index";
+export type { BrandDocument, BrandCreateInput, BrandUpdateInput } from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // categoriesRepository - Shared export for categories repository.
 export { categoriesRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -3162,6 +3166,12 @@ export { AdminBlogView } from "./features/admin/index";
 // AdminCarouselView - Component for admin carousel view.
 export { AdminCarouselView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AdminBrandsView - Component for admin brands management view.
+export { AdminBrandsView } from "./features/admin/index";
+export type { AdminBrandsViewProps } from "./features/admin/index";
+// AdminBrandEditorView - Component for admin brand create/edit form.
+export { AdminBrandEditorView } from "./features/admin/index";
+export type { AdminBrandEditorViewProps } from "./features/admin/index";
 // AdminCategoriesView - Component for admin categories view.
 export { AdminCategoriesView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.

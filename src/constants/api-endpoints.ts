@@ -92,6 +92,8 @@ export const ADMIN_ENDPOINTS = {
   BIDS: "/api/admin/bids",
   BLOG: "/api/admin/blog",
   CATEGORIES: "/api/admin/categories",
+  BRANDS: "/api/admin/brands",
+  BRAND_BY_ID: (id: string) => `/api/admin/brands/${id}`,
   FAQS: "/api/admin/faqs",
   STORES: "/api/admin/stores",
   PAYOUTS: "/api/admin/payouts",

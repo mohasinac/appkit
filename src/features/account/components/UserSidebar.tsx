@@ -24,8 +24,10 @@ export interface UserSidebarProps {
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
   desktopOpen?: boolean;
+  /** Toggle callback for the desktop sidebar tab (open ↔ close). */
+  onToggle?: () => void;
   className?: string;
-  /** "sidebar" = persistent inline aside on desktop; "overlay" = slide-over portal (default) */
+  /** "sidebar" = left slide-over panel on desktop; "overlay" = right slide-over portal (default) */
   variant?: "sidebar" | "overlay";
 }
 
@@ -174,7 +176,7 @@ function DrawerPanel({
   );
 }
 
-export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, desktopOpen = true, variant = "overlay" }: UserSidebarProps) {
+export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, desktopOpen = false, onToggle, variant = "overlay" }: UserSidebarProps) {
   const pathname = usePathname();
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -188,32 +190,58 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
     }
   }, [mobileOpen, variant]);
 
-  // ── Persistent sidebar variant (desktop inline, mobile bottom-sheet) ──────
+  // ── Persistent sidebar variant (desktop left slide-over, mobile bottom-sheet) ──────
   if (variant === "sidebar") {
+    const handleToggle = onToggle ?? close;
     return (
       <>
-        {/* Desktop — collapsible aside with smooth width transition */}
-        <aside
-          className={`hidden md:flex flex-col shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-hidden transition-[width] duration-300 ${desktopOpen ? "w-52 lg:w-56" : "w-0 border-r-0"}`}
+        {/* Desktop backdrop */}
+        {desktopOpen && (
+          <div
+            className="hidden md:block fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30"
+            onClick={handleToggle}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
+        <div
+          className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
+          style={{
+            top: "var(--header-height, 3.5rem)",
+            height: "calc(100vh - var(--header-height, 3.5rem))",
+            width: "13rem",
+            transform: desktopOpen ? "translateX(0)" : "translateX(calc(-100% + 1.25rem))",
+          }}
         >
-          <div className="w-52 lg:w-56 flex flex-col flex-1 min-h-0">
-            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0 flex items-center justify-between gap-2">
+          {/* Nav panel */}
+          <div className="flex-1 bg-white dark:bg-slate-900 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
+            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">My Account</span>
-              <button
-                type="button"
-                onClick={close}
-                aria-label="Collapse sidebar"
-                className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
-              </button>
             </div>
-            <DrawerContent groups={groups} items={items} activeHref={pathname} />
+            <div className="flex-1 overflow-y-auto">
+              <DrawerContent groups={groups} items={items} activeHref={pathname} />
+            </div>
           </div>
-        </aside>
-        {/* Mobile — BottomSheet triggered by external mobileOpen state */}
+
+          {/* Toggle tab — primary-colored vertical bar, always visible */}
+          <button
+            type="button"
+            onClick={handleToggle}
+            aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
+            className="w-5 shrink-0 bg-primary dark:bg-secondary hover:bg-primary-600 dark:hover:bg-secondary-600 flex items-center justify-center transition-colors rounded-r-md shadow-md"
+          >
+            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              {desktopOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile: bottom sheet */}
         <div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title="My Account">
             <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />

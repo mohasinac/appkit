@@ -28,6 +28,8 @@ interface StoreSidebarProps {
   desktopOpen?: boolean;
   variant?: "sidebar" | "overlay";
   onCloseMobile?: () => void;
+  /** Toggle callback for the desktop sidebar tab (open ↔ close). */
+  onToggle?: () => void;
   className?: string;
 }
 
@@ -204,9 +206,10 @@ export function StoreSidebar({
   storeName,
   storeLogoURL,
   mobileOpen = false,
-  desktopOpen = true,
+  desktopOpen = false,
   variant = "overlay",
   onCloseMobile,
+  onToggle,
 }: StoreSidebarProps) {
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -227,13 +230,31 @@ export function StoreSidebar({
   );
 
   if (variant === "sidebar") {
+    const handleToggle = onToggle ?? close;
     return (
       <>
-        <aside
-          className={`hidden md:flex flex-col shrink-0 border-r border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-hidden transition-[width] duration-300 ${desktopOpen ? "w-72" : "w-0 border-r-0"}`}
+        {/* Desktop backdrop */}
+        {desktopOpen && (
+          <div
+            className="hidden md:block fixed inset-0 bg-black/40 backdrop-blur-[2px] z-30"
+            onClick={handleToggle}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Desktop: left slide-over panel + always-visible primary toggle tab */}
+        <div
+          className="hidden md:flex fixed left-0 z-40 transition-transform duration-300"
+          style={{
+            top: "var(--header-height, 3.5rem)",
+            height: "calc(100vh - var(--header-height, 3.5rem))",
+            width: "18rem",
+            transform: desktopOpen ? "translateX(0)" : "translateX(calc(-100% + 1.25rem))",
+          }}
         >
-          <div className="w-72 flex flex-col flex-1 min-h-0">
-            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0 flex items-center justify-between gap-2">
+          {/* Nav panel */}
+          <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-700 flex flex-col overflow-hidden shadow-xl">
+            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (
                   <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
@@ -244,20 +265,28 @@ export function StoreSidebar({
                 )}
                 <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName || panelTitle}</Text>
               </div>
-              <button
-                type="button"
-                onClick={close}
-                aria-label="Collapse sidebar"
-                className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                </svg>
-              </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-0 py-3">{navContent}</div>
+            <div className="flex-1 overflow-y-auto">{navContent}</div>
           </div>
-        </aside>
+
+          {/* Toggle tab — primary-colored vertical bar, always visible */}
+          <button
+            type="button"
+            onClick={handleToggle}
+            aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
+            className="w-5 shrink-0 bg-primary dark:bg-secondary hover:bg-primary-600 dark:hover:bg-secondary-600 flex items-center justify-center transition-colors rounded-r-md shadow-md"
+          >
+            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              {desktopOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile: bottom sheet */}
         <div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title={panelTitle}>
             {groups ? (

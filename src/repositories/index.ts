@@ -111,6 +111,16 @@ export type {
 } from "../core/newsletter.repository";
 
 export { CopilotLogRepository, copilotLogRepository } from "../core";
+
+export {
+  BrandsRepository,
+  brandsRepository,
+} from "../features/brands/repository/brands.repository";
+export type {
+  BrandDocument,
+  BrandCreateInput,
+  BrandUpdateInput,
+} from "../features/brands/schemas";
 export type {
   CopilotFeedback,
   CopilotLogDocument,
