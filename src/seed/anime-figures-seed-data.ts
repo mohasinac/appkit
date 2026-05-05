@@ -15,7 +15,7 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const AV = {
   sellerId: "user-anime-vault-owner",
-  storeId: "store-anime-vault-india",
+  storeId: "anime-vault-india",
   sellerName: "Anime Vault India",
   sellerEmail: "animevault@letitrip.in",
 } as const;

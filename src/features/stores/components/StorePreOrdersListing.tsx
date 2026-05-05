@@ -15,6 +15,8 @@ const PREORDER_SORT_OPTIONS = [
   { value: "-price", label: "Price: High to Low" },
 ] as const;
 
+const FILTER_KEYS = ["minPrice", "maxPrice"];
+
 export interface StorePreOrdersListingProps {
   storeId?: string;
   /** @deprecated Use storeId */
