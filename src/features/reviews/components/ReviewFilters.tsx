@@ -140,7 +140,6 @@ export function ReviewFilters({
             label={t("showVerifiedOnly")}
             checked={table.get("verified") === "true"}
             onChange={(v: boolean) => table.set("verified", v ? "true" : "")}
-            defaultCollapsed={true}
           />
 
           <SwitchFilter
@@ -148,7 +147,6 @@ export function ReviewFilters({
             label={t("showFeaturedOnly")}
             checked={table.get("featured") === "true"}
             onChange={(v: boolean) => table.set("featured", v ? "true" : "")}
-            defaultCollapsed={true}
           />
         </>
       )}

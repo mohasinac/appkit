@@ -6,14 +6,8 @@ import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersInde
 
 type TabId = "products" | "auctions" | "pre-orders";
 
-function tabLabel(label: string, count?: number) {
-  if (!count) return label;
-  return `${label} (${count.toLocaleString()})`;
-}
-
-export interface CategoryDetailTabsProps {
-  categorySlug: string;
-  categoryId?: string;
+export interface BrandDetailTabsProps {
+  brandName: string;
   initialProductsData?: any;
   counts?: {
     products?: number;
@@ -22,7 +16,12 @@ export interface CategoryDetailTabsProps {
   };
 }
 
-export function CategoryDetailTabs({ categorySlug, categoryId, initialProductsData, counts }: CategoryDetailTabsProps) {
+function tabLabel(label: string, count?: number) {
+  if (!count) return label;
+  return `${label} (${count.toLocaleString()})`;
+}
+
+export function BrandDetailTabs({ brandName, initialProductsData, counts }: BrandDetailTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>("products");
 
   const TABS: { id: TabId; label: string }[] = [
@@ -51,19 +50,18 @@ export function CategoryDetailTabs({ categorySlug, categoryId, initialProductsDa
         ))}
       </div>
 
-      {/* Tab panels — unmount/remount on tab switch keeps URL state isolated */}
       {activeTab === "products" && (
         <CategoryProductsListing
-          categorySlug={categorySlug}
-          categoryId={categoryId}
+          categorySlug=""
+          brandName={brandName}
           initialData={initialProductsData}
         />
       )}
       {activeTab === "auctions" && (
-        <AuctionsIndexListing categorySlug={categorySlug} />
+        <AuctionsIndexListing brandName={brandName} />
       )}
       {activeTab === "pre-orders" && (
-        <PreOrdersIndexListing categorySlug={categorySlug} />
+        <PreOrdersIndexListing brandName={brandName} />
       )}
     </div>
   );

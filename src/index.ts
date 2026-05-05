@@ -4426,6 +4426,7 @@ export { CategoriesListView } from "./features/categories/index";
 // [SERVER-RSC]-Self-fetching index/detail page views for categories.
 export { CategoriesIndexPageView } from "./features/categories/components/CategoriesIndexPageView";
 export { CategoryDetailPageView } from "./features/categories/components/CategoryDetailPageView";
+export { BrandDetailPageView } from "./features/categories/components/BrandDetailPageView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // CategoryCard - Component for category card.
 export { CategoryCard } from "./features/categories/index";

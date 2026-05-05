@@ -1,3 +1,4 @@
+"use client";
 import type { ReactNode } from "react";
 import { Gavel } from "lucide-react";
 import type { WishlistToggleActions } from "../../wishlist";

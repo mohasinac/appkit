@@ -16,6 +16,7 @@ export interface CategoryDisplay {
 
 export interface CategoryMetrics {
   productCount: number;
+  auctionCount?: number;
   totalItemCount: number;
   lastUpdated?: string;
 }

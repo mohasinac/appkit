@@ -37,6 +37,8 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_COUPONS: (storeSlug: string) => `/stores/${storeSlug}/coupons`,
     CATEGORIES: "/categories",
     CATEGORY_DETAIL: (slug: string) => `/categories/${slug}`,
+    BRANDS: "/brands",
+    BRAND_DETAIL: (slug: string) => `/brands/${slug}`,
     REVIEWS: "/reviews",
     REVIEW_DETAIL: (id: string) => `/reviews/${id}`,
     SEARCH: "/search",

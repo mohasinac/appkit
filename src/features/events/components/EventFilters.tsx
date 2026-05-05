@@ -135,7 +135,6 @@ export function EventFilters({ table, variant = "admin" }: EventFiltersProps) {
         label={t("showExpiredOnly")}
         checked={table.get("showExpired") === "true"}
         onChange={(v) => table.set("showExpired", v ? "true" : "")}
-        defaultCollapsed={true}
       />
     </Div>
   );

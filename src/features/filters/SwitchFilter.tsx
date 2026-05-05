@@ -20,7 +20,7 @@ export function SwitchFilter({
   label,
   checked,
   onChange,
-  defaultCollapsed = true,
+  defaultCollapsed = false,
   className = "",
   isOpen: controlledOpen,
   onToggle,

@@ -25,9 +25,11 @@ const FILTER_KEYS = ["category", "brand", "minPrice", "maxPrice", "storeId", "pr
 export interface PreOrdersIndexListingProps {
   initialData?: any;
   categorySlug?: string;
+  /** Filter pre-orders by brand name (for brand detail pages) */
+  brandName?: string;
 }
 
-export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIndexListingProps) {
+export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: PreOrdersIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -100,7 +102,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
     categorySlug: categorySlug || undefined,
-    brand: table.get("brand") || undefined,
+    brand: brandName || table.get("brand") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     storeId: table.get("storeId") || undefined,
@@ -178,6 +180,17 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
         onViewChange={handleViewToggle}
       />
 
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
+        </div>
+      )}
+
       {/* ── Pre-order grid ─────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
@@ -226,15 +239,6 @@ export function PreOrdersIndexListing({ initialData, categorySlug }: PreOrdersIn
           </div>
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
       </div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}

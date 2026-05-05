@@ -15,14 +15,34 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .getCategoryBySlug(slug)
     .catch(() => undefined) as CategoryItem | undefined;
 
-  const [productsResult, childCategories] = await Promise.all([
+  const [productsResult, auctionsCountResult, preOrdersCountResult, childCategories] = await Promise.all([
     category?.id
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},isAuction==false`,
+            filters: `status==published,category==${category.id},isAuction==false,isPreOrder==false`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 24,
+          })
+          .catch(() => null)
+      : Promise.resolve(null),
+    category?.id
+      ? productRepository
+          .list({
+            filters: `status==published,category==${category.id},isAuction==true`,
+            sorts: "auctionEndDate",
+            page: 1,
+            pageSize: 1,
+          })
+          .catch(() => null)
+      : Promise.resolve(null),
+    category?.id
+      ? productRepository
+          .list({
+            filters: `status==published,category==${category.id},isPreOrder==true`,
+            sorts: "-createdAt",
+            page: 1,
+            pageSize: 1,
           })
           .catch(() => null)
       : Promise.resolve(null),
@@ -31,7 +51,10 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       : Promise.resolve([] as CategoryItem[]),
   ]);
 
-  const productCount = category?.metrics?.productCount ?? 0;
+  const productCount = productsResult?.total ?? category?.metrics?.productCount ?? 0;
+  const auctionCount = auctionsCountResult?.total ?? category?.metrics?.auctionCount ?? 0;
+  const preOrderCount = preOrdersCountResult?.total ?? 0;
+  const totalCount = productCount + auctionCount + preOrderCount;
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -82,15 +105,29 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             </p>
           )}
 
-          {productCount > 0 && (
-            <span className={`inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1 rounded-full ${
-              hasCover
-                ? "bg-white/20 text-white backdrop-blur-sm"
-                : "bg-primary/10 text-primary-700 dark:text-primary-400"
-            }`}>
-              {productCount.toLocaleString()} {productCount === 1 ? "item" : "items"}
-            </span>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {productCount > 0 && (
+              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"
+              }`}>
+                {productCount.toLocaleString()} {productCount === 1 ? "product" : "products"}
+              </span>
+            )}
+            {auctionCount > 0 && (
+              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+              }`}>
+                {auctionCount.toLocaleString()} {auctionCount === 1 ? "auction" : "auctions"}
+              </span>
+            )}
+            {preOrderCount > 0 && (
+              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
+              }`}>
+                {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
+              </span>
+            )}
+          </div>
         </div>
       </section>
 
@@ -128,6 +165,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             categorySlug={slug}
             categoryId={category?.id}
             initialProductsData={productsResult ?? undefined}
+            counts={{ products: productCount, auctions: auctionCount, preOrders: preOrderCount }}
           />
         </Container>
       </Section>

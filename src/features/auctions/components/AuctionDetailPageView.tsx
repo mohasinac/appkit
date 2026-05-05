@@ -48,10 +48,10 @@ function toDescriptionHtml(raw: unknown): string {
 }
 
 export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPageViewProps) {
-  const [product, bidsResult] = await Promise.all([
-    productRepository.findByIdOrSlug(id).catch(() => undefined),
-    listBidsByProduct(id, { pageSize: 20 }).catch(() => null),
-  ]);
+  const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
+  const bidsResult = product
+    ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
+    : null;
 
   const sellerId = (product as unknown as Record<string, unknown>)?.sellerId as string | undefined;
   const storeReviews: ReviewDocument[] = sellerId

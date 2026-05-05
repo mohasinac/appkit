@@ -53,21 +53,21 @@ function withRichTextDescription(
 // Seller shortcuts
 const MISTY = {
   sellerId: "user-misty-water-gym-misty",
-  storeId: "store-mistys-water-cards",
+  storeId: "mistys-water-cards",
   sellerName: "Misty's Water Cards",
   sellerEmail: "misty@letitrip.in",
 } as const;
 
 const SURGE = {
   sellerId: "user-lt-surge-electric-surge",
-  storeId: "store-surges-electric-emporium",
+  storeId: "surges-electric-emporium",
   sellerName: "Surge's Electric Emporium",
   sellerEmail: "surge@letitrip.in",
 } as const;
 
 const BLAINE = {
   sellerId: "user-blaine-fire-gym-blaine",
-  storeId: "store-blaines-fire-shoppe",
+  storeId: "blaines-fire-shoppe",
   sellerName: "Blaine's Fire Shoppe",
   sellerEmail: "blaine@letitrip.in",
 } as const;

@@ -14,7 +14,7 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const BP = {
   sellerId: "user-bladers-paradise",
-  storeId: "store-bladers-paradise",
+  storeId: "bladers-paradise",
   sellerName: "Bladers Paradise",
   sellerEmail: "bladers@letitrip.in",
 } as const;

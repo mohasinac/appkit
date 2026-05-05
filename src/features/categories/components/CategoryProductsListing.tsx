@@ -16,12 +16,15 @@ import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 export interface CategoryProductsListingProps {
   categorySlug: string;
   categoryId?: string;
+  /** Filter products by brand name (for brand detail pages) */
+  brandName?: string;
   initialData?: any;
 }
 
 export function CategoryProductsListing({
   categorySlug,
   categoryId,
+  brandName,
   initialData,
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
@@ -41,7 +44,7 @@ export function CategoryProductsListing({
     q: table.get("q") || undefined,
     category: categoryId || undefined,
     condition: table.get("condition") || undefined,
-    brand: table.get("brand") || undefined,
+    brand: brandName || table.get("brand") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     sort: table.get("sort") || "-createdAt",

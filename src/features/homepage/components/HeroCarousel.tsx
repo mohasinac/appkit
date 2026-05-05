@@ -242,32 +242,22 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                 <Div
                   className={`${position.fill} grid gap-2 md:gap-4 p-4 md:p-8`}
                   style={{
-                    gridTemplateRows: isMobile ? "repeat(2, 1fr)" : "repeat(2, 1fr)",
-                    gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)",
+                    gridTemplateRows: "repeat(2, 1fr)",
+                    gridTemplateColumns: "1fr",
                     alignContent: "center",
-                    justifyItems: "center",
-                    alignItems: "center",
+                    justifyItems: "stretch",
+                    alignItems: "stretch",
                   }}
                 >
-                  {slide.cards.slice(0, isMobile ? 2 : undefined).map((card) => (
+                  {slide.cards.slice(0, 2).map((card) => (
                     <Div
                       key={card.id}
                       className="relative rounded-lg overflow-hidden shadow-lg transition-transform hover:scale-105 w-full"
                       style={{
-                        ...getGridPosition(card),
                         ...getBackgroundStyle(card),
-                        width: isMobile
-                          ? "100%"
-                          : card.sizing?.widthPct
-                            ? `${card.sizing.widthPct}%`
-                            : "100%",
-                        height: isMobile
-                          ? "100%"
-                          : card.sizing?.heightPct
-                            ? `${card.sizing.heightPct}%`
-                            : "100%",
-                        minHeight: isMobile ? 100 : undefined,
-                        justifySelf: "center",
+                        width: "100%",
+                        height: "100%",
+                        minHeight: isMobile ? 100 : 140,
                         alignSelf: "stretch",
                       }}
                     >

@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useCallback } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import React, { useState, useCallback, useMemo } from "react";
+import { X } from "lucide-react";
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { Pagination } from "../../../ui";
+import { Pagination, ListingToolbar } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -11,6 +11,7 @@ import type { UrlTable } from "../../filters/FilterPanel";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 
 const PAGE_SIZE = 24;
+const FILTER_KEYS = ["isFeatured", "isBrand", "rootOnly", "tier", "minItemCount", "maxItemCount"];
 
 const SORT_OPTIONS = [
   { value: "name", label: "Name A–Z" },
@@ -20,15 +21,69 @@ const SORT_OPTIONS = [
 
 export interface CategoriesIndexListingProps {
   initialData?: CategoryItem[];
+  /** When true, filters to brands only (for the standalone /brands page) */
+  brandsOnly?: boolean;
 }
 
-export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListingProps) {
+export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: CategoriesIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "name" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
   const sort = table.get("sort") || "name";
   const page = table.getNumber("page", 1);
+
+  // Pending filter state — buffered until "Apply Filters" clicked
+  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
+    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
+  );
+
+  const pendingTable = useMemo(() => ({
+    get: (key: string) => pendingFilters[key] ?? "",
+    getNumber: (key: string, fallback = 0) => {
+      const v = pendingFilters[key];
+      if (!v) return fallback;
+      const n = Number(v);
+      return isNaN(n) ? fallback : n;
+    },
+    set: (key: string, value: string) =>
+      setPendingFilters((p) => ({ ...p, [key]: value })),
+    setMany: (updates: Record<string, string>) =>
+      setPendingFilters((p) => ({ ...p, ...updates })),
+    clear: (keys?: string[]) => {
+      const ks = keys ?? FILTER_KEYS;
+      setPendingFilters((p) => ({
+        ...p,
+        ...Object.fromEntries(ks.map((k) => [k, ""])),
+      }));
+    },
+    setPage: (_: number) => {},
+    setPageSize: (_: number) => {},
+    setSort: (_: string) => {},
+    buildSieveParams: () => "",
+    buildSearchParams: () => "",
+    params: new URLSearchParams(),
+  }), [pendingFilters]) as unknown as UrlTable;
+
+  const openFilters = useCallback(() => {
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
+    setFilterOpen(true);
+  }, [table]);
+
+  const applyFilters = useCallback(() => {
+    const updates: Record<string, string> = { page: "1" };
+    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
+    table.setMany(updates);
+    setFilterOpen(false);
+  }, [pendingFilters, table]);
+
+  const clearFilters = useCallback(() => {
+    const empty = Object.fromEntries(FILTER_KEYS.map((k) => [k, ""]));
+    setPendingFilters(empty);
+    table.setMany({ ...empty, page: "1" });
+  }, [table]);
+
+  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
@@ -41,12 +96,19 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
     table.setPage(1);
   };
 
-  const closeFilters = () => setFilterOpen(false);
+  // Tab state — "all" | "categories" | "brands" (not used when brandsOnly=true)
+  const activeTab = brandsOnly ? "brands" : (table.get("tab") || "all");
 
-  const activeTab = table.get("tab") || "all";
+  const isBrandParam: boolean | undefined =
+    brandsOnly ? true :
+    activeTab === "brands" ? true :
+    activeTab === "categories" ? false :
+    undefined;
 
-  const isBrandParam =
-    activeTab === "brands" ? true : activeTab === "categories" ? false : undefined;
+  const switchTab = (key: string) => {
+    table.set("tab", key);
+    table.setPage(1);
+  };
 
   const { categories, total, totalPages, isLoading } = useCategoriesFiltered({
     q: table.get("q") || undefined,
@@ -69,78 +131,51 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
     { key: "brands", label: "Brands" },
   ] as const;
 
-  const switchTab = (key: string) => {
-    table.set("tab", key);
-    table.setPage(1);
-  };
-
   return (
     <div className="min-h-screen">
-      {/* ── Tab bar ────────────────────────────────────────────────────── */}
-      <div className="mb-4 flex gap-1 border-b border-zinc-200 dark:border-slate-700">
-        {TABS.map((tab) => (
-          <button
-            key={tab.key}
-            type="button"
-            onClick={() => switchTab(tab.key)}
-            className={[
-              "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
-              activeTab === tab.key
-                ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
-                : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200",
-            ].join(" ")}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      {/* ── Tab bar — only shown on the combined /categories page ──────── */}
+      {!brandsOnly && (
+        <div className="flex gap-1 border-b border-zinc-200 dark:border-slate-700 mb-2">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => switchTab(tab.key)}
+              className={[
+                "px-4 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px",
+                activeTab === tab.key
+                  ? "border-primary text-primary dark:text-primary-400 dark:border-primary-400"
+                  : "border-transparent text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200",
+              ].join(" ")}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4 -mx-4">
-        <div className="flex items-center gap-2.5 max-w-full">
+      <ListingToolbar
+        filterCount={activeFilterCount}
+        onFiltersClick={openFilters}
+        searchValue={searchInput}
+        searchPlaceholder={activeTab === "brands" || brandsOnly ? "Search brands..." : "Search categories..."}
+        onSearchChange={setSearchInput}
+        onSearchCommit={commitSearch}
+        sortValue={sort}
+        sortOptions={SORT_OPTIONS}
+        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        hideViewToggle
+      />
 
-          <button
-            type="button"
-            onClick={() => setFilterOpen(true)}
-            className="flex shrink-0 items-center gap-2 rounded-lg border border-zinc-300 dark:border-slate-600 px-3.5 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
-          >
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters</span>
-          </button>
-
-          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && commitSearch()}
-              placeholder={activeTab === "brands" ? "Search brands..." : "Search categories..."}
-              className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 outline-none"
-            />
-            {searchInput && (
-              <button type="button" onClick={clearSearch} className="px-2 text-zinc-400 hover:text-zinc-600 transition-colors" aria-label="Clear search">
-                <X className="h-3.5 w-3.5" />
-              </button>
-            )}
-            <button type="button" onClick={commitSearch} className="flex shrink-0 items-center justify-center px-3 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors" aria-label="Search">
-              <Search className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-            <span className="hidden md:inline whitespace-nowrap">Sort</span>
-            <select
-              value={sort}
-              onChange={(e) => { table.set("sort", e.target.value); table.setPage(1); }}
-              className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-200 outline-none focus:ring-2 focus:ring-primary/30"
-            >
-              {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-            </select>
-          </div>
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </div>
-      </div>
+      )}
 
-      {/* ── Category grid ──────────────────────────────────────────────── */}
+      {/* ── Category / brand grid ──────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -157,10 +192,10 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
         ) : categories.length === 0 ? (
           <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             {activeSearch
-            ? `No ${activeTab === "brands" ? "brands" : "categories"} matching "${activeSearch}"`
-            : activeTab === "brands"
-              ? "No brands found"
-              : "No categories found"}
+              ? `No ${activeTab === "brands" || brandsOnly ? "brands" : "categories"} matching "${activeSearch}"`
+              : activeTab === "brands" || brandsOnly
+                ? "No brands found"
+                : "No categories found"}
           </p>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
@@ -169,34 +204,34 @@ export function CategoriesIndexListing({ initialData: _ }: CategoriesIndexListin
             ))}
           </div>
         )}
-
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-          </div>
-        )}
       </div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (
         <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={closeFilters} />
+          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
           <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                <SlidersHorizontal className="h-4 w-4" />
                 Filters
               </span>
-              <button type="button" onClick={closeFilters} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                <X className="h-5 w-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {activeFilterCount > 0 && (
+                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">
+                    Clear all
+                  </button>
+                )}
+                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              <CategoryFilters table={table as unknown as UrlTable} variant="public" />
+              <CategoryFilters table={pendingTable} variant="public" />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={closeFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors">
-                Apply filters
+              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </button>
             </div>
           </div>

@@ -76,6 +76,7 @@ export interface CategoryDocument {
   isFeatured: boolean;
   featuredPriority?: number;
   isBrand?: boolean;
+  type?: import("../types").CategoryType;
 
   seo: CategoryDocumentSEO;
   display: CategoryDocumentDisplay;

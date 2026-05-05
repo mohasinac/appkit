@@ -47,6 +47,19 @@ interface StoreAddressSelectorRenderArgs {
   disabled: boolean;
 }
 
+export interface BrandSelectorRenderArgs {
+  label: string;
+  /** Current brand name (single mode) */
+  value: string;
+  /** Current brand names (mixed mode) */
+  values: string[];
+  /** Whether selector is in multi-select mode */
+  multi: boolean;
+  onValueChange: (value: string) => void;
+  onValuesChange: (values: string[]) => void;
+  disabled: boolean;
+}
+
 export interface ProductFormProps {
   product: ProductFormValue;
   onChange: (updated: ProductFormValue) => void;
@@ -63,6 +76,12 @@ export interface ProductFormProps {
   }) => React.ReactNode;
   /** Render app-specific category selector. */
   renderCategorySelector?: (args: CategorySelectorRenderArgs) => React.ReactNode;
+  /**
+   * Render app-specific brand selector (select existing or create new).
+   * Receives `multi=true` when brandMode is "mixed".
+   * If omitted, falls back to a plain text input.
+   */
+  renderBrandSelector?: (args: BrandSelectorRenderArgs) => React.ReactNode;
   /** Render app-specific pickup-address selector. */
   renderStoreAddressSelector?: (
     args: StoreAddressSelectorRenderArgs,
@@ -82,6 +101,7 @@ export function ProductForm({
   isReadonly = false,
   renderDescriptionEditor,
   renderCategorySelector,
+  renderBrandSelector,
   renderStoreAddressSelector,
   onMediaAbort,
   currencyPrefix = "",
@@ -190,16 +210,89 @@ export function ProductForm({
         />
       </FormGroup>
 
+      {/* ── Brand ───────────────────────────────────────────────────────── */}
+      <Stack gap="xs">
+        <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+          {t("formBrand")}
+        </Text>
+        {/* Mode selector */}
+        <div className="flex gap-3 flex-wrap">
+          {(["single", "unbranded", "mixed"] as const).map((mode) => (
+            <label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-zinc-700 dark:text-zinc-300">
+              <input
+                type="radio"
+                name="brandMode"
+                value={mode}
+                checked={(product.brandMode ?? "single") === mode}
+                onChange={() => {
+                  if (mode === "unbranded") {
+                    update({ brandMode: "unbranded", brand: undefined, brands: [] });
+                  } else if (mode === "mixed") {
+                    update({ brandMode: "mixed", brand: undefined });
+                  } else {
+                    update({ brandMode: "single", brands: [] });
+                  }
+                }}
+                disabled={isReadonly}
+                className="accent-primary"
+              />
+              {mode === "single" ? "Single Brand" : mode === "unbranded" ? "Unbranded" : "Mixed Brands"}
+            </label>
+          ))}
+        </div>
+        {/* Help text for unbranded / mixed */}
+        {(product.brandMode === "unbranded") && (
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            Unbranded items won&apos;t appear in brand-filtered results.
+          </Text>
+        )}
+        {(product.brandMode === "mixed") && (
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            Mixed-brand items won&apos;t appear in single-brand filters. Select all applicable brands.
+          </Text>
+        )}
+        {/* Brand input — hidden for unbranded */}
+        {(product.brandMode ?? "single") !== "unbranded" && (
+          <>
+            {renderBrandSelector ? (
+              renderBrandSelector({
+                label: product.brandMode === "mixed" ? "Brands" : t("formBrand"),
+                value: product.brand || "",
+                values: product.brands || [],
+                multi: product.brandMode === "mixed",
+                onValueChange: (value) => update({ brand: value }),
+                onValuesChange: (values) => update({ brands: values }),
+                disabled: isReadonly,
+              })
+            ) : product.brandMode === "mixed" ? (
+              <FormField
+                name="brands"
+                label="Brands (comma-separated)"
+                type="text"
+                value={(product.brands || []).join(", ")}
+                onChange={(value) =>
+                  update({ brands: value.split(",").map((b) => b.trim()).filter(Boolean) })
+                }
+                disabled={isReadonly}
+                placeholder="e.g. Nike, Adidas, Puma"
+              />
+            ) : (
+              <FormField
+                name="brand"
+                label={t("formBrand")}
+                type="text"
+                value={product.brand || ""}
+                onChange={(value) => update({ brand: value })}
+                disabled={isReadonly}
+                placeholder="e.g. Apple"
+              />
+            )}
+          </>
+        )}
+      </Stack>
+
       <FormGroup columns={2}>
-        <FormField
-          name="brand"
-          label={t("formBrand")}
-          type="text"
-          value={product.brand || ""}
-          onChange={(value) => update({ brand: value })}
-          disabled={isReadonly}
-          placeholder="e.g. Apple"
-        />
+        <div /> {/* spacer */}
         <FormField
           name="status"
           label={t("formStatus")}

@@ -116,7 +116,6 @@ export function CategoryFilters({
         label={tr("showFeaturedOnly", "Show featured only")}
         checked={featuredOnly}
         onChange={(v: boolean) => table.set("isFeatured", v ? "true" : "")}
-        defaultCollapsed={true}
       />
 
       <SwitchFilter
@@ -124,7 +123,6 @@ export function CategoryFilters({
         label={tr("showBrandsOnly", "Show brands only")}
         checked={brandOnly}
         onChange={(v: boolean) => table.set("isBrand", v ? "true" : "")}
-        defaultCollapsed={true}
       />
 
       {variant !== "public" && (
@@ -133,7 +131,6 @@ export function CategoryFilters({
           label={tr("showActiveOnly", "Show active only")}
           checked={activeOnly}
           onChange={(v: boolean) => table.set("isActive", v ? "true" : "")}
-          defaultCollapsed={true}
         />
       )}
 
@@ -146,7 +143,6 @@ export function CategoryFilters({
             onChange={(v: boolean) =>
               table.set("isSearchable", v ? "true" : "")
             }
-            defaultCollapsed={true}
           />
 
           <SwitchFilter
@@ -154,7 +150,6 @@ export function CategoryFilters({
             label={tr("showLeafOnly", "Show leaf only")}
             checked={leafOnly}
             onChange={(v: boolean) => table.set("isLeaf", v ? "true" : "")}
-            defaultCollapsed={true}
           />
         </>
       )}
@@ -164,7 +159,6 @@ export function CategoryFilters({
         label={tr("showRootLevelOnly", "Top level only")}
         checked={table.get("rootOnly") === "true"}
         onChange={(v: boolean) => table.set("rootOnly", v ? "true" : "")}
-        defaultCollapsed={true}
       />
 
       <RangeFilter
@@ -178,7 +172,7 @@ export function CategoryFilters({
         step={10}
         minPlaceholder={tr("minItemCount", "Min items")}
         maxPlaceholder={tr("maxItemCount", "Max items")}
-        defaultCollapsed={true}
+        defaultCollapsed={false}
       />
     </Div>
   );

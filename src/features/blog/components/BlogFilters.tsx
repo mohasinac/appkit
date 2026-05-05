@@ -116,7 +116,6 @@ export function BlogFilters({ table, variant = "admin" }: BlogFiltersProps) {
           label={t("showFeaturedOnly")}
           checked={table.get("isFeatured") === "true"}
           onChange={(v: boolean) => table.set("isFeatured", v ? "true" : "")}
-          defaultCollapsed={true}
         />
       )}
 

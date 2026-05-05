@@ -14,7 +14,7 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const SK = {
   sellerId: "user-speed-king-diecast",
-  storeId: "store-speed-king-diecast",
+  storeId: "speed-king-diecast",
   sellerName: "Speed King Diecast",
   sellerEmail: "speedking@letitrip.in",
 } as const;

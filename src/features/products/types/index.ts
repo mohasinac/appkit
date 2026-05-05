@@ -73,6 +73,10 @@ export interface ProductItem {
   stockQuantity?: number;
   subcategory?: string;
   brand?: string;
+  /** "single" = one brand, "unbranded" = no brand (filter won't match), "mixed" = multiple brands */
+  brandMode?: "single" | "unbranded" | "mixed";
+  /** Brand names for mixed-brand items */
+  brands?: string[];
   storeId?: string;
   sellerEmail?: string;
   specifications?: { name: string; value: string; unit?: string }[];

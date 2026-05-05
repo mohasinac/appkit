@@ -25,9 +25,11 @@ const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFr
 export interface AuctionsIndexListingProps {
   initialData?: any;
   categorySlug?: string;
+  /** Filter auctions by brand name (for brand detail pages) */
+  brandName?: string;
 }
 
-export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsIndexListingProps) {
+export function AuctionsIndexListing({ initialData, categorySlug, brandName }: AuctionsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "auctionEndDate" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -99,7 +101,7 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
     categorySlug: categorySlug || undefined,
-    brand: table.get("brand") || undefined,
+    brand: brandName || table.get("brand") || undefined,
     minBid: table.get("minBid") ? Number(table.get("minBid")) : undefined,
     maxBid: table.get("maxBid") ? Number(table.get("maxBid")) : undefined,
     storeId: table.get("storeId") || undefined,
@@ -166,6 +168,17 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
         onViewChange={handleViewToggle}
       />
 
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
+        </div>
+      )}
+
       {/* ── Auction grid ───────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
@@ -191,15 +204,6 @@ export function AuctionsIndexListing({ initialData, categorySlug }: AuctionsInde
           />
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
       </div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}

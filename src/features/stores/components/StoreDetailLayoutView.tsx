@@ -1,6 +1,6 @@
 import React, { cache } from "react";
 import type { ReactNode } from "react";
-import { storeRepository } from "../../../repositories";
+import { storeRepository, productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
 import { StoreHeader } from "./StoreHeader";
@@ -16,6 +16,11 @@ export interface StoreDetailLayoutViewProps {
   /** The current active tab value: "products" | "auctions" | "reviews" | "about" */
   activeTab: string;
   children: ReactNode;
+}
+
+function tabLabel(base: string, count?: number) {
+  if (!count) return base;
+  return `${base} (${count.toLocaleString()})`;
 }
 
 export async function StoreDetailLayoutView({
@@ -37,10 +42,29 @@ export async function StoreDetailLayoutView({
     );
   }
 
+  const storeId = (store as Record<string, any>)?.id;
+
+  const [productsCount, auctionsCount, preOrdersCount] = storeId
+    ? await Promise.all([
+        productRepository
+          .list({ filters: `storeId==${storeId},status==published,isAuction==false,isPreOrder==false`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+        productRepository
+          .list({ filters: `storeId==${storeId},status==published,isAuction==true`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+        productRepository
+          .list({ filters: `storeId==${storeId},status==published,isPreOrder==true`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+      ])
+    : [0, 0, 0];
+
   const tabs = [
-    { value: "products", label: "Products", href: String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug)) },
-    { value: "auctions", label: "Auctions", href: String(ROUTES.PUBLIC.STORE_AUCTIONS(storeSlug)) },
-    { value: "pre-orders", label: "Pre-Orders", href: String(ROUTES.PUBLIC.STORE_PRE_ORDERS(storeSlug)) },
+    { value: "products", label: tabLabel("Products", productsCount), href: String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug)) },
+    { value: "auctions", label: tabLabel("Auctions", auctionsCount), href: String(ROUTES.PUBLIC.STORE_AUCTIONS(storeSlug)) },
+    { value: "pre-orders", label: tabLabel("Pre-Orders", preOrdersCount), href: String(ROUTES.PUBLIC.STORE_PRE_ORDERS(storeSlug)) },
     { value: "coupons", label: "Coupons", href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
     { value: "reviews", label: "Reviews", href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },

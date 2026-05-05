@@ -194,6 +194,17 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         }
       />
 
+      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
+      {totalPages > 1 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
+        </div>
+      )}
+
       {/* ── Product grid ───────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
@@ -226,15 +237,6 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
           />
         )}
 
-        {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
       </div>
 
       {/* ── Bulk actions bar ──────────────────────────────────────────── */}

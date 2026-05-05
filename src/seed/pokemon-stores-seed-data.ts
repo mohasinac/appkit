@@ -11,7 +11,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
   // 1. Misty's Water Cards — Pokémon TCG Water-type
   {
-    id: "store-mistys-water-cards",
+    id: "mistys-water-cards",
     storeSlug: "mistys-water-cards",
     ownerId: "user-misty-water-gym-misty",
     storeName: "Misty's Water Cards",
@@ -32,7 +32,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 2. Surge's Electric Emporium — Pokémon TCG Electric-type
   {
-    id: "store-surges-electric-emporium",
+    id: "surges-electric-emporium",
     storeSlug: "surges-electric-emporium",
     ownerId: "user-lt-surge-electric-surge",
     storeName: "Surge's Electric Emporium",
@@ -53,7 +53,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 3. Blaine's Fire Shoppe — Pokémon TCG Fire-type
   {
-    id: "store-blaines-fire-shoppe",
+    id: "blaines-fire-shoppe",
     storeSlug: "blaines-fire-shoppe",
     ownerId: "user-blaine-fire-gym-blaine",
     storeName: "Blaine's Fire Shoppe",
@@ -74,7 +74,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 4. Speed King Diecast — Hot Wheels + Transformers
   {
-    id: "store-speed-king-diecast",
+    id: "speed-king-diecast",
     storeSlug: "speed-king-diecast",
     ownerId: "user-speed-king-diecast",
     storeName: "Speed King Diecast",
@@ -95,7 +95,7 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
 
   // 5. Bladers Paradise — Beyblade Burst + some Transformers
   {
-    id: "store-bladers-paradise",
+    id: "bladers-paradise",
     storeSlug: "bladers-paradise",
     ownerId: "user-bladers-paradise",
     storeName: "Bladers Paradise",
