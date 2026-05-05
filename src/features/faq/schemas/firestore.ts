@@ -38,6 +38,7 @@ export interface FAQDocument {
 export const FAQS_COLLECTION = "faqs" as const;
 
 export const FAQS_INDEXED_FIELDS = [
+  "slug",
   "seo.slug",
   "category",
   "order",
@@ -130,7 +131,7 @@ export interface FAQWithInterpolatedAnswer extends Omit<FAQDocument, "answer"> {
 }
 
 export const faqQueryHelpers = {
-  bySlug: (slug: string) => ["seo.slug", "==", slug] as const,
+  bySlug: (slug: string) => ["slug", "==", slug] as const,
   byCategory: (category: FAQCategory) => ["category", "==", category] as const,
   homepage: () => ["showOnHomepage", "==", true] as const,
   footer: () => ["showInFooter", "==", true] as const,
