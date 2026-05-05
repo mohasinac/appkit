@@ -721,7 +721,7 @@ export function AppLayoutShell({
           loginHref={loginHref}
           onSearchToggle={() => setSearchOpen((prev) => !prev)}
           navItems={navItems}
-          onMoreToggle={handleTogglePublicSidebar}
+          onMoreToggle={hasDashboardNav ? toggleDashboardNav : handleTogglePublicSidebar}
         />
         <UnsavedChangesModal />
       </Div>

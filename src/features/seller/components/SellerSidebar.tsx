@@ -229,7 +229,7 @@ export function StoreSidebar({
   if (variant === "sidebar") {
     return (
       <>
-        <aside className={`${desktopOpen ? "flex" : "hidden"} md:flex flex-col w-72 shrink-0 border-r border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
+        <aside className={`${desktopOpen ? "hidden md:flex" : "hidden"} flex-col w-72 shrink-0 border-r border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
           <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
             <div className="flex items-center gap-3">
               {storeLogoURL ? (
