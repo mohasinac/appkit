@@ -23,6 +23,7 @@ export interface UserSidebarProps {
   groups?: UserNavGroup[];
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
+  desktopOpen?: boolean;
   className?: string;
   /** "sidebar" = persistent inline aside on desktop; "overlay" = slide-over portal (default) */
   variant?: "sidebar" | "overlay";
@@ -173,7 +174,7 @@ function DrawerPanel({
   );
 }
 
-export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, variant = "overlay" }: UserSidebarProps) {
+export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, desktopOpen = true, variant = "overlay" }: UserSidebarProps) {
   const pathname = usePathname();
   const close = onCloseMobile ?? (() => {});
   const [mounted, setMounted] = useState(false);
@@ -191,8 +192,8 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
   if (variant === "sidebar") {
     return (
       <>
-        {/* Desktop — inline aside, always visible */}
-        <aside className="hidden md:flex flex-col w-52 lg:w-56 shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto">
+        {/* Desktop — inline aside, always visible when desktopOpen is true */}
+        <aside className={`${desktopOpen ? "flex" : "hidden"} md:flex flex-col w-52 lg:w-56 shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
           <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
             <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">My Account</span>
           </div>

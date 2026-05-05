@@ -26,6 +26,8 @@ export interface AdminSidebarProps {
   /** Structured groups — takes precedence over renderNavItems when provided. */
   groups?: AdminNavGroup[];
   mobileOpen?: boolean;
+  desktopOpen?: boolean;
+  variant?: "sidebar" | "overlay";
   onCloseMobile?: () => void;
   className?: string;
 }
@@ -151,6 +153,8 @@ export function AdminSidebar({
   activePath = "",
   groups,
   mobileOpen = false,
+  desktopOpen = true,
+  variant = "overlay",
   onCloseMobile,
 }: AdminSidebarProps) {
   const close = onCloseMobile ?? (() => {});
@@ -182,6 +186,25 @@ export function AdminSidebar({
       {renderFooter?.()}
     </Nav>
   );
+
+  if (variant === "sidebar") {
+    return (
+      <>
+        <aside className={`${desktopOpen ? "flex" : "hidden"} md:flex flex-col w-72 shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
+          <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+            {renderHeader ? renderHeader() : <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">Admin Panel</span>}
+          </div>
+          <div className="flex-1 overflow-y-auto px-0 py-3">{navContent}</div>
+          {renderFooter && <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</div>}
+        </aside>
+        <div className="md:hidden">
+          <BottomSheet open={mobileOpen} onClose={close} title="Admin Panel">
+            {mobileNavContent}
+          </BottomSheet>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

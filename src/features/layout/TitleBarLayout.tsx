@@ -250,7 +250,7 @@ export function TitleBarLayout({
               </Link>
             )}
 
-            {/* Public sidebar toggle — hidden on desktop where MainNavbar takes over */}
+            {/* Public sidebar toggle — shown on both desktop and mobile */}
             {!hideSidebarToggle && (
               <Button
                 type="button"
@@ -260,7 +260,7 @@ export function TitleBarLayout({
                 aria-expanded={sidebarOpen}
                 aria-controls="secondary-sidebar"
                 onClick={onToggleSidebar}
-                className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
+                className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 <svg
                   className="w-5 h-5"

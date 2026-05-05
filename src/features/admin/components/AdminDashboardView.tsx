@@ -20,6 +20,13 @@ interface AdminDashboardApiResponse {
   };
   orders?: {
     total?: number;
+    pending?: number;
+  };
+  reviews?: {
+    pending?: number;
+  };
+  revenue?: {
+    total?: number;
   };
 }
 
@@ -61,9 +68,12 @@ export function AdminDashboardView({
   const resolvedStats: DashboardStats = shouldFetch
     ? {
       totalOrders: query.data?.orders?.total ?? 0,
+      totalRevenue: query.data?.revenue?.total ?? 0,
       totalUsers: query.data?.users?.total ?? 0,
       totalProducts: query.data?.products?.total ?? 0,
       newUsersToday: query.data?.users?.newThisMonth ?? 0,
+      pendingOrders: query.data?.orders?.pending,
+      pendingReviews: query.data?.reviews?.pending,
     }
     : stats;
   const busy = isLoading || query.isLoading;

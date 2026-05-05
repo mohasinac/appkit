@@ -587,8 +587,8 @@ export function AppLayoutShell({
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
-            {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
           <MainNavbar navItems={navItems} hiddenNavItems={hiddenNavItems} />
+          {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
         </Div>
 
         {eventBannerSlot}
