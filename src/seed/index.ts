@@ -147,6 +147,7 @@ export { DEFAULT_FAQS } from "./defaults/faqs";
 export { DEFAULT_HOMEPAGE_SECTIONS } from "./defaults/homepage-sections";
 
 // Migrated seed datasets from consumer repositories
+export { brandsSeedData } from "./brands-seed-data";
 export { usersSeedData } from "./users-seed-data";
 export { sessionsSeedData, SESSION_COLLECTION } from "./sessions-seed-data";
 export { addressesSeedData } from "./addresses-seed-data";

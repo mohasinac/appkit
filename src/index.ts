@@ -1534,6 +1534,8 @@ export { cartRepository } from "./repositories/index";
 // brandsRepository - Shared export for brands repository.
 export { brandsRepository } from "./repositories/index";
 export type { BrandDocument, BrandCreateInput, BrandUpdateInput } from "./repositories/index";
+// BRANDS_COLLECTION - Firestore collection name constant for brands.
+export { BRANDS_COLLECTION } from "./features/brands/schemas";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // categoriesRepository - Shared export for categories repository.
 export { categoriesRepository } from "./repositories/index";
@@ -1672,6 +1674,8 @@ export { carouselSlidesSeedData } from "./seed/index";
 // cartsSeedData - Model for carts seed data.
 export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// brandsSeedData - Seed data for brands collection (15 franchise brands).
+export { brandsSeedData } from "./seed/index";
 // categoriesSeedData - Model for categories seed data.
 export { categoriesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
