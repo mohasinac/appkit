@@ -14,6 +14,8 @@ export { AdminCouponsView } from "./AdminCouponsView";
 export type { AdminCouponsViewProps } from "./AdminCouponsView";
 export { AdminCategoriesView } from "./AdminCategoriesView";
 export type { AdminCategoriesViewProps } from "./AdminCategoriesView";
+export { AdminCategoryEditorView } from "./AdminCategoryEditorView";
+export type { AdminCategoryEditorViewProps } from "./AdminCategoryEditorView";
 export { AdminBrandsView } from "./AdminBrandsView";
 export type { AdminBrandsViewProps } from "./AdminBrandsView";
 export { AdminBrandEditorView } from "./AdminBrandEditorView";

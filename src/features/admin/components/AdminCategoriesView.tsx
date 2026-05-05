@@ -85,6 +85,7 @@ export function AdminCategoriesView({
       title="Category Management"
       subtitle="Organize taxonomy hierarchy, slug readiness, and active visibility from the shared listing scaffold."
       actionLabel="New category"
+      actionHref="/admin/categories/new"
       searchPlaceholder="Search categories, slugs, or parent category"
       onSearch={setQ}
       searchValue={q}

@@ -77,16 +77,16 @@ const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
 
 export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // HOLO RARE SINGLES (cards 1â€“16)
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #4 â€” Charizard (the crown jewel)
   {
     id: "product-charizard-base1-4-holo-rare-fire-blaine-1",
     title: "Charizard â€” Base Set #4 Holo Rare (Near Mint)",
     description:
-      "The most iconic card in PokÃ©mon history. First-edition Base Set Charizard in Near Mint condition. " +
+      "The most iconic card in Pokémon history. First-edition Base Set Charizard in Near Mint condition. " +
       "Lightly played centering, no scratches on holo surface. Comes in a hard sleeve and top-loader.",
     slug: "product-charizard-base1-4-holo-rare",
     category: "category-holo-rare-rarity",
@@ -134,7 +134,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-blastoise-base1-2-holo-rare-water-misty-1",
     title: "Blastoise â€” Base Set #2 Holo Rare (Near Mint)",
     description:
-      "Blastoise Holo Rare from the original PokÃ©mon Base Set. Near Mint, light play centering. " +
+      "Blastoise Holo Rare from the original Pokémon Base Set. Near Mint, light play centering. " +
       "A must-have Water-type collectible.",
     slug: "product-blastoise-base1-2-holo-rare",
     category: "category-holo-rare-rarity",
@@ -219,7 +219,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
     title: "Mewtwo â€” Base Set #10 Holo Rare (Near Mint)",
     description:
-      "The Genetic PokÃ©mon. Mewtwo Holo Rare from the original Base Set in Near Mint condition.",
+      "The Genetic Pokémon. Mewtwo Holo Rare from the original Base Set in Near Mint condition.",
     slug: "product-mewtwo-base1-10-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Psychic",
@@ -420,9 +420,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(9),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // NON-HOLO RARE SINGLES
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #17 â€” Beedrill
   {
@@ -547,9 +547,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // UNCOMMON SINGLES
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #35 â€” Clefairy
   {
@@ -638,7 +638,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-pikachu-base1-58-common-electric-surge-1",
     title: "Pikachu â€” Base Set #58 Common (Near Mint)",
     description:
-      "The PokÃ©mon mascot himself. Base Set Pikachu, Common, Near Mint â€” yellow cheeks version.",
+      "The Pokémon mascot himself. Base Set Pikachu, Common, Near Mint â€” yellow cheeks version.",
     slug: "product-pikachu-base1-58-common",
     category: "category-common-rarity",
     subcategory: "Electric",
@@ -676,9 +676,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // TRAINER CARDS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #88 â€” Professor Oak
   {
@@ -764,9 +764,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // ENERGY CARDS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #99 â€” Water Energy (x10 lot)
   {
@@ -897,16 +897,16 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // SEALED PRODUCTS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // Booster Pack
   {
     id: "product-base-set-booster-pack-sealed-blaine-1",
-    title: "PokÃ©mon Base Set Booster Pack (Sealed, Random Art)",
+    title: "Pokémon Base Set Booster Pack (Sealed, Random Art)",
     description:
-      "Sealed PokÃ©mon TCG Base Set booster pack with 11 cards and one guaranteed rare. " +
+      "Sealed Pokémon TCG Base Set booster pack with 11 cards and one guaranteed rare. " +
       "Perfect for vintage collectors searching for authentic Base Set pack openings and long-term sealed investments.",
     slug: "product-pokemon-tcg-base-set-sealed-booster-pack-random-art",
     category: "category-sealed-products",
@@ -947,9 +947,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Theme Deck â€” Zap! (Raichu / Electric)
   {
     id: "product-zap-theme-deck-sealed-surge-1",
-    title: "PokÃ©mon Base Set 'Zap!' Theme Deck (Sealed)",
+    title: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
     description:
-      "Factory-sealed PokÃ©mon Base Set Zap! Theme Deck featuring Electric-type strategy cards led by Raichu. " +
+      "Factory-sealed Pokémon Base Set Zap! Theme Deck featuring Electric-type strategy cards led by Raichu. " +
       "Ideal for collectors who want original sealed WOTC era deck products.",
     slug: "product-pokemon-base-set-zap-theme-deck-sealed-raichu",
     category: "category-sealed-products",
@@ -986,13 +986,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // ACCESSORIES
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   {
     id: "product-pokemon-card-sleeves-standard-blaine-1",
-    title: "PokÃ©mon-Art Card Sleeves (100-pack, Pikachu)",
+    title: "Pokémon-Art Card Sleeves (100-pack, Pikachu)",
     description:
       "100 standard-size card sleeves featuring Pikachu artwork. Compatible with all Base Set singles.",
     slug: "product-pokemon-pikachu-card-sleeves-100pack",
@@ -1031,9 +1031,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-pokemon-9-pocket-binder-misty-1",
-    title: "PokÃ©mon 9-Pocket Binder (360 cards, Charizard Cover)",
+    title: "Pokémon 9-Pocket Binder (360 cards, Charizard Cover)",
     description:
-      "9-pocket binder for storing and displaying up to 360 PokÃ©mon cards. Charizard cover art.",
+      "9-pocket binder for storing and displaying up to 360 Pokémon cards. Charizard cover art.",
     slug: "product-pokemon-charizard-9-pocket-binder",
     category: "category-accessories",
     subcategory: "Binder",
@@ -1068,9 +1068,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // AUCTION LISTINGS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // Auction: 1st Edition Charizard
   {
@@ -1193,9 +1193,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // MORE HOLO RARES
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #14 â€” Raichu
   {
@@ -1325,7 +1325,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "product-alakazam-base1-1-holo-rare-psychic-surge-1",
     title: "Alakazam â€” Base Set #1 Holo Rare (Near Mint)",
     description:
-      "Alakazam Holo Rare â€” card #1 in Base Set. Features the iconic Damage Swap PokÃ©mon Power.",
+      "Alakazam Holo Rare â€” card #1 in Base Set. Features the iconic Damage Swap Pokémon Power.",
     slug: "product-alakazam-base1-1-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Psychic",
@@ -1347,7 +1347,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Condition", value: "Near Mint" },
       { name: "Language", value: "English" },
     ],
-    features: ["Damage Swap PokÃ©mon Power", "Card #1 in set", "Top-loader shipped"],
+    features: ["Damage Swap Pokémon Power", "Card #1 in set", "Top-loader shipped"],
     shippingInfo: "Tracked shipping.",
     returnPolicy: "7-day returns.",
     condition: "new",
@@ -1361,16 +1361,16 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // MORE NON-HOLO RARES
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #23 â€” Arcanine
   {
     id: "product-arcanine-base1-23-non-holo-rare-fire-blaine-1",
     title: "Arcanine â€” Base Set #23 Non-Holo Rare (Near Mint)",
     description:
-      "Arcanine Non-Holo Rare from Base Set â€” the Legendary PokÃ©mon. Flame Wheel 50 damage, near mint condition.",
+      "Arcanine Non-Holo Rare from Base Set â€” the Legendary Pokémon. Flame Wheel 50 damage, near mint condition.",
     slug: "product-arcanine-base1-23-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Fire",
@@ -1488,9 +1488,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(9),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // MORE UNCOMMONS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #37 â€” Dewgong
   {
@@ -1572,15 +1572,15 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // MORE TRAINERS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // #93 â€” Potion
   {
     id: "product-potion-base1-93-common-trainer-misty-1",
     title: "Potion â€” Base Set #93 Trainer Common (Near Mint)",
-    description: "Remove 2 damage counters from one of your PokÃ©mon. Potion is the most classic Trainer card ever printed.",
+    description: "Remove 2 damage counters from one of your Pokémon. Potion is the most classic Trainer card ever printed.",
     slug: "product-potion-base1-93-trainer-common",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
@@ -1658,9 +1658,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // GRADED SLAB (non-auction)
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   // Blastoise PSA 8
   {
@@ -1708,7 +1708,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Booster Box (sealed)
   {
     id: "product-base-set-booster-box-sealed-blaine-2",
-    title: "PokÃ©mon Base Set Booster Box (36 Packs, Sealed)",
+    title: "Pokémon Base Set Booster Box (36 Packs, Sealed)",
     description:
       "Factory-sealed Base Set booster box containing 36 packs (11 cards each). The ultimate sealed vintage investment. Ships double-boxed.",
     slug: "product-pokemon-tcg-base-set-sealed-booster-box-36-packs",
@@ -1748,20 +1748,20 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
   // PRE-ORDERS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ════════════════════════════════════════════════════════════
 
   {
     id: "preorder-pokemon-tcg-151-booster-box-misty-1",
-    title: "PokÃ©mon TCG: Scarlet & Violet â€” 151 Booster Box (Pre-Order)",
+    title: "Pokémon TCG: Scarlet & Violet â€” 151 Booster Box (Pre-Order)",
     description:
-      "Pre-order the upcoming Scarlet & Violet: 151 booster box reprint run. 36 packs featuring original 151 PokÃ©mon with modern card quality. " +
+      "Pre-order the upcoming Scarlet & Violet: 151 booster box reprint run. 36 packs featuring original 151 Pokémon with modern card quality. " +
       "Estimated dispatch within 7 days of street date.",
     slug: "preorder-pokemon-sv-151-booster-box",
     category: "category-sealed-products",
     subcategory: "Booster Box",
-    brand: "The PokÃ©mon Company",
+    brand: "The Pokémon Company",
     price: 14999,
     currency: _CURRENCY,
     stockQuantity: 50,
@@ -1779,7 +1779,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Condition", value: "Pre-Order / Sealed" },
       { name: "Language", value: "English" },
     ],
-    features: ["All 151 original PokÃ©mon represented", "Modern card stock", "ETBs also available"],
+    features: ["All 151 original Pokémon represented", "Modern card stock", "ETBs also available"],
     shippingInfo: "Ships within 7 days of street date via tracked courier.",
     returnPolicy: "No returns on pre-ordered sealed products once dispatched.",
     condition: "new",
@@ -1801,14 +1801,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-pokemon-temporal-forces-elite-trainer-surge-1",
-    title: "PokÃ©mon TCG: Temporal Forces Elite Trainer Box (Pre-Order)",
+    title: "Pokémon TCG: Temporal Forces Elite Trainer Box (Pre-Order)",
     description:
       "Pre-order the Temporal Forces Elite Trainer Box featuring Walking Wake ex and Iron Leaves ex. " +
       "Includes 9 booster packs, promo card, sleeves, dice, and accessories.",
     slug: "preorder-pokemon-temporal-forces-etb",
     category: "category-sealed-products",
     subcategory: "Elite Trainer Box",
-    brand: "The PokÃ©mon Company",
+    brand: "The Pokémon Company",
     price: 5999,
     currency: _CURRENCY,
     stockQuantity: 30,
@@ -1846,14 +1846,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-pokemon-surging-sparks-booster-bundle-blaine-1",
-    title: "PokÃ©mon TCG: Surging Sparks Booster Bundle (Pre-Order)",
+    title: "Pokémon TCG: Surging Sparks Booster Bundle (Pre-Order)",
     description:
       "Pre-order the Surging Sparks Booster Bundle (6 packs) â€” featuring Pikachu ex SIR and Raichu VMAX. " +
       "Great entry-level sealed product for budget collectors.",
     slug: "preorder-pokemon-surging-sparks-booster-bundle",
     category: "category-sealed-products",
     subcategory: "Booster Bundle",
-    brand: "The PokÃ©mon Company",
+    brand: "The Pokémon Company",
     price: 2499,
     currency: _CURRENCY,
     stockQuantity: 60,

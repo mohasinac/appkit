@@ -1,7 +1,7 @@
 ﻿/**
  * Cosplay & Prop Accessories â€” Products Seed Data
- * Replica Props Â· Wearables Â· Cosplay Gear
- * 14 general Â· 1 auction Â· 1 pre-order = 16 total
+ * Replica Props · Wearables · Cosplay Gear
+ * 14 general · 1 auction · 1 pre-order = 16 total
  * Seller: CosPlay India Hub (store-cosplay-india-hub)
  */
 

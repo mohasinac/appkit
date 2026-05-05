@@ -3178,6 +3178,9 @@ export { AdminBrandEditorView } from "./features/admin/index";
 export type { AdminBrandEditorViewProps } from "./features/admin/index";
 // AdminCategoriesView - Component for admin categories view.
 export { AdminCategoriesView } from "./features/admin/index";
+// AdminCategoryEditorView - Component for admin category create/edit form.
+export { AdminCategoryEditorView } from "./features/admin/index";
+export type { AdminCategoryEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCouponsView - Component for admin coupons view.
 export { AdminCouponsView } from "./features/admin/index";

@@ -1,7 +1,7 @@
 ﻿/**
  * Anime Figures â€” Products Seed Data
- * Dragon Ball Z Â· Naruto Â· One Piece Â· My Hero Academia
- * 22 general Â· 2 auctions Â· 2 pre-orders = 26 total
+ * Dragon Ball Z · Naruto · One Piece · My Hero Academia
+ * 22 general · 2 auctions · 2 pre-orders = 26 total
  * Seller: Anime Vault India (store-anime-vault-india)
  */
 

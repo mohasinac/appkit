@@ -430,21 +430,21 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 12. Active Sale â€” PokÃ©mon Multi-Set Clearance
+  // 12. Active Sale â€” Pokémon Multi-Set Clearance
   {
     id: "event-pokemon-multiseries-clearance-2026",
     slug: "event-pokemon-multiseries-clearance-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "PokÃ©mon TCG Multi-Series Clearance â€” Up to 25% Off Non-Holo Rares & Uncommons",
+    title: "Pokémon TCG Multi-Series Clearance â€” Up to 25% Off Non-Holo Rares & Uncommons",
     description:
-      "<p>Clearance sale across all three LetItRip PokÃ©mon TCG stores. <strong>Up to 25% off</strong> non-holo rares, uncommons, and common energy lots. Perfect for completing your Base Set playset.</p>",
+      "<p>Clearance sale across all three LetItRip Pokémon TCG stores. <strong>Up to 25% off</strong> non-holo rares, uncommons, and common energy lots. Perfect for completing your Base Set playset.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(7),
     coverImageUrl: "https://images.pokemontcg.io/base1/2_hires.png",
     saleConfig: {
       discountPercent: 25,
-      bannerText: "PokÃ©mon Clearance Sale â€” Up to 25% Off Non-Holo Rares & Uncommons!",
+      bannerText: "Pokémon Clearance Sale â€” Up to 25% Off Non-Holo Rares & Uncommons!",
       affectedCategories: ["category-non-holo-rare-rarity", "category-uncommon-rarity", "category-common-rarity"],
     },
     tags: ["pokemon", "clearance", "sale", "non-holo", "uncommon", "common"],

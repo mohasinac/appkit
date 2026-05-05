@@ -1,6 +1,6 @@
 ﻿/**
  * Beyblade Burst â€” Products Seed Data
- * 20 general Â· 2 auctions Â· 2 pre-orders = 24 total
+ * 20 general · 2 auctions · 2 pre-orders = 24 total
  * Seller: Bladers Paradise (store-bladers-paradise)
  */
 

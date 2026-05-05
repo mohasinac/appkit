@@ -1,6 +1,6 @@
 ﻿/**
  * Hot Wheels â€” Products Seed Data
- * 30 general Â· 3 auctions Â· 2 pre-orders = 35 total
+ * 30 general · 3 auctions · 2 pre-orders = 35 total
  * Seller: Speed King Diecast (store-speed-king-diecast)
  */
 

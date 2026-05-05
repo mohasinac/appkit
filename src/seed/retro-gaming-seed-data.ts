@@ -1,7 +1,7 @@
 ﻿/**
  * Retro Gaming & Vintage Diecast â€” Products Seed Data
- * Nintendo Â· SEGA Â· Vintage Diecast Cars
- * 18 general Â· 1 auction Â· 1 pre-order = 20 total
+ * Nintendo · SEGA · Vintage Diecast Cars
+ * 18 general · 1 auction · 1 pre-order = 20 total
  * Seller: Retro Vault India (store-retro-vault-india)
  */
 

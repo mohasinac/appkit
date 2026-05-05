@@ -1,12 +1,12 @@
 ﻿/**
  * Multi-Franchise Collectibles â€” Categories Seed Data (35 categories)
  *
- * Franchises: PokÃ©mon TCG Â· Hot Wheels Â· Beyblade Burst Â· Transformers
+ * Franchises: Pokémon TCG · Hot Wheels · Beyblade Burst · Transformers
  *
  * Hierarchy:
- *   PokÃ©mon Cards (root)         â€” tier 0
+ *   Pokémon Cards (root)         â€” tier 0
  *     Card Type                  â€” tier 1
- *       PokÃ©mon / Trainer / Energy â€” tier 2 leaf
+ *       Pokémon / Trainer / Energy â€” tier 2 leaf
  *     Element Type               â€” tier 1
  *       Water / Electric / Fire / Grass / Psychic / Fighting / Colorless â€” leaf
  *     Rarity                     â€” tier 1
@@ -44,15 +44,15 @@ function mkCat(partial: Partial<CategoryDocument>): Partial<CategoryDocument> {
 
 export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
   // POKÃ‰MON TCG
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
 
   mkCat({
     id: "category-pokemon-cards",
-    name: "PokÃ©mon Cards",
+    name: "Pokémon Cards",
     slug: "category-pokemon-cards",
-    description: "Original PokÃ©mon Base Set 151 cards â€” singles, lots, graded, and sealed",
+    description: "Original Pokémon Base Set 151 cards â€” singles, lots, graded, and sealed",
     rootId: "category-pokemon-cards",
     parentIds: [],
     childrenIds: [
@@ -72,8 +72,8 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
       totalProductCount: 80, totalAuctionCount: 6, totalItemCount: 86, lastUpdated: daysAgo(1),
     },
     seo: {
-      title: "PokÃ©mon Cards â€” Base Set 151 | LetItRip",
-      description: "Buy and sell original PokÃ©mon Base Set 151 singles, holos, and sealed packs.",
+      title: "Pokémon Cards â€” Base Set 151 | LetItRip",
+      description: "Buy and sell original Pokémon Base Set 151 singles, holos, and sealed packs.",
       keywords: ["pokemon cards", "base set", "151", "charizard", "pikachu"],
     },
     display: { showInFooter: true, icon: "ðŸƒ", coverImage: "https://images.pokemontcg.io/base1/logo.png", color: "#FFCB05", showInMenu: true },
@@ -84,20 +84,20 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     id: "category-card-type-pokemon-cards",
     name: "Card Type",
     slug: "category-card-type-pokemon-cards",
-    description: "Filter by PokÃ©mon, Trainer, or Energy card",
+    description: "Filter by Pokémon, Trainer, or Energy card",
     rootId: "category-pokemon-cards",
     parentIds: ["category-pokemon-cards"],
     childrenIds: ["category-pokemon-type-card-type", "category-trainer-type-card-type", "category-energy-type-card-type"],
     tier: 1, path: "pokemon-cards/card-type", order: 1, isLeaf: false,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 45, totalAuctionCount: 4, totalItemCount: 49, lastUpdated: daysAgo(1) },
-    seo: { title: "Card Type â€” PokÃ©mon TCG", description: "Shop by card type.", keywords: ["pokemon card type"] },
+    seo: { title: "Card Type â€” Pokémon TCG", description: "Shop by card type.", keywords: ["pokemon card type"] },
     display: { showInFooter: false, icon: "ðŸŽ´", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }],
   }),
 
   mkCat({
     id: "category-pokemon-type-card-type",
-    name: "PokÃ©mon Cards",
+    name: "Pokémon Cards",
     slug: "category-pokemon-type-card-type",
     description: "Individual creature cards â€” the core of the Base Set",
     rootId: "category-pokemon-cards",
@@ -105,9 +105,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     childrenIds: [], tier: 2, path: "pokemon-cards/card-type/pokemon-type", order: 1, isLeaf: true,
     isFeatured: true, featuredPriority: 2, showOnHomepage: true,
     metrics: { productCount: 35, productIds: [], auctionCount: 4, auctionIds: [], totalProductCount: 35, totalAuctionCount: 4, totalItemCount: 39, lastUpdated: daysAgo(1) },
-    seo: { title: "PokÃ©mon Cards â€” Base Set Singles", description: "Shop all Base Set creature singles.", keywords: ["pokemon singles", "charizard", "blastoise"] },
+    seo: { title: "Pokémon Cards â€” Base Set Singles", description: "Shop all Base Set creature singles.", keywords: ["pokemon singles", "charizard", "blastoise"] },
     display: { showInFooter: false, icon: "âš¡", coverImage: "https://images.pokemontcg.io/base1/4_hires.png", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
   }),
 
   mkCat({
@@ -119,138 +119,138 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     parentIds: ["category-card-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/card-type/trainer-type", order: 2, isLeaf: true,
     metrics: { productCount: 8, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 8, totalAuctionCount: 0, totalItemCount: 8, lastUpdated: daysAgo(1) },
-    seo: { title: "Trainer Cards â€” PokÃ©mon Base Set", description: "Professor Oak, Bill, Energy Removal and more.", keywords: ["trainer cards", "professor oak", "item cards"] },
+    seo: { title: "Trainer Cards â€” Pokémon Base Set", description: "Professor Oak, Bill, Energy Removal and more.", keywords: ["trainer cards", "professor oak", "item cards"] },
     display: { showInFooter: false, icon: "ðŸ§‘â€ðŸ«", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-energy-type-card-type",
     name: "Energy Cards",
     slug: "category-energy-type-card-type",
-    description: "Basic and Special Energy cards to power your PokÃ©mon",
+    description: "Basic and Special Energy cards to power your Pokémon",
     rootId: "category-pokemon-cards",
     parentIds: ["category-card-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/card-type/energy-type", order: 3, isLeaf: true,
     metrics: { productCount: 5, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 5, totalAuctionCount: 0, totalItemCount: 5, lastUpdated: daysAgo(1) },
-    seo: { title: "Energy Cards â€” PokÃ©mon Base Set", description: "Basic Energy sets from the original print runs.", keywords: ["energy cards", "fire energy", "water energy"] },
+    seo: { title: "Energy Cards â€” Pokémon Base Set", description: "Basic Energy sets from the original print runs.", keywords: ["energy cards", "fire energy", "water energy"] },
     display: { showInFooter: false, icon: "âšª", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-card-type-pokemon-cards", name: "Card Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-element-type-pokemon-cards",
     name: "Element Type",
     slug: "category-element-type-pokemon-cards",
-    description: "Shop by PokÃ©mon energy type",
+    description: "Shop by Pokémon energy type",
     rootId: "category-pokemon-cards",
     parentIds: ["category-pokemon-cards"],
     childrenIds: ["category-water-element", "category-electric-element", "category-fire-element", "category-grass-element", "category-psychic-element", "category-fighting-element", "category-colorless-element"],
     tier: 1, path: "pokemon-cards/element-type", order: 2, isLeaf: false,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 35, totalAuctionCount: 4, totalItemCount: 39, lastUpdated: daysAgo(1) },
-    seo: { title: "Element Types â€” PokÃ©mon TCG", description: "Water, Fire, Electric, Grass, Psychic, Fighting, and Colorless types.", keywords: ["pokemon elements", "fire type", "water type"] },
+    seo: { title: "Element Types â€” Pokémon TCG", description: "Water, Fire, Electric, Grass, Psychic, Fighting, and Colorless types.", keywords: ["pokemon elements", "fire type", "water type"] },
     display: { showInFooter: false, icon: "ðŸŒŠ", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }],
   }),
 
   mkCat({
     id: "category-water-element",
     name: "Water",
     slug: "category-water-element",
-    description: "Water-type PokÃ©mon cards â€” Blastoise, Lapras, Starmie, Gyarados",
+    description: "Water-type Pokémon cards â€” Blastoise, Lapras, Starmie, Gyarados",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/water", order: 1, isLeaf: true,
     metrics: { productCount: 6, productIds: [], auctionCount: 1, auctionIds: [], totalProductCount: 6, totalAuctionCount: 1, totalItemCount: 7, lastUpdated: daysAgo(1) },
-    seo: { title: "Water-Type PokÃ©mon Cards", description: "Blastoise, Lapras, Starmie and more.", keywords: ["water pokemon", "blastoise"] },
+    seo: { title: "Water-Type Pokémon Cards", description: "Blastoise, Lapras, Starmie and more.", keywords: ["water pokemon", "blastoise"] },
     display: { showInFooter: false, icon: "ðŸ’§", color: "#6DB6D4", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-electric-element",
     name: "Electric",
     slug: "category-electric-element",
-    description: "Electric-type PokÃ©mon cards â€” Pikachu, Raichu, Zapdos, Electabuzz",
+    description: "Electric-type Pokémon cards â€” Pikachu, Raichu, Zapdos, Electabuzz",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/electric", order: 2, isLeaf: true,
     metrics: { productCount: 5, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 5, totalAuctionCount: 0, totalItemCount: 5, lastUpdated: daysAgo(1) },
-    seo: { title: "Electric-Type PokÃ©mon Cards", description: "Pikachu, Zapdos, Raichu and more.", keywords: ["electric pokemon", "pikachu", "zapdos"] },
+    seo: { title: "Electric-Type Pokémon Cards", description: "Pikachu, Zapdos, Raichu and more.", keywords: ["electric pokemon", "pikachu", "zapdos"] },
     display: { showInFooter: false, icon: "âš¡", color: "#F7D02C", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-fire-element",
     name: "Fire",
     slug: "category-fire-element",
-    description: "Fire-type PokÃ©mon cards â€” Charizard, Arcanine, Ninetales, Moltres",
+    description: "Fire-type Pokémon cards â€” Charizard, Arcanine, Ninetales, Moltres",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/fire", order: 3, isLeaf: true,
     isFeatured: true, featuredPriority: 3, showOnHomepage: true,
     metrics: { productCount: 6, productIds: [], auctionCount: 2, auctionIds: [], totalProductCount: 6, totalAuctionCount: 2, totalItemCount: 8, lastUpdated: daysAgo(1) },
-    seo: { title: "Fire-Type PokÃ©mon Cards", description: "Charizard, Arcanine, Ninetales and more.", keywords: ["fire pokemon", "charizard"] },
+    seo: { title: "Fire-Type Pokémon Cards", description: "Charizard, Arcanine, Ninetales and more.", keywords: ["fire pokemon", "charizard"] },
     display: { showInFooter: false, icon: "ðŸ”¥", color: "#EE8130", coverImage: "https://images.pokemontcg.io/base1/4_hires.png", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-grass-element",
     name: "Grass",
     slug: "category-grass-element",
-    description: "Grass-type PokÃ©mon cards â€” Venusaur, Scyther, Pinsir, Clefairy",
+    description: "Grass-type Pokémon cards â€” Venusaur, Scyther, Pinsir, Clefairy",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/grass", order: 4, isLeaf: true,
     metrics: { productCount: 4, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 4, totalAuctionCount: 0, totalItemCount: 4, lastUpdated: daysAgo(1) },
-    seo: { title: "Grass-Type PokÃ©mon Cards", description: "Venusaur, Scyther, Pinsir and more.", keywords: ["grass pokemon", "venusaur"] },
+    seo: { title: "Grass-Type Pokémon Cards", description: "Venusaur, Scyther, Pinsir and more.", keywords: ["grass pokemon", "venusaur"] },
     display: { showInFooter: false, icon: "ðŸŒ¿", color: "#7AC74C", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-psychic-element",
     name: "Psychic",
     slug: "category-psychic-element",
-    description: "Psychic-type PokÃ©mon cards â€” Mewtwo, Gengar, Jynx, Alakazam",
+    description: "Psychic-type Pokémon cards â€” Mewtwo, Gengar, Jynx, Alakazam",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/psychic", order: 5, isLeaf: true,
     isFeatured: true, featuredPriority: 4,
     metrics: { productCount: 5, productIds: [], auctionCount: 1, auctionIds: [], totalProductCount: 5, totalAuctionCount: 1, totalItemCount: 6, lastUpdated: daysAgo(1) },
-    seo: { title: "Psychic-Type PokÃ©mon Cards", description: "Mewtwo, Gengar, Alakazam and more.", keywords: ["psychic pokemon", "mewtwo", "gengar"] },
+    seo: { title: "Psychic-Type Pokémon Cards", description: "Mewtwo, Gengar, Alakazam and more.", keywords: ["psychic pokemon", "mewtwo", "gengar"] },
     display: { showInFooter: false, icon: "ðŸ”®", color: "#F95587", coverImage: "https://images.pokemontcg.io/base1/10_hires.png", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-fighting-element",
     name: "Fighting",
     slug: "category-fighting-element",
-    description: "Fighting-type PokÃ©mon cards â€” Machamp, Hitmonchan, Primeape, Onix",
+    description: "Fighting-type Pokémon cards â€” Machamp, Hitmonchan, Primeape, Onix",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/fighting", order: 6, isLeaf: true,
     metrics: { productCount: 3, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 3, totalAuctionCount: 0, totalItemCount: 3, lastUpdated: daysAgo(1) },
-    seo: { title: "Fighting-Type PokÃ©mon Cards", description: "Machamp, Hitmonchan and more.", keywords: ["fighting pokemon", "machamp"] },
+    seo: { title: "Fighting-Type Pokémon Cards", description: "Machamp, Hitmonchan and more.", keywords: ["fighting pokemon", "machamp"] },
     display: { showInFooter: false, icon: "ðŸ¥Š", color: "#C22E28", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
     id: "category-colorless-element",
     name: "Colorless",
     slug: "category-colorless-element",
-    description: "Colorless-type PokÃ©mon cards â€” Chansey, Snorlax, Dragonite, Kangaskhan",
+    description: "Colorless-type Pokémon cards â€” Chansey, Snorlax, Dragonite, Kangaskhan",
     rootId: "category-pokemon-cards",
     parentIds: ["category-element-type-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/element-type/colorless", order: 7, isLeaf: true,
     metrics: { productCount: 4, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 4, totalAuctionCount: 0, totalItemCount: 4, lastUpdated: daysAgo(1) },
-    seo: { title: "Colorless-Type PokÃ©mon Cards", description: "Chansey, Snorlax, Dragonite and more.", keywords: ["colorless pokemon", "chansey", "snorlax"] },
+    seo: { title: "Colorless-Type Pokémon Cards", description: "Chansey, Snorlax, Dragonite and more.", keywords: ["colorless pokemon", "chansey", "snorlax"] },
     display: { showInFooter: false, icon: "âšª", color: "#A8A77A", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-element-type-pokemon-cards", name: "Element Type", tier: 1 }],
   }),
 
   mkCat({
@@ -263,9 +263,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     childrenIds: ["category-holo-rare-rarity", "category-non-holo-rare-rarity", "category-uncommon-rarity", "category-common-rarity"],
     tier: 1, path: "pokemon-cards/rarity", order: 3, isLeaf: false,
     metrics: { productCount: 0, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 35, totalAuctionCount: 4, totalItemCount: 39, lastUpdated: daysAgo(1) },
-    seo: { title: "Rarity â€” PokÃ©mon TCG", description: "Browse Holo Rare, Uncommon, and Common PokÃ©mon cards.", keywords: ["pokemon rarity", "holo rare", "uncommon"] },
+    seo: { title: "Rarity â€” Pokémon TCG", description: "Browse Holo Rare, Uncommon, and Common Pokémon cards.", keywords: ["pokemon rarity", "holo rare", "uncommon"] },
     display: { showInFooter: false, icon: "â­", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }],
   }),
 
   mkCat({
@@ -278,9 +278,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     childrenIds: [], tier: 2, path: "pokemon-cards/rarity/holo-rare", order: 1, isLeaf: true,
     isFeatured: true, featuredPriority: 1, showOnHomepage: true,
     metrics: { productCount: 16, productIds: [], auctionCount: 4, auctionIds: [], totalProductCount: 16, totalAuctionCount: 4, totalItemCount: 20, lastUpdated: daysAgo(1) },
-    seo: { title: "Holo Rare PokÃ©mon Cards â€” Base Set", description: "All 16 Holo Rares from the original PokÃ©mon Base Set.", keywords: ["holo rare", "holographic", "charizard", "mewtwo"] },
+    seo: { title: "Holo Rare Pokémon Cards â€” Base Set", description: "All 16 Holo Rares from the original Pokémon Base Set.", keywords: ["holo rare", "holographic", "charizard", "mewtwo"] },
     display: { showInFooter: true, icon: "âœ¨", coverImage: "https://images.pokemontcg.io/base1/4_hires.png", color: "#B8860B", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
   }),
 
   mkCat({
@@ -292,9 +292,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     parentIds: ["category-rarity-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/rarity/non-holo-rare", order: 2, isLeaf: true,
     metrics: { productCount: 10, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 10, totalAuctionCount: 0, totalItemCount: 10, lastUpdated: daysAgo(1) },
-    seo: { title: "Non-Holo Rare PokÃ©mon Cards", description: "Rare cards without holo foil from Base Set.", keywords: ["non holo rare", "rare pokemon cards"] },
+    seo: { title: "Non-Holo Rare Pokémon Cards", description: "Rare cards without holo foil from Base Set.", keywords: ["non holo rare", "rare pokemon cards"] },
     display: { showInFooter: false, icon: "ðŸŒŸ", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
   }),
 
   mkCat({
@@ -306,9 +306,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     parentIds: ["category-rarity-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/rarity/uncommon", order: 3, isLeaf: true,
     metrics: { productCount: 6, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 6, totalAuctionCount: 0, totalItemCount: 6, lastUpdated: daysAgo(1) },
-    seo: { title: "Uncommon PokÃ©mon Cards â€” Base Set", description: "Budget-friendly uncommon singles from the original print run.", keywords: ["uncommon pokemon cards", "base set uncommon"] },
+    seo: { title: "Uncommon Pokémon Cards â€” Base Set", description: "Budget-friendly uncommon singles from the original print run.", keywords: ["uncommon pokemon cards", "base set uncommon"] },
     display: { showInFooter: false, icon: "ðŸ’Ž", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
   }),
 
   mkCat({
@@ -320,14 +320,14 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     parentIds: ["category-rarity-pokemon-cards"],
     childrenIds: [], tier: 2, path: "pokemon-cards/rarity/common", order: 4, isLeaf: true,
     metrics: { productCount: 6, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 6, totalAuctionCount: 0, totalItemCount: 6, lastUpdated: daysAgo(1) },
-    seo: { title: "Common PokÃ©mon Cards â€” Base Set", description: "Affordable common singles from the original Base Set.", keywords: ["common pokemon cards", "base set common"] },
+    seo: { title: "Common Pokémon Cards â€” Base Set", description: "Affordable common singles from the original Base Set.", keywords: ["common pokemon cards", "base set common"] },
     display: { showInFooter: false, icon: "ðŸƒ", showInMenu: true },
-    ancestors: [{ id: "category-pokemon-cards", name: "PokÃ©mon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
+    ancestors: [{ id: "category-pokemon-cards", name: "Pokémon Cards", tier: 0 }, { id: "category-rarity-pokemon-cards", name: "Rarity", tier: 1 }],
   }),
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
   // HOT WHEELS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
 
   mkCat({
     id: "category-hot-wheels",
@@ -404,9 +404,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     ancestors: [{ id: "category-hot-wheels", name: "Hot Wheels", tier: 0 }],
   }),
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
   // BEYBLADE BURST
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
 
   mkCat({
     id: "category-beyblade-burst",
@@ -495,9 +495,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     ancestors: [{ id: "category-beyblade-burst", name: "Beyblade Burst", tier: 0 }],
   }),
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
   // TRANSFORMERS
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
 
   mkCat({
     id: "category-transformers",
@@ -558,9 +558,9 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     ancestors: [{ id: "category-transformers", name: "Transformers", tier: 0 }],
   }),
 
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
   // CROSS-FRANCHISE
-  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // ═══════════════════════════════════════════════════
 
   mkCat({
     id: "category-sealed-products",
@@ -572,7 +572,7 @@ export const pokemonCategoriesSeedData: Partial<CategoryDocument>[] = [
     childrenIds: [], tier: 0, path: "sealed-products", order: 5, isLeaf: true,
     isFeatured: true, featuredPriority: 10, showOnHomepage: true,
     metrics: { productCount: 8, productIds: [], auctionCount: 0, auctionIds: [], totalProductCount: 8, totalAuctionCount: 0, totalItemCount: 8, lastUpdated: daysAgo(1) },
-    seo: { title: "Sealed Products â€” PokÃ©mon, Hot Wheels & More | LetItRip", description: "Factory-sealed collectibles â€” PokÃ©mon packs, Hot Wheels cases, Beyblade sets.", keywords: ["sealed products", "booster box", "factory sealed"] },
+    seo: { title: "Sealed Products â€” Pokémon, Hot Wheels & More | LetItRip", description: "Factory-sealed collectibles â€” Pokémon packs, Hot Wheels cases, Beyblade sets.", keywords: ["sealed products", "booster box", "factory sealed"] },
     display: { showInFooter: true, icon: "ðŸ“¦", showInMenu: true },
     ancestors: [],
   }),

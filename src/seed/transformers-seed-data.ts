@@ -1,6 +1,6 @@
 ﻿/**
  * Transformers â€” Products Seed Data
- * 10 general Â· 1 auction Â· 1 pre-order = 12 total
+ * 10 general · 1 auction · 1 pre-order = 12 total
  * Seller: Speed King Diecast (store-speed-king-diecast)
  */
 
