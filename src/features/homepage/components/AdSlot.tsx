@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
+import { useActiveAd } from "../hooks/useActiveAd";
+import type { ActiveAdRecord } from "../hooks/useActiveAd";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -69,6 +71,42 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
   return null;
 }
 
+function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
+  const { creative } = ad;
+  if (!creative) return null;
+
+  return (
+    <a
+      href={creative.ctaHref || "#"}
+      target={creative.ctaHref ? "_blank" : undefined}
+      rel="noopener noreferrer"
+      className="flex items-center gap-3 w-full overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800 px-4 py-3 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors no-underline"
+    >
+      {creative.imageUrl ? (
+        <img
+          src={creative.imageUrl}
+          alt={creative.title || "Advertisement"}
+          className="h-14 w-14 rounded object-cover flex-shrink-0"
+          loading="lazy"
+        />
+      ) : null}
+      <div className="flex-1 min-w-0">
+        {creative.title ? (
+          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{creative.title}</p>
+        ) : null}
+        {creative.body ? (
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{creative.body}</p>
+        ) : null}
+      </div>
+      {creative.ctaLabel ? (
+        <span className="flex-shrink-0 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white">
+          {creative.ctaLabel}
+        </span>
+      ) : null}
+    </a>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Primary component
 // ---------------------------------------------------------------------------
@@ -80,9 +118,7 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
  * - The slot id is not registered
  * - `enabled: false` in config
  * - `requiresConsent: true` and consent has not been granted
- *
- * When `reservedHeight` is set in the config, the container always reserves
- * that height to prevent CLS — even before the ad loads.
+ * - No active ad exists for the slot (for manual provider without manualContent)
  *
  * @example
  * <AdSlot id="homepage-hero-banner" />
@@ -90,6 +126,7 @@ function ThirdPartyAd({ config }: { config: AdSlotConfig }) {
  */
 export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
   const [hydrated, setHydrated] = useState(false);
+  const { ad: activeAd } = useActiveAd(id);
 
   useEffect(() => {
     setHydrated(true);
@@ -106,7 +143,8 @@ export function AdSlot({ id, manualContent, className = "" }: AdSlotProps) {
     return null;
   }
 
-  const content = renderProvider(config.provider, config, manualContent);
+  const resolvedManualContent = manualContent ?? (activeAd ? <ManualAdBanner ad={activeAd} /> : null);
+  const content = renderProvider(config.provider, config, resolvedManualContent);
 
   if (!content) return null;
 

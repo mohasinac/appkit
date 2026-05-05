@@ -10,6 +10,8 @@ export * from "./hooks/useTopBrands";
 export * from "./hooks/useBlogArticles";
 export * from "./hooks/useHomepageReviews";
 export * from "./hooks/useNewsletter";
+export { useActiveAd } from "./hooks/useActiveAd";
+export type { ActiveAdRecord, ActiveAdCreative } from "./hooks/useActiveAd";
 export * from "./hooks/useFeaturedStores";
 export * from "./hooks/useHomepageEvents";
 export * from "./components";

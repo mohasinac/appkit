@@ -191,6 +191,8 @@ export type { SearchViewProps } from "./features/search/index";
 export { UserSettingsView } from "./features/account/index";
 export type { UserSettingsViewProps, UserSettingsViewLabels } from "./features/account/index";
 export { AdSlot } from "./features/homepage/components/AdSlot";
+export { useActiveAd } from "./features/homepage/hooks/useActiveAd";
+export type { ActiveAdRecord, ActiveAdCreative } from "./features/homepage/hooks/useActiveAd";
 export {
   registerAdSlot,
   registerAdSlots,
