@@ -8426,7 +8426,8 @@ export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, Summar
 export { CountdownDisplay, ItemRow, HorizontalScroller, SectionTabs, TabStrip } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
 export { TabsList, TabsContent, PasswordStrengthIndicator, DashboardStatsCard, TablePagination } from "./ui/index";
-export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText } from "./ui/index";
+export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
+export type { RichTextRendererProps } from "./ui/index";
 export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";
 export { buildColumns, createColumnBuilder } from "./ui/index";
 export { renderBoolean, renderCurrency, renderCurrencyCompact, renderCount, renderNullable } from "./ui/index";

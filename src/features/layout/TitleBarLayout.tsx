@@ -259,7 +259,7 @@ export function TitleBarLayout({
                 aria-label={sidebarOpen ? "Close menu" : "Open menu"}
                 aria-expanded={sidebarOpen}
                 aria-controls="secondary-sidebar"
-                onClick={hasDashboardNav && onToggleDashboardNav ? onToggleDashboardNav : onToggleSidebar}
+                onClick={onToggleSidebar}
                 className="flex items-center justify-center w-9 h-9 rounded-lg text-zinc-600 dark:text-zinc-400 hover:bg-primary-50 hover:text-primary-700 dark:hover:bg-slate-800 dark:hover:text-secondary-400 transition-colors"
               >
                 <svg

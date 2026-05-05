@@ -45,9 +45,7 @@ export function StoreAboutView({
           <Heading level={2} className="text-lg font-semibold mb-2">
             {labels.aboutTitle ?? "About"}
           </Heading>
-          <Text className="text-neutral-600 whitespace-pre-line">
-            {store.bio}
-          </Text>
+          <RichText html={normalizeRichTextHtml(store.bio)} className="text-neutral-600" />
         </Div>
       )}
 

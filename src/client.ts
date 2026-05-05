@@ -237,3 +237,5 @@ export type { EventDocument } from "./features/events/schemas/firestore";
 export { PromotionsViewProductSection, PromotionsHero, PromotionsView } from "./features/promotions/components/index";
 export type { PromotionsViewProductSectionProps } from "./features/promotions/components/index";
 export { RichText } from "./ui/rich-text/RichText";
+export { RichTextRenderer } from "./ui/rich-text/RichTextRenderer";
+export type { RichTextRendererProps } from "./ui/rich-text/RichTextRenderer";

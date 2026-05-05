@@ -192,12 +192,26 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
   if (variant === "sidebar") {
     return (
       <>
-        {/* Desktop — inline aside, always visible when desktopOpen is true */}
-        <aside className={`${desktopOpen ? "hidden md:flex" : "hidden"} flex-col w-52 lg:w-56 shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
-          <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">My Account</span>
+        {/* Desktop — collapsible aside with smooth width transition */}
+        <aside
+          className={`hidden md:flex flex-col shrink-0 border-r border-zinc-200 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-hidden transition-[width] duration-300 ${desktopOpen ? "w-52 lg:w-56" : "w-0 border-r-0"}`}
+        >
+          <div className="w-52 lg:w-56 flex flex-col flex-1 min-h-0">
+            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0 flex items-center justify-between gap-2">
+              <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">My Account</span>
+              <button
+                type="button"
+                onClick={close}
+                aria-label="Collapse sidebar"
+                className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                </svg>
+              </button>
+            </div>
+            <DrawerContent groups={groups} items={items} activeHref={pathname} />
           </div>
-          <DrawerContent groups={groups} items={items} activeHref={pathname} />
         </aside>
         {/* Mobile — BottomSheet triggered by external mobileOpen state */}
         <div className="md:hidden">

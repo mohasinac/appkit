@@ -1,6 +1,6 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Stack } from "../../../ui";
+import { Heading, Text, Section, Stack, RichTextRenderer } from "../../../ui";
 import { TextLink } from "../../../ui";
 import { HelpCircle, ChevronRight } from "lucide-react";
 
@@ -131,12 +131,11 @@ export async function FAQPageView({
                       <ChevronRight className="w-4 h-4 flex-shrink-0 ml-3 transition-transform group-open:rotate-90" />
                     </summary>
                     <div className="px-5 pb-5 pt-1" data-section="faqpageview-div-98">
-                      <Text
-                        variant="secondary"
-                        className="text-sm leading-relaxed whitespace-pre-line"
-                      >
-                        {item.answer}
-                      </Text>
+                      <RichTextRenderer
+                        html={item.answer}
+                        proseClass="prose prose-sm max-w-none dark:prose-invert"
+                        className="text-neutral-600 dark:text-neutral-300"
+                      />
                     </div>
                   </details>
                 ))}

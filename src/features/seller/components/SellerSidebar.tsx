@@ -229,20 +229,34 @@ export function StoreSidebar({
   if (variant === "sidebar") {
     return (
       <>
-        <aside className={`${desktopOpen ? "hidden md:flex" : "hidden"} flex-col w-72 shrink-0 border-r border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-y-auto`}>
-          <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-            <div className="flex items-center gap-3">
-              {storeLogoURL ? (
-                <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
-              ) : (
-                <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
-                  {storeName?.[0]?.toUpperCase()}
-                </Div>
-              )}
-              <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName || panelTitle}</Text>
+        <aside
+          className={`hidden md:flex flex-col shrink-0 border-r border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-950 sticky top-[var(--appkit-header-height,3.5rem)] self-start h-[calc(100vh-var(--appkit-header-height,3.5rem))] overflow-hidden transition-[width] duration-300 ${desktopOpen ? "w-72" : "w-0 border-r-0"}`}
+        >
+          <div className="w-72 flex flex-col flex-1 min-h-0">
+            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3 min-w-0">
+                {storeLogoURL ? (
+                  <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
+                ) : (
+                  <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
+                    {storeName?.[0]?.toUpperCase()}
+                  </Div>
+                )}
+                <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName || panelTitle}</Text>
+              </div>
+              <button
+                type="button"
+                onClick={close}
+                aria-label="Collapse sidebar"
+                className="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                </svg>
+              </button>
             </div>
+            <div className="flex-1 overflow-y-auto px-0 py-3">{navContent}</div>
           </div>
-          <div className="flex-1 overflow-y-auto px-0 py-3">{navContent}</div>
         </aside>
         <div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title={panelTitle}>

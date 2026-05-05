@@ -362,6 +362,8 @@ export { SideModal } from "./components/SideModal";
 // --- RichText -----------------------------------------------------------------
 export type { RichTextProps } from "./rich-text/RichText";
 export { RichText } from "./rich-text/RichText";
+export type { RichTextRendererProps } from "./rich-text/RichTextRenderer";
+export { RichTextRenderer } from "./rich-text/RichTextRenderer";
 export type { RichTextEditorProps } from "./components/RichTextEditor";
 export { RichTextEditor } from "./components/RichTextEditor";
 
