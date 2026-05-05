@@ -184,8 +184,12 @@ export { MediaImage } from "./features/media/index";
 export { ReviewsListView } from "./features/reviews/index";
 export { StoreSidebar, SellerSidebar } from "./features/seller/components/SellerSidebar";
 export type { StoreNavItem, StoreNavGroup, SellerNavItem } from "./features/seller/components/SellerSidebar";
-export { StoreProductsView } from "./features/stores/index";
-export type { StoreProductItem } from "./features/stores/index";
+export { StoreProductsView, StoreAboutView } from "./features/stores/index";
+export type { StoreProductItem, StoreAboutViewProps, StoreDetail } from "./features/stores/index";
+export { SearchView } from "./features/search/index";
+export type { SearchViewProps } from "./features/search/index";
+export { UserSettingsView } from "./features/account/index";
+export type { UserSettingsViewProps, UserSettingsViewLabels } from "./features/account/index";
 export { AdSlot } from "./features/homepage/components/AdSlot";
 export {
   registerAdSlot,
@@ -222,3 +226,12 @@ export { UserAccountHubView, UserOrdersView } from "./features/account/index";
 export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels } from "./features/account/index";
 export { useOrders, OrdersList } from "./features/orders/index";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";
+export { BlogPostView } from "./features/blog/components/BlogPostView";
+export type { BlogPostViewProps } from "./features/blog/components/BlogPostView";
+export { BlogCard, BlogCategoryTabs, BlogListView } from "./features/blog/components/BlogListView";
+export { EventDetailView } from "./features/events/components/index";
+export type { EventDetailViewProps } from "./features/events/components/index";
+export type { EventDocument } from "./features/events/schemas/firestore";
+export { PromotionsViewProductSection, PromotionsHero, PromotionsView } from "./features/promotions/components/index";
+export type { PromotionsViewProductSectionProps } from "./features/promotions/components/index";
+export { RichText } from "./ui/rich-text/RichText";

@@ -101,7 +101,7 @@ export const eventsSeedData: EventDocument[] = [
           order: 1,
         },
         {
-          id: "tagged_friend"",
+          id: "tagged_friend",
           type: "text",
           label: "Tag a friend (username or social handle)",
           required: false,
@@ -182,7 +182,7 @@ export const eventsSeedData: EventDocument[] = [
           order: 1,
         },
         {
-          id: "most_wanted"",
+          id: "most_wanted",
           type: "text",
           label: "Which Pokemon card are you currently hunting?",
           required: false,
@@ -396,21 +396,21 @@ export const eventsSeedData: EventDocument[] = [
     feedbackConfig: {
       formFields: [
         {
-          id: "collecting_focus"",
+          id: "collecting_focus",
           type: "text",
           label: "What's your Hot Wheels collecting focus? (TH hunting, Car Culture, mainline, track sets)",
           required: true,
           order: 1,
         },
         {
-          id: "most_wanted_casting"",
+          id: "most_wanted_casting",
           type: "text",
           label: "Name your most-wanted Hot Wheels casting currently",
           required: true,
           order: 2,
         },
         {
-          id: "monthly_spend"",
+          id: "monthly_spend",
           type: "text",
           label: "Roughly how much do you spend on Hot Wheels per month?",
           required: false,

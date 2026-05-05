@@ -55,7 +55,7 @@ export interface ProductDocument {
   features?: string[];
   shippingInfo?: string;
   returnPolicy?: string;
-  condition?: "new" | "used" | "refurbished" | "broken";
+  condition?: "new" | "used" | "refurbished" | "broken" | "graded";
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
