@@ -18,7 +18,7 @@ import {
   type MediaField,
   type MediaFieldInput,
 } from "../../media/types/index";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { normalizeRichTextHtml, slugify } from "../../../utils/string.formatter";
 
 export interface BlogPostFormValue {
   title?: string;
@@ -110,7 +110,11 @@ export function BlogPostForm({
           <Input
             id="blog-post-title"
             value={value.title || ""}
-            onChange={(event) => update({ title: event.target.value })}
+            onChange={(event) => {
+              const title = event.target.value;
+              const autoSlug = `blog-${slugify(title)}`;
+              update({ title, slug: autoSlug });
+            }}
             disabled={isReadonly}
           />
         </Stack>

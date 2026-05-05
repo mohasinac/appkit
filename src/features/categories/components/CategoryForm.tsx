@@ -3,7 +3,7 @@ import { Label, Span, Checkbox, RichTextEditor, Text } from "../../../ui";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";
 import { flattenCategories, type Category } from "../types";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { normalizeRichTextHtml, slugify } from "../../../utils/string.formatter";
 
 export interface CategoryFormLabels {
   name?: string;
@@ -58,9 +58,13 @@ export function CategoryForm({
     onChange({ ...category, ...partial });
   };
 
+  const makeSlug = (name: string, isBrand: boolean) => {
+    const base = slugify(name);
+    return isBrand ? `category-brand-${base}` : `category-${base}`;
+  };
+
   const handleNameChange = (value: string) => {
-    const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    update({ name: value, slug });
+    update({ name: value, slug: makeSlug(value, category.isBrand ?? false) });
   };
 
   return (
@@ -162,7 +166,10 @@ export function CategoryForm({
         />
         <Checkbox
           checked={category.isBrand || false}
-          onChange={(e) => update({ isBrand: e.target.checked })}
+          onChange={(e) => {
+            const isBrand = e.target.checked;
+            update({ isBrand, slug: makeSlug(category.name ?? "", isBrand) });
+          }}
           disabled={isReadonly}
           label={L.isBrand}
         />
