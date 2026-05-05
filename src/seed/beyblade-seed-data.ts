@@ -1,6 +1,6 @@
-/**
- * Beyblade Burst — Products Seed Data
- * 20 general · 2 auctions · 2 pre-orders = 24 total
+﻿/**
+ * Beyblade Burst â€” Products Seed Data
+ * 20 general Â· 2 auctions Â· 2 pre-orders = 24 total
  * Seller: Bladers Paradise (store-bladers-paradise)
  */
 
@@ -37,13 +37,13 @@ const img = (seed: string) => {
 
 export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
-  // ── ATTACK TYPE (6) ──────────────────────────────────────────────────────
+  // â”€â”€ ATTACK TYPE (6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-valtryek-v5-attack-bp-1",
-    title: "Beyblade Burst — Valtryek V5 Attack Type (Rise)",
+    title: "Beyblade Burst â€” Valtryek V5 Attack Type (Rise)",
     description: "<p>Valtryek V5 is one of the most powerful attack-type Beyblades in the Burst Rise series. The five-bladed layer delivers devastating attacks with high burst resistance. Includes launcher and ripcord.</p>",
-    slug: "bb-valtryek-v5-attack-rise",
+    slug: "product-bb-valtryek-v5-attack-rise",
     category: "category-bb-attack-type",
     subcategory: "Burst Rise",
     brand: "Beyblade Burst",
@@ -87,9 +87,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-spriggan-requiem-attack-bp-2",
-    title: "Beyblade Burst — Spriggan Requiem Attack/Stamina (Turbo)",
-    description: "<p>Spriggan Requiem from Beyblade Burst Turbo — the mythical dual-spin top that dominated every competition in its era. Spin right for Attack, left for Stamina. Legendary performance.</p>",
-    slug: "bb-spriggan-requiem-turbo-attack-stamina",
+    title: "Beyblade Burst â€” Spriggan Requiem Attack/Stamina (Turbo)",
+    description: "<p>Spriggan Requiem from Beyblade Burst Turbo â€” the mythical dual-spin top that dominated every competition in its era. Spin right for Attack, left for Stamina. Legendary performance.</p>",
+    slug: "product-bb-spriggan-requiem-turbo-attack-stamina",
     category: "category-bb-attack-type",
     subcategory: "Burst Turbo",
     brand: "Beyblade Burst",
@@ -127,9 +127,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-cho-z-achilles-attack-bp-3",
-    title: "Beyblade Burst — Cho-Z Achilles 00 Dimension Attack",
-    description: "<p>Cho-Z Achilles 00 Dimension — the most powerful attack-type in Burst Cho-Z series. Metal-reinforced armor for devastating strikes. Used by Aiger Akabane in the anime.</p>",
-    slug: "bb-cho-z-achilles-00-dimension-attack",
+    title: "Beyblade Burst â€” Cho-Z Achilles 00 Dimension Attack",
+    description: "<p>Cho-Z Achilles 00 Dimension â€” the most powerful attack-type in Burst Cho-Z series. Metal-reinforced armor for devastating strikes. Used by Aiger Akabane in the anime.</p>",
+    slug: "product-bb-cho-z-achilles-00-dimension-attack",
     category: "category-bb-attack-type",
     subcategory: "Burst Cho-Z",
     brand: "Beyblade Burst",
@@ -165,9 +165,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-world-spriggan-attack-bp-4",
-    title: "Beyblade Burst — World Spriggan Unison' Sword Drift Attack",
+    title: "Beyblade Burst â€” World Spriggan Unison' Sword Drift Attack",
     description: "<p>World Spriggan features the unique Unison Driver that switches between Attack and Stamina modes dynamically during battle. A top competitive choice in GT series.</p>",
-    slug: "bb-world-spriggan-unison-sword-drift",
+    slug: "product-bb-world-spriggan-unison-sword-drift",
     category: "category-bb-attack-type",
     subcategory: "Burst GT",
     brand: "Beyblade Burst",
@@ -202,9 +202,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-turbo-spryzen-s4-attack-bp-5",
-    title: "Beyblade Burst — Turbo Spryzen S4 Tornado Strike Attack",
-    description: "<p>Turbo Spryzen S4 — the iconic balance-to-attack Beyblade from Burst Turbo. The tornado-generating performance tip creates spiraling attack patterns that confuse opponents.</p>",
-    slug: "bb-turbo-spryzen-s4-tornado-strike",
+    title: "Beyblade Burst â€” Turbo Spryzen S4 Tornado Strike Attack",
+    description: "<p>Turbo Spryzen S4 â€” the iconic balance-to-attack Beyblade from Burst Turbo. The tornado-generating performance tip creates spiraling attack patterns that confuse opponents.</p>",
+    slug: "product-bb-turbo-spryzen-s4-tornado-strike",
     category: "category-bb-attack-type",
     subcategory: "Burst Turbo",
     brand: "Beyblade Burst",
@@ -238,9 +238,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-ultimate-valtryek-v6-attack-bp-6",
-    title: "Beyblade Burst — Ultimate Valtryek V6 Volcanic' Attack",
-    description: "<p>The ultimate evolution of Valtryek. V6 features enhanced burst resistance and the Volcanic' driver for aggressive close-range attacks. Limited restock — get yours now.</p>",
-    slug: "bb-ultimate-valtryek-v6-volcanic-attack",
+    title: "Beyblade Burst â€” Ultimate Valtryek V6 Volcanic' Attack",
+    description: "<p>The ultimate evolution of Valtryek. V6 features enhanced burst resistance and the Volcanic' driver for aggressive close-range attacks. Limited restock â€” get yours now.</p>",
+    slug: "product-bb-ultimate-valtryek-v6-volcanic-attack",
     category: "category-bb-attack-type",
     subcategory: "Burst Superking",
     brand: "Beyblade Burst",
@@ -257,7 +257,7 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Series", value: "Beyblade Burst Superking" },
       { name: "Type", value: "Attack" },
-      { name: "Generation", value: "V6 — 6th evolution" },
+      { name: "Generation", value: "V6 â€” 6th evolution" },
     ],
     features: ["Enhanced burst resistance", "Volcanic' driver", "6th-gen Valtryek evolution"],
     shippingInfo: "Nationwide delivery.",
@@ -273,13 +273,13 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ── DEFENSE TYPE (4) ──────────────────────────────────────────────────────
+  // â”€â”€ DEFENSE TYPE (4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-maximum-garuda-g6-defense-bp-7",
-    title: "Beyblade Burst — Maximum Garuda G6 Defense",
+    title: "Beyblade Burst â€” Maximum Garuda G6 Defense",
     description: "<p>Maximum Garuda G6 is a wide, heavy defense-type Beyblade from Burst Rise. The six-wing layer absorbs attacks efficiently, and the heavy disc adds stability under pressure.</p>",
-    slug: "bb-maximum-garuda-g6-defense",
+    slug: "product-bb-maximum-garuda-g6-defense",
     category: "category-bb-defense-type",
     subcategory: "Burst Rise",
     brand: "Beyblade Burst",
@@ -314,9 +314,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-tempest-dragon-defense-bp-8",
-    title: "Beyblade Burst — Tempest Dragon Defense (QuadDrive)",
-    description: "<p>Tempest Dragon from QuadDrive — the toughest defense bey in the series. The dragon-themed layer has reinforced ridges that deflect attack-type hits and maintain spin momentum.</p>",
-    slug: "bb-tempest-dragon-defense-quaddrive",
+    title: "Beyblade Burst â€” Tempest Dragon Defense (QuadDrive)",
+    description: "<p>Tempest Dragon from QuadDrive â€” the toughest defense bey in the series. The dragon-themed layer has reinforced ridges that deflect attack-type hits and maintain spin momentum.</p>",
+    slug: "product-bb-tempest-dragon-defense-quaddrive",
     category: "category-bb-defense-type",
     subcategory: "Burst QuadDrive",
     brand: "Beyblade Burst",
@@ -350,9 +350,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-balkesh-b3-defense-bp-9",
-    title: "Beyblade Burst — Balkesh B3 Iron Defense",
+    title: "Beyblade Burst â€” Balkesh B3 Iron Defense",
     description: "<p>Balkesh B3 Iron Defense from original Burst series. The bull-horned layer provides excellent self-righting behaviour and burst resistance. A foundational defense-type bey.</p>",
-    slug: "bb-balkesh-b3-iron-defense",
+    slug: "product-bb-balkesh-b3-iron-defense",
     category: "category-bb-defense-type",
     subcategory: "Burst Original",
     brand: "Beyblade Burst",
@@ -386,9 +386,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-king-helios-defense-bp-10",
-    title: "Beyblade Burst — King Helios Zn Dimension Defense",
-    description: "<p>King Helios Zn Dimension from Burst QuadDrive — heavy defense chassis with the King Helios sun-themed layer. Exceptional stability under relentless attack combinations.</p>",
-    slug: "bb-king-helios-zn-dimension-defense",
+    title: "Beyblade Burst â€” King Helios Zn Dimension Defense",
+    description: "<p>King Helios Zn Dimension from Burst QuadDrive â€” heavy defense chassis with the King Helios sun-themed layer. Exceptional stability under relentless attack combinations.</p>",
+    slug: "product-bb-king-helios-zn-dimension-defense",
     category: "category-bb-defense-type",
     subcategory: "Burst QuadDrive",
     brand: "Beyblade Burst",
@@ -421,13 +421,13 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ── STAMINA TYPE (5) ──────────────────────────────────────────────────────
+  // â”€â”€ STAMINA TYPE (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-nepstrius-n4-stamina-bp-11",
-    title: "Beyblade Burst — Nepstrius N4 Octo' Yard' Stamina",
+    title: "Beyblade Burst â€” Nepstrius N4 Octo' Yard' Stamina",
     description: "<p>Nepstrius N4 is the definitive stamina-type Beyblade from Burst Rise. Low-friction tip and aerodynamic layer allow it to outlast almost any opponent. Tournament pick for stamina bladers.</p>",
-    slug: "bb-nepstrius-n4-octo-yard-stamina",
+    slug: "product-bb-nepstrius-n4-octo-yard-stamina",
     category: "category-bb-stamina-type",
     subcategory: "Burst Rise",
     brand: "Beyblade Burst",
@@ -464,9 +464,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-chaos-hyperion-stamina-bp-12",
-    title: "Beyblade Burst — Chaos Hyperion Stamina (Superking)",
-    description: "<p>Hyperion Burn from Burst Superking — a fearsome stamina type with the Hyperion sun layer and Burn performance tip. Lights up the stadium with its signature glow effect during battle.</p>",
-    slug: "bb-chaos-hyperion-burn-stamina-superking",
+    title: "Beyblade Burst â€” Chaos Hyperion Stamina (Superking)",
+    description: "<p>Hyperion Burn from Burst Superking â€” a fearsome stamina type with the Hyperion sun layer and Burn performance tip. Lights up the stadium with its signature glow effect during battle.</p>",
+    slug: "product-bb-chaos-hyperion-burn-stamina-superking",
     category: "category-bb-stamina-type",
     subcategory: "Burst Superking",
     brand: "Beyblade Burst",
@@ -501,9 +501,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-revive-phoenix-stamina-bp-13",
-    title: "Beyblade Burst — Revive Phoenix 10Fr Survive Stamina",
-    description: "<p>Revive Phoenix — the legendary stamina-type with the unique 'Survive' performance tip that self-rights when tilted. Near impossible to knock out. A collector icon.</p>",
-    slug: "bb-revive-phoenix-10fr-survive-stamina",
+    title: "Beyblade Burst â€” Revive Phoenix 10Fr Survive Stamina",
+    description: "<p>Revive Phoenix â€” the legendary stamina-type with the unique 'Survive' performance tip that self-rights when tilted. Near impossible to knock out. A collector icon.</p>",
+    slug: "product-bb-revive-phoenix-10fr-survive-stamina",
     category: "category-bb-stamina-type",
     subcategory: "Burst Evolution",
     brand: "Beyblade Burst",
@@ -540,9 +540,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-air-knight-a5-stamina-bp-14",
-    title: "Beyblade Burst — Air Knight A5 Hurricane Hold' Stamina",
-    description: "<p>Air Knight A5 from Burst Rise — aerodynamic wing design that channels air flow for maximum spin time. The Hurricane Hold' tip creates a centre-gravity vortex that outlasts all competition.</p>",
-    slug: "bb-air-knight-a5-hurricane-hold-stamina",
+    title: "Beyblade Burst â€” Air Knight A5 Hurricane Hold' Stamina",
+    description: "<p>Air Knight A5 from Burst Rise â€” aerodynamic wing design that channels air flow for maximum spin time. The Hurricane Hold' tip creates a centre-gravity vortex that outlasts all competition.</p>",
+    slug: "product-bb-air-knight-a5-hurricane-hold-stamina",
     category: "category-bb-stamina-type",
     subcategory: "Burst Rise",
     brand: "Beyblade Burst",
@@ -577,9 +577,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-longinus-5-stamina-bp-15",
-    title: "Beyblade Burst — Longinus 5 Hell Scythe Stamina",
-    description: "<p>Hell Longinus 5 from Burst Cho-Z — a stamina-type with a dual-scythe attack layer that shreds opponents while maintaining extraordinary spin time. The go-to bey of countless champions.</p>",
-    slug: "bb-longinus-5-hell-scythe-stamina",
+    title: "Beyblade Burst â€” Longinus 5 Hell Scythe Stamina",
+    description: "<p>Hell Longinus 5 from Burst Cho-Z â€” a stamina-type with a dual-scythe attack layer that shreds opponents while maintaining extraordinary spin time. The go-to bey of countless champions.</p>",
+    slug: "product-bb-longinus-5-hell-scythe-stamina",
     category: "category-bb-stamina-type",
     subcategory: "Burst Cho-Z",
     brand: "Beyblade Burst",
@@ -612,13 +612,13 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ── BALANCE TYPE (3) ──────────────────────────────────────────────────────
+  // â”€â”€ BALANCE TYPE (3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-genesis-drago-balance-bp-16",
-    title: "Beyblade Burst — Genesis Drago 10*B Assault Balance",
-    description: "<p>Genesis Drago from original Burst — the dragon-themed balance-type Beyblade. Versatile performance tip allows aggressive and defensive strategies. Iconic bey of Valt Aoi in the anime.</p>",
-    slug: "bb-genesis-drago-10b-assault-balance",
+    title: "Beyblade Burst â€” Genesis Drago 10*B Assault Balance",
+    description: "<p>Genesis Drago from original Burst â€” the dragon-themed balance-type Beyblade. Versatile performance tip allows aggressive and defensive strategies. Iconic bey of Valt Aoi in the anime.</p>",
+    slug: "product-bb-genesis-drago-10b-assault-balance",
     category: "category-bb-balance-type",
     subcategory: "Burst Original",
     brand: "Beyblade Burst",
@@ -655,9 +655,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-turbo-achilles-balance-bp-17",
-    title: "Beyblade Burst — Turbo Achilles A4 Xtreme' Revolve' Balance",
-    description: "<p>Turbo Achilles A4 from Burst Turbo — a high-performance balance-type with aggressive attack potential and solid stamina. The Xtreme' driver enables burst attacks while Revolve' base sustains spin.</p>",
-    slug: "bb-turbo-achilles-a4-xtreme-revolve-balance",
+    title: "Beyblade Burst â€” Turbo Achilles A4 Xtreme' Revolve' Balance",
+    description: "<p>Turbo Achilles A4 from Burst Turbo â€” a high-performance balance-type with aggressive attack potential and solid stamina. The Xtreme' driver enables burst attacks while Revolve' base sustains spin.</p>",
+    slug: "product-bb-turbo-achilles-a4-xtreme-revolve-balance",
     category: "category-bb-balance-type",
     subcategory: "Burst Turbo",
     brand: "Beyblade Burst",
@@ -692,9 +692,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-dead-hades-balance-bp-18",
-    title: "Beyblade Burst — Dead Hades 7 Iron Revolve' Balance",
-    description: "<p>Dead Hades — the dark balance-type from Burst Evolution. The Iron Disc adds defensive mass while the Revolve' driver enables exceptional stamina. One of the most complete balance beys ever made.</p>",
-    slug: "bb-dead-hades-7-iron-revolve-balance",
+    title: "Beyblade Burst â€” Dead Hades 7 Iron Revolve' Balance",
+    description: "<p>Dead Hades â€” the dark balance-type from Burst Evolution. The Iron Disc adds defensive mass while the Revolve' driver enables exceptional stamina. One of the most complete balance beys ever made.</p>",
+    slug: "product-bb-dead-hades-7-iron-revolve-balance",
     category: "category-bb-balance-type",
     subcategory: "Burst Evolution",
     brand: "Beyblade Burst",
@@ -727,13 +727,13 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── STADIUM & ACCESSORIES (2) ─────────────────────────────────────────────
+  // â”€â”€ STADIUM & ACCESSORIES (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-attack-type-stadium-bp-19",
-    title: "Beyblade Burst BeyStadium — Attack Type Stadium",
-    description: "<p>The official Burst Attack Type stadium — designed for aggressive attack-type battles. Deep pockets and steep walls amplify bursts and send losers flying. Recommended for competitive play.</p>",
-    slug: "bb-burst-beystadium-attack-type",
+    title: "Beyblade Burst BeyStadium â€” Attack Type Stadium",
+    description: "<p>The official Burst Attack Type stadium â€” designed for aggressive attack-type battles. Deep pockets and steep walls amplify bursts and send losers flying. Recommended for competitive play.</p>",
+    slug: "product-bb-burst-beystadium-attack-type",
     category: "category-bb-stadium",
     subcategory: "Stadiums",
     brand: "Beyblade Burst",
@@ -771,9 +771,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-gt-stamina-stadium-bp-20",
-    title: "Beyblade Burst GT Stamina BeyStadium — Pro Tournament",
+    title: "Beyblade Burst GT Stamina BeyStadium â€” Pro Tournament",
     description: "<p>Pro-grade Burst GT Stamina stadium used in official tournaments. Smooth, low-friction surface maximises stamina battles. Extra-deep walls keep beys in play longer. Comes with mesh scoring track.</p>",
-    slug: "bb-burst-gt-stamina-stadium-pro-tournament",
+    slug: "product-bb-burst-gt-stamina-stadium-pro-tournament",
     category: "category-bb-stadium",
     subcategory: "Stadiums",
     brand: "Beyblade Burst",
@@ -807,12 +807,12 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // ── AUCTIONS (2) ─────────────────────────────────────────────────────────
+  // â”€â”€ AUCTIONS (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "auction-bb-astral-spriggan-rare-bp-1",
-    title: "AUCTION — Beyblade Burst QuadDrive Astral Spriggan Rare",
-    description: "<p>Astral Spriggan from QuadDrive — the rarest attack-type Beyblade of the series. Limited international release, never made available in India officially. The Giga Driver delivers extreme power bursts. This is a Japan import in original packaging.</p>",
+    title: "AUCTION â€” Beyblade Burst QuadDrive Astral Spriggan Rare",
+    description: "<p>Astral Spriggan from QuadDrive â€” the rarest attack-type Beyblade of the series. Limited international release, never made available in India officially. The Giga Driver delivers extreme power bursts. This is a Japan import in original packaging.</p>",
     slug: "auction-bb-astral-spriggan-quaddrive-rare",
     category: "category-bb-attack-type",
     subcategory: "Burst QuadDrive",
@@ -834,7 +834,7 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Driver", value: "Giga Driver" },
       { name: "Condition", value: "Sealed box" },
     ],
-    features: ["Japan exclusive import", "Giga Driver — extreme power", "Sealed original packaging", "Never released in India"],
+    features: ["Japan exclusive import", "Giga Driver â€” extreme power", "Sealed original packaging", "Never released in India"],
     shippingInfo: "Insured courier. Padded hard case.",
     returnPolicy: "No returns on auction wins.",
     condition: "new",
@@ -864,8 +864,8 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "auction-bb-dead-phoenix-limited-bp-2",
-    title: "AUCTION — Beyblade Burst Evolution Dead Phoenix Hasbro Limited",
-    description: "<p>Dead Phoenix Limited Edition from Hasbro — the alternate Hasbro version of the Revive Phoenix with unique colour scheme and chrome disc. Only 500 units released in India. Original Hasbro packaging, never opened.</p>",
+    title: "AUCTION â€” Beyblade Burst Evolution Dead Phoenix Hasbro Limited",
+    description: "<p>Dead Phoenix Limited Edition from Hasbro â€” the alternate Hasbro version of the Revive Phoenix with unique colour scheme and chrome disc. Only 500 units released in India. Original Hasbro packaging, never opened.</p>",
     slug: "auction-bb-dead-phoenix-hasbro-limited",
     category: "category-bb-stamina-type",
     subcategory: "Burst Evolution",
@@ -883,7 +883,7 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Series", value: "Beyblade Burst Evolution" },
       { name: "Type", value: "Stamina" },
-      { name: "Edition", value: "Hasbro Limited — 500 units" },
+      { name: "Edition", value: "Hasbro Limited â€” 500 units" },
       { name: "Disc", value: "Chrome Disc" },
       { name: "Condition", value: "Sealed" },
     ],
@@ -915,11 +915,11 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // ── PRE-ORDERS (2) ───────────────────────────────────────────────────────
+  // â”€â”€ PRE-ORDERS (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "preorder-bb-quaddrive-wave3-2026-bp-1",
-    title: "PRE-ORDER — Beyblade Burst QuadDrive Wave 3 2026 (Starter Set)",
+    title: "PRE-ORDER â€” Beyblade Burst QuadDrive Wave 3 2026 (Starter Set)",
     description: "<p>Reserve the upcoming Beyblade Burst QuadDrive Wave 3 2026 Starter Set featuring the new Valtryek and Longinus evolution models. Includes bey, launcher, and exclusive stadium piece. Pre-order for guaranteed day-1 delivery.</p>",
     slug: "preorder-bb-quaddrive-wave3-starter-2026",
     category: "category-bb-attack-type",
@@ -961,8 +961,8 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-bb-ultimate-championship-set-2026-bp-2",
-    title: "PRE-ORDER — Beyblade Burst Ultimate Championship Set 2026",
-    description: "<p>The official 2026 Beyblade Burst Ultimate Championship Set — everything you need to compete. Includes 3 championship-grade beys (Attack/Defense/Stamina), 2 string launchers, metal handle, and pro-grade Attack Type stadium. Pre-order at launch price.</p>",
+    title: "PRE-ORDER â€” Beyblade Burst Ultimate Championship Set 2026",
+    description: "<p>The official 2026 Beyblade Burst Ultimate Championship Set â€” everything you need to compete. Includes 3 championship-grade beys (Attack/Defense/Stamina), 2 string launchers, metal handle, and pro-grade Attack Type stadium. Pre-order at launch price.</p>",
     slug: "preorder-bb-ultimate-championship-set-2026",
     category: "category-bb-stadium",
     subcategory: "Championship Sets",
@@ -1001,13 +1001,13 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── ADDITIONAL (10 more) ─────────────────────────────────────────────────
+  // â”€â”€ ADDITIONAL (10 more) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-bb-xcalius-x4-stamina-bp-25",
-    title: "Beyblade Burst — X4 Xcalius Stamina Type (GT Series)",
-    slug: "bb-gt-xcalius-x4-stamina",
-    description: "<p>GT Series Xcalius X4 — a stamina-type with the new GT chip system and the infamous Upper Attack performance tip. Balanced between stamina endurance and burst resistance.</p>",
+    title: "Beyblade Burst â€” X4 Xcalius Stamina Type (GT Series)",
+    slug: "product-bb-gt-xcalius-x4-stamina",
+    description: "<p>GT Series Xcalius X4 â€” a stamina-type with the new GT chip system and the infamous Upper Attack performance tip. Balanced between stamina endurance and burst resistance.</p>",
     category: "category-bb-stamina", subcategory: "GT Series", brand: "Beyblade Burst",
     price: 1799, currency: _CURRENCY, stockQuantity: 20, availableQuantity: 16,
     mainImage: img("bb-xcalius-x4"), images: [img("bb-xcalius-x4")],
@@ -1022,9 +1022,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-fafnir-f5-left-spin-bp-26",
-    title: "Beyblade Burst — Fafnir F5 Left-Spin (Turbo)",
-    slug: "bb-turbo-fafnir-f5-left-spin",
-    description: "<p>Turbo Fafnir F5 — left-spin stamina type that steals spin from right-spin opponents. The Rubber Frame absorbs right-spin contact and transfers rotation to Fafnir. Devastating in stamina duels.</p>",
+    title: "Beyblade Burst â€” Fafnir F5 Left-Spin (Turbo)",
+    slug: "product-bb-turbo-fafnir-f5-left-spin",
+    description: "<p>Turbo Fafnir F5 â€” left-spin stamina type that steals spin from right-spin opponents. The Rubber Frame absorbs right-spin contact and transfers rotation to Fafnir. Devastating in stamina duels.</p>",
     category: "category-bb-stamina", subcategory: "Turbo", brand: "Beyblade Burst",
     price: 2199, currency: _CURRENCY, stockQuantity: 15, availableQuantity: 12,
     mainImage: img("bb-fafnir-f5"), images: [img("bb-fafnir-f5")],
@@ -1039,9 +1039,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-storm-spriggan-sp-bp-27",
-    title: "Beyblade Burst — Spriggan Requiem SP (Limited Edition)",
-    slug: "bb-spriggan-requiem-sp-limited",
-    description: "<p>Spriggan Requiem SP — the legendary Balance-type with dual-spin capability. Can change spin direction mid-battle. Both left and right spin configurations included. The most versatile Beyblade in competitive play.</p>",
+    title: "Beyblade Burst â€” Spriggan Requiem SP (Limited Edition)",
+    slug: "product-bb-spriggan-requiem-sp-limited",
+    description: "<p>Spriggan Requiem SP â€” the legendary Balance-type with dual-spin capability. Can change spin direction mid-battle. Both left and right spin configurations included. The most versatile Beyblade in competitive play.</p>",
     category: "category-bb-balance", subcategory: "Special Edition", brand: "Beyblade Burst",
     price: 3499, currency: _CURRENCY, stockQuantity: 8, availableQuantity: 5,
     mainImage: img("bb-spriggan-requiem-sp"), images: [img("bb-spriggan-requiem-sp")],
@@ -1057,9 +1057,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-drain-fafnir-f4-bp-28",
-    title: "Beyblade Burst — Drain Fafnir F4 (Evolution)",
-    slug: "bb-evolution-drain-fafnir-f4",
-    description: "<p>Evolution series Drain Fafnir F4 — the original left-spin stamina king. Rubber blades aggressively drain right-spin opponents' rotation. Classic competitive pick for stamina bladers.</p>",
+    title: "Beyblade Burst â€” Drain Fafnir F4 (Evolution)",
+    slug: "product-bb-evolution-drain-fafnir-f4",
+    description: "<p>Evolution series Drain Fafnir F4 â€” the original left-spin stamina king. Rubber blades aggressively drain right-spin opponents' rotation. Classic competitive pick for stamina bladers.</p>",
     category: "category-bb-stamina", subcategory: "Evolution", brand: "Beyblade Burst",
     price: 1499, currency: _CURRENCY, stockQuantity: 22, availableQuantity: 18,
     mainImage: img("bb-drain-fafnir-f4"), images: [img("bb-drain-fafnir-f4")],
@@ -1074,9 +1074,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-turbo-stadium-pro-bp-29",
-    title: "Beyblade Burst — Turbo Pro Battle Stadium (Official Hasbro)",
-    slug: "bb-turbo-pro-battle-stadium",
-    description: "<p>Official Hasbro Turbo Pro Battle Stadium — full-size competition-grade stadium with outer wall ring. Compatible with all Burst series tops. Recessed launch tracks on opposing sides. Ideal for 1v1 and 2v2 battles.</p>",
+    title: "Beyblade Burst â€” Turbo Pro Battle Stadium (Official Hasbro)",
+    slug: "product-bb-turbo-pro-battle-stadium",
+    description: "<p>Official Hasbro Turbo Pro Battle Stadium â€” full-size competition-grade stadium with outer wall ring. Compatible with all Burst series tops. Recessed launch tracks on opposing sides. Ideal for 1v1 and 2v2 battles.</p>",
     category: "category-bb-stadiums", subcategory: "Official Stadiums", brand: "Beyblade Burst",
     price: 3999, currency: _CURRENCY, stockQuantity: 10, availableQuantity: 7,
     mainImage: img("bb-pro-stadium"), images: [img("bb-pro-stadium")],
@@ -1091,9 +1091,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-hyperion-h5-attack-bp-30",
-    title: "Beyblade Burst — Hyperion Burn Kendama H5 (Rise Attack)",
-    slug: "bb-rise-hyperion-h5-attack-burn",
-    description: "<p>Rise series Hyperion Burn H5 — right-spin attack top with Kendama Blade set for contact damage. Burn Performance Tip for controlled spin and attack angle. Aggressive design in flaming orange.</p>",
+    title: "Beyblade Burst â€” Hyperion Burn Kendama H5 (Rise Attack)",
+    slug: "product-bb-rise-hyperion-h5-attack-burn",
+    description: "<p>Rise series Hyperion Burn H5 â€” right-spin attack top with Kendama Blade set for contact damage. Burn Performance Tip for controlled spin and attack angle. Aggressive design in flaming orange.</p>",
     category: "category-bb-attack", subcategory: "Rise", brand: "Beyblade Burst",
     price: 1799, currency: _CURRENCY, stockQuantity: 18, availableQuantity: 15,
     mainImage: img("bb-hyperion-h5"), images: [img("bb-hyperion-h5")],
@@ -1108,9 +1108,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-achilles-a5-defense-bp-31",
-    title: "Beyblade Burst — Brave Valkyrie EV' / Achilles A5 Defense (Sparking)",
-    slug: "bb-sparking-achilles-a5-defense",
-    description: "<p>Sparking series Achilles A5 — defense-mode configuration with armored EV Performance Tip. The Sparking chip adds weight distribution for high-endurance defense. A stalwart defensive wall for tournament play.</p>",
+    title: "Beyblade Burst â€” Brave Valkyrie EV' / Achilles A5 Defense (Sparking)",
+    slug: "product-bb-sparking-achilles-a5-defense",
+    description: "<p>Sparking series Achilles A5 â€” defense-mode configuration with armored EV Performance Tip. The Sparking chip adds weight distribution for high-endurance defense. A stalwart defensive wall for tournament play.</p>",
     category: "category-bb-defense", subcategory: "Sparking", brand: "Beyblade Burst",
     price: 2299, currency: _CURRENCY, stockQuantity: 14, availableQuantity: 11,
     mainImage: img("bb-achilles-a5-sparking"), images: [img("bb-achilles-a5-sparking")],
@@ -1125,9 +1125,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-twin-launcher-ll-string-bp-32",
-    title: "Beyblade Burst — Dual String Launcher LR (Left/Right Spin)",
-    slug: "bb-dual-string-launcher-lr-left-right",
-    description: "<p>Dual String Launcher LR — launches both left-spin and right-spin tops. Premium string launcher with metal handle grip. Compatible with all Burst series layers. Essential accessory for competitive bladers who run dual-spin decks.</p>",
+    title: "Beyblade Burst â€” Dual String Launcher LR (Left/Right Spin)",
+    slug: "product-bb-dual-string-launcher-lr-left-right",
+    description: "<p>Dual String Launcher LR â€” launches both left-spin and right-spin tops. Premium string launcher with metal handle grip. Compatible with all Burst series layers. Essential accessory for competitive bladers who run dual-spin decks.</p>",
     category: "category-bb-launchers", subcategory: "Launchers", brand: "Beyblade Burst",
     price: 1299, currency: _CURRENCY, stockQuantity: 25, availableQuantity: 22,
     mainImage: img("bb-dual-lr-launcher"), images: [img("bb-dual-lr-launcher")],
@@ -1142,9 +1142,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-rage-longinus-l5-bp-33",
-    title: "Beyblade Burst — Rage Longinus Destroy' 3A (Sparking)",
-    slug: "bb-sparking-rage-longinus-l5-destroy",
-    description: "<p>Sparking Rage Longinus — left-spin attack with Destroy' Performance Tip for aggressive stamina-attack hybrid. Rubber-tipped blade contact damages right-spin opponents. Strong recoil makes it risky but rewarding in the right hands.</p>",
+    title: "Beyblade Burst â€” Rage Longinus Destroy' 3A (Sparking)",
+    slug: "product-bb-sparking-rage-longinus-l5-destroy",
+    description: "<p>Sparking Rage Longinus â€” left-spin attack with Destroy' Performance Tip for aggressive stamina-attack hybrid. Rubber-tipped blade contact damages right-spin opponents. Strong recoil makes it risky but rewarding in the right hands.</p>",
     category: "category-bb-attack", subcategory: "Sparking", brand: "Beyblade Burst",
     price: 2499, currency: _CURRENCY, stockQuantity: 12, availableQuantity: 9,
     mainImage: img("bb-rage-longinus"), images: [img("bb-rage-longinus")],
@@ -1159,9 +1159,9 @@ export const beybladeProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-bb-world-beyblade-stadium-bp-34",
-    title: "Beyblade Burst — World Stadium (Official Tournament Grade)",
-    slug: "bb-world-championship-stadium-official",
-    description: "<p>Official Beyblade Burst World Stadium — the same design used at World Championships. Extra-wide outer ring prevents early ring-outs. Textured surface adds friction. The definitive competitive arena.</p>",
+    title: "Beyblade Burst â€” World Stadium (Official Tournament Grade)",
+    slug: "product-bb-world-championship-stadium-official",
+    description: "<p>Official Beyblade Burst World Stadium â€” the same design used at World Championships. Extra-wide outer ring prevents early ring-outs. Textured surface adds friction. The definitive competitive arena.</p>",
     category: "category-bb-stadiums", subcategory: "World Championship", brand: "Beyblade Burst",
     price: 5499, currency: _CURRENCY, stockQuantity: 5, availableQuantity: 3,
     mainImage: img("bb-world-stadium"), images: [img("bb-world-stadium")],

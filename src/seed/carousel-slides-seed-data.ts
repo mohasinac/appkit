@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Carousel Slides Seed Data
  * Homepage carousel/hero section slides with interactive grid cards
  */
@@ -10,7 +10,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
-  // Slide 1: Welcome/Hero Slide — full-slide central overlay (no cards)
+  // Slide 1: Welcome/Hero Slide â€” full-slide central overlay (no cards)
   {
     id: "carousel-welcome-hero-slide-1707300000001",
     title: "Welcome Hero Slide",
@@ -19,7 +19,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     media: {
       type: "image",
       url: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920&h=1080&fit=crop",
-      alt: "Welcome to LetItRip — Anime Figures & Collectibles",
+      alt: "Welcome to LetItRip â€” Anime Figures & Collectibles",
     },
     mobileMedia: {
       type: "image",
@@ -31,7 +31,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
       subtitle: "Your Otaku Marketplace",
       title: "Anime Figures & Collectibles",
       description:
-        "Shop authentic scale figures, Nendoroids, Gunpla kits, and cosplay — bid on rare auctions and exclusive drops.",
+        "Shop authentic scale figures, Nendoroids, Gunpla kits, and cosplay â€” bid on rare auctions and exclusive drops.",
       button: {
         id: "btn_overlay_001",
         text: "Shop Now",
@@ -75,7 +75,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
           {
             id: "btn_003",
             text: "Shop Electronics",
-            link: "/categories/electronics",
+            link: "/categories/category-electronics",
             variant: "primary",
             openInNewTab: false,
           },
@@ -93,13 +93,13 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         },
         content: {
           title: "iPhone 15 Pro",
-          description: "Starting at ₹134,900",
+          description: "Starting at â‚¹134,900",
         },
         buttons: [
           {
             id: "btn_004",
             text: "View",
-            link: "/products/product-iphone-15-pro-max-smartphones-new-techhub-electronics-1",
+            link: "/categories/category-electronics",
             variant: "secondary",
             openInNewTab: false,
           },
@@ -142,14 +142,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
           {
             id: "btn_005",
             text: "Men's Cosplay",
-            link: "/categories/mens-fashion",
+            link: "/categories/category-mens-fashion-fashion",
             variant: "primary",
             openInNewTab: false,
           },
           {
             id: "btn_006",
             text: "Women's Cosplay",
-            link: "/categories/womens-fashion",
+            link: "/categories/category-womens-fashion-fashion",
             variant: "secondary",
             openInNewTab: false,
           },
@@ -186,13 +186,13 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         },
         content: {
           title: "Limited Edition",
-          description: "Rare figures — grab before they're gone",
+          description: "Rare figures â€” grab before they're gone",
         },
         buttons: [
           {
             id: "btn_007",
             text: "View Limited Drops",
-            link: "/categories/audio-electronics",
+            link: "/categories/category-audio-electronics",
             variant: "primary",
             openInNewTab: false,
           },
@@ -209,7 +209,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         },
         content: {
           title: "Evangelion Unit-01",
-          description: "Garage Kit — Only 3 left!",
+          description: "Garage Kit â€” Only 3 left!",
         },
         buttons: [],
         isButtonOnly: false,
@@ -248,7 +248,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         content: {
           title: "Live Figure Auctions",
           subtitle: "Bid & Win",
-          description: "NGE Evangelion Signed Poster • Son Goku Family Set",
+          description: "NGE Evangelion Signed Poster â€¢ Son Goku Family Set",
         },
         buttons: [
           {
@@ -271,7 +271,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
         },
         content: {
           title: "Auction Closing",
-          description: "NGE Poster — 2 hours left!",
+          description: "NGE Poster â€” 2 hours left!",
         },
         buttons: [],
         isButtonOnly: false,

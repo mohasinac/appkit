@@ -10,12 +10,12 @@
  *   Blaine → user-blaine-fire-gym-blaine  / store-blaines-fire-shoppe
  *
  * Buyer IDs:
- *   ash      → user-ash-ketchum-pallet-ash
- *   gary     → user-gary-oak-pallet-gary
- *   brock    → user-brock-pewter-brock
- *   oak      → user-prof-oak-pallet-oak
- *   sabrina  → user-sabrina-saffron-sabrina
- *   erika    → user-erika-celadon-erika
+ *   ash      → user-ash-ketchum-buyer
+ *   gary     → user-gary-oak-buyer
+ *   brock    → user-brock-pewter-buyer
+ *   oak/dawn → user-dawn-sinnoh-buyer
+ *   sabrina/may → user-may-hoenn-buyer
+ *   erika/dawn  → user-dawn-sinnoh-buyer
  */
 
 import type { ReviewDocument } from "../features/reviews/schemas";
@@ -67,8 +67,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
     productTitle: "Mewtwo — Base Set #10 Holo Rare (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-prof-oak-pallet-oak",
-    userName: "Professor Oak",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
     rating: 5,
@@ -125,8 +125,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-base-set-booster-pack-sealed-blaine-1",
     productTitle: "Pokémon Base Set Booster Pack (Sealed, Random Art)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-sabrina-saffron-sabrina",
-    userName: "Sabrina",
+    userId: "user-may-hoenn-buyer",
+    userName: "May (Hoenn)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
     rating: 5,
@@ -194,7 +194,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productTitle: "Zapdos — Base Set #16 Holo Rare (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
     userId: "user-brock-pewter-buyer",
-    userName: "Brock",
+    userName: "Brock Pewter",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
     rating: 4,
@@ -222,8 +222,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
     productTitle: "Venusaur — Base Set #15 Holo Rare (Lightly Played)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-erika-celadon-erika",
-    userName: "Erika",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
     rating: 4,
@@ -280,8 +280,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
     productTitle: "Haunter — Base Set #24 Non-Holo Rare (Near Mint)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-sabrina-saffron-sabrina",
-    userName: "Sabrina",
+    userId: "user-may-hoenn-buyer",
+    userName: "May (Hoenn)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
     rating: 5,
@@ -309,8 +309,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-water-energy-base1-99-common-energy-misty-lot",
     productTitle: "Water Energy — Base Set #99 x10 Lot (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-prof-oak-pallet-oak",
-    userName: "Professor Oak",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
     rating: 5,
@@ -338,7 +338,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productTitle: "Pokémon 9-Pocket Binder (360 cards, Charizard Cover)",
     sellerId: "user-misty-water-gym-misty",
     userId: "user-brock-pewter-buyer",
-    userName: "Brock",
+    userName: "Brock Pewter",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
     rating: 5,
@@ -366,8 +366,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-fire-energy-base1-100-common-energy-blaine-lot",
     productTitle: "Fire Energy — Base Set #100 x10 Lot (Near Mint)",
     sellerId: "user-blaine-fire-gym-blaine",
-    userId: "user-erika-celadon-erika",
-    userName: "Erika",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
     rating: 4,
@@ -454,7 +454,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productTitle: "Magneton — Base Set #9 Holo Rare (Lightly Played)",
     sellerId: "user-lt-surge-electric-surge",
     userId: "user-brock-pewter-buyer",
-    userName: "Brock",
+    userName: "Brock Pewter",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
     rating: 3,
@@ -483,8 +483,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-clefairy-base1-35-uncommon-colorless-misty-1",
     productTitle: "Clefairy — Base Set #35 Uncommon (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-erika-celadon-erika",
-    userName: "Erika",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
     rating: 5,
@@ -512,8 +512,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-gyarados-base1-6-holo-rare-water-misty-1",
     productTitle: "Gyarados — Base Set #6 Holo Rare (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-prof-oak-pallet-oak",
-    userName: "Professor Oak",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
     rating: 5,
@@ -541,8 +541,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-zap-theme-deck-sealed-surge-1",
     productTitle: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
     sellerId: "user-lt-surge-electric-surge",
-    userId: "user-sabrina-saffron-sabrina",
-    userName: "Sabrina",
+    userId: "user-may-hoenn-buyer",
+    userName: "May (Hoenn)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/65.png",
     rating: 4,
@@ -630,7 +630,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productTitle: "Beedrill — Base Set #17 Non-Holo Rare (Near Mint)",
     sellerId: "user-blaine-fire-gym-blaine",
     userId: "user-brock-pewter-buyer",
-    userName: "Brock",
+    userName: "Brock Pewter",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png",
     rating: 3,
@@ -655,8 +655,8 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     productId: "product-energy-retrieval-base1-91-common-trainer-misty-1",
     productTitle: "Energy Retrieval — Base Set #91 Trainer (Near Mint)",
     sellerId: "user-misty-water-gym-misty",
-    userId: "user-erika-celadon-erika",
-    userName: "Erika",
+    userId: "user-dawn-sinnoh-buyer",
+    userName: "Dawn (Sinnoh)",
     userAvatar:
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/45.png",
     rating: 5,

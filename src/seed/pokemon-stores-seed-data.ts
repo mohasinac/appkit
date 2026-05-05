@@ -156,6 +156,27 @@ export const pokemonStoresSeedData: Partial<StoreDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
+  // 9. LetItRip Official Store — Admin / Platform Store (all franchises)
+  {
+    id: "letitrip-official",
+    storeSlug: "letitrip-official",
+    ownerId: "user-admin-user-admin",
+    storeName: "LetItRip Official Store",
+    storeDescription:
+      "The official LetItRip platform store. Premium graded slabs, curated sealed products, cross-franchise collector bundles, and accessories — handpicked by the platform team and authenticated before listing.",
+    storeCategory: "accessories",
+    storeLogoURL: "https://upload.wikimedia.org/wikipedia/commons/3/31/Pyrkon_2022_Pokemon_Trading_Card_Game.jpg",
+    storeBannerURL: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mycars.JPG",
+    status: "active",
+    bio: "Pokémon TCG · Hot Wheels · Anime Figures · Sealed Bundles · Accessories — Platform Curated",
+    location: "Delhi, India",
+    isPublic: true,
+    isVacationMode: false,
+    stats: { totalProducts: 12, itemsSold: 58, totalReviews: 21, averageRating: 4.9 },
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(1),
+  },
+
   // 8. CosPlay India Hub — Cosplay Props & TCG Accessories
   {
     id: "cosplay-india-hub",

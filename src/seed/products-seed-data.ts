@@ -2617,7 +2617,9 @@ export const productsSeedData: Partial<ProductDocument>[] = [
 ]
   .map(withRichTextDescription)
   .map((p) => {
-    const slug = p.slug ?? slugify(p.title ?? p.id ?? "");
+    const rawSlug = p.slug ?? slugify(p.title ?? p.id ?? "");
+    const typePrefix = p.isPreOrder ? "preorder" : p.isAuction ? "auction" : "product";
+    const slug = rawSlug.startsWith(`${typePrefix}-`) ? rawSlug : `${typePrefix}-${rawSlug}`;
     const isSimplePublished =
       !p.isAuction &&
       !p.isPreOrder &&

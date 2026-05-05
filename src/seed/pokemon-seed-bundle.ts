@@ -29,6 +29,7 @@ import { transformersProductsSeedData } from "./transformers-seed-data";
 import { animeFiguresSeedData } from "./anime-figures-seed-data";
 import { retroGamingSeedData } from "./retro-gaming-seed-data";
 import { cosplayAccessoriesSeedData } from "./cosplay-accessories-seed-data";
+import { letitripOfficialSeedData } from "./letitrip-official-seed-data";
 
 function withAllowOffers<T extends { isAuction?: boolean; isPreOrder?: boolean; status?: string; availableQuantity?: number; stockQuantity?: number; allowOffers?: boolean }>(p: T): T {
   const eligible =
@@ -39,7 +40,7 @@ function withAllowOffers<T extends { isAuction?: boolean; isPreOrder?: boolean; 
   return { ...p, allowOffers: eligible ? true : (p.allowOffers ?? false) };
 }
 
-/** All products across all 7 franchises — use this as the `products` seed collection. */
+/** All products across all franchises + official store — use this as the `products` seed collection. */
 export const allProductsSeedData = [
   ...pokemonProductsSeedData,
   ...hotWheelsProductsSeedData,
@@ -48,6 +49,7 @@ export const allProductsSeedData = [
   ...animeFiguresSeedData,
   ...retroGamingSeedData,
   ...cosplayAccessoriesSeedData,
+  ...letitripOfficialSeedData,
 ].map(withAllowOffers);
 
 export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
@@ -71,3 +73,4 @@ export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";
 export { animeFiguresSeedData } from "./anime-figures-seed-data";
 export { retroGamingSeedData } from "./retro-gaming-seed-data";
 export { cosplayAccessoriesSeedData } from "./cosplay-accessories-seed-data";
+export { letitripOfficialSeedData } from "./letitrip-official-seed-data";

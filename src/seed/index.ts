@@ -181,6 +181,7 @@ export { pokemonStoresSeedData } from "./pokemon-stores-seed-data";
 export { pokemonCarouselSlidesSeedData } from "./pokemon-carousel-slides-seed-data";
 export { pokemonHomepageSectionsSeedData } from "./pokemon-homepage-sections-seed-data";
 export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";
+export { letitripOfficialSeedData } from "./letitrip-official-seed-data";
 
 // Firestore index helpers
 export type { FirestoreIndexConfig } from "./firestore-indexes";

@@ -1,7 +1,7 @@
-/**
- * Anime Figures — Products Seed Data
- * Dragon Ball Z · Naruto · One Piece · My Hero Academia
- * 22 general · 2 auctions · 2 pre-orders = 26 total
+﻿/**
+ * Anime Figures â€” Products Seed Data
+ * Dragon Ball Z Â· Naruto Â· One Piece Â· My Hero Academia
+ * 22 general Â· 2 auctions Â· 2 pre-orders = 26 total
  * Seller: Anime Vault India (store-anime-vault-india)
  */
 
@@ -39,13 +39,13 @@ const img = (seed: string) => {
 
 export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
-  // ── DRAGON BALL Z (8) ────────────────────────────────────────────────────
+  // â”€â”€ DRAGON BALL Z (8) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-av-dbz-goku-ultra-instinct-av-1",
-    title: "Dragon Ball Z — Goku Ultra Instinct S.H.Figuarts Figure",
-    description: "<p>S.H.Figuarts Goku in Ultra Instinct form — the pinnacle of Saiyan power. Includes 3 face plates, multiple hand parts, Ki effect parts, and a Kamehameha wave effect. Highly articulated with 28 points of movement. Premium Bandai release with metallic silver hair coating.</p>",
-    slug: "dbz-goku-ultra-instinct-shf-figuarts",
+    title: "Dragon Ball Z â€” Goku Ultra Instinct S.H.Figuarts Figure",
+    description: "<p>S.H.Figuarts Goku in Ultra Instinct form â€” the pinnacle of Saiyan power. Includes 3 face plates, multiple hand parts, Ki effect parts, and a Kamehameha wave effect. Highly articulated with 28 points of movement. Premium Bandai release with metallic silver hair coating.</p>",
+    slug: "product-dbz-goku-ultra-instinct-shf-figuarts",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -88,9 +88,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-vegeta-super-saiyan-av-2",
-    title: "Dragon Ball Z — Vegeta Super Saiyan Blue S.H.Figuarts",
-    description: "<p>S.H.Figuarts Vegeta in Super Saiyan Blue form — the Prince of all Saiyans at his finest. Includes signature scowl and smirk face plates, Ki blast effect, Final Flash effects. Dynamic pose potential with ball-jointed hips and double-jointed elbows.</p>",
-    slug: "dbz-vegeta-super-saiyan-blue-shf",
+    title: "Dragon Ball Z â€” Vegeta Super Saiyan Blue S.H.Figuarts",
+    description: "<p>S.H.Figuarts Vegeta in Super Saiyan Blue form â€” the Prince of all Saiyans at his finest. Includes signature scowl and smirk face plates, Ki blast effect, Final Flash effects. Dynamic pose potential with ball-jointed hips and double-jointed elbows.</p>",
+    slug: "product-dbz-vegeta-super-saiyan-blue-shf",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -125,9 +125,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-frieza-final-form-av-3",
-    title: "Dragon Ball Z — Frieza Final Form S.H.Figuarts",
-    description: "<p>S.H.Figuarts Frieza in his iconic Final Form — cold, calculated, and utterly ruthless. Includes Death Beam effect, energy disc effect, and multiple hand parts. Floating hover base included. Spot-on movie proportions with glossy white and purple finish.</p>",
-    slug: "dbz-frieza-final-form-shf-figuarts",
+    title: "Dragon Ball Z â€” Frieza Final Form S.H.Figuarts",
+    description: "<p>S.H.Figuarts Frieza in his iconic Final Form â€” cold, calculated, and utterly ruthless. Includes Death Beam effect, energy disc effect, and multiple hand parts. Floating hover base included. Spot-on movie proportions with glossy white and purple finish.</p>",
+    slug: "product-dbz-frieza-final-form-shf-figuarts",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -162,9 +162,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-gohan-beast-av-4",
-    title: "Dragon Ball Z — Gohan Beast Form Figure (Dragon Ball Super: Super Hero)",
-    description: "<p>Gohan Beast from Dragon Ball Super: Super Hero — the most powerful transformation of Gohan's hidden power fully unleashed. Red eyes, white-purple hair, and supreme power level. Includes energy blast effects and multiple face plates.</p>",
-    slug: "dbz-gohan-beast-super-hero-figure",
+    title: "Dragon Ball Z â€” Gohan Beast Form Figure (Dragon Ball Super: Super Hero)",
+    description: "<p>Gohan Beast from Dragon Ball Super: Super Hero â€” the most powerful transformation of Gohan's hidden power fully unleashed. Red eyes, white-purple hair, and supreme power level. Includes energy blast effects and multiple face plates.</p>",
+    slug: "product-dbz-gohan-beast-super-hero-figure",
     category: "category-anime-dbz",
     subcategory: "Figure",
     brand: "Dragon Ball Z",
@@ -198,9 +198,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-broly-dxf-av-5",
-    title: "Dragon Ball Z — Broly Legendary Super Saiyan DXF Figure",
-    description: "<p>Broly Legendary Super Saiyan — the DXF premium statue from Banpresto. Dynamic stomp pose with massive muscle detail. Glow-in-the-dark Broly Ki aura elements. 24 cm tall centrepiece figure. Perfect for collectors who want scale over articulation.</p>",
-    slug: "dbz-broly-legendary-ssj-dxf-banpresto",
+    title: "Dragon Ball Z â€” Broly Legendary Super Saiyan DXF Figure",
+    description: "<p>Broly Legendary Super Saiyan â€” the DXF premium statue from Banpresto. Dynamic stomp pose with massive muscle detail. Glow-in-the-dark Broly Ki aura elements. 24 cm tall centrepiece figure. Perfect for collectors who want scale over articulation.</p>",
+    slug: "product-dbz-broly-legendary-ssj-dxf-banpresto",
     category: "category-anime-dbz",
     subcategory: "DXF",
     brand: "Dragon Ball Z",
@@ -235,9 +235,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-cell-perfect-av-6",
-    title: "Dragon Ball Z — Cell Perfect Form S.H.Figuarts",
-    description: "<p>S.H.Figuarts Cell in his perfect form — bio-android perfection. Includes taunting, screaming, and power-up face plates. Energy absorption effects and tail parts. Signature green and black deco with detailed bio-organic sculpt.</p>",
-    slug: "dbz-cell-perfect-form-shf-figuarts",
+    title: "Dragon Ball Z â€” Cell Perfect Form S.H.Figuarts",
+    description: "<p>S.H.Figuarts Cell in his perfect form â€” bio-android perfection. Includes taunting, screaming, and power-up face plates. Energy absorption effects and tail parts. Signature green and black deco with detailed bio-organic sculpt.</p>",
+    slug: "product-dbz-cell-perfect-form-shf-figuarts",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -272,9 +272,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-beerus-av-7",
-    title: "Dragon Ball Z — Beerus God of Destruction S.H.Figuarts",
-    description: "<p>S.H.Figuarts Beerus — the God of Destruction in feline form. Delicate sculpt captures his slender yet powerful physique. Includes open hand, pointing hand, and purple energy ball effects. Long flexible tail part. Sitting pose compatible accessory base.</p>",
-    slug: "dbz-beerus-god-of-destruction-shf",
+    title: "Dragon Ball Z â€” Beerus God of Destruction S.H.Figuarts",
+    description: "<p>S.H.Figuarts Beerus â€” the God of Destruction in feline form. Delicate sculpt captures his slender yet powerful physique. Includes open hand, pointing hand, and purple energy ball effects. Long flexible tail part. Sitting pose compatible accessory base.</p>",
+    slug: "product-dbz-beerus-god-of-destruction-shf",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -309,9 +309,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-dbz-piccolo-av-8",
-    title: "Dragon Ball Z — Piccolo Namekian Warrior S.H.Figuarts",
-    description: "<p>S.H.Figuarts Piccolo — the Namekian warrior who became Gohan's mentor. Special beam cannon effect, removable cape and turban, multiple face plates with the iconic narrow-eyed expression. Earring detail and accurate green-purple colour scheme.</p>",
-    slug: "dbz-piccolo-namekian-warrior-shf",
+    title: "Dragon Ball Z â€” Piccolo Namekian Warrior S.H.Figuarts",
+    description: "<p>S.H.Figuarts Piccolo â€” the Namekian warrior who became Gohan's mentor. Special beam cannon effect, removable cape and turban, multiple face plates with the iconic narrow-eyed expression. Earring detail and accurate green-purple colour scheme.</p>",
+    slug: "product-dbz-piccolo-namekian-warrior-shf",
     category: "category-anime-dbz",
     subcategory: "S.H.Figuarts",
     brand: "Dragon Ball Z",
@@ -344,13 +344,13 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── NARUTO (5) ───────────────────────────────────────────────────────────
+  // â”€â”€ NARUTO (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-av-naruto-uzumaki-sage-mode-av-9",
-    title: "Naruto Uzumaki — Sage Mode S.H.Figuarts",
-    description: "<p>S.H.Figuarts Naruto in Sage Mode — Frog Sage marks fully activated. Includes Rasengan effect, shuriken, multiple hand parts, and 3 face plates. Toad belt rope accessory removable. Accurate orange and black Sage outfit with detailed toad summoning markings.</p>",
-    slug: "naruto-uzumaki-sage-mode-shf-figuarts",
+    title: "Naruto Uzumaki â€” Sage Mode S.H.Figuarts",
+    description: "<p>S.H.Figuarts Naruto in Sage Mode â€” Frog Sage marks fully activated. Includes Rasengan effect, shuriken, multiple hand parts, and 3 face plates. Toad belt rope accessory removable. Accurate orange and black Sage outfit with detailed toad summoning markings.</p>",
+    slug: "product-naruto-uzumaki-sage-mode-shf-figuarts",
     category: "category-anime-naruto",
     subcategory: "S.H.Figuarts",
     brand: "Naruto",
@@ -387,9 +387,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-naruto-sasuke-rinnegan-av-10",
-    title: "Naruto — Sasuke Uchiha Rinnegan S.H.Figuarts",
-    description: "<p>S.H.Figuarts Sasuke with Rinnegan — the avenger in his most powerful form. Includes Chidori effect, sword Kusanagi, Rinnegan swap eye parts, and 3 face plates. Eternal Mangekyo Sharingan detail. Blue Void Chidori version included.</p>",
-    slug: "naruto-sasuke-rinnegan-shf-figuarts",
+    title: "Naruto â€” Sasuke Uchiha Rinnegan S.H.Figuarts",
+    description: "<p>S.H.Figuarts Sasuke with Rinnegan â€” the avenger in his most powerful form. Includes Chidori effect, sword Kusanagi, Rinnegan swap eye parts, and 3 face plates. Eternal Mangekyo Sharingan detail. Blue Void Chidori version included.</p>",
+    slug: "product-naruto-sasuke-rinnegan-shf-figuarts",
     category: "category-anime-naruto",
     subcategory: "S.H.Figuarts",
     brand: "Naruto",
@@ -424,9 +424,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-naruto-kakashi-sharingan-av-11",
-    title: "Naruto — Kakashi Hatake Sharingan Eye S.H.Figuarts",
-    description: "<p>S.H.Figuarts Kakashi Hatake — the Copy Ninja with Sharingan eye revealed. Includes headband up and down versions, Lightning Blade effect, Kunai accessories, and 3 face plates including his lazy expression and serious battle expression.</p>",
-    slug: "naruto-kakashi-sharingan-shf-figuarts",
+    title: "Naruto â€” Kakashi Hatake Sharingan Eye S.H.Figuarts",
+    description: "<p>S.H.Figuarts Kakashi Hatake â€” the Copy Ninja with Sharingan eye revealed. Includes headband up and down versions, Lightning Blade effect, Kunai accessories, and 3 face plates including his lazy expression and serious battle expression.</p>",
+    slug: "product-naruto-kakashi-sharingan-shf-figuarts",
     category: "category-anime-naruto",
     subcategory: "S.H.Figuarts",
     brand: "Naruto",
@@ -461,9 +461,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-naruto-itachi-anbu-av-12",
-    title: "Naruto — Itachi Uchiha ANBU Black Ops Figure",
-    description: "<p>Itachi Uchiha in his ANBU Black Ops outfit — the prodigious Uchiha as a child ninja. Crow familiar accessories, Mangekyo Sharingan genjutsu effect, and ANBU mask. Standard and sans-mask head parts. Kunai and shuriken pouch detail.</p>",
-    slug: "naruto-itachi-uchiha-anbu-figure",
+    title: "Naruto â€” Itachi Uchiha ANBU Black Ops Figure",
+    description: "<p>Itachi Uchiha in his ANBU Black Ops outfit â€” the prodigious Uchiha as a child ninja. Crow familiar accessories, Mangekyo Sharingan genjutsu effect, and ANBU mask. Standard and sans-mask head parts. Kunai and shuriken pouch detail.</p>",
+    slug: "product-naruto-itachi-uchiha-anbu-figure",
     category: "category-anime-naruto",
     subcategory: "Figure",
     brand: "Naruto",
@@ -497,9 +497,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-naruto-rock-lee-gates-av-13",
-    title: "Naruto — Rock Lee 8 Inner Gates Figure",
-    description: "<p>Rock Lee in his famous 8 Inner Gates state — red steaming skin, torn suit, and ultimate power. Includes steam effect parts, multiple fist configurations, and a base recreating the sand arena. Bandai Ichibansho premium sculpt.</p>",
-    slug: "naruto-rock-lee-8-gates-ichibansho",
+    title: "Naruto â€” Rock Lee 8 Inner Gates Figure",
+    description: "<p>Rock Lee in his famous 8 Inner Gates state â€” red steaming skin, torn suit, and ultimate power. Includes steam effect parts, multiple fist configurations, and a base recreating the sand arena. Bandai Ichibansho premium sculpt.</p>",
+    slug: "product-naruto-rock-lee-8-gates-ichibansho",
     category: "category-anime-naruto",
     subcategory: "Ichibansho",
     brand: "Naruto",
@@ -532,13 +532,13 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ── ONE PIECE (5) ────────────────────────────────────────────────────────
+  // â”€â”€ ONE PIECE (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-av-op-luffy-gear5-av-14",
-    title: "One Piece — Luffy Gear 5 Nika S.H.Figuarts",
-    description: "<p>S.H.Figuarts Monkey D. Luffy in Gear 5 Nika form — the Sun God awakened. White hair, hyper-expressive cartoon face plates, cloud accessory, and giant inflated fist effects. The most playful and expressive figure in the Figuarts line. Must-have for One Piece fans.</p>",
-    slug: "one-piece-luffy-gear5-nika-shf-figuarts",
+    title: "One Piece â€” Luffy Gear 5 Nika S.H.Figuarts",
+    description: "<p>S.H.Figuarts Monkey D. Luffy in Gear 5 Nika form â€” the Sun God awakened. White hair, hyper-expressive cartoon face plates, cloud accessory, and giant inflated fist effects. The most playful and expressive figure in the Figuarts line. Must-have for One Piece fans.</p>",
+    slug: "product-one-piece-luffy-gear5-nika-shf-figuarts",
     category: "category-anime-onepiece",
     subcategory: "S.H.Figuarts",
     brand: "One Piece",
@@ -575,9 +575,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-op-zoro-enma-av-15",
-    title: "One Piece — Roronoa Zoro Three Sword Style Enma Figure",
-    description: "<p>Roronoa Zoro wielding Enma — post-Wano arc three-sword style stance. Dramatic three-blade draw pose with Enma's black blade effect. Haramaki detail and scar over eye. Ichibansho Wano Arc release. Premium sculptwork from Bandai Spirits.</p>",
-    slug: "one-piece-zoro-three-sword-enma-wano",
+    title: "One Piece â€” Roronoa Zoro Three Sword Style Enma Figure",
+    description: "<p>Roronoa Zoro wielding Enma â€” post-Wano arc three-sword style stance. Dramatic three-blade draw pose with Enma's black blade effect. Haramaki detail and scar over eye. Ichibansho Wano Arc release. Premium sculptwork from Bandai Spirits.</p>",
+    slug: "product-one-piece-zoro-three-sword-enma-wano",
     category: "category-anime-onepiece",
     subcategory: "Ichibansho",
     brand: "One Piece",
@@ -612,9 +612,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-op-nami-wano-av-16",
-    title: "One Piece — Nami Wano Arc DXF Figure",
-    description: "<p>Nami in her Wano Country outfit — the Navigator of the Straw Hats in stunning kimono style. DXF Figure from Banpresto. Clima-Tact weapon pose. Dynamic hair and flower hair accessories. 18 cm premium figure with weather effect diorama base.</p>",
-    slug: "one-piece-nami-wano-dxf-banpresto",
+    title: "One Piece â€” Nami Wano Arc DXF Figure",
+    description: "<p>Nami in her Wano Country outfit â€” the Navigator of the Straw Hats in stunning kimono style. DXF Figure from Banpresto. Clima-Tact weapon pose. Dynamic hair and flower hair accessories. 18 cm premium figure with weather effect diorama base.</p>",
+    slug: "product-one-piece-nami-wano-dxf-banpresto",
     category: "category-anime-onepiece",
     subcategory: "DXF",
     brand: "One Piece",
@@ -648,9 +648,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-op-ace-mera-av-17",
-    title: "One Piece — Portgas D. Ace Fire Fist Figure",
-    description: "<p>Portgas D. Ace — Fire Fist flaming punch pose from Marineford arc. Detailed flame effect from wrist to elbow. Freckle detail, ASCE tattoo on arm, and iconic open jacket. Bandai Ichibansho premium quality. Tribute figure to the beloved fallen Whitebeard commander.</p>",
-    slug: "one-piece-ace-fire-fist-marineford-figure",
+    title: "One Piece â€” Portgas D. Ace Fire Fist Figure",
+    description: "<p>Portgas D. Ace â€” Fire Fist flaming punch pose from Marineford arc. Detailed flame effect from wrist to elbow. Freckle detail, ASCE tattoo on arm, and iconic open jacket. Bandai Ichibansho premium quality. Tribute figure to the beloved fallen Whitebeard commander.</p>",
+    slug: "product-one-piece-ace-fire-fist-marineford-figure",
     category: "category-anime-onepiece",
     subcategory: "Ichibansho",
     brand: "One Piece",
@@ -685,9 +685,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-op-shanks-haki-av-18",
-    title: "One Piece — Red-Haired Shanks Conqueror Haki Figure",
-    description: "<p>Red-Haired Shanks unleashing Conqueror Haki — the One Piece protagonist's idol and the most feared Yonko. Haki aura effect envelops him. Black lightning effects, iconic straw hat, and missing left arm. Premium collector's edition with diorama base.</p>",
-    slug: "one-piece-shanks-conqueror-haki-figure",
+    title: "One Piece â€” Red-Haired Shanks Conqueror Haki Figure",
+    description: "<p>Red-Haired Shanks unleashing Conqueror Haki â€” the One Piece protagonist's idol and the most feared Yonko. Haki aura effect envelops him. Black lightning effects, iconic straw hat, and missing left arm. Premium collector's edition with diorama base.</p>",
+    slug: "product-one-piece-shanks-conqueror-haki-figure",
     category: "category-anime-onepiece",
     subcategory: "Figure",
     brand: "One Piece",
@@ -722,13 +722,13 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── MY HERO ACADEMIA (4) ─────────────────────────────────────────────────
+  // â”€â”€ MY HERO ACADEMIA (4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-av-mha-deku-fullcowl-av-19",
-    title: "My Hero Academia — Izuku Midoriya Full Cowl S.H.Figuarts",
-    description: "<p>S.H.Figuarts Deku in Full Cowl — One For All coursing through his body at full power. Lightning/electric effect parts, Delaware Smash air burst effect, and multiple face plates. Costume Beta outfit with reinforced arms. Essential for any MHA collection.</p>",
-    slug: "mha-deku-midoriya-full-cowl-shf-figuarts",
+    title: "My Hero Academia â€” Izuku Midoriya Full Cowl S.H.Figuarts",
+    description: "<p>S.H.Figuarts Deku in Full Cowl â€” One For All coursing through his body at full power. Lightning/electric effect parts, Delaware Smash air burst effect, and multiple face plates. Costume Beta outfit with reinforced arms. Essential for any MHA collection.</p>",
+    slug: "product-mha-deku-midoriya-full-cowl-shf-figuarts",
     category: "category-anime-mha",
     subcategory: "S.H.Figuarts",
     brand: "My Hero Academia",
@@ -763,9 +763,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-mha-bakugo-howitzer-av-20",
-    title: "My Hero Academia — Katsuki Bakugo Howitzer Impact S.H.Figuarts",
-    description: "<p>S.H.Figuarts Bakugo in his Howitzer Impact pose — spinning explosion attack. Explosion effect parts around both arms, angry and grinning face plates, and his iconic grenade-style gauntlets. The most dynamic MHA figure for capturing his combat style.</p>",
-    slug: "mha-bakugo-howitzer-impact-shf-figuarts",
+    title: "My Hero Academia â€” Katsuki Bakugo Howitzer Impact S.H.Figuarts",
+    description: "<p>S.H.Figuarts Bakugo in his Howitzer Impact pose â€” spinning explosion attack. Explosion effect parts around both arms, angry and grinning face plates, and his iconic grenade-style gauntlets. The most dynamic MHA figure for capturing his combat style.</p>",
+    slug: "product-mha-bakugo-howitzer-impact-shf-figuarts",
     category: "category-anime-mha",
     subcategory: "S.H.Figuarts",
     brand: "My Hero Academia",
@@ -800,9 +800,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-mha-allmight-toshinori-av-21",
-    title: "My Hero Academia — All Might Toshinori True Form Statue",
-    description: "<p>All Might in his true form — Toshinori Yagi deflated, frail, yet still smiling. Rare collector's resin statue capturing his iconic weakened state. 20 cm premium cold-cast porcelain. Limited edition with numbered base. Symbol of Peace even in weakness.</p>",
-    slug: "mha-all-might-toshinori-true-form-statue",
+    title: "My Hero Academia â€” All Might Toshinori True Form Statue",
+    description: "<p>All Might in his true form â€” Toshinori Yagi deflated, frail, yet still smiling. Rare collector's resin statue capturing his iconic weakened state. 20 cm premium cold-cast porcelain. Limited edition with numbered base. Symbol of Peace even in weakness.</p>",
+    slug: "product-mha-all-might-toshinori-true-form-statue",
     category: "category-anime-mha",
     subcategory: "Statue",
     brand: "My Hero Academia",
@@ -840,9 +840,9 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-av-mha-todoroki-half-cold-av-22",
-    title: "My Hero Academia — Shoto Todoroki Half-Cold Half-Hot S.H.Figuarts",
-    description: "<p>S.H.Figuarts Todoroki — left side fire, right side ice. Dual elemental effects for both sides, multiple stern and determined face plates, and ice floor base. Signature half-and-half hair with scar detail. The most visually striking MHA figure available.</p>",
-    slug: "mha-todoroki-half-cold-hot-shf-figuarts",
+    title: "My Hero Academia â€” Shoto Todoroki Half-Cold Half-Hot S.H.Figuarts",
+    description: "<p>S.H.Figuarts Todoroki â€” left side fire, right side ice. Dual elemental effects for both sides, multiple stern and determined face plates, and ice floor base. Signature half-and-half hair with scar detail. The most visually striking MHA figure available.</p>",
+    slug: "product-mha-todoroki-half-cold-hot-shf-figuarts",
     category: "category-anime-mha",
     subcategory: "S.H.Figuarts",
     brand: "My Hero Academia",
@@ -875,12 +875,12 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ── AUCTION (2) ───────────────────────────────────────────────────────────
+  // â”€â”€ AUCTION (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "auction-av-dbz-goku-first-edition-graded-av-1",
-    title: "AUCTION — Dragon Ball Z Goku First Edition Box Art Figure (1989 Vintage)",
-    description: "<p>Vintage 1989 Bandai Dragon Ball Z Goku figure with original box art. First edition Japanese release. Complete with original accessories and instruction sheet. Figure is in C8 condition — light play wear. Box is C7 with shelf wear but intact. Extremely rare in this condition. Certificate from Anime Heritage Japan.</p>",
+    title: "AUCTION â€” Dragon Ball Z Goku First Edition Box Art Figure (1989 Vintage)",
+    description: "<p>Vintage 1989 Bandai Dragon Ball Z Goku figure with original box art. First edition Japanese release. Complete with original accessories and instruction sheet. Figure is in C8 condition â€” light play wear. Box is C7 with shelf wear but intact. Extremely rare in this condition. Certificate from Anime Heritage Japan.</p>",
     slug: "auction-dbz-goku-1989-vintage-bandai-first-ed",
     category: "category-anime-dbz",
     subcategory: "Vintage",
@@ -932,8 +932,8 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "auction-av-onepiece-luffy-gear5-first-print-av-2",
-    title: "AUCTION — One Piece Luffy Gear 5 First Print Prototype Sample Figure",
-    description: "<p>Extremely rare One Piece Luffy Gear 5 Figuarts first print prototype sample — production test shot before finalised mass production colour. Predominantly white unpainted with prototype blue tack marks. Sealed in original Bandai internal sample bag. Unique and unrepeatable collectible.</p>",
+    title: "AUCTION â€” One Piece Luffy Gear 5 First Print Prototype Sample Figure",
+    description: "<p>Extremely rare One Piece Luffy Gear 5 Figuarts first print prototype sample â€” production test shot before finalised mass production colour. Predominantly white unpainted with prototype blue tack marks. Sealed in original Bandai internal sample bag. Unique and unrepeatable collectible.</p>",
     slug: "auction-onepiece-luffy-gear5-prototype-sample",
     category: "category-anime-onepiece",
     subcategory: "Prototype",
@@ -981,12 +981,12 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // ── PRE-ORDER (2) ─────────────────────────────────────────────────────────
+  // â”€â”€ PRE-ORDER (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "preorder-av-dbz-goku-ultra-ego-2026-av-1",
-    title: "PRE-ORDER — Dragon Ball Z Goku Ultra Ego 2026 Premium Statue",
-    description: "<p>Pre-order the upcoming Goku Ultra Ego premium statue from Tsume Art — 1:6 scale, 35 cm tall, cold-cast resin with hand-painted finish. Limited to 999 pieces worldwide. Only 50 India-allocated units. Expected delivery Q3 2026. Pay 20% now, rest on dispatch.</p>",
+    title: "PRE-ORDER â€” Dragon Ball Z Goku Ultra Ego 2026 Premium Statue",
+    description: "<p>Pre-order the upcoming Goku Ultra Ego premium statue from Tsume Art â€” 1:6 scale, 35 cm tall, cold-cast resin with hand-painted finish. Limited to 999 pieces worldwide. Only 50 India-allocated units. Expected delivery Q3 2026. Pay 20% now, rest on dispatch.</p>",
     slug: "preorder-dbz-goku-ultra-ego-tsume-art-2026",
     category: "category-anime-dbz",
     subcategory: "Premium Statue",
@@ -1029,8 +1029,8 @@ export const animeFiguresSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-av-mha-allmight-golden-age-2026-av-2",
-    title: "PRE-ORDER — My Hero Academia All Might Golden Age Box Set (2026)",
-    description: "<p>Reserve the upcoming My Hero Academia All Might Golden Age Box Set — 5 figures spanning his life from young Toshinori to the Symbol of Peace, plus the deflated retirement state. Includes collector artbook and muscle fibres diorama. India pre-order exclusive bonus: All Might enamel pin set.</p>",
+    title: "PRE-ORDER â€” My Hero Academia All Might Golden Age Box Set (2026)",
+    description: "<p>Reserve the upcoming My Hero Academia All Might Golden Age Box Set â€” 5 figures spanning his life from young Toshinori to the Symbol of Peace, plus the deflated retirement state. Includes collector artbook and muscle fibres diorama. India pre-order exclusive bonus: All Might enamel pin set.</p>",
     slug: "preorder-mha-all-might-golden-age-box-set-2026",
     category: "category-anime-mha",
     subcategory: "Box Set",

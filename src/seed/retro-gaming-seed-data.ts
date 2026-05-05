@@ -1,7 +1,7 @@
-/**
- * Retro Gaming & Vintage Diecast — Products Seed Data
- * Nintendo · SEGA · Vintage Diecast Cars
- * 18 general · 1 auction · 1 pre-order = 20 total
+﻿/**
+ * Retro Gaming & Vintage Diecast â€” Products Seed Data
+ * Nintendo Â· SEGA Â· Vintage Diecast Cars
+ * 18 general Â· 1 auction Â· 1 pre-order = 20 total
  * Seller: Retro Vault India (store-retro-vault-india)
  */
 
@@ -41,13 +41,13 @@ const img = (seed: string) => {
 
 export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
-  // ── NINTENDO (6) ─────────────────────────────────────────────────────────
+  // â”€â”€ NINTENDO (6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-rg-nes-console-boxed-rg-1",
-    title: "Nintendo NES Console — Complete In Box (1985 Original)",
-    description: "<p>Original 1985 Nintendo Entertainment System — complete in box with original cables, controller, zapper, and Super Mario Bros/Duck Hunt cartridge. Box has moderate shelf wear, console and accessories are in excellent working condition. HDMI mod available on request.</p>",
-    slug: "nintendo-nes-console-complete-in-box-1985",
+    title: "Nintendo NES Console â€” Complete In Box (1985 Original)",
+    description: "<p>Original 1985 Nintendo Entertainment System â€” complete in box with original cables, controller, zapper, and Super Mario Bros/Duck Hunt cartridge. Box has moderate shelf wear, console and accessories are in excellent working condition. HDMI mod available on request.</p>",
+    slug: "product-nintendo-nes-console-complete-in-box-1985",
     category: "category-retro-nintendo",
     subcategory: "Consoles",
     brand: "Nintendo",
@@ -68,7 +68,7 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     tags: ["nintendo", "nes", "retro", "console", "1985", "complete in box", "vintage"],
     specifications: [
       { name: "Year", value: "1985 (Original)" },
-      { name: "Condition", value: "Working — excellent" },
+      { name: "Condition", value: "Working â€” excellent" },
       { name: "Contents", value: "Console + 2 controllers + zapper + cables + 2 games" },
     ],
     features: ["Fully working console", "Original zapper gun", "Super Mario Bros + Duck Hunt", "Complete original box"],
@@ -90,9 +90,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-snes-console-boxed-rg-2",
-    title: "Nintendo SNES Super Console — Complete In Box (1991)",
-    description: "<p>Super Nintendo Entertainment System from 1991 — complete with box, console, 2 controllers, and Super Mario World cartridge. Controller buttons have normal wear. Console outputs composite video cleanly. A nostalgia centrepiece that still plays perfectly after 30+ years.</p>",
-    slug: "nintendo-snes-console-complete-in-box-1991",
+    title: "Nintendo SNES Super Console â€” Complete In Box (1991)",
+    description: "<p>Super Nintendo Entertainment System from 1991 â€” complete with box, console, 2 controllers, and Super Mario World cartridge. Controller buttons have normal wear. Console outputs composite video cleanly. A nostalgia centrepiece that still plays perfectly after 30+ years.</p>",
+    slug: "product-nintendo-snes-console-complete-in-box-1991",
     category: "category-retro-nintendo",
     subcategory: "Consoles",
     brand: "Nintendo",
@@ -127,9 +127,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-gameboy-original-dmg-rg-3",
-    title: "Nintendo Game Boy DMG-01 — Original Grey Brick (1989)",
-    description: "<p>The original Game Boy DMG-01 in working condition — the grey brick that started it all. Screen has light scratch (still clear display). Includes battery cover and Tetris cartridge. Authentic 1989 Japanese unit. Yellowing is minimal for age. A true gaming history artefact.</p>",
-    slug: "nintendo-gameboy-dmg-01-original-1989",
+    title: "Nintendo Game Boy DMG-01 â€” Original Grey Brick (1989)",
+    description: "<p>The original Game Boy DMG-01 in working condition â€” the grey brick that started it all. Screen has light scratch (still clear display). Includes battery cover and Tetris cartridge. Authentic 1989 Japanese unit. Yellowing is minimal for age. A true gaming history artefact.</p>",
+    slug: "product-nintendo-gameboy-dmg-01-original-1989",
     category: "category-retro-nintendo",
     subcategory: "Handhelds",
     brand: "Nintendo",
@@ -164,9 +164,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-n64-console-rg-4",
-    title: "Nintendo 64 Console — Charcoal Grey (1997) with Mario Kart 64",
-    description: "<p>Nintendo 64 in charcoal grey — working perfectly with 1 original controller and Mario Kart 64 cartridge. Expansion pak slot covered. Analogue stick has typical N64 wear but works well. NTSC-J version (Japan). Plays all region games with adapter (not included).</p>",
-    slug: "nintendo-64-console-charcoal-mario-kart-1997",
+    title: "Nintendo 64 Console â€” Charcoal Grey (1997) with Mario Kart 64",
+    description: "<p>Nintendo 64 in charcoal grey â€” working perfectly with 1 original controller and Mario Kart 64 cartridge. Expansion pak slot covered. Analogue stick has typical N64 wear but works well. NTSC-J version (Japan). Plays all region games with adapter (not included).</p>",
+    slug: "product-nintendo-64-console-charcoal-mario-kart-1997",
     category: "category-retro-nintendo",
     subcategory: "Consoles",
     brand: "Nintendo",
@@ -202,9 +202,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-super-mario-64-sealed-rg-5",
-    title: "Super Mario 64 — Factory Sealed NTSC-J Cartridge (1996)",
-    description: "<p>Factory-sealed Super Mario 64 N64 cartridge — original 1996 NTSC-J release. Never opened. Seal intact with no tears. The game that defined 3D platforming forever. VGA-comparable seal freshness. Extremely rare to find sealed after 30 years.</p>",
-    slug: "super-mario-64-factory-sealed-ntscj-1996",
+    title: "Super Mario 64 â€” Factory Sealed NTSC-J Cartridge (1996)",
+    description: "<p>Factory-sealed Super Mario 64 N64 cartridge â€” original 1996 NTSC-J release. Never opened. Seal intact with no tears. The game that defined 3D platforming forever. VGA-comparable seal freshness. Extremely rare to find sealed after 30 years.</p>",
+    slug: "product-super-mario-64-factory-sealed-ntscj-1996",
     category: "category-retro-nintendo",
     subcategory: "Cartridges",
     brand: "Nintendo",
@@ -221,7 +221,7 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Year", value: "1996 (Original Release)" },
       { name: "Region", value: "NTSC-J" },
-      { name: "Seal Condition", value: "Intact — no tears" },
+      { name: "Seal Condition", value: "Intact â€” no tears" },
     ],
     features: ["Factory sealed original", "1996 first printing", "Seal fully intact", "Extremely rare find"],
     shippingInfo: "Protective sleeved box. Insured nationwide.",
@@ -242,9 +242,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-gameboy-color-purple-rg-6",
-    title: "Nintendo Game Boy Color — Atomic Purple (GBC, 1998)",
-    description: "<p>Game Boy Color in Atomic Purple — transparent chassis showing internal PCB. Near-mint condition, light scratching on back only. Works perfectly with all GBC and original GB games. Comes with Pokemon Gold cartridge. Iconic late-90s design that still looks futuristic today.</p>",
-    slug: "nintendo-gameboy-color-atomic-purple-1998",
+    title: "Nintendo Game Boy Color â€” Atomic Purple (GBC, 1998)",
+    description: "<p>Game Boy Color in Atomic Purple â€” transparent chassis showing internal PCB. Near-mint condition, light scratching on back only. Works perfectly with all GBC and original GB games. Comes with Pokemon Gold cartridge. Iconic late-90s design that still looks futuristic today.</p>",
+    slug: "product-nintendo-gameboy-color-atomic-purple-1998",
     category: "category-retro-nintendo",
     subcategory: "Handhelds",
     brand: "Nintendo",
@@ -277,13 +277,13 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ── SEGA (5) ─────────────────────────────────────────────────────────────
+  // â”€â”€ SEGA (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-rg-sega-genesis-model1-rg-7",
-    title: "Sega Genesis Model 1 — High Definition Compatible (1989)",
-    description: "<p>Original Sega Genesis Model 1 with HDMI upscaler board pre-installed. VA3 motherboard revision — best audio output. Includes Sonic the Hedgehog cartridge. Controller is near mint. The definitive vintage SEGA setup for modern TVs.</p>",
-    slug: "sega-genesis-model1-hdmi-mod-1989",
+    title: "Sega Genesis Model 1 â€” High Definition Compatible (1989)",
+    description: "<p>Original Sega Genesis Model 1 with HDMI upscaler board pre-installed. VA3 motherboard revision â€” best audio output. Includes Sonic the Hedgehog cartridge. Controller is near mint. The definitive vintage SEGA setup for modern TVs.</p>",
+    slug: "product-sega-genesis-model1-hdmi-mod-1989",
     category: "category-retro-sega",
     subcategory: "Consoles",
     brand: "SEGA",
@@ -320,9 +320,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-sega-dreamcast-console-rg-8",
-    title: "Sega Dreamcast — White Console with Controller (1998)",
-    description: "<p>Sega Dreamcast in white — SEGA's final console and arguably their finest. Includes one VMU memory card, original controller, and Sonic Adventure 2 disc. GD-ROM drive reads well. A legendary console that died too young. Perfect for collectors and those new to retro gaming.</p>",
-    slug: "sega-dreamcast-console-white-1998",
+    title: "Sega Dreamcast â€” White Console with Controller (1998)",
+    description: "<p>Sega Dreamcast in white â€” SEGA's final console and arguably their finest. Includes one VMU memory card, original controller, and Sonic Adventure 2 disc. GD-ROM drive reads well. A legendary console that died too young. Perfect for collectors and those new to retro gaming.</p>",
+    slug: "product-sega-dreamcast-console-white-1998",
     category: "category-retro-sega",
     subcategory: "Consoles",
     brand: "SEGA",
@@ -357,9 +357,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-sega-master-system-rg-9",
-    title: "Sega Master System II — Working Console (1986)",
-    description: "<p>Sega Master System II — the European/Brazilian blockbuster SEGA console. Includes built-in Alex Kidd in Miracle World game, 2 standard controllers, and 3 cartridges: Sonic the Hedgehog, Wonder Boy, and Fantasy Zone. Composite output tested.</p>",
-    slug: "sega-master-system-ii-console-1986",
+    title: "Sega Master System II â€” Working Console (1986)",
+    description: "<p>Sega Master System II â€” the European/Brazilian blockbuster SEGA console. Includes built-in Alex Kidd in Miracle World game, 2 standard controllers, and 3 cartridges: Sonic the Hedgehog, Wonder Boy, and Fantasy Zone. Composite output tested.</p>",
+    slug: "product-sega-master-system-ii-console-1986",
     category: "category-retro-sega",
     subcategory: "Consoles",
     brand: "SEGA",
@@ -393,9 +393,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-sonic-hedgehog-genesis-cib-rg-10",
-    title: "Sonic the Hedgehog — Genesis Complete In Box (1991 US Release)",
-    description: "<p>Original 1991 Sonic the Hedgehog for Sega Genesis in complete-in-box condition. Box has light shelf wear. Manual complete with registration card. Cartridge tested working. The game that put SEGA on the map — an iconic piece of gaming history.</p>",
-    slug: "sonic-hedgehog-sega-genesis-cib-1991",
+    title: "Sonic the Hedgehog â€” Genesis Complete In Box (1991 US Release)",
+    description: "<p>Original 1991 Sonic the Hedgehog for Sega Genesis in complete-in-box condition. Box has light shelf wear. Manual complete with registration card. Cartridge tested working. The game that put SEGA on the map â€” an iconic piece of gaming history.</p>",
+    slug: "product-sonic-hedgehog-sega-genesis-cib-1991",
     category: "category-retro-sega",
     subcategory: "Cartridges",
     brand: "SEGA",
@@ -412,7 +412,7 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Year", value: "1991" },
       { name: "Region", value: "NTSC-US" },
-      { name: "Condition", value: "CIB — light shelf wear on box" },
+      { name: "Condition", value: "CIB â€” light shelf wear on box" },
     ],
     features: ["Complete in box", "Manual with registration card", "Cartridge tested", "1991 first print"],
     shippingInfo: "Protective sleeve and padded box. Nationwide.",
@@ -430,9 +430,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-sega-saturn-console-rg-11",
-    title: "Sega Saturn — Grey Console with Nights into Dreams (1994 JP)",
-    description: "<p>Sega Saturn in original grey — Japanese 1994 release. Includes Nights Into Dreams disc, one original control pad. Disc tray mechanism tested smooth. NTSC-J region, plays all import titles. A beloved collector's console with exceptional 2D performance and a great library.</p>",
-    slug: "sega-saturn-console-grey-nights-dreams-jp",
+    title: "Sega Saturn â€” Grey Console with Nights into Dreams (1994 JP)",
+    description: "<p>Sega Saturn in original grey â€” Japanese 1994 release. Includes Nights Into Dreams disc, one original control pad. Disc tray mechanism tested smooth. NTSC-J region, plays all import titles. A beloved collector's console with exceptional 2D performance and a great library.</p>",
+    slug: "product-sega-saturn-console-grey-nights-dreams-jp",
     category: "category-retro-sega",
     subcategory: "Consoles",
     brand: "SEGA",
@@ -466,13 +466,13 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(11),
   },
 
-  // ── VINTAGE DIECAST (7) ───────────────────────────────────────────────────
+  // â”€â”€ VINTAGE DIECAST (7) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "product-rg-matchbox-ferrari-250-1960s-rg-12",
-    title: "Matchbox Ferrari 250 GTO — 1960s Original Lesney (Loose, EX)",
-    description: "<p>Original 1960s Matchbox Ferrari 250 GTO by Lesney — red body, smooth wheels, grey plastic base. Excellent condition for age with minimal paint wear. A true vintage die-cast from when Matchbox was the undisputed king of 1:64 scale. No box but figure is in excellent shape.</p>",
-    slug: "matchbox-ferrari-250-gto-1960s-lesney-loose",
+    title: "Matchbox Ferrari 250 GTO â€” 1960s Original Lesney (Loose, EX)",
+    description: "<p>Original 1960s Matchbox Ferrari 250 GTO by Lesney â€” red body, smooth wheels, grey plastic base. Excellent condition for age with minimal paint wear. A true vintage die-cast from when Matchbox was the undisputed king of 1:64 scale. No box but figure is in excellent shape.</p>",
+    slug: "product-matchbox-ferrari-250-gto-1960s-lesney-loose",
     category: "category-vintage-diecast",
     subcategory: "Matchbox Lesney",
     brand: "Matchbox",
@@ -489,7 +489,7 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Era", value: "1960s (Original Lesney)" },
       { name: "Scale", value: "1:64 approximate" },
-      { name: "Condition", value: "Excellent — minimal paint wear" },
+      { name: "Condition", value: "Excellent â€” minimal paint wear" },
     ],
     features: ["1960s Lesney original", "Red Ferrari body", "Smooth wheels", "Minimal wear"],
     shippingInfo: "Bubble wrapped protective box. Nationwide.",
@@ -507,9 +507,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-corgi-aston-martin-db5-rg-13",
-    title: "Corgi James Bond Aston Martin DB5 — 1965 Original (Boxed)",
-    description: "<p>Original 1965 Corgi James Bond Aston Martin DB5 with ejector seat function — the most famous toy car ever made. Original box with wear, car in VG condition. Ejector seat mechanism works. Passenger figures present. Roof-mounted machine gun covers intact. Numbered 261.</p>",
-    slug: "corgi-james-bond-aston-martin-db5-1965-boxed",
+    title: "Corgi James Bond Aston Martin DB5 â€” 1965 Original (Boxed)",
+    description: "<p>Original 1965 Corgi James Bond Aston Martin DB5 with ejector seat function â€” the most famous toy car ever made. Original box with wear, car in VG condition. Ejector seat mechanism works. Passenger figures present. Roof-mounted machine gun covers intact. Numbered 261.</p>",
+    slug: "product-corgi-james-bond-aston-martin-db5-1965-boxed",
     category: "category-vintage-diecast",
     subcategory: "Corgi",
     brand: "Corgi",
@@ -527,7 +527,7 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
       { name: "Year", value: "1965 (Original Corgi 261)" },
       { name: "Model No.", value: "261" },
       { name: "Car Condition", value: "Very Good" },
-      { name: "Box Condition", value: "Good — wear" },
+      { name: "Box Condition", value: "Good â€” wear" },
       { name: "Ejector Seat", value: "Working" },
     ],
     features: ["Working ejector seat", "Passenger figures included", "Machine gun covers intact", "Original 1965 261 release"],
@@ -549,9 +549,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-dinky-spitfire-ww2-rg-14",
-    title: "Dinky Toys Spitfire — WWII 1/72 Scale Original (1970s)",
-    description: "<p>Dinky Toys Spitfire in 1/72 scale — WWII fighter plane from the 1970s Dinky military aircraft range. Die-cast with fabric-printed transfer roundel markings. Retractable undercarriage. Original box shows moderate wear, plane in very good condition with all decals.</p>",
-    slug: "dinky-toys-spitfire-ww2-1970s-original",
+    title: "Dinky Toys Spitfire â€” WWII 1/72 Scale Original (1970s)",
+    description: "<p>Dinky Toys Spitfire in 1/72 scale â€” WWII fighter plane from the 1970s Dinky military aircraft range. Die-cast with fabric-printed transfer roundel markings. Retractable undercarriage. Original box shows moderate wear, plane in very good condition with all decals.</p>",
+    slug: "product-dinky-toys-spitfire-ww2-1970s-original",
     category: "category-vintage-diecast",
     subcategory: "Dinky Toys",
     brand: "Dinky",
@@ -586,9 +586,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-britains-soldiers-set-rg-15",
-    title: "Britain's Diecast Soldiers — Cold War Era Set (1960s, Boxed)",
-    description: "<p>Britain's Diecast Toy Soldiers in original box — Cold War era infantry set from the 1960s. 12 figures in khaki with full complement of rifles, machine guns, and mortar. Box is complete but worn. Figures are in excellent marching and firing poses. Rare complete set.</p>",
-    slug: "britains-toy-soldiers-cold-war-1960s-set",
+    title: "Britain's Diecast Soldiers â€” Cold War Era Set (1960s, Boxed)",
+    description: "<p>Britain's Diecast Toy Soldiers in original box â€” Cold War era infantry set from the 1960s. 12 figures in khaki with full complement of rifles, machine guns, and mortar. Box is complete but worn. Figures are in excellent marching and firing poses. Rare complete set.</p>",
+    slug: "product-britains-toy-soldiers-cold-war-1960s-set",
     category: "category-vintage-diecast",
     subcategory: "Britain's",
     brand: "Britain's",
@@ -622,9 +622,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-hot-wheels-redline-camaro-rg-16",
-    title: "Hot Wheels Redline Camaro — 1968 Original Spectraflame (Rare)",
-    description: "<p>Original 1968 Hot Wheels Redline Camaro in Spectraflame red — the very first generation of Hot Wheels cars. Redline wheels (the rare original rubber tires) intact on all four corners. Minimal paint wear for a 55-year-old toy. This is what started the Hot Wheels legend.</p>",
-    slug: "hot-wheels-redline-camaro-1968-spectraflame-original",
+    title: "Hot Wheels Redline Camaro â€” 1968 Original Spectraflame (Rare)",
+    description: "<p>Original 1968 Hot Wheels Redline Camaro in Spectraflame red â€” the very first generation of Hot Wheels cars. Redline wheels (the rare original rubber tires) intact on all four corners. Minimal paint wear for a 55-year-old toy. This is what started the Hot Wheels legend.</p>",
+    slug: "product-hot-wheels-redline-camaro-1968-spectraflame-original",
     category: "category-vintage-diecast",
     subcategory: "Hot Wheels Redlines",
     brand: "Hot Wheels",
@@ -662,9 +662,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-tonka-steel-truck-1970s-rg-17",
-    title: "Tonka Steel Pressed Dump Truck — 1970s Original (Large Scale)",
-    description: "<p>Original 1970s Tonka steel pressed dump truck in classic yellow — the indestructible steel toy that defined an era. Large scale (~40 cm) with working dump bed raise/lower lever. Surface rust on underside only; exterior paint remarkably intact. A genuine nostalgia centrepiece.</p>",
-    slug: "tonka-steel-pressed-dump-truck-1970s-yellow",
+    title: "Tonka Steel Pressed Dump Truck â€” 1970s Original (Large Scale)",
+    description: "<p>Original 1970s Tonka steel pressed dump truck in classic yellow â€” the indestructible steel toy that defined an era. Large scale (~40 cm) with working dump bed raise/lower lever. Surface rust on underside only; exterior paint remarkably intact. A genuine nostalgia centrepiece.</p>",
+    slug: "product-tonka-steel-pressed-dump-truck-1970s-yellow",
     category: "category-vintage-diecast",
     subcategory: "Tonka Steel",
     brand: "Tonka",
@@ -700,9 +700,9 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-rg-schuco-micro-racer-rg-18",
-    title: "Schuco Micro Racer — Wind-Up German Tin Car (1960s)",
-    description: "<p>Schuco Micro Racer wind-up tin car from the 1960s — the pinnacle of German toy engineering. Ferrari-inspired red body with working wind-up key mechanism. Steerable front wheels via key. Box present but heavily worn. Car mechanism works perfectly after 60+ years.</p>",
-    slug: "schuco-micro-racer-wind-up-1960s-german",
+    title: "Schuco Micro Racer â€” Wind-Up German Tin Car (1960s)",
+    description: "<p>Schuco Micro Racer wind-up tin car from the 1960s â€” the pinnacle of German toy engineering. Ferrari-inspired red body with working wind-up key mechanism. Steerable front wheels via key. Box present but heavily worn. Car mechanism works perfectly after 60+ years.</p>",
+    slug: "product-schuco-micro-racer-wind-up-1960s-german",
     category: "category-vintage-diecast",
     subcategory: "Schuco",
     brand: "Schuco",
@@ -736,12 +736,12 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── AUCTION (1) ───────────────────────────────────────────────────────────
+  // â”€â”€ AUCTION (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "auction-rg-nes-punch-out-sealed-rg-1",
-    title: "AUCTION — Mike Tyson's Punch-Out!! NES Factory Sealed (1987)",
-    description: "<p>Factory sealed Mike Tyson's Punch-Out!! for NES — original 1987 US release with H-Seam seal intact. This is one of the most iconic NES games and extremely hard to find sealed. Professional authentication by WATA Games (graded 7.0 A+ seal). Reserve your bid now.</p>",
+    title: "AUCTION â€” Mike Tyson's Punch-Out!! NES Factory Sealed (1987)",
+    description: "<p>Factory sealed Mike Tyson's Punch-Out!! for NES â€” original 1987 US release with H-Seam seal intact. This is one of the most iconic NES games and extremely hard to find sealed. Professional authentication by WATA Games (graded 7.0 A+ seal). Reserve your bid now.</p>",
     slug: "auction-nes-mike-tysons-punch-out-sealed-1987",
     category: "category-retro-nintendo",
     subcategory: "Sealed Cartridges",
@@ -789,11 +789,11 @@ export const retroGamingSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // ── PRE-ORDER (1) ─────────────────────────────────────────────────────────
+  // â”€â”€ PRE-ORDER (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
   {
     id: "preorder-rg-nintendo-classic-mini-2026-rg-1",
-    title: "PRE-ORDER — Nintendo Classic Mini Super NES 2026 Edition (Rumoured)",
+    title: "PRE-ORDER â€” Nintendo Classic Mini Super NES 2026 Edition (Rumoured)",
     description: "<p>Reserve our notification spot for the rumoured Nintendo Classic Mini Super NES 2026 re-issue. Get priority access when Nintendo confirms the release. Our store allocation is limited to 20 units. No payment taken until dispatch confirmed. Register interest now to avoid missing out.</p>",
     slug: "preorder-nintendo-classic-mini-snes-2026",
     category: "category-retro-nintendo",

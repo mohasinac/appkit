@@ -35,6 +35,43 @@ export interface StoreAddressSeedData {
 
 export const storeAddressesSeedData: StoreAddressSeedData[] = [
   // ============================================
+  // LetItRip Official Store Addresses (Admin)
+  // ============================================
+  {
+    id: "saddr-letitrip-hq-1707400010",
+    storeSlug: "letitrip-official",
+    label: "LetItRip HQ",
+    fullName: "Admin User",
+    phone: `${_phonePrefix}9876543210`,
+    addressLine1: "LetItRip Platform HQ, 12 Collector's Lane",
+    addressLine2: "Tech City, Okhla Phase III",
+    landmark: "Near Okhla Industrial Estate Gate 3",
+    city: "Delhi",
+    state: "Delhi",
+    postalCode: "110020",
+    country: _locale.countryName,
+    isDefault: true,
+    createdAt: daysAgo(365),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "saddr-letitrip-warehouse-1707400011",
+    storeSlug: "letitrip-official",
+    label: "Fulfilment Warehouse",
+    fullName: "Admin User",
+    phone: `${_phonePrefix}9876543210`,
+    addressLine1: "Unit 7B, Connaught Logistics Park",
+    addressLine2: "Lajpat Nagar",
+    city: "Delhi",
+    state: "Delhi",
+    postalCode: "110024",
+    country: _locale.countryName,
+    isDefault: false,
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(30),
+  },
+
+  // ============================================
   // Misty's Water Card Shop Addresses
   // ============================================
   {

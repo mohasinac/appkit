@@ -1,11 +1,11 @@
-import { getDefaultCurrency } from "./seed-market-config";
+﻿import { getDefaultCurrency } from "./seed-market-config";
 
 /**
- * Pokemon Base Set 151 — Products Seed Data
+ * Pokemon Base Set 151 â€” Products Seed Data
  *
  * Cards use real pokemontcg.io image URLs.
  * Image URL pattern:  https://images.pokemontcg.io/base1/{number}_hires.png
- * Base Set card numbers: 1–102 (1–16 holo rare, 17–64 non-holo / uncommon, 65–102 common / energy)
+ * Base Set card numbers: 1â€“102 (1â€“16 holo rare, 17â€“64 non-holo / uncommon, 65â€“102 common / energy)
  */
 
 import type { ProductDocument } from "../features/products/schemas";
@@ -72,23 +72,23 @@ const BLAINE = {
   sellerEmail: "blaine@letitrip.in",
 } as const;
 
-// Helper — pokemontcg.io Base Set card image
+// Helper â€” pokemontcg.io Base Set card image
 const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
 
 export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
-  // ════════════════════════════════════════════════════════════
-  // HOLO RARE SINGLES (cards 1–16)
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+  // HOLO RARE SINGLES (cards 1â€“16)
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #4 — Charizard (the crown jewel)
+  // #4 â€” Charizard (the crown jewel)
   {
     id: "product-charizard-base1-4-holo-rare-fire-blaine-1",
-    title: "Charizard — Base Set #4 Holo Rare (Near Mint)",
+    title: "Charizard â€” Base Set #4 Holo Rare (Near Mint)",
     description:
-      "The most iconic card in Pokémon history. First-edition Base Set Charizard in Near Mint condition. " +
+      "The most iconic card in PokÃ©mon history. First-edition Base Set Charizard in Near Mint condition. " +
       "Lightly played centering, no scratches on holo surface. Comes in a hard sleeve and top-loader.",
-    slug: "charizard-base1-4-holo-rare",
+    slug: "product-charizard-base1-4-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -129,14 +129,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // #2 — Blastoise
+  // #2 â€” Blastoise
   {
     id: "product-blastoise-base1-2-holo-rare-water-misty-1",
-    title: "Blastoise — Base Set #2 Holo Rare (Near Mint)",
+    title: "Blastoise â€” Base Set #2 Holo Rare (Near Mint)",
     description:
-      "Blastoise Holo Rare from the original Pokémon Base Set. Near Mint, light play centering. " +
+      "Blastoise Holo Rare from the original PokÃ©mon Base Set. Near Mint, light play centering. " +
       "A must-have Water-type collectible.",
-    slug: "blastoise-base1-2-holo-rare",
+    slug: "product-blastoise-base1-2-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Water",
     brand: "Wizards of the Coast",
@@ -173,13 +173,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #15 — Venusaur
+  // #15 â€” Venusaur
   {
     id: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
-    title: "Venusaur — Base Set #15 Holo Rare (Lightly Played)",
+    title: "Venusaur â€” Base Set #15 Holo Rare (Lightly Played)",
     description:
-      "Venusaur Holo Rare from Base Set. Lightly Played — minor corner wear, holo surface pristine.",
-    slug: "venusaur-base1-15-holo-rare",
+      "Venusaur Holo Rare from Base Set. Lightly Played â€” minor corner wear, holo surface pristine.",
+    slug: "product-venusaur-base1-15-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Grass",
     brand: "Wizards of the Coast",
@@ -214,13 +214,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // #10 — Mewtwo
+  // #10 â€” Mewtwo
   {
     id: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
-    title: "Mewtwo — Base Set #10 Holo Rare (Near Mint)",
+    title: "Mewtwo â€” Base Set #10 Holo Rare (Near Mint)",
     description:
-      "The Genetic Pokémon. Mewtwo Holo Rare from the original Base Set in Near Mint condition.",
-    slug: "mewtwo-base1-10-holo-rare",
+      "The Genetic PokÃ©mon. Mewtwo Holo Rare from the original Base Set in Near Mint condition.",
+    slug: "product-mewtwo-base1-10-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Psychic",
     brand: "Wizards of the Coast",
@@ -256,13 +256,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // #16 — Zapdos
+  // #16 â€” Zapdos
   {
     id: "product-zapdos-base1-16-holo-rare-electric-surge-1",
-    title: "Zapdos — Base Set #16 Holo Rare (Near Mint)",
+    title: "Zapdos â€” Base Set #16 Holo Rare (Near Mint)",
     description:
-      "Zapdos Holo Rare from Base Set. One of the three legendary birds — this one is pure Electric.",
-    slug: "zapdos-base1-16-holo-rare",
+      "Zapdos Holo Rare from Base Set. One of the three legendary birds â€” this one is pure Electric.",
+    slug: "product-zapdos-base1-16-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -297,13 +297,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #3 — Chansey
+  // #3 â€” Chansey
   {
     id: "product-chansey-base1-3-holo-rare-colorless-misty-1",
-    title: "Chansey — Base Set #3 Holo Rare (Near Mint)",
+    title: "Chansey â€” Base Set #3 Holo Rare (Near Mint)",
     description:
-      "Chansey with 120 HP — the tankiest Base Set card. Holo Rare, Near Mint.",
-    slug: "chansey-base1-3-holo-rare",
+      "Chansey with 120 HP â€” the tankiest Base Set card. Holo Rare, Near Mint.",
+    slug: "product-chansey-base1-3-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Colorless",
     brand: "Wizards of the Coast",
@@ -338,13 +338,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #6 — Gyarados
+  // #6 â€” Gyarados
   {
     id: "product-gyarados-base1-6-holo-rare-water-misty-1",
-    title: "Gyarados — Base Set #6 Holo Rare (Near Mint)",
+    title: "Gyarados â€” Base Set #6 Holo Rare (Near Mint)",
     description:
       "The fearsome sea serpent. Gyarados Holo Rare from Base Set, Near Mint.",
-    slug: "gyarados-base1-6-holo-rare",
+    slug: "product-gyarados-base1-6-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Water",
     brand: "Wizards of the Coast",
@@ -379,13 +379,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // #9 — Magneton
+  // #9 â€” Magneton
   {
     id: "product-magneton-base1-9-holo-rare-electric-surge-1",
-    title: "Magneton — Base Set #9 Holo Rare (Lightly Played)",
+    title: "Magneton â€” Base Set #9 Holo Rare (Lightly Played)",
     description:
       "Magneton Holo Rare, Lightly Played. Light whitening on corners, holo face clean.",
-    slug: "magneton-base1-9-holo-rare",
+    slug: "product-magneton-base1-9-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -420,17 +420,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(9),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // NON-HOLO RARE SINGLES
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #17 — Beedrill
+  // #17 â€” Beedrill
   {
     id: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
-    title: "Beedrill — Base Set #17 Non-Holo Rare (Near Mint)",
+    title: "Beedrill â€” Base Set #17 Non-Holo Rare (Near Mint)",
     description:
       "Beedrill Non-Holo Rare. A Grass-type attacker classic from the original Base Set.",
-    slug: "beedrill-base1-17-non-holo-rare",
+    slug: "product-beedrill-base1-17-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Grass",
     brand: "Wizards of the Coast",
@@ -465,13 +465,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(10),
   },
 
-  // #19 — Dugtrio
+  // #19 â€” Dugtrio
   {
     id: "product-dugtrio-base1-19-non-holo-rare-fighting-misty-1",
-    title: "Dugtrio — Base Set #19 Non-Holo Rare (Near Mint)",
+    title: "Dugtrio â€” Base Set #19 Non-Holo Rare (Near Mint)",
     description:
       "Dugtrio Non-Holo Rare from Base Set. Subsonic move artwork is iconic.",
-    slug: "dugtrio-base1-19-non-holo-rare",
+    slug: "product-dugtrio-base1-19-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Fighting",
     brand: "Wizards of the Coast",
@@ -506,13 +506,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #24 — Haunter
+  // #24 â€” Haunter
   {
     id: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
-    title: "Haunter — Base Set #24 Non-Holo Rare (Near Mint)",
+    title: "Haunter â€” Base Set #24 Non-Holo Rare (Near Mint)",
     description:
       "Haunter Non-Holo Rare. A beloved Psychic-type card with the classic Lick attack.",
-    slug: "haunter-base1-24-non-holo-rare",
+    slug: "product-haunter-base1-24-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Psychic",
     brand: "Wizards of the Coast",
@@ -547,17 +547,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // UNCOMMON SINGLES
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #35 — Clefairy
+  // #35 â€” Clefairy
   {
     id: "product-clefairy-base1-35-uncommon-colorless-misty-1",
-    title: "Clefairy — Base Set #35 Uncommon (Near Mint)",
+    title: "Clefairy â€” Base Set #35 Uncommon (Near Mint)",
     description:
-      "Clefairy Uncommon from Base Set. Uses Metronome — a nostalgic fan favourite.",
-    slug: "clefairy-base1-35-uncommon",
+      "Clefairy Uncommon from Base Set. Uses Metronome â€” a nostalgic fan favourite.",
+    slug: "product-clefairy-base1-35-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Colorless",
     brand: "Wizards of the Coast",
@@ -592,13 +592,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #40 — Growlithe
+  // #40 â€” Growlithe
   {
     id: "product-growlithe-base1-40-uncommon-fire-blaine-1",
-    title: "Growlithe — Base Set #40 Uncommon (Near Mint)",
+    title: "Growlithe â€” Base Set #40 Uncommon (Near Mint)",
     description:
       "Growlithe Uncommon from Base Set. A loyal Fire-type favourite.",
-    slug: "growlithe-base1-40-uncommon",
+    slug: "product-growlithe-base1-40-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -633,13 +633,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #52 — Pikachu
+  // #52 â€” Pikachu
   {
     id: "product-pikachu-base1-58-common-electric-surge-1",
-    title: "Pikachu — Base Set #58 Common (Near Mint)",
+    title: "Pikachu â€” Base Set #58 Common (Near Mint)",
     description:
-      "The Pokémon mascot himself. Base Set Pikachu, Common, Near Mint — yellow cheeks version.",
-    slug: "pikachu-base1-58-common",
+      "The PokÃ©mon mascot himself. Base Set Pikachu, Common, Near Mint â€” yellow cheeks version.",
+    slug: "product-pikachu-base1-58-common",
     category: "category-common-rarity",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -676,17 +676,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // TRAINER CARDS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #88 — Professor Oak
+  // #88 â€” Professor Oak
   {
     id: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
-    title: "Professor Oak — Base Set #88 Trainer (Near Mint)",
+    title: "Professor Oak â€” Base Set #88 Trainer (Near Mint)",
     description:
       "Draw 7 cards. Professor Oak is one of the most powerful Trainer cards ever printed. Near Mint copy.",
-    slug: "professor-oak-base1-88-trainer",
+    slug: "product-professor-oak-base1-88-trainer",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
     brand: "Wizards of the Coast",
@@ -722,13 +722,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #91 — Energy Retrieval
+  // #91 â€” Energy Retrieval
   {
     id: "product-energy-retrieval-base1-91-common-trainer-misty-1",
-    title: "Energy Retrieval — Base Set #91 Trainer (Near Mint)",
+    title: "Energy Retrieval â€” Base Set #91 Trainer (Near Mint)",
     description:
       "Return 2 Basic Energy from discard to hand. A staple in Water decks. Near Mint.",
-    slug: "energy-retrieval-base1-91-trainer",
+    slug: "product-energy-retrieval-base1-91-trainer",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
     brand: "Wizards of the Coast",
@@ -764,17 +764,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // ENERGY CARDS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #99 — Water Energy (x10 lot)
+  // #99 â€” Water Energy (x10 lot)
   {
     id: "product-water-energy-base1-99-common-energy-misty-lot",
-    title: "Water Energy — Base Set #99 x10 Lot (Near Mint)",
+    title: "Water Energy â€” Base Set #99 x10 Lot (Near Mint)",
     description:
-      "10× Water Energy from the original Base Set. Near Mint. Perfect for deck building.",
-    slug: "water-energy-base1-99-x10-lot",
+      "10Ã— Water Energy from the original Base Set. Near Mint. Perfect for deck building.",
+    slug: "product-water-energy-base1-99-x10-lot",
     category: "category-energy-type-card-type",
     subcategory: "Water",
     brand: "Wizards of the Coast",
@@ -811,13 +811,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #100 — Fire Energy (x10 lot)
+  // #100 â€” Fire Energy (x10 lot)
   {
     id: "product-fire-energy-base1-100-common-energy-blaine-lot",
-    title: "Fire Energy — Base Set #100 x10 Lot (Near Mint)",
+    title: "Fire Energy â€” Base Set #100 x10 Lot (Near Mint)",
     description:
-      "10× Fire Energy from Base Set. Perfect for Charizard and Arcanine decks.",
-    slug: "fire-energy-base1-100-x10-lot",
+      "10Ã— Fire Energy from Base Set. Perfect for Charizard and Arcanine decks.",
+    slug: "product-fire-energy-base1-100-x10-lot",
     category: "category-energy-type-card-type",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -854,13 +854,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // #101 — Lightning Energy (x10 lot)
+  // #101 â€” Lightning Energy (x10 lot)
   {
     id: "product-lightning-energy-base1-101-common-energy-surge-lot",
-    title: "Lightning Energy — Base Set #101 x10 Lot (Near Mint)",
+    title: "Lightning Energy â€” Base Set #101 x10 Lot (Near Mint)",
     description:
-      "10× Lightning (Electric) Energy from Base Set. Fuel for Pikachu, Raichu, and Zapdos.",
-    slug: "lightning-energy-base1-101-x10-lot",
+      "10Ã— Lightning (Electric) Energy from Base Set. Fuel for Pikachu, Raichu, and Zapdos.",
+    slug: "product-lightning-energy-base1-101-x10-lot",
     category: "category-energy-type-card-type",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -897,18 +897,18 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // SEALED PRODUCTS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   // Booster Pack
   {
     id: "product-base-set-booster-pack-sealed-blaine-1",
-    title: "Pokémon Base Set Booster Pack (Sealed, Random Art)",
+    title: "PokÃ©mon Base Set Booster Pack (Sealed, Random Art)",
     description:
-      "Sealed Pokémon TCG Base Set booster pack with 11 cards and one guaranteed rare. " +
+      "Sealed PokÃ©mon TCG Base Set booster pack with 11 cards and one guaranteed rare. " +
       "Perfect for vintage collectors searching for authentic Base Set pack openings and long-term sealed investments.",
-    slug: "pokemon-tcg-base-set-sealed-booster-pack-random-art",
+    slug: "product-pokemon-tcg-base-set-sealed-booster-pack-random-art",
     category: "category-sealed-products",
     subcategory: "Booster Pack",
     brand: "Wizards of the Coast",
@@ -944,14 +944,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // Theme Deck — Zap! (Raichu / Electric)
+  // Theme Deck â€” Zap! (Raichu / Electric)
   {
     id: "product-zap-theme-deck-sealed-surge-1",
-    title: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
+    title: "PokÃ©mon Base Set 'Zap!' Theme Deck (Sealed)",
     description:
-      "Factory-sealed Pokémon Base Set Zap! Theme Deck featuring Electric-type strategy cards led by Raichu. " +
+      "Factory-sealed PokÃ©mon Base Set Zap! Theme Deck featuring Electric-type strategy cards led by Raichu. " +
       "Ideal for collectors who want original sealed WOTC era deck products.",
-    slug: "pokemon-base-set-zap-theme-deck-sealed-raichu",
+    slug: "product-pokemon-base-set-zap-theme-deck-sealed-raichu",
     category: "category-sealed-products",
     subcategory: "Theme Deck",
     brand: "Wizards of the Coast",
@@ -986,16 +986,16 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // ACCESSORIES
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   {
     id: "product-pokemon-card-sleeves-standard-blaine-1",
-    title: "Pokémon-Art Card Sleeves (100-pack, Pikachu)",
+    title: "PokÃ©mon-Art Card Sleeves (100-pack, Pikachu)",
     description:
       "100 standard-size card sleeves featuring Pikachu artwork. Compatible with all Base Set singles.",
-    slug: "pokemon-pikachu-card-sleeves-100pack",
+    slug: "product-pokemon-pikachu-card-sleeves-100pack",
     category: "category-accessories",
     subcategory: "Card Sleeves",
     brand: "Ultra PRO",
@@ -1012,7 +1012,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Brand", value: "Ultra PRO" },
       { name: "Quantity", value: "100 sleeves" },
-      { name: "Size", value: "Standard (66 × 91 mm)" },
+      { name: "Size", value: "Standard (66 Ã— 91 mm)" },
       { name: "Art", value: "Pikachu" },
     ],
     features: ["Acid-free", "Archival quality", "Fits Base Set cards"],
@@ -1031,10 +1031,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-pokemon-9-pocket-binder-misty-1",
-    title: "Pokémon 9-Pocket Binder (360 cards, Charizard Cover)",
+    title: "PokÃ©mon 9-Pocket Binder (360 cards, Charizard Cover)",
     description:
-      "9-pocket binder for storing and displaying up to 360 Pokémon cards. Charizard cover art.",
-    slug: "pokemon-charizard-9-pocket-binder",
+      "9-pocket binder for storing and displaying up to 360 PokÃ©mon cards. Charizard cover art.",
+    slug: "product-pokemon-charizard-9-pocket-binder",
     category: "category-accessories",
     subcategory: "Binder",
     brand: "Ultra PRO",
@@ -1068,14 +1068,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // AUCTION LISTINGS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   // Auction: 1st Edition Charizard
   {
     id: "auction-charizard-1st-ed-base1-4-fire-blaine-auction-1",
-    title: "1st Edition Charizard — Base Set #4 Holo (AUCTION, PSA 7)",
+    title: "1st Edition Charizard â€” Base Set #4 Holo (AUCTION, PSA 7)",
     description:
       "Ultra-rare 1st Edition Charizard from Base Set, PSA-graded 7 (Near Mint). This is your chance to own the holy grail.",
     slug: "auction-charizard-1st-ed-psa7",
@@ -1142,7 +1142,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Auction: Mewtwo PSA 9
   {
     id: "auction-mewtwo-base1-10-psychic-surge-auction-1",
-    title: "Mewtwo — Base Set #10 Holo (AUCTION, PSA 9)",
+    title: "Mewtwo â€” Base Set #10 Holo (AUCTION, PSA 9)",
     description:
       "PSA-graded 9 (Mint) Mewtwo Holo from Base Set. A landmark Psychic-type collector piece.",
     slug: "auction-mewtwo-psa9",
@@ -1193,17 +1193,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MORE HOLO RARES
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #14 — Raichu
+  // #14 â€” Raichu
   {
     id: "product-raichu-base1-14-holo-rare-electric-surge-1",
-    title: "Raichu — Base Set #14 Holo Rare (Near Mint)",
+    title: "Raichu â€” Base Set #14 Holo Rare (Near Mint)",
     description:
       "Raichu Holo Rare from Base Set. Powerful Electric-type evolution of Pikachu with 80 HP and the Thunder Punch attack.",
-    slug: "raichu-base1-14-holo-rare",
+    slug: "product-raichu-base1-14-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -1238,13 +1238,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #12 — Ninetales
+  // #12 â€” Ninetales
   {
     id: "product-ninetales-base1-12-holo-rare-fire-blaine-1",
-    title: "Ninetales — Base Set #12 Holo Rare (Near Mint)",
+    title: "Ninetales â€” Base Set #12 Holo Rare (Near Mint)",
     description:
       "Ninetales Holo Rare, one of the most visually stunning cards in Base Set. Beautiful fox artwork on a shimmering holo background.",
-    slug: "ninetales-base1-12-holo-rare",
+    slug: "product-ninetales-base1-12-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -1279,13 +1279,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #7 — Hitmonchan
+  // #7 â€” Hitmonchan
   {
     id: "product-hitmonchan-base1-7-holo-rare-fighting-misty-1",
-    title: "Hitmonchan — Base Set #7 Holo Rare (Near Mint)",
+    title: "Hitmonchan â€” Base Set #7 Holo Rare (Near Mint)",
     description:
-      "Hitmonchan Holo Rare — a staple Fighting-type card widely used in competitive Base Set format decks.",
-    slug: "hitmonchan-base1-7-holo-rare",
+      "Hitmonchan Holo Rare â€” a staple Fighting-type card widely used in competitive Base Set format decks.",
+    slug: "product-hitmonchan-base1-7-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Fighting",
     brand: "Wizards of the Coast",
@@ -1320,13 +1320,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // #1 — Alakazam
+  // #1 â€” Alakazam
   {
     id: "product-alakazam-base1-1-holo-rare-psychic-surge-1",
-    title: "Alakazam — Base Set #1 Holo Rare (Near Mint)",
+    title: "Alakazam â€” Base Set #1 Holo Rare (Near Mint)",
     description:
-      "Alakazam Holo Rare — card #1 in Base Set. Features the iconic Damage Swap Pokémon Power.",
-    slug: "alakazam-base1-1-holo-rare",
+      "Alakazam Holo Rare â€” card #1 in Base Set. Features the iconic Damage Swap PokÃ©mon Power.",
+    slug: "product-alakazam-base1-1-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Psychic",
     brand: "Wizards of the Coast",
@@ -1347,7 +1347,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Condition", value: "Near Mint" },
       { name: "Language", value: "English" },
     ],
-    features: ["Damage Swap Pokémon Power", "Card #1 in set", "Top-loader shipped"],
+    features: ["Damage Swap PokÃ©mon Power", "Card #1 in set", "Top-loader shipped"],
     shippingInfo: "Tracked shipping.",
     returnPolicy: "7-day returns.",
     condition: "new",
@@ -1361,17 +1361,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MORE NON-HOLO RARES
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #23 — Arcanine
+  // #23 â€” Arcanine
   {
     id: "product-arcanine-base1-23-non-holo-rare-fire-blaine-1",
-    title: "Arcanine — Base Set #23 Non-Holo Rare (Near Mint)",
+    title: "Arcanine â€” Base Set #23 Non-Holo Rare (Near Mint)",
     description:
-      "Arcanine Non-Holo Rare from Base Set — the Legendary Pokémon. Flame Wheel 50 damage, near mint condition.",
-    slug: "arcanine-base1-23-non-holo-rare",
+      "Arcanine Non-Holo Rare from Base Set â€” the Legendary PokÃ©mon. Flame Wheel 50 damage, near mint condition.",
+    slug: "product-arcanine-base1-23-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -1406,13 +1406,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // #20 — Electabuzz
+  // #20 â€” Electabuzz
   {
     id: "product-electabuzz-base1-20-non-holo-rare-electric-surge-1",
-    title: "Electabuzz — Base Set #20 Non-Holo Rare (Near Mint)",
+    title: "Electabuzz â€” Base Set #20 Non-Holo Rare (Near Mint)",
     description:
-      "Electabuzz Non-Holo Rare — another competitive Base Set staple with Thunderpunch.",
-    slug: "electabuzz-base1-20-non-holo-rare",
+      "Electabuzz Non-Holo Rare â€” another competitive Base Set staple with Thunderpunch.",
+    slug: "product-electabuzz-base1-20-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Electric",
     brand: "Wizards of the Coast",
@@ -1447,13 +1447,13 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #30 — Magmar
+  // #30 â€” Magmar
   {
     id: "product-magmar-base1-30-non-holo-rare-fire-blaine-1",
-    title: "Magmar — Base Set #30 Non-Holo Rare (Lightly Played)",
+    title: "Magmar â€” Base Set #30 Non-Holo Rare (Lightly Played)",
     description:
       "Magmar Non-Holo Rare, Lightly Played. Slight edge whitening but face clean.",
-    slug: "magmar-base1-30-non-holo-rare-lp",
+    slug: "product-magmar-base1-30-non-holo-rare-lp",
     category: "category-non-holo-rare-rarity",
     subcategory: "Fire",
     brand: "Wizards of the Coast",
@@ -1488,16 +1488,16 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(9),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MORE UNCOMMONS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #37 — Dewgong
+  // #37 â€” Dewgong
   {
     id: "product-dewgong-base1-37-uncommon-water-misty-1",
-    title: "Dewgong — Base Set #37 Uncommon (Near Mint)",
-    description: "Dewgong Uncommon from Base Set — an underrated Water-type with Aurora Beam.",
-    slug: "dewgong-base1-37-uncommon",
+    title: "Dewgong â€” Base Set #37 Uncommon (Near Mint)",
+    description: "Dewgong Uncommon from Base Set â€” an underrated Water-type with Aurora Beam.",
+    slug: "product-dewgong-base1-37-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Water",
     brand: "Wizards of the Coast",
@@ -1532,12 +1532,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #42 — Kadabra
+  // #42 â€” Kadabra
   {
     id: "product-kadabra-base1-32-uncommon-psychic-surge-1",
-    title: "Kadabra — Base Set #32 Uncommon (Near Mint)",
+    title: "Kadabra â€” Base Set #32 Uncommon (Near Mint)",
     description: "Kadabra Uncommon from Base Set. A notorious card rarely reprinted. Near Mint copy.",
-    slug: "kadabra-base1-32-uncommon",
+    slug: "product-kadabra-base1-32-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Psychic",
     brand: "Wizards of the Coast",
@@ -1572,16 +1572,16 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // MORE TRAINERS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
-  // #93 — Potion
+  // #93 â€” Potion
   {
     id: "product-potion-base1-93-common-trainer-misty-1",
-    title: "Potion — Base Set #93 Trainer Common (Near Mint)",
-    description: "Remove 2 damage counters from one of your Pokémon. Potion is the most classic Trainer card ever printed.",
-    slug: "potion-base1-93-trainer-common",
+    title: "Potion â€” Base Set #93 Trainer Common (Near Mint)",
+    description: "Remove 2 damage counters from one of your PokÃ©mon. Potion is the most classic Trainer card ever printed.",
+    slug: "product-potion-base1-93-trainer-common",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
     brand: "Wizards of the Coast",
@@ -1617,12 +1617,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #89 — Bill
+  // #89 â€” Bill
   {
     id: "product-bill-base1-89-common-trainer-surge-1",
-    title: "Bill — Base Set #89 Trainer Common (Near Mint)",
-    description: "Draw 2 cards. Bill is a beloved draw supporter from Base Set — simple, effective, nostalgic.",
-    slug: "bill-base1-89-trainer-common",
+    title: "Bill â€” Base Set #89 Trainer Common (Near Mint)",
+    description: "Draw 2 cards. Bill is a beloved draw supporter from Base Set â€” simple, effective, nostalgic.",
+    slug: "product-bill-base1-89-trainer-common",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
     brand: "Wizards of the Coast",
@@ -1658,17 +1658,17 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // GRADED SLAB (non-auction)
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   // Blastoise PSA 8
   {
     id: "product-blastoise-psa8-base1-2-water-misty-graded",
-    title: "Blastoise — Base Set #2 Holo Rare (PSA 8 NM-MT)",
+    title: "Blastoise â€” Base Set #2 Holo Rare (PSA 8 NM-MT)",
     description:
-      "PSA graded 8 (NM-MT) Blastoise Holo Rare from Base Set. A certified investment-grade slab for serious collectors. No auction — buy it now.",
-    slug: "blastoise-base1-2-psa8-holo-graded",
+      "PSA graded 8 (NM-MT) Blastoise Holo Rare from Base Set. A certified investment-grade slab for serious collectors. No auction â€” buy it now.",
+    slug: "product-blastoise-base1-2-psa8-holo-graded",
     category: "category-holo-rare-rarity",
     subcategory: "Water",
     brand: "Wizards of the Coast",
@@ -1708,10 +1708,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Booster Box (sealed)
   {
     id: "product-base-set-booster-box-sealed-blaine-2",
-    title: "Pokémon Base Set Booster Box (36 Packs, Sealed)",
+    title: "PokÃ©mon Base Set Booster Box (36 Packs, Sealed)",
     description:
       "Factory-sealed Base Set booster box containing 36 packs (11 cards each). The ultimate sealed vintage investment. Ships double-boxed.",
-    slug: "pokemon-tcg-base-set-sealed-booster-box-36-packs",
+    slug: "product-pokemon-tcg-base-set-sealed-booster-box-36-packs",
     category: "category-sealed-products",
     subcategory: "Booster Box",
     brand: "Wizards of the Coast",
@@ -1748,20 +1748,20 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
   // PRE-ORDERS
-  // ════════════════════════════════════════════════════════════
+  // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
   {
     id: "preorder-pokemon-tcg-151-booster-box-misty-1",
-    title: "Pokémon TCG: Scarlet & Violet — 151 Booster Box (Pre-Order)",
+    title: "PokÃ©mon TCG: Scarlet & Violet â€” 151 Booster Box (Pre-Order)",
     description:
-      "Pre-order the upcoming Scarlet & Violet: 151 booster box reprint run. 36 packs featuring original 151 Pokémon with modern card quality. " +
+      "Pre-order the upcoming Scarlet & Violet: 151 booster box reprint run. 36 packs featuring original 151 PokÃ©mon with modern card quality. " +
       "Estimated dispatch within 7 days of street date.",
     slug: "preorder-pokemon-sv-151-booster-box",
     category: "category-sealed-products",
     subcategory: "Booster Box",
-    brand: "The Pokémon Company",
+    brand: "The PokÃ©mon Company",
     price: 14999,
     currency: _CURRENCY,
     stockQuantity: 50,
@@ -1779,7 +1779,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Condition", value: "Pre-Order / Sealed" },
       { name: "Language", value: "English" },
     ],
-    features: ["All 151 original Pokémon represented", "Modern card stock", "ETBs also available"],
+    features: ["All 151 original PokÃ©mon represented", "Modern card stock", "ETBs also available"],
     shippingInfo: "Ships within 7 days of street date via tracked courier.",
     returnPolicy: "No returns on pre-ordered sealed products once dispatched.",
     condition: "new",
@@ -1801,14 +1801,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-pokemon-temporal-forces-elite-trainer-surge-1",
-    title: "Pokémon TCG: Temporal Forces Elite Trainer Box (Pre-Order)",
+    title: "PokÃ©mon TCG: Temporal Forces Elite Trainer Box (Pre-Order)",
     description:
       "Pre-order the Temporal Forces Elite Trainer Box featuring Walking Wake ex and Iron Leaves ex. " +
       "Includes 9 booster packs, promo card, sleeves, dice, and accessories.",
     slug: "preorder-pokemon-temporal-forces-etb",
     category: "category-sealed-products",
     subcategory: "Elite Trainer Box",
-    brand: "The Pokémon Company",
+    brand: "The PokÃ©mon Company",
     price: 5999,
     currency: _CURRENCY,
     stockQuantity: 30,
@@ -1846,14 +1846,14 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-pokemon-surging-sparks-booster-bundle-blaine-1",
-    title: "Pokémon TCG: Surging Sparks Booster Bundle (Pre-Order)",
+    title: "PokÃ©mon TCG: Surging Sparks Booster Bundle (Pre-Order)",
     description:
-      "Pre-order the Surging Sparks Booster Bundle (6 packs) — featuring Pikachu ex SIR and Raichu VMAX. " +
+      "Pre-order the Surging Sparks Booster Bundle (6 packs) â€” featuring Pikachu ex SIR and Raichu VMAX. " +
       "Great entry-level sealed product for budget collectors.",
     slug: "preorder-pokemon-surging-sparks-booster-bundle",
     category: "category-sealed-products",
     subcategory: "Booster Bundle",
-    brand: "The Pokémon Company",
+    brand: "The PokÃ©mon Company",
     price: 2499,
     currency: _CURRENCY,
     stockQuantity: 60,

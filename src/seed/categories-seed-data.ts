@@ -15,7 +15,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-electronics",
     name: "Scale Figures",
-    slug: "electronics",
+    slug: "category-electronics",
     description: "Premium Beyblade products and collectibles",
     rootId: "category-electronics",
     parentIds: [],
@@ -76,7 +76,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-mobiles-accessories-electronics",
     name: "Nendoroids & Chibis",
-    slug: "mobiles-accessories",
+    slug: "category-mobiles-accessories-electronics",
     description: "Nendoroids, chibi figurines, and small-scale collectibles",
     rootId: "category-electronics",
     parentIds: ["category-electronics"],
@@ -131,7 +131,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-smartphones-mobiles-accessories",
     name: "Beyblade Figures",
-    slug: "smartphones",
+    slug: "category-smartphones-mobiles-accessories",
     description: "Beyblade Z and Beyblade Super scale figures",
     rootId: "category-electronics",
     parentIds: [
@@ -198,7 +198,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-mobile-accessories-mobiles-accessories",
     name: "Chibi Figurines",
-    slug: "mobile-accessories",
+    slug: "category-mobile-accessories-mobiles-accessories",
     description: "Mini figurines, gashapon, and chibi collectibles",
     rootId: "category-electronics",
     parentIds: [
@@ -260,7 +260,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-laptops-computers-electronics",
     name: "Premium Statues",
-    slug: "laptops-computers",
+    slug: "category-laptops-computers-electronics",
     description:
       "Large-scale Beyblade, Beyblade X, and premium beyblade statues",
     rootId: "category-electronics",
@@ -318,7 +318,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-audio-electronics",
     name: "Limited Edition Figures",
-    slug: "audio",
+    slug: "category-audio-electronics",
     description: "Limited and sold-out exclusive beyblade figures",
     rootId: "category-electronics",
     parentIds: ["category-electronics"],
@@ -378,7 +378,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-cameras-photography-electronics",
     name: "Signed Art & Collectibles",
-    slug: "cameras-photography",
+    slug: "category-cameras-photography-electronics",
     description:
       "Signed production art, original cels, and rare Beyblade collectibles",
     rootId: "category-electronics",
@@ -438,7 +438,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-fashion",
     name: "Cosplay & Apparel",
-    slug: "fashion",
+    slug: "category-fashion",
     description: "Beyblade cosplay, apparel, and accessories",
     rootId: "category-fashion",
     parentIds: [],
@@ -495,7 +495,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-mens-fashion-fashion",
     name: "Men's Cosplay",
-    slug: "mens-fashion",
+    slug: "category-mens-fashion-fashion",
     description: "Cosplay sets, jackets, hoodies, and apparel for men",
     rootId: "category-fashion",
     parentIds: ["category-fashion"],
@@ -553,7 +553,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-womens-fashion-fashion",
     name: "Women's Cosplay",
-    slug: "womens-fashion",
+    slug: "category-womens-fashion-fashion",
     description: "Cosplay dresses, kimono sets, and beyblade apparel for women",
     rootId: "category-fashion",
     parentIds: ["category-fashion"],
@@ -612,7 +612,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-home-kitchen",
     name: "Collectibles & Display",
-    slug: "home-kitchen",
+    slug: "category-home-kitchen",
     description:
       "Nendoroids, garage kits, art replicas, and display collectibles",
     rootId: "category-home-kitchen",
@@ -674,7 +674,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-sports-outdoors",
     name: "Model Kits & Gunpla",
-    slug: "sports-outdoors",
+    slug: "category-sports-outdoors",
     description: "Gundam model kits, Gunpla, ship models, and poseable figures",
     rootId: "category-sports-outdoors",
     parentIds: [],
@@ -735,7 +735,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-beauty-health",
     name: "Beauty & Health",
-    slug: "beauty-health",
+    slug: "category-beauty-health",
     description: "Skincare, cosmetics, and wellness products",
     rootId: "category-beauty-health",
     parentIds: [],
@@ -783,7 +783,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-books-stationery",
     name: "Books & Stationery",
-    slug: "books-stationery",
+    slug: "category-books-stationery",
     description: "Books, notebooks, and office supplies",
     rootId: "category-books-stationery",
     parentIds: [],
@@ -831,7 +831,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-automotive",
     name: "Automotive",
-    slug: "automotive",
+    slug: "category-automotive",
     description: "Car accessories, tools, and parts",
     rootId: "category-automotive",
     parentIds: [],
@@ -879,7 +879,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-jewelry-accessories",
     name: "Jewelry & Accessories",
-    slug: "jewelry-accessories",
+    slug: "category-jewelry-accessories",
     description: "Fine jewelry, watches, and fashion accessories",
     rootId: "category-jewelry-accessories",
     parentIds: [],
@@ -927,7 +927,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-toys-baby",
     name: "Toys & Baby",
-    slug: "toys-baby",
+    slug: "category-toys-baby",
     description: "Toys, games, and baby essentials",
     rootId: "category-toys-baby",
     parentIds: [],
@@ -975,7 +975,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-food-groceries",
     name: "Food & Groceries",
-    slug: "food-groceries",
+    slug: "category-food-groceries",
     description: "Fresh produce, packaged foods, and beverages",
     rootId: "category-food-groceries",
     parentIds: [],
@@ -1023,7 +1023,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-apple",
     name: "Apple",
-    slug: "apple",
+    slug: "category-brand-apple",
     type: "brand" as const,
     description:
       "Official Apple products including iPhone, Mac, iPad, and accessories",
@@ -1081,7 +1081,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-samsung",
     name: "Samsung",
-    slug: "samsung",
+    slug: "category-brand-samsung",
     type: "brand" as const,
     description:
       "Samsung electronics including smartphones, TVs, and home appliances",
@@ -1134,7 +1134,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-sony",
     name: "Sony",
-    slug: "sony",
+    slug: "category-brand-sony",
     type: "brand" as const,
     description:
       "Sony electronics including headphones, cameras, and gaming consoles",
@@ -1190,7 +1190,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-nike",
     name: "Nike",
-    slug: "nike",
+    slug: "category-brand-nike",
     type: "brand" as const,
     description: "Nike sportswear, footwear, and athletic equipment",
     rootId: "category-brand-nike",
@@ -1241,7 +1241,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-adidas",
     name: "Adidas",
-    slug: "adidas",
+    slug: "category-brand-adidas",
     description: "Adidas sportswear, footwear, and accessories",
     rootId: "category-brand-adidas",
     parentIds: [],
@@ -1295,7 +1295,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-takara-tomy",
     name: "Takara Tomy",
-    slug: "takara-tomy",
+    slug: "category-brand-takara-tomy",
     type: "brand" as const,
     description: "Official Takara Tomy Beyblade, Tomica, and Zoids products",
     rootId: "category-brand-takara-tomy",
@@ -1346,7 +1346,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-good-smile-company",
     name: "Good Smile Company",
-    slug: "good-smile-company",
+    slug: "category-brand-good-smile-company",
     type: "brand" as const,
     description: "Good Smile Company Nendoroids, figma, and scale figures",
     rootId: "category-brand-good-smile-company",
@@ -1397,7 +1397,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-bandai-namco",
     name: "Bandai Namco",
-    slug: "bandai-namco",
+    slug: "category-brand-bandai-namco",
     type: "brand" as const,
     description: "Bandai Namco Gunpla, Dragon Ball, Pokemon, and Digimon",
     rootId: "category-brand-bandai-namco",
@@ -1448,7 +1448,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-kotobukiya",
     name: "Kotobukiya",
-    slug: "kotobukiya",
+    slug: "category-brand-kotobukiya",
     type: "brand" as const,
     description: "Kotobukiya ARTFX, Bishoujo, and Frame Arms scale figures",
     rootId: "category-brand-kotobukiya",
@@ -1499,7 +1499,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-alter",
     name: "Alter",
-    slug: "alter",
+    slug: "category-brand-alter",
     type: "brand" as const,
     description: "Alter Co. premium 1/7 and 1/8 scale anime figures",
     rootId: "category-brand-alter",
@@ -1550,7 +1550,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-max-factory",
     name: "Max Factory",
-    slug: "max-factory",
+    slug: "category-brand-max-factory",
     type: "brand" as const,
     description: "Max Factory figma poseable figures and scale collectibles",
     rootId: "category-brand-max-factory",
@@ -1600,7 +1600,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-funko",
     name: "Funko",
-    slug: "funko",
+    slug: "category-brand-funko",
     type: "brand" as const,
     description: "Funko Pop! vinyl figures and collectibles",
     rootId: "category-brand-funko",
@@ -1650,7 +1650,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-hasbro",
     name: "Hasbro",
-    slug: "hasbro",
+    slug: "category-brand-hasbro",
     type: "brand" as const,
     description: "Hasbro Transformers, Marvel Legends, and action figures",
     rootId: "category-brand-hasbro",
@@ -1700,7 +1700,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-pokemon-company",
     name: "The Pokemon Company",
-    slug: "pokemon-company",
+    slug: "category-brand-pokemon-company",
     type: "brand" as const,
     description: "Official Pokemon TCG, figures, and collectibles",
     rootId: "category-brand-pokemon-company",
@@ -1751,7 +1751,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-aniplex",
     name: "Aniplex",
-    slug: "aniplex",
+    slug: "category-brand-aniplex",
     type: "brand" as const,
     description: "Aniplex limited-edition figures from Fate, Demon Slayer, and SAO",
     rootId: "category-brand-aniplex",
@@ -1801,7 +1801,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-mattel",
     name: "Mattel",
-    slug: "mattel",
+    slug: "category-brand-mattel",
     type: "brand" as const,
     description: "Mattel Hot Wheels, Barbie, and Masters of the Universe",
     rootId: "category-brand-mattel",
@@ -1851,7 +1851,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   {
     id: "category-brand-kaiyodo",
     name: "Kaiyodo",
-    slug: "kaiyodo",
+    slug: "category-brand-kaiyodo",
     type: "brand" as const,
     description: "Kaiyodo Revoltech and Capsule Q poseable figures",
     rootId: "category-brand-kaiyodo",
