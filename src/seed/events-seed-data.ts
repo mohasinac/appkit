@@ -1,6 +1,8 @@
-﻿/**
- * Events Seed Data — Pokemon TCG Themed
- * Sample events: sale, offer, poll, survey, feedback for Pokemon card collectors
+/**
+ * Events Seed Data — LetiTrip Collectibles Platform
+ * 6 events: 2 upcoming (draft), 2 active, 2 ended.
+ * Types: sale | offer | poll | survey | feedback — using exact schema shapes.
+ * id === slug, event- prefix throughout.
  */
 
 import type {
@@ -9,547 +11,217 @@ import type {
 } from "../features/events/schemas";
 import { EVENT_FIELDS, EVENT_ENTRY_FIELDS } from "../features/events/schemas";
 
-// --- Dynamic date helpers ---------------------------------------------------
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
-const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 3_600_000);
-
-// -- Events --------------------------------------------------------------------
 
 export const eventsSeedData: EventDocument[] = [
-  // 1. Ended Sale Event
+  // ── 1. UPCOMING — Pokémon Card Tournament (Poll, opens in 7 days) ─────────
   {
-    id: "event-pokemon-summer-holo-sale-2026",
-    slug: "event-pokemon-summer-holo-sale-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Pokemon Summer Holo Sale 2026 — 15% Off All Holo Rares",
-    description:
-      "<p>Celebrate the summer season with a <strong>flat 15% discount</strong> across all holo rare singles. Stock up on Base Set holos, fossil holos, and jungle holos before prices climb again.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
-    startsAt: daysAgo(45),
-    endsAt: daysAgo(38),
-    coverImageUrl: "https://images.pokemontcg.io/base1/4_hires.png",
-    saleConfig: {
-      discountPercent: 15,
-      bannerText: "Pokemon Summer Holo Sale — 15% Off All Holo Rares!",
-      affectedCategories: ["category-holo-rare-rarity"],
-    },
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(49),
-    updatedAt: daysAgo(37),
-  },
-
-  // 2. Active Poll Event — Favourite Gen 1 Starter
-  {
-    id: "event-gen1-starter-poll-2026",
-    slug: "event-gen1-starter-poll-2026",
+    id: "event-pokemon-card-tournament-june-2026",
+    slug: "event-pokemon-card-tournament-june-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
-    title: "Vote: Which Gen 1 Starter Has the Best Base Set Card?",
+    title: "Pokémon TCG India Open — June 2026 (Vote for Format!)",
     description:
-      "<p>The eternal debate — <strong>Charizard, Blastoise, or Venusaur</strong>? Vote for which of the original three starters has the best card art in the Base Set. Results go live after the poll closes.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(7),
-    endsAt: daysAhead(7),
-    coverImageUrl: "https://images.pokemontcg.io/base1/15_hires.png",
+      "<p>India's biggest Pokémon TCG open tournament is coming to Mumbai in June 2026. <strong>Vote for your preferred battle format</strong> — Standard, Expanded, or Limited Sealed — and help us shape the event schedule. Top voter-selected format gets the biggest prize pool!</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
+    startsAt: daysAhead(7),
+    endsAt: daysAhead(21),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1559336197-ded8aaa244bc?w=1200&h=630&fit=crop",
+    tags: ["pokemon", "tournament", "tcg", "mumbai", "2026"],
     pollConfig: {
-      options: [
-        { id: "charizard", label: "Charizard (#4)" },
-        { id: "blastoise", label: "Blastoise (#2)" },
-        { id: "venusaur", label: "Venusaur (#15)" },
-      ],
       allowMultiSelect: false,
       allowComment: true,
-      resultsVisibility: "after_end",
-      requireLogin: false,
-    },
-    tags: ["poll", "starter-pokemon", "base-set", "community"],
-    stats: {
-      totalEntries: 312,
-      approvedEntries: 312,
-      flaggedEntries: 2,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(10),
-    updatedAt: daysAgo(1),
-  },
-
-  // 3. Active Feedback Event — Best Pull Story (giveaway-style)
-  {
-    id: "event-1st-edition-booster-giveaway-2026",
-    slug: "event-1st-edition-booster-giveaway-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
-    title: "Share Your Best Pull Story — Win a Sealed 1st Edition Booster Pack!",
-    description:
-      "<p>We're giving away a <strong>sealed 1st Edition Base Set Booster Pack</strong> — estimated value â‚¹95,000+. Share your best pull story and tag a friend who loves Pokemon TCG.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(3),
-    endsAt: daysAhead(11),
-    coverImageUrl: "https://images.pokemontcg.io/base1/4_hires.png",
-    feedbackConfig: {
-      formFields: [
-        {
-          id: "story",
-          type: "textarea",
-          label: "Share your best Pokemon card pull story",
-          required: true,
-          order: 1,
-        },
-        {
-          id: "tagged_friend",
-          type: "text",
-          label: "Tag a friend (username or social handle)",
-          required: false,
-          order: 2,
-        },
-      ],
-      anonymous: false,
-    },
-    tags: ["giveaway", "1st-edition", "base-set", "booster-pack"],
-    stats: {
-      totalEntries: 847,
-      approvedEntries: 839,
-      flaggedEntries: 8,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(5),
-    updatedAt: hoursAgo(6),
-  },
-
-  // 4. Upcoming Poll Event — Best PSA Submission
-  {
-    id: "event-best-psa-submission-contest-2026",
-    slug: "event-best-psa-submission-contest-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.POLL,
-    title: "Best PSA Submission — Community Vote for Top Grade!",
-    description:
-      "<p>The community votes for the most impressive PSA-graded Pokemon card. Winner receives store credit and a featured listing slot. Base Set cards only.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAhead(3),
-    endsAt: daysAhead(17),
-    coverImageUrl: "https://images.pokemontcg.io/base1/10_hires.png",
-    pollConfig: {
       options: [
-        { id: "charizard-psa10", label: "Charizard PSA 10" },
-        { id: "mewtwo-psa9", label: "Mewtwo PSA 9" },
-        { id: "blastoise-psa10", label: "Blastoise PSA 10" },
+        { id: "opt-standard", label: "Standard Format (current meta)" },
+        { id: "opt-expanded", label: "Expanded Format (wider card pool)" },
+        { id: "opt-sealed", label: "Limited Sealed (booster draft)" },
       ],
-      allowMultiSelect: false,
-      allowComment: true,
       resultsVisibility: "after_end",
       requireLogin: true,
     },
-    tags: ["contest", "psa", "grading", "base-set", "community"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(2),
-    updatedAt: daysAgo(1),
-  },
-
-  // 5. Active Survey — Buyer Experience
-  {
-    id: "event-buyer-experience-survey-2026",
-    slug: "event-buyer-experience-survey-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
-    title: "Pokemon TCG Buyer Experience Survey",
-    description:
-      "<p>Help us improve the LetItRip Pokemon TCG buying experience. This short survey takes 2 minutes and helps us understand what collectors want most from our platform.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(14),
-    endsAt: daysAhead(14),
-    coverImageUrl: "https://images.pokemontcg.io/base1/58_hires.png",
-    surveyConfig: {
-      requireLogin: true,
-      maxEntriesPerUser: 1,
-      hasLeaderboard: false,
-      hasPointSystem: false,
-      entryReviewRequired: false,
-      formFields: [
-        {
-          id: "satisfaction",
-          type: "rating",
-          label: "How satisfied are you with our Pokemon card listings?",
-          required: true,
-          order: 1,
-        },
-        {
-          id: "most_wanted",
-          type: "text",
-          label: "Which Pokemon card are you currently hunting?",
-          required: false,
-          order: 2,
-        },
-        {
-          id: "improvements",
-          type: "textarea",
-          label: "What would make your experience better?",
-          required: false,
-          order: 3,
-        },
-      ],
-    },
-    tags: ["survey", "feedback", "buyer-experience"],
-    stats: {
-      totalEntries: 156,
-      approvedEntries: 156,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(16),
-    updatedAt: daysAgo(2),
-  },
-
-  // 6. Ended Offer Event
-  {
-    id: "event-new-trainer-welcome-offer-2026",
-    slug: "event-new-trainer-welcome-offer-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "New Trainer Welcome Offer — 10% Off Your First Order",
-    description:
-      "<p>New to LetItRip? Welcome, Trainer! Use code <strong>NEWTRAINER10</strong> for 10% off your first Pokemon card purchase. Valid on all singles, sealed product, and accessories.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
-    startsAt: daysAgo(60),
-    endsAt: daysAgo(30),
-    coverImageUrl: "https://images.pokemontcg.io/base1/58_hires.png",
-    offerConfig: {
-      couponId: "coupon-newtrainer10",
-      displayCode: "NEWTRAINER10",
-      bannerText: "New Trainer? Get 10% off your first order with NEWTRAINER10",
-    },
-    tags: ["offer", "welcome", "new-trainer", "discount"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(65),
-    updatedAt: daysAgo(29),
-  },
-
-  // 7. Active Sale — Hot Wheels Car Culture Flash Sale
-  {
-    id: "event-hot-wheels-car-culture-flash-sale-2026",
-    slug: "event-hot-wheels-car-culture-flash-sale-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Hot Wheels Car Culture Flash Sale — 20% Off 5-Car Packs",
-    description:
-      "<p>Limited-time flash sale — <strong>20% off all Hot Wheels Car Culture 5-car assortments</strong> at Speed King Diecast. Japan Historics, Germany or Bust, and more. Ends Sunday!</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(2),
-    endsAt: daysAhead(5),
-    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_620d08fa-a8ad-49c2-acca-e8807910d25c?wid=800&hei=800&fmt=pjpeg",
-    saleConfig: {
-      discountPercent: 20,
-      bannerText: "Hot Wheels Car Culture Flash Sale — 20% Off This Weekend!",
-      affectedCategories: ["category-hw-premium"],
-    },
-    tags: ["hot-wheels", "car-culture", "flash-sale", "discount", "speed-king"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
     createdAt: daysAgo(3),
-    updatedAt: daysAgo(2),
-  },
-
-  // 8. Active Poll — Best Beyblade Burst Series
-  {
-    id: "event-best-beyblade-burst-series-poll-2026",
-    slug: "event-best-beyblade-burst-series-poll-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.POLL,
-    title: "Vote: Which Is the Best Beyblade Burst Series?",
-    description:
-      "<p>From Classic to MCC — which series introduced your favourite mechanics and best tops? Cast your vote and join the discussion. Results revealed when the poll closes.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(5),
-    endsAt: daysAhead(9),
-    coverImageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Beyblade.jpg",
-    pollConfig: {
-      options: [
-        { id: "classic", label: "Classic / Original Burst" },
-        { id: "turbo", label: "Burst Turbo / Cho-Z" },
-        { id: "gt", label: "Burst GT / Gachi" },
-        { id: "superking", label: "Burst Superking / Sparking" },
-        { id: "quaddrive", label: "QuadDrive" },
-        { id: "mcc", label: "DB / MCC" },
-      ],
-      allowMultiSelect: false,
-      allowComment: true,
-      resultsVisibility: "after_end",
-    },
-    tags: ["beyblade", "poll", "series", "community", "burst"],
-    stats: {
-      totalEntries: 214,
-      approvedEntries: 214,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(6),
     updatedAt: daysAgo(1),
   },
 
-  // 9. Active Feedback — Transformers Figure Wishlist Survey
+  // ── 2. UPCOMING — Collectors Convention Survey (starts in 14 days) ────────
   {
-    id: "event-transformers-figure-wishlist-survey-2026",
-    slug: "event-transformers-figure-wishlist-survey-2026",
+    id: "event-collectors-convention-2026-survey",
+    slug: "event-collectors-convention-2026-survey",
     type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
-    title: "Tell Us: Which Transformers Figures Do You Want Listed?",
+    title: "LetiTrip Collectors Convention 2026 — Interest Survey",
     description:
-      "<p>Help us stock what you actually want. Share your Transformers wishlist — Studio Series, Legacy, G1 vintage, or Masterpiece? We'll use these results to prioritise our Speed King Diecast stock requests.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(10),
-    endsAt: daysAhead(20),
-    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_effc13c6-bb7c-4f90-9d93-952fd3ff52c0?wid=800&hei=800&fmt=pjpeg",
+      "<p>We're planning the first-ever LetiTrip Collectors Convention — a one-day event for Pokémon TCG, Hot Wheels, Beyblade X, anime figure, and Gunpla enthusiasts in India. Help us plan by filling out this short survey. Participants get a ₹200 voucher on their next LetiTrip order.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
+    startsAt: daysAhead(14),
+    endsAt: daysAhead(35),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=630&fit=crop",
+    tags: ["convention", "collectors", "survey", "india", "community"],
     surveyConfig: {
       requireLogin: true,
       maxEntriesPerUser: 1,
       hasLeaderboard: false,
-      hasPointSystem: false,
+      hasPointSystem: true,
+      pointsLabel: "Voucher Credits",
       entryReviewRequired: false,
       formFields: [
         {
-          id: "line",
-          type: "text",
-          label: "Which Transformers line do you prefer? (Studio Series, Legacy, Masterpiece, G1 vintage)",
+          id: "field-city",
+          type: "select",
+          label: "Which city would you travel to for a 1-day convention?",
           required: true,
+          options: ["Mumbai", "Delhi", "Bengaluru", "Hyderabad", "Pune", "Chennai", "Other"],
           order: 1,
         },
         {
-          id: "wishlist",
-          type: "textarea",
-          label: "List up to 5 specific figures you'd like to see available on LetItRip",
+          id: "field-vertical",
+          type: "multiselect",
+          label: "Which collectibles verticals do you primarily collect?",
           required: true,
+          options: ["Pokémon TCG", "Hot Wheels / Tomica", "Beyblade X", "Anime Figures", "Gunpla", "Yu-Gi-Oh! TCG"],
           order: 2,
         },
         {
-          id: "budget",
-          type: "text",
-          label: "What's your typical budget per Transformers figure?",
+          id: "field-budget",
+          type: "select",
+          label: "What would you spend at a convention (entry + purchases)?",
           required: false,
+          options: ["Under ₹2,000", "₹2,000–5,000", "₹5,000–10,000", "Over ₹10,000"],
           order: 3,
         },
       ],
     },
-    tags: ["transformers", "survey", "wishlist", "studio-series", "legacy"],
-    stats: {
-      totalEntries: 98,
-      approvedEntries: 98,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(11),
-    updatedAt: daysAgo(1),
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(2),
   },
 
-  // 10. Active Offer — Beyblade Burst Bundle Deal
+  // ── 3. ACTIVE — Hot Wheels May Swap Meet Sale ─────────────────────────────
   {
-    id: "event-beyblade-burst-bundle-offer-2026",
-    slug: "event-beyblade-burst-bundle-offer-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Bladers Paradise Bundle Deal — Buy 2 Tops, Get Free Stadium",
+    id: "event-hot-wheels-swap-meet-may-2026",
+    slug: "event-hot-wheels-swap-meet-may-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Hot Wheels May Swap Meet — Up to 30% Off Diecast This Weekend",
     description:
-      "<p>Order any 2 Beyblade Burst starter/individual tops from Bladers Paradise and get a <strong>free standard stadium</strong> (worth â‚¹1,299). Use code <strong>BBBUNDLE2</strong> at checkout. While stocks last!</p>",
+      "<p>Diecast Depot is running a <strong>weekend flash sale</strong> to clear swap meet stock. Up to 30% off Treasure Hunts, Car Culture sets, Team Transport, and Tomica Limited Vintage. Prices drop as stock runs out — grab your cars before they're gone. <strong>LetiTrip exclusive sale</strong> — no other platform, no restocks.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(1),
-    endsAt: daysAhead(13),
-    coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_0f30a098-b05e-4692-830a-44aae2e6dfa8?wid=800&hei=800&fmt=pjpeg",
-    offerConfig: {
-      couponId: "coupon-bbbundle2",
-      displayCode: "BBBUNDLE2",
-      bannerText: "Buy 2 Beyblade Tops â†’ Free Stadium! Use BBBUNDLE2",
+    endsAt: daysAhead(2),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1200&h=630&fit=crop",
+    tags: ["hot-wheels", "sale", "diecast", "swap-meet", "tomica"],
+    saleConfig: {
+      discountPercent: 30,
+      bannerText: "🚗 Up to 30% off Hot Wheels & Tomica — this weekend only!",
+      affectedCategories: ["category-diecast-vehicles", "category-hot-wheels-cars", "category-tomica-cars"],
     },
-    tags: ["beyblade", "offer", "bundle", "stadium", "bladers-paradise"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(2),
+    stats: { totalEntries: 47, approvedEntries: 47, flaggedEntries: 0 },
+    createdBy: "user-vikram-mehta",
+    createdAt: daysAgo(7),
     updatedAt: daysAgo(1),
   },
 
-  // 11. Active Feedback — Hot Wheels Collector Community Survey
+  // ── 4. ACTIVE — Anime Figure Showcase Offer Event ─────────────────────────
   {
-    id: "event-hot-wheels-collector-survey-2026",
-    slug: "event-hot-wheels-collector-survey-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
-    title: "Hot Wheels Collectors Survey — Win a Super Treasure Hunt!",
+    id: "event-anime-figure-showcase-may-2026",
+    slug: "event-anime-figure-showcase-may-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
+    title: "S.H.Figuarts & Nendoroid Showcase — Make an Offer Week",
     description:
-      "<p>Complete this 2-minute survey about your Hot Wheels collecting habits and be entered to <strong>win a Super Treasure Hunt</strong> of our choice (value â‚¹2,000â€“â‚¹5,000). One lucky winner drawn when entries close.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
-    startsAt: daysAgo(4),
-    endsAt: daysAhead(10),
-    coverImageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Mycars.JPG",
-    feedbackConfig: {
-      formFields: [
-        {
-          id: "collecting_focus",
-          type: "text",
-          label: "What's your Hot Wheels collecting focus? (TH hunting, Car Culture, mainline, track sets)",
-          required: true,
-          order: 1,
-        },
-        {
-          id: "most_wanted_casting",
-          type: "text",
-          label: "Name your most-wanted Hot Wheels casting currently",
-          required: true,
-          order: 2,
-        },
-        {
-          id: "monthly_spend",
-          type: "text",
-          label: "Roughly how much do you spend on Hot Wheels per month?",
-          required: false,
-          order: 3,
-        },
-      ],
-      anonymous: false,
-    },
-    tags: ["hot-wheels", "survey", "giveaway", "super-th", "community"],
-    stats: {
-      totalEntries: 183,
-      approvedEntries: 180,
-      flaggedEntries: 3,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(5),
-    updatedAt: daysAgo(1),
-  },
-
-  // 12. Active Sale — Pokémon Multi-Set Clearance
-  {
-    id: "event-pokemon-multiseries-clearance-2026",
-    slug: "event-pokemon-multiseries-clearance-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Pokémon TCG Multi-Series Clearance — Up to 25% Off Non-Holo Rares & Uncommons",
-    description:
-      "<p>Clearance sale across all three LetItRip Pokémon TCG stores. <strong>Up to 25% off</strong> non-holo rares, uncommons, and common energy lots. Perfect for completing your Base Set playset.</p>",
+      "<p>This week, all S.H.Figuarts and Nendoroid listings on LetiTrip accept <strong>negotiated offers</strong>. Submit your best price on any anime figure listing — sellers will respond within 24 hours. Use code <strong>FIGURE10</strong> for an additional 10% off any accepted offer.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
-    endsAt: daysAhead(7),
-    coverImageUrl: "https://images.pokemontcg.io/base1/2_hires.png",
-    saleConfig: {
-      discountPercent: 25,
-      bannerText: "Pokémon Clearance Sale — Up to 25% Off Non-Holo Rares & Uncommons!",
-      affectedCategories: ["category-non-holo-rare-rarity", "category-uncommon-rarity", "category-common-rarity"],
+    endsAt: daysAhead(4),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&h=630&fit=crop",
+    tags: ["anime-figures", "shf", "nendoroid", "offers", "bandai", "good-smile"],
+    offerConfig: {
+      couponId: "coupon-figure10",
+      displayCode: "FIGURE10",
+      bannerText: "🎌 Use FIGURE10 for 10% extra off any accepted offer on anime figures",
     },
-    tags: ["pokemon", "clearance", "sale", "non-holo", "uncommon", "common"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
-    },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(4),
+    stats: { totalEntries: 23, approvedEntries: 21, flaggedEntries: 2 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(10),
     updatedAt: daysAgo(3),
   },
 
-  // 13. Cancelled — Transformers Convention Live Event (cancelled due to venue issue)
+  // ── 5. ENDED — Yu-Gi-Oh! Regional Qualifier Poll ──────────────────────────
   {
-    id: "event-transformers-convention-mumbai-2026",
-    slug: "event-transformers-convention-mumbai-2026",
-    type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Transformers Collector Meet-Up Mumbai 2026 [CANCELLED]",
+    id: "event-yugioh-regional-qualifier-march-2026",
+    slug: "event-yugioh-regional-qualifier-march-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.POLL,
+    title: "Yu-Gi-Oh! Regional March 2026 — Hyderabad vs Bengaluru Vote",
     description:
-      "<p><strong>This event has been cancelled</strong> due to unforeseen venue circumstances. We apologise for the inconvenience. All registered participants will receive a â‚¹500 store credit coupon as compensation. Thank you for your understanding.</p>",
+      "<p>The vote for March's regional venue is closed. <strong>Hyderabad won</strong> with 68% of the vote! Results and tournament schedule are now posted in the LetiTrip blog. Stay tuned for the April regional venue poll.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
-    startsAt: daysAhead(15),
-    endsAt: daysAhead(16),
-    coverImageUrl: "https://www.seibertron.com/images/toys/files/01/r_optimusprime001.jpg",
-    offerConfig: {
-      couponId: "coupon-tfmeet-cancelled",
-      displayCode: "TFMEET500",
-      bannerText: "Convention cancelled — â‚¹500 compensation coupon issued to all registrants",
+    startsAt: daysAgo(45),
+    endsAt: daysAgo(30),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1200&h=630&fit=crop",
+    tags: ["yugioh", "regional", "tournament", "poll", "ended"],
+    pollConfig: {
+      allowMultiSelect: false,
+      allowComment: false,
+      options: [
+        { id: "opt-hyd", label: "Hyderabad" },
+        { id: "opt-blr", label: "Bengaluru" },
+      ],
+      resultsVisibility: "after_end",
+      requireLogin: true,
     },
-    tags: ["transformers", "event", "cancelled", "convention", "mumbai"],
-    stats: {
-      totalEntries: 0,
-      approvedEntries: 0,
-      flaggedEntries: 0,
+    stats: { totalEntries: 209, approvedEntries: 209, flaggedEntries: 0 },
+    createdBy: "user-nisha-reddy",
+    createdAt: daysAgo(52),
+    updatedAt: daysAgo(30),
+  },
+
+  // ── 6. ENDED — Beyblade X India Launch Sale ───────────────────────────────
+  {
+    id: "event-beyblade-x-india-launch-sale-2026",
+    slug: "event-beyblade-x-india-launch-sale-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.SALE,
+    title: "Beyblade X Official India Launch — 15% Off All BX Tops",
+    description:
+      "<p>This event has ended. Thank you to everyone who participated in the Beyblade X India launch sale! Over 300 BX tops sold in 72 hours — Dran Sword, Wizard Arrow, and Knight Shield all sold out within the first day. New stock arrives in 3 weeks.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
+    startsAt: daysAgo(60),
+    endsAt: daysAgo(57),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&h=630&fit=crop",
+    tags: ["beyblade-x", "launch", "sale", "takara-tomy", "india"],
+    saleConfig: {
+      discountPercent: 15,
+      bannerText: "🌀 15% off all Beyblade X tops — India launch weekend!",
+      affectedCategories: ["category-beyblade-tops", "category-spinning-tops"],
     },
-    createdBy: "user-admin-user-admin",
-    createdAt: daysAgo(20),
-    updatedAt: daysAgo(1),
+    stats: { totalEntries: 312, approvedEntries: 312, flaggedEntries: 0 },
+    createdBy: "user-rohit-joshi",
+    createdAt: daysAgo(65),
+    updatedAt: daysAgo(57),
   },
 ];
 
-// -- Event Entries -------------------------------------------------------------
-
 export const eventEntriesSeedData: EventEntryDocument[] = [
-  // Poll entries — Gen 1 Starter poll
   {
-    id: "entry-gen1-poll-ash-ketchum",
-    eventId: "event-gen1-starter-poll-2026",
-    userId: "user-ash-ketchum-buyer",
-    userDisplayName: "Ash Ketchum",
-    pollVotes: ["charizard"],
-    pollComment: "Charizard carried me through every battle!",
+    id: "entry-swap-meet-rahul",
+    eventId: "event-hot-wheels-swap-meet-may-2026",
+    userId: "user-rahul-sharma",
+    userDisplayName: "Rahul Sharma",
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(6),
-    points: 1,
+    submittedAt: daysAgo(1),
   },
   {
-    id: "entry-gen1-poll-gary-oak",
-    eventId: "event-gen1-starter-poll-2026",
-    userId: "user-gary-oak-buyer",
-    userDisplayName: "Gary Oak",
-    pollVotes: ["blastoise"],
-    pollComment: "Blastoise's art is unmatched. Shell Shock is peak Pokemon TCG design.",
+    id: "entry-swap-meet-priya",
+    eventId: "event-hot-wheels-swap-meet-may-2026",
+    userId: "user-priya-patel",
+    userDisplayName: "Priya Patel",
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(5),
-    points: 1,
-  },
-  {
-    id: "entry-gen1-poll-brock",
-    eventId: "event-gen1-starter-poll-2026",
-    userId: "user-brock-pewter-buyer",
-    userDisplayName: "Brock Pewter",
-    pollVotes: ["venusaur"],
-    pollComment: "Venusaur never gets the respect it deserves. Solar Beam is powerful!",
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(4),
-    points: 1,
-  },
-
-  // Feedback entries — 1st Edition booster pull story
-  {
-    id: "entry-feedback-1sted-ash-ketchum",
-    eventId: "event-1st-edition-booster-giveaway-2026",
-    userId: "user-ash-ketchum-buyer",
-    userDisplayName: "Ash Ketchum",
-    formResponses: {
-      story: "I pulled a 1st Edition Charizard from a booster pack at age 10 and have been hooked ever since. Tagged @professor_oak!",
-      tagged_friend: "@professor_oak",
-    },
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: daysAgo(2),
-    points: 1,
-  },
-  {
-    id: "entry-feedback-1sted-sabrina",
-    eventId: "event-1st-edition-booster-giveaway-2026",
-    userId: "user-may-hoenn-buyer",
-    userDisplayName: "May (Hoenn)",
-    formResponses: {
-      story: "My best pull was a 1st Ed Mewtwo from a pack my gym leader gave me. Changed my life as a collector.",
-      tagged_friend: "@giovanni_viridian",
-    },
-    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
-    submittedAt: hoursAgo(36),
-    points: 1,
+    submittedAt: daysAgo(1),
   },
 ];
