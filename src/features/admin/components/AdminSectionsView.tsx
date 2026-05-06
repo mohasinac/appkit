@@ -222,6 +222,35 @@ interface WhatsAppBuilderState {
   testimonial: string;
 }
 
+type FAQCategory = "general" | "shipping" | "returns" | "payment" | "account" | "products" | "sellers";
+
+interface FAQBuilderState {
+  title: string;
+  subtitle: string;
+  showOnHomepage: boolean;
+  displayCount: number;
+  expandedByDefault: boolean;
+  linkToFullPage: boolean;
+  categories: FAQCategory[];
+}
+
+interface BlogBuilderState {
+  title: string;
+  maxArticles: number;
+  showReadTime: boolean;
+  showAuthor: boolean;
+  showThumbnails: boolean;
+}
+
+interface NewsletterBuilderState {
+  title: string;
+  description: string;
+  placeholder: string;
+  buttonText: string;
+  privacyText: string;
+  privacyLink: string;
+}
+
 const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -384,6 +413,33 @@ const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
   testimonial: "",
 };
 
+const DEFAULT_FAQ_BUILDER: FAQBuilderState = {
+  title: "Frequently Asked Questions",
+  subtitle: "",
+  showOnHomepage: true,
+  displayCount: 5,
+  expandedByDefault: false,
+  linkToFullPage: true,
+  categories: ["general", "shipping", "returns"],
+};
+
+const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
+  title: "From the Blog",
+  maxArticles: 3,
+  showReadTime: true,
+  showAuthor: true,
+  showThumbnails: true,
+};
+
+const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
+  title: "Stay in the Loop",
+  description: "Get the latest drops, auction alerts, and collector news.",
+  placeholder: "Enter your email",
+  buttonText: "Subscribe",
+  privacyText: "We respect your privacy. Unsubscribe anytime.",
+  privacyLink: "/privacy",
+};
+
 const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -400,6 +456,9 @@ const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "features",
   "reviews",
   "whatsapp-community",
+  "faq",
+  "blog-articles",
+  "newsletter",
 ];
 
 function parseCsvValues(value: string): string[] {
@@ -908,6 +967,84 @@ function parseWhatsAppBuilder(config: Record<string, unknown>): WhatsAppBuilderS
   };
 }
 
+const FAQ_CATEGORY_OPTIONS: Array<{ label: string; value: FAQCategory }> = [
+  { label: "General", value: "general" },
+  { label: "Shipping", value: "shipping" },
+  { label: "Returns", value: "returns" },
+  { label: "Payment", value: "payment" },
+  { label: "Account", value: "account" },
+  { label: "Products", value: "products" },
+  { label: "Sellers", value: "sellers" },
+];
+
+function buildFAQConfig(builder: FAQBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    subtitle: builder.subtitle || undefined,
+    showOnHomepage: builder.showOnHomepage,
+    displayCount: builder.displayCount,
+    expandedByDefault: builder.expandedByDefault,
+    linkToFullPage: builder.linkToFullPage,
+    categories: builder.categories,
+  };
+}
+
+function parseFAQBuilder(config: Record<string, unknown>): FAQBuilderState {
+  const categoriesRaw = Array.isArray(config.categories) ? config.categories : [];
+  const validCats = FAQ_CATEGORY_OPTIONS.map((o) => o.value);
+  return {
+    title: toStringValue(config.title, DEFAULT_FAQ_BUILDER.title),
+    subtitle: toStringValue(config.subtitle),
+    showOnHomepage: toBooleanValue(config.showOnHomepage, DEFAULT_FAQ_BUILDER.showOnHomepage),
+    displayCount: toNumberValue(config.displayCount, DEFAULT_FAQ_BUILDER.displayCount),
+    expandedByDefault: toBooleanValue(config.expandedByDefault, DEFAULT_FAQ_BUILDER.expandedByDefault),
+    linkToFullPage: toBooleanValue(config.linkToFullPage, DEFAULT_FAQ_BUILDER.linkToFullPage),
+    categories: categoriesRaw.filter((c): c is FAQCategory => validCats.includes(c as FAQCategory)),
+  };
+}
+
+function buildBlogConfig(builder: BlogBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    maxArticles: builder.maxArticles,
+    showReadTime: builder.showReadTime,
+    showAuthor: builder.showAuthor,
+    showThumbnails: builder.showThumbnails,
+  };
+}
+
+function parseBlogBuilder(config: Record<string, unknown>): BlogBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_BLOG_BUILDER.title),
+    maxArticles: toNumberValue(config.maxArticles, DEFAULT_BLOG_BUILDER.maxArticles),
+    showReadTime: toBooleanValue(config.showReadTime, DEFAULT_BLOG_BUILDER.showReadTime),
+    showAuthor: toBooleanValue(config.showAuthor, DEFAULT_BLOG_BUILDER.showAuthor),
+    showThumbnails: toBooleanValue(config.showThumbnails, DEFAULT_BLOG_BUILDER.showThumbnails),
+  };
+}
+
+function buildNewsletterConfig(builder: NewsletterBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    description: builder.description,
+    placeholder: builder.placeholder,
+    buttonText: builder.buttonText,
+    privacyText: builder.privacyText || undefined,
+    privacyLink: builder.privacyLink || undefined,
+  };
+}
+
+function parseNewsletterBuilder(config: Record<string, unknown>): NewsletterBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_NEWSLETTER_BUILDER.title),
+    description: toStringValue(config.description, DEFAULT_NEWSLETTER_BUILDER.description),
+    placeholder: toStringValue(config.placeholder, DEFAULT_NEWSLETTER_BUILDER.placeholder),
+    buttonText: toStringValue(config.buttonText, DEFAULT_NEWSLETTER_BUILDER.buttonText),
+    privacyText: toStringValue(config.privacyText, DEFAULT_NEWSLETTER_BUILDER.privacyText),
+    privacyLink: toStringValue(config.privacyLink, DEFAULT_NEWSLETTER_BUILDER.privacyLink),
+  };
+}
+
 export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
@@ -932,6 +1069,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [featuresBuilder, setFeaturesBuilder] = React.useState<FeaturesBuilderState>(DEFAULT_FEATURES_BUILDER);
   const [reviewsBuilder, setReviewsBuilder] = React.useState<ReviewsBuilderState>(DEFAULT_REVIEWS_BUILDER);
   const [whatsappBuilder, setWhatsappBuilder] = React.useState<WhatsAppBuilderState>(DEFAULT_WHATSAPP_BUILDER);
+  const [faqBuilder, setFaqBuilder] = React.useState<FAQBuilderState>(DEFAULT_FAQ_BUILDER);
+  const [blogBuilder, setBlogBuilder] = React.useState<BlogBuilderState>(DEFAULT_BLOG_BUILDER);
+  const [newsletterBuilder, setNewsletterBuilder] = React.useState<NewsletterBuilderState>(DEFAULT_NEWSLETTER_BUILDER);
   const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
@@ -1014,6 +1154,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (sectionType === "whatsapp-community") {
       return buildWhatsAppConfig(whatsappBuilder);
     }
+    if (sectionType === "faq") {
+      return buildFAQConfig(faqBuilder);
+    }
+    if (sectionType === "blog-articles") {
+      return buildBlogConfig(blogBuilder);
+    }
+    if (sectionType === "newsletter") {
+      return buildNewsletterConfig(newsletterBuilder);
+    }
     return null;
   }, [
     sectionType,
@@ -1031,6 +1180,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     featuresBuilder,
     reviewsBuilder,
     whatsappBuilder,
+    faqBuilder,
+    blogBuilder,
+    newsletterBuilder,
   ]);
 
   React.useEffect(() => {
@@ -1171,6 +1323,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (selected.type === "whatsapp-community") {
       setWhatsappBuilder(parseWhatsAppBuilder(selectedConfig));
     }
+    if (selected.type === "faq") {
+      setFaqBuilder(parseFAQBuilder(selectedConfig));
+    }
+    if (selected.type === "blog-articles") {
+      setBlogBuilder(parseBlogBuilder(selectedConfig));
+    }
+    if (selected.type === "newsletter") {
+      setNewsletterBuilder(parseNewsletterBuilder(selectedConfig));
+    }
   }, [mode, sections, selectedSectionId]);
 
   React.useEffect(() => {
@@ -1219,6 +1380,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "whatsapp-community") {
       setWhatsappBuilder(DEFAULT_WHATSAPP_BUILDER);
+    }
+    if (sectionType === "faq") {
+      setFaqBuilder(DEFAULT_FAQ_BUILDER);
+    }
+    if (sectionType === "blog-articles") {
+      setBlogBuilder(DEFAULT_BLOG_BUILDER);
+    }
+    if (sectionType === "newsletter") {
+      setNewsletterBuilder(DEFAULT_NEWSLETTER_BUILDER);
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -2180,6 +2350,65 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderFAQBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">FAQ Section Builder</Text>
+        <Input label="Section title" value={faqBuilder.title} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label="Subtitle" value={faqBuilder.subtitle} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
+        <Input label="Display count" type="number" min={1} max={20} value={String(faqBuilder.displayCount)} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, displayCount: Math.min(20, Math.max(1, Number(e.target.value) || 1)) }))} />
+        <Checkbox checked={faqBuilder.showOnHomepage} label="Show on homepage" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, showOnHomepage: e.target.checked }))} />
+        <Checkbox checked={faqBuilder.expandedByDefault} label="Expanded by default" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, expandedByDefault: e.target.checked }))} />
+        <Checkbox checked={faqBuilder.linkToFullPage} label="Link to full FAQ page" onChange={(e) => setFaqBuilder((prev) => ({ ...prev, linkToFullPage: e.target.checked }))} />
+        <Div className="space-y-2">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Categories</Text>
+          <Div className="grid grid-cols-2 gap-2">
+            {FAQ_CATEGORY_OPTIONS.map((opt) => (
+              <Checkbox
+                key={opt.value}
+                checked={faqBuilder.categories.includes(opt.value)}
+                label={opt.label}
+                onChange={(e) => setFaqBuilder((prev) => ({
+                  ...prev,
+                  categories: e.target.checked
+                    ? [...prev.categories, opt.value]
+                    : prev.categories.filter((c) => c !== opt.value),
+                }))}
+              />
+            ))}
+          </Div>
+        </Div>
+      </Div>
+    );
+  }
+
+  function renderBlogBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Blog Articles Builder</Text>
+        <Input label="Section title" value={blogBuilder.title} onChange={(e) => setBlogBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Select label="Max articles" value={String(blogBuilder.maxArticles)} onValueChange={(v) => setBlogBuilder((prev) => ({ ...prev, maxArticles: Number(v) }))} options={[{ label: "3", value: "3" }, { label: "4", value: "4" }, { label: "6", value: "6" }]} />
+        <Checkbox checked={blogBuilder.showReadTime} label="Show read time" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showReadTime: e.target.checked }))} />
+        <Checkbox checked={blogBuilder.showAuthor} label="Show author" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showAuthor: e.target.checked }))} />
+        <Checkbox checked={blogBuilder.showThumbnails} label="Show thumbnails" onChange={(e) => setBlogBuilder((prev) => ({ ...prev, showThumbnails: e.target.checked }))} />
+      </Div>
+    );
+  }
+
+  function renderNewsletterBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Newsletter Section Builder</Text>
+        <Input label="Title" value={newsletterBuilder.title} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Textarea label="Description" value={newsletterBuilder.description} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
+        <Input label="Email placeholder" value={newsletterBuilder.placeholder} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, placeholder: e.target.value }))} />
+        <Input label="Button text" value={newsletterBuilder.buttonText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, buttonText: e.target.value }))} />
+        <Input label="Privacy text" value={newsletterBuilder.privacyText} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyText: e.target.value }))} />
+        <Input label="Privacy link" value={newsletterBuilder.privacyLink} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, privacyLink: e.target.value }))} placeholder="/privacy" />
+      </Div>
+    );
+  }
+
   function renderBannerBuilder(): React.ReactNode {
     return (
       <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
@@ -2376,6 +2605,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "whatsapp-community") {
       return renderWhatsAppBuilder();
+    }
+    if (sectionType === "faq") {
+      return renderFAQBuilder();
+    }
+    if (sectionType === "blog-articles") {
+      return renderBlogBuilder();
+    }
+    if (sectionType === "newsletter") {
+      return renderNewsletterBuilder();
     }
     return null;
   }
