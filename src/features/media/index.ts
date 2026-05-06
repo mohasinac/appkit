@@ -72,6 +72,7 @@ export type {
   MediaField,
   MediaFieldInput,
   MediaFieldType,
+  MediaSource,
 } from "./types/index";
 
 export { default as CameraCapture } from "./upload/CameraCapture";

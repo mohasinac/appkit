@@ -2,6 +2,9 @@ import { z } from "zod";
 
 export type MediaFieldType = "image" | "video" | "file";
 
+/** Where the media originates: Firebase Storage upload, YouTube embed, or external URL. */
+export type MediaSource = "upload" | "youtube" | "external";
+
 export type MediaFieldInput = MediaField | string | null | undefined;
 
 export interface MediaField {
@@ -9,13 +12,19 @@ export interface MediaField {
   type: MediaFieldType;
   alt?: string;
   thumbnailUrl?: string;
+  /** Media origin. Omitted / "upload" = Firebase Storage proxy URL. */
+  source?: MediaSource;
+  /** YouTube video ID. Only set when source === "youtube". */
+  youtubeId?: string;
 }
 
 export const mediaFieldSchema = z.object({
-  url: z.string().url(),
+  url: z.string(),
   type: z.enum(["image", "video", "file"]),
   alt: z.string().optional(),
-  thumbnailUrl: z.string().url().optional(),
+  thumbnailUrl: z.string().optional(),
+  source: z.enum(["upload", "youtube", "external"]).optional(),
+  youtubeId: z.string().optional(),
 });
 
 export function coerceMediaField(

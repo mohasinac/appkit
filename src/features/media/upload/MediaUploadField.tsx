@@ -32,6 +32,10 @@ export interface MediaUploadFieldProps {
   enableTrim?: boolean;
   enableThumbnail?: boolean;
   onThumbnailChange?: (url: string) => void;
+  /** Show a "YouTube URL" tab to embed a YouTube video by ID or URL. */
+  showYoutube?: boolean;
+  /** Show an "External URL" tab to link a third-party image/video URL. */
+  showExternal?: boolean;
   /**
    * Called with every URL that was staged (uploaded) but never persisted.
    * The parent form should call `DELETE /api/media?url=…` for each entry.
@@ -64,6 +68,23 @@ function filenameFromUrl(url: string): string {
   }
 }
 
+type MediaSourceTab = "upload" | "youtube" | "external";
+
+function extractYouTubeId(input: string): string | null {
+  const trimmed = input.trim();
+  // Already just an ID (11 chars, alphanumeric + _ -)
+  if (/^[\w-]{11}$/.test(trimmed)) return trimmed;
+  try {
+    const url = new URL(trimmed);
+    return (
+      url.searchParams.get("v") ||
+      (url.hostname === "youtu.be" ? url.pathname.slice(1) : null)
+    );
+  } catch {
+    return null;
+  }
+}
+
 export function MediaUploadField({
   label,
   value,
@@ -79,6 +100,8 @@ export function MediaUploadField({
   enableTrim = true,
   enableThumbnail = true,
   onThumbnailChange,
+  showYoutube = false,
+  showExternal = false,
   onAbort,
   onStagedUrlsChange,
   isPersisted = false,
@@ -89,6 +112,36 @@ export function MediaUploadField({
   const [showTrimModal, setShowTrimModal] = useState(false);
   const [showThumbnailModal, setShowThumbnailModal] = useState(false);
   const [inputMode, setInputMode] = useState<"file" | "camera">("file");
+  const [sourceTab, setSourceTab] = useState<MediaSourceTab>("upload");
+  const [ytInput, setYtInput] = useState("");
+  const [ytError, setYtError] = useState("");
+  const [extInput, setExtInput] = useState("");
+  const [extError, setExtError] = useState("");
+
+  const hasAlternateSources = showYoutube || showExternal;
+
+  function handleYtApply() {
+    const id = extractYouTubeId(ytInput);
+    if (!id) {
+      setYtError("Enter a valid YouTube video ID or URL.");
+      return;
+    }
+    const url = `https://www.youtube.com/watch?v=${id}`;
+    const thumb = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
+    onChange(url);
+    onChangeField?.({ url, type: "video", source: "youtube", youtubeId: id, thumbnailUrl: thumb });
+    setYtError("");
+  }
+
+  function handleExtApply() {
+    const trimmed = extInput.trim();
+    if (!trimmed) { setExtError("Enter a URL."); return; }
+    try { new URL(trimmed); } catch { setExtError("Enter a valid URL."); return; }
+    const type = /\.(mp4|webm|ogg|mov|avi)(\?|$)/i.test(trimmed) ? "video" : "image";
+    onChange(trimmed);
+    onChangeField?.({ url: trimmed, type, source: "external" });
+    setExtError("");
+  }
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const mobileCaptureRef = useRef<HTMLInputElement>(null);
@@ -264,7 +317,71 @@ export function MediaUploadField({
         {label}
       </Label>
 
-      {value && !isLoading && (
+      {/* Source tab switcher — only shown when alternate sources are enabled */}
+      {hasAlternateSources && !disabled && (
+        <Row gap="none" className="appkit-media-upload__source-tabs">
+          {(["upload", ...(showYoutube ? ["youtube"] : []), ...(showExternal ? ["external"] : [])] as MediaSourceTab[]).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setSourceTab(tab)}
+              className={[
+                "appkit-media-upload__source-tab",
+                sourceTab === tab ? "appkit-media-upload__source-tab--active" : "",
+              ].filter(Boolean).join(" ")}
+            >
+              {tab === "upload" ? "Upload" : tab === "youtube" ? "YouTube" : "External URL"}
+            </button>
+          ))}
+        </Row>
+      )}
+
+      {/* YouTube input */}
+      {hasAlternateSources && sourceTab === "youtube" && !disabled && (
+        <Div className="space-y-2">
+          <Row gap="sm">
+            <input
+              type="text"
+              value={ytInput}
+              onChange={(e) => { setYtInput(e.target.value); setYtError(""); }}
+              placeholder="YouTube video ID or URL"
+              className="appkit-input flex-1"
+            />
+            <Button type="button" variant="primary" size="sm" onClick={handleYtApply}>
+              Apply
+            </Button>
+          </Row>
+          {ytError && <Alert variant="error">{ytError}</Alert>}
+          {value?.includes("youtube.com") && (
+            <Text size="xs" variant="secondary">YouTube embed: {value}</Text>
+          )}
+        </Div>
+      )}
+
+      {/* External URL input */}
+      {hasAlternateSources && sourceTab === "external" && !disabled && (
+        <Div className="space-y-2">
+          <Row gap="sm">
+            <input
+              type="url"
+              value={extInput}
+              onChange={(e) => { setExtInput(e.target.value); setExtError(""); }}
+              placeholder="https://example.com/image.jpg"
+              className="appkit-input flex-1"
+            />
+            <Button type="button" variant="primary" size="sm" onClick={handleExtApply}>
+              Apply
+            </Button>
+          </Row>
+          {extError && <Alert variant="error">{extError}</Alert>}
+          <Text size="xs" variant="secondary">
+            External URLs are stored as-is and are not watermarked.
+          </Text>
+        </Div>
+      )}
+
+      {/* Standard upload UI — shown when source tab is "upload" (or no alternate sources) */}
+      {(!hasAlternateSources || sourceTab === "upload") && value && !isLoading && (
         <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
           {isVideo(value) ? (
             <Div className="relative aspect-video overflow-hidden rounded-lg">
@@ -324,7 +441,7 @@ export function MediaUploadField({
         </Div>
       )}
 
-      {!disabled && !isLoading && (
+      {!disabled && !isLoading && (!hasAlternateSources || sourceTab === "upload") && (
         <>
           {captureSource === "both" && isCameraSupported && (
             <Row className="gap-2">
