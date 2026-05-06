@@ -292,6 +292,8 @@ export interface ReviewsSectionConfig {
   mobileItemsPerView: 1;
   autoScroll: boolean;
   scrollInterval: number;
+  source?: "platform" | "google";
+  placeId?: string;
 }
 
 export interface WhatsAppCommunitySectionConfig {

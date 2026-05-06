@@ -228,6 +228,8 @@ interface ReviewsBuilderState {
   itemsPerView: number;
   autoScroll: boolean;
   scrollInterval: number;
+  source: "platform" | "google";
+  placeId: string;
 }
 
 interface WhatsAppBuilderState {
@@ -434,6 +436,8 @@ const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {
   itemsPerView: 3,
   autoScroll: true,
   scrollInterval: 5000,
+  source: "platform",
+  placeId: "",
 };
 
 const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
@@ -992,6 +996,8 @@ function buildReviewsConfig(builder: ReviewsBuilderState): Record<string, unknow
     mobileItemsPerView: 1,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
+    source: builder.source,
+    placeId: builder.source === "google" ? builder.placeId || undefined : undefined,
   };
 }
 
@@ -1002,6 +1008,8 @@ function parseReviewsBuilder(config: Record<string, unknown>): ReviewsBuilderSta
     itemsPerView: toNumberValue(config.itemsPerView, DEFAULT_REVIEWS_BUILDER.itemsPerView),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_REVIEWS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_REVIEWS_BUILDER.scrollInterval),
+    source: toStringValue(config.source, "platform") as ReviewsBuilderState["source"],
+    placeId: toStringValue(config.placeId),
   };
 }
 
@@ -2563,6 +2571,24 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Reviews Section Builder</Text>
         <Input label="Section title" value={reviewsBuilder.title} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Select
+          label="Reviews source"
+          value={reviewsBuilder.source}
+          onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, source: v as ReviewsBuilderState["source"] }))}
+          options={[
+            { label: "Platform reviews (LetiTrip)", value: "platform" },
+            { label: "Google Business Reviews", value: "google" },
+          ]}
+        />
+        {reviewsBuilder.source === "google" ? (
+          <Input
+            label="Google Place ID"
+            value={reviewsBuilder.placeId}
+            onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, placeId: e.target.value }))}
+            placeholder="ChIJ..."
+            helperText="Find your Place ID at maps.google.com/placesinventory"
+          />
+        ) : null}
         <Select label="Max reviews" value={String(reviewsBuilder.maxReviews)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, maxReviews: Number(v) }))} options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]} />
         <Select label="Items per view" value={String(reviewsBuilder.itemsPerView)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, itemsPerView: Number(v) }))} options={[{ label: "1", value: "1" }, { label: "2", value: "2" }, { label: "3", value: "3" }]} />
         <Checkbox checked={reviewsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
