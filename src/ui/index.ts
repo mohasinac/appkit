@@ -270,6 +270,8 @@ export type {
   AsyncPage,
 } from "./components/DynamicSelect";
 export { DynamicSelect } from "./components/DynamicSelect";
+export type { InlineCreateSelectProps } from "./components/InlineCreateSelect";
+export { InlineCreateSelect } from "./components/InlineCreateSelect";
 
 export type { RoleBadgeProps } from "./components/RoleBadge";
 export { RoleBadge } from "./components/RoleBadge";

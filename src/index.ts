@@ -187,6 +187,10 @@ export type { DynamicSelectOption } from "./ui/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // DynamicSelectProps - Type contract for dynamic select props.
 export type { DynamicSelectProps } from "./ui/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// InlineCreateSelect - Select with inline create-new form in a SideDrawer.
+export type { InlineCreateSelectProps } from "./ui/index";
+export { InlineCreateSelect } from "./ui/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // EmptyStateProps - Type contract for empty state props.
 export type { EmptyStateProps } from "./ui/index";
