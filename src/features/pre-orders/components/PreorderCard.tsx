@@ -43,7 +43,7 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
   return (
     <Link
       href={href}
-      className="group relative block overflow-hidden rounded-xl border border-gray-200 bg-white transition-shadow hover:shadow-md"
+      className="group relative block overflow-hidden rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 transition-shadow hover:shadow-md"
     >
       {item.images[0] ? (
         <Div
@@ -59,23 +59,23 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
         <PreorderBadge shipDate={item.preorderShipDate} />
         <Heading
           level={3}
-          className="mt-2 font-semibold text-gray-900 text-base"
+          className="mt-2 font-semibold text-gray-900 dark:text-zinc-100 text-base"
         >
           {item.name}
         </Heading>
-        <Text className="mt-1 text-sm text-gray-500">{item.brand}</Text>
+        <Text className="mt-1 text-sm text-gray-500 dark:text-zinc-400">{item.brand}</Text>
         <Div className="mt-3 flex items-baseline gap-2">
-          <Span className="text-lg font-bold text-gray-900">
+          <Span className="text-lg font-bold text-gray-900 dark:text-zinc-100">
             {formatCurrency(item.salePrice)}
           </Span>
           {item.regularPrice > item.salePrice && (
-            <Span className="text-sm text-gray-400 line-through">
+            <Span className="text-sm text-gray-400 dark:text-zinc-500 line-through">
               {formatCurrency(item.regularPrice)}
             </Span>
           )}
         </Div>
         {item.preorderShipDate && (
-          <Text className="mt-1 text-xs text-gray-400">
+          <Text className="mt-1 text-xs text-gray-400 dark:text-zinc-500">
             Ships:{" "}
             {new Date(item.preorderShipDate).toLocaleDateString(
               getDefaultLocale(),

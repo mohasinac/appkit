@@ -14,7 +14,9 @@
 }
 
 :is(.dark) .appkit-listing-card {
-  border-color: #374151;
+  background-color: #0f172a;  /* slate-900 — matches --appkit-color-surface dark */
+  border-color: #334155;       /* slate-700 — matches --appkit-color-border dark */
+  color: #f1f5f9;
 }
 
 .appkit-listing-card--selected {

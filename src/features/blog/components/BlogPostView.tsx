@@ -179,7 +179,7 @@ export function BlogPostView({
         )}
 
         {/* Content */}
-        <Div className="bg-white rounded-xl border border-neutral-200 p-8 mb-12">
+        <Div className="bg-white dark:bg-slate-900 rounded-xl border border-neutral-200 dark:border-slate-700 p-8 mb-12">
           {renderContent ? (
             renderContent(post)
           ) : (

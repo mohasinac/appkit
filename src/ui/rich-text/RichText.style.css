@@ -1,5 +1,47 @@
 /* RichText — sanitised HTML renderer with prose styling */
 
+/* --- Rich Text Editor --------------------------------------------------------
+ * CSS-backed surface ensures dark mode applies even when Tailwind's dark:
+ * utilities for this package are not scanned/generated.
+ * The Tailwind utility classes on the element remain the primary source;
+ * these rules act as a reliable fallback with the same values.
+ * -------------------------------------------------------------------------- */
+.appkit-rich-text-editor {
+  background: var(--appkit-color-surface, #ffffff);
+  border: 1px solid var(--appkit-color-border, #e4e4e7);
+  border-radius: 0.5rem;
+}
+
+.dark .appkit-rich-text-editor {
+  background: #0f172a;    /* slate-900 = --appkit-color-surface dark */
+  border-color: #334155;  /* slate-700 = --appkit-color-border dark */
+}
+
+.appkit-rich-text-editor__toolbar {
+  border-bottom: 1px solid var(--appkit-color-border, #e4e4e7);
+}
+
+.dark .appkit-rich-text-editor__toolbar {
+  border-bottom-color: #334155;
+}
+
+.appkit-rich-text-editor__btn {
+  border: 1px solid #e4e4e7;
+  color: #3f3f46;
+  border-radius: 0.375rem;
+}
+
+.dark .appkit-rich-text-editor__btn {
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+.dark .appkit-rich-text-editor__btn:hover {
+  background-color: #1e293b;
+}
+
+
+
 /* --------------------------------------------------------------------------
  * Base wrapper. All selectors are scoped to .appkit-rich-text so they
  * never leak into surrounding UI.

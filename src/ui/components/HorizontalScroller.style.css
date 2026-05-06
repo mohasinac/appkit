@@ -98,8 +98,8 @@
 }
 
 .dark .appkit-hscroller__fade--left {
-  background: linear-gradient(to right, #111827, transparent); /* gray-900 */
+  background: linear-gradient(to right, #0f172a, transparent); /* slate-900 — matches surface dark */
 }
 .dark .appkit-hscroller__fade--right {
-  background: linear-gradient(to left, #111827, transparent);
+  background: linear-gradient(to left, #0f172a, transparent);
 }
