@@ -156,6 +156,35 @@ interface SocialFeedBuilderState {
   showStats: boolean;
 }
 
+interface WelcomeBuilderState {
+  h1: string;
+  subtitle: string;
+  description: string;
+  showCTA: boolean;
+  ctaText: string;
+  ctaLink: string;
+}
+
+interface TrustIndicatorsBuilderState {
+  title: string;
+  indicators: Array<{ id: string; icon: string; title: string; description: string }>;
+}
+
+interface CategoriesBuilderState {
+  title: string;
+  maxCategories: number;
+  autoScroll: boolean;
+  scrollInterval: number;
+}
+
+interface BrandsBuilderState {
+  title: string;
+  subtitle: string;
+  maxBrands: number;
+  autoScroll: boolean;
+  scrollInterval: number;
+}
+
 const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -247,6 +276,40 @@ const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
   showStats: true,
 };
 
+const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
+  h1: "India's #1 Collectibles Marketplace",
+  subtitle: "Buy, Sell & Auction Pokémon Cards, Hot Wheels, Action Figures and more",
+  description: "",
+  showCTA: true,
+  ctaText: "Shop Now",
+  ctaLink: "/products",
+};
+
+const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
+  title: "Why LetiTrip?",
+  indicators: [
+    { id: "ti-1", icon: "🚚", title: "Free Shipping", description: "On orders above ₹999" },
+    { id: "ti-2", icon: "🔒", title: "Secure Payment", description: "Razorpay protected checkout" },
+    { id: "ti-3", icon: "✅", title: "Verified Sellers", description: "Every store is manually verified" },
+    { id: "ti-4", icon: "↩️", title: "Easy Returns", description: "7-day hassle-free returns" },
+  ],
+};
+
+const DEFAULT_CATEGORIES_BUILDER: CategoriesBuilderState = {
+  title: "Shop by Category",
+  maxCategories: 8,
+  autoScroll: false,
+  scrollInterval: 5000,
+};
+
+const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
+  title: "Top Brands",
+  subtitle: "",
+  maxBrands: 13,
+  autoScroll: true,
+  scrollInterval: 4000,
+};
+
 const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -255,6 +318,10 @@ const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "stores",
   "events",
   "social-feed",
+  "welcome",
+  "trust-indicators",
+  "categories",
+  "brands",
 ];
 
 function parseCsvValues(value: string): string[] {
@@ -569,6 +636,95 @@ function parseSocialFeedBuilder(config: Record<string, unknown>): SocialFeedBuil
   };
 }
 
+function buildWelcomeConfig(builder: WelcomeBuilderState): Record<string, unknown> {
+  return {
+    h1: builder.h1,
+    subtitle: builder.subtitle || undefined,
+    description: builder.description || undefined,
+    showCTA: builder.showCTA,
+    ctaText: builder.ctaText || undefined,
+    ctaLink: builder.ctaLink || undefined,
+  };
+}
+
+function parseWelcomeBuilder(config: Record<string, unknown>): WelcomeBuilderState {
+  return {
+    h1: toStringValue(config.h1, DEFAULT_WELCOME_BUILDER.h1),
+    subtitle: toStringValue(config.subtitle, DEFAULT_WELCOME_BUILDER.subtitle),
+    description: toStringValue(config.description),
+    showCTA: toBooleanValue(config.showCTA, DEFAULT_WELCOME_BUILDER.showCTA),
+    ctaText: toStringValue(config.ctaText, DEFAULT_WELCOME_BUILDER.ctaText),
+    ctaLink: toStringValue(config.ctaLink, DEFAULT_WELCOME_BUILDER.ctaLink),
+  };
+}
+
+function buildTrustIndicatorsConfig(builder: TrustIndicatorsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    indicators: builder.indicators.map((ind, index) => ({
+      id: ind.id || `ti-${index + 1}`,
+      icon: ind.icon,
+      title: ind.title,
+      description: ind.description,
+    })),
+  };
+}
+
+function parseTrustIndicatorsBuilder(config: Record<string, unknown>): TrustIndicatorsBuilderState {
+  const indicatorsRaw = Array.isArray(config.indicators) ? config.indicators : [];
+  const indicators = indicatorsRaw.map((item, index) => {
+    const row = (item ?? {}) as Record<string, unknown>;
+    return {
+      id: toStringValue(row.id, `ti-${index + 1}`),
+      icon: toStringValue(row.icon),
+      title: toStringValue(row.title),
+      description: toStringValue(row.description),
+    };
+  });
+  return {
+    title: toStringValue(config.title, DEFAULT_TRUST_INDICATORS_BUILDER.title),
+    indicators: indicators.length > 0 ? indicators : DEFAULT_TRUST_INDICATORS_BUILDER.indicators,
+  };
+}
+
+function buildCategoriesConfig(builder: CategoriesBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    maxCategories: builder.maxCategories,
+    autoScroll: builder.autoScroll,
+    scrollInterval: builder.scrollInterval,
+  };
+}
+
+function parseCategoriesBuilder(config: Record<string, unknown>): CategoriesBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_CATEGORIES_BUILDER.title),
+    maxCategories: toNumberValue(config.maxCategories, DEFAULT_CATEGORIES_BUILDER.maxCategories),
+    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CATEGORIES_BUILDER.autoScroll),
+    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_CATEGORIES_BUILDER.scrollInterval),
+  };
+}
+
+function buildBrandsConfig(builder: BrandsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    subtitle: builder.subtitle || undefined,
+    maxBrands: builder.maxBrands,
+    autoScroll: builder.autoScroll,
+    scrollInterval: builder.scrollInterval,
+  };
+}
+
+function parseBrandsBuilder(config: Record<string, unknown>): BrandsBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_BRANDS_BUILDER.title),
+    subtitle: toStringValue(config.subtitle),
+    maxBrands: toNumberValue(config.maxBrands, DEFAULT_BRANDS_BUILDER.maxBrands),
+    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_BRANDS_BUILDER.autoScroll),
+    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_BRANDS_BUILDER.scrollInterval),
+  };
+}
+
 export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
@@ -585,6 +741,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [preOrdersBuilder, setPreOrdersBuilder] = React.useState<PreOrdersBuilderState>(DEFAULT_PRE_ORDERS_BUILDER);
   const [storesBuilder, setStoresBuilder] = React.useState<StoresBuilderState>(DEFAULT_STORES_BUILDER);
   const [eventsBuilder, setEventsBuilder] = React.useState<EventsBuilderState>(DEFAULT_EVENTS_BUILDER);
+  const [welcomeBuilder, setWelcomeBuilder] = React.useState<WelcomeBuilderState>(DEFAULT_WELCOME_BUILDER);
+  const [trustIndicatorsBuilder, setTrustIndicatorsBuilder] = React.useState<TrustIndicatorsBuilderState>(DEFAULT_TRUST_INDICATORS_BUILDER);
+  const [categoriesBuilder, setCategoriesBuilder] = React.useState<CategoriesBuilderState>(DEFAULT_CATEGORIES_BUILDER);
+  const [brandsBuilder, setBrandsBuilder] = React.useState<BrandsBuilderState>(DEFAULT_BRANDS_BUILDER);
   const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
@@ -643,6 +803,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (sectionType === "events") {
       return buildEventsConfig(eventsBuilder);
     }
+    if (sectionType === "welcome") {
+      return buildWelcomeConfig(welcomeBuilder);
+    }
+    if (sectionType === "trust-indicators") {
+      return buildTrustIndicatorsConfig(trustIndicatorsBuilder);
+    }
+    if (sectionType === "categories") {
+      return buildCategoriesConfig(categoriesBuilder);
+    }
+    if (sectionType === "brands") {
+      return buildBrandsConfig(brandsBuilder);
+    }
     return null;
   }, [
     sectionType,
@@ -652,6 +824,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     preOrdersBuilder,
     storesBuilder,
     eventsBuilder,
+    welcomeBuilder,
+    trustIndicatorsBuilder,
+    categoriesBuilder,
+    brandsBuilder,
   ]);
 
   React.useEffect(() => {
@@ -768,6 +944,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (selected.type === "events") {
       setEventsBuilder(parseEventsBuilder(selectedConfig));
     }
+    if (selected.type === "welcome") {
+      setWelcomeBuilder(parseWelcomeBuilder(selectedConfig));
+    }
+    if (selected.type === "trust-indicators") {
+      setTrustIndicatorsBuilder(parseTrustIndicatorsBuilder(selectedConfig));
+    }
+    if (selected.type === "categories") {
+      setCategoriesBuilder(parseCategoriesBuilder(selectedConfig));
+    }
+    if (selected.type === "brands") {
+      setBrandsBuilder(parseBrandsBuilder(selectedConfig));
+    }
   }, [mode, sections, selectedSectionId]);
 
   React.useEffect(() => {
@@ -792,6 +980,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "events") {
       setEventsBuilder(DEFAULT_EVENTS_BUILDER);
+    }
+    if (sectionType === "welcome") {
+      setWelcomeBuilder(DEFAULT_WELCOME_BUILDER);
+    }
+    if (sectionType === "trust-indicators") {
+      setTrustIndicatorsBuilder(DEFAULT_TRUST_INDICATORS_BUILDER);
+    }
+    if (sectionType === "categories") {
+      setCategoriesBuilder(DEFAULT_CATEGORIES_BUILDER);
+    }
+    if (sectionType === "brands") {
+      setBrandsBuilder(DEFAULT_BRANDS_BUILDER);
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -1753,6 +1953,70 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderWelcomeBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Welcome Section Builder</Text>
+        <Input label="Headline (h1)" value={welcomeBuilder.h1} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, h1: e.target.value }))} />
+        <Input label="Subtitle" value={welcomeBuilder.subtitle} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
+        <Textarea label="Description" value={welcomeBuilder.description} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={3} />
+        <Checkbox checked={welcomeBuilder.showCTA} label="Show CTA button" onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, showCTA: e.target.checked }))} />
+        {welcomeBuilder.showCTA ? (
+          <>
+            <Input label="CTA text" value={welcomeBuilder.ctaText} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, ctaText: e.target.value }))} />
+            <Input label="CTA link" value={welcomeBuilder.ctaLink} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, ctaLink: e.target.value }))} placeholder="/products" />
+          </>
+        ) : null}
+      </Div>
+    );
+  }
+
+  function renderTrustIndicatorsBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Trust Indicators Builder</Text>
+        <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        {trustIndicatorsBuilder.indicators.map((ind, index) => (
+          <Div key={ind.id} className="space-y-2 rounded-md border border-zinc-200 p-3 dark:border-slate-700">
+            <Div className="flex items-center justify-between">
+              <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Indicator {index + 1}</Text>
+              <Button type="button" variant="ghost" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: prev.indicators.filter((_, i) => i !== index) }))}>Remove</Button>
+            </Div>
+            <Input label="Icon (emoji or text)" value={ind.icon} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], icon: e.target.value }; return { ...prev, indicators: next }; })} />
+            <Input label="Title" value={ind.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], title: e.target.value }; return { ...prev, indicators: next }; })} />
+            <Input label="Description" value={ind.description} onChange={(e) => setTrustIndicatorsBuilder((prev) => { const next = [...prev.indicators]; next[index] = { ...next[index], description: e.target.value }; return { ...prev, indicators: next }; })} />
+          </Div>
+        ))}
+        <Button type="button" variant="outline" size="sm" onClick={() => setTrustIndicatorsBuilder((prev) => ({ ...prev, indicators: [...prev.indicators, { id: `ti-${Date.now()}`, icon: "✨", title: "", description: "" }] }))}>+ Add indicator</Button>
+      </Div>
+    );
+  }
+
+  function renderCategoriesBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Categories Section Builder</Text>
+        <Input label="Section title" value={categoriesBuilder.title} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label="Max categories (4–12)" type="number" min={4} max={12} value={String(categoriesBuilder.maxCategories)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, maxCategories: Math.min(12, Math.max(4, Number(e.target.value) || 4)) }))} />
+        <Checkbox checked={categoriesBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
+        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(categoriesBuilder.scrollInterval)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+      </Div>
+    );
+  }
+
+  function renderBrandsBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Brands Section Builder</Text>
+        <Input label="Section title" value={brandsBuilder.title} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Input label="Subtitle" value={brandsBuilder.subtitle} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
+        <Input label="Max brands" type="number" min={1} max={30} value={String(brandsBuilder.maxBrands)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, maxBrands: Math.max(1, Number(e.target.value) || 1) }))} />
+        <Checkbox checked={brandsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
+        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(brandsBuilder.scrollInterval)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+      </Div>
+    );
+  }
+
   function renderTypedBuilder(): React.ReactNode {
     if (sectionType === "products") {
       return renderProductsBuilder();
@@ -1771,6 +2035,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "events") {
       return renderEventsBuilder();
+    }
+    if (sectionType === "welcome") {
+      return renderWelcomeBuilder();
+    }
+    if (sectionType === "trust-indicators") {
+      return renderTrustIndicatorsBuilder();
+    }
+    if (sectionType === "categories") {
+      return renderCategoriesBuilder();
+    }
+    if (sectionType === "brands") {
+      return renderBrandsBuilder();
     }
     return null;
   }
