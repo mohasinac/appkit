@@ -15,7 +15,9 @@ import { useBrands } from "../../products/hooks/useBrands";
 
 const PREORDER_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
-  { value: "preOrderDeliveryDate", label: "Delivery Soon" },
+  { value: "createdAt", label: "Oldest First" },
+  { value: "preOrderDeliveryDate", label: "Delivery: Soonest" },
+  { value: "-preOrderDeliveryDate", label: "Delivery: Furthest" },
   { value: "price", label: "Price: Low to High" },
   { value: "-price", label: "Price: High to Low" },
 ] as const;
@@ -34,6 +36,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [showClosed, setShowClosed] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
@@ -113,6 +116,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     isPreOrder: true,
+    status: showClosed ? undefined : ("published" as const),
   };
 
   const { products: preOrders, totalPages, page, isLoading } = useProducts(
@@ -178,6 +182,28 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
         view={view}
         onViewChange={handleViewToggle}
+        extra={
+          <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+            <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+              Show closed
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={showClosed}
+              onClick={() => setShowClosed((v) => !v)}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
+                showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                  showClosed ? "translate-x-[19px]" : "translate-x-[3px]"
+                }`}
+              />
+            </button>
+          </label>
+        }
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

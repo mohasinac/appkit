@@ -10,6 +10,7 @@ interface UseBlogPostsOptions {
   initialData?: BlogListResponse;
   enabled?: boolean;
   endpoint?: string;
+  staleTime?: number;
 }
 
 export function useBlogPosts(
@@ -34,6 +35,7 @@ export function useBlogPosts(
         `${BLOG_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled,
   });
 
@@ -51,6 +53,7 @@ export function useBlogPosts(
 interface UseBlogPostOptions {
   initialData?: BlogPostDetailResponse;
   enabled?: boolean;
+  staleTime?: number;
 }
 
 export function useBlogPost(slug: string, opts?: UseBlogPostOptions) {
@@ -59,6 +62,7 @@ export function useBlogPost(slug: string, opts?: UseBlogPostOptions) {
     queryFn: () =>
       apiClient.get<BlogPostDetailResponse>(BLOG_ENDPOINTS.BY_SLUG(slug)),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled !== false && !!slug,
   });
 

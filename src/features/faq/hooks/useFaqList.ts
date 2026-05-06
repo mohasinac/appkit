@@ -40,7 +40,7 @@ export function useFaqList(options: UseFaqListOptions = {}) {
       ),
     enabled: options.enabled,
     initialData: options.initialData,
-    staleTime: 5 * 60 * 1000,
+    staleTime: options.initialData !== undefined ? Infinity : 5 * 60 * 1000,
   });
 
   return {

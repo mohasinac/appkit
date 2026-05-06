@@ -17,6 +17,7 @@ interface UseAuctionsOptions {
   endpoint?: string;
   initialData?: AuctionListResponse;
   queryKeyPrefix?: string;
+  staleTime?: number;
 }
 
 interface UseAuctionDetailOptions {
@@ -60,6 +61,7 @@ export function useAuctions(
       apiClient.get<AuctionListResponse>(`${endpoint}${qs ? `?${qs}` : ""}`),
     enabled: opts?.enabled ?? true,
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
   });
 
   return {

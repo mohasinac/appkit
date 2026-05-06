@@ -7,6 +7,7 @@ interface UseEventsOptions<T extends EventItem = EventItem> {
   enabled?: boolean;
   initialData?: EventListResponse;
   endpoint?: string;
+  staleTime?: number;
   /**
    * Map each API item to a richer app-level type.
    * The API always returns `EventItem`; use this to project it to your own
@@ -42,6 +43,7 @@ export function useEvents<T extends EventItem = EventItem>(
       apiClient.get<EventListResponse>(endpoint),
     enabled: opts?.enabled ?? true,
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
   });
 
   const rawItems = data?.items ?? [];

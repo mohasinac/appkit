@@ -7,6 +7,7 @@ interface UseReviewsOptions {
   initialData?: ReviewListResponse;
   enabled?: boolean;
   endpoint?: string;
+  staleTime?: number;
 }
 
 export function useReviews(
@@ -41,6 +42,7 @@ export function useReviews(
         `${REVIEW_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled,
   });
 

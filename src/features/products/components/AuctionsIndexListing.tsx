@@ -14,10 +14,11 @@ import { useBrands } from "../hooks/useBrands";
 
 const AUCTION_SORT_OPTIONS = [
   { value: "auctionEndDate", label: "Ending Soonest" },
-  { value: "-currentBid", label: "Highest Bid" },
-  { value: "-createdAt", label: "Newest" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "-price", label: "Price: High to Low" },
+  { value: "-auctionEndDate", label: "Ending Latest" },
+  { value: "currentBid", label: "Bid: Low to High" },
+  { value: "-currentBid", label: "Bid: High to Low" },
+  { value: "-createdAt", label: "Newly Listed" },
+  { value: "createdAt", label: "Oldest Listed" },
 ] as const;
 
 const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFrom", "dateTo", "condition"];
@@ -34,6 +35,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [showEnded, setShowEnded] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
@@ -105,7 +107,11 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     minBid: table.get("minBid") ? Number(table.get("minBid")) : undefined,
     maxBid: table.get("maxBid") ? Number(table.get("maxBid")) : undefined,
     storeId: table.get("storeId") || undefined,
-    dateFrom: table.get("dateFrom") || undefined,
+    // When showEnded is false (default), force dateFrom=now so only live auctions appear.
+    // When showEnded is true, respect the filter-drawer value (or show all if none set).
+    dateFrom: showEnded
+      ? (table.get("dateFrom") || undefined)
+      : new Date().toISOString(),
     dateTo: table.get("dateTo") || undefined,
     sort: table.get("sort") || "auctionEndDate",
     page: table.getNumber("page", 1),
@@ -166,6 +172,28 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
         view={view}
         onViewChange={handleViewToggle}
+        extra={
+          <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+            <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+              Show ended
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={showEnded}
+              onClick={() => setShowEnded((v) => !v)}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
+                showEnded ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
+              }`}
+            >
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                  showEnded ? "translate-x-[19px]" : "translate-x-[3px]"
+                }`}
+              />
+            </button>
+          </label>
+        }
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

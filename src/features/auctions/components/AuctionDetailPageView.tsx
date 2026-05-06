@@ -117,9 +117,10 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
   const featured = p.featured === true;
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
   const freeShipping = shippingPaidBy === "seller";
+  const storeName = typeof p.storeName === "string" ? p.storeName : null;
   const sellerName = typeof p.sellerName === "string" ? p.sellerName : null;
-  const safeSeller = sellerName ? safeDisplayName(sellerName, "") : null;
-  const storeSlug = typeof p.storeSlug === "string" ? (p.storeSlug as string) : null;
+  const safeSeller = (storeName || sellerName) ? safeDisplayName((storeName || sellerName) ?? "", "") : null;
+  const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
   const auctionSellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
@@ -127,6 +128,7 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
       ? String(ROUTES.PUBLIC.SELLER_DETAIL(auctionSellerId))
       : null;
   const category = typeof p.category === "string" ? (p.category as string) : null;
+  const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
@@ -150,8 +152,8 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 transition-colors">
-                  {category}
+                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 transition-colors">
+                  {categoryName || category}
                 </Link>
               </>
             )}
@@ -238,6 +240,19 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
                   categoryProductCount: (n, cat) => `${n} in ${cat}`,
                 }}
               />
+
+              {/* Category */}
+              {(categoryName || category) && (
+                <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
+                  {category ? (
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {categoryName || category}
+                    </Link>
+                  ) : (
+                    <Span>{categoryName}</Span>
+                  )}
+                </Row>
+              )}
 
               {/* Highlights */}
               {features.length > 0 && (

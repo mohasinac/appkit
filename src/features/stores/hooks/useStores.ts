@@ -15,6 +15,7 @@ interface UseStoresOptions {
   endpoint?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialData?: any;
+  staleTime?: number;
 }
 
 export function useStores(
@@ -36,6 +37,7 @@ export function useStores(
     queryFn: () =>
       apiClient.get<StoreListResponse>(endpoint),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled ?? true,
   });
 

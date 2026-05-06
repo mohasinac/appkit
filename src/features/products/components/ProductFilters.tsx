@@ -61,9 +61,11 @@ export const PRODUCT_SELLER_SORT_OPTIONS = [
 
 export const PRODUCT_PUBLIC_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
+  { value: "createdAt", label: "Oldest First" },
   { value: "-price", label: "Price: High to Low" },
   { value: "price", label: "Price: Low to High" },
-  { value: "title", label: "Title A-Z" },
+  { value: "title", label: "Title A–Z" },
+  { value: "-title", label: "Title Z–A" },
   { value: "-views", label: "Most Viewed" },
 ] as const;
 

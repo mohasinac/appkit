@@ -35,6 +35,7 @@ export interface ProductDocument {
   seoDescription?: string;
   seoKeywords?: string[];
   category: string;
+  categoryName?: string;
   subcategory?: string;
   brand?: string;
   price: number;
@@ -47,6 +48,7 @@ export interface ProductDocument {
   status: ProductStatus;
   sellerId: string;
   storeId?: string;
+  storeName?: string;
   sellerName: string;
   sellerEmail: string;
   featured: boolean;

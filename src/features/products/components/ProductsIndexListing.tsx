@@ -26,6 +26,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [showSold, setShowSold] = useState(false);
   const [view, setView] = useState<ViewMode>(
     (table.get("view") as ViewMode) || "card",
   );
@@ -105,6 +106,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     perPage: table.getNumber("pageSize", 24),
     isAuction: false,
     isPreOrder: false,
+    status: showSold ? undefined : ("published" as const),
   };
 
   const { products, totalPages, page, isLoading } = useProducts(
@@ -180,17 +182,41 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         view={view === "card" ? "grid" : "list"}
         onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
         extra={
-          <button
-            type="button"
-            onClick={() => { setSelectionMode((m) => !m); selection.clearSelection(); }}
-            className={`shrink-0 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-medium transition-colors ${
-              selectionMode
-                ? "border-primary bg-primary/10 text-primary dark:text-primary-400"
-                : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-            }`}
-          >
-            {selectionMode ? "Cancel" : "Select"}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Show sold toggle */}
+            <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+              <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+                Show sold
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={showSold}
+                onClick={() => setShowSold((v) => !v)}
+                className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
+                  showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
+                }`}
+              >
+                <span
+                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                    showSold ? "translate-x-[19px]" : "translate-x-[3px]"
+                  }`}
+                />
+              </button>
+            </label>
+            {/* Select mode toggle */}
+            <button
+              type="button"
+              onClick={() => { setSelectionMode((m) => !m); selection.clearSelection(); }}
+              className={`shrink-0 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-medium transition-colors ${
+                selectionMode
+                  ? "border-primary bg-primary/10 text-primary dark:text-primary-400"
+                  : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+              }`}
+            >
+              {selectionMode ? "Cancel" : "Select"}
+            </button>
+          </div>
         }
       />
 

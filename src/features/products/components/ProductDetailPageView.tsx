@@ -215,6 +215,7 @@ export async function ProductDetailPageView({
 
   const category =
     typeof p.category === "string" ? (p.category as string) : null;
+  const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
   const subcategory =
     typeof p.subcategory === "string" ? (p.subcategory as string) : null;
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;
@@ -250,12 +251,13 @@ export async function ProductDetailPageView({
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
   const freeShipping = shippingPaidBy === "seller";
   const featured = p.featured === true;
+  const storeName = typeof p.storeName === "string" ? (p.storeName as string) : null;
   const sellerName =
     typeof p.sellerName === "string" ? (p.sellerName as string) : null;
-  const safeSeller = sellerName
-    ? safeDisplayName(sellerName, "")
+  const safeSeller = (storeName || sellerName)
+    ? safeDisplayName((storeName || sellerName) ?? "", "")
     : null;
-  const storeSlug = typeof p.storeSlug === "string" ? (p.storeSlug as string) : null;
+  const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
   const sellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
@@ -306,8 +308,8 @@ export async function ProductDetailPageView({
                 {category && (
                   <>
                     <Span aria-hidden>/</Span>
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 transition-colors">
-                      {category}
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 transition-colors">
+                      {categoryName || category}
                     </Link>
                   </>
                 )}
@@ -408,11 +410,11 @@ export async function ProductDetailPageView({
               )}
 
               {/* Category + brand path */}
-              {(category || brand) && (
+              {(categoryName || category || brand) && (
                 <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
                   {category && (
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="capitalize hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                      {category}
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {categoryName || category}
                     </Link>
                   )}
                   {category && brand && <Span>›</Span>}

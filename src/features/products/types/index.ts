@@ -109,6 +109,9 @@ export interface ProductItem {
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   preOrderCancellable?: boolean;
 
+  /** Winner's display name for ended auctions — shown masked in public UI */
+  winnerDisplayName?: string;
+
   // Analytics
   viewCount?: number;
   avgRating?: number;

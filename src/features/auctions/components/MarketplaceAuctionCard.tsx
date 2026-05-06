@@ -40,6 +40,8 @@ export interface MarketplaceAuctionCardData {
   status?: string;
   slug?: string;
   buyNowPrice?: number;
+  /** Display name of the auction winner — shown masked when the auction has ended */
+  winnerDisplayName?: string;
 }
 
 export interface MarketplaceAuctionCardLabels {
@@ -52,6 +54,8 @@ export interface MarketplaceAuctionCardLabels {
   typeBadge?: string;
   currentBid?: string;
   startingBid?: string;
+  winningBid?: string;
+  wonBy?: string;
   totalBids?: (count: number) => string;
   placeBid?: string;
   buyout?: string;
@@ -86,6 +90,8 @@ const DEFAULT_LABELS: Required<MarketplaceAuctionCardLabels> = {
   typeBadge: "Auction",
   currentBid: "Current bid",
   startingBid: "Starting bid",
+  winningBid: "Winning bid",
+  wonBy: "Won by",
   totalBids: (count: number) => `${count} bids`,
   placeBid: "Place bid",
   buyout: "Buyout",
@@ -93,6 +99,21 @@ const DEFAULT_LABELS: Required<MarketplaceAuctionCardLabels> = {
   removeFromWishlist: "Remove from wishlist",
   videoLabel: "Video available",
 };
+
+function maskDisplayName(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) {
+    const p = parts[0];
+    return p.length <= 2 ? p : p[0] + "*".repeat(Math.min(p.length - 1, 3));
+  }
+  return parts
+    .map((part, i) => {
+      if (!part) return "";
+      if (i === parts.length - 1) return part[0] + ".";
+      return part[0] + "*".repeat(Math.min(part.length - 1, 3));
+    })
+    .join(" ");
+}
 
 function resolveHref(
   product: MarketplaceAuctionCardData,
@@ -339,11 +360,20 @@ export function MarketplaceAuctionCard({
 
         <Div>
           <Caption>
-            {hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}
+            {isEnded && hasCurrentBid
+              ? mergedLabels.winningBid
+              : hasCurrentBid
+                ? mergedLabels.currentBid
+                : mergedLabels.startingBid}
           </Caption>
           <Text className="text-base font-bold leading-none text-primary">
             {formatCurrency(displayBid, getDefaultCurrency())}
           </Text>
+          {isEnded && product.winnerDisplayName && (
+            <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">
+              {mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}
+            </Caption>
+          )}
         </Div>
 
         <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">

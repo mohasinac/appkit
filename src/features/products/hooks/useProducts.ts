@@ -13,6 +13,12 @@ interface UseProductsOptions<T extends ProductItem = ProductItem> {
   initialData?: ProductListResponse;
   enabled?: boolean;
   /**
+   * How long (ms) React Query considers the data fresh before background-refetching.
+   * Defaults to Infinity when `initialData` is supplied (SSR hydration — no refetch
+   * on mount). Callers can override with a lower value if live data is needed.
+   */
+  staleTime?: number;
+  /**
    * Map each API item to a richer app-level type.
    * The API always returns `ProductItem`; use this to project it to your own
    * extended type (e.g. `ProductDocument`) without forking the package.
@@ -68,6 +74,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
         `${PRODUCT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled,
   });
 
@@ -92,6 +99,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
 interface UseProductOptions<T extends ProductItem = ProductItem> {
   initialData?: ProductItem;
   enabled?: boolean;
+  staleTime?: number;
   /**
    * Map the API item to a richer app-level type.
    * @example
@@ -110,6 +118,7 @@ export function useProduct<T extends ProductItem = ProductItem>(
     queryKey: ["products", slug],
     queryFn: () => apiClient.get<ProductItem>(PRODUCT_ENDPOINTS.BY_SLUG(slug)),
     initialData: opts?.initialData,
+    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
     enabled: opts?.enabled !== false && !!slug,
   });
 
