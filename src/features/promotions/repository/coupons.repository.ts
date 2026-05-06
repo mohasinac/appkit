@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Coupons Repository
  *
  * Manages coupon creation, validation, and usage tracking
@@ -14,6 +14,7 @@ import type {
 } from "../../../providers/db-firebase";
 import {
   COUPONS_COLLECTION,
+  COUPON_FIELDS,
   CouponDocument,
   CouponUsageDocument,
   CouponCreateInput,
@@ -30,18 +31,6 @@ import { increment, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 
 const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
-const COUPON_FIELDS = {
-  CODE: "code",
-  TYPE: "type",
-  CREATED_BY: "createdBy",
-  SELLER_ID: "sellerId",
-  CREATED_AT: "createdAt",
-  VALIDITY_FIELDS: {
-    IS_ACTIVE: "validity.isActive",
-    START_DATE: "validity.startDate",
-    END_DATE: "validity.endDate",
-  },
-} as const;
 
 /**
  * Repository for coupon management
@@ -117,9 +106,9 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       // validity.isActive ASC + validity.endDate ASC (see firestore.indexes.json)
       const snapshot = await this.db
         .collection(this.collection)
-        .where(COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE, "==", true)
-        .where(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, ">=", now)
-        .orderBy(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "asc")
+        .where(COUPON_FIELDS.VALIDITY.IS_ACTIVE, "==", true)
+        .where(COUPON_FIELDS.VALIDITY.END_DATE, ">=", now)
+        .orderBy(COUPON_FIELDS.VALIDITY.END_DATE, "asc")
         .get();
 
       return snapshot.docs
@@ -187,13 +176,13 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       const now = new Date();
       const futureDate = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
 
-      // Firestore-native range filter — reuses the same composite index as getActiveCoupons()
+      // Firestore-native range filter â€” reuses the same composite index as getActiveCoupons()
       const snapshot = await this.db
         .collection(this.collection)
-        .where(COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE, "==", true)
-        .where(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, ">", now)
-        .where(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "<=", futureDate)
-        .orderBy(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "asc")
+        .where(COUPON_FIELDS.VALIDITY.IS_ACTIVE, "==", true)
+        .where(COUPON_FIELDS.VALIDITY.END_DATE, ">", now)
+        .where(COUPON_FIELDS.VALIDITY.END_DATE, "<=", futureDate)
+        .orderBy(COUPON_FIELDS.VALIDITY.END_DATE, "asc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
@@ -516,7 +505,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       };
     }
 
-    // Determine eligible items — no blanket exclusion by product type.
+    // Determine eligible items â€” no blanket exclusion by product type.
     // Coupon flags (applicableToAuctions) decide type eligibility below.
     let eligible = [...cartItems];
 
@@ -528,9 +517,9 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     }
 
     // Apply product-type filter based on the coupon's own flag:
-    //   true  → auction-only coupon
-    //   false → explicitly excludes auctions (but includes pre-orders & simple)
-    //   undefined → no restriction; applies to all product types
+    //   true  â†’ auction-only coupon
+    //   false â†’ explicitly excludes auctions (but includes pre-orders & simple)
+    //   undefined â†’ no restriction; applies to all product types
     if (coupon.applicableToAuctions === true) {
       eligible = eligible.filter((item) => item.isAuction);
     } else if (coupon.applicableToAuctions === false) {
@@ -550,7 +539,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         (item) => !excludeProducts.includes(item.productId),
       );
     }
-    // Note: category filtering requires product metadata — skipped here but
+    // Note: category filtering requires product metadata â€” skipped here but
     // the restriction is stored and can be enforced by the order service.
     void applicableCategories;
 
@@ -669,8 +658,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   async getExpiredActiveRefs(now: Date): Promise<DocumentReference[]> {
     const snap = await this.db
       .collection(this.collection)
-      .where(COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE, "==", true)
-      .where(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "<=", now)
+      .where(COUPON_FIELDS.VALIDITY.IS_ACTIVE, "==", true)
+      .where(COUPON_FIELDS.VALIDITY.END_DATE, "<=", now)
       .limit(500)
       .get();
     return snap.docs.map((d) => d.ref as DocumentReference);
@@ -681,7 +670,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
    */
   deactivateInBatch(batch: WriteBatch, ref: DocumentReference): void {
     batch.update(ref as unknown as FirebaseFirestore.DocumentReference, {
-      [COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE]: false,
+      [COUPON_FIELDS.VALIDITY.IS_ACTIVE]: false,
       updatedAt: serverTimestamp(),
     });
   }

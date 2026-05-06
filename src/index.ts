@@ -7002,6 +7002,8 @@ export { COUPONS_PUBLIC_FIELDS } from "./features/promotions/index";
 // COUPONS_UPDATABLE_FIELDS - Constant used across modules.
 export { COUPONS_UPDATABLE_FIELDS } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// COUPON_FIELDS - Field-name constants + scope/type value enums for coupons.
+export { COUPON_FIELDS } from "./features/promotions/index";
 // COUPON_TYPE_LABELS - Constant used across modules.
 export { COUPON_TYPE_LABELS } from "./features/promotions/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8441,7 +8443,7 @@ export { Ol } from "./ui/index";
 
 // -- Missing constants ----------------------------------------------------------
 export {
-  API_ENDPOINTS, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
+  API_ENDPOINTS, API_ROUTES, LOGS_ENDPOINTS, AUTH_ENDPOINTS, ACCOUNT_ENDPOINTS,
   NOTIFICATIONS_ENDPOINTS, ADMIN_ENDPOINTS, CHAT_ENDPOINTS, AUCTION_ENDPOINTS,
   BID_ENDPOINTS, CART_ENDPOINTS, CATEGORY_ENDPOINTS, CHECKOUT_ENDPOINTS,
   PAYMENT_ENDPOINTS, COPILOT_ENDPOINTS, CORPORATE_ENDPOINTS, EVENT_ENDPOINTS,

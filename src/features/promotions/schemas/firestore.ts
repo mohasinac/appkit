@@ -94,6 +94,35 @@ export const COUPONS_INDEXED_FIELDS = [
   "createdBy",
 ] as const;
 
+export const COUPON_FIELDS = {
+  CODE: "code",
+  TYPE: "type",
+  SCOPE: "scope",
+  CREATED_BY: "createdBy",
+  SELLER_ID: "sellerId",
+  CREATED_AT: "createdAt",
+  UPDATED_AT: "updatedAt",
+  VALIDITY: {
+    IS_ACTIVE: "validity.isActive",
+    START_DATE: "validity.startDate",
+    END_DATE: "validity.endDate",
+  },
+  USAGE: {
+    CURRENT_USAGE: "usage.currentUsage",
+    TOTAL_LIMIT: "usage.totalLimit",
+  },
+  TYPE_VALUES: {
+    PERCENTAGE: "percentage" as CouponType,
+    FIXED: "fixed" as CouponType,
+    FREE_SHIPPING: "free_shipping" as CouponType,
+    BUY_X_GET_Y: "buy_x_get_y" as CouponType,
+  },
+  SCOPE_VALUES: {
+    ADMIN: "admin" as const,
+    SELLER: "seller" as const,
+  },
+} as const;
+
 export const COUPON_TYPE_LABELS: Record<CouponType, string> = {
   percentage: "Percentage Discount",
   fixed: "Fixed Amount Discount",
