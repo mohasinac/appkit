@@ -11,7 +11,7 @@ import { brandsSeedData } from "./brands-seed-data";
 import { categoriesSeedData } from "./categories-seed-data";
 import { usersSeedData } from "./users-seed-data";
 import { storesSeedData } from "./stores-seed-data";
-import { productsSeedData } from "./products-seed-data";
+import { productsStandardSeedData } from "./products-standard-seed-data";
 import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
@@ -68,7 +68,7 @@ export const SEED_MANIFEST: SeedManifest = {
     })),
   ),
   products: pick(
-    asArr(productsSeedData).map((p) => ({
+    asArr(productsStandardSeedData).map((p) => ({
       ...p,
       type: p.isAuction ? "auction" : p.isPreOrder ? "preorder" : "standard",
     })),

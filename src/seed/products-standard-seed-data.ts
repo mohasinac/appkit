@@ -1,0 +1,1241 @@
+/**
+ * Standard Products Seed Data — Collectibles Edition
+ * 20 products across 5 stores covering all collectibles verticals.
+ * id === slug convention enforced throughout.
+ * Prices in INR paise (₹1 = 100 paise).
+ */
+
+import type { ProductDocument } from "../features/products/schemas";
+
+const NOW = new Date();
+const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
+
+export const productsStandardSeedData: Partial<ProductDocument>[] = [
+  // ── Store: Pokémon Palace (user-aryan-kapoor) — 5 products ─────────────────
+
+  // 1. Pokémon SV Paldean Fates ETB
+  {
+    id: "product-pokemon-sv-etb",
+    slug: "product-pokemon-sv-etb",
+    title: "Pokémon TCG: Scarlet & Violet — Paldean Fates Elite Trainer Box",
+    description:
+      "The Paldean Fates Elite Trainer Box is packed with Pokémon from the Paldea region in their special Shiny forms. Includes 9 Scarlet & Violet—Paldean Fates booster packs, 65 Pokémon card sleeves featuring Shiny Tinkaton ex, 45 Pokémon TCG Energy cards, a player's guide to the set, 6 damage-counter dice, 1 competition-legal coin-flip die, 2 plastic condition markers, and a collector's box.",
+    category: "category-pokemon-tcg",
+    brand: "brand-pokemon-company",
+    price: 449900,
+    currency: "INR",
+    stockQuantity: 15,
+    availableQuantity: 15,
+    mainImage:
+      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-aryan-kapoor",
+    sellerName: "Aryan Kapoor",
+    sellerEmail: "aryan@pokemonpalace.in",
+    storeId: "store-pokemon-palace",
+    featured: false,
+    isPromoted: true,
+    tags: [
+      "pokemon",
+      "etb",
+      "paldean-fates",
+      "scarlet-violet",
+      "sealed",
+      "shiny",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Set", value: "Scarlet & Violet — Paldean Fates" },
+      { name: "Language", value: "English" },
+      { name: "Contents", value: "9 booster packs, 65 sleeves, dice, coin" },
+      { name: "Year", value: "2024" },
+      { name: "Publisher", value: "The Pokémon Company International" },
+    ],
+    features: [
+      "Factory sealed — authentic PTCGI guarantee",
+      "9 booster packs with Shiny Pokémon cards",
+      "Includes 65 protective card sleeves",
+      "Competition-legal accessories included",
+      "Sourced directly from official distributor",
+    ],
+    shippingInfo:
+      "Double-boxed with foam inserts. Free shipping on orders above ₹1,499. 3–7 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed product (seal must be intact). No returns on opened packs.",
+    allowOffers: false,
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(2),
+  },
+
+  // 2. Pokémon 151 Booster Box (sealed)
+  {
+    id: "product-pokemon-151-booster-box",
+    slug: "product-pokemon-151-booster-box",
+    title: "Pokémon TCG: Scarlet & Violet — 151 Booster Box (36 Packs)",
+    description:
+      "Sealed booster box of the iconic Pokémon TCG: 151 set. Each box contains 36 booster packs, each with 10 cards including 1 reverse holo and at least 1 rare or higher. The 151 set celebrates the original 151 Pokémon with special illustration rares, ultra rares, and the coveted gold card chase cards. Investment-grade sealed product — ideal for collectors and investors.",
+    category: "category-sealed-product",
+    brand: "brand-pokemon-company",
+    price: 1499900,
+    currency: "INR",
+    stockQuantity: 5,
+    availableQuantity: 5,
+    mainImage:
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-aryan-kapoor",
+    sellerName: "Aryan Kapoor",
+    sellerEmail: "aryan@pokemonpalace.in",
+    storeId: "store-pokemon-palace",
+    featured: true,
+    isPromoted: false,
+    tags: [
+      "pokemon",
+      "booster-box",
+      "151",
+      "scarlet-violet",
+      "sealed",
+      "investment",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Set", value: "Scarlet & Violet — 151" },
+      { name: "Packs per Box", value: "36" },
+      { name: "Cards per Pack", value: "10" },
+      { name: "Language", value: "English" },
+      { name: "Year", value: "2023" },
+    ],
+    features: [
+      "Factory sealed booster box",
+      "36 booster packs — one case equivalent",
+      "Features Mew, Venusaur, Charizard, Blastoise chase cards",
+      "Investment-grade sealed collectible",
+      "Sourced from official UK distributor shipment",
+    ],
+    shippingInfo:
+      "Double-boxed with foam inserts — no corner damage guarantee. Free shipping. 3–7 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed product (seal must be intact). No returns on opened boxes.",
+    allowOffers: true,
+    minOfferPercent: 90,
+    createdAt: daysAgo(55),
+    updatedAt: daysAgo(3),
+  },
+
+  // 3. Pokémon Pikachu Plush 8"
+  {
+    id: "product-pokemon-pikachu-plush-8",
+    slug: "product-pokemon-pikachu-plush-8",
+    title: "Pokémon Center: Pikachu Sitting Cuties Plush — 8 Inch",
+    description:
+      "Official Pokémon Center Pikachu Sitting Cuties plush, 8 inches tall. Super-soft, detailed embroidery, and safe for all ages. Comes in original Pokémon Center hang-tag packaging. A must-have for every Pokémon fan — the iconic expression and bright yellow colouring make this Pikachu plush a display favourite.",
+    category: "category-nendoroids-chibis",
+    brand: "brand-pokemon-company",
+    price: 129900,
+    currency: "INR",
+    stockQuantity: 25,
+    availableQuantity: 25,
+    mainImage:
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-aryan-kapoor",
+    sellerName: "Aryan Kapoor",
+    sellerEmail: "aryan@pokemonpalace.in",
+    storeId: "store-pokemon-palace",
+    featured: false,
+    isPromoted: false,
+    tags: ["pokemon", "pikachu", "plush", "pokemon-center", "official", "gift"],
+    condition: "new",
+    specifications: [
+      { name: "Size", value: "8 inches", unit: "inches" },
+      { name: "Material", value: "Polyester plush" },
+      { name: "License", value: "Official Pokémon Center" },
+      { name: "Age Rating", value: "3+" },
+    ],
+    features: [
+      "Official Pokémon Center licensed product",
+      "CE safety certified — safe for children 3+",
+      "Super-soft polyester plush material",
+      "Embroidered face details for durability",
+      "Original hang-tag packaging included",
+    ],
+    shippingInfo:
+      "Bubble-padded envelope. Free shipping on orders above ₹1,499. 3–7 business days.",
+    returnPolicy:
+      "7-day return if product is defective or not as described. Must be in original packaging.",
+    allowOffers: false,
+    createdAt: daysAgo(50),
+    updatedAt: daysAgo(5),
+  },
+
+  // 4. Pokémon Gengar Sitting Cuties Plush
+  {
+    id: "product-pokemon-gengar-sitting-cuties",
+    slug: "product-pokemon-gengar-sitting-cuties",
+    title: "Pokémon Center: Gengar Sitting Cuties Plush — 12 Inch",
+    description:
+      "Official Pokémon Center Gengar Sitting Cuties plush in a 12-inch extra-large size. Everyone's favourite Ghost-type Pokémon rendered in super-soft plush with its iconic grin. Perfect display piece and gift. Comes with original Pokémon Center hang-tag. Limited availability — direct import from the official Pokémon Center Japan.",
+    category: "category-nendoroids-chibis",
+    brand: "brand-pokemon-company",
+    price: 149900,
+    currency: "INR",
+    stockQuantity: 12,
+    availableQuantity: 12,
+    mainImage:
+      "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-aryan-kapoor",
+    sellerName: "Aryan Kapoor",
+    sellerEmail: "aryan@pokemonpalace.in",
+    storeId: "store-pokemon-palace",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "pokemon",
+      "gengar",
+      "plush",
+      "pokemon-center",
+      "ghost-type",
+      "official",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Size", value: "12 inches", unit: "inches" },
+      { name: "Material", value: "Polyester plush" },
+      { name: "License", value: "Official Pokémon Center Japan" },
+      { name: "Age Rating", value: "3+" },
+    ],
+    features: [
+      "Official Pokémon Center Japan licensed product",
+      "12-inch extra-large format",
+      "Super-soft polyester plush",
+      "Embroidered grin and eye details",
+      "Japan import — direct sourcing",
+    ],
+    shippingInfo:
+      "Bubble-padded envelope. Free shipping on orders above ₹1,499. 3–7 business days.",
+    returnPolicy:
+      "7-day return if product is defective or not as described. Must be in original packaging.",
+    allowOffers: false,
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(4),
+  },
+
+  // 5. Pokémon Base Set Booster Pack (Shadowless Sealed)
+  {
+    id: "product-pokemon-base-set-booster-sealed",
+    slug: "product-pokemon-base-set-booster-sealed",
+    title:
+      "Pokémon Base Set Booster Pack — Shadowless 1st Print (Sealed, 1999)",
+    description:
+      "Extraordinarily rare sealed 1999 Pokémon Base Set booster pack — Shadowless first print run. The shadowless print is identified by the lack of drop shadow on the card frame, produced only during the first months of the English TCG print run. This sealed pack is in pristine condition, never opened, and represents one of the finest Pokémon TCG investments available. PSA population report shows very few sealed Shadowless packs in existence. Art: Clefairy Booster. Grading / resale value estimated ₹1,50,000–₹3,00,000 once professionally authenticated.",
+    category: "category-vintage-tcg",
+    brand: "brand-pokemon-company",
+    price: 8999900,
+    currency: "INR",
+    stockQuantity: 1,
+    availableQuantity: 1,
+    mainImage:
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-aryan-kapoor",
+    sellerName: "Aryan Kapoor",
+    sellerEmail: "aryan@pokemonpalace.in",
+    storeId: "store-pokemon-palace",
+    featured: true,
+    isPromoted: false,
+    tags: [
+      "pokemon",
+      "base-set",
+      "shadowless",
+      "1999",
+      "sealed",
+      "vintage",
+      "investment",
+      "rare",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Set", value: "Base Set — Shadowless" },
+      { name: "Print Run", value: "1st Print (Shadowless)" },
+      { name: "Year", value: "1999" },
+      { name: "Booster Art", value: "Clefairy" },
+      { name: "Language", value: "English" },
+      { name: "Condition", value: "Sealed — never opened" },
+    ],
+    features: [
+      "1999 Shadowless first-print run — extremely rare",
+      "Sealed in original factory crimp",
+      "Stored in UV-protected sleeve since acquisition",
+      "Certificate of authenticity included",
+      "Investment-grade — estimated appreciation potential",
+    ],
+    shippingInfo:
+      "Insured courier with signature on delivery. Double-boxed with foam insert. Extra care packaging at no charge.",
+    returnPolicy:
+      "3-day return window if pack is proven to be a reproduction. No returns for any other reason — please ask all questions before purchasing.",
+    insurance: true,
+    insuranceCost: 50000,
+    allowOffers: true,
+    minOfferPercent: 85,
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Store: CardGame Hub (user-nisha-reddy) — 2 products ────────────────────
+
+  // 6. Yu-Gi-Oh! 25th Anniversary Tin
+  {
+    id: "product-yugioh-25th-tin",
+    slug: "product-yugioh-25th-tin",
+    title: "Yu-Gi-Oh! 25th Anniversary Tin: Dueling Mirrors",
+    description:
+      "Celebrate 25 years of the Yu-Gi-Oh! Trading Card Game with this premium anniversary tin. Contains 3 Mega-Packs of 16 cards each (48 cards total), including a guaranteed Ghost Rare and 3 Secret Rares per tin. Features reprint versions of popular tournament staples in ultra-rare foil treatments. The commemorative tin itself is a collector's piece with 25th anniversary embossing and gold foil detail.",
+    category: "category-yugioh-tcg",
+    brand: "brand-konami",
+    price: 299900,
+    currency: "INR",
+    stockQuantity: 8,
+    availableQuantity: 8,
+    mainImage:
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-nisha-reddy",
+    sellerName: "Nisha Reddy",
+    sellerEmail: "nisha@cardgamehub.in",
+    storeId: "store-cardgame-hub",
+    featured: true,
+    isPromoted: false,
+    tags: [
+      "yugioh",
+      "tin",
+      "25th-anniversary",
+      "konami",
+      "ghost-rare",
+      "secret-rare",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Product", value: "25th Anniversary Tin: Dueling Mirrors" },
+      { name: "Mega-Packs", value: "3" },
+      { name: "Cards per Mega-Pack", value: "16" },
+      { name: "Guaranteed Ghost Rare", value: "1 per tin" },
+      { name: "Secret Rares", value: "3+ per tin" },
+      { name: "Language", value: "English" },
+    ],
+    features: [
+      "25th Anniversary commemorative tin",
+      "Guaranteed Ghost Rare card",
+      "3 Secret Rare cards minimum",
+      "Tournament staple reprints",
+      "Collector-grade embossed tin included",
+    ],
+    shippingInfo:
+      "Singles shipped in toploader inside padded envelope. Free shipping on orders above ₹1,199. 4–6 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed product only. No returns on opened tins.",
+    allowOffers: false,
+    createdAt: daysAgo(70),
+    updatedAt: daysAgo(5),
+  },
+
+  // 7. Yu-Gi-Oh! Structure Deck: Alba Strike
+  {
+    id: "product-yugioh-structure-albaz",
+    slug: "product-yugioh-structure-albaz",
+    title: "Yu-Gi-Oh! Structure Deck: Alba Strike",
+    description:
+      "A ready-to-play 41-card Structure Deck featuring the Albaz-related cards and Fallen of Albaz strategies. Includes powerful 'Mirrorjade the Iceblade Dragon' and 'Despian Tragedy'. Ideal for beginner-to-intermediate players looking to build a competitive Dogmatika/Albaz fusion strategy. The deck features 2 Ultra Rare, 2 Super Rare, and 37 Common cards, along with a Deck Guide and game mat.",
+    category: "category-yugioh-tcg",
+    brand: "brand-konami",
+    price: 89900,
+    currency: "INR",
+    stockQuantity: 20,
+    availableQuantity: 20,
+    mainImage:
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578292992345-7ee038c5fb7c?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-nisha-reddy",
+    sellerName: "Nisha Reddy",
+    sellerEmail: "nisha@cardgamehub.in",
+    storeId: "store-cardgame-hub",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "yugioh",
+      "structure-deck",
+      "alba-strike",
+      "albaz",
+      "dogmatika",
+      "konami",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Deck Size", value: "41 cards" },
+      { name: "Ultra Rare", value: "2" },
+      { name: "Super Rare", value: "2" },
+      { name: "Commons", value: "37" },
+      { name: "Strategy", value: "Albaz Fusion / Dogmatika" },
+      { name: "Language", value: "English" },
+    ],
+    features: [
+      "Ready-to-play 41-card deck",
+      "Includes powerful Mirrorjade the Iceblade Dragon",
+      "Deck guide for new players included",
+      "Game mat included",
+      "Great entry point for competitive Albaz strategy",
+    ],
+    shippingInfo:
+      "Bubble-padded envelope. Free shipping on orders above ₹1,199. 4–6 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed product (box must be unopened). No returns on opened decks.",
+    allowOffers: false,
+    createdAt: daysAgo(65),
+    updatedAt: daysAgo(7),
+  },
+
+  // ── Store: Diecast Depot (user-vikram-mehta) — 5 products ──────────────────
+
+  // 8. Hot Wheels Redline 1969 Camaro (Vintage)
+  {
+    id: "product-hot-wheels-redline-1969-camaro",
+    slug: "product-hot-wheels-redline-1969-camaro",
+    title:
+      "Hot Wheels Redline 1969 Custom Camaro — Orange (Vintage, Near Mint)",
+    description:
+      "Original 1969 Hot Wheels Redline Custom Camaro in bright orange with red-line tyres. This is a first-year release car from the original Hot Wheels line launched by Mattel in 1968. Condition is Near Mint (NM) — vibrant paint with minimal surface scratches, red lines intact, all four wheels spin freely. Stored in UV-resistant case for the past 15 years. Original collector sourced from a US estate sale. An extraordinary piece for serious Redline collectors.",
+    category: "category-hot-wheels",
+    brand: "brand-hot-wheels",
+    price: 499900,
+    currency: "INR",
+    stockQuantity: 1,
+    availableQuantity: 1,
+    mainImage:
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-vikram-mehta",
+    sellerName: "Vikram Mehta",
+    sellerEmail: "vikram@diecastdepot.in",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "hot-wheels",
+      "redline",
+      "1969",
+      "camaro",
+      "vintage",
+      "collector",
+      "rare",
+    ],
+    condition: "used",
+    specifications: [
+      { name: "Year", value: "1969" },
+      { name: "Scale", value: "1:64" },
+      { name: "Colour", value: "Orange" },
+      { name: "Wheels", value: "Redline" },
+      { name: "Condition Grade", value: "Near Mint (NM)" },
+      { name: "Country of Origin", value: "USA (Hong Kong manufactured)" },
+    ],
+    features: [
+      "First-year Hot Wheels Redline series (1969)",
+      "Near Mint condition — vibrant original paint",
+      "Authentic red-line tyres intact",
+      "US estate sale provenance",
+      "UV-protected storage history",
+    ],
+    shippingInfo:
+      "Each car bubble-wrapped individually and packed in rigid mailer. Insured shipping included. 3–5 business days.",
+    returnPolicy:
+      "3-day return window if car is misrepresented in condition grading. Photos taken before shipping for reference.",
+    insurance: true,
+    insuranceCost: 10000,
+    allowOffers: true,
+    minOfferPercent: 88,
+    createdAt: daysAgo(40),
+    updatedAt: daysAgo(2),
+  },
+
+  // 9. Hot Wheels Car Culture Premium 5-Pack
+  {
+    id: "product-hot-wheels-premium-5pack",
+    slug: "product-hot-wheels-premium-5pack",
+    title: "Hot Wheels Car Culture: Modern Classics Premium 5-Pack",
+    description:
+      "Hot Wheels Car Culture Modern Classics 5-car premium set featuring iconic Japanese performance cars: Honda S2000, Mazda RX-7 (FD), Nissan Skyline GT-R (R34), Toyota Supra (A80), and Honda NSX (NA1). Premium rubber tyres, opening hoods on select vehicles, and individually numbered collector cards. Each car has authentic die-cast metal construction with premium paint finish.",
+    category: "category-hot-wheels",
+    brand: "brand-hot-wheels",
+    price: 129900,
+    currency: "INR",
+    stockQuantity: 18,
+    availableQuantity: 18,
+    mainImage:
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-vikram-mehta",
+    sellerName: "Vikram Mehta",
+    sellerEmail: "vikram@diecastdepot.in",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: true,
+    tags: [
+      "hot-wheels",
+      "car-culture",
+      "premium",
+      "5-pack",
+      "jdm",
+      "modern-classics",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Set", value: "Car Culture — Modern Classics" },
+      { name: "Cars", value: "5" },
+      { name: "Scale", value: "1:64" },
+      { name: "Wheels", value: "Premium rubber" },
+      { name: "Features", value: "Opening hoods (select cars)" },
+    ],
+    features: [
+      "Premium 5-car set — Japanese performance cars",
+      "Real rubber tyres for premium feel",
+      "Opening hoods on select vehicles",
+      "Individually numbered collector cards included",
+      "Die-cast metal with premium paint",
+    ],
+    shippingInfo:
+      "Cars packed individually in bubble wrap inside rigid mailer. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed blister pack (blister must be unopened).",
+    allowOffers: false,
+    createdAt: daysAgo(35),
+    updatedAt: daysAgo(1),
+  },
+
+  // 10. Tomica Limited Vintage Datsun 240Z
+  {
+    id: "product-tomica-limited-datsun",
+    slug: "product-tomica-limited-datsun",
+    title: "Tomica Limited Vintage: Datsun Fairlady 240Z (Silver) — TLV-N43",
+    description:
+      "Tomica Limited Vintage precision diecast of the iconic Datsun Fairlady 240Z in silver. Part of the premium TLV-Vintage series — highly detailed 1:64 scale model with opening doors, rubber tyres, and photo-etched badges. The 240Z is widely regarded as one of the most beautiful Japanese sports cars ever made and TLV captures every curve faithfully. Comes in original Tomica Limited Vintage box with protective tray.",
+    category: "category-tomica",
+    brand: "brand-tomica",
+    price: 299900,
+    currency: "INR",
+    stockQuantity: 6,
+    availableQuantity: 6,
+    mainImage:
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-vikram-mehta",
+    sellerName: "Vikram Mehta",
+    sellerEmail: "vikram@diecastdepot.in",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "tomica",
+      "limited-vintage",
+      "datsun",
+      "240z",
+      "fairlady",
+      "tlv",
+      "japanese-cars",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Model", value: "Datsun Fairlady 240Z" },
+      { name: "Series", value: "Tomica Limited Vintage (TLV-N43)" },
+      { name: "Colour", value: "Silver" },
+      { name: "Scale", value: "1:64" },
+      { name: "Features", value: "Opening doors, rubber tyres, photo-etched badges" },
+    ],
+    features: [
+      "Premium TLV-Vintage precision casting",
+      "Opening doors with interior detail",
+      "Real rubber tyres",
+      "Photo-etched badges and emblems",
+      "Original box with protective tray",
+    ],
+    shippingInfo:
+      "Individually bubble-wrapped and packed in rigid mailer. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed cars (box must be unopened). Loose cars: 3-day return if misrepresented.",
+    allowOffers: true,
+    minOfferPercent: 90,
+    createdAt: daysAgo(25),
+    updatedAt: daysAgo(3),
+  },
+
+  // 11. Hot Wheels RLC Bone Shaker
+  {
+    id: "product-hot-wheels-rlc-bone-shaker",
+    slug: "product-hot-wheels-rlc-bone-shaker",
+    title:
+      "Hot Wheels RLC Exclusive: Bone Shaker — Matte Black (2023 Members Only)",
+    description:
+      "Hot Wheels Red Line Club exclusive 2023 Bone Shaker in matte black with gold spectraflame accents. RLC exclusive cars are produced in strictly limited quantities (typically under 10,000 units worldwide) and are available only to Red Line Club members. This is the iconic Bone Shaker in the most desirable colourway — matte black with metal-flake. Includes original RLC packaging, numbered certificate of authenticity, and collector button.",
+    category: "category-hot-wheels",
+    brand: "brand-hot-wheels",
+    price: 399900,
+    currency: "INR",
+    stockQuantity: 2,
+    availableQuantity: 2,
+    mainImage:
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-vikram-mehta",
+    sellerName: "Vikram Mehta",
+    sellerEmail: "vikram@diecastdepot.in",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: true,
+    tags: [
+      "hot-wheels",
+      "rlc",
+      "bone-shaker",
+      "exclusive",
+      "limited",
+      "red-line-club",
+      "2023",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Series", value: "Red Line Club (RLC) Members Exclusive" },
+      { name: "Year", value: "2023" },
+      { name: "Colour", value: "Matte Black with Gold Spectraflame" },
+      { name: "Production Run", value: "Under 10,000 units worldwide" },
+      { name: "Certificate", value: "Numbered CoA included" },
+    ],
+    features: [
+      "RLC Members-only exclusive (2023)",
+      "Strictly limited worldwide production",
+      "Matte black with gold spectraflame finish",
+      "Numbered certificate of authenticity",
+      "Original RLC collector packaging",
+    ],
+    shippingInfo:
+      "Individually bubble-wrapped in rigid mailer with foam insert. Insured shipping. 3–5 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed cars (blister must be unopened). No returns on opened RLC product.",
+    insurance: true,
+    insuranceCost: 5000,
+    allowOffers: true,
+    minOfferPercent: 90,
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(1),
+  },
+
+  // 12. Hot Wheels Redline 1968 Banana (Vintage)
+  {
+    id: "product-hot-wheels-redline-banana-1968",
+    slug: "product-hot-wheels-redline-banana-1968",
+    title:
+      "Hot Wheels Redline 1968 Custom Camaro — Antifreeze Yellow (Banana, Vintage)",
+    description:
+      "Iconic 1968 Hot Wheels Redline Custom Camaro in the legendary Antifreeze Yellow 'Banana' colourway. Among the most desirable first-year Hot Wheels Redlines due to the rarity of the Banana colour — fewer units were produced compared to the orange version. This example is in Good-to-Very Good (G-VG) condition with honest play wear on the paint, strong red-line tyres, and all four wheels spinning. A genuine original — not a reproduction.",
+    category: "category-hot-wheels",
+    brand: "brand-hot-wheels",
+    price: 1299900,
+    currency: "INR",
+    stockQuantity: 1,
+    availableQuantity: 1,
+    mainImage:
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-vikram-mehta",
+    sellerName: "Vikram Mehta",
+    sellerEmail: "vikram@diecastdepot.in",
+    storeId: "store-diecast-depot",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "hot-wheels",
+      "redline",
+      "1968",
+      "camaro",
+      "banana",
+      "antifreeze",
+      "vintage",
+      "rare",
+    ],
+    condition: "used",
+    specifications: [
+      { name: "Year", value: "1968" },
+      { name: "Scale", value: "1:64" },
+      { name: "Colour", value: "Antifreeze Yellow (Banana)" },
+      { name: "Wheels", value: "Redline" },
+      { name: "Condition Grade", value: "Good to Very Good (G-VG)" },
+      { name: "Rarity", value: "Low production Banana colour" },
+    ],
+    features: [
+      "First-year 1968 Hot Wheels Redline (Banana)",
+      "Rare Antifreeze Yellow — low production colourway",
+      "Honest play wear only — no reproduction parts",
+      "Strong red-line tyres — all four wheels spin",
+      "Japan trip sourced — original US market car",
+    ],
+    shippingInfo:
+      "Individually bubble-wrapped in rigid mailer with foam insert. Insured shipping. 3–5 business days.",
+    returnPolicy:
+      "3-day return if car is misrepresented in condition grading. Detailed photos taken before shipping.",
+    insurance: true,
+    insuranceCost: 20000,
+    allowOffers: true,
+    minOfferPercent: 87,
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── Store: LetItRip Official (user-admin-letitrip) — 6 products ─────────────
+
+  // 13. S.H.Figuarts Goku Ultra Instinct
+  {
+    id: "product-shf-goku-ultra-instinct",
+    slug: "product-shf-goku-ultra-instinct",
+    title:
+      "Bandai S.H.Figuarts Son Goku -Ultra Instinct- (Dragon Ball Super: Super Hero Ver.)",
+    description:
+      "Bandai S.H.Figuarts Son Goku in his iconic Ultra Instinct form from Dragon Ball Super. This premium figure stands approximately 14 cm tall and features over 20 points of articulation for dynamic posing. Includes multiple expression faceplates, interchangeable hand parts, effect parts for the Ultra Instinct silver aura, and a figure stand. The Ultra Instinct transformation's silver hair is rendered in transparent gradient plastic for an ethereal glow effect. Tamashii Web Exclusive edition.",
+    category: "category-poseable-figures",
+    brand: "brand-bandai",
+    price: 699900,
+    currency: "INR",
+    stockQuantity: 8,
+    availableQuantity: 8,
+    mainImage:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1560762484-813fc97650a0?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: true,
+    tags: [
+      "bandai",
+      "sh-figuarts",
+      "goku",
+      "ultra-instinct",
+      "dragon-ball",
+      "anime-figure",
+      "tamashii",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Character", value: "Son Goku — Ultra Instinct" },
+      { name: "Series", value: "Dragon Ball Super: Super Hero" },
+      { name: "Height", value: "~14 cm", unit: "cm" },
+      { name: "Articulation", value: "20+ points" },
+      { name: "Edition", value: "Tamashii Web Exclusive" },
+      { name: "Manufacturer", value: "Bandai Spirits" },
+    ],
+    features: [
+      "20+ points of articulation for dynamic posing",
+      "Multiple expression faceplates",
+      "Ultra Instinct aura effect parts",
+      "Interchangeable hands (12 pairs)",
+      "Tamashii Nations display stand included",
+    ],
+    shippingInfo:
+      "Double-boxed with foam inserts. Fast dispatch within 24 hours. 3–5 business days across India.",
+    returnPolicy:
+      "7-day hassle-free returns. Items must be in original condition. Full refund or replacement guaranteed.",
+    allowOffers: false,
+    createdAt: daysAgo(80),
+    updatedAt: daysAgo(3),
+  },
+
+  // 14. Nendoroid Rem Re:Zero
+  {
+    id: "product-nendoroid-rem-rezero",
+    slug: "product-nendoroid-rem-rezero",
+    title: "Good Smile Company Nendoroid Rem (Re:Zero) — #663",
+    description:
+      "Good Smile Company's iconic Nendoroid #663 — Rem from Re:Zero -Starting Life in Another World-. This is one of the best-selling Nendoroids of all time and a must-have for any Re:Zero fan. Stands approximately 10 cm tall in typical Nendoroid cute chibi style. Includes 3 expression faceplates (standard, smiling, and combat), 3 optional hand parts, her morning star weapon, and a Nendoroid stand. Re-release edition in standard packaging.",
+    category: "category-nendoroids-chibis",
+    brand: "brand-good-smile",
+    price: 499900,
+    currency: "INR",
+    stockQuantity: 10,
+    availableQuantity: 10,
+    mainImage:
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: true,
+    isPromoted: false,
+    tags: [
+      "nendoroid",
+      "rem",
+      "re-zero",
+      "good-smile",
+      "gsc",
+      "anime-figure",
+      "chibi",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Nendoroid Number", value: "#663" },
+      { name: "Character", value: "Rem" },
+      { name: "Series", value: "Re:Zero -Starting Life in Another World-" },
+      { name: "Height", value: "~10 cm", unit: "cm" },
+      { name: "Manufacturer", value: "Good Smile Company" },
+      { name: "Edition", value: "Re-release" },
+    ],
+    features: [
+      "One of the best-selling Nendoroids ever made",
+      "3 interchangeable expression faceplates",
+      "Includes morning star weapon effect part",
+      "Nendoroid display stand included",
+      "Re-release — authentic GSC quality",
+    ],
+    shippingInfo:
+      "Double-boxed with foam inserts. Fast dispatch within 24 hours. 3–5 business days across India.",
+    returnPolicy:
+      "7-day hassle-free returns. Items must be in original condition. Full refund or replacement guaranteed.",
+    allowOffers: false,
+    createdAt: daysAgo(75),
+    updatedAt: daysAgo(2),
+  },
+
+  // 15. Funko Pop Naruto Sage Mode
+  {
+    id: "product-funko-pop-naruto-sage",
+    slug: "product-funko-pop-naruto-sage",
+    title: "Funko Pop! Animation: Naruto Shippuden — Naruto Sage Mode #932",
+    description:
+      "Funko Pop! Naruto Uzumaki in Sage Mode (#932) from Naruto Shippuden. Features Naruto in his iconic Sage Mode toad markings with orange and black design. Stands approximately 9.5 cm tall in the standard Funko Pop vinyl style with oversized head and solid black eyes. Comes in original window box. Perfect for display on any shelf — great gift for Naruto fans.",
+    category: "category-poseable-figures",
+    brand: "brand-funko",
+    price: 149900,
+    currency: "INR",
+    stockQuantity: 30,
+    availableQuantity: 30,
+    mainImage:
+      "https://images.unsplash.com/photo-1578292992345-7ee038c5fb7c?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1578292992345-7ee038c5fb7c?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "funko-pop",
+      "naruto",
+      "sage-mode",
+      "shippuden",
+      "anime",
+      "vinyl-figure",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Pop Number", value: "#932" },
+      { name: "Character", value: "Naruto Uzumaki — Sage Mode" },
+      { name: "Series", value: "Naruto Shippuden" },
+      { name: "Height", value: "~9.5 cm", unit: "cm" },
+      { name: "Manufacturer", value: "Funko" },
+    ],
+    features: [
+      "Official Funko licensed Naruto Shippuden product",
+      "Sage Mode design with toad markings",
+      "Standard window box — mint on card",
+      "CE safety certified vinyl",
+      "Great display piece and gift item",
+    ],
+    shippingInfo:
+      "Bubble-padded envelope. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day return if item is damaged or not as described. Original packaging required.",
+    allowOffers: false,
+    createdAt: daysAgo(70),
+    updatedAt: daysAgo(4),
+  },
+
+  // 16. McFarlane DC Multiverse Batman Dark Knight
+  {
+    id: "product-mcfarlane-batman-dark-knight",
+    slug: "product-mcfarlane-batman-dark-knight",
+    title:
+      "McFarlane Toys DC Multiverse: Batman (The Dark Knight Returns) 7-Inch Figure",
+    description:
+      "McFarlane Toys DC Multiverse Batman figure based on Frank Miller's legendary graphic novel The Dark Knight Returns. This 7-inch scale figure features an extremely detailed sculpt of the older, armoured Batman, over 22 points of articulation, and includes a batarang accessory and display base. The textured grey and black armour is faithfully rendered with aged weathering effects. Comes in collector-grade window box packaging with character art.",
+    category: "category-scale-figures",
+    brand: "brand-mcfarlane",
+    price: 349900,
+    currency: "INR",
+    stockQuantity: 7,
+    availableQuantity: 7,
+    mainImage:
+      "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "mcfarlane",
+      "batman",
+      "dark-knight-returns",
+      "dc",
+      "comics",
+      "action-figure",
+      "frank-miller",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Character", value: "Batman" },
+      { name: "Source", value: "The Dark Knight Returns (Frank Miller)" },
+      { name: "Scale", value: "7-inch" },
+      { name: "Articulation", value: "22+ points" },
+      { name: "Accessories", value: "Batarang, display base" },
+      { name: "Manufacturer", value: "McFarlane Toys" },
+    ],
+    features: [
+      "Based on Frank Miller's The Dark Knight Returns",
+      "22+ articulation points for dynamic posing",
+      "Highly detailed weathered armour sculpt",
+      "Batarang accessory and display stand included",
+      "Collector-grade window box packaging",
+    ],
+    shippingInfo:
+      "Double-boxed with foam inserts. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day hassle-free returns. Must be in original sealed packaging.",
+    allowOffers: false,
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(5),
+  },
+
+  // 17. Gunpla MG 1/100 RX-78-2 Gundam (Ver. 3.0)
+  {
+    id: "product-gundam-rx78-mg",
+    slug: "product-gundam-rx78-mg",
+    title:
+      "Bandai Gunpla MG 1/100 RX-78-2 Gundam Ver. 3.0 — Master Grade Model Kit",
+    description:
+      "Bandai's definitive Master Grade RX-78-2 Gundam Ver. 3.0 — the iconic original Gundam redefined with state-of-the-art engineering. This 1/100 scale snap-fit plastic model features an internal frame with full armour over-wrap, 144 individual hand-assembly components, and impressive poseability that captures every heroic Gundam stance. Includes beam rifle, beam sabre, shield, hyper bazooka, and Gundam hammer. No glue required — perfect for builders aged 15+.",
+    category: "category-gunpla",
+    brand: "brand-bandai",
+    price: 299900,
+    currency: "INR",
+    stockQuantity: 12,
+    availableQuantity: 12,
+    mainImage:
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: true,
+    isPromoted: false,
+    tags: [
+      "gunpla",
+      "master-grade",
+      "rx-78-2",
+      "gundam",
+      "bandai",
+      "model-kit",
+      "mg",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Grade", value: "Master Grade (MG)" },
+      { name: "Scale", value: "1/100" },
+      { name: "Parts Count", value: "144 parts" },
+      { name: "Height (assembled)", value: "~18 cm", unit: "cm" },
+      { name: "Skill Level", value: "Intermediate (15+)" },
+      { name: "Glue Required", value: "No — snap-fit" },
+    ],
+    features: [
+      "Full internal frame with armour over-wrap",
+      "144 snap-fit parts — no glue or paint required",
+      "Beam rifle, sabre, shield, bazooka, Gundam hammer included",
+      "Exceptional articulation for action poses",
+      "Ver. 3.0 — definitive version of the iconic RX-78-2",
+    ],
+    shippingInfo:
+      "Rigid-box double-packed with foam. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed kits (outer shrink wrap must be intact).",
+    allowOffers: false,
+    createdAt: daysAgo(65),
+    updatedAt: daysAgo(4),
+  },
+
+  // 18. Gunpla RG 1/144 Wing Gundam Zero (EW)
+  {
+    id: "product-gundam-wing-zero-rg",
+    slug: "product-gundam-wing-zero-rg",
+    title:
+      "Bandai Gunpla RG 1/144 Wing Gundam Zero EW (Endless Waltz) — Real Grade Kit",
+    description:
+      "Bandai's legendary Real Grade Wing Gundam Zero from Endless Waltz — the most beautiful Gundam ever made. The RG 1/144 scale features an advanced MS Joint inner frame system, stunning wing feather detail with individual micro-articulated feathers, twin buster rifle, beam sabre effect parts, and a Sandhausen Sturm System for the signature Wing Zero cannon pose. The feathers alone have 88 individual moving components. A showpiece even un-built.",
+    category: "category-gunpla",
+    brand: "brand-bandai",
+    price: 199900,
+    currency: "INR",
+    stockQuantity: 9,
+    availableQuantity: 9,
+    mainImage:
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-admin-letitrip",
+    sellerName: "LetItRip Admin",
+    sellerEmail: "admin@letitrip.in",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "gunpla",
+      "real-grade",
+      "wing-gundam-zero",
+      "endless-waltz",
+      "bandai",
+      "model-kit",
+      "rg",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Grade", value: "Real Grade (RG)" },
+      { name: "Scale", value: "1/144" },
+      { name: "Wing Feather Parts", value: "88 individual moving components" },
+      { name: "Height (assembled)", value: "~16 cm", unit: "cm" },
+      { name: "Skill Level", value: "Advanced (15+)" },
+      { name: "Glue Required", value: "No — snap-fit" },
+    ],
+    features: [
+      "Iconic Wing Gundam Zero Endless Waltz design",
+      "88 individual micro-articulated wing feathers",
+      "Advanced MS Joint inner frame",
+      "Twin Buster Rifle in merge configuration",
+      "Beam sabre effect parts included",
+    ],
+    shippingInfo:
+      "Rigid-box double-packed with foam. Free shipping on orders above ₹999. 3–5 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed kits (outer shrink wrap must be intact).",
+    allowOffers: false,
+    createdAt: daysAgo(55),
+    updatedAt: daysAgo(6),
+  },
+
+  // ── Store: Beyblade Arena (user-rohit-joshi) — 2 products ──────────────────
+
+  // 19. Beyblade X BX-01 Dran Sword Starter Set
+  {
+    id: "product-beyblade-x-bx01-dran-sword",
+    slug: "product-beyblade-x-bx01-dran-sword",
+    title:
+      "Beyblade X BX-01 Starter Set: Dran Sword 3-60F — Official Takara Tomy",
+    description:
+      "The official Beyblade X launch product — BX-01 Dran Sword 3-60F Starter Set. Beyblade X is the next evolution of the competitive Beyblade system, featuring the new X-Line rail system and the Extreme Dash (X-Dash) mechanic where the Beyblade launches at high speed onto the XStadium rail for powerful finisher attacks. Includes Dran Sword top (Bit: Dran, Blade: Sword 3, Ratchet: 60, Bit: F), a high-grip X-String Launcher, and a Beyblade X Activity Guide booklet. Authentic Takara Tomy Japan import.",
+    category: "category-beyblade-x",
+    brand: "brand-beyblade",
+    price: 199900,
+    currency: "INR",
+    stockQuantity: 20,
+    availableQuantity: 20,
+    mainImage:
+      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-rohit-joshi",
+    sellerName: "Rohit Joshi",
+    sellerEmail: "rohit@beyladearena.in",
+    storeId: "store-beyblade-arena",
+    featured: false,
+    isPromoted: true,
+    tags: [
+      "beyblade-x",
+      "bx-01",
+      "dran-sword",
+      "takara-tomy",
+      "starter-set",
+      "x-line",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Generation", value: "Beyblade X" },
+      { name: "Product Code", value: "BX-01" },
+      { name: "Top Name", value: "Dran Sword 3-60F" },
+      { name: "Bit", value: "Dran" },
+      { name: "Blade", value: "Sword 3" },
+      { name: "Manufacturer", value: "Takara Tomy Japan" },
+    ],
+    features: [
+      "Official Beyblade X debut product",
+      "X-Line rail system for Extreme Dash mechanic",
+      "High-grip X-String Launcher included",
+      "Authentic Takara Tomy Japan import",
+      "Activity guide booklet included",
+    ],
+    shippingInfo:
+      "All tops packed individually in foam-lined boxes. Free shipping on orders above ₹799. 4–6 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed Beyblade product (box must be unopened). No returns on opened combo sets.",
+    allowOffers: false,
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(2),
+  },
+
+  // 20. Beyblade Burst B-200 Infinite Valkyrie
+  {
+    id: "product-beyblade-burst-b200-valkyrie",
+    slug: "product-beyblade-burst-b200-valkyrie",
+    title:
+      "Beyblade Burst QuadStrike B-200 Starter: Infinite Valkyrie — Official Takara Tomy",
+    description:
+      "Beyblade Burst QuadStrike B-200 Infinite Valkyrie Knight Sword 1B Starter Set — the latest evolution in the Valkyrie lineage. Part of the QuadStrike system featuring four-blade attack design with the Knight Sword contact points and 1B driver for aggressive stamina-to-attack balance. Includes Infinite Valkyrie top, QuadDrive Launcher, and Beyblade Burst activity guide. Authentic Takara Tomy Japan manufacture — no knockoffs. A top-tier competitive choice in the QuadStrike meta.",
+    category: "category-beyblade-burst",
+    brand: "brand-beyblade",
+    price: 249900,
+    currency: "INR",
+    stockQuantity: 15,
+    availableQuantity: 15,
+    mainImage:
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
+    ],
+    status: "published",
+    sellerId: "user-rohit-joshi",
+    sellerName: "Rohit Joshi",
+    sellerEmail: "rohit@beyladearena.in",
+    storeId: "store-beyblade-arena",
+    featured: false,
+    isPromoted: false,
+    tags: [
+      "beyblade-burst",
+      "quadstrike",
+      "b-200",
+      "valkyrie",
+      "takara-tomy",
+      "starter-set",
+    ],
+    condition: "new",
+    specifications: [
+      { name: "Generation", value: "Beyblade Burst QuadStrike" },
+      { name: "Product Code", value: "B-200" },
+      { name: "Top Name", value: "Infinite Valkyrie Knight Sword 1B" },
+      { name: "System", value: "QuadStrike — four-blade attack design" },
+      { name: "Manufacturer", value: "Takara Tomy Japan" },
+    ],
+    features: [
+      "QuadStrike system — four-blade attack design",
+      "Valkyrie lineage — proven competitive performance",
+      "QuadDrive Launcher included",
+      "Authentic Takara Tomy Japan manufacture",
+      "Activity guide included",
+    ],
+    shippingInfo:
+      "All tops packed individually in foam-lined boxes. Free shipping on orders above ₹799. 4–6 business days.",
+    returnPolicy:
+      "7-day return on factory-sealed Beyblade product (box must be unopened). No returns on opened combo sets.",
+    allowOffers: false,
+    createdAt: daysAgo(50),
+    updatedAt: daysAgo(3),
+  },
+];
