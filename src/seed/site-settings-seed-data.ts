@@ -406,4 +406,23 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     sellerRegistration: true,
     preOrders: true,
   },
+  // VA8 ⑧ Integrations — placeholder credentials (replace with real values in Firestore/admin panel)
+  credentials: {
+    razorpayKeyId: "rzp_test_PLACEHOLDER",
+    razorpayKeySecret: "secret_PLACEHOLDER",
+    razorpayWebhookSecret: "webhook_PLACEHOLDER",
+    resendApiKey: "re_PLACEHOLDER",
+    whatsappApiKey: "wa_PLACEHOLDER",
+    shiprocketEmail: "shiprocket@letitrip.in",
+    shiprocketPassword: "shiprocket_PLACEHOLDER",
+    metaAppId: "meta_app_PLACEHOLDER",
+    metaAppSecret: "meta_secret_PLACEHOLDER",
+    metaPageAccessToken: "meta_page_token_PLACEHOLDER",
+    metaPageId: "meta_page_id_PLACEHOLDER",
+    tiktokClientKey: "tiktok_client_key_PLACEHOLDER",
+    tiktokClientSecret: "tiktok_client_secret_PLACEHOLDER",
+    tiktokAccessToken: "tiktok_access_token_PLACEHOLDER",
+    deviantartClientId: "deviantart_client_id_PLACEHOLDER",
+    deviantartClientSecret: "deviantart_client_secret_PLACEHOLDER",
+  },
 };
