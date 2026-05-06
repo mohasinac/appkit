@@ -364,7 +364,7 @@ export function AppLayoutShell({
                     "block w-full rounded-lg px-3 py-2.5 text-center text-sm font-semibold transition-all duration-200 hover:scale-[1.02] shadow-sm",
                     action.variant === "outline"
                       ? "border border-zinc-300 text-zinc-700 hover:bg-zinc-50 dark:border-slate-700 dark:text-zinc-100 dark:hover:bg-slate-800"
-                      : "bg-primary !text-zinc-900 hover:bg-primary-500 dark:bg-secondary dark:!text-white dark:hover:bg-secondary-600 shadow-lg shadow-primary/20 dark:shadow-secondary/20",
+                      : "bg-primary text-white hover:bg-primary-600 dark:bg-primary dark:hover:bg-primary-600 btn-glow",
                   ].join(" ")}
                 >
                   {action.label}

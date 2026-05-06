@@ -21,12 +21,14 @@ import {
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { BuyBar } from "../../products/components/BuyBar";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
+import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { ShareButton } from "../../products/components/ShareButton";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
+  onReserveNow?: (productId: string) => Promise<void>;
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -41,7 +43,7 @@ const PRODUCTION_STATUS_LABELS: Record<string, string> = {
   ready_to_ship: "Ready to Ship",
 };
 
-export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps) {
+export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetailPageViewProps) {
   const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
 
   if (!product) {
@@ -297,7 +299,7 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
             />
           )}
           renderBuyBar={() => (
-            <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+            <Div id="pre-order-buy-bar" className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
               {/* Progress bar */}
               {reserveTarget > 0 && (
                 <Div className="space-y-2">
@@ -318,62 +320,68 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
                 </Div>
               )}
 
-              {/* Price */}
-              {price !== null && (
-                <Div>
-                  <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                    {formatCurrency(price, currency)}
-                  </Text>
-                  {depositAmount !== null && (
-                    <Text className="mt-0.5 text-xs text-zinc-500">
-                      Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
-                    </Text>
-                  )}
-                </Div>
-              )}
-
-              <Stack gap="sm">
-                <Button variant="primary" size="md" className="w-full">
-                  Reserve Now
-                </Button>
-                <Button variant="secondary" size="md" className="w-full">
-                  Add to Cart
-                </Button>
-                {isCancellable && (
-                  <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
-                    ✓ Free cancellation before production
-                  </Text>
-                )}
-              </Stack>
-
-              {/* Tags */}
-              {tags.length > 0 && (
-                <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                  <Row wrap gap="xs">
-                    {tags.map((tag) => (
-                      <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
-                        {tag}
-                      </Span>
-                    ))}
-                  </Row>
-                </Div>
-              )}
-
-              {/* Trust badges */}
-              <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                <Row wrap gap="sm" className="justify-center text-center">
-                  {[
-                    { icon: "🔒", label: "Secure\nPayment" },
-                    { icon: "📅", label: "Guaranteed\nDelivery" },
-                    { icon: "↩", label: "Free\nCancellation" },
-                  ].map(({ icon, label }) => (
-                    <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
-                      <Span className="text-base">{icon}</Span>
-                      <Span className="whitespace-pre-line leading-tight">{label}</Span>
+              {onReserveNow ? (
+                <PreOrderActionsClient
+                  productId={String(product.id)}
+                  price={price}
+                  currency={currency}
+                  depositAmount={depositAmount}
+                  depositPercent={depositPercent}
+                  isCancellable={isCancellable}
+                  tags={tags}
+                  onReserveNow={onReserveNow}
+                />
+              ) : (
+                <>
+                  {price !== null && (
+                    <Div>
+                      <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                        {formatCurrency(price, currency)}
+                      </Text>
+                      {depositAmount !== null && (
+                        <Text className="mt-0.5 text-xs text-zinc-500">
+                          Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
+                        </Text>
+                      )}
                     </Div>
-                  ))}
-                </Row>
-              </Div>
+                  )}
+                  <Stack gap="sm">
+                    <Button variant="primary" size="md" className="w-full">
+                      Reserve Now
+                    </Button>
+                    {isCancellable && (
+                      <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+                        ✓ Free cancellation before production
+                      </Text>
+                    )}
+                  </Stack>
+                  {tags.length > 0 && (
+                    <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                      <Row wrap gap="xs">
+                        {tags.map((tag) => (
+                          <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                            {tag}
+                          </Span>
+                        ))}
+                      </Row>
+                    </Div>
+                  )}
+                  <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+                    <Row wrap gap="sm" className="justify-center text-center">
+                      {[
+                        { icon: "🔒", label: "Secure\nPayment" },
+                        { icon: "📅", label: "Guaranteed\nDelivery" },
+                        { icon: "↩", label: "Free\nCancellation" },
+                      ].map(({ icon, label }) => (
+                        <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                          <Span className="text-base">{icon}</Span>
+                          <Span className="whitespace-pre-line leading-tight">{label}</Span>
+                        </Div>
+                      ))}
+                    </Row>
+                  </Div>
+                </>
+              )}
             </Div>
           )}
         />
@@ -385,12 +393,12 @@ export async function PreOrderDetailPageView({ id }: PreOrderDetailPageViewProps
               {formatCurrency(price, currency)}
             </Span>
           )}
-          <Button variant="secondary" size="sm" className="shrink-0">
-            Add to Cart
-          </Button>
-          <Button variant="primary" size="sm" className="flex-1">
-            Reserve Now
-          </Button>
+          <a
+            href="#pre-order-buy-bar"
+            className="appkit-button appkit-button--primary appkit-button--sm flex-1"
+          >
+            <span className="appkit-button__content">Reserve Now</span>
+          </a>
         </BuyBar>
       </Container>
     </Main>

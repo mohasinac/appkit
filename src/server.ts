@@ -1310,3 +1310,19 @@ export type {
 // -- i18n / messages ---------------------------------------------------------
 // mergeFeatureMessages - Merge per-feature message files into a single bundle.
 export { mergeFeatureMessages } from "./cli/index";
+
+
+// -- Social Feed (server-only: fetches from platform APIs using credentials) --
+export {
+  fetchInstagramPosts,
+  fetchFacebookPosts,
+  fetchTikTokPosts,
+  fetchDeviantArtPosts,
+} from "./features/homepage/lib/social-feed-fetcher";
+export type {
+  SocialPost,
+  SocialPlatform,
+  SocialPostType,
+  SocialFeedLayout,
+  SocialFeedSectionConfig,
+} from "./features/homepage/schemas";

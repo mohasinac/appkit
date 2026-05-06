@@ -27,7 +27,7 @@ export function BulkActionsBar({
 
   const variantClass: Record<string, string> = {
     primary:
-      "bg-primary text-white hover:bg-primary/90 shadow-sm shadow-primary/20",
+      "bg-primary text-white hover:bg-primary/90 btn-glow",
     secondary:
       "border border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800",
     danger: "bg-rose-500 text-white hover:bg-rose-600",

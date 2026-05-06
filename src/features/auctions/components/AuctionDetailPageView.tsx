@@ -22,7 +22,6 @@ import {
   Text,
 } from "../../../ui";
 import { AuctionDetailView } from "../../products/components/AuctionDetailView";
-import { BidHistory } from "../../products/components/BidHistory";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { BuyBar } from "../../products/components/BuyBar";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
@@ -35,6 +34,7 @@ import { listReviewsBySeller } from "../../reviews/actions/review-actions";
 import type { ReviewDocument } from "../../reviews/schemas/firestore";
 import { PlaceBidFormClient } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
+import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -416,14 +416,7 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
               amount: (typeof b.bidAmount === "number" ? b.bidAmount : typeof b.amount === "number" ? b.amount : 0),
               placedAt: (b.createdAt ?? b.bidAt ?? "") as string,
             }));
-            return (
-              <BidHistory
-                bids={bids}
-                isEmpty={bids.length === 0}
-                currency={currency}
-                labels={{ title: "Bid History" }}
-              />
-            );
+            return <CollapsibleBidHistory bids={bids} currency={currency} />;
           }}
           renderRelated={() => {
             const related: MarketplaceAuctionCardData[] = relatedDocs

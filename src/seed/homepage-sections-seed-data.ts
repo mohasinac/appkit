@@ -212,7 +212,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       height: "md",
-      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      gradient: "linear-gradient(135deg, #3570fc 0%, #65c408 100%)",
       content: {
         title: "AniCon 2026 Coupon Drop 🎉",
         subtitle: "Extra 15% Off All Anime Orders",

@@ -42,6 +42,7 @@ const SECTION_TYPE_OPTIONS = [
   "newsletter",
   "stores",
   "events",
+  "social-feed",
 ] as const;
 
 type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
@@ -143,6 +144,18 @@ interface EventsBuilderState {
   manualResourceIds: string;
 }
 
+interface SocialFeedBuilderState {
+  title: string;
+  subtitle: string;
+  platform: "instagram" | "facebook" | "tiktok" | "deviantart";
+  handle: string;
+  postType: "all" | "images" | "videos" | "reels";
+  count: number;
+  layout: "grid" | "masonry" | "carousel";
+  showCaption: boolean;
+  showStats: boolean;
+}
+
 const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -222,6 +235,18 @@ const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
   manualResourceIds: "",
 };
 
+const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
+  title: "",
+  subtitle: "",
+  platform: "instagram",
+  handle: "",
+  postType: "all",
+  count: 9,
+  layout: "grid",
+  showCaption: true,
+  showStats: true,
+};
+
 const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -229,6 +254,7 @@ const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "pre-orders",
   "stores",
   "events",
+  "social-feed",
 ];
 
 function parseCsvValues(value: string): string[] {
@@ -512,6 +538,34 @@ function parseEventsBuilder(config: Record<string, unknown>): EventsBuilderState
       toStringValue(resources.mode, DEFAULT_EVENTS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+  };
+}
+
+function buildSocialFeedConfig(builder: SocialFeedBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    subtitle: builder.subtitle || undefined,
+    platform: builder.platform,
+    handle: builder.handle,
+    postType: builder.postType,
+    count: builder.count,
+    layout: builder.layout,
+    showCaption: builder.showCaption,
+    showStats: builder.showStats,
+  };
+}
+
+function parseSocialFeedBuilder(config: Record<string, unknown>): SocialFeedBuilderState {
+  return {
+    title: toStringValue(config.title),
+    subtitle: toStringValue(config.subtitle),
+    platform: toStringValue(config.platform, DEFAULT_SOCIAL_FEED_BUILDER.platform) as SocialFeedBuilderState["platform"],
+    handle: toStringValue(config.handle),
+    postType: toStringValue(config.postType, DEFAULT_SOCIAL_FEED_BUILDER.postType) as SocialFeedBuilderState["postType"],
+    count: toNumberValue(config.count, DEFAULT_SOCIAL_FEED_BUILDER.count),
+    layout: toStringValue(config.layout, DEFAULT_SOCIAL_FEED_BUILDER.layout) as SocialFeedBuilderState["layout"],
+    showCaption: toBooleanValue(config.showCaption, DEFAULT_SOCIAL_FEED_BUILDER.showCaption),
+    showStats: toBooleanValue(config.showStats, DEFAULT_SOCIAL_FEED_BUILDER.showStats),
   };
 }
 

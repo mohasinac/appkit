@@ -1,5 +1,250 @@
 /* RichText — sanitised HTML renderer with prose styling */
 
-.appkit-rich-text {
-  /* Base wrapper — prose classes applied via className prop */
+/* --------------------------------------------------------------------------
+ * Base wrapper. All selectors are scoped to .appkit-rich-text so they
+ * never leak into surrounding UI.
+ * Prose classes (typography plugin) are applied via the `proseClass` prop.
+ * The rules below layer on top of prose to ensure proper dark-mode theming
+ * for elements that the typography plugin doesn't fully cover.
+ * -------------------------------------------------------------------------- */
+
+/* --- Inline code ---------------------------------------------------------- */
+.appkit-rich-text :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-weight: 500;
+  background-color: rgba(53, 112, 252, 0.08);   /* primary cobalt /8 */
+  color: #1343de;                                /* primary-700 cobalt */
+  border: 1px solid rgba(53, 112, 252, 0.18);
+}
+
+.dark .appkit-rich-text :not(pre) > code {
+  background-color: rgba(51, 65, 85, 0.6);      /* slate-700/60 */
+  color: #84e122;                                /* lime green — high contrast on dark */
+  border-color: rgba(71, 85, 105, 0.5);
+}
+
+/* --- Code blocks (pre) ---------------------------------------------------- */
+.appkit-rich-text pre {
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+  font-size: 0.875em;
+  line-height: 1.7;
+  background-color: #1e293b;                     /* slate-800 — always dark */
+  color: #e2e8f0;                                /* slate-200 */
+  border: 1px solid rgba(51, 65, 85, 0.6);
+}
+
+.dark .appkit-rich-text pre {
+  background-color: #0f172a;                     /* slate-900 */
+  border-color: rgba(30, 41, 59, 0.8);
+}
+
+/* --- Blockquote ----------------------------------------------------------- */
+.appkit-rich-text blockquote {
+  border-left: 3px solid #3570fc;               /* primary cobalt */
+  padding: 0.5rem 1rem;
+  margin: 1.25rem 0;
+  border-radius: 0 0.375rem 0.375rem 0;
+  background-color: rgba(53, 112, 252, 0.06);
+  color: #3f3f46;                                /* zinc-700 */
+  font-style: italic;
+}
+
+.dark .appkit-rich-text blockquote {
+  border-left-color: #f063b9;                    /* secondary-400 */
+  background-color: rgba(240, 99, 185, 0.06);
+  color: #a1a1aa;                                /* zinc-400 */
+}
+
+/* --- Mark / Highlight ----------------------------------------------------- */
+.appkit-rich-text mark {
+  background-color: rgba(101, 196, 8, 0.25);
+  color: inherit;
+  border-radius: 0.125rem;
+  padding: 0 0.1em;
+}
+
+.dark .appkit-rich-text mark {
+  background-color: rgba(101, 196, 8, 0.35);
+  color: #f4f4f5;                               /* zinc-100 */
+}
+
+/* --- Horizontal rule ------------------------------------------------------ */
+.appkit-rich-text hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(161, 161, 170, 0.4), transparent);
+  margin: 1.75rem 0;
+}
+
+.dark .appkit-rich-text hr {
+  background: linear-gradient(to right, transparent, rgba(71, 85, 105, 0.5), transparent);
+}
+
+/* --- Links ---------------------------------------------------------------- */
+.appkit-rich-text a {
+  color: #1a55f2;                               /* primary-600 cobalt */
+  text-decoration: underline;
+  text-decoration-color: rgba(26, 85, 242, 0.4);
+  text-underline-offset: 2px;
+  transition: color 150ms, text-decoration-color 150ms;
+}
+
+.appkit-rich-text a:hover {
+  color: #1343de;                               /* primary-700 cobalt */
+  text-decoration-color: rgba(19, 67, 222, 0.7);
+}
+
+.dark .appkit-rich-text a {
+  color: #84e122;                               /* lime green — high contrast on dark bg */
+  text-decoration-color: rgba(132, 225, 34, 0.4);
+}
+
+.dark .appkit-rich-text a:hover {
+  color: #a3f550;                               /* lighter lime green */
+  text-decoration-color: rgba(163, 245, 80, 0.6);
+}
+
+/* --- Tables --------------------------------------------------------------- */
+.appkit-rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid #e4e4e7;                    /* zinc-200 */
+}
+
+.dark .appkit-rich-text table {
+  border-color: #334155;                        /* slate-700 */
+}
+
+.appkit-rich-text th {
+  background-color: #f4f4f5;                    /* zinc-100 */
+  color: #18181b;                               /* zinc-900 */
+  font-weight: 600;
+  padding: 0.6rem 0.875rem;
+  text-align: left;
+  border-bottom: 1px solid #e4e4e7;
+}
+
+.dark .appkit-rich-text th {
+  background-color: #1e293b;                    /* slate-800 */
+  color: #f4f4f5;                               /* zinc-100 */
+  border-bottom-color: #334155;
+}
+
+.appkit-rich-text td {
+  padding: 0.55rem 0.875rem;
+  border-bottom: 1px solid #f4f4f5;            /* zinc-100 */
+  color: #3f3f46;                               /* zinc-700 */
+}
+
+.dark .appkit-rich-text td {
+  border-bottom-color: #1e293b;                 /* slate-800 */
+  color: #a1a1aa;                               /* zinc-400 */
+}
+
+.appkit-rich-text tr:last-child td {
+  border-bottom: none;
+}
+
+.appkit-rich-text tr:hover td {
+  background-color: rgba(244, 244, 245, 0.6);   /* zinc-100/60 */
+}
+
+.dark .appkit-rich-text tr:hover td {
+  background-color: rgba(30, 41, 59, 0.5);      /* slate-800/50 */
+}
+
+/* --- Figure & captions ---------------------------------------------------- */
+.appkit-rich-text figure {
+  margin: 1.5rem 0;
+}
+
+.appkit-rich-text figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8em;
+  color: #71717a;                               /* zinc-500 */
+  text-align: center;
+  font-style: italic;
+}
+
+.dark .appkit-rich-text figcaption {
+  color: #71717a;                               /* zinc-500 */
+}
+
+/* --- Images --------------------------------------------------------------- */
+.appkit-rich-text img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+/* --- Headings — consistent theming even without prose-invert -------------- */
+.appkit-rich-text h1,
+.appkit-rich-text h2,
+.appkit-rich-text h3,
+.appkit-rich-text h4,
+.appkit-rich-text h5,
+.appkit-rich-text h6 {
+  color: #18181b;                               /* zinc-900 */
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.dark .appkit-rich-text h1,
+.dark .appkit-rich-text h2,
+.dark .appkit-rich-text h3,
+.dark .appkit-rich-text h4,
+.dark .appkit-rich-text h5,
+.dark .appkit-rich-text h6 {
+  color: #fafafa;                               /* zinc-50 */
+}
+
+/* --- Body text fallback when not inside a prose wrapper ------------------- */
+.appkit-rich-text p {
+  color: #3f3f46;                               /* zinc-700 */
+}
+
+.dark .appkit-rich-text p {
+  color: #a1a1aa;                               /* zinc-400 */
+}
+
+/* --- Lists ---------------------------------------------------------------- */
+.appkit-rich-text ul,
+.appkit-rich-text ol {
+  padding-left: 1.5rem;
+  color: #3f3f46;
+}
+
+.dark .appkit-rich-text ul,
+.dark .appkit-rich-text ol {
+  color: #a1a1aa;
+}
+
+/* --- Ins / Del ------------------------------------------------------------ */
+.appkit-rich-text ins {
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: #3570fc;               /* primary cobalt */
+}
+
+.dark .appkit-rich-text ins {
+  text-decoration-color: #84e122;               /* lime green on dark */
+}
+
+.appkit-rich-text del {
+  text-decoration: line-through;
+  color: #71717a;
+  opacity: 0.75;
+}
+
+.dark .appkit-rich-text del {
+  color: #52525b;
 }

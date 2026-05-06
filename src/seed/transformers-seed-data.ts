@@ -1,5 +1,5 @@
 ﻿/**
- * Transformers â€” Products Seed Data
+ * Transformers — Products Seed Data
  * 10 general · 1 auction · 1 pre-order = 12 total
  * Seller: Speed King Diecast (store-speed-king-diecast)
  */
@@ -38,12 +38,12 @@ const img = (seed: string) => {
 
 export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
-  // â”€â”€ AUTOBOTS (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── AUTOBOTS (5) ─────────────────────────────────────────────────────────
 
   {
     id: "product-tf-optimus-prime-studio-voyager-sk-1",
-    title: "Transformers Studio Series Optimus Prime â€” Voyager Class (Bumblebee Movie)",
-    description: "<p>Studio Series Optimus Prime from the Bumblebee movie â€” Voyager Class figure with intricate Cybertronian mode conversion. Highly articulated with 30+ points of articulation. Includes energy axe accessory. Converts between robot and Peterbilt truck mode in 22 steps.</p>",
+    title: "Transformers Studio Series Optimus Prime — Voyager Class (Bumblebee Movie)",
+    description: "<p>Studio Series Optimus Prime from the Bumblebee movie — Voyager Class figure with intricate Cybertronian mode conversion. Highly articulated with 30+ points of articulation. Includes energy axe accessory. Converts between robot and Peterbilt truck mode in 22 steps.</p>",
     slug: "product-tf-studio-series-optimus-prime-voyager-bumblebee-movie",
     category: "category-tf-autobots",
     subcategory: "Studio Series",
@@ -90,8 +90,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-bumblebee-deluxe-wfc-sk-2",
-    title: "Transformers War for Cybertron Bumblebee â€” Deluxe Class",
-    description: "<p>War for Cybertron Siege Bumblebee â€” a faithful G1-inspired Bumblebee redesign with Earthrise weapon compatibility. Converts in 15 steps between VW Beetle-inspired Cybertronian alt mode and articulated robot mode.</p>",
+    title: "Transformers War for Cybertron Bumblebee — Deluxe Class",
+    description: "<p>War for Cybertron Siege Bumblebee — a faithful G1-inspired Bumblebee redesign with Earthrise weapon compatibility. Converts in 15 steps between VW Beetle-inspired Cybertronian alt mode and articulated robot mode.</p>",
     slug: "product-tf-wfc-siege-bumblebee-deluxe",
     category: "category-tf-autobots",
     subcategory: "War for Cybertron",
@@ -128,8 +128,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-jazz-deluxe-legacy-sk-3",
-    title: "Transformers Legacy Jazz â€” Deluxe Class (G1 Inspired)",
-    description: "<p>Legacy Jazz â€” a modern reimagining of the G1 classic with enhanced articulation and screen-accurate Porsche 935 alt mode. Vibrant white with racing livery tampo. A fan-favourite upgrade.</p>",
+    title: "Transformers Legacy Jazz — Deluxe Class (G1 Inspired)",
+    description: "<p>Legacy Jazz — a modern reimagining of the G1 classic with enhanced articulation and screen-accurate Porsche 935 alt mode. Vibrant white with racing livery tampo. A fan-favourite upgrade.</p>",
     slug: "product-tf-legacy-jazz-deluxe-g1-inspired",
     category: "category-tf-autobots",
     subcategory: "Legacy",
@@ -165,8 +165,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-ironhide-voyager-legacy-sk-4",
-    title: "Transformers Legacy Ironhide â€” Voyager Class",
-    description: "<p>Ironhide Voyager from Legacy â€” the big red battle veteran in his most articulated form yet. Converts to GMC TopKick pickup truck. Ion blaster and missile launcher accessories included.</p>",
+    title: "Transformers Legacy Ironhide — Voyager Class",
+    description: "<p>Ironhide Voyager from Legacy — the big red battle veteran in his most articulated form yet. Converts to GMC TopKick pickup truck. Ion blaster and missile launcher accessories included.</p>",
     slug: "product-tf-legacy-ironhide-voyager",
     category: "category-tf-autobots",
     subcategory: "Legacy",
@@ -204,8 +204,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-grimlock-leader-legacy-sk-5",
-    title: "Transformers Legacy Grimlock â€” Leader Class Dinobot",
-    description: "<p>Grimlock Leader Class from Legacy â€” the king of the Dinobots in his most detailed form. Converts from T-Rex dinosaur to robot in 35 steps. Sword and shield accessories. Chrome head and chest elements. Me Grimlock strongest!</p>",
+    title: "Transformers Legacy Grimlock — Leader Class Dinobot",
+    description: "<p>Grimlock Leader Class from Legacy — the king of the Dinobots in his most detailed form. Converts from T-Rex dinosaur to robot in 35 steps. Sword and shield accessories. Chrome head and chest elements. Me Grimlock strongest!</p>",
     slug: "product-tf-legacy-grimlock-leader-dinobot",
     category: "category-tf-autobots",
     subcategory: "Legacy",
@@ -244,12 +244,12 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // â”€â”€ DECEPTICONS (4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── DECEPTICONS (4) ──────────────────────────────────────────────────────
 
   {
     id: "product-tf-megatron-leader-ss-sk-6",
-    title: "Transformers Studio Series Megatron â€” Leader Class (TF1 Movie)",
-    description: "<p>Studio Series Megatron from the 2007 movie â€” Leader Class with movie-accurate alien jet alt mode. Complex 40-step conversion. Fusion cannon accessory with clear energon blast effect. The most detailed Megatron figure ever made.</p>",
+    title: "Transformers Studio Series Megatron — Leader Class (TF1 Movie)",
+    description: "<p>Studio Series Megatron from the 2007 movie — Leader Class with movie-accurate alien jet alt mode. Complex 40-step conversion. Fusion cannon accessory with clear energon blast effect. The most detailed Megatron figure ever made.</p>",
     slug: "product-tf-studio-series-megatron-leader-tf1",
     category: "category-tf-decepticons",
     subcategory: "Studio Series",
@@ -291,8 +291,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-starscream-deluxe-legacy-sk-7",
-    title: "Transformers Legacy Starscream â€” Deluxe Class (F-15 Eagle)",
-    description: "<p>Legacy Starscream â€” an F-15 Eagle that faithfully represents the treacherous Decepticon Air Commander. Converts in 18 steps. Null ray cannons and display stand included. Classic null-ray shoulder cannons that clip to fighter jet mode.</p>",
+    title: "Transformers Legacy Starscream — Deluxe Class (F-15 Eagle)",
+    description: "<p>Legacy Starscream — an F-15 Eagle that faithfully represents the treacherous Decepticon Air Commander. Converts in 18 steps. Null ray cannons and display stand included. Classic null-ray shoulder cannons that clip to fighter jet mode.</p>",
     slug: "product-tf-legacy-starscream-deluxe-f15",
     category: "category-tf-decepticons",
     subcategory: "Legacy",
@@ -329,8 +329,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-soundwave-voyager-legacy-sk-8",
-    title: "Transformers Legacy Soundwave â€” Voyager Class (Cassette Player)",
-    description: "<p>Legacy Soundwave â€” the Decepticon Communications Officer in his iconic cassette player alt mode. Voyager Class with Laserbeak cassette that converts and perches on Soundwave's arm. Two included Minicons.</p>",
+    title: "Transformers Legacy Soundwave — Voyager Class (Cassette Player)",
+    description: "<p>Legacy Soundwave — the Decepticon Communications Officer in his iconic cassette player alt mode. Voyager Class with Laserbeak cassette that converts and perches on Soundwave's arm. Two included Minicons.</p>",
     slug: "product-tf-legacy-soundwave-voyager-cassette",
     category: "category-tf-decepticons",
     subcategory: "Legacy",
@@ -368,8 +368,8 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-tf-shockwave-leader-wfc-sk-9",
-    title: "Transformers War for Cybertron Shockwave â€” Leader Class",
-    description: "<p>WFC Siege Shockwave â€” the logical Decepticon scientist in his most articulated form. Converts between a Cybertronian tank/cannon and a towering robot. Two-way arm-cannon fires projectiles. Purple and grey precision engineering.</p>",
+    title: "Transformers War for Cybertron Shockwave — Leader Class",
+    description: "<p>WFC Siege Shockwave — the logical Decepticon scientist in his most articulated form. Converts between a Cybertronian tank/cannon and a towering robot. Two-way arm-cannon fires projectiles. Purple and grey precision engineering.</p>",
     slug: "product-tf-wfc-siege-shockwave-leader",
     category: "category-tf-decepticons",
     subcategory: "War for Cybertron",
@@ -405,12 +405,12 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // â”€â”€ COMBINERS (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── COMBINERS (1) ─────────────────────────────────────────────────────────
 
   {
     id: "product-tf-devastator-combiner-ss-sk-10",
-    title: "Transformers Studio Series Devastator â€” Combiner Set (6 Constructicons)",
-    description: "<p>Studio Series Devastator â€” all 6 Constructicons that combine to form the massive Devastator from Revenge of the Fallen. Each figure individually transforms, and all 6 combine in a precise 50+ step sequence. The most screen-accurate Devastator toy ever made. Giant at 47 cm tall in combined mode.</p>",
+    title: "Transformers Studio Series Devastator — Combiner Set (6 Constructicons)",
+    description: "<p>Studio Series Devastator — all 6 Constructicons that combine to form the massive Devastator from Revenge of the Fallen. Each figure individually transforms, and all 6 combine in a precise 50+ step sequence. The most screen-accurate Devastator toy ever made. Giant at 47 cm tall in combined mode.</p>",
     slug: "product-tf-studio-series-devastator-combiner-6pack",
     category: "category-tf-combiners",
     subcategory: "Studio Series",
@@ -450,12 +450,12 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â”€â”€ AUCTION (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── AUCTION (1) ───────────────────────────────────────────────────────────
 
   {
     id: "auction-tf-g1-optimus-prime-1984-misb-sk-1",
-    title: "AUCTION â€” Vintage G1 Optimus Prime 1984 MISB (Factory Sealed)",
-    description: "<p>Ultra-rare 1984 Generation 1 Optimus Prime â€” Mint In Sealed Box (MISB). Original Hasbro US release in full G1 packaging with Rubsign on box. The box is sealed with original tape. Never opened. This is the holy grail of Transformers collecting. Certificate of authenticity from Hasbro Heritage verified.</p>",
+    title: "AUCTION — Vintage G1 Optimus Prime 1984 MISB (Factory Sealed)",
+    description: "<p>Ultra-rare 1984 Generation 1 Optimus Prime — Mint In Sealed Box (MISB). Original Hasbro US release in full G1 packaging with Rubsign on box. The box is sealed with original tape. Never opened. This is the holy grail of Transformers collecting. Certificate of authenticity from Hasbro Heritage verified.</p>",
     slug: "auction-tf-g1-optimus-prime-1984-misb",
     category: "category-tf-autobots",
     subcategory: "G1 Vintage",
@@ -473,7 +473,7 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Year", value: "1984 (Original Release)" },
       { name: "Series", value: "Generation 1 (G1)" },
-      { name: "Condition", value: "MISB â€” Mint in Sealed Box" },
+      { name: "Condition", value: "MISB — Mint in Sealed Box" },
       { name: "Market", value: "US Hasbro Release" },
       { name: "Authentication", value: "Hasbro Heritage verified" },
     ],
@@ -505,12 +505,12 @@ export const transformersProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // â”€â”€ PRE-ORDER (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── PRE-ORDER (1) ─────────────────────────────────────────────────────────
 
   {
     id: "preorder-tf-legacy-united-collector-2026-sk-1",
-    title: "PRE-ORDER â€” Transformers Legacy United Collector Edition 2026",
-    description: "<p>Reserve the upcoming Transformers Legacy United Collector Edition 2026 set â€” featuring G1, Beast Wars, and Unicron Trilogy characters in a massive 10-figure set. Includes exclusive clear Energon variants, collector book, and display plinth. Limited to 1,500 sets India-wide.</p>",
+    title: "PRE-ORDER — Transformers Legacy United Collector Edition 2026",
+    description: "<p>Reserve the upcoming Transformers Legacy United Collector Edition 2026 set — featuring G1, Beast Wars, and Unicron Trilogy characters in a massive 10-figure set. Includes exclusive clear Energon variants, collector book, and display plinth. Limited to 1,500 sets India-wide.</p>",
     slug: "preorder-tf-legacy-united-collector-2026",
     category: "category-tf-combiners",
     subcategory: "Legacy United",

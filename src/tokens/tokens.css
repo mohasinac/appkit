@@ -15,34 +15,43 @@
  */
 
 /* --- Colour — Brand ------------------------------------------------------- */
+/*
+ * Light mode  (image 1 — cobalt-blue body + lime-green blades):
+ *   primary   = Cobalt Blue   (dominant body colour)
+ *   secondary = Lime Green    (blade / accent colour)
+ *
+ * Dark mode   (image 2 — hot-pink blades + near-black body):
+ *   primary   = Hot Pink      (dominant accent colour)   ← overridden in .dark below
+ *   secondary = Hot Pink      (same — unified accent)    ← overridden in .dark below
+ */
 :root {
-  /* Primary — Lime Green (Beyblade green blades) */
-  --appkit-color-primary:          #84e122;
-  --appkit-color-primary-50:       #f3ffe3;
-  --appkit-color-primary-100:      #e4ffc5;
-  --appkit-color-primary-200:      #c8ff90;
-  --appkit-color-primary-300:      #a3f550;
-  --appkit-color-primary-400:      #84e122;
-  --appkit-color-primary-500:      #65c408;
-  --appkit-color-primary-600:      #509c02;
-  --appkit-color-primary-700:      #3e7708;
-  --appkit-color-primary-800:      #345e0d;
-  --appkit-color-primary-900:      #2c5011;
-  --appkit-color-primary-950:      #142d03;
+  /* Primary — Cobalt Blue (light mode dominant, matches Beyblade 1 blue body) */
+  --appkit-color-primary:          #3570fc;
+  --appkit-color-primary-50:       #eef5ff;
+  --appkit-color-primary-100:      #d9e8ff;
+  --appkit-color-primary-200:      #bcd4ff;
+  --appkit-color-primary-300:      #8eb9ff;
+  --appkit-color-primary-400:      #5992ff;
+  --appkit-color-primary-500:      #3570fc;
+  --appkit-color-primary-600:      #1a55f2;
+  --appkit-color-primary-700:      #1343de;
+  --appkit-color-primary-800:      #1536b4;
+  --appkit-color-primary-900:      #18318e;
+  --appkit-color-primary-950:      #111e58;
 
-  /* Secondary — Hot Pink / Magenta (dark mode accent, pink Beyblade blades) */
-  --appkit-color-secondary:        #e91e8c;
-  --appkit-color-secondary-50:     #fdf0f8;
-  --appkit-color-secondary-100:    #fce2f2;
-  --appkit-color-secondary-200:    #fac6e6;
-  --appkit-color-secondary-300:    #f79dd2;
-  --appkit-color-secondary-400:    #f063b9;
-  --appkit-color-secondary-500:    #e91e8c;
-  --appkit-color-secondary-600:    #d4107a;
-  --appkit-color-secondary-700:    #b00d66;
-  --appkit-color-secondary-800:    #900f56;
-  --appkit-color-secondary-900:    #771249;
-  --appkit-color-secondary-950:    #480525;
+  /* Secondary — Lime Green (light mode accent, matches Beyblade 1 green blades) */
+  --appkit-color-secondary:        #65c408;
+  --appkit-color-secondary-50:     #f3ffe3;
+  --appkit-color-secondary-100:    #e4ffc5;
+  --appkit-color-secondary-200:    #c8ff90;
+  --appkit-color-secondary-300:    #a3f550;
+  --appkit-color-secondary-400:    #84e122;
+  --appkit-color-secondary-500:    #65c408;
+  --appkit-color-secondary-600:    #509c02;
+  --appkit-color-secondary-700:    #3e7708;
+  --appkit-color-secondary-800:    #345e0d;
+  --appkit-color-secondary-900:    #2c5011;
+  --appkit-color-secondary-950:    #142d03;
 
   /* Cobalt — Blue accent (links, nav) */
   --appkit-color-cobalt:           #3570fc;
@@ -94,7 +103,37 @@
   --appkit-color-error:            #dc2626;    /* red-600 */
   --appkit-color-info:             #0284c7;    /* sky-600 */
 
-  --appkit-color-focus-ring:       #65c408;    /* primary-500 */
+  --appkit-color-focus-ring:       #3570fc;    /* primary-500 = cobalt blue */
+}
+
+/* --- Colour — Brand (dark mode overrides) --------------------------------- */
+/* Dark mode: both primary & secondary become Hot Pink (Beyblade 2 dominant colour) */
+.dark {
+  --appkit-color-primary:          #e91e8c;
+  --appkit-color-primary-50:       #fdf0f8;
+  --appkit-color-primary-100:      #fce2f2;
+  --appkit-color-primary-200:      #fac6e6;
+  --appkit-color-primary-300:      #f79dd2;
+  --appkit-color-primary-400:      #f063b9;
+  --appkit-color-primary-500:      #e91e8c;
+  --appkit-color-primary-600:      #d4107a;
+  --appkit-color-primary-700:      #b00d66;
+  --appkit-color-primary-800:      #900f56;
+  --appkit-color-primary-900:      #771249;
+  --appkit-color-primary-950:      #480525;
+
+  --appkit-color-secondary:        #e91e8c;
+  --appkit-color-secondary-50:     #fdf0f8;
+  --appkit-color-secondary-100:    #fce2f2;
+  --appkit-color-secondary-200:    #fac6e6;
+  --appkit-color-secondary-300:    #f79dd2;
+  --appkit-color-secondary-400:    #f063b9;
+  --appkit-color-secondary-500:    #e91e8c;
+  --appkit-color-secondary-600:    #d4107a;
+  --appkit-color-secondary-700:    #b00d66;
+  --appkit-color-secondary-800:    #900f56;
+  --appkit-color-secondary-900:    #771249;
+  --appkit-color-secondary-950:    #480525;
 }
 
 /* --- Colour — Semantic (dark mode overrides) ------------------------------ */
@@ -116,7 +155,10 @@
   --appkit-color-error:            #f87171;    /* red-400 */
   --appkit-color-info:             #38bdf8;    /* sky-400 */
 
-  --appkit-color-focus-ring:       #f063b9;    /* secondary-400 */
+  --appkit-color-focus-ring:       #f063b9;    /* primary-400 in dark = hot pink */
+  /* Dark-mode glow: use hot pink instead of cobalt */
+  --appkit-shadow-glow:            0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
+  --appkit-shadow-glow-pink:       0 0 0 1px rgba(233,30,140,0.14), 0 4px 20px -4px rgba(233,30,140,0.28);
 }
 
 /* --- Typography ----------------------------------------------------------- */
@@ -186,8 +228,9 @@
   --appkit-shadow-lg:      0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
   --appkit-shadow-xl:      0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
   --appkit-shadow-soft:    0 2px 15px -3px rgba(0,0,0,0.07), 0 10px 20px -2px rgba(0,0,0,0.04);
-  --appkit-shadow-glow:    0 0 20px rgba(80, 156, 2, 0.45);
-  --appkit-shadow-glow-pink: 0 0 20px rgba(233, 30, 140, 0.5);
+  /* Themed glow: tight ring + soft bloom — no bleed into neighbours */
+  --appkit-shadow-glow:      0 0 0 1px rgba(53,112,252,0.10), 0 4px 16px -4px rgba(53,112,252,0.20);
+  --appkit-shadow-glow-pink: 0 0 0 1px rgba(233,30,140,0.12), 0 4px 16px -4px rgba(233,30,140,0.22);
 }
 
 /* --- Z-index -------------------------------------------------------------- */

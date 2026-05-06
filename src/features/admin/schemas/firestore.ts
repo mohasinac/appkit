@@ -270,6 +270,13 @@ export interface SiteSettingsCredentials {
   metaAppSecret?: string;
   metaPageAccessToken?: string;
   metaPageId?: string;
+  /** TikTok for Developers — client credentials + long-lived access token */
+  tiktokClientKey?: string;
+  tiktokClientSecret?: string;
+  tiktokAccessToken?: string;
+  /** DeviantArt OAuth2 client credentials */
+  deviantartClientId?: string;
+  deviantartClientSecret?: string;
 }
 
 export interface SiteSettingsCredentialsMasked {
@@ -284,6 +291,11 @@ export interface SiteSettingsCredentialsMasked {
   metaAppSecret?: string;
   metaPageAccessToken?: string;
   metaPageId?: string;
+  tiktokClientKey?: string;
+  tiktokClientSecret?: string;
+  tiktokAccessToken?: string;
+  deviantartClientId?: string;
+  deviantartClientSecret?: string;
 }
 
 export interface SiteSettingsDocument {

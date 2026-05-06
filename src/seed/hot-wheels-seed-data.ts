@@ -1,5 +1,5 @@
 ﻿/**
- * Hot Wheels â€” Products Seed Data
+ * Hot Wheels — Products Seed Data
  * 30 general · 3 auctions · 2 pre-orders = 35 total
  * Seller: Speed King Diecast (store-speed-king-diecast)
  */
@@ -40,11 +40,11 @@ const img = (seed: string) => {
 
 export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
-  // â”€â”€ BASIC MAINLINE CARS (15) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── BASIC MAINLINE CARS (15) ──────────────────────────────────────────────
 
   {
     id: "product-hw-corvette-zr1-2019-basic-sk-1",
-    title: "Hot Wheels 2019 Corvette ZR1 â€” Mainline (Red)",
+    title: "Hot Wheels 2019 Corvette ZR1 — Mainline (Red)",
     description: "<p>The iconic 2019 Corvette ZR1 in Hot Wheels scale. Vivid red finish with detailed tampo print. A must-have for American muscle collectors.</p>",
     slug: "product-hw-2019-corvette-zr1-red-mainline",
     category: "category-hw-basic-cars",
@@ -90,7 +90,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-67-camaro-blue-basic-sk-2",
-    title: "Hot Wheels '67 Camaro â€” Mainline (Metallic Blue)",
+    title: "Hot Wheels '67 Camaro — Mainline (Metallic Blue)",
     description: "<p>Classic 1967 Chevrolet Camaro in Hot Wheels 1:64 scale. Striking metallic blue finish with chrome bumpers.</p>",
     slug: "product-hw-67-camaro-metallic-blue",
     category: "category-hw-basic-cars",
@@ -127,8 +127,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-twin-mill-classic-basic-sk-3",
-    title: "Hot Wheels Twin Mill â€” Classic Redline Replica",
-    description: "<p>The legendary Twin Mill â€” one of the most iconic original Hot Wheels designs ever created. Dual-engine supercar in eye-catching orange with tampo details.</p>",
+    title: "Hot Wheels Twin Mill — Classic Redline Replica",
+    description: "<p>The legendary Twin Mill — one of the most iconic original Hot Wheels designs ever created. Dual-engine supercar in eye-catching orange with tampo details.</p>",
     slug: "product-hw-twin-mill-classic-redline",
     category: "category-hw-basic-cars",
     subcategory: "Originals",
@@ -166,7 +166,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-bone-shaker-skull-basic-sk-4",
-    title: "Hot Wheels Bone Shaker â€” Skull Edition (Black)",
+    title: "Hot Wheels Bone Shaker — Skull Edition (Black)",
     description: "<p>Bone Shaker is one of Hot Wheels' most popular original designs. The skull and engine exposed front makes this an instant classic. Black variant with chrome details.</p>",
     slug: "product-hw-bone-shaker-skull-black",
     category: "category-hw-basic-cars",
@@ -202,8 +202,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-toyota-ae86-jdm-basic-sk-5",
-    title: "Hot Wheels Toyota AE86 Corolla â€” JDM Edition (White)",
-    description: "<p>The legendary Toyota AE86 Trueno in white with Initial D-inspired livery. One of the most beloved JDM icons in Hot Wheels form. Extremely popular â€” limited stock.</p>",
+    title: "Hot Wheels Toyota AE86 Corolla — JDM Edition (White)",
+    description: "<p>The legendary Toyota AE86 Trueno in white with Initial D-inspired livery. One of the most beloved JDM icons in Hot Wheels form. Extremely popular — limited stock.</p>",
     slug: "product-hw-toyota-ae86-corolla-jdm-white",
     category: "category-hw-basic-cars",
     subcategory: "JDM",
@@ -241,8 +241,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-ford-gt-lm-racing-basic-sk-6",
-    title: "Hot Wheels Ford GT Le Mans â€” Racing Livery",
-    description: "<p>Ford GT in full Le Mans racing livery â€” the car that beat Ferrari at the 1966 24 Hours of Le Mans. Stunning Gulf Oil colours in 1:64 scale.</p>",
+    title: "Hot Wheels Ford GT Le Mans — Racing Livery",
+    description: "<p>Ford GT in full Le Mans racing livery — the car that beat Ferrari at the 1966 24 Hours of Le Mans. Stunning Gulf Oil colours in 1:64 scale.</p>",
     slug: "product-hw-ford-gt-le-mans-racing",
     category: "category-hw-basic-cars",
     subcategory: "Racing",
@@ -316,7 +316,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-dodge-challenger-hellcat-basic-sk-8",
     title: "Hot Wheels Dodge Challenger SRT Hellcat (Dark Purple)",
-    description: "<p>The Dodge Challenger SRT Hellcat â€” 707 bhp of raw American muscle in 1:64 form. Dark purple with subtle flame tampo.</p>",
+    description: "<p>The Dodge Challenger SRT Hellcat — 707 bhp of raw American muscle in 1:64 form. Dark purple with subtle flame tampo.</p>",
     slug: "product-hw-dodge-challenger-hellcat-purple",
     category: "category-hw-basic-cars",
     subcategory: "American Muscle",
@@ -351,7 +351,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-deora-iii-surf-basic-sk-9",
-    title: "Hot Wheels Deora III â€” Surf Van (Teal)",
+    title: "Hot Wheels Deora III — Surf Van (Teal)",
     description: "<p>The Deora III continues the legendary Deora lineage. Part van, part hot rod, all Cool. The surfboard detail and teal finish make this a showpiece.</p>",
     slug: "product-hw-deora-iii-surf-van-teal",
     category: "category-hw-basic-cars",
@@ -388,7 +388,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-nissan-gtr-r35-basic-sk-10",
     title: "Hot Wheels Nissan GT-R R35 (Midnight Purple)",
-    description: "<p>The Nissan GT-R R35 â€” Godzilla in midnight purple. Sharp casting with all GT-R detail lines reproduced perfectly in 1:64 scale.</p>",
+    description: "<p>The Nissan GT-R R35 — Godzilla in midnight purple. Sharp casting with all GT-R detail lines reproduced perfectly in 1:64 scale.</p>",
     slug: "product-hw-nissan-gtr-r35-midnight-purple",
     category: "category-hw-basic-cars",
     subcategory: "JDM",
@@ -424,7 +424,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-ferrari-488-gt3-basic-sk-11",
-    title: "Hot Wheels Ferrari 488 GT3 â€” Race Edition",
+    title: "Hot Wheels Ferrari 488 GT3 — Race Edition",
     description: "<p>Ferrari 488 GT3 in full race livery. Official Ferrari licensed casting in 1:64 with race number tampo and GT3 body kit details.</p>",
     slug: "product-hw-ferrari-488-gt3-race",
     category: "category-hw-basic-cars",
@@ -461,7 +461,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-porsche-911-gt3-basic-sk-12",
-    title: "Hot Wheels Porsche 911 GT3 RS â€” White",
+    title: "Hot Wheels Porsche 911 GT3 RS — White",
     description: "<p>Porsche 911 GT3 RS in white with distinctive GT3 RS wing. Official Porsche licensed. One of the cleanest castings in the current lineup.</p>",
     slug: "product-hw-porsche-911-gt3-rs-white",
     category: "category-hw-basic-cars",
@@ -497,8 +497,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-bmw-m3-e30-basic-sk-13",
-    title: "Hot Wheels BMW M3 E30 â€” Touring Car (Red)",
-    description: "<p>The iconic BMW E30 M3 in touring car spec â€” red with white BBS-style wheels. One of the most wanted JDM/Euro castings from Hot Wheels.</p>",
+    title: "Hot Wheels BMW M3 E30 — Touring Car (Red)",
+    description: "<p>The iconic BMW E30 M3 in touring car spec — red with white BBS-style wheels. One of the most wanted JDM/Euro castings from Hot Wheels.</p>",
     slug: "product-hw-bmw-m3-e30-touring-red",
     category: "category-hw-basic-cars",
     subcategory: "Euro",
@@ -536,7 +536,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-subaru-wrx-sti-basic-sk-14",
-    title: "Hot Wheels Subaru WRX STI â€” Rally Edition (Blue)",
+    title: "Hot Wheels Subaru WRX STI — Rally Edition (Blue)",
     description: "<p>Subaru WRX STI in iconic blue with rally decals. Full rally livery tampo with WRC mudflaps. Real Riders rubber tyres included.</p>",
     slug: "product-hw-subaru-wrx-sti-rally-blue",
     category: "category-hw-basic-cars",
@@ -573,7 +573,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-datsun-240z-classic-basic-sk-15",
-    title: "Hot Wheels Datsun 240Z â€” JDM Classic (Orange)",
+    title: "Hot Wheels Datsun 240Z — JDM Classic (Orange)",
     description: "<p>The timeless Datsun 240Z in classic orange. A beloved JDM grand tourer that defined a generation. This casting is one of Hot Wheels' most lauded.</p>",
     slug: "product-hw-datsun-240z-jdm-orange",
     category: "category-hw-basic-cars",
@@ -608,12 +608,12 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // â”€â”€ PREMIUM CARS (10) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── PREMIUM CARS (10) ─────────────────────────────────────────────────────
 
   {
     id: "product-hw-car-culture-boulevard-pack-premium-sk-16",
-    title: "Hot Wheels Car Culture Boulevard â€” Wave 5 (5-pack)",
-    description: "<p>Hot Wheels Car Culture Boulevard Wave 5 â€” premium 5-car assortment featuring Real Riders rubber tyres and premium packaging. Includes BMW 2002, Honda S2000, Mini Cooper, Mazda MX-5, and Alfa Romeo Spider.</p>",
+    title: "Hot Wheels Car Culture Boulevard — Wave 5 (5-pack)",
+    description: "<p>Hot Wheels Car Culture Boulevard Wave 5 — premium 5-car assortment featuring Real Riders rubber tyres and premium packaging. Includes BMW 2002, Honda S2000, Mini Cooper, Mazda MX-5, and Alfa Romeo Spider.</p>",
     slug: "product-hw-car-culture-boulevard-wave5-5pack",
     category: "category-hw-premium",
     subcategory: "Car Culture",
@@ -654,7 +654,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-japan-historics-3-premium-sk-17",
     title: "Hot Wheels Car Culture Japan Historics 3 (5-pack)",
-    description: "<p>Car Culture Japan Historics 3 â€” 5 iconic Japanese cars from the 70s and 80s. Features Mazda Cosmo, Honda N600, Toyota Celica, Datsun 510, and Nissan Skyline C210. All with Real Riders rubber tyres.</p>",
+    description: "<p>Car Culture Japan Historics 3 — 5 iconic Japanese cars from the 70s and 80s. Features Mazda Cosmo, Honda N600, Toyota Celica, Datsun 510, and Nissan Skyline C210. All with Real Riders rubber tyres.</p>",
     slug: "product-hw-car-culture-japan-historics-3-5pack",
     category: "category-hw-premium",
     subcategory: "Car Culture",
@@ -766,7 +766,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-real-riders-trucks-pack-premium-sk-20",
-    title: "Hot Wheels Real Riders Trucks Series â€” Wave 1 (5-pack)",
+    title: "Hot Wheels Real Riders Trucks Series — Wave 1 (5-pack)",
     description: "<p>5 premium 1:64 scale trucks with Real Riders rubber tyres. Includes Chevy Silverado, Ford F-150 Raptor, Ram 1500 TRX, Toyota Tundra, and GMC Sierra. Off-road details throughout.</p>",
     slug: "product-hw-real-riders-trucks-series-wave1",
     category: "category-hw-premium",
@@ -801,11 +801,11 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // â”€â”€ TRACK SETS (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TRACK SETS (5) ────────────────────────────────────────────────────────
 
   {
     id: "product-hw-loop-launch-track-set-sk-21",
-    title: "Hot Wheels Loop & Launch Track Set â€” Triple Loop",
+    title: "Hot Wheels Loop & Launch Track Set — Triple Loop",
     description: "<p>Three vertigo-inducing loops in one set! Launcher-powered track with triple loop, crash zone, and finish line. Works with all standard Hot Wheels mainline cars. Recommended age 5+.</p>",
     slug: "product-hw-loop-launch-triple-loop-track-set",
     category: "category-hw-track-sets",
@@ -844,7 +844,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-city-ultimate-garage-track-sk-22",
-    title: "Hot Wheels City Ultimate Garage â€” 5-Level Playset",
+    title: "Hot Wheels City Ultimate Garage — 5-Level Playset",
     description: "<p>The ultimate Hot Wheels garage! 5-level parking structure with loop, elevator, car wash, and service station. Stores over 90 cars. A centrepiece for any collection or playroom.</p>",
     slug: "product-hw-city-ultimate-garage-5-level",
     category: "category-hw-track-sets",
@@ -885,7 +885,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-monster-trucks-jump-track-sk-23",
-    title: "Hot Wheels Monster Trucks Jump Track â€” Epic Crash",
+    title: "Hot Wheels Monster Trucks Jump Track — Epic Crash",
     description: "<p>Monster Trucks themed jump and crash track. Launch your 1:64 monster truck over cars and obstacles, smash the crash zone, then do it all again. Includes 1 Monster Truck and 2 crash cars.</p>",
     slug: "product-hw-monster-trucks-jump-crash-track",
     category: "category-hw-track-sets",
@@ -957,8 +957,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-racing-circuit-10pack-sk-25",
-    title: "Hot Wheels Racing Circuit â€” 10-car Collector Pack",
-    description: "<p>10 racing-themed Hot Wheels cars in collector blister packaging. Mix of Formula-style, GT racers, and touring cars â€” all with racing liveries. Great value collector set.</p>",
+    title: "Hot Wheels Racing Circuit — 10-car Collector Pack",
+    description: "<p>10 racing-themed Hot Wheels cars in collector blister packaging. Mix of Formula-style, GT racers, and touring cars — all with racing liveries. Great value collector set.</p>",
     slug: "product-hw-racing-circuit-10car-pack",
     category: "category-hw-track-sets",
     subcategory: "Collector Sets",
@@ -992,12 +992,12 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(11),
   },
 
-  // â”€â”€ TREASURE HUNT (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TREASURE HUNT (5) ─────────────────────────────────────────────────────
 
   {
     id: "product-hw-th-charger-orange-th-sk-26",
     title: "Hot Wheels Treasure Hunt Dodge Charger R/T (2024 #TH1)",
-    description: "<p>Official 2024 Treasure Hunt â€” Dodge Charger R/T with the distinctive TH logo, green flame tampo, and specialised Real Riders tyres. Much harder to find than mainline. Original blister card, unopened.</p>",
+    description: "<p>Official 2024 Treasure Hunt — Dodge Charger R/T with the distinctive TH logo, green flame tampo, and specialised Real Riders tyres. Much harder to find than mainline. Original blister card, unopened.</p>",
     slug: "product-hw-treasure-hunt-dodge-charger-rt-2024",
     category: "category-hw-treasure-hunt",
     subcategory: "Treasure Hunt",
@@ -1038,7 +1038,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-th-shelby-gt500-th-sk-27",
     title: "Hot Wheels Treasure Hunt Ford Shelby GT500 (2024 #TH7)",
-    description: "<p>2024 Treasure Hunt Ford Shelby GT500 with TH script, specialised wheels, and Shelby GT500 livery tampo. Hunted in stores worldwide â€” authentic card, acquired directly from Case C assortment.</p>",
+    description: "<p>2024 Treasure Hunt Ford Shelby GT500 with TH script, specialised wheels, and Shelby GT500 livery tampo. Hunted in stores worldwide — authentic card, acquired directly from Case C assortment.</p>",
     slug: "product-hw-treasure-hunt-shelby-gt500-2024",
     category: "category-hw-treasure-hunt",
     subcategory: "Treasure Hunt",
@@ -1075,7 +1075,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-th-bmw-m5-th-sk-28",
     title: "Hot Wheels Treasure Hunt BMW M5 E60 (2024 #TH12)",
-    description: "<p>2024 Treasure Hunt BMW M5 E60 â€” a collector holy grail for BMW fans. TH logo, Real Riders, and authentic M-stripe tampo. Stored sealed since case opening.</p>",
+    description: "<p>2024 Treasure Hunt BMW M5 E60 — a collector holy grail for BMW fans. TH logo, Real Riders, and authentic M-stripe tampo. Stored sealed since case opening.</p>",
     slug: "product-hw-treasure-hunt-bmw-m5-e60-2024",
     category: "category-hw-treasure-hunt",
     subcategory: "Treasure Hunt",
@@ -1150,7 +1150,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hw-th-porsche-914-th-sk-30",
     title: "Hot Wheels Treasure Hunt Porsche 914 (2024 #TH18)",
-    description: "<p>Rare 2024 TH Porsche 914 â€” a vintage mid-engine Porsche in treasure hunt spec. Includes TH flame graphics and Real Riders. Perfect for Euro-car collectors.</p>",
+    description: "<p>Rare 2024 TH Porsche 914 — a vintage mid-engine Porsche in treasure hunt spec. Includes TH flame graphics and Real Riders. Perfect for Euro-car collectors.</p>",
     slug: "product-hw-treasure-hunt-porsche-914-2024",
     category: "category-hw-treasure-hunt",
     subcategory: "Treasure Hunt",
@@ -1184,12 +1184,12 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // â”€â”€ AUCTIONS (3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── AUCTIONS (3) ─────────────────────────────────────────────────────────
 
   {
     id: "auction-hw-sth-gto-judge-70-auction-sk-1",
-    title: "AUCTION â€” Hot Wheels Super Treasure Hunt '70 Pontiac GTO 'The Judge'",
-    description: "<p>Extremely rare 2022 Super Treasure Hunt '70 Pontiac GTO The Judge. Spectraflame orange paint, Real Riders premium rubber tyres, and the coveted $TH designation. Only found in 1 of every 72 cases worldwide. Stored sealed since case opening â€” perfect for grading.</p>",
+    title: "AUCTION — Hot Wheels Super Treasure Hunt '70 Pontiac GTO 'The Judge'",
+    description: "<p>Extremely rare 2022 Super Treasure Hunt '70 Pontiac GTO The Judge. Spectraflame orange paint, Real Riders premium rubber tyres, and the coveted $TH designation. Only found in 1 of every 72 cases worldwide. Stored sealed since case opening — perfect for grading.</p>",
     slug: "auction-hw-sth-pontiac-gto-judge-2022",
     category: "category-hw-treasure-hunt",
     subcategory: "Super Treasure Hunt",
@@ -1209,7 +1209,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
       { name: "Type", value: "Super Treasure Hunt ($TH)" },
       { name: "Finish", value: "Spectraflame Orange" },
       { name: "Wheels", value: "Real Riders Premium" },
-      { name: "Condition", value: "Sealed Card â€” Near Mint" },
+      { name: "Condition", value: "Sealed Card — Near Mint" },
       { name: "Year", value: "2022 Series" },
     ],
     features: ["Spectraflame metallic finish", "Premium Real Riders rubber tyres", "$TH Super designation", "1 in 72 case rarity"],
@@ -1242,8 +1242,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "auction-hw-rlc-twin-mill-redline-auction-sk-2",
-    title: "AUCTION â€” Hot Wheels RLC Exclusive Twin Mill Redline Club",
-    description: "<p>Hot Wheels Redline Club (RLC) exclusive Twin Mill â€” only available to RLC members for a limited window. Red enamel paint with authentic redline wire wheels, metal base, and collector tin packaging. Never opened â€” original shrink wrap intact.</p>",
+    title: "AUCTION — Hot Wheels RLC Exclusive Twin Mill Redline Club",
+    description: "<p>Hot Wheels Redline Club (RLC) exclusive Twin Mill — only available to RLC members for a limited window. Red enamel paint with authentic redline wire wheels, metal base, and collector tin packaging. Never opened — original shrink wrap intact.</p>",
     slug: "auction-hw-rlc-twin-mill-redline-club",
     category: "category-hw-premium",
     subcategory: "RLC Exclusive",
@@ -1294,7 +1294,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "auction-hw-countach-118-scale-auction-sk-3",
-    title: "AUCTION â€” Hot Wheels Lamborghini Countach 1:18 Elite Edition",
+    title: "AUCTION — Hot Wheels Lamborghini Countach 1:18 Elite Edition",
     description: "<p>Ultra-rare Hot Wheels 1:18 Elite Edition Lamborghini Countach LP5000S QV in Bianco Polo White. Full die-cast metal body with opening doors, hood, and engine cover. Limited to 2,500 units worldwide. Certificate of authenticity included.</p>",
     slug: "auction-hw-lamborghini-countach-118-elite",
     category: "category-hw-premium",
@@ -1345,12 +1345,12 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // â”€â”€ PRE-ORDERS (2) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── PRE-ORDERS (2) ───────────────────────────────────────────────────────
 
   {
     id: "preorder-hw-car-culture-wave4-2026-sk-1",
-    title: "PRE-ORDER â€” Hot Wheels Car Culture Wave 4 2026 (5-pack)",
-    description: "<p>Reserve the highly anticipated Car Culture Wave 4 2026 â€” featuring 5 premium cars with Real Riders and premium detailing. Exact models TBA; historically Wave 4 features European grand tourers and JDM icons. Pre-order now to guarantee your set at launch price.</p>",
+    title: "PRE-ORDER — Hot Wheels Car Culture Wave 4 2026 (5-pack)",
+    description: "<p>Reserve the highly anticipated Car Culture Wave 4 2026 — featuring 5 premium cars with Real Riders and premium detailing. Exact models TBA; historically Wave 4 features European grand tourers and JDM icons. Pre-order now to guarantee your set at launch price.</p>",
     slug: "preorder-hw-car-culture-wave4-2026",
     category: "category-hw-premium",
     subcategory: "Car Culture",
@@ -1392,8 +1392,8 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-hw-legends-tour-winner-2026-sk-2",
-    title: "PRE-ORDER â€” Hot Wheels Legends Tour 2026 Winner Edition",
-    description: "<p>The Hot Wheels Legends Tour crowns the best modified car in India each year and immortalises it as a 1:64 die-cast. Pre-order the 2026 Indian Legends Tour winner â€” model to be announced after the tour finale. Previous winners have been Bajaj, Ambassador, and Premier Padmini customs.</p>",
+    title: "PRE-ORDER — Hot Wheels Legends Tour 2026 Winner Edition",
+    description: "<p>The Hot Wheels Legends Tour crowns the best modified car in India each year and immortalises it as a 1:64 die-cast. Pre-order the 2026 Indian Legends Tour winner — model to be announced after the tour finale. Previous winners have been Bajaj, Ambassador, and Premier Padmini customs.</p>",
     slug: "preorder-hw-legends-tour-india-winner-2026",
     category: "category-hw-premium",
     subcategory: "Legends Tour",
@@ -1411,7 +1411,7 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     specifications: [
       { name: "Scale", value: "1:64" },
       { name: "Series", value: "Legends Tour India 2026" },
-      { name: "Model", value: "TBA â€” 2026 Tour Winner" },
+      { name: "Model", value: "TBA — 2026 Tour Winner" },
       { name: "Certificate", value: "Included" },
     ],
     features: ["Limited to 5,000 units", "Certificate of authenticity", "Tour winner story booklet"],
@@ -1432,13 +1432,13 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // â”€â”€ ADDITIONAL MAINLINE (16 more) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── ADDITIONAL MAINLINE (16 more) ─────────────────────────────────────────
 
   {
     id: "product-hw-dodge-challenger-hellcat-sk-36",
-    title: "Hot Wheels Dodge Challenger SRT Hellcat â€” Mainline (Purple)",
+    title: "Hot Wheels Dodge Challenger SRT Hellcat — Mainline (Purple)",
     slug: "product-hw-dodge-challenger-srt-hellcat-purple",
-    description: "<p>Dodge Challenger SRT Hellcat in Hot Wheels Mainline â€” 707HP muscle car in deep purple with aggressive tampo. A crowd favourite for American muscle collectors.</p>",
+    description: "<p>Dodge Challenger SRT Hellcat in Hot Wheels Mainline — 707HP muscle car in deep purple with aggressive tampo. A crowd favourite for American muscle collectors.</p>",
     category: "category-hw-basic-cars", subcategory: "American Muscle", brand: "Hot Wheels",
     price: 199, currency: _CURRENCY, stockQuantity: 28, availableQuantity: 22,
     mainImage: img("hw-challenger-hellcat-purple"), images: [img("hw-challenger-hellcat-purple")],
@@ -1451,9 +1451,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-ford-gt40-le-mans-sk-37",
-    title: "Hot Wheels Ford GT40 Le Mans 1966 â€” Car Culture",
+    title: "Hot Wheels Ford GT40 Le Mans 1966 — Car Culture",
     slug: "product-hw-ford-gt40-lemans-1966-car-culture",
-    description: "<p>Ford GT40 from the 1966 Le Mans â€” the car that beat Ferrari. Car Culture premium series with Real Riders tyres and detailed livery. Gulf Oil racing colours.</p>",
+    description: "<p>Ford GT40 from the 1966 Le Mans — the car that beat Ferrari. Car Culture premium series with Real Riders tyres and detailed livery. Gulf Oil racing colours.</p>",
     category: "category-hw-premium", subcategory: "Car Culture", brand: "Hot Wheels",
     price: 699, currency: _CURRENCY, stockQuantity: 18, availableQuantity: 14,
     mainImage: img("hw-gt40-lemans"), images: [img("hw-gt40-lemans")],
@@ -1466,9 +1466,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-lamborghini-countach-white-sk-38",
-    title: "Hot Wheels Lamborghini Countach LP400S â€” Mainline (White)",
+    title: "Hot Wheels Lamborghini Countach LP400S — Mainline (White)",
     slug: "product-hw-lamborghini-countach-lp400s-white",
-    description: "<p>Lamborghini Countach LP400S in pearl white â€” the poster car of the 80s in Hot Wheels scale. Mainline series. Opening scissor doors modelled in the tampo art.</p>",
+    description: "<p>Lamborghini Countach LP400S in pearl white — the poster car of the 80s in Hot Wheels scale. Mainline series. Opening scissor doors modelled in the tampo art.</p>",
     category: "category-hw-basic-cars", subcategory: "Supercars", brand: "Hot Wheels",
     price: 199, currency: _CURRENCY, stockQuantity: 25, availableQuantity: 21,
     mainImage: img("hw-countach-white"), images: [img("hw-countach-white")],
@@ -1481,9 +1481,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-porsche-911-gt3-rs-sk-39",
-    title: "Hot Wheels Porsche 911 GT3 RS â€” Car Culture (Orange)",
+    title: "Hot Wheels Porsche 911 GT3 RS — Car Culture (Orange)",
     slug: "product-hw-porsche-911-gt3-rs-orange-car-culture",
-    description: "<p>Porsche 911 GT3 RS in hot orange â€” Car Culture premium with Real Riders and detailed GT3 RS aero. Black cage interior detail. The benchmark track Porsche in 1:64 scale.</p>",
+    description: "<p>Porsche 911 GT3 RS in hot orange — Car Culture premium with Real Riders and detailed GT3 RS aero. Black cage interior detail. The benchmark track Porsche in 1:64 scale.</p>",
     category: "category-hw-premium", subcategory: "Car Culture", brand: "Hot Wheels",
     price: 699, currency: _CURRENCY, stockQuantity: 20, availableQuantity: 16,
     mainImage: img("hw-porsche-911-gt3-rs"), images: [img("hw-porsche-911-gt3-rs")],
@@ -1496,9 +1496,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-nissan-gtr-r35-blue-sk-40",
-    title: "Hot Wheels Nissan GT-R R35 â€” Premium (Pearl Blue)",
+    title: "Hot Wheels Nissan GT-R R35 — Premium (Pearl Blue)",
     slug: "product-hw-nissan-gtr-r35-pearl-blue-premium",
-    description: "<p>Nissan GT-R R35 in pearl blue â€” premium Hot Wheels with die-cast body and Real Riders. Godzilla in miniature. Detailed front bumper and rear diffuser aero kit.</p>",
+    description: "<p>Nissan GT-R R35 in pearl blue — premium Hot Wheels with die-cast body and Real Riders. Godzilla in miniature. Detailed front bumper and rear diffuser aero kit.</p>",
     category: "category-hw-premium", subcategory: "JDM", brand: "Hot Wheels",
     price: 499, currency: _CURRENCY, stockQuantity: 22, availableQuantity: 18,
     mainImage: img("hw-nissan-gtr-r35"), images: [img("hw-nissan-gtr-r35")],
@@ -1511,9 +1511,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-bmw-m3-e30-white-sk-41",
-    title: "Hot Wheels BMW M3 E30 â€” Car Culture (White DTM)",
+    title: "Hot Wheels BMW M3 E30 — Car Culture (White DTM)",
     slug: "product-hw-bmw-m3-e30-white-dtm-car-culture",
-    description: "<p>BMW M3 E30 in white DTM racing livery â€” Car Culture Touring Cars series. Real Riders, accurate DTM wing, and sponsor tampo. The original touring car legend.</p>",
+    description: "<p>BMW M3 E30 in white DTM racing livery — Car Culture Touring Cars series. Real Riders, accurate DTM wing, and sponsor tampo. The original touring car legend.</p>",
     category: "category-hw-premium", subcategory: "Car Culture", brand: "Hot Wheels",
     price: 699, currency: _CURRENCY, stockQuantity: 15, availableQuantity: 12,
     mainImage: img("hw-bmw-m3-e30-white"), images: [img("hw-bmw-m3-e30-white")],
@@ -1526,9 +1526,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-mazda-rx7-fd-red-sk-42",
-    title: "Hot Wheels Mazda RX-7 FD â€” Mainline (Red)",
+    title: "Hot Wheels Mazda RX-7 FD — Mainline (Red)",
     slug: "product-hw-mazda-rx7-fd-red-mainline",
-    description: "<p>Mazda RX-7 FD in vivid red â€” the rotary icon in Hot Wheels scale. One of the most beloved JDM cars in the Hot Wheels lineup. Great for JDM collections and track play.</p>",
+    description: "<p>Mazda RX-7 FD in vivid red — the rotary icon in Hot Wheels scale. One of the most beloved JDM cars in the Hot Wheels lineup. Great for JDM collections and track play.</p>",
     category: "category-hw-basic-cars", subcategory: "JDM", brand: "Hot Wheels",
     price: 199, currency: _CURRENCY, stockQuantity: 30, availableQuantity: 26,
     mainImage: img("hw-rx7-fd-red"), images: [img("hw-rx7-fd-red")],
@@ -1541,9 +1541,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-toyota-supra-a90-orange-sk-43",
-    title: "Hot Wheels Toyota GR Supra A90 â€” Mainline (Orange)",
+    title: "Hot Wheels Toyota GR Supra A90 — Mainline (Orange)",
     slug: "product-hw-toyota-gr-supra-a90-orange-mainline",
-    description: "<p>Toyota GR Supra A90 in vivid orange â€” the new-generation Supra in Hot Wheels. Mainline series with accurate body kit and twin exhaust detail. Perfect for modern JDM shelf.</p>",
+    description: "<p>Toyota GR Supra A90 in vivid orange — the new-generation Supra in Hot Wheels. Mainline series with accurate body kit and twin exhaust detail. Perfect for modern JDM shelf.</p>",
     category: "category-hw-basic-cars", subcategory: "JDM", brand: "Hot Wheels",
     price: 199, currency: _CURRENCY, stockQuantity: 28, availableQuantity: 25,
     mainImage: img("hw-supra-a90-orange"), images: [img("hw-supra-a90-orange")],
@@ -1556,9 +1556,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-f1-mercedes-w11-sk-44",
-    title: "Hot Wheels Mercedes F1 W11 â€” Collector (2020 Lewis Hamilton Championship)",
+    title: "Hot Wheels Mercedes F1 W11 — Collector (2020 Lewis Hamilton Championship)",
     slug: "product-hw-f1-mercedes-w11-2020-hamilton",
-    description: "<p>Mercedes F1 W11 from Lewis Hamilton's 2020 World Championship â€” 7-time champion's car in 1:64 premium. Silver arrows livery with BLM livery version. Detailed front wing and Halo. Limited collector edition.</p>",
+    description: "<p>Mercedes F1 W11 from Lewis Hamilton's 2020 World Championship — 7-time champion's car in 1:64 premium. Silver arrows livery with BLM livery version. Detailed front wing and Halo. Limited collector edition.</p>",
     category: "category-hw-premium", subcategory: "F1", brand: "Hot Wheels",
     price: 899, currency: _CURRENCY, stockQuantity: 12, availableQuantity: 9,
     mainImage: img("hw-f1-mercedes-w11"), images: [img("hw-f1-mercedes-w11")],
@@ -1571,9 +1571,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-batmobile-89-tim-burton-sk-45",
-    title: "Hot Wheels Batman Batmobile 1989 â€” Tim Burton Film Car",
+    title: "Hot Wheels Batman Batmobile 1989 — Tim Burton Film Car",
     slug: "product-hw-batmobile-1989-tim-burton-batman",
-    description: "<p>Tim Burton's 1989 Batman Batmobile in Hot Wheels â€” the most iconic movie car ever. Die-cast body with jet afterburner and bat fin detail. Entertainment series. Black matte finish with chrome trim.</p>",
+    description: "<p>Tim Burton's 1989 Batman Batmobile in Hot Wheels — the most iconic movie car ever. Die-cast body with jet afterburner and bat fin detail. Entertainment series. Black matte finish with chrome trim.</p>",
     category: "category-hw-entertainment", subcategory: "Movie Cars", brand: "Hot Wheels",
     price: 499, currency: _CURRENCY, stockQuantity: 20, availableQuantity: 16,
     mainImage: img("hw-batmobile-89"), images: [img("hw-batmobile-89")],
@@ -1586,9 +1586,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-dodge-viper-gts-r-sk-46",
-    title: "Hot Wheels Dodge Viper GTS-R â€” Racing (Blue/White Stripe)",
+    title: "Hot Wheels Dodge Viper GTS-R — Racing (Blue/White Stripe)",
     slug: "product-hw-dodge-viper-gts-r-racing-blue-white",
-    description: "<p>Dodge Viper GTS-R in classic blue with white racing stripe â€” Car Culture track version. Real Riders with racing slick profile. GTS-R aero bodykit. The racing icon that conquered Le Mans GT class.</p>",
+    description: "<p>Dodge Viper GTS-R in classic blue with white racing stripe — Car Culture track version. Real Riders with racing slick profile. GTS-R aero bodykit. The racing icon that conquered Le Mans GT class.</p>",
     category: "category-hw-premium", subcategory: "Car Culture", brand: "Hot Wheels",
     price: 699, currency: _CURRENCY, stockQuantity: 18, availableQuantity: 14,
     mainImage: img("hw-viper-gts-r"), images: [img("hw-viper-gts-r")],
@@ -1601,9 +1601,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-mclaren-p1-yellow-sk-47",
-    title: "Hot Wheels McLaren P1 â€” Mainline (Volcano Yellow)",
+    title: "Hot Wheels McLaren P1 — Mainline (Volcano Yellow)",
     slug: "product-hw-mclaren-p1-volcano-yellow-mainline",
-    description: "<p>McLaren P1 in Volcano Yellow â€” the British hybrid hypercar in Hot Wheels. Mainline series with detailed front splitter and rear diffuser. One of the fastest-selling Hot Wheels in the supercar category.</p>",
+    description: "<p>McLaren P1 in Volcano Yellow — the British hybrid hypercar in Hot Wheels. Mainline series with detailed front splitter and rear diffuser. One of the fastest-selling Hot Wheels in the supercar category.</p>",
     category: "category-hw-basic-cars", subcategory: "Supercars", brand: "Hot Wheels",
     price: 199, currency: _CURRENCY, stockQuantity: 25, availableQuantity: 20,
     mainImage: img("hw-mclaren-p1-yellow"), images: [img("hw-mclaren-p1-yellow")],
@@ -1616,9 +1616,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-subaru-impreza-wrc-sk-48",
-    title: "Hot Wheels Subaru Impreza WRC â€” Rally (McRae 1997 Livery)",
+    title: "Hot Wheels Subaru Impreza WRC — Rally (McRae 1997 Livery)",
     slug: "product-hw-subaru-impreza-wrc-mcrae-1997",
-    description: "<p>Subaru Impreza WRC in Colin McRae's iconic 1997 livery â€” blue/gold Subaru rally legend. Car Culture Rally series with Real Riders. One of the most popular rally liveries of all time.</p>",
+    description: "<p>Subaru Impreza WRC in Colin McRae's iconic 1997 livery — blue/gold Subaru rally legend. Car Culture Rally series with Real Riders. One of the most popular rally liveries of all time.</p>",
     category: "category-hw-premium", subcategory: "Rally", brand: "Hot Wheels",
     price: 699, currency: _CURRENCY, stockQuantity: 15, availableQuantity: 11,
     mainImage: img("hw-subaru-impreza-wrc"), images: [img("hw-subaru-impreza-wrc")],
@@ -1631,9 +1631,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-honda-nsx-type-r-sk-49",
-    title: "Hot Wheels Honda NSX Type R â€” Premium (Championship White)",
+    title: "Hot Wheels Honda NSX Type R — Premium (Championship White)",
     slug: "product-hw-honda-nsx-type-r-championship-white",
-    description: "<p>Honda NSX Type R in Championship White â€” the lightweight Japanese sports car legend. Premium Hot Wheels with Real Riders and detailed Type R wing. Red tow hook and red badge detail.</p>",
+    description: "<p>Honda NSX Type R in Championship White — the lightweight Japanese sports car legend. Premium Hot Wheels with Real Riders and detailed Type R wing. Red tow hook and red badge detail.</p>",
     category: "category-hw-premium", subcategory: "JDM", brand: "Hot Wheels",
     price: 499, currency: _CURRENCY, stockQuantity: 18, availableQuantity: 14,
     mainImage: img("hw-honda-nsx-type-r"), images: [img("hw-honda-nsx-type-r")],
@@ -1646,9 +1646,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-delorean-back-future-sk-50",
-    title: "Hot Wheels DeLorean Time Machine â€” Back to the Future (2015 Hover Mode)",
+    title: "Hot Wheels DeLorean Time Machine — Back to the Future (2015 Hover Mode)",
     slug: "product-hw-delorean-back-to-future-2015-hover",
-    description: "<p>DeLorean Time Machine in 2015 hover mode from Back to the Future Part II â€” Entertainment series. Deployed hover wheels, Mr Fusion, and flux capacitor detail. One of the most sought-after entertainment Hot Wheels. Includes display stand for hover effect.</p>",
+    description: "<p>DeLorean Time Machine in 2015 hover mode from Back to the Future Part II — Entertainment series. Deployed hover wheels, Mr Fusion, and flux capacitor detail. One of the most sought-after entertainment Hot Wheels. Includes display stand for hover effect.</p>",
     category: "category-hw-entertainment", subcategory: "Movie Cars", brand: "Hot Wheels",
     price: 599, currency: _CURRENCY, stockQuantity: 14, availableQuantity: 10,
     mainImage: img("hw-delorean-hover"), images: [img("hw-delorean-hover")],
@@ -1661,9 +1661,9 @@ export const hotWheelsProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-hw-ferrari-sf90-spider-sk-51",
-    title: "Hot Wheels Ferrari SF90 Spider â€” Premium Collector",
+    title: "Hot Wheels Ferrari SF90 Spider — Premium Collector",
     slug: "product-hw-ferrari-sf90-spider-premium",
-    description: "<p>Ferrari SF90 Spider in Ferrari rosso red â€” premium Hot Wheels with Real Riders and detailed PHEV hybrid components visible. One of the most powerful road Ferraris ever made in 1:64 scale.</p>",
+    description: "<p>Ferrari SF90 Spider in Ferrari rosso red — premium Hot Wheels with Real Riders and detailed PHEV hybrid components visible. One of the most powerful road Ferraris ever made in 1:64 scale.</p>",
     category: "category-hw-premium", subcategory: "Supercars", brand: "Hot Wheels",
     price: 799, currency: _CURRENCY, stockQuantity: 12, availableQuantity: 9,
     mainImage: img("hw-ferrari-sf90-spider"), images: [img("hw-ferrari-sf90-spider")],

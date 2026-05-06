@@ -93,7 +93,8 @@ export function WhatsAppCommunitySection({
             {descriptionHtml && (
               <RichText
                 html={descriptionHtml}
-                className="text-lg md:text-xl mb-2 opacity-90 prose-invert prose-sm"
+                proseClass="prose max-w-none prose-invert prose-sm"
+                className="text-lg md:text-xl mb-2 opacity-90"
               />
             )}
 

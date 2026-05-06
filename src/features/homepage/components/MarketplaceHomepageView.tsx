@@ -22,6 +22,7 @@ import { NewsletterSection } from "./NewsletterSection";
 import { BlogArticlesSection } from "./BlogArticlesSection";
 import { WelcomeSection } from "./WelcomeSection";
 import { BrandsSection } from "./BrandsSection";
+import { SocialFeedSection } from "./SocialFeedSection";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import type {
   HomepageSectionDocument,
@@ -42,6 +43,7 @@ import type {
   BlogArticlesSectionConfig,
   NewsletterSectionConfig,
   BrandsSectionConfig,
+  SocialFeedSectionConfig,
 } from "../schemas";
 
 const DEFAULT_TRUST_FEATURES = [
@@ -388,6 +390,24 @@ function renderSection(
             limit={cfg?.maxBrands || 12}
             viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
             viewMoreLabel="All brands →"
+          />
+        );
+      }
+
+      case "social-feed": {
+        const cfg = config as SocialFeedSectionConfig;
+        if (!cfg?.platform || !cfg?.handle) return null;
+        return (
+          <SocialFeedSection
+            title={cleanTitle(cfg.title) || ""}
+            subtitle={cfg.subtitle}
+            platform={cfg.platform}
+            handle={cfg.handle}
+            postType={cfg.postType || "all"}
+            count={cfg.count || 9}
+            layout={cfg.layout || "grid"}
+            showCaption={cfg.showCaption ?? true}
+            showStats={cfg.showStats ?? true}
           />
         );
       }

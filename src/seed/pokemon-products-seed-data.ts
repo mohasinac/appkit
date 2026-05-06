@@ -1,7 +1,7 @@
 ﻿import { getDefaultCurrency } from "./seed-market-config";
 
 /**
- * Pokemon Base Set 151 â€” Products Seed Data
+ * Pokemon Base Set 151 — Products Seed Data
  *
  * Cards use real pokemontcg.io image URLs.
  * Image URL pattern:  https://images.pokemontcg.io/base1/{number}_hires.png
@@ -72,7 +72,7 @@ const BLAINE = {
   sellerEmail: "blaine@letitrip.in",
 } as const;
 
-// Helper â€” pokemontcg.io Base Set card image
+// Helper — pokemontcg.io Base Set card image
 const cardImg = (num: number) =>
   `https://images.pokemontcg.io/base1/${num}_hires.png`;
 
@@ -81,10 +81,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // HOLO RARE SINGLES (cards 1â€“16)
   // ════════════════════════════════════════════════════════════
 
-  // #4 â€” Charizard (the crown jewel)
+  // #4 — Charizard (the crown jewel)
   {
     id: "product-charizard-base1-4-holo-rare-fire-blaine-1",
-    title: "Charizard â€” Base Set #4 Holo Rare (Near Mint)",
+    title: "Charizard — Base Set #4 Holo Rare (Near Mint)",
     description:
       "The most iconic card in Pokémon history. First-edition Base Set Charizard in Near Mint condition. " +
       "Lightly played centering, no scratches on holo surface. Comes in a hard sleeve and top-loader.",
@@ -129,10 +129,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // #2 â€” Blastoise
+  // #2 — Blastoise
   {
     id: "product-blastoise-base1-2-holo-rare-water-misty-1",
-    title: "Blastoise â€” Base Set #2 Holo Rare (Near Mint)",
+    title: "Blastoise — Base Set #2 Holo Rare (Near Mint)",
     description:
       "Blastoise Holo Rare from the original Pokémon Base Set. Near Mint, light play centering. " +
       "A must-have Water-type collectible.",
@@ -173,12 +173,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #15 â€” Venusaur
+  // #15 — Venusaur
   {
     id: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
-    title: "Venusaur â€” Base Set #15 Holo Rare (Lightly Played)",
+    title: "Venusaur — Base Set #15 Holo Rare (Lightly Played)",
     description:
-      "Venusaur Holo Rare from Base Set. Lightly Played â€” minor corner wear, holo surface pristine.",
+      "Venusaur Holo Rare from Base Set. Lightly Played — minor corner wear, holo surface pristine.",
     slug: "product-venusaur-base1-15-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Grass",
@@ -214,10 +214,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // #10 â€” Mewtwo
+  // #10 — Mewtwo
   {
     id: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
-    title: "Mewtwo â€” Base Set #10 Holo Rare (Near Mint)",
+    title: "Mewtwo — Base Set #10 Holo Rare (Near Mint)",
     description:
       "The Genetic Pokémon. Mewtwo Holo Rare from the original Base Set in Near Mint condition.",
     slug: "product-mewtwo-base1-10-holo-rare",
@@ -256,12 +256,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // #16 â€” Zapdos
+  // #16 — Zapdos
   {
     id: "product-zapdos-base1-16-holo-rare-electric-surge-1",
-    title: "Zapdos â€” Base Set #16 Holo Rare (Near Mint)",
+    title: "Zapdos — Base Set #16 Holo Rare (Near Mint)",
     description:
-      "Zapdos Holo Rare from Base Set. One of the three legendary birds â€” this one is pure Electric.",
+      "Zapdos Holo Rare from Base Set. One of the three legendary birds — this one is pure Electric.",
     slug: "product-zapdos-base1-16-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Electric",
@@ -297,12 +297,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #3 â€” Chansey
+  // #3 — Chansey
   {
     id: "product-chansey-base1-3-holo-rare-colorless-misty-1",
-    title: "Chansey â€” Base Set #3 Holo Rare (Near Mint)",
+    title: "Chansey — Base Set #3 Holo Rare (Near Mint)",
     description:
-      "Chansey with 120 HP â€” the tankiest Base Set card. Holo Rare, Near Mint.",
+      "Chansey with 120 HP — the tankiest Base Set card. Holo Rare, Near Mint.",
     slug: "product-chansey-base1-3-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Colorless",
@@ -338,10 +338,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #6 â€” Gyarados
+  // #6 — Gyarados
   {
     id: "product-gyarados-base1-6-holo-rare-water-misty-1",
-    title: "Gyarados â€” Base Set #6 Holo Rare (Near Mint)",
+    title: "Gyarados — Base Set #6 Holo Rare (Near Mint)",
     description:
       "The fearsome sea serpent. Gyarados Holo Rare from Base Set, Near Mint.",
     slug: "product-gyarados-base1-6-holo-rare",
@@ -379,10 +379,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // #9 â€” Magneton
+  // #9 — Magneton
   {
     id: "product-magneton-base1-9-holo-rare-electric-surge-1",
-    title: "Magneton â€” Base Set #9 Holo Rare (Lightly Played)",
+    title: "Magneton — Base Set #9 Holo Rare (Lightly Played)",
     description:
       "Magneton Holo Rare, Lightly Played. Light whitening on corners, holo face clean.",
     slug: "product-magneton-base1-9-holo-rare",
@@ -424,10 +424,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // NON-HOLO RARE SINGLES
   // ════════════════════════════════════════════════════════════
 
-  // #17 â€” Beedrill
+  // #17 — Beedrill
   {
     id: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
-    title: "Beedrill â€” Base Set #17 Non-Holo Rare (Near Mint)",
+    title: "Beedrill — Base Set #17 Non-Holo Rare (Near Mint)",
     description:
       "Beedrill Non-Holo Rare. A Grass-type attacker classic from the original Base Set.",
     slug: "product-beedrill-base1-17-non-holo-rare",
@@ -465,10 +465,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(10),
   },
 
-  // #19 â€” Dugtrio
+  // #19 — Dugtrio
   {
     id: "product-dugtrio-base1-19-non-holo-rare-fighting-misty-1",
-    title: "Dugtrio â€” Base Set #19 Non-Holo Rare (Near Mint)",
+    title: "Dugtrio — Base Set #19 Non-Holo Rare (Near Mint)",
     description:
       "Dugtrio Non-Holo Rare from Base Set. Subsonic move artwork is iconic.",
     slug: "product-dugtrio-base1-19-non-holo-rare",
@@ -506,10 +506,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #24 â€” Haunter
+  // #24 — Haunter
   {
     id: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
-    title: "Haunter â€” Base Set #24 Non-Holo Rare (Near Mint)",
+    title: "Haunter — Base Set #24 Non-Holo Rare (Near Mint)",
     description:
       "Haunter Non-Holo Rare. A beloved Psychic-type card with the classic Lick attack.",
     slug: "product-haunter-base1-24-non-holo-rare",
@@ -551,12 +551,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // UNCOMMON SINGLES
   // ════════════════════════════════════════════════════════════
 
-  // #35 â€” Clefairy
+  // #35 — Clefairy
   {
     id: "product-clefairy-base1-35-uncommon-colorless-misty-1",
-    title: "Clefairy â€” Base Set #35 Uncommon (Near Mint)",
+    title: "Clefairy — Base Set #35 Uncommon (Near Mint)",
     description:
-      "Clefairy Uncommon from Base Set. Uses Metronome â€” a nostalgic fan favourite.",
+      "Clefairy Uncommon from Base Set. Uses Metronome — a nostalgic fan favourite.",
     slug: "product-clefairy-base1-35-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Colorless",
@@ -592,10 +592,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #40 â€” Growlithe
+  // #40 — Growlithe
   {
     id: "product-growlithe-base1-40-uncommon-fire-blaine-1",
-    title: "Growlithe â€” Base Set #40 Uncommon (Near Mint)",
+    title: "Growlithe — Base Set #40 Uncommon (Near Mint)",
     description:
       "Growlithe Uncommon from Base Set. A loyal Fire-type favourite.",
     slug: "product-growlithe-base1-40-uncommon",
@@ -633,12 +633,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #52 â€” Pikachu
+  // #52 — Pikachu
   {
     id: "product-pikachu-base1-58-common-electric-surge-1",
-    title: "Pikachu â€” Base Set #58 Common (Near Mint)",
+    title: "Pikachu — Base Set #58 Common (Near Mint)",
     description:
-      "The Pokémon mascot himself. Base Set Pikachu, Common, Near Mint â€” yellow cheeks version.",
+      "The Pokémon mascot himself. Base Set Pikachu, Common, Near Mint — yellow cheeks version.",
     slug: "product-pikachu-base1-58-common",
     category: "category-common-rarity",
     subcategory: "Electric",
@@ -680,10 +680,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // TRAINER CARDS
   // ════════════════════════════════════════════════════════════
 
-  // #88 â€” Professor Oak
+  // #88 — Professor Oak
   {
     id: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
-    title: "Professor Oak â€” Base Set #88 Trainer (Near Mint)",
+    title: "Professor Oak — Base Set #88 Trainer (Near Mint)",
     description:
       "Draw 7 cards. Professor Oak is one of the most powerful Trainer cards ever printed. Near Mint copy.",
     slug: "product-professor-oak-base1-88-trainer",
@@ -722,10 +722,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #91 â€” Energy Retrieval
+  // #91 — Energy Retrieval
   {
     id: "product-energy-retrieval-base1-91-common-trainer-misty-1",
-    title: "Energy Retrieval â€” Base Set #91 Trainer (Near Mint)",
+    title: "Energy Retrieval — Base Set #91 Trainer (Near Mint)",
     description:
       "Return 2 Basic Energy from discard to hand. A staple in Water decks. Near Mint.",
     slug: "product-energy-retrieval-base1-91-trainer",
@@ -768,10 +768,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // ENERGY CARDS
   // ════════════════════════════════════════════════════════════
 
-  // #99 â€” Water Energy (x10 lot)
+  // #99 — Water Energy (x10 lot)
   {
     id: "product-water-energy-base1-99-common-energy-misty-lot",
-    title: "Water Energy â€” Base Set #99 x10 Lot (Near Mint)",
+    title: "Water Energy — Base Set #99 x10 Lot (Near Mint)",
     description:
       "10Ã— Water Energy from the original Base Set. Near Mint. Perfect for deck building.",
     slug: "product-water-energy-base1-99-x10-lot",
@@ -811,10 +811,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #100 â€” Fire Energy (x10 lot)
+  // #100 — Fire Energy (x10 lot)
   {
     id: "product-fire-energy-base1-100-common-energy-blaine-lot",
-    title: "Fire Energy â€” Base Set #100 x10 Lot (Near Mint)",
+    title: "Fire Energy — Base Set #100 x10 Lot (Near Mint)",
     description:
       "10Ã— Fire Energy from Base Set. Perfect for Charizard and Arcanine decks.",
     slug: "product-fire-energy-base1-100-x10-lot",
@@ -854,10 +854,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // #101 â€” Lightning Energy (x10 lot)
+  // #101 — Lightning Energy (x10 lot)
   {
     id: "product-lightning-energy-base1-101-common-energy-surge-lot",
-    title: "Lightning Energy â€” Base Set #101 x10 Lot (Near Mint)",
+    title: "Lightning Energy — Base Set #101 x10 Lot (Near Mint)",
     description:
       "10Ã— Lightning (Electric) Energy from Base Set. Fuel for Pikachu, Raichu, and Zapdos.",
     slug: "product-lightning-energy-base1-101-x10-lot",
@@ -944,7 +944,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // Theme Deck â€” Zap! (Raichu / Electric)
+  // Theme Deck — Zap! (Raichu / Electric)
   {
     id: "product-zap-theme-deck-sealed-surge-1",
     title: "Pokémon Base Set 'Zap!' Theme Deck (Sealed)",
@@ -1075,7 +1075,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Auction: 1st Edition Charizard
   {
     id: "auction-charizard-1st-ed-base1-4-fire-blaine-auction-1",
-    title: "1st Edition Charizard â€” Base Set #4 Holo (AUCTION, PSA 7)",
+    title: "1st Edition Charizard — Base Set #4 Holo (AUCTION, PSA 7)",
     description:
       "Ultra-rare 1st Edition Charizard from Base Set, PSA-graded 7 (Near Mint). This is your chance to own the holy grail.",
     slug: "auction-charizard-1st-ed-psa7",
@@ -1142,7 +1142,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Auction: Mewtwo PSA 9
   {
     id: "auction-mewtwo-base1-10-psychic-surge-auction-1",
-    title: "Mewtwo â€” Base Set #10 Holo (AUCTION, PSA 9)",
+    title: "Mewtwo — Base Set #10 Holo (AUCTION, PSA 9)",
     description:
       "PSA-graded 9 (Mint) Mewtwo Holo from Base Set. A landmark Psychic-type collector piece.",
     slug: "auction-mewtwo-psa9",
@@ -1197,10 +1197,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // MORE HOLO RARES
   // ════════════════════════════════════════════════════════════
 
-  // #14 â€” Raichu
+  // #14 — Raichu
   {
     id: "product-raichu-base1-14-holo-rare-electric-surge-1",
-    title: "Raichu â€” Base Set #14 Holo Rare (Near Mint)",
+    title: "Raichu — Base Set #14 Holo Rare (Near Mint)",
     description:
       "Raichu Holo Rare from Base Set. Powerful Electric-type evolution of Pikachu with 80 HP and the Thunder Punch attack.",
     slug: "product-raichu-base1-14-holo-rare",
@@ -1238,10 +1238,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #12 â€” Ninetales
+  // #12 — Ninetales
   {
     id: "product-ninetales-base1-12-holo-rare-fire-blaine-1",
-    title: "Ninetales â€” Base Set #12 Holo Rare (Near Mint)",
+    title: "Ninetales — Base Set #12 Holo Rare (Near Mint)",
     description:
       "Ninetales Holo Rare, one of the most visually stunning cards in Base Set. Beautiful fox artwork on a shimmering holo background.",
     slug: "product-ninetales-base1-12-holo-rare",
@@ -1279,12 +1279,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(4),
   },
 
-  // #7 â€” Hitmonchan
+  // #7 — Hitmonchan
   {
     id: "product-hitmonchan-base1-7-holo-rare-fighting-misty-1",
-    title: "Hitmonchan â€” Base Set #7 Holo Rare (Near Mint)",
+    title: "Hitmonchan — Base Set #7 Holo Rare (Near Mint)",
     description:
-      "Hitmonchan Holo Rare â€” a staple Fighting-type card widely used in competitive Base Set format decks.",
+      "Hitmonchan Holo Rare — a staple Fighting-type card widely used in competitive Base Set format decks.",
     slug: "product-hitmonchan-base1-7-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Fighting",
@@ -1320,12 +1320,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(6),
   },
 
-  // #1 â€” Alakazam
+  // #1 — Alakazam
   {
     id: "product-alakazam-base1-1-holo-rare-psychic-surge-1",
-    title: "Alakazam â€” Base Set #1 Holo Rare (Near Mint)",
+    title: "Alakazam — Base Set #1 Holo Rare (Near Mint)",
     description:
-      "Alakazam Holo Rare â€” card #1 in Base Set. Features the iconic Damage Swap Pokémon Power.",
+      "Alakazam Holo Rare — card #1 in Base Set. Features the iconic Damage Swap Pokémon Power.",
     slug: "product-alakazam-base1-1-holo-rare",
     category: "category-holo-rare-rarity",
     subcategory: "Psychic",
@@ -1365,12 +1365,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // MORE NON-HOLO RARES
   // ════════════════════════════════════════════════════════════
 
-  // #23 â€” Arcanine
+  // #23 — Arcanine
   {
     id: "product-arcanine-base1-23-non-holo-rare-fire-blaine-1",
-    title: "Arcanine â€” Base Set #23 Non-Holo Rare (Near Mint)",
+    title: "Arcanine — Base Set #23 Non-Holo Rare (Near Mint)",
     description:
-      "Arcanine Non-Holo Rare from Base Set â€” the Legendary Pokémon. Flame Wheel 50 damage, near mint condition.",
+      "Arcanine Non-Holo Rare from Base Set — the Legendary Pokémon. Flame Wheel 50 damage, near mint condition.",
     slug: "product-arcanine-base1-23-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Fire",
@@ -1406,12 +1406,12 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 
-  // #20 â€” Electabuzz
+  // #20 — Electabuzz
   {
     id: "product-electabuzz-base1-20-non-holo-rare-electric-surge-1",
-    title: "Electabuzz â€” Base Set #20 Non-Holo Rare (Near Mint)",
+    title: "Electabuzz — Base Set #20 Non-Holo Rare (Near Mint)",
     description:
-      "Electabuzz Non-Holo Rare â€” another competitive Base Set staple with Thunderpunch.",
+      "Electabuzz Non-Holo Rare — another competitive Base Set staple with Thunderpunch.",
     slug: "product-electabuzz-base1-20-non-holo-rare",
     category: "category-non-holo-rare-rarity",
     subcategory: "Electric",
@@ -1447,10 +1447,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(8),
   },
 
-  // #30 â€” Magmar
+  // #30 — Magmar
   {
     id: "product-magmar-base1-30-non-holo-rare-fire-blaine-1",
-    title: "Magmar â€” Base Set #30 Non-Holo Rare (Lightly Played)",
+    title: "Magmar — Base Set #30 Non-Holo Rare (Lightly Played)",
     description:
       "Magmar Non-Holo Rare, Lightly Played. Slight edge whitening but face clean.",
     slug: "product-magmar-base1-30-non-holo-rare-lp",
@@ -1492,11 +1492,11 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // MORE UNCOMMONS
   // ════════════════════════════════════════════════════════════
 
-  // #37 â€” Dewgong
+  // #37 — Dewgong
   {
     id: "product-dewgong-base1-37-uncommon-water-misty-1",
-    title: "Dewgong â€” Base Set #37 Uncommon (Near Mint)",
-    description: "Dewgong Uncommon from Base Set â€” an underrated Water-type with Aurora Beam.",
+    title: "Dewgong — Base Set #37 Uncommon (Near Mint)",
+    description: "Dewgong Uncommon from Base Set — an underrated Water-type with Aurora Beam.",
     slug: "product-dewgong-base1-37-uncommon",
     category: "category-uncommon-rarity",
     subcategory: "Water",
@@ -1532,10 +1532,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // #42 â€” Kadabra
+  // #42 — Kadabra
   {
     id: "product-kadabra-base1-32-uncommon-psychic-surge-1",
-    title: "Kadabra â€” Base Set #32 Uncommon (Near Mint)",
+    title: "Kadabra — Base Set #32 Uncommon (Near Mint)",
     description: "Kadabra Uncommon from Base Set. A notorious card rarely reprinted. Near Mint copy.",
     slug: "product-kadabra-base1-32-uncommon",
     category: "category-uncommon-rarity",
@@ -1576,10 +1576,10 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // MORE TRAINERS
   // ════════════════════════════════════════════════════════════
 
-  // #93 â€” Potion
+  // #93 — Potion
   {
     id: "product-potion-base1-93-common-trainer-misty-1",
-    title: "Potion â€” Base Set #93 Trainer Common (Near Mint)",
+    title: "Potion — Base Set #93 Trainer Common (Near Mint)",
     description: "Remove 2 damage counters from one of your Pokémon. Potion is the most classic Trainer card ever printed.",
     slug: "product-potion-base1-93-trainer-common",
     category: "category-trainer-type-card-type",
@@ -1617,11 +1617,11 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // #89 â€” Bill
+  // #89 — Bill
   {
     id: "product-bill-base1-89-common-trainer-surge-1",
-    title: "Bill â€” Base Set #89 Trainer Common (Near Mint)",
-    description: "Draw 2 cards. Bill is a beloved draw supporter from Base Set â€” simple, effective, nostalgic.",
+    title: "Bill — Base Set #89 Trainer Common (Near Mint)",
+    description: "Draw 2 cards. Bill is a beloved draw supporter from Base Set — simple, effective, nostalgic.",
     slug: "product-bill-base1-89-trainer-common",
     category: "category-trainer-type-card-type",
     subcategory: "Trainer",
@@ -1665,9 +1665,9 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
   // Blastoise PSA 8
   {
     id: "product-blastoise-psa8-base1-2-water-misty-graded",
-    title: "Blastoise â€” Base Set #2 Holo Rare (PSA 8 NM-MT)",
+    title: "Blastoise — Base Set #2 Holo Rare (PSA 8 NM-MT)",
     description:
-      "PSA graded 8 (NM-MT) Blastoise Holo Rare from Base Set. A certified investment-grade slab for serious collectors. No auction â€” buy it now.",
+      "PSA graded 8 (NM-MT) Blastoise Holo Rare from Base Set. A certified investment-grade slab for serious collectors. No auction — buy it now.",
     slug: "product-blastoise-base1-2-psa8-holo-graded",
     category: "category-holo-rare-rarity",
     subcategory: "Water",
@@ -1754,7 +1754,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "preorder-pokemon-tcg-151-booster-box-misty-1",
-    title: "Pokémon TCG: Scarlet & Violet â€” 151 Booster Box (Pre-Order)",
+    title: "Pokémon TCG: Scarlet & Violet — 151 Booster Box (Pre-Order)",
     description:
       "Pre-order the upcoming Scarlet & Violet: 151 booster box reprint run. 36 packs featuring original 151 Pokémon with modern card quality. " +
       "Estimated dispatch within 7 days of street date.",
@@ -1848,7 +1848,7 @@ export const pokemonProductsSeedData: Partial<ProductDocument>[] = [
     id: "preorder-pokemon-surging-sparks-booster-bundle-blaine-1",
     title: "Pokémon TCG: Surging Sparks Booster Bundle (Pre-Order)",
     description:
-      "Pre-order the Surging Sparks Booster Bundle (6 packs) â€” featuring Pikachu ex SIR and Raichu VMAX. " +
+      "Pre-order the Surging Sparks Booster Bundle (6 packs) — featuring Pikachu ex SIR and Raichu VMAX. " +
       "Great entry-level sealed product for budget collectors.",
     slug: "preorder-pokemon-surging-sparks-booster-bundle",
     category: "category-sealed-products",

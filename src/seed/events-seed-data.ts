@@ -1,5 +1,5 @@
 ﻿/**
- * Events Seed Data â€” Pokemon TCG Themed
+ * Events Seed Data — Pokemon TCG Themed
  * Sample events: sale, offer, poll, survey, feedback for Pokemon card collectors
  */
 
@@ -23,7 +23,7 @@ export const eventsSeedData: EventDocument[] = [
     id: "event-pokemon-summer-holo-sale-2026",
     slug: "event-pokemon-summer-holo-sale-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Pokemon Summer Holo Sale 2026 â€” 15% Off All Holo Rares",
+    title: "Pokemon Summer Holo Sale 2026 — 15% Off All Holo Rares",
     description:
       "<p>Celebrate the summer season with a <strong>flat 15% discount</strong> across all holo rare singles. Stock up on Base Set holos, fossil holos, and jungle holos before prices climb again.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
@@ -32,7 +32,7 @@ export const eventsSeedData: EventDocument[] = [
     coverImageUrl: "https://images.pokemontcg.io/base1/4_hires.png",
     saleConfig: {
       discountPercent: 15,
-      bannerText: "Pokemon Summer Holo Sale â€” 15% Off All Holo Rares!",
+      bannerText: "Pokemon Summer Holo Sale — 15% Off All Holo Rares!",
       affectedCategories: ["category-holo-rare-rarity"],
     },
     stats: {
@@ -45,14 +45,14 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(37),
   },
 
-  // 2. Active Poll Event â€” Favourite Gen 1 Starter
+  // 2. Active Poll Event — Favourite Gen 1 Starter
   {
     id: "event-gen1-starter-poll-2026",
     slug: "event-gen1-starter-poll-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Vote: Which Gen 1 Starter Has the Best Base Set Card?",
     description:
-      "<p>The eternal debate â€” <strong>Charizard, Blastoise, or Venusaur</strong>? Vote for which of the original three starters has the best card art in the Base Set. Results go live after the poll closes.</p>",
+      "<p>The eternal debate — <strong>Charizard, Blastoise, or Venusaur</strong>? Vote for which of the original three starters has the best card art in the Base Set. Results go live after the poll closes.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(7),
     endsAt: daysAhead(7),
@@ -79,14 +79,14 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 3. Active Feedback Event â€” Best Pull Story (giveaway-style)
+  // 3. Active Feedback Event — Best Pull Story (giveaway-style)
   {
     id: "event-1st-edition-booster-giveaway-2026",
     slug: "event-1st-edition-booster-giveaway-2026",
     type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
-    title: "Share Your Best Pull Story â€” Win a Sealed 1st Edition Booster Pack!",
+    title: "Share Your Best Pull Story — Win a Sealed 1st Edition Booster Pack!",
     description:
-      "<p>We're giving away a <strong>sealed 1st Edition Base Set Booster Pack</strong> â€” estimated value â‚¹95,000+. Share your best pull story and tag a friend who loves Pokemon TCG.</p>",
+      "<p>We're giving away a <strong>sealed 1st Edition Base Set Booster Pack</strong> — estimated value â‚¹95,000+. Share your best pull story and tag a friend who loves Pokemon TCG.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(11),
@@ -121,12 +121,12 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: hoursAgo(6),
   },
 
-  // 4. Upcoming Poll Event â€” Best PSA Submission
+  // 4. Upcoming Poll Event — Best PSA Submission
   {
     id: "event-best-psa-submission-contest-2026",
     slug: "event-best-psa-submission-contest-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
-    title: "Best PSA Submission â€” Community Vote for Top Grade!",
+    title: "Best PSA Submission — Community Vote for Top Grade!",
     description:
       "<p>The community votes for the most impressive PSA-graded Pokemon card. Winner receives store credit and a featured listing slot. Base Set cards only.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
@@ -155,7 +155,7 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 5. Active Survey â€” Buyer Experience
+  // 5. Active Survey — Buyer Experience
   {
     id: "event-buyer-experience-survey-2026",
     slug: "event-buyer-experience-survey-2026",
@@ -213,7 +213,7 @@ export const eventsSeedData: EventDocument[] = [
     id: "event-new-trainer-welcome-offer-2026",
     slug: "event-new-trainer-welcome-offer-2026",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "New Trainer Welcome Offer â€” 10% Off Your First Order",
+    title: "New Trainer Welcome Offer — 10% Off Your First Order",
     description:
       "<p>New to LetItRip? Welcome, Trainer! Use code <strong>NEWTRAINER10</strong> for 10% off your first Pokemon card purchase. Valid on all singles, sealed product, and accessories.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
@@ -236,21 +236,21 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(29),
   },
 
-  // 7. Active Sale â€” Hot Wheels Car Culture Flash Sale
+  // 7. Active Sale — Hot Wheels Car Culture Flash Sale
   {
     id: "event-hot-wheels-car-culture-flash-sale-2026",
     slug: "event-hot-wheels-car-culture-flash-sale-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Hot Wheels Car Culture Flash Sale â€” 20% Off 5-Car Packs",
+    title: "Hot Wheels Car Culture Flash Sale — 20% Off 5-Car Packs",
     description:
-      "<p>Limited-time flash sale â€” <strong>20% off all Hot Wheels Car Culture 5-car assortments</strong> at Speed King Diecast. Japan Historics, Germany or Bust, and more. Ends Sunday!</p>",
+      "<p>Limited-time flash sale — <strong>20% off all Hot Wheels Car Culture 5-car assortments</strong> at Speed King Diecast. Japan Historics, Germany or Bust, and more. Ends Sunday!</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(2),
     endsAt: daysAhead(5),
     coverImageUrl: "https://target.scene7.com/is/image/Target/GUEST_620d08fa-a8ad-49c2-acca-e8807910d25c?wid=800&hei=800&fmt=pjpeg",
     saleConfig: {
       discountPercent: 20,
-      bannerText: "Hot Wheels Car Culture Flash Sale â€” 20% Off This Weekend!",
+      bannerText: "Hot Wheels Car Culture Flash Sale — 20% Off This Weekend!",
       affectedCategories: ["category-hw-premium"],
     },
     tags: ["hot-wheels", "car-culture", "flash-sale", "discount", "speed-king"],
@@ -264,14 +264,14 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(2),
   },
 
-  // 8. Active Poll â€” Best Beyblade Burst Series
+  // 8. Active Poll — Best Beyblade Burst Series
   {
     id: "event-best-beyblade-burst-series-poll-2026",
     slug: "event-best-beyblade-burst-series-poll-2026",
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Vote: Which Is the Best Beyblade Burst Series?",
     description:
-      "<p>From Classic to MCC â€” which series introduced your favourite mechanics and best tops? Cast your vote and join the discussion. Results revealed when the poll closes.</p>",
+      "<p>From Classic to MCC — which series introduced your favourite mechanics and best tops? Cast your vote and join the discussion. Results revealed when the poll closes.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(5),
     endsAt: daysAhead(9),
@@ -300,14 +300,14 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 9. Active Feedback â€” Transformers Figure Wishlist Survey
+  // 9. Active Feedback — Transformers Figure Wishlist Survey
   {
     id: "event-transformers-figure-wishlist-survey-2026",
     slug: "event-transformers-figure-wishlist-survey-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
     title: "Tell Us: Which Transformers Figures Do You Want Listed?",
     description:
-      "<p>Help us stock what you actually want. Share your Transformers wishlist â€” Studio Series, Legacy, G1 vintage, or Masterpiece? We'll use these results to prioritise our Speed King Diecast stock requests.</p>",
+      "<p>Help us stock what you actually want. Share your Transformers wishlist — Studio Series, Legacy, G1 vintage, or Masterpiece? We'll use these results to prioritise our Speed King Diecast stock requests.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(10),
     endsAt: daysAhead(20),
@@ -353,12 +353,12 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 10. Active Offer â€” Beyblade Burst Bundle Deal
+  // 10. Active Offer — Beyblade Burst Bundle Deal
   {
     id: "event-beyblade-burst-bundle-offer-2026",
     slug: "event-beyblade-burst-bundle-offer-2026",
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
-    title: "Bladers Paradise Bundle Deal â€” Buy 2 Tops, Get Free Stadium",
+    title: "Bladers Paradise Bundle Deal — Buy 2 Tops, Get Free Stadium",
     description:
       "<p>Order any 2 Beyblade Burst starter/individual tops from Bladers Paradise and get a <strong>free standard stadium</strong> (worth â‚¹1,299). Use code <strong>BBBUNDLE2</strong> at checkout. While stocks last!</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
@@ -381,12 +381,12 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 11. Active Feedback â€” Hot Wheels Collector Community Survey
+  // 11. Active Feedback — Hot Wheels Collector Community Survey
   {
     id: "event-hot-wheels-collector-survey-2026",
     slug: "event-hot-wheels-collector-survey-2026",
     type: EVENT_FIELDS.TYPE_VALUES.FEEDBACK,
-    title: "Hot Wheels Collectors Survey â€” Win a Super Treasure Hunt!",
+    title: "Hot Wheels Collectors Survey — Win a Super Treasure Hunt!",
     description:
       "<p>Complete this 2-minute survey about your Hot Wheels collecting habits and be entered to <strong>win a Super Treasure Hunt</strong> of our choice (value â‚¹2,000â€“â‚¹5,000). One lucky winner drawn when entries close.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
@@ -430,12 +430,12 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // 12. Active Sale â€” Pokémon Multi-Set Clearance
+  // 12. Active Sale — Pokémon Multi-Set Clearance
   {
     id: "event-pokemon-multiseries-clearance-2026",
     slug: "event-pokemon-multiseries-clearance-2026",
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
-    title: "Pokémon TCG Multi-Series Clearance â€” Up to 25% Off Non-Holo Rares & Uncommons",
+    title: "Pokémon TCG Multi-Series Clearance — Up to 25% Off Non-Holo Rares & Uncommons",
     description:
       "<p>Clearance sale across all three LetItRip Pokémon TCG stores. <strong>Up to 25% off</strong> non-holo rares, uncommons, and common energy lots. Perfect for completing your Base Set playset.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
@@ -444,7 +444,7 @@ export const eventsSeedData: EventDocument[] = [
     coverImageUrl: "https://images.pokemontcg.io/base1/2_hires.png",
     saleConfig: {
       discountPercent: 25,
-      bannerText: "Pokémon Clearance Sale â€” Up to 25% Off Non-Holo Rares & Uncommons!",
+      bannerText: "Pokémon Clearance Sale — Up to 25% Off Non-Holo Rares & Uncommons!",
       affectedCategories: ["category-non-holo-rare-rarity", "category-uncommon-rarity", "category-common-rarity"],
     },
     tags: ["pokemon", "clearance", "sale", "non-holo", "uncommon", "common"],
@@ -458,7 +458,7 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(3),
   },
 
-  // 13. Cancelled â€” Transformers Convention Live Event (cancelled due to venue issue)
+  // 13. Cancelled — Transformers Convention Live Event (cancelled due to venue issue)
   {
     id: "event-transformers-convention-mumbai-2026",
     slug: "event-transformers-convention-mumbai-2026",
@@ -473,7 +473,7 @@ export const eventsSeedData: EventDocument[] = [
     offerConfig: {
       couponId: "coupon-tfmeet-cancelled",
       displayCode: "TFMEET500",
-      bannerText: "Convention cancelled â€” â‚¹500 compensation coupon issued to all registrants",
+      bannerText: "Convention cancelled — â‚¹500 compensation coupon issued to all registrants",
     },
     tags: ["transformers", "event", "cancelled", "convention", "mumbai"],
     stats: {
@@ -490,7 +490,7 @@ export const eventsSeedData: EventDocument[] = [
 // -- Event Entries -------------------------------------------------------------
 
 export const eventEntriesSeedData: EventEntryDocument[] = [
-  // Poll entries â€” Gen 1 Starter poll
+  // Poll entries — Gen 1 Starter poll
   {
     id: "entry-gen1-poll-ash-ketchum",
     eventId: "event-gen1-starter-poll-2026",
@@ -525,7 +525,7 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     points: 1,
   },
 
-  // Feedback entries â€” 1st Edition booster pull story
+  // Feedback entries — 1st Edition booster pull story
   {
     id: "entry-feedback-1sted-ash-ketchum",
     eventId: "event-1st-edition-booster-giveaway-2026",

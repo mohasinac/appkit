@@ -226,7 +226,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                     e.preventDefault();
                     onBuyNow(product);
                   }}
-                  className="flex items-center justify-center gap-1 rounded-xl bg-primary py-2 text-xs font-semibold text-white hover:bg-primary/90 active:scale-[0.97] transition-all duration-150 shadow-sm shadow-primary/20"
+                  className="flex items-center justify-center gap-1 rounded-xl bg-primary py-2 text-xs font-semibold text-white hover:bg-primary/90 active:scale-[0.97] transition-all duration-150 btn-glow"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />

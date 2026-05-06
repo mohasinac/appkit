@@ -293,6 +293,41 @@ export interface EventsSectionConfig {
   scrollInterval: number;
 }
 
+export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart";
+export type SocialPostType = "all" | "images" | "videos" | "reels";
+export type SocialFeedLayout = "grid" | "masonry" | "carousel";
+
+export interface SocialFeedSectionConfig {
+  title: string;
+  subtitle?: string;
+  platform: SocialPlatform;
+  /** Username, page ID, or handle for the platform account */
+  handle: string;
+  postType: SocialPostType;
+  /** Number of posts to display (4–12) */
+  count: number;
+  layout: SocialFeedLayout;
+  showCaption: boolean;
+  showStats: boolean;
+}
+
+/** Normalised social post returned by /api/social-feed */
+export interface SocialPost {
+  id: string;
+  platform: SocialPlatform;
+  imageUrl: string;
+  videoThumbnailUrl?: string;
+  caption?: string;
+  permalink: string;
+  mediaType: "image" | "video" | "carousel";
+  stats: {
+    likes?: number;
+    views?: number;
+    comments?: number;
+  };
+  publishedAt: string;
+}
+
 export interface PreOrdersSectionConfig {
   title: string;
   subtitle?: string;
@@ -338,7 +373,8 @@ export type SectionType =
   | "blog-articles"
   | "newsletter"
   | "stores"
-  | "events";
+  | "events"
+  | "social-feed";
 
 export type SectionConfig =
   | WelcomeSectionConfig
@@ -357,7 +393,8 @@ export type SectionConfig =
   | BlogArticlesSectionConfig
   | NewsletterSectionConfig
   | StoresSectionConfig
-  | EventsSectionConfig;
+  | EventsSectionConfig
+  | SocialFeedSectionConfig;
 
 export interface HomepageSectionDocument {
   id: string;
@@ -395,6 +432,7 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   newsletter: 9,
   stores: 10,
   events: 11,
+  "social-feed": 12,
 };
 
 export const BANNER_HEIGHTS: Record<BannerSectionConfig["height"], string> = {

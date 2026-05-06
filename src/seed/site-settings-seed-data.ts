@@ -94,7 +94,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
   background: {
     light: {
       type: "gradient",
-      value: "linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%)",
+      value: "linear-gradient(135deg, #f0f4ff 0%, #f9fafb 100%)",
       overlay: {
         enabled: false,
         color: "#000000",
@@ -103,7 +103,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     },
     dark: {
       type: "gradient",
-      value: "linear-gradient(135deg, #030712 0%, #1f2937 100%)",
+      value: "linear-gradient(135deg, #020617 0%, #0f172a 100%)",
       overlay: {
         enabled: false,
         color: "#000000",

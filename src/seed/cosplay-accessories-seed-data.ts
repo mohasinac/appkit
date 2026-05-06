@@ -1,5 +1,5 @@
 ﻿/**
- * Cosplay & Prop Accessories â€” Products Seed Data
+ * Cosplay & Prop Accessories — Products Seed Data
  * Replica Props · Wearables · Cosplay Gear
  * 14 general · 1 auction · 1 pre-order = 16 total
  * Seller: CosPlay India Hub (store-cosplay-india-hub)
@@ -39,11 +39,11 @@ const img = (seed: string) => {
 
 export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
-  // â”€â”€ REPLICA PROPS (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── REPLICA PROPS (5) ────────────────────────────────────────────────────
 
   {
     id: "product-cp-naruto-headband-konoha-cp-1",
-    title: "Naruto Konoha Headband â€” Metal Plate Cosplay Replica",
+    title: "Naruto Konoha Headband — Metal Plate Cosplay Replica",
     description: "<p>High-quality Naruto Leaf Village (Konoha) headband with zinc alloy metal plate and adjustable black cloth band. Accurate Konoha spiral leaf engraving. Fits all head sizes. Used by cosplayers across conventions. Comes with authentication card and display stand.</p>",
     slug: "product-naruto-konoha-headband-metal-cosplay-replica",
     category: "category-cosplay-props",
@@ -82,8 +82,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-dbz-scouter-green-cp-2",
-    title: "Dragon Ball Z Scouter â€” Green Lens Replica (Wearable)",
-    description: "<p>Wearable Dragon Ball Z Scouter in green â€” the power level reading device worn by Vegeta and Frieza's forces. Hard plastic frame with tinted green acrylic lens. Right-ear mount with elastic head strap. LED backlight effect optional model. It's over 9000!</p>",
+    title: "Dragon Ball Z Scouter — Green Lens Replica (Wearable)",
+    description: "<p>Wearable Dragon Ball Z Scouter in green — the power level reading device worn by Vegeta and Frieza's forces. Hard plastic frame with tinted green acrylic lens. Right-ear mount with elastic head strap. LED backlight effect optional model. It's over 9000!</p>",
     slug: "product-dbz-scouter-green-lens-wearable-replica",
     category: "category-cosplay-props",
     subcategory: "Wearable Props",
@@ -119,8 +119,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-onepiece-straw-hat-replica-cp-3",
-    title: "One Piece Luffy Straw Hat â€” Official Wearable Replica",
-    description: "<p>Official Bandai-licensed wearable Luffy Straw Hat replica from One Piece. Woven natural straw with red band detail. One size fits most adults. The iconic accessory that defines the series â€” perfect for conventions, photoshoots, and display. Comes in official branded bag.</p>",
+    title: "One Piece Luffy Straw Hat — Official Wearable Replica",
+    description: "<p>Official Bandai-licensed wearable Luffy Straw Hat replica from One Piece. Woven natural straw with red band detail. One size fits most adults. The iconic accessory that defines the series — perfect for conventions, photoshoots, and display. Comes in official branded bag.</p>",
     slug: "product-one-piece-luffy-straw-hat-official-wearable",
     category: "category-cosplay-props",
     subcategory: "Hats & Accessories",
@@ -157,7 +157,7 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-mha-deku-gloves-replica-cp-4",
-    title: "My Hero Academia â€” Deku Hero Costume Gloves (Knuckle Guards)",
+    title: "My Hero Academia — Deku Hero Costume Gloves (Knuckle Guards)",
     description: "<p>Deku's iconic hero costume gloves with knuckle reinforcement guards. Heavyweight polyester outer with neoprene padding on knuckles. Beta and Gamma costume variants available. Adjustable wrist strap. Great for cosplay photography or convention wear.</p>",
     slug: "product-mha-deku-hero-gloves-knuckle-guards-cosplay",
     category: "category-cosplay-props",
@@ -194,8 +194,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-demon-slayer-nichirin-blade-cp-5",
-    title: "Demon Slayer â€” Tanjiro Nichirin Blade Cosplay Prop",
-    description: "<p>Tanjiro's iconic Nichirin Blade cosplay prop â€” black turning red gradient blade in EVA foam safe material. 90 cm total length including handle. Detailed tsuba guard, handle wrapping, and flame gradient tip. Safe for convention carry. Includes blade bag for transport.</p>",
+    title: "Demon Slayer — Tanjiro Nichirin Blade Cosplay Prop",
+    description: "<p>Tanjiro's iconic Nichirin Blade cosplay prop — black turning red gradient blade in EVA foam safe material. 90 cm total length including handle. Detailed tsuba guard, handle wrapping, and flame gradient tip. Safe for convention carry. Includes blade bag for transport.</p>",
     slug: "product-demon-slayer-tanjiro-nichirin-blade-eva-foam",
     category: "category-cosplay-props",
     subcategory: "Prop Weapons",
@@ -231,12 +231,12 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // â”€â”€ TCG & CARD ACCESSORIES (5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── TCG & CARD ACCESSORIES (5) ───────────────────────────────────────────
 
   {
     id: "product-cp-ultra-pro-card-sleeves-clear-cp-6",
-    title: "Ultra PRO Platinum Card Sleeves â€” Perfect Clear (100 pack)",
-    description: "<p>Ultra PRO Platinum series card sleeves â€” 100 pack of perfect clear standard size. Acid-free, archival quality. Ideal for grading candidates and tournament play. 66mm Ã— 91mm standard TCG size. UV protection coating. No-stick interior, smooth shuffle.</p>",
+    title: "Ultra PRO Platinum Card Sleeves — Perfect Clear (100 pack)",
+    description: "<p>Ultra PRO Platinum series card sleeves — 100 pack of perfect clear standard size. Acid-free, archival quality. Ideal for grading candidates and tournament play. 66mm Ã— 91mm standard TCG size. UV protection coating. No-stick interior, smooth shuffle.</p>",
     slug: "product-ultra-pro-platinum-card-sleeves-clear-100pack",
     category: "category-tcg-accessories",
     subcategory: "Card Sleeves",
@@ -272,8 +272,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-bcw-toploader-card-holder-cp-7",
-    title: "BCW Toploaders â€” 3 Ã— 4 Rigid Card Holders (25 pack)",
-    description: "<p>BCW 3Ã—4 inch rigid toploaders â€” industry-standard hard card protectors for grading candidates and display. 35pt thickness for standard cards. Each toploader has a sliding lip for safe card insert. Ideal for PSA/BGS grading submissions or display.</p>",
+    title: "BCW Toploaders — 3 Ã— 4 Rigid Card Holders (25 pack)",
+    description: "<p>BCW 3Ã—4 inch rigid toploaders — industry-standard hard card protectors for grading candidates and display. 35pt thickness for standard cards. Each toploader has a sliding lip for safe card insert. Ideal for PSA/BGS grading submissions or display.</p>",
     slug: "product-bcw-3x4-toploader-card-holders-25pack",
     category: "category-tcg-accessories",
     subcategory: "Toploaders",
@@ -309,7 +309,7 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-pokemon-binder-9pocket-cp-8",
-    title: "Pokemon TCG â€” 9-Pocket Premium Binder (Pikachu Edition, 360 cards)",
+    title: "Pokemon TCG — 9-Pocket Premium Binder (Pikachu Edition, 360 cards)",
     description: "<p>Premium 360-card Pikachu-themed 9-pocket binder for Pokemon TCG collection storage. Clear PVC pockets with side-loading to prevent card fall. Hardcover with Pikachu artwork on front and back. Spine label window. Includes 40 double-sided pages = 360 card capacity.</p>",
     slug: "product-pokemon-tcg-9pocket-binder-pikachu-360cards",
     category: "category-tcg-accessories",
@@ -348,8 +348,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-display-case-acrylic-single-cp-9",
-    title: "Acrylic Display Case â€” Single Card UV-Block (Graded/Raw)",
-    description: "<p>Premium UV-blocking acrylic single card display case â€” for raw or graded cards (PSA slab compatible). Magnetic sealed lid with foam insert. UV-protection acrylic blocks 98% of UV rays. Perfect for displaying your most prized card on a desk or shelf.</p>",
+    title: "Acrylic Display Case — Single Card UV-Block (Graded/Raw)",
+    description: "<p>Premium UV-blocking acrylic single card display case — for raw or graded cards (PSA slab compatible). Magnetic sealed lid with foam insert. UV-protection acrylic blocks 98% of UV rays. Perfect for displaying your most prized card on a desk or shelf.</p>",
     slug: "product-acrylic-display-case-single-card-uv-block",
     category: "category-tcg-accessories",
     subcategory: "Display Cases",
@@ -385,7 +385,7 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-card-grading-kit-bundle-cp-10",
-    title: "Card Grading Submission Kit â€” Complete Bundle (PSA/BGS Ready)",
+    title: "Card Grading Submission Kit — Complete Bundle (PSA/BGS Ready)",
     description: "<p>Complete card grading submission kit for PSA, BGS, or CGC. Includes 20 toploaders, 50 card sleeves, 10 foam inserts, 20 packing bubbles, and step-by-step guide PDF. Everything you need to safely ship your most valuable cards for professional grading. Secure your investment correctly.</p>",
     slug: "product-card-grading-submission-kit-psa-bgs-ready",
     category: "category-tcg-accessories",
@@ -418,12 +418,12 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // â”€â”€ COLLECTOR DISPLAY (4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── COLLECTOR DISPLAY (4) ────────────────────────────────────────────────
 
   {
     id: "product-cp-acrylic-figure-display-cp-11",
-    title: "Acrylic Figure Display Case â€” 3-Tier Rotating (Dustproof)",
-    description: "<p>Premium 3-tier rotating acrylic figure display case â€” holds up to 9 medium figures or 18 small nendoroids. Motorised 360Â° rotation (USB powered). Dust-proof clear acrylic panels. LED strip lighting inside each tier. Perfect for S.H.Figuarts, Nendoroids, and Funko Pops.</p>",
+    title: "Acrylic Figure Display Case — 3-Tier Rotating (Dustproof)",
+    description: "<p>Premium 3-tier rotating acrylic figure display case — holds up to 9 medium figures or 18 small nendoroids. Motorised 360Â° rotation (USB powered). Dust-proof clear acrylic panels. LED strip lighting inside each tier. Perfect for S.H.Figuarts, Nendoroids, and Funko Pops.</p>",
     slug: "product-acrylic-figure-display-3tier-rotating-led",
     category: "category-cosplay-props",
     subcategory: "Display Cases",
@@ -462,8 +462,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-funko-pop-protector-cp-12",
-    title: "Funko Pop Protector â€” Hard Stack Premium (Standard Size, 10-pack)",
-    description: "<p>Premium hard stack Funko Pop protectors â€” standard box size 10-pack. 0.5mm PET clear plastic, UV blocking. Tab-lock system that doesn't need tape. Fits all standard 6-inch Funko Pop boxes. Stack-compatible design. Protect your collection without opening boxes.</p>",
+    title: "Funko Pop Protector — Hard Stack Premium (Standard Size, 10-pack)",
+    description: "<p>Premium hard stack Funko Pop protectors — standard box size 10-pack. 0.5mm PET clear plastic, UV blocking. Tab-lock system that doesn't need tape. Fits all standard 6-inch Funko Pop boxes. Stack-compatible design. Protect your collection without opening boxes.</p>",
     slug: "product-funko-pop-hard-stack-protector-10pack-standard",
     category: "category-cosplay-props",
     subcategory: "Display Accessories",
@@ -500,8 +500,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-floating-shelves-collectibles-cp-13",
-    title: "Floating Wall Shelf Set â€” Collector's Edition (3-shelf, Black)",
-    description: "<p>Collectibles floating wall shelf set â€” 3 shelves in matte black finish. Each shelf holds up to 5kg. Adjustable LED strip channels on back. Perfect for anime figures, Funko Pops, LEGO sets, and car models. Heavy-duty wall anchors included. Easy 20-minute installation.</p>",
+    title: "Floating Wall Shelf Set — Collector's Edition (3-shelf, Black)",
+    description: "<p>Collectibles floating wall shelf set — 3 shelves in matte black finish. Each shelf holds up to 5kg. Adjustable LED strip channels on back. Perfect for anime figures, Funko Pops, LEGO sets, and car models. Heavy-duty wall anchors included. Easy 20-minute installation.</p>",
     slug: "product-floating-wall-shelves-collectors-3shelf-black",
     category: "category-cosplay-props",
     subcategory: "Display Furniture",
@@ -538,8 +538,8 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
 
   {
     id: "product-cp-enamel-pin-set-anime-cp-14",
-    title: "Anime Enamel Pin Set â€” 10-pack (Mixed Characters, Hard Enamel)",
-    description: "<p>Collector's anime enamel pin set â€” 10 hard enamel pins featuring characters from Dragon Ball Z, Naruto, One Piece, and My Hero Academia. 2.5 cm average size, butterfly clutch backs. Perfect for jackets, bags, and display boards. Gold metal border on all pins. Gift-boxed.</p>",
+    title: "Anime Enamel Pin Set — 10-pack (Mixed Characters, Hard Enamel)",
+    description: "<p>Collector's anime enamel pin set — 10 hard enamel pins featuring characters from Dragon Ball Z, Naruto, One Piece, and My Hero Academia. 2.5 cm average size, butterfly clutch backs. Perfect for jackets, bags, and display boards. Gold metal border on all pins. Gift-boxed.</p>",
     slug: "product-anime-enamel-pin-set-10pack-mixed-dbz-naruto",
     category: "category-cosplay-props",
     subcategory: "Enamel Pins",
@@ -574,12 +574,12 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // â”€â”€ AUCTION (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── AUCTION (1) ───────────────────────────────────────────────────────────
 
   {
     id: "auction-cp-signed-dbz-cell-game-art-cp-1",
-    title: "AUCTION â€” Dragon Ball Z Cell Game Original Cel Art (Signed, 1992)",
-    description: "<p>Original Dragon Ball Z animation cel from the Cell Game saga â€” frame #247 from episode 177. Hand-painted on acetate, mounted on original background watercolour. Authentication letter from Toei Animation licensed archives. Signed by the lead animator in Japanese. Framed in archival UV glass frame.</p>",
+    title: "AUCTION — Dragon Ball Z Cell Game Original Cel Art (Signed, 1992)",
+    description: "<p>Original Dragon Ball Z animation cel from the Cell Game saga — frame #247 from episode 177. Hand-painted on acetate, mounted on original background watercolour. Authentication letter from Toei Animation licensed archives. Signed by the lead animator in Japanese. Framed in archival UV glass frame.</p>",
     slug: "auction-dbz-cell-game-original-cel-art-1992",
     category: "category-cosplay-props",
     subcategory: "Original Art",
@@ -596,7 +596,7 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
     tags: ["dragon ball z", "cel art", "original", "animation", "1992", "auction", "signed", "toei"],
     specifications: [
       { name: "Type", value: "Original animation cel on acetate" },
-      { name: "Episode", value: "177 â€” Cell Game Saga, Frame #247" },
+      { name: "Episode", value: "177 — Cell Game Saga, Frame #247" },
       { name: "Year", value: "1992" },
       { name: "Authentication", value: "Toei Animation licensed archives" },
       { name: "Signature", value: "Lead animator (Japanese)" },
@@ -629,12 +629,12 @@ export const cosplayAccessoriesSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(0),
   },
 
-  // â”€â”€ PRE-ORDER (1) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── PRE-ORDER (1) ─────────────────────────────────────────────────────────
 
   {
     id: "preorder-cp-anime-india-expo-bundle-2026-cp-1",
-    title: "PRE-ORDER â€” Anime India Expo 2026 Collector Bundle (Limited)",
-    description: "<p>Pre-order the exclusive Anime India Expo 2026 Collector Bundle â€” includes 3 signed art prints, 5 exclusive convention enamel pins, 1 limited-run figure (character TBA at expo), and VIP expo pass. India's biggest anime convention returns in Feb 2026. Only 200 bundles available India-wide.</p>",
+    title: "PRE-ORDER — Anime India Expo 2026 Collector Bundle (Limited)",
+    description: "<p>Pre-order the exclusive Anime India Expo 2026 Collector Bundle — includes 3 signed art prints, 5 exclusive convention enamel pins, 1 limited-run figure (character TBA at expo), and VIP expo pass. India's biggest anime convention returns in Feb 2026. Only 200 bundles available India-wide.</p>",
     slug: "preorder-anime-india-expo-2026-collector-bundle",
     category: "category-cosplay-props",
     subcategory: "Convention Bundles",

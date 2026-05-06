@@ -178,7 +178,7 @@ export default function BottomActions() {
 
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
       {isBulkMode && (
-        <div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-primary-400 to-primary-600 dark:from-secondary-600 dark:via-secondary-400 dark:to-secondary-600" />
+        <div className="h-[3px] w-full bg-gradient-to-r from-primary-600 via-secondary-400 to-primary-600 dark:from-primary-600 dark:via-primary-400 dark:to-primary-600" />
       )}
 
       {/* -- Info label row (page mode only) --------------------------------- */}

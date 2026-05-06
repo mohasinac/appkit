@@ -108,7 +108,7 @@ export function WelcomeSection({
             <Heading
               level={1}
               variant="none"
-              className="mt-4 font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-primary-600 via-cobalt to-primary-400 dark:from-secondary dark:via-cobalt-400 dark:to-secondary-300 bg-clip-text text-transparent leading-[1.1] tracking-tight"
+              className="mt-4 font-display text-5xl md:text-6xl lg:text-7xl xl:text-8xl bg-gradient-to-r from-primary-700 via-cobalt to-secondary-400 dark:from-primary dark:via-cobalt-400 dark:to-primary-300 bg-clip-text text-transparent leading-[1.1] tracking-tight"
             >
               {title}
             </Heading>
@@ -132,7 +132,7 @@ export function WelcomeSection({
                 {ctaHref ? (
                   <TextLink
                     href={ctaHref}
-                    className="inline-flex items-center justify-center rounded-xl px-8 py-3.5 text-base font-bold !bg-primary hover:!bg-primary-500 !text-zinc-900 dark:!bg-secondary dark:hover:!bg-secondary-600 dark:!text-white shadow-lg shadow-primary/25 dark:shadow-secondary/25 transition-all hover:scale-[1.02]"
+                    className="inline-flex items-center justify-center rounded-xl px-8 py-3.5 text-base font-bold !bg-primary hover:!bg-primary-600 text-white dark:!bg-primary dark:hover:!bg-primary-600 dark:text-white btn-glow transition-all hover:scale-[1.02]"
                   >
                     {ctaLabel}
                   </TextLink>
