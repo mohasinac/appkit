@@ -36,6 +36,9 @@ export type {
 } from "./hooks/useMedia";
 
 // Modals
+export { MediaPickerModal } from "./MediaPickerModal";
+export type { MediaPickerModalProps } from "./MediaPickerModal";
+
 export { ImageCropModal } from "./modals/ImageCropModal";
 export type {
   ImageCropData,

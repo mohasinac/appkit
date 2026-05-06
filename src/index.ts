@@ -6205,6 +6205,9 @@ export { MediaLightbox } from "./features/media/index";
 // MediaSlider - Shared export for media slider.
 export { MediaSlider } from "./features/media/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// MediaPickerModal - Modal for picking or uploading a media file.
+export type { MediaPickerModalProps } from "./features/media/index";
+export { MediaPickerModal } from "./features/media/index";
 // MediaUploadField - Shared export for media upload field.
 export { MediaUploadField } from "./features/media/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
