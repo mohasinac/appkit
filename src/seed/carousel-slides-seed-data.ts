@@ -1,6 +1,6 @@
 /**
  * Carousel Slides Seed Data — LetiTrip Collectibles Platform
- * 6 slides using CarouselSlideDocument schema (pre-CF1 schema).
+ * 6 slides using CF1 schema (background/zone fields).
  * slide- prefix, id === slug. MAX_ACTIVE_SLIDES = 5, so slide 6 is inactive.
  */
 
@@ -16,20 +16,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "Hero — India's #1 Collectibles Marketplace",
     order: 1,
     active: true,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=1920&h=1080&fit=crop",
-      alt: "Collectibles — Pokémon cards, Hot Wheels, anime figures and Beyblades",
+      mobileUrl: "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 40 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=1200&fit=crop",
-      alt: "LetiTrip Collectibles",
-    },
+    settings: { height: "tall", autoplayDelayMs: 5000 },
     overlay: {
-      enabled: true,
-      color: "#000000",
-      opacity: 40,
       title: "India's #1 Collectibles Marketplace",
       subtitle: "Pokémon TCG · Hot Wheels · Beyblade X · Anime Figures",
       description: "Buy, sell and auction rare collectibles with verified sellers across India.",
@@ -43,42 +37,39 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     cards: [
       {
         id: "card-hero-pokemon",
-        gridRow: 1,
-        gridCol: 1,
+        zone: 1,
+        mobileZone: 2,
         background: {
           type: "image",
-          value: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=400&fit=crop",
-          overlay: { enabled: true, color: "#1a1a2e", opacity: 50 },
+          url: "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=400&fit=crop",
+          dimOverlay: { enabled: true, opacity: 50 },
         },
-        content: { title: "Pokémon TCG", subtitle: "Cards, ETBs & Sealed Boxes", textColor: "#ffffff" },
-        buttons: [{ text: "Shop Pokémon", link: "/categories/category-pokemon-cards", variant: "primary", openInNewTab: false }],
-        isButtonOnly: false,
+        content: {
+          title: "Pokémon TCG",
+          subtitle: "Cards, ETBs & Sealed Boxes",
+          textColor: "#ffffff",
+          textAlign: "left",
+        },
+        buttons: [{ text: "Shop Pokémon", href: "/categories/category-pokemon-cards", variant: "primary", openInNewTab: false }],
+        hover: { effect: "scale", scaleValue: 1.03 },
       },
       {
         id: "card-hero-hotwheels",
-        gridRow: 1,
-        gridCol: 2,
+        zone: 2,
+        mobileZone: 5,
         background: {
           type: "image",
-          value: "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=600&h=400&fit=crop",
-          overlay: { enabled: true, color: "#ff0000", opacity: 30 },
+          url: "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=600&h=400&fit=crop",
+          dimOverlay: { enabled: true, opacity: 30 },
         },
-        content: { title: "Hot Wheels", subtitle: "STHs, RLC & Car Culture", textColor: "#ffffff" },
-        buttons: [{ text: "Shop Diecast", link: "/categories/category-hot-wheels-cars", variant: "primary", openInNewTab: false }],
-        isButtonOnly: false,
-      },
-      {
-        id: "card-hero-beyblade",
-        gridRow: 1,
-        gridCol: 3,
-        background: {
-          type: "image",
-          value: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=600&h=400&fit=crop",
-          overlay: { enabled: true, color: "#0000aa", opacity: 40 },
+        content: {
+          title: "Hot Wheels",
+          subtitle: "STHs, RLC & Car Culture",
+          textColor: "#ffffff",
+          textAlign: "left",
         },
-        content: { title: "Beyblade X", subtitle: "Official Takara Tomy Import", textColor: "#ffffff" },
-        buttons: [{ text: "Shop Beyblades", link: "/categories/category-beyblade-tops", variant: "primary", openInNewTab: false }],
-        isButtonOnly: false,
+        buttons: [{ text: "Shop Diecast", href: "/categories/category-hot-wheels-cars", variant: "primary", openInNewTab: false }],
+        hover: { effect: "scale", scaleValue: 1.03 },
       },
     ],
     analytics: { views: 12400 },
@@ -93,20 +84,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "New Pokémon 151 Collection",
     order: 2,
     active: true,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1920&h=1080&fit=crop",
-      alt: "Pokémon Scarlet & Violet 151 Collection",
+      mobileUrl: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 30 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=1200&fit=crop",
-      alt: "Pokémon 151",
-    },
+    settings: { height: "tall", autoplayDelayMs: 4000 },
     overlay: {
-      enabled: true,
-      color: "#cc0000",
-      opacity: 30,
       title: "Pokémon Scarlet & Violet 151",
       subtitle: "Sealed ETBs · Booster Boxes · Singles",
       description: "Original 151 Pokémon — reimagined in Scarlet & Violet. Mew ex, Charizard ex, and more.",
@@ -131,20 +116,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "Hot Wheels RLC Exclusives",
     order: 3,
     active: true,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1563642421748-5047b6585a4a?w=1920&h=1080&fit=crop",
-      alt: "Hot Wheels RLC Exclusives and Spectraflame",
+      mobileUrl: "https://images.unsplash.com/photo-1563642421748-5047b6585a4a?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 25 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1563642421748-5047b6585a4a?w=800&h=1200&fit=crop",
-      alt: "Hot Wheels RLC",
-    },
+    settings: { height: "tall", autoplayDelayMs: 4000 },
     overlay: {
-      enabled: true,
-      color: "#cc0000",
-      opacity: 25,
       title: "Hot Wheels RLC Exclusives",
       subtitle: "Spectraflame · Real Riders · Super Treasure Hunts",
       description: "Rare Hot Wheels sourced from RLC members and Japan collectors. Fresh to India.",
@@ -169,20 +148,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "Live Auctions — Bid Now",
     order: 4,
     active: true,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1559336197-ded8aaa244bc?w=1920&h=1080&fit=crop",
-      alt: "Live collectibles auctions — bid on rare items",
+      mobileUrl: "https://images.unsplash.com/photo-1559336197-ded8aaa244bc?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 50 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1559336197-ded8aaa244bc?w=800&h=1200&fit=crop",
-      alt: "Live Auctions",
-    },
+    settings: { height: "tall", autoplayDelayMs: 6000 },
     overlay: {
-      enabled: true,
-      color: "#1a0050",
-      opacity: 50,
       title: "Live Auctions — Bid Now",
       subtitle: "PSA Slabs · Vintage Cards · Rare Diecast · Signed Tops",
       description: "Real-time bidding with auto-extend protection. New auctions added daily.",
@@ -196,20 +169,20 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     cards: [
       {
         id: "card-auction-charizard",
-        gridRow: 2,
-        gridCol: 1,
+        zone: 4,
+        mobileZone: 5,
         background: {
           type: "color",
-          value: "var(--appkit-color-primary)",
-          overlay: { enabled: false, color: "#000000", opacity: 0 },
+          color: "var(--appkit-color-primary)",
         },
         content: {
           title: "Charizard 1st Edition PSA 9",
           subtitle: "Ending in 12h · Current bid ₹2,99,999",
           textColor: "#ffffff",
+          textAlign: "left",
         },
-        buttons: [{ text: "Bid Now", link: "/auctions/auction-pokemon-charizard-base1-psa9", variant: "secondary", openInNewTab: false }],
-        isButtonOnly: false,
+        buttons: [{ text: "Bid Now", href: "/auctions/auction-pokemon-charizard-base1-psa9", variant: "secondary", openInNewTab: false }],
+        hover: { effect: "glow" },
       },
     ],
     analytics: { views: 9300 },
@@ -224,20 +197,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "S.H.Figuarts & Nendoroid New Arrivals",
     order: 5,
     active: true,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1920&h=1080&fit=crop",
-      alt: "Anime figures — S.H.Figuarts and Nendoroid collection",
+      mobileUrl: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 45 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=1200&fit=crop",
-      alt: "Anime Figures",
-    },
+    settings: { height: "tall", autoplayDelayMs: 4000 },
     overlay: {
-      enabled: true,
-      color: "#000022",
-      opacity: 45,
       title: "S.H.Figuarts & Nendoroid",
       subtitle: "Dragon Ball · Re:Zero · Naruto · Demon Slayer",
       description: "Official Bandai and Good Smile figures, sourced directly from Japanese distributors.",
@@ -262,20 +229,14 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
     title: "Pre-Order: Pokémon Shrouded Fable (SV5)",
     order: 6,
     active: false,
-    media: {
+    background: {
       type: "image",
       url: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1920&h=1080&fit=crop",
-      alt: "Pokémon Shrouded Fable SV5 Pre-Order",
+      mobileUrl: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&h=1200&fit=crop",
+      dimOverlay: { enabled: true, opacity: 40 },
     },
-    mobileMedia: {
-      type: "image",
-      url: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&h=1200&fit=crop",
-      alt: "Pokémon SV5 Pre-Order",
-    },
+    settings: { height: "tall", autoplayDelayMs: 4000 },
     overlay: {
-      enabled: true,
-      color: "#2d0057",
-      opacity: 40,
       title: "Pre-Order Now: Pokémon SV5",
       subtitle: "Shrouded Fable — Pecharunt ex & Ancient Beasts",
       description: "Secure your Shrouded Fable ETB or booster box with just 30% deposit. Ships in 60 days.",

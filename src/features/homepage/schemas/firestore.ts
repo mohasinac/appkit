@@ -10,43 +10,78 @@ import {
 
 // --- Carousel Slides ----------------------------------------------------------
 
-export interface GridCard {
+/** Unified background for a slide or card — supports image, video, solid color, or gradient. */
+export interface CarouselBackground {
+  type: "image" | "video" | "color" | "gradient";
+  /** URL for image/video backgrounds */
+  url?: string;
+  /** Mobile-optimised URL (image/video) */
+  mobileUrl?: string;
+  /** Poster frame URL for video backgrounds */
+  thumbnail?: string;
+  /** Hex/token value for solid-color backgrounds */
+  color?: string;
+  /** Gradient start color (token or hex) */
+  gradientFrom?: string;
+  /** Gradient end color (token or hex) */
+  gradientTo?: string;
+  /** Gradient angle in degrees (0–360) */
+  gradientAngle?: number;
+  /** Dim overlay drawn on top of image/video */
+  dimOverlay?: { enabled: boolean; opacity: number };
+}
+
+export type CarouselSlideHeight = "viewport" | "tall" | "medium";
+export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
+
+/** A content card placed in one of 6 grid zones (2 rows × 3 cols). */
+export interface CarouselCard {
   id: string;
-  gridRow: 1 | 2;
-  gridCol: 1 | 2 | 3;
-  background: {
-    type: "color" | "gradient" | "image" | "video";
-    value: string;
-    overlay?: { enabled: boolean; color: string; opacity: number };
-  };
+  /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6 */
+  zone: 1 | 2 | 3 | 4 | 5 | 6;
+  /** On mobile, collapse to row-1 centre (zone 2) or row-2 centre (zone 5) */
+  mobileZone?: 2 | 5;
+  background: CarouselBackground;
   content?: {
+    eyebrow?: string;
     title?: string;
     subtitle?: string;
     description?: string;
     textColor?: string;
+    textAlign?: "left" | "center" | "right";
   };
   buttons?: Array<{
     id?: string;
     text: string;
-    link: string;
-    variant: "primary" | "secondary" | "outline";
-    openInNewTab: boolean;
+    href: string;
+    variant: "primary" | "secondary" | "outline" | "ghost" | "link";
+    openInNewTab?: boolean;
   }>;
-  isButtonOnly: boolean;
-  sizing?: {
-    width?: "auto" | "full" | "1/2" | "1/3" | "2/3";
-    height?: "auto" | "full" | "sm" | "md" | "lg";
+  hover?: {
+    effect: CarouselHoverEffect;
+    scaleValue?: number;
+    colorValue?: string;
   };
+  isButtonOnly?: boolean;
+  /** Legacy — kept for backward compat; use `zone` instead */
+  gridRow?: 1 | 2;
+  /** Legacy — kept for backward compat; use `zone` instead */
+  gridCol?: 1 | 2 | 3;
 }
 
-export type GridCardCreateInput = Omit<GridCard, "id">;
+/** @deprecated Use CarouselCard. This alias is kept for backward compatibility. */
+export type GridCard = CarouselCard;
+export type GridCardCreateInput = Omit<CarouselCard, "id">;
 
 export interface CarouselSlideDocument {
   id: string;
   title: string;
   order: number;
   active: boolean;
-  media: {
+  /** New unified background field (CF1). */
+  background?: CarouselBackground;
+  /** @deprecated Use `background`. Kept for backward compat — component falls back gracefully. */
+  media?: {
     type: "image" | "video";
     url: string;
     alt?: string;
@@ -56,18 +91,17 @@ export interface CarouselSlideDocument {
     url: string;
     openInNewTab: boolean;
   };
+  /** @deprecated Use `background.mobileUrl`. Kept for backward compat. */
   mobileMedia?: {
     type: "image" | "video";
     url: string;
     alt?: string;
   };
-  cards: GridCard[];
+  cards: CarouselCard[];
   overlay?: {
-    /** Visual overlay — dims the background image */
     enabled?: boolean;
     color?: string;
     opacity?: number;
-    /** Content overlay — text and CTA layered over the slide */
     title?: string;
     subtitle?: string;
     description?: string;
@@ -78,6 +112,10 @@ export interface CarouselSlideDocument {
       variant: "primary" | "secondary" | "outline";
       openInNewTab: boolean;
     };
+  };
+  settings?: {
+    autoplayDelayMs?: number;
+    height?: CarouselSlideHeight;
   };
   analytics?: {
     views: number;
@@ -108,11 +146,13 @@ export const CAROUSEL_SLIDES_PUBLIC_FIELDS = [
   "title",
   "order",
   "active",
+  "background",
   "media",
   "link",
   "mobileMedia",
   "cards",
   "overlay",
+  "settings",
 ] as const;
 
 export type CarouselSlideCreateInput = Omit<
@@ -122,7 +162,16 @@ export type CarouselSlideCreateInput = Omit<
 export type CarouselSlideUpdateInput = Partial<
   Pick<
     CarouselSlideDocument,
-    "title" | "order" | "active" | "media" | "link" | "mobileMedia" | "cards"
+    | "title"
+    | "order"
+    | "active"
+    | "background"
+    | "media"
+    | "link"
+    | "mobileMedia"
+    | "cards"
+    | "overlay"
+    | "settings"
   >
 >;
 
@@ -150,6 +199,16 @@ export function canActivateSlide(currentActiveCount: number): boolean {
 }
 
 // --- Homepage Sections --------------------------------------------------------
+
+/** Config for the hero carousel section — references the carouselSlides collection. */
+export interface CarouselSectionConfig {
+  title?: string;
+  height?: CarouselSlideHeight;
+  defaultAutoplayDelayMs?: number;
+  pauseOnHover?: boolean;
+  showDots?: boolean;
+  showArrows?: boolean;
+}
 
 export interface WelcomeSectionConfig {
   h1: string;
@@ -377,6 +436,7 @@ export type SectionType =
   | "social-feed";
 
 export type SectionConfig =
+  | CarouselSectionConfig
   | WelcomeSectionConfig
   | StatsSectionConfig
   | TrustIndicatorsSectionConfig

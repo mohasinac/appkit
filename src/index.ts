@@ -3162,6 +3162,9 @@ export { AdminBlogView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCarouselView - Component for admin carousel view.
 export { AdminCarouselView } from "./features/admin/index";
+// AdminCarouselEditorView - Component for admin carousel slide create/edit form.
+export { AdminCarouselEditorView } from "./features/admin/index";
+export type { AdminCarouselEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminBrandsView - Component for admin brands management view.
 export { AdminBrandsView } from "./features/admin/index";

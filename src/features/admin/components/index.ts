@@ -44,6 +44,8 @@ export { AdminAdEditorView } from "./AdminAdEditorView";
 export type { AdminAdEditorViewProps } from "./AdminAdEditorView";
 export { AdminCarouselView } from "./AdminCarouselView";
 export type { AdminCarouselViewProps } from "./AdminCarouselView";
+export { AdminCarouselEditorView } from "./AdminCarouselEditorView";
+export type { AdminCarouselEditorViewProps } from "./AdminCarouselEditorView";
 export { AdminDashboardView } from "./AdminDashboardView";
 export type { AdminDashboardViewProps } from "./AdminDashboardView";
 export { QuickActionsPanel } from "./QuickActionsPanel";

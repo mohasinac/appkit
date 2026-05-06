@@ -127,6 +127,9 @@ export const ADMIN_ENDPOINTS = {
   SESSIONS: "/api/admin/sessions",
   SESSION_BY_ID: (id: string) => `/api/admin/sessions/${id}`,
   SESSIONS_REVOKE_USER: "/api/admin/sessions/revoke-user",
+  CAROUSEL: "/api/admin/carousel",
+  CAROUSEL_BY_ID: (id: string) => `/api/admin/carousel/${id}`,
+  CAROUSEL_REORDER: "/api/admin/carousel/reorder",
 } as const;
 
 // ---------------------------------------------------------------------------

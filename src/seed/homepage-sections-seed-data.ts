@@ -4,7 +4,7 @@
  * Order reflects the recommended homepage layout.
  */
 
-import type { HomepageSectionDocument, SectionConfig } from "../features/homepage/schemas";
+import type { HomepageSectionDocument } from "../features/homepage/schemas";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -35,7 +35,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     type: "carousel",
     order: 2,
     enabled: true,
-    config: { title: "Hero Carousel", stats: [] } as unknown as SectionConfig,
+    config: { title: "Hero Carousel", height: "tall", pauseOnHover: true, showDots: true, showArrows: true },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(5),
   },

@@ -133,28 +133,53 @@ export interface BeforeAfterItem {
 
 // --- Carousel Slide -----------------------------------------------------------
 
+export type CarouselSlideHeight = "viewport" | "tall" | "medium";
+export type CarouselHoverEffect = "scale" | "color" | "glow" | "none";
+
+/** Unified background for a slide or a card. */
+export interface CarouselBackground {
+  type: "image" | "video" | "color" | "gradient";
+  url?: string;
+  mobileUrl?: string;
+  thumbnail?: string;
+  color?: string;
+  gradientFrom?: string;
+  gradientTo?: string;
+  gradientAngle?: number;
+  dimOverlay?: { enabled: boolean; opacity: number };
+}
+
 export interface CarouselSlideCard {
   id: string;
-  gridRow: 1 | 2;
-  gridCol: 1 | 2 | 3;
-  background: {
-    type: "color" | "gradient" | "image" | "transparent";
-    value: string;
+  /** Zone 1–6: row 1 = zones 1–3, row 2 = zones 4–6. */
+  zone: 1 | 2 | 3 | 4 | 5 | 6;
+  mobileZone?: 2 | 5;
+  background: CarouselBackground;
+  content?: {
+    eyebrow?: string;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    textColor?: string;
+    textAlign?: "left" | "center" | "right";
   };
-  content?: { title?: string; subtitle?: string; description?: string };
   buttons?: Array<{
-    id: string;
+    id?: string;
     text: string;
-    link: string;
-    variant: "primary" | "secondary" | "outline";
-    openInNewTab: boolean;
+    href: string;
+    variant: "primary" | "secondary" | "outline" | "ghost" | "link";
+    openInNewTab?: boolean;
   }>;
-  isButtonOnly: boolean;
-  sizing?: {
-    widthPct?: 25 | 50 | 75 | 100;
-    heightPct?: 25 | 50 | 75 | 100;
-    padding?: "none" | "sm" | "md" | "lg";
+  hover?: {
+    effect: CarouselHoverEffect;
+    scaleValue?: number;
+    colorValue?: string;
   };
+  isButtonOnly?: boolean;
+  /** @deprecated Use zone. */
+  gridRow?: 1 | 2;
+  /** @deprecated Use zone. */
+  gridCol?: 1 | 2 | 3;
 }
 
 export interface CarouselSlide {
@@ -162,21 +187,28 @@ export interface CarouselSlide {
   title: string;
   order: number;
   active: boolean;
-  media: { type: "image" | "video"; url: string; alt: string; thumbnail?: string };
+  background?: CarouselBackground;
+  /** @deprecated Use background. Kept for backward compat. */
+  media?: { type: "image" | "video"; url: string; alt?: string; thumbnail?: string };
   link?: { url: string; openInNewTab: boolean };
-  mobileMedia?: { type: "image" | "video"; url: string; alt: string };
+  /** @deprecated Use background.mobileUrl. Kept for backward compat. */
+  mobileMedia?: { type: "image" | "video"; url: string; alt?: string };
   cards: CarouselSlideCard[];
   overlay?: {
     title?: string;
     subtitle?: string;
     description?: string;
     button?: {
-      id: string;
+      id?: string;
       text: string;
       link: string;
       variant: "primary" | "secondary" | "outline";
       openInNewTab: boolean;
     };
+  };
+  settings?: {
+    autoplayDelayMs?: number;
+    height?: CarouselSlideHeight;
   };
   createdAt?: string;
   updatedAt?: string;
