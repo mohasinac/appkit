@@ -8,6 +8,8 @@ export interface BrandDocument {
   logoURL?: string;
   bannerURL?: string;
   website?: string;
+  country?: string;
+  founded?: number;
   isActive: boolean;
   displayOrder?: number;
   productCount?: number;
