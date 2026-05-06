@@ -157,6 +157,7 @@ export { categoriesSeedData } from "./categories-seed-data";
 export { productsSeedData } from "./products-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
 export { productsAuctionsSeedData } from "./products-auctions-seed-data";
+export { productsPreOrdersSeedData } from "./products-preorders-seed-data";
 export { ordersSeedData } from "./orders-seed-data";
 export { reviewsSeedData } from "./reviews-seed-data";
 export { cartsSeedData } from "./cart-seed-data";
