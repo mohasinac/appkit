@@ -185,6 +185,43 @@ interface BrandsBuilderState {
   scrollInterval: number;
 }
 
+interface BannerBuilderState {
+  height: "sm" | "md" | "lg" | "xl";
+  backgroundImage: string;
+  backgroundColor: string;
+  gradientFrom: string;
+  gradientTo: string;
+  contentTitle: string;
+  contentSubtitle: string;
+  contentDescription: string;
+  buttons: Array<{ text: string; link: string; variant: "primary" | "secondary" | "outline" }>;
+  clickable: boolean;
+  clickLink: string;
+}
+
+interface FeaturesBuilderState {
+  title: string;
+  features: string[];
+}
+
+interface ReviewsBuilderState {
+  title: string;
+  maxReviews: number;
+  itemsPerView: number;
+  autoScroll: boolean;
+  scrollInterval: number;
+}
+
+interface WhatsAppBuilderState {
+  title: string;
+  description: string;
+  groupLink: string;
+  memberCount: number;
+  benefits: string[];
+  buttonText: string;
+  testimonial: string;
+}
+
 const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -310,6 +347,43 @@ const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
   scrollInterval: 4000,
 };
 
+const DEFAULT_BANNER_BUILDER: BannerBuilderState = {
+  height: "lg",
+  backgroundImage: "",
+  backgroundColor: "",
+  gradientFrom: "",
+  gradientTo: "",
+  contentTitle: "",
+  contentSubtitle: "",
+  contentDescription: "",
+  buttons: [],
+  clickable: false,
+  clickLink: "",
+};
+
+const DEFAULT_FEATURES_BUILDER: FeaturesBuilderState = {
+  title: "Platform Features",
+  features: ["Free Shipping on ₹999+", "Secure Payments", "Easy Returns", "Verified Sellers"],
+};
+
+const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {
+  title: "What Collectors Say",
+  maxReviews: 10,
+  itemsPerView: 3,
+  autoScroll: true,
+  scrollInterval: 5000,
+};
+
+const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
+  title: "Join Our Collector Community",
+  description: "Connect with 10,000+ collectors on WhatsApp",
+  groupLink: "",
+  memberCount: 10000,
+  benefits: ["Exclusive deals", "First access to rare finds", "Collector tips & guides"],
+  buttonText: "Join WhatsApp Group",
+  testimonial: "",
+};
+
 const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -322,6 +396,10 @@ const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "trust-indicators",
   "categories",
   "brands",
+  "banner",
+  "features",
+  "reviews",
+  "whatsapp-community",
 ];
 
 function parseCsvValues(value: string): string[] {
@@ -725,6 +803,111 @@ function parseBrandsBuilder(config: Record<string, unknown>): BrandsBuilderState
   };
 }
 
+function buildBannerConfig(builder: BannerBuilderState): Record<string, unknown> {
+  return {
+    height: builder.height,
+    backgroundImage: builder.backgroundImage || undefined,
+    backgroundColor: builder.backgroundColor || undefined,
+    gradient: builder.gradientFrom && builder.gradientTo ? `${builder.gradientFrom},${builder.gradientTo}` : undefined,
+    content: {
+      title: builder.contentTitle,
+      subtitle: builder.contentSubtitle || undefined,
+      description: builder.contentDescription || undefined,
+    },
+    buttons: builder.buttons,
+    clickable: builder.clickable,
+    clickLink: builder.clickLink || undefined,
+  };
+}
+
+function parseBannerBuilder(config: Record<string, unknown>): BannerBuilderState {
+  const content = (config.content ?? {}) as Record<string, unknown>;
+  const buttonsRaw = Array.isArray(config.buttons) ? config.buttons : [];
+  const gradient = toStringValue(config.gradient);
+  const [gradientFrom = "", gradientTo = ""] = gradient ? gradient.split(",") : [];
+  return {
+    height: toStringValue(config.height, DEFAULT_BANNER_BUILDER.height) as BannerBuilderState["height"],
+    backgroundImage: toStringValue(config.backgroundImage),
+    backgroundColor: toStringValue(config.backgroundColor),
+    gradientFrom,
+    gradientTo,
+    contentTitle: toStringValue(content.title),
+    contentSubtitle: toStringValue(content.subtitle),
+    contentDescription: toStringValue(content.description),
+    buttons: buttonsRaw.map((btn) => {
+      const b = (btn ?? {}) as Record<string, unknown>;
+      return {
+        text: toStringValue(b.text),
+        link: toStringValue(b.link),
+        variant: toStringValue(b.variant, "primary") as BannerBuilderState["buttons"][number]["variant"],
+      };
+    }),
+    clickable: toBooleanValue(config.clickable),
+    clickLink: toStringValue(config.clickLink),
+  };
+}
+
+function buildFeaturesConfig(builder: FeaturesBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    features: builder.features.filter(Boolean),
+  };
+}
+
+function parseFeaturesBuilder(config: Record<string, unknown>): FeaturesBuilderState {
+  const featuresRaw = Array.isArray(config.features) ? config.features : [];
+  return {
+    title: toStringValue(config.title, DEFAULT_FEATURES_BUILDER.title),
+    features: featuresRaw.filter((f): f is string => typeof f === "string"),
+  };
+}
+
+function buildReviewsConfig(builder: ReviewsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    maxReviews: builder.maxReviews,
+    itemsPerView: builder.itemsPerView,
+    mobileItemsPerView: 1,
+    autoScroll: builder.autoScroll,
+    scrollInterval: builder.scrollInterval,
+  };
+}
+
+function parseReviewsBuilder(config: Record<string, unknown>): ReviewsBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_REVIEWS_BUILDER.title),
+    maxReviews: toNumberValue(config.maxReviews, DEFAULT_REVIEWS_BUILDER.maxReviews),
+    itemsPerView: toNumberValue(config.itemsPerView, DEFAULT_REVIEWS_BUILDER.itemsPerView),
+    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_REVIEWS_BUILDER.autoScroll),
+    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_REVIEWS_BUILDER.scrollInterval),
+  };
+}
+
+function buildWhatsAppConfig(builder: WhatsAppBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title,
+    description: builder.description,
+    groupLink: builder.groupLink,
+    memberCount: builder.memberCount || undefined,
+    benefits: builder.benefits.filter(Boolean),
+    buttonText: builder.buttonText,
+    testimonial: builder.testimonial || undefined,
+  };
+}
+
+function parseWhatsAppBuilder(config: Record<string, unknown>): WhatsAppBuilderState {
+  const benefitsRaw = Array.isArray(config.benefits) ? config.benefits : [];
+  return {
+    title: toStringValue(config.title, DEFAULT_WHATSAPP_BUILDER.title),
+    description: toStringValue(config.description, DEFAULT_WHATSAPP_BUILDER.description),
+    groupLink: toStringValue(config.groupLink),
+    memberCount: toNumberValue(config.memberCount, DEFAULT_WHATSAPP_BUILDER.memberCount),
+    benefits: benefitsRaw.filter((b): b is string => typeof b === "string"),
+    buttonText: toStringValue(config.buttonText, DEFAULT_WHATSAPP_BUILDER.buttonText),
+    testimonial: toStringValue(config.testimonial),
+  };
+}
+
 export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
@@ -745,6 +928,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [trustIndicatorsBuilder, setTrustIndicatorsBuilder] = React.useState<TrustIndicatorsBuilderState>(DEFAULT_TRUST_INDICATORS_BUILDER);
   const [categoriesBuilder, setCategoriesBuilder] = React.useState<CategoriesBuilderState>(DEFAULT_CATEGORIES_BUILDER);
   const [brandsBuilder, setBrandsBuilder] = React.useState<BrandsBuilderState>(DEFAULT_BRANDS_BUILDER);
+  const [bannerBuilder, setBannerBuilder] = React.useState<BannerBuilderState>(DEFAULT_BANNER_BUILDER);
+  const [featuresBuilder, setFeaturesBuilder] = React.useState<FeaturesBuilderState>(DEFAULT_FEATURES_BUILDER);
+  const [reviewsBuilder, setReviewsBuilder] = React.useState<ReviewsBuilderState>(DEFAULT_REVIEWS_BUILDER);
+  const [whatsappBuilder, setWhatsappBuilder] = React.useState<WhatsAppBuilderState>(DEFAULT_WHATSAPP_BUILDER);
   const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
@@ -815,6 +1002,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (sectionType === "brands") {
       return buildBrandsConfig(brandsBuilder);
     }
+    if (sectionType === "banner") {
+      return buildBannerConfig(bannerBuilder);
+    }
+    if (sectionType === "features") {
+      return buildFeaturesConfig(featuresBuilder);
+    }
+    if (sectionType === "reviews") {
+      return buildReviewsConfig(reviewsBuilder);
+    }
+    if (sectionType === "whatsapp-community") {
+      return buildWhatsAppConfig(whatsappBuilder);
+    }
     return null;
   }, [
     sectionType,
@@ -828,6 +1027,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     trustIndicatorsBuilder,
     categoriesBuilder,
     brandsBuilder,
+    bannerBuilder,
+    featuresBuilder,
+    reviewsBuilder,
+    whatsappBuilder,
   ]);
 
   React.useEffect(() => {
@@ -956,6 +1159,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (selected.type === "brands") {
       setBrandsBuilder(parseBrandsBuilder(selectedConfig));
     }
+    if (selected.type === "banner") {
+      setBannerBuilder(parseBannerBuilder(selectedConfig));
+    }
+    if (selected.type === "features") {
+      setFeaturesBuilder(parseFeaturesBuilder(selectedConfig));
+    }
+    if (selected.type === "reviews") {
+      setReviewsBuilder(parseReviewsBuilder(selectedConfig));
+    }
+    if (selected.type === "whatsapp-community") {
+      setWhatsappBuilder(parseWhatsAppBuilder(selectedConfig));
+    }
   }, [mode, sections, selectedSectionId]);
 
   React.useEffect(() => {
@@ -992,6 +1207,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "brands") {
       setBrandsBuilder(DEFAULT_BRANDS_BUILDER);
+    }
+    if (sectionType === "banner") {
+      setBannerBuilder(DEFAULT_BANNER_BUILDER);
+    }
+    if (sectionType === "features") {
+      setFeaturesBuilder(DEFAULT_FEATURES_BUILDER);
+    }
+    if (sectionType === "reviews") {
+      setReviewsBuilder(DEFAULT_REVIEWS_BUILDER);
+    }
+    if (sectionType === "whatsapp-community") {
+      setWhatsappBuilder(DEFAULT_WHATSAPP_BUILDER);
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -1953,6 +2180,96 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderBannerBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Banner Section Builder</Text>
+        <Select label="Height" value={bannerBuilder.height} onValueChange={(v) => setBannerBuilder((prev) => ({ ...prev, height: v as BannerBuilderState["height"] }))} options={[{ label: "Small (200px)", value: "sm" }, { label: "Medium (300px)", value: "md" }, { label: "Large (400px)", value: "lg" }, { label: "Extra Large (500px)", value: "xl" }]} />
+        <Input label="Background image URL" type="url" value={bannerBuilder.backgroundImage} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, backgroundImage: e.target.value }))} placeholder="https://..." />
+        <Input label="Background color (CSS token)" value={bannerBuilder.backgroundColor} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, backgroundColor: e.target.value }))} placeholder="var(--appkit-color-primary)" />
+        <Input label="Gradient from (CSS token)" value={bannerBuilder.gradientFrom} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, gradientFrom: e.target.value }))} placeholder="var(--appkit-color-primary)" />
+        <Input label="Gradient to (CSS token)" value={bannerBuilder.gradientTo} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, gradientTo: e.target.value }))} placeholder="var(--appkit-color-secondary)" />
+        <Input label="Content title" value={bannerBuilder.contentTitle} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentTitle: e.target.value }))} />
+        <Input label="Content subtitle" value={bannerBuilder.contentSubtitle} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentSubtitle: e.target.value }))} />
+        <Textarea label="Content description" value={bannerBuilder.contentDescription} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, contentDescription: e.target.value }))} rows={2} />
+        <Div className="space-y-2">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Buttons (max 3)</Text>
+          {bannerBuilder.buttons.map((btn, index) => (
+            <Div key={`banner-btn-${index}`} className="space-y-2 rounded-md border border-zinc-200 p-2 dark:border-slate-700">
+              <Div className="flex items-center justify-between"><Text className="text-xs text-zinc-500">Button {index + 1}</Text><Button type="button" variant="ghost" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: prev.buttons.filter((_, i) => i !== index) }))}>Remove</Button></Div>
+              <Input label="Text" value={btn.text} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], text: e.target.value }; return { ...prev, buttons: next }; })} />
+              <Input label="Link" value={btn.link} onChange={(e) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], link: e.target.value }; return { ...prev, buttons: next }; })} />
+              <Select label="Variant" value={btn.variant} onValueChange={(v) => setBannerBuilder((prev) => { const next = [...prev.buttons]; next[index] = { ...next[index], variant: v as "primary" | "secondary" | "outline" }; return { ...prev, buttons: next }; })} options={[{ label: "Primary", value: "primary" }, { label: "Secondary", value: "secondary" }, { label: "Outline", value: "outline" }]} />
+            </Div>
+          ))}
+          {bannerBuilder.buttons.length < 3 ? (
+            <Button type="button" variant="outline" size="sm" onClick={() => setBannerBuilder((prev) => ({ ...prev, buttons: [...prev.buttons, { text: "", link: "", variant: "primary" }] }))}>+ Add button</Button>
+          ) : null}
+        </Div>
+        <Checkbox checked={bannerBuilder.clickable} label="Make entire banner clickable" onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickable: e.target.checked }))} />
+        {bannerBuilder.clickable ? (
+          <Input label="Click link" value={bannerBuilder.clickLink} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, clickLink: e.target.value }))} placeholder="/products" />
+        ) : null}
+      </Div>
+    );
+  }
+
+  function renderFeaturesBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Features Section Builder</Text>
+        <Input label="Section title" value={featuresBuilder.title} onChange={(e) => setFeaturesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Div className="space-y-2">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Feature items</Text>
+          {featuresBuilder.features.map((feature, index) => (
+            <Div key={`feat-${index}`} className="flex items-center gap-2">
+              <Input value={feature} onChange={(e) => setFeaturesBuilder((prev) => { const next = [...prev.features]; next[index] = e.target.value; return { ...prev, features: next }; })} className="flex-1" />
+              <Button type="button" variant="ghost" size="sm" onClick={() => setFeaturesBuilder((prev) => ({ ...prev, features: prev.features.filter((_, i) => i !== index) }))}>✕</Button>
+            </Div>
+          ))}
+          <Button type="button" variant="outline" size="sm" onClick={() => setFeaturesBuilder((prev) => ({ ...prev, features: [...prev.features, ""] }))}>+ Add feature</Button>
+        </Div>
+      </Div>
+    );
+  }
+
+  function renderReviewsBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Reviews Section Builder</Text>
+        <Input label="Section title" value={reviewsBuilder.title} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Select label="Max reviews" value={String(reviewsBuilder.maxReviews)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, maxReviews: Number(v) }))} options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]} />
+        <Select label="Items per view" value={String(reviewsBuilder.itemsPerView)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, itemsPerView: Number(v) }))} options={[{ label: "1", value: "1" }, { label: "2", value: "2" }, { label: "3", value: "3" }]} />
+        <Checkbox checked={reviewsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
+        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(reviewsBuilder.scrollInterval)} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+      </Div>
+    );
+  }
+
+  function renderWhatsAppBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">WhatsApp Community Builder</Text>
+        <Input label="Title" value={whatsappBuilder.title} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, title: e.target.value }))} />
+        <Textarea label="Description" value={whatsappBuilder.description} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
+        <Input label="WhatsApp group link" type="url" value={whatsappBuilder.groupLink} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, groupLink: e.target.value }))} placeholder="https://chat.whatsapp.com/..." />
+        <Input label="Member count" type="number" min={0} value={String(whatsappBuilder.memberCount)} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, memberCount: Math.max(0, Number(e.target.value) || 0) }))} />
+        <Div className="space-y-2">
+          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Benefits</Text>
+          {whatsappBuilder.benefits.map((benefit, index) => (
+            <Div key={`wb-${index}`} className="flex items-center gap-2">
+              <Input value={benefit} onChange={(e) => setWhatsappBuilder((prev) => { const next = [...prev.benefits]; next[index] = e.target.value; return { ...prev, benefits: next }; })} className="flex-1" />
+              <Button type="button" variant="ghost" size="sm" onClick={() => setWhatsappBuilder((prev) => ({ ...prev, benefits: prev.benefits.filter((_, i) => i !== index) }))}>✕</Button>
+            </Div>
+          ))}
+          <Button type="button" variant="outline" size="sm" onClick={() => setWhatsappBuilder((prev) => ({ ...prev, benefits: [...prev.benefits, ""] }))}>+ Add benefit</Button>
+        </Div>
+        <Input label="Button text" value={whatsappBuilder.buttonText} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, buttonText: e.target.value }))} />
+        <Input label="Testimonial (optional)" value={whatsappBuilder.testimonial} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, testimonial: e.target.value }))} />
+      </Div>
+    );
+  }
+
   function renderWelcomeBuilder(): React.ReactNode {
     return (
       <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
@@ -2047,6 +2364,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "brands") {
       return renderBrandsBuilder();
+    }
+    if (sectionType === "banner") {
+      return renderBannerBuilder();
+    }
+    if (sectionType === "features") {
+      return renderFeaturesBuilder();
+    }
+    if (sectionType === "reviews") {
+      return renderReviewsBuilder();
+    }
+    if (sectionType === "whatsapp-community") {
+      return renderWhatsAppBuilder();
     }
     return null;
   }
