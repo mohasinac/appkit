@@ -3,7 +3,6 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  Alert,
   Button,
   Checkbox,
   Div,
@@ -14,6 +13,7 @@ import {
   Select,
   Text,
   Textarea,
+  useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants";
@@ -66,12 +66,15 @@ interface ReorderItem {
   order: number;
 }
 
+type ResourceSortBy = "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+type ResourceMaxCount = 5 | 10 | 20;
+
 interface ProductsBuilderState {
   title: string;
   subtitle: string;
   maxItems: number;
   status: "all" | "published" | "draft";
-  sortBy: "featured" | "newest" | "price-asc" | "price-desc";
+  sortBy: ResourceSortBy;
   featuredOnly: boolean;
   inStockOnly: boolean;
   autoScroll: boolean;
@@ -79,6 +82,9 @@ interface ProductsBuilderState {
   resourceMode: ResourceMode;
   selectedCategoryIds: string[];
   manualResourceIds: string;
+  filterByCategory: string;
+  maxCount: ResourceMaxCount;
+  loop: boolean;
 }
 
 interface AuctionsBuilderState {
@@ -86,12 +92,15 @@ interface AuctionsBuilderState {
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "scheduled" | "ended";
-  sortBy: "ending-soon" | "highest-bid" | "newest";
+  sortBy: ResourceSortBy;
   autoScroll: boolean;
   scrollInterval: number;
   resourceMode: ResourceMode;
   selectedCategoryIds: string[];
   manualResourceIds: string;
+  filterByCategory: string;
+  maxCount: ResourceMaxCount;
+  loop: boolean;
 }
 
 interface StatsBuilderState {
@@ -108,12 +117,15 @@ interface PreOrdersBuilderState {
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "upcoming" | "closed";
-  sortBy: "newest" | "price-asc" | "price-desc" | "shipping-soon";
+  sortBy: ResourceSortBy;
   autoScroll: boolean;
   scrollInterval: number;
   resourceMode: ResourceMode;
   selectedCategoryIds: string[];
   manualResourceIds: string;
+  filterByCategory: string;
+  maxCount: ResourceMaxCount;
+  loop: boolean;
 }
 
 interface StoresBuilderState {
@@ -121,13 +133,16 @@ interface StoresBuilderState {
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "pending" | "disabled";
-  sortBy: "rating-desc" | "newest" | "popular";
+  sortBy: ResourceSortBy;
   verifiedOnly: boolean;
   autoScroll: boolean;
   scrollInterval: number;
   resourceMode: ResourceMode;
   selectedCategoryIds: string[];
   manualResourceIds: string;
+  filterByCategory: string;
+  maxCount: ResourceMaxCount;
+  loop: boolean;
 }
 
 interface EventsBuilderState {
@@ -135,13 +150,16 @@ interface EventsBuilderState {
   subtitle: string;
   maxItems: number;
   status: "all" | "active" | "upcoming" | "ended";
-  sortBy: "start-date" | "newest" | "popular";
+  sortBy: ResourceSortBy;
   featuredOnly: boolean;
   autoScroll: boolean;
   scrollInterval: number;
   resourceMode: ResourceMode;
   selectedCategoryIds: string[];
   manualResourceIds: string;
+  filterByCategory: string;
+  maxCount: ResourceMaxCount;
+  loop: boolean;
 }
 
 interface SocialFeedBuilderState {
@@ -264,6 +282,9 @@ const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   resourceMode: "automatic",
   selectedCategoryIds: [],
   manualResourceIds: "",
+  filterByCategory: "",
+  maxCount: 10,
+  loop: false,
 };
 
 const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
@@ -271,12 +292,15 @@ const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
   subtitle: "",
   maxItems: 18,
   status: "active",
-  sortBy: "ending-soon",
+  sortBy: "latest",
   autoScroll: false,
   scrollInterval: 5000,
   resourceMode: "automatic",
   selectedCategoryIds: [],
   manualResourceIds: "",
+  filterByCategory: "",
+  maxCount: 10,
+  loop: false,
 };
 
 const DEFAULT_STATS_BUILDER: StatsBuilderState = {
@@ -294,12 +318,15 @@ const DEFAULT_PRE_ORDERS_BUILDER: PreOrdersBuilderState = {
   subtitle: "",
   maxItems: 18,
   status: "active",
-  sortBy: "shipping-soon",
+  sortBy: "latest",
   autoScroll: false,
   scrollInterval: 5000,
   resourceMode: "automatic",
   selectedCategoryIds: [],
   manualResourceIds: "",
+  filterByCategory: "",
+  maxCount: 10,
+  loop: false,
 };
 
 const DEFAULT_STORES_BUILDER: StoresBuilderState = {
@@ -307,13 +334,16 @@ const DEFAULT_STORES_BUILDER: StoresBuilderState = {
   subtitle: "",
   maxItems: 8,
   status: "active",
-  sortBy: "rating-desc",
+  sortBy: "popular",
   verifiedOnly: true,
   autoScroll: false,
   scrollInterval: 5000,
   resourceMode: "automatic",
   selectedCategoryIds: [],
   manualResourceIds: "",
+  filterByCategory: "",
+  maxCount: 10,
+  loop: false,
 };
 
 const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
@@ -321,13 +351,16 @@ const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
   subtitle: "",
   maxItems: 6,
   status: "active",
-  sortBy: "start-date",
+  sortBy: "latest",
   featuredOnly: false,
   autoScroll: false,
   scrollInterval: 5000,
   resourceMode: "automatic",
   selectedCategoryIds: [],
   manualResourceIds: "",
+  filterByCategory: "",
+  maxCount: 10,
+  loop: false,
 };
 
 const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
@@ -495,11 +528,25 @@ function toStringArray(value: unknown): string[] {
     : [];
 }
 
+const RESOURCE_SORT_OPTIONS = [
+  { label: "Latest", value: "latest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Price: Low to High", value: "priceLow" },
+  { label: "Price: High to Low", value: "priceHigh" },
+  { label: "Featured", value: "featured" },
+  { label: "On Sale", value: "onSale" },
+  { label: "Popular", value: "popular" },
+] as const;
+
 function buildProductsConfig(builder: ProductsBuilderState): Record<string, unknown> {
   return {
     title: builder.title,
     subtitle: builder.subtitle || undefined,
     maxProducts: builder.maxItems,
+    maxCount: builder.maxCount,
+    sortBy: builder.sortBy,
+    filterByCategory: builder.filterByCategory || undefined,
+    loop: builder.loop,
     rows: 2,
     itemsPerRow: 3,
     mobileItemsPerRow: 1,
@@ -508,7 +555,6 @@ function buildProductsConfig(builder: ProductsBuilderState): Record<string, unkn
     filters: {
       categoryIds: builder.selectedCategoryIds,
       status: builder.status,
-      sortBy: builder.sortBy,
       featuredOnly: builder.featuredOnly,
       inStockOnly: builder.inStockOnly,
     },
@@ -524,6 +570,10 @@ function buildAuctionsConfig(builder: AuctionsBuilderState): Record<string, unkn
     title: builder.title,
     subtitle: builder.subtitle || undefined,
     maxAuctions: builder.maxItems,
+    maxCount: builder.maxCount,
+    sortBy: builder.sortBy,
+    filterByCategory: builder.filterByCategory || undefined,
+    loop: builder.loop,
     rows: 2,
     itemsPerRow: 3,
     mobileItemsPerRow: 1,
@@ -532,7 +582,6 @@ function buildAuctionsConfig(builder: AuctionsBuilderState): Record<string, unkn
     filters: {
       categoryIds: builder.selectedCategoryIds,
       status: builder.status,
-      sortBy: builder.sortBy,
     },
     resources: {
       mode: builder.resourceMode,
@@ -557,6 +606,10 @@ function buildPreOrdersConfig(builder: PreOrdersBuilderState): Record<string, un
     title: builder.title,
     subtitle: builder.subtitle || undefined,
     maxItems: builder.maxItems,
+    maxCount: builder.maxCount,
+    sortBy: builder.sortBy,
+    filterByCategory: builder.filterByCategory || undefined,
+    loop: builder.loop,
     rows: 2,
     itemsPerRow: 3,
     mobileItemsPerRow: 1,
@@ -565,7 +618,6 @@ function buildPreOrdersConfig(builder: PreOrdersBuilderState): Record<string, un
     filters: {
       categoryIds: builder.selectedCategoryIds,
       status: builder.status,
-      sortBy: builder.sortBy,
     },
     resources: {
       mode: builder.resourceMode,
@@ -579,12 +631,15 @@ function buildStoresConfig(builder: StoresBuilderState): Record<string, unknown>
     title: builder.title,
     subtitle: builder.subtitle || undefined,
     maxStores: builder.maxItems,
+    maxCount: builder.maxCount,
+    sortBy: builder.sortBy,
+    filterByCategory: builder.filterByCategory || undefined,
+    loop: builder.loop,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
     filters: {
       categoryIds: builder.selectedCategoryIds,
       status: builder.status,
-      sortBy: builder.sortBy,
       verifiedOnly: builder.verifiedOnly,
     },
     resources: {
@@ -599,12 +654,15 @@ function buildEventsConfig(builder: EventsBuilderState): Record<string, unknown>
     title: builder.title,
     subtitle: builder.subtitle || undefined,
     maxEvents: builder.maxItems,
+    maxCount: builder.maxCount,
+    sortBy: builder.sortBy,
+    filterByCategory: builder.filterByCategory || undefined,
+    loop: builder.loop,
     autoScroll: builder.autoScroll,
     scrollInterval: builder.scrollInterval,
     filters: {
       categoryIds: builder.selectedCategoryIds,
       status: builder.status,
-      sortBy: builder.sortBy,
       featuredOnly: builder.featuredOnly,
     },
     resources: {
@@ -617,42 +675,44 @@ function buildEventsConfig(builder: EventsBuilderState): Record<string, unknown>
 function parseProductsBuilder(config: Record<string, unknown>): ProductsBuilderState {
   const filters = (config.filters ?? {}) as Record<string, unknown>;
   const resources = (config.resources ?? {}) as Record<string, unknown>;
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_PRODUCTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRODUCTS_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxProducts, DEFAULT_PRODUCTS_BUILDER.maxItems),
-    status:
-      toStringValue(filters.status, DEFAULT_PRODUCTS_BUILDER.status) as ProductsBuilderState["status"],
-    sortBy:
-      toStringValue(filters.sortBy, DEFAULT_PRODUCTS_BUILDER.sortBy) as ProductsBuilderState["sortBy"],
+    status: toStringValue(filters.status, DEFAULT_PRODUCTS_BUILDER.status) as ProductsBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_PRODUCTS_BUILDER.sortBy) as ResourceSortBy,
     featuredOnly: toBooleanValue(filters.featuredOnly, DEFAULT_PRODUCTS_BUILDER.featuredOnly),
     inStockOnly: toBooleanValue(filters.inStockOnly, DEFAULT_PRODUCTS_BUILDER.inStockOnly),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_PRODUCTS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_PRODUCTS_BUILDER.scrollInterval),
-    resourceMode:
-      toStringValue(resources.mode, DEFAULT_PRODUCTS_BUILDER.resourceMode) as ResourceMode,
+    resourceMode: toStringValue(resources.mode, DEFAULT_PRODUCTS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+    filterByCategory: toStringValue(config.filterByCategory),
+    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
+    loop: toBooleanValue(config.loop, false),
   };
 }
 
 function parseAuctionsBuilder(config: Record<string, unknown>): AuctionsBuilderState {
   const filters = (config.filters ?? {}) as Record<string, unknown>;
   const resources = (config.resources ?? {}) as Record<string, unknown>;
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_AUCTIONS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_AUCTIONS_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxAuctions, DEFAULT_AUCTIONS_BUILDER.maxItems),
-    status:
-      toStringValue(filters.status, DEFAULT_AUCTIONS_BUILDER.status) as AuctionsBuilderState["status"],
-    sortBy:
-      toStringValue(filters.sortBy, DEFAULT_AUCTIONS_BUILDER.sortBy) as AuctionsBuilderState["sortBy"],
+    status: toStringValue(filters.status, DEFAULT_AUCTIONS_BUILDER.status) as AuctionsBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_AUCTIONS_BUILDER.sortBy) as ResourceSortBy,
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_AUCTIONS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_AUCTIONS_BUILDER.scrollInterval),
-    resourceMode:
-      toStringValue(resources.mode, DEFAULT_AUCTIONS_BUILDER.resourceMode) as ResourceMode,
+    resourceMode: toStringValue(resources.mode, DEFAULT_AUCTIONS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+    filterByCategory: toStringValue(config.filterByCategory),
+    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
+    loop: toBooleanValue(config.loop, false),
   };
 }
 
@@ -686,62 +746,65 @@ function parseStatsBuilder(config: Record<string, unknown>): StatsBuilderState {
 function parsePreOrdersBuilder(config: Record<string, unknown>): PreOrdersBuilderState {
   const filters = (config.filters ?? {}) as Record<string, unknown>;
   const resources = (config.resources ?? {}) as Record<string, unknown>;
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_PRE_ORDERS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_PRE_ORDERS_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxItems, DEFAULT_PRE_ORDERS_BUILDER.maxItems),
-    status:
-      toStringValue(filters.status, DEFAULT_PRE_ORDERS_BUILDER.status) as PreOrdersBuilderState["status"],
-    sortBy:
-      toStringValue(filters.sortBy, DEFAULT_PRE_ORDERS_BUILDER.sortBy) as PreOrdersBuilderState["sortBy"],
+    status: toStringValue(filters.status, DEFAULT_PRE_ORDERS_BUILDER.status) as PreOrdersBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_PRE_ORDERS_BUILDER.sortBy) as ResourceSortBy,
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_PRE_ORDERS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_PRE_ORDERS_BUILDER.scrollInterval),
-    resourceMode:
-      toStringValue(resources.mode, DEFAULT_PRE_ORDERS_BUILDER.resourceMode) as ResourceMode,
+    resourceMode: toStringValue(resources.mode, DEFAULT_PRE_ORDERS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+    filterByCategory: toStringValue(config.filterByCategory),
+    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
+    loop: toBooleanValue(config.loop, false),
   };
 }
 
 function parseStoresBuilder(config: Record<string, unknown>): StoresBuilderState {
   const filters = (config.filters ?? {}) as Record<string, unknown>;
   const resources = (config.resources ?? {}) as Record<string, unknown>;
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_STORES_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_STORES_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxStores, DEFAULT_STORES_BUILDER.maxItems),
-    status:
-      toStringValue(filters.status, DEFAULT_STORES_BUILDER.status) as StoresBuilderState["status"],
-    sortBy:
-      toStringValue(filters.sortBy, DEFAULT_STORES_BUILDER.sortBy) as StoresBuilderState["sortBy"],
+    status: toStringValue(filters.status, DEFAULT_STORES_BUILDER.status) as StoresBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_STORES_BUILDER.sortBy) as ResourceSortBy,
     verifiedOnly: toBooleanValue(filters.verifiedOnly, DEFAULT_STORES_BUILDER.verifiedOnly),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_STORES_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_STORES_BUILDER.scrollInterval),
-    resourceMode:
-      toStringValue(resources.mode, DEFAULT_STORES_BUILDER.resourceMode) as ResourceMode,
+    resourceMode: toStringValue(resources.mode, DEFAULT_STORES_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+    filterByCategory: toStringValue(config.filterByCategory),
+    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
+    loop: toBooleanValue(config.loop, false),
   };
 }
 
 function parseEventsBuilder(config: Record<string, unknown>): EventsBuilderState {
   const filters = (config.filters ?? {}) as Record<string, unknown>;
   const resources = (config.resources ?? {}) as Record<string, unknown>;
+  const maxCount = toNumberValue(config.maxCount, DEFAULT_EVENTS_BUILDER.maxCount);
   return {
     title: toStringValue(config.title, DEFAULT_EVENTS_BUILDER.title),
     subtitle: toStringValue(config.subtitle),
     maxItems: toNumberValue(config.maxEvents, DEFAULT_EVENTS_BUILDER.maxItems),
-    status:
-      toStringValue(filters.status, DEFAULT_EVENTS_BUILDER.status) as EventsBuilderState["status"],
-    sortBy:
-      toStringValue(filters.sortBy, DEFAULT_EVENTS_BUILDER.sortBy) as EventsBuilderState["sortBy"],
+    status: toStringValue(filters.status, DEFAULT_EVENTS_BUILDER.status) as EventsBuilderState["status"],
+    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_EVENTS_BUILDER.sortBy) as ResourceSortBy,
     featuredOnly: toBooleanValue(filters.featuredOnly, DEFAULT_EVENTS_BUILDER.featuredOnly),
     autoScroll: toBooleanValue(config.autoScroll, DEFAULT_EVENTS_BUILDER.autoScroll),
     scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_EVENTS_BUILDER.scrollInterval),
-    resourceMode:
-      toStringValue(resources.mode, DEFAULT_EVENTS_BUILDER.resourceMode) as ResourceMode,
+    resourceMode: toStringValue(resources.mode, DEFAULT_EVENTS_BUILDER.resourceMode) as ResourceMode,
     selectedCategoryIds: toStringArray(filters.categoryIds),
     manualResourceIds: toStringArray(resources.ids).join(", "),
+    filterByCategory: toStringValue(config.filterByCategory),
+    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
+    loop: toBooleanValue(config.loop, false),
   };
 }
 
@@ -1076,7 +1139,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
   const [dragIndex, setDragIndex] = React.useState<number | null>(null);
-  const [formMessage, setFormMessage] = React.useState<string | null>(null);
+  const toast = useToast();
 
   const isTypedBuilder = SUPPORTED_TYPED_BUILDERS.includes(sectionType);
 
@@ -1241,11 +1304,11 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
-      setFormMessage(mode === "create" ? "Section created." : "Section updated.");
+      toast.showToast(mode === "create" ? "Section created." : "Section updated.", "success");
       setIsModalOpen(false);
     },
     onError: (error) => {
-      setFormMessage(error instanceof Error ? error.message : "Failed to save section.");
+      toast.showToast(error instanceof Error ? error.message : "Failed to save section.", "error");
     },
   });
 
@@ -1263,10 +1326,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
       setReorderServerSnapshot(cloneReorderItems(reorderDraft));
       setReorderUndoStack([]);
-      setFormMessage("Section order updated.");
+      toast.showToast("Section order updated.", "success");
     },
     onError: (error) => {
-      setFormMessage(error instanceof Error ? error.message : "Failed to reorder sections.");
+      toast.showToast(error instanceof Error ? error.message : "Failed to reorder sections.", "error");
     },
   });
 
@@ -1552,21 +1615,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Select
-          label="Sort"
+          label="Sort by"
           value={productsBuilder.sortBy}
-          onValueChange={(value) =>
-            setProductsBuilder((prev) => ({
-              ...prev,
-              sortBy: value as ProductsBuilderState["sortBy"],
-            }))
-          }
-          options={[
-            { label: "Featured", value: "featured" },
-            { label: "Newest", value: "newest" },
-            { label: "Price (Low to High)", value: "price-asc" },
-            { label: "Price (High to Low)", value: "price-desc" },
-          ]}
+          onValueChange={(value) => setProductsBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          options={[...RESOURCE_SORT_OPTIONS]}
         />
+
+        <Input
+          label="Filter by category slug"
+          value={productsBuilder.filterByCategory}
+          onChange={(e) => setProductsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
+          placeholder="category-pokemon-cards"
+        />
+
+        <Select
+          label="Max items to show"
+          value={String(productsBuilder.maxCount)}
+          onValueChange={(v) => setProductsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
+        />
+
+        <Checkbox checked={productsBuilder.loop} label="Loop carousel" onChange={(e) => setProductsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
@@ -1733,20 +1802,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Select
-          label="Sort"
+          label="Sort by"
           value={auctionsBuilder.sortBy}
-          onValueChange={(value) =>
-            setAuctionsBuilder((prev) => ({
-              ...prev,
-              sortBy: value as AuctionsBuilderState["sortBy"],
-            }))
-          }
-          options={[
-            { label: "Ending Soon", value: "ending-soon" },
-            { label: "Highest Bid", value: "highest-bid" },
-            { label: "Newest", value: "newest" },
-          ]}
+          onValueChange={(value) => setAuctionsBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          options={[...RESOURCE_SORT_OPTIONS]}
         />
+
+        <Input
+          label="Filter by category slug"
+          value={auctionsBuilder.filterByCategory}
+          onChange={(e) => setAuctionsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
+          placeholder="category-pokemon-cards"
+        />
+
+        <Select
+          label="Max items to show"
+          value={String(auctionsBuilder.maxCount)}
+          onValueChange={(v) => setAuctionsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
+        />
+
+        <Checkbox checked={auctionsBuilder.loop} label="Loop carousel" onChange={(e) => setAuctionsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
@@ -1980,21 +2056,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Select
-          label="Sort"
+          label="Sort by"
           value={preOrdersBuilder.sortBy}
-          onValueChange={(value) =>
-            setPreOrdersBuilder((prev) => ({
-              ...prev,
-              sortBy: value as PreOrdersBuilderState["sortBy"],
-            }))
-          }
-          options={[
-            { label: "Shipping Soon", value: "shipping-soon" },
-            { label: "Newest", value: "newest" },
-            { label: "Price (Low to High)", value: "price-asc" },
-            { label: "Price (High to Low)", value: "price-desc" },
-          ]}
+          onValueChange={(value) => setPreOrdersBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          options={[...RESOURCE_SORT_OPTIONS]}
         />
+
+        <Input
+          label="Filter by category slug"
+          value={preOrdersBuilder.filterByCategory}
+          onChange={(e) => setPreOrdersBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
+          placeholder="category-beyblade-tops"
+        />
+
+        <Select
+          label="Max items to show"
+          value={String(preOrdersBuilder.maxCount)}
+          onValueChange={(v) => setPreOrdersBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
+        />
+
+        <Checkbox checked={preOrdersBuilder.loop} label="Loop carousel" onChange={(e) => setPreOrdersBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
@@ -2115,20 +2197,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Select
-          label="Sort"
+          label="Sort by"
           value={storesBuilder.sortBy}
-          onValueChange={(value) =>
-            setStoresBuilder((prev) => ({
-              ...prev,
-              sortBy: value as StoresBuilderState["sortBy"],
-            }))
-          }
-          options={[
-            { label: "Rating (High to Low)", value: "rating-desc" },
-            { label: "Newest", value: "newest" },
-            { label: "Popular", value: "popular" },
-          ]}
+          onValueChange={(value) => setStoresBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          options={[...RESOURCE_SORT_OPTIONS]}
         />
+
+        <Input
+          label="Filter by category slug"
+          value={storesBuilder.filterByCategory}
+          onChange={(e) => setStoresBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
+          placeholder="category-pokemon-cards"
+        />
+
+        <Select
+          label="Max items to show"
+          value={String(storesBuilder.maxCount)}
+          onValueChange={(v) => setStoresBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
+        />
+
+        <Checkbox checked={storesBuilder.loop} label="Loop carousel" onChange={(e) => setStoresBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
@@ -2260,20 +2349,27 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Select
-          label="Sort"
+          label="Sort by"
           value={eventsBuilder.sortBy}
-          onValueChange={(value) =>
-            setEventsBuilder((prev) => ({
-              ...prev,
-              sortBy: value as EventsBuilderState["sortBy"],
-            }))
-          }
-          options={[
-            { label: "Start Date", value: "start-date" },
-            { label: "Newest", value: "newest" },
-            { label: "Popular", value: "popular" },
-          ]}
+          onValueChange={(value) => setEventsBuilder((prev) => ({ ...prev, sortBy: value as ResourceSortBy }))}
+          options={[...RESOURCE_SORT_OPTIONS]}
         />
+
+        <Input
+          label="Filter by category slug"
+          value={eventsBuilder.filterByCategory}
+          onChange={(e) => setEventsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
+          placeholder="category-events"
+        />
+
+        <Select
+          label="Max items to show"
+          value={String(eventsBuilder.maxCount)}
+          onValueChange={(v) => setEventsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
+          options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
+        />
+
+        <Checkbox checked={eventsBuilder.loop} label="Loop carousel" onChange={(e) => setEventsBuilder((prev) => ({ ...prev, loop: e.target.checked }))} />
 
         <Select
           label="Resource mode"
@@ -2761,11 +2857,6 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         )}
       </Div>
 
-      {formMessage ? (
-        <Alert variant={formMessage.includes("Failed") || formMessage.includes("must") ? "error" : "success"} title="Sections">
-          {formMessage}
-        </Alert>
-      ) : null}
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Manage Homepage Section" size="lg">
         <Form
