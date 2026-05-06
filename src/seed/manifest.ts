@@ -1,0 +1,161 @@
+/**
+ * Seed Manifest
+ *
+ * Lightweight index of every seeded document across all collections.
+ * Imported by SeedPanel to render previews without loading full seed data.
+ * Auto-derived from the live seed data files — stays in sync automatically.
+ */
+
+import type { SeedCollectionName } from "./actions/demo-seed-actions";
+import { brandsSeedData } from "./brands-seed-data";
+import { categoriesSeedData } from "./categories-seed-data";
+import { usersSeedData } from "./users-seed-data";
+import { storesSeedData } from "./stores-seed-data";
+import { productsSeedData } from "./products-seed-data";
+import { ordersSeedData } from "./orders-seed-data";
+import { reviewsSeedData } from "./reviews-seed-data";
+import { bidsSeedData } from "./bids-seed-data";
+import { couponsSeedData } from "./coupons-seed-data";
+import { carouselSlidesSeedData } from "./carousel-slides-seed-data";
+import { homepageSectionsSeedData } from "./homepage-sections-seed-data";
+import { siteSettingsSeedData } from "./site-settings-seed-data";
+import { faqSeedData } from "./faq-seed-data";
+import { notificationsSeedData } from "./notifications-seed-data";
+import { payoutsSeedData } from "./payouts-seed-data";
+import { blogPostsSeedData } from "./blog-posts-seed-data";
+import { eventsSeedData } from "./events-seed-data";
+import { sessionsSeedData } from "./sessions-seed-data";
+import { addressesSeedData } from "./addresses-seed-data";
+import { storeAddressesSeedData } from "./store-addresses-seed-data";
+import { cartsSeedData } from "./cart-seed-data";
+import { wishlistsSeedData } from "./wishlists-seed-data";
+
+export interface SeedManifestEntry {
+  id: string;
+  name: string;
+  type?: string;
+}
+
+export type SeedManifest = Record<SeedCollectionName, SeedManifestEntry[]>;
+
+function asArr(items: unknown): Array<Record<string, unknown>> {
+  return (items as unknown as Array<Record<string, unknown>>) ?? [];
+}
+
+function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
+  return (items as Array<Record<string, unknown>>)
+    .filter((item) => Boolean(item.id))
+    .map((item) => ({
+      id: String(item.id),
+      name: String(item[nameKey] ?? item.id),
+      ...(item.type ? { type: String(item.type) } : {}),
+    }));
+}
+
+export const SEED_MANIFEST: SeedManifest = {
+  brands: pick(asArr(brandsSeedData)),
+  categories: pick(asArr(categoriesSeedData)),
+  users: pick(
+    asArr(usersSeedData).map((u) => ({
+      ...u,
+      name: u.displayName ?? u.email ?? u.uid,
+    })),
+  ),
+  stores: pick(
+    asArr(storesSeedData).map((s) => ({
+      ...s,
+      name: s.storeName ?? s.id,
+    })),
+  ),
+  products: pick(
+    asArr(productsSeedData).map((p) => ({
+      ...p,
+      type: p.isAuction ? "auction" : p.isPreOrder ? "preorder" : "standard",
+    })),
+    "title",
+  ),
+  orders: pick(asArr(ordersSeedData)),
+  reviews: pick(asArr(reviewsSeedData), "title"),
+  bids: pick(asArr(bidsSeedData)),
+  coupons: pick(
+    asArr(couponsSeedData).map((c) => ({
+      ...c,
+      name: c.code ?? c.id,
+    })),
+  ),
+  carouselSlides: pick(
+    asArr(carouselSlidesSeedData).map((s) => ({
+      ...s,
+      name: s.title ?? s.id,
+    })),
+  ),
+  homepageSections: pick(
+    asArr(homepageSectionsSeedData).map((s) => ({
+      ...s,
+      name: s.title ?? s.type ?? s.id,
+    })),
+    "name",
+  ),
+  siteSettings: pick(
+    [siteSettingsSeedData as unknown as Record<string, unknown>].map((s) => ({
+      ...s,
+      name: s.siteName ?? "global",
+    })),
+  ),
+  faqs: pick(
+    asArr(faqSeedData).map((f) => ({
+      ...f,
+      name: f.question ?? f.id,
+    })),
+  ),
+  notifications: pick(
+    asArr(notificationsSeedData).map((n) => ({
+      ...n,
+      name: n.title ?? n.type ?? n.id,
+    })),
+  ),
+  payouts: pick(asArr(payoutsSeedData)),
+  blogPosts: pick(
+    asArr(blogPostsSeedData).map((p) => ({
+      ...p,
+      name: p.title ?? p.id,
+    })),
+  ),
+  events: pick(
+    asArr(eventsSeedData).map((e) => ({
+      ...e,
+      name: e.title ?? e.id,
+    })),
+  ),
+  eventEntries: [],
+  sessions: pick(
+    asArr(sessionsSeedData).map((s) => ({
+      ...s,
+      name: s.userId ?? s.id,
+    })),
+  ),
+  addresses: pick(
+    asArr(addressesSeedData).map((a) => ({
+      ...a,
+      name: a.label ?? a.fullName ?? a.id,
+    })),
+  ),
+  storeAddresses: pick(
+    asArr(storeAddressesSeedData).map((a) => ({
+      ...a,
+      name: a.label ?? a.fullName ?? a.id,
+    })),
+  ),
+  carts: pick(
+    asArr(cartsSeedData).map((c) => ({
+      ...c,
+      name: c.userId ?? c.id,
+    })),
+  ),
+  wishlists: pick(
+    asArr(wishlistsSeedData).map((w) => ({
+      ...w,
+      name: w.userId ?? w.id,
+    })),
+  ),
+};

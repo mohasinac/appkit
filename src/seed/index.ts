@@ -170,19 +170,9 @@ export { siteSettingsSeedData } from "./site-settings-seed-data";
 export { carouselSlidesSeedData } from "./carousel-slides-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
 
-// Pokemon-themed seed datasets
-export { pokemonUsersSeedData } from "./pokemon-users-seed-data";
-export { pokemonCategoriesSeedData } from "./pokemon-categories-seed-data";
-export { pokemonProductsSeedData } from "./pokemon-products-seed-data";
-export { hotWheelsProductsSeedData } from "./hot-wheels-seed-data";
-export { beybladeProductsSeedData } from "./beyblade-seed-data";
-export { transformersProductsSeedData } from "./transformers-seed-data";
-export { allProductsSeedData } from "./pokemon-seed-bundle";
-export { pokemonStoresSeedData } from "./pokemon-stores-seed-data";
-export { pokemonCarouselSlidesSeedData } from "./pokemon-carousel-slides-seed-data";
-export { pokemonHomepageSectionsSeedData } from "./pokemon-homepage-sections-seed-data";
-export { pokemonCouponsSeedData } from "./pokemon-coupons-seed-data";
-export { letitripOfficialSeedData } from "./letitrip-official-seed-data";
+// Seed manifest — lightweight index for SeedPanel previews
+export type { SeedManifest, SeedManifestEntry } from "./manifest";
+export { SEED_MANIFEST } from "./manifest";
 
 // Firestore index helpers
 export type { FirestoreIndexConfig } from "./firestore-indexes";
