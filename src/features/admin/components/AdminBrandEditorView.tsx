@@ -11,6 +11,8 @@ import {
   Toggle,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { ImageUpload } from "../../media/upload/ImageUpload";
+import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -124,6 +126,8 @@ export function AdminBrandEditorView({
     onError: (err: unknown) => setErrorMsg((err as Error)?.message ?? "Failed to delete brand."),
   });
 
+  const { upload } = useMediaUpload();
+
   const isSubmitting = saveMutation.isPending || brandQuery.isLoading;
 
   return (
@@ -168,20 +172,18 @@ export function AdminBrandEditorView({
             placeholder="Brief description of the brand"
           />
 
-          <Input
-            label="Logo URL"
-            value={logoURL}
-            onChange={(e) => setLogoURL(e.target.value)}
-            placeholder="https://..."
-            type="url"
+          <ImageUpload
+            label="Logo"
+            currentImage={logoURL}
+            onUpload={(file) => upload(file, "brands")}
+            onChange={setLogoURL}
           />
 
-          <Input
-            label="Banner URL"
-            value={bannerURL}
-            onChange={(e) => setBannerURL(e.target.value)}
-            placeholder="https://..."
-            type="url"
+          <ImageUpload
+            label="Banner"
+            currentImage={bannerURL}
+            onUpload={(file) => upload(file, "brands")}
+            onChange={setBannerURL}
           />
 
           <Input
