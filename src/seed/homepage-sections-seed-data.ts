@@ -1,625 +1,395 @@
 /**
- * Homepage Sections Seed Data
- * Configurable sections for the homepage
- *
- * ID Pattern: section-{type}-{timestamp}
- * All IDs follow the generateHomepageSectionId() pattern from @/utils
- *
- * Section order follows DEFAULT_SECTION_ORDER from schema:
- * welcome(1) → trust-indicators(2) → categories(3) → products(4,5) →
- * pre-orders(6) → auctions(7) → banner(8) → features(9) → reviews(10) →
- * whatsapp-community(11) → faq(12) → blog-articles(13) → newsletter(14) →
- * stores(15) → events(16) → brands(17, disabled)
- *
- * 26 total sections (24 enabled, 2 disabled) — includes 9 franchise-specific sections
+ * Homepage Sections Seed Data — LetiTrip Collectibles Platform
+ * All 19 section types seeded. section- prefix, id === slug.
+ * Order reflects the recommended homepage layout.
  */
 
-import type { HomepageSectionDocument } from "../features/homepage/schemas";
+import type { HomepageSectionDocument, SectionConfig } from "../features/homepage/schemas";
 
-// Dynamic date helpers
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
-  // ============================================
-  // 1. WELCOME SECTION
-  // ============================================
+  // ── 1. welcome ────────────────────────────────────────────────────────────
   {
-    id: "section-welcome-1707300000001",
+    id: "section-welcome-hero",
     type: "welcome",
     order: 1,
     enabled: true,
     config: {
-      h1: "Welcome to LetItRip — Your Otaku Marketplace",
-      subtitle: "India’s Premier Anime Collectibles & Rare Figures Destination",
-      description: JSON.stringify({
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            content: [
-              {
-                type: "text",
-                text: "Discover rare anime figures, exclusive live auctions, and pre-orders from verified collectors across India. Scale figures, Nendoroids, Gunpla, Pok\u00e9mon TCG, cosplay, and more.",
-              },
-            ],
-          },
-        ],
-      }),
+      h1: "India's #1 Collectibles Marketplace",
+      subtitle: "Buy, Sell & Auction with Verified Sellers",
+      description:
+        "Discover Pokémon TCG cards, Hot Wheels diecast, Beyblade X tops, anime figures, and Gunpla kits from verified sellers across India. Secure payments, escrow protection, authentic products.",
       showCTA: true,
-      ctaText: "Explore Collectibles",
+      ctaText: "Start Shopping",
       ctaLink: "/products",
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(10),
   },
 
-  // ============================================
-  // 2. TRUST INDICATORS
-  // ============================================
+  // ── 2. carousel ──────────────────────────────────────────────────────────
   {
-    id: "section-trust-indicators-1707300000002",
-    type: "trust-indicators",
+    id: "section-hero-carousel",
+    type: "carousel",
     order: 2,
     enabled: true,
+    config: { title: "Hero Carousel", stats: [] } as unknown as SectionConfig,
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(5),
+  },
+
+  // ── 3. stats ─────────────────────────────────────────────────────────────
+  {
+    id: "section-platform-stats",
+    type: "stats",
+    order: 3,
+    enabled: true,
     config: {
-      title: "Why Collectors Trust LetItRip",
+      title: "LetiTrip by the Numbers",
+      stats: [
+        { key: "products", label: "Listings", value: "5,000+" },
+        { key: "sellers", label: "Verified Sellers", value: "200+" },
+        { key: "buyers", label: "Happy Buyers", value: "12,000+" },
+        { key: "rating", label: "Platform Rating", value: "4.8★" },
+      ],
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(15),
+  },
+
+  // ── 4. trust-indicators ──────────────────────────────────────────────────
+  {
+    id: "section-trust-indicators",
+    type: "trust-indicators",
+    order: 4,
+    enabled: true,
+    config: {
+      title: "Why Collectors Trust LetiTrip",
       indicators: [
         {
-          id: "trust_001",
-          icon: "🚚",
-          title: "Free Shipping",
-          description: "On all orders above ₹999",
-        },
-        {
-          id: "trust_002",
-          icon: "🔒",
-          title: "Secure Payments",
-          description: "100% safe & encrypted",
-        },
-        {
-          id: "trust_003",
-          icon: "✅",
+          id: "trust-verified",
+          icon: "shield-check",
           title: "Verified Sellers",
-          description: "Only authenticated collectibles",
+          description: "Every seller is manually verified. Listings reviewed for authenticity before going live.",
         },
         {
-          id: "trust_004",
-          icon: "🏆",
-          title: "Live Auctions",
-          description: "Bid on rare & exclusive figures",
+          id: "trust-escrow",
+          icon: "lock",
+          title: "Escrow Payment",
+          description: "Payment held in escrow and released only after you confirm delivery.",
+        },
+        {
+          id: "trust-returns",
+          icon: "arrow-path",
+          title: "Easy Returns",
+          description: "Seller return policies cover all product types. Platform mediates disputes.",
+        },
+        {
+          id: "trust-authentic",
+          icon: "badge-check",
+          title: "Authenticity Guarantee",
+          description: "Counterfeit items: full refund + seller suspension. Zero tolerance policy.",
         },
       ],
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(12),
   },
 
-  // ============================================
-  // 3. FEATURED CATEGORIES
-  // ============================================
+  // ── 5. categories ────────────────────────────────────────────────────────
   {
-    id: "section-categories-1707300000003",
+    id: "section-collectibles-categories",
     type: "categories",
-    order: 3,
+    order: 5,
     enabled: true,
     config: {
       title: "Shop by Category",
       maxCategories: 4,
-      autoScroll: false,
-      scrollInterval: 3000,
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 4. FEATURED PRODUCTS
-  // ============================================
-  {
-    id: "section-products-1707300000004",
-    type: "products",
-    order: 4,
-    enabled: true,
-    config: {
-      title: "Featured Collectibles",
-      subtitle: "Handpicked rare figures & anime merch",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: false,
-      scrollInterval: 5000,
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 5. NEW ARRIVALS PRODUCTS
-  // ============================================
-  {
-    id: "section-products-1707300000005",
-    type: "products",
-    order: 5,
-    enabled: true,
-    config: {
-      title: "New Arrivals",
-      subtitle: "Fresh drops — figures, Nendoroids & pre-orders just listed",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
       autoScroll: true,
       scrollInterval: 4000,
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(8),
   },
 
-  // ============================================
-  // 6. PRE-ORDERS
-  // ============================================
+  // ── 6. brands ────────────────────────────────────────────────────────────
   {
-    id: "section-pre-orders-1707300000006",
-    type: "pre-orders",
+    id: "section-top-brands",
+    type: "brands",
     order: 6,
     enabled: true,
     config: {
-      title: "Pre-Order Now",
-      subtitle: "Reserve upcoming anime figures & collector editions before they sell out",
-      maxItems: 18,
+      title: "Top Collectibles Brands",
+      subtitle: "Authentic products from the world's leading collectibles manufacturers",
+      maxBrands: 13,
+      autoScroll: true,
+      scrollInterval: 3000,
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(6),
+  },
+
+  // ── 7. products — featured ───────────────────────────────────────────────
+  {
+    id: "section-featured-products",
+    type: "products",
+    order: 7,
+    enabled: true,
+    config: {
+      title: "Featured Collectibles",
+      subtitle: "Hand-picked by our team — fresh stock, verified authentic",
+      maxProducts: 18,
       rows: 2,
       itemsPerRow: 3,
       mobileItemsPerRow: 1,
       autoScroll: false,
-      scrollInterval: 5000,
+      scrollInterval: 0,
     },
-    createdAt: daysAgo(180),
-    updatedAt: daysAgo(7),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(4),
   },
 
-  // ============================================
-  // 7. LIVE AUCTIONS
-  // ============================================
+  // ── 8. auctions ──────────────────────────────────────────────────────────
   {
-    id: "section-auctions-1707300000007",
+    id: "section-live-auctions",
     type: "auctions",
-    order: 7,
+    order: 8,
     enabled: true,
     config: {
       title: "Live Auctions",
-      subtitle:
-        "Bid on rare 1/7 scale figures, signed art, PSA graded cards & more",
+      subtitle: "Bid on rare collectibles — auctions ending soon",
       maxAuctions: 18,
       rows: 2,
       itemsPerRow: 3,
       mobileItemsPerRow: 1,
       autoScroll: false,
-      scrollInterval: 5000,
+      scrollInterval: 0,
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(3),
   },
 
-  // ============================================
-  // 8. PROMOTIONAL BANNER
-  // ============================================
+  // ── 9. pre-orders ────────────────────────────────────────────────────────
   {
-    id: "section-banner-1707300000008",
-    type: "banner",
-    order: 8,
-    enabled: true,
-    config: {
-      height: "md",
-      gradient: "linear-gradient(135deg, #3570fc 0%, #65c408 100%)",
-      content: {
-        title: "AniCon 2026 Coupon Drop 🎉",
-        subtitle: "Extra 15% Off All Anime Orders",
-        description: "Use code ANIMECON15 at checkout — valid Mar 1–15",
-      },
-      buttons: [
-        {
-          text: "Shop Now",
-          link: "/products",
-          variant: "primary",
-        },
-      ],
-      clickable: true,
-      clickLink: "/deals",
-    },
-    createdAt: daysAgo(37),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 9. FEATURES SECTION
-  // ============================================
-  {
-    id: "section-features-1707300000009",
-    type: "features",
+    id: "section-pre-orders",
+    type: "pre-orders",
     order: 9,
     enabled: true,
     config: {
-      title: "Platform Features",
-      features: ["feature_001", "feature_002", "feature_003", "feature_004"],
+      title: "Reserve Before It Ships",
+      subtitle: "Secure upcoming Pokémon, Bandai, and Hot Wheels releases with a deposit",
+      maxItems: 18,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 0,
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(3),
   },
 
-  // ============================================
-  // 10. CUSTOMER REVIEWS
-  // ============================================
+  // ── 10. banner — Beyblade X promo ────────────────────────────────────────
   {
-    id: "section-reviews-1707300000010",
-    type: "reviews",
+    id: "section-beyblade-x-banner",
+    type: "banner",
     order: 10,
     enabled: true,
     config: {
-      title: "What Our Customers Say",
+      height: "md",
+      backgroundImage:
+        "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1920&h=400&fit=crop",
+      content: {
+        title: "Beyblade X is Here",
+        subtitle: "Official Takara Tomy Import — BX-01, BX-05, BX-10 and more",
+        description: "India's best selection of Beyblade X tops, launchers, and XStadiums.",
+      },
+      buttons: [
+        { text: "Shop Beyblade X", link: "/categories/category-beyblade-tops", variant: "primary" },
+        { text: "Beginner's Guide", link: "/blog/blog-beyblade-x-beginners-guide-2026", variant: "outline" },
+      ],
+      clickable: false,
+    },
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(3),
+  },
+
+  // ── 11. features ─────────────────────────────────────────────────────────
+  {
+    id: "section-platform-features",
+    type: "features",
+    order: 11,
+    enabled: true,
+    config: {
+      title: "Everything a Collector Needs",
+      features: [
+        "Verified authentic listings — every item reviewed before going live",
+        "Escrow payment protection — money held until you confirm delivery",
+        "Graded slab support — PSA, BGS, CGC with certificate verification",
+        "Live auctions with auto-extend — no last-second sniping",
+        "Pre-orders with deposit — secure releases with 20-30% down",
+        "Make-an-offer on any listing — negotiate your price",
+        "5-star store review system on every seller",
+        "Fast India-wide delivery — 3–7 business days standard",
+      ],
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(20),
+  },
+
+  // ── 12. reviews ──────────────────────────────────────────────────────────
+  {
+    id: "section-collector-reviews",
+    type: "reviews",
+    order: 12,
+    enabled: true,
+    config: {
+      title: "What Collectors Are Saying",
       maxReviews: 18,
       itemsPerView: 3,
       mobileItemsPerView: 1,
       autoScroll: true,
-      scrollInterval: 6000,
+      scrollInterval: 5000,
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(7),
   },
 
-  // ============================================
-  // 11. WHATSAPP COMMUNITY
-  // ============================================
+  // ── 13. stores ───────────────────────────────────────────────────────────
   {
-    id: "section-whatsapp-community-1707300000011",
-    type: "whatsapp-community",
-    order: 11,
-    enabled: true,
-    config: {
-      title: "Join Our Community",
-      description:
-        "Get early auction alerts, exclusive otaku deals, and connect with collectors across India",
-      groupLink: "https://chat.whatsapp.com/example",
-      memberCount: 5000,
-      benefits: [
-        "Exclusive discounts",
-        "Early sale access",
-        "Product tips",
-        "Direct support",
-      ],
-      buttonText: "Join WhatsApp Community",
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 12. FAQ SECTION
-  // ============================================
-  {
-    id: "section-faq-1707300000012",
-    type: "faq",
-    order: 12,
-    enabled: true,
-    config: {
-      title: "Frequently Asked Questions",
-      subtitle: "Find answers to common questions",
-      showOnHomepage: true,
-      displayCount: 6,
-      expandedByDefault: false,
-      linkToFullPage: true,
-      categories: ["general", "shipping", "returns", "payment"],
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 13. BLOG ARTICLES
-  // ============================================
-  {
-    id: "section-blog-articles-1707300000013",
-    type: "blog-articles",
+    id: "section-featured-stores",
+    type: "stores",
     order: 13,
     enabled: true,
     config: {
-      title: "From Our Blog",
-      subtitle:
-        "Figure reviews, auction guides, and collector community stories",
+      title: "Top Collectibles Stores",
+      subtitle: "Browse our verified seller stores — Pokémon, Hot Wheels, Beyblade X, and more",
+      maxStores: 5,
+      autoScroll: false,
+      scrollInterval: 0,
+    },
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(5),
+  },
+
+  // ── 14. events ───────────────────────────────────────────────────────────
+  {
+    id: "section-upcoming-events",
+    type: "events",
+    order: 14,
+    enabled: true,
+    config: {
+      title: "Tournaments & Community Events",
+      subtitle: "Sales, polls, and collector meetups — stay in the loop",
+      maxEvents: 6,
+      autoScroll: false,
+      scrollInterval: 0,
+    },
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(4),
+  },
+
+  // ── 15. blog-articles ────────────────────────────────────────────────────
+  {
+    id: "section-collector-blog",
+    type: "blog-articles",
+    order: 15,
+    enabled: true,
+    config: {
+      title: "Collector's Corner",
       maxArticles: 4,
       showReadTime: true,
       showAuthor: true,
       showThumbnails: true,
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(26),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(6),
   },
 
-  // ============================================
-  // 14. NEWSLETTER SIGNUP
-  // ============================================
+  // ── 16. whatsapp-community ───────────────────────────────────────────────
   {
-    id: "section-newsletter-1707300000014",
-    type: "newsletter",
-    order: 14,
-    enabled: true,
-    config: {
-      title: "Stay Updated",
-      description:
-        "Subscribe for pre-order alerts, auction announcements, and otaku discounts",
-      placeholder: "Enter your email",
-      buttonText: "Subscribe",
-      privacyText: "We respect your privacy",
-      privacyLink: "/privacy-policy",
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 15. FEATURED STORES
-  // ============================================
-  {
-    id: "section-stores-1707300000015",
-    type: "stores",
-    order: 15,
-    enabled: true,
-    config: {
-      title: "Featured Stores",
-      subtitle:
-        "Shop from verified anime figure importers and collectible stores",
-      maxStores: 12,
-      autoScroll: true,
-      scrollInterval: 4500,
-    },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
-  },
-
-  // ============================================
-  // 16. UPCOMING EVENTS
-  // ============================================
-  {
-    id: "section-events-1707300000016",
-    type: "events",
+    id: "section-whatsapp-community",
+    type: "whatsapp-community",
     order: 16,
     enabled: true,
     config: {
-      title: "Upcoming Events",
-      subtitle:
-        "Anime sales, AniCon drops, and collector auctions — coming up soon",
-      maxEvents: 12,
-      autoScroll: true,
-      scrollInterval: 5000,
+      title: "Join the LetiTrip Collectors Community",
+      description:
+        "Connect with 4,000+ Indian collectors on WhatsApp. Share pulls, get authentication help, trade advice, and be first to know about new drops.",
+      groupLink: "https://chat.whatsapp.com/letitrip-collectors",
+      memberCount: 4200,
+      benefits: [
+        "First look at rare listings before they go live",
+        "Authentication help from experienced collectors",
+        "Live auction alerts for Charizard, Redlines & signed tops",
+        "Free giveaways and community events",
+      ],
+      buttonText: "Join WhatsApp Community",
+      testimonial:
+        '"The LetiTrip WhatsApp group helped me authenticate a PSA slab within 10 minutes." — Rahul S., Bengaluru',
     },
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(30),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(8),
   },
 
-  // ============================================
-  // 17. BRANDS
-  // ============================================
+  // ── 17. faq ──────────────────────────────────────────────────────────────
   {
-    id: "section-brands-1707300000017",
-    type: "brands",
+    id: "section-homepage-faq",
+    type: "faq",
     order: 17,
     enabled: true,
     config: {
-      title: "Shop by Brand",
-      subtitle: "Explore collectibles from Takara Tomy, Bandai, Good Smile Company, and more",
-      maxBrands: 12,
-      autoScroll: true,
-      scrollInterval: 4000,
+      title: "Frequently Asked Questions",
+      subtitle: "Quick answers about buying, selling, and collecting on LetiTrip",
+      showOnHomepage: true,
+      displayCount: 5,
+      expandedByDefault: false,
+      linkToFullPage: true,
+      categories: ["general", "payment", "shipping"],
     },
     createdAt: daysAgo(90),
-    updatedAt: daysAgo(1),
+    updatedAt: daysAgo(10),
   },
 
-  // ============================================
-  // 18. HOT WHEELS — Franchise Products Section
-  // ============================================
+  // ── 18. newsletter ───────────────────────────────────────────────────────
   {
-    id: "section-products-hw-1746400000018",
-    type: "products",
+    id: "section-newsletter",
+    type: "newsletter",
     order: 18,
     enabled: true,
     config: {
-      title: "Hot Wheels Diecast",
-      subtitle: "Treasure Hunts, Car Culture, and mainline cars — all scales",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 4500,
-      filterByBrand: "Hot Wheels",
+      title: "Get New Drop Alerts",
+      description:
+        "Be first to know about rare Pokémon listings, Hot Wheels STH drops, Beyblade X imports, and LetiTrip-exclusive auction events.",
+      placeholder: "Enter your email address",
+      buttonText: "Subscribe",
+      privacyText: "We respect your privacy. Unsubscribe anytime.",
+      privacyLink: "/privacy",
     },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(12),
   },
 
-  // ============================================
-  // 19. BEYBLADE BURST — Franchise Products Section
-  // ============================================
+  // ── 19. social-feed (disabled — credentials not yet configured) ───────────
   {
-    id: "section-products-bb-1746400000019",
-    type: "products",
+    id: "section-social-feed-instagram",
+    type: "social-feed",
     order: 19,
-    enabled: true,
+    enabled: false,
     config: {
-      title: "Beyblade Burst",
-      subtitle: "Attack, Defense, Stamina & Balance — QuadDrive, GT and beyond",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 4500,
-      filterByBrand: "Beyblade Burst",
+      title: "LetiTrip on Instagram",
+      subtitle: "Follow @letitrip for daily collection showcases and new drop alerts",
+      platform: "instagram",
+      handle: "letitrip",
+      postType: "all",
+      count: 9,
+      layout: "grid",
+      showCaption: true,
+      showStats: false,
     },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 20. TRANSFORMERS — Franchise Products Section
-  // ============================================
-  {
-    id: "section-products-tf-1746400000020",
-    type: "products",
-    order: 20,
-    enabled: true,
-    config: {
-      title: "Transformers",
-      subtitle: "Studio Series, Masterpiece, Legacy — Autobots & Decepticons",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 4500,
-      filterByBrand: "Transformers",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 21. ANIME FIGURES — Franchise Products Section
-  // ============================================
-  {
-    id: "section-products-af-1746400000021",
-    type: "products",
-    order: 21,
-    enabled: true,
-    config: {
-      title: "Anime Figures",
-      subtitle: "Dragon Ball Z, Naruto, One Piece & My Hero Academia — scale figures and Nendoroids",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 4500,
-      filterByBrand: "Dragon Ball Z",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 22. POKEMON TCG — Franchise Products Section
-  // ============================================
-  {
-    id: "section-products-pk-1746400000022",
-    type: "products",
-    order: 22,
-    enabled: true,
-    config: {
-      title: "Pokémon TCG",
-      subtitle: "Base Set, Fossil, Jungle — singles, sealed packs, and graded slabs",
-      maxProducts: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 4500,
-      filterByBrand: "The Pokémon Company",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 23. HOT WHEELS — Auctions Section
-  // ============================================
-  {
-    id: "section-auctions-hw-1746400000023",
-    type: "auctions",
-    order: 23,
-    enabled: true,
-    config: {
-      title: "Hot Wheels Live Auctions",
-      subtitle: "Bid on Super Treasure Hunts, vintage redlines, and rare finds",
-      maxAuctions: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: false,
-      scrollInterval: 5000,
-      filterByBrand: "Hot Wheels",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 24. ANIME — Auctions Section
-  // ============================================
-  {
-    id: "section-auctions-af-1746400000024",
-    type: "auctions",
-    order: 24,
-    enabled: true,
-    config: {
-      title: "Anime Figure Auctions",
-      subtitle: "Rare scale figures, signed art, and limited editions up for bid",
-      maxAuctions: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: false,
-      scrollInterval: 5000,
-      filterByBrand: "Dragon Ball Z",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 25. TRANSFORMERS — Pre-Orders Section
-  // ============================================
-  {
-    id: "section-pre-orders-tf-1746400000025",
-    type: "pre-orders",
-    order: 25,
-    enabled: true,
-    config: {
-      title: "Transformers Pre-Orders",
-      subtitle: "Reserve upcoming Studio Series and Masterpiece figures before release",
-      maxItems: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 5000,
-      filterByBrand: "Transformers",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
-  },
-
-  // ============================================
-  // 26. BEYBLADE — Pre-Orders Section
-  // ============================================
-  {
-    id: "section-pre-orders-bb-1746400000026",
-    type: "pre-orders",
-    order: 26,
-    enabled: true,
-    config: {
-      title: "Beyblade Burst Pre-Orders",
-      subtitle: "Secure upcoming QuadDrive and MCC sets before they sell out",
-      maxItems: 18,
-      rows: 2,
-      itemsPerRow: 3,
-      mobileItemsPerRow: 1,
-      autoScroll: true,
-      scrollInterval: 5000,
-      filterByBrand: "Beyblade Burst",
-    },
-    createdAt: daysAgo(7),
-    updatedAt: daysAgo(1),
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(30),
   },
 ];
