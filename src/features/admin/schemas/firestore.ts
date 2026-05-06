@@ -277,6 +277,9 @@ export interface SiteSettingsCredentials {
   /** DeviantArt OAuth2 client credentials */
   deviantartClientId?: string;
   deviantartClientSecret?: string;
+  /** Google Places API for Google Business Reviews (HS4) */
+  googleMapsApiKey?: string;
+  googlePlaceId?: string;
 }
 
 export interface SiteSettingsCredentialsMasked {
@@ -296,6 +299,8 @@ export interface SiteSettingsCredentialsMasked {
   tiktokAccessToken?: string;
   deviantartClientId?: string;
   deviantartClientSecret?: string;
+  googleMapsApiKey?: string;
+  googlePlaceId?: string;
 }
 
 export interface SiteSettingsDocument {

@@ -254,6 +254,10 @@ export interface ProductsSectionConfig {
   autoScroll: boolean;
   scrollInterval: number;
   filterByBrand?: string;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+  filterByCategory?: string;
+  maxCount?: 5 | 10 | 20;
+  loop?: boolean;
 }
 
 export interface StatsSectionConfig {
@@ -275,6 +279,10 @@ export interface AuctionsSectionConfig {
   autoScroll: boolean;
   scrollInterval: number;
   filterByBrand?: string;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+  filterByCategory?: string;
+  maxCount?: 5 | 10 | 20;
+  loop?: boolean;
 }
 
 export interface ReviewsSectionConfig {
@@ -342,6 +350,10 @@ export interface StoresSectionConfig {
   maxStores: number;
   autoScroll: boolean;
   scrollInterval: number;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+  filterByCategory?: string;
+  maxCount?: 5 | 10 | 20;
+  loop?: boolean;
 }
 
 export interface EventsSectionConfig {
@@ -350,6 +362,10 @@ export interface EventsSectionConfig {
   maxEvents: number;
   autoScroll: boolean;
   scrollInterval: number;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+  filterByCategory?: string;
+  maxCount?: 5 | 10 | 20;
+  loop?: boolean;
 }
 
 export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart";
@@ -397,6 +413,10 @@ export interface PreOrdersSectionConfig {
   autoScroll: boolean;
   scrollInterval: number;
   filterByBrand?: string;
+  sortBy?: "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
+  filterByCategory?: string;
+  maxCount?: 5 | 10 | 20;
+  loop?: boolean;
 }
 
 export interface BannerSectionConfig {
@@ -412,6 +432,46 @@ export interface BannerSectionConfig {
   }>;
   clickable: boolean;
   clickLink?: string;
+}
+
+export interface CustomCardsCard {
+  id: string;
+  image?: string;
+  imageAlt?: string;
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  buttons?: Array<{
+    label: string;
+    href: string;
+    variant: "primary" | "secondary" | "outline" | "ghost";
+    target?: "_blank" | "_self";
+  }>;
+  formEmbed?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  borderRadius?: "none" | "sm" | "md" | "lg" | "xl" | "full";
+  shadowLevel?: "none" | "sm" | "md" | "lg";
+}
+
+export interface CustomCardsSectionConfig {
+  title?: string;
+  layout: "grid" | "row" | "masonry";
+  columns?: 1 | 2 | 3 | 4;
+  cards: CustomCardsCard[];
+  autoScroll?: boolean;
+  scrollIntervalMs?: number;
+}
+
+export interface GoogleReviewsSectionConfig {
+  placeId: string;
+  maxReviews?: number;
+  minRating?: number;
+  layout?: "grid" | "carousel";
+  showRating?: boolean;
+  showDate?: boolean;
+  linkToGoogleMaps?: boolean;
+  googleMapsUrl?: string;
 }
 
 export type SectionType =
@@ -433,7 +493,9 @@ export type SectionType =
   | "newsletter"
   | "stores"
   | "events"
-  | "social-feed";
+  | "social-feed"
+  | "custom-cards"
+  | "google-reviews";
 
 export type SectionConfig =
   | CarouselSectionConfig
@@ -454,7 +516,9 @@ export type SectionConfig =
   | NewsletterSectionConfig
   | StoresSectionConfig
   | EventsSectionConfig
-  | SocialFeedSectionConfig;
+  | SocialFeedSectionConfig
+  | CustomCardsSectionConfig
+  | GoogleReviewsSectionConfig;
 
 export interface HomepageSectionDocument {
   id: string;
@@ -493,6 +557,8 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   stores: 10,
   events: 11,
   "social-feed": 12,
+  "custom-cards": 13,
+  "google-reviews": 14,
 };
 
 export const BANNER_HEIGHTS: Record<BannerSectionConfig["height"], string> = {
