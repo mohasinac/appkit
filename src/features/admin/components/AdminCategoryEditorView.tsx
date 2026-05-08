@@ -3,12 +3,12 @@
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Alert,
   Button,
   Form,
   Input,
   StackedViewShell,
   Toggle,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -62,8 +62,7 @@ export function AdminCategoryEditorView({
   const [order, setOrder] = React.useState<string>("");
   const [isActive, setIsActive] = React.useState(true);
   const [showInMenu, setShowInMenu] = React.useState(true);
-  const [errorMsg, setErrorMsg] = React.useState("");
-  const [successMsg, setSuccessMsg] = React.useState("");
+  const { showToast } = useToast();
 
   const categoryQuery = useQuery({
     queryKey: ["admin", "category", categoryId],
@@ -119,24 +118,22 @@ export function AdminCategoryEditorView({
     },
     onSuccess: (res: unknown) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? categoryId;
-      setSuccessMsg(isEdit ? "Category updated." : "Category created.");
-      setErrorMsg("");
+      showToast(isEdit ? "Category updated." : "Category created.", "success");
       if (onSaved && id) onSaved(id);
     },
     onError: (err: unknown) => {
-      setErrorMsg((err as Error)?.message ?? "Failed to save category.");
-      setSuccessMsg("");
+      showToast((err as Error)?.message ?? "Failed to save category.", "error");
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.CATEGORY_BY_ID(categoryId!)),
     onSuccess: () => {
-      setSuccessMsg("Category deleted.");
+      showToast("Category deleted.", "success");
       if (onDeleted) onDeleted();
     },
     onError: (err: unknown) =>
-      setErrorMsg((err as Error)?.message ?? "Failed to delete category."),
+      showToast((err as Error)?.message ?? "Failed to delete category.", "error"),
   });
 
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
@@ -148,8 +145,6 @@ export function AdminCategoryEditorView({
       {...rest}
       title={isEdit ? "Edit Category" : "Create Category"}
       sections={[
-        errorMsg ? <Alert key="err" variant="error">{errorMsg}</Alert> : null,
-        successMsg ? <Alert key="ok" variant="success">{successMsg}</Alert> : null,
         <Form
           key="cat-form"
           onSubmit={(e) => {

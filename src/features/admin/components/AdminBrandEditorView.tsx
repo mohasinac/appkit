@@ -3,12 +3,12 @@
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  Alert,
   Button,
   Form,
   Input,
   StackedViewShell,
   Toggle,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
@@ -57,8 +57,7 @@ export function AdminBrandEditorView({
   const [website, setWebsite] = React.useState("");
   const [isActive, setIsActive] = React.useState(true);
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
-  const [errorMsg, setErrorMsg] = React.useState("");
-  const [successMsg, setSuccessMsg] = React.useState("");
+  const { showToast } = useToast();
 
   const brandQuery = useQuery({
     queryKey: ["admin", "brand", brandId],
@@ -107,23 +106,21 @@ export function AdminBrandEditorView({
     },
     onSuccess: (res: unknown) => {
       const id = (res as any)?.data?.id ?? (res as any)?.id ?? brandId;
-      setSuccessMsg(isEdit ? "Brand updated." : "Brand created.");
-      setErrorMsg("");
+      showToast(isEdit ? "Brand updated." : "Brand created.", "success");
       if (onSaved && id) onSaved(id);
     },
     onError: (err: unknown) => {
-      setErrorMsg((err as Error)?.message ?? "Failed to save brand.");
-      setSuccessMsg("");
+      showToast((err as Error)?.message ?? "Failed to save brand.", "error");
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: () => apiClient.delete(ADMIN_ENDPOINTS.BRAND_BY_ID(brandId!)),
     onSuccess: () => {
-      setSuccessMsg("Brand deleted.");
+      showToast("Brand deleted.", "success");
       if (onDeleted) onDeleted();
     },
-    onError: (err: unknown) => setErrorMsg((err as Error)?.message ?? "Failed to delete brand."),
+    onError: (err: unknown) => showToast((err as Error)?.message ?? "Failed to delete brand.", "error"),
   });
 
   const { upload } = useMediaUpload();
@@ -136,8 +133,6 @@ export function AdminBrandEditorView({
       {...rest}
       title={isEdit ? "Edit Brand" : "Create Brand"}
       sections={[
-        errorMsg ? <Alert variant="error">{errorMsg}</Alert> : null,
-        successMsg ? <Alert variant="success">{successMsg}</Alert> : null,
         <Form
           key="brand-form"
           onSubmit={(e) => {

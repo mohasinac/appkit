@@ -12,6 +12,7 @@ import {
   StackedViewShell,
   Text,
   Toggle,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -90,7 +91,7 @@ export function AdminAdEditorView({
   const [ctaHref, setCtaHref] = React.useState("");
   const [adsenseSlot, setAdsenseSlot] = React.useState("");
   const [thirdPartyUrl, setThirdPartyUrl] = React.useState("");
-  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const { showToast } = useToast();
 
   const metaQuery = useQuery<AdsListResponse>({
     queryKey: ["admin-ads-editor-meta", endpointBase],
@@ -155,13 +156,13 @@ export function AdminAdEditorView({
       return created.id;
     },
     onSuccess: (savedId) => {
-      setSaveMessage("Saved successfully.");
+      showToast("Saved successfully.", "success");
       if (savedId) {
         onSaved?.(savedId);
       }
     },
     onError: (error) => {
-      setSaveMessage(error instanceof Error ? error.message : "Save failed");
+      showToast(error instanceof Error ? error.message : "Save failed", "error");
     },
   });
 
@@ -292,7 +293,6 @@ export function AdminAdEditorView({
         ? prev.filter((id) => id !== placementId)
         : [...prev, placementId],
     );
-    setSaveMessage(null);
   };
 
   return (
@@ -315,7 +315,7 @@ export function AdminAdEditorView({
           onSubmit={(event) => {
             event.preventDefault();
             if (blockedByPublishValidation) {
-              setSaveMessage("Cannot save in publish-ready status until validation issues are fixed.");
+              showToast("Cannot save in publish-ready status until validation issues are fixed.", "warning");
               return;
             }
             saveMutation.mutate();
@@ -467,11 +467,6 @@ export function AdminAdEditorView({
               {saveMutation.isPending ? "Saving..." : status === "active" ? "Publish ad" : adId ? "Save changes" : "Create ad"}
             </Button>
           </FormActions>
-          {saveMessage ? (
-            <Alert variant={saveMessage.includes("failed") || saveMessage.includes("Failed") ? "error" : "success"} title="Save status">
-              {saveMessage}
-            </Alert>
-          ) : null}
         </Form>,
       ]}
     />

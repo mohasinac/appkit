@@ -9,6 +9,7 @@ import {
   FormActions,
   StackedViewShell,
   Toggle,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
@@ -67,7 +68,7 @@ export function AdminNavigationView({
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useSiteSettings<AdminNavigationSettings>();
   const [hiddenNavItems, setHiddenNavItems] = React.useState<string[]>([]);
-  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const { showToast } = useToast();
 
   React.useEffect(() => {
     if (!data) return;
@@ -84,10 +85,10 @@ export function AdminNavigationView({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["site-settings"] });
-      setSaveMessage("Navigation settings saved.");
+      showToast("Navigation settings saved.", "success");
     },
     onError: () => {
-      setSaveMessage("Failed to save navigation settings.");
+      showToast("Failed to save navigation settings.", "error");
     },
   });
 
@@ -101,7 +102,6 @@ export function AdminNavigationView({
       }
       return [...prev, key];
     });
-    setSaveMessage(null);
   };
 
   const defaultForm = () => (
@@ -129,7 +129,6 @@ export function AdminNavigationView({
           variant="secondary"
           onClick={() => {
             setHiddenNavItems(data?.navbarConfig?.hiddenNavItems ?? []);
-            setSaveMessage(null);
           }}
           disabled={saveNavigation.isPending}
         >
@@ -139,14 +138,6 @@ export function AdminNavigationView({
           {saveNavigation.isPending ? "Saving..." : "Save navigation"}
         </Button>
       </FormActions>
-      {saveMessage ? (
-        <Alert
-          variant={saveMessage.startsWith("Failed") ? "error" : "success"}
-          title={saveMessage.startsWith("Failed") ? "Save failed" : "Saved"}
-        >
-          {saveMessage}
-        </Alert>
-      ) : null}
     </Form>
   );
 

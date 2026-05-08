@@ -9,6 +9,7 @@ import {
   FormActions,
   StackedViewShell,
   Toggle,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
@@ -35,7 +36,7 @@ export function AdminFeatureFlagsView({
   const queryClient = useQueryClient();
   const { data, isLoading, error } = useSiteSettings<AdminFeatureFlagsSettings>();
   const [flags, setFlags] = React.useState<Record<string, boolean>>({});
-  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const { showToast } = useToast();
 
   React.useEffect(() => {
     if (!data?.featureFlags) return;
@@ -50,10 +51,10 @@ export function AdminFeatureFlagsView({
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["site-settings"] });
-      setSaveMessage("Feature flags saved.");
+      showToast("Feature flags saved.", "success");
     },
     onError: () => {
-      setSaveMessage("Failed to save feature flags.");
+      showToast("Failed to save feature flags.", "error");
     },
   });
 
@@ -78,7 +79,6 @@ export function AdminFeatureFlagsView({
           checked={Boolean(flags[key])}
           onChange={(value) => {
             setFlags((prev) => ({ ...prev, [key]: value }));
-            setSaveMessage(null);
           }}
           label={formatLabel(key)}
         />
@@ -89,7 +89,6 @@ export function AdminFeatureFlagsView({
           variant="secondary"
           onClick={() => {
             setFlags(data?.featureFlags ?? {});
-            setSaveMessage(null);
           }}
           disabled={saveFlags.isPending}
         >
@@ -102,14 +101,6 @@ export function AdminFeatureFlagsView({
           {saveFlags.isPending ? "Saving..." : "Save feature flags"}
         </Button>
       </FormActions>
-      {saveMessage ? (
-        <Alert
-          variant={saveMessage.startsWith("Failed") ? "error" : "success"}
-          title={saveMessage.startsWith("Failed") ? "Save failed" : "Saved"}
-        >
-          {saveMessage}
-        </Alert>
-      ) : null}
     </Form>
   );
 
