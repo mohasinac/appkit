@@ -23,6 +23,8 @@ import { BlogArticlesSection } from "./BlogArticlesSection";
 import { WelcomeSection } from "./WelcomeSection";
 import { BrandsSection } from "./BrandsSection";
 import { SocialFeedSection } from "./SocialFeedSection";
+import { CustomCardsSection } from "./CustomCardsSection";
+import { GoogleReviewsSection } from "./GoogleReviewsSection";
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import type {
   HomepageSectionDocument,
@@ -44,6 +46,8 @@ import type {
   NewsletterSectionConfig,
   BrandsSectionConfig,
   SocialFeedSectionConfig,
+  CustomCardsSectionConfig,
+  GoogleReviewsSectionConfig,
 } from "../schemas";
 
 const DEFAULT_TRUST_FEATURES = [
@@ -408,6 +412,37 @@ function renderSection(
             layout={cfg.layout || "grid"}
             showCaption={cfg.showCaption ?? true}
             showStats={cfg.showStats ?? true}
+          />
+        );
+      }
+
+      case "custom-cards": {
+        const cfg = config as CustomCardsSectionConfig;
+        if (!cfg?.cards?.length) return null;
+        return (
+          <CustomCardsSection
+            title={cleanTitle(cfg.title)}
+            layout={cfg.layout ?? "grid"}
+            columns={cfg.columns ?? 3}
+            cards={cfg.cards}
+            autoScroll={cfg.autoScroll}
+            scrollIntervalMs={cfg.scrollIntervalMs}
+          />
+        );
+      }
+
+      case "google-reviews": {
+        const cfg = config as GoogleReviewsSectionConfig;
+        return (
+          <GoogleReviewsSection
+            placeId={cfg?.placeId ?? ""}
+            maxReviews={cfg?.maxReviews ?? 6}
+            minRating={cfg?.minRating ?? 0}
+            layout={cfg?.layout ?? "grid"}
+            showRating={cfg?.showRating ?? true}
+            showDate={cfg?.showDate ?? true}
+            linkToGoogleMaps={cfg?.linkToGoogleMaps ?? true}
+            googleMapsUrl={cfg?.googleMapsUrl}
           />
         );
       }
