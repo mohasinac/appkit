@@ -58,6 +58,8 @@ export interface ProductItem {
   listingType?: ListingType;
   isAuction?: boolean;
   isPreOrder?: boolean;
+  isOnSale?: boolean;
+  isSold?: boolean;
   inStock?: boolean;
   stockCount?: number;
   rating?: number;

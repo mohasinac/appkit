@@ -20,6 +20,10 @@ export interface AdminListingScaffoldRow {
   secondary: string;
   status: string;
   updatedAt: string;
+  featured?: boolean;
+  isPromoted?: boolean;
+  isOnSale?: boolean;
+  isSold?: boolean;
 }
 
 interface AdminListingScaffoldProps extends ListingViewShellProps {

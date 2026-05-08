@@ -82,6 +82,8 @@ export interface ProductDocument {
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   preOrderCancellable?: boolean;
   isPromoted?: boolean;
+  isOnSale?: boolean;
+  isSold?: boolean;
   promotionEndDate?: Date;
   pickupAddressId?: string;
   viewCount?: number;
@@ -116,6 +118,8 @@ export const PRODUCT_INDEXED_FIELDS = [
   "isAuction",
   "isPreOrder",
   "isPromoted",
+  "isOnSale",
+  "isSold",
   "createdAt",
 ] as const;
 
@@ -128,6 +132,8 @@ export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
   isAuction: false,
   isPreOrder: false,
   isPromoted: false,
+  isOnSale: false,
+  isSold: false,
   bidCount: 0,
   condition: "new",
   insurance: false,
@@ -181,6 +187,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "insuranceCost",
   "shippingPaidBy",
   "isPromoted",
+  "isOnSale",
+  "isSold",
   "slug",
   "seoTitle",
   "seoDescription",
@@ -221,6 +229,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "preOrderMaxQuantity",
   "preOrderProductionStatus",
   "preOrderCancellable",
+  "isOnSale",
+  "isSold",
   "seoTitle",
   "seoDescription",
   "seoKeywords",
