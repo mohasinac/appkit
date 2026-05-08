@@ -3192,6 +3192,9 @@ export { AdminDashboardView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminFaqsView - Component for admin faqs view.
 export { AdminFaqsView } from "./features/admin/index";
+// AdminFaqEditorView - Component for admin FAQ create/edit form.
+export { AdminFaqEditorView } from "./features/admin/index";
+export type { AdminFaqEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminFeatureFlagsView - Component for admin feature flags view.
 export { AdminFeatureFlagsView } from "./features/admin/index";

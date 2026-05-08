@@ -34,6 +34,8 @@ export { AdminBlogEditorView } from "./AdminBlogEditorView";
 export type { AdminBlogEditorViewProps } from "./AdminBlogEditorView";
 export { AdminFaqsView } from "./AdminFaqsView";
 export type { AdminFaqsViewProps } from "./AdminFaqsView";
+export { AdminFaqEditorView } from "./AdminFaqEditorView";
+export type { AdminFaqEditorViewProps } from "./AdminFaqEditorView";
 export { AdminMediaView } from "./AdminMediaView";
 export type { AdminMediaViewProps } from "./AdminMediaView";
 export { AdminStoresView } from "./AdminStoresView";

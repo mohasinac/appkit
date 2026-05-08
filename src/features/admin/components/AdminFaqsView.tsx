@@ -10,9 +10,12 @@ import {
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
-import { AdminListingScaffold } from "./AdminListingScaffold";
+import { AdminListingScaffold, type AdminListingScaffoldRow } from "./AdminListingScaffold";
 
-export interface AdminFaqsViewProps extends ListingViewShellProps {}
+export interface AdminFaqsViewProps extends ListingViewShellProps {
+  actionHref?: string;
+  getRowHref?: (row: AdminListingScaffoldRow) => string;
+}
 
 interface AdminFaqsResponse {
   items?: unknown[];
