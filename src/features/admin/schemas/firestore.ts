@@ -386,6 +386,7 @@ export interface SiteSettingsDocument {
     notifications: boolean;
     sellerRegistration: boolean;
     preOrders: boolean;
+    seedPanel: boolean;
   };
   legalPages: {
     termsOfService: string;
@@ -473,6 +474,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     notifications: true,
     sellerRegistration: true,
     preOrders: false,
+    seedPanel: false,
   },
   shipping: {
     estimatedDays: 5,

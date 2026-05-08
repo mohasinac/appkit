@@ -405,6 +405,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     notifications: true,
     sellerRegistration: true,
     preOrders: true,
+    seedPanel: true,
   },
   // VA8 ⑧ Integrations — placeholder credentials (replace with real values in Firestore/admin panel)
   credentials: {
