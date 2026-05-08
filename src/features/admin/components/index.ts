@@ -69,6 +69,8 @@ export type {
 } from "./QuickActionsPanel";
 export { AdminSiteView } from "./AdminSiteView";
 export type { AdminSiteViewProps } from "./AdminSiteView";
+export { AdminSiteSettingsView } from "./AdminSiteSettingsView";
+export type { AdminSiteSettingsViewProps } from "./AdminSiteSettingsView";
 export { AdminAnalyticsView } from "./AdminAnalyticsView";
 export type {
   AdminAnalyticsViewProps,

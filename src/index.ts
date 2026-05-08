@@ -3256,6 +3256,8 @@ export { AdminSidebar } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminSiteView - Component for admin site view.
 export { AdminSiteView } from "./features/admin/index";
+// AdminSiteSettingsView - 12-tab site settings form for admin (VA8).
+export { AdminSiteSettingsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminStatCard - Component for admin stat card.
 export { AdminStatCard } from "./features/admin/index";
@@ -3462,6 +3464,8 @@ export type { AdminSidebarProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminSiteViewProps - Type contract for admin site view props.
 export type { AdminSiteViewProps } from "./features/admin/index";
+// AdminSiteSettingsViewProps - Type contract for admin site settings view props.
+export type { AdminSiteSettingsViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminStatCardProps - Type contract for admin stat card props.
 export type { AdminStatCardProps } from "./features/admin/index";
