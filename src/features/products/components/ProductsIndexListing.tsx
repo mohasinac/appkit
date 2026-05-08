@@ -162,7 +162,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       price: product.price,
     });
     pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
-    router.push("/cart");
+    router.push(String(ROUTES.USER.CART));
   }, [localCart, router]);
 
   return (

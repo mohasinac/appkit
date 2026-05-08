@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
+import { ROUTES } from "../../../next";
 
 interface EventPollWidgetProps {
   eventId: string;
@@ -92,7 +93,7 @@ export function EventPollWidget({
         <p className="font-semibold text-zinc-900 dark:text-zinc-100">Login to vote</p>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">You need an account to participate in this poll.</p>
         <a
-          href="/login"
+          href={String(ROUTES.AUTH.LOGIN)}
           className="inline-block rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-white hover:bg-primary-600"
         >
           Log In
