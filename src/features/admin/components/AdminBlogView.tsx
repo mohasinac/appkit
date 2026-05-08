@@ -10,9 +10,12 @@ import {
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
-import { AdminListingScaffold } from "./AdminListingScaffold";
+import { AdminListingScaffold, type AdminListingScaffoldRow } from "./AdminListingScaffold";
 
-export interface AdminBlogViewProps extends ListingViewShellProps {}
+export interface AdminBlogViewProps extends ListingViewShellProps {
+  actionHref?: string;
+  getRowHref?: (row: AdminListingScaffoldRow) => string;
+}
 
 interface AdminBlogResponse {
   posts?: unknown[];

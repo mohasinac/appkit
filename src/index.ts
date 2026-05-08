@@ -3159,6 +3159,9 @@ export { AdminBidsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminBlogView - Component for admin blog view.
 export { AdminBlogView } from "./features/admin/index";
+// AdminBlogEditorView - Component for admin blog post create/edit form.
+export { AdminBlogEditorView } from "./features/admin/index";
+export type { AdminBlogEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCarouselView - Component for admin carousel view.
 export { AdminCarouselView } from "./features/admin/index";
@@ -3180,6 +3183,9 @@ export type { AdminCategoryEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCouponsView - Component for admin coupons view.
 export { AdminCouponsView } from "./features/admin/index";
+// AdminCouponEditorView - Component for admin coupon create/edit form.
+export { AdminCouponEditorView } from "./features/admin/index";
+export type { AdminCouponEditorViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminDashboardView - Component for admin dashboard view.
 export { AdminDashboardView } from "./features/admin/index";
