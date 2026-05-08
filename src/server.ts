@@ -1328,3 +1328,7 @@ export type {
   SocialFeedLayout,
   SocialFeedSectionConfig,
 } from "./features/homepage/schemas";
+
+// -- Google Reviews (server-only: calls Google Places API) --------------------
+export { fetchGoogleReviews } from "./features/homepage/lib/google-reviews-fetcher";
+export type { GoogleReview, GoogleReviewsResult } from "./features/homepage/lib/google-reviews-fetcher";
