@@ -6,6 +6,8 @@ export { AdminUsersView } from "./AdminUsersView";
 export type { AdminUsersViewProps } from "./AdminUsersView";
 export { AdminProductsView } from "./AdminProductsView";
 export type { AdminProductsViewProps } from "./AdminProductsView";
+export { AdminProductEditorView } from "./AdminProductEditorView";
+export type { AdminProductEditorViewProps } from "./AdminProductEditorView";
 export { AdminOrdersView } from "./AdminOrdersView";
 export type { AdminOrdersViewProps } from "./AdminOrdersView";
 export { AdminBidsView } from "./AdminBidsView";

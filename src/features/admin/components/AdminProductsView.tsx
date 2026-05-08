@@ -12,14 +12,17 @@ import {
 } from "../hooks/useAdminListingData";
 import { AdminListingScaffold } from "./AdminListingScaffold";
 
-export interface AdminProductsViewProps extends ListingViewShellProps {}
+export interface AdminProductsViewProps extends ListingViewShellProps {
+  actionHref?: string;
+  getRowHref?: (row: { id: string; primary: string; secondary: string; status: string; updatedAt: string }) => string;
+}
 
 interface AdminProductsResponse {
   items?: unknown[];
   total?: number;
 }
 
-export function AdminProductsView({ children, ...props }: AdminProductsViewProps) {
+export function AdminProductsView({ children, actionHref, getRowHref, ...props }: AdminProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [q, setQ] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("");
@@ -67,6 +70,8 @@ export function AdminProductsView({ children, ...props }: AdminProductsViewProps
       title="Product Management"
       subtitle="Review catalogue health, publishing state, and merchandising issues from one queue."
       actionLabel="New product"
+      actionHref={actionHref}
+      getRowHref={getRowHref}
       searchPlaceholder="Search products, SKUs, or seller names"
       onSearch={setQ}
       searchValue={q}
