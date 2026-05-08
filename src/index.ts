@@ -3220,6 +3220,12 @@ export { AdminProductsView } from "./features/admin/index";
 // AdminProductEditorView - Component for admin product create/edit form (3-mode: standard/auction/pre-order).
 export { AdminProductEditorView } from "./features/admin/index";
 export type { AdminProductEditorViewProps } from "./features/admin/index";
+// CategoryQuickCreateForm - Lightweight inline create form for categories used in InlineCreateSelect.
+export { CategoryQuickCreateForm } from "./features/admin/index";
+export type { CategoryQuickCreateFormProps } from "./features/admin/index";
+// BrandQuickCreateForm - Lightweight inline create form for brands used in InlineCreateSelect.
+export { BrandQuickCreateForm } from "./features/admin/index";
+export type { BrandQuickCreateFormProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminRevenueChart - Shared export for admin revenue chart.
 export { AdminRevenueChart } from "./features/admin/index";

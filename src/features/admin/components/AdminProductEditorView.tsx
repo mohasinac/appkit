@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
   DynamicSelect,
+  InlineCreateSelect,
   Form,
   Stack,
   StackedViewShell,
@@ -19,7 +20,9 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
-import type { ProductFormValue } from "../../products/components/ProductForm";
+import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
+import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
+import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
 
 export interface AdminProductEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -68,6 +71,28 @@ async function loadStoreOptions(query: string, page: number) {
   }));
   return {
     items,
+    hasMore: data.hasMore ?? false,
+  };
+}
+
+async function loadCategoryOptions(query: string, page: number) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+  if (query) params.set("q", query);
+  const res = await apiClient.get(`${ADMIN_ENDPOINTS.CATEGORIES}?${params.toString()}`);
+  const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
+  return {
+    items: (data.items ?? []).map((c) => ({ value: c.id, label: c.name })),
+    hasMore: data.hasMore ?? false,
+  };
+}
+
+async function loadBrandOptions(query: string, page: number) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+  if (query) params.set("q", query);
+  const res = await apiClient.get(`${ADMIN_ENDPOINTS.BRANDS}?${params.toString()}`);
+  const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
+  return {
+    items: (data.items ?? []).map((b) => ({ value: b.id, label: b.name })),
     hasMore: data.hasMore ?? false,
   };
 }
@@ -205,7 +230,58 @@ export function AdminProductEditorView({
           </Stack>
 
           {/* ── Shared product fields ── */}
-          <ProductForm product={product} onChange={setProduct} />
+          <ProductForm
+            product={product}
+            onChange={setProduct}
+            renderCategorySelector={({ label, value, onChange, disabled }) => (
+              <Stack gap="xs">
+                <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {label}
+                </Text>
+                <InlineCreateSelect
+                  value={value || null}
+                  onChange={(v) => onChange(v ?? "")}
+                  loadOptions={loadCategoryOptions}
+                  placeholder="Search categories…"
+                  searchPlaceholder="Type category name…"
+                  noResultsText="No categories found"
+                  ariaLabel={label}
+                  disabled={disabled}
+                  createLabel="Category"
+                  renderCreateForm={({ onCreated, onCancel }) => (
+                    <CategoryQuickCreateForm
+                      onSaved={(id, name) => onCreated({ value: id, label: name })}
+                      onCancel={onCancel}
+                    />
+                  )}
+                />
+              </Stack>
+            )}
+            renderBrandSelector={(args: BrandSelectorRenderArgs) => (
+              <Stack gap="xs">
+                <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {args.label}
+                </Text>
+                <InlineCreateSelect
+                  value={args.multi ? null : (args.value || null)}
+                  onChange={(v) => args.onValueChange(v ?? "")}
+                  loadOptions={loadBrandOptions}
+                  placeholder="Search brands…"
+                  searchPlaceholder="Type brand name…"
+                  noResultsText="No brands found"
+                  ariaLabel={args.label}
+                  disabled={args.disabled}
+                  createLabel="Brand"
+                  renderCreateForm={({ onCreated, onCancel }) => (
+                    <BrandQuickCreateForm
+                      onSaved={(id, name) => onCreated({ value: id, label: name })}
+                      onCancel={onCancel}
+                    />
+                  )}
+                />
+              </Stack>
+            )}
+          />
 
           <div className="flex gap-3 pt-2">
             <Button

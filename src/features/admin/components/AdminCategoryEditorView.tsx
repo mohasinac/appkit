@@ -6,13 +6,15 @@ import {
   Button,
   Form,
   Input,
+  InlineCreateSelect,
   StackedViewShell,
   Toggle,
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS, CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 
 export interface AdminCategoryEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -32,10 +34,15 @@ interface CategoryPayload {
   display?: { showInMenu: boolean };
 }
 
-interface RootCategory {
-  id: string;
-  name: string;
-  slug: string;
+async function loadCategoryOptions(query: string, page: number) {
+  const params = new URLSearchParams({ page: String(page), pageSize: "25" });
+  if (query) params.set("q", query);
+  const res = await apiClient.get(`${ADMIN_ENDPOINTS.CATEGORIES}?${params.toString()}`);
+  const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
+  return {
+    items: (data.items ?? []).map((c) => ({ value: c.id, label: c.name })),
+    hasMore: data.hasMore ?? false,
+  };
 }
 
 function toCategorySlug(str: string): string {
@@ -71,15 +78,6 @@ export function AdminCategoryEditorView({
       return (res as any)?.data ?? res;
     },
     enabled: isEdit,
-  });
-
-  const rootCategoriesQuery = useQuery({
-    queryKey: ["categories", "root"],
-    queryFn: async () => {
-      const res = await apiClient.get(CATEGORY_ENDPOINTS.ROOT(100));
-      const data = (res as any)?.data ?? res;
-      return (Array.isArray(data) ? data : data?.items ?? []) as RootCategory[];
-    },
   });
 
   React.useEffect(() => {
@@ -137,7 +135,6 @@ export function AdminCategoryEditorView({
   });
 
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
-  const rootCategories = rootCategoriesQuery.data ?? [];
 
   return (
     <StackedViewShell
@@ -181,18 +178,22 @@ export function AdminCategoryEditorView({
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Parent category</label>
-            <select
-              value={parentId}
-              onChange={(e) => setParentId(e.target.value)}
-              className="rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            >
-              <option value="">— Root (no parent) —</option>
-              {rootCategories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+            <InlineCreateSelect
+              value={parentId || null}
+              onChange={(v) => setParentId(v ?? "")}
+              loadOptions={loadCategoryOptions}
+              placeholder="Search categories… (leave empty for root)"
+              searchPlaceholder="Type category name…"
+              noResultsText="No categories found"
+              ariaLabel="Parent category"
+              createLabel="Category"
+              renderCreateForm={({ onCreated, onCancel }) => (
+                <CategoryQuickCreateForm
+                  onSaved={(id, name) => { setParentId(id); onCreated({ value: id, label: name }); }}
+                  onCancel={onCancel}
+                />
+              )}
+            />
             <p className="text-xs text-neutral-500">
               Leave empty to create a root category.
             </p>
