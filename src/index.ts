@@ -3195,6 +3195,9 @@ export { AdminFaqsView } from "./features/admin/index";
 // AdminFaqEditorView - Component for admin FAQ create/edit form.
 export { AdminFaqEditorView } from "./features/admin/index";
 export type { AdminFaqEditorViewProps } from "./features/admin/index";
+// AdminNavEditorView - SideDrawer form for nav item create/edit.
+export { AdminNavEditorView } from "./features/admin/index";
+export type { AdminNavEditorViewProps, NavItemData } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminFeatureFlagsView - Component for admin feature flags view.
 export { AdminFeatureFlagsView } from "./features/admin/index";

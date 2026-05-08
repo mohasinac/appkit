@@ -130,6 +130,9 @@ export const ADMIN_ENDPOINTS = {
   CAROUSEL: "/api/admin/carousel",
   CAROUSEL_BY_ID: (id: string) => `/api/admin/carousel/${id}`,
   CAROUSEL_REORDER: "/api/admin/carousel/reorder",
+  NAVIGATION: "/api/admin/navigation",
+  NAVIGATION_BY_ID: (id: string) => `/api/admin/navigation/${id}`,
+  ADMIN_SITE: "/api/admin/site",
 } as const;
 
 // ---------------------------------------------------------------------------
