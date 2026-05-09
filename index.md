@@ -140,16 +140,19 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `AdminNotificationsView` | `AdminNotificationsView.tsx` | Admin notifications listing — type filter; Resend (POST resend)+ Delete (ConfirmDeleteModal) row actions (LL13) |
 | `AdminCartsView` | `AdminCartsView.tsx` | Admin carts diagnostic view — read-only; guest/auth type filter (LL14) |
 | `AdminWishlistsView` | `AdminWishlistsView.tsx` | Admin wishlist insights — read-only; Firestore collectionGroup("wishlist") cross-user data (LL15) |
-| `AdminBidsView` | `AdminBidsView.tsx` | Admin bids listing |
+| `AdminBidsView` | `AdminBidsView.tsx` | Admin bids listing — RowActionMenu: Cancel bid (disabled when already cancelled/voided), ConfirmDeleteModal (variant=warning); PATCH BID_BY_ID {status:"cancelled"} (B5/VA16) |
 | `AdminPayoutsView` | `AdminPayoutsView.tsx` | Admin payouts listing — store identity (storeName/storeId, no sellerId in UI), Mark paid Modal (1 field: transactionId), CSV export button GET /api/admin/payouts/export (ARCH4) |
 | `AdminAdsView` | `AdminAdsView.tsx` | Admin ads/promotions listing |
 | `AdminAdEditorView` | `AdminAdEditorView.tsx` | Admin ad create/edit form |
-| `AdminNewsletterView` | `AdminNewsletterView.tsx` | Admin newsletter subscribers listing |
-| `AdminContactView` | `AdminContactView.tsx` | Admin contact submissions listing |
+| `AdminNewsletterView` | `AdminNewsletterView.tsx` | Admin newsletter subscribers listing — RowActionMenu: Unsubscribe (disabled when already unsubscribed); Export CSV button → blob download /api/admin/newsletter/export (B6/VA14) |
+| `AdminContactView` | `AdminContactView.tsx` | Admin contact submissions listing — RowActionMenu: View (→SideDrawer), Mark read, Archive, Delete; ConfirmDeleteModal for delete (B7/VA15) |
+| `AdminContactEditorView` | `AdminContactEditorView.tsx` | Admin contact SideDrawer — status badge, From section, scrollable message body, mailto reply, PATCH action=read/resolved (B7/VA15) |
+| `AdminReturnRequestsView` | `AdminReturnRequestsView.tsx` | Admin return requests queue — orders filtered to RETURN_REQUESTED; RowActionMenu: Approve(→REFUNDED)/Reject(→DELIVERED) each with ConfirmDeleteModal (LL16) |
+| `AdminStoreAddressesView` | `AdminStoreAddressesView.tsx` | Admin store addresses — read-only overview via collectionGroup("addresses"); optional storeId filter; no mutations (LL17) |
 | `AdminAnalyticsView` | `AdminAnalyticsView.tsx` | Admin analytics dashboard — revenue + orders charts, top products table; accepts startDate/endDate forwarded to Firebase Function (VA19) |
-| `AdminMediaView` | `AdminMediaView.tsx` | Admin media library |
+| `AdminMediaView` | `AdminMediaView.tsx` | Admin media library — upload sandbox with copy-URL button (clipboard); browse-existing grid deferred to I4 (VA18) |
 | `AdminSiteView` | `AdminSiteView.tsx` | Admin site settings — 12-group tabbed form (branding/appearance/announcement/SEO/contact/watermark/fees/integrations/shipping/auctions/limits/legal); singleton doc at site_settings/global (VA8) |
-| `AdminFeatureFlagsView` | `AdminFeatureFlagsView.tsx` | Admin feature flags toggle list |
+| `AdminFeatureFlagsView` | `AdminFeatureFlagsView.tsx` | Admin feature flags — per-flag toggle + rollout % input (0–100, disabled when flag off); GET/PUT /api/admin/feature-flags → siteSettings.featureFlags + featureFlagRollouts (VA17) |
 | `AdminNavigationView` | `AdminNavigationView.tsx` | Admin navigation CMS — drag-reorder table, inline visibility toggle, RowActionMenu (Edit→SideDrawer, Delete→ConfirmDeleteModal) (F5/VA7) |
 | `AdminNavEditorView` | `AdminNavEditorView.tsx` | Admin nav item create/edit SideDrawer — 6 fields: label, href, icon, parent (DynSelect), order, visible toggle; POST/PATCH /api/admin/navigation (F5/VA7) |
 | `AdminSessionsManager` | `AdminSessionsManager.tsx` | Admin session management UI |
