@@ -12,7 +12,9 @@ import {
 } from "../hooks/useAdminListingData";
 import { AdminListingScaffold } from "./AdminListingScaffold";
 
-export interface AdminCategoriesViewProps extends ListingViewShellProps {}
+export interface AdminCategoriesViewProps extends ListingViewShellProps {
+  getRowHref?: (row: { id: string }) => string;
+}
 
 interface AdminCategoriesResponse {
   data?: unknown;
@@ -22,6 +24,7 @@ interface AdminCategoriesResponse {
 
 export function AdminCategoriesView({
   children,
+  getRowHref,
   ...props
 }: AdminCategoriesViewProps) {
   const hasChildren = React.Children.count(children) > 0;
@@ -94,6 +97,7 @@ export function AdminCategoriesView({
       errorMessage={errorMessage}
       emptyLabel="No categories found"
       resultSummary={`Showing ${rows.length} of ${total} categories`}
+      getRowHref={getRowHref}
       filterGroups={[
         {
           title: "Active",

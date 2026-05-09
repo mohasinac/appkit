@@ -38,10 +38,12 @@ async function loadCategoryOptions(query: string, page: number) {
   const params = new URLSearchParams({ page: String(page), pageSize: "25" });
   if (query) params.set("q", query);
   const res = await apiClient.get(`${ADMIN_ENDPOINTS.CATEGORIES}?${params.toString()}`);
-  const data = (res as { items?: { id: string; name: string }[]; hasMore?: boolean }) ?? {};
+  // apiClient returns the full response; the route wraps items in successResponse({ data: [...] })
+  const payload = (res as any)?.data ?? res;
+  const items: { id: string; name: string }[] = payload?.data ?? payload?.items ?? [];
   return {
-    items: (data.items ?? []).map((c) => ({ value: c.id, label: c.name })),
-    hasMore: data.hasMore ?? false,
+    items: items.map((c) => ({ value: c.id, label: c.name })),
+    hasMore: payload?.hasMore ?? false,
   };
 }
 

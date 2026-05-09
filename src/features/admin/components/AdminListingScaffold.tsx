@@ -49,6 +49,7 @@ interface AdminListingScaffoldProps extends ListingViewShellProps {
   onSearch?: (query: string) => void;
   searchValue?: string;
   onClearFilters?: () => void;
+  renderRowActions?: (row: AdminListingScaffoldRow) => React.ReactNode;
 }
 
 const DEFAULT_FILTER_GROUPS = [
@@ -171,6 +172,7 @@ export function AdminListingScaffold({
   onSearch,
   searchValue,
   onClearFilters,
+  renderRowActions,
   children,
   headerSlot,
   filterContent,
@@ -279,6 +281,7 @@ export function AdminListingScaffold({
           isLoading={isLoading}
           emptyLabel={emptyLabel}
           getRowHref={getRowHref}
+          renderRowActions={renderRowActions}
         />
       )}
     </ListingViewShell>

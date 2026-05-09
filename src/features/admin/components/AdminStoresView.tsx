@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ListingViewShell } from "../../../ui";
+import { ListingViewShell, RowActionMenu } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -11,6 +11,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { AdminListingScaffold } from "./AdminListingScaffold";
+import { AdminStoreEditorView } from "./AdminStoreEditorView";
 
 export interface AdminStoresViewProps extends ListingViewShellProps {}
 
@@ -19,10 +20,21 @@ interface AdminStoresResponse {
   total?: number;
 }
 
+interface StoreRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  _raw?: Record<string, unknown>;
+}
+
 export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [q, setQ] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState<StoreRow | null>(null);
 
   const filterParts: string[] = [];
   if (statusFilter && statusFilter !== "All") filterParts.push(`status==${statusFilter}`);
@@ -30,7 +42,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminStoresResponse,
-    { id: string; primary: string; secondary: string; status: string; updatedAt: string }
+    StoreRow
   >({
     queryKey: ["admin", "stores", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.STORES,
@@ -46,6 +58,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         ].join(" · "),
         status: toStringValue(item.status, "Pending"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        _raw: item,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
@@ -55,29 +68,51 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
 
+  const rowActions = (row: StoreRow) => [
+    {
+      label: "Manage",
+      onClick: () => {
+        setSelectedRow(row);
+        setDrawerOpen(true);
+      },
+    },
+  ];
+
   return (
-    <AdminListingScaffold
-      portal="admin"
-      {...props}
-      title="Store Directory"
-      subtitle="Review seller storefront health, verification, and merchandising quality from the shared listing shell."
-      actionLabel="Approve store"
-      searchPlaceholder="Search stores, slugs, or owner names"
-      onSearch={setQ}
-      searchValue={q}
-      rows={rows}
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      emptyLabel="No stores found"
-      resultSummary={`Showing ${rows.length} of ${total} stores`}
-      filterGroups={[
-        {
-          title: "Status",
-          options: ["All", "active", "pending", "suspended", "rejected"],
-          active: statusFilter || "All",
-          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
-        },
-      ]}
-    />
+    <>
+      <AdminListingScaffold
+        portal="admin"
+        {...props}
+        title="Store Directory"
+        subtitle="Review seller storefront health, verification, and merchandising quality."
+        searchPlaceholder="Search stores, slugs, or owner names"
+        onSearch={setQ}
+        searchValue={q}
+        rows={rows}
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        emptyLabel="No stores found"
+        resultSummary={`Showing ${rows.length} of ${total} stores`}
+        filterGroups={[
+          {
+            title: "Status",
+            options: ["All", "active", "pending", "suspended", "rejected"],
+            active: statusFilter || "All",
+            onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+          },
+        ]}
+        renderRowActions={(row) => (
+          <RowActionMenu actions={rowActions(row as StoreRow)} />
+        )}
+      />
+
+      <AdminStoreEditorView
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        storeId={selectedRow?.id}
+        storeName={selectedRow?.primary}
+        currentStatus={selectedRow?.status?.toLowerCase()}
+      />
+    </>
   );
 }

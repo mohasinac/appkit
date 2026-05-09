@@ -3264,6 +3264,8 @@ export { AdminStatCard } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminStoresView - Component for admin stores view.
 export { AdminStoresView } from "./features/admin/index";
+// AdminStoreEditorView - SideDrawer for approving/managing stores (VA12).
+export { AdminStoreEditorView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminTopBar - Shared export for admin top bar.
 export { AdminTopBar } from "./features/admin/index";
@@ -3472,6 +3474,8 @@ export type { AdminStatCardProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminStoresViewProps - Type contract for admin stores view props.
 export type { AdminStoresViewProps } from "./features/admin/index";
+// AdminStoreEditorViewProps - Type contract for admin store editor props.
+export type { AdminStoreEditorViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // AdminTableColumn - Type contract for admin table column.
 export type { AdminTableColumn } from "./features/admin/index";

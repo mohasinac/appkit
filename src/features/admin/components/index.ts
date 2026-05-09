@@ -42,6 +42,8 @@ export { AdminMediaView } from "./AdminMediaView";
 export type { AdminMediaViewProps } from "./AdminMediaView";
 export { AdminStoresView } from "./AdminStoresView";
 export type { AdminStoresViewProps } from "./AdminStoresView";
+export { AdminStoreEditorView } from "./AdminStoreEditorView";
+export type { AdminStoreEditorViewProps } from "./AdminStoreEditorView";
 export { AdminPayoutsView } from "./AdminPayoutsView";
 export type { AdminPayoutsViewProps } from "./AdminPayoutsView";
 export { AdminReviewsView } from "./AdminReviewsView";

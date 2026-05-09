@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import type { AdminTableColumn } from "../types";
 import { Button, Div, Span } from "../../../ui";
 
@@ -8,6 +9,7 @@ interface DataTableProps<T extends { id: string }> {
   rows: T[];
   isLoading?: boolean;
   getRowHref?: (row: T) => string;
+  renderRowActions?: (row: T) => React.ReactNode;
   sortKey?: string;
   sortDir?: "asc" | "desc";
   onSort?: (key: string) => void;
@@ -29,6 +31,7 @@ export function DataTable<T extends { id: string }>({
   onPageChange,
   emptyLabel = "No records found",
   getRowHref,
+  renderRowActions,
 }: DataTableProps<T>) {
   return (
     <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
@@ -53,6 +56,7 @@ export function DataTable<T extends { id: string }>({
                   )}
                 </th>
               ))}
+              {renderRowActions && <th scope="col" className="w-12 px-2 py-3" />}
             </tr>
           </thead>
           <tbody>
@@ -113,6 +117,14 @@ export function DataTable<T extends { id: string }>({
                             )}
                       </td>
                     ))}
+                    {renderRowActions && (
+                      <td
+                        className="px-2 py-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {renderRowActions(row)}
+                      </td>
+                    )}
                   </tr>
                 );
               })
