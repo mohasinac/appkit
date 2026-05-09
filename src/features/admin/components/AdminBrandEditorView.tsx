@@ -173,14 +173,14 @@ export function AdminBrandEditorView({
             <ImageUpload
               label="Logo"
               currentImage={logoURL}
-              onUpload={(file) => upload(file, "brands")}
+              onUpload={(file) => upload(file, "brands", true, { type: "brand-logo", brand: name || slug })}
               onChange={setLogoURL}
             />
 
             <ImageUpload
               label="Banner"
               currentImage={bannerURL}
-              onUpload={(file) => upload(file, "brands")}
+              onUpload={(file) => upload(file, "brands", true, { type: "brand-banner", brand: name || slug })}
               onChange={setBannerURL}
             />
           </div>

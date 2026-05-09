@@ -438,6 +438,22 @@ export function generateStoreBannerFilename(
   return `store-${store}-banner.${ext.replace(/^\./, "")}`;
 }
 
+export function generateBrandLogoFilename(
+  brandName: string,
+  ext: string = "webp",
+): string {
+  const brand = slugify(brandName).substring(0, 40).replace(/-+$/, "");
+  return `brand-${brand}-logo.${ext.replace(/^\./, "")}`;
+}
+
+export function generateBrandBannerFilename(
+  brandName: string,
+  ext: string = "webp",
+): string {
+  const brand = slugify(brandName).substring(0, 40).replace(/-+$/, "");
+  return `brand-${brand}-banner.${ext.replace(/^\./, "")}`;
+}
+
 export interface GenerateBlogImageFilenameInput {
   title: string;
   category: string;
@@ -564,6 +580,8 @@ export type MediaFilenameContext =
   | ({ type: "preorder-image" } & GeneratePreOrderImageFilenameInput)
   | { type: "store-logo"; store: string; ext?: string }
   | { type: "store-banner"; store: string; ext?: string }
+  | { type: "brand-logo"; brand: string; ext?: string }
+  | { type: "brand-banner"; brand: string; ext?: string }
   | ({ type: "blog-image" } & GenerateBlogImageFilenameInput)
   | ({ type: "blog-cover" } & GenerateBlogImageFilenameInput)
   | ({ type: "blog-content-image" } & GenerateBlogImageFilenameInput)
@@ -597,6 +615,10 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       return generateStoreLogoFilename(ctx.store, ctx.ext);
     case "store-banner":
       return generateStoreBannerFilename(ctx.store, ctx.ext);
+    case "brand-logo":
+      return generateBrandLogoFilename(ctx.brand, ctx.ext);
+    case "brand-banner":
+      return generateBrandBannerFilename(ctx.brand, ctx.ext);
     case "blog-image":
       return generateBlogImageFilename(ctx);
     case "blog-cover":

@@ -249,7 +249,7 @@ export function AdminBlogEditorView({
           <ImageUpload
             label="Cover image"
             currentImage={coverImage}
-            onUpload={(file) => upload(file, "blog")}
+            onUpload={(file) => upload(file, "blog", true, { type: "blog-cover", title: title || slug, category })}
             onChange={setCoverImage}
           />
 
