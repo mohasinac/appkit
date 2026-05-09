@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Checkbox,
+  ConfirmDeleteModal,
   Div,
   Form,
   FormActions,
@@ -16,7 +17,7 @@ import {
   useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
-import { ADMIN_ENDPOINTS } from "../../../constants";
+import { ADMIN_ENDPOINTS, DEMO_ENDPOINTS } from "../../../constants";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
 import { AdminListingScaffold } from "./AdminListingScaffold";
 
@@ -1120,6 +1121,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [seedResetOpen, setSeedResetOpen] = React.useState(false);
   const [mode, setMode] = React.useState<"create" | "edit">("create");
   const [selectedSectionId, setSelectedSectionId] = React.useState("");
   const [sectionType, setSectionType] = React.useState<SectionType>("products");
@@ -1317,6 +1319,22 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     },
     onError: (error) => {
       toast.showToast(error instanceof Error ? error.message : "Failed to save section.", "error");
+    },
+  });
+
+  const resetSeed = useMutation({
+    mutationFn: () =>
+      apiClient.post(DEMO_ENDPOINTS.SEED, {
+        action: "load",
+        collections: ["homepageSections"],
+      }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin", "sections", "listing"] });
+      setSeedResetOpen(false);
+      toast.showToast("Homepage sections seed data reloaded.", "success");
+    },
+    onError: () => {
+      toast.showToast("Seed reset failed.", "error");
     },
   });
 
@@ -2775,9 +2793,19 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         errorMessage={errorMessage}
         emptyLabel="No sections found"
         actionsSlot={
-          <Button type="button" variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
-            Manage Sections
-          </Button>
+          <Div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setSeedResetOpen(true)}
+            >
+              Reset seed data
+            </Button>
+            <Button type="button" variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
+              Manage Sections
+            </Button>
+          </Div>
         }
       />
 
@@ -2883,6 +2911,18 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         )}
       </Div>
 
+
+      <ConfirmDeleteModal
+        isOpen={seedResetOpen}
+        onClose={() => setSeedResetOpen(false)}
+        onConfirm={() => resetSeed.mutate()}
+        title="Reset homepage sections seed data?"
+        message="This will reload the 19 default homepage sections from seed data. Any manual changes made in Firestore will be overwritten."
+        confirmText="Reset seed"
+        cancelText="Cancel"
+        isDeleting={resetSeed.isPending}
+        variant="danger"
+      />
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Manage Homepage Section" size="lg">
         <Form

@@ -109,6 +109,7 @@ export const ADMIN_ENDPOINTS = {
   PAYOUTS: "/api/admin/payouts",
   PAYOUT_BY_ID: (id: string) => `/api/admin/payouts/${id}`,
   PAYOUTS_WEEKLY: "/api/admin/payouts/weekly",
+  PAYOUTS_EXPORT: "/api/admin/payouts/export",
   EVENTS: "/api/admin/events",
   EVENT_BY_ID: (id: string) => `/api/admin/events/${id}`,
   EVENT_STATUS: (id: string) => `/api/admin/events/${id}/status`,
