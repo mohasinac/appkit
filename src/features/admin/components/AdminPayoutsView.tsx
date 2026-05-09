@@ -190,7 +190,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           hideViewToggle
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
-          actionsSlot={
+          extra={
             <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
               Export CSV
             </Button>

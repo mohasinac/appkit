@@ -1,12 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  ConfirmDeleteModal,
-  RowActionMenu,
-  useToast,
-} from "../../../ui";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -15,8 +12,15 @@ import {
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
-import { AdminListingScaffold } from "./AdminListingScaffold";
+import { DataTable } from "./DataTable";
 import { apiClient } from "../../../http";
+
+const PAGE_SIZE = 25;
+const DEFAULT_SORT = "-createdAt";
+const SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest" },
+  { value: "createdAt", label: "Oldest" },
+];
 
 interface AdminOrdersResponse {
   items?: unknown[];
@@ -36,19 +40,34 @@ export interface AdminReturnRequestsViewProps {
   children?: React.ReactNode;
 }
 
-export function AdminReturnRequestsView({ children }: AdminReturnRequestsViewProps) {
+export function AdminReturnRequestsView({ children: _children }: AdminReturnRequestsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
-  const [approveOpen, setApproveOpen] = React.useState(false);
-  const [rejectOpen, setRejectOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState<ReturnRow | null>(null);
+  const [approveOpen, setApproveOpen] = useState(false);
+  const [rejectOpen, setRejectOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<ReturnRow | null>(null);
 
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<
-    AdminOrdersResponse,
-    ReturnRow
-  >({
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+
+  const resetAll = useCallback(() => {
+    table.setMany({ q: "", sort: "" });
+    setSearchInput("");
+  }, [table]);
+
+  const commitSearch = useCallback(() => {
+    table.set("q", searchInput.trim());
+  }, [searchInput, table]);
+
+  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
+
+  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminOrdersResponse, ReturnRow>({
     queryKey: ["admin", "return-requests", "listing"],
     endpoint: `${ADMIN_ENDPOINTS.ORDERS}?status=RETURN_REQUESTED`,
+    page: table.getNumber("page", 1),
+    pageSize: PAGE_SIZE,
+    sorts: table.get("sort") || DEFAULT_SORT,
+    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `order-${index}`),
@@ -97,53 +116,68 @@ export function AdminReturnRequestsView({ children }: AdminReturnRequestsViewPro
     },
   });
 
+  const currentPage = table.getNumber("page", 1);
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+
   return (
     <>
-      <AdminListingScaffold
-        portal="admin"
-        title="Return Requests"
-        subtitle="Orders where the buyer has requested a return. Approve to issue a refund, or reject to revert to Delivered."
-        searchPlaceholder="Search by order ID or buyer"
-        emptyLabel="No return requests"
-        rows={rows}
-        isLoading={isLoading}
-        errorMessage={errorMessage}
-        resultSummary={`${total} return request${total === 1 ? "" : "s"}`}
-        renderRowActions={(row) => {
-          const rr = row as ReturnRow;
-          return (
-            <RowActionMenu
-              actions={[
-                {
-                  label: "Approve return",
-                  onClick: () => {
-                    setSelectedRow(rr);
-                    setApproveOpen(true);
-                  },
-                },
-                {
-                  label: "Reject return",
-                  destructive: true,
-                  onClick: () => {
-                    setSelectedRow(rr);
-                    setRejectOpen(true);
-                  },
-                },
-              ]}
-            />
-          );
-        }}
-      />
+      <div className="min-h-screen">
+        <ListingToolbar
+          filterCount={0}
+          searchValue={searchInput}
+          searchPlaceholder="Search by order ID or buyer"
+          onSearchChange={setSearchInput}
+          onSearchCommit={commitSearch}
+          sortValue={table.get("sort") || DEFAULT_SORT}
+          sortOptions={SORT_OPTIONS}
+          onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+          hideViewToggle
+          onResetAll={resetAll}
+          hasActiveState={hasActiveState}
+        />
+
+        {totalPages > 1 && (
+          <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
+          </div>
+        )}
+
+        <div className="py-4 px-3 sm:px-4">
+          {errorMessage && (
+            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+              {errorMessage}
+            </div>
+          )}
+          <DataTable
+            rows={rows}
+            isLoading={isLoading}
+            emptyLabel="No return requests"
+            renderRowActions={(row) => {
+              const rr = row as ReturnRow;
+              return (
+                <RowActionMenu
+                  actions={[
+                    {
+                      label: "Approve return",
+                      onClick: () => { setSelectedRow(rr); setApproveOpen(true); },
+                    },
+                    {
+                      label: "Reject return",
+                      destructive: true,
+                      onClick: () => { setSelectedRow(rr); setRejectOpen(true); },
+                    },
+                  ]}
+                />
+              );
+            }}
+          />
+        </div>
+      </div>
 
       <ConfirmDeleteModal
         isOpen={approveOpen}
-        onClose={() => {
-          setApproveOpen(false);
-          setSelectedRow(null);
-        }}
-        onConfirm={() => {
-          if (selectedRow) approveMutation.mutate(selectedRow.id);
-        }}
+        onClose={() => { setApproveOpen(false); setSelectedRow(null); }}
+        onConfirm={() => { if (selectedRow) approveMutation.mutate(selectedRow.id); }}
         isDeleting={approveMutation.isPending}
         title="Approve return request?"
         message="The order status will be updated to Refunded. The buyer will be notified and the refund process will begin."
@@ -153,13 +187,8 @@ export function AdminReturnRequestsView({ children }: AdminReturnRequestsViewPro
 
       <ConfirmDeleteModal
         isOpen={rejectOpen}
-        onClose={() => {
-          setRejectOpen(false);
-          setSelectedRow(null);
-        }}
-        onConfirm={() => {
-          if (selectedRow) rejectMutation.mutate(selectedRow.id);
-        }}
+        onClose={() => { setRejectOpen(false); setSelectedRow(null); }}
+        onConfirm={() => { if (selectedRow) rejectMutation.mutate(selectedRow.id); }}
         isDeleting={rejectMutation.isPending}
         title="Reject return request?"
         message="The order status will be reverted to Delivered. The buyer's return request will be declined."
