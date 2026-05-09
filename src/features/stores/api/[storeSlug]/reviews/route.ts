@@ -75,7 +75,7 @@ export async function GET(
     // Fetch up to 20 published products for this seller
     const productsRepo = db.getRepository<ProductEntity>("products");
     const productsResult = await productsRepo.findAll({
-      filters: `sellerId==${store.ownerId},status==published`,
+      filters: `storeId==${store.id},status==published`,
       sort: "itemsSold",
       order: "desc",
       perPage: 20,

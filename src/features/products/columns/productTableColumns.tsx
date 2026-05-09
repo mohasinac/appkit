@@ -129,13 +129,13 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       },
     },
     {
-      key: "sellerName",
+      key: "storeName",
       header: labels.seller,
       sortable: true,
       width: "15%",
       render: (product: T) => (
         <Span className="block max-w-[120px] truncate text-sm">
-          {product.sellerName ?? "-"}
+          {product.storeName ?? "-"}
         </Span>
       ),
     },

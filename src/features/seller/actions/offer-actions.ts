@@ -11,6 +11,7 @@ import { productRepository } from "../../products/repository/products.repository
 import { ProductStatusValues } from "../../products/schemas";
 import { notificationRepository } from "../../admin/repository/notification.repository";
 import { userRepository } from "../../auth/repository/user.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { cartRepository } from "../../cart/repository/cart.repository";
 import { maskOfferForSeller } from "../../../security";
 import {
@@ -91,23 +92,26 @@ export async function makeOffer(
     buyerUid: userId,
     buyerName: buyerDisplayName,
     buyerEmail: profile?.email ?? userEmail ?? "",
-    sellerId: product.sellerId,
-    sellerName: product.sellerName,
+    storeId: product.storeId,
+    storeName: product.storeName,
     offerAmount,
     listedPrice: product.price,
     currency: product.currency,
     buyerNote,
   });
 
-  await notificationRepository.create({
-    userId: product.sellerId,
-    type: "offer_received",
-    priority: "normal",
-    title: "New offer received",
-    message: `${buyerDisplayName === "Buyer" ? "A buyer" : buyerDisplayName} offered ₹${offerAmount} on "${product.title}"`,
-    relatedId: offer.id,
-    relatedType: "offer",
-  });
+  const sellerStore = product.storeId ? await storeRepository.findById(product.storeId) : null;
+  if (sellerStore?.ownerId) {
+    await notificationRepository.create({
+      userId: sellerStore.ownerId,
+      type: "offer_received",
+      priority: "normal",
+      title: "New offer received",
+      message: `${buyerDisplayName === "Buyer" ? "A buyer" : buyerDisplayName} offered ₹${offerAmount} on "${product.title}"`,
+      relatedId: offer.id,
+      relatedType: "offer",
+    });
+  }
 
   serverLogger.info("makeOffer", {
     offerId: offer.id,
@@ -128,7 +132,8 @@ export async function respondToOffer(
 
   const offer = await offerRepository.findById(offerId);
   if (!offer) throw new NotFoundError("Offer not found.");
-  if (offer.sellerId !== userId)
+  const offerStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
+  if (!offerStore || offerStore.ownerId !== userId)
     throw new AuthorizationError("Not authorised to respond to this offer.");
   if (offer.status !== OfferStatusValues.PENDING)
     throw new ValidationError(
@@ -164,7 +169,7 @@ export async function respondToOffer(
       ? `Your offer of ₹${offer.offerAmount} on "${offer.productTitle}" was accepted! Complete checkout now.`
       : action === "decline"
         ? `Your offer on "${offer.productTitle}" was declined.`
-        : `${offer.sellerName} countered with ₹${counterAmount} on "${offer.productTitle}".`;
+        : `${offer.storeName} countered with ₹${counterAmount} on "${offer.productTitle}".`;
 
   await notificationRepository.create({
     userId: offer.buyerUid,
@@ -206,8 +211,9 @@ export async function acceptCounterOffer(
 
   const updated = await offerRepository.acceptCounter(offerId);
 
-  await notificationRepository.create({
-    userId: offer.sellerId,
+  const counterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
+  if (counterStore?.ownerId) await notificationRepository.create({
+    userId: counterStore.ownerId,
     type: "offer_counter_accepted",
     priority: "high",
     title: "Counter offer accepted",
@@ -271,16 +277,17 @@ export async function counterOfferByBuyer(
     buyerUid: userId,
     buyerName: offer.buyerName,
     buyerEmail: offer.buyerEmail,
-    sellerId: offer.sellerId,
-    sellerName: offer.sellerName,
+    storeId: offer.storeId,
+    storeName: offer.storeName,
     offerAmount: counterAmount,
     listedPrice: offer.listedPrice,
     currency: offer.currency,
     buyerNote,
   });
 
-  await notificationRepository.create({
-    userId: offer.sellerId,
+  const buyerCounterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
+  if (buyerCounterStore?.ownerId) await notificationRepository.create({
+    userId: buyerCounterStore.ownerId,
     type: "offer_received",
     priority: "normal",
     title: "Buyer counter offer",
@@ -376,8 +383,8 @@ export async function checkoutOffer(
     price: offer.lockedPrice,
     currency: offer.currency,
     quantity: 1,
-    sellerId: offer.sellerId,
-    sellerName: offer.sellerName,
+    storeId: offer.storeId,
+    storeName: offer.storeName,
     isAuction: false,
     isPreOrder: false,
     isOffer: true,

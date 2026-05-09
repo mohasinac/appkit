@@ -14,10 +14,8 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const LR = {
-  sellerId: "user-admin-user-admin",
-  storeId: "letitrip-official",
-  sellerName: "LetItRip Official Store",
-  sellerEmail: "admin@letitrip.in",
+  storeId: "store-letitrip-official",
+  storeName: "LetItRip Official Store",
 } as const;
 
 export const letitripOfficialSeedData: Partial<ProductDocument>[] = [

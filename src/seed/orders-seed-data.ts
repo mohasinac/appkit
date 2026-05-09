@@ -24,8 +24,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-rahul-sharma",
     userName: "Rahul Sharma",
     userEmail: "rahul.sharma@gmail.com",
-    sellerId: "user-aryan-kapoor",
-    sellerName: "Aryan Kapoor",
+    storeId: "store-pokemon-palace",
+    storeName: "Pokémon Palace",
     items: [
       {
         productId: "product-pokemon-sv-etb",
@@ -65,8 +65,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-priya-patel",
     userName: "Priya Patel",
     userEmail: "priya.patel@gmail.com",
-    sellerId: "user-admin-letitrip",
-    sellerName: "LetItRip Admin",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
     items: [
       {
         productId: "product-nendoroid-rem-rezero",
@@ -104,8 +104,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-arjun-singh",
     userName: "Arjun Singh",
     userEmail: "arjun.singh@gmail.com",
-    sellerId: "user-admin-letitrip",
-    sellerName: "LetItRip Admin",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
     items: [
       {
         productId: "product-gundam-rx78-mg",
@@ -144,8 +144,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-meera-nair",
     userName: "Meera Nair",
     userEmail: "meera.nair@gmail.com",
-    sellerId: "user-rohit-joshi",
-    sellerName: "Rohit Joshi",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
     items: [
       {
         productId: "product-beyblade-x-bx01-dran-sword",
@@ -183,8 +183,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-rahul-sharma",
     userName: "Rahul Sharma",
     userEmail: "rahul.sharma@gmail.com",
-    sellerId: "user-vikram-mehta",
-    sellerName: "Vikram Mehta",
+    storeId: "store-diecast-depot",
+    storeName: "Diecast Depot",
     items: [
       {
         productId: "product-tomica-limited-datsun",
@@ -218,8 +218,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-priya-patel",
     userName: "Priya Patel",
     userEmail: "priya.patel@gmail.com",
-    sellerId: "user-nisha-reddy",
-    sellerName: "Nisha Reddy",
+    storeId: "store-cardgame-hub",
+    storeName: "CardGame Hub",
     items: [
       {
         productId: "product-yugioh-25th-tin",
@@ -253,8 +253,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-arjun-singh",
     userName: "Arjun Singh",
     userEmail: "arjun.singh@gmail.com",
-    sellerId: "user-admin-letitrip",
-    sellerName: "LetItRip Admin",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
     items: [
       {
         productId: "product-funko-pop-naruto-sage",
@@ -294,8 +294,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-meera-nair",
     userName: "Meera Nair",
     userEmail: "meera.nair@gmail.com",
-    sellerId: "user-vikram-mehta",
-    sellerName: "Vikram Mehta",
+    storeId: "store-diecast-depot",
+    storeName: "Diecast Depot",
     items: [
       {
         productId: "product-hot-wheels-redline-banana-1968",
@@ -337,8 +337,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-rahul-sharma",
     userName: "Rahul Sharma",
     userEmail: "rahul.sharma@gmail.com",
-    sellerId: "user-rohit-joshi",
-    sellerName: "Rohit Joshi",
+    storeId: "store-beyblade-arena",
+    storeName: "Beyblade Arena",
     items: [
       {
         productId: "product-beyblade-burst-b200-valkyrie",
@@ -377,8 +377,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     userId: "user-priya-patel",
     userName: "Priya Patel",
     userEmail: "priya.patel@gmail.com",
-    sellerId: "user-admin-letitrip",
-    sellerName: "LetItRip Admin",
+    storeId: "store-letitrip-official",
+    storeName: "LetItRip Official",
     items: [
       {
         productId: "product-shf-goku-ultra-instinct",

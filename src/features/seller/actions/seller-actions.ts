@@ -337,7 +337,7 @@ export async function updatePayoutSettings(
 // --- Request Payout -----------------------------------------------------------
 
 async function computeSellerEarnings(sellerId: string) {
-  const products = await productRepository.findBySeller(sellerId);
+  const products = await productRepository.findByStore(sellerId);
   const productIds = products.slice(0, 50).map((p) => p.id);
 
   let deliveredOrders: OrderDocument[] = [];
@@ -379,7 +379,7 @@ export async function requestPayout(
   userEmail: string,
   input: RequestPayoutInput,
 ): Promise<unknown> {
-  const existing = await payoutRepository.findBySeller(userId);
+  const existing = await payoutRepository.findByStore(userId);
   const hasPending = existing.some(
     (p) =>
       p.status === PAYOUT_FIELDS.STATUS_VALUES.PENDING ||
@@ -393,7 +393,7 @@ export async function requestPayout(
     throw new ValidationError("No eligible earnings available for payout.");
 
   const payout = await payoutRepository.create({
-    sellerId: userId,
+    storeId: userId,
     sellerName: userName,
     sellerEmail: userEmail,
     amount: earnings.netAmount,
@@ -451,7 +451,7 @@ export async function bulkSellerOrder(
       skipped.push(id);
       continue;
     }
-    if (userRole !== "admin" && order.sellerId !== userId) {
+    if (userRole !== "admin" && order.storeId !== userId) {
       skipped.push(id);
       continue;
     }
@@ -480,7 +480,7 @@ export async function bulkSellerOrder(
   const netAmount = Math.round((grossAmount - platformFee) * 100) / 100;
 
   const payoutDoc = await payoutRepository.create({
-    sellerId: userId,
+    storeId: userId,
     sellerName: userDisplayName,
     sellerEmail: userEmail,
     orderIds: eligible.map((o) => o.id!),
@@ -585,7 +585,7 @@ export async function listSellerOrders(
   userId: string,
   params?: SellerListParams,
 ): Promise<FirebaseSieveResult<OrderDocument>> {
-  const sellerProducts = await productRepository.findBySeller(userId);
+  const sellerProducts = await productRepository.findByStore(userId);
   const productIds = sellerProducts.map((p) => p.id);
   if (productIds.length === 0) {
     return {
@@ -606,7 +606,7 @@ export async function listSellerOrders(
 }
 
 export async function getSellerAnalytics(userId: string) {
-  const products = await productRepository.findBySeller(userId);
+  const products = await productRepository.findByStore(userId);
   const productIds = products.map((p) => p.id);
   let allOrders: OrderDocument[] = [];
   if (productIds.length > 0) {
@@ -661,7 +661,7 @@ export async function listSellerPayouts(
   userId: string,
   params?: { page?: number; pageSize?: number },
 ) {
-  const payouts = await payoutRepository.findBySeller(userId);
+  const payouts = await payoutRepository.findByStore(userId);
   const page = params?.page ?? 1;
   const pageSize = params?.pageSize ?? 20;
   const start = (page - 1) * pageSize;
@@ -677,14 +677,16 @@ export async function listSellerPayouts(
 export async function listSellerCoupons(
   userId: string,
 ): Promise<CouponDocument[]> {
-  return couponsRepository.getSellerCoupons(userId);
+  const store = await storeRepository.findByOwnerId(userId);
+  if (!store) return [];
+  return couponsRepository.getStoreCoupons(store.id);
 }
 
 export async function listSellerMyProducts(
   userId: string,
   params?: SellerListParams,
 ) {
-  const products = await productRepository.findBySeller(userId);
+  const products = await productRepository.findByStore(userId);
   let filtered = products;
   if (params?.filters?.includes("status==")) {
     const match = params.filters.match(/status==([\w]+)/);
@@ -711,7 +713,7 @@ export async function sellerUpdateProduct(
 ): Promise<ProductDocument> {
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
-  if (userRole !== "admin" && existing.sellerId !== userId)
+  if (userRole !== "admin" && existing.storeId !== userId)
     throw new AuthorizationError("You do not own this product");
   const finalizedData = await finalizeProductMediaReferences(input);
   const updated = await productRepository.updateProduct(
@@ -729,7 +731,7 @@ export async function sellerDeleteProduct(
 ): Promise<void> {
   const existing = await productRepository.findById(productId);
   if (!existing) throw new NotFoundError("Product not found");
-  if (userRole !== "admin" && existing.sellerId !== userId)
+  if (userRole !== "admin" && existing.storeId !== userId)
     throw new AuthorizationError("You do not own this product");
   await productRepository.delete(productId);
   serverLogger.info("sellerDeleteProduct", { userId, productId });
@@ -745,7 +747,7 @@ export async function customShipOrder(
 ): Promise<{ orderId: string; method: string }> {
   const order = await orderRepository.findById(orderId);
   if (!order) throw new NotFoundError("Order not found");
-  if (userRole !== "admin" && order.sellerId !== userId)
+  if (userRole !== "admin" && order.storeId !== userId)
     throw new AuthorizationError("You do not own this order");
   if (
     order.status === OrderStatusValues.SHIPPED ||

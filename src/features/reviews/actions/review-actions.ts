@@ -262,7 +262,7 @@ export async function listAdminReviews(params?: {
 export async function listReviewsBySeller(
   sellerId: string,
 ): Promise<ReviewDocument[]> {
-  const products = await productRepository.findBySeller(sellerId);
+  const products = await productRepository.findByStore(sellerId);
   const productIds = products
     .filter((product) => product.status === ProductStatusValues.PUBLISHED)
     .map((product) => product.id);

@@ -58,8 +58,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     const scope = param(url, "scope");
     if (scope) parts.push(`scope==${scope}`);
 
-    const sellerId = param(url, "sellerId");
-    if (sellerId) parts.push(`sellerId==${sellerId}`);
+    const storeId = param(url, "storeId");
+    if (storeId) parts.push(`storeId==${storeId}`);
 
     const filters = parts.join(",");
 

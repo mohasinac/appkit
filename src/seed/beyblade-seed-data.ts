@@ -13,10 +13,8 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const BP = {
-  sellerId: "user-bladers-paradise",
-  storeId: "bladers-paradise",
-  sellerName: "Bladers Paradise",
-  sellerEmail: "bladers@letitrip.in",
+  storeId: "store-bladers-paradise",
+  storeName: "Bladers Paradise",
 } as const;
 
 const BB_IMGS = [

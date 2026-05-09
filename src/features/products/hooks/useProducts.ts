@@ -50,7 +50,6 @@ export function useProducts<T extends ProductItem = ProductItem>(
     sp.set("isAuction", String(params.isAuction));
   if (params.isPreOrder !== undefined)
     sp.set("isPreOrder", String(params.isPreOrder));
-  if (params.sellerId) sp.set("sellerId", params.sellerId);
   if (params.storeId) sp.set("storeId", params.storeId);
   if (params.sort) sp.set("sorts", params.sort);
   if (params.page) sp.set("page", String(params.page));

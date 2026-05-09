@@ -9,7 +9,7 @@ export function splitCartIntoOrderGroups<
   T extends {
     item: {
       itemId: string;
-      sellerId?: string;
+      storeId?: string;
       isAuction?: boolean;
       isPreOrder?: boolean;
       isOffer?: boolean;
@@ -30,10 +30,10 @@ export function splitCartIntoOrderGroups<
       key = `offer:${item.itemId}`;
       orderType = "offer";
     } else if (item.isPreOrder) {
-      key = `preorder:${item.sellerId ?? "unknown"}`;
+      key = `preorder:${item.storeId ?? "unknown"}`;
       orderType = "preorder";
     } else {
-      key = `standard:${item.sellerId ?? "unknown"}`;
+      key = `standard:${item.storeId ?? "unknown"}`;
       orderType = "standard";
     }
 

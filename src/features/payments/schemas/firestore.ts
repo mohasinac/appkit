@@ -27,7 +27,7 @@ export type PayoutPaymentMethod = "bank_transfer" | "upi";
 
 export interface PayoutDocument {
   id: string;
-  sellerId: string;
+  storeId: string;
   sellerName: string;
   sellerEmail: string;
   amount: number;
@@ -56,7 +56,7 @@ export interface PayoutDocument {
 export const PAYOUT_COLLECTION = "payouts" as const;
 
 export const PAYOUT_INDEXED_FIELDS = [
-  "sellerId",
+  "storeId",
   "status",
   "requestedAt",
   "createdAt",
@@ -71,7 +71,7 @@ export const DEFAULT_PAYOUT_DATA: Partial<PayoutDocument> = {
 };
 
 export const PAYOUT_FIELDS = {
-  SELLER_ID: "sellerId",
+  STORE_ID: "storeId",
   SELLER_NAME: "sellerName",
   SELLER_EMAIL: "sellerEmail",
   SELLER_EMAIL_INDEX: "sellerEmailIndex",
@@ -88,7 +88,7 @@ export const PAYOUT_FIELDS = {
 
 export const PAYOUT_PUBLIC_FIELDS = [
   "id",
-  "sellerId",
+  "storeId",
   "amount",
   "currency",
   "status",
@@ -113,11 +113,11 @@ export type PayoutUpdateInput = Partial<
 >;
 
 export const payoutQueryHelpers = {
-  bySeller: (sellerId: string) => ["sellerId", "==", sellerId] as const,
+  byStore: (storeId: string) => ["storeId", "==", storeId] as const,
   byStatus: (status: PayoutStatus) => ["status", "==", status] as const,
-  pendingForSeller: (sellerId: string) =>
+  pendingForStore: (storeId: string) =>
     [
-      ["sellerId", "==", sellerId],
+      ["storeId", "==", storeId],
       ["status", "==", "pending"],
     ] as const,
 } as const;

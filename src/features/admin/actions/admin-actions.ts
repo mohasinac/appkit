@@ -246,13 +246,12 @@ export async function adminUpdateProduct(
 export async function adminCreateProduct(
   admin: AdminActor,
   input: ProductCreateInput &
-    Partial<Pick<ProductDocument, "sellerId" | "sellerName" | "sellerEmail">>,
+    Partial<Pick<ProductDocument, "storeId" | "storeName">>,
 ): Promise<ProductDocument> {
   const product = await productRepository.create({
     ...input,
-    sellerId: input.sellerId || admin.uid,
-    sellerName: input.sellerName || admin.displayName || admin.email || "Admin",
-    sellerEmail: input.sellerEmail || admin.email || "",
+    storeId: input.storeId,
+    storeName: input.storeName || "Admin",
   });
 
   serverLogger.info("adminCreateProduct", {

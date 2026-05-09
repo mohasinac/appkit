@@ -14,10 +14,8 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const RV = {
-  sellerId: "user-retro-vault-owner",
-  storeId: "retro-vault-india",
-  sellerName: "Retro Vault India",
-  sellerEmail: "retrovault@letitrip.in",
+  storeId: "store-retro-vault-india",
+  storeName: "Retro Vault India",
 } as const;
 
 const RG_IMGS = [

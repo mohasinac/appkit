@@ -71,7 +71,7 @@ export interface AppliedOrderDiscount {
   type: "coupon" | "deal" | "auto";
   discountAmount: number;
   scope?: "admin" | "seller";
-  sellerId?: string;
+  storeId?: string;
 }
 
 export interface OrderDocument {
@@ -81,8 +81,8 @@ export interface OrderDocument {
   userId: string;
   userName: string;
   userEmail: string;
-  sellerId?: string;
-  sellerName?: string;
+  storeId?: string;
+  storeName?: string;
   items?: OrderDocumentItem[];
   orderType?: OrderType;
   imageUrls?: string[];
@@ -135,7 +135,7 @@ export const ORDER_COLLECTION = "orders" as const;
 export const ORDER_INDEXED_FIELDS = [
   "userId",
   "productId",
-  "sellerId",
+  "storeId",
   "status",
   "paymentStatus",
   "payoutStatus",
@@ -184,7 +184,7 @@ export type OrderAdminUpdateInput = Partial<
 
 export const orderQueryHelpers = {
   byUser: (userId: string) => ["userId", "==", userId] as const,
-  bySeller: (sellerId: string) => ["sellerId", "==", sellerId] as const,
+  byStore: (storeId: string) => ["storeId", "==", storeId] as const,
   byProduct: (productId: string) => ["productId", "==", productId] as const,
   byStatus: (status: OrderStatus) => ["status", "==", status] as const,
   byPaymentStatus: (status: PaymentStatus) =>

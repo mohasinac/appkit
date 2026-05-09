@@ -14,7 +14,7 @@ export interface ProductListActionParams {
   isAuction?: boolean;
   isPreOrder?: boolean;
   featured?: boolean;
-  sellerId?: string;
+  storeId?: string;
   categoriesIn?: string[];
 }
 
@@ -31,7 +31,7 @@ export async function listProducts(
     isAuction,
     isPreOrder,
     featured,
-    sellerId,
+    storeId,
     categoriesIn,
   } = params;
 
@@ -40,7 +40,7 @@ export async function listProducts(
   if (isPreOrder !== undefined)
     compoundFilters.push(`isPreOrder==${isPreOrder}`);
   if (featured === true) compoundFilters.push("featured==true");
-  if (sellerId) compoundFilters.push(`sellerId==${sellerId}`);
+  if (storeId) compoundFilters.push(`storeId==${storeId}`);
   if (filters) compoundFilters.push(filters);
   const mergedFilters =
     compoundFilters.length > 0 ? compoundFilters.join(",") : undefined;
@@ -175,9 +175,9 @@ export async function getRelatedProducts(
   };
 }
 
-export async function getSellerStorefrontProducts(
-  sellerId: string,
+export async function getStoreStorefrontProducts(
+  storeId: string,
 ): Promise<ProductDocument[]> {
-  const products = await productRepository.findBySeller(sellerId);
+  const products = await productRepository.findByStore(storeId);
   return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }

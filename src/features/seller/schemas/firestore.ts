@@ -36,8 +36,8 @@ export interface OfferDocument {
   buyerUid: string;
   buyerName: string;
   buyerEmail: string;
-  sellerId: string;
-  sellerName: string;
+  storeId: string;
+  storeName: string;
   offerAmount: number;
   listedPrice: number;
   counterAmount?: number;
@@ -57,7 +57,7 @@ export const OFFER_COLLECTION = "offers" as const;
 
 export const OFFER_INDEXED_FIELDS = [
   "buyerUid",
-  "sellerId",
+  "storeId",
   "productId",
   "status",
   "createdAt",
@@ -71,8 +71,8 @@ export const OFFER_FIELDS = {
   BUYER_UID: "buyerUid",
   BUYER_NAME: "buyerName",
   BUYER_EMAIL: "buyerEmail",
-  SELLER_ID: "sellerId",
-  SELLER_NAME: "sellerName",
+  STORE_ID: "storeId",
+  STORE_NAME: "storeName",
   OFFER_AMOUNT: "offerAmount",
   LISTED_PRICE: "listedPrice",
   COUNTER_AMOUNT: "counterAmount",
@@ -97,8 +97,8 @@ export type OfferCreateInput = Pick<
   | "buyerUid"
   | "buyerName"
   | "buyerEmail"
-  | "sellerId"
-  | "sellerName"
+  | "storeId"
+  | "storeName"
   | "offerAmount"
   | "listedPrice"
   | "currency"
@@ -120,7 +120,7 @@ export type OfferUpdateInput = Partial<
 
 export const offerQueryHelpers = {
   byBuyer: (buyerUid: string) => ["buyerUid", "==", buyerUid] as const,
-  bySeller: (sellerId: string) => ["sellerId", "==", sellerId] as const,
+  byStore: (storeId: string) => ["storeId", "==", storeId] as const,
   byProduct: (productId: string) => ["productId", "==", productId] as const,
   byStatus: (status: OfferStatus) => ["status", "==", status] as const,
   pending: () => ["status", "==", "pending"] as const,

@@ -47,11 +47,8 @@ export interface ProductDocument {
   images: string[];
   video?: ProductVideoField;
   status: ProductStatus;
-  sellerId: string;
-  storeId?: string;
+  storeId: string;
   storeName?: string;
-  sellerName: string;
-  sellerEmail: string;
   featured: boolean;
   tags: string[];
   specifications?: ProductSpecification[];
@@ -112,7 +109,7 @@ export const ProductStatusValues = {
 export const PRODUCT_COLLECTION = "products" as const;
 
 export const PRODUCT_INDEXED_FIELDS = [
-  "sellerId",
+  "storeId",
   "status",
   "category",
   "featured",
@@ -157,7 +154,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "availableQuantity",
   "images",
   "status",
-  "sellerName",
+  "storeName",
   "featured",
   "tags",
   "specifications",
@@ -257,7 +254,7 @@ export type ProductAdminUpdateInput = Partial<
 >;
 
 export const productQueryHelpers = {
-  bySeller: (sellerId: string) => ["sellerId", "==", sellerId] as const,
+  byStore: (storeId: string) => ["storeId", "==", storeId] as const,
   byStatus: (status: ProductStatus) => ["status", "==", status] as const,
   byCategory: (category: string) => ["category", "==", category] as const,
   featured: () => ["featured", "==", true] as const,

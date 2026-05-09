@@ -24,7 +24,6 @@ export interface CouponItem {
   getQuantity?: number;
   applicableProductIds?: string[];
   applicableCategoryIds?: string[];
-  sellerId?: string;
   storeId?: string;
   isPublic: boolean;
   isActive: boolean;
@@ -57,7 +56,7 @@ export interface PromotionsListResponse {
 export interface PromotionsListParams {
   scope?: CouponScope;
   isActive?: boolean;
-  sellerId?: string;
+  storeId?: string;
   page?: number;
   pageSize?: number;
   filters?: string;

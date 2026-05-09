@@ -13,10 +13,8 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 const SK = {
-  sellerId: "user-speed-king-diecast",
-  storeId: "speed-king-diecast",
-  sellerName: "Speed King Diecast",
-  sellerEmail: "speedking@letitrip.in",
+  storeId: "store-speed-king-diecast",
+  storeName: "Speed King Diecast",
 } as const;
 
 const TF_IMGS = [

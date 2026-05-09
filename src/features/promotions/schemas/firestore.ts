@@ -58,8 +58,8 @@ export interface CouponDocument {
   description: string;
   type: CouponType;
   scope: "admin" | "seller";
-  sellerId?: string;
-  storeSlug?: string;
+  /** For seller-scoped coupons: the storeId (= storeSlug = store.id) of the issuing store */
+  storeId?: string;
   applicableToAuctions?: boolean;
   discount: DiscountConfig;
   bxgy?: BXGYConfig;
@@ -99,7 +99,7 @@ export const COUPON_FIELDS = {
   TYPE: "type",
   SCOPE: "scope",
   CREATED_BY: "createdBy",
-  SELLER_ID: "sellerId",
+  STORE_ID: "storeId",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
   VALIDITY: {
@@ -196,6 +196,7 @@ export const couponQueryHelpers = {
   inactive: () => ["validity.isActive", "==", false] as const,
   byType: (type: CouponType) => ["type", "==", type] as const,
   byCreator: (userId: string) => ["createdBy", "==", userId] as const,
+  byStore: (storeId: string) => ["storeId", "==", storeId] as const,
   expiringSoon: (days = 7) => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + days);

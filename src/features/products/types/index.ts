@@ -50,8 +50,6 @@ export interface ProductItem {
   category?: string;
   categoryName?: string;
   categorySlug?: string;
-  sellerId?: string;
-  sellerName?: string;
   sellerAvatar?: string;
   status: ProductStatus;
   condition?: ProductCondition;
@@ -81,7 +79,7 @@ export interface ProductItem {
   /** Brand names for mixed-brand items */
   brands?: string[];
   storeId?: string;
-  sellerEmail?: string;
+  storeName?: string;
   specifications?: { name: string; value: string; unit?: string }[];
   features?: string[];
   shippingInfo?: string;
@@ -146,7 +144,6 @@ export interface ProductListParams {
   inStock?: boolean;
   isAuction?: boolean;
   isPreOrder?: boolean;
-  sellerId?: string;
   storeId?: string;
   sort?: string;
   page?: number;

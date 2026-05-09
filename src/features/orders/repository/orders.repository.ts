@@ -269,7 +269,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     userId: { canFilter: true, canSort: false },
     userName: { canFilter: true, canSort: true },
     userEmail: { canFilter: true, canSort: true },
-    sellerId: { canFilter: true, canSort: false },
+    storeId: { canFilter: true, canSort: false },
     productId: { canFilter: true, canSort: false },
     productTitle: { canFilter: true, canSort: true },
     status: { canFilter: true, canSort: true },
@@ -407,7 +407,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
       userId: string;
       userName: string;
       userEmail: string;
-      sellerId?: string;
+      storeId?: string;
       amount: number;
       currency: string;
       auctionProductId: string;
@@ -423,7 +423,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         userId: input.userId,
         userName: input.userName,
         userEmail: input.userEmail,
-        sellerId: input.sellerId ?? null,
+        storeId: input.storeId ?? null,
         quantity: 1,
         unitPrice: input.amount,
         totalPrice: input.amount,

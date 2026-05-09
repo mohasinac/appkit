@@ -115,10 +115,10 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /**
    * Find all payouts for a specific seller, newest first
    */
-  async findBySeller(sellerId: string): Promise<PayoutDocument[]> {
+  async findByStore(storeId: string): Promise<PayoutDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where(PAYOUT_FIELDS.SELLER_ID, "==", sellerId)
+      .where(PAYOUT_FIELDS.STORE_ID, "==", storeId)
       .orderBy(PAYOUT_FIELDS.CREATED_AT, "desc")
       .get();
 
@@ -133,13 +133,13 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
   /**
    * Find payouts for a seller by status, newest first
    */
-  async findBySellerAndStatus(
-    sellerId: string,
+  async findByStoreAndStatus(
+    storeId: string,
     status: PayoutStatus,
   ): Promise<PayoutDocument[]> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where(PAYOUT_FIELDS.SELLER_ID, "==", sellerId)
+      .where(PAYOUT_FIELDS.STORE_ID, "==", storeId)
       .where(PAYOUT_FIELDS.STATUS, "==", status)
       .orderBy(PAYOUT_FIELDS.CREATED_AT, "desc")
       .get();
@@ -241,10 +241,10 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
    * Get all order IDs that have already been paid out for a seller.
    * Used to avoid double-paying the same orders.
    */
-  async getPaidOutOrderIds(sellerId: string): Promise<Set<string>> {
+  async getPaidOutOrderIds(storeId: string): Promise<Set<string>> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where(PAYOUT_FIELDS.SELLER_ID, "==", sellerId)
+      .where(PAYOUT_FIELDS.STORE_ID, "==", storeId)
       .where(PAYOUT_FIELDS.STATUS, "in", ["pending", "processing", "completed"])
       .get();
 
@@ -262,7 +262,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
 
   static readonly SIEVE_FIELDS = {
     id: { canFilter: true, canSort: false },
-    sellerId: { canFilter: true, canSort: false },
+    storeId: { canFilter: true, canSort: false },
     sellerEmailIndex: { canFilter: true, canSort: false },
     sellerName: { canFilter: true, canSort: true },
     sellerEmail: { canFilter: false, canSort: false }, // encrypted — use sellerEmailIndex

@@ -1,5 +1,5 @@
-/**
- * Conversations Seed Data — Buyer ↔ Seller messaging on products.
+﻿/**
+ * Conversations Seed Data â€” Buyer â†” Seller messaging on products.
  * 8 conversations with realistic pre-purchase and post-purchase threads.
  * Covers: availability questions, grading enquiries, shipping queries, offer negotiation,
  * order tracking help, and return requests. Mixed read/unread states.
@@ -13,17 +13,16 @@ const hoursAgo = (n: number) => new Date(NOW.getTime() - n * 3_600_000);
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const conversationsSeedData: Partial<ConversationDocument>[] = [
-  // ── 1. Charizard PSA 9 — Pre-purchase grading query ───────────────────────
+  // â”€â”€ 1. Charizard PSA 9 â€” Pre-purchase grading query â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-charizard-rahul-aryan-001",
     buyerId: "user-rahul-sharma",
     buyerDisplayName: "Rahul Sharma",
-    sellerId: "user-aryan-kapoor",
     sellerDisplayName: "Aryan Kapoor",
     storeId: "store-pokemon-palace",
-    storeName: "Pokémon Palace",
+    storeName: "PokÃ©mon Palace",
     productId: "auction-pokemon-charizard-base1-psa9",
-    productTitle: "Pokémon Base Set Charizard #4 — PSA 9",
+    productTitle: "PokÃ©mon Base Set Charizard #4 â€” PSA 9",
     messages: [
       {
         id: "msg-001-1",
@@ -37,7 +36,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-001-2",
         senderId: "user-aryan-kapoor",
         senderRole: "seller",
-        body: "Hey Rahul! The centering is approximately 55/45 front and 60/40 back — well within PSA 9 standards. The slab itself has no cracks. This was submitted by me personally from a sealed WOTC booster. Happy to share full slab photos on WhatsApp if you DM me before bidding.",
+        body: "Hey Rahul! The centering is approximately 55/45 front and 60/40 back â€” well within PSA 9 standards. The slab itself has no cracks. This was submitted by me personally from a sealed WOTC booster. Happy to share full slab photos on WhatsApp if you DM me before bidding.",
         isRead: true,
         sentAt: daysAgo(3),
       },
@@ -67,17 +66,16 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── 2. Hot Wheels STH — Availability + bundle query ───────────────────────
+  // â”€â”€ 2. Hot Wheels STH â€” Availability + bundle query â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-hotwheels-priya-vikram-002",
     buyerId: "user-priya-patel",
     buyerDisplayName: "Priya Patel",
-    sellerId: "user-vikram-mehta",
     sellerDisplayName: "Vikram Mehta",
     storeId: "store-diecast-depot",
     storeName: "Diecast Depot",
     productId: "product-hot-wheels-super-th-bone-shaker",
-    productTitle: "Hot Wheels Super Treasure Hunt — Bone Shaker",
+    productTitle: "Hot Wheels Super Treasure Hunt â€” Bone Shaker",
     messages: [
       {
         id: "msg-002-1",
@@ -91,7 +89,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-002-2",
         senderId: "user-vikram-mehta",
         senderRole: "seller",
-        body: "Hi Priya! I only have 1 of this particular STH, but I do have 2x STH Twin Mill and 1x STH Deora III. All fresh from retail, blisterchecked. For 3+ cars I can do combined shipping in a single rigid box — saves you ~₹80. Let me know which you want!",
+        body: "Hi Priya! I only have 1 of this particular STH, but I do have 2x STH Twin Mill and 1x STH Deora III. All fresh from retail, blisterchecked. For 3+ cars I can do combined shipping in a single rigid box â€” saves you ~â‚¹80. Let me know which you want!",
         isRead: true,
         sentAt: hoursAgo(16),
       },
@@ -113,12 +111,11 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: hoursAgo(12),
   },
 
-  // ── 3. Beyblade X — Combo & authenticity check ───────────────────────────
+  // â”€â”€ 3. Beyblade X â€” Combo & authenticity check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-beyblade-arjun-rohit-003",
     buyerId: "user-arjun-singh",
     buyerDisplayName: "Arjun Singh",
-    sellerId: "user-rohit-joshi",
     sellerDisplayName: "Rohit Joshi",
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
@@ -137,7 +134,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-003-2",
         senderId: "user-rohit-joshi",
         senderRole: "seller",
-        body: "100% Takara Tomy Japan release. All my stock is direct import — no Hasbro, no knockoffs. The Japanese box has 'TAKARA TOMY' printed on the back spine and the QR code resolves to the official TT website. I can send unboxing photos before I ship if you want extra assurance.",
+        body: "100% Takara Tomy Japan release. All my stock is direct import â€” no Hasbro, no knockoffs. The Japanese box has 'TAKARA TOMY' printed on the back spine and the QR code resolves to the official TT website. I can send unboxing photos before I ship if you want extra assurance.",
         isRead: true,
         sentAt: daysAgo(1),
       },
@@ -153,12 +150,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-003-4",
         senderId: "user-rohit-joshi",
         senderRole: "seller",
-        body: "Yes, I ship pan-India via Shiprocket. Chandigarh is 4–5 business days. Order placed — I'll dispatch tomorrow and share tracking once it's picked up.",
+        body: "Yes, I ship pan-India via Shiprocket. Chandigarh is 4â€“5 business days. Order placed â€” I'll dispatch tomorrow and share tracking once it's picked up.",
         isRead: true,
         sentAt: hoursAgo(22),
       },
     ],
-    lastMessage: "Yes, I ship pan-India via Shiprocket. Chandigarh is 4–5 business days. Order placed — I'll dispatch tomorrow and share tracking once it's picked up.",
+    lastMessage: "Yes, I ship pan-India via Shiprocket. Chandigarh is 4â€“5 business days. Order placed â€” I'll dispatch tomorrow and share tracking once it's picked up.",
     lastMessageAt: hoursAgo(22),
     unreadBuyer: 0,
     unreadSeller: 0,
@@ -167,12 +164,11 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: hoursAgo(22),
   },
 
-  // ── 4. Yu-Gi-Oh! Singles — Post-purchase shipping delay ──────────────────
+  // â”€â”€ 4. Yu-Gi-Oh! Singles â€” Post-purchase shipping delay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-yugioh-sneha-nisha-004",
     buyerId: "user-sneha-kumar",
     buyerDisplayName: "Sneha Kumar",
-    sellerId: "user-nisha-reddy",
     sellerDisplayName: "Nisha Reddy",
     storeId: "store-cardgame-hub",
     storeName: "CardGame Hub",
@@ -191,7 +187,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-004-2",
         senderId: "user-nisha-reddy",
         senderRole: "seller",
-        body: "Hi Sneha, apologies for the delay! There was a Diwali backlog at the courier facility — they've confirmed it will leave Hyderabad tonight. Updated tracking should show movement tomorrow morning. If it doesn't arrive by end of week, I'll initiate a replacement. Very sorry for the inconvenience!",
+        body: "Hi Sneha, apologies for the delay! There was a Diwali backlog at the courier facility â€” they've confirmed it will leave Hyderabad tonight. Updated tracking should show movement tomorrow morning. If it doesn't arrive by end of week, I'll initiate a replacement. Very sorry for the inconvenience!",
         isRead: true,
         sentAt: daysAgo(2),
       },
@@ -213,23 +209,22 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── 5. Nendoroid — Return request negotiation ─────────────────────────────
+  // â”€â”€ 5. Nendoroid â€” Return request negotiation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-nendo-kartik-priya-005",
     buyerId: "user-kartik-nair",
     buyerDisplayName: "Kartik Nair",
-    sellerId: "user-priya-singh",
     sellerDisplayName: "Priya Singh",
     storeId: "store-tokyo-toys-india",
     storeName: "Tokyo Toys India",
     productId: "product-nendoroid-rem-rezero",
-    productTitle: "Nendoroid Rem — Re:Zero #663",
+    productTitle: "Nendoroid Rem â€” Re:Zero #663",
     messages: [
       {
         id: "msg-005-1",
         senderId: "user-kartik-nair",
         senderRole: "buyer",
-        body: "Hi, I received the Rem Nendoroid today but the hair accessory part is broken — it looks like it was cracked during shipping. Can I return it?",
+        body: "Hi, I received the Rem Nendoroid today but the hair accessory part is broken â€” it looks like it was cracked during shipping. Can I return it?",
         isRead: true,
         sentAt: minsAgo(180),
       },
@@ -237,7 +232,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-005-2",
         senderId: "user-priya-singh",
         senderRole: "seller",
-        body: "Oh no, I'm so sorry about that! Can you send me photos of the damage? The nendoroid was in perfect condition when I packed it — I double-boxed it with bubble wrap. If it was damaged in transit I can file a claim with the courier and either send a replacement part or issue a partial refund. Please don't ship it back yet until we figure out the best resolution.",
+        body: "Oh no, I'm so sorry about that! Can you send me photos of the damage? The nendoroid was in perfect condition when I packed it â€” I double-boxed it with bubble wrap. If it was damaged in transit I can file a claim with the courier and either send a replacement part or issue a partial refund. Please don't ship it back yet until we figure out the best resolution.",
         isRead: true,
         sentAt: minsAgo(150),
       },
@@ -245,12 +240,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-005-3",
         senderId: "user-kartik-nair",
         senderRole: "buyer",
-        body: "Photos sent to your WhatsApp. The maid headband part snapped in two. The figure itself is fine. A replacement part or partial refund would be great — full return seems excessive for one small part.",
+        body: "Photos sent to your WhatsApp. The maid headband part snapped in two. The figure itself is fine. A replacement part or partial refund would be great â€” full return seems excessive for one small part.",
         isRead: false,
         sentAt: minsAgo(90),
       },
     ],
-    lastMessage: "Photos sent to your WhatsApp. The maid headband part snapped in two. The figure itself is fine. A replacement part or partial refund would be great — full return seems excessive for one small part.",
+    lastMessage: "Photos sent to your WhatsApp. The maid headband part snapped in two. The figure itself is fine. A replacement part or partial refund would be great â€” full return seems excessive for one small part.",
     lastMessageAt: minsAgo(90),
     unreadBuyer: 0,
     unreadSeller: 1,
@@ -259,12 +254,11 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: minsAgo(90),
   },
 
-  // ── 6. Gundam PG — Pre-purchase spec check ────────────────────────────────
+  // â”€â”€ 6. Gundam PG â€” Pre-purchase spec check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-gundam-divya-priya-006",
     buyerId: "user-divya-menon",
     buyerDisplayName: "Divya Menon",
-    sellerId: "user-priya-singh",
     sellerDisplayName: "Priya Singh",
     storeId: "store-tokyo-toys-india",
     storeName: "Tokyo Toys India",
@@ -283,7 +277,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-006-2",
         senderId: "user-priya-singh",
         senderRole: "seller",
-        body: "Confirmed: this is the Ver. 3.0 — you can identify it by the full inner frame and the improved waist joint. Japanese release by Bandai Spirits (the successor brand to Bandai Hobby). Box is entirely in Japanese with the 'Bandai Spirits' logo on the bottom right. Instructions are in Japanese but the build sequence is identical to global releases.",
+        body: "Confirmed: this is the Ver. 3.0 â€” you can identify it by the full inner frame and the improved waist joint. Japanese release by Bandai Spirits (the successor brand to Bandai Hobby). Box is entirely in Japanese with the 'Bandai Spirits' logo on the bottom right. Instructions are in Japanese but the build sequence is identical to global releases.",
         isRead: true,
         sentAt: daysAgo(4),
       },
@@ -299,12 +293,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-006-4",
         senderId: "user-priya-singh",
         senderRole: "seller",
-        body: "This stock was already imported to India — I hold it domestically in Mumbai. You won't pay any customs. Delivery is via standard domestic courier, 3–5 business days.",
+        body: "This stock was already imported to India â€” I hold it domestically in Mumbai. You won't pay any customs. Delivery is via standard domestic courier, 3â€“5 business days.",
         isRead: true,
         sentAt: daysAgo(3),
       },
     ],
-    lastMessage: "This stock was already imported to India — I hold it domestically in Mumbai. You won't pay any customs. Delivery is via standard domestic courier, 3–5 business days.",
+    lastMessage: "This stock was already imported to India â€” I hold it domestically in Mumbai. You won't pay any customs. Delivery is via standard domestic courier, 3â€“5 business days.",
     lastMessageAt: daysAgo(3),
     unreadBuyer: 0,
     unreadSeller: 0,
@@ -313,12 +307,11 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(3),
   },
 
-  // ── 7. Vintage Hot Wheels — Offer negotiation ─────────────────────────────
+  // â”€â”€ 7. Vintage Hot Wheels â€” Offer negotiation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-vintage-hw-ankit-vikram-007",
     buyerId: "user-ankit-gupta",
     buyerDisplayName: "Ankit Gupta",
-    sellerId: "user-vikram-mehta",
     sellerDisplayName: "Vikram Mehta",
     storeId: "store-diecast-depot",
     storeName: "Diecast Depot",
@@ -329,7 +322,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-007-1",
         senderId: "user-ankit-gupta",
         senderRole: "buyer",
-        body: "Would you take ₹10,000 for the Banana Yellow Camaro? I see it's listed at ₹12,999.",
+        body: "Would you take â‚¹10,000 for the Banana Yellow Camaro? I see it's listed at â‚¹12,999.",
         isRead: true,
         sentAt: daysAgo(6),
       },
@@ -337,7 +330,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-007-2",
         senderId: "user-vikram-mehta",
         senderRole: "seller",
-        body: "Hi Ankit! I paid ₹9,500 to source this from a Tokyo flea market including import costs, so ₹10,000 doesn't leave me much margin. Best I can do is ₹11,500 — that's a ₹1,500 discount and I'll cover shipping. The car is unplayed, original wheels, and the button pops correctly — it's a genuine 1968 US card.",
+        body: "Hi Ankit! I paid â‚¹9,500 to source this from a Tokyo flea market including import costs, so â‚¹10,000 doesn't leave me much margin. Best I can do is â‚¹11,500 â€” that's a â‚¹1,500 discount and I'll cover shipping. The car is unplayed, original wheels, and the button pops correctly â€” it's a genuine 1968 US card.",
         isRead: true,
         sentAt: daysAgo(6),
       },
@@ -345,7 +338,7 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-007-3",
         senderId: "user-ankit-gupta",
         senderRole: "buyer",
-        body: "Fair enough — deal at ₹11,500 with free shipping. Can you create a custom listing or should I use the Make Offer feature?",
+        body: "Fair enough â€” deal at â‚¹11,500 with free shipping. Can you create a custom listing or should I use the Make Offer feature?",
         isRead: true,
         sentAt: daysAgo(5),
       },
@@ -353,12 +346,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-007-4",
         senderId: "user-vikram-mehta",
         senderRole: "seller",
-        body: "I've updated the listing price to ₹11,500 for you. Add to cart now and use coupon DIECAST10 for the remainder of the discount. Will dispatch day after tomorrow.",
+        body: "I've updated the listing price to â‚¹11,500 for you. Add to cart now and use coupon DIECAST10 for the remainder of the discount. Will dispatch day after tomorrow.",
         isRead: true,
         sentAt: daysAgo(5),
       },
     ],
-    lastMessage: "I've updated the listing price to ₹11,500 for you. Add to cart now and use coupon DIECAST10 for the remainder of the discount. Will dispatch day after tomorrow.",
+    lastMessage: "I've updated the listing price to â‚¹11,500 for you. Add to cart now and use coupon DIECAST10 for the remainder of the discount. Will dispatch day after tomorrow.",
     lastMessageAt: daysAgo(5),
     unreadBuyer: 0,
     unreadSeller: 0,
@@ -367,17 +360,16 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
     updatedAt: daysAgo(5),
   },
 
-  // ── 8. Pokémon Booster Box — Bulk order query ─────────────────────────────
+  // â”€â”€ 8. PokÃ©mon Booster Box â€” Bulk order query â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   {
     id: "conv-bulkorder-rahul-aryan-008",
     buyerId: "user-rahul-sharma",
     buyerDisplayName: "Rahul Sharma",
-    sellerId: "user-aryan-kapoor",
     sellerDisplayName: "Aryan Kapoor",
     storeId: "store-pokemon-palace",
-    storeName: "Pokémon Palace",
+    storeName: "PokÃ©mon Palace",
     productId: "product-pokemon-151-booster-box",
-    productTitle: "Pokémon TCG: Scarlet & Violet 151 Booster Box",
+    productTitle: "PokÃ©mon TCG: Scarlet & Violet 151 Booster Box",
     messages: [
       {
         id: "msg-008-1",
@@ -391,12 +383,12 @@ export const conversationsSeedData: Partial<ConversationDocument>[] = [
         id: "msg-008-2",
         senderId: "user-aryan-kapoor",
         senderRole: "seller",
-        body: "Yes! I have 5 sealed boxes in stock. For 3+ boxes I can do ₹12,999 per box (saving ₹2,000 per box vs list price) + free shipping in a sturdy reinforced outer carton. All boxes are factory-sealed with intact shrinkwrap.",
+        body: "Yes! I have 5 sealed boxes in stock. For 3+ boxes I can do â‚¹12,999 per box (saving â‚¹2,000 per box vs list price) + free shipping in a sturdy reinforced outer carton. All boxes are factory-sealed with intact shrinkwrap.",
         isRead: false,
         sentAt: minsAgo(200),
       },
     ],
-    lastMessage: "Yes! I have 5 sealed boxes in stock. For 3+ boxes I can do ₹12,999 per box (saving ₹2,000 per box vs list price) + free shipping in a sturdy reinforced outer carton. All boxes are factory-sealed with intact shrinkwrap.",
+    lastMessage: "Yes! I have 5 sealed boxes in stock. For 3+ boxes I can do â‚¹12,999 per box (saving â‚¹2,000 per box vs list price) + free shipping in a sturdy reinforced outer carton. All boxes are factory-sealed with intact shrinkwrap.",
     lastMessageAt: minsAgo(200),
     unreadBuyer: 1,
     unreadSeller: 0,

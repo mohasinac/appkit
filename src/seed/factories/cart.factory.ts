@@ -7,7 +7,6 @@ export interface SeedCartItemDocument {
   /** Unit price at time of adding to cart */
   price: number;
   storeId?: string;
-  sellerId?: string;
   variantId?: string;
 }
 
@@ -53,8 +52,8 @@ export function makeFullCart(
 ): SeedCartDocument {
   return makeCart({
     items: [
-      makeCartItem({ productId: "product-1", quantity: 2, price: 299, storeId: "store-1", sellerId: "seller-1" }),
-      makeCartItem({ productId: "product-2", quantity: 1, price: 499, storeId: "store-1", sellerId: "seller-1" }),
+      makeCartItem({ productId: "product-1", quantity: 2, price: 299, storeId: "store-1" }),
+      makeCartItem({ productId: "product-2", quantity: 1, price: 499, storeId: "store-1" }),
     ],
     ...overrides,
   });

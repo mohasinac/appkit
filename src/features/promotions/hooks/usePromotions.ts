@@ -15,7 +15,7 @@ export function usePromotions(
   if (params.scope) sp.set("scope", params.scope);
   if (params.isActive !== undefined)
     sp.set("isActive", String(params.isActive));
-  if (params.sellerId) sp.set("sellerId", params.sellerId);
+  if (params.storeId) sp.set("storeId", params.storeId);
   if (params.page) sp.set("page", String(params.page));
   if (params.pageSize) sp.set("pageSize", String(params.pageSize));
   if (params.sort) sp.set("sorts", params.sort);

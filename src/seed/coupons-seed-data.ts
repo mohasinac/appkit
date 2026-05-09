@@ -212,8 +212,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       "15% off your next order at Pokémon Palace. Exclusively for repeat customers. Min order ₹1,500. Max discount ₹750.",
     type: "percentage",
     scope: "seller",
-    storeSlug: "store-pokemon-palace",
-    sellerId: "user-aryan-kapoor",
+    storeId: "store-pokemon-palace",
     discount: {
       value: 15,
       maxDiscount: 75000,
@@ -252,8 +251,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       "₹100 flat off any order at Diecast Depot. Works on all Hot Wheels and Tomica cars. Min order ₹500.",
     type: "fixed",
     scope: "seller",
-    storeSlug: "store-diecast-depot",
-    sellerId: "user-vikram-mehta",
+    storeId: "store-diecast-depot",
     discount: {
       value: 10000,
       maxDiscount: 10000,
@@ -292,8 +290,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       "20% off all Beyblade X products at Beyblade Arena. Limited launch promotion. Max discount ₹500. One use per customer.",
     type: "percentage",
     scope: "seller",
-    storeSlug: "store-beyblade-arena",
-    sellerId: "user-rohit-joshi",
+    storeId: "store-beyblade-arena",
     discount: {
       value: 20,
       maxDiscount: 50000,
@@ -333,8 +330,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       "Free shipping on any order from CardGame Hub. No minimum order. Available to all buyers.",
     type: "free_shipping",
     scope: "seller",
-    storeSlug: "store-cardgame-hub",
-    sellerId: "user-nisha-reddy",
+    storeId: "store-cardgame-hub",
     discount: {
       value: 100,
       minPurchase: 0,
@@ -372,8 +368,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       "10% off your first order at Tokyo Toys India. Valid on all anime figures, Gundam kits, and Funko Pops. Min order ₹2,000. Max discount ₹500.",
     type: "percentage",
     scope: "seller",
-    storeSlug: "store-tokyo-toys-india",
-    sellerId: "user-priya-singh",
+    storeId: "store-tokyo-toys-india",
     discount: {
       value: 10,
       maxDiscount: 50000,

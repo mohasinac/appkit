@@ -43,7 +43,7 @@ export interface OrderItem {
   price: number;
   quantity: number;
   currency?: string;
-  sellerId?: string;
+  storeId?: string;
   attributes?: Record<string, string>;
 }
 

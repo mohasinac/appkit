@@ -43,7 +43,6 @@ export const couponItemSchema = z.object({
   getQuantity: z.number().optional(),
   applicableProductIds: z.array(z.string()).optional(),
   applicableCategoryIds: z.array(z.string()).optional(),
-  sellerId: z.string().optional(),
   storeId: z.string().optional(),
   isPublic: z.boolean(),
   isActive: z.boolean(),
@@ -56,7 +55,7 @@ export const couponItemSchema = z.object({
 export const promotionsListParamsSchema = z.object({
   scope: couponScopeSchema.optional(),
   isActive: z.coerce.boolean().optional(),
-  sellerId: z.string().optional(),
+  storeId: z.string().optional(),
   page: z.coerce.number().optional(),
   pageSize: z.coerce.number().optional(),
   filters: z.string().optional(),

@@ -421,18 +421,18 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
    *
    * @param sellerId - The seller's user UID
    */
-  async getSellerCoupons(sellerId: string): Promise<CouponDocument[]> {
+  async getStoreCoupons(storeId: string): Promise<CouponDocument[]> {
     try {
       const snapshot = await this.db
         .collection(this.collection)
-        .where(COUPON_FIELDS.SELLER_ID, "==", sellerId)
+        .where(COUPON_FIELDS.STORE_ID, "==", storeId)
         .orderBy(COUPON_FIELDS.CREATED_AT, "desc")
         .get();
 
       return snapshot.docs.map((doc) => this.mapDoc<CouponDocument>(doc));
     } catch (error) {
       throw new DatabaseError(
-        `Failed to retrieve seller coupons: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to retrieve store coupons: ${error instanceof Error ? error.message : "Unknown error"}`,
       );
     }
   }
@@ -460,7 +460,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     userId: string,
     cartItems: Array<{
       productId: string;
-      sellerId: string;
+      storeId: string;
       price: number;
       quantity: number;
       isPreOrder: boolean;
@@ -473,7 +473,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     eligibleSubtotal?: number;
     eligibleProductIds?: string[];
     scope?: "admin" | "seller";
-    sellerId?: string;
+    storeId?: string;
     message?: string;
   }> {
     const check = await this._fetchAndValidateCoupon(code, userId);
@@ -487,8 +487,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     const scope = coupon.scope ?? "admin";
 
     if (scope === "seller") {
-      // Restrict to this seller's items (auctions carry sellerId too)
-      eligible = eligible.filter((item) => item.sellerId === coupon.sellerId);
+      // Restrict to this store's items
+      eligible = eligible.filter((item) => item.storeId === coupon.storeId);
     }
 
     // Apply product-type filter based on the coupon's own flag:
@@ -556,7 +556,7 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       eligibleSubtotal,
       eligibleProductIds: eligible.map((item) => item.productId),
       scope,
-      sellerId: coupon.sellerId,
+      storeId: coupon.storeId,
       message: "Coupon is valid",
     };
   }

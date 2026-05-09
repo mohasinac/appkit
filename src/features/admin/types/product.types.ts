@@ -45,9 +45,8 @@ export interface AdminProduct {
     trimEnd?: number;
   };
   status: AdminProductStatus;
-  sellerId: string;
-  sellerName: string;
-  sellerEmail: string;
+  storeId?: string;
+  storeName?: string;
   featured: boolean;
   tags: string[];
   shippingInfo?: string;

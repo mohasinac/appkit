@@ -1,6 +1,6 @@
 export interface CartItemMeta {
   productId: string;
-  sellerId?: string;
+  storeId?: string;
   title: string;
   image?: string;
   price: number;

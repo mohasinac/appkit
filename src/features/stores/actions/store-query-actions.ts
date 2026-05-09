@@ -79,7 +79,7 @@ export async function getStoreProducts(
   }
 
   const filtersArr = [
-    `sellerId==${storeDoc.ownerId}`,
+    `storeId==${storeDoc.id}`,
     "status==published",
     "isAuction==false",
   ];
@@ -109,7 +109,7 @@ export async function getStoreAuctions(
   }
 
   const filtersArr = [
-    `sellerId==${storeDoc.ownerId}`,
+    `storeId==${storeDoc.id}`,
     "status==published",
     "isAuction==true",
   ];
@@ -135,7 +135,7 @@ export async function getStoreReviews(
     throw new NotFoundError("Store not found");
   }
 
-  const allProducts = await productRepository.findBySeller(storeDoc.ownerId);
+  const allProducts = await productRepository.findByStore(storeDoc.id);
   const publishedProducts = allProducts
     .filter((p) => p.status === ProductStatusValues.PUBLISHED)
     .slice(0, 20);

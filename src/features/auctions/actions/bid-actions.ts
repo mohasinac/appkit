@@ -10,6 +10,7 @@ import { bidRepository } from "../repository/bid.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { unitOfWork } from "../../../core/unit-of-work";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { getAdminRealtimeDb } from "../../../providers/db-firebase";
 import { maskPublicBid } from "../../../security";
 import {
@@ -54,8 +55,11 @@ export async function placeBid(
     }
   }
 
-  if (product.sellerId === userId) {
-    throw new AuthorizationError(ERROR_MESSAGES.BID.OWN_AUCTION);
+  if (product.storeId) {
+    const store = await storeRepository.findById(product.storeId);
+    if (store?.ownerId === userId) {
+      throw new AuthorizationError(ERROR_MESSAGES.BID.OWN_AUCTION);
+    }
   }
 
   const minimumBid =

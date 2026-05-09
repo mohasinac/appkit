@@ -22,7 +22,7 @@ export const orderItemSchema = z.object({
   price: z.number(),
   quantity: z.number(),
   currency: z.string().optional(),
-  sellerId: z.string().optional(),
+  storeId: z.string().optional(),
   attributes: z.record(z.string(), z.string()).optional(),
 });
 

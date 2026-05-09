@@ -1153,14 +1153,14 @@ const rawCategories: Partial<CategoryDocument>[] = [
 
 const STORE_CREATOR: Record<
   string,
-  { createdByType: "store"; createdByStoreId: string }
+  { createdByType: "store"; createdByStoreId: string; createdByStoreName: string }
 > = {
-  "user-aryan-kapoor":  { createdByType: "store", createdByStoreId: "store-pokemon-palace" },
-  "user-nisha-reddy":   { createdByType: "store", createdByStoreId: "store-cardgame-hub" },
-  "user-vikram-mehta":  { createdByType: "store", createdByStoreId: "store-diecast-depot" },
-  "user-rohit-joshi":   { createdByType: "store", createdByStoreId: "store-beyblade-arena" },
-  "user-amit-sharma":   { createdByType: "store", createdByStoreId: "store-gundam-galaxy" },
-  "user-priya-singh":   { createdByType: "store", createdByStoreId: "store-tokyo-toys-india" },
+  "user-aryan-kapoor":  { createdByType: "store", createdByStoreId: "store-pokemon-palace",     createdByStoreName: "Pokémon Palace" },
+  "user-nisha-reddy":   { createdByType: "store", createdByStoreId: "store-cardgame-hub",        createdByStoreName: "CardGame Hub" },
+  "user-vikram-mehta":  { createdByType: "store", createdByStoreId: "store-diecast-depot",       createdByStoreName: "Diecast Depot" },
+  "user-rohit-joshi":   { createdByType: "store", createdByStoreId: "store-beyblade-arena",      createdByStoreName: "Beyblade Arena" },
+  "user-amit-sharma":   { createdByType: "store", createdByStoreId: "store-gundam-galaxy",       createdByStoreName: "Gundam Galaxy" },
+  "user-priya-singh":   { createdByType: "store", createdByStoreId: "store-tokyo-toys-india",    createdByStoreName: "Tokyo Toys India" },
 };
 
 export const categoriesSeedData: Partial<CategoryDocument>[] = rawCategories.map(

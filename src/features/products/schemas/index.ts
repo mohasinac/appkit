@@ -52,8 +52,6 @@ export const productItemSchema = z.object({
   availableQuantity: z.number().optional(),
   category: z.string().optional(),
   categorySlug: z.string().optional(),
-  sellerId: z.string().optional(),
-  sellerName: z.string().optional(),
   sellerAvatar: z.string().optional(),
   status: z.enum([
     "draft",
@@ -94,7 +92,6 @@ export const productItemSchema = z.object({
   subcategory: z.string().optional(),
   brand: z.string().optional(),
   storeId: z.string().optional(),
-  sellerEmail: z.string().optional(),
   specifications: z
     .array(
       z.object({
@@ -178,7 +175,7 @@ export const productListParamsSchema = z.object({
   maxPrice: z.coerce.number().optional(),
   inStock: z.coerce.boolean().optional(),
   isAuction: z.coerce.boolean().optional(),
-  sellerId: z.string().optional(),
+  storeId: z.string().optional(),
   sort: z.string().optional(),
   page: z.coerce.number().optional(),
   perPage: z.coerce.number().optional(),

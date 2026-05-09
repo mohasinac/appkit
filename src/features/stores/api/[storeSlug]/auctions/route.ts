@@ -22,6 +22,7 @@ import type {
 } from "../../../types/index";
 
 interface StoreEntity {
+  id: string;
   ownerId: string;
 }
 
@@ -89,7 +90,7 @@ export async function GET(
     const pageSize = numParam(url, "pageSize", 24);
 
     const filterParts = [
-      `sellerId==${store.ownerId}`,
+      `storeId==${store.id}`,
       "status==published",
       "isAuction==true",
     ];

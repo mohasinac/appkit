@@ -90,6 +90,8 @@ export interface CategoryDocument {
   createdByType?: "admin" | "store";
   /** The storeId of the store that requested this category (only set when createdByType === "store"). */
   createdByStoreId?: string;
+  /** Display name of the store that requested this category. */
+  createdByStoreName?: string;
   createdAt: Date;
   updatedAt: Date;
 

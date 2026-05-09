@@ -16,11 +16,12 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
 import { mediaFieldSchema } from "../../../media/types/index";
+import { storeRepository } from "../../../stores/repository/store.repository";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 type ProductRecord = ProductItem & {
-  sellerId?: string;
+  storeId?: string;
 };
 
 function getRepo() {
@@ -132,7 +133,8 @@ export const PATCH = createRouteHandler<
       );
     }
 
-    const isOwner = product.sellerId === user?.uid;
+    const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
+    const isOwner = !!ownerStore && ownerStore.id === product.storeId;
     const isModerator = user?.role === "moderator";
     const isAdmin = user?.role === "admin";
 
@@ -174,7 +176,8 @@ export const DELETE = createRouteHandler<never, { id: string }>({
       );
     }
 
-    const isOwner = product.sellerId === user?.uid;
+    const ownerStore = product.storeId ? await storeRepository.findByOwnerId(user?.uid ?? "") : null;
+    const isOwner = !!ownerStore && ownerStore.id === product.storeId;
     const isModerator = user?.role === "moderator";
     const isAdmin = user?.role === "admin";
 

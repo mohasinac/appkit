@@ -82,7 +82,7 @@ const SAFE_PRODUCT_FILTER_FIELDS = new Set([
   "category",
   "brand",
   "condition",
-  "sellerId",
+  "storeId",
   "title",
   "price",
   "isAuction",
@@ -122,8 +122,8 @@ function buildFilters(url: URL): string {
   if (brand) parts.push(`brand==${brand}`);
   const condition = param(url, "condition");
   if (condition) parts.push(`condition==${condition}`);
-  const sellerId = param(url, "sellerId");
-  if (sellerId) parts.push(`sellerId==${sellerId}`);
+  const storeId = param(url, "storeId");
+  if (storeId) parts.push(`storeId==${storeId}`);
   const q = param(url, "q");
   if (q) parts.push(`title@=*${q}`);
   const minPrice = param(url, "minPrice");
@@ -221,18 +221,14 @@ export const POST = createRouteHandler({
     const data: Partial<ProductItem> = {
       ...(payload as Partial<ProductRecord>),
       status: "draft",
-      sellerId:
-        typeof payload.sellerId === "string"
-          ? payload.sellerId
-          : typeof userRecord.uid === "string"
-            ? userRecord.uid
-            : undefined,
-      sellerName:
-        typeof payload.sellerName === "string"
-          ? payload.sellerName
-          : typeof userRecord.displayName === "string"
-            ? userRecord.displayName
-            : undefined,
+      storeId:
+        typeof payload.storeId === "string"
+          ? payload.storeId
+          : undefined,
+      storeName:
+        typeof payload.storeName === "string"
+          ? payload.storeName
+          : undefined,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

@@ -45,7 +45,7 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     status: { canFilter: true, canSort: false },
     productId: { canFilter: true, canSort: false },
     buyerUid: { canFilter: true, canSort: false },
-    sellerId: { canFilter: true, canSort: false },
+    storeId: { canFilter: true, canSort: false },
     createdAt: { canFilter: false, canSort: true },
   } as const;
 
@@ -111,21 +111,21 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     };
   }
 
-  async findBySeller(
-    sellerId: string,
+  async findByStore(
+    storeId: string,
     model?: SieveModel,
   ): Promise<FirebaseSieveResult<OfferDocument>> {
     if (model) {
       return this.sieveQuery(model, OfferRepository.SIEVE_FIELDS, {
         baseQuery: this.getCollection().where(
-          OFFER_FIELDS.SELLER_ID,
+          OFFER_FIELDS.STORE_ID,
           "==",
-          sellerId,
+          storeId,
         ),
       });
     }
     const snap = await this.getCollection()
-      .where(OFFER_FIELDS.SELLER_ID, "==", sellerId)
+      .where(OFFER_FIELDS.STORE_ID, "==", storeId)
       .orderBy(OFFER_FIELDS.CREATED_AT, "desc")
       .get();
     const items = snap.docs.map((d) => this.mapDoc(d));
@@ -139,9 +139,9 @@ class OfferRepository extends BaseRepository<OfferDocument> {
     };
   }
 
-  async findPendingBySeller(sellerId: string): Promise<OfferDocument[]> {
+  async findPendingByStore(storeId: string): Promise<OfferDocument[]> {
     const snap = await this.getCollection()
-      .where(OFFER_FIELDS.SELLER_ID, "==", sellerId)
+      .where(OFFER_FIELDS.STORE_ID, "==", storeId)
       .where(OFFER_FIELDS.STATUS, "==", "pending")
       .orderBy(OFFER_FIELDS.CREATED_AT, "asc")
       .get();

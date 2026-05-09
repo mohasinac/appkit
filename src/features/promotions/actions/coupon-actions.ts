@@ -16,14 +16,14 @@ export interface CouponCartValidationResult {
   eligibleSubtotal?: number;
   eligibleProductIds?: string[];
   scope?: "admin" | "seller";
-  sellerId?: string;
+  storeId?: string;
   coupon?: unknown;
   error?: string;
 }
 
 export type CouponCartItem = {
   productId: string;
-  sellerId: string;
+  storeId: string;
   price: number;
   quantity: number;
   isPreOrder: boolean;
@@ -59,7 +59,7 @@ export async function validateCouponForCart(
     eligibleSubtotal: result.eligibleSubtotal,
     eligibleProductIds: result.eligibleProductIds,
     scope: result.scope,
-    sellerId: result.sellerId,
+    storeId: result.storeId,
     coupon: result.coupon,
     error: result.message,
   };

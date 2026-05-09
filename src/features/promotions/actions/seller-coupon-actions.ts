@@ -77,8 +77,7 @@ export async function sellerCreateCoupon(
     ...rest,
     code: fullCode,
     scope: "seller",
-    sellerId: userId,
-    storeSlug: store.storeSlug,
+    storeId: store.id,
     applicableToAuctions,
     createdBy: userId,
     validity: {
@@ -118,10 +117,13 @@ export async function sellerUpdateCoupon(
   const existing = await couponsRepository.findById(id);
   if (!existing) throw new NotFoundError("Coupon not found");
 
-  if (userRole !== "admin" && existing.sellerId !== userId)
-    throw new AuthorizationError(
-      "You do not have permission to update this coupon.",
-    );
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || existing.storeId !== store.id)
+      throw new AuthorizationError(
+        "You do not have permission to update this coupon.",
+      );
+  }
 
   const { validity: _validity, ...dataWithoutValidity } = input;
   const updated = await couponsRepository.update(id, {
@@ -157,10 +159,13 @@ export async function sellerDeleteCoupon(
   const existing = await couponsRepository.findById(id);
   if (!existing) throw new NotFoundError("Coupon not found");
 
-  if (userRole !== "admin" && existing.sellerId !== userId)
-    throw new AuthorizationError(
-      "You do not have permission to delete this coupon.",
-    );
+  if (userRole !== "admin") {
+    const store = await storeRepository.findByOwnerId(userId);
+    if (!store || existing.storeId !== store.id)
+      throw new AuthorizationError(
+        "You do not have permission to delete this coupon.",
+      );
+  }
 
   await couponsRepository.delete(id);
   serverLogger.info("sellerDeleteCoupon", { sellerId: userId, couponId: id });

@@ -20,10 +20,9 @@ export interface ConversationDocument {
   id: string;
   buyerId: string;
   buyerDisplayName: string;
-  sellerId: string;
-  sellerDisplayName: string;
   storeId: string;
   storeName: string;
+  sellerDisplayName: string;
   productId?: string;
   productTitle?: string;
   messages: ConversationMessage[];
@@ -40,7 +39,6 @@ export const CONVERSATIONS_COLLECTION = "conversations" as const;
 
 export const CONVERSATIONS_INDEXED_FIELDS = [
   "buyerId",
-  "sellerId",
   "storeId",
   "productId",
   "status",

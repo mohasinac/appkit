@@ -9,7 +9,6 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
-import { decryptPiiFields, encryptPiiFields } from "../../../security";
 import { generateUniqueId, slugify } from "../../../utils";
 import {
   PRODUCT_COLLECTION,
@@ -24,7 +23,7 @@ import {
 import type { ProductStatus } from "../types";
 
 const PRODUCT_FIELDS = {
-  SELLER_ID: "sellerId",
+  STORE_ID: "storeId",
   STATUS: "status",
   FEATURED: "featured",
   CATEGORY: "category",
@@ -37,8 +36,6 @@ const PRODUCT_FIELDS = {
   AVAILABLE_QUANTITY: "availableQuantity",
   VIEW_COUNT: "viewCount",
 } as const;
-
-const PRODUCT_PII_FIELDS = ["sellerName", "sellerEmail"] as const;
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
@@ -82,11 +79,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   protected override mapDoc<D = ProductDocument>(snap: DocumentSnapshot): D {
-    const raw = super.mapDoc<ProductDocument>(snap);
-    return decryptPiiFields(raw as unknown as Record<string, unknown>, [
-      ...PRODUCT_PII_FIELDS,
-      "title", // decrypt legacy records where title was encrypted; passthrough if not encrypted
-    ]) as unknown as D;
+    return super.mapDoc<D>(snap);
   }
 
   override async update(
@@ -94,12 +87,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     data: Partial<ProductDocument>,
   ): Promise<ProductDocument> {
     this.cacheInvalidateForId(id);
-
-    const encrypted = encryptPiiFields(
-      data as unknown as Record<string, unknown>,
-      [...PRODUCT_PII_FIELDS],
-    );
-    const updated = await super.update(id, encrypted as Partial<ProductDocument>);
+    const updated = await super.update(id, data);
     this.cacheSet(updated);
     return updated;
   }
@@ -128,23 +116,18 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       updatedAt: new Date(),
     };
 
-    const encrypted = encryptPiiFields(
-      productData as unknown as Record<string, unknown>,
-      [...PRODUCT_PII_FIELDS],
-    );
-
     await this.db
       .collection(this.collection)
       .doc(id)
-      .set(prepareForFirestore(encrypted));
+      .set(prepareForFirestore(productData as unknown as Record<string, unknown>));
 
     const created = { id, ...productData };
     this.cacheSet(created);
     return created;
   }
 
-  async findBySeller(sellerId: string): Promise<ProductDocument[]> {
-    return this.findBy(PRODUCT_FIELDS.SELLER_ID, sellerId);
+  async findByStore(storeId: string): Promise<ProductDocument[]> {
+    return this.findBy(PRODUCT_FIELDS.STORE_ID, storeId);
   }
 
   async findByStatus(status: ProductStatus): Promise<ProductDocument[]> {
@@ -252,10 +235,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }
 
-  async deleteBySeller(sellerId: string): Promise<number> {
+  async deleteByStore(storeId: string): Promise<number> {
     try {
       const snapshot = await this.getCollection()
-        .where(PRODUCT_FIELDS.SELLER_ID, "==", sellerId)
+        .where(PRODUCT_FIELDS.STORE_ID, "==", storeId)
         .get();
 
       if (snapshot.empty) return 0;
@@ -267,7 +250,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       return snapshot.size;
     } catch (error) {
       throw new DatabaseError(
-        `Failed to delete products for seller: ${sellerId}`,
+        `Failed to delete products for store: ${storeId}`,
         error,
       );
     }
@@ -287,9 +270,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     brand: { canFilter: true, canSort: true },
     condition: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: true },
-    sellerId: { canFilter: true, canSort: false },
     storeId: { canFilter: true, canSort: false },
-    sellerName: { canFilter: true, canSort: true },
+    storeName: { canFilter: true, canSort: true },
     featured: { canFilter: true, canSort: false },
     isAuction: { canFilter: true, canSort: false },
     isPreOrder: { canFilter: true, canSort: false },
@@ -323,7 +305,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
   async list(
     model: SieveModel,
-    opts?: { sellerId?: string; status?: string; categoriesIn?: string[] },
+    opts?: { storeId?: string; status?: string; categoriesIn?: string[] },
   ): Promise<FirebaseSieveResult<ProductDocument>> {
     let baseQuery = this.getCollection();
 
@@ -335,11 +317,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ) as typeof baseQuery;
     }
 
-    if (opts?.sellerId) {
+    if (opts?.storeId) {
       baseQuery = baseQuery.where(
-        PRODUCT_FIELDS.SELLER_ID,
+        PRODUCT_FIELDS.STORE_ID,
         "==",
-        opts.sellerId,
+        opts.storeId,
       ) as typeof baseQuery;
     }
 

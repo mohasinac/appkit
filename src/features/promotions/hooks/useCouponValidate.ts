@@ -7,7 +7,7 @@ interface ValidateCouponPayload {
   orderTotal?: number;
   cartItems?: Array<{
     productId: string;
-    sellerId?: string;
+    storeId?: string;
     price: number;
     quantity: number;
     isPreOrder?: boolean;

@@ -15,10 +15,9 @@ export interface CartItemDocument {
   price: number;
   currency: string;
   quantity: number;
-  sellerId: string;
-  sellerName: string;
-  /** Store slug used to build the clickable seller link (/stores/[storeSlug]) */
-  sellerSlug?: string;
+  /** Store slug (= storeId = store.id) used for order grouping and store link (/stores/[storeId]) */
+  storeId: string;
+  storeName: string;
   isAuction: boolean;
   isPreOrder: boolean;
   /** True when item was added from an accepted Make-an-Offer */
@@ -34,10 +33,10 @@ export interface CartAppliedCoupon {
   code: string;
   discountAmount: number;
   couponId?: string;
-  /** "admin" coupons apply across all sellers; "seller" coupons apply to one seller's items */
+  /** "admin" coupons apply across all stores; "seller" coupons apply to one store's items */
   scope?: "admin" | "seller";
-  /** For seller-scoped coupons, the seller whose items this applies to */
-  sellerId?: string;
+  /** For seller-scoped coupons, the storeId whose items this applies to */
+  storeId?: string;
   /** Item IDs (CartItemDocument.itemId) this coupon was calculated against */
   applicableItemIds?: string[];
   /** Mirrors CouponDocument.restrictions.combineWithSellerCoupons — used for conflict detection when adding future coupons */
@@ -75,8 +74,8 @@ export const CART_FIELDS = {
     PRICE: "price",
     CURRENCY: "currency",
     QUANTITY: "quantity",
-    SELLER_ID: "sellerId",
-    SELLER_NAME: "sellerName",
+    STORE_ID: "storeId",
+    STORE_NAME: "storeName",
     IS_AUCTION: "isAuction",
     IS_PRE_ORDER: "isPreOrder",
     ADDED_AT: "addedAt",
@@ -100,9 +99,9 @@ export type AddToCartInput = {
   price: number;
   currency: string;
   quantity: number;
-  sellerId: string;
-  sellerName: string;
-  sellerSlug?: string;
+  /** Store slug (= storeId = store.id) */
+  storeId: string;
+  storeName: string;
   isAuction?: boolean;
   isPreOrder?: boolean;
   isOffer?: boolean;

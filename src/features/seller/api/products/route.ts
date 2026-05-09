@@ -16,6 +16,7 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
+import { storeRepository } from "../../../stores/repository/store.repository";
 
 function numParam(url: URL, key: string, fallback: number): number {
   const v = url.searchParams.get(key);
@@ -35,11 +36,15 @@ export const GET = createRouteHandler({
       url.searchParams.get("sort") ??
       "-createdAt";
 
-    // Server-side security: force sellerId filter so sellers can't see others' products
-    const sellerFilter = `sellerId==${user!.uid}`;
+    // Server-side security: resolve storeId so sellers can't see others' products
+    const store = await storeRepository.findByOwnerId(user!.uid);
+    if (!store) {
+      return NextResponse.json({ success: true, data: { products: [], meta: { page, limit: pageSize, total: 0, totalPages: 0, hasMore: false } } });
+    }
+    const storeFilter = `storeId==${store.id}`;
     const combinedFilters = clientFilters
-      ? `${sellerFilter},${clientFilters}`
-      : sellerFilter;
+      ? `${storeFilter},${clientFilters}`
+      : storeFilter;
 
     const { db } = getProviders();
     if (!db)

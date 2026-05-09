@@ -59,24 +59,18 @@ function withRichTextDescription(
   };
 }
 
-// --- Seller shortcuts -------------------------------------------------------
+// --- Store shortcuts --------------------------------------------------------
 const FV = {
-  sellerId: "user-techhub-electronics-electron",
   storeId: "store-figurevault-jp-by-figurevault",
-  sellerName: "FigureVault JP",
-  sellerEmail: "techhub@letitrip.in",
+  storeName: "FigureVault JP",
 } as const;
 const AC = {
-  sellerId: "user-fashion-boutique-fashionb",
   storeId: "store-animecraft-apparel-by-animecraft",
-  sellerName: "AnimeCraft Apparel",
-  sellerEmail: "fashion@letitrip.in",
+  storeName: "AnimeCraft Apparel",
 } as const;
 const OS = {
-  sellerId: "user-home-essentials-homeesse",
   storeId: "store-otakushelf-co-by-otakushelf",
-  sellerName: "OtakuShelf Co",
-  sellerEmail: "home@letitrip.in",
+  storeName: "OtakuShelf Co",
 } as const;
 
 // --- Regular stockable products (24 � all referenced by orders/reviews/cart) -

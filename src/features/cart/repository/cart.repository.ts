@@ -27,10 +27,10 @@ export class CartRepository extends BaseRepository<CartDocument> {
       ...raw,
       items: (raw.items ?? []).map((item) => ({
         ...item,
-        sellerName:
-          typeof item.sellerName === "string"
-            ? (decryptPii(item.sellerName) ?? item.sellerName)
-            : item.sellerName,
+        storeName:
+          typeof item.storeName === "string"
+            ? (decryptPii(item.storeName) ?? item.storeName)
+            : item.storeName,
       })),
     } as unknown as D;
   }
@@ -102,8 +102,8 @@ export class CartRepository extends BaseRepository<CartDocument> {
           price: input.price,
           currency: input.currency,
           quantity: input.quantity,
-          sellerId: input.sellerId,
-          sellerName: input.sellerName,
+          storeId: input.storeId,
+          storeName: input.storeName,
           isAuction: input.isAuction ?? false,
           isPreOrder: input.isPreOrder ?? false,
           ...(input.isOffer !== undefined && { isOffer: input.isOffer }),
