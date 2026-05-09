@@ -42,98 +42,114 @@ export function ReviewCard({ review, className = "" }: ReviewCardProps) {
     ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
     : null;
 
-  const card = (
+  const hasFooter = !!(review.storeSlug && review.storeName) || !!productHref;
+
+  return (
     <Div
-      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md cursor-pointer ${className}`}
+      className={`group flex flex-col h-full rounded-xl border border-neutral-200 bg-white p-5 dark:border-zinc-700 dark:bg-zinc-900 transition-shadow hover:shadow-md ${className}`}
     >
-      <Div className="flex items-start gap-3">
-        {review.userAvatar ? (
-          <Div
-            role="img"
-            aria-label={displayName}
-            className="h-9 w-9 flex-shrink-0 rounded-full bg-center bg-cover"
-            style={{ backgroundImage: `url(${review.userAvatar})` }}
-          />
-        ) : (
-          <Div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300">
-            {initials}
-          </Div>
-        )}
-        <Div className="flex-1 min-w-0">
-          <Row wrap gap="sm">
-            <Span className="font-medium text-neutral-900 dark:text-white">
-              {displayName}
-            </Span>
-            {review.verified && (
-              <Span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                Verified
+      {/* Clicking the main body navigates to the review detail */}
+      <Link href={reviewHref} className="flex flex-col flex-1 min-h-0">
+        <Div className="flex items-start gap-3">
+          {review.userAvatar ? (
+            <Div
+              role="img"
+              aria-label={displayName}
+              className="h-9 w-9 flex-shrink-0 rounded-full bg-center bg-cover"
+              style={{ backgroundImage: `url(${review.userAvatar})` }}
+            />
+          ) : (
+            <Div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-neutral-200 text-sm font-medium text-neutral-600 dark:bg-zinc-700 dark:text-zinc-300">
+              {initials}
+            </Div>
+          )}
+          <Div className="flex-1 min-w-0">
+            <Row wrap gap="sm">
+              <Span className="font-medium text-neutral-900 dark:text-white">
+                {displayName}
               </Span>
-            )}
-            {date && (
-              <Span className="text-xs text-neutral-400 dark:text-zinc-500">
-                {date}
-              </Span>
-            )}
-          </Row>
-          <Div className="mt-1">
-            <StarRating value={review.rating} size="sm" readOnly />
+              {review.verified && (
+                <Span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                  Verified
+                </Span>
+              )}
+              {date && (
+                <Span className="text-xs text-neutral-400 dark:text-zinc-500">
+                  {date}
+                </Span>
+              )}
+            </Row>
+            <Div className="mt-1">
+              <StarRating value={review.rating} size="sm" readOnly />
+            </Div>
           </Div>
         </Div>
-      </Div>
 
-      {review.title && (
-        <Heading
-          level={4}
-          className="mt-3 font-semibold text-neutral-900 dark:text-white"
-        >
-          {review.title}
-        </Heading>
-      )}
+        {review.title && (
+          <Heading
+            level={4}
+            className="mt-3 font-semibold text-neutral-900 dark:text-white"
+          >
+            {review.title}
+          </Heading>
+        )}
 
-      {review.comment && (
-        <RichText
-          html={normalizeRichTextHtml(review.comment)}
-          proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-          className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
-        />
-      )}
+        {review.comment && (
+          <RichText
+            html={normalizeRichTextHtml(review.comment)}
+            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+            className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-zinc-400"
+          />
+        )}
 
-      {review.images && review.images.length > 0 && (
-        <Row wrap gap="sm" className="mt-3">
-          {review.images.map((img, i) => (
-            <Div
-              key={i}
-              role="img"
-              aria-label={`Review image ${i + 1}`}
-              className="h-16 w-16 rounded-lg bg-center bg-cover border border-neutral-100 dark:border-zinc-700"
-              style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
-            />
-          ))}
-        </Row>
-      )}
+        {review.images && review.images.length > 0 && (
+          <Row wrap gap="sm" className="mt-3">
+            {review.images.map((img, i) => (
+              <Div
+                key={i}
+                role="img"
+                aria-label={`Review image ${i + 1}`}
+                className="h-16 w-16 rounded-lg bg-center bg-cover border border-neutral-100 dark:border-zinc-700"
+                style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
+              />
+            ))}
+          </Row>
+        )}
 
-      {(review.helpfulCount ?? 0) > 0 && (
-        <Text className="mt-3 text-xs text-neutral-400 dark:text-zinc-500">
-          {review.helpfulCount} found this helpful
-        </Text>
-      )}
+        {(review.helpfulCount ?? 0) > 0 && (
+          <Text className="mt-3 text-xs text-neutral-400 dark:text-zinc-500">
+            {review.helpfulCount} found this helpful
+          </Text>
+        )}
+      </Link>
 
-      {productHref && (
-        <Div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 border-t border-neutral-100 dark:border-zinc-800">
-          <span aria-hidden="true">📦</span>
-          <span className={THEME_CONSTANTS.utilities.textClamp1}>
-            {review.productTitle ?? "View Product"}
-          </span>
-          <span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</span>
+      {/* Footer links — rendered outside the review Link to avoid nested anchors */}
+      {hasFooter && (
+        <Div className="mt-3 pt-3 border-t border-neutral-100 dark:border-zinc-800 flex flex-col gap-1.5">
+          {review.storeSlug && review.storeName && (
+            <Link
+              href={String(ROUTES.PUBLIC.STORE_DETAIL(review.storeSlug))}
+              className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+            >
+              <span aria-hidden="true">🏪</span>
+              <span className={THEME_CONSTANTS.utilities.textClamp1}>{review.storeName}</span>
+            </Link>
+          )}
+          {productHref && (
+            <Link
+              href={productHref}
+              className="flex items-center gap-1.5 text-xs font-medium text-neutral-500 dark:text-zinc-400 hover:text-neutral-700 dark:hover:text-zinc-200"
+            >
+              <span aria-hidden="true">📦</span>
+              <span className={THEME_CONSTANTS.utilities.textClamp1}>
+                {review.productTitle ?? "View Product"}
+              </span>
+              <span aria-hidden="true" className="ml-auto text-primary group-hover:translate-x-0.5 transition-transform">→</span>
+            </Link>
+          )}
         </Div>
       )}
     </Div>
-  );
-
-  return (
-    <Link href={reviewHref} className="block h-full">
-      {card}
-    </Link>
   );
 }
 

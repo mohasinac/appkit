@@ -13,6 +13,7 @@ import { productRepository } from "../../products/repository/products.repository
 import { ProductStatusValues } from "../../products/schemas";
 import { reviewRepository } from "../../reviews/repository/reviews.repository";
 import type { UserDocument } from "../schemas";
+import type { Review } from "../../reviews/types";
 
 export type UpdateProfileInput = {
   displayName?: string;
@@ -50,7 +51,15 @@ export async function getPublicUserProfile(
   userId: string,
 ): Promise<Pick<
   UserDocument,
-  "id" | "displayName" | "photoURL" | "role" | "createdAt"
+  | "id"
+  | "displayName"
+  | "photoURL"
+  | "role"
+  | "createdAt"
+  | "storeId"
+  | "storeSlug"
+  | "publicProfile"
+  | "stats"
 > | null> {
   const user = await userRepository.findById(userId);
   if (!user) return null;
@@ -60,6 +69,10 @@ export async function getPublicUserProfile(
     photoURL: user.photoURL,
     role: user.role,
     createdAt: user.createdAt,
+    storeId: user.storeId,
+    storeSlug: user.storeSlug,
+    publicProfile: user.publicProfile,
+    stats: user.stats,
   };
 }
 
@@ -74,7 +87,29 @@ export async function getSellerReviews(sellerId: string) {
       .slice(0, 20)
       .map((p) => reviewRepository.findApprovedByProduct(p.id).catch(() => [])),
   );
-  return batches.flat().map(maskPublicReview);
+  return batches.flat().map((r): Review => ({
+    id: r.id,
+    productId: r.productId,
+    productTitle: r.productTitle,
+    sellerId: r.sellerId,
+    userId: r.userId,
+    userName: maskPublicReview(r).userName,
+    userAvatar: r.userAvatar,
+    rating: r.rating as Review["rating"],
+    title: r.title,
+    comment: r.comment,
+    images: r.images?.map((url) => ({ url })),
+    status: r.status,
+    helpfulCount: r.helpfulCount,
+    reportCount: r.reportCount,
+    verified: r.verified,
+    featured: r.featured,
+    createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : undefined,
+    updatedAt: r.updatedAt instanceof Date ? r.updatedAt.toISOString() : undefined,
+    // storeId === storeSlug for stores (pure slug IDs in this project)
+    storeSlug: r.storeId,
+    storeName: r.storeName,
+  }));
 }
 
 export async function getSellerProducts(sellerId: string) {

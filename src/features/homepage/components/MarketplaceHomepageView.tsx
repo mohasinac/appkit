@@ -2,6 +2,7 @@ import React from "react";
 import { Main } from "../../../ui";
 import { carouselRepository, faqsRepository, siteSettingsRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
+import { fetchLiveStats, type LiveStatsMap } from "../lib/live-stats";
 import { AnnouncementBar } from "./AnnouncementBar";
 import { HeroCarousel } from "./HeroCarousel";
 import { StatsCounterSection } from "./StatsCounterSection";
@@ -30,6 +31,7 @@ import type {
   HomepageSectionDocument,
   WelcomeSectionConfig,
   StatsSectionConfig,
+  LiveStatMetric,
   ProductsSectionConfig,
   AuctionsSectionConfig,
   PreOrdersSectionConfig,
@@ -156,6 +158,7 @@ function renderSection(
   newsletterFormSlot: React.ReactNode,
   faqItems: Array<{ id: string; question: string; answer: string }>,
   slides: any[],
+  liveStats: LiveStatsMap,
 ): React.ReactNode {
   const { type, config } = section;
   const adSlotKey = AD_SLOT_MAP[type] as keyof MarketplaceHomepageViewAdSlots | undefined;
@@ -214,14 +217,25 @@ function renderSection(
                   typeof item?.value === "string" &&
                   item.value.trim().length > 0,
               )
-              .map((item, index) => ({
-                key:
-                  typeof item?.key === "string" && item.key.trim().length > 0
-                    ? item.key
-                    : `stat-${index}`,
-                label: item.label,
-                value: item.value,
-              }))
+              .map((item, index) => {
+                // Resolve display value: prefer live metric when configured
+                const liveRaw =
+                  item.source === "live" && item.metric
+                    ? liveStats[item.metric as LiveStatMetric]
+                    : undefined;
+                const displayValue =
+                  liveRaw !== undefined
+                    ? liveRaw + (item.suffix ?? "")
+                    : item.value;
+                return {
+                  key:
+                    typeof item?.key === "string" && item.key.trim().length > 0
+                      ? item.key
+                      : `stat-${index}`,
+                  label: item.label,
+                  value: displayValue,
+                };
+              })
           : [];
         if (stats.length === 0) {
           return null;
@@ -511,6 +525,23 @@ export async function MarketplaceHomepageView({
     homepageSectionsRepository.getEnabledSections().catch(() => [] as HomepageSectionDocument[]),
     faqsRepository.getHomepageFAQs().catch(() => []),
   ]);
+
+  // Collect live stat metrics requested by any enabled stats section
+  const liveMetricsNeeded = new Set<LiveStatMetric>();
+  for (const section of enabledSections) {
+    if (section.type === "stats") {
+      const cfg = section.config as StatsSectionConfig;
+      for (const stat of cfg?.stats ?? []) {
+        if (stat.source === "live" && stat.metric) {
+          liveMetricsNeeded.add(stat.metric as LiveStatMetric);
+        }
+      }
+    }
+  }
+  const liveStats: LiveStatsMap =
+    liveMetricsNeeded.size > 0
+      ? await fetchLiveStats([...liveMetricsNeeded])
+      : {};
   const orderedSections = [...enabledSections].sort((a, b) => {
     if (a.order !== b.order) return a.order - b.order;
     const aUpdated = new Date(a.updatedAt).getTime();
@@ -529,7 +560,7 @@ export async function MarketplaceHomepageView({
     <Main>
       {showAnnouncement ? <AnnouncementBar message={announcementMessage} /> : null}
       {orderedSections.map((section) =>
-        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, slides as any[]),
+        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, slides as any[], liveStats),
       )}
     </Main>
   );

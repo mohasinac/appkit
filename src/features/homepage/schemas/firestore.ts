@@ -260,12 +260,32 @@ export interface ProductsSectionConfig {
   loop?: boolean;
 }
 
+/**
+ * Metrics that the homepage stats section can resolve live from Firestore.
+ * When a stat has source "live" and a matching metric, the value field is
+ * used only as a fallback (shown if the live fetch fails or is still loading).
+ */
+export type LiveStatMetric =
+  | "total_listings"     // all products (standard + auction + pre-order)
+  | "verified_sellers"   // total stores
+  | "total_buyers"       // users with role "user"
+  | "platform_rating"    // average rating across all approved reviews
+  | "total_orders"       // all orders
+  | "total_reviews";     // all approved reviews
+
 export interface StatsSectionConfig {
   title?: string;
   stats: Array<{
     key: string;
     label: string;
+    /** Fallback value shown when source is "static" or when a live fetch fails. */
     value: string;
+    /** "live" resolves the value from Firestore at render time; "static" uses value as-is. */
+    source?: "static" | "live";
+    /** Which Firestore metric to fetch when source is "live". */
+    metric?: LiveStatMetric;
+    /** Optional suffix appended after the live value (e.g. "★", "+"). */
+    suffix?: string;
   }>;
 }
 
@@ -320,12 +340,12 @@ export interface FAQSectionConfig {
   linkToFullPage: boolean;
   categories: Array<
     | "general"
-    | "shipping"
-    | "returns"
-    | "payment"
-    | "account"
-    | "products"
-    | "sellers"
+    | "orders_payment"
+    | "shipping_delivery"
+    | "returns_refunds"
+    | "product_information"
+    | "account_security"
+    | "technical_support"
   >;
 }
 

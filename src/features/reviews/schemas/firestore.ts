@@ -25,6 +25,8 @@ export interface ReviewDocument {
   productId: string;
   productTitle: string;
   sellerId?: string;
+  storeId?: string;
+  storeName?: string;
   userId: string;
   userName: string;
   userAvatar?: string;

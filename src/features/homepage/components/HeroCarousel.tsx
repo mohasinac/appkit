@@ -320,7 +320,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
 
   if (isLoading) {
     return (
-      <Div className={`relative w-full min-h-[260px] md:${heightClass} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}>
+      <Div className={`relative w-full ${heightClass} ${THEME_CONSTANTS.themed.bgTertiary} animate-pulse`}>
         <Div className={`${position.fill} ${flex.center}`}>
           <Text variant="secondary">Loading...</Text>
         </Div>
@@ -342,7 +342,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
   return (
     <Section
       ref={sectionRef}
-      className={`relative w-full min-h-[260px] md:${heightClass} overflow-hidden`}
+      className={`relative w-full ${heightClass} overflow-hidden`}
       aria-roledescription="carousel"
       aria-label="Hero carousel"
       onKeyDown={handleKeyDown}
@@ -370,7 +370,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
             return (
               <Div
                 key={slide.id}
-                className={`snap-start flex-none w-full relative self-stretch bg-zinc-900 min-h-[260px] md:${slideHeightClass}`}
+                className={`snap-start flex-none w-full relative self-stretch bg-zinc-900 ${slideHeightClass}`}
               >
                 {/* Background */}
                 <Div className={position.fill}>
@@ -436,7 +436,7 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                       alignItems: "stretch",
                     }}
                   >
-                    {slide.cards.slice(0, 2).map((card) => (
+                    {slide.cards.slice(0, 6).map((card) => (
                       <CarouselCardRenderer
                         key={card.id}
                         card={card}

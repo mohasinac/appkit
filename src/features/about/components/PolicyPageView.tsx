@@ -2,6 +2,8 @@ import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section, Stack } from "../../../ui";
 import { TextLink } from "../../../ui";
+import { siteSettingsRepository } from "../../../repositories";
+
 const DEFAULT_HERO_CLASS =
   "bg-gradient-to-br from-violet-700 to-indigo-700 dark:from-violet-800 dark:to-indigo-800";
 
@@ -11,6 +13,20 @@ export interface PolicyPageViewProps {
   heroBannerClass?: string;
 }
 
+const namespaceMap = {
+  privacy: "privacy",
+  terms: "terms",
+  cookies: "cookies",
+  refund: "refundPolicy",
+} as const;
+
+const firestoreFieldMap: Record<PolicyPageViewProps["policy"], string> = {
+  privacy: "privacy",
+  terms: "terms",
+  cookies: "cookies",
+  refund: "refundPolicy",
+};
+
 export async function PolicyPageView({
   policy,
   heroBannerClass = DEFAULT_HERO_CLASS,
@@ -18,17 +34,19 @@ export async function PolicyPageView({
   const { themed, page } = THEME_CONSTANTS;
   const { getTranslations } = await import("next-intl/server");
 
-  const namespaceMap = {
-    privacy: "privacyPolicy",
-    terms: "termsOfService",
-    cookies: "cookiePolicy",
-    refund: "refundPolicy",
-  } as const;
-
   const t = await getTranslations(namespaceMap[policy]);
 
-  // Each policy namespace must export: title, lastUpdated, intro, sections (JSON array)
-  // sections: [{ heading: string, body: string }]
+  // Check Firestore for admin-overridden HTML content
+  let adminHtml = "";
+  try {
+    const settings = await siteSettingsRepository.getSingleton();
+    const legalPages = (settings as any).legalPages ?? {};
+    adminHtml = legalPages[firestoreFieldMap[policy]] ?? "";
+  } catch {
+    // Firestore unavailable — fall back to i18n
+  }
+
+  // i18n fallback sections
   const rawSections = t.raw("sections") as Array<{
     heading: string;
     body: string;
@@ -40,7 +58,10 @@ export async function PolicyPageView({
     { label: t("relatedTerms"), href: String(ROUTES.PUBLIC.TERMS) },
     { label: t("relatedCookies"), href: String(ROUTES.PUBLIC.COOKIE_POLICY) },
     { label: t("relatedRefund"), href: String(ROUTES.PUBLIC.REFUND_POLICY) },
-  ].filter((l) => !l.href.includes(`/${policy}`));
+  ].filter((l) => {
+    const policyPath = { privacy: "/privacy", terms: "/terms", cookies: "/cookies", refund: "/refund-policy" }[policy];
+    return !l.href.endsWith(policyPath ?? "");
+  });
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="policypageview-div-181">
@@ -59,29 +80,39 @@ export async function PolicyPageView({
       </Section>
 
       <div className={`${page.container.sm} py-10 md:py-12 lg:py-16`} data-section="policypageview-div-183">
-        {/* Intro */}
-        {t("intro") && (
-          <Text variant="secondary" className="mb-10 text-base leading-relaxed">
-            {t("intro")}
-          </Text>
-        )}
-
-        {/* Policy sections */}
-        <Stack gap="xl" className="space-y-10">
-          {sections.map((section, i) => (
-            <Section key={i}>
-              <Heading level={2} className="mb-3">
-                {section.heading}
-              </Heading>
-              <Text
-                variant="secondary"
-                className="leading-relaxed whitespace-pre-line"
-              >
-                {section.body}
+        {adminHtml ? (
+          /* Admin-set HTML takes priority */
+          <div
+            className="prose prose-neutral dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: adminHtml }}
+          />
+        ) : (
+          <>
+            {/* Intro */}
+            {t("intro") && (
+              <Text variant="secondary" className="mb-10 text-base leading-relaxed">
+                {t("intro")}
               </Text>
-            </Section>
-          ))}
-        </Stack>
+            )}
+
+            {/* Policy sections from i18n */}
+            <Stack gap="xl" className="space-y-10">
+              {sections.map((section, i) => (
+                <Section key={i}>
+                  <Heading level={2} className="mb-3">
+                    {section.heading}
+                  </Heading>
+                  <Text
+                    variant="secondary"
+                    className="leading-relaxed whitespace-pre-line"
+                  >
+                    {section.body}
+                  </Text>
+                </Section>
+              ))}
+            </Stack>
+          </>
+        )}
 
         {/* Related policies footer */}
         {relatedLinks.length > 0 && (

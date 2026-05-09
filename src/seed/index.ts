@@ -163,6 +163,8 @@ export { reviewsSeedData } from "./reviews-seed-data";
 export { cartsSeedData } from "./cart-seed-data";
 export { bidsSeedData } from "./bids-seed-data";
 export { couponsSeedData } from "./coupons-seed-data";
+export type { CouponUsageSeedRecord } from "./coupon-usage-seed-data";
+export { couponUsageSeedData } from "./coupon-usage-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { notificationsSeedData } from "./notifications-seed-data";
@@ -172,6 +174,9 @@ export { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 export { siteSettingsSeedData } from "./site-settings-seed-data";
 export { carouselSlidesSeedData } from "./carousel-slides-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
+export { conversationsSeedData } from "./conversations-seed-data";
+export { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
+export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 
 // Seed manifest — lightweight index for SeedPanel previews
 export type { SeedManifest, SeedManifestEntry } from "./manifest";

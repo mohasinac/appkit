@@ -188,4 +188,111 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     createdAt: daysAgo(290),
     updatedAt: daysAgo(2),
   },
+
+  // ── Store 6: Tokyo Toys India (Anime Figures, Gundam, Funko Pop) ──────────
+  {
+    id: "store-tokyo-toys-india",
+    storeSlug: "store-tokyo-toys-india",
+    ownerId: "user-priya-singh",
+    storeName: "Tokyo Toys India",
+    storeDescription:
+      "India's premier anime figure and Gundam store. Nendoroids, S.H.Figuarts, scale PVC figures, Real Grade and High Grade Gunpla, and Funko Pops. All sourced from Akihabara, Good Smile Company, and Bandai Spirits directly.",
+    storeCategory: "category-anime-figures",
+    storeLogoURL:
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=400&h=400&fit=crop",
+    storeBannerURL:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1600&h=400&fit=crop",
+    status: "active",
+    bio: "I visit Akihabara twice a year and bring back genuine figures direct from Good Smile, Bandai Spirits, and Kotobukiya. All products have original Japanese box with serial number. No grey-market, no bootlegs. Specialising in Nendoroids and S.H.Figuarts with a growing Gunpla section.",
+    location: "Chennai, Tamil Nadu, India",
+    socialLinks: {
+      instagram: "https://instagram.com/priya.tokyotoys",
+      twitter: "https://twitter.com/tokyotoysindia",
+    },
+    returnPolicy:
+      "7-day return on factory-sealed product (seal must be intact). Figures with broken or missing accessories: 3-day return window, photographic evidence required. No returns on opened Nendoroids.",
+    shippingPolicy:
+      "Each figure individually bubble-wrapped in rigid box with foam padding. Free shipping on orders above ₹999. 3–5 business days. Japan-sourced items dispatched within 24 hours of arrival.",
+    isPublic: true,
+    isVacationMode: false,
+    stats: {
+      totalProducts: 0,
+      itemsSold: 52,
+      totalReviews: 28,
+      averageRating: 4.8,
+    },
+    createdAt: daysAgo(260),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Store 7: Gundam Galaxy (Gunpla model kits specialist) ─────────────────
+  {
+    id: "store-gundam-galaxy",
+    storeSlug: "store-gundam-galaxy",
+    ownerId: "user-amit-sharma",
+    storeName: "Gundam Galaxy",
+    storeDescription:
+      "Gunpla model kit specialists — High Grade, Real Grade, Master Grade, and Perfect Grade kits. Bandai authentic stock only, sourced directly from official distributors in Japan and Singapore. Beginner kits to advanced PG builds.",
+    storeCategory: "category-gunpla",
+    storeLogoURL:
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=400&h=400&fit=crop",
+    storeBannerURL:
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=1600&h=400&fit=crop",
+    status: "active",
+    bio: "Master Grade builder and competitive Gunpla modeller since 2016. All kits sourced from official Bandai distributors — no Malaysian bootlegs, no resealed boxes. YouTube channel with build tutorials for MG and RG kits. Discord server for India Gunpla community with 1,500+ members.",
+    location: "Bengaluru, Karnataka, India",
+    socialLinks: {
+      instagram: "https://instagram.com/amit.gundamgalaxy",
+      twitter: "https://twitter.com/gundamgalaxy",
+    },
+    returnPolicy:
+      "7-day return on factory-sealed kits (outer shrink wrap must be intact). Loose runner returns: 3-day window if misrepresented. No returns on started/built kits.",
+    shippingPolicy:
+      "All kits double-boxed in rigid cardboard. Free shipping on orders above ₹999. 3–5 business days. PG kits shipped with additional foam corner protection.",
+    isPublic: true,
+    isVacationMode: false,
+    stats: {
+      totalProducts: 0,
+      itemsSold: 41,
+      totalReviews: 22,
+      averageRating: 4.7,
+    },
+    createdAt: daysAgo(230),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── Store 8: Vintage Vault (vintage collectibles — WOTC era + 80s toys) ───
+  {
+    id: "store-vintage-vault",
+    storeSlug: "store-vintage-vault",
+    ownerId: "user-kavya-iyer",
+    storeName: "Vintage Vault",
+    storeDescription:
+      "Vintage collectibles from the golden era. Pokémon WOTC-era raw and graded cards, 1980s action figures (Masters of the Universe, TMNT, Star Wars vintage), vintage Hot Wheels Redlines, and rare Japanese toys from the Shōwa period. Sourced from estate sales, Tokyo flea markets, and private collector networks.",
+    storeCategory: "category-vintage-rare",
+    storeLogoURL:
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=400&h=400&fit=crop",
+    storeBannerURL:
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=1600&h=400&fit=crop",
+    status: "active",
+    bio: "20+ years sourcing vintage collectibles from Japan, the UK, and the US. Every item in my store has a provenance story. I travel to Japan twice a year — Tokyo Toy Show and the Shinjuku/Shibuya flea market circuit. Specialist in Pokémon WOTC era (Base Set through Skyridge) and vintage Redline Hot Wheels.",
+    location: "Kolkata, West Bengal, India",
+    socialLinks: {
+      instagram: "https://instagram.com/kavya.vintagevault",
+    },
+    returnPolicy:
+      "3-day return on all vintage items if misrepresented. Detailed grading photos taken before shipping. Any dispute handled promptly and fairly — reputation is everything in vintage.",
+    shippingPolicy:
+      "All vintage items individually sleeved and packed in rigid mailers with foam. Insured shipping on items above ₹5,000. Free standard shipping on orders above ₹999. 4–6 business days.",
+    isPublic: true,
+    isVacationMode: false,
+    stats: {
+      totalProducts: 0,
+      itemsSold: 34,
+      totalReviews: 19,
+      averageRating: 4.9,
+    },
+    createdAt: daysAgo(200),
+    updatedAt: daysAgo(3),
+  },
 ];

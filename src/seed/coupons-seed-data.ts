@@ -202,4 +202,204 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
       totalDiscount: 1250000,
     },
   },
+
+  // ── 6. PALACE15 — 15% off Pokémon Palace (store-scoped) ──────────────────
+  {
+    id: "coupon-palace15",
+    code: "PALACE15",
+    name: "Pokémon Palace — 15% Loyalty Discount",
+    description:
+      "15% off your next order at Pokémon Palace. Exclusively for repeat customers. Min order ₹1,500. Max discount ₹750.",
+    type: "percentage",
+    scope: "seller",
+    storeSlug: "store-pokemon-palace",
+    sellerId: "user-aryan-kapoor",
+    discount: {
+      value: 15,
+      maxDiscount: 75000,
+      minPurchase: 150000,
+    },
+    usage: {
+      totalLimit: 100,
+      perUserLimit: 2,
+      currentUsage: 23,
+    },
+    validity: {
+      startDate: daysAgo(20),
+      endDate: daysAhead(40),
+      isActive: true,
+    },
+    restrictions: {
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-aryan-kapoor",
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(1),
+    stats: {
+      totalUses: 23,
+      totalRevenue: 11500000,
+      totalDiscount: 1725000,
+    },
+  },
+
+  // ── 7. DIECAST10 — ₹100 off Diecast Depot (store-scoped) ─────────────────
+  {
+    id: "coupon-diecast10",
+    code: "DIECAST10",
+    name: "Diecast Depot — ₹100 Off Your Next Order",
+    description:
+      "₹100 flat off any order at Diecast Depot. Works on all Hot Wheels and Tomica cars. Min order ₹500.",
+    type: "fixed",
+    scope: "seller",
+    storeSlug: "store-diecast-depot",
+    sellerId: "user-vikram-mehta",
+    discount: {
+      value: 10000,
+      maxDiscount: 10000,
+      minPurchase: 50000,
+    },
+    usage: {
+      totalLimit: 200,
+      perUserLimit: 3,
+      currentUsage: 67,
+    },
+    validity: {
+      startDate: daysAgo(15),
+      endDate: daysAhead(60),
+      isActive: true,
+    },
+    restrictions: {
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-vikram-mehta",
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(2),
+    stats: {
+      totalUses: 67,
+      totalRevenue: 33500000,
+      totalDiscount: 670000,
+    },
+  },
+
+  // ── 8. BEYARENA20 — 20% off Beyblade Arena (store-scoped) ────────────────
+  {
+    id: "coupon-beyarena20",
+    code: "BEYARENA20",
+    name: "Beyblade Arena Launch Special — 20% Off",
+    description:
+      "20% off all Beyblade X products at Beyblade Arena. Limited launch promotion. Max discount ₹500. One use per customer.",
+    type: "percentage",
+    scope: "seller",
+    storeSlug: "store-beyblade-arena",
+    sellerId: "user-rohit-joshi",
+    discount: {
+      value: 20,
+      maxDiscount: 50000,
+      minPurchase: 0,
+    },
+    usage: {
+      totalLimit: 50,
+      perUserLimit: 1,
+      currentUsage: 42,
+    },
+    validity: {
+      startDate: daysAgo(10),
+      endDate: daysAhead(20),
+      isActive: true,
+    },
+    restrictions: {
+      applicableCategories: ["category-beyblade-tops", "category-spinning-tops"],
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-rohit-joshi",
+    createdAt: daysAgo(10),
+    updatedAt: daysAgo(1),
+    stats: {
+      totalUses: 42,
+      totalRevenue: 21000000,
+      totalDiscount: 420000,
+    },
+  },
+
+  // ── 9. CARDGAME5 — Free shipping from CardGame Hub (store-scoped) ─────────
+  {
+    id: "coupon-cardgame-freeship",
+    code: "CARDGAME5",
+    name: "CardGame Hub — Free Shipping",
+    description:
+      "Free shipping on any order from CardGame Hub. No minimum order. Available to all buyers.",
+    type: "free_shipping",
+    scope: "seller",
+    storeSlug: "store-cardgame-hub",
+    sellerId: "user-nisha-reddy",
+    discount: {
+      value: 100,
+      minPurchase: 0,
+    },
+    usage: {
+      totalLimit: undefined,
+      perUserLimit: 5,
+      currentUsage: 89,
+    },
+    validity: {
+      startDate: daysAgo(25),
+      endDate: daysAhead(90),
+      isActive: true,
+    },
+    restrictions: {
+      firstTimeUserOnly: false,
+      combineWithSellerCoupons: true,
+    },
+    createdBy: "user-nisha-reddy",
+    createdAt: daysAgo(25),
+    updatedAt: daysAgo(3),
+    stats: {
+      totalUses: 89,
+      totalRevenue: 44500000,
+      totalDiscount: 445000,
+    },
+  },
+
+  // ── 10. TOKYOTOYS10 — 10% off Tokyo Toys India (store-scoped) ────────────
+  {
+    id: "coupon-tokyotoys10",
+    code: "TOKYOTOYS10",
+    name: "Tokyo Toys India — 10% New Customer Discount",
+    description:
+      "10% off your first order at Tokyo Toys India. Valid on all anime figures, Gundam kits, and Funko Pops. Min order ₹2,000. Max discount ₹500.",
+    type: "percentage",
+    scope: "seller",
+    storeSlug: "store-tokyo-toys-india",
+    sellerId: "user-priya-singh",
+    discount: {
+      value: 10,
+      maxDiscount: 50000,
+      minPurchase: 200000,
+    },
+    usage: {
+      totalLimit: 150,
+      perUserLimit: 1,
+      currentUsage: 38,
+    },
+    validity: {
+      startDate: daysAgo(30),
+      endDate: daysAhead(60),
+      isActive: true,
+    },
+    restrictions: {
+      firstTimeUserOnly: true,
+      combineWithSellerCoupons: false,
+    },
+    createdBy: "user-priya-singh",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(2),
+    stats: {
+      totalUses: 38,
+      totalRevenue: 19000000,
+      totalDiscount: 950000,
+    },
+  },
 ];

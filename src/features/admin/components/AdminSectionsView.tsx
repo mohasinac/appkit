@@ -44,6 +44,9 @@ const SECTION_TYPE_OPTIONS = [
   "stores",
   "events",
   "social-feed",
+  "carousel",
+  "custom-cards",
+  "google-reviews",
 ] as const;
 
 type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
@@ -272,6 +275,49 @@ interface NewsletterBuilderState {
   privacyLink: string;
 }
 
+interface CarouselBuilderState {
+  title: string;
+  height: "viewport" | "tall" | "medium";
+  defaultAutoplayDelayMs: number;
+  pauseOnHover: boolean;
+  showDots: boolean;
+  showArrows: boolean;
+}
+
+interface CustomCardsCardBuilderEntry {
+  id: string;
+  image: string;
+  imageAlt: string;
+  eyebrow: string;
+  title: string;
+  body: string;
+  link: string;
+  backgroundColor: string;
+  textColor: string;
+  borderRadius: "none" | "sm" | "md" | "lg" | "xl" | "full";
+  shadowLevel: "none" | "sm" | "md" | "lg";
+}
+
+interface CustomCardsBuilderState {
+  title: string;
+  layout: "grid" | "row" | "masonry";
+  columns: 1 | 2 | 3 | 4;
+  autoScroll: boolean;
+  scrollIntervalMs: number;
+  cards: CustomCardsCardBuilderEntry[];
+}
+
+interface GoogleReviewsBuilderState {
+  placeId: string;
+  maxReviews: number;
+  minRating: number;
+  layout: "grid" | "carousel";
+  showRating: boolean;
+  showDate: boolean;
+  linkToGoogleMaps: boolean;
+  googleMapsUrl: string;
+}
+
 const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -478,6 +524,35 @@ const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
   privacyLink: "/privacy",
 };
 
+const DEFAULT_CAROUSEL_BUILDER: CarouselBuilderState = {
+  title: "Hero Carousel",
+  height: "tall",
+  defaultAutoplayDelayMs: 5000,
+  pauseOnHover: true,
+  showDots: true,
+  showArrows: true,
+};
+
+const DEFAULT_CUSTOM_CARDS_BUILDER: CustomCardsBuilderState = {
+  title: "",
+  layout: "grid",
+  columns: 3,
+  autoScroll: false,
+  scrollIntervalMs: 4000,
+  cards: [],
+};
+
+const DEFAULT_GOOGLE_REVIEWS_BUILDER: GoogleReviewsBuilderState = {
+  placeId: "",
+  maxReviews: 6,
+  minRating: 4,
+  layout: "grid",
+  showRating: true,
+  showDate: true,
+  linkToGoogleMaps: true,
+  googleMapsUrl: "",
+};
+
 const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -497,6 +572,9 @@ const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "faq",
   "blog-articles",
   "newsletter",
+  "carousel",
+  "custom-cards",
+  "google-reviews",
 ];
 
 function parseCsvValues(value: string): string[] {
@@ -1117,6 +1195,109 @@ function parseNewsletterBuilder(config: Record<string, unknown>): NewsletterBuil
   };
 }
 
+function buildCarouselConfig(builder: CarouselBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    height: builder.height,
+    defaultAutoplayDelayMs: builder.defaultAutoplayDelayMs,
+    pauseOnHover: builder.pauseOnHover,
+    showDots: builder.showDots,
+    showArrows: builder.showArrows,
+  };
+}
+
+function parseCarouselBuilder(config: Record<string, unknown>): CarouselBuilderState {
+  return {
+    title: toStringValue(config.title),
+    height: toStringValue(config.height, DEFAULT_CAROUSEL_BUILDER.height) as CarouselBuilderState["height"],
+    defaultAutoplayDelayMs: toNumberValue(config.defaultAutoplayDelayMs, DEFAULT_CAROUSEL_BUILDER.defaultAutoplayDelayMs),
+    pauseOnHover: toBooleanValue(config.pauseOnHover, DEFAULT_CAROUSEL_BUILDER.pauseOnHover),
+    showDots: toBooleanValue(config.showDots, DEFAULT_CAROUSEL_BUILDER.showDots),
+    showArrows: toBooleanValue(config.showArrows, DEFAULT_CAROUSEL_BUILDER.showArrows),
+  };
+}
+
+function buildCustomCardsConfig(builder: CustomCardsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    layout: builder.layout,
+    columns: builder.columns,
+    autoScroll: builder.autoScroll,
+    scrollIntervalMs: builder.scrollIntervalMs,
+    cards: builder.cards.map((card, index) => ({
+      id: card.id || `card-${index + 1}`,
+      image: card.image || undefined,
+      imageAlt: card.imageAlt || undefined,
+      eyebrow: card.eyebrow || undefined,
+      title: card.title || undefined,
+      body: card.body || undefined,
+      link: card.link || undefined,
+      backgroundColor: card.backgroundColor || undefined,
+      textColor: card.textColor || undefined,
+      borderRadius: card.borderRadius !== "none" ? card.borderRadius : undefined,
+      shadowLevel: card.shadowLevel !== "none" ? card.shadowLevel : undefined,
+    })),
+  };
+}
+
+function parseCustomCardsBuilder(config: Record<string, unknown>): CustomCardsBuilderState {
+  const cardsRaw = Array.isArray(config.cards) ? config.cards : [];
+  const validBorderRadii: CustomCardsCardBuilderEntry["borderRadius"][] = ["none", "sm", "md", "lg", "xl", "full"];
+  const validShadows: CustomCardsCardBuilderEntry["shadowLevel"][] = ["none", "sm", "md", "lg"];
+  const cols = Number(config.columns);
+  return {
+    title: toStringValue(config.title),
+    layout: toStringValue(config.layout, DEFAULT_CUSTOM_CARDS_BUILDER.layout) as CustomCardsBuilderState["layout"],
+    columns: ([1, 2, 3, 4].includes(cols) ? cols : DEFAULT_CUSTOM_CARDS_BUILDER.columns) as CustomCardsBuilderState["columns"],
+    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CUSTOM_CARDS_BUILDER.autoScroll),
+    scrollIntervalMs: toNumberValue(config.scrollIntervalMs, DEFAULT_CUSTOM_CARDS_BUILDER.scrollIntervalMs),
+    cards: cardsRaw.map((item, index) => {
+      const c = (item ?? {}) as Record<string, unknown>;
+      const br = toStringValue(c.borderRadius, "none");
+      const sh = toStringValue(c.shadowLevel, "none");
+      return {
+        id: toStringValue(c.id, `card-${index + 1}`),
+        image: toStringValue(c.image),
+        imageAlt: toStringValue(c.imageAlt),
+        eyebrow: toStringValue(c.eyebrow),
+        title: toStringValue(c.title),
+        body: toStringValue(c.body),
+        link: toStringValue(c.link),
+        backgroundColor: toStringValue(c.backgroundColor),
+        textColor: toStringValue(c.textColor),
+        borderRadius: (validBorderRadii.includes(br as CustomCardsCardBuilderEntry["borderRadius"]) ? br : "none") as CustomCardsCardBuilderEntry["borderRadius"],
+        shadowLevel: (validShadows.includes(sh as CustomCardsCardBuilderEntry["shadowLevel"]) ? sh : "none") as CustomCardsCardBuilderEntry["shadowLevel"],
+      };
+    }),
+  };
+}
+
+function buildGoogleReviewsConfig(builder: GoogleReviewsBuilderState): Record<string, unknown> {
+  return {
+    placeId: builder.placeId,
+    maxReviews: builder.maxReviews,
+    minRating: builder.minRating || undefined,
+    layout: builder.layout,
+    showRating: builder.showRating,
+    showDate: builder.showDate,
+    linkToGoogleMaps: builder.linkToGoogleMaps,
+    googleMapsUrl: builder.googleMapsUrl || undefined,
+  };
+}
+
+function parseGoogleReviewsBuilder(config: Record<string, unknown>): GoogleReviewsBuilderState {
+  return {
+    placeId: toStringValue(config.placeId),
+    maxReviews: toNumberValue(config.maxReviews, DEFAULT_GOOGLE_REVIEWS_BUILDER.maxReviews),
+    minRating: toNumberValue(config.minRating, DEFAULT_GOOGLE_REVIEWS_BUILDER.minRating),
+    layout: toStringValue(config.layout, DEFAULT_GOOGLE_REVIEWS_BUILDER.layout) as GoogleReviewsBuilderState["layout"],
+    showRating: toBooleanValue(config.showRating, DEFAULT_GOOGLE_REVIEWS_BUILDER.showRating),
+    showDate: toBooleanValue(config.showDate, DEFAULT_GOOGLE_REVIEWS_BUILDER.showDate),
+    linkToGoogleMaps: toBooleanValue(config.linkToGoogleMaps, DEFAULT_GOOGLE_REVIEWS_BUILDER.linkToGoogleMaps),
+    googleMapsUrl: toStringValue(config.googleMapsUrl),
+  };
+}
+
 export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const queryClient = useQueryClient();
@@ -1145,6 +1326,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [faqBuilder, setFaqBuilder] = React.useState<FAQBuilderState>(DEFAULT_FAQ_BUILDER);
   const [blogBuilder, setBlogBuilder] = React.useState<BlogBuilderState>(DEFAULT_BLOG_BUILDER);
   const [newsletterBuilder, setNewsletterBuilder] = React.useState<NewsletterBuilderState>(DEFAULT_NEWSLETTER_BUILDER);
+  const [carouselBuilder, setCarouselBuilder] = React.useState<CarouselBuilderState>(DEFAULT_CAROUSEL_BUILDER);
+  const [customCardsBuilder, setCustomCardsBuilder] = React.useState<CustomCardsBuilderState>(DEFAULT_CUSTOM_CARDS_BUILDER);
+  const [googleReviewsBuilder, setGoogleReviewsBuilder] = React.useState<GoogleReviewsBuilderState>(DEFAULT_GOOGLE_REVIEWS_BUILDER);
   const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
@@ -1236,6 +1420,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (sectionType === "newsletter") {
       return buildNewsletterConfig(newsletterBuilder);
     }
+    if (sectionType === "carousel") {
+      return buildCarouselConfig(carouselBuilder);
+    }
+    if (sectionType === "custom-cards") {
+      return buildCustomCardsConfig(customCardsBuilder);
+    }
+    if (sectionType === "google-reviews") {
+      return buildGoogleReviewsConfig(googleReviewsBuilder);
+    }
     return null;
   }, [
     sectionType,
@@ -1256,6 +1449,9 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     faqBuilder,
     blogBuilder,
     newsletterBuilder,
+    carouselBuilder,
+    customCardsBuilder,
+    googleReviewsBuilder,
   ]);
 
   React.useEffect(() => {
@@ -1421,6 +1617,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     if (selected.type === "newsletter") {
       setNewsletterBuilder(parseNewsletterBuilder(selectedConfig));
     }
+    if (selected.type === "carousel") {
+      setCarouselBuilder(parseCarouselBuilder(selectedConfig));
+    }
+    if (selected.type === "custom-cards") {
+      setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig));
+    }
+    if (selected.type === "google-reviews") {
+      setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig));
+    }
   }, [mode, sections, selectedSectionId]);
 
   React.useEffect(() => {
@@ -1478,6 +1683,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "newsletter") {
       setNewsletterBuilder(DEFAULT_NEWSLETTER_BUILDER);
+    }
+    if (sectionType === "carousel") {
+      setCarouselBuilder(DEFAULT_CAROUSEL_BUILDER);
+    }
+    if (sectionType === "custom-cards") {
+      setCustomCardsBuilder(DEFAULT_CUSTOM_CARDS_BUILDER);
+    }
+    if (sectionType === "google-reviews") {
+      setGoogleReviewsBuilder(DEFAULT_GOOGLE_REVIEWS_BUILDER);
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -2703,6 +2917,362 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderCarouselBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Carousel Section Builder
+        </Text>
+
+        <Input
+          label="Section title"
+          value={carouselBuilder.title}
+          onChange={(e) => setCarouselBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="Hero Carousel"
+        />
+
+        <Select
+          label="Slide height"
+          value={carouselBuilder.height}
+          onValueChange={(value) =>
+            setCarouselBuilder((prev) => ({ ...prev, height: value as CarouselBuilderState["height"] }))
+          }
+          options={[
+            { label: "Viewport (100vh)", value: "viewport" },
+            { label: "Tall (80vh)", value: "tall" },
+            { label: "Medium (60vh)", value: "medium" },
+          ]}
+        />
+
+        <Input
+          label="Default autoplay delay (ms)"
+          type="number"
+          min={1000}
+          step={500}
+          value={String(carouselBuilder.defaultAutoplayDelayMs)}
+          onChange={(e) =>
+            setCarouselBuilder((prev) => ({
+              ...prev,
+              defaultAutoplayDelayMs: Math.max(1000, Number(e.target.value) || 5000),
+            }))
+          }
+        />
+
+        <Checkbox
+          checked={carouselBuilder.pauseOnHover}
+          label="Pause on hover"
+          onChange={(e) => setCarouselBuilder((prev) => ({ ...prev, pauseOnHover: e.target.checked }))}
+        />
+
+        <Checkbox
+          checked={carouselBuilder.showDots}
+          label="Show navigation dots"
+          onChange={(e) => setCarouselBuilder((prev) => ({ ...prev, showDots: e.target.checked }))}
+        />
+
+        <Checkbox
+          checked={carouselBuilder.showArrows}
+          label="Show prev/next arrows"
+          onChange={(e) => setCarouselBuilder((prev) => ({ ...prev, showArrows: e.target.checked }))}
+        />
+      </Div>
+    );
+  }
+
+  function renderCustomCardsBuilder(): React.ReactNode {
+    function addCard() {
+      setCustomCardsBuilder((prev) => ({
+        ...prev,
+        cards: [
+          ...prev.cards,
+          {
+            id: `card-${prev.cards.length + 1}`,
+            image: "",
+            imageAlt: "",
+            eyebrow: "",
+            title: "",
+            body: "",
+            link: "",
+            backgroundColor: "",
+            textColor: "",
+            borderRadius: "md",
+            shadowLevel: "sm",
+          },
+        ],
+      }));
+    }
+
+    function removeCard(index: number) {
+      setCustomCardsBuilder((prev) => ({
+        ...prev,
+        cards: prev.cards.filter((_, i) => i !== index),
+      }));
+    }
+
+    function updateCard(index: number, patch: Partial<CustomCardsCardBuilderEntry>) {
+      setCustomCardsBuilder((prev) => {
+        const next = [...prev.cards];
+        next[index] = { ...next[index], ...patch };
+        return { ...prev, cards: next };
+      });
+    }
+
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Custom Cards Builder
+        </Text>
+
+        <Input
+          label="Section title"
+          value={customCardsBuilder.title}
+          onChange={(e) => setCustomCardsBuilder((prev) => ({ ...prev, title: e.target.value }))}
+        />
+
+        <Select
+          label="Layout"
+          value={customCardsBuilder.layout}
+          onValueChange={(value) =>
+            setCustomCardsBuilder((prev) => ({ ...prev, layout: value as CustomCardsBuilderState["layout"] }))
+          }
+          options={[
+            { label: "Grid", value: "grid" },
+            { label: "Row (horizontal scroll)", value: "row" },
+            { label: "Masonry", value: "masonry" },
+          ]}
+        />
+
+        <Select
+          label="Columns"
+          value={String(customCardsBuilder.columns)}
+          onValueChange={(value) =>
+            setCustomCardsBuilder((prev) => ({ ...prev, columns: Number(value) as CustomCardsBuilderState["columns"] }))
+          }
+          options={[
+            { label: "1 column", value: "1" },
+            { label: "2 columns", value: "2" },
+            { label: "3 columns", value: "3" },
+            { label: "4 columns", value: "4" },
+          ]}
+        />
+
+        <Checkbox
+          checked={customCardsBuilder.autoScroll}
+          label="Auto-scroll"
+          onChange={(e) => setCustomCardsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))}
+        />
+
+        <Input
+          label="Scroll interval (ms)"
+          type="number"
+          min={1000}
+          step={500}
+          value={String(customCardsBuilder.scrollIntervalMs)}
+          onChange={(e) =>
+            setCustomCardsBuilder((prev) => ({
+              ...prev,
+              scrollIntervalMs: Math.max(1000, Number(e.target.value) || 4000),
+            }))
+          }
+        />
+
+        <Div className="space-y-3">
+          <Div className="flex items-center justify-between">
+            <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Cards ({customCardsBuilder.cards.length})
+            </Text>
+            <Button type="button" variant="outline" size="sm" onClick={addCard}>
+              Add card
+            </Button>
+          </Div>
+
+          {customCardsBuilder.cards.map((card, index) => (
+            <Div
+              key={`custom-card-${index}`}
+              className="space-y-3 rounded-md border border-zinc-200 p-3 dark:border-slate-700"
+            >
+              <Div className="flex items-center justify-between">
+                <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                  Card {index + 1}
+                </Text>
+                <Button type="button" variant="outline" size="sm" onClick={() => removeCard(index)}>
+                  Remove
+                </Button>
+              </Div>
+              <Input
+                label="ID / slug"
+                value={card.id}
+                onChange={(e) => updateCard(index, { id: e.target.value })}
+                placeholder="card-1"
+              />
+              <Input
+                label="Image URL"
+                value={card.image}
+                onChange={(e) => updateCard(index, { image: e.target.value })}
+                placeholder="https://..."
+              />
+              <Input
+                label="Image alt text"
+                value={card.imageAlt}
+                onChange={(e) => updateCard(index, { imageAlt: e.target.value })}
+              />
+              <Input
+                label="Eyebrow (small label above title)"
+                value={card.eyebrow}
+                onChange={(e) => updateCard(index, { eyebrow: e.target.value })}
+              />
+              <Input
+                label="Title"
+                value={card.title}
+                onChange={(e) => updateCard(index, { title: e.target.value })}
+              />
+              <Input
+                label="Body / description"
+                value={card.body}
+                onChange={(e) => updateCard(index, { body: e.target.value })}
+              />
+              <Input
+                label="Link (href)"
+                value={card.link}
+                onChange={(e) => updateCard(index, { link: e.target.value })}
+                placeholder="/categories/..."
+              />
+              <Input
+                label="Background colour"
+                value={card.backgroundColor}
+                onChange={(e) => updateCard(index, { backgroundColor: e.target.value })}
+                placeholder="#ffffff or var(--appkit-color-primary)"
+              />
+              <Input
+                label="Text colour"
+                value={card.textColor}
+                onChange={(e) => updateCard(index, { textColor: e.target.value })}
+                placeholder="#000000"
+              />
+              <Select
+                label="Border radius"
+                value={card.borderRadius}
+                onValueChange={(value) =>
+                  updateCard(index, { borderRadius: value as CustomCardsCardBuilderEntry["borderRadius"] })
+                }
+                options={[
+                  { label: "None", value: "none" },
+                  { label: "Small", value: "sm" },
+                  { label: "Medium", value: "md" },
+                  { label: "Large", value: "lg" },
+                  { label: "XL", value: "xl" },
+                  { label: "Full (pill)", value: "full" },
+                ]}
+              />
+              <Select
+                label="Shadow level"
+                value={card.shadowLevel}
+                onValueChange={(value) =>
+                  updateCard(index, { shadowLevel: value as CustomCardsCardBuilderEntry["shadowLevel"] })
+                }
+                options={[
+                  { label: "None", value: "none" },
+                  { label: "Small", value: "sm" },
+                  { label: "Medium", value: "md" },
+                  { label: "Large", value: "lg" },
+                ]}
+              />
+            </Div>
+          ))}
+
+          {customCardsBuilder.cards.length === 0 ? (
+            <Text className="text-sm text-zinc-500 dark:text-zinc-400">No cards added yet. Click "Add card" to start.</Text>
+          ) : null}
+        </Div>
+      </Div>
+    );
+  }
+
+  function renderGoogleReviewsBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Google Reviews Builder
+        </Text>
+
+        <Input
+          label="Google Place ID"
+          value={googleReviewsBuilder.placeId}
+          onChange={(e) => setGoogleReviewsBuilder((prev) => ({ ...prev, placeId: e.target.value }))}
+          placeholder="ChIJ..."
+          helperText="Find your Place ID at developers.google.com/maps/documentation/places/web-service/place-id"
+        />
+
+        <Input
+          label="Max reviews to show"
+          type="number"
+          min={1}
+          max={20}
+          value={String(googleReviewsBuilder.maxReviews)}
+          onChange={(e) =>
+            setGoogleReviewsBuilder((prev) => ({
+              ...prev,
+              maxReviews: Math.max(1, Math.min(20, Number(e.target.value) || 6)),
+            }))
+          }
+        />
+
+        <Select
+          label="Minimum star rating to show"
+          value={String(googleReviewsBuilder.minRating)}
+          onValueChange={(value) =>
+            setGoogleReviewsBuilder((prev) => ({ ...prev, minRating: Number(value) }))
+          }
+          options={[
+            { label: "All ratings (0★+)", value: "0" },
+            { label: "3★ and above", value: "3" },
+            { label: "4★ and above", value: "4" },
+            { label: "5★ only", value: "5" },
+          ]}
+        />
+
+        <Select
+          label="Layout"
+          value={googleReviewsBuilder.layout}
+          onValueChange={(value) =>
+            setGoogleReviewsBuilder((prev) => ({ ...prev, layout: value as GoogleReviewsBuilderState["layout"] }))
+          }
+          options={[
+            { label: "Grid", value: "grid" },
+            { label: "Carousel", value: "carousel" },
+          ]}
+        />
+
+        <Checkbox
+          checked={googleReviewsBuilder.showRating}
+          label="Show star rating on each review"
+          onChange={(e) => setGoogleReviewsBuilder((prev) => ({ ...prev, showRating: e.target.checked }))}
+        />
+
+        <Checkbox
+          checked={googleReviewsBuilder.showDate}
+          label="Show review date"
+          onChange={(e) => setGoogleReviewsBuilder((prev) => ({ ...prev, showDate: e.target.checked }))}
+        />
+
+        <Checkbox
+          checked={googleReviewsBuilder.linkToGoogleMaps}
+          label="Link to Google Maps listing"
+          onChange={(e) => setGoogleReviewsBuilder((prev) => ({ ...prev, linkToGoogleMaps: e.target.checked }))}
+        />
+
+        {googleReviewsBuilder.linkToGoogleMaps ? (
+          <Input
+            label="Google Maps URL"
+            value={googleReviewsBuilder.googleMapsUrl}
+            onChange={(e) => setGoogleReviewsBuilder((prev) => ({ ...prev, googleMapsUrl: e.target.value }))}
+            placeholder="https://maps.google.com/..."
+          />
+        ) : null}
+      </Div>
+    );
+  }
+
   function renderTypedBuilder(): React.ReactNode {
     if (sectionType === "products") {
       return renderProductsBuilder();
@@ -2754,6 +3324,15 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     }
     if (sectionType === "newsletter") {
       return renderNewsletterBuilder();
+    }
+    if (sectionType === "carousel") {
+      return renderCarouselBuilder();
+    }
+    if (sectionType === "custom-cards") {
+      return renderCustomCardsBuilder();
+    }
+    if (sectionType === "google-reviews") {
+      return renderGoogleReviewsBuilder();
     }
     return null;
   }

@@ -55,7 +55,7 @@ export const carouselSlidesSeedData: Partial<CarouselSlideDocument>[] = [
       },
       {
         id: "card-hero-hotwheels",
-        zone: 2,
+        zone: 5,
         mobileZone: 5,
         background: {
           type: "image",

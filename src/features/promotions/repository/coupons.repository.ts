@@ -27,7 +27,7 @@ import {
 import type { CouponType } from "../types";
 import { USER_COLLECTION } from "../../auth/schemas";
 import { DatabaseError } from "../../../errors";
-import { increment, serverTimestamp } from "../../../contracts/field-ops";
+import { increment, arrayUnion, serverTimestamp } from "../../../contracts/field-ops";
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
 
 const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
@@ -274,48 +274,55 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
   }
 
   /**
-   * Apply coupon to order (increment usage counters)
+   * Record coupon usage after a successful checkout.
    *
-   * @param couponId - Coupon ID
-   * @param userId - User ID
-   * @param orderId - Order ID
-   * @param discountAmount - Applied discount amount
-   * @returns Promise<void>
+   * Increments both the global coupon counter and the per-user usage doc so
+   * that subsequent `validateCoupon` calls respect `perUserLimit` and
+   * `totalLimit` correctly.
+   *
+   * @param couponId      - Coupon document ID (e.g. "coupon-welcome10")
+   * @param couponCode    - Human-readable code (e.g. "WELCOME10")
+   * @param userId        - Buyer UID
+   * @param orderIds      - All order IDs created in this checkout that used the coupon
+   * @param discountAmount - Total discount amount applied across all order groups
    */
   async applyCoupon(
     couponId: string,
+    couponCode: string,
     userId: string,
-    orderId: string,
+    orderIds: string[],
     discountAmount: number,
   ): Promise<void> {
     try {
       const batch = this.db.batch();
 
-      // Update coupon usage stats
+      // Increment global coupon counters
       const couponRef = this.db.collection(this.collection).doc(couponId);
       batch.update(couponRef, {
         "usage.currentUsage": increment(1),
-        "stats.totalDiscountGiven": increment(discountAmount),
-        "stats.totalOrders": increment(1),
+        "stats.totalDiscount": increment(discountAmount),
+        "stats.totalUses": increment(1),
         updatedAt: new Date(),
       });
 
-      // Create user coupon usage record
-      const usageData = {
-        userId,
-        couponCode: "", // Will be filled by getCouponByCode
-        orderId,
-        discountAmount,
-        usedAt: new Date(),
-      } as any;
-
+      // Upsert per-user usage doc — safe for perUserLimit > 1
       const usageRef = this.db
         .collection(USER_COLLECTION)
         .doc(userId)
         .collection(COUPON_USAGE_SUBCOLLECTION)
         .doc(couponId);
 
-      batch.set(usageRef, prepareForFirestore(usageData));
+      batch.set(
+        usageRef,
+        prepareForFirestore({
+          userId,
+          couponCode: couponCode.toUpperCase(),
+          usageCount: increment(1),
+          lastUsedAt: new Date(),
+          orders: arrayUnion(...orderIds),
+        }),
+        { merge: true },
+      );
 
       await batch.commit();
     } catch (error) {
@@ -344,7 +351,9 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         .doc(couponId)
         .get();
 
-      return doc.exists ? 1 : 0; // Document exists = used once (per our schema)
+      if (!doc.exists) return 0;
+      const data = doc.data() as { usageCount?: number };
+      return data.usageCount ?? 1;
     } catch {
       return 0;
     }

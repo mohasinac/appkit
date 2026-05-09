@@ -31,6 +31,9 @@ import { addressesSeedData } from "./addresses-seed-data";
 import { storeAddressesSeedData } from "./store-addresses-seed-data";
 import { cartsSeedData } from "./cart-seed-data";
 import { wishlistsSeedData } from "./wishlists-seed-data";
+import { conversationsSeedData } from "./conversations-seed-data";
+import { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
+import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -162,6 +165,24 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(wishlistsSeedData).map((w) => ({
       ...w,
       name: w.userId ?? w.id,
+    })),
+  ),
+  conversations: pick(
+    asArr(conversationsSeedData).map((c) => ({
+      ...c,
+      name: c.productTitle ?? c.id,
+    })),
+  ),
+  sublistingCategories: pick(
+    asArr(sublistingCategoriesSeedData).map((s) => ({
+      ...s,
+      name: s.title ?? s.id,
+    })),
+  ),
+  groupedListings: pick(
+    asArr(groupedListingsSeedData).map((g) => ({
+      ...g,
+      name: g.title ?? g.id,
     })),
   ),
 };

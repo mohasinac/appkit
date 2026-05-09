@@ -196,6 +196,13 @@ export function AdminSiteSettingsView({
   const [shippingPolicyHtml, setShippingPolicyHtml] = React.useState("");
   const [cookieHtml, setCookieHtml] = React.useState("");
 
+  // ⓪ About
+  const [aboutTitle, setAboutTitle] = React.useState("");
+  const [aboutSubtitle, setAboutSubtitle] = React.useState("");
+  const [aboutMissionTitle, setAboutMissionTitle] = React.useState("");
+  const [aboutMissionText, setAboutMissionText] = React.useState("");
+  const [aboutCtaTitle, setAboutCtaTitle] = React.useState("");
+
   // Populate from query data
   React.useEffect(() => {
     if (!s || !Object.keys(s).length) return;
@@ -284,6 +291,12 @@ export function AdminSiteSettingsView({
     setRefundHtml(s.legalPages?.refundPolicy ?? "");
     setShippingPolicyHtml(s.legalPages?.shipping ?? "");
     setCookieHtml(s.legalPages?.cookies ?? "");
+
+    setAboutTitle(s.aboutContent?.title ?? "");
+    setAboutSubtitle(s.aboutContent?.subtitle ?? "");
+    setAboutMissionTitle(s.aboutContent?.missionTitle ?? "");
+    setAboutMissionText(s.aboutContent?.missionText ?? "");
+    setAboutCtaTitle(s.aboutContent?.ctaTitle ?? "");
   }, [data]);
 
   function useSave(group: string, payload: () => Record<string, unknown>) {
@@ -340,6 +353,9 @@ export function AdminSiteSettingsView({
   const legalMutation = useSave("Legal Policies", () => ({
     legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
   }));
+  const aboutMutation = useSave("About Page", () => ({
+    aboutContent: { title: aboutTitle, subtitle: aboutSubtitle, missionTitle: aboutMissionTitle, missionText: aboutMissionText, ctaTitle: aboutCtaTitle },
+  }));
 
   const FONT_OPTIONS = [
     { label: "Inter", value: "inter" },
@@ -378,6 +394,7 @@ export function AdminSiteSettingsView({
         <Tabs key="tabs" defaultValue="branding">
           <TabsList>
             {[
+              ["about", "⓪ About"],
               ["branding", "① Branding"],
               ["appearance", "② Appearance"],
               ["announcement", "③ Announcement"],
@@ -396,6 +413,30 @@ export function AdminSiteSettingsView({
               </TabsTrigger>
             ))}
           </TabsList>
+
+          {/* ⓪ About Page */}
+          <TabsContent value="about">
+            <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="space-y-4 pt-4">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                Override the About page hero and mission text. Leave blank to use the platform defaults.
+              </p>
+              <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder="About LetItRip" />
+              <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
+              <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
+              <div>
+                <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mission text</p>
+                <textarea
+                  value={aboutMissionText}
+                  onChange={(e) => setAboutMissionText(e.target.value)}
+                  placeholder="LetItRip was built to democratise commerce…"
+                  rows={4}
+                  className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-3 text-sm text-zinc-800 dark:text-zinc-200 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
+              <GroupSaveButton isPending={aboutMutation.isPending} />
+            </Form>
+          </TabsContent>
 
           {/* ① Branding */}
           <TabsContent value="branding">

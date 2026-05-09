@@ -18,6 +18,8 @@ export interface Review {
   productId: string;
   productTitle?: string;
   sellerId?: string;
+  storeSlug?: string;
+  storeName?: string;
   userId: string;
   userName: string;
   userAvatar?: string;

@@ -33,7 +33,10 @@ export type SeedCollectionName =
   | "sessions"
   | "storeAddresses"
   | "carts"
-  | "wishlists";
+  | "wishlists"
+  | "conversations"
+  | "sublistingCategories"
+  | "groupedListings";
 
 export interface SeedOperationResult {
   success?: boolean;

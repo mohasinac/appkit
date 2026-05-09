@@ -1685,6 +1685,9 @@ export { categoriesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // couponsSeedData - Model for coupons seed data.
 export { couponsSeedData } from "./seed/index";
+// couponUsageSeedData - Per-user coupon redemption records (subcollection seed).
+export type { CouponUsageSeedRecord } from "./seed/index";
+export { couponUsageSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // demoSeed - Shared export for demo seed.
 export { demoSeed } from "./seed/index";
@@ -8585,3 +8588,13 @@ export type { MediaFilenameContext } from "./utils/id-generators";
 export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";
 export { generateCroppedImageFilename } from "./utils/id-generators";
+
+// Messages / Conversations feature schemas
+export { CONVERSATIONS_COLLECTION } from "./features/messages/schemas/firestore";
+export type { ConversationDocument, ConversationMessage } from "./features/messages/schemas/firestore";
+// Sublisting categories feature schemas
+export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/sublisting/schemas/firestore";
+export type { SublistingCategoryDocument } from "./features/sublisting/schemas/firestore";
+// Grouped listings feature schemas
+export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
+export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
