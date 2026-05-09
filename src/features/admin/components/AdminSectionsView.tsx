@@ -19,7 +19,7 @@ import {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, DEMO_ENDPOINTS } from "../../../constants";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
-import { AdminListingScaffold } from "./AdminListingScaffold";
+import { DataTable } from "./DataTable";
 
 export interface AdminSectionsViewProps {
   children?: React.ReactNode;
@@ -2783,31 +2783,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   return (
     <>
-      <AdminListingScaffold
-        title="Homepage Sections"
-        subtitle="Manage homepage sections and their display order"
-        actionLabel="Manage Sections"
-        searchPlaceholder="Search sections..."
-        rows={rows}
-        isLoading={isLoading}
-        errorMessage={errorMessage}
-        emptyLabel="No sections found"
-        actionsSlot={
+      <div className="py-4 px-3 sm:px-4">
+        <Div className="mb-4 flex items-center justify-between gap-3">
+          <Div>
+            <Text className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Homepage Sections</Text>
+            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Manage homepage sections and their display order</Text>
+          </Div>
           <Div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setSeedResetOpen(true)}
-            >
+            <Button type="button" variant="outline" size="sm" onClick={() => setSeedResetOpen(true)}>
               Reset seed data
             </Button>
             <Button type="button" variant="primary" size="sm" onClick={() => setIsModalOpen(true)}>
               Manage Sections
             </Button>
           </Div>
-        }
-      />
+        </Div>
+        {errorMessage && (
+          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+            {errorMessage}
+          </div>
+        )}
+        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No sections found" />
+      </div>
 
       <Div className="mt-4 space-y-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
         <Div className="flex items-center justify-between gap-3">
