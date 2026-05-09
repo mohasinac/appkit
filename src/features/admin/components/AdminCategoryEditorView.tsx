@@ -152,24 +152,26 @@ export function AdminCategoryEditorView({
           }}
           className="space-y-4"
         >
-          <Input
-            label="Category name"
-            value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            required
-            placeholder="e.g. Toys & Games"
-          />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Input
+              label="Category name"
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              required
+              placeholder="e.g. Toys & Games"
+            />
 
-          <Input
-            label="Slug"
-            value={slug}
-            onChange={(e) => {
-              setSlug(e.target.value);
-              setSlugManual(true);
-            }}
-            placeholder="toys-and-games"
-            helperText="Auto-generated from name. Used in URLs."
-          />
+            <Input
+              label="Slug"
+              value={slug}
+              onChange={(e) => {
+                setSlug(e.target.value);
+                setSlugManual(true);
+              }}
+              placeholder="toys-and-games"
+              helperText="Auto-generated from name. Used in URLs."
+            />
+          </div>
 
           <Input
             label="Description"
@@ -179,7 +181,7 @@ export function AdminCategoryEditorView({
           />
 
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium">Parent category</label>
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Parent category</label>
             <InlineCreateSelect
               value={parentId || null}
               onChange={(v) => setParentId(v ?? "")}
@@ -196,7 +198,7 @@ export function AdminCategoryEditorView({
                 />
               )}
             />
-            <p className="text-xs text-neutral-500">
+            <p className="text-xs text-neutral-500 dark:text-neutral-400">
               Leave empty to create a root category.
             </p>
           </div>

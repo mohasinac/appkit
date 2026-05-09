@@ -141,24 +141,26 @@ export function AdminBrandEditorView({
           }}
           className="space-y-4"
         >
-          <Input
-            label="Brand name"
-            value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
-            required
-            placeholder="e.g. Hot Wheels"
-          />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Input
+              label="Brand name"
+              value={name}
+              onChange={(e) => handleNameChange(e.target.value)}
+              required
+              placeholder="e.g. Hot Wheels"
+            />
 
-          <Input
-            label="Slug"
-            value={slug}
-            onChange={(e) => {
-              setSlug(e.target.value);
-              setSlugManual(true);
-            }}
-            placeholder="brand-hot-wheels"
-            helperText="Auto-generated from name. Must start with 'brand-'."
-          />
+            <Input
+              label="Slug"
+              value={slug}
+              onChange={(e) => {
+                setSlug(e.target.value);
+                setSlugManual(true);
+              }}
+              placeholder="brand-hot-wheels"
+              helperText="Auto-generated from name. Must start with 'brand-'."
+            />
+          </div>
 
           <Input
             label="Description"
@@ -167,36 +169,40 @@ export function AdminBrandEditorView({
             placeholder="Brief description of the brand"
           />
 
-          <ImageUpload
-            label="Logo"
-            currentImage={logoURL}
-            onUpload={(file) => upload(file, "brands")}
-            onChange={setLogoURL}
-          />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <ImageUpload
+              label="Logo"
+              currentImage={logoURL}
+              onUpload={(file) => upload(file, "brands")}
+              onChange={setLogoURL}
+            />
 
-          <ImageUpload
-            label="Banner"
-            currentImage={bannerURL}
-            onUpload={(file) => upload(file, "brands")}
-            onChange={setBannerURL}
-          />
+            <ImageUpload
+              label="Banner"
+              currentImage={bannerURL}
+              onUpload={(file) => upload(file, "brands")}
+              onChange={setBannerURL}
+            />
+          </div>
 
-          <Input
-            label="Website"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
-            placeholder="https://brand.com"
-            type="url"
-          />
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Input
+              label="Website"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://brand.com"
+              type="url"
+            />
 
-          <Input
-            label="Display order"
-            value={displayOrder}
-            onChange={(e) => setDisplayOrder(e.target.value)}
-            type="number"
-            min={0}
-            placeholder="0"
-          />
+            <Input
+              label="Display order"
+              value={displayOrder}
+              onChange={(e) => setDisplayOrder(e.target.value)}
+              type="number"
+              min={0}
+              placeholder="0"
+            />
+          </div>
 
           <Toggle
             label="Active"
