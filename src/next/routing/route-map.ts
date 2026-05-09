@@ -180,6 +180,8 @@ export const DEFAULT_ROUTE_MAP = {
     NOTIFICATIONS: "/admin/notifications",
     CARTS: "/admin/carts",
     WISHLISTS: "/admin/wishlists",
+    RETURN_REQUESTS: "/admin/return-requests",
+    STORE_ADDRESSES: "/admin/store-addresses",
   },
   DEMO: {
     SEED: "/demo/seed",

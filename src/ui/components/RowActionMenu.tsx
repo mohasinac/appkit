@@ -9,6 +9,7 @@ export interface RowAction {
   label: string;
   onClick: () => void;
   destructive?: boolean;
+  disabled?: boolean;
   icon?: React.ReactNode;
   separator?: boolean;
 }
@@ -60,11 +61,13 @@ export function RowActionMenu({
                 type="button"
                 role="menuitem"
                 variant="ghost"
+                disabled={action.disabled}
                 onClick={() => {
+                  if (action.disabled) return;
                   action.onClick();
                   setOpen(false);
                 }}
-                className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""}`}
+                className={`appkit-row-action-menu__item ${action.destructive ? "appkit-row-action-menu__item--destructive" : ""} ${action.disabled ? "opacity-40 cursor-not-allowed" : ""}`}
               >
                 {action.icon ? (
                   <Span className="appkit-row-action-menu__icon">

@@ -40,6 +40,7 @@ export function AdminMediaView({
   const [galleryAssets, setGalleryAssets] = React.useState<MediaField[]>([]);
   const [stagedUrls, setStagedUrls] = React.useState<string[]>([]);
   const [operationMessage, setOperationMessage] = React.useState<string | null>(null);
+  const [copiedUrl, setCopiedUrl] = React.useState<string | null>(null);
 
   const onUpload = React.useCallback(
     async (file: File) => {
@@ -59,10 +60,7 @@ export function AdminMediaView({
   );
 
   const clearStagedUploads = React.useCallback(async () => {
-    if (stagedUrls.length === 0) {
-      return;
-    }
-
+    if (stagedUrls.length === 0) return;
     try {
       await cleanup(stagedUrls);
       setHeroAssetUrl("");
@@ -74,12 +72,22 @@ export function AdminMediaView({
     }
   }, [cleanup, stagedUrls]);
 
+  const copyToClipboard = React.useCallback(async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiedUrl(url);
+      setTimeout(() => setCopiedUrl(null), 2000);
+    } catch {
+      setOperationMessage("Could not copy URL to clipboard.");
+    }
+  }, []);
+
   if (hasChildren) {
     return (
       <StackedViewShell
         portal="admin"
         {...rest}
-        title={labels.title ?? "Media Operations"}
+        title={labels.title ?? "Media Library"}
         sections={[children]}
       />
     );
@@ -89,15 +97,15 @@ export function AdminMediaView({
     <StackedViewShell
       portal="admin"
       {...rest}
-      title={labels.title ?? "Media Operations"}
+      title={labels.title ?? "Media Library"}
       sections={[
-        <Alert key="media-info" variant="info" title="Frame-only media surface">
-          Use this screen for upload validation and staged file cleanup. Persistent asset ownership should stay in the parent form that references the media URL.
+        <Alert key="media-info" variant="info" title="Upload sandbox">
+          Upload files and copy the resulting URL for use in forms. Browsing all stored media files requires the I4 media library infrastructure (deferred).
         </Alert>,
         operationMessage ? (
           <Alert
             key="media-op-message"
-            variant={operationMessage.startsWith("Failed") || operationMessage.startsWith("Some") ? "error" : "success"}
+            variant={operationMessage.startsWith("Failed") || operationMessage.startsWith("Some") || operationMessage.startsWith("Could") ? "error" : "success"}
             title="Media"
           >
             {operationMessage}
@@ -108,7 +116,7 @@ export function AdminMediaView({
           className="space-y-5 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
         >
           <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            Upload Sandbox
+            Upload & Copy URL
           </Text>
           <MediaUploadField
             label="Primary media asset"
@@ -119,6 +127,20 @@ export function AdminMediaView({
             onAbort={handleAbort}
             onStagedUrlsChange={setStagedUrls}
           />
+          {heroAssetUrl && (
+            <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
+              <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                {heroAssetUrl}
+              </Text>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => copyToClipboard(heroAssetUrl)}
+              >
+                {copiedUrl === heroAssetUrl ? "Copied!" : "Copy URL"}
+              </Button>
+            </Div>
+          )}
           <MediaUploadList
             label="Gallery assets"
             value={galleryAssets}
@@ -129,6 +151,30 @@ export function AdminMediaView({
             onStagedUrlsChange={setStagedUrls}
             maxItems={12}
           />
+          {galleryAssets.length > 0 && (
+            <Div className="flex flex-col gap-1">
+              <Text className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+                Gallery URLs
+              </Text>
+              {galleryAssets.map((asset, i) => (
+                <Div
+                  key={i}
+                  className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1"
+                >
+                  <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                    {asset.url}
+                  </Text>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => copyToClipboard(asset.url)}
+                  >
+                    {copiedUrl === asset.url ? "Copied!" : "Copy"}
+                  </Button>
+                </Div>
+              ))}
+            </Div>
+          )}
           <Div className="flex flex-wrap items-center gap-2">
             <Button
               type="button"
@@ -149,7 +195,7 @@ export function AdminMediaView({
               }}
               disabled={isUploadPending || isCleanupPending || stagedUrls.length === 0}
             >
-              {isCleanupPending ? "Discarding..." : "Discard staged uploads"}
+              {isCleanupPending ? "Discarding…" : "Discard staged uploads"}
             </Button>
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               {stagedUrls.length} staged upload(s)
