@@ -56,6 +56,7 @@ export { Heading, Text, Label, Caption, Span } from "./components/Typography";
 // --- Loading / Feedback -------------------------------------------------------
 export type { SpinnerProps } from "./components/Spinner";
 export { Spinner } from "./components/Spinner";
+export { PageLoader } from "./components/PageLoader";
 
 export type { SkeletonProps } from "./components/Skeleton";
 export { Skeleton } from "./components/Skeleton";

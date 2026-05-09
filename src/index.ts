@@ -3280,6 +3280,15 @@ export { AdminNotificationsView } from "./features/admin/index";
 export { AdminCartsView } from "./features/admin/index";
 // AdminWishlistsView - Admin read-only wishlist insights listing (LL15).
 export { AdminWishlistsView } from "./features/admin/index";
+// AdminContactEditorView - Admin contact submission detail SideDrawer (B7/VA15).
+export { AdminContactEditorView } from "./features/admin/index";
+export type { AdminContactEditorViewProps } from "./features/admin/index";
+// AdminReturnRequestsView - Admin return requests queue filtered to RETURN_REQUESTED (LL16).
+export { AdminReturnRequestsView } from "./features/admin/index";
+export type { AdminReturnRequestsViewProps } from "./features/admin/index";
+// AdminStoreAddressesView - Admin read-only store pickup locations overview (LL17).
+export { AdminStoreAddressesView } from "./features/admin/index";
+export type { AdminStoreAddressesViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminTopBar - Shared export for admin top bar.
 export { AdminTopBar } from "./features/admin/index";
@@ -8483,7 +8492,7 @@ export type { WhatsAppCommunitySectionConfig } from "./features/homepage/schemas
 
 // -- Missing UI primitives ------------------------------------------------------
 export { Button } from "./ui/index";
-export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination } from "./ui/index";
+export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination, PageLoader } from "./ui/index";
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
 export { CountdownDisplay, ItemRow, HorizontalScroller, SectionTabs, TabStrip } from "./ui/index";
