@@ -4,8 +4,37 @@ import React from "react";
 import type { AdminTableColumn } from "../types";
 import { Button, Div, Span } from "../../../ui";
 
+const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
+  {
+    key: "primary",
+    header: "Name",
+    render: (row) => (
+      <div className="space-y-0.5">
+        <p className="font-medium text-zinc-900 dark:text-zinc-100">{String(row.primary ?? "")}</p>
+        {row.secondary ? <p className="text-xs text-zinc-500 dark:text-zinc-400">{String(row.secondary)}</p> : null}
+      </div>
+    ),
+  },
+  {
+    key: "status",
+    header: "Status",
+    className: "w-32",
+    render: (row) => (
+      <span className="inline-flex rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300">
+        {String(row.status ?? "—")}
+      </span>
+    ),
+  },
+  {
+    key: "updatedAt",
+    header: "Updated",
+    className: "w-32",
+    render: (row) => <span className="text-sm text-zinc-500 dark:text-zinc-400">{String(row.updatedAt ?? "")}</span>,
+  },
+];
+
 interface DataTableProps<T extends { id: string }> {
-  columns: AdminTableColumn<T>[];
+  columns?: AdminTableColumn<T>[];
   rows: T[];
   isLoading?: boolean;
   getRowHref?: (row: T) => string;
@@ -20,7 +49,7 @@ interface DataTableProps<T extends { id: string }> {
 }
 
 export function DataTable<T extends { id: string }>({
-  columns,
+  columns: columnsProp,
   rows,
   isLoading,
   sortKey,
@@ -33,6 +62,7 @@ export function DataTable<T extends { id: string }>({
   getRowHref,
   renderRowActions,
 }: DataTableProps<T>) {
+  const columns = (columnsProp ?? DEFAULT_COLUMNS) as AdminTableColumn<T>[];
   return (
     <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
       <Div className="overflow-x-auto">
