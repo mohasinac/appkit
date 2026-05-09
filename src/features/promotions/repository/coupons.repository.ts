@@ -193,13 +193,46 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
   /**
-   * Validate coupon code (format and availability)
+   * Steps shared by all public validate methods:
+   * 1. Code format  2. DB lookup  3. Validity  4. Per-user limit
    *
-   * @param code - Coupon code to validate
-   * @param userId - User ID attempting to use coupon
-   * @param orderTotal - Order total amount (for validation)
-   * @returns Promise<{valid: boolean, coupon?: CouponDocument, message?: string}>
+   * Returns either an early-exit failure result or the resolved coupon.
+   */
+  private async _fetchAndValidateCoupon(
+    code: string,
+    userId: string,
+  ): Promise<
+    | { ok: false; result: { valid: false; coupon?: CouponDocument; message: string } }
+    | { ok: true; coupon: CouponDocument }
+  > {
+    if (!isValidCouponCode(code)) {
+      return { ok: false, result: { valid: false, message: "Invalid coupon code format" } };
+    }
+    const coupon = await this.getCouponByCode(code);
+    if (!coupon) {
+      return { ok: false, result: { valid: false, message: "Coupon not found" } };
+    }
+    if (!isCouponValid(coupon)) {
+      return { ok: false, result: { valid: false, coupon, message: "Coupon is not currently valid" } };
+    }
+    const userUsageCount = await this.getUserCouponUsageCount(userId, coupon.id);
+    if (!canUserUseCoupon(coupon, userUsageCount)) {
+      return { ok: false, result: { valid: false, coupon, message: "You have reached the usage limit for this coupon" } };
+    }
+    return { ok: true, coupon };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Public validation methods
+  // ---------------------------------------------------------------------------
+
+  /**
+   * Validate coupon against a flat order total (no cart breakdown).
    */
   async validateCoupon(
     code: string,
@@ -211,64 +244,18 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     discountAmount?: number;
     message?: string;
   }> {
-    // Validate code format
-    if (!isValidCouponCode(code)) {
-      return {
-        valid: false,
-        message: "Invalid coupon code format",
-      };
-    }
+    const check = await this._fetchAndValidateCoupon(code, userId);
+    if (!check.ok) return check.result;
+    const { coupon } = check;
 
-    // Get coupon from database
-    const coupon = await this.getCouponByCode(code);
-    if (!coupon) {
-      return {
-        valid: false,
-        message: "Coupon not found",
-      };
+    if (coupon.discount.minPurchase && orderTotal < coupon.discount.minPurchase) {
+      return { valid: false, coupon, message: "Minimum purchase requirement not met" };
     }
-
-    // Check if coupon is valid (active, date range, usage limits)
-    if (!isCouponValid(coupon)) {
-      return {
-        valid: false,
-        coupon,
-        message: "Coupon is not currently valid",
-      };
-    }
-
-    // Check minimum purchase requirement
-    if (
-      coupon.discount.minPurchase &&
-      orderTotal < coupon.discount.minPurchase
-    ) {
-      return {
-        valid: false,
-        coupon,
-        message: "Minimum purchase requirement not met",
-      };
-    }
-
-    // Check user-specific usage limit
-    const userUsageCount = await this.getUserCouponUsageCount(
-      userId,
-      coupon.id,
-    );
-    if (!canUserUseCoupon(coupon, userUsageCount)) {
-      return {
-        valid: false,
-        coupon,
-        message: "You have reached the usage limit for this coupon",
-      };
-    }
-
-    // Calculate discount
-    const discountAmount = calculateDiscount(coupon, orderTotal);
 
     return {
       valid: true,
       coupon,
-      discountAmount,
+      discountAmount: calculateDiscount(coupon, orderTotal),
       message: "Coupon is valid",
     };
   }
@@ -312,15 +299,16 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
         .collection(COUPON_USAGE_SUBCOLLECTION)
         .doc(couponId);
 
+      // FieldValue sentinels (increment, arrayUnion) must NOT go through
+      // prepareForFirestore — it recurses into objects and Object.keys() on a
+      // FieldValue returns [] (non-enumerable internals), silently dropping them.
       batch.set(
         usageRef,
-        prepareForFirestore({
-          userId,
-          couponCode: couponCode.toUpperCase(),
+        {
+          ...prepareForFirestore({ userId, couponCode: couponCode.toUpperCase(), lastUsedAt: new Date() }),
           usageCount: increment(1),
-          lastUsedAt: new Date(),
           orders: arrayUnion(...orderIds),
-        }),
+        },
         { merge: true },
       );
 
@@ -488,33 +476,11 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     sellerId?: string;
     message?: string;
   }> {
-    // Format check
-    if (!isValidCouponCode(code)) {
-      return { valid: false, message: "Invalid coupon code format" };
-    }
+    const check = await this._fetchAndValidateCoupon(code, userId);
+    if (!check.ok) return check.result;
+    const { coupon } = check;
 
-    const coupon = await this.getCouponByCode(code);
-    if (!coupon) {
-      return { valid: false, message: "Coupon not found" };
-    }
-
-    if (!isCouponValid(coupon)) {
-      return { valid: false, coupon, message: "Coupon is not currently valid" };
-    }
-
-    const userUsageCount = await this.getUserCouponUsageCount(
-      userId,
-      coupon.id,
-    );
-    if (!canUserUseCoupon(coupon, userUsageCount)) {
-      return {
-        valid: false,
-        coupon,
-        message: "You have reached the usage limit for this coupon",
-      };
-    }
-
-    // Determine eligible items â€” no blanket exclusion by product type.
+    // Determine eligible items — no blanket exclusion by product type.
     // Coupon flags (applicableToAuctions) decide type eligibility below.
     let eligible = [...cartItems];
 

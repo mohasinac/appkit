@@ -10,7 +10,17 @@ import type { ReviewDocument } from "../features/reviews/schemas";
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const reviewsSeedData: Partial<ReviewDocument>[] = [
+const SELLER_STORE: Record<string, { storeId: string; storeName: string }> = {
+  "user-aryan-kapoor":    { storeId: "store-pokemon-palace",     storeName: "Pokémon Palace" },
+  "user-nisha-reddy":     { storeId: "store-cardgame-hub",       storeName: "CardGame Hub" },
+  "user-vikram-mehta":    { storeId: "store-diecast-depot",      storeName: "Diecast Depot" },
+  "user-rohit-joshi":     { storeId: "store-beyblade-arena",     storeName: "Beyblade Arena" },
+  "user-admin-letitrip":  { storeId: "store-letitrip-official",  storeName: "LetItRip Official" },
+  "user-priya-singh":     { storeId: "store-tokyo-toys-india",   storeName: "Tokyo Toys India" },
+  "user-amit-sharma":     { storeId: "store-gundam-galaxy",      storeName: "Gundam Galaxy" },
+};
+
+const rawReviews: Array<Partial<ReviewDocument> & { sellerId?: string }> = [
   // ── store-pokemon-palace (4 reviews) ─────────────────────────────────────
 
   {
@@ -764,3 +774,10 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     approvedAt: daysAgo(1),
   },
 ];
+
+export const reviewsSeedData: Partial<ReviewDocument>[] = rawReviews.map(
+  ({ sellerId, ...r }) => ({
+    ...r,
+    ...(sellerId ? (SELLER_STORE[sellerId] ?? {}) : {}),
+  }),
+);

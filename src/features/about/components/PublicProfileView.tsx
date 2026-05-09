@@ -62,10 +62,12 @@ export async function PublicProfileView({
   const { getTranslations } = await import("next-intl/server");
   const t = await getTranslations("publicProfile");
 
-  const [profile, products, reviews] = await Promise.all([
-    getPublicUserProfile(userId).catch(() => null),
-    getSellerProducts(userId).catch(() => []),
-    getSellerReviews(userId).catch(() => []),
+  const profile = await getPublicUserProfile(userId).catch(() => null);
+  const storeId = profile?.storeSlug ?? null;
+
+  const [products, reviews] = await Promise.all([
+    storeId ? getSellerProducts(userId).catch(() => []) : Promise.resolve([]),
+    storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
   ]);
 
   const displayName = profile?.displayName ?? t("profileTitle");

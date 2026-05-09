@@ -17,7 +17,6 @@ export interface Review {
   id: string;
   productId: string;
   productTitle?: string;
-  sellerId?: string;
   storeSlug?: string;
   storeName?: string;
   userId: string;

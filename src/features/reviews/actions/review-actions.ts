@@ -68,7 +68,8 @@ export async function createReview(
   return reviewRepository.create({
     productId: input.productId,
     productTitle: product.title,
-    sellerId: product.sellerId,
+    storeId: product.storeId,
+    storeName: product.storeName,
     userId,
     userName: profile?.displayName ?? "Anonymous",
     userAvatar: profile?.photoURL ?? "",

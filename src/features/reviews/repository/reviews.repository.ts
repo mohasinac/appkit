@@ -24,7 +24,7 @@ import type { ReviewStatus } from "../types";
 const REVIEW_FIELDS = {
   PRODUCT_ID: "productId",
   USER_ID: "userId",
-  SELLER_ID: "sellerId",
+  STORE_ID: "storeId",
   STATUS: "status",
   FEATURED: "featured",
   CREATED_AT: "createdAt",
@@ -105,6 +105,18 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       .where(REVIEW_FIELDS.PRODUCT_ID, "==", productId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
       .orderBy("createdAt", "desc")
+      .get();
+
+    return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
+  }
+
+  async findApprovedByStore(storeId: string): Promise<ReviewDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(REVIEW_FIELDS.STORE_ID, "==", storeId)
+      .where(REVIEW_FIELDS.STATUS, "==", "approved")
+      .orderBy("createdAt", "desc")
+      .limit(50)
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<ReviewDocument>(doc));
@@ -227,14 +239,14 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
   }
 
   /**
-   * Cloud Functions compatibility: approved review count + average by seller.
+   * Cloud Functions compatibility: approved review count + average by store.
    */
-  async getApprovedRatingAggregateBySeller(
-    sellerId: string,
+  async getApprovedRatingAggregateByStore(
+    storeId: string,
   ): Promise<ReviewRatingAggregate> {
     const snapshot = await this.db
       .collection(this.collection)
-      .where(REVIEW_FIELDS.SELLER_ID, "==", sellerId)
+      .where(REVIEW_FIELDS.STORE_ID, "==", storeId)
       .where(REVIEW_FIELDS.STATUS, "==", "approved")
       .get();
 
@@ -258,7 +270,8 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     userId: { canFilter: true, canSort: false },
     userNameIndex: { canFilter: true, canSort: false },
     userName: { canFilter: false, canSort: false },
-    sellerId: { canFilter: true, canSort: false },
+    storeId: { canFilter: true, canSort: false },
+    storeName: { canFilter: true, canSort: false },
     status: { canFilter: true, canSort: true },
     rating: { canFilter: true, canSort: true },
     verified: { canFilter: true, canSort: false },
@@ -289,14 +302,14 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     );
   }
 
-  async listForSeller(
-    sellerId: string,
+  async listForStore(
+    storeId: string,
     model: SieveModel,
   ): Promise<FirebaseSieveResult<ReviewDocument>> {
     const baseQuery = this.getCollection().where(
-      REVIEW_FIELDS.SELLER_ID,
+      REVIEW_FIELDS.STORE_ID,
       "==",
-      sellerId,
+      storeId,
     );
     return this.sieveQuery<ReviewDocument>(
       model,

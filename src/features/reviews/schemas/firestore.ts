@@ -24,7 +24,6 @@ export interface ReviewDocument {
   id: string;
   productId: string;
   productTitle: string;
-  sellerId?: string;
   storeId?: string;
   storeName?: string;
   userId: string;
@@ -53,6 +52,7 @@ export const REVIEW_COLLECTION = "reviews" as const;
 
 export const REVIEW_INDEXED_FIELDS = [
   "productId",
+  "storeId",
   "userId",
   "status",
   "rating",

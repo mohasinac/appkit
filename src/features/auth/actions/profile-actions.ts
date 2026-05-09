@@ -76,22 +76,13 @@ export async function getPublicUserProfile(
   };
 }
 
-export async function getSellerReviews(sellerId: string) {
-  const products = await productRepository.findBySeller(sellerId);
-  const published = products.filter(
-    (p) => p.status === ProductStatusValues.PUBLISHED,
-  );
-  if (published.length === 0) return [];
-  const batches = await Promise.all(
-    published
-      .slice(0, 20)
-      .map((p) => reviewRepository.findApprovedByProduct(p.id).catch(() => [])),
-  );
-  return batches.flat().map((r): Review => ({
+/** Fetch approved reviews for a store. storeId === storeSlug in this project. */
+export async function getSellerReviews(storeId: string) {
+  const snapshot = await reviewRepository.findApprovedByStore(storeId).catch(() => []);
+  return snapshot.map((r): Review => ({
     id: r.id,
     productId: r.productId,
     productTitle: r.productTitle,
-    sellerId: r.sellerId,
     userId: r.userId,
     userName: maskPublicReview(r).userName,
     userAvatar: r.userAvatar,
@@ -106,7 +97,6 @@ export async function getSellerReviews(sellerId: string) {
     featured: r.featured,
     createdAt: r.createdAt instanceof Date ? r.createdAt.toISOString() : undefined,
     updatedAt: r.updatedAt instanceof Date ? r.updatedAt.toISOString() : undefined,
-    // storeId === storeSlug for stores (pure slug IDs in this project)
     storeSlug: r.storeId,
     storeName: r.storeName,
   }));
