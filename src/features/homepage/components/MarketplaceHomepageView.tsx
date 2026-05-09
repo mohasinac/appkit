@@ -315,7 +315,7 @@ function renderSection(
         const cfg = config as TrustIndicatorsSectionConfig;
         return (
           <TrustFeaturesSection
-            title={cleanTitle(cfg?.title) || "Why Buyers Trust LetiTrip"}
+            title={cleanTitle(cfg?.title) || "Why Buyers Trust LetItRip"}
             items={DEFAULT_TRUST_FEATURES}
           />
         );

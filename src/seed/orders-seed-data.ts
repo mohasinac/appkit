@@ -1,5 +1,5 @@
 /**
- * Orders Seed Data — LetiTrip Collectibles Platform
+ * Orders Seed Data — LetItRip Collectibles Platform
  * 10 orders in all status states (pending, processing, shipped, delivered,
  * cancelled, refunded, return_requested). Buyer/seller IDs from P15.
  * order- prefix (system IDs, not slug-based).

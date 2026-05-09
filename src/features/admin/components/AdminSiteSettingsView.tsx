@@ -400,7 +400,7 @@ export function AdminSiteSettingsView({
           {/* ① Branding */}
           <TabsContent value="branding">
             <Form onSubmit={(e) => { e.preventDefault(); brandingMutation.mutate(); }} className="space-y-4 pt-4">
-              <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetiTrip" />
+              <Input label="Site name" value={siteName} onChange={(e) => setSiteName(e.target.value)} placeholder="LetItRip" />
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
               <ImageUpload label="Favicon" currentImage={faviconUrl} onUpload={(file) => upload(file, "store")} onChange={setFaviconUrl} />
@@ -454,7 +454,7 @@ export function AdminSiteSettingsView({
           {/* ④ SEO */}
           <TabsContent value="seo">
             <Form onSubmit={(e) => { e.preventDefault(); seoMutation.mutate(); }} className="space-y-4 pt-4">
-              <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetiTrip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
+              <Input label="Default meta title" value={seoTitle} onChange={(e) => setSeoTitle(e.target.value)} placeholder="LetItRip — Buy, Sell & Auction Collectibles in India" maxLength={60} helperText="Max 60 chars. Use {page} token for dynamic insertion." />
               <Input label="Default meta description" value={seoDescription} onChange={(e) => setSeoDescription(e.target.value)} placeholder="India's largest collectibles marketplace…" maxLength={160} helperText="Max 160 chars." />
               <ImageUpload label="Default OG image" currentImage={seoOgImage} onUpload={(file) => upload(file, "store")} onChange={setSeoOgImage} />
               <Input label="Canonical base URL" value={canonicalUrl} onChange={(e) => setCanonicalUrl(e.target.value)} placeholder="https://letitrip.in" />

@@ -1,5 +1,5 @@
 /**
- * Coupons Seed Data — LetiTrip Collectibles Platform
+ * Coupons Seed Data — LetItRip Collectibles Platform
  * 5 coupons covering all key scenarios: welcome, category-scoped, free shipping,
  * partially-used, and exhausted (limit reached).
  * coupon- prefix, id === code-based slug.
@@ -18,7 +18,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "WELCOME10",
     name: "Welcome Discount — 10% Off Your First Order",
     description:
-      "10% off your first order on LetiTrip. Valid on all categories. Maximum discount ₹200. First-time buyers only.",
+      "10% off your first order on LetItRip. Valid on all categories. Maximum discount ₹200. First-time buyers only.",
     type: "percentage",
     scope: "admin",
     discount: {
@@ -171,7 +171,7 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "VIP2026",
     name: "VIP Collector's Exclusive — 25% Off (Limit Reached)",
     description:
-      "25% off any order — exclusive to LetiTrip VIP program members. Limited to 10 uses total. This coupon is now exhausted. Watch for VIP2026B in the next newsletter.",
+      "25% off any order — exclusive to LetItRip VIP program members. Limited to 10 uses total. This coupon is now exhausted. Watch for VIP2026B in the next newsletter.",
     type: "percentage",
     scope: "admin",
     discount: {

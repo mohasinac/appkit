@@ -2,6 +2,19 @@
 
 This document defines the working rules for maintainers and contributors of `@mohasinac/appkit`.
 
+## Index
+
+- [Purpose](#purpose)
+- [Project Structure Guidance](#project-structure-guidance)
+- [Runtime Boundary Rules](#runtime-boundary-rules)
+- [Public API Rules](#public-api-rules)
+- [How Consumers Should Handle Appkit](#how-consumers-should-handle-appkit)
+- [Adding New Components or Code](#adding-new-components-or-code)
+- [Quality Gates](#quality-gates)
+- [Release Hygiene](#release-hygiene)
+
+---
+
 ## Purpose
 
 Appkit is a shared package used by application consumers for contracts, feature logic, utilities, and integration layers. Changes should preserve compatibility, clear runtime boundaries, and stable exports.

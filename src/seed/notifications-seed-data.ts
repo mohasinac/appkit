@@ -1,5 +1,5 @@
 /**
- * Notifications Seed Data — LetiTrip Collectibles Platform
+ * Notifications Seed Data — LetItRip Collectibles Platform
  * 10 notifications covering all types. Mixed read/unread.
  * Distributed across buyer and seller users from P15.
  * notif- prefix (system IDs).
@@ -19,7 +19,7 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     userId: "user-rahul-sharma",
     type: NOTIFICATION_FIELDS.TYPE_VALUES.WELCOME,
     priority: NOTIFICATION_FIELDS.PRIORITY_VALUES.NORMAL,
-    title: "Welcome to LetiTrip, Rahul! 🎉",
+    title: "Welcome to LetItRip, Rahul! 🎉",
     message:
       "Explore thousands of Pokémon TCG cards, Hot Wheels, Beyblade X, and anime figures from verified sellers across India. Use code WELCOME10 for 10% off your first order!",
     actionUrl: "/products",

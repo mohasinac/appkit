@@ -1,5 +1,5 @@
 /**
- * FAQ Seed Data — LetiTrip Collectibles Platform
+ * FAQ Seed Data — LetItRip Collectibles Platform
  * 20 FAQs across 5 categories. faq- prefix, id === slug.
  * 5 showOnHomepage: true.
  */
@@ -62,7 +62,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-how-to-track-my-order",
     question: "How do I track my order?",
-    answer: html(`<p>Once your order is dispatched, you receive a <strong>tracking link</strong> via email and WhatsApp. You can also track directly from your LetiTrip account: go to <em>My Account → Orders</em> and click "Track" next to any shipped order.</p><p>We support tracking from Shiprocket, India Post, Delhivery, Ekart, and DTDC. If your tracking link doesn't update within 24 hours of dispatch, contact the seller via the order chat — sellers are required to respond within 12 hours.</p>`),
+    answer: html(`<p>Once your order is dispatched, you receive a <strong>tracking link</strong> via email and WhatsApp. You can also track directly from your LetItRip account: go to <em>My Account → Orders</em> and click "Track" next to any shipped order.</p><p>We support tracking from Shiprocket, India Post, Delhivery, Ekart, and DTDC. If your tracking link doesn't update within 24 hours of dispatch, contact the seller via the order chat — sellers are required to respond within 12 hours.</p>`),
     category: "shipping_delivery",
     showOnHomepage: false,
     showInFooter: false,
@@ -84,7 +84,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-do-you-ship-internationally",
     question: "Do you ship internationally?",
-    answer: html(`<p>Currently, LetiTrip only ships within India. International shipping is on our roadmap for 2027. If you are a non-resident Indian (NRI) wanting to send a gift to an Indian address, that works fine — enter the Indian delivery address at checkout.</p><p>For international inquiries, email <strong>support@letitrip.in</strong> — we occasionally facilitate international shipping for high-value auctions on a case-by-case basis.</p>`),
+    answer: html(`<p>Currently, LetItRip only ships within India. International shipping is on our roadmap for 2027. If you are a non-resident Indian (NRI) wanting to send a gift to an Indian address, that works fine — enter the Indian delivery address at checkout.</p><p>For international inquiries, email <strong>support@letitrip.in</strong> — we occasionally facilitate international shipping for high-value auctions on a case-by-case basis.</p>`),
     category: "shipping_delivery",
     showOnHomepage: false,
     showInFooter: false,
@@ -106,7 +106,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-what-happens-if-item-damaged-in-transit",
     question: "What happens if my item is damaged in transit?",
-    answer: html(`<p>If your item arrives damaged, <strong>photograph the damage immediately</strong> — both the item and the packaging — before opening it further. Then:</p><ol><li>Report through My Account → Orders → "Report Issue" within 48 hours of delivery.</li><li>Upload your photographs.</li><li>LetiTrip mediates between you and the seller for a replacement or full refund.</li></ol><p>All parcels on LetiTrip are covered by basic transit insurance. Items valued above ₹5,000 are automatically insured at declared value. Sellers who repeatedly dispatch poorly packaged items lose their verified status.</p>`),
+    answer: html(`<p>If your item arrives damaged, <strong>photograph the damage immediately</strong> — both the item and the packaging — before opening it further. Then:</p><ol><li>Report through My Account → Orders → "Report Issue" within 48 hours of delivery.</li><li>Upload your photographs.</li><li>LetItRip mediates between you and the seller for a replacement or full refund.</li></ol><p>All parcels on LetItRip are covered by basic transit insurance. Items valued above ₹5,000 are automatically insured at declared value. Sellers who repeatedly dispatch poorly packaged items lose their verified status.</p>`),
     category: "shipping_delivery",
     showOnHomepage: false,
     showInFooter: false,
@@ -129,8 +129,8 @@ export const faqSeedData: Partial<FAQDocument>[] = [
 
   {
     id: "faq-what-is-the-return-policy",
-    question: "What is the return policy on LetiTrip?",
-    answer: html(`<p>Return policies on LetiTrip are set by individual sellers, not the platform. Most verified sellers offer:</p><ul><li><strong>Sealed products</strong> (booster boxes, ETBs, sealed figures): 7-day return if factory seal is intact.</li><li><strong>Graded slabs</strong>: 3-day return if slab arrived cracked or case is damaged.</li><li><strong>Singles and loose items</strong>: 3-day return if item is materially different from description.</li><li><strong>Opened product</strong>: No returns (contents cannot be re-verified).</li></ul><p>To initiate a return, go to My Account → Orders → "Return Item". Seller must approve within 3 business days. LetiTrip holds payment in escrow until the dispute is resolved.</p>`),
+    question: "What is the return policy on LetItRip?",
+    answer: html(`<p>Return policies on LetItRip are set by individual sellers, not the platform. Most verified sellers offer:</p><ul><li><strong>Sealed products</strong> (booster boxes, ETBs, sealed figures): 7-day return if factory seal is intact.</li><li><strong>Graded slabs</strong>: 3-day return if slab arrived cracked or case is damaged.</li><li><strong>Singles and loose items</strong>: 3-day return if item is materially different from description.</li><li><strong>Opened product</strong>: No returns (contents cannot be re-verified).</li></ul><p>To initiate a return, go to My Account → Orders → "Return Item". Seller must approve within 3 business days. LetItRip holds payment in escrow until the dispute is resolved.</p>`),
     category: "returns_refunds",
     showOnHomepage: true,
     showInFooter: false,
@@ -152,7 +152,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-how-long-does-refund-take",
     question: "How long does a refund take?",
-    answer: html(`<p>Once a return is approved by the seller and the item is received back, refunds are processed within <strong>5–7 business days</strong>:</p><ul><li><strong>UPI and bank transfer</strong>: 2–3 business days</li><li><strong>Razorpay (card/wallet)</strong>: 5–7 business days (subject to bank processing)</li><li><strong>COD orders</strong>: Refunded as LetiTrip wallet credit, or bank transfer (takes 3–5 days and requires bank details verification)</li></ul><p>If a refund is not received within 10 business days of approval, contact support@letitrip.in with your order ID and we escalate within 24 hours.</p>`),
+    answer: html(`<p>Once a return is approved by the seller and the item is received back, refunds are processed within <strong>5–7 business days</strong>:</p><ul><li><strong>UPI and bank transfer</strong>: 2–3 business days</li><li><strong>Razorpay (card/wallet)</strong>: 5–7 business days (subject to bank processing)</li><li><strong>COD orders</strong>: Refunded as LetItRip wallet credit, or bank transfer (takes 3–5 days and requires bank details verification)</li></ul><p>If a refund is not received within 10 business days of approval, contact support@letitrip.in with your order ID and we escalate within 24 hours.</p>`),
     category: "returns_refunds",
     showOnHomepage: false,
     showInFooter: false,
@@ -197,8 +197,8 @@ export const faqSeedData: Partial<FAQDocument>[] = [
 
   {
     id: "faq-what-payment-methods-are-accepted",
-    question: "What payment methods does LetiTrip accept?",
-    answer: html(`<p>LetiTrip accepts all major Indian payment methods:</p><ul><li><strong>UPI</strong> (Google Pay, PhonePe, Paytm, BHIM, any UPI app)</li><li><strong>Debit/Credit Cards</strong> (Visa, Mastercard, RuPay, Amex)</li><li><strong>Net Banking</strong> (all major Indian banks)</li><li><strong>EMI</strong> (0% on Bajaj Finserv and select bank cards for orders above ₹3,000)</li><li><strong>Cash on Delivery (COD)</strong> for orders up to ₹10,000 (requires 20% deposit online)</li></ul><p>All payments are processed securely via Razorpay, which is PCI-DSS Level 1 compliant. LetiTrip never stores your card details.</p>`),
+    question: "What payment methods does LetItRip accept?",
+    answer: html(`<p>LetItRip accepts all major Indian payment methods:</p><ul><li><strong>UPI</strong> (Google Pay, PhonePe, Paytm, BHIM, any UPI app)</li><li><strong>Debit/Credit Cards</strong> (Visa, Mastercard, RuPay, Amex)</li><li><strong>Net Banking</strong> (all major Indian banks)</li><li><strong>EMI</strong> (0% on Bajaj Finserv and select bank cards for orders above ₹3,000)</li><li><strong>Cash on Delivery (COD)</strong> for orders up to ₹10,000 (requires 20% deposit online)</li></ul><p>All payments are processed securely via Razorpay, which is PCI-DSS Level 1 compliant. LetItRip never stores your card details.</p>`),
     category: "orders_payment",
     showOnHomepage: true,
     showInFooter: false,
@@ -219,8 +219,8 @@ export const faqSeedData: Partial<FAQDocument>[] = [
 
   {
     id: "faq-is-it-safe-to-pay-on-letitrip",
-    question: "Is it safe to pay on LetiTrip?",
-    answer: html(`<p>Yes. LetiTrip uses an <strong>escrow model</strong> — your payment is held securely by our payment processor (Razorpay) and only released to the seller after you confirm delivery or after 5 days of confirmed delivery without a dispute. If anything goes wrong, LetiTrip mediates and can issue a full refund directly from escrow.</p><p>LetiTrip is registered under the Indian IT Act and complies with the Consumer Protection (E-Commerce) Rules 2020. Our platform fee (5% + 2.36% Razorpay) is transparently shown at checkout — no hidden charges.</p>`),
+    question: "Is it safe to pay on LetItRip?",
+    answer: html(`<p>Yes. LetItRip uses an <strong>escrow model</strong> — your payment is held securely by our payment processor (Razorpay) and only released to the seller after you confirm delivery or after 5 days of confirmed delivery without a dispute. If anything goes wrong, LetItRip mediates and can issue a full refund directly from escrow.</p><p>LetItRip is registered under the Indian IT Act and complies with the Consumer Protection (E-Commerce) Rules 2020. Our platform fee (5% + 2.36% Razorpay) is transparently shown at checkout — no hidden charges.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,
@@ -242,7 +242,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-can-i-use-multiple-coupons",
     question: "Can I use multiple coupon codes on one order?",
-    answer: html(`<p>Yes — LetiTrip supports <strong>stacking platform and seller coupons</strong> on the same order. You can apply one platform coupon (issued by LetiTrip) and one seller coupon (issued by the store) simultaneously.</p><p>Two platform coupons cannot be stacked. If you have multiple platform coupons, the higher-value one is applied automatically. Coupon restrictions (minimum order, applicable categories, first-order only) still apply per coupon.</p>`),
+    answer: html(`<p>Yes — LetItRip supports <strong>stacking platform and seller coupons</strong> on the same order. You can apply one platform coupon (issued by LetItRip) and one seller coupon (issued by the store) simultaneously.</p><p>Two platform coupons cannot be stacked. If you have multiple platform coupons, the higher-value one is applied automatically. Coupon restrictions (minimum order, applicable categories, first-order only) still apply per coupon.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,
@@ -286,7 +286,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-gst-invoice-for-my-order",
     question: "Can I get a GST invoice for my order?",
-    answer: html(`<p>GST invoices are issued by individual sellers. At checkout, you can enter your <strong>GSTIN</strong> in the "Billing Details" section. The seller issues a GST-compliant invoice that is available for download from My Account → Orders → "Download Invoice" once the order is confirmed.</p><p>Not all sellers are GST-registered — individual sellers with turnover below ₹40 lakh are exempt. LetiTrip's platform fee (charged separately) is always GST-inclusive at 18% and a receipt is available in your account.</p>`),
+    answer: html(`<p>GST invoices are issued by individual sellers. At checkout, you can enter your <strong>GSTIN</strong> in the "Billing Details" section. The seller issues a GST-compliant invoice that is available for download from My Account → Orders → "Download Invoice" once the order is confirmed.</p><p>Not all sellers are GST-registered — individual sellers with turnover below ₹40 lakh are exempt. LetItRip's platform fee (charged separately) is always GST-inclusive at 18% and a receipt is available in your account.</p>`),
     category: "orders_payment",
     showOnHomepage: false,
     showInFooter: false,
@@ -309,8 +309,8 @@ export const faqSeedData: Partial<FAQDocument>[] = [
 
   {
     id: "faq-how-does-bidding-work",
-    question: "How does bidding work on LetiTrip auctions?",
-    answer: html(`<p>LetiTrip auctions work on a <strong>timed open-bid system</strong>:</p><ol><li>Each auction has a starting bid, optional reserve price, and a closing time.</li><li>Click "Place Bid" and enter an amount at least ₹50 (or the minimum increment) above the current bid.</li><li>If you are outbid, you receive an instant notification via app/email/WhatsApp.</li><li>The highest bidder at closing time wins.</li><li>An <strong>auto-extend rule</strong> applies: if a bid is placed in the final 5 minutes, the auction extends by 5 minutes. This prevents sniping and gives all bidders a fair chance.</li></ol><p>Reserve price: if set, the auction only closes as a sale if the reserve is met. If the reserve is not met, the item is relisted or the seller may contact the highest bidder to negotiate.</p>`),
+    question: "How does bidding work on LetItRip auctions?",
+    answer: html(`<p>LetItRip auctions work on a <strong>timed open-bid system</strong>:</p><ol><li>Each auction has a starting bid, optional reserve price, and a closing time.</li><li>Click "Place Bid" and enter an amount at least ₹50 (or the minimum increment) above the current bid.</li><li>If you are outbid, you receive an instant notification via app/email/WhatsApp.</li><li>The highest bidder at closing time wins.</li><li>An <strong>auto-extend rule</strong> applies: if a bid is placed in the final 5 minutes, the auction extends by 5 minutes. This prevents sniping and gives all bidders a fair chance.</li></ol><p>Reserve price: if set, the auction only closes as a sale if the reserve is met. If the reserve is not met, the item is relisted or the seller may contact the highest bidder to negotiate.</p>`),
     category: "general",
     showOnHomepage: true,
     showInFooter: false,
@@ -332,7 +332,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-what-happens-when-i-win-an-auction",
     question: "What happens when I win an auction?",
-    answer: html(`<p>Congratulations! When you win an auction:</p><ol><li>You receive an instant notification and email with the winning amount.</li><li>You have <strong>24 hours</strong> to complete payment. The order appears in My Account → Orders with status "Pending Payment".</li><li>After payment, the seller has 2 business days to dispatch.</li><li>If you do not pay within 24 hours, the auction may be offered to the next-highest bidder and your account receives a non-payment strike. Three strikes result in a 30-day ban from LetiTrip auctions.</li></ol><p>High-value auction wins (above ₹50,000) require a ₹5,000 refundable deposit at the time of bidding. The deposit is deducted from the final amount at checkout.</p>`),
+    answer: html(`<p>Congratulations! When you win an auction:</p><ol><li>You receive an instant notification and email with the winning amount.</li><li>You have <strong>24 hours</strong> to complete payment. The order appears in My Account → Orders with status "Pending Payment".</li><li>After payment, the seller has 2 business days to dispatch.</li><li>If you do not pay within 24 hours, the auction may be offered to the next-highest bidder and your account receives a non-payment strike. Three strikes result in a 30-day ban from LetItRip auctions.</li></ol><p>High-value auction wins (above ₹50,000) require a ₹5,000 refundable deposit at the time of bidding. The deposit is deducted from the final amount at checkout.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
@@ -354,7 +354,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-can-i-retract-a-bid",
     question: "Can I retract a bid once placed?",
-    answer: html(`<p><strong>Bid retraction is not allowed</strong> on LetiTrip. All bids are binding commitments. This protects sellers from bid manipulation and price suppression.</p><p>Exception: if the item description has materially changed after you placed your bid (e.g., a seller edits the condition or images to show undisclosed damage), you may contact LetiTrip support with evidence and we can void your bid within 1 hour of the edit. Sellers who make material edits after bids are placed face penalties.</p>`),
+    answer: html(`<p><strong>Bid retraction is not allowed</strong> on LetItRip. All bids are binding commitments. This protects sellers from bid manipulation and price suppression.</p><p>Exception: if the item description has materially changed after you placed your bid (e.g., a seller edits the condition or images to show undisclosed damage), you may contact LetItRip support with evidence and we can void your bid within 1 hour of the edit. Sellers who make material edits after bids are placed face penalties.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
@@ -376,7 +376,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-what-is-a-reserve-price",
     question: "What is a reserve price in an auction?",
-    answer: html(`<p>A <strong>reserve price</strong> is the minimum amount a seller is willing to accept. If the highest bid does not reach the reserve at auction close, the seller is not obligated to sell.</p><p>Reserve prices are kept secret — the listing shows "Reserve not met" if the current bid is below the reserve, and "Reserve met" once it is reached. Sellers set reserve prices for high-value items like PSA 9/10 slabs or rare vintage collectibles to protect against under-valuation.</p><p>If a reserve is not met and you are the highest bidder, the seller may contact you through LetiTrip's messaging to negotiate a private sale at a mutually agreed price.</p>`),
+    answer: html(`<p>A <strong>reserve price</strong> is the minimum amount a seller is willing to accept. If the highest bid does not reach the reserve at auction close, the seller is not obligated to sell.</p><p>Reserve prices are kept secret — the listing shows "Reserve not met" if the current bid is below the reserve, and "Reserve met" once it is reached. Sellers set reserve prices for high-value items like PSA 9/10 slabs or rare vintage collectibles to protect against under-valuation.</p><p>If a reserve is not met and you are the highest bidder, the seller may contact you through LetItRip's messaging to negotiate a private sale at a mutually agreed price.</p>`),
     category: "general",
     showOnHomepage: false,
     showInFooter: false,
@@ -399,7 +399,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
 
   {
     id: "faq-how-do-pre-orders-work",
-    question: "How do pre-orders work on LetiTrip?",
+    question: "How do pre-orders work on LetItRip?",
     answer: html(`<p>Pre-orders let you reserve <strong>upcoming collectibles</strong> before they arrive in India. Here's how:</p><ol><li>Browse pre-order listings — each shows an estimated delivery window (e.g., "Shipping in 45–60 days").</li><li>Pay a <strong>deposit</strong> (typically 20–30% of the total price) to secure your unit.</li><li>The remaining balance is charged automatically when the item is ready to ship.</li><li>If a pre-order is cancelled by the seller, your deposit is refunded in full within 5 business days.</li></ol><p>Pre-orders are available for Beyblade X new releases, Pokémon booster boxes, S.H.Figuarts, Nendoroids, and Hot Wheels RLC exclusives — all sourced directly from Japanese/US distributors.</p>`),
     category: "product_information",
     showOnHomepage: true,
@@ -422,7 +422,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-can-i-cancel-a-pre-order",
     question: "Can I cancel a pre-order?",
-    answer: html(`<p>You can cancel a pre-order <strong>before the seller marks it as "In Production"</strong>. At that stage, your deposit is fully refunded within 5 business days. After "In Production" status, cancellation may result in the deposit being forfeited — this is disclosed on the pre-order listing page before you pay.</p><p>If the estimated delivery date shifts by more than 60 days, LetiTrip sends you a notification and gives you a 7-day window to cancel with full deposit refund regardless of production status.</p>`),
+    answer: html(`<p>You can cancel a pre-order <strong>before the seller marks it as "In Production"</strong>. At that stage, your deposit is fully refunded within 5 business days. After "In Production" status, cancellation may result in the deposit being forfeited — this is disclosed on the pre-order listing page before you pay.</p><p>If the estimated delivery date shifts by more than 60 days, LetItRip sends you a notification and gives you a 7-day window to cancel with full deposit refund regardless of production status.</p>`),
     category: "product_information",
     showOnHomepage: false,
     showInFooter: false,
@@ -444,7 +444,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-what-if-preorder-delayed",
     question: "What if my pre-order is delayed?",
-    answer: html(`<p>Collectibles pre-orders can be delayed due to production issues, customs clearance, or distributor delays — this is common in the hobby. LetiTrip's policy:</p><ul><li><strong>Minor delay (under 30 days)</strong>: Seller updates the estimated date and notifies you. No action required unless you want to cancel.</li><li><strong>Major delay (30–60 days)</strong>: LetiTrip sends you a notification. You have 7 days to cancel with full deposit refund.</li><li><strong>Excessive delay (over 60 days)</strong>: LetiTrip may initiate a full refund if the seller cannot provide a confirmed new date within 14 days.</li></ul><p>You can always check your pre-order's current status and estimated ship date in My Account → Orders.</p>`),
+    answer: html(`<p>Collectibles pre-orders can be delayed due to production issues, customs clearance, or distributor delays — this is common in the hobby. LetItRip's policy:</p><ul><li><strong>Minor delay (under 30 days)</strong>: Seller updates the estimated date and notifies you. No action required unless you want to cancel.</li><li><strong>Major delay (30–60 days)</strong>: LetItRip sends you a notification. You have 7 days to cancel with full deposit refund.</li><li><strong>Excessive delay (over 60 days)</strong>: LetItRip may initiate a full refund if the seller cannot provide a confirmed new date within 14 days.</li></ul><p>You can always check your pre-order's current status and estimated ship date in My Account → Orders.</p>`),
     category: "product_information",
     showOnHomepage: false,
     showInFooter: false,
@@ -466,7 +466,7 @@ export const faqSeedData: Partial<FAQDocument>[] = [
   {
     id: "faq-are-preorder-products-authentic",
     question: "Are pre-order products guaranteed to be authentic?",
-    answer: html(`<p>Yes. All pre-orders on LetiTrip are sourced by <strong>verified sellers</strong> directly from official distributors, importers, or brand-authorised retailers. Every pre-order listing must include:</p><ul><li>Proof of distributor agreement or purchase order (reviewed by LetiTrip before the listing goes live)</li><li>Country of origin and distributor name</li><li>Expected batch number / release series</li></ul><p>For high-value pre-orders (above ₹10,000 total), sellers must provide a distributor invoice at the time of dispatch. If an item arrives and is found to be counterfeit, LetiTrip issues a full refund and suspends the seller immediately pending investigation.</p>`),
+    answer: html(`<p>Yes. All pre-orders on LetItRip are sourced by <strong>verified sellers</strong> directly from official distributors, importers, or brand-authorised retailers. Every pre-order listing must include:</p><ul><li>Proof of distributor agreement or purchase order (reviewed by LetItRip before the listing goes live)</li><li>Country of origin and distributor name</li><li>Expected batch number / release series</li></ul><p>For high-value pre-orders (above ₹10,000 total), sellers must provide a distributor invoice at the time of dispatch. If an item arrives and is found to be counterfeit, LetItRip issues a full refund and suspends the seller immediately pending investigation.</p>`),
     category: "product_information",
     showOnHomepage: false,
     showInFooter: false,

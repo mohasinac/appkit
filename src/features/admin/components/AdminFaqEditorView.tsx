@@ -167,7 +167,7 @@ export function AdminFaqEditorView({
             value={question}
             onChange={(e) => handleQuestionChange(e.target.value)}
             required
-            placeholder="e.g. How does bidding work on LetiTrip?"
+            placeholder="e.g. How does bidding work on LetItRip?"
           />
 
           <Input

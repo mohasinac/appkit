@@ -75,6 +75,7 @@ export interface ProductItem {
   stockQuantity?: number;
   subcategory?: string;
   brand?: string;
+  brandSlug?: string;
   /** "single" = one brand, "unbranded" = no brand (filter won't match), "mixed" = multiple brands */
   brandMode?: "single" | "unbranded" | "mixed";
   /** Brand names for mixed-brand items */

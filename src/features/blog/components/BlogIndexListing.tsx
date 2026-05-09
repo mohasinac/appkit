@@ -67,12 +67,21 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
   }, [pendingFilters, table]);
 
   const clearFilters = useCallback(() => {
-    const empty = Object.fromEntries(FILTER_KEYS.map((k) => [k, ""]));
-    setPendingFilters(empty);
-    table.setMany({ ...empty, page: "1" });
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
+  }, []);
+
+  const resetAll = useCallback(() => {
+    const updates: Record<string, string> = { q: "", sort: "" };
+    for (const k of FILTER_KEYS) updates[k] = "";
+    table.setMany(updates);
+    setSearchInput("");
   }, [table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
+  const hasActiveState =
+    !!table.get("q") ||
+    table.get("sort") !== "-publishedAt" ||
+    activeFilterCount > 0;
 
   const params = {
     q: table.get("q") || undefined,
@@ -104,6 +113,8 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
         sortOptions={BLOG_PUBLIC_SORT_OPTIONS as any}
         onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
         hideViewToggle
+        onResetAll={resetAll}
+        hasActiveState={hasActiveState}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

@@ -36,7 +36,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [showClosed, setShowClosed] = useState(false);
+  const showClosed = table.get("showClosed") === "true";
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
@@ -94,12 +94,22 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [pendingFilters, table]);
 
   const clearFilters = useCallback(() => {
-    const empty = Object.fromEntries(FILTER_KEYS.map((k) => [k, ""]));
-    setPendingFilters(empty);
-    table.setMany({ ...empty, page: "1" });
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
+  }, []);
+
+  const resetAll = useCallback(() => {
+    const updates: Record<string, string> = { q: "", sort: "", showClosed: "" };
+    for (const k of FILTER_KEYS) updates[k] = "";
+    table.setMany(updates);
+    setSearchInput("");
   }, [table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
+  const hasActiveState =
+    !!table.get("q") ||
+    table.get("showClosed") === "true" ||
+    table.get("sort") !== "-createdAt" ||
+    activeFilterCount > 0;
 
   const params = {
     q: table.get("q") || undefined,
@@ -182,6 +192,8 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
         view={view}
         onViewChange={handleViewToggle}
+        onResetAll={resetAll}
+        hasActiveState={hasActiveState}
         extra={
           <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
             <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
@@ -191,7 +203,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
               type="button"
               role="switch"
               aria-checked={showClosed}
-              onClick={() => setShowClosed((v) => !v)}
+              onClick={() => table.set("showClosed", showClosed ? "" : "true")}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
                 showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}

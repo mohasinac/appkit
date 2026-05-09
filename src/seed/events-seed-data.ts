@@ -1,5 +1,5 @@
 /**
- * Events Seed Data — LetiTrip Collectibles Platform
+ * Events Seed Data — LetItRip Collectibles Platform
  * 6 events: 2 upcoming (draft), 2 active, 2 ended.
  * Types: sale | offer | poll | survey | feedback — using exact schema shapes.
  * id === slug, event- prefix throughout.
@@ -52,9 +52,9 @@ export const eventsSeedData: EventDocument[] = [
     id: "event-collectors-convention-2026-survey",
     slug: "event-collectors-convention-2026-survey",
     type: EVENT_FIELDS.TYPE_VALUES.SURVEY,
-    title: "LetiTrip Collectors Convention 2026 — Interest Survey",
+    title: "LetItRip Collectors Convention 2026 — Interest Survey",
     description:
-      "<p>We're planning the first-ever LetiTrip Collectors Convention — a one-day event for Pokémon TCG, Hot Wheels, Beyblade X, anime figure, and Gunpla enthusiasts in India. Help us plan by filling out this short survey. Participants get a ₹200 voucher on their next LetiTrip order.</p>",
+      "<p>We're planning the first-ever LetItRip Collectors Convention — a one-day event for Pokémon TCG, Hot Wheels, Beyblade X, anime figure, and Gunpla enthusiasts in India. Help us plan by filling out this short survey. Participants get a ₹200 voucher on their next LetItRip order.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
     startsAt: daysAhead(14),
     endsAt: daysAhead(35),
@@ -108,7 +108,7 @@ export const eventsSeedData: EventDocument[] = [
     type: EVENT_FIELDS.TYPE_VALUES.SALE,
     title: "Hot Wheels May Swap Meet — Up to 30% Off Diecast This Weekend",
     description:
-      "<p>Diecast Depot is running a <strong>weekend flash sale</strong> to clear swap meet stock. Up to 30% off Treasure Hunts, Car Culture sets, Team Transport, and Tomica Limited Vintage. Prices drop as stock runs out — grab your cars before they're gone. <strong>LetiTrip exclusive sale</strong> — no other platform, no restocks.</p>",
+      "<p>Diecast Depot is running a <strong>weekend flash sale</strong> to clear swap meet stock. Up to 30% off Treasure Hunts, Car Culture sets, Team Transport, and Tomica Limited Vintage. Prices drop as stock runs out — grab your cars before they're gone. <strong>LetItRip exclusive sale</strong> — no other platform, no restocks.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(1),
     endsAt: daysAhead(2),
@@ -133,7 +133,7 @@ export const eventsSeedData: EventDocument[] = [
     type: EVENT_FIELDS.TYPE_VALUES.OFFER,
     title: "S.H.Figuarts & Nendoroid Showcase — Make an Offer Week",
     description:
-      "<p>This week, all S.H.Figuarts and Nendoroid listings on LetiTrip accept <strong>negotiated offers</strong>. Submit your best price on any anime figure listing — sellers will respond within 24 hours. Use code <strong>FIGURE10</strong> for an additional 10% off any accepted offer.</p>",
+      "<p>This week, all S.H.Figuarts and Nendoroid listings on LetItRip accept <strong>negotiated offers</strong>. Submit your best price on any anime figure listing — sellers will respond within 24 hours. Use code <strong>FIGURE10</strong> for an additional 10% off any accepted offer.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAgo(3),
     endsAt: daysAhead(4),
@@ -158,7 +158,7 @@ export const eventsSeedData: EventDocument[] = [
     type: EVENT_FIELDS.TYPE_VALUES.POLL,
     title: "Yu-Gi-Oh! Regional March 2026 — Hyderabad vs Bengaluru Vote",
     description:
-      "<p>The vote for March's regional venue is closed. <strong>Hyderabad won</strong> with 68% of the vote! Results and tournament schedule are now posted in the LetiTrip blog. Stay tuned for the April regional venue poll.</p>",
+      "<p>The vote for March's regional venue is closed. <strong>Hyderabad won</strong> with 68% of the vote! Results and tournament schedule are now posted in the LetItRip blog. Stay tuned for the April regional venue poll.</p>",
     status: EVENT_FIELDS.STATUS_VALUES.ENDED,
     startsAt: daysAgo(45),
     endsAt: daysAgo(30),

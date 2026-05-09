@@ -1,5 +1,5 @@
 /**
- * Carousel Slides Seed Data — LetiTrip Collectibles Platform
+ * Carousel Slides Seed Data — LetItRip Collectibles Platform
  * 6 slides using CF1 schema (background/zone fields).
  * slide- prefix, id === slug. MAX_ACTIVE_SLIDES = 5, so slide 6 is inactive.
  */

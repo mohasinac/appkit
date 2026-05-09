@@ -1,5 +1,5 @@
 /**
- * Reviews Seed Data — LetiTrip Collectibles Platform
+ * Reviews Seed Data — LetItRip Collectibles Platform
  * 15 reviews distributed across the 5 stores from P15.
  * Uses buyer IDs from P15 and product IDs from P16/P17/P18.
  * review- prefix, system-generated IDs (not slug-based per slug prefix table).
@@ -109,7 +109,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     rating: 5,
     title: "Nisha is the best YGO seller in India, period",
     comment:
-      "I've ordered from three different YGO sellers on LetiTrip and CardGame Hub is on another level. The 25th Anniversary Tin arrived with each mega pack in its own sleeve inside the tin. Nisha also included a handwritten note about recommended first packs to open — genuine community knowledge. Will only order YGO from here going forward.",
+      "I've ordered from three different YGO sellers on LetItRip and CardGame Hub is on another level. The 25th Anniversary Tin arrived with each mega pack in its own sleeve inside the tin. Nisha also included a handwritten note about recommended first packs to open — genuine community knowledge. Will only order YGO from here going forward.",
     status: "approved",
     helpfulCount: 22,
     reportCount: 0,
@@ -325,7 +325,7 @@ export const reviewsSeedData: Partial<ReviewDocument>[] = [
     rating: 2,
     title: "Kit was missing the beam rifle assembly — resolved via support",
     comment:
-      "The box arrived safely but when I inventoried the sprues, the G runner (beam rifle parts) was missing — looks like a factory packing error. I opened a dispute on LetiTrip and LetItRip Official resolved it within 48 hours by shipping the missing runner separately at no cost. They clearly take after-sales seriously. Updating from 1 star to 2 stars because the issue was resolved, but losing a star for the missing part.",
+      "The box arrived safely but when I inventoried the sprues, the G runner (beam rifle parts) was missing — looks like a factory packing error. I opened a dispute on LetItRip and LetItRip Official resolved it within 48 hours by shipping the missing runner separately at no cost. They clearly take after-sales seriously. Updating from 1 star to 2 stars because the issue was resolved, but losing a star for the missing part.",
     status: "approved",
     helpfulCount: 6,
     reportCount: 0,

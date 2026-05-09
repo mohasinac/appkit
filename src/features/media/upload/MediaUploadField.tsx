@@ -95,7 +95,7 @@ export function MediaUploadField({
   maxSizeMB = 50,
   disabled = false,
   helperText,
-  captureSource = "file-only",
+  captureSource = "both",
   captureMode = "photo",
   enableTrim = true,
   enableThumbnail = true,

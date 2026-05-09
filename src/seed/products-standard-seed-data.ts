@@ -41,6 +41,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "aryan@pokemonpalace.in",
     storeId: "store-pokemon-palace",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: true,
     tags: [
       "pokemon",
@@ -102,6 +104,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "aryan@pokemonpalace.in",
     storeId: "store-pokemon-palace",
     featured: true,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "pokemon",
@@ -164,6 +168,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "aryan@pokemonpalace.in",
     storeId: "store-pokemon-palace",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: ["pokemon", "pikachu", "plush", "pokemon-center", "official", "gift"],
     condition: "new",
@@ -217,6 +223,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "aryan@pokemonpalace.in",
     storeId: "store-pokemon-palace",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "pokemon",
@@ -278,6 +286,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "aryan@pokemonpalace.in",
     storeId: "store-pokemon-palace",
     featured: true,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "pokemon",
@@ -347,6 +357,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "nisha@cardgamehub.in",
     storeId: "store-cardgame-hub",
     featured: true,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "yugioh",
@@ -409,6 +421,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "nisha@cardgamehub.in",
     storeId: "store-cardgame-hub",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "yugioh",
@@ -474,6 +488,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "vikram@diecastdepot.in",
     storeId: "store-diecast-depot",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "hot-wheels",
@@ -540,6 +556,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "vikram@diecastdepot.in",
     storeId: "store-diecast-depot",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: true,
     tags: [
       "hot-wheels",
@@ -601,6 +619,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "vikram@diecastdepot.in",
     storeId: "store-diecast-depot",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "tomica",
@@ -665,6 +685,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "vikram@diecastdepot.in",
     storeId: "store-diecast-depot",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: true,
     tags: [
       "hot-wheels",
@@ -731,6 +753,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "vikram@diecastdepot.in",
     storeId: "store-diecast-depot",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "hot-wheels",
@@ -801,6 +825,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: true,
     tags: [
       "bandai",
@@ -864,6 +890,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: true,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "nendoroid",
@@ -927,6 +955,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "funko-pop",
@@ -989,6 +1019,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "mcfarlane",
@@ -1053,6 +1085,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: true,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "gunpla",
@@ -1117,6 +1151,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "admin@letitrip.in",
     storeId: "store-letitrip-official",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "gunpla",
@@ -1183,6 +1219,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "rohit@beyladearena.in",
     storeId: "store-beyblade-arena",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: true,
     tags: [
       "beyblade-x",
@@ -1246,6 +1284,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     sellerEmail: "rohit@beyladearena.in",
     storeId: "store-beyblade-arena",
     featured: false,
+    isAuction: false,
+    isPreOrder: false,
     isPromoted: false,
     tags: [
       "beyblade-burst",

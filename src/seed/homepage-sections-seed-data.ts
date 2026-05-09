@@ -1,5 +1,5 @@
 /**
- * Homepage Sections Seed Data — LetiTrip Collectibles Platform
+ * Homepage Sections Seed Data — LetItRip Collectibles Platform
  * All 19 section types seeded. section- prefix, id === slug.
  * Order reflects the recommended homepage layout.
  */
@@ -47,7 +47,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 3,
     enabled: true,
     config: {
-      title: "LetiTrip by the Numbers",
+      title: "LetItRip by the Numbers",
       stats: [
         { key: "products", label: "Listings", value: "5,000+" },
         { key: "sellers", label: "Verified Sellers", value: "200+" },
@@ -66,7 +66,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 4,
     enabled: true,
     config: {
-      title: "Why Collectors Trust LetiTrip",
+      title: "Why Collectors Trust LetItRip",
       indicators: [
         {
           id: "trust-verified",
@@ -315,7 +315,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 16,
     enabled: true,
     config: {
-      title: "Join the LetiTrip Collectors Community",
+      title: "Join the LetItRip Collectors Community",
       description:
         "Connect with 4,000+ Indian collectors on WhatsApp. Share pulls, get authentication help, trade advice, and be first to know about new drops.",
       groupLink: "https://chat.whatsapp.com/letitrip-collectors",
@@ -328,7 +328,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       ],
       buttonText: "Join WhatsApp Community",
       testimonial:
-        '"The LetiTrip WhatsApp group helped me authenticate a PSA slab within 10 minutes." — Rahul S., Bengaluru',
+        '"The LetItRip WhatsApp group helped me authenticate a PSA slab within 10 minutes." — Rahul S., Bengaluru',
     },
     createdAt: daysAgo(90),
     updatedAt: daysAgo(8),
@@ -342,7 +342,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     enabled: true,
     config: {
       title: "Frequently Asked Questions",
-      subtitle: "Quick answers about buying, selling, and collecting on LetiTrip",
+      subtitle: "Quick answers about buying, selling, and collecting on LetItRip",
       showOnHomepage: true,
       displayCount: 5,
       expandedByDefault: false,
@@ -362,7 +362,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     config: {
       title: "Get New Drop Alerts",
       description:
-        "Be first to know about rare Pokémon listings, Hot Wheels STH drops, Beyblade X imports, and LetiTrip-exclusive auction events.",
+        "Be first to know about rare Pokémon listings, Hot Wheels STH drops, Beyblade X imports, and LetItRip-exclusive auction events.",
       placeholder: "Enter your email address",
       buttonText: "Subscribe",
       privacyText: "We respect your privacy. Unsubscribe anytime.",
@@ -379,7 +379,7 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     order: 19,
     enabled: false,
     config: {
-      title: "LetiTrip on Instagram",
+      title: "LetItRip on Instagram",
       subtitle: "Follow @letitrip for daily collection showcases and new drop alerts",
       platform: "instagram",
       handle: "letitrip",

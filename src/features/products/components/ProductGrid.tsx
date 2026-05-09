@@ -183,6 +183,22 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           {product.title}
         </Text>
 
+        {/* Category + brand chips */}
+        {(product.categoryName || product.brand) && (
+          <Row className="mt-1 gap-1 flex-wrap">
+            {product.categoryName && (
+              <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[90px]">
+                {product.categoryName}
+              </Span>
+            )}
+            {product.brand && (
+              <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[80px]">
+                {product.brand}
+              </Span>
+            )}
+          </Row>
+        )}
+
         {(() => {
           const seller = safeDisplayName(product.sellerName, "");
           return seller ? (

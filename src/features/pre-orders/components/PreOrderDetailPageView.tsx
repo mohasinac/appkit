@@ -133,6 +133,8 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
       : null;
   const category = typeof p.category === "string" ? (p.category as string) : null;
   const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
+  const brand = typeof p.brand === "string" ? (p.brand as string) : null;
+  const brandSlug = typeof p.brandSlug === "string" ? (p.brandSlug as string) : null;
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
@@ -227,15 +229,27 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
                 }}
               />
 
-              {/* Category */}
-              {(categoryName || category) && (
+              {/* Category + Brand */}
+              {(categoryName || category || brand) && (
                 <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
                   {category ? (
                     <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                       {categoryName || category}
                     </Link>
                   ) : (
-                    <Span>{categoryName}</Span>
+                    categoryName ? <Span>{categoryName}</Span> : null
+                  )}
+                  {brand && (categoryName || category) && (
+                    <Span className="text-zinc-300 dark:text-zinc-600">·</Span>
+                  )}
+                  {brand && (
+                    brandSlug ? (
+                      <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                        {brand}
+                      </Link>
+                    ) : (
+                      <Span>{brand}</Span>
+                    )
                   )}
                 </Row>
               )}
@@ -266,18 +280,28 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
                 />
               )}
 
-              {/* Seller */}
+              {/* Store card */}
               {safeSeller && (
-                <Row align="center" gap="xs" className="border-t border-zinc-100 dark:border-zinc-800 pt-3">
-                  <Span className="text-xs text-zinc-500">Sold by</Span>
-                  {storeHref ? (
-                    <Link href={storeHref} className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:underline">
-                      {safeSeller}
-                    </Link>
-                  ) : (
-                    <Span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">{safeSeller}</Span>
-                  )}
-                </Row>
+                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
+                  <Row justify="between" align="center">
+                    <Div>
+                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+                        Sold by
+                      </Text>
+                      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                        {safeSeller}
+                      </Text>
+                    </Div>
+                    {storeHref && (
+                      <Link
+                        href={storeHref}
+                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+                      >
+                        Visit Store →
+                      </Link>
+                    )}
+                  </Row>
+                </Div>
               )}
             </Stack>
           )}

@@ -4,6 +4,18 @@
 > **Before creating anything new** — search this file first. If it's here, reuse it.
 > Import paths shown relative to `appkit/src/`. Consumer apps import via `@mohasinac/appkit`, `@mohasinac/appkit/client`, or `@mohasinac/appkit/ui`.
 
+## Index
+
+- [UI Primitives](#ui-primitives--appkitsrcuicomponents)
+- [Admin Feature Components](#admin-feature-components--appkitsrcfeaturesadmincomponents)
+- [Seller Feature Components](#seller-feature-components--appkitsrcfeaturessellercomponents)
+- [Account / User Feature Components](#account--user-feature-components--appkitsrcfeaturesaccountcomponents)
+- [Other Feature Views](#other-feature-views)
+- [Hooks](#hooks--appkitsrcfeatureshooks)
+- [Repositories](#repositories--appkitsrcrepositories)
+- [Utilities](#utilities--appkitsrcutils)
+- [Constants](#constants--appkitsrcconstants)
+
 ---
 
 ## UI Primitives — `appkit/src/ui/components/`

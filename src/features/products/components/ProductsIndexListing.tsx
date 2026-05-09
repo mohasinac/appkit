@@ -26,7 +26,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [showSold, setShowSold] = useState(false);
+  const showSold = table.get("showSold") === "true";
   const [view, setView] = useState<ViewMode>(
     (table.get("view") as ViewMode) || "card",
   );
@@ -77,12 +77,22 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   }, [pendingFilters, table]);
 
   const clearFilters = useCallback(() => {
-    const empty = Object.fromEntries(FILTER_KEYS.map((k) => [k, ""]));
-    setPendingFilters(empty);
-    table.setMany({ ...empty, page: "1" });
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
+  }, []);
+
+  const resetAll = useCallback(() => {
+    const updates: Record<string, string> = { q: "", sort: "", showSold: "" };
+    for (const k of FILTER_KEYS) updates[k] = "";
+    table.setMany(updates);
+    setSearchInput("");
   }, [table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
+  const hasActiveState =
+    !!table.get("q") ||
+    table.get("showSold") === "true" ||
+    table.get("sort") !== "-createdAt" ||
+    activeFilterCount > 0;
 
   const localCart = useGuestCart();
   const localWishlist = useGuestWishlist();
@@ -181,6 +191,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
         view={view === "card" ? "grid" : "list"}
         onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
+        onResetAll={resetAll}
+        hasActiveState={hasActiveState}
         extra={
           <div className="flex items-center gap-2">
             {/* Show sold toggle */}
@@ -192,7 +204,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
                 type="button"
                 role="switch"
                 aria-checked={showSold}
-                onClick={() => setShowSold((v) => !v)}
+                onClick={() => table.set("showSold", showSold ? "" : "true")}
                 className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
                   showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
                 }`}

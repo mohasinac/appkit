@@ -38,6 +38,7 @@ export interface ProductDocument {
   categoryName?: string;
   subcategory?: string;
   brand?: string;
+  brandSlug?: string;
   price: number;
   currency: string;
   stockQuantity: number;

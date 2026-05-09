@@ -214,8 +214,8 @@ async function summarizeFirestore(db) {
   const collections = [];
 
   for (const collectionRef of rootCollections) {
-    const snapshot = await collectionRef.count().get();
-    const count = snapshot.data().count || 0;
+    const snapshot = await collectionRef.get();
+    const count = snapshot.size;
     rootDocumentCount += count;
     collections.push({ id: collectionRef.id, count });
   }

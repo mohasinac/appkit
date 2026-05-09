@@ -1,5 +1,5 @@
 /**
- * Blog Posts Seed Data — LetiTrip Collectibles Platform
+ * Blog Posts Seed Data — LetItRip Collectibles Platform
  * 8 posts covering Pokémon TCG, Hot Wheels, Beyblade X, Yu-Gi-Oh!, Gundam,
  * Funko Pop, Tomica, and authentication. blog- prefix, id === slug.
  */
@@ -47,7 +47,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "LetItRip Admin",
     readTimeMinutes: 8,
     views: 5420,
-    metaTitle: "How to Grade Pokémon Cards — PSA vs BGS Guide | LetiTrip",
+    metaTitle: "How to Grade Pokémon Cards — PSA vs BGS Guide | LetItRip",
     metaDescription:
       "Complete guide to grading Pokémon cards with PSA and BGS — costs, preparation, what grade to expect, and how to submit from India.",
     createdAt: daysAgo(65),
@@ -91,7 +91,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "Vikram Mehta",
     readTimeMinutes: 6,
     views: 3180,
-    metaTitle: "Top 10 Hot Wheels Super Treasure Hunts 2025 | LetiTrip",
+    metaTitle: "Top 10 Hot Wheels Super Treasure Hunts 2025 | LetItRip",
     metaDescription:
       "The 10 most valuable Hot Wheels Super Treasure Hunts of 2025 — Spectraflame paint, Real Riders, and prices in India.",
     createdAt: daysAgo(50),
@@ -118,7 +118,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
 <strong>Stamina</strong>: Wizard Arrow 4-80B — wide blade, low tip maintains long spin.<br>
 <strong>Balance</strong>: Knight Shield 3-80N — defensive blade with good burst resistance.</p>
 <h2>How to Enter an Indian Tournament</h2>
-<p>Official Beyblade X tournaments are organised by Takara Tomy's Indian distributor through LetiTrip and local hobby shops. Tournaments use the Standard Stadium format — 3-minute battle, best of 3. Register through the Events section on LetiTrip. Bring your official BX tops — bootlegs are disqualified on inspection.</p>`,
+<p>Official Beyblade X tournaments are organised by Takara Tomy's Indian distributor through LetItRip and local hobby shops. Tournaments use the Standard Stadium format — 3-minute battle, best of 3. Register through the Events section on LetItRip. Bring your official BX tops — bootlegs are disqualified on inspection.</p>`,
     coverImage:
       "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=1200&h=630&fit=crop",
     category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
@@ -130,7 +130,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "Rohit Joshi",
     readTimeMinutes: 7,
     views: 4210,
-    metaTitle: "Beyblade X Beginner's Guide 2026 — Parts, Combos & Tournaments | LetiTrip",
+    metaTitle: "Beyblade X Beginner's Guide 2026 — Parts, Combos & Tournaments | LetItRip",
     metaDescription:
       "Complete beginner's guide to Beyblade X — XStadium, blade parts, Xtreme Dash, best starter combos, and how to enter Indian tournaments.",
     createdAt: daysAgo(40),
@@ -172,7 +172,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "Nisha Reddy",
     readTimeMinutes: 6,
     views: 2870,
-    metaTitle: "Yu-Gi-Oh! Deck Building 101 for Beginners | LetiTrip",
+    metaTitle: "Yu-Gi-Oh! Deck Building 101 for Beginners | LetItRip",
     metaDescription:
       "Learn how to build your first Yu-Gi-Oh! deck from scratch — 40-card rule, archetypes, budget tips, and hand trap essentials.",
     createdAt: daysAgo(32),
@@ -205,7 +205,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "LetItRip Admin",
     readTimeMinutes: 7,
     views: 1950,
-    metaTitle: "Gundam MG vs RG — Which Grade to Start With? | LetiTrip",
+    metaTitle: "Gundam MG vs RG — Which Grade to Start With? | LetItRip",
     metaDescription:
       "Choosing between Gundam Master Grade and Real Grade kits — difficulty, scale, price, and which to buy as your first or second Gunpla build.",
     createdAt: daysAgo(24),
@@ -220,7 +220,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     excerpt:
       "Counterfeit Pokémon cards have become increasingly convincing. Here are 7 tests you can do at home to verify a card is authentic before spending thousands of rupees.",
     content: `<h2>Why Fakes Are a Problem Now</h2>
-<p>Chinese counterfeit Pokémon cards have improved dramatically since 2022. Basic fakes are easy to spot, but high-quality "proxies" can fool casual collectors. A fake PSA slab was reported in 2024. Always buy from verified sellers like those on LetiTrip with review histories.</p>
+<p>Chinese counterfeit Pokémon cards have improved dramatically since 2022. Basic fakes are easy to spot, but high-quality "proxies" can fool casual collectors. A fake PSA slab was reported in 2024. Always buy from verified sellers like those on LetItRip with review histories.</p>
 <h2>Test 1: The Light Test</h2>
 <p>Hold the card up to a bright light. Real Pokémon cards have a black core layer between the front and back. This shows as an unbroken dark line around all edges. Fakes often show a solid colour or uneven core.</p>
 <h2>Test 2: The Rip Test (last resort)</h2>
@@ -246,7 +246,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "Aryan Kapoor",
     readTimeMinutes: 7,
     views: 3640,
-    metaTitle: "How to Spot Fake Pokémon Cards — 7 Authentication Tests | LetiTrip",
+    metaTitle: "How to Spot Fake Pokémon Cards — 7 Authentication Tests | LetItRip",
     metaDescription:
       "7 at-home tests to authenticate Pokémon cards: light test, print dots, font check, UV test, and more. Protect yourself from counterfeits.",
     createdAt: daysAgo(17),
@@ -281,7 +281,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "LetItRip Admin",
     readTimeMinutes: 5,
     views: 1230,
-    metaTitle: "Funko Pop Storage & Display Tips — Keep Boxes Mint | LetiTrip",
+    metaTitle: "Funko Pop Storage & Display Tips — Keep Boxes Mint | LetItRip",
     metaDescription:
       "How to store and display Funko Pops: Pop Protectors, KALLAX shelving, UV protection, humidity control, and safe shipping tips.",
     createdAt: daysAgo(11),
@@ -307,7 +307,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
 <li><strong>TLV Honda N360 (1967)</strong> — kei car classic, ₹2,200–3,800</li>
 </ul>
 <h2>Where to Buy in India</h2>
-<p>TLV models are not available at regular toy retailers. Source from importers, dedicated collector shops, and LetiTrip's Diecast Depot store. New releases ship from Japan 2–3 months after the Japanese release date. Pre-orders sell out fast — register your interest on the LetiTrip pre-order section.</p>
+<p>TLV models are not available at regular toy retailers. Source from importers, dedicated collector shops, and LetItRip's Diecast Depot store. New releases ship from Japan 2–3 months after the Japanese release date. Pre-orders sell out fast — register your interest on the LetItRip pre-order section.</p>
 <h2>Storage and Display</h2>
 <p>TLV models come in individual plastic display cases inside a cardboard outer box. Keep in original cases — the plastic yellows if left in direct sunlight. IKEA DETOLF glass cabinet with LED lighting is the community favourite for premium display.</p>`,
     coverImage:
@@ -321,7 +321,7 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     authorName: "Vikram Mehta",
     readTimeMinutes: 6,
     views: 890,
-    metaTitle: "Tomica Limited Vintage Collector's Guide for India | LetiTrip",
+    metaTitle: "Tomica Limited Vintage Collector's Guide for India | LetItRip",
     metaDescription:
       "Complete guide to collecting Tomica Limited Vintage — TLV vs TLV-N, top models, where to buy in India, and display tips.",
     createdAt: daysAgo(6),

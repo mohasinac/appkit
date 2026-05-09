@@ -388,7 +388,7 @@ const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
 };
 
 const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
-  title: "Why LetiTrip?",
+  title: "Why LetItRip?",
   indicators: [
     { id: "ti-1", icon: "🚚", title: "Free Shipping", description: "On orders above ₹999" },
     { id: "ti-2", icon: "🔒", title: "Secure Payment", description: "Razorpay protected checkout" },
@@ -2594,7 +2594,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           value={reviewsBuilder.source}
           onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, source: v as ReviewsBuilderState["source"] }))}
           options={[
-            { label: "Platform reviews (LetiTrip)", value: "platform" },
+            { label: "Platform reviews (LetItRip)", value: "platform" },
             { label: "Google Business Reviews", value: "google" },
           ]}
         />

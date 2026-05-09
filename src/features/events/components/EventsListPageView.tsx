@@ -21,7 +21,7 @@ function buildEventFilters(params: SearchParams): string {
     if (values.length === 1) parts.push(`status==${values[0]}`);
     else if (values.length > 1) parts.push(`status==${values.join("|")}`);
   } else {
-    parts.push("status==published");
+    parts.push("status==active");
   }
 
   const type = sp(params, "type");
