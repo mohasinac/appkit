@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Search, SlidersHorizontal, LayoutGrid, List } from "lucide-react";
+import { Search, SlidersHorizontal, LayoutGrid, List, RotateCcw } from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
 
 export interface ListingToolbarSortOption {
@@ -30,6 +30,11 @@ export interface ListingToolbarProps {
   onViewChange?: (view: "grid" | "list") => void;
   hideViewToggle?: boolean;
 
+  /** Reset all toolbar state to defaults — shown as icon button when provided */
+  onResetAll?: () => void;
+  /** Controls whether the reset icon is shown */
+  hasActiveState?: boolean;
+
   /** Any extra action buttons placed after the view toggle */
   extra?: React.ReactNode;
 
@@ -55,6 +60,8 @@ export function ListingToolbar({
   view = "grid",
   onViewChange,
   hideViewToggle = false,
+  onResetAll,
+  hasActiveState = false,
   extra,
   className = "",
 }: ListingToolbarProps) {
@@ -155,6 +162,19 @@ export function ListingToolbar({
                 <List className="h-4 w-4" />
               </button>
             </div>
+          )}
+
+          {/* Reset all — instant, icon only */}
+          {onResetAll && hasActiveState && (
+            <button
+              type="button"
+              onClick={onResetAll}
+              aria-label="Reset all filters"
+              title="Reset all"
+              className="flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </button>
           )}
 
           {/* Extra actions (e.g. Select button) */}

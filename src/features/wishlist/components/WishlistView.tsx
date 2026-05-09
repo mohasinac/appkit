@@ -1,15 +1,14 @@
 "use client"
 import React from "react";
 import { Div, Heading, Row, Text } from "../../../ui";
+import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useWishlist } from "../hooks/useWishlist";
 import type { WishlistItem, WishlistResponse } from "../types";
 
 export type WishlistTab = "products" | "auctions" | "categories" | "stores";
 
 export interface WishlistViewProps {
-  /** Authenticated user id — required to fetch wishlist */
   userId?: string;
-  /** Optional initial SSR data */
   initialData?: WishlistResponse;
   labels?: {
     title?: string;
@@ -17,42 +16,41 @@ export interface WishlistViewProps {
     emptyTitle?: string;
     emptyDescription?: string;
   };
-  /** Render tab bar (receives active tab and setter) */
   renderTabs?: (
     activeTab: WishlistTab,
     onTabChange: (tab: WishlistTab) => void,
   ) => React.ReactNode;
-  /** Render search input */
   renderSearch?: (
     value: string,
     onChange: (v: string) => void,
   ) => React.ReactNode;
-  /** Render sort dropdown */
   renderSort?: (
     value: string,
     onChange: (v: string) => void,
   ) => React.ReactNode;
-  /** Render view mode toggle */
   renderViewToggle?: (
     mode: string,
     onToggle: (m: string) => void,
   ) => React.ReactNode;
-  /** Render the products grid */
   renderProducts?: (
     items: WishlistItem[],
     isLoading: boolean,
   ) => React.ReactNode;
-  /** Render coming-soon placeholder for non-products tabs */
   renderTabPlaceholder?: (tab: WishlistTab) => React.ReactNode;
-  /** Render bulk action bar */
   renderBulkActions?: (
     selectedIds: string[],
     onClearSelection: () => void,
   ) => React.ReactNode;
-  /** Render pagination */
   renderPagination?: (total: number) => React.ReactNode;
   className?: string;
 }
+
+const WISHLIST_SORT_OPTIONS = [
+  { value: "-addedAt", label: "Newest first" },
+  { value: "addedAt", label: "Oldest first" },
+  { value: "-price", label: "Price: high → low" },
+  { value: "price", label: "Price: low → high" },
+];
 
 export function WishlistView({
   userId,
@@ -68,15 +66,16 @@ export function WishlistView({
   renderPagination,
   className = "",
 }: WishlistViewProps) {
-  const [activeTab, setActiveTab] = React.useState<WishlistTab>("products");
-  const [search, setSearch] = React.useState("");
-  const [sort, setSort] = React.useState("-addedAt");
-  const [viewMode, setViewMode] = React.useState("card");
+  const table = useUrlTable({ defaults: { sort: "-addedAt", view: "card" } });
   const [selectedIds, setSelectedIds] = React.useState<string[]>([]);
+
+  const activeTab = (table.get("tab") as WishlistTab) || "products";
+  const search = table.get("q");
+  const sort = table.get("sort") || "-addedAt";
+  const viewMode = table.get("view") || "card";
 
   const { items, total, isLoading } = useWishlist(userId ?? "", { initialData });
 
-  // Client-side filter + sort for products tab
   const displayedItems = React.useMemo(() => {
     if (activeTab !== "products") return [];
     let result = [...items];
@@ -117,14 +116,14 @@ export function WishlistView({
         )}
 
         {/* Tabs */}
-        {renderTabs?.(activeTab, setActiveTab)}
+        {renderTabs?.(activeTab, (tab) => table.set("tab", tab))}
 
         {/* Toolbar: search + sort + view toggle */}
         {activeTab === "products" && (
           <Row wrap gap="3" className="mb-4">
-            {renderSearch?.(search, setSearch)}
-            {renderSort?.(sort, setSort)}
-            {renderViewToggle?.(viewMode, setViewMode)}
+            {renderSearch?.(search, (v) => table.set("q", v))}
+            {renderSort?.(sort, (v) => table.set("sort", v))}
+            {renderViewToggle?.(viewMode, (m) => table.set("view", m))}
           </Row>
         )}
 

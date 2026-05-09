@@ -12,6 +12,7 @@ interface UseSellerListingDataOptions<TResponse, TRow extends { id: string }> {
   pageSize?: number;
   sorts?: string;
   filters?: string;
+  q?: string;
   mapRows: (response: TResponse) => TRow[];
   getTotal?: (response: TResponse, rows: TRow[]) => number;
 }
@@ -36,6 +37,7 @@ export function useSellerListingData<TResponse, TRow extends { id: string }>({
   pageSize = 25,
   sorts = "-createdAt",
   filters = "",
+  q,
   mapRows,
   getTotal,
 }: UseSellerListingDataOptions<TResponse, TRow>): UseSellerListingDataResult<TRow> {
@@ -45,12 +47,11 @@ export function useSellerListingData<TResponse, TRow extends { id: string }>({
     sorts,
   };
 
-  if (filters) {
-    params.filters = filters;
-  }
+  if (filters) params.filters = filters;
+  if (q) params.q = q;
 
   const query = useQuery<TResponse>({
-    queryKey: [...queryKey, page, pageSize, sorts, filters],
+    queryKey: [...queryKey, page, pageSize, sorts, filters, q ?? ""],
     queryFn: () =>
       apiClient.get<TResponse>(
         withQueryParams(endpoint, params),
