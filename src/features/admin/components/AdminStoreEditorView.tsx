@@ -22,6 +22,7 @@ export interface AdminStoreEditorViewProps {
   storeId?: string;
   storeName?: string;
   currentStatus?: string;
+  currentIsVerified?: boolean;
 }
 
 const STATUS_OPTIONS = [
@@ -39,6 +40,7 @@ export function AdminStoreEditorView({
   storeId,
   storeName,
   currentStatus,
+  currentIsVerified,
 }: AdminStoreEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -46,14 +48,18 @@ export function AdminStoreEditorView({
   const [storeStatus, setStoreStatus] = React.useState(currentStatus ?? "pending");
   const [adminNotes, setAdminNotes] = React.useState("");
   const [isFeatured, setIsFeatured] = React.useState(false);
+  const [isVerified, setIsVerified] = React.useState(currentIsVerified ?? false);
+  const [suspensionReason, setSuspensionReason] = React.useState("");
 
   React.useEffect(() => {
     if (open) {
       setStoreStatus(currentStatus ?? "pending");
       setAdminNotes("");
       setIsFeatured(false);
+      setIsVerified(currentIsVerified ?? false);
+      setSuspensionReason("");
     }
-  }, [open, currentStatus]);
+  }, [open, currentStatus, currentIsVerified]);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -61,6 +67,8 @@ export function AdminStoreEditorView({
         storeStatus,
         adminNotes: adminNotes || undefined,
         isFeatured,
+        isVerified,
+        suspensionReason: storeStatus === "suspended" ? (suspensionReason || undefined) : undefined,
       });
     },
     onSuccess: () => {
@@ -106,7 +114,24 @@ export function AdminStoreEditorView({
           />
         </div>
 
+        <Toggle label="Verified store" checked={isVerified} onChange={setIsVerified} />
+
         <Toggle label="Featured store" checked={isFeatured} onChange={setIsFeatured} />
+
+        {storeStatus === "suspended" && (
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Suspension reason (optional)
+            </label>
+            <textarea
+              value={suspensionReason}
+              onChange={(e) => setSuspensionReason(e.target.value)}
+              rows={2}
+              placeholder="e.g. Policy violation, fraudulent activity…"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+          </div>
+        )}
 
         <FormActions align="right">
           <Button type="button" variant="secondary" onClick={onClose}>

@@ -103,7 +103,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 
 | Name | File | What it does |
 |------|------|-------------|
-| `AdminListingScaffold` | `AdminListingScaffold.tsx` | Base scaffold for all admin listing pages (search/sort/filter/pagination wired) |
+| `AdminListingScaffold` | `AdminListingScaffold.tsx` | Base scaffold for all admin listing pages (search/sort/filter/pagination wired); props: `renderRowActions` (per-row ⋮ menu), `actionsSlot` (toolbar right-side buttons) |
 | `AdminDashboardView` | `AdminDashboardView.tsx` | Admin home dashboard with stats + quick actions |
 | `AdminSidebar` | `AdminSidebar.tsx` | Left navigation sidebar for admin area |
 | `AdminTopBar` | `AdminTopBar.tsx` | Top bar with breadcrumbs for admin pages |
@@ -112,36 +112,46 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `DashboardStats` | `DashboardStats.tsx` | Stats grid for admin dashboard |
 | `QuickActionsPanel` | `QuickActionsPanel.tsx` | Admin quick-action shortcut panel |
 | `DrawerFormFooter` | `DrawerFormFooter.tsx` | Save/Cancel footer for SideDrawer forms |
-| `DataTable` | `DataTable.tsx` | Generic data table (prefer SlottedListingView for full CRUD tables) |
+| `DataTable` | `DataTable.tsx` | Generic data table (prefer SlottedListingView for full CRUD tables); supports `renderRowActions` prop for per-row ⋮ menu |
 | `AdminProductsView` | `AdminProductsView.tsx` | Admin products listing (list page) |
 | `AdminProductEditorView` | `AdminProductEditorView.tsx` | Admin product create/edit form (3-mode: standard/auction/preorder) |
 | `AdminCouponsView` | `AdminCouponsView.tsx` | Admin coupons listing |
 | `AdminCouponEditorView` | `AdminCouponEditorView.tsx` | Admin coupon create/edit form |
 | `AdminBlogView` | `AdminBlogView.tsx` | Admin blog posts listing |
 | `AdminBlogEditorView` | `AdminBlogEditorView.tsx` | Admin blog post create/edit with RichTextEditor |
-| `AdminFaqsView` | `AdminFaqsView.tsx` | Admin FAQs listing |
+| `AdminFaqsView` | `AdminFaqsView.tsx` | Admin FAQs listing — RowActionMenu (Edit→/admin/faqs/[id]/edit, Delete→ConfirmDeleteModal) (A5/VA5) |
+| `AdminFaqEditorView` | `AdminFaqEditorView.tsx` | Admin FAQ create/edit page — dedicated route /admin/faqs/new + /admin/faqs/[id]/edit; fields: question, slug, answer (RichText), category, tags, order, priority, 4 visibility toggles (A5/VA5) |
 | `AdminBrandsView` | `AdminBrandsView.tsx` | Admin brands listing |
 | `AdminBrandEditorView` | `AdminBrandEditorView.tsx` | Admin brand create/edit form |
-| `AdminCategoriesView` | `AdminCategoriesView.tsx` | Admin categories listing |
+| `AdminCategoriesView` | `AdminCategoriesView.tsx` | Admin categories listing — row click + RowActionMenu navigate to dedicated editor routes (RC4) |
 | `AdminCategoryEditorView` | `AdminCategoryEditorView.tsx` | Admin category create/edit form |
 | `AdminCarouselView` | `AdminCarouselView.tsx` | Admin carousel slides listing |
 | `AdminCarouselEditorView` | `AdminCarouselEditorView.tsx` | Admin carousel slide create/edit |
-| `AdminSectionsView` | `AdminSectionsView.tsx` | Admin homepage sections listing + builder |
-| `AdminOrdersView` | `AdminOrdersView.tsx` | Admin orders listing |
-| `AdminUsersView` | `AdminUsersView.tsx` | Admin users listing |
-| `AdminStoresView` | `AdminStoresView.tsx` | Admin stores listing |
-| `AdminReviewsView` | `AdminReviewsView.tsx` | Admin reviews listing |
+| `AdminSectionsView` | `AdminSectionsView.tsx` | Admin homepage sections listing + builder; toolbar has Reset seed data (ConfirmDeleteModal→POST /api/demo/seed) + Manage Sections buttons (I3) |
+| `AdminOrdersView` | `AdminOrdersView.tsx` | Admin orders listing — RowActionMenu "Update order" → AdminOrderEditorView SideDrawer (B2/VA9) |
+| `AdminOrderEditorView` | `AdminOrderEditorView.tsx` | Admin order status + tracking SideDrawer — status select (7 statuses), trackingNumber, carrier select, refundAmount (conditional), notes; PATCH /api/admin/orders/[id] (B2/VA9) |
+| `AdminUsersView` | `AdminUsersView.tsx` | Admin users listing — RowActionMenu "Manage" → AdminUserEditorView SideDrawer (B1/VA10) |
+| `AdminUserEditorView` | `AdminUserEditorView.tsx` | Admin user management SideDrawer — role select, isDisabled+banReason, emailVerified, adminNotes; Delete→ConfirmDeleteModal; PATCH+DELETE /api/admin/users/[uid] (B1/VA10) |
+| `AdminStoresView` | `AdminStoresView.tsx` | Admin stores listing — shows storeName + ownerId (admin only); RowActionMenu: Manage→AdminStoreEditorView SideDrawer, View→public store page (VA3/VA12) |
+| `AdminStoreEditorView` | `AdminStoreEditorView.tsx` | Admin store management SideDrawer — status, adminNotes, isFeatured, isVerified, suspensionReason (conditional); PATCH /api/admin/stores/[storeId] (VA12/N3) |
+| `AdminReviewsView` | `AdminReviewsView.tsx` | Admin reviews listing — RowActionMenu: Approve/Reject/Feature/Unfeature/Reply(Modal)/View(ViewReviewModal); PATCH /api/admin/reviews/[id] (N2/VA11) |
+| `AdminSessionsView` | `AdminSessionsView.tsx` | Admin user sessions listing — columns: user/device/browser/OS/IP(masked)/lastActivity/expires/isActive; active-only filter; Revoke→ConfirmDeleteModal→DELETE (LL11) |
+| `AdminAllEventEntriesView` | `AdminAllEventEntriesView.tsx` | Admin cross-event entries listing — status filter; Confirm/Waitlist/Cancel row actions→PATCH (LL12) |
+| `AdminNotificationsView` | `AdminNotificationsView.tsx` | Admin notifications listing — type filter; Resend (POST resend)+ Delete (ConfirmDeleteModal) row actions (LL13) |
+| `AdminCartsView` | `AdminCartsView.tsx` | Admin carts diagnostic view — read-only; guest/auth type filter (LL14) |
+| `AdminWishlistsView` | `AdminWishlistsView.tsx` | Admin wishlist insights — read-only; Firestore collectionGroup("wishlist") cross-user data (LL15) |
 | `AdminBidsView` | `AdminBidsView.tsx` | Admin bids listing |
-| `AdminPayoutsView` | `AdminPayoutsView.tsx` | Admin payouts listing |
+| `AdminPayoutsView` | `AdminPayoutsView.tsx` | Admin payouts listing — store identity (storeName/storeId, no sellerId in UI), Mark paid Modal (1 field: transactionId), CSV export button GET /api/admin/payouts/export (ARCH4) |
 | `AdminAdsView` | `AdminAdsView.tsx` | Admin ads/promotions listing |
 | `AdminAdEditorView` | `AdminAdEditorView.tsx` | Admin ad create/edit form |
 | `AdminNewsletterView` | `AdminNewsletterView.tsx` | Admin newsletter subscribers listing |
 | `AdminContactView` | `AdminContactView.tsx` | Admin contact submissions listing |
-| `AdminAnalyticsView` | `AdminAnalyticsView.tsx` | Admin analytics dashboard (charts) |
+| `AdminAnalyticsView` | `AdminAnalyticsView.tsx` | Admin analytics dashboard — revenue + orders charts, top products table; accepts startDate/endDate forwarded to Firebase Function (VA19) |
 | `AdminMediaView` | `AdminMediaView.tsx` | Admin media library |
-| `AdminSiteView` | `AdminSiteView.tsx` | Admin site settings (VA8) |
+| `AdminSiteView` | `AdminSiteView.tsx` | Admin site settings — 12-group tabbed form (branding/appearance/announcement/SEO/contact/watermark/fees/integrations/shipping/auctions/limits/legal); singleton doc at site_settings/global (VA8) |
 | `AdminFeatureFlagsView` | `AdminFeatureFlagsView.tsx` | Admin feature flags toggle list |
-| `AdminNavigationView` | `AdminNavigationView.tsx` | Admin navigation CMS |
+| `AdminNavigationView` | `AdminNavigationView.tsx` | Admin navigation CMS — drag-reorder table, inline visibility toggle, RowActionMenu (Edit→SideDrawer, Delete→ConfirmDeleteModal) (F5/VA7) |
+| `AdminNavEditorView` | `AdminNavEditorView.tsx` | Admin nav item create/edit SideDrawer — 6 fields: label, href, icon, parent (DynSelect), order, visible toggle; POST/PATCH /api/admin/navigation (F5/VA7) |
 | `AdminSessionsManager` | `AdminSessionsManager.tsx` | Admin session management UI |
 | `BrandQuickCreateForm` | `BrandQuickCreateForm.tsx` | Inline brand create (used in InlineCreateSelect) |
 | `CategoryQuickCreateForm` | `CategoryQuickCreateForm.tsx` | Inline category create (used in InlineCreateSelect) |
@@ -401,11 +411,13 @@ Import: `import { x } from "@mohasinac/appkit"` or `"@mohasinac/appkit/client"`
 
 Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 
-| Name | File | What it does |
+| Name | File | Notable keys / What it does |
 |------|------|-------------|
-| `ADMIN_ENDPOINTS` | `api-endpoints.ts` | All `/api/admin/*` route strings |
-| `STORE_ENDPOINTS` / `SELLER_ENDPOINTS` | `api-endpoints.ts` | All `/api/store/*` route strings |
-| `USER_ENDPOINTS` / `ORDER_ENDPOINTS` | `api-endpoints.ts` | All `/api/user/*` route strings |
+| `ADMIN_ENDPOINTS` | `api-endpoints.ts` | All `/api/admin/*` strings. Notable: `PAYOUT_BY_ID(id)` → `/api/admin/payouts/${id}`; `PAYOUTS_EXPORT` → `/api/admin/payouts/export` (CSV download); `PAYOUTS_WEEKLY` → weekly payout trigger; `NAVIGATION` → `/api/admin/navigation` |
+| `STORE_ENDPOINTS` | `api-endpoints.ts` | All `/api/stores/*` route strings |
+| `SELLER_ENDPOINTS` | `api-endpoints.ts` | All `/api/seller/*` / store-management route strings |
+| `USER_ENDPOINTS` | `api-endpoints.ts` | All `/api/user/*` route strings |
+| `ORDER_ENDPOINTS` | `api-endpoints.ts` | All `/api/orders/*` route strings |
 | `PRODUCT_ENDPOINTS` | `api-endpoints.ts` | All `/api/products/*` route strings |
 | `AUCTION_ENDPOINTS` | `api-endpoints.ts` | All `/api/auctions/*` route strings |
 | `BID_ENDPOINTS` | `api-endpoints.ts` | All `/api/bids/*` route strings |
@@ -415,8 +427,7 @@ Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 | `BLOG_ENDPOINTS` | `api-endpoints.ts` | All `/api/blog/*` route strings |
 | `FAQ_ENDPOINTS` | `api-endpoints.ts` | All `/api/faqs/*` route strings |
 | `EVENT_ENDPOINTS` | `api-endpoints.ts` | All `/api/events/*` route strings |
-| `STORE_ENDPOINTS` | `api-endpoints.ts` | All `/api/stores/*` route strings |
 | `SEARCH_ENDPOINTS` | `api-endpoints.ts` | All `/api/search/*` route strings |
 | `MEDIA_ENDPOINTS` | `api-endpoints.ts` | All `/api/media/*` route strings |
-| `DEMO_ENDPOINTS` | `api-endpoints.ts` | All `/api/demo/*` route strings |
+| `DEMO_ENDPOINTS` | `api-endpoints.ts` | All `/api/demo/*` strings. Notable: `SEED` → `/api/demo/seed` (POST load/delete, GET counts) |
 | `ROUTES` | `appkit/src/next/routing/route-map.ts` | All page routes (ROUTES.PUBLIC.* / ROUTES.ADMIN.* / ROUTES.STORE.* / ROUTES.USER.*) |

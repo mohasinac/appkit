@@ -175,6 +175,11 @@ export const DEFAULT_ROUTE_MAP = {
     ADS_EDIT: (id: string) => `/admin/ads/${id}/edit`,
     NEWSLETTER: "/admin/newsletter",
     CONTACT: "/admin/contact",
+    SESSIONS: "/admin/sessions",
+    ALL_EVENT_ENTRIES: "/admin/event-entries",
+    NOTIFICATIONS: "/admin/notifications",
+    CARTS: "/admin/carts",
+    WISHLISTS: "/admin/wishlists",
   },
   DEMO: {
     SEED: "/demo/seed",

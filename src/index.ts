@@ -3266,6 +3266,20 @@ export { AdminStatCard } from "./features/admin/index";
 export { AdminStoresView } from "./features/admin/index";
 // AdminStoreEditorView - SideDrawer for approving/managing stores (VA12).
 export { AdminStoreEditorView } from "./features/admin/index";
+// AdminUserEditorView - SideDrawer for role/ban management of users (B1/VA10).
+export { AdminUserEditorView } from "./features/admin/index";
+// AdminOrderEditorView - SideDrawer for order status/tracking/refund management (B2/VA9).
+export { AdminOrderEditorView } from "./features/admin/index";
+// AdminSessionsView - Admin listing of user sessions with revoke action (LL11).
+export { AdminSessionsView } from "./features/admin/index";
+// AdminAllEventEntriesView - Cross-event entries listing for admin (LL12).
+export { AdminAllEventEntriesView } from "./features/admin/index";
+// AdminNotificationsView - Admin listing of platform notifications (LL13).
+export { AdminNotificationsView } from "./features/admin/index";
+// AdminCartsView - Admin read-only abandoned carts overview (LL14).
+export { AdminCartsView } from "./features/admin/index";
+// AdminWishlistsView - Admin read-only wishlist insights listing (LL15).
+export { AdminWishlistsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminTopBar - Shared export for admin top bar.
 export { AdminTopBar } from "./features/admin/index";

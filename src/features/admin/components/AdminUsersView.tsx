@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ListingViewShell } from "../../../ui";
+import { ListingViewShell, RowActionMenu } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -11,6 +11,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { AdminListingScaffold } from "./AdminListingScaffold";
+import { AdminUserEditorView } from "./AdminUserEditorView";
 
 export interface AdminUsersViewProps extends ListingViewShellProps {}
 
@@ -22,11 +23,22 @@ interface AdminUsersResponse {
   };
 }
 
+interface UserRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  _raw?: Record<string, unknown>;
+}
+
 export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [q, setQ] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("");
   const [roleFilter, setRoleFilter] = React.useState("");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [selectedRow, setSelectedRow] = React.useState<UserRow | null>(null);
 
   const filterParts: string[] = [];
   if (statusFilter && statusFilter !== "All") {
@@ -37,7 +49,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminUsersResponse,
-    { id: string; primary: string; secondary: string; status: string; updatedAt: string }
+    UserRow
   >({
     queryKey: ["admin", "users", "listing", q, filters ?? ""],
     endpoint: ADMIN_ENDPOINTS.USERS,
@@ -58,6 +70,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               : "Active"
             : "Active",
         updatedAt: toRelativeDate(item.lastLoginAt ?? item.createdAt),
+        _raw: item,
       })),
     getTotal: (response, mappedRows) => {
       if (typeof response.meta?.total === "number") {
@@ -74,35 +87,60 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
 
+  const rowActions = (row: UserRow) => [
+    {
+      label: "Manage",
+      onClick: () => {
+        setSelectedRow(row);
+        setDrawerOpen(true);
+      },
+    },
+  ];
+
   return (
-    <AdminListingScaffold
-      portal="admin"
-      {...props}
-      title="User Management"
-      subtitle="Audit onboarding, verification, and role changes without leaving the admin listing shell."
-      actionLabel="Invite user"
-      searchPlaceholder="Search users, email, or seller handles"
-      onSearch={setQ}
-      searchValue={q}
-      rows={rows}
-      isLoading={isLoading}
-      errorMessage={errorMessage}
-      emptyLabel="No users found"
-      resultSummary={`Showing ${rows.length} of ${total} users`}
-      filterGroups={[
-        {
-          title: "Status",
-          options: ["All", "Active", "Disabled"],
-          active: statusFilter || "All",
-          onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
-        },
-        {
-          title: "Role",
-          options: ["All", "admin", "seller", "buyer", "moderator"],
-          active: roleFilter || "All",
-          onSelect: (opt) => setRoleFilter(opt === "All" ? "" : opt),
-        },
-      ]}
-    />
+    <>
+      <AdminListingScaffold
+        portal="admin"
+        {...props}
+        title="User Management"
+        subtitle="Audit onboarding, verification, and role changes without leaving the admin listing shell."
+        actionLabel="Invite user"
+        searchPlaceholder="Search users, email, or seller handles"
+        onSearch={setQ}
+        searchValue={q}
+        rows={rows}
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        emptyLabel="No users found"
+        resultSummary={`Showing ${rows.length} of ${total} users`}
+        filterGroups={[
+          {
+            title: "Status",
+            options: ["All", "Active", "Disabled"],
+            active: statusFilter || "All",
+            onSelect: (opt) => setStatusFilter(opt === "All" ? "" : opt),
+          },
+          {
+            title: "Role",
+            options: ["All", "admin", "seller", "buyer", "moderator"],
+            active: roleFilter || "All",
+            onSelect: (opt) => setRoleFilter(opt === "All" ? "" : opt),
+          },
+        ]}
+        renderRowActions={(row) => (
+          <RowActionMenu actions={rowActions(row as UserRow)} />
+        )}
+      />
+
+      <AdminUserEditorView
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        userId={selectedRow?.id}
+        displayName={selectedRow?.primary}
+        currentRole={toStringValue(selectedRow?._raw?.role, "user")}
+        currentIsDisabled={selectedRow?.status === "Disabled"}
+        currentEmailVerified={Boolean(selectedRow?._raw?.emailVerified)}
+      />
+    </>
   );
 }

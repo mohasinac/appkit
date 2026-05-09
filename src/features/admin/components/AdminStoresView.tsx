@@ -112,6 +112,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         storeId={selectedRow?.id}
         storeName={selectedRow?.primary}
         currentStatus={selectedRow?.status?.toLowerCase()}
+        currentIsVerified={Boolean(selectedRow?._raw?.isVerified)}
       />
     </>
   );
