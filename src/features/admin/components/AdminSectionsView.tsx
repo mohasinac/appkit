@@ -20,1282 +20,116 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS, DEMO_ENDPOINTS } from "../../../constants";
 import { useAdminSectionsListing } from "../hooks/useAdminSectionsListing";
 import { DataTable } from "./DataTable";
+import {
+  SECTION_TYPE_OPTIONS,
+  SUPPORTED_TYPED_BUILDERS,
+  RESOURCE_SORT_OPTIONS,
+  FAQ_CATEGORY_OPTIONS,
+  DEFAULT_PRODUCTS_BUILDER,
+  DEFAULT_AUCTIONS_BUILDER,
+  DEFAULT_STATS_BUILDER,
+  DEFAULT_PRE_ORDERS_BUILDER,
+  DEFAULT_STORES_BUILDER,
+  DEFAULT_EVENTS_BUILDER,
+  DEFAULT_SOCIAL_FEED_BUILDER,
+  DEFAULT_WELCOME_BUILDER,
+  DEFAULT_TRUST_INDICATORS_BUILDER,
+  DEFAULT_CATEGORIES_BUILDER,
+  DEFAULT_BRANDS_BUILDER,
+  DEFAULT_BANNER_BUILDER,
+  DEFAULT_FEATURES_BUILDER,
+  DEFAULT_REVIEWS_BUILDER,
+  DEFAULT_WHATSAPP_BUILDER,
+  DEFAULT_FAQ_BUILDER,
+  DEFAULT_BLOG_BUILDER,
+  DEFAULT_NEWSLETTER_BUILDER,
+  DEFAULT_CAROUSEL_BUILDER,
+  DEFAULT_CUSTOM_CARDS_BUILDER,
+  DEFAULT_GOOGLE_REVIEWS_BUILDER,
+} from "./sections/adminSectionsTypes";
+import type {
+  SectionType,
+  SectionPatchPayload,
+  ResourceMode,
+  ResourceSortBy,
+  ResourceMaxCount,
+  CategoryOption,
+  ReorderItem,
+  FAQCategory,
+  ProductsBuilderState,
+  AuctionsBuilderState,
+  StatsBuilderState,
+  PreOrdersBuilderState,
+  StoresBuilderState,
+  EventsBuilderState,
+  SocialFeedBuilderState,
+  WelcomeBuilderState,
+  TrustIndicatorsBuilderState,
+  CategoriesBuilderState,
+  BrandsBuilderState,
+  BannerBuilderState,
+  FeaturesBuilderState,
+  ReviewsBuilderState,
+  WhatsAppBuilderState,
+  FAQBuilderState,
+  BlogBuilderState,
+  NewsletterBuilderState,
+  CarouselBuilderState,
+  CustomCardsCardBuilderEntry,
+  CustomCardsBuilderState,
+  GoogleReviewsBuilderState,
+} from "./sections/adminSectionsTypes";
+import {
+  toStringValue,
+  toNumberValue,
+  toBooleanValue,
+  toStringArray,
+  buildProductsConfig,
+  buildAuctionsConfig,
+  buildStatsConfig,
+  buildPreOrdersConfig,
+  buildStoresConfig,
+  buildEventsConfig,
+  buildSocialFeedConfig,
+  buildWelcomeConfig,
+  buildTrustIndicatorsConfig,
+  buildCategoriesConfig,
+  buildBrandsConfig,
+  buildBannerConfig,
+  buildFeaturesConfig,
+  buildReviewsConfig,
+  buildWhatsAppConfig,
+  buildFAQConfig,
+  buildBlogConfig,
+  buildNewsletterConfig,
+  buildCarouselConfig,
+  buildCustomCardsConfig,
+  buildGoogleReviewsConfig,
+  parseProductsBuilder,
+  parseAuctionsBuilder,
+  parseStatsBuilder,
+  parsePreOrdersBuilder,
+  parseStoresBuilder,
+  parseEventsBuilder,
+  parseSocialFeedBuilder,
+  parseWelcomeBuilder,
+  parseTrustIndicatorsBuilder,
+  parseCategoriesBuilder,
+  parseBrandsBuilder,
+  parseBannerBuilder,
+  parseFeaturesBuilder,
+  parseReviewsBuilder,
+  parseWhatsAppBuilder,
+  parseFAQBuilder,
+  parseBlogBuilder,
+  parseNewsletterBuilder,
+  parseCarouselBuilder,
+  parseCustomCardsBuilder,
+  parseGoogleReviewsBuilder,
+} from "./sections/adminSectionsBuildParse";
 
 export interface AdminSectionsViewProps {
   children?: React.ReactNode;
-}
-
-const SECTION_TYPE_OPTIONS = [
-  "welcome",
-  "stats",
-  "trust-indicators",
-  "categories",
-  "brands",
-  "products",
-  "pre-orders",
-  "auctions",
-  "banner",
-  "features",
-  "reviews",
-  "whatsapp-community",
-  "faq",
-  "blog-articles",
-  "newsletter",
-  "stores",
-  "events",
-  "social-feed",
-  "carousel",
-  "custom-cards",
-  "google-reviews",
-] as const;
-
-type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
-
-interface SectionPatchPayload {
-  enabled: boolean;
-  order?: number;
-  config: Record<string, unknown>;
-}
-
-type ResourceMode = "automatic" | "manual";
-
-interface CategoryOption {
-  id: string;
-  name: string;
-}
-
-interface ReorderItem {
-  id: string;
-  type: string;
-  order: number;
-}
-
-type ResourceSortBy = "latest" | "oldest" | "priceLow" | "priceHigh" | "featured" | "onSale" | "popular";
-type ResourceMaxCount = 5 | 10 | 20;
-
-interface ProductsBuilderState {
-  title: string;
-  subtitle: string;
-  maxItems: number;
-  status: "all" | "published" | "draft";
-  sortBy: ResourceSortBy;
-  featuredOnly: boolean;
-  inStockOnly: boolean;
-  autoScroll: boolean;
-  scrollInterval: number;
-  resourceMode: ResourceMode;
-  selectedCategoryIds: string[];
-  manualResourceIds: string;
-  filterByCategory: string;
-  maxCount: ResourceMaxCount;
-  loop: boolean;
-}
-
-interface AuctionsBuilderState {
-  title: string;
-  subtitle: string;
-  maxItems: number;
-  status: "all" | "active" | "scheduled" | "ended";
-  sortBy: ResourceSortBy;
-  autoScroll: boolean;
-  scrollInterval: number;
-  resourceMode: ResourceMode;
-  selectedCategoryIds: string[];
-  manualResourceIds: string;
-  filterByCategory: string;
-  maxCount: ResourceMaxCount;
-  loop: boolean;
-}
-
-interface StatsBuilderState {
-  title: string;
-  stats: Array<{
-    key: string;
-    label: string;
-    value: string;
-  }>;
-}
-
-interface PreOrdersBuilderState {
-  title: string;
-  subtitle: string;
-  maxItems: number;
-  status: "all" | "active" | "upcoming" | "closed";
-  sortBy: ResourceSortBy;
-  autoScroll: boolean;
-  scrollInterval: number;
-  resourceMode: ResourceMode;
-  selectedCategoryIds: string[];
-  manualResourceIds: string;
-  filterByCategory: string;
-  maxCount: ResourceMaxCount;
-  loop: boolean;
-}
-
-interface StoresBuilderState {
-  title: string;
-  subtitle: string;
-  maxItems: number;
-  status: "all" | "active" | "pending" | "disabled";
-  sortBy: ResourceSortBy;
-  verifiedOnly: boolean;
-  autoScroll: boolean;
-  scrollInterval: number;
-  resourceMode: ResourceMode;
-  selectedCategoryIds: string[];
-  manualResourceIds: string;
-  filterByCategory: string;
-  maxCount: ResourceMaxCount;
-  loop: boolean;
-}
-
-interface EventsBuilderState {
-  title: string;
-  subtitle: string;
-  maxItems: number;
-  status: "all" | "active" | "upcoming" | "ended";
-  sortBy: ResourceSortBy;
-  featuredOnly: boolean;
-  autoScroll: boolean;
-  scrollInterval: number;
-  resourceMode: ResourceMode;
-  selectedCategoryIds: string[];
-  manualResourceIds: string;
-  filterByCategory: string;
-  maxCount: ResourceMaxCount;
-  loop: boolean;
-}
-
-interface SocialFeedBuilderState {
-  title: string;
-  subtitle: string;
-  platform: "instagram" | "facebook" | "tiktok" | "deviantart";
-  handle: string;
-  postType: "all" | "images" | "videos" | "reels";
-  count: number;
-  layout: "grid" | "masonry" | "carousel";
-  showCaption: boolean;
-  showStats: boolean;
-}
-
-interface WelcomeBuilderState {
-  h1: string;
-  subtitle: string;
-  description: string;
-  showCTA: boolean;
-  ctaText: string;
-  ctaLink: string;
-}
-
-interface TrustIndicatorsBuilderState {
-  title: string;
-  indicators: Array<{ id: string; icon: string; title: string; description: string }>;
-}
-
-interface CategoriesBuilderState {
-  title: string;
-  maxCategories: number;
-  autoScroll: boolean;
-  scrollInterval: number;
-}
-
-interface BrandsBuilderState {
-  title: string;
-  subtitle: string;
-  maxBrands: number;
-  autoScroll: boolean;
-  scrollInterval: number;
-}
-
-interface BannerBuilderState {
-  height: "sm" | "md" | "lg" | "xl";
-  backgroundImage: string;
-  backgroundColor: string;
-  gradientFrom: string;
-  gradientTo: string;
-  contentTitle: string;
-  contentSubtitle: string;
-  contentDescription: string;
-  buttons: Array<{ text: string; link: string; variant: "primary" | "secondary" | "outline" }>;
-  clickable: boolean;
-  clickLink: string;
-}
-
-interface FeaturesBuilderState {
-  title: string;
-  features: string[];
-}
-
-interface ReviewsBuilderState {
-  title: string;
-  maxReviews: number;
-  itemsPerView: number;
-  autoScroll: boolean;
-  scrollInterval: number;
-  source: "platform" | "google";
-  placeId: string;
-}
-
-interface WhatsAppBuilderState {
-  title: string;
-  description: string;
-  groupLink: string;
-  memberCount: number;
-  benefits: string[];
-  buttonText: string;
-  testimonial: string;
-}
-
-type FAQCategory = "general" | "shipping" | "returns" | "payment" | "account" | "products" | "sellers";
-
-interface FAQBuilderState {
-  title: string;
-  subtitle: string;
-  showOnHomepage: boolean;
-  displayCount: number;
-  expandedByDefault: boolean;
-  linkToFullPage: boolean;
-  categories: FAQCategory[];
-}
-
-interface BlogBuilderState {
-  title: string;
-  maxArticles: number;
-  showReadTime: boolean;
-  showAuthor: boolean;
-  showThumbnails: boolean;
-}
-
-interface NewsletterBuilderState {
-  title: string;
-  description: string;
-  placeholder: string;
-  buttonText: string;
-  privacyText: string;
-  privacyLink: string;
-}
-
-interface CarouselBuilderState {
-  title: string;
-  height: "viewport" | "tall" | "medium";
-  defaultAutoplayDelayMs: number;
-  pauseOnHover: boolean;
-  showDots: boolean;
-  showArrows: boolean;
-}
-
-interface CustomCardsCardBuilderEntry {
-  id: string;
-  image: string;
-  imageAlt: string;
-  eyebrow: string;
-  title: string;
-  body: string;
-  link: string;
-  backgroundColor: string;
-  textColor: string;
-  borderRadius: "none" | "sm" | "md" | "lg" | "xl" | "full";
-  shadowLevel: "none" | "sm" | "md" | "lg";
-}
-
-interface CustomCardsBuilderState {
-  title: string;
-  layout: "grid" | "row" | "masonry";
-  columns: 1 | 2 | 3 | 4;
-  autoScroll: boolean;
-  scrollIntervalMs: number;
-  cards: CustomCardsCardBuilderEntry[];
-}
-
-interface GoogleReviewsBuilderState {
-  placeId: string;
-  maxReviews: number;
-  minRating: number;
-  layout: "grid" | "carousel";
-  showRating: boolean;
-  showDate: boolean;
-  linkToGoogleMaps: boolean;
-  googleMapsUrl: string;
-}
-
-const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
-  title: "Featured Products",
-  subtitle: "",
-  maxItems: 18,
-  status: "published",
-  sortBy: "featured",
-  featuredOnly: true,
-  inStockOnly: true,
-  autoScroll: false,
-  scrollInterval: 5000,
-  resourceMode: "automatic",
-  selectedCategoryIds: [],
-  manualResourceIds: "",
-  filterByCategory: "",
-  maxCount: 10,
-  loop: false,
-};
-
-const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
-  title: "Live Auctions",
-  subtitle: "",
-  maxItems: 18,
-  status: "active",
-  sortBy: "latest",
-  autoScroll: false,
-  scrollInterval: 5000,
-  resourceMode: "automatic",
-  selectedCategoryIds: [],
-  manualResourceIds: "",
-  filterByCategory: "",
-  maxCount: 10,
-  loop: false,
-};
-
-const DEFAULT_STATS_BUILDER: StatsBuilderState = {
-  title: "Marketplace Stats",
-  stats: [
-    { key: "products", label: "Products Listed", value: "10,000+" },
-    { key: "sellers", label: "Verified Sellers", value: "2,000+" },
-    { key: "buyers", label: "Happy Buyers", value: "50,000+" },
-    { key: "rating", label: "Average Rating", value: "4.8/5" },
-  ],
-};
-
-const DEFAULT_PRE_ORDERS_BUILDER: PreOrdersBuilderState = {
-  title: "Reserve Before It Ships",
-  subtitle: "",
-  maxItems: 18,
-  status: "active",
-  sortBy: "latest",
-  autoScroll: false,
-  scrollInterval: 5000,
-  resourceMode: "automatic",
-  selectedCategoryIds: [],
-  manualResourceIds: "",
-  filterByCategory: "",
-  maxCount: 10,
-  loop: false,
-};
-
-const DEFAULT_STORES_BUILDER: StoresBuilderState = {
-  title: "Featured Stores",
-  subtitle: "",
-  maxItems: 8,
-  status: "active",
-  sortBy: "popular",
-  verifiedOnly: true,
-  autoScroll: false,
-  scrollInterval: 5000,
-  resourceMode: "automatic",
-  selectedCategoryIds: [],
-  manualResourceIds: "",
-  filterByCategory: "",
-  maxCount: 10,
-  loop: false,
-};
-
-const DEFAULT_EVENTS_BUILDER: EventsBuilderState = {
-  title: "Events & Offers",
-  subtitle: "",
-  maxItems: 6,
-  status: "active",
-  sortBy: "latest",
-  featuredOnly: false,
-  autoScroll: false,
-  scrollInterval: 5000,
-  resourceMode: "automatic",
-  selectedCategoryIds: [],
-  manualResourceIds: "",
-  filterByCategory: "",
-  maxCount: 10,
-  loop: false,
-};
-
-const DEFAULT_SOCIAL_FEED_BUILDER: SocialFeedBuilderState = {
-  title: "",
-  subtitle: "",
-  platform: "instagram",
-  handle: "",
-  postType: "all",
-  count: 9,
-  layout: "grid",
-  showCaption: true,
-  showStats: true,
-};
-
-const DEFAULT_WELCOME_BUILDER: WelcomeBuilderState = {
-  h1: "India's #1 Collectibles Marketplace",
-  subtitle: "Buy, Sell & Auction Pokémon Cards, Hot Wheels, Action Figures and more",
-  description: "",
-  showCTA: true,
-  ctaText: "Shop Now",
-  ctaLink: "/products",
-};
-
-const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
-  title: "Why LetItRip?",
-  indicators: [
-    { id: "ti-1", icon: "🚚", title: "Free Shipping", description: "On orders above ₹999" },
-    { id: "ti-2", icon: "🔒", title: "Secure Payment", description: "Razorpay protected checkout" },
-    { id: "ti-3", icon: "✅", title: "Verified Sellers", description: "Every store is manually verified" },
-    { id: "ti-4", icon: "↩️", title: "Easy Returns", description: "7-day hassle-free returns" },
-  ],
-};
-
-const DEFAULT_CATEGORIES_BUILDER: CategoriesBuilderState = {
-  title: "Shop by Category",
-  maxCategories: 8,
-  autoScroll: false,
-  scrollInterval: 5000,
-};
-
-const DEFAULT_BRANDS_BUILDER: BrandsBuilderState = {
-  title: "Top Brands",
-  subtitle: "",
-  maxBrands: 13,
-  autoScroll: true,
-  scrollInterval: 4000,
-};
-
-const DEFAULT_BANNER_BUILDER: BannerBuilderState = {
-  height: "lg",
-  backgroundImage: "",
-  backgroundColor: "",
-  gradientFrom: "",
-  gradientTo: "",
-  contentTitle: "",
-  contentSubtitle: "",
-  contentDescription: "",
-  buttons: [],
-  clickable: false,
-  clickLink: "",
-};
-
-const DEFAULT_FEATURES_BUILDER: FeaturesBuilderState = {
-  title: "Platform Features",
-  features: ["Free Shipping on ₹999+", "Secure Payments", "Easy Returns", "Verified Sellers"],
-};
-
-const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {
-  title: "What Collectors Say",
-  maxReviews: 10,
-  itemsPerView: 3,
-  autoScroll: true,
-  scrollInterval: 5000,
-  source: "platform",
-  placeId: "",
-};
-
-const DEFAULT_WHATSAPP_BUILDER: WhatsAppBuilderState = {
-  title: "Join Our Collector Community",
-  description: "Connect with 10,000+ collectors on WhatsApp",
-  groupLink: "",
-  memberCount: 10000,
-  benefits: ["Exclusive deals", "First access to rare finds", "Collector tips & guides"],
-  buttonText: "Join WhatsApp Group",
-  testimonial: "",
-};
-
-const DEFAULT_FAQ_BUILDER: FAQBuilderState = {
-  title: "Frequently Asked Questions",
-  subtitle: "",
-  showOnHomepage: true,
-  displayCount: 5,
-  expandedByDefault: false,
-  linkToFullPage: true,
-  categories: ["general", "shipping", "returns"],
-};
-
-const DEFAULT_BLOG_BUILDER: BlogBuilderState = {
-  title: "From the Blog",
-  maxArticles: 3,
-  showReadTime: true,
-  showAuthor: true,
-  showThumbnails: true,
-};
-
-const DEFAULT_NEWSLETTER_BUILDER: NewsletterBuilderState = {
-  title: "Stay in the Loop",
-  description: "Get the latest drops, auction alerts, and collector news.",
-  placeholder: "Enter your email",
-  buttonText: "Subscribe",
-  privacyText: "We respect your privacy. Unsubscribe anytime.",
-  privacyLink: "/privacy",
-};
-
-const DEFAULT_CAROUSEL_BUILDER: CarouselBuilderState = {
-  title: "Hero Carousel",
-  height: "tall",
-  defaultAutoplayDelayMs: 5000,
-  pauseOnHover: true,
-  showDots: true,
-  showArrows: true,
-};
-
-const DEFAULT_CUSTOM_CARDS_BUILDER: CustomCardsBuilderState = {
-  title: "",
-  layout: "grid",
-  columns: 3,
-  autoScroll: false,
-  scrollIntervalMs: 4000,
-  cards: [],
-};
-
-const DEFAULT_GOOGLE_REVIEWS_BUILDER: GoogleReviewsBuilderState = {
-  placeId: "",
-  maxReviews: 6,
-  minRating: 4,
-  layout: "grid",
-  showRating: true,
-  showDate: true,
-  linkToGoogleMaps: true,
-  googleMapsUrl: "",
-};
-
-const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
-  "products",
-  "auctions",
-  "stats",
-  "pre-orders",
-  "stores",
-  "events",
-  "social-feed",
-  "welcome",
-  "trust-indicators",
-  "categories",
-  "brands",
-  "banner",
-  "features",
-  "reviews",
-  "whatsapp-community",
-  "faq",
-  "blog-articles",
-  "newsletter",
-  "carousel",
-  "custom-cards",
-  "google-reviews",
-];
-
-function parseCsvValues(value: string): string[] {
-  return value
-    .split(",")
-    .map((part) => part.trim())
-    .filter(Boolean);
-}
-
-function toNumberValue(value: unknown, fallback: number): number {
-  if (typeof value === "number" && Number.isFinite(value)) {
-    return value;
-  }
-  if (typeof value === "string") {
-    const parsed = Number(value);
-    if (Number.isFinite(parsed)) {
-      return parsed;
-    }
-  }
-  return fallback;
-}
-
-function toStringValue(value: unknown, fallback = ""): string {
-  return typeof value === "string" ? value : fallback;
-}
-
-function toBooleanValue(value: unknown, fallback = false): boolean {
-  return typeof value === "boolean" ? value : fallback;
-}
-
-function toStringArray(value: unknown): string[] {
-  return Array.isArray(value)
-    ? value.filter((item): item is string => typeof item === "string")
-    : [];
-}
-
-const RESOURCE_SORT_OPTIONS = [
-  { label: "Latest", value: "latest" },
-  { label: "Oldest", value: "oldest" },
-  { label: "Price: Low to High", value: "priceLow" },
-  { label: "Price: High to Low", value: "priceHigh" },
-  { label: "Featured", value: "featured" },
-  { label: "On Sale", value: "onSale" },
-  { label: "Popular", value: "popular" },
-] as const;
-
-function buildProductsConfig(builder: ProductsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxProducts: builder.maxItems,
-    maxCount: builder.maxCount,
-    sortBy: builder.sortBy,
-    filterByCategory: builder.filterByCategory || undefined,
-    loop: builder.loop,
-    rows: 2,
-    itemsPerRow: 3,
-    mobileItemsPerRow: 1,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    filters: {
-      categoryIds: builder.selectedCategoryIds,
-      status: builder.status,
-      featuredOnly: builder.featuredOnly,
-      inStockOnly: builder.inStockOnly,
-    },
-    resources: {
-      mode: builder.resourceMode,
-      ids: builder.resourceMode === "manual" ? parseCsvValues(builder.manualResourceIds) : [],
-    },
-  };
-}
-
-function buildAuctionsConfig(builder: AuctionsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxAuctions: builder.maxItems,
-    maxCount: builder.maxCount,
-    sortBy: builder.sortBy,
-    filterByCategory: builder.filterByCategory || undefined,
-    loop: builder.loop,
-    rows: 2,
-    itemsPerRow: 3,
-    mobileItemsPerRow: 1,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    filters: {
-      categoryIds: builder.selectedCategoryIds,
-      status: builder.status,
-    },
-    resources: {
-      mode: builder.resourceMode,
-      ids: builder.resourceMode === "manual" ? parseCsvValues(builder.manualResourceIds) : [],
-    },
-  };
-}
-
-function buildStatsConfig(builder: StatsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title || undefined,
-    stats: builder.stats.map((item, index) => ({
-      key: item.key.trim() || `stat-${index + 1}`,
-      label: item.label,
-      value: item.value,
-    })),
-  };
-}
-
-function buildPreOrdersConfig(builder: PreOrdersBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxItems: builder.maxItems,
-    maxCount: builder.maxCount,
-    sortBy: builder.sortBy,
-    filterByCategory: builder.filterByCategory || undefined,
-    loop: builder.loop,
-    rows: 2,
-    itemsPerRow: 3,
-    mobileItemsPerRow: 1,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    filters: {
-      categoryIds: builder.selectedCategoryIds,
-      status: builder.status,
-    },
-    resources: {
-      mode: builder.resourceMode,
-      ids: builder.resourceMode === "manual" ? parseCsvValues(builder.manualResourceIds) : [],
-    },
-  };
-}
-
-function buildStoresConfig(builder: StoresBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxStores: builder.maxItems,
-    maxCount: builder.maxCount,
-    sortBy: builder.sortBy,
-    filterByCategory: builder.filterByCategory || undefined,
-    loop: builder.loop,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    filters: {
-      categoryIds: builder.selectedCategoryIds,
-      status: builder.status,
-      verifiedOnly: builder.verifiedOnly,
-    },
-    resources: {
-      mode: builder.resourceMode,
-      ids: builder.resourceMode === "manual" ? parseCsvValues(builder.manualResourceIds) : [],
-    },
-  };
-}
-
-function buildEventsConfig(builder: EventsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxEvents: builder.maxItems,
-    maxCount: builder.maxCount,
-    sortBy: builder.sortBy,
-    filterByCategory: builder.filterByCategory || undefined,
-    loop: builder.loop,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    filters: {
-      categoryIds: builder.selectedCategoryIds,
-      status: builder.status,
-      featuredOnly: builder.featuredOnly,
-    },
-    resources: {
-      mode: builder.resourceMode,
-      ids: builder.resourceMode === "manual" ? parseCsvValues(builder.manualResourceIds) : [],
-    },
-  };
-}
-
-function parseProductsBuilder(config: Record<string, unknown>): ProductsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_PRODUCTS_BUILDER.maxCount);
-  return {
-    title: toStringValue(config.title, DEFAULT_PRODUCTS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxProducts, DEFAULT_PRODUCTS_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_PRODUCTS_BUILDER.status) as ProductsBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_PRODUCTS_BUILDER.sortBy) as ResourceSortBy,
-    featuredOnly: toBooleanValue(filters.featuredOnly, DEFAULT_PRODUCTS_BUILDER.featuredOnly),
-    inStockOnly: toBooleanValue(filters.inStockOnly, DEFAULT_PRODUCTS_BUILDER.inStockOnly),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_PRODUCTS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_PRODUCTS_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_PRODUCTS_BUILDER.resourceMode) as ResourceMode,
-    selectedCategoryIds: toStringArray(filters.categoryIds),
-    manualResourceIds: toStringArray(resources.ids).join(", "),
-    filterByCategory: toStringValue(config.filterByCategory),
-    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
-  };
-}
-
-function parseAuctionsBuilder(config: Record<string, unknown>): AuctionsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_AUCTIONS_BUILDER.maxCount);
-  return {
-    title: toStringValue(config.title, DEFAULT_AUCTIONS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxAuctions, DEFAULT_AUCTIONS_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_AUCTIONS_BUILDER.status) as AuctionsBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_AUCTIONS_BUILDER.sortBy) as ResourceSortBy,
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_AUCTIONS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_AUCTIONS_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_AUCTIONS_BUILDER.resourceMode) as ResourceMode,
-    selectedCategoryIds: toStringArray(filters.categoryIds),
-    manualResourceIds: toStringArray(resources.ids).join(", "),
-    filterByCategory: toStringValue(config.filterByCategory),
-    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
-  };
-}
-
-function parseStatsBuilder(config: Record<string, unknown>): StatsBuilderState {
-  const statsArray = Array.isArray(config.stats) ? config.stats : [];
-  const parsedStats = statsArray
-    .slice(0, 4)
-    .map((item, index) => {
-      const row = (item ?? {}) as Record<string, unknown>;
-      return {
-        key: toStringValue(row.key, `stat-${index + 1}`),
-        label: toStringValue(row.label),
-        value: toStringValue(row.value),
-      };
-    });
-
-  while (parsedStats.length < 4) {
-    parsedStats.push({
-      key: `stat-${parsedStats.length + 1}`,
-      label: "",
-      value: "",
-    });
-  }
-
-  return {
-    title: toStringValue(config.title, DEFAULT_STATS_BUILDER.title),
-    stats: parsedStats,
-  };
-}
-
-function parsePreOrdersBuilder(config: Record<string, unknown>): PreOrdersBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_PRE_ORDERS_BUILDER.maxCount);
-  return {
-    title: toStringValue(config.title, DEFAULT_PRE_ORDERS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxItems, DEFAULT_PRE_ORDERS_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_PRE_ORDERS_BUILDER.status) as PreOrdersBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_PRE_ORDERS_BUILDER.sortBy) as ResourceSortBy,
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_PRE_ORDERS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_PRE_ORDERS_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_PRE_ORDERS_BUILDER.resourceMode) as ResourceMode,
-    selectedCategoryIds: toStringArray(filters.categoryIds),
-    manualResourceIds: toStringArray(resources.ids).join(", "),
-    filterByCategory: toStringValue(config.filterByCategory),
-    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
-  };
-}
-
-function parseStoresBuilder(config: Record<string, unknown>): StoresBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_STORES_BUILDER.maxCount);
-  return {
-    title: toStringValue(config.title, DEFAULT_STORES_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxStores, DEFAULT_STORES_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_STORES_BUILDER.status) as StoresBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_STORES_BUILDER.sortBy) as ResourceSortBy,
-    verifiedOnly: toBooleanValue(filters.verifiedOnly, DEFAULT_STORES_BUILDER.verifiedOnly),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_STORES_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_STORES_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_STORES_BUILDER.resourceMode) as ResourceMode,
-    selectedCategoryIds: toStringArray(filters.categoryIds),
-    manualResourceIds: toStringArray(resources.ids).join(", "),
-    filterByCategory: toStringValue(config.filterByCategory),
-    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
-  };
-}
-
-function parseEventsBuilder(config: Record<string, unknown>): EventsBuilderState {
-  const filters = (config.filters ?? {}) as Record<string, unknown>;
-  const resources = (config.resources ?? {}) as Record<string, unknown>;
-  const maxCount = toNumberValue(config.maxCount, DEFAULT_EVENTS_BUILDER.maxCount);
-  return {
-    title: toStringValue(config.title, DEFAULT_EVENTS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxItems: toNumberValue(config.maxEvents, DEFAULT_EVENTS_BUILDER.maxItems),
-    status: toStringValue(filters.status, DEFAULT_EVENTS_BUILDER.status) as EventsBuilderState["status"],
-    sortBy: toStringValue(config.sortBy ?? filters.sortBy, DEFAULT_EVENTS_BUILDER.sortBy) as ResourceSortBy,
-    featuredOnly: toBooleanValue(filters.featuredOnly, DEFAULT_EVENTS_BUILDER.featuredOnly),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_EVENTS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_EVENTS_BUILDER.scrollInterval),
-    resourceMode: toStringValue(resources.mode, DEFAULT_EVENTS_BUILDER.resourceMode) as ResourceMode,
-    selectedCategoryIds: toStringArray(filters.categoryIds),
-    manualResourceIds: toStringArray(resources.ids).join(", "),
-    filterByCategory: toStringValue(config.filterByCategory),
-    maxCount: ([5, 10, 20].includes(maxCount) ? maxCount : 10) as ResourceMaxCount,
-    loop: toBooleanValue(config.loop, false),
-  };
-}
-
-function buildSocialFeedConfig(builder: SocialFeedBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title || undefined,
-    subtitle: builder.subtitle || undefined,
-    platform: builder.platform,
-    handle: builder.handle,
-    postType: builder.postType,
-    count: builder.count,
-    layout: builder.layout,
-    showCaption: builder.showCaption,
-    showStats: builder.showStats,
-  };
-}
-
-function parseSocialFeedBuilder(config: Record<string, unknown>): SocialFeedBuilderState {
-  return {
-    title: toStringValue(config.title),
-    subtitle: toStringValue(config.subtitle),
-    platform: toStringValue(config.platform, DEFAULT_SOCIAL_FEED_BUILDER.platform) as SocialFeedBuilderState["platform"],
-    handle: toStringValue(config.handle),
-    postType: toStringValue(config.postType, DEFAULT_SOCIAL_FEED_BUILDER.postType) as SocialFeedBuilderState["postType"],
-    count: toNumberValue(config.count, DEFAULT_SOCIAL_FEED_BUILDER.count),
-    layout: toStringValue(config.layout, DEFAULT_SOCIAL_FEED_BUILDER.layout) as SocialFeedBuilderState["layout"],
-    showCaption: toBooleanValue(config.showCaption, DEFAULT_SOCIAL_FEED_BUILDER.showCaption),
-    showStats: toBooleanValue(config.showStats, DEFAULT_SOCIAL_FEED_BUILDER.showStats),
-  };
-}
-
-function buildWelcomeConfig(builder: WelcomeBuilderState): Record<string, unknown> {
-  return {
-    h1: builder.h1,
-    subtitle: builder.subtitle || undefined,
-    description: builder.description || undefined,
-    showCTA: builder.showCTA,
-    ctaText: builder.ctaText || undefined,
-    ctaLink: builder.ctaLink || undefined,
-  };
-}
-
-function parseWelcomeBuilder(config: Record<string, unknown>): WelcomeBuilderState {
-  return {
-    h1: toStringValue(config.h1, DEFAULT_WELCOME_BUILDER.h1),
-    subtitle: toStringValue(config.subtitle, DEFAULT_WELCOME_BUILDER.subtitle),
-    description: toStringValue(config.description),
-    showCTA: toBooleanValue(config.showCTA, DEFAULT_WELCOME_BUILDER.showCTA),
-    ctaText: toStringValue(config.ctaText, DEFAULT_WELCOME_BUILDER.ctaText),
-    ctaLink: toStringValue(config.ctaLink, DEFAULT_WELCOME_BUILDER.ctaLink),
-  };
-}
-
-function buildTrustIndicatorsConfig(builder: TrustIndicatorsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    indicators: builder.indicators.map((ind, index) => ({
-      id: ind.id || `ti-${index + 1}`,
-      icon: ind.icon,
-      title: ind.title,
-      description: ind.description,
-    })),
-  };
-}
-
-function parseTrustIndicatorsBuilder(config: Record<string, unknown>): TrustIndicatorsBuilderState {
-  const indicatorsRaw = Array.isArray(config.indicators) ? config.indicators : [];
-  const indicators = indicatorsRaw.map((item, index) => {
-    const row = (item ?? {}) as Record<string, unknown>;
-    return {
-      id: toStringValue(row.id, `ti-${index + 1}`),
-      icon: toStringValue(row.icon),
-      title: toStringValue(row.title),
-      description: toStringValue(row.description),
-    };
-  });
-  return {
-    title: toStringValue(config.title, DEFAULT_TRUST_INDICATORS_BUILDER.title),
-    indicators: indicators.length > 0 ? indicators : DEFAULT_TRUST_INDICATORS_BUILDER.indicators,
-  };
-}
-
-function buildCategoriesConfig(builder: CategoriesBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    maxCategories: builder.maxCategories,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-  };
-}
-
-function parseCategoriesBuilder(config: Record<string, unknown>): CategoriesBuilderState {
-  return {
-    title: toStringValue(config.title, DEFAULT_CATEGORIES_BUILDER.title),
-    maxCategories: toNumberValue(config.maxCategories, DEFAULT_CATEGORIES_BUILDER.maxCategories),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CATEGORIES_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_CATEGORIES_BUILDER.scrollInterval),
-  };
-}
-
-function buildBrandsConfig(builder: BrandsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    maxBrands: builder.maxBrands,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-  };
-}
-
-function parseBrandsBuilder(config: Record<string, unknown>): BrandsBuilderState {
-  return {
-    title: toStringValue(config.title, DEFAULT_BRANDS_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    maxBrands: toNumberValue(config.maxBrands, DEFAULT_BRANDS_BUILDER.maxBrands),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_BRANDS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_BRANDS_BUILDER.scrollInterval),
-  };
-}
-
-function buildBannerConfig(builder: BannerBuilderState): Record<string, unknown> {
-  return {
-    height: builder.height,
-    backgroundImage: builder.backgroundImage || undefined,
-    backgroundColor: builder.backgroundColor || undefined,
-    gradient: builder.gradientFrom && builder.gradientTo ? `${builder.gradientFrom},${builder.gradientTo}` : undefined,
-    content: {
-      title: builder.contentTitle,
-      subtitle: builder.contentSubtitle || undefined,
-      description: builder.contentDescription || undefined,
-    },
-    buttons: builder.buttons,
-    clickable: builder.clickable,
-    clickLink: builder.clickLink || undefined,
-  };
-}
-
-function parseBannerBuilder(config: Record<string, unknown>): BannerBuilderState {
-  const content = (config.content ?? {}) as Record<string, unknown>;
-  const buttonsRaw = Array.isArray(config.buttons) ? config.buttons : [];
-  const gradient = toStringValue(config.gradient);
-  const [gradientFrom = "", gradientTo = ""] = gradient ? gradient.split(",") : [];
-  return {
-    height: toStringValue(config.height, DEFAULT_BANNER_BUILDER.height) as BannerBuilderState["height"],
-    backgroundImage: toStringValue(config.backgroundImage),
-    backgroundColor: toStringValue(config.backgroundColor),
-    gradientFrom,
-    gradientTo,
-    contentTitle: toStringValue(content.title),
-    contentSubtitle: toStringValue(content.subtitle),
-    contentDescription: toStringValue(content.description),
-    buttons: buttonsRaw.map((btn) => {
-      const b = (btn ?? {}) as Record<string, unknown>;
-      return {
-        text: toStringValue(b.text),
-        link: toStringValue(b.link),
-        variant: toStringValue(b.variant, "primary") as BannerBuilderState["buttons"][number]["variant"],
-      };
-    }),
-    clickable: toBooleanValue(config.clickable),
-    clickLink: toStringValue(config.clickLink),
-  };
-}
-
-function buildFeaturesConfig(builder: FeaturesBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    features: builder.features.filter(Boolean),
-  };
-}
-
-function parseFeaturesBuilder(config: Record<string, unknown>): FeaturesBuilderState {
-  const featuresRaw = Array.isArray(config.features) ? config.features : [];
-  return {
-    title: toStringValue(config.title, DEFAULT_FEATURES_BUILDER.title),
-    features: featuresRaw.filter((f): f is string => typeof f === "string"),
-  };
-}
-
-function buildReviewsConfig(builder: ReviewsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    maxReviews: builder.maxReviews,
-    itemsPerView: builder.itemsPerView,
-    mobileItemsPerView: 1,
-    autoScroll: builder.autoScroll,
-    scrollInterval: builder.scrollInterval,
-    source: builder.source,
-    placeId: builder.source === "google" ? builder.placeId || undefined : undefined,
-  };
-}
-
-function parseReviewsBuilder(config: Record<string, unknown>): ReviewsBuilderState {
-  return {
-    title: toStringValue(config.title, DEFAULT_REVIEWS_BUILDER.title),
-    maxReviews: toNumberValue(config.maxReviews, DEFAULT_REVIEWS_BUILDER.maxReviews),
-    itemsPerView: toNumberValue(config.itemsPerView, DEFAULT_REVIEWS_BUILDER.itemsPerView),
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_REVIEWS_BUILDER.autoScroll),
-    scrollInterval: toNumberValue(config.scrollInterval, DEFAULT_REVIEWS_BUILDER.scrollInterval),
-    source: toStringValue(config.source, "platform") as ReviewsBuilderState["source"],
-    placeId: toStringValue(config.placeId),
-  };
-}
-
-function buildWhatsAppConfig(builder: WhatsAppBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    description: builder.description,
-    groupLink: builder.groupLink,
-    memberCount: builder.memberCount || undefined,
-    benefits: builder.benefits.filter(Boolean),
-    buttonText: builder.buttonText,
-    testimonial: builder.testimonial || undefined,
-  };
-}
-
-function parseWhatsAppBuilder(config: Record<string, unknown>): WhatsAppBuilderState {
-  const benefitsRaw = Array.isArray(config.benefits) ? config.benefits : [];
-  return {
-    title: toStringValue(config.title, DEFAULT_WHATSAPP_BUILDER.title),
-    description: toStringValue(config.description, DEFAULT_WHATSAPP_BUILDER.description),
-    groupLink: toStringValue(config.groupLink),
-    memberCount: toNumberValue(config.memberCount, DEFAULT_WHATSAPP_BUILDER.memberCount),
-    benefits: benefitsRaw.filter((b): b is string => typeof b === "string"),
-    buttonText: toStringValue(config.buttonText, DEFAULT_WHATSAPP_BUILDER.buttonText),
-    testimonial: toStringValue(config.testimonial),
-  };
-}
-
-const FAQ_CATEGORY_OPTIONS: Array<{ label: string; value: FAQCategory }> = [
-  { label: "General", value: "general" },
-  { label: "Shipping", value: "shipping" },
-  { label: "Returns", value: "returns" },
-  { label: "Payment", value: "payment" },
-  { label: "Account", value: "account" },
-  { label: "Products", value: "products" },
-  { label: "Sellers", value: "sellers" },
-];
-
-function buildFAQConfig(builder: FAQBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    subtitle: builder.subtitle || undefined,
-    showOnHomepage: builder.showOnHomepage,
-    displayCount: builder.displayCount,
-    expandedByDefault: builder.expandedByDefault,
-    linkToFullPage: builder.linkToFullPage,
-    categories: builder.categories,
-  };
-}
-
-function parseFAQBuilder(config: Record<string, unknown>): FAQBuilderState {
-  const categoriesRaw = Array.isArray(config.categories) ? config.categories : [];
-  const validCats = FAQ_CATEGORY_OPTIONS.map((o) => o.value);
-  return {
-    title: toStringValue(config.title, DEFAULT_FAQ_BUILDER.title),
-    subtitle: toStringValue(config.subtitle),
-    showOnHomepage: toBooleanValue(config.showOnHomepage, DEFAULT_FAQ_BUILDER.showOnHomepage),
-    displayCount: toNumberValue(config.displayCount, DEFAULT_FAQ_BUILDER.displayCount),
-    expandedByDefault: toBooleanValue(config.expandedByDefault, DEFAULT_FAQ_BUILDER.expandedByDefault),
-    linkToFullPage: toBooleanValue(config.linkToFullPage, DEFAULT_FAQ_BUILDER.linkToFullPage),
-    categories: categoriesRaw.filter((c): c is FAQCategory => validCats.includes(c as FAQCategory)),
-  };
-}
-
-function buildBlogConfig(builder: BlogBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    maxArticles: builder.maxArticles,
-    showReadTime: builder.showReadTime,
-    showAuthor: builder.showAuthor,
-    showThumbnails: builder.showThumbnails,
-  };
-}
-
-function parseBlogBuilder(config: Record<string, unknown>): BlogBuilderState {
-  return {
-    title: toStringValue(config.title, DEFAULT_BLOG_BUILDER.title),
-    maxArticles: toNumberValue(config.maxArticles, DEFAULT_BLOG_BUILDER.maxArticles),
-    showReadTime: toBooleanValue(config.showReadTime, DEFAULT_BLOG_BUILDER.showReadTime),
-    showAuthor: toBooleanValue(config.showAuthor, DEFAULT_BLOG_BUILDER.showAuthor),
-    showThumbnails: toBooleanValue(config.showThumbnails, DEFAULT_BLOG_BUILDER.showThumbnails),
-  };
-}
-
-function buildNewsletterConfig(builder: NewsletterBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title,
-    description: builder.description,
-    placeholder: builder.placeholder,
-    buttonText: builder.buttonText,
-    privacyText: builder.privacyText || undefined,
-    privacyLink: builder.privacyLink || undefined,
-  };
-}
-
-function parseNewsletterBuilder(config: Record<string, unknown>): NewsletterBuilderState {
-  return {
-    title: toStringValue(config.title, DEFAULT_NEWSLETTER_BUILDER.title),
-    description: toStringValue(config.description, DEFAULT_NEWSLETTER_BUILDER.description),
-    placeholder: toStringValue(config.placeholder, DEFAULT_NEWSLETTER_BUILDER.placeholder),
-    buttonText: toStringValue(config.buttonText, DEFAULT_NEWSLETTER_BUILDER.buttonText),
-    privacyText: toStringValue(config.privacyText, DEFAULT_NEWSLETTER_BUILDER.privacyText),
-    privacyLink: toStringValue(config.privacyLink, DEFAULT_NEWSLETTER_BUILDER.privacyLink),
-  };
-}
-
-function buildCarouselConfig(builder: CarouselBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title || undefined,
-    height: builder.height,
-    defaultAutoplayDelayMs: builder.defaultAutoplayDelayMs,
-    pauseOnHover: builder.pauseOnHover,
-    showDots: builder.showDots,
-    showArrows: builder.showArrows,
-  };
-}
-
-function parseCarouselBuilder(config: Record<string, unknown>): CarouselBuilderState {
-  return {
-    title: toStringValue(config.title),
-    height: toStringValue(config.height, DEFAULT_CAROUSEL_BUILDER.height) as CarouselBuilderState["height"],
-    defaultAutoplayDelayMs: toNumberValue(config.defaultAutoplayDelayMs, DEFAULT_CAROUSEL_BUILDER.defaultAutoplayDelayMs),
-    pauseOnHover: toBooleanValue(config.pauseOnHover, DEFAULT_CAROUSEL_BUILDER.pauseOnHover),
-    showDots: toBooleanValue(config.showDots, DEFAULT_CAROUSEL_BUILDER.showDots),
-    showArrows: toBooleanValue(config.showArrows, DEFAULT_CAROUSEL_BUILDER.showArrows),
-  };
-}
-
-function buildCustomCardsConfig(builder: CustomCardsBuilderState): Record<string, unknown> {
-  return {
-    title: builder.title || undefined,
-    layout: builder.layout,
-    columns: builder.columns,
-    autoScroll: builder.autoScroll,
-    scrollIntervalMs: builder.scrollIntervalMs,
-    cards: builder.cards.map((card, index) => ({
-      id: card.id || `card-${index + 1}`,
-      image: card.image || undefined,
-      imageAlt: card.imageAlt || undefined,
-      eyebrow: card.eyebrow || undefined,
-      title: card.title || undefined,
-      body: card.body || undefined,
-      link: card.link || undefined,
-      backgroundColor: card.backgroundColor || undefined,
-      textColor: card.textColor || undefined,
-      borderRadius: card.borderRadius !== "none" ? card.borderRadius : undefined,
-      shadowLevel: card.shadowLevel !== "none" ? card.shadowLevel : undefined,
-    })),
-  };
-}
-
-function parseCustomCardsBuilder(config: Record<string, unknown>): CustomCardsBuilderState {
-  const cardsRaw = Array.isArray(config.cards) ? config.cards : [];
-  const validBorderRadii: CustomCardsCardBuilderEntry["borderRadius"][] = ["none", "sm", "md", "lg", "xl", "full"];
-  const validShadows: CustomCardsCardBuilderEntry["shadowLevel"][] = ["none", "sm", "md", "lg"];
-  const cols = Number(config.columns);
-  return {
-    title: toStringValue(config.title),
-    layout: toStringValue(config.layout, DEFAULT_CUSTOM_CARDS_BUILDER.layout) as CustomCardsBuilderState["layout"],
-    columns: ([1, 2, 3, 4].includes(cols) ? cols : DEFAULT_CUSTOM_CARDS_BUILDER.columns) as CustomCardsBuilderState["columns"],
-    autoScroll: toBooleanValue(config.autoScroll, DEFAULT_CUSTOM_CARDS_BUILDER.autoScroll),
-    scrollIntervalMs: toNumberValue(config.scrollIntervalMs, DEFAULT_CUSTOM_CARDS_BUILDER.scrollIntervalMs),
-    cards: cardsRaw.map((item, index) => {
-      const c = (item ?? {}) as Record<string, unknown>;
-      const br = toStringValue(c.borderRadius, "none");
-      const sh = toStringValue(c.shadowLevel, "none");
-      return {
-        id: toStringValue(c.id, `card-${index + 1}`),
-        image: toStringValue(c.image),
-        imageAlt: toStringValue(c.imageAlt),
-        eyebrow: toStringValue(c.eyebrow),
-        title: toStringValue(c.title),
-        body: toStringValue(c.body),
-        link: toStringValue(c.link),
-        backgroundColor: toStringValue(c.backgroundColor),
-        textColor: toStringValue(c.textColor),
-        borderRadius: (validBorderRadii.includes(br as CustomCardsCardBuilderEntry["borderRadius"]) ? br : "none") as CustomCardsCardBuilderEntry["borderRadius"],
-        shadowLevel: (validShadows.includes(sh as CustomCardsCardBuilderEntry["shadowLevel"]) ? sh : "none") as CustomCardsCardBuilderEntry["shadowLevel"],
-      };
-    }),
-  };
-}
-
-function buildGoogleReviewsConfig(builder: GoogleReviewsBuilderState): Record<string, unknown> {
-  return {
-    placeId: builder.placeId,
-    maxReviews: builder.maxReviews,
-    minRating: builder.minRating || undefined,
-    layout: builder.layout,
-    showRating: builder.showRating,
-    showDate: builder.showDate,
-    linkToGoogleMaps: builder.linkToGoogleMaps,
-    googleMapsUrl: builder.googleMapsUrl || undefined,
-  };
-}
-
-function parseGoogleReviewsBuilder(config: Record<string, unknown>): GoogleReviewsBuilderState {
-  return {
-    placeId: toStringValue(config.placeId),
-    maxReviews: toNumberValue(config.maxReviews, DEFAULT_GOOGLE_REVIEWS_BUILDER.maxReviews),
-    minRating: toNumberValue(config.minRating, DEFAULT_GOOGLE_REVIEWS_BUILDER.minRating),
-    layout: toStringValue(config.layout, DEFAULT_GOOGLE_REVIEWS_BUILDER.layout) as GoogleReviewsBuilderState["layout"],
-    showRating: toBooleanValue(config.showRating, DEFAULT_GOOGLE_REVIEWS_BUILDER.showRating),
-    showDate: toBooleanValue(config.showDate, DEFAULT_GOOGLE_REVIEWS_BUILDER.showDate),
-    linkToGoogleMaps: toBooleanValue(config.linkToGoogleMaps, DEFAULT_GOOGLE_REVIEWS_BUILDER.linkToGoogleMaps),
-    googleMapsUrl: toStringValue(config.googleMapsUrl),
-  };
 }
 
 export function AdminSectionsView({ children }: AdminSectionsViewProps) {
@@ -1315,6 +149,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [preOrdersBuilder, setPreOrdersBuilder] = React.useState<PreOrdersBuilderState>(DEFAULT_PRE_ORDERS_BUILDER);
   const [storesBuilder, setStoresBuilder] = React.useState<StoresBuilderState>(DEFAULT_STORES_BUILDER);
   const [eventsBuilder, setEventsBuilder] = React.useState<EventsBuilderState>(DEFAULT_EVENTS_BUILDER);
+  const [socialFeedBuilder, setSocialFeedBuilder] = React.useState<SocialFeedBuilderState>(DEFAULT_SOCIAL_FEED_BUILDER);
   const [welcomeBuilder, setWelcomeBuilder] = React.useState<WelcomeBuilderState>(DEFAULT_WELCOME_BUILDER);
   const [trustIndicatorsBuilder, setTrustIndicatorsBuilder] = React.useState<TrustIndicatorsBuilderState>(DEFAULT_TRUST_INDICATORS_BUILDER);
   const [categoriesBuilder, setCategoriesBuilder] = React.useState<CategoriesBuilderState>(DEFAULT_CATEGORIES_BUILDER);
@@ -1369,67 +204,30 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   }, [categoriesQuery.data?.items]);
 
   const typedConfig = React.useMemo(() => {
-    if (sectionType === "products") {
-      return buildProductsConfig(productsBuilder);
+    switch (sectionType) {
+      case "products": return buildProductsConfig(productsBuilder);
+      case "auctions": return buildAuctionsConfig(auctionsBuilder);
+      case "stats": return buildStatsConfig(statsBuilder);
+      case "pre-orders": return buildPreOrdersConfig(preOrdersBuilder);
+      case "stores": return buildStoresConfig(storesBuilder);
+      case "events": return buildEventsConfig(eventsBuilder);
+      case "social-feed": return buildSocialFeedConfig(socialFeedBuilder);
+      case "welcome": return buildWelcomeConfig(welcomeBuilder);
+      case "trust-indicators": return buildTrustIndicatorsConfig(trustIndicatorsBuilder);
+      case "categories": return buildCategoriesConfig(categoriesBuilder);
+      case "brands": return buildBrandsConfig(brandsBuilder);
+      case "banner": return buildBannerConfig(bannerBuilder);
+      case "features": return buildFeaturesConfig(featuresBuilder);
+      case "reviews": return buildReviewsConfig(reviewsBuilder);
+      case "whatsapp-community": return buildWhatsAppConfig(whatsappBuilder);
+      case "faq": return buildFAQConfig(faqBuilder);
+      case "blog-articles": return buildBlogConfig(blogBuilder);
+      case "newsletter": return buildNewsletterConfig(newsletterBuilder);
+      case "carousel": return buildCarouselConfig(carouselBuilder);
+      case "custom-cards": return buildCustomCardsConfig(customCardsBuilder);
+      case "google-reviews": return buildGoogleReviewsConfig(googleReviewsBuilder);
+      default: return null;
     }
-    if (sectionType === "auctions") {
-      return buildAuctionsConfig(auctionsBuilder);
-    }
-    if (sectionType === "stats") {
-      return buildStatsConfig(statsBuilder);
-    }
-    if (sectionType === "pre-orders") {
-      return buildPreOrdersConfig(preOrdersBuilder);
-    }
-    if (sectionType === "stores") {
-      return buildStoresConfig(storesBuilder);
-    }
-    if (sectionType === "events") {
-      return buildEventsConfig(eventsBuilder);
-    }
-    if (sectionType === "welcome") {
-      return buildWelcomeConfig(welcomeBuilder);
-    }
-    if (sectionType === "trust-indicators") {
-      return buildTrustIndicatorsConfig(trustIndicatorsBuilder);
-    }
-    if (sectionType === "categories") {
-      return buildCategoriesConfig(categoriesBuilder);
-    }
-    if (sectionType === "brands") {
-      return buildBrandsConfig(brandsBuilder);
-    }
-    if (sectionType === "banner") {
-      return buildBannerConfig(bannerBuilder);
-    }
-    if (sectionType === "features") {
-      return buildFeaturesConfig(featuresBuilder);
-    }
-    if (sectionType === "reviews") {
-      return buildReviewsConfig(reviewsBuilder);
-    }
-    if (sectionType === "whatsapp-community") {
-      return buildWhatsAppConfig(whatsappBuilder);
-    }
-    if (sectionType === "faq") {
-      return buildFAQConfig(faqBuilder);
-    }
-    if (sectionType === "blog-articles") {
-      return buildBlogConfig(blogBuilder);
-    }
-    if (sectionType === "newsletter") {
-      return buildNewsletterConfig(newsletterBuilder);
-    }
-    if (sectionType === "carousel") {
-      return buildCarouselConfig(carouselBuilder);
-    }
-    if (sectionType === "custom-cards") {
-      return buildCustomCardsConfig(customCardsBuilder);
-    }
-    if (sectionType === "google-reviews") {
-      return buildGoogleReviewsConfig(googleReviewsBuilder);
-    }
-    return null;
   }, [
     sectionType,
     productsBuilder,
@@ -1438,6 +236,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     preOrdersBuilder,
     storesBuilder,
     eventsBuilder,
+    socialFeedBuilder,
     welcomeBuilder,
     trustIndicatorsBuilder,
     categoriesBuilder,
@@ -1566,65 +365,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     const selectedConfig = (selected.config ?? {}) as unknown as Record<string, unknown>;
     setConfigJson(JSON.stringify(selectedConfig, null, 2));
 
-    if (selected.type === "products") {
-      setProductsBuilder(parseProductsBuilder(selectedConfig));
-    }
-    if (selected.type === "auctions") {
-      setAuctionsBuilder(parseAuctionsBuilder(selectedConfig));
-    }
-    if (selected.type === "stats") {
-      setStatsBuilder(parseStatsBuilder(selectedConfig));
-    }
-    if (selected.type === "pre-orders") {
-      setPreOrdersBuilder(parsePreOrdersBuilder(selectedConfig));
-    }
-    if (selected.type === "stores") {
-      setStoresBuilder(parseStoresBuilder(selectedConfig));
-    }
-    if (selected.type === "events") {
-      setEventsBuilder(parseEventsBuilder(selectedConfig));
-    }
-    if (selected.type === "welcome") {
-      setWelcomeBuilder(parseWelcomeBuilder(selectedConfig));
-    }
-    if (selected.type === "trust-indicators") {
-      setTrustIndicatorsBuilder(parseTrustIndicatorsBuilder(selectedConfig));
-    }
-    if (selected.type === "categories") {
-      setCategoriesBuilder(parseCategoriesBuilder(selectedConfig));
-    }
-    if (selected.type === "brands") {
-      setBrandsBuilder(parseBrandsBuilder(selectedConfig));
-    }
-    if (selected.type === "banner") {
-      setBannerBuilder(parseBannerBuilder(selectedConfig));
-    }
-    if (selected.type === "features") {
-      setFeaturesBuilder(parseFeaturesBuilder(selectedConfig));
-    }
-    if (selected.type === "reviews") {
-      setReviewsBuilder(parseReviewsBuilder(selectedConfig));
-    }
-    if (selected.type === "whatsapp-community") {
-      setWhatsappBuilder(parseWhatsAppBuilder(selectedConfig));
-    }
-    if (selected.type === "faq") {
-      setFaqBuilder(parseFAQBuilder(selectedConfig));
-    }
-    if (selected.type === "blog-articles") {
-      setBlogBuilder(parseBlogBuilder(selectedConfig));
-    }
-    if (selected.type === "newsletter") {
-      setNewsletterBuilder(parseNewsletterBuilder(selectedConfig));
-    }
-    if (selected.type === "carousel") {
-      setCarouselBuilder(parseCarouselBuilder(selectedConfig));
-    }
-    if (selected.type === "custom-cards") {
-      setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig));
-    }
-    if (selected.type === "google-reviews") {
-      setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig));
+    switch (selected.type) {
+      case "products": setProductsBuilder(parseProductsBuilder(selectedConfig)); break;
+      case "auctions": setAuctionsBuilder(parseAuctionsBuilder(selectedConfig)); break;
+      case "stats": setStatsBuilder(parseStatsBuilder(selectedConfig)); break;
+      case "pre-orders": setPreOrdersBuilder(parsePreOrdersBuilder(selectedConfig)); break;
+      case "stores": setStoresBuilder(parseStoresBuilder(selectedConfig)); break;
+      case "events": setEventsBuilder(parseEventsBuilder(selectedConfig)); break;
+      case "social-feed": setSocialFeedBuilder(parseSocialFeedBuilder(selectedConfig)); break;
+      case "welcome": setWelcomeBuilder(parseWelcomeBuilder(selectedConfig)); break;
+      case "trust-indicators": setTrustIndicatorsBuilder(parseTrustIndicatorsBuilder(selectedConfig)); break;
+      case "categories": setCategoriesBuilder(parseCategoriesBuilder(selectedConfig)); break;
+      case "brands": setBrandsBuilder(parseBrandsBuilder(selectedConfig)); break;
+      case "banner": setBannerBuilder(parseBannerBuilder(selectedConfig)); break;
+      case "features": setFeaturesBuilder(parseFeaturesBuilder(selectedConfig)); break;
+      case "reviews": setReviewsBuilder(parseReviewsBuilder(selectedConfig)); break;
+      case "whatsapp-community": setWhatsappBuilder(parseWhatsAppBuilder(selectedConfig)); break;
+      case "faq": setFaqBuilder(parseFAQBuilder(selectedConfig)); break;
+      case "blog-articles": setBlogBuilder(parseBlogBuilder(selectedConfig)); break;
+      case "newsletter": setNewsletterBuilder(parseNewsletterBuilder(selectedConfig)); break;
+      case "carousel": setCarouselBuilder(parseCarouselBuilder(selectedConfig)); break;
+      case "custom-cards": setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig)); break;
+      case "google-reviews": setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig)); break;
     }
   }, [mode, sections, selectedSectionId]);
 
@@ -1633,65 +395,28 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       return;
     }
 
-    if (sectionType === "products") {
-      setProductsBuilder(DEFAULT_PRODUCTS_BUILDER);
-    }
-    if (sectionType === "auctions") {
-      setAuctionsBuilder(DEFAULT_AUCTIONS_BUILDER);
-    }
-    if (sectionType === "stats") {
-      setStatsBuilder(DEFAULT_STATS_BUILDER);
-    }
-    if (sectionType === "pre-orders") {
-      setPreOrdersBuilder(DEFAULT_PRE_ORDERS_BUILDER);
-    }
-    if (sectionType === "stores") {
-      setStoresBuilder(DEFAULT_STORES_BUILDER);
-    }
-    if (sectionType === "events") {
-      setEventsBuilder(DEFAULT_EVENTS_BUILDER);
-    }
-    if (sectionType === "welcome") {
-      setWelcomeBuilder(DEFAULT_WELCOME_BUILDER);
-    }
-    if (sectionType === "trust-indicators") {
-      setTrustIndicatorsBuilder(DEFAULT_TRUST_INDICATORS_BUILDER);
-    }
-    if (sectionType === "categories") {
-      setCategoriesBuilder(DEFAULT_CATEGORIES_BUILDER);
-    }
-    if (sectionType === "brands") {
-      setBrandsBuilder(DEFAULT_BRANDS_BUILDER);
-    }
-    if (sectionType === "banner") {
-      setBannerBuilder(DEFAULT_BANNER_BUILDER);
-    }
-    if (sectionType === "features") {
-      setFeaturesBuilder(DEFAULT_FEATURES_BUILDER);
-    }
-    if (sectionType === "reviews") {
-      setReviewsBuilder(DEFAULT_REVIEWS_BUILDER);
-    }
-    if (sectionType === "whatsapp-community") {
-      setWhatsappBuilder(DEFAULT_WHATSAPP_BUILDER);
-    }
-    if (sectionType === "faq") {
-      setFaqBuilder(DEFAULT_FAQ_BUILDER);
-    }
-    if (sectionType === "blog-articles") {
-      setBlogBuilder(DEFAULT_BLOG_BUILDER);
-    }
-    if (sectionType === "newsletter") {
-      setNewsletterBuilder(DEFAULT_NEWSLETTER_BUILDER);
-    }
-    if (sectionType === "carousel") {
-      setCarouselBuilder(DEFAULT_CAROUSEL_BUILDER);
-    }
-    if (sectionType === "custom-cards") {
-      setCustomCardsBuilder(DEFAULT_CUSTOM_CARDS_BUILDER);
-    }
-    if (sectionType === "google-reviews") {
-      setGoogleReviewsBuilder(DEFAULT_GOOGLE_REVIEWS_BUILDER);
+    switch (sectionType) {
+      case "products": setProductsBuilder(DEFAULT_PRODUCTS_BUILDER); break;
+      case "auctions": setAuctionsBuilder(DEFAULT_AUCTIONS_BUILDER); break;
+      case "stats": setStatsBuilder(DEFAULT_STATS_BUILDER); break;
+      case "pre-orders": setPreOrdersBuilder(DEFAULT_PRE_ORDERS_BUILDER); break;
+      case "stores": setStoresBuilder(DEFAULT_STORES_BUILDER); break;
+      case "events": setEventsBuilder(DEFAULT_EVENTS_BUILDER); break;
+      case "social-feed": setSocialFeedBuilder(DEFAULT_SOCIAL_FEED_BUILDER); break;
+      case "welcome": setWelcomeBuilder(DEFAULT_WELCOME_BUILDER); break;
+      case "trust-indicators": setTrustIndicatorsBuilder(DEFAULT_TRUST_INDICATORS_BUILDER); break;
+      case "categories": setCategoriesBuilder(DEFAULT_CATEGORIES_BUILDER); break;
+      case "brands": setBrandsBuilder(DEFAULT_BRANDS_BUILDER); break;
+      case "banner": setBannerBuilder(DEFAULT_BANNER_BUILDER); break;
+      case "features": setFeaturesBuilder(DEFAULT_FEATURES_BUILDER); break;
+      case "reviews": setReviewsBuilder(DEFAULT_REVIEWS_BUILDER); break;
+      case "whatsapp-community": setWhatsappBuilder(DEFAULT_WHATSAPP_BUILDER); break;
+      case "faq": setFaqBuilder(DEFAULT_FAQ_BUILDER); break;
+      case "blog-articles": setBlogBuilder(DEFAULT_BLOG_BUILDER); break;
+      case "newsletter": setNewsletterBuilder(DEFAULT_NEWSLETTER_BUILDER); break;
+      case "carousel": setCarouselBuilder(DEFAULT_CAROUSEL_BUILDER); break;
+      case "custom-cards": setCustomCardsBuilder(DEFAULT_CUSTOM_CARDS_BUILDER); break;
+      case "google-reviews": setGoogleReviewsBuilder(DEFAULT_GOOGLE_REVIEWS_BUILDER); break;
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -3274,67 +1999,29 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   }
 
   function renderTypedBuilder(): React.ReactNode {
-    if (sectionType === "products") {
-      return renderProductsBuilder();
+    switch (sectionType) {
+      case "products": return renderProductsBuilder();
+      case "auctions": return renderAuctionsBuilder();
+      case "stats": return renderStatsBuilder();
+      case "pre-orders": return renderPreOrdersBuilder();
+      case "stores": return renderStoresBuilder();
+      case "events": return renderEventsBuilder();
+      case "welcome": return renderWelcomeBuilder();
+      case "trust-indicators": return renderTrustIndicatorsBuilder();
+      case "categories": return renderCategoriesBuilder();
+      case "brands": return renderBrandsBuilder();
+      case "banner": return renderBannerBuilder();
+      case "features": return renderFeaturesBuilder();
+      case "reviews": return renderReviewsBuilder();
+      case "whatsapp-community": return renderWhatsAppBuilder();
+      case "faq": return renderFAQBuilder();
+      case "blog-articles": return renderBlogBuilder();
+      case "newsletter": return renderNewsletterBuilder();
+      case "carousel": return renderCarouselBuilder();
+      case "custom-cards": return renderCustomCardsBuilder();
+      case "google-reviews": return renderGoogleReviewsBuilder();
+      default: return null;
     }
-    if (sectionType === "auctions") {
-      return renderAuctionsBuilder();
-    }
-    if (sectionType === "stats") {
-      return renderStatsBuilder();
-    }
-    if (sectionType === "pre-orders") {
-      return renderPreOrdersBuilder();
-    }
-    if (sectionType === "stores") {
-      return renderStoresBuilder();
-    }
-    if (sectionType === "events") {
-      return renderEventsBuilder();
-    }
-    if (sectionType === "welcome") {
-      return renderWelcomeBuilder();
-    }
-    if (sectionType === "trust-indicators") {
-      return renderTrustIndicatorsBuilder();
-    }
-    if (sectionType === "categories") {
-      return renderCategoriesBuilder();
-    }
-    if (sectionType === "brands") {
-      return renderBrandsBuilder();
-    }
-    if (sectionType === "banner") {
-      return renderBannerBuilder();
-    }
-    if (sectionType === "features") {
-      return renderFeaturesBuilder();
-    }
-    if (sectionType === "reviews") {
-      return renderReviewsBuilder();
-    }
-    if (sectionType === "whatsapp-community") {
-      return renderWhatsAppBuilder();
-    }
-    if (sectionType === "faq") {
-      return renderFAQBuilder();
-    }
-    if (sectionType === "blog-articles") {
-      return renderBlogBuilder();
-    }
-    if (sectionType === "newsletter") {
-      return renderNewsletterBuilder();
-    }
-    if (sectionType === "carousel") {
-      return renderCarouselBuilder();
-    }
-    if (sectionType === "custom-cards") {
-      return renderCustomCardsBuilder();
-    }
-    if (sectionType === "google-reviews") {
-      return renderGoogleReviewsBuilder();
-    }
-    return null;
   }
 
   // If children exist, render passthrough mode (detail view)

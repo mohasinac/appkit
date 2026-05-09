@@ -21,7 +21,7 @@ const emptyMetrics = {
   lastUpdated: daysAgo(1),
 };
 
-export const categoriesSeedData: Partial<CategoryDocument>[] = [
+const rawCategories: Partial<CategoryDocument>[] = [
   // ──────────────────────────────────────────────────────────────────────────
   // ROOT 1: Action Figures & Statues (tier 0)
   // ──────────────────────────────────────────────────────────────────────────
@@ -114,7 +114,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-priya-singh",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-action-figures", name: "Action Figures & Statues", tier: 0 }],
@@ -303,7 +303,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-aryan-kapoor",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-trading-cards", name: "Trading Cards", tier: 0 }],
@@ -350,7 +350,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-nisha-reddy",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-trading-cards", name: "Trading Cards", tier: 0 }],
@@ -504,7 +504,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-vikram-mehta",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-diecast-vehicles", name: "Diecast & Vehicles", tier: 0 }],
@@ -746,7 +746,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-rohit-joshi",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-spinning-tops", name: "Spinning Tops", tier: 0 }],
@@ -900,7 +900,7 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     },
     isActive: true,
     isSearchable: true,
-    createdBy: "user-admin-letitrip",
+    createdBy: "user-amit-sharma",
     createdAt: daysAgo(400),
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-model-kits", name: "Model Kits & Gunpla", tier: 0 }],
@@ -1150,3 +1150,24 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
     ancestors: [{ id: "category-vintage-rare", name: "Vintage & Rare", tier: 0 }],
   },
 ];
+
+const STORE_CREATOR: Record<
+  string,
+  { createdByType: "store"; createdByStoreId: string }
+> = {
+  "user-aryan-kapoor":  { createdByType: "store", createdByStoreId: "store-pokemon-palace" },
+  "user-nisha-reddy":   { createdByType: "store", createdByStoreId: "store-cardgame-hub" },
+  "user-vikram-mehta":  { createdByType: "store", createdByStoreId: "store-diecast-depot" },
+  "user-rohit-joshi":   { createdByType: "store", createdByStoreId: "store-beyblade-arena" },
+  "user-amit-sharma":   { createdByType: "store", createdByStoreId: "store-gundam-galaxy" },
+  "user-priya-singh":   { createdByType: "store", createdByStoreId: "store-tokyo-toys-india" },
+};
+
+export const categoriesSeedData: Partial<CategoryDocument>[] = rawCategories.map(
+  (c) => ({
+    ...c,
+    ...(c.createdBy && STORE_CREATOR[c.createdBy]
+      ? STORE_CREATOR[c.createdBy]
+      : { createdByType: "admin" as const }),
+  }),
+);

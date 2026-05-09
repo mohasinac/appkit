@@ -50,7 +50,7 @@ export interface ReviewListResponse {
 export interface ReviewListParams {
   productId?: string;
   userId?: string;
-  sellerId?: string;
+  storeId?: string;
   status?: ReviewStatus;
   rating?: number | string;
   featured?: boolean;

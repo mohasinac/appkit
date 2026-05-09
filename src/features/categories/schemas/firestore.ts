@@ -86,6 +86,10 @@ export interface CategoryDocument {
   showOnHomepage?: boolean;
 
   createdBy: string;
+  /** Whether this category was created by admin or a store owner. */
+  createdByType?: "admin" | "store";
+  /** The storeId of the store that requested this category (only set when createdByType === "store"). */
+  createdByStoreId?: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -107,6 +111,8 @@ export const CATEGORIES_INDEXED_FIELDS = [
   "isSearchable",
   "showOnHomepage",
   "createdBy",
+  "createdByType",
+  "createdByStoreId",
   "createdAt",
 ] as const;
 

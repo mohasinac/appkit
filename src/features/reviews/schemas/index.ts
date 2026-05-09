@@ -37,7 +37,8 @@ export const reviewSchema = z.object({
   id: z.string(),
   productId: z.string(),
   productTitle: z.string().optional(),
-  sellerId: z.string().optional(),
+  storeSlug: z.string().optional(),
+  storeName: z.string().optional(),
   userId: z.string(),
   userName: z.string(),
   userAvatar: z.string().optional(),
@@ -65,7 +66,7 @@ export const reviewSchema = z.object({
 export const reviewListParamsSchema = z.object({
   productId: z.string().optional(),
   userId: z.string().optional(),
-  sellerId: z.string().optional(),
+  storeId: z.string().optional(),
   status: reviewStatusSchema.optional(),
   rating: z.coerce.number().optional(),
   featured: z.coerce.boolean().optional(),

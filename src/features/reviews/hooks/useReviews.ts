@@ -30,7 +30,7 @@ export function useReviews(
   if (params.minVotes !== undefined) sp.set("minVotes", String(params.minVotes));
   if (params.maxVotes !== undefined) sp.set("maxVotes", String(params.maxVotes));
   // General listing mode (no productId)
-  if (!params.productId && !params.userId && !params.sellerId) {
+  if (!params.productId && !params.userId && !params.storeId) {
     sp.set("latest", "true");
   }
   const qs = sp.toString();
