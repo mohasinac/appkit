@@ -1,7 +1,21 @@
 import React from "react";
 import Link from "next/link";
-import { Shield, AlertTriangle, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
+import {
+  Container,
+  Heading,
+  Main,
+  Section,
+  Text,
+  Grid,
+  Stack,
+  Row,
+  Card,
+  Badge,
+  Alert,
+  EmptyState,
+  Input,
+} from "../../../ui";
 import { listVerifiedScammers } from "../actions/scam-actions";
 import type { ScammerDocument } from "../schemas/firestore";
 import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
@@ -26,81 +40,61 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
   const aliases = scammer.displayNames.slice(1);
 
   return (
-    <Link
-      href={href}
-      className="group flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-red-300 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900 dark:hover:border-red-600"
-    >
-      {/* Header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex min-w-0 flex-col gap-1">
-          <span className="truncate text-base font-semibold text-zinc-900 dark:text-zinc-50">
-            {name}
-          </span>
-          {aliases.length > 0 && (
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
-              Also known as: {aliases.join(", ")}
-            </span>
-          )}
-        </div>
-        <span className="shrink-0 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/40 dark:text-red-300">
-          Verified
-        </span>
-      </div>
+    <Link href={href} className="group block">
+      <Card variant="outlined" hover padding="md">
+        <Stack gap="sm">
+          <Row justify="between" gap="sm" align="start">
+            <Stack gap="xs" className="min-w-0">
+              <Text className="truncate font-semibold">{name}</Text>
+              {aliases.length > 0 && (
+                <Text variant="secondary" className="text-xs">
+                  Also known as: {aliases.join(", ")}
+                </Text>
+              )}
+            </Stack>
+            <Badge variant="danger">Verified</Badge>
+          </Row>
 
-      {/* Scam type badge */}
-      <div className="flex flex-wrap gap-1.5">
-        <span className="rounded bg-amber-50 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
-          {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
-        </span>
-        <span className="rounded bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-          {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
-        </span>
-      </div>
+          <Row gap="xs" wrap>
+            <Badge variant="warning">
+              {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
+            </Badge>
+            <Badge variant="default">
+              {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
+            </Badge>
+          </Row>
 
-      {/* Contact identifiers — SEO plaintext */}
-      <div className="flex flex-col gap-1 text-xs text-zinc-500 dark:text-zinc-400">
-        {scammer.phones.slice(0, 2).map((p) => (
-          <span key={p} className="flex items-center gap-1">
-            <Phone className="h-3 w-3 shrink-0" /> {p}
-          </span>
-        ))}
-        {scammer.upiIds.slice(0, 1).map((u) => (
-          <span key={u} className="flex items-center gap-1">
-            <Wallet className="h-3 w-3 shrink-0" /> {u}
-          </span>
-        ))}
-        {scammer.emails.slice(0, 1).map((e) => (
-          <span key={e} className="flex items-center gap-1">
-            <Mail className="h-3 w-3 shrink-0" /> {e}
-          </span>
-        ))}
-      </div>
+          {/* Contact identifiers rendered as plaintext for SEO */}
+          <Stack gap="xs">
+            {scammer.phones.slice(0, 2).map((p) => (
+              <Text key={p} variant="secondary" className="flex items-center gap-1 text-xs">
+                <Phone className="h-3 w-3 shrink-0" /> {p}
+              </Text>
+            ))}
+            {scammer.upiIds.slice(0, 1).map((u) => (
+              <Text key={u} variant="secondary" className="flex items-center gap-1 text-xs">
+                <Wallet className="h-3 w-3 shrink-0" /> {u}
+              </Text>
+            ))}
+            {scammer.emails.slice(0, 1).map((e) => (
+              <Text key={e} variant="secondary" className="flex items-center gap-1 text-xs">
+                <Mail className="h-3 w-3 shrink-0" /> {e}
+              </Text>
+            ))}
+          </Stack>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between text-xs text-zinc-400">
-        <span>
-          {scammer.incidentCount > 0 ? `${scammer.incidentCount + 1} victims reported` : "1 victim reported"}
-          {scammer.amountLost ? ` · ${formatPaise(scammer.amountLost)} lost` : ""}
-        </span>
-        <ChevronRight className="h-4 w-4 text-zinc-300 transition group-hover:text-red-500 dark:text-zinc-600" />
-      </div>
+          <Row justify="between" gap="sm">
+            <Text variant="secondary" className="text-xs">
+              {scammer.incidentCount > 0
+                ? `${scammer.incidentCount + 1} victims reported`
+                : "1 victim reported"}
+              {scammer.amountLost ? ` · ${formatPaise(scammer.amountLost)} lost` : ""}
+            </Text>
+            <ChevronRight className="h-4 w-4 shrink-0 text-zinc-300 transition group-hover:text-red-500 dark:text-zinc-600" />
+          </Row>
+        </Stack>
+      </Card>
     </Link>
-  );
-}
-
-function EmptyState({ query }: { query: string }) {
-  return (
-    <div className="flex flex-col items-center gap-4 py-20 text-center">
-      <Shield className="h-12 w-12 text-zinc-300 dark:text-zinc-600" />
-      <Heading level={3} className="text-lg font-medium text-zinc-600 dark:text-zinc-400">
-        {query ? "No verified scammers matched your search" : "No verified scammers in the registry yet"}
-      </Heading>
-      <Text className="max-w-sm text-sm text-zinc-400 dark:text-zinc-500">
-        {query
-          ? "Try a different name, phone number, or UPI ID."
-          : "Verified reports will appear here once reviewed by our moderation team."}
-      </Text>
-    </div>
   );
 }
 
@@ -123,85 +117,96 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
 
   return (
     <Main>
-      {/* Warning banner */}
-      <div className="border-b border-amber-200 bg-amber-50 dark:border-amber-800/50 dark:bg-amber-950/30">
-        <Container size="xl" className="flex items-center gap-3 py-3 text-sm">
-          <AlertTriangle className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
-          <Text className="text-amber-700 dark:text-amber-300">
-            All profiles on this page have been verified by our moderation team.
-            If you recognise a scammer not listed here,{" "}
+      {/* Site-wide notice: all profiles are moderation-verified */}
+      <div className="border-b appkit-alert--warning rounded-none">
+        <Container size="xl" className="py-2.5">
+          <Alert variant="warning" compact>
+            All profiles on this page have been verified by our moderation team. If you recognise a
+            scammer not listed here,{" "}
             <Link href={reportHref} className="font-medium underline hover:no-underline">
               report them
             </Link>
             .
-          </Text>
+          </Alert>
         </Container>
       </div>
 
       <Section className="py-10">
         <Container size="xl">
-          {/* Page header */}
-          <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <Heading level={1} className="text-3xl font-semibold text-zinc-900 dark:text-zinc-50">
-                Scam Registry
-              </Heading>
-              <Text className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                Verified scammers active in India's collectibles community. Search by name, phone, or UPI.
-              </Text>
-            </div>
-            <Link
-              href={reportHref}
-              className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-600"
-            >
-              <Shield className="h-4 w-4" />
-              Report a Scammer
-            </Link>
-          </div>
+          <Stack gap="xl">
+            {/* Page header */}
+            <Row justify="between" gap="md" align="end" className="flex-wrap">
+              <Stack gap="xs">
+                <Heading level={1} className="text-3xl font-semibold">
+                  Scam Registry
+                </Heading>
+                <Text variant="secondary" className="text-sm">
+                  Verified scammers active in India&apos;s collectibles community. Search by name,
+                  phone, or UPI.
+                </Text>
+              </Stack>
+              <Link
+                href={reportHref}
+                className="appkit-button appkit-button--danger appkit-button--md shrink-0"
+              >
+                <Shield className="h-4 w-4" />
+                Report a Scammer
+              </Link>
+            </Row>
 
-          {/* Search form */}
-          <form method="GET" className="mb-6">
-            <div className="relative max-w-xl">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-              <input
+            {/* Search form */}
+            <form method="GET" className="max-w-xl">
+              <Input
                 type="search"
                 name="q"
                 defaultValue={query}
                 placeholder="Search name, phone number, UPI ID, or email…"
-                className="w-full rounded-lg border border-zinc-300 bg-white py-2 pl-9 pr-4 text-sm outline-none placeholder:text-zinc-400 focus:border-red-400 focus:ring-2 focus:ring-red-100 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-red-600 dark:focus:ring-red-900/30"
+                icon={<Search className="h-4 w-4" />}
               />
-            </div>
-          </form>
+            </form>
 
-          {/* Stats summary */}
-          {result.total > 0 && (
-            <Text className="mb-6 text-sm text-zinc-400 dark:text-zinc-500">
-              {result.total} verified profile{result.total !== 1 ? "s" : ""}
-            </Text>
-          )}
+            {/* Results */}
+            {result.items.length === 0 ? (
+              <EmptyState
+                icon={<Shield className="h-12 w-12" />}
+                title={
+                  query
+                    ? "No verified scammers matched your search"
+                    : "No verified scammers in the registry yet"
+                }
+                description={
+                  query
+                    ? "Try a different name, phone number, or UPI ID."
+                    : "Verified reports will appear here once reviewed by our moderation team."
+                }
+              />
+            ) : (
+              <Stack gap="md">
+                {result.total > 0 && (
+                  <Text variant="secondary" className="text-sm">
+                    {result.total} verified profile{result.total !== 1 ? "s" : ""}
+                  </Text>
+                )}
+                <Grid cols={3} gap="md">
+                  {result.items.map((scammer) => (
+                    <ScammerCard key={scammer.id} scammer={scammer} />
+                  ))}
+                </Grid>
+              </Stack>
+            )}
 
-          {/* Grid */}
-          {result.items.length === 0 ? (
-            <EmptyState query={query} />
-          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {result.items.map((scammer) => (
-                <ScammerCard key={scammer.id} scammer={scammer} />
-              ))}
-            </div>
-          )}
-
-          {/* Pagination */}
-          {result.hasMore && (
-            <div className="mt-10 flex justify-center">
-              <Link
-                href={`/scams?page=${result.page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
-                className="rounded-lg border border-zinc-300 bg-white px-6 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
-              >
-                Load more
-              </Link>
-            </div>
-          )}
+            {/* Pagination */}
+            {result.hasMore && (
+              <Row justify="center">
+                <Link
+                  href={`/scams?page=${result.page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
+                  className="appkit-button appkit-button--outline appkit-button--md"
+                >
+                  Load more
+                </Link>
+              </Row>
+            )}
+          </Stack>
         </Container>
       </Section>
     </Main>

@@ -12,7 +12,22 @@ import {
   Calendar,
   ExternalLink,
 } from "lucide-react";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import {
+  Container,
+  Heading,
+  Main,
+  Section,
+  Text,
+  Grid,
+  Stack,
+  Row,
+  Card,
+  CardHeader,
+  CardBody,
+  Badge,
+  Alert,
+  Breadcrumb,
+} from "../../../ui";
 import type { ScammerDocument } from "../schemas/firestore";
 import {
   SCAM_PLATFORM_LABELS,
@@ -37,268 +52,328 @@ function formatPaise(paise: number | undefined): string {
   return `₹${(paise / 100).toLocaleString("en-IN")}`;
 }
 
-function IdentityChip({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) {
+function IdentityChip({
+  label,
+  value,
+  icon,
+}: {
+  label: string;
+  value: string;
+  icon: React.ReactNode;
+}) {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-800">
-      <span className="text-zinc-400 dark:text-zinc-500">{icon}</span>
-      <div className="min-w-0">
-        <p className="text-[11px] font-medium uppercase tracking-wide text-zinc-400 dark:text-zinc-500">{label}</p>
-        <p className="truncate text-sm font-medium text-zinc-800 dark:text-zinc-100">{value}</p>
-      </div>
-    </div>
+    <Card variant="outlined" padding="sm">
+      <Row gap="sm" align="center">
+        <span className="text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]">
+          {icon}
+        </span>
+        <Stack gap="none">
+          <Text className="text-[11px] font-medium uppercase tracking-wide" variant="secondary">
+            {label}
+          </Text>
+          <Text className="truncate text-sm font-medium">{value}</Text>
+        </Stack>
+      </Row>
+    </Card>
   );
+}
+
+function statusVariant(
+  status: string,
+): "danger" | "warning" | "default" | "inactive" {
+  if (status === "verified") return "danger";
+  if (status === "pending_review") return "warning";
+  return "inactive";
 }
 
 export interface ScamProfileViewProps {
   scammer: ScammerDocument;
-  /** When true, the Contest button links to the report page; when false shows login-required note. */
+  /** When true the contest/report buttons are direct links; otherwise show sign-in prompts. */
   isAuthenticated: boolean;
 }
 
 export function ScamProfileView({ scammer, isAuthenticated }: ScamProfileViewProps) {
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
   const registryHref = String(ROUTES.PUBLIC.SCAMS);
-
-  const statusColor: Record<string, string> = {
-    verified: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
-    pending_review: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
-    rejected: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
-    removed: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500",
-  };
-
   const contestLoginHref = `${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(`/scams/${scammer.id}`)}`;
 
   return (
     <Main>
-      {/* Breadcrumb */}
-      <div className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700/60 dark:bg-zinc-900/60">
-        <Container size="xl" className="flex items-center gap-2 py-3 text-xs text-zinc-500 dark:text-zinc-400">
-          <Link href="/" className="hover:text-zinc-700 dark:hover:text-zinc-200">Home</Link>
-          <span>/</span>
-          <Link href={registryHref} className="hover:text-zinc-700 dark:hover:text-zinc-200">Scam Registry</Link>
-          <span>/</span>
-          <span className="text-zinc-700 dark:text-zinc-200 truncate">{scammer.displayNames[0]}</span>
+      {/* Breadcrumb strip */}
+      <div className="border-b appkit-breadcrumb-strip">
+        <Container size="xl" className="py-3">
+          <Breadcrumb
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Scam Registry", href: registryHref },
+              { label: scammer.displayNames[0] ?? "Profile" },
+            ]}
+          />
         </Container>
       </div>
 
       <Section className="py-10">
         <Container size="xl">
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-
-            {/* ── Left column — main profile ──────────────────────────────────── */}
-            <div className="lg:col-span-2 flex flex-col gap-8">
-
+          <Grid cols="twoThird" gap="lg">
+            {/* ── Left column — main profile ───────────────────────────────── */}
+            <Stack gap="lg">
               {/* Header card */}
-              <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <div className="mb-4 flex items-start justify-between gap-3 flex-wrap">
-                  <div>
-                    <Heading level={1} className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                      {scammer.displayNames[0]}
-                    </Heading>
-                    {scammer.displayNames.length > 1 && (
-                      <Text className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                        Also known as: {scammer.displayNames.slice(1).join(", ")}
-                      </Text>
+              <Card variant="elevated" padding="lg">
+                <Stack gap="md">
+                  <Row justify="between" gap="md" align="start" className="flex-wrap">
+                    <Stack gap="xs">
+                      <Heading level={1} className="text-2xl font-bold">
+                        {scammer.displayNames[0]}
+                      </Heading>
+                      {scammer.displayNames.length > 1 && (
+                        <Text variant="secondary" className="text-sm">
+                          Also known as: {scammer.displayNames.slice(1).join(", ")}
+                        </Text>
+                      )}
+                    </Stack>
+                    <Badge variant={statusVariant(scammer.status)}>
+                      {SCAMMER_STATUS_LABELS[scammer.status] ?? scammer.status}
+                    </Badge>
+                  </Row>
+
+                  <Row gap="xs" wrap>
+                    <Badge variant="warning">
+                      {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
+                    </Badge>
+                    <Badge variant="default">
+                      via {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
+                    </Badge>
+                    {scammer.tags.includes("repeat_offender") && (
+                      <Badge variant="danger">Repeat Offender</Badge>
                     )}
-                  </div>
-                  <span className={`rounded-full px-3 py-1 text-sm font-medium ${statusColor[scammer.status] ?? "bg-zinc-100 text-zinc-600"}`}>
-                    {SCAMMER_STATUS_LABELS[scammer.status] ?? scammer.status}
-                  </span>
-                </div>
+                  </Row>
 
-                {/* Scam classification */}
-                <div className="mb-4 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 dark:border-amber-700/50 dark:bg-amber-900/20 dark:text-amber-300">
-                    {SCAM_TYPE_LABELS[scammer.scamType] ?? scammer.scamType}
-                  </span>
-                  <span className="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-medium text-zinc-600 dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                    via {SCAM_PLATFORM_LABELS[scammer.scamPlatform] ?? scammer.scamPlatform}
-                  </span>
-                  {scammer.tags.includes("repeat_offender") && (
-                    <span className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-600 dark:border-red-700/40 dark:bg-red-900/20 dark:text-red-300">
-                      Repeat Offender
-                    </span>
-                  )}
-                </div>
-
-                {/* Stats row */}
-                <div className="flex flex-wrap gap-4 text-sm text-zinc-500 dark:text-zinc-400">
-                  <span className="flex items-center gap-1.5"><Eye className="h-4 w-4" />{scammer.views} views</span>
-                  <span className="flex items-center gap-1.5"><Users className="h-4 w-4" />{scammer.incidentCount + 1} victim{scammer.incidentCount !== 0 ? "s" : ""} reported</span>
-                  <span className="flex items-center gap-1.5"><Calendar className="h-4 w-4" />Reported {formatDate(scammer.createdAt)}</span>
-                  {scammer.amountLost ? (
-                    <span className="font-medium text-red-600 dark:text-red-400">
-                      {formatPaise(scammer.amountLost)} lost (primary incident)
-                    </span>
-                  ) : null}
-                </div>
-              </div>
+                  <Row gap="md" wrap>
+                    <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+                      <Eye className="h-4 w-4" />
+                      {scammer.views} views
+                    </Text>
+                    <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+                      <Users className="h-4 w-4" />
+                      {scammer.incidentCount + 1} victim
+                      {scammer.incidentCount !== 0 ? "s" : ""} reported
+                    </Text>
+                    <Text variant="secondary" className="flex items-center gap-1.5 text-sm">
+                      <Calendar className="h-4 w-4" />
+                      Reported {formatDate(scammer.createdAt)}
+                    </Text>
+                    {scammer.amountLost ? (
+                      <Text className="text-sm font-medium text-[color:var(--appkit-color-danger,theme(colors.red.600))]">
+                        {formatPaise(scammer.amountLost)} lost (primary incident)
+                      </Text>
+                    ) : null}
+                  </Row>
+                </Stack>
+              </Card>
 
               {/* Contact identifiers — plaintext for SEO */}
-              {(scammer.phones.length > 0 || scammer.upiIds.length > 0 || scammer.emails.length > 0) && (
-                <div>
-                  <Heading level={2} className="mb-3 text-base font-semibold text-zinc-800 dark:text-zinc-200">
+              {(scammer.phones.length > 0 ||
+                scammer.upiIds.length > 0 ||
+                scammer.emails.length > 0) && (
+                <Stack gap="sm">
+                  <Heading level={2} className="text-base font-semibold">
                     Contact Identifiers
                   </Heading>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  <Grid cols={2} gap="sm">
                     {scammer.phones.map((p) => (
-                      <IdentityChip key={p} label="Phone" value={p} icon={<Phone className="h-4 w-4" />} />
+                      <IdentityChip
+                        key={p}
+                        label="Phone"
+                        value={p}
+                        icon={<Phone className="h-4 w-4" />}
+                      />
                     ))}
                     {scammer.upiIds.map((u) => (
-                      <IdentityChip key={u} label="UPI ID" value={u} icon={<Wallet className="h-4 w-4" />} />
+                      <IdentityChip
+                        key={u}
+                        label="UPI ID"
+                        value={u}
+                        icon={<Wallet className="h-4 w-4" />}
+                      />
                     ))}
                     {scammer.emails.map((e) => (
-                      <IdentityChip key={e} label="Email" value={e} icon={<Mail className="h-4 w-4" />} />
+                      <IdentityChip
+                        key={e}
+                        label="Email"
+                        value={e}
+                        icon={<Mail className="h-4 w-4" />}
+                      />
                     ))}
-                  </div>
-                </div>
+                  </Grid>
+                </Stack>
               )}
 
-              {/* Social media */}
+              {/* Social media profiles */}
               {scammer.socialMedia.length > 0 && (
-                <div>
-                  <Heading level={2} className="mb-3 text-base font-semibold text-zinc-800 dark:text-zinc-200">
+                <Stack gap="sm">
+                  <Heading level={2} className="text-base font-semibold">
                     Social Media Profiles
                   </Heading>
-                  <div className="flex flex-col gap-2">
+                  <Stack gap="xs">
                     {scammer.socialMedia.map((sm, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-300">
-                        <ExternalLink className="h-4 w-4 shrink-0 text-zinc-400" />
-                        <span className="font-medium">{SOCIAL_PLATFORM_LABELS[sm.platform] ?? sm.platform}:</span>
+                      <Row key={i} gap="sm" align="center">
+                        <ExternalLink className="h-4 w-4 shrink-0 text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]" />
+                        <Text className="text-sm font-medium">
+                          {SOCIAL_PLATFORM_LABELS[sm.platform] ?? sm.platform}:
+                        </Text>
                         {sm.url ? (
-                          <a href={sm.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline dark:text-blue-400">
+                          <a
+                            href={sm.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
+                          >
                             {sm.handle}
                           </a>
                         ) : (
-                          <span>{sm.handle}</span>
+                          <Text variant="secondary" className="text-sm">
+                            {sm.handle}
+                          </Text>
                         )}
-                      </div>
+                      </Row>
                     ))}
-                  </div>
-                </div>
+                  </Stack>
+                </Stack>
               )}
 
               {/* Item involved */}
               {scammer.itemInvolved && (
-                <div>
-                  <Heading level={2} className="mb-1 text-base font-semibold text-zinc-800 dark:text-zinc-200">
+                <Stack gap="xs">
+                  <Heading level={2} className="text-base font-semibold">
                     Item Involved
                   </Heading>
-                  <Text className="text-sm text-zinc-600 dark:text-zinc-300">{scammer.itemInvolved}</Text>
-                </div>
+                  <Text variant="secondary" className="text-sm">
+                    {scammer.itemInvolved}
+                  </Text>
+                </Stack>
               )}
 
-              {/* Description */}
-              <div>
-                <Heading level={2} className="mb-3 text-base font-semibold text-zinc-800 dark:text-zinc-200">
+              {/* Incident description */}
+              <Stack gap="sm">
+                <Heading level={2} className="text-base font-semibold">
                   What Happened
                 </Heading>
-                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4 text-sm leading-relaxed text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-zinc-300">
-                  {scammer.description}
-                </div>
-              </div>
+                <Card variant="flat" padding="md">
+                  <Text className="text-sm leading-relaxed">{scammer.description}</Text>
+                </Card>
+              </Stack>
 
               {/* Evidence images */}
               {scammer.evidence.length > 0 && (
-                <div>
-                  <Heading level={2} className="mb-3 text-base font-semibold text-zinc-800 dark:text-zinc-200">
+                <Stack gap="sm">
+                  <Heading level={2} className="text-base font-semibold">
                     Evidence
                   </Heading>
-                  <div className="flex flex-wrap gap-3">
+                  <Row gap="sm" wrap>
                     {scammer.evidence.map((url, i) => (
                       <a key={i} href={url} target="_blank" rel="noopener noreferrer">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={url}
                           alt={`Evidence ${i + 1}`}
-                          className="h-32 w-auto rounded-lg border border-zinc-200 object-cover shadow-sm hover:opacity-90 dark:border-zinc-700"
+                          className="h-32 w-auto rounded-lg border object-cover shadow-sm hover:opacity-90"
                         />
                       </a>
                     ))}
-                  </div>
-                </div>
+                  </Row>
+                </Stack>
               )}
-            </div>
+            </Stack>
 
-            {/* ── Right column — actions + meta ───────────────────────────────── */}
-            <div className="flex flex-col gap-5">
+            {/* ── Right column — actions + meta ───────────────────────────── */}
+            <Stack gap="md">
+              {/* Actions card */}
+              <Card variant="elevated" padding="md">
+                <CardHeader>
+                  <Heading level={3} className="text-sm font-semibold uppercase tracking-wide">
+                    Actions
+                  </Heading>
+                </CardHeader>
+                <CardBody>
+                  <Stack gap="sm">
+                    {isAuthenticated ? (
+                      <Link
+                        href={reportHref}
+                        className="appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-2"
+                      >
+                        <AlertOctagon className="h-4 w-4 text-[color:var(--appkit-color-danger,theme(colors.red.500))]" />
+                        Report another incident
+                      </Link>
+                    ) : (
+                      <Link
+                        href={`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(reportHref)}`}
+                        className="appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-2"
+                      >
+                        <AlertOctagon className="h-4 w-4 text-[color:var(--appkit-color-danger,theme(colors.red.500))]" />
+                        Sign in to report an incident
+                      </Link>
+                    )}
 
-              {/* Report / Contest card */}
-              <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <Heading level={3} className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Actions
-                </Heading>
-                <div className="flex flex-col gap-3">
-                  {/* Report another incident */}
-                  {isAuthenticated ? (
-                    <Link
-                      href={reportHref}
-                      className="flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-700 hover:border-red-300 hover:bg-red-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:border-red-700 dark:hover:bg-red-900/20"
-                    >
-                      <AlertOctagon className="h-4 w-4 text-red-500" />
-                      Report another incident
-                    </Link>
-                  ) : (
-                    <Link
-                      href={`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(reportHref)}`}
-                      className="flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-700 hover:border-red-300 hover:bg-red-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:border-red-700 dark:hover:bg-red-900/20"
-                    >
-                      <AlertOctagon className="h-4 w-4 text-red-500" />
-                      Sign in to report an incident
-                    </Link>
-                  )}
+                    {isAuthenticated ? (
+                      <Link
+                        href={`/scams/${scammer.id}/contest`}
+                        className="appkit-button appkit-button--outline appkit-button--md flex w-full items-center gap-2"
+                      >
+                        <Flag className="h-4 w-4 text-[color:var(--appkit-color-warning,theme(colors.amber.500))]" />
+                        Contest this profile
+                      </Link>
+                    ) : (
+                      <Link
+                        href={contestLoginHref}
+                        className="appkit-button appkit-button--ghost appkit-button--md flex w-full items-center gap-2"
+                      >
+                        <Flag className="h-4 w-4" />
+                        Sign in to contest
+                      </Link>
+                    )}
 
-                  {/* Contest this profile */}
-                  {isAuthenticated ? (
-                    <Link
-                      href={`/scams/${scammer.id}/contest`}
-                      className="flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-3 text-sm font-medium text-zinc-600 hover:border-amber-300 hover:bg-amber-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-amber-700 dark:hover:bg-amber-900/20"
-                    >
-                      <Flag className="h-4 w-4 text-amber-500" />
-                      Contest this profile
-                    </Link>
-                  ) : (
-                    <Link
-                      href={contestLoginHref}
-                      className="flex items-center gap-2 rounded-lg border border-zinc-200 px-4 py-3 text-sm text-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800"
-                    >
-                      <Flag className="h-4 w-4" />
-                      Sign in to contest
-                    </Link>
-                  )}
-                </div>
-
-                <Text className="mt-3 text-xs text-zinc-400 dark:text-zinc-500">
-                  All contest submissions are reviewed by our moderation team before any changes are made.
-                </Text>
-              </div>
+                    <Text variant="secondary" className="text-xs">
+                      All contest submissions are reviewed by our moderation team before any changes
+                      are made.
+                    </Text>
+                  </Stack>
+                </CardBody>
+              </Card>
 
               {/* Contest types reference */}
-              <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <Heading level={3} className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Contest Options
-                </Heading>
-                <ul className="flex flex-col gap-2">
-                  {Object.entries(CONTEST_TYPE_LABELS).map(([, label]) => (
-                    <li key={label} className="flex items-start gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-                      <span className="mt-0.5 h-1.5 w-1.5 shrink-0 rounded-full bg-zinc-300 dark:bg-zinc-600" />
-                      {label}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <Card variant="outlined" padding="md">
+                <CardHeader>
+                  <Heading level={3} className="text-sm font-semibold uppercase tracking-wide">
+                    Contest Options
+                  </Heading>
+                </CardHeader>
+                <CardBody>
+                  <Stack gap="xs" as="ul">
+                    {Object.entries(CONTEST_TYPE_LABELS).map(([, label]) => (
+                      <Row key={label} gap="sm" align="start" as="li">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--appkit-color-border,theme(colors.zinc.300))]" />
+                        <Text variant="secondary" className="text-xs">
+                          {label}
+                        </Text>
+                      </Row>
+                    ))}
+                  </Stack>
+                </CardBody>
+              </Card>
 
-              {/* Verified meta */}
+              {/* Verification meta */}
               {scammer.verifiedAt && (
-                <div className="rounded-xl border border-green-100 bg-green-50 p-4 dark:border-green-900/40 dark:bg-green-950/20">
-                  <Text className="text-xs font-medium text-green-700 dark:text-green-400">
-                    <Shield className="mr-1 inline h-3.5 w-3.5" />
-                    Verified by LetItRip moderation on {formatDate(scammer.verifiedAt)}
-                  </Text>
-                </div>
+                <Alert variant="success" compact>
+                  <Row gap="xs" align="center">
+                    <Shield className="h-3.5 w-3.5 shrink-0" />
+                    <Text className="text-xs font-medium">
+                      Verified by LetItRip moderation on {formatDate(scammer.verifiedAt)}
+                    </Text>
+                  </Row>
+                </Alert>
               )}
-            </div>
-          </div>
+            </Stack>
+          </Grid>
         </Container>
       </Section>
     </Main>

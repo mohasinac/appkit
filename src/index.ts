@@ -191,6 +191,8 @@ export type { DynamicSelectProps } from "./ui/index";
 // InlineCreateSelect - Select with inline create-new form in a SideDrawer.
 export type { InlineCreateSelectProps } from "./ui/index";
 export { InlineCreateSelect } from "./ui/index";
+// EmptyState - Component for empty state display.
+export { EmptyState } from "./ui/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // EmptyStateProps - Type contract for empty state props.
 export type { EmptyStateProps } from "./ui/index";
