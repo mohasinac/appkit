@@ -143,6 +143,8 @@ export interface ProductListResponse {
   pageSize: number;
   totalPages: number;
   hasMore: boolean;
+  /** Set when the query fell back to an empty result due to a DB error (index missing, permission denied). */
+  warning?: string;
 }
 
 export interface ProductListParams {

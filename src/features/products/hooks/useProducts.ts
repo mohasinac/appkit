@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import { useToast } from "../../../ui";
 import type {
   ProductItem,
   ProductListResponse,
@@ -35,6 +37,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
   params: ProductListParams = {},
   opts?: UseProductsOptions<T>,
 ) {
+  const { showToast } = useToast();
   const sp = new URLSearchParams();
   if (params.q) sp.set("q", params.q);
   if (params.category) sp.set("category", params.category);
@@ -77,6 +80,12 @@ export function useProducts<T extends ProductItem = ProductItem>(
     enabled: opts?.enabled,
   });
 
+  const warning = query.data?.warning;
+
+  useEffect(() => {
+    if (warning) showToast(warning, "error");
+  }, [warning]);
+
   const rawItems = query.data?.items ?? [];
   const products = (
     opts?.transform ? rawItems.map(opts.transform) : rawItems
@@ -90,6 +99,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
     hasMore: query.data?.hasMore ?? false,
     isLoading: query.isLoading,
     error: query.error,
+    warning,
   };
 }
 
