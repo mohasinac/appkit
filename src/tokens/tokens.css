@@ -82,6 +82,138 @@
   --appkit-color-accent-950:       #222730;
 }
 
+/* --- Colour — Extended Palettes ------------------------------------------ */
+/* Tailwind-aligned palette scales. Pure values — no dark-mode override needed.   */
+/* Used by component CSS to reference specific shades via var(--appkit-color-*).  */
+:root {
+  /* Zinc (neutrals used for borders, muted text, surfaces) */
+  --appkit-color-zinc-50:  #fafafa;
+  --appkit-color-zinc-100: #f4f4f5;
+  --appkit-color-zinc-200: #e4e4e7;
+  --appkit-color-zinc-300: #d4d4d8;
+  --appkit-color-zinc-400: #a1a1aa;
+  --appkit-color-zinc-500: #71717a;
+  --appkit-color-zinc-600: #52525b;
+  --appkit-color-zinc-700: #3f3f46;
+  --appkit-color-zinc-800: #27272a;
+  --appkit-color-zinc-900: #18181b;
+  --appkit-color-zinc-950: #09090b;
+
+  /* Slate (used for dark-mode chrome, dev tools, panel backgrounds) */
+  --appkit-color-slate-50:  #f8fafc;
+  --appkit-color-slate-100: #f1f5f9;
+  --appkit-color-slate-200: #e2e8f0;
+  --appkit-color-slate-300: #cbd5e1;
+  --appkit-color-slate-400: #94a3b8;
+  --appkit-color-slate-500: #64748b;
+  --appkit-color-slate-600: #475569;
+  --appkit-color-slate-700: #334155;
+  --appkit-color-slate-800: #1e293b;
+  --appkit-color-slate-900: #0f172a;
+  --appkit-color-slate-950: #020617;
+
+  /* Emerald (success states, verified badges) */
+  --appkit-color-emerald-50:  #ecfdf5;
+  --appkit-color-emerald-100: #d1fae5;
+  --appkit-color-emerald-200: #a7f3d0;
+  --appkit-color-emerald-300: #6ee7b7;
+  --appkit-color-emerald-400: #34d399;
+  --appkit-color-emerald-500: #10b981;
+  --appkit-color-emerald-600: #059669;
+  --appkit-color-emerald-700: #047857;
+  --appkit-color-emerald-800: #065f46;
+  --appkit-color-emerald-900: #064e3b;
+  --appkit-color-emerald-950: #022c22;
+
+  /* Amber (warning states, pending badges) */
+  --appkit-color-amber-50:  #fffbeb;
+  --appkit-color-amber-100: #fef3c7;
+  --appkit-color-amber-200: #fde68a;
+  --appkit-color-amber-300: #fcd34d;
+  --appkit-color-amber-400: #fbbf24;
+  --appkit-color-amber-500: #f59e0b;
+  --appkit-color-amber-600: #d97706;
+  --appkit-color-amber-700: #b45309;
+  --appkit-color-amber-800: #92400e;
+  --appkit-color-amber-900: #78350f;
+  --appkit-color-amber-950: #451a03;
+
+  /* Rose (danger states, rejected badges) */
+  --appkit-color-rose-50:  #fff1f2;
+  --appkit-color-rose-100: #ffe4e6;
+  --appkit-color-rose-200: #fecdd3;
+  --appkit-color-rose-300: #fda4af;
+  --appkit-color-rose-400: #fb7185;
+  --appkit-color-rose-500: #f43f5e;
+  --appkit-color-rose-600: #e11d48;
+  --appkit-color-rose-700: #be123c;
+  --appkit-color-rose-800: #9f1239;
+  --appkit-color-rose-900: #881337;
+  --appkit-color-rose-950: #4c0519;
+
+  /* Sky (info states, link colors) */
+  --appkit-color-sky-50:  #f0f9ff;
+  --appkit-color-sky-100: #e0f2fe;
+  --appkit-color-sky-200: #bae6fd;
+  --appkit-color-sky-300: #7dd3fc;
+  --appkit-color-sky-400: #38bdf8;
+  --appkit-color-sky-500: #0ea5e9;
+  --appkit-color-sky-600: #0284c7;
+  --appkit-color-sky-700: #0369a1;
+  --appkit-color-sky-800: #075985;
+  --appkit-color-sky-900: #0c4a6e;
+  --appkit-color-sky-950: #082f49;
+
+  /* Purple (admin badges, premium states) */
+  --appkit-color-purple-50:  #faf5ff;
+  --appkit-color-purple-100: #f3e8ff;
+  --appkit-color-purple-200: #e9d5ff;
+  --appkit-color-purple-300: #d8b4fe;
+  --appkit-color-purple-400: #c084fc;
+  --appkit-color-purple-500: #a855f7;
+  --appkit-color-purple-600: #9333ea;
+  --appkit-color-purple-700: #7e22ce;
+  --appkit-color-purple-800: #6b21a8;
+  --appkit-color-purple-900: #581c87;
+  --appkit-color-purple-950: #3b0764;
+
+  /* Teal (seller badges, verified states) */
+  --appkit-color-teal-50:  #f0fdfa;
+  --appkit-color-teal-100: #ccfbf1;
+  --appkit-color-teal-200: #99f6e4;
+  --appkit-color-teal-300: #5eead4;
+  --appkit-color-teal-400: #2dd4bf;
+  --appkit-color-teal-500: #14b8a6;
+  --appkit-color-teal-600: #0d9488;
+  --appkit-color-teal-700: #0f766e;
+  --appkit-color-teal-800: #115e59;
+  --appkit-color-teal-900: #134e4a;
+  --appkit-color-teal-950: #042f2e;
+
+  /* Green (active/live indicators, availability) */
+  --appkit-color-green-50:  #f0fdf4;
+  --appkit-color-green-100: #dcfce7;
+  --appkit-color-green-200: #bbf7d0;
+  --appkit-color-green-300: #86efac;
+  --appkit-color-green-400: #4ade80;
+  --appkit-color-green-500: #22c55e;
+  --appkit-color-green-600: #16a34a;
+  --appkit-color-green-700: #15803d;
+  --appkit-color-green-800: #166534;
+  --appkit-color-green-900: #14532d;
+  --appkit-color-green-950: #052e16;
+}
+
+/* --- Colour — Social Brand Tokens ---------------------------------------- */
+:root {
+  --appkit-color-instagram:  #E1306C;
+  --appkit-color-facebook:   #1877F2;
+  --appkit-color-tiktok:     #010101;
+  --appkit-color-deviantart: #05CC47;
+  --appkit-color-whatsapp:   #25D366;
+  --appkit-color-youtube:    #FF0000;
+}
+
 /* --- Colour — Semantic (light mode defaults) ------------------------------ */
 :root {
   --appkit-color-bg:               #fafafa;    /* zinc-50 */
