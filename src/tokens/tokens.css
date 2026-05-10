@@ -380,21 +380,48 @@
 
 /* --- Z-index -------------------------------------------------------------- */
 :root {
-  --appkit-z-dropdown: 30;
+  --appkit-z-below:          -1;
+  --appkit-z-base:            0;
+  --appkit-z-raised:         10;
+  --appkit-z-dropdown:       30;
   --appkit-z-search-backdrop: 35;
-  --appkit-z-navbar:   40;
-  --appkit-z-bottom-nav: 40;
-  --appkit-z-sidebar:  50;
-  --appkit-z-title-bar: 50;
-  --appkit-z-overlay:  45;
-  --appkit-z-modal:    60;
-  --appkit-z-toast:    70;
+  --appkit-z-overlay:        45;
+  --appkit-z-navbar:         40;
+  --appkit-z-bottom-nav:     40;
+  --appkit-z-sidebar:        50;
+  --appkit-z-title-bar:      50;
+  --appkit-z-modal:          60;
+  --appkit-z-toast:          70;
+  --appkit-z-tooltip:        80;
 
   /* Layout dimensions */
-  --appkit-navbar-height:    2.5rem;  /* h-10 = 40px (mobile), h-12 = 48px (md) */
-  --appkit-sidebar-width:    20rem;   /* w-80 = 320px */
-  --appkit-bottom-nav-height: 3.5rem; /* h-14 = 56px */
-  --appkit-title-bar-height: 3rem;    /* h-12 = 48px */
+  --appkit-navbar-height:     2.5rem;  /* h-10 = 40px (mobile), h-12 = 48px (md) */
+  --appkit-sidebar-width:     20rem;   /* w-80 = 320px */
+  --appkit-bottom-nav-height: 3.5rem;  /* h-14 = 56px */
+  --appkit-title-bar-height:  3rem;    /* h-12 = 48px */
+}
+
+/* --- Component Sizes ------------------------------------------------------- */
+:root {
+  /* Input heights */
+  --appkit-size-input-sm: 2rem;     /*  32px */
+  --appkit-size-input-md: 2.5rem;   /*  40px */
+  --appkit-size-input-lg: 2.75rem;  /*  44px */
+
+  /* Avatar sizes */
+  --appkit-size-avatar-xs: 1.5rem;  /*  24px */
+  --appkit-size-avatar-sm: 2rem;    /*  32px */
+  --appkit-size-avatar-md: 2.5rem;  /*  40px */
+  --appkit-size-avatar-lg: 3rem;    /*  48px */
+}
+
+/* --- Grid ------------------------------------------------------------------ */
+:root {
+  /* Minimum column widths for auto-fill grid layouts (used in minmax()) */
+  --appkit-grid-min-card-xs: 130px;
+  --appkit-grid-min-card-sm: 160px;
+  --appkit-grid-min-card:    220px;
+  --appkit-grid-min-card-lg: 300px;
 }
 
 /* --- Transition ----------------------------------------------------------- */
