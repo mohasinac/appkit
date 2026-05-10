@@ -9,6 +9,7 @@ export type {
   FooterLayoutProps,
   FooterLinkGroup,
   FooterSocialLink,
+  FooterBottomLink,
   TrustBarItem,
 } from "./FooterLayout";
 

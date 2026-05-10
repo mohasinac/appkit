@@ -69,6 +69,9 @@ export const DEFAULT_ROUTE_MAP = {
     SUBLISTING_CATEGORIES: "/sublisting-categories",
     SUBLISTING_CATEGORY: (slug: string) => `/sublisting-categories/${slug}`,
     SUPPORT: "/support",
+    SCAMS: "/scams",
+    SCAM_DETAIL: (id: string) => `/scams/${id}`,
+    SCAM_REPORT: "/scams/report",
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",

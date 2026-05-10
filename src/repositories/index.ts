@@ -126,3 +126,8 @@ export type {
   CopilotLogDocument,
   CopilotLogCreateInput,
 } from "../core";
+
+export {
+  ScammerRepository,
+  scammerRepository,
+} from "../features/scams/repository/scammer.repository";

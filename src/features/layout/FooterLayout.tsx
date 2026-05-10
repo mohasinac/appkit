@@ -36,6 +36,11 @@ export interface TrustBarItem {
   visible?: boolean;
 }
 
+export interface FooterBottomLink {
+  label: string;
+  href: string;
+}
+
 export interface FooterLayoutProps {
   brandName: string;
   brandDescription: string;
@@ -49,6 +54,8 @@ export interface FooterLayoutProps {
   /** When true, renders the trust bar above the main footer content. */
   showTrustBar?: boolean;
   trustBarItems?: TrustBarItem[];
+  /** SEO/utility links shown in the bottom bar (sitemap, robots, etc.) */
+  bottomLinks?: FooterBottomLink[];
   id?: string;
 }
 
@@ -63,6 +70,7 @@ export function FooterLayout({
   newsletterEnabled = true,
   showTrustBar = false,
   trustBarItems = [],
+  bottomLinks = [],
   id = "footer",
 }: FooterLayoutProps) {
   const [openGroups, setOpenGroups] = useState<Record<number, boolean>>({});
@@ -208,6 +216,22 @@ export function FooterLayout({
           <Text className="text-xs text-zinc-600 dark:text-zinc-400">
             {copyrightText}
           </Text>
+          {bottomLinks.length > 0 && (
+            <nav aria-label="Site utilities">
+              <Ul className="flex flex-wrap items-center gap-x-4 gap-y-1 justify-center">
+                {bottomLinks.map((link) => (
+                  <Li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-primary dark:hover:text-secondary transition-colors underline-offset-2 hover:underline"
+                    >
+                      {link.label}
+                    </Link>
+                  </Li>
+                ))}
+              </Ul>
+            </nav>
+          )}
           {madeInText && (
             <Text className="text-xs text-zinc-600 dark:text-zinc-400">
               {madeInText}

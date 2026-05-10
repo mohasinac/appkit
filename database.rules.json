@@ -1,0 +1,139 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "chat": {
+      "$chatId": {
+        ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true",
+        ".write": false,
+        "messages": {
+          "$messageId": {
+            ".validate": "newData.hasChildren(['userId', 'message', 'timestamp'])",
+            "userId": {
+              ".validate": "newData.isString()"
+            },
+            "message": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 1000"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber() || newData.val() == '.sv'"
+            }
+          }
+        },
+        "metadata": {
+          ".read": "auth != null && auth.token.chatIds != null && auth.token.chatIds[$chatId] == true"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false,
+        "$notificationId": {
+          ".validate": "newData.hasChildren(['title', 'message', 'type', 'timestamp', 'read'])",
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "message": {
+            ".validate": "newData.isString()"
+          },
+          "type": {
+            ".validate": "newData.isString() && (newData.val() == 'info' || newData.val() == 'success' || newData.val() == 'warning' || newData.val() == 'error')"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          },
+          "read": {
+            ".validate": "newData.isBoolean()"
+          }
+        }
+      }
+    },
+    "live_updates": {
+      "$updateType": {
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.hasChildren(['timestamp'])",
+        "timestamp": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        }
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": false,
+        ".validate": "newData.hasChildren(['online', 'lastSeen'])",
+        "online": {
+          ".validate": "newData.isBoolean()"
+        },
+        "lastSeen": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        }
+      }
+    },
+    "auction-bids": {
+      "$productId": {
+        ".read": true,
+        ".write": false,
+        ".validate": "newData.hasChildren(['currentBid', 'bidCount'])",
+        "currentBid": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "bidCount": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber() || newData.val() == '.sv'"
+        },
+        "lastBid": {
+          "amount": {
+            ".validate": "newData.isNumber() && newData.val() > 0"
+          },
+          "bidderName": {
+            ".validate": "newData.isString()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          }
+        }
+      }
+    },
+    "order_tracking": {
+      "$orderId": {
+        ".read": "auth != null && auth.token.orderId == $orderId",
+        ".write": false,
+        "$event": {
+          ".validate": "newData.hasChildren(['status', 'timestamp'])",
+          "status": {
+            ".validate": "newData.isString()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber() || newData.val() == '.sv'"
+          },
+          "message": {
+            ".validate": "!newData.exists() || newData.isString()"
+          }
+        }
+      }
+    },
+    "auth_events": {
+      "$eventId": {
+        ".read": "auth != null && auth.token.authEventId == $eventId",
+        ".write": false
+      }
+    },
+    "payment_events": {
+      "$eventId": {
+        ".read": "auth != null && auth.token.paymentEventId == $eventId",
+        ".write": false
+      }
+    },
+    "bulk_events": {
+      "$jobId": {
+        ".read": "auth != null && auth.token.bulkJobId == $jobId",
+        ".write": false
+      }
+    }
+  }
+}

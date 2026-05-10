@@ -6136,6 +6136,9 @@ export type { FooterLinkGroup } from "./features/layout/index";
 // FooterSocialLink - Type contract for footer social link.
 export type { FooterSocialLink } from "./features/layout/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// FooterBottomLink - Type contract for footer bottom utility links.
+export type { FooterBottomLink } from "./features/layout/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // LayoutClientProps - Type contract for layout client props.
 export type { LayoutClientProps } from "./features/layout/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -8670,3 +8673,13 @@ export type {
   ScamCategory,
   ScamTypeDefinition,
 } from "./features/scams/constants/scam-types";
+
+// Scam Registry view components (SCAM3–SCAM4)
+export { ScamRegistryView } from "./features/scams/components/ScamRegistryView";
+export type { ScamRegistryViewProps } from "./features/scams/components/ScamRegistryView";
+export { ScamProfileView } from "./features/scams/components/ScamProfileView";
+export type { ScamProfileViewProps } from "./features/scams/components/ScamProfileView";
+
+// Scam server actions
+export { listVerifiedScammers, getPublicScammerById } from "./features/scams/actions/scam-actions";
+export type { ScammerListResult } from "./features/scams/actions/scam-actions";
