@@ -230,6 +230,10 @@ export type { FormActionId, FormActionMeta } from "./features/products/index";
 // Dashboard quick actions
 export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
 export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
+// Action dispatch hook + panel store
+export { useActionDispatch } from "./react/hooks/use-action-dispatch";
+export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
+export { usePanelStore } from "./stores/panel-store";
 export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
 export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
 export { SellerOffersPanel } from "./features/seller/components/SellerOffersPanel";

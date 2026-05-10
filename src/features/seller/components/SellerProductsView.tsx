@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { X, Pencil, Trash2 } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Alert, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
@@ -169,7 +169,7 @@ export function SellerProductsView({
   ...props
 }: SellerProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const router = useRouter();
+  const dispatch = useActionDispatch();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -281,13 +281,13 @@ export function SellerProductsView({
   }
 
   const handleEdit = (row: ProductRow) => {
-    if (row.listingKind === "auction") {
-      router.push(String(ROUTES.STORE.AUCTIONS_EDIT(row.id)));
-    } else if (row.listingKind === "pre-order") {
-      router.push(String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)));
-    } else {
-      router.push(String(ROUTES.STORE.PRODUCTS_EDIT(row.id)));
-    }
+    const href =
+      row.listingKind === "auction"
+        ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
+        : row.listingKind === "pre-order"
+          ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
+          : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
+    void dispatch({ type: "NAVIGATE", href });
   };
 
   const handleDelete = async (row: ProductRow) => {

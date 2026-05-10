@@ -6793,6 +6793,10 @@ export type { FormActionId, FormActionMeta } from "./features/products/index";
 // Dashboard quick actions
 export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
 export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
+// Action dispatch hook + panel store
+export { useActionDispatch } from "./react/hooks/use-action-dispatch";
+export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
+export { usePanelStore } from "./stores/panel-store";
 // PRODUCT_ADMIN_SORT_OPTIONS - Constant used across modules.
 export { PRODUCT_ADMIN_SORT_OPTIONS } from "./features/products/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
