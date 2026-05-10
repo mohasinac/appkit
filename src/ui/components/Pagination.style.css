@@ -5,7 +5,7 @@
 }
 
 .appkit-pagination__button {
-  border: 1px solid #e4e4e7;
+  border: 1px solid var(--appkit-color-border);
   border-radius: 0.5rem;
   font-weight: 500;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
@@ -16,61 +16,61 @@
 .appkit-pagination--lg { font-size: 1rem; padding: 0.5rem 1rem; min-width: 2.75rem; }
 
 .appkit-pagination__button--default {
-  background: #ffffff;
-  color: #3f3f46;
+  background: var(--appkit-color-surface);
+  color: var(--appkit-color-zinc-700);
   cursor: pointer;
 }
 
 .appkit-pagination__button--default:hover {
-  background: #fafafa;
-  border-color: #d4d4d8;
+  background: var(--appkit-color-zinc-50);
+  border-color: var(--appkit-color-zinc-300);
 }
 
 .appkit-pagination__button--active {
-  background: #509c02;
-  color: #ffffff;
-  border-color: #509c02;
+  background: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-text-on-primary);
+  border-color: var(--appkit-color-secondary-600);
   cursor: default;
 }
 
 .appkit-pagination__button--disabled {
-  background: #f4f4f5;
-  color: #a1a1aa;
-  border-color: #e4e4e7;
+  background: var(--appkit-color-zinc-100);
+  color: var(--appkit-color-text-faint);
+  border-color: var(--appkit-color-border);
   cursor: not-allowed;
   opacity: 0.6;
 }
 
 .appkit-pagination__ellipsis {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
   text-align: center;
 }
 
 .dark .appkit-pagination__button {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
 }
 
 .dark .appkit-pagination__button--default {
-  background: #0f172a;
-  color: #cbd5e1;
+  background: var(--appkit-color-surface);
+  color: var(--appkit-color-slate-300);
 }
 
 .dark .appkit-pagination__button--default:hover {
-  background: #1e293b;
-  border-color: #475569;
+  background: var(--appkit-color-slate-800);
+  border-color: var(--appkit-color-slate-600);
 }
 
 .dark .appkit-pagination__button--active {
-  background: #e91e8c;
-  border-color: #e91e8c;
-  color: #ffffff;
+  background: var(--appkit-color-primary);
+  border-color: var(--appkit-color-primary);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .dark .appkit-pagination__button--disabled {
-  background: #1e293b;
-  color: #64748b;
+  background: var(--appkit-color-slate-800);
+  color: var(--appkit-color-slate-500);
 }
 
 .dark .appkit-pagination__ellipsis {
-  color: #64748b;
+  color: var(--appkit-color-slate-500);
 }

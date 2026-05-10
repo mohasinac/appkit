@@ -1,9 +1,9 @@
 .appkit-accordion {
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid var(--appkit-color-border);
 }
 
 .dark .appkit-accordion {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--appkit-color-border);
 }
 
 .appkit-accordion__summary {
@@ -16,17 +16,17 @@
   padding: 0.75rem 0;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #18181b;
+  color: var(--appkit-color-text);
 }
 
 .dark .appkit-accordion__summary {
-  color: #f8fafc;
+  color: var(--appkit-color-text);
 }
 
 .appkit-accordion__chevron {
   margin-left: 0.5rem;
   flex-shrink: 0;
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
   transition: transform 0.2s ease;
 }
 
@@ -37,19 +37,19 @@
 .appkit-accordion__content {
   padding-bottom: 1rem;
   font-size: 0.875rem;
-  color: #52525b;
+  color: var(--appkit-color-zinc-600);
 }
 
 .dark .appkit-accordion__content {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .appkit-accordion__item {
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid var(--appkit-color-border);
 }
 
 .dark .appkit-accordion__item {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--appkit-color-border);
 }
 
 .appkit-accordion__trigger {
@@ -74,9 +74,9 @@
 .appkit-accordion__panel {
   padding: 0 0.25rem 0.75rem;
   font-size: 0.875rem;
-  color: #52525b;
+  color: var(--appkit-color-zinc-600);
 }
 
 .dark .appkit-accordion__panel {
-  color: #94a3b8;
+  color: var(--appkit-color-slate-400);
 }
