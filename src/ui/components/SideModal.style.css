@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: #ffffff;
+  background: var(--appkit-color-surface);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   transition: transform 300ms ease-in-out;
 }
@@ -46,7 +46,7 @@
 }
 
 .dark .appkit-side-modal__panel {
-  background: #18181b; /* zinc-900 */
+  background: var(--appkit-color-zinc-900);
 }
 
 /* -- Header ------------------------------------------ */
@@ -55,13 +55,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb; /* neutral-200 */
+  border-bottom: 1px solid var(--appkit-color-border);
   padding: 1rem 1.25rem;
   flex-shrink: 0;
 }
 
 .dark .appkit-side-modal__header {
-  border-bottom-color: #3f3f46; /* zinc-700 */
+  border-bottom-color: var(--appkit-color-zinc-700);
 }
 
 /* -- Body -------------------------------------------- */
