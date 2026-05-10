@@ -8685,3 +8685,14 @@ export type { ScamProfileViewProps } from "./features/scams/components/ScamProfi
 // Scam server actions
 export { listVerifiedScammers, getPublicScammerById } from "./features/scams/actions/scam-actions";
 export type { ScammerListResult } from "./features/scams/actions/scam-actions";
+
+// --- Shell primitives (UX1/UX2/UX3) -------------------------------------------
+// [CLIENT] FormShell — full-viewport edit overlay with sticky top/bottom bars, left section nav, and dirty-state hook.
+export { FormShell, useFormShell } from "./features/shell/index";
+export type { FormShellSection, FormShellProps, UseFormShellResult } from "./features/shell/index";
+// [CLIENT] QuickFormDrawer — 40% desktop / 100% mobile auto-rendered field drawer.
+export { QuickFormDrawer } from "./features/shell/index";
+export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./features/shell/index";
+// [CLIENT] StepForm — multi-step wizard with step indicator, prev/next, localStorage persistence.
+export { StepForm, StepFormActions, StepIndicator } from "./features/shell/index";
+export type { StepDef, StepFormProps, StepFormActionsProps } from "./features/shell/index";
