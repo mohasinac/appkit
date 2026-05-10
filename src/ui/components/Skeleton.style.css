@@ -1,9 +1,9 @@
 .appkit-skeleton {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 .dark .appkit-skeleton {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-skeleton--rounded {

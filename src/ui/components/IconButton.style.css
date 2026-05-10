@@ -38,64 +38,64 @@
 
 .appkit-icon-button--ghost {
   background: transparent;
-  color: #52525b;
+  color: var(--appkit-color-zinc-600);
 }
 
 .appkit-icon-button--ghost:hover:not(:disabled) {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 .dark .appkit-icon-button--ghost {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .dark .appkit-icon-button--ghost:hover:not(:disabled) {
-  background: #27272a;
+  background: var(--appkit-color-zinc-800);
 }
 
 .appkit-icon-button--outline {
-  border-color: #e4e4e7;
-  background: #ffffff;
-  color: #3f3f46;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
+  color: var(--appkit-color-zinc-700);
 }
 
 .appkit-icon-button--outline:hover:not(:disabled) {
-  background: #fafafa;
+  background: var(--appkit-color-zinc-50);
 }
 
 .dark .appkit-icon-button--outline {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
   background: transparent;
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .dark .appkit-icon-button--outline:hover:not(:disabled) {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-icon-button--primary {
-  background: #509c02;
-  color: #ffffff;
+  background: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-icon-button--primary:hover:not(:disabled) {
-  background: #3e7708;
+  background: var(--appkit-color-secondary-700);
 }
 
 .dark .appkit-icon-button--primary {
-  background: #e91e8c;
+  background: var(--appkit-color-primary);
 }
 
 .dark .appkit-icon-button--primary:hover:not(:disabled) {
-  background: #d4107a;
+  background: var(--appkit-color-primary-600);
 }
 
 .appkit-icon-button--danger {
-  color: #dc2626;
+  color: var(--appkit-color-error);
 }
 
 .appkit-icon-button--danger:hover:not(:disabled) {
-  background: #fef2f2;
+  background: var(--appkit-color-error-surface);
 }
 
 .dark .appkit-icon-button--danger:hover:not(:disabled) {

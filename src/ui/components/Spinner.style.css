@@ -38,17 +38,17 @@
 }
 
 .appkit-spinner__indicator--primary {
-  border-color: #509c02;
+  border-color: var(--appkit-color-secondary-600);
   border-top-color: transparent;
 }
 
 .dark .appkit-spinner__indicator--primary {
-  border-color: #e91e8c;
+  border-color: var(--appkit-color-primary);
   border-top-color: transparent;
 }
 
 .appkit-spinner__indicator--white {
-  border-color: #ffffff;
+  border-color: var(--appkit-color-text-on-primary);
   border-top-color: transparent;
 }
 
@@ -61,8 +61,8 @@
 .appkit-spinner__indicator--pokeball {
   border-top-color: #CC0000;
   border-right-color: #CC0000;
-  border-bottom-color: #ffffff;
-  border-left-color: #ffffff;
+  border-bottom-color: var(--appkit-color-text-on-primary);
+  border-left-color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-sr-only {

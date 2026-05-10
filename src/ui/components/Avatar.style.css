@@ -3,7 +3,7 @@
 .appkit-avatar {
   border-radius: 9999px;
   object-fit: cover;
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 .appkit-avatar--fallback {
@@ -11,9 +11,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: #e4e4e7;
+  background: var(--appkit-color-zinc-200);
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 /* Sizes */
@@ -51,21 +51,21 @@
   justify-content: center;
   border-radius: 9999px;
   ring: 2px solid white;
-  background: #d4d4d8;
+  background: var(--appkit-color-zinc-300);
   font-size: 0.75rem;
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 /* Dark mode */
 .dark .appkit-avatar {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 .dark .appkit-avatar--fallback {
-  background: #334155;
-  color: #e2e8f0;
+  background: var(--appkit-color-slate-700);
+  color: var(--appkit-color-text);
 }
 .dark .appkit-avatar-group__overflow {
-  background: #475569;
-  color: #e2e8f0;
+  background: var(--appkit-color-slate-600);
+  color: var(--appkit-color-text);
 }
