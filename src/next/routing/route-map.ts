@@ -72,6 +72,7 @@ export const DEFAULT_ROUTE_MAP = {
     SCAMS: "/scams",
     SCAM_DETAIL: (id: string) => `/scams/${id}`,
     SCAM_REPORT: "/scams/report",
+    SCAM_TYPES: "/scams/types",
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",

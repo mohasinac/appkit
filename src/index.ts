@@ -8685,6 +8685,7 @@ export type {
 // Scam registry — scam type definitions
 export {
   SCAM_TYPES,
+  SCAM_CATEGORIES,
   SCAM_TYPE_LABELS,
   SCAM_CATEGORY_LABELS,
   getScamType,
@@ -8695,6 +8696,7 @@ export type {
   ScamType,
   ScamCategory,
   ScamTypeDefinition,
+  ScamCategoryDefinition,
 } from "./features/scams/constants/scam-types";
 
 // Scam Registry view components (SCAM3–SCAM4)
