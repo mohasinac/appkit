@@ -247,7 +247,7 @@ export function buildPurchaseAnnouncementMessage(
   const extra =
     additionalItemCount > 0 ? ` + ${additionalItemCount} more item${additionalItemCount > 1 ? "s" : ""}` : "";
   const amount = (totalAmount / 100).toLocaleString("en-IN");
-  return `🛑 New order! ${buyerName} purchased ${firstItemName}${extra} for ₹${amount}. Order #${orderId}`;
+  return `🛍️ New order! ${buyerName} purchased ${firstItemName}${extra} for ₹${amount}. Order #${orderId}`;
 }
 
 /**
