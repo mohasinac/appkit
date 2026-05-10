@@ -59,3 +59,6 @@ export { CustomSectionTabContent } from "./CustomSectionTabContent";
 export { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 export { SublistingCategorySelect } from "./SublistingCategorySelect";
 export { SublistingCarouselSection } from "./SublistingCarouselSection";
+export { ShowGroupSection } from "./ShowGroupSection";
+export { GroupSettingsPanel } from "./GroupSettingsPanel";
+export type { GroupSettingsPanelProps } from "./GroupSettingsPanel";

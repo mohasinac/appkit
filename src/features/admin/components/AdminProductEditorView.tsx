@@ -21,6 +21,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
 import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
+import { GroupSettingsPanel } from "../../products/components/GroupSettingsPanel";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
 
@@ -233,6 +234,24 @@ export function AdminProductEditorView({
           <ProductForm
             product={product}
             onChange={setProduct}
+            renderGroupSettings={
+              isEdit && productId
+                ? (p) => (
+                    <GroupSettingsPanel
+                      productId={productId}
+                      productSlug={(p.slug as string | undefined) ?? productId}
+                      groupId={(p as Record<string, unknown>).groupId as string | undefined}
+                      isGroupParent={(p as Record<string, unknown>).isGroupParent as boolean | undefined}
+                      groupParentSlug={(p as Record<string, unknown>).groupParentSlug as string | undefined}
+                      groupChildSlugs={(p as Record<string, unknown>).groupChildSlugs as string[] | undefined}
+                      groupTitle={(p as Record<string, unknown>).groupTitle as string | undefined}
+                      isAuction={!!p.isAuction}
+                      storeProductsEndpoint="/api/admin/products"
+                      onGroupChanged={() => productQuery.refetch()}
+                    />
+                  )
+                : undefined
+            }
             renderCategorySelector={({ label, value, onChange, disabled }) => (
               <Stack gap="xs">
                 <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">

@@ -112,39 +112,80 @@ export function useGoogleLogin(options?: {
 }) {
   const authEvent = useAuthEvent();
   const [initiating, setInitiating] = useState(false);
+  // popupPending stays true from popup open until auth resolves (success/error/timeout)
+  const [popupPending, setPopupPending] = useState(false);
+  // calledRef prevents both RTDB and postMessage from firing the callbacks
+  const calledRef = useRef(false);
 
   const onSuccessRef = useRef(options?.onSuccess);
   const onErrorRef = useRef(options?.onError);
   const onSessionSyncedRef = useRef(options?.onSessionSynced);
+  const authEventResetRef = useRef(authEvent.reset);
 
-  useEffect(() => {
-    onSuccessRef.current = options?.onSuccess;
-  }, [options?.onSuccess]);
+  useEffect(() => { onSuccessRef.current = options?.onSuccess; }, [options?.onSuccess]);
+  useEffect(() => { onErrorRef.current = options?.onError; }, [options?.onError]);
+  useEffect(() => { onSessionSyncedRef.current = options?.onSessionSynced; }, [options?.onSessionSynced]);
+  useEffect(() => { authEventResetRef.current = authEvent.reset; }, [authEvent.reset]);
 
-  useEffect(() => {
-    onErrorRef.current = options?.onError;
-  }, [options?.onError]);
-
-  useEffect(() => {
-    onSessionSyncedRef.current = options?.onSessionSynced;
-  }, [options?.onSessionSynced]);
-
+  // RTDB status watcher — fast path when RTDB is available.
+  // FAILED is intentionally not forwarded to onError here: RTDB connection
+  // failures (e.g. missing database URL) should fall through to the postMessage
+  // fallback so the user still gets a result from the popup.
   useEffect(() => {
     if (authEvent.status === RealtimeEventStatus.SUCCESS) {
+      setPopupPending(false);
+      if (calledRef.current) return;
+      calledRef.current = true;
       Promise.resolve(onSessionSyncedRef.current?.()).then(() => {
         onSuccessRef.current?.(authEvent.data);
       });
-    } else if (
-      authEvent.status === RealtimeEventStatus.FAILED ||
-      authEvent.status === RealtimeEventStatus.TIMEOUT
-    ) {
+    } else if (authEvent.status === RealtimeEventStatus.TIMEOUT) {
+      // RTDB timed out AND postMessage never arrived (popup likely closed without completing)
+      setPopupPending(false);
+      if (calledRef.current) return;
+      calledRef.current = true;
       onErrorRef.current?.(
-        new Error(authEvent.error ?? "Sign-in failed. Please try again."),
+        new Error(authEvent.error ?? "Sign-in timed out. Please try again."),
       );
     }
+    // FAILED: do not call onError — wait for the postMessage from /auth/close
   }, [authEvent.status, authEvent.error, authEvent.data]);
 
+  // postMessage fallback — fires when /auth/close sends window.opener.postMessage.
+  // This covers two cases:
+  //   1. RTDB is unavailable (the primary channel failed)
+  //   2. RTDB fires FAILED (connection issue) — postMessage still arrives from the popup
+  // calledRef guards against double-resolution when both RTDB and postMessage fire.
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      if (!event.data || event.data.type !== "letitrip_auth_close") return;
+      if (calledRef.current) return;
+
+      calledRef.current = true;
+      setPopupPending(false);
+      authEventResetRef.current();
+
+      if (event.data.status === "success") {
+        const data = event.data.uid
+          ? { uid: event.data.uid as string, role: (event.data.role as string) ?? "user", isNewUser: Boolean(event.data.isNewUser) }
+          : null;
+        Promise.resolve(onSessionSyncedRef.current?.()).then(() => {
+          onSuccessRef.current?.(data);
+        });
+      } else {
+        onErrorRef.current?.(
+          new Error((event.data.error as string | undefined) ?? "Sign-in failed. Please try again."),
+        );
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []); // mount once — uses refs, no stale closure risk
+
   const mutate = useCallback(async () => {
+    calledRef.current = false; // reset for each new auth flow
     const popup = window.open(
       `${window.location.origin}/auth.html`,
       "oauth_google",
@@ -158,21 +199,30 @@ export function useGoogleLogin(options?: {
       return;
     }
 
+    setPopupPending(true);
+
     try {
       setInitiating(true);
       authEvent.reset();
 
-      const { eventId, customToken } = await apiClient.post<{
+      const { eventId, customToken, rtdbEnabled } = await apiClient.post<{
         eventId: string;
         customToken: string;
         expiresAt: number;
+        rtdbEnabled?: boolean;
       }>(AUTH_ENDPOINTS.EVENT_INIT, {});
 
       const url = `${window.location.origin}${AUTH_ENDPOINTS.GOOGLE_START}?eventId=${encodeURIComponent(eventId)}`;
       localStorage.setItem("letitrip_oauth_redirect", url);
-      authEvent.subscribe(eventId, customToken);
+
+      // Only subscribe to RTDB if it's available — skipping avoids an immediate
+      // FAILED status (token sign-in error) that would block the postMessage fallback.
+      if (rtdbEnabled !== false) {
+        authEvent.subscribe(eventId, customToken);
+      }
     } catch (err) {
       popup.close();
+      setPopupPending(false);
       onErrorRef.current?.(
         err instanceof Error ? err : new Error("Failed to start sign-in."),
       );
@@ -183,6 +233,7 @@ export function useGoogleLogin(options?: {
 
   const isLoading =
     initiating ||
+    popupPending ||
     authEvent.status === RealtimeEventStatus.SUBSCRIBING ||
     authEvent.status === RealtimeEventStatus.PENDING;
 

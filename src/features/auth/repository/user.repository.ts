@@ -11,8 +11,6 @@ import {
 } from "../../../providers/db-firebase";
 import {
   USER_PII_FIELDS,
-  USER_PII_INDEX_MAP,
-  addPiiIndices,
   decryptPayoutDetails,
   decryptPiiFields,
   decryptShippingConfig,
@@ -68,12 +66,12 @@ export class UserRepository extends BaseRepository<UserDocument> {
   }
 
   private encryptUserData<T extends Record<string, unknown>>(data: T): T {
+    // encryptPiiFields encrypts each PII field in-place AND adds the corresponding
+    // blind-index sibling (e.g. email → emailIndex) from the plaintext value.
+    // addPiiIndices is intentionally NOT called here — it spreads the original
+    // plaintext `data` back into the result, which would overwrite the encrypted
+    // ciphertext with the original plaintext values, defeating the encryption.
     let encrypted = encryptPiiFields(data, [...USER_PII_FIELDS]);
-    encrypted = addPiiIndices(data, USER_PII_INDEX_MAP) as unknown as T;
-    encrypted = {
-      ...encryptPiiFields(data, [...USER_PII_FIELDS]),
-      ...encrypted,
-    };
 
     if (encrypted.payoutDetails) {
       (encrypted as Record<string, unknown>).payoutDetails =
@@ -95,6 +93,14 @@ export class UserRepository extends BaseRepository<UserDocument> {
   protected override mapDoc<D = UserDocument>(snap: DocumentSnapshot): D {
     const raw = super.mapDoc<UserDocument>(snap);
     return this.decryptUser(raw) as unknown as D;
+  }
+
+  override async createWithId(
+    id: string,
+    data: Partial<UserDocument>,
+  ): Promise<UserDocument> {
+    const encrypted = this.encryptUserData(data as unknown as Record<string, unknown>);
+    return super.createWithId(id, encrypted as Partial<UserDocument>);
   }
 
   async create(

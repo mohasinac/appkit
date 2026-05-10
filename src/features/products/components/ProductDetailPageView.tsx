@@ -30,6 +30,7 @@ import { BuyBar } from "./BuyBar";
 import { ShareButton } from "./ShareButton";
 import { CustomSectionTabContent } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
+import { ShowGroupSection } from "./ShowGroupSection";
 import type { CustomSection } from "../schemas/firestore";
 
 export interface ProductDetailPageViewProps {
@@ -275,6 +276,9 @@ export async function ProductDetailPageView({
 
   const descriptionHtml = toDescriptionHtml(p.description);
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
+  const groupId = typeof p.groupId === "string" ? p.groupId : null;
+  const isGroupParent = p.isGroupParent === true;
+  const groupTitle = typeof p.groupTitle === "string" ? p.groupTitle : undefined;
 
   // -- Fetch reviews + related in parallel ------------------------------------
   const [reviewDocs, relatedDocs] = await Promise.all([
@@ -635,6 +639,18 @@ export async function ProductDetailPageView({
                   <SublistingCarouselSection
                     sublistingCategoryId={sublistingCategoryId}
                     currentListingId={String(product.id)}
+                  />
+                )
+              : undefined
+          }
+          renderGroupSection={
+            groupId
+              ? () => (
+                  <ShowGroupSection
+                    groupId={groupId}
+                    currentSlug={String(p.slug ?? product.id)}
+                    isParent={isGroupParent}
+                    groupTitle={groupTitle}
                   />
                 )
               : undefined

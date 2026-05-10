@@ -59,6 +59,11 @@ export interface ProductItem {
   isAuction?: boolean;
   isPreOrder?: boolean;
   sublistingCategoryId?: string;
+  groupId?: string;
+  isGroupParent?: boolean;
+  groupParentSlug?: string;
+  groupChildSlugs?: string[];
+  groupTitle?: string;
   isOnSale?: boolean;
   isSold?: boolean;
   inStock?: boolean;

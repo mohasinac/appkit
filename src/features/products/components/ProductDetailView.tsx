@@ -15,6 +15,8 @@ export interface ProductDetailViewProps extends Omit<
   renderActions?: () => React.ReactNode;
   /** Rendered between the main grid and the below-fold tabs (e.g. sub-listing carousel). */
   renderSublistingSection?: () => React.ReactNode;
+  /** Rendered below the sub-listing section and above the tabs (e.g. group carousel). */
+  renderGroupSection?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
   /**
@@ -34,6 +36,7 @@ export function ProductDetailView({
   renderInfo,
   renderActions,
   renderSublistingSection,
+  renderGroupSection,
   renderTabs,
   renderRelated,
   isLoading = false,
@@ -41,6 +44,16 @@ export function ProductDetailView({
   stickyRailOffset = "top-20",
   ...rest
 }: ProductDetailViewProps) {
+  const sublistingNode = renderSublistingSection?.();
+  const groupNode = renderGroupSection?.();
+  const afterMainNode =
+    sublistingNode || groupNode ? (
+      <React.Fragment>
+        {sublistingNode}
+        {groupNode}
+      </React.Fragment>
+    ) : undefined;
+
   return (
     <DetailViewShell
       portal="public"
@@ -54,7 +67,7 @@ export function ProductDetailView({
         renderInfo?.(isLoading),
         renderActions?.(),
       ]}
-      afterMain={renderSublistingSection?.()}
+      afterMain={afterMainNode}
       belowFold={[renderTabs?.(), renderRelated?.()]}
     />
   );

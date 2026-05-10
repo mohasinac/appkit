@@ -27,6 +27,7 @@ import { ProductGalleryClient } from "../../products/components/ProductGalleryCl
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { ShareButton } from "../../products/components/ShareButton";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
+import { ShowGroupSection } from "../../products/components/ShowGroupSection";
 import type { CustomSection } from "../../products/schemas/firestore";
 
 export interface PreOrderDetailPageViewProps {
@@ -148,6 +149,9 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
     : [];
   const descriptionHtml = toDescriptionHtml(p.description);
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
+  const groupId = typeof p.groupId === "string" ? p.groupId : null;
+  const isGroupParent = p.isGroupParent === true;
+  const groupTitle = typeof p.groupTitle === "string" ? p.groupTitle : undefined;
 
   return (
     <Main>
@@ -318,6 +322,18 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
                   <SublistingCarouselSection
                     sublistingCategoryId={sublistingCategoryId}
                     currentListingId={String(product.id)}
+                  />
+                )
+              : undefined
+          }
+          renderGroupSection={
+            groupId
+              ? () => (
+                  <ShowGroupSection
+                    groupId={groupId}
+                    currentSlug={String(p.slug ?? product.id)}
+                    isParent={isGroupParent}
+                    groupTitle={groupTitle}
                   />
                 )
               : undefined

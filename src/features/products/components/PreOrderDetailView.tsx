@@ -15,6 +15,8 @@ export interface PreOrderDetailViewProps extends Omit<
   renderBuyBar?: () => React.ReactNode;
   /** Rendered between the main grid and the below-fold tabs (e.g. sub-listing carousel). */
   renderSublistingSection?: () => React.ReactNode;
+  /** Rendered below the sub-listing section and above the tabs (e.g. group carousel). */
+  renderGroupSection?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
 }
@@ -24,11 +26,22 @@ export function PreOrderDetailView({
   renderInfo,
   renderBuyBar,
   renderSublistingSection,
+  renderGroupSection,
   renderTabs,
   renderRelated,
   isLoading = false,
   ...rest
 }: PreOrderDetailViewProps) {
+  const sublistingNode = renderSublistingSection?.();
+  const groupNode = renderGroupSection?.();
+  const afterMainNode =
+    sublistingNode || groupNode ? (
+      <React.Fragment>
+        {sublistingNode}
+        {groupNode}
+      </React.Fragment>
+    ) : undefined;
+
   return (
     <DetailViewShell
       portal="public"
@@ -42,7 +55,7 @@ export function PreOrderDetailView({
           {renderBuyBar?.()}
         </React.Fragment>,
       ]}
-      afterMain={renderSublistingSection?.()}
+      afterMain={afterMainNode}
       belowFold={[renderTabs?.(), renderRelated?.()]}
     />
   );

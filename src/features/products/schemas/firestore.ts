@@ -114,6 +114,11 @@ export interface ProductDocument {
   customFields?: CustomField[];
   customSections?: CustomSection[];
   sublistingCategoryId?: string;
+  groupId?: string;
+  isGroupParent?: boolean;
+  groupParentSlug?: string;
+  groupChildSlugs?: string[];
+  groupTitle?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -217,6 +222,11 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "customFields",
   "customSections",
   "sublistingCategoryId",
+  "groupId",
+  "isGroupParent",
+  "groupParentSlug",
+  "groupChildSlugs",
+  "groupTitle",
   "createdAt",
 ] as const;
 
@@ -260,6 +270,11 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "customFields",
   "customSections",
   "sublistingCategoryId",
+  "groupId",
+  "isGroupParent",
+  "groupParentSlug",
+  "groupChildSlugs",
+  "groupTitle",
 ] as const;
 
 export type ProductCreateInput = Omit<

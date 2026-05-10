@@ -60,15 +60,20 @@ function loadDatabase() {
 //   2. Real newlines          (set via CLI / multiline input)
 //   3. Windows \r\n endings   (copied on Windows)
 //   4. Wrapped in double-quotes (pasted with JSON quotes intact)
+//   5. UTF-8 BOM prefix (PowerShell pipe encoding artefact)
+//   6. Trailing literal \r\n  (PowerShell pipe newline artefact)
 //
 // OpenSSL 3 (Node 18+) rejects malformed PEM — ensure the key is normalised
 // before passing it to `cert()`.
 //
 function parsePrivateKey(raw: string): string {
   return raw
+    .replace(/^﻿/, "")    // strip UTF-8 BOM (PowerShell pipe artefact)
     .replace(/^["']|["']$/g, "") // strip optional surrounding quotes
-    .replace(/\\n/g, "\n") // literal \n → real newline
-    .replace(/\r\n/g, "\n") // Windows CRLF → LF
+    .replace(/\\n/g, "\n")     // literal \n → real newline
+    .replace(/\\r/g, "")       // literal \r → remove
+    .replace(/\r\n/g, "\n")    // Windows CRLF → LF
+    .replace(/\r/g, "")        // stray CR → remove
     .trim();
 }
 

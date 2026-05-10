@@ -224,6 +224,15 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }
 
+  async findByGroupId(groupId: string): Promise<ProductDocument[]> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where("groupId", "==", groupId)
+      .where(PRODUCT_FIELDS.IS_AUCTION, "==", false)
+      .get();
+    return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
+  }
+
   async findActiveAuctions(): Promise<ProductDocument[]> {
     const now = new Date();
     const snapshot = await this.db
@@ -233,6 +242,89 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       .get();
 
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
+  }
+
+  async startGroup(productId: string, slug: string): Promise<void> {
+    await this.getCollection().doc(productId).update({
+      groupId: slug,
+      isGroupParent: true,
+      groupChildSlugs: [],
+    });
+  }
+
+  async updateGroupTitle(productId: string, groupTitle: string): Promise<void> {
+    await this.getCollection().doc(productId).update({ groupTitle });
+  }
+
+  async dissolveGroup(groupId: string): Promise<void> {
+    const members = await this.findByGroupId(groupId);
+    const batch = this.db.batch();
+    const clearFields = {
+      groupId: null,
+      isGroupParent: null,
+      groupParentSlug: null,
+      groupChildSlugs: null,
+      groupTitle: null,
+    };
+    for (const m of members) {
+      batch.update(this.getCollection().doc(m.id), clearFields);
+    }
+    await batch.commit();
+  }
+
+  async linkChildToGroup(parent: ProductDocument, child: ProductDocument): Promise<void> {
+    const batch = this.db.batch();
+    batch.update(this.getCollection().doc(child.id), {
+      groupId: parent.groupId!,
+      groupParentSlug: parent.slug ?? parent.id,
+      groupTitle: parent.groupTitle ?? null,
+    });
+    batch.update(this.getCollection().doc(parent.id), {
+      groupChildSlugs: [...(parent.groupChildSlugs ?? []), child.id],
+    });
+    await batch.commit();
+  }
+
+  async unlinkChildFromGroup(parent: ProductDocument, child: ProductDocument): Promise<void> {
+    const batch = this.db.batch();
+    batch.update(this.getCollection().doc(child.id), {
+      groupId: null,
+      groupParentSlug: null,
+      groupTitle: null,
+    });
+    const updated = (parent.groupChildSlugs ?? []).filter((s) => s !== child.id && s !== child.slug);
+    batch.update(this.getCollection().doc(parent.id), { groupChildSlugs: updated });
+    await batch.commit();
+  }
+
+  async leaveGroup(child: ProductDocument, parent: ProductDocument | null): Promise<void> {
+    const batch = this.db.batch();
+    batch.update(this.getCollection().doc(child.id), {
+      groupId: null,
+      groupParentSlug: null,
+      groupTitle: null,
+    });
+    if (parent) {
+      const updated = (parent.groupChildSlugs ?? []).filter((s) => s !== child.id && s !== child.slug);
+      batch.update(this.getCollection().doc(parent.id), { groupChildSlugs: updated });
+    }
+    await batch.commit();
+  }
+
+  async addChildProduct(
+    parent: ProductDocument,
+    child: Omit<import("../schemas/firestore").ProductCreateInput, "groupId" | "isGroupParent" | "groupParentSlug" | "groupTitle">,
+  ): Promise<ProductDocument> {
+    const newChild = await this.create({
+      ...child,
+      groupId: parent.groupId!,
+      isGroupParent: false,
+      groupParentSlug: parent.slug ?? parent.id,
+      groupTitle: parent.groupTitle,
+    });
+    const updated = [...(parent.groupChildSlugs ?? []), newChild.id];
+    await this.getCollection().doc(parent.id).update({ groupChildSlugs: updated });
+    return newChild;
   }
 
   async deleteByStore(storeId: string): Promise<number> {

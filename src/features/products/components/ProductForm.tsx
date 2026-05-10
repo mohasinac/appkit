@@ -97,6 +97,11 @@ export interface ProductFormProps {
   onMediaAbort?: (stagedUrls: string[]) => void | Promise<void>;
   /** Currency prefix for numeric money inputs (e.g. "₹", "$", "€"). */
   currencyPrefix?: string;
+  /**
+   * Render a Group Settings panel (GP2). Only passed when editing an existing
+   * non-auction product. Returns null/undefined to omit.
+   */
+  renderGroupSettings?: (product: ProductFormValue) => React.ReactNode;
 }
 
 export function ProductForm({
@@ -109,6 +114,7 @@ export function ProductForm({
   renderStoreAddressSelector,
   onMediaAbort,
   currencyPrefix = "",
+  renderGroupSettings,
 }: ProductFormProps) {
   const t = useTranslations("adminProducts");
   const { upload } = useMediaUpload();
@@ -737,6 +743,9 @@ export function ProductForm({
         onChange={(id) => update({ sublistingCategoryId: id || undefined })}
         disabled={isReadonly}
       />
+
+      {/* ── Group Settings (GP2) — edit mode only, hidden for auctions ── */}
+      {!product.isAuction && renderGroupSettings?.(product)}
 
       {/* ── Custom Sections (L3) ── */}
       <Div>
