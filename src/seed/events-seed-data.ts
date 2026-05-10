@@ -16,7 +16,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 
 export const eventsSeedData: EventDocument[] = [
-  // ── 1. UPCOMING — Pokémon Card Tournament (Poll, opens in 7 days) ─────────
+  // ── 1. ACTIVE — Pokémon Card Tournament (Poll, voting open now) ──────────
   {
     id: "event-pokemon-card-tournament-june-2026",
     slug: "event-pokemon-card-tournament-june-2026",
@@ -24,7 +24,7 @@ export const eventsSeedData: EventDocument[] = [
     title: "Pokémon TCG India Open — June 2026 (Vote for Format!)",
     description:
       "<p>India's biggest Pokémon TCG open tournament is coming to Mumbai in June 2026. <strong>Vote for your preferred battle format</strong> — Standard, Expanded, or Limited Sealed — and help us shape the event schedule. Top voter-selected format gets the biggest prize pool!</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAhead(7),
     endsAt: daysAhead(21),
     coverImageUrl:
@@ -47,7 +47,7 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(1),
   },
 
-  // ── 2. UPCOMING — Collectors Convention Survey (starts in 14 days) ────────
+  // ── 2. ACTIVE — Collectors Convention Survey (survey open now) ───────────
   {
     id: "event-collectors-convention-2026-survey",
     slug: "event-collectors-convention-2026-survey",
@@ -55,7 +55,7 @@ export const eventsSeedData: EventDocument[] = [
     title: "LetItRip Collectors Convention 2026 — Interest Survey",
     description:
       "<p>We're planning the first-ever LetItRip Collectors Convention — a one-day event for Pokémon TCG, Hot Wheels, Beyblade X, anime figure, and Gunpla enthusiasts in India. Help us plan by filling out this short survey. Participants get a ₹200 voucher on their next LetItRip order.</p>",
-    status: EVENT_FIELDS.STATUS_VALUES.DRAFT,
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
     startsAt: daysAhead(14),
     endsAt: daysAhead(35),
     coverImageUrl:
