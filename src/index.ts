@@ -1603,6 +1603,9 @@ export { storeAddressRepository } from "./repositories/index";
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// scammerRepository - Shared export for scammer profiles repository.
+export { scammerRepository } from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // tokenRepository - Shared export for token repository.
 export { tokenRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -8706,7 +8709,12 @@ export { ScamProfileView } from "./features/scams/components/ScamProfileView";
 export type { ScamProfileViewProps } from "./features/scams/components/ScamProfileView";
 
 // Scam server actions
-export { listVerifiedScammers, getPublicScammerById } from "./features/scams/actions/scam-actions";
+export {
+  listVerifiedScammers,
+  getPublicScammerById,
+  getScammerProfilePageData,
+} from "./features/scams/actions/scam-actions";
+export type { ScammerProfilePageData } from "./features/scams/actions/scam-actions";
 export type { ScammerListResult } from "./features/scams/actions/scam-actions";
 
 // --- Shell primitives (UX1/UX2/UX3/UX6) ----------------------------------------
