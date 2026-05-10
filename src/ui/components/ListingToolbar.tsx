@@ -1,12 +1,46 @@
 "use client";
 import React from "react";
-import { CheckSquare, Search, SlidersHorizontal, LayoutGrid, List, RotateCcw, Square } from "lucide-react";
+import {
+  CheckSquare,
+  Search,
+  SlidersHorizontal,
+  LayoutGrid,
+  List,
+  RotateCcw,
+  Square,
+} from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
 
 export interface ListingToolbarSortOption {
   value: string;
   label: string;
 }
+
+export interface ListingToolbarLabels {
+  search?: string;
+  filters?: string;
+  sort?: string;
+  gridView?: string;
+  listView?: string;
+  resetAll?: string;
+  selectAll?: (total: number) => string;
+  deselectAll?: string;
+  selected?: (count: number) => string;
+  clearSelection?: string;
+}
+
+const DEFAULT_LABELS = {
+  search: "Search",
+  filters: "Filters",
+  sort: "Sort",
+  gridView: "Grid view",
+  listView: "List view",
+  resetAll: "Reset all",
+  selectAll: (total: number) => `Select All (${total})`,
+  deselectAll: "Deselect All",
+  selected: (count: number) => `${count} selected`,
+  clearSelection: "Clear",
+} satisfies Required<ListingToolbarLabels>;
 
 export interface ListingToolbarProps {
   /** Filter button */
@@ -47,8 +81,18 @@ export interface ListingToolbarProps {
   /** Any extra action buttons placed after the view toggle */
   extra?: React.ReactNode;
 
+  /** Overridable text labels for i18n */
+  labels?: ListingToolbarLabels;
+
   className?: string;
 }
+
+const VIEW_BTN_BASE =
+  "p-1.5 sm:p-2 transition-colors";
+const VIEW_BTN_ACTIVE =
+  "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white";
+const VIEW_BTN_INACTIVE =
+  "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400";
 
 export function ListingToolbar({
   filterCount = 0,
@@ -72,8 +116,11 @@ export function ListingToolbar({
   onBulkSelectAll,
   onBulkClear,
   extra,
+  labels,
   className = "",
 }: ListingToolbarProps) {
+  const l = { ...DEFAULT_LABELS, ...labels };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onSearchKeyDown) {
       onSearchKeyDown(e);
@@ -102,17 +149,17 @@ export function ListingToolbar({
                 ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary,theme(colors.violet.600))]" />
                 : <Square className="h-4 w-4" />
               }
-              {allSelected ? "Deselect All" : `Select All (${bulkTotalCount})`}
+              {allSelected ? l.deselectAll : l.selectAll(bulkTotalCount)}
             </button>
             <span className="text-sm text-zinc-500 dark:text-zinc-400">
-              {bulkSelectedCount} selected
+              {l.selected(bulkSelectedCount)}
             </span>
             <button
               type="button"
               onClick={onBulkClear}
               className="text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-500 transition-colors"
             >
-              Clear
+              {l.clearSelection}
             </button>
           </div>
         ) : onSearchChange ? (
@@ -128,8 +175,8 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onSearchCommit}
-              className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-primary dark:hover:text-primary-400 transition-colors"
-              aria-label="Search"
+              className="flex shrink-0 items-center justify-center px-2.5 py-2 text-zinc-400 hover:text-[var(--appkit-color-primary,theme(colors.violet.600))] transition-colors"
+              aria-label={l.search}
             >
               <Search className="h-4 w-4" />
             </button>
@@ -146,7 +193,7 @@ export function ListingToolbar({
               className="relative flex shrink-0 items-center gap-1.5 rounded-lg border border-zinc-300 dark:border-slate-600 px-2.5 py-1.5 sm:px-3.5 sm:py-2 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
             >
               <SlidersHorizontal className="h-4 w-4" />
-              <span className="hidden sm:inline">Filters</span>
+              <span className="hidden sm:inline">{l.filters}</span>
               {filterCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-[10px] font-bold text-white">
                   {filterCount}
@@ -157,7 +204,7 @@ export function ListingToolbar({
 
           {sortOptions && sortValue !== undefined && onSortChange && (
             <div className="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-              <span className="hidden md:inline whitespace-nowrap text-xs">Sort</span>
+              <span className="hidden md:inline whitespace-nowrap text-xs">{l.sort}</span>
               <SortDropdown
                 value={sortValue}
                 onChange={onSortChange}
@@ -171,24 +218,16 @@ export function ListingToolbar({
               <button
                 type="button"
                 onClick={() => onViewChange("grid")}
-                aria-label="Grid view"
-                className={`p-1.5 sm:p-2 transition-colors ${
-                  view === "grid"
-                    ? "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
-                    : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
-                }`}
+                aria-label={l.gridView}
+                className={`${VIEW_BTN_BASE} ${view === "grid" ? VIEW_BTN_ACTIVE : VIEW_BTN_INACTIVE}`}
               >
                 <LayoutGrid className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => onViewChange("list")}
-                aria-label="List view"
-                className={`p-1.5 sm:p-2 transition-colors ${
-                  view === "list"
-                    ? "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
-                    : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
-                }`}
+                aria-label={l.listView}
+                className={`${VIEW_BTN_BASE} ${view === "list" ? VIEW_BTN_ACTIVE : VIEW_BTN_INACTIVE}`}
               >
                 <List className="h-4 w-4" />
               </button>
@@ -199,8 +238,8 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onResetAll}
-              aria-label="Reset all filters"
-              title="Reset all"
+              aria-label={l.resetAll}
+              title={l.resetAll}
               className="flex shrink-0 items-center justify-center rounded-lg border border-zinc-300 dark:border-slate-600 p-1.5 sm:p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-rose-500 dark:hover:text-rose-400 transition-colors"
             >
               <RotateCcw className="h-4 w-4" />

@@ -271,6 +271,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onClearSelection={selection.clearSelection}
         actions={[
           {
+            key: "cart",
             label: "Add to Cart",
             icon: <ShoppingCart className="h-3.5 w-3.5" />,
             variant: "primary",
@@ -285,6 +286,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             },
           },
           {
+            key: "wishlist",
             label: "Wishlist",
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",

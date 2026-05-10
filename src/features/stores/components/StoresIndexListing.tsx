@@ -205,6 +205,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         onClearSelection={selection.clearSelection}
         actions={[
           {
+            key: "compare",
             label: "Compare",
             variant: "secondary",
             onClick: () => {

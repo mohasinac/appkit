@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
 import { X } from "lucide-react";
+import { Button } from "./Button";
 
 export interface BulkAction {
+  key: string;
   label: string;
   icon?: React.ReactNode;
   onClick: () => void;
@@ -17,12 +19,13 @@ export interface BulkActionsBarProps {
   isAuthenticated?: boolean;
 }
 
-const variantClass: Record<string, string> = {
+const ACTION_VARIANT_CLASS: Record<NonNullable<BulkAction["variant"]>, string> = {
   primary:
     "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white hover:opacity-90 btn-glow",
   secondary:
     "border border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800",
-  danger: "bg-rose-500 text-white hover:bg-rose-600",
+  danger:
+    "bg-[var(--appkit-color-danger,theme(colors.rose.500))] text-white hover:opacity-90",
 };
 
 export function BulkActionsBar({
@@ -41,7 +44,7 @@ export function BulkActionsBar({
       aria-live="polite"
       aria-label={`${selectedCount} items selected`}
     >
-      <div className="border-t border-zinc-200 dark:border-slate-700 bg-white/98 dark:bg-slate-900/98 backdrop-blur-md px-4 py-3 shadow-2xl">
+      <div className="border-t border-zinc-200 dark:border-slate-700 bg-white/[.98] dark:bg-slate-900/[.98] backdrop-blur-md px-4 py-3 shadow-2xl">
         <div className="mx-auto flex max-w-5xl items-center gap-3">
           <span className="shrink-0 text-sm font-semibold text-zinc-700 dark:text-zinc-200">
             {selectedCount} selected
@@ -50,16 +53,16 @@ export function BulkActionsBar({
           <div className="h-4 w-px shrink-0 bg-zinc-200 dark:bg-slate-700" />
 
           <div className="flex flex-1 flex-wrap items-center gap-2">
-            {actions.map((action, i) => {
+            {actions.map((action) => {
               if (action.requiresAuth && !isAuthenticated) return null;
               return (
                 <button
-                  key={i}
+                  key={action.key}
                   type="button"
                   onClick={action.onClick}
                   className={[
                     "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all active:scale-95",
-                    variantClass[action.variant ?? "secondary"],
+                    ACTION_VARIANT_CLASS[action.variant ?? "secondary"],
                   ].join(" ")}
                 >
                   {action.icon}
@@ -69,14 +72,16 @@ export function BulkActionsBar({
             })}
           </div>
 
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={onClearSelection}
             aria-label="Clear selection"
             className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </div>
