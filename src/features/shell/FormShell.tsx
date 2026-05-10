@@ -289,8 +289,8 @@ export function FormShell({
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >
             <div className="flex gap-3 mb-4">
-              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--appkit-color-warning-surface)] flex items-center justify-center">
+                <AlertTriangle className="w-5 h-5 text-[var(--appkit-color-warning)]" />
               </span>
               <div>
                 <p className="font-semibold text-[var(--appkit-color-text)]">Unsaved changes</p>

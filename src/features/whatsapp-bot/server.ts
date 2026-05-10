@@ -4,3 +4,4 @@
  * Server-only entry point for WhatsApp bot helpers (crypto operations).
  */
 export * from "./helpers/whatsapp";
+export * from "./types";

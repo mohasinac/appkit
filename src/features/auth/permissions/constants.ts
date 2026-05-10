@@ -511,7 +511,10 @@ export type StoreCapability =
   | "api_access" // programmatic API credentials (future)
   | "lower_commission_rate" // negotiated reduced platform fee; requires customCommissionRate
   | "early_access_features" // beta features before GA
-  | "advanced_analytics"; // cohort/basket analysis beyond summary stats
+  | "advanced_analytics" // cohort/basket analysis beyond summary stats
+
+  // Integrations
+  | "whatsapp_catalog_sync"; // can sync store products to their WhatsApp Business Catalog (admin-granted)
 
 /** Default capabilities granted to every new store on creation. */
 export const DEFAULT_STORE_CAPABILITIES: StoreCapability[] = [

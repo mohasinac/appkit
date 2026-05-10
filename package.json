@@ -71,6 +71,10 @@
       "types": "./dist/features/admin/repository/site-settings.repository.d.ts",
       "import": "./dist/features/admin/repository/site-settings.repository.js"
     },
+    "./features/whatsapp-bot/server": {
+      "types": "./dist/features/whatsapp-bot/server.d.ts",
+      "import": "./dist/features/whatsapp-bot/server.js"
+    },
     "./styles": "./dist/styles.css",
     "./tokens": {
       "types": "./dist/tokens/index.d.ts",

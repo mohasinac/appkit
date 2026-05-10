@@ -129,6 +129,7 @@ export const DEFAULT_ROUTE_MAP = {
     PAYOUT_SETTINGS: "/store/payout-settings",
     ADDRESSES: "/store/addresses",
     OFFERS: "/store/offers",
+    WHATSAPP: "/store/whatsapp",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

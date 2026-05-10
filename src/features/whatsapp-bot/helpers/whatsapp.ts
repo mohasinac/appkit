@@ -10,7 +10,13 @@ import type {
   IncomingWebhookPayload,
   SendWhatsAppInput,
   StatusMessageInput,
+  WaBusinessSendInput,
+  CatalogSyncInput,
+  CatalogSyncResult,
+  PurchaseAnnouncementInput,
 } from "../types";
+
+const META_GRAPH_BASE = "https://graph.facebook.com/v20.0";
 
 export function buildCheckoutMessageURL(input: CheckoutMessageInput): string {
   const { waNumber, cart, total, address, isPreorder = false } = input;
@@ -134,6 +140,123 @@ export function buildStatusMessage(
     ? `\nTracking: ${courierName ? courierName + " — " : ""}${trackingNumber}`
     : "";
   return template.replace("{id}", orderId).replace("{tracking}", trackingLine);
+}
+
+/**
+ * Send a WhatsApp message via Meta WhatsApp Business Cloud API.
+ * Distinct from the Twilio-based sendWhatsAppMessage — used for server-initiated
+ * platform announcements. Returns true on success, false on any failure.
+ */
+export async function sendWhatsAppBusinessMessage(
+  input: WaBusinessSendInput,
+): Promise<boolean> {
+  const { toPhone, message, phoneNumberId, accessToken } = input;
+  const cleanPhone = toPhone.replace(/\D/g, "");
+  if (!cleanPhone || !phoneNumberId || !accessToken) return false;
+  try {
+    const res = await fetch(`${META_GRAPH_BASE}/${phoneNumberId}/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to: cleanPhone,
+        type: "text",
+        text: { body: message },
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Sync a store's products to a Meta Commerce Catalog via items_batch API.
+ * Batches at 50 items per call (Meta limit). Returns aggregate results.
+ */
+export async function syncProductsToCatalog(
+  input: CatalogSyncInput,
+): Promise<CatalogSyncResult> {
+  const { catalogId, accessToken, products } = input;
+  const result: CatalogSyncResult = {
+    handles: [],
+    successCount: 0,
+    failureCount: 0,
+    errors: [],
+  };
+
+  const BATCH_SIZE = 50;
+  for (let i = 0; i < products.length; i += BATCH_SIZE) {
+    const batch = products.slice(i, i + BATCH_SIZE);
+    const requests = batch.map((p) => ({
+      method: "UPDATE",
+      retailer_id: p.id,
+      data: {
+        name: p.title,
+        description: p.description,
+        // Meta expects "<amount> <ISO_CURRENCY>" e.g. "450.00 INR"
+        price: `${(p.price / 100).toFixed(2)} ${p.currency}`,
+        image_url: p.imageUrl,
+        availability: p.availability,
+        condition: p.condition,
+        ...(p.link ? { url: p.link } : {}),
+      },
+    }));
+
+    try {
+      const res = await fetch(
+        `${META_GRAPH_BASE}/${catalogId}/items_batch`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ requests }),
+        },
+      );
+      const json = (await res.json()) as { handles?: string[]; error?: { message: string } };
+      if (res.ok && json.handles) {
+        result.handles.push(...json.handles);
+        result.successCount += batch.length;
+      } else {
+        result.failureCount += batch.length;
+        result.errors.push(json.error?.message ?? `Batch ${i / BATCH_SIZE + 1} failed`);
+      }
+    } catch (err) {
+      result.failureCount += batch.length;
+      result.errors.push(String(err));
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Build a plain-text purchase announcement message for WhatsApp.
+ * Sent to admin numbers and store owner when a new order is placed.
+ */
+export function buildPurchaseAnnouncementMessage(
+  input: PurchaseAnnouncementInput,
+): string {
+  const { buyerName, firstItemName, additionalItemCount, totalAmount, orderId } =
+    input;
+  const extra =
+    additionalItemCount > 0 ? ` + ${additionalItemCount} more item${additionalItemCount > 1 ? "s" : ""}` : "";
+  const amount = (totalAmount / 100).toLocaleString("en-IN");
+  return `🛑 New order! ${buyerName} purchased ${firstItemName}${extra} for ₹${amount}. Order #${orderId}`;
+}
+
+/**
+ * Build a wa.me share link with a pre-filled message.
+ * Opens WhatsApp contact picker — user selects group manually.
+ * This is the only API-compliant way to target a WhatsApp group.
+ */
+export function buildGroupShareLink(message: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(message)}`;
 }
 
 /**

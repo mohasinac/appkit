@@ -100,6 +100,7 @@
 
   --appkit-color-success:          #059669;    /* emerald-600 */
   --appkit-color-warning:          #d97706;    /* amber-600 */
+  --appkit-color-warning-surface:  #fffbeb;    /* amber-50 */
   --appkit-color-error:            #dc2626;    /* red-600 */
   --appkit-color-info:             #0284c7;    /* sky-600 */
 
@@ -152,6 +153,7 @@
 
   --appkit-color-success:          #34d399;    /* emerald-400 */
   --appkit-color-warning:          #fbbf24;    /* amber-400 */
+  --appkit-color-warning-surface:  #1c1508;    /* dark amber tint */
   --appkit-color-error:            #f87171;    /* red-400 */
   --appkit-color-info:             #38bdf8;    /* sky-400 */
 
