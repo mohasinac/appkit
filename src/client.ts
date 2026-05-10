@@ -244,3 +244,18 @@ export type { PromotionsViewProductSectionProps } from "./features/promotions/co
 export { RichText } from "./ui/rich-text/RichText";
 export { RichTextRenderer } from "./ui/rich-text/RichTextRenderer";
 export type { RichTextRendererProps } from "./ui/rich-text/RichTextRenderer";
+// Scam registry — pure data constants safe for client bundle
+export {
+  SCAM_TYPES,
+  SCAM_CATEGORIES,
+  SCAM_TYPE_LABELS,
+  SCAM_CATEGORY_LABELS,
+  getScamType,
+  getScamTypesByCategory,
+} from "./features/scams/constants/scam-types";
+export type { ScamType, ScamCategory, ScamTypeDefinition, ScamCategoryDefinition } from "./features/scams/constants/scam-types";
+export {
+  SCAM_PLATFORM_LABELS,
+  ScamPlatformValues,
+} from "./features/scams/schemas/firestore";
+export type { ScamPlatform } from "./features/scams/schemas/firestore";

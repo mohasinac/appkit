@@ -1,7 +1,18 @@
 "use server";
 
 import { scammerRepository } from "../repository/scammer.repository";
-import type { ScammerDocument } from "../schemas/firestore";
+import type {
+  ScammerDocument,
+  ScammerIncidentDocument,
+  ScammerCommentDocument,
+} from "../schemas/firestore";
+
+export interface ScammerProfilePageData {
+  scammer: ScammerDocument;
+  incidents: ScammerIncidentDocument[];
+  comments: ScammerCommentDocument[];
+  relatedScammers: ScammerDocument[];
+}
 
 export interface ScammerListResult {
   items: ScammerDocument[];
@@ -60,4 +71,23 @@ export async function getPublicScammerById(id: string): Promise<ScammerDocument 
   scammerRepository.incrementViews(doc.id).catch(() => {});
 
   return doc;
+}
+
+/**
+ * Fetch full profile page data: main doc + verified incidents + public comments + related scammers.
+ * Returns null if not found or not verified.
+ */
+export async function getScammerProfilePageData(
+  id: string,
+): Promise<ScammerProfilePageData | null> {
+  const scammer = await getPublicScammerById(id);
+  if (!scammer) return null;
+
+  const [incidents, comments, relatedScammers] = await Promise.all([
+    scammerRepository.listPublicIncidents(scammer.id),
+    scammerRepository.listPublicComments(scammer.id),
+    scammerRepository.findManyById(scammer.relatedScammerIds),
+  ]);
+
+  return { scammer, incidents, comments, relatedScammers };
 }

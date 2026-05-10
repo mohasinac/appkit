@@ -9,8 +9,12 @@ import { increment } from "../../../contracts/field-ops";
 import {
   SCAMMER_COLLECTION,
   SCAMMER_FIELDS,
+  SCAMMER_INCIDENTS_SUBCOLLECTION,
+  SCAMMER_COMMENTS_SUBCOLLECTION,
   DEFAULT_SCAMMER_DATA,
   type ScammerDocument,
+  type ScammerIncidentDocument,
+  type ScammerCommentDocument,
   type ScammerCreateInput,
   type ScammerAdminUpdateInput,
   type ScammerStatus,
@@ -135,6 +139,50 @@ class ScammerRepository extends BaseRepository<ScammerDocument> {
       return snap.docs.map((d) => this.mapDoc<ScammerDocument>(d));
     } catch (error) {
       throw new DatabaseError(`Failed to search scammer by ${field}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  async listPublicIncidents(scammerId: string): Promise<ScammerIncidentDocument[]> {
+    try {
+      const snap = await this.db
+        .collection(SCAMMER_COLLECTION)
+        .doc(scammerId)
+        .collection(SCAMMER_INCIDENTS_SUBCOLLECTION)
+        .where("status", "==", "verified" as ScammerStatus)
+        .orderBy("createdAt", "desc")
+        .limit(20)
+        .get();
+      return snap.docs.map((d) => this.mapDoc<ScammerIncidentDocument>(d));
+    } catch {
+      return [];
+    }
+  }
+
+  async listPublicComments(scammerId: string): Promise<ScammerCommentDocument[]> {
+    try {
+      const snap = await this.db
+        .collection(SCAMMER_COLLECTION)
+        .doc(scammerId)
+        .collection(SCAMMER_COMMENTS_SUBCOLLECTION)
+        .where("isHidden", "==", false)
+        .orderBy("createdAt", "desc")
+        .limit(30)
+        .get();
+      return snap.docs.map((d) => this.mapDoc<ScammerCommentDocument>(d));
+    } catch {
+      return [];
+    }
+  }
+
+  async findManyById(ids: string[]): Promise<ScammerDocument[]> {
+    if (!ids.length) return [];
+    try {
+      const results = await Promise.all(
+        ids.slice(0, 5).map((id) => this.findById(id).catch(() => null)),
+      );
+      return results.filter((d): d is ScammerDocument => d !== null && d.status === "verified");
+    } catch {
+      return [];
     }
   }
 }
