@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-const ALL_TABS = [
+const STATIC_TABS = [
   { id: "description", label: "Description" },
   { id: "specs", label: "Specifications" },
   { id: "ingredients", label: "Ingredients" },
@@ -9,7 +9,13 @@ const ALL_TABS = [
   { id: "reviews", label: "Reviews" },
 ] as const;
 
-type TabId = (typeof ALL_TABS)[number]["id"];
+type StaticTabId = (typeof STATIC_TABS)[number]["id"];
+
+export interface CustomTabDef {
+  id: string;
+  label: string;
+  content: React.ReactNode;
+}
 
 export interface ProductTabsShellProps {
   descriptionContent?: React.ReactNode;
@@ -17,6 +23,8 @@ export interface ProductTabsShellProps {
   ingredientsContent?: React.ReactNode;
   howToUseContent?: React.ReactNode;
   reviewsContent?: React.ReactNode;
+  /** Additional tabs from custom sections — rendered after standard tabs */
+  customTabs?: CustomTabDef[];
   className?: string;
 }
 
@@ -26,9 +34,10 @@ export function ProductTabsShell({
   ingredientsContent,
   howToUseContent,
   reviewsContent,
+  customTabs = [],
   className = "",
 }: ProductTabsShellProps) {
-  const contentMap: Record<TabId, React.ReactNode | undefined> = {
+  const staticContentMap: Record<StaticTabId, React.ReactNode | undefined> = {
     description: descriptionContent,
     specs: specsContent,
     ingredients: ingredientsContent,
@@ -36,24 +45,37 @@ export function ProductTabsShell({
     reviews: reviewsContent,
   };
 
-  const visibleTabs = ALL_TABS.filter((t) => contentMap[t.id] != null);
-  const [activeTab, setActiveTab] = useState<TabId>(
-    visibleTabs[0]?.id ?? "description",
+  const visibleStatic = STATIC_TABS.filter(
+    (t) => staticContentMap[t.id] != null,
   );
+  const visibleCustom = customTabs.filter((t) => t.content != null);
 
-  if (visibleTabs.length === 0) return null;
+  const allTabs: { id: string; label: string; content: React.ReactNode }[] = [
+    ...visibleStatic.map((t) => ({
+      id: t.id,
+      label: t.label,
+      content: staticContentMap[t.id],
+    })),
+    ...visibleCustom,
+  ];
+
+  const [activeId, setActiveId] = useState<string>(allTabs[0]?.id ?? "");
+
+  if (allTabs.length === 0) return null;
+
+  const activeContent = allTabs.find((t) => t.id === activeId)?.content;
 
   return (
     <div className={`mt-8 ${className}`}>
       <div className="mb-6 flex gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-700 pb-px">
-        {visibleTabs.map((t) => (
+        {allTabs.map((t) => (
           <button
             key={t.id}
             type="button"
-            onClick={() => setActiveTab(t.id)}
+            onClick={() => setActiveId(t.id)}
             className={`flex-shrink-0 -mb-px pb-3 px-4 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === t.id
-                ? "border-primary-500 text-primary-600 dark:text-primary-400"
+              activeId === t.id
+                ? "border-[var(--appkit-color-primary,#6366f1)] text-[var(--appkit-color-primary,#6366f1)]"
                 : "border-transparent text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300"
             }`}
           >
@@ -61,13 +83,7 @@ export function ProductTabsShell({
           </button>
         ))}
       </div>
-      <div>
-        {visibleTabs.map((t) => (
-          <div key={t.id} hidden={activeTab !== t.id}>
-            {contentMap[t.id]}
-          </div>
-        ))}
-      </div>
+      <div>{activeContent}</div>
     </div>
   );
 }

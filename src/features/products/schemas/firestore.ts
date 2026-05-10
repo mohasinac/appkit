@@ -26,6 +26,25 @@ export interface ProductSpecification {
   unit?: string;
 }
 
+export type CustomFieldType = "text" | "number" | "boolean" | "url";
+
+export interface CustomField {
+  key: string;
+  type: CustomFieldType;
+  value: string;
+  unit?: string;
+}
+
+export const MAX_CUSTOM_FIELDS = 50;
+export const MAX_CUSTOM_SECTIONS = 3;
+
+export interface CustomSection {
+  id: string;
+  title: string;
+  text?: string;
+  fields?: CustomField[];
+}
+
 export interface ProductDocument {
   id: string;
   title: string;
@@ -92,6 +111,8 @@ export interface ProductDocument {
   howToUse?: string[];
   allowOffers?: boolean;
   minOfferPercent?: number;
+  customFields?: CustomField[];
+  customSections?: CustomSection[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -192,6 +213,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "seoDescription",
   "seoKeywords",
   "viewCount",
+  "customFields",
+  "customSections",
   "createdAt",
 ] as const;
 
@@ -232,6 +255,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "seoTitle",
   "seoDescription",
   "seoKeywords",
+  "customFields",
+  "customSections",
 ] as const;
 
 export type ProductCreateInput = Omit<

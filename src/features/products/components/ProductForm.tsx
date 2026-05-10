@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import {
   Alert,
   Checkbox,
+  Div,
   FormField,
   FormGroup,
   Heading,
@@ -11,6 +12,8 @@ import {
   Stack,
   Text,
 } from "../../../ui";
+import { CustomSectionsEditor } from "./CustomSectionsEditor";
+import type { CustomSection } from "../schemas/firestore";
 import {
   ImageUpload,
   MediaUploadField,
@@ -726,6 +729,24 @@ export function ProductForm({
           disabled={isReadonly}
         />
       )}
+
+      {/* ── Custom Sections (L3) ── */}
+      <Div>
+        <Heading
+          level={3}
+          className="mb-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+        >
+          Custom Sections
+        </Heading>
+        <Text className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+          Add up to 3 custom tabs to your product page — e.g. "Box Contents",
+          "Compatibility", "Grading Details".
+        </Text>
+        <CustomSectionsEditor
+          sections={(product.customSections as CustomSection[]) ?? []}
+          onChange={(sections) => update({ customSections: sections })}
+        />
+      </Div>
 
       <FormField
         name="shippingInfo"

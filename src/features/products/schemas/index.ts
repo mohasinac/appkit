@@ -143,6 +143,37 @@ export const productItemSchema = z.object({
   pickupAddressId: z.string().optional(),
   insurance: z.boolean().optional(),
   insuranceCost: z.number().optional(),
+
+  // Custom fields & sections
+  customFields: z
+    .array(
+      z.object({
+        key: z.string(),
+        type: z.enum(["text", "number", "boolean", "url"]),
+        value: z.string(),
+        unit: z.string().optional(),
+      }),
+    )
+    .optional(),
+  customSections: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        text: z.string().optional(),
+        fields: z
+          .array(
+            z.object({
+              key: z.string(),
+              type: z.enum(["text", "number", "boolean", "url"]),
+              value: z.string(),
+              unit: z.string().optional(),
+            }),
+          )
+          .optional(),
+      }),
+    )
+    .optional(),
 });
 
 /** Base Zod schema for list-query parameters. */

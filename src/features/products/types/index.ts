@@ -1,4 +1,6 @@
 import type { MediaField } from "../../media/types/index";
+import type { CustomField, CustomSection } from "../schemas/firestore";
+export type { CustomField, CustomSection } from "../schemas/firestore";
 
 export type ProductStatus =
   | "draft"
@@ -122,6 +124,10 @@ export interface ProductItem {
   pickupAddressId?: string;
   insurance?: boolean;
   insuranceCost?: number;
+
+  // Custom fields & sections (L1–L3)
+  customFields?: CustomField[];
+  customSections?: CustomSection[];
 }
 
 export interface ProductListResponse {

@@ -28,6 +28,8 @@ import { ProductFeatureBadges } from "./ProductFeatureBadges";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 import { BuyBar } from "./BuyBar";
 import { ShareButton } from "./ShareButton";
+import { CustomSectionTabContent } from "./CustomSectionTabContent";
+import type { CustomSection } from "../schemas/firestore";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -238,6 +240,10 @@ export async function ProductDetailPageView({
     Array.isArray(p.specifications)
       ? (p.specifications as { name: string; value: string; unit?: string }[])
       : [];
+
+  const customSections: CustomSection[] = Array.isArray(p.customSections)
+    ? (p.customSections as CustomSection[])
+    : [];
 
   const allowOffers = p.allowOffers === true;
   const productType =
@@ -684,6 +690,11 @@ export async function ProductDetailPageView({
                   emptyLabel="No reviews yet — be the first to review this product."
                 />
               }
+              customTabs={customSections.map((s) => ({
+                id: s.id,
+                label: s.title,
+                content: <CustomSectionTabContent section={s} />,
+              }))}
             />
           )}
           renderRelated={() =>

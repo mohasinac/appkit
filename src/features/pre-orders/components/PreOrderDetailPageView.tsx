@@ -21,10 +21,12 @@ import {
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
 import { BuyBar } from "../../products/components/BuyBar";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
+import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
 import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { ShareButton } from "../../products/components/ShareButton";
+import type { CustomSection } from "../../products/schemas/firestore";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
@@ -139,6 +141,9 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
   const specs: { name: string; value: string; unit?: string }[] = Array.isArray(p.specifications)
     ? (p.specifications as { name: string; value: string; unit?: string }[])
+    : [];
+  const customSections: CustomSection[] = Array.isArray(p.customSections)
+    ? (p.customSections as CustomSection[])
     : [];
   const descriptionHtml = toDescriptionHtml(p.description);
 
@@ -335,6 +340,11 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
                   </dl>
                 ) : undefined
               }
+              customTabs={customSections.map((s) => ({
+                id: s.id,
+                label: s.title,
+                content: <CustomSectionTabContent section={s} />,
+              }))}
             />
           )}
           renderBuyBar={() => (
