@@ -69,6 +69,30 @@ export interface StoreDocument {
    */
   customCommissionRate?: number;
 
+  // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
+  whatsappConfig?: {
+    /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */
+    phoneNumber?: string;
+    /** Meta WABA ID for this store */
+    wabaId?: string;
+    /** Meta Commerce Catalog ID linked to this store */
+    catalogId?: string;
+    /** Encrypted access token (AES-256-GCM via encryptPii) — never returned to client */
+    accessToken?: string;
+    /** Whether catalog sync is enabled for this store */
+    catalogSyncEnabled: boolean;
+    /** Timestamp of last successful catalog sync */
+    lastCatalogSyncAt?: Date;
+    /** Number of products synced in last run */
+    lastSyncCount?: number;
+    /** Status of last sync attempt */
+    lastSyncStatus?: "success" | "partial" | "failed";
+    /** True when wabaId + catalogId + accessToken are all set */
+    connected: boolean;
+    /** When the seller first connected their account */
+    connectedAt?: Date;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }

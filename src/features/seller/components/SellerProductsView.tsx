@@ -4,7 +4,7 @@ import React, { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { X, Pencil, Trash2 } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
+import { Alert, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../constants";
@@ -336,9 +336,7 @@ export function SellerProductsView({
 
         <div className="py-4 px-3 sm:px-4">
           {errorMessage && (
-            <div className="mb-4 rounded-xl border border-[var(--appkit-color-error-border,#fca5a5)] bg-[var(--appkit-color-error-surface,#fef2f2)] px-4 py-3 text-sm text-[var(--appkit-color-error)]">
-              {errorMessage}
-            </div>
+            <Alert variant="error" className="mb-4">{errorMessage}</Alert>
           )}
           <DataTable
             columns={PRODUCT_COLUMNS}
@@ -374,7 +372,7 @@ export function SellerProductsView({
                         onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
                         disabled={deletingId === row.id}
                         aria-label="Delete"
-                        className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-error-surface,#fef2f2)]"
+                        className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

@@ -280,6 +280,11 @@ export interface SiteSettingsCredentials {
   /** Google Places API for Google Business Reviews (HS4) */
   googleMapsApiKey?: string;
   googlePlaceId?: string;
+  /** WhatsApp Business Cloud API — platform level (for admin purchase announcements) */
+  whatsappPhoneNumberId?: string;
+  whatsappCloudApiToken?: string;
+  /** Comma-separated digits-only phone numbers that receive order announcements */
+  whatsappAdminNotifyNumbers?: string;
 }
 
 export interface SiteSettingsCredentialsMasked {
@@ -301,6 +306,9 @@ export interface SiteSettingsCredentialsMasked {
   deviantartClientSecret?: string;
   googleMapsApiKey?: string;
   googlePlaceId?: string;
+  whatsappPhoneNumberId?: string;
+  whatsappCloudApiToken?: string;
+  whatsappAdminNotifyNumbers?: string;
 }
 
 export interface SiteSettingsDocument {

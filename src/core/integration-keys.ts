@@ -22,8 +22,13 @@ export interface ResolvedKeys {
   razorpayWebhookSecret: string;
   // Resend email
   resendApiKey: string;
-  // WhatsApp Business Cloud
+  // WhatsApp Business Cloud (Twilio legacy key)
   whatsappApiKey: string;
+  // WhatsApp Business Cloud API — platform level (Meta Cloud API)
+  whatsappPhoneNumberId: string;
+  whatsappCloudApiToken: string;
+  /** Comma-separated digits-only numbers, e.g. "919876543210,918765432109" */
+  whatsappAdminNotifyNumbers: string;
 }
 
 const EMPTY_KEYS: ResolvedKeys = {
@@ -32,6 +37,9 @@ const EMPTY_KEYS: ResolvedKeys = {
   razorpayWebhookSecret: "",
   resendApiKey: "",
   whatsappApiKey: "",
+  whatsappPhoneNumberId: "",
+  whatsappCloudApiToken: "",
+  whatsappAdminNotifyNumbers: "",
 };
 
 let _cache: { value: ResolvedKeys; expiresAt: number } | null = null;
@@ -65,6 +73,14 @@ export async function resolveKeys(): Promise<ResolvedKeys> {
       db.razorpayWebhookSecret || process.env.RAZORPAY_WEBHOOK_SECRET || "",
     resendApiKey: db.resendApiKey || process.env.RESEND_API_KEY || "",
     whatsappApiKey: db.whatsappApiKey || process.env.WHATSAPP_API_KEY || "",
+    whatsappPhoneNumberId:
+      db.whatsappPhoneNumberId || process.env.WHATSAPP_PHONE_NUMBER_ID || "",
+    whatsappCloudApiToken:
+      db.whatsappCloudApiToken || process.env.WHATSAPP_CLOUD_API_TOKEN || "",
+    whatsappAdminNotifyNumbers:
+      db.whatsappAdminNotifyNumbers ||
+      process.env.WHATSAPP_ADMIN_NOTIFY_NUMBERS ||
+      "",
   };
 
   _cache = { value, expiresAt: Date.now() + CACHE_TTL_MS };
