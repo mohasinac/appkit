@@ -4,7 +4,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  border-top: 1px solid #f4f4f5;
+  border-top: 1px solid var(--appkit-color-zinc-100);
 }
 
 @media (min-width: 640px) {
@@ -21,7 +21,7 @@
 }
 
 .appkit-table-pagination__summary {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
   font-variant-numeric: tabular-nums;
 }
 
@@ -33,14 +33,14 @@
 
 .appkit-table-pagination__summary-value {
   font-weight: 600;
-  color: #52525b;
+  color: var(--appkit-color-zinc-600);
 }
 
 .appkit-table-pagination__controls {
   display: inline-flex;
   padding: 0.125rem;
   border-radius: 0.75rem;
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 .appkit-table-pagination__size {
@@ -57,7 +57,7 @@
 
 .appkit-table-pagination__size-label {
   font-size: 0.75rem;
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
   white-space: nowrap;
 }
 
@@ -73,17 +73,17 @@
 }
 
 .dark .appkit-table-pagination__summary {
-  color: #64748b;
+  color: var(--appkit-color-slate-500);
 }
 
 .dark .appkit-table-pagination__summary-value {
-  color: #cbd5e1;
+  color: var(--appkit-color-slate-300);
 }
 
 .dark .appkit-table-pagination__controls {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .dark .appkit-table-pagination__size-label {
-  color: #64748b;
+  color: var(--appkit-color-slate-500);
 }
