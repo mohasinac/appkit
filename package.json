@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.4.10",
+  "version": "2.4.11",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -98,7 +98,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify",
+    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/verify-css-build.mjs",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
