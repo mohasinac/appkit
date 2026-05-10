@@ -1,7 +1,7 @@
 .appkit-heading {
   margin: 0;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: var(--appkit-leading-tight);
+  letter-spacing: var(--appkit-tracking-tighter);
   font-family: var(--font-display), Poppins, ui-sans-serif, system-ui, sans-serif;
 }
 

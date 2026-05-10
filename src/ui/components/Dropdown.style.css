@@ -7,7 +7,7 @@
 
 .appkit-dropdown__menu {
   position: absolute;
-  z-index: 50;
+  z-index: var(--appkit-z-sidebar);
   margin-top: 0.5rem;
   min-width: 180px;
   border-radius: 0.5rem;
@@ -45,7 +45,7 @@
 .appkit-dropdown__composed-menu {
   position: absolute;
   right: 0;
-  z-index: 50;
+  z-index: var(--appkit-z-sidebar);
   margin-top: 0.25rem;
   min-width: 160px;
   border-radius: 0.5rem;

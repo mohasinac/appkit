@@ -88,13 +88,13 @@
 .appkit-grid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .appkit-grid--cards { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--product-cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; }
-.appkit-grid--product-cards-compact { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
-.appkit-grid--store-cards { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
-.appkit-grid--category-cards { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; }
+.appkit-grid--product-cards-compact { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card), 1fr)); gap: 1rem; }
+.appkit-grid--store-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card), 1fr)); gap: 1.5rem; }
+.appkit-grid--category-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-xs), 1fr)); gap: 1rem; }
 .appkit-grid--coupon-cards { grid-template-columns: repeat(auto-fill, minmax(264px, 1fr)); gap: 1.5rem; }
-.appkit-grid--address-cards { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.appkit-grid--address-cards { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-lg), 1fr)); gap: 1rem; }
 .appkit-grid--stat-tiles { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; }
-.appkit-grid--nav-tiles { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 1rem; }
+.appkit-grid--nav-tiles { grid-template-columns: repeat(auto-fill, minmax(var(--appkit-grid-min-card-sm), 1fr)); gap: 1rem; }
 .appkit-grid--halves { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--two-third { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 .appkit-grid--one-third { grid-template-columns: repeat(1, minmax(0, 1fr)); }

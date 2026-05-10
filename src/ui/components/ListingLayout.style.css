@@ -405,7 +405,7 @@
 .appkit-listing-layout__mobile-overlay-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: var(--appkit-z-navbar);
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -418,7 +418,7 @@
 .appkit-listing-layout__mobile-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: var(--appkit-z-sidebar);
   display: flex;
   flex-direction: column;
   background: var(--appkit-color-surface);

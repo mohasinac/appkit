@@ -20,7 +20,7 @@
 .appkit-avatar--xs {
   height: 1.5rem;
   width: 1.5rem;
-  font-size: 10px;
+  font-size: var(--appkit-text-2xs);
 }
 .appkit-avatar--sm {
   height: 2rem;

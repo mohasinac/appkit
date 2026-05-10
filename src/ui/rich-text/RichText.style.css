@@ -73,7 +73,7 @@
   padding: 1rem 1.25rem;
   overflow-x: auto;
   font-size: 0.875em;
-  line-height: 1.7;
+  line-height: var(--appkit-leading-relaxed);
   background-color: var(--appkit-color-slate-800);  /* always dark */
   color: var(--appkit-color-slate-200);
   border: 1px solid rgba(51, 65, 85, 0.6);

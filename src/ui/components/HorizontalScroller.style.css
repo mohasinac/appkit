@@ -83,7 +83,7 @@
   top: 0;
   bottom: 0;
   width: 2rem;
-  z-index: 10;
+  z-index: var(--appkit-z-raised);
   pointer-events: none;
 }
 

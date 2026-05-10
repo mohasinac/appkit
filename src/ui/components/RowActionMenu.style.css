@@ -12,14 +12,14 @@
 
 .appkit-row-action-menu__dropdown {
   position: absolute;
-  z-index: 50;
+  z-index: var(--appkit-z-sidebar);
   margin-top: 0.25rem;
   min-width: 160px;
   border-radius: 0.75rem;
   border: 1px solid var(--appkit-color-border);
   background: var(--appkit-color-surface);
   padding-block: 0.375rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--appkit-shadow-xl);
 }
 
 :is(.dark) .appkit-row-action-menu__dropdown {

@@ -60,7 +60,7 @@
 }
 
 .appkit-flow-diagram__badge {
-  font-size: 10px;
+  font-size: var(--appkit-text-2xs);
   font-weight: 700;
   padding: 0.125rem 0.375rem;
   border-radius: 9999px;

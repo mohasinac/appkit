@@ -31,7 +31,7 @@
 .appkit-card--interactive {
   background: var(--appkit-color-surface);
   border: 1px solid var(--appkit-color-border);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--appkit-shadow-sm);
 }
 .appkit-card--interactive:hover {
   transform: translateY(-2px);
@@ -40,7 +40,7 @@
 .appkit-card--glass {
   border: 1px solid rgba(255, 255, 255, 0.4);
   background: rgba(255, 255, 255, 0.75);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: var(--appkit-shadow-sm);
   backdrop-filter: blur(8px);
 }
 

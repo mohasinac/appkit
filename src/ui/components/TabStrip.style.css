@@ -86,7 +86,7 @@
   height: 1rem;
   padding: 0 0.25rem;
   border-radius: 9999px;
-  font-size: 10px;
+  font-size: var(--appkit-text-2xs);
   background: var(--appkit-color-secondary-50);
   color: var(--appkit-color-secondary-600);
 }
