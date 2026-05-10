@@ -7,11 +7,15 @@ interface CartItemRowProps {
   item: CartItem;
   onQtyChange?: (id: string, qty: number) => void;
   onRemove?: (id: string) => void;
+  /** Product detail URL — if provided, title becomes a link */
+  href?: string;
+  /** When true: grays out item, shows "Out of Stock" badge, locks qty stepper */
+  isOutOfStock?: boolean;
 }
 
-export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
+export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
-    <Div className="flex gap-4 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
+    <Div className={`flex gap-4 rounded-xl border bg-white dark:bg-slate-900 p-4 transition-opacity ${isOutOfStock ? "border-neutral-200 dark:border-slate-700 opacity-60" : "border-neutral-200 dark:border-slate-700"}`}>
       <Div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-slate-800">
         {item.meta.image && (
           <Div
@@ -23,9 +27,27 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
         )}
       </Div>
       <Div className="flex flex-1 flex-col justify-between">
-        <Text className={`font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp2}`}>
-          {item.meta.title}
-        </Text>
+        <Div className="flex items-start gap-1.5">
+          {href ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`font-medium text-neutral-900 dark:text-zinc-100 hover:underline underline-offset-2 ${THEME_CONSTANTS.utilities.textClamp2}`}
+            >
+              {item.meta.title}
+            </a>
+          ) : (
+            <Text className={`font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp2}`}>
+              {item.meta.title}
+            </Text>
+          )}
+          {isOutOfStock && (
+            <Span className="flex-shrink-0 rounded bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
+              Out of Stock
+            </Span>
+          )}
+        </Div>
         {item.meta.attributes &&
           Object.keys(item.meta.attributes).length > 0 && (
             <Text className="text-xs text-neutral-500 dark:text-zinc-400">
@@ -41,7 +63,7 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
               item.meta.currency,
             )}
           </Text>
-          {onQtyChange && (
+          {onQtyChange && !isOutOfStock && (
             <Row className="gap-2">
               <Button
                 onClick={() => onQtyChange(item.id, item.quantity - 1)}
@@ -64,6 +86,9 @@ export function CartItemRow({ item, onQtyChange, onRemove }: CartItemRowProps) {
                 +
               </Button>
             </Row>
+          )}
+          {isOutOfStock && (
+            <Span className="text-xs text-neutral-400 dark:text-zinc-500">Qty: {item.quantity}</Span>
           )}
         </Row>
       </Div>
