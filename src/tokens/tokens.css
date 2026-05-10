@@ -235,6 +235,7 @@
   --appkit-color-warning:          #d97706;    /* amber-600 */
   --appkit-color-warning-surface:  #fffbeb;    /* amber-50 */
   --appkit-color-error:            #dc2626;    /* red-600 */
+  --appkit-color-error-hover:      #ef4444;    /* red-500 — danger button hover */
   --appkit-color-error-surface:    #fef2f2;    /* red-50 */
   --appkit-color-error-title:      #7f1d1d;    /* red-900 */
   --appkit-color-error-text:       #991b1b;    /* red-800 */

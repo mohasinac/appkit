@@ -48,54 +48,54 @@
 }
 
 .appkit-button--primary {
-  background: var(--appkit-color-primary-700, #3e7708);
-  color: var(--appkit-color-text-on-primary, #ffffff);
+  background: var(--appkit-color-primary-700);
+  color: var(--appkit-color-text-on-primary);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .appkit-button--primary:hover:not(:disabled) {
-  background: var(--appkit-color-primary-800, #2f5a06);
+  background: var(--appkit-color-primary-800);
 }
 
 .dark .appkit-button--primary {
-  background: var(--appkit-color-secondary, #e91e8c);
+  background: var(--appkit-color-secondary);
 }
 
 .dark .appkit-button--primary:hover:not(:disabled) {
-  background: var(--appkit-color-secondary-400, #f063b9);
+  background: var(--appkit-color-secondary-400);
 }
 
 .appkit-button--secondary {
-  background: var(--appkit-color-primary-700, #3e7708);
-  color: var(--appkit-color-text-on-primary, #ffffff);
+  background: var(--appkit-color-primary-700);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-button--secondary:hover:not(:disabled) {
-  background: var(--appkit-color-primary-600, #509c02);
+  background: var(--appkit-color-primary-600);
 }
 
 .dark .appkit-button--secondary {
-  background: var(--appkit-color-secondary-700, #b00d66);
+  background: var(--appkit-color-secondary-700);
 }
 
 .dark .appkit-button--secondary:hover:not(:disabled) {
-  background: var(--appkit-color-secondary-600, #d4107a);
+  background: var(--appkit-color-secondary-600);
 }
 
 .appkit-button--outline {
-  background: var(--appkit-color-surface, #ffffff);
-  border-color: var(--appkit-color-border, #e4e4e7);
-  color: var(--appkit-color-text, #18181b);
+  background: var(--appkit-color-surface);
+  border-color: var(--appkit-color-border);
+  color: var(--appkit-color-text);
 }
 
 .appkit-button--outline:hover:not(:disabled) {
-  background: var(--appkit-color-bg, #fafafa);
+  background: var(--appkit-color-bg);
 }
 
 .dark .appkit-button--outline {
   background: transparent;
-  border-color: var(--appkit-color-border, #334155);
-  color: var(--appkit-color-text, #f8fafc);
+  border-color: var(--appkit-color-border);
+  color: var(--appkit-color-text);
 }
 
 .dark .appkit-button--outline:hover:not(:disabled) {
@@ -104,15 +104,15 @@
 
 .appkit-button--ghost {
   background: transparent;
-  color: var(--appkit-color-text, #3f3f46);
+  color: var(--appkit-color-text);
 }
 
 .appkit-button--ghost:hover:not(:disabled) {
-  background: var(--appkit-color-border-subtle, #f4f4f5);
+  background: var(--appkit-color-border-subtle);
 }
 
 .dark .appkit-button--ghost {
-  color: var(--appkit-color-text-muted, #cbd5e1);
+  color: var(--appkit-color-text-muted);
 }
 
 .dark .appkit-button--ghost:hover:not(:disabled) {
@@ -120,21 +120,21 @@
 }
 
 .appkit-button--danger {
-  background: var(--appkit-color-error, #dc2626);
-  color: #ffffff;
+  background: var(--appkit-color-error);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-button--danger:hover:not(:disabled) {
-  background: #ef4444;
+  background: var(--appkit-color-error-hover);
 }
 
 .appkit-button--warning {
-  background: var(--appkit-color-warning, #f59e0b);
-  color: #ffffff;
+  background: var(--appkit-color-warning);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-button--warning:hover:not(:disabled) {
-  background: #fbbf24;
+  background: var(--appkit-color-amber-400);
 }
 
 .appkit-button__spinner {
