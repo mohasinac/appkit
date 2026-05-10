@@ -20,7 +20,6 @@ import React, { type ReactNode } from "react";
 import type { ViewPortal } from "./Layout";
 import { Div } from "./Div";
 import { Grid } from "./Layout";
-import { THEME_CONSTANTS } from "../../tokens";
 
 export type DetailViewLayout =
   /** 3-column product grid (gallery | info | sidebar) */
@@ -120,13 +119,13 @@ export function DetailViewShell({
         );
       case "grid-2":
         return (
-          <Div className={`flex flex-col md:flex-row ${THEME_CONSTANTS.spacing.gap.lg} my-6`}>
+          <Grid cols="detailSplit" gap="lg" className="my-6">
             {mainSlots.map((slot, i) => (
-              <Div key={i} className={i === 0 ? "w-full md:w-1/2" : "flex-1"}>
+              <Div key={i}>
                 {resolveSlot(slot)}
               </Div>
             ))}
-          </Div>
+          </Grid>
         );
       case "narrow":
         return (

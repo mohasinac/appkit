@@ -482,7 +482,7 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     notifications: true,
     sellerRegistration: true,
     preOrders: false,
-    seedPanel: false,
+    seedPanel: true,
   },
   shipping: {
     estimatedDays: 5,

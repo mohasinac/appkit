@@ -133,7 +133,7 @@ export async function listBidsByProduct(
 ): Promise<FirebaseSieveResult<Omit<BidDocument, "userEmail">>> {
   const result = await bidRepository.list({
     filters: `productId==${productId}`,
-    sorts: "-bidAmount",
+    sorts: "-bidDate",
     page: params?.page ?? 1,
     pageSize: params?.pageSize ?? 20,
   });

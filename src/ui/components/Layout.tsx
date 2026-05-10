@@ -139,6 +139,8 @@ export const GRID_MAP = {
   sidebarWide: "appkit-grid appkit-grid--sidebar-wide",
   /** Product detail triplet: gallery | info | actions sidebar */
   productDetailTriplet: "appkit-grid appkit-grid--product-detail-triplet",
+  /** 2-column split (media | content) — flex row on md+, custom CSS (no cascade conflict) */
+  detailSplit: "appkit-grid appkit-grid--detail-split",
   /** CSS auto-fill, min 200px columns */
   autoSm: "appkit-grid appkit-grid--auto-sm",
   /** CSS auto-fill, min 280px columns */

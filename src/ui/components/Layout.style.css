@@ -105,6 +105,23 @@
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 1.5rem;
 }
+.appkit-grid--detail-split {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .appkit-grid--detail-split {
+    flex-direction: row;
+  }
+  .appkit-grid--detail-split > *:first-child {
+    width: 50%;
+    flex-shrink: 0;
+  }
+  .appkit-grid--detail-split > *:nth-child(n+2) {
+    flex: 1;
+  }
+}
 .appkit-grid--auto-sm { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 .appkit-grid--auto-md { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 .appkit-grid--auto-lg { grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); }
