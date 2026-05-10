@@ -2,27 +2,13 @@
 import { useRef, useCallback, useEffect } from "react";
 
 /**
- * useLongPress Hook
- *
  * Fires `callback` after the element is held for `ms` milliseconds.
- * A quick tap (pointer-up before the threshold) does NOT fire the callback.
- * Safe to use on both mouse and touch devices.
- *
- * @param callback - Function to call on long-press
- * @param ms       - Hold duration in ms before callback fires (default: 500)
- *
- * @example
- * ```tsx
- * const longPress = useLongPress(() => openContextMenu(), 500);
- *
- * return (
- *   <tr {...longPress}>…</tr>
- * );
- * ```
+ * Quick taps (pointer-up before threshold) do NOT fire the callback.
+ * Triggers haptic feedback via `navigator.vibrate` on mobile.
+ * Safe for both mouse and touch devices.
  */
 export function useLongPress(callback: () => void, ms = 500) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Keep callback ref stable — avoids re-attaching on every render
   const callbackRef = useRef(callback);
 
   useEffect(() => {
@@ -31,6 +17,7 @@ export function useLongPress(callback: () => void, ms = 500) {
 
   const start = useCallback(() => {
     timerRef.current = setTimeout(() => {
+      navigator.vibrate?.(30);
       callbackRef.current();
     }, ms);
   }, [ms]);
@@ -42,14 +29,7 @@ export function useLongPress(callback: () => void, ms = 500) {
     }
   }, []);
 
-  // Clean up any pending timer on unmount
-  useEffect(() => {
-    return () => {
-      if (timerRef.current !== null) {
-        clearTimeout(timerRef.current);
-      }
-    };
-  }, []);
+  useEffect(() => () => { if (timerRef.current !== null) clearTimeout(timerRef.current); }, []);
 
   return {
     onMouseDown: start,

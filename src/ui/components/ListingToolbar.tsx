@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Search, SlidersHorizontal, LayoutGrid, List, RotateCcw } from "lucide-react";
+import { CheckSquare, Search, SlidersHorizontal, LayoutGrid, List, RotateCcw, Square } from "lucide-react";
 import { SortDropdown } from "./SortDropdown";
 
 export interface ListingToolbarSortOption {
@@ -30,10 +30,19 @@ export interface ListingToolbarProps {
   onViewChange?: (view: "grid" | "list") => void;
   hideViewToggle?: boolean;
 
-  /** Reset all toolbar state to defaults — shown as icon button when provided */
+  /** Reset all toolbar state to defaults */
   onResetAll?: () => void;
-  /** Controls whether the reset icon is shown */
   hasActiveState?: boolean;
+
+  /**
+   * Bulk-selection mode.
+   * When `true`, the search row is replaced by Select All / Clear controls.
+   */
+  bulkMode?: boolean;
+  bulkSelectedCount?: number;
+  bulkTotalCount?: number;
+  onBulkSelectAll?: () => void;
+  onBulkClear?: () => void;
 
   /** Any extra action buttons placed after the view toggle */
   extra?: React.ReactNode;
@@ -41,11 +50,6 @@ export interface ListingToolbarProps {
   className?: string;
 }
 
-/**
- * Responsive two-row listing toolbar.
- * Mobile: search on its own row; filters/sort/view on second row.
- * Tablet+: single row.
- */
 export function ListingToolbar({
   filterCount = 0,
   onFiltersClick,
@@ -62,6 +66,11 @@ export function ListingToolbar({
   hideViewToggle = false,
   onResetAll,
   hasActiveState = false,
+  bulkMode = false,
+  bulkSelectedCount = 0,
+  bulkTotalCount = 0,
+  onBulkSelectAll,
+  onBulkClear,
   extra,
   className = "",
 }: ListingToolbarProps) {
@@ -73,15 +82,40 @@ export function ListingToolbar({
     }
   };
 
+  const allSelected = bulkTotalCount > 0 && bulkSelectedCount === bulkTotalCount;
+
   return (
     <div
       className={`sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
     >
-      {/* ── Mobile: two rows; sm+: single row ─────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">
 
-        {/* Row 1 (mobile) / main row (desktop): Search — full width on mobile */}
-        {onSearchChange && (
+        {/* Search row OR Bulk-select controls */}
+        {bulkMode ? (
+          <div className="flex flex-1 items-center gap-2">
+            <button
+              type="button"
+              onClick={onBulkSelectAll}
+              className="flex items-center gap-1.5 rounded-lg border border-zinc-300 dark:border-slate-600 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              {allSelected
+                ? <CheckSquare className="h-4 w-4 text-[var(--appkit-color-primary,theme(colors.violet.600))]" />
+                : <Square className="h-4 w-4" />
+              }
+              {allSelected ? "Deselect All" : `Select All (${bulkTotalCount})`}
+            </button>
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              {bulkSelectedCount} selected
+            </span>
+            <button
+              type="button"
+              onClick={onBulkClear}
+              className="text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-500 transition-colors"
+            >
+              Clear
+            </button>
+          </div>
+        ) : onSearchChange ? (
           <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900 min-w-0">
             <input
               type="text"
@@ -100,12 +134,11 @@ export function ListingToolbar({
               <Search className="h-4 w-4" />
             </button>
           </div>
-        )}
+        ) : null}
 
-        {/* Row 2 (mobile) / right side (desktop): Filters + Sort + View + Extra */}
+        {/* Filters + Sort + View + Reset + Extra */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
 
-          {/* Filters button */}
           {onFiltersClick && (
             <button
               type="button"
@@ -115,14 +148,13 @@ export function ListingToolbar({
               <SlidersHorizontal className="h-4 w-4" />
               <span className="hidden sm:inline">Filters</span>
               {filterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white">
+                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-[10px] font-bold text-white">
                   {filterCount}
                 </span>
               )}
             </button>
           )}
 
-          {/* Sort dropdown */}
           {sortOptions && sortValue !== undefined && onSortChange && (
             <div className="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
               <span className="hidden md:inline whitespace-nowrap text-xs">Sort</span>
@@ -134,7 +166,6 @@ export function ListingToolbar({
             </div>
           )}
 
-          {/* Grid / list toggle */}
           {!hideViewToggle && onViewChange && (
             <div className="flex items-center rounded-lg border border-zinc-300 dark:border-slate-600 overflow-hidden">
               <button
@@ -143,7 +174,7 @@ export function ListingToolbar({
                 aria-label="Grid view"
                 className={`p-1.5 sm:p-2 transition-colors ${
                   view === "grid"
-                    ? "bg-primary text-white"
+                    ? "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
                     : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
                 }`}
               >
@@ -155,7 +186,7 @@ export function ListingToolbar({
                 aria-label="List view"
                 className={`p-1.5 sm:p-2 transition-colors ${
                   view === "list"
-                    ? "bg-primary text-white"
+                    ? "bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
                     : "text-zinc-500 hover:bg-zinc-50 dark:hover:bg-slate-800 dark:text-zinc-400"
                 }`}
               >
@@ -164,7 +195,6 @@ export function ListingToolbar({
             </div>
           )}
 
-          {/* Reset all — instant, icon only */}
           {onResetAll && hasActiveState && (
             <button
               type="button"
@@ -177,7 +207,6 @@ export function ListingToolbar({
             </button>
           )}
 
-          {/* Extra actions (e.g. Select button) */}
           {extra}
         </div>
       </div>

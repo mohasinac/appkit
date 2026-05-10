@@ -10,6 +10,7 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency, getDefaultCurrencySymbol } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { safeDisplayName } from "../../../security";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -59,6 +60,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       ? { label: "Pre-Order", cls: "bg-violet-600 text-white" }
       : null;
 
+  const longPress = useLongPress(() => onSelect?.(product.id));
+
   const handleCardClick = selectionMode
     ? (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }
     : onClick && !href ? () => onClick(product) : undefined;
@@ -76,6 +79,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           : undefined
       }
       onClick={handleCardClick}
+      {...(!selectionMode ? longPress : {})}
       className={[
         "group relative flex h-full flex-col overflow-hidden",
         "rounded-2xl border bg-white",
@@ -106,25 +110,29 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           </Div>
         )}
 
-        {/* Top-left: checkbox (selection mode) or badges */}
+        {/* Top-left: hover/selection checkbox + badges */}
         <Div className="absolute left-2 top-2 flex flex-col gap-1">
-          {selectionMode ? (
+          {/* Checkbox — always rendered; hidden until hover or selection active */}
+          {onSelect && (
             <Div
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); onSelect(product.id); }}
+              aria-label={isSelected ? "Deselect" : "Select"}
               className={[
-                "flex h-6 w-6 items-center justify-center rounded-md border-2 shadow-sm transition-all",
+                "flex h-6 w-6 items-center justify-center rounded-md border-2 shadow-sm transition-all duration-150 cursor-pointer",
                 isSelected
-                  ? "bg-primary border-primary text-white"
+                  ? "bg-primary border-primary text-white opacity-100"
                   : "bg-white/90 dark:bg-slate-800/90 border-zinc-300 dark:border-slate-500",
+                selectionMode || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100",
               ].join(" ")}
             >
               {isSelected && (
-                <svg className="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M2 6l3 3 5-5" />
                 </svg>
               )}
             </Div>
-          ) : (
+          )}
+          {!selectionMode && !isSelected && (
             <>
               {discount && (
                 <Span className="rounded-full bg-rose-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">

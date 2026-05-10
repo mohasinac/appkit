@@ -124,9 +124,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     { initialData },
   );
 
-  const [selectionMode, setSelectionMode] = useState(false);
   const selection = useBulkSelection({ items: products as any[], keyExtractor: (p: any) => p.id });
-  const selectedSet = new Set(selection.selectedIds);
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
@@ -193,42 +191,32 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        bulkMode={selection.isSelecting}
+        bulkSelectedCount={selection.selectedCount}
+        bulkTotalCount={products.length}
+        onBulkSelectAll={selection.toggleAll}
+        onBulkClear={selection.clearSelection}
         extra={
-          <div className="flex items-center gap-2">
-            {/* Show sold toggle */}
-            <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
-              <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
-                Show sold
-              </span>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={showSold}
-                onClick={() => table.set("showSold", showSold ? "" : "true")}
-                className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
-                  showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
-                }`}
-              >
-                <span
-                  className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                    showSold ? "translate-x-[19px]" : "translate-x-[3px]"
-                  }`}
-                />
-              </button>
-            </label>
-            {/* Select mode toggle */}
+          <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
+            <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
+              Show sold
+            </span>
             <button
               type="button"
-              onClick={() => { setSelectionMode((m) => !m); selection.clearSelection(); }}
-              className={`shrink-0 rounded-lg border px-2.5 py-1.5 sm:px-3 sm:py-2 text-xs font-medium transition-colors ${
-                selectionMode
-                  ? "border-primary bg-primary/10 text-primary dark:text-primary-400"
-                  : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+              role="switch"
+              aria-checked={showSold}
+              onClick={() => table.set("showSold", showSold ? "" : "true")}
+              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
+                showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}
             >
-              {selectionMode ? "Cancel" : "Select"}
+              <span
+                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                  showSold ? "translate-x-[19px]" : "translate-x-[3px]"
+                }`}
+              />
             </button>
-          </div>
+          </label>
         }
       />
 
@@ -269,8 +257,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             wishlistedIds={wishlistedIds}
             onAddToCart={handleAddToCart}
             onBuyNow={handleBuyNow}
-            selectionMode={selectionMode}
-            selectedIds={selectedSet}
+            selectionMode={selection.isSelecting}
+            selectedIds={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
           />
         )}
@@ -280,21 +268,20 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       {/* ── Bulk actions bar ──────────────────────────────────────────── */}
       <BulkActionsBar
         selectedCount={selection.selectedCount}
-        onClearSelection={() => { selection.clearSelection(); setSelectionMode(false); }}
+        onClearSelection={selection.clearSelection}
         actions={[
           {
             label: "Add to Cart",
             icon: <ShoppingCart className="h-3.5 w-3.5" />,
             variant: "primary",
             onClick: () => {
-              const selected = (products as any[]).filter((p) => selectedSet.has(p.id));
+              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
               selected.forEach((p) => {
                 localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
                 pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
               });
               showToast(`${selected.length} items added to cart`, "success");
               selection.clearSelection();
-              setSelectionMode(false);
             },
           },
           {
@@ -302,14 +289,13 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
             onClick: () => {
-              const selected = (products as any[]).filter((p) => selectedSet.has(p.id));
+              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
               selected.forEach((p) => {
                 localWishlist.add(p.id, "product");
                 pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
               });
               showToast(`${selected.length} items added to wishlist`, "success");
               selection.clearSelection();
-              setSelectionMode(false);
             },
           },
         ]}

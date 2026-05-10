@@ -8686,6 +8686,11 @@ export type { ScamProfileViewProps } from "./features/scams/components/ScamProfi
 export { listVerifiedScammers, getPublicScammerById } from "./features/scams/actions/scam-actions";
 export type { ScammerListResult } from "./features/scams/actions/scam-actions";
 
+// --- Shell primitives (UX1/UX2/UX3/UX6) ----------------------------------------
+// [CLIENT] SellerProductShell — full-flow create/edit shell for standard, auction, and pre-order listings.
+export { SellerProductShell } from "./features/seller/components/SellerProductShell";
+export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } from "./features/seller/components/SellerProductShell";
+
 // --- Shell primitives (UX1/UX2/UX3) -------------------------------------------
 // [CLIENT] FormShell — full-viewport edit overlay with sticky top/bottom bars, left section nav, and dirty-state hook.
 export { FormShell, useFormShell } from "./features/shell/index";

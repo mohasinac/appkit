@@ -34,6 +34,8 @@ export { SellerCreateProductView } from "./SellerCreateProductView";
 export type { SellerCreateProductViewProps } from "./SellerCreateProductView";
 export { SellerEditProductView } from "./SellerEditProductView";
 export type { SellerEditProductViewProps } from "./SellerEditProductView";
+export { SellerProductShell } from "./SellerProductShell";
+export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } from "./SellerProductShell";
 export { SellerStoreSetupView } from "./SellerStoreSetupView";
 export type { SellerStoreSetupViewProps } from "./SellerStoreSetupView";
 export { SellerStoreView } from "./SellerStoreView";

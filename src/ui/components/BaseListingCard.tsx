@@ -9,6 +9,12 @@ export interface BaseListingCardRootProps {
   variant?: "grid" | "list";
   onClick?: () => void;
   children?: ReactNode;
+  /** Long-press / gesture event handlers forwarded to the root element */
+  onMouseDown?: () => void;
+  onMouseUp?: () => void;
+  onMouseLeave?: () => void;
+  onTouchStart?: () => void;
+  onTouchEnd?: () => void;
 }
 
 export interface BaseListingCardHeroProps {
@@ -39,13 +45,23 @@ function BaseListingCardRoot({
   isSelected,
   isDisabled,
   onClick,
+  onMouseDown,
+  onMouseUp,
+  onMouseLeave,
+  onTouchStart,
+  onTouchEnd,
   children,
 }: BaseListingCardRootProps) {
   return (
     <div
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
       className={[
-        "relative flex flex-col w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
+        "group relative flex flex-col w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
         isSelected
           ? "border-primary outline outline-2 outline-primary shadow-sm"
           : "border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-md",

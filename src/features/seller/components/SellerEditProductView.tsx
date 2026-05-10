@@ -1,28 +1,12 @@
-import React from "react";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+"use client";
+import { SellerProductShell } from "./SellerProductShell";
+import type { SellerProductShellProps, ProductListingMode } from "./SellerProductShell";
 
-export interface SellerEditProductViewProps extends Omit<
-  StackedViewShellProps,
-  "sections"
-> {
-  labels?: { title?: string; submitButton?: string };
-  renderForm?: (isLoading: boolean) => React.ReactNode;
-  isLoading?: boolean;
+export interface SellerEditProductViewProps
+  extends Omit<SellerProductShellProps, "mode"> {
+  listingType?: ProductListingMode;
 }
 
-export function SellerEditProductView({
-  labels = {},
-  renderForm,
-  isLoading = false,
-  ...rest
-}: SellerEditProductViewProps) {
-  return (
-    <StackedViewShell
-      portal="seller"
-      {...rest}
-      title={labels.title}
-      sections={[renderForm?.(isLoading)]}
-    />
-  );
+export function SellerEditProductView(props: SellerEditProductViewProps) {
+  return <SellerProductShell mode="edit" {...props} />;
 }

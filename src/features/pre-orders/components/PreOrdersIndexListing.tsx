@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Heart, ShoppingCart, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, useToast, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { PreOrderFilters } from "./PreOrderFilters";
@@ -12,6 +12,7 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../../products/hooks/useBrands";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
 const PREORDER_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -174,6 +175,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     showToast("Added to cart", "success");
   }, [localCart, showToast]);
 
+  const selection = useBulkSelection({ items: preOrders as any[], keyExtractor: (p: any) => p.id });
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
 
   return (
@@ -194,6 +196,11 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        bulkMode={selection.isSelecting}
+        bulkSelectedCount={selection.selectedCount}
+        bulkTotalCount={preOrders.length}
+        onBulkSelectAll={selection.toggleAll}
+        onBulkClear={selection.clearSelection}
         extra={
           <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
             <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
@@ -259,6 +266,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
                 onAddToCart={handleAddToCart}
                 wishlistActions={wishlistActions}
+                selectable={selection.isSelecting}
+                isSelected={selection.isSelected(product.id)}
+                onSelect={(id) => selection.toggle(id)}
               />
             ))}
           </div>
@@ -272,12 +282,51 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 hrefBuilder={(p) => String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id))}
                 onAddToCart={handleAddToCart}
                 wishlistActions={wishlistActions}
+                selectable={selection.isSelecting}
+                isSelected={selection.isSelected(product.id)}
+                onSelect={(id) => selection.toggle(id)}
               />
             ))}
           </div>
         )}
 
       </div>
+
+      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
+      <BulkActionsBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            label: "Add to Cart",
+            icon: <ShoppingCart className="h-3.5 w-3.5" />,
+            variant: "primary",
+            onClick: () => {
+              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
+              });
+              showToast(`${selected.length} items added to cart`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            label: "Wishlist",
+            icon: <Heart className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            onClick: () => {
+              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localWishlist.add(p.id, "preorder");
+                pushWishlistOp({ op: "add", itemId: p.id, type: "preorder" });
+              });
+              showToast(`${selected.length} items added to wishlist`, "success");
+              selection.clearSelection();
+            },
+          },
+        ]}
+      />
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (

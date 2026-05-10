@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Clock, Gavel, Heart, Play, ShoppingBag, Star } from "lucide-react";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
 import { useCountdown, type CountdownRemaining } from "../../../react";
@@ -195,6 +196,8 @@ export function MarketplaceAuctionCard({
     };
   }, [hovered, images.length]);
 
+  const longPress = useLongPress(() => onSelect?.(product.id, !isSelected));
+
   const handleNavigate = useCallback(() => {
     if (!auctionHref) return;
     if (onNavigate) {
@@ -237,6 +240,11 @@ export function MarketplaceAuctionCard({
       isDisabled={isEnded}
       variant={baseVariant}
       className={className}
+      onMouseDown={!isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={!isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={!isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
     >
       <BaseListingCard.Hero
         aspect="square"
@@ -279,15 +287,16 @@ export function MarketplaceAuctionCard({
           </Div>
         ) : null}
 
-        {selectable ? (
+        {onSelect && (
           <BaseListingCard.Checkbox
             selected={isSelected}
             onSelect={handleSelect}
-            label={
-              isSelected ? mergedLabels.deselectItem : mergedLabels.selectItem
+            label={isSelected ? mergedLabels.deselectItem : mergedLabels.selectItem}
+            className={
+              selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"
             }
           />
-        ) : null}
+        )}
 
         <Div
           className={`absolute left-2 z-10 flex flex-col gap-1 ${product.featured ? "top-8" : "top-2"}`}

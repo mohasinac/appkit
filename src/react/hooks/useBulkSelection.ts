@@ -1,67 +1,32 @@
 "use client"
-/**
- * useBulkSelection
- *
- * Generic multi-select state hook for list/table rows.
- * Pairs with any table component that accepts `selectedIds` and
- * `onSelectionChange` props.
- *
- * @example
- * ```tsx
- * const selection = useBulkSelection({ items, keyExtractor: (p) => p.id });
- *
- * <DataTable
- *   selectable
- *   selectedIds={selection.selectedIds}
- *   onSelectionChange={selection.setSelectedIds}
- * />
- * ```
- */
 
 import { useState, useCallback, useMemo } from "react";
-import type { Dispatch, SetStateAction } from "react";
 
 /** Default API limit — match the `z.array().max(N)` on your bulk endpoint */
 const BULK_MAX_IDS = 100;
 
 export interface UseBulkSelectionOptions<T> {
-  /** The current page / list of items being displayed. */
   items: T[];
-  /** Extract a stable unique key from each item (e.g. `item => item.id`). */
   keyExtractor: (item: T) => string;
-  /**
-   * Maximum number of IDs that can be selected at once.
-   * @default 100
-   */
   maxSelection?: number;
 }
 
 export interface UseBulkSelectionReturn {
+  /** Stable array of selected IDs — for backward-compat serialisation / API calls. */
   selectedIds: string[];
+  /** O(1) membership set — prefer this over `selectedIds.includes()` in render. */
+  selectedIdSet: Set<string>;
   selectedCount: number;
-  /** Returns `true` if the given ID is currently selected. */
+  /** `true` when at least one item is selected — drives selection-mode UI. */
+  isSelecting: boolean;
   isSelected: (id: string) => boolean;
-  /** `true` when every item on the current page is selected. */
   isAllSelected: boolean;
-  /**
-   * `true` when some — but not all — items are selected.
-   * Use to set the indeterminate state on the header checkbox.
-   */
   isIndeterminate: boolean;
-  /** Toggle one item in or out of the selection. Respects `maxSelection`. */
   toggle: (id: string) => void;
-  /**
-   * Select all items on the current page (up to `maxSelection`),
-   * or deselect all if every item is already selected.
-   */
   toggleAll: () => void;
-  /** Deselect everything. Call this after a bulk action completes. */
   clearSelection: () => void;
-  /**
-   * Direct state setter — pass straight to a table's `onSelectionChange`
-   * or use when you need to replace the entire selection programmatically.
-   */
-  setSelectedIds: Dispatch<SetStateAction<string[]>>;
+  /** Replace entire selection programmatically. */
+  setSelectedIds: (ids: string[]) => void;
 }
 
 export function useBulkSelection<T>({
@@ -69,44 +34,49 @@ export function useBulkSelection<T>({
   keyExtractor,
   maxSelection = BULK_MAX_IDS,
 }: UseBulkSelectionOptions<T>): UseBulkSelectionReturn {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [selectedSet, setSelectedSet] = useState<Set<string>>(() => new Set());
 
   const allIds = useMemo(() => items.map(keyExtractor), [items, keyExtractor]);
 
-  const isSelected = useCallback(
-    (id: string) => selectedIds.includes(id),
-    [selectedIds],
-  );
-
-  const toggle = useCallback(
-    (id: string) => {
-      setSelectedIds((prev) => {
-        if (prev.includes(id)) return prev.filter((s) => s !== id);
-        if (prev.length >= maxSelection) return prev;
-        return [...prev, id];
-      });
-    },
-    [maxSelection],
-  );
+  const toggle = useCallback((id: string) => {
+    setSelectedSet((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else if (next.size < maxSelection) {
+        next.add(id);
+      }
+      return next;
+    });
+  }, [maxSelection]);
 
   const toggleAll = useCallback(() => {
-    setSelectedIds((prev) => {
-      const allSelected = prev.length === allIds.length && allIds.length > 0;
-      if (allSelected) return [];
-      return allIds.slice(0, maxSelection);
+    setSelectedSet((prev) => {
+      const allSelected = prev.size === allIds.length && allIds.length > 0;
+      if (allSelected) return new Set();
+      return new Set(allIds.slice(0, maxSelection));
     });
   }, [allIds, maxSelection]);
 
-  const clearSelection = useCallback(() => setSelectedIds([]), []);
+  const clearSelection = useCallback(() => setSelectedSet(new Set()), []);
 
-  const isAllSelected =
-    allIds.length > 0 && selectedIds.length === allIds.length;
-  const isIndeterminate =
-    selectedIds.length > 0 && selectedIds.length < allIds.length;
+  const setSelectedIds = useCallback((ids: string[]) => {
+    setSelectedSet(new Set(ids.slice(0, maxSelection)));
+  }, [maxSelection]);
+
+  const isSelected = useCallback((id: string) => selectedSet.has(id), [selectedSet]);
+
+  const selectedIds = useMemo(() => Array.from(selectedSet), [selectedSet]);
+  const selectedCount = selectedSet.size;
+  const isSelecting = selectedCount > 0;
+  const isAllSelected = allIds.length > 0 && selectedCount === allIds.length;
+  const isIndeterminate = selectedCount > 0 && selectedCount < allIds.length;
 
   return {
     selectedIds,
-    selectedCount: selectedIds.length,
+    selectedIdSet: selectedSet,
+    selectedCount,
+    isSelecting,
     isSelected,
     isAllSelected,
     isIndeterminate,

@@ -1,0 +1,250 @@
+"use client";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { X } from "lucide-react";
+import { Button } from "../../ui/components/Button";
+import { FormField } from "../../ui/components/FormField";
+import { Toggle } from "../../ui/components/Toggle";
+
+export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
+
+export interface QuickFieldDef {
+  name: string;
+  label: string;
+  type: QuickFieldType;
+  options?: { value: string; label: string }[];
+  required?: boolean;
+  placeholder?: string;
+  helperText?: string;
+  defaultValue?: unknown;
+}
+
+export interface QuickFormDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  fields: QuickFieldDef[];
+  defaultValues?: Record<string, unknown>;
+  onSubmit: (values: Record<string, unknown>) => void | Promise<void>;
+  submitLabel?: string;
+  cancelLabel?: string;
+  isLoading?: boolean;
+  /** Extra content rendered below auto-generated fields. */
+  renderExtra?: (
+    values: Record<string, unknown>,
+    onChange: (name: string, value: unknown) => void,
+  ) => ReactNode;
+}
+
+function initValues(
+  fields: QuickFieldDef[],
+  defaults: Record<string, unknown> = {},
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const f of fields) {
+    out[f.name] =
+      f.name in defaults
+        ? defaults[f.name]
+        : (f.defaultValue ?? (f.type === "toggle" ? false : ""));
+  }
+  return out;
+}
+
+const FOCUSABLE =
+  'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
+export function QuickFormDrawer({
+  isOpen,
+  onClose,
+  title,
+  fields,
+  defaultValues,
+  onSubmit,
+  submitLabel = "Save",
+  cancelLabel = "Cancel",
+  isLoading = false,
+  renderExtra,
+}: QuickFormDrawerProps) {
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const [values, setValues] = useState<Record<string, unknown>>(() =>
+    initValues(fields, defaultValues),
+  );
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+
+  // Re-initialise when defaultValues change (e.g. edit mode)
+  useEffect(() => {
+    if (isOpen) setValues(initValues(fields, defaultValues));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const set = (name: string, value: unknown) => {
+    setValues((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => { const n = { ...prev }; delete n[name]; return n; });
+  };
+
+  const validate = (): boolean => {
+    const errs: Record<string, string> = {};
+    for (const f of fields) {
+      if (f.required) {
+        const v = values[f.name];
+        if (v === undefined || v === null || v === "") {
+          errs[f.name] = `${f.label} is required`;
+        }
+      }
+    }
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleSubmit = useCallback(
+    async (e?: React.FormEvent) => {
+      e?.preventDefault();
+      if (!validate()) return;
+      setSubmitting(true);
+      try {
+        await onSubmit(values);
+        setValues(initValues(fields, defaultValues));
+        setErrors({});
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [values, fields, defaultValues, onSubmit],
+  );
+
+  const handleClose = useCallback(() => {
+    setValues(initValues(fields, defaultValues));
+    setErrors({});
+    onClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fields, defaultValues, onClose]);
+
+  // Keyboard: Esc → close; Tab → trap focus
+  useEffect(() => {
+    if (!isOpen) return;
+    const handle = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { e.preventDefault(); handleClose(); return; }
+      if (e.key === "Tab" && drawerRef.current) {
+        const els = Array.from(drawerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
+        if (!els.length) { e.preventDefault(); return; }
+        if (e.shiftKey) {
+          if (document.activeElement === els[0]) { e.preventDefault(); els[els.length - 1].focus(); }
+        } else {
+          if (document.activeElement === els[els.length - 1]) { e.preventDefault(); els[0].focus(); }
+        }
+      }
+    };
+    document.addEventListener("keydown", handle);
+    return () => document.removeEventListener("keydown", handle);
+  }, [isOpen, handleClose]);
+
+  if (!isOpen) return null;
+
+  const busy = submitting || isLoading;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
+        style={{ zIndex: "calc(var(--appkit-z-modal) + 1)" }}
+        aria-hidden="true"
+        onClick={handleClose}
+      />
+
+      {/* Drawer panel: 100% mobile / 40% desktop */}
+      <div
+        ref={drawerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className="fixed inset-y-0 right-0 flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl w-full lg:w-[40%]"
+        style={{ zIndex: "calc(var(--appkit-z-modal) + 2)" }}
+      >
+        {/* Header */}
+        <div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
+          <p className="flex-1 text-base font-semibold text-[var(--appkit-color-text)]">{title}</p>
+          <button
+            type="button"
+            onClick={handleClose}
+            aria-label="Close"
+            className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <form
+          className="flex-1 overflow-y-auto px-4 py-5 space-y-4"
+          onSubmit={handleSubmit}
+          noValidate
+        >
+          {fields.map((field) => {
+            const value = values[field.name];
+            if (field.type === "toggle") {
+              return (
+                <div key={field.name} className="space-y-1">
+                  <Toggle
+                    checked={!!value}
+                    onChange={(checked) => set(field.name, checked)}
+                    label={field.label}
+                  />
+                  {field.helperText && (
+                    <p className="text-xs text-[var(--appkit-color-text-muted)]">{field.helperText}</p>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <div key={field.name}>
+                <FormField
+                  name={field.name}
+                  label={field.label}
+                  type={
+                    field.type === "textarea"
+                      ? "textarea"
+                      : field.type === "select"
+                        ? "select"
+                        : "text"
+                  }
+                  value={String(value ?? "")}
+                  onChange={(v) =>
+                    set(field.name, field.type === "number" ? Number(v) : v)
+                  }
+                  options={field.options}
+                  placeholder={field.placeholder}
+                  disabled={busy}
+                  error={errors[field.name]}
+                />
+                {field.helperText && !errors[field.name] && (
+                  <p className="mt-1 text-xs text-[var(--appkit-color-text-muted)]">
+                    {field.helperText}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+          {renderExtra?.(values, set)}
+        </form>
+
+        {/* Footer */}
+        <div className="flex-shrink-0 flex items-center justify-between gap-2 px-4 py-4 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-bg)]">
+          <Button variant="outline" size="sm" onClick={handleClose} disabled={busy}>
+            {cancelLabel}
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => void handleSubmit()}
+            disabled={busy}
+            isLoading={busy}
+          >
+            {submitLabel} →
+          </Button>
+        </div>
+      </div>
+    </>
+  );
+}

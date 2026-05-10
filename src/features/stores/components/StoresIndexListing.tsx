@@ -3,11 +3,12 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { Pagination, ListingToolbar } from "../../../ui";
+import { BulkActionsBar, Pagination, ListingToolbar } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
 import { StoreFilters } from "./StoreFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 
 const STORE_SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest First" },
@@ -93,12 +94,6 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
     table.setPage(1);
   }, [searchInput, table]);
 
-  const clearSearch = useCallback(() => {
-    setSearchInput("");
-    table.set("q", "");
-    table.setPage(1);
-  }, [table]);
-
   // Build sieve filters from applied URL params
   const ratingRaw = table.get("rating");
   const minProductCount = table.get("minProductCount");
@@ -114,7 +109,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   if (maxProductCount) filterParts.push(`stats.totalProducts<=${maxProductCount}`);
   if (featured === "true") filterParts.push("isFeatured==true");
 
-  const { stores, total, totalPages, isLoading } = useStores(
+  const { stores, totalPages, isLoading } = useStores(
     {
       q: table.get("q") || undefined,
       page: table.getNumber("page", 1),
@@ -125,6 +120,8 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
     },
     { initialData },
   );
+
+  const selection = useBulkSelection({ items: stores, keyExtractor: (s) => s.id ?? s.storeSlug });
 
   return (
     <div className="min-h-screen">
@@ -142,6 +139,11 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        bulkMode={selection.isSelecting}
+        bulkSelectedCount={selection.selectedCount}
+        bulkTotalCount={stores.length}
+        onBulkSelectAll={selection.toggleAll}
+        onBulkClear={selection.clearSelection}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
@@ -179,17 +181,39 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stores.map((store) => (
-              <InteractiveStoreCard
-                key={store.storeSlug ?? store.id}
-                store={store}
-                href={String(ROUTES.PUBLIC.STORE_DETAIL(store.storeSlug ?? store.id))}
-              />
-            ))}
+            {stores.map((store) => {
+              const storeKey = store.storeSlug ?? store.id;
+              return (
+                <InteractiveStoreCard
+                  key={storeKey}
+                  store={store}
+                  href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
+                  selectable={selection.isSelecting}
+                  isSelected={selection.isSelected(store.id ?? store.storeSlug)}
+                  onSelect={(id, sel) => { void sel; selection.toggle(id); }}
+                />
+              );
+            })}
           </div>
         )}
 
       </div>
+
+      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
+      <BulkActionsBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            label: "Compare",
+            variant: "secondary",
+            onClick: () => {
+              /* BK3 compare overlay — wired in a later session */
+              selection.clearSelection();
+            },
+          },
+        ]}
+      />
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (

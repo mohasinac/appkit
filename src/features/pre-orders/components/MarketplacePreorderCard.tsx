@@ -1,6 +1,7 @@
 "use client"
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 import type { ProductItem } from "../../products";
 import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
@@ -85,6 +86,7 @@ export function MarketplacePreorderCard({
   const router = useRouter();
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const detailHref = resolveHref(product, href, hrefBuilder);
+  const longPress = useLongPress(() => onSelect?.(product.id, !isSelected));
   const deliveryDate = product.preOrderDeliveryDate;
   const shipDate =
     deliveryDate instanceof Date ? deliveryDate.toISOString() : deliveryDate;
@@ -119,6 +121,11 @@ export function MarketplacePreorderCard({
       isSelected={isSelected}
       variant={variant}
       className={className}
+      onMouseDown={!isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={!isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={!isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
     >
       <BaseListingCard.Hero aspect="square" variant={variant}>
         <TextLink href={detailHref} className="absolute inset-0 block">
@@ -141,13 +148,16 @@ export function MarketplacePreorderCard({
           )}
         </Div>
 
-        {selectable && (
+        {onSelect && (
           <BaseListingCard.Checkbox
             selected={isSelected}
             onSelect={(event) => {
               event.stopPropagation();
-              onSelect?.(product.id, !isSelected);
+              onSelect(product.id, !isSelected);
             }}
+            className={
+              selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"
+            }
           />
         )}
       </BaseListingCard.Hero>
