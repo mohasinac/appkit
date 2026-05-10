@@ -218,6 +218,18 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+// Product / listing actions
+export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/index";
+export type { ActionId, ActionMeta, ActionVariant } from "./features/products/index";
+// Row / table actions (admin, seller, user dashboards)
+export { ROW_ACTION_ID, ROW_ACTION_META, ADMIN_ROW_ACTIONS, SELLER_ROW_ACTIONS, USER_ROW_ACTIONS, ADMIN_BULK_ACTIONS, SELLER_BULK_ACTIONS } from "./features/products/index";
+export type { RowActionId, RowActionMeta } from "./features/products/index";
+// Form shell actions
+export { FORM_ACTION_ID, FORM_ACTION_META, FORM_FOOTER_PRESET } from "./features/products/index";
+export type { FormActionId, FormActionMeta } from "./features/products/index";
+// Dashboard quick actions
+export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
+export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
 export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
 export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
 export { SellerOffersPanel } from "./features/seller/components/SellerOffersPanel";

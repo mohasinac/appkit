@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { X, AlertTriangle } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
+import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
 
 export interface FormShellSection {
   id: string;
@@ -20,7 +21,9 @@ export interface FormShellProps {
   sections?: FormShellSection[];
   onSaveDraft?: () => void | Promise<void>;
   onPublish?: () => void | Promise<void>;
+  /** Override the Save Draft button label. Defaults to FORM_ACTION_META label. */
   saveLabel?: string;
+  /** Override the Publish button label. Defaults to FORM_ACTION_META label. */
   publishLabel?: string;
   /** Override the entire bottom action bar. */
   renderBottomBar?: () => ReactNode;
@@ -55,8 +58,8 @@ export function FormShell({
   sections,
   onSaveDraft,
   onPublish,
-  saveLabel = "Save Draft",
-  publishLabel = "Publish",
+  saveLabel = FORM_ACTION_META[FORM_ACTION_ID.SAVE_DRAFT].label,
+  publishLabel = FORM_ACTION_META[FORM_ACTION_ID.PUBLISH].label,
   renderBottomBar,
   children,
 }: FormShellProps) {
@@ -246,7 +249,7 @@ export function FormShell({
         ) : (onSaveDraft || onPublish) ? (
           <div className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3 flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
-              Discard
+              {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>
             <div className="flex items-center gap-2">
               {onSaveDraft && (

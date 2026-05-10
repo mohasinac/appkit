@@ -4,6 +4,7 @@ import { Heart, ShoppingCart, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
 import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
+import { ACTION_ID, ACTION_META } from "../../products/constants/action-defs";
 import { ROUTES } from "../../../next";
 import { MarketplacePreorderCard } from "./MarketplacePreorderCard";
 import { PreOrderFilters } from "./PreOrderFilters";
@@ -298,8 +299,8 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onClearSelection={selection.clearSelection}
         actions={[
           {
-            key: "cart",
-            label: "Add to Cart",
+            key: ACTION_ID.ADD_TO_CART,
+            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
             icon: <ShoppingCart className="h-3.5 w-3.5" />,
             variant: "primary",
             onClick: () => {
@@ -313,8 +314,8 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             },
           },
           {
-            key: "wishlist",
-            label: "Wishlist",
+            key: ACTION_ID.ADD_TO_WISHLIST,
+            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
             onClick: () => {

@@ -1,33 +1,22 @@
 import { Button } from "@mohasinac/appkit/ui";
+import { FORM_ACTION_META, FORM_ACTION_ID } from "../../products/constants/action-defs";
 
 /**
- * DrawerFormFooter Component
+ * DrawerFormFooter
  *
- * Cancel + Save/Delete button pair used in drawer/modal forms.
- * Provides consistent spacing and button styling for form actions.
- *
- * Text labels are injected via the `labels` prop; variant and styling
- * are configured through `themeConfig`.
+ * Cancel + Save (+ optional Delete) button row for drawer/modal forms.
+ * Default labels come from FORM_ACTION_META so they stay in sync with the
+ * platform-wide action-defs constants. Override via the `labels` prop.
  *
  * @example
- * ```tsx
- * <DrawerFormFooter
- *   onCancel={() => setShowDrawer(false)}
- *   onSubmit={handleSave}
- *   labels={{ submit: "Save User", cancel: "Cancel" }}
- * />
+ * <DrawerFormFooter onCancel={close} onSubmit={save} />
  *
- * // With delete option
- * <DrawerFormFooter
- *   onCancel={() => setShowDrawer(false)}
- *   onSubmit={handleSave}
- *   onDelete={handleDelete}
- *   labels={{ submit: "Update", delete: "Delete", cancel: "Cancel" }}
- * />
- * ```
+ * // With delete:
+ * <DrawerFormFooter onCancel={close} onSubmit={save} onDelete={remove}
+ *   labels={{ submit: "Update", delete: "Remove", cancel: "Cancel" }} />
  */
 
-interface DrawerFormFooterLabels {
+export interface DrawerFormFooterLabels {
   submit?: string;
   delete?: string;
   cancel?: string;
@@ -56,6 +45,13 @@ export interface DrawerFormFooterProps {
   themeConfig?: DrawerFormFooterThemeConfig;
 }
 
+const DEFAULT_LABELS: Required<DrawerFormFooterLabels> = {
+  submit:  FORM_ACTION_META[FORM_ACTION_ID.SUBMIT].label,
+  delete:  FORM_ACTION_META[FORM_ACTION_ID.DELETE].label,
+  cancel:  FORM_ACTION_META[FORM_ACTION_ID.CANCEL].label,
+  saving:  "Saving…",
+};
+
 export function DrawerFormFooter({
   onCancel,
   onSubmit,
@@ -63,44 +59,46 @@ export function DrawerFormFooter({
   isLoading = false,
   isSubmitDisabled = false,
   className = "",
-  labels = { submit: "Save", delete: "Delete", cancel: "Cancel", saving: "Saving..." },
+  labels,
   variant = "footer",
   themeConfig = { borderClass: "border-t border-zinc-200 dark:border-zinc-700" },
 }: DrawerFormFooterProps) {
+  const l = { ...DEFAULT_LABELS, ...labels };
+
   return (
     <div
       className={`flex items-center gap-3${
         variant === "inline" ? ` pt-4 ${themeConfig.borderClass}` : ""
       } ${className}`}
-     data-section="drawerformfooter-div-257">
+    >
       {onDelete && (
         <Button
-          variant="danger"
+          variant={FORM_ACTION_META[FORM_ACTION_ID.DELETE].variant}
           onClick={onDelete}
           disabled={isLoading}
           size="md"
         >
-          {labels.delete}
+          {l.delete}
         </Button>
       )}
 
-      <div className={`flex items-center gap-3${!onDelete ? " ml-auto" : ""}`} data-section="drawerformfooter-div-258">
+      <div className={`flex items-center gap-3${!onDelete ? " ml-auto" : ""}`}>
         <Button
-          variant="outline"
+          variant={FORM_ACTION_META[FORM_ACTION_ID.CANCEL].variant}
           onClick={onCancel}
           disabled={isLoading}
           size="md"
         >
-          {labels.cancel}
+          {l.cancel}
         </Button>
 
         <Button
-          variant="primary"
+          variant={FORM_ACTION_META[FORM_ACTION_ID.SUBMIT].variant}
           onClick={onSubmit}
           disabled={isLoading || isSubmitDisabled}
           size="md"
         >
-          {isLoading ? labels.saving : labels.submit}
+          {isLoading ? l.saving : l.submit}
         </Button>
       </div>
     </div>

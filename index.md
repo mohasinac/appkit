@@ -447,3 +447,21 @@ Import: `import { ADMIN_ENDPOINTS } from "@mohasinac/appkit"` (or `/client`)
 | `MEDIA_ENDPOINTS` | `api-endpoints.ts` | All `/api/media/*` route strings |
 | `DEMO_ENDPOINTS` | `api-endpoints.ts` | All `/api/demo/*` strings. Notable: `SEED` → `/api/demo/seed` (POST load/delete, GET counts) |
 | `ROUTES` | `appkit/src/next/routing/route-map.ts` | All page routes (ROUTES.PUBLIC.* / ROUTES.ADMIN.* / ROUTES.STORE.* / ROUTES.USER.*) |
+| `ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for all 11 product/listing action IDs (buy-now, add-to-cart, add-to-wishlist, remove-from-wishlist, make-offer, share, place-bid, buy-now-auction, watch-auction, reserve-now, cancel-reservation) |
+| `ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `ActionId` — `{ id, label, variant, iconName?, requiresAuth? }` |
+| `DETAIL_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered action IDs for detail page panels: `product`, `auction`, `preorder` keys |
+| `MOBILE_PRIMARY_ACTIONS` | `features/products/constants/action-defs.ts` | 1–2 primary CTA IDs for mobile BuyBar per listing type |
+| `LISTING_BULK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered action IDs for BulkActionsBar per listing page (`products`, `auctions`, `preorders`, `stores`) |
+| `ROW_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 17 row/table action IDs (row-edit, row-view, row-delete, row-approve, row-reject, row-suspend, row-restore, row-manage, row-duplicate, row-export, row-track, row-cancel, row-refund, row-resend, row-reply, row-publish, row-archive) |
+| `ROW_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `RowActionId` — `{ id, label, iconName?, destructive?, separator? }` |
+| `ADMIN_ROW_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered row action IDs per admin entity type (users, stores, products, orders, reviews, events, payouts, coupons, blog, faqs, bids) |
+| `SELLER_ROW_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered row action IDs per seller entity type (products, orders, reviews, payouts, coupons, bids, addresses) |
+| `USER_ROW_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered row action IDs per user entity type (orders, addresses, bids) |
+| `ADMIN_BULK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered bulk action IDs per admin listing entity (uses RowActionId values) |
+| `SELLER_BULK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered bulk action IDs per seller listing entity |
+| `FORM_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 7 form action IDs (form-submit, form-cancel, form-reset, form-save-draft, form-publish, form-delete, form-discard) |
+| `FORM_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `FormActionId` — `{ id, label, variant, type, iconName?, destructive? }`. Used as defaults by `FormShell` and `DrawerFormFooter`. |
+| `FORM_FOOTER_PRESET` | `features/products/constants/action-defs.ts` | Named groups of FormActionIds for common footer layouts: `drawerEdit`, `drawerEditDelete`, `contentEditor`, `modalForm`, `settingsForm` |
+| `DASHBOARD_QUICK_ACTION_ID` | `features/products/constants/action-defs.ts` | String constants for 17 dashboard quick action IDs (admin/seller/user shortcut buttons) |
+| `DASHBOARD_QUICK_ACTION_META` | `features/products/constants/action-defs.ts` | Metadata record for each `DashboardQuickActionId` — `{ id, label, variant, iconName?, routeKey? }` |
+| `DASHBOARD_QUICK_ACTIONS` | `features/products/constants/action-defs.ts` | Ordered quick action IDs per dashboard type: `admin`, `seller`, `user` |

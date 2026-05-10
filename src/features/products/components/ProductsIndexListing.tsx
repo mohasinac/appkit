@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
 import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
+import { ACTION_ID, ACTION_META } from "../constants/action-defs";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
@@ -271,8 +272,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onClearSelection={selection.clearSelection}
         actions={[
           {
-            key: "cart",
-            label: "Add to Cart",
+            key: ACTION_ID.ADD_TO_CART,
+            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
             icon: <ShoppingCart className="h-3.5 w-3.5" />,
             variant: "primary",
             onClick: () => {
@@ -286,8 +287,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             },
           },
           {
-            key: "wishlist",
-            label: "Wishlist",
+            key: ACTION_ID.ADD_TO_WISHLIST,
+            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
             onClick: () => {

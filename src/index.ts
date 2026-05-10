@@ -6780,6 +6780,19 @@ export { InteractiveProductCard } from "./features/products/index";
 // MakeOfferForm - Component for make offer form.
 export { MakeOfferForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// ACTION_ID / ACTION_META / DETAIL_ACTIONS / MOBILE_PRIMARY_ACTIONS / LISTING_BULK_ACTIONS - Single source of truth for all product-type action constants.
+// Product / listing actions
+export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/index";
+export type { ActionId, ActionMeta, ActionVariant } from "./features/products/index";
+// Row / table actions (admin, seller, user dashboards)
+export { ROW_ACTION_ID, ROW_ACTION_META, ADMIN_ROW_ACTIONS, SELLER_ROW_ACTIONS, USER_ROW_ACTIONS, ADMIN_BULK_ACTIONS, SELLER_BULK_ACTIONS } from "./features/products/index";
+export type { RowActionId, RowActionMeta } from "./features/products/index";
+// Form shell actions
+export { FORM_ACTION_ID, FORM_ACTION_META, FORM_FOOTER_PRESET } from "./features/products/index";
+export type { FormActionId, FormActionMeta } from "./features/products/index";
+// Dashboard quick actions
+export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
+export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
 // PRODUCT_ADMIN_SORT_OPTIONS - Constant used across modules.
 export { PRODUCT_ADMIN_SORT_OPTIONS } from "./features/products/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
