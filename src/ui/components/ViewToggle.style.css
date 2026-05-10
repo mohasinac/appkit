@@ -14,19 +14,19 @@
 }
 
 .appkit-view-toggle__button--active {
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
   background: rgba(80, 156, 2, 0.08);
   border-color: rgba(80, 156, 2, 0.3);
 }
 
 .appkit-view-toggle__button--inactive {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
   background: transparent;
-  border-color: #e4e4e7;
+  border-color: var(--appkit-color-border);
 }
 
 .appkit-view-toggle__button--inactive:hover {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 .appkit-view-toggle__icon {
@@ -35,16 +35,16 @@
 }
 
 .dark .appkit-view-toggle__button--active {
-  color: #e91e8c;
+  color: var(--appkit-color-primary);
   background: rgba(233, 30, 140, 0.14);
   border-color: rgba(233, 30, 140, 0.35);
 }
 
 .dark .appkit-view-toggle__button--inactive {
-  color: #94a3b8;
-  border-color: #334155;
+  color: var(--appkit-color-slate-400);
+  border-color: var(--appkit-color-border);
 }
 
 .dark .appkit-view-toggle__button--inactive:hover {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }

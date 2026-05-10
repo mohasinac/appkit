@@ -2,14 +2,14 @@
   position: sticky;
   top: var(--header-height, 0px);
   z-index: 10;
-  background: #ffffff;
-  border-bottom: 1px solid #e4e4e7;
+  background: var(--appkit-color-surface);
+  border-bottom: 1px solid var(--appkit-color-border);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .dark .appkit-section-tabs {
-  background: #020617;
-  border-bottom-color: #334155;
+  background: var(--appkit-color-bg);
+  border-bottom-color: var(--appkit-color-border);
 }
 
 .appkit-section-tabs--admin {
@@ -104,22 +104,22 @@
 
 .appkit-section-tabs__tab--active {
   border-color: rgba(80, 156, 2, 0.35);
-  background: #509c02;
-  color: #ffffff;
+  background: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-text-on-primary);
   box-shadow: 0 10px 24px -12px rgba(34, 197, 94, 0.7);
 }
 
 .dark .appkit-section-tabs__tab--active {
   border-color: rgba(233, 30, 140, 0.4);
-  background: #e91e8c;
-  color: #ffffff;
+  background: var(--appkit-color-primary);
+  color: var(--appkit-color-text-on-primary);
   box-shadow: 0 10px 24px -12px rgba(236, 72, 153, 0.9);
 }
 
 .appkit-section-tabs__tab--inactive {
   border-color: rgba(80, 156, 2, 0.2);
   background: rgba(80, 156, 2, 0.1);
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 .appkit-section-tabs__tab--inactive:hover {
@@ -127,14 +127,14 @@
 }
 
 .dark .appkit-section-tabs__tab--inactive {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
   background: rgba(30, 41, 59, 0.8);
-  color: #f79dd2;
+  color: var(--appkit-color-primary-300);
 }
 
 .dark .appkit-section-tabs__tab--inactive:hover {
   background: rgba(51, 65, 85, 0.9);
-  color: #fce7f3;
+  color: var(--appkit-color-primary-100);
 }
 
 .appkit-section-tabs__icon {
@@ -150,15 +150,15 @@
 
 .appkit-section-tabs__count--active {
   background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-section-tabs__count--inactive {
-  background: #f4f4f5;
-  color: #71717a;
+  background: var(--appkit-color-zinc-100);
+  color: var(--appkit-color-zinc-500);
 }
 
 .dark .appkit-section-tabs__count--inactive {
-  background: #334155;
-  color: #cbd5e1;
+  background: var(--appkit-color-slate-700);
+  color: var(--appkit-color-slate-300);
 }
