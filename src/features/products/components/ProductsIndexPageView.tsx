@@ -24,8 +24,8 @@ function buildProductFilters(params: SearchParams): string {
   const maxPrice = sp(params, "maxPrice");
   if (minPrice) parts.push(`price>=${minPrice}`);
   if (maxPrice) parts.push(`price<=${maxPrice}`);
-  const sellerId = sp(params, "seller");
-  if (sellerId) parts.push(`sellerId==${sellerId}`);
+  const storeId = sp(params, "seller");
+  if (storeId) parts.push(`storeId==${storeId}`);
   const freeShipping = sp(params, "freeShipping");
   if (freeShipping === "true") parts.push("freeShipping==true");
   return parts.join(",");
