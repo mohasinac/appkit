@@ -196,6 +196,11 @@ export function AdminSiteSettingsView({
   const [shippingPolicyHtml, setShippingPolicyHtml] = React.useState("");
   const [cookieHtml, setCookieHtml] = React.useState("");
 
+  // ⑬ WhatsApp Business Cloud API (platform-level)
+  const [waPhoneNumberId, setWaPhoneNumberId] = React.useState("");
+  const [waCloudApiToken, setWaCloudApiToken] = React.useState("");
+  const [waAdminNotifyNumbers, setWaAdminNotifyNumbers] = React.useState("");
+
   // ⓪ About
   const [aboutTitle, setAboutTitle] = React.useState("");
   const [aboutSubtitle, setAboutSubtitle] = React.useState("");
@@ -297,6 +302,10 @@ export function AdminSiteSettingsView({
     setAboutMissionTitle(s.aboutContent?.missionTitle ?? "");
     setAboutMissionText(s.aboutContent?.missionText ?? "");
     setAboutCtaTitle(s.aboutContent?.ctaTitle ?? "");
+
+    setWaPhoneNumberId(s.credentialsMasked?.whatsappPhoneNumberId ?? "");
+    setWaCloudApiToken(s.credentialsMasked?.whatsappCloudApiToken ?? "");
+    setWaAdminNotifyNumbers(s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "");
   }, [data]);
 
   function useSave(group: string, payload: () => Record<string, unknown>) {
@@ -350,6 +359,14 @@ export function AdminSiteSettingsView({
   const limitsMutation = useSave("Platform Limits", () => ({
     platformLimits: { maxProductsPerStore, maxImagesPerProduct, maxVideoSizeMb, maxCustomFieldsPerProduct: maxCustomFields, maxCustomSectionsPerProduct: maxCustomSections, orderCancellationWindowHours: orderCancelWindow },
   }));
+  const whatsappMutation = useSave("WhatsApp", () => ({
+    credentials: {
+      whatsappPhoneNumberId: waPhoneNumberId,
+      whatsappCloudApiToken: waCloudApiToken,
+      whatsappAdminNotifyNumbers: waAdminNotifyNumbers,
+    },
+  }));
+
   const legalMutation = useSave("Legal Policies", () => ({
     legalPages: { terms: termsHtml, privacy: privacyHtml, refundPolicy: refundHtml, shipping: shippingPolicyHtml, cookies: cookieHtml },
   }));
@@ -407,6 +424,7 @@ export function AdminSiteSettingsView({
               ["auction", "⑩ Auction"],
               ["limits", "⑪ Limits"],
               ["legal", "⑫ Legal"],
+              ["whatsapp", "⑬ WhatsApp"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
                 {label}
@@ -646,6 +664,39 @@ export function AdminSiteSettingsView({
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
               </div>
               <GroupSaveButton isPending={limitsMutation.isPending} />
+            </Form>
+          </TabsContent>
+
+          {/* ⑬ WhatsApp Business Cloud API */}
+          <TabsContent value="whatsapp">
+            <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="space-y-4 pt-4">
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
+                announcements to admin numbers when orders are placed. Store owners configure their
+                own credentials in Store → WhatsApp.
+              </p>
+              <Input
+                label="Phone Number ID"
+                value={waPhoneNumberId}
+                onChange={(e) => setWaPhoneNumberId(e.target.value)}
+                placeholder="987654321098765"
+                helperText="From Meta for Developers → App → WhatsApp → API Setup"
+              />
+              <MaskedInput
+                label="Cloud API System User Token"
+                value={waCloudApiToken}
+                onChange={setWaCloudApiToken}
+                placeholder="EAAxxxxxxxx…"
+                helperText="Long-lived system user access token with WhatsApp Business permissions"
+              />
+              <Input
+                label="Admin Notify Numbers"
+                value={waAdminNotifyNumbers}
+                onChange={(e) => setWaAdminNotifyNumbers(e.target.value)}
+                placeholder="919876543210,918765432109"
+                helperText="Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."
+              />
+              <GroupSaveButton isPending={whatsappMutation.isPending} />
             </Form>
           </TabsContent>
 

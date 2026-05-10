@@ -8273,6 +8273,8 @@ export type { StoreReviewsResult } from "./features/stores/server";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // WhatsAppChatButton - Component for whats app chat button.
 export { WhatsAppChatButton } from "./features/whatsapp-bot/index";
+export { SellerWhatsAppSettingsView } from "./features/whatsapp-bot/index";
+export type { SellerWhatsAppSettingsViewProps } from "./features/whatsapp-bot/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CheckoutMessageInput - Type contract for checkout message input.
 export type { CheckoutMessageInput } from "./features/whatsapp-bot/index";
