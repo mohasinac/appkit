@@ -42,6 +42,8 @@ export interface ReviewDocument {
   reportCount: number;
   verified: boolean;
   featured?: boolean;
+  sellerReply?: string;
+  sellerRepliedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
   approvedAt?: Date;

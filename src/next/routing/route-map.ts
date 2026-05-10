@@ -133,6 +133,7 @@ export const DEFAULT_ROUTE_MAP = {
     ADDRESSES: "/store/addresses",
     OFFERS: "/store/offers",
     WHATSAPP: "/store/whatsapp",
+    REVIEWS: "/store/reviews",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

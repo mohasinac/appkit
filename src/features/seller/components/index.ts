@@ -48,6 +48,10 @@ export { SellerAddressesView } from "./SellerAddressesView";
 export type { SellerAddressesViewProps } from "./SellerAddressesView";
 export { SellerGuideView } from "./SellerGuideView";
 export type { SellerGuideViewProps } from "./SellerGuideView";
+export { SellerReviewsView } from "./SellerReviewsView";
+export type { SellerReviewsViewProps } from "./SellerReviewsView";
+export { SellerPayoutRequestView } from "./SellerPayoutRequestView";
+export type { SellerPayoutRequestViewProps } from "./SellerPayoutRequestView";
 export * from "./analytics";
 
 // Store* aliases — same components, renamed for store-centric terminology

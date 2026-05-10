@@ -13,6 +13,7 @@ import {
   Toggle,
 } from "../../../ui";
 import { ImageUpload, MediaUploadList, useMediaUpload } from "../../media";
+import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
 
 export type ProductListingMode = "standard" | "auction" | "pre-order";
@@ -511,13 +512,10 @@ function StepShipping({
           })}
         </div>
       ) : (
-        <FormField
-          name="pickupAddressId"
-          label="Pickup Address ID (optional)"
-          type="text"
+        <StoreAddressSelectorCreate
+          label="Pickup Address (optional)"
           value={values.pickupAddressId ?? ""}
-          onChange={(v) => onChange({ pickupAddressId: v })}
-          placeholder="Select a store pickup address"
+          onChange={(id) => onChange({ pickupAddressId: id })}
         />
       )}
       <Toggle

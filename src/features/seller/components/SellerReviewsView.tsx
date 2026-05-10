@@ -1,0 +1,305 @@
+"use client";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Alert,
+  Badge,
+  Button,
+  Div,
+  Heading,
+  Select,
+  SideDrawer,
+  Stack,
+  Text,
+} from "../../../ui";
+import { StackedViewShell } from "../../../ui";
+
+interface ReviewItem {
+  id: string;
+  productId: string;
+  productTitle: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  title: string;
+  comment: string;
+  images?: string[];
+  verified: boolean;
+  status: string;
+  sellerReply?: string;
+  sellerRepliedAt?: Date | string | null;
+  createdAt: Date | string;
+}
+
+interface Meta {
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  hasMore: boolean;
+}
+
+export interface SellerReviewsViewProps {
+  reviewsApiBase?: string;
+  replyApiBase?: string;
+}
+
+const STAR = "★";
+const EMPTY_STAR = "☆";
+
+function Stars({ rating }: { rating: number }) {
+  return (
+    <span className="text-[var(--appkit-color-warning,#f59e0b)] text-sm">
+      {Array.from({ length: 5 }, (_, i) => (i < rating ? STAR : EMPTY_STAR)).join("")}
+    </span>
+  );
+}
+
+function statusBadge(status: string) {
+  const map: Record<string, "success" | "warning" | "danger" | "default"> = {
+    approved: "success",
+    pending: "warning",
+    rejected: "danger",
+  };
+  return <Badge variant={map[status] ?? "default"}>{status}</Badge>;
+}
+
+export function SellerReviewsView({
+  reviewsApiBase = "/api/store/reviews",
+  replyApiBase = "/api/store/reviews",
+}: SellerReviewsViewProps) {
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
+  const [meta, setMeta] = useState<Meta | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filters
+  const [rating, setRating] = useState("");
+  const [replied, setReplied] = useState("");
+  const [page, setPage] = useState(1);
+
+  // Reply drawer
+  const [replyTarget, setReplyTarget] = useState<ReviewItem | null>(null);
+  const [replyText, setReplyText] = useState("");
+  const [replySaving, setReplySaving] = useState(false);
+  const [replyError, setReplyError] = useState<string | null>(null);
+
+  const fetchReviews = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const params = new URLSearchParams({ page: String(page), pageSize: "20" });
+      if (rating) params.set("rating", rating);
+      if (replied) params.set("replied", replied);
+
+      const res = await fetch(`${reviewsApiBase}?${params}`);
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error ?? "Failed to load reviews");
+      setReviews(json?.data?.reviews ?? []);
+      setMeta(json?.data?.meta ?? null);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, [reviewsApiBase, rating, replied, page]);
+
+  useEffect(() => { fetchReviews(); }, [fetchReviews]);
+
+  const openReply = (review: ReviewItem) => {
+    setReplyTarget(review);
+    setReplyText(review.sellerReply ?? "");
+    setReplyError(null);
+  };
+
+  const handleReplySave = async () => {
+    if (!replyTarget) return;
+    setReplySaving(true);
+    setReplyError(null);
+    try {
+      const res = await fetch(`${replyApiBase}/${replyTarget.id}/reply`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reply: replyText }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json?.error ?? "Failed to save reply");
+      setReplyTarget(null);
+      fetchReviews();
+    } catch (err) {
+      setReplyError((err as Error).message);
+    } finally {
+      setReplySaving(false);
+    }
+  };
+
+  return (
+    <>
+      <StackedViewShell portal="seller" title="Reviews" sections={[
+        <Stack key="reviews" gap="lg">
+          {/* Filters */}
+          <Div className="flex flex-wrap items-center gap-3">
+            <Select
+              value={rating}
+              onChange={(e) => { setRating(e.target.value); setPage(1); }}
+              aria-label="Filter by rating"
+              options={[
+                { value: "", label: "All ratings" },
+                { value: "5", label: "5 stars" },
+                { value: "4", label: "4 stars" },
+                { value: "3", label: "3 stars" },
+                { value: "2", label: "2 stars" },
+                { value: "1", label: "1 star" },
+              ]}
+            />
+            <Select
+              value={replied}
+              onChange={(e) => { setReplied(e.target.value); setPage(1); }}
+              aria-label="Filter by reply status"
+              options={[
+                { value: "", label: "All reply statuses" },
+                { value: "true", label: "Replied" },
+                { value: "false", label: "Pending reply" },
+              ]}
+            />
+            {meta && (
+              <Text className="text-sm text-[var(--appkit-color-text-muted)] ml-auto">
+                {meta.total} review{meta.total !== 1 ? "s" : ""}
+              </Text>
+            )}
+          </Div>
+
+          {error && <Alert variant="error">{error}</Alert>}
+
+          {/* Review list */}
+          {loading ? (
+            <Div className="py-8 text-center">
+              <Text className="text-[var(--appkit-color-text-muted)]">Loading reviews…</Text>
+            </Div>
+          ) : reviews.length === 0 ? (
+            <Div className="py-12 text-center">
+              <Text className="text-[var(--appkit-color-text-muted)]">No reviews found.</Text>
+            </Div>
+          ) : (
+            <Stack gap="md">
+              {reviews.map((review) => (
+                <Div
+                  key={review.id}
+                  className="p-4 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
+                >
+                  <Div className="flex items-start justify-between gap-3 flex-wrap">
+                    <Div className="flex-1 min-w-0">
+                      {/* Product + reviewer */}
+                      <Text className="font-medium truncate">{review.productTitle}</Text>
+                      <Div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <Stars rating={review.rating} />
+                        <Text className="text-sm text-[var(--appkit-color-text-muted)]">by {review.userName}</Text>
+                        {review.verified && <Badge variant="success">Verified</Badge>}
+                        {statusBadge(review.status)}
+                        <Badge variant={review.sellerReply ? "success" : "warning"}>
+                          {review.sellerReply ? "Replied" : "Pending reply"}
+                        </Badge>
+                      </Div>
+
+                      {/* Review content */}
+                      {review.title && <Text className="mt-2 font-medium">{review.title}</Text>}
+                      <Text className="mt-1 text-sm text-[var(--appkit-color-text-secondary)] line-clamp-3">
+                        {review.comment}
+                      </Text>
+
+                      {/* Existing reply */}
+                      {review.sellerReply && (
+                        <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
+                          <Text className="text-xs text-[var(--appkit-color-text-muted)]">Your reply:</Text>
+                          <Text className="text-sm">{review.sellerReply}</Text>
+                        </Div>
+                      )}
+                    </Div>
+
+                    {/* Action */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => openReply(review)}
+                    >
+                      {review.sellerReply ? "Edit Reply" : "Reply"}
+                    </Button>
+                  </Div>
+                </Div>
+              ))}
+            </Stack>
+          )}
+
+          {/* Pagination */}
+          {meta && meta.totalPages > 1 && (
+            <Div className="flex items-center justify-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page <= 1 || loading}
+              >
+                Previous
+              </Button>
+              <Text className="text-sm">
+                Page {meta.page} of {meta.totalPages}
+              </Text>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => p + 1)}
+                disabled={!meta.hasMore || loading}
+              >
+                Next
+              </Button>
+            </Div>
+          )}
+        </Stack>,
+      ]} />
+
+      {/* Reply drawer */}
+      <SideDrawer
+        isOpen={!!replyTarget}
+        onClose={() => setReplyTarget(null)}
+        title={replyTarget?.sellerReply ? "Edit Reply" : "Reply to Review"}
+        mode="create"
+      >
+        <Stack gap="md" className="p-4">
+          {replyTarget && (
+            <Div className="p-3 rounded bg-[var(--appkit-color-surface-muted)]">
+              <Stars rating={replyTarget.rating} />
+              <Text className="text-sm mt-1">{replyTarget.comment}</Text>
+            </Div>
+          )}
+          {replyError && <Alert variant="error">{replyError}</Alert>}
+          <Div>
+            <Text className="text-sm font-medium mb-1.5">Your reply</Text>
+            <textarea
+              className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-input-bg,var(--appkit-color-surface))] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)] dark:bg-[var(--appkit-color-surface-dark,#1e2330)] dark:border-[var(--appkit-color-border-dark)]"
+              rows={5}
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              maxLength={1000}
+              placeholder="Write your response to this review…"
+            />
+            <Text className="text-xs text-[var(--appkit-color-text-muted)] text-right mt-1">
+              {replyText.length}/1000
+            </Text>
+          </Div>
+          <Div className="flex gap-2 justify-end">
+            <Button variant="outline" onClick={() => setReplyTarget(null)} disabled={replySaving}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleReplySave}
+              disabled={replySaving || !replyText.trim()}
+              isLoading={replySaving}
+            >
+              {replyTarget?.sellerReply ? "Update Reply" : "Post Reply"}
+            </Button>
+          </Div>
+        </Stack>
+      </SideDrawer>
+    </>
+  );
+}
