@@ -4,11 +4,11 @@
 }
 
 .appkit-select__label {
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-select__label {
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .appkit-select__trigger {
@@ -18,32 +18,32 @@
   align-items: center;
   justify-content: space-between;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;
-  background: #ffffff;
-  color: #18181b;
+  border: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
+  color: var(--appkit-color-text);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dark .appkit-select__trigger {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
   background: rgba(30, 41, 59, 0.6);
-  color: #f8fafc;
+  color: var(--appkit-color-text);
 }
 
 .appkit-select__trigger--default:focus-visible {
-  border-color: #65c408;
+  border-color: var(--appkit-color-secondary);
   box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.2);
 }
 
 .dark .appkit-select__trigger--default:focus-visible {
-  border-color: #e91e8c;
+  border-color: var(--appkit-color-primary);
   box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.2);
 }
 
 .appkit-select__trigger--error {
-  border-color: #f87171;
+  border-color: var(--appkit-color-error);
 }
 
 .appkit-select__trigger--error:focus-visible {
@@ -65,26 +65,26 @@
 }
 
 .appkit-select__value--selected {
-  color: #18181b;
+  color: var(--appkit-color-text);
 }
 
 .appkit-select__value--placeholder {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .dark .appkit-select__value--selected {
-  color: #fafafa;
+  color: var(--appkit-color-text);
 }
 
 .dark .appkit-select__value--placeholder {
-  color: #737373;
+  color: var(--appkit-color-text-muted);
 }
 
 .appkit-select__chevron {
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
   transition: transform 0.2s ease;
 }
 
@@ -99,15 +99,15 @@
   max-height: 15rem;
   overflow: auto;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;
-  background: #ffffff;
+  border: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
   box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.25);
   padding: 0.25rem 0;
 }
 
 .dark .appkit-select__list {
-  border-color: #334155;
-  background: #1e293b;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-select__list--up {
@@ -135,30 +135,30 @@
 }
 
 .appkit-select__option--default {
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
   cursor: pointer;
 }
 
 .appkit-select__option--default:hover {
-  background: #fafafa;
+  background: var(--appkit-color-bg);
 }
 
 .dark .appkit-select__option--default {
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .dark .appkit-select__option--default:hover {
-  background: #334155;
+  background: var(--appkit-color-slate-700);
 }
 
 .appkit-select__option--selected {
-  background: #f3ffe3;
-  color: #3e7708;
+  background: var(--appkit-color-secondary-50);
+  color: var(--appkit-color-secondary-700);
 }
 
 .dark .appkit-select__option--selected {
   background: rgba(233, 30, 140, 0.15);
-  color: #f79dd2;
+  color: var(--appkit-color-primary-300);
 }
 
 .appkit-select__option-label {
