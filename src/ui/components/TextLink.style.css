@@ -3,39 +3,39 @@
 }
 
 .appkit-text-link--default {
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 .appkit-text-link--default:hover {
-  color: #3e7708;
+  color: var(--appkit-color-secondary-700);
 }
 
 .dark .appkit-text-link--default {
-  color: #f063b9;
+  color: var(--appkit-color-primary-400);
 }
 
 .dark .appkit-text-link--default:hover {
-  color: #f9a8d4;
+  color: var(--appkit-color-primary-300);
 }
 
 .appkit-text-link--muted {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-text-link--muted:hover {
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-text-link--muted {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .dark .appkit-text-link--muted:hover {
-  color: #e4e4e7;
+  color: var(--appkit-color-border);
 }
 
 .appkit-text-link--underline {
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
   text-decoration: underline;
 }
 
@@ -44,43 +44,43 @@
 }
 
 .dark .appkit-text-link--underline {
-  color: #f063b9;
+  color: var(--appkit-color-primary-400);
 }
 
 /* nav — secondary text colour; hover to primary; no underline */
 .appkit-text-link--nav {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-text-link--nav:hover {
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 .dark .appkit-text-link--nav {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .dark .appkit-text-link--nav:hover {
-  color: #f063b9;
+  color: var(--appkit-color-primary-400);
 }
 
 /* danger — red destructive link */
 .appkit-text-link--danger {
-  color: #dc2626;
+  color: var(--appkit-color-error);
   text-underline-offset: 2px;
 }
 
 .appkit-text-link--danger:hover {
-  color: #991b1b;
+  color: var(--appkit-color-rose-800);
   text-decoration: underline;
 }
 
 .dark .appkit-text-link--danger {
-  color: #f87171;
+  color: var(--appkit-color-rose-400);
 }
 
 .dark .appkit-text-link--danger:hover {
-  color: #fca5a5;
+  color: var(--appkit-color-error-text);
 }
 
 /* inherit — inherits surrounding text colour; underline on hover only */

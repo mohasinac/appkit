@@ -25,10 +25,10 @@
   clip: auto;
   white-space: normal;
   border-radius: 0.5rem;
-  background: var(--color-primary, #65a30d);
-  color: white;
+  background: var(--appkit-color-secondary);
+  color: var(--appkit-color-text-on-primary);
   font-size: 0.875rem;
   font-weight: 600;
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary, #65a30d), 0 0 0 4px white;
+  box-shadow: 0 0 0 2px var(--appkit-color-secondary), 0 0 0 4px var(--appkit-color-surface);
 }
