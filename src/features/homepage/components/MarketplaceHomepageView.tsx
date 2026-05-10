@@ -13,12 +13,28 @@ import type {
   HomepageSectionDocument,
   StatsSectionConfig,
   LiveStatMetric,
+  CarouselSlideDocument,
 } from "../schemas";
+import type { CarouselSlide } from "../types/index";
 import type { ProductItem } from "../../products/types";
 import type { StoreListItem } from "../../stores/types";
 import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";
+
+/**
+ * Converts Firestore CarouselSlideDocument[] (Date fields) to the API-shaped
+ * CarouselSlide[] (string dates) expected by HeroCarousel / useHeroCarousel.
+ * The two types share all display-relevant fields; only createdAt/updatedAt
+ * and internal-only fields (analytics, createdBy) diverge.
+ */
+function toCarouselSlides(docs: CarouselSlideDocument[]): CarouselSlide[] {
+  return docs.map(({ createdAt, updatedAt, analytics: _analytics, createdBy: _createdBy, ...rest }) => ({
+    ...rest,
+    createdAt: createdAt instanceof Date ? createdAt.toISOString() : undefined,
+    updatedAt: updatedAt instanceof Date ? updatedAt.toISOString() : undefined,
+  }));
+}
 
 export type { MarketplaceHomepageViewAdSlots } from "../lib/section-renderer";
 
@@ -95,26 +111,43 @@ export async function MarketplaceHomepageView({
     activeTypes.has("events") ? listPublicEvents({ filters: "status==active", pageSize: 6 }).catch(() => null) : null,
   ]);
 
-  // ProductDocument.condition has "graded" which is absent from ProductItem.condition,
-  // so the structural types are not directly assignable despite being functionally
-  // compatible for all section rendering purposes. The cast is safe: section components
-  // only read fields that overlap between the two types.
+  // ProductDocument / BlogDocument / EventDocument have Date fields and extra Firestore-only
+  // fields absent from the corresponding *Item types. The casts below are safe: section
+  // components only read display fields that are present on both document and item shapes.
   const sectionData: SectionData = {
-    products: (productsResult?.items ?? []) as unknown as ProductItem[],
-    auctions: (auctionsResult?.items ?? []) as unknown as ProductItem[],
-    preOrders: (preOrdersResult?.items ?? []) as unknown as ProductItem[],
-    categories: (categoriesResult ?? []) as unknown as CategoryItem[],
-    brands: (brandsResult ?? []) as unknown as CategoryItem[],
-    stores: (storesResult?.items ?? []) as unknown as StoreListItem[],
-    blog: (blogResult ?? []) as unknown as BlogPost[],
-    events: (eventsResult?.items ?? []) as unknown as EventItem[],
+    products: productsResult?.items?.length
+      ? (productsResult.items as unknown as ProductItem[])
+      : undefined,
+    auctions: auctionsResult?.items?.length
+      ? (auctionsResult.items as unknown as ProductItem[])
+      : undefined,
+    preOrders: preOrdersResult?.items?.length
+      ? (preOrdersResult.items as unknown as ProductItem[])
+      : undefined,
+    categories: categoriesResult?.length
+      ? (categoriesResult as unknown as CategoryItem[])
+      : undefined,
+    brands: brandsResult?.length
+      ? (brandsResult as unknown as CategoryItem[])
+      : undefined,
+    stores: storesResult?.items?.length
+      ? (storesResult.items as unknown as StoreListItem[])
+      : undefined,
+    blog: blogResult?.length
+      ? (blogResult as unknown as BlogPost[])
+      : undefined,
+    events: eventsResult?.items?.length
+      ? (eventsResult.items as unknown as EventItem[])
+      : undefined,
   };
+
+  const carouselSlides = toCarouselSlides(slides);
 
   return (
     <Main>
       {showAnnouncement ? <AnnouncementBar message={announcementMessage} /> : null}
       {orderedSections.map((section) =>
-        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, slides as any[], liveStats, sectionData),
+        renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),
       )}
     </Main>
   );

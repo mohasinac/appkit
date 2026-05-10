@@ -25,6 +25,7 @@ import { BrandsSection } from "../components/BrandsSection";
 import { SocialFeedSection } from "../components/SocialFeedSection";
 import { CustomCardsSection } from "../components/CustomCardsSection";
 import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
+import type { CarouselSlide } from "../types/index";
 import type {
   HomepageSectionDocument,
   WelcomeSectionConfig,
@@ -86,7 +87,7 @@ function renderSectionElement(
   section: HomepageSectionDocument,
   newsletterFormSlot: React.ReactNode,
   faqItems: FaqItem[],
-  slides: any[],
+  slides: CarouselSlide[],
   liveStats: LiveStatsMap,
   sectionData: SectionData,
 ): React.ReactNode {
@@ -399,7 +400,7 @@ export function renderSection(
   adSlots: MarketplaceHomepageViewAdSlots | undefined,
   newsletterFormSlot: React.ReactNode,
   faqItems: FaqItem[],
-  slides: any[],
+  slides: CarouselSlide[],
   liveStats: LiveStatsMap,
   sectionData: SectionData = {},
 ): React.ReactNode {
