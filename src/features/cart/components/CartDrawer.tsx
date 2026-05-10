@@ -43,7 +43,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
           {isOutOfStock && (
-            <Span className="flex-shrink-0 rounded bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">
+            <Span className="flex-shrink-0 rounded bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--appkit-color-error)]">
               Out of Stock
             </Span>
           )}
