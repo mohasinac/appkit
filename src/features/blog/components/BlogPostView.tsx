@@ -8,6 +8,7 @@ import type { BlogPostDetailResponse } from "../api/[slug]/route";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { ROUTES } from "../../../next/routing/route-map";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800",
@@ -204,7 +205,7 @@ export function BlogPostView({
                     {renderRelatedCard(rel, i)}
                   </React.Fragment>
                 ) : (
-                  <BlogCard key={rel.id} post={rel} />
+                  <BlogCard key={rel.id} post={rel} href={String(ROUTES.BLOG.ARTICLE(rel.slug))} />
                 ),
               )}
             </Div>

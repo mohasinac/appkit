@@ -31,6 +31,7 @@ interface ParseableSchema<TOutput> {
 export interface RouteUser {
   uid: string;
   email?: string | null;
+  displayName?: string;
   role?: string;
   [key: string]: unknown;
 }
@@ -41,6 +42,12 @@ interface RouteHandlerOptions<
 > {
   /** Require a valid session cookie. Implied when `roles` is set. */
   auth?: boolean;
+  /**
+   * Read the session cookie if present and attach the user, but do not
+   * require authentication. Useful for routes that serve both anonymous
+   * and authenticated callers (e.g. public event participation).
+   */
+  authOptional?: boolean;
   /**
    * If provided, the verified user's `role` must be in this list.
    * Implies `auth: true`.
@@ -136,6 +143,12 @@ export function createRouteHandler<
 
       if (needsAuth) {
         user = await verifySession(request);
+      } else if (options.authOptional) {
+        try {
+          user = await verifySession(request);
+        } catch {
+          // No valid session — continue as anonymous
+        }
       }
 
       if (options.roles && options.roles.length > 0) {

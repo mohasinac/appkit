@@ -108,6 +108,8 @@
   },
   "peerDependencies": {
     "@tanstack/react-query": ">=5.0.0",
+    "@types/react": ">=18",
+    "@types/react-dom": ">=18",
     "firebase-admin": "^10.3.0",
     "next": ">=14",
     "next-intl": ">=3",
@@ -133,8 +135,6 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.0.0",
-    "@types/react": "19.1.0",
-    "@types/react-dom": "19.1.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
     "eslint": "^9.37.0",

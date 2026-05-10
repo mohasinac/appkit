@@ -86,6 +86,7 @@ export async function MarketplaceHomepageView({
     id: faq.id,
     question: faq.question,
     answer: typeof faq.answer === "string" ? faq.answer : faq.answer.text,
+    category: faq.category ?? "general",
   }));
 
   // Determine which data-driven section types are active so we only fetch what's needed

@@ -143,7 +143,7 @@ export { Label, Text } from "./ui/components/Typography";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, DashboardNavProvider, LayoutClient, ListingLayout } from "./features/layout/index";
-export type { AppLayoutShellProps, DashboardNavState, MainNavbarItem, LayoutClientProps, ListingLayoutProps, ListingLayoutLabels } from "./features/layout/index";
+export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, DashboardNavState, MainNavbarItem, LayoutClientProps, ListingLayoutProps, ListingLayoutLabels } from "./features/layout/index";
 export { Search } from "./features/search/components";
 export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter, SearchResourceType, SearchResourceTypeOption } from "./features/search/components";
 export { ToastProvider, SkipToMain, NavigationLoader } from "./ui/index";

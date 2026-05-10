@@ -345,8 +345,15 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       subtitle: "Quick answers about buying, selling, and collecting on LetItRip",
       showOnHomepage: true,
       displayCount: 8,
-      expandedByDefault: true,
       linkToFullPage: true,
+      /** Show a category tab bar so visitors can filter by topic */
+      showCategoryTabs: true,
+      /** Which tabs to surface in display order (leave empty [] to auto-derive from categories) */
+      visibleTabs: ["general", "orders_payment", "shipping_delivery", "returns_refunds"],
+      /** Allow multiple accordion panels open at once */
+      allowMultipleOpen: false,
+      /** Number of items expanded on first render (0 = all closed) */
+      defaultOpenCount: 1,
       categories: ["general", "orders_payment", "shipping_delivery", "returns_refunds", "product_information"],
     },
     createdAt: daysAgo(90),

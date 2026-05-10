@@ -74,7 +74,7 @@ export interface MarketplaceHomepageViewAdSlots {
   afterFAQ?: React.ReactNode;
 }
 
-export type FaqItem = { id: string; question: string; answer: string };
+export type FaqItem = { id: string; question: string; answer: string; category: string };
 
 const AD_SLOT_MAP: Record<string, keyof MarketplaceHomepageViewAdSlots> = {
   carousel: "afterHero",
@@ -279,12 +279,12 @@ function renderSectionElement(
       return (
         <WhatsAppCommunitySection
           title={cleanTitle(cfg?.title) || "Join Our WhatsApp Community"}
-          descriptionHtml={
-            cfg?.description ||
-            "5,000+ members. Get deal alerts, auction updates, and exclusive drops before anyone else."
-          }
+          descriptionHtml={cfg?.description || "5,000+ members. Get deal alerts, auction updates, and exclusive drops before anyone else."}
           memberCount={cfg?.memberCount || 5000}
           groupLink={cfg?.groupLink || "https://chat.whatsapp.com/"}
+          benefits={cfg?.benefits ?? []}
+          testimonial={cfg?.testimonial}
+          buttonText={cfg?.buttonText}
         />
       );
     }
@@ -292,14 +292,40 @@ function renderSectionElement(
     case "faq": {
       const cfg = config as FAQSectionConfig;
       if (!cfg?.showOnHomepage || faqItems.length === 0) return null;
+
+      // Build tabs from configured visibleTabs (or all categories in config)
+      const tabCategories = (cfg?.visibleTabs?.length ? cfg.visibleTabs : cfg?.categories) ?? [];
+      const FAQ_CATEGORY_LABELS: Record<string, string> = {
+        general: "General",
+        orders_payment: "Orders & Payment",
+        shipping_delivery: "Shipping",
+        returns_refunds: "Returns & Refunds",
+        product_information: "Products",
+        account_security: "Account",
+        technical_support: "Support",
+      };
+      const tabs = tabCategories.map((cat) => ({
+        value: cat,
+        label: FAQ_CATEGORY_LABELS[cat] ?? cat,
+      }));
+
+      const slicedItems = cfg?.displayCount ? faqItems.slice(0, cfg.displayCount) : faqItems;
+      const totalFaqs = faqItems.length;
+      const hasMore = totalFaqs > slicedItems.length;
+
       return (
         <FAQSection
           title={cleanTitle(cfg?.title) || "Frequently Asked Questions"}
-          tabs={[]}
-          activeTab=""
-          items={faqItems}
-          viewMoreHref={ROUTES.PUBLIC.FAQS}
+          subtitle={cfg?.subtitle}
+          tabs={tabs}
+          showCategoryTabs={cfg?.showCategoryTabs ?? false}
+          allowMultipleOpen={cfg?.allowMultipleOpen ?? false}
+          defaultOpenCount={cfg?.defaultOpenCount ?? 0}
+          items={slicedItems}
+          viewMoreHref={cfg?.linkToFullPage ? ROUTES.PUBLIC.FAQS : undefined}
           viewMoreLabel="View all FAQs →"
+          hasMore={hasMore}
+          moreCount={totalFaqs - slicedItems.length}
         />
       );
     }

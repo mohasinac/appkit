@@ -1,35 +1,63 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Heading, Section, Span, Text, TextLink } from "../../../ui";
+import { Button, Heading, RichText, Section, Span, Text, TextLink } from "../../../ui";
 import { ChevronDown } from "lucide-react";
+
+// --- Constants ----------------------------------------------------------------
+
+const CATEGORY_LABELS: Record<string, string> = {
+  general: "General",
+  orders_payment: "Orders & Payment",
+  shipping_delivery: "Shipping",
+  returns_refunds: "Returns & Refunds",
+  product_information: "Products",
+  account_security: "Account",
+  technical_support: "Support",
+};
 
 // --- Types -------------------------------------------------------------------
 
 export interface FAQTab {
   value: string;
   label: string;
-  icon?: string;
 }
 
 export interface FAQItem {
   id: string;
   question: string;
+  /** HTML or plain-text answer. */
   answer: string;
+  category?: string;
 }
 
 export interface FAQSectionProps {
   title: string;
   subtitle?: string;
-  tabs: FAQTab[];
-  activeTab: string;
   items: FAQItem[];
+  /** Explicit tab list. When omitted and showCategoryTabs=true, tabs are derived from items. */
+  tabs?: FAQTab[];
+  /** Show a category tab bar so visitors can filter by topic. */
+  showCategoryTabs?: boolean;
+  /** Allow multiple accordion panels open simultaneously. Default: false (single-open). */
+  allowMultipleOpen?: boolean;
+  /** Number of items to expand on first render. 0 = all closed. */
+  defaultOpenCount?: number;
   viewMoreHref?: string;
   viewMoreLabel?: string;
   hasMore?: boolean;
   moreCount?: number;
+  /** @deprecated Tabs are now derived internally or from the tabs prop */
+  activeTab?: string;
+  /** @deprecated Use showCategoryTabs + tabs props instead */
   renderTabs?: () => React.ReactNode;
   className?: string;
+}
+
+// --- Helpers -----------------------------------------------------------------
+
+function isHtml(s: string) {
+  return /<[a-z][\s\S]*>/i.test(s);
 }
 
 // --- Section -----------------------------------------------------------------
@@ -38,25 +66,71 @@ export function FAQSection({
   title,
   subtitle,
   items,
+  tabs: tabsProp,
+  showCategoryTabs = false,
+  allowMultipleOpen = false,
+  defaultOpenCount = 0,
   viewMoreHref,
-  viewMoreLabel = "View all →",
+  viewMoreLabel = "View all FAQs →",
   hasMore = false,
   moreCount = 0,
-  renderTabs,
   className = "",
 }: FAQSectionProps) {
-  const { themed, spacing, flex } = THEME_CONSTANTS;
-  const [openFaqId, setOpenFaqId] = useState<string | null>(null);
+  const { themed, flex } = THEME_CONSTANTS;
 
-  const toggleFaq = (faqId: string) => {
-    setOpenFaqId(openFaqId === faqId ? null : faqId);
+  // Derive tabs from items when not explicitly provided
+  const derivedTabs = useMemo<FAQTab[]>(() => {
+    if (!showCategoryTabs) return [];
+    if (tabsProp && tabsProp.length > 0) return tabsProp;
+    const seen = new Set<string>();
+    const result: FAQTab[] = [];
+    for (const item of items) {
+      const cat = item.category ?? "general";
+      if (!seen.has(cat)) {
+        seen.add(cat);
+        result.push({ value: cat, label: CATEGORY_LABELS[cat] ?? cat });
+      }
+    }
+    return result;
+  }, [showCategoryTabs, tabsProp, items]);
+
+  const showTabs = showCategoryTabs && derivedTabs.length > 1;
+
+  const [activeTab, setActiveTab] = useState<string>("all");
+
+  // Pre-open the first N items
+  const defaultOpen = useMemo(
+    () => new Set(items.slice(0, defaultOpenCount).map((i) => i.id)),
+    [items, defaultOpenCount],
+  );
+
+  const [openIds, setOpenIds] = useState<Set<string>>(defaultOpen);
+
+  const toggle = (id: string) => {
+    setOpenIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        if (!allowMultipleOpen) next.clear();
+        next.add(id);
+      }
+      return next;
+    });
   };
 
+  // Filter by selected tab
+  const visibleItems = useMemo(() => {
+    if (!showTabs || activeTab === "all") return items;
+    return items.filter((i) => (i.category ?? "general") === activeTab);
+  }, [items, showTabs, activeTab]);
+
   return (
-    <Section className={`p-8 ${themed.bgSecondary} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto" data-section="faqsection-div-320">
+    <Section className={`py-16 px-4 sm:px-8 ${themed.bgSecondary} ${className}`}>
+      <div className="w-full max-w-4xl mx-auto" data-section="faqsection-div-320">
+
         {/* Section Header */}
-        <div className="text-center mb-8" data-section="faqsection-div-321">
+        <div className="text-center mb-10" data-section="faqsection-div-321">
           <Heading
             level={2}
             variant="none"
@@ -65,64 +139,96 @@ export function FAQSection({
             {title}
           </Heading>
           {subtitle && (
-            <Text className={`text-base ${themed.textSecondary}`}>
+            <Text className={`text-base max-w-xl mx-auto ${themed.textSecondary}`}>
               {subtitle}
             </Text>
           )}
         </div>
 
-        {/* Category Tabs (rendered externally) */}
-        {renderTabs && <div className="mb-8 -mx-8" data-section="faqsection-div-322">{renderTabs()}</div>}
+        {/* Category Tabs — appkit Button with ghost variant */}
+        {showTabs && (
+          <div className={`${flex.center} flex-wrap gap-2 mb-8`} data-section="faqsection-div-322">
+            <Button
+              variant={activeTab === "all" ? "primary" : "ghost"}
+              size="sm"
+              onClick={() => setActiveTab("all")}
+              className="rounded-full"
+            >
+              All
+            </Button>
+            {derivedTabs.map((tab) => (
+              <Button
+                key={tab.value}
+                variant={activeTab === tab.value ? "primary" : "ghost"}
+                size="sm"
+                onClick={() => setActiveTab(tab.value)}
+                className="rounded-full"
+              >
+                {tab.label}
+              </Button>
+            ))}
+          </div>
+        )}
 
         {/* FAQ Accordion */}
-        <div className={`${spacing.stack} max-w-5xl mx-auto`} data-section="faqsection-div-323">
-          {items.length === 0 && (
-            <Text className={`text-center py-8 ${themed.textSecondary}`}>
-              No FAQs found.
+        <div className="space-y-2" data-section="faqsection-div-323">
+          {visibleItems.length === 0 && (
+            <Text className={`text-center py-12 ${themed.textSecondary}`}>
+              No FAQs in this category yet.
             </Text>
           )}
-          {items.map((faq) => {
-            const isOpen = openFaqId === faq.id;
+          {visibleItems.map((faq) => {
+            const isOpen = openIds.has(faq.id);
             return (
               <div
                 key={faq.id}
-                className={`${themed.bgPrimary} rounded-2xl overflow-hidden transition-all border-l-4 ${
-                  isOpen
-                    ? "border-primary bg-primary/5 dark:bg-primary/10"
-                    : "border-transparent"
+                className={`${themed.bgPrimary} rounded-xl overflow-hidden border transition-all duration-200 ${
+                  isOpen ? "border-primary/40 shadow-sm" : `${themed.border}`
                 }`}
-               data-section="faqsection-div-324">
-                {/* Question Button */}
+                data-section="faqsection-div-324"
+              >
+                {/* Question trigger */}
                 <Button
                   variant="ghost"
-                  className={`w-full text-left p-6 ${flex.between} gap-4 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors`}
-                  onClick={() => toggleFaq(faq.id)}
+                  className={`w-full text-left px-5 py-4 ${flex.between} gap-4 hover:${themed.bgTertiary} transition-colors rounded-none`}
+                  onClick={() => toggle(faq.id)}
                   aria-expanded={isOpen}
                 >
                   <Span
-                    className={`text-base ${themed.textPrimary} font-medium flex-1`}
+                    className={`text-sm font-medium flex-1 leading-snug ${
+                      isOpen ? "text-primary" : themed.textPrimary
+                    }`}
                   >
                     {faq.question}
                   </Span>
                   <ChevronDown
-                    className={`w-5 h-5 flex-shrink-0 ${themed.textSecondary} transition-transform duration-300 ${
-                      isOpen ? "rotate-180" : ""
+                    className={`w-4 h-4 flex-shrink-0 transition-transform duration-250 ${
+                      isOpen ? "rotate-180 text-primary" : themed.textSecondary
                     }`}
                   />
                 </Button>
 
-                {/* Answer */}
+                {/* Answer — CSS grid expand/collapse animation */}
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-out ${
-                    isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  className={`grid transition-all duration-300 ease-out ${
+                    isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
-                 data-section="faqsection-div-325">
-                  <div className="p-6 pt-0" data-section="faqsection-div-326">
-                    <Text
-                      className={`text-base ${themed.textSecondary} rounded-md ${themed.bgTertiary} p-4`}
-                    >
-                      {faq.answer}
-                    </Text>
+                  data-section="faqsection-div-325"
+                >
+                  <div className="overflow-hidden" data-section="faqsection-div-326">
+                    <div className="px-5 pb-5 pt-0">
+                      {isHtml(faq.answer) ? (
+                        <RichText
+                          html={faq.answer}
+                          proseClass="prose prose-sm max-w-none dark:prose-invert"
+                          className={themed.textSecondary}
+                        />
+                      ) : (
+                        <Text className={`text-sm leading-relaxed ${themed.textSecondary}`}>
+                          {faq.answer}
+                        </Text>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -130,16 +236,16 @@ export function FAQSection({
           })}
         </div>
 
-        {/* View More link */}
+        {/* View More */}
         {viewMoreHref && (
-          <div className="text-center mt-8" data-section="faqsection-div-327">
+          <div className="text-center mt-10" data-section="faqsection-div-327">
             <TextLink
               href={viewMoreHref}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 dark:text-primary-400 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/15 transition-colors"
             >
               {viewMoreLabel}
               {hasMore && moreCount > 0 && (
-                <Span className="bg-primary dark:bg-primary/80 text-white text-xs px-2 py-0.5 rounded-full">
+                <Span className="bg-primary text-white text-xs px-2 py-0.5 rounded-full">
                   +{moreCount}
                 </Span>
               )}

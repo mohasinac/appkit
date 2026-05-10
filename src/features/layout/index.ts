@@ -53,7 +53,7 @@ export { LayoutClient } from "./LayoutClient";
 export type { LayoutClientProps, LayoutProvider } from "./LayoutClient";
 
 export { AppLayoutShell } from "./AppLayoutShell";
-export type { AppLayoutShellProps } from "./AppLayoutShell";
+export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection } from "./AppLayoutShell";
 
 export {
   BottomActionsProvider,

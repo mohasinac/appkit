@@ -208,6 +208,7 @@ export const eventsSeedData: EventDocument[] = [
 ];
 
 export const eventEntriesSeedData: EventEntryDocument[] = [
+  // ── Sale event entries ────────────────────────────────────────────────────
   {
     id: "entry-swap-meet-rahul",
     eventId: "event-hot-wheels-swap-meet-may-2026",
@@ -223,5 +224,65 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     userDisplayName: "Priya Patel",
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
     submittedAt: daysAgo(1),
+  },
+
+  // ── Active poll entries (Pokémon TCG tournament format vote) ─────────────
+  {
+    id: "entry-pokemon-poll-ravi",
+    eventId: "event-pokemon-card-tournament-june-2026",
+    userId: "user-ravi-kumar",
+    userDisplayName: "Ravi Kumar",
+    pollVotes: ["opt-standard"],
+    pollComment: "Standard meta is the most balanced and skill-testing format for a regional.",
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(2),
+  },
+  {
+    id: "entry-pokemon-poll-priya",
+    eventId: "event-pokemon-card-tournament-june-2026",
+    userId: "user-priya-patel",
+    userDisplayName: "Priya Patel",
+    pollVotes: ["opt-sealed"],
+    pollComment: "Sealed is the most fun for players without expensive cards!",
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(2),
+  },
+  {
+    id: "entry-pokemon-poll-arjun",
+    eventId: "event-pokemon-card-tournament-june-2026",
+    userId: "user-arjun-nair",
+    userDisplayName: "Arjun Nair",
+    pollVotes: ["opt-expanded"],
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(1),
+  },
+
+  // ── Ended poll entries (Yu-Gi-Oh! regional venue vote) ───────────────────
+  {
+    id: "entry-yugioh-poll-nisha",
+    eventId: "event-yugioh-regional-qualifier-march-2026",
+    userId: "user-nisha-reddy",
+    userDisplayName: "Nisha Reddy",
+    pollVotes: ["opt-hyd"],
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(38),
+  },
+  {
+    id: "entry-yugioh-poll-rohit",
+    eventId: "event-yugioh-regional-qualifier-march-2026",
+    userId: "user-rohit-joshi",
+    userDisplayName: "Rohit Joshi",
+    pollVotes: ["opt-blr"],
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(37),
+  },
+  {
+    id: "entry-yugioh-poll-rahul",
+    eventId: "event-yugioh-regional-qualifier-march-2026",
+    userId: "user-rahul-sharma",
+    userDisplayName: "Rahul Sharma",
+    pollVotes: ["opt-hyd"],
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    submittedAt: daysAgo(36),
   },
 ];

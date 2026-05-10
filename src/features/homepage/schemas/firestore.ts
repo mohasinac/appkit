@@ -331,22 +331,31 @@ export interface FeaturesSectionConfig {
   features: string[];
 }
 
+export type FAQCategoryKey =
+  | "general"
+  | "orders_payment"
+  | "shipping_delivery"
+  | "returns_refunds"
+  | "product_information"
+  | "account_security"
+  | "technical_support";
+
 export interface FAQSectionConfig {
   title: string;
   subtitle?: string;
   showOnHomepage: boolean;
   displayCount: number;
-  expandedByDefault: boolean;
+  /** When true, render a tab bar so visitors can filter by category. */
+  showCategoryTabs: boolean;
+  /** Which category tabs to surface (in display order). Empty = all categories that have items. */
+  visibleTabs: FAQCategoryKey[];
+  /** Allow multiple accordions to be open simultaneously. */
+  allowMultipleOpen: boolean;
+  /** Number of items to expand on initial render. 0 = none open. */
+  defaultOpenCount: number;
   linkToFullPage: boolean;
-  categories: Array<
-    | "general"
-    | "orders_payment"
-    | "shipping_delivery"
-    | "returns_refunds"
-    | "product_information"
-    | "account_security"
-    | "technical_support"
-  >;
+  /** Which FAQ categories to pull items from for this section. */
+  categories: FAQCategoryKey[];
 }
 
 export interface BlogArticlesSectionConfig {
