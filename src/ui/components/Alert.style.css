@@ -51,137 +51,137 @@
 }
 
 .appkit-alert--info {
-  background: #f0f9ff;
+  background: var(--appkit-color-info-surface);
   border-color: rgba(125, 211, 252, 0.7);
 }
 
 .appkit-alert__icon--info {
-  color: #0284c7;
+  color: var(--appkit-color-info);
 }
 
 .appkit-alert__title--info {
-  color: #0c4a6e;
+  color: var(--appkit-color-sky-900);
 }
 
 .appkit-alert__text--info {
-  color: #075985;
+  color: var(--appkit-color-sky-800);
 }
 
 .appkit-alert--success {
-  background: #ecfdf5;
+  background: var(--appkit-color-success-surface);
   border-color: rgba(134, 239, 172, 0.7);
 }
 
 .appkit-alert__icon--success {
-  color: #059669;
+  color: var(--appkit-color-success);
 }
 
 .appkit-alert__title--success {
-  color: #064e3b;
+  color: var(--appkit-color-emerald-900);
 }
 
 .appkit-alert__text--success {
-  color: #065f46;
+  color: var(--appkit-color-emerald-800);
 }
 
 .appkit-alert--warning {
-  background: #fffbeb;
+  background: var(--appkit-color-warning-surface);
   border-color: rgba(252, 211, 77, 0.7);
 }
 
 .appkit-alert__icon--warning {
-  color: #d97706;
+  color: var(--appkit-color-warning);
 }
 
 .appkit-alert__title--warning {
-  color: #78350f;
+  color: var(--appkit-color-amber-900);
 }
 
 .appkit-alert__text--warning {
-  color: #92400e;
+  color: var(--appkit-color-amber-800);
 }
 
 .appkit-alert--error {
-  background: #fef2f2;
+  background: var(--appkit-color-error-surface);
   border-color: rgba(252, 165, 165, 0.7);
 }
 
 .appkit-alert__icon--error {
-  color: #dc2626;
+  color: var(--appkit-color-error);
 }
 
 .appkit-alert__title--error {
-  color: #7f1d1d;
+  color: var(--appkit-color-error-title);
 }
 
 .appkit-alert__text--error {
-  color: #991b1b;
+  color: var(--appkit-color-error-text);
 }
 
 .dark .appkit-alert--info {
-  background: rgba(12, 74, 110, 0.25);
+  background: var(--appkit-color-info-surface);
   border-color: rgba(3, 105, 161, 0.45);
 }
 
 .dark .appkit-alert__icon--info {
-  color: #7dd3fc;
+  color: var(--appkit-color-sky-300);
 }
 
 .dark .appkit-alert__title--info {
-  color: #bae6fd;
+  color: var(--appkit-color-sky-100);
 }
 
 .dark .appkit-alert__text--info {
-  color: #7dd3fc;
+  color: var(--appkit-color-sky-300);
 }
 
 .dark .appkit-alert--success {
-  background: rgba(6, 78, 59, 0.25);
+  background: var(--appkit-color-success-surface);
   border-color: rgba(5, 150, 105, 0.45);
 }
 
 .dark .appkit-alert__icon--success {
-  color: #6ee7b7;
+  color: var(--appkit-color-emerald-300);
 }
 
 .dark .appkit-alert__title--success {
-  color: #a7f3d0;
+  color: var(--appkit-color-emerald-200);
 }
 
 .dark .appkit-alert__text--success {
-  color: #6ee7b7;
+  color: var(--appkit-color-emerald-300);
 }
 
 .dark .appkit-alert--warning {
-  background: rgba(120, 53, 15, 0.25);
+  background: var(--appkit-color-warning-surface);
   border-color: rgba(217, 119, 6, 0.45);
 }
 
 .dark .appkit-alert__icon--warning {
-  color: #fcd34d;
+  color: var(--appkit-color-amber-300);
 }
 
 .dark .appkit-alert__title--warning {
-  color: #fde68a;
+  color: var(--appkit-color-amber-200);
 }
 
 .dark .appkit-alert__text--warning {
-  color: #fcd34d;
+  color: var(--appkit-color-amber-300);
 }
 
 .dark .appkit-alert--error {
-  background: rgba(127, 29, 29, 0.25);
+  background: var(--appkit-color-error-surface);
   border-color: rgba(220, 38, 38, 0.45);
 }
 
 .dark .appkit-alert__icon--error {
-  color: #fca5a5;
+  color: var(--appkit-color-error-text);
 }
 
 .dark .appkit-alert__title--error {
-  color: #fecaca;
+  color: var(--appkit-color-error-title);
 }
 
 .dark .appkit-alert__text--error {
-  color: #fca5a5;
+  color: var(--appkit-color-error-text);
 }
