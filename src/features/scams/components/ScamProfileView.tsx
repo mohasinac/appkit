@@ -11,6 +11,9 @@ import {
   Users,
   Calendar,
   ExternalLink,
+  FileText,
+  MessageSquare,
+  Link2,
 } from "lucide-react";
 import {
   Container,
@@ -27,6 +30,7 @@ import {
   Badge,
   Alert,
   Breadcrumb,
+  EmptyState,
 } from "../../../ui";
 import type { ScammerDocument } from "../schemas/firestore";
 import {
@@ -35,7 +39,7 @@ import {
   SOCIAL_PLATFORM_LABELS,
   CONTEST_TYPE_LABELS,
 } from "../schemas/firestore";
-import { SCAM_TYPE_LABELS } from "../constants/scam-types";
+import { SCAM_TYPE_LABELS, getScamType } from "../constants/scam-types";
 import { ROUTES } from "../../../next/routing/route-map";
 
 function formatDate(d: Date | string | undefined): string {
@@ -263,6 +267,33 @@ export function ScamProfileView({ scammer, isAuthenticated }: ScamProfileViewPro
                 </Card>
               </Stack>
 
+              {/* How to Avoid */}
+              {(() => {
+                const scamTypeDef = getScamType(scammer.scamType);
+                if (!scamTypeDef || scamTypeDef.howToAvoid.length === 0) return null;
+                return (
+                  <Stack gap="sm">
+                    <Heading level={2} className="text-base font-semibold">
+                      How to Avoid This Scam
+                    </Heading>
+                    <Card variant="flat" padding="md">
+                      <Stack gap="xs" as="ol">
+                        {scamTypeDef.howToAvoid.map((tip, i) => (
+                          <Row key={i} gap="sm" align="start" as="li">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[color:var(--appkit-color-success,theme(colors.green.600))]/10 text-xs font-bold text-[color:var(--appkit-color-success,theme(colors.green.700))]">
+                              {i + 1}
+                            </span>
+                            <Text variant="secondary" className="text-sm leading-relaxed">
+                              {tip}
+                            </Text>
+                          </Row>
+                        ))}
+                      </Stack>
+                    </Card>
+                  </Stack>
+                );
+              })()}
+
               {/* Evidence images */}
               {scammer.evidence.length > 0 && (
                 <Stack gap="sm">
@@ -283,6 +314,41 @@ export function ScamProfileView({ scammer, isAuthenticated }: ScamProfileViewPro
                   </Row>
                 </Stack>
               )}
+              {/* Additional Incidents — placeholder */}
+              <Stack gap="sm">
+                <Heading level={2} className="text-base font-semibold">
+                  Additional Incidents
+                </Heading>
+                <EmptyState
+                  icon={<FileText className="h-8 w-8" />}
+                  title="No additional incidents yet"
+                  description="Other victims' reports linked to this profile will appear here once verified."
+                />
+              </Stack>
+
+              {/* Community Discussion — placeholder */}
+              <Stack gap="sm">
+                <Heading level={2} className="text-base font-semibold">
+                  Community Discussion
+                </Heading>
+                <EmptyState
+                  icon={<MessageSquare className="h-8 w-8" />}
+                  title="No comments yet"
+                  description="Comments and victim testimonials will appear here."
+                />
+              </Stack>
+
+              {/* Related Profiles — placeholder */}
+              <Stack gap="sm">
+                <Heading level={2} className="text-base font-semibold">
+                  Related Profiles
+                </Heading>
+                <EmptyState
+                  icon={<Link2 className="h-8 w-8" />}
+                  title="No related profiles"
+                  description="Other scammer profiles linked to this person will appear here."
+                />
+              </Stack>
             </Stack>
 
             {/* ── Right column — actions + meta ───────────────────────────── */}
