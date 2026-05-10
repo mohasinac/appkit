@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import {
   BlockFooter,
+  Button,
   Div,
   Heading,
   Li,
@@ -160,8 +161,9 @@ export function FooterLayout({
             {linkGroups.map((group, idx) => (
               <Div key={idx}>
                 {/* Mobile accordion header */}
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => toggleGroup(idx)}
                   className="flex w-full items-center justify-between border-b border-zinc-200 py-3 text-left text-sm font-semibold text-zinc-800 transition-colors hover:text-zinc-950 dark:border-slate-800 dark:text-zinc-100 dark:hover:text-white lg:hidden"
                   aria-expanded={!!openGroups[idx]}
@@ -170,7 +172,7 @@ export function FooterLayout({
                   <ChevronDown
                     className={`w-4 h-4 transition-transform duration-200 ${openGroups[idx] ? "rotate-180" : ""}`}
                   />
-                </button>
+                </Button>
 
                 {/* Mobile content */}
                 <Ul
