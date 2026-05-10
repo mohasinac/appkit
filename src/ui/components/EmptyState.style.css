@@ -11,7 +11,7 @@
 }
 
 .appkit-empty-state__icon {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .appkit-empty-state__description {
@@ -24,5 +24,5 @@
 
 /* Dark mode */
 .dark .appkit-empty-state__icon {
-  color: #64748b;
+  color: var(--appkit-color-slate-500);
 }

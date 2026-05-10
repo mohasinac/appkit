@@ -24,27 +24,27 @@
 }
 
 .appkit-rating-display__star--active {
-  color: #fbbf24;
+  color: var(--appkit-color-amber-400);
 }
 
 .dark .appkit-rating-display__star--active {
-  color: #e91e8c;
+  color: var(--appkit-color-primary);
 }
 
 .appkit-rating-display__star--inactive {
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .dark .appkit-rating-display__star--inactive {
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .appkit-rating-display__value {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-rating-display__value {
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }

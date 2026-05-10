@@ -1,10 +1,10 @@
 .appkit-price-display__price {
   font-weight: 700;
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 .dark .appkit-price-display__price {
-  color: #f063b9;
+  color: var(--appkit-color-primary-400);
 }
 
 .appkit-price-display__price--compact {
@@ -17,11 +17,11 @@
 
 .appkit-price-display__original {
   text-decoration: line-through;
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .dark .appkit-price-display__original {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-price-display__original--compact {
@@ -37,11 +37,11 @@
   padding: 0.125rem 0.25rem;
   font-size: 0.75rem;
   font-weight: 600;
-  background: #dcfce7;
-  color: #047857;
+  background: var(--appkit-color-emerald-100);
+  color: var(--appkit-color-emerald-700);
 }
 
 .dark .appkit-price-display__discount {
   background: rgba(6, 78, 59, 0.35);
-  color: #6ee7b7;
+  color: var(--appkit-color-emerald-300);
 }

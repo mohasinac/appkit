@@ -19,23 +19,23 @@
 
 /* states */
 .appkit-star-rating__icon--filled {
-  fill: #fbbf24;
-  color: #fbbf24;
+  fill: var(--appkit-color-amber-400);
+  color: var(--appkit-color-amber-400);
 }
 
 .appkit-star-rating__icon--empty {
   fill: transparent;
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .appkit-star-rating--interactive .appkit-star-rating__star:hover .appkit-star-rating__icon--empty {
-  fill: #fde68a;
-  color: #fde68a;
+  fill: var(--appkit-color-amber-200);
+  color: var(--appkit-color-amber-200);
 }
 
 /* dark */
 .dark .appkit-star-rating__icon--empty {
-  color: #475569;
+  color: var(--appkit-color-slate-600);
 }
 
 .dark .appkit-star-rating--interactive .appkit-star-rating__star:hover .appkit-star-rating__icon--empty {
