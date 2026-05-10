@@ -102,6 +102,8 @@ export const DEFAULT_ROUTE_MAP = {
     CHECKOUT: "/checkout",
     CHECKOUT_SUCCESS: "/checkout/success",
     OFFERS: "/user/offers",
+    REVIEWS: "/user/reviews",
+    BIDS: "/user/bids",
   },
   STORE: {
     DASHBOARD: "/store",

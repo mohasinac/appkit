@@ -13,13 +13,15 @@ interface CartCountResponse {
  * useCartCount
  *
  * Returns a live cart count, preferring server cart data when available
- * and falling back to guest-cart storage.
+ * and falling back to guest-cart storage. Pass `enabled=true` only when
+ * a user session exists — prevents unauthenticated API calls sitewide.
  */
-export function useCartCount() {
+export function useCartCount(enabled = false) {
   const { count: guestCount } = useGuestCart();
   const { data } = useQuery<CartCountResponse | null>({
     queryKey: ["cart"],
     queryFn: () => apiClient.get<CartCountResponse | null>(CART_ENDPOINTS.GET),
+    enabled,
   });
 
   return data?.itemCount ?? guestCount;

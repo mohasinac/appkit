@@ -61,6 +61,9 @@ export interface AppLayoutShellProps {
   logoHref: string;
   promotionsHref?: string;
   cartHref: string;
+  wishlistHref?: string;
+  /** Auth UID passed through to TitleBar for wishlist merge-on-login and sync. */
+  userId?: string | null;
   profileHref: string;
   loginHref: string;
   homeHref: string;
@@ -248,6 +251,8 @@ export function AppLayoutShell({
   logoHref,
   promotionsHref,
   cartHref,
+  wishlistHref,
+  userId,
   profileHref,
   loginHref,
   homeHref,
@@ -340,7 +345,7 @@ export function AppLayoutShell({
     const sectionLabelClass =
       "px-1 text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400";
     const navItemClass =
-      "block rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300";
+      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-700 transition-colors hover:bg-primary-50 hover:text-primary-800 dark:text-zinc-300 dark:hover:bg-slate-800 dark:hover:text-secondary-300";
 
     const normalizedSections: AppLayoutShellSidebarSection[] = hasSections
       ? (sidebarSections as AppLayoutShellSidebarSection[])
@@ -575,6 +580,8 @@ export function AppLayoutShell({
             logoHref={logoHref}
             promotionsHref={promotionsHref}
             cartHref={cartHref}
+            wishlistHref={wishlistHref}
+            userId={userId}
             profileHref={profileHref}
             user={user}
             navSlot={titleBarNavSlot}

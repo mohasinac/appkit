@@ -15,3 +15,21 @@ export interface WishlistResponse {
   items: WishlistItem[];
   total: number;
 }
+
+/** Shape of the product data the GET /api/user/wishlist endpoint attaches via Promise.allSettled enrichment. */
+export interface WishlistProductData {
+  slug?: string;
+  title?: string;
+  price?: number;
+  currency?: string;
+  images?: string[];
+  status?: "draft" | "published" | "archived" | "sold" | "out_of_stock" | "discontinued";
+  isFeatured?: boolean;
+  isAuction?: boolean;
+  isPreOrder?: boolean;
+}
+
+/** WishlistItem enriched with inline product details returned by the wishlist GET endpoint. */
+export interface EnrichedWishlistItem extends WishlistItem {
+  product?: WishlistProductData;
+}
