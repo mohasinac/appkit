@@ -27,6 +27,7 @@ export interface AdminBlogEditorViewProps
   postId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  embedded?: boolean;
 }
 
 // --- Helpers -----------------------------------------------------------------
@@ -69,6 +70,7 @@ export function AdminBlogEditorView({
   postId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminBlogEditorViewProps) {
   const isEdit = Boolean(postId);
@@ -189,14 +191,9 @@ export function AdminBlogEditorView({
   const isSubmitting = saveMutation.isPending || postQuery.isLoading;
   const canSave = Boolean(title);
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Post" : "New Blog Post"}
-      sections={[
-        <Form
-          key="blog-form"
+  const formSection = (
+    <Form
+      key="blog-form"
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
@@ -336,8 +333,19 @@ export function AdminBlogEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Post" : "New Blog Post"}
+      sections={[formSection]}
     />
   );
 }

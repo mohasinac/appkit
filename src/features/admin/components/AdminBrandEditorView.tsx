@@ -21,6 +21,8 @@ export interface AdminBrandEditorViewProps
   brandId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  /** When true, renders form only (no StackedViewShell) for use inside a SideDrawer. */
+  embedded?: boolean;
 }
 
 interface BrandPayload {
@@ -44,6 +46,7 @@ export function AdminBrandEditorView({
   brandId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminBrandEditorViewProps) {
   const isEdit = Boolean(brandId);
@@ -127,20 +130,15 @@ export function AdminBrandEditorView({
 
   const isSubmitting = saveMutation.isPending || brandQuery.isLoading;
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Brand" : "Create Brand"}
-      sections={[
-        <Form
-          key="brand-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }}
-          className="space-y-4"
-        >
+  const formSection = (
+    <Form
+      key="brand-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        saveMutation.mutate();
+      }}
+      className="space-y-4"
+    >
           <div className="grid sm:grid-cols-2 gap-4">
             <Input
               label="Brand name"
@@ -233,8 +231,19 @@ export function AdminBrandEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Brand" : "Create Brand"}
+      sections={[formSection]}
     />
   );
 }

@@ -23,6 +23,7 @@ export interface AdminCouponEditorViewProps
   couponId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  embedded?: boolean;
 }
 
 interface CouponPayload {
@@ -70,6 +71,7 @@ export function AdminCouponEditorView({
   couponId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminCouponEditorViewProps) {
   const isEdit = Boolean(couponId);
@@ -226,14 +228,9 @@ export function AdminCouponEditorView({
         ? "Discount amount (paise)"
         : "Discount value";
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Coupon" : "Create Coupon"}
-      sections={[
-        <Form
-          key="coupon-form"
+  const formSection = (
+    <Form
+      key="coupon-form"
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
@@ -438,8 +435,19 @@ export function AdminCouponEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Coupon" : "Create Coupon"}
+      sections={[formSection]}
     />
   );
 }

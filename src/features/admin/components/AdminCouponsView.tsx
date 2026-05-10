@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
+import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
+import { AdminCouponEditorView } from "./AdminCouponEditorView";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["type"];
@@ -39,6 +41,7 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
   const hasChildren = React.Children.count(children) > 0;
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -129,6 +132,12 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        extra={
+          <Button size="sm" onClick={openCreatePanel} className="flex items-center gap-1.5">
+            <Plus className="h-4 w-4" />
+            Add Coupon
+          </Button>
+        }
       />
 
       {totalPages > 1 && (
@@ -143,7 +152,7 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No coupons found" getRowHref={getRowHref as any} />
+        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No coupons found" onRowClick={(row) => openEditPanel(row.id)} />
       </div>
 
       {filterOpen && (
@@ -182,6 +191,22 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
           </div>
         </>
       )}
+
+      <SideDrawer
+        isOpen={isCreateOpen || isEditOpen}
+        onClose={closePanel}
+        title={isCreateOpen ? "Add Coupon" : "Edit Coupon"}
+        mode={isCreateOpen ? "create" : "edit"}
+      >
+        {(isCreateOpen || isEditOpen) && (
+          <AdminCouponEditorView
+            couponId={editId ?? undefined}
+            onSaved={closePanel}
+            onDeleted={closePanel}
+            embedded
+          />
+        )}
+      </SideDrawer>
     </div>
   );
 }

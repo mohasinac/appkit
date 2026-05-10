@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, ListingViewShell, Pagination, Toggle, useToast } from "../../../ui";
+import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
+import { Button, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Toggle, useToast } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -16,6 +17,7 @@ import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
+import { AdminProductEditorView } from "./AdminProductEditorView";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "type"];
@@ -91,6 +93,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -225,6 +228,12 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        extra={
+          <Button size="sm" onClick={openCreatePanel} className="flex items-center gap-1.5">
+            <Plus className="h-4 w-4" />
+            Add Product
+          </Button>
+        }
       />
 
       {totalPages > 1 && (
@@ -244,7 +253,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
           columns={[...buildBaseColumns(), flagColumn]}
           isLoading={isLoading}
           emptyLabel="No products found"
-          getRowHref={getRowHref as any}
+          onRowClick={(row) => openEditPanel(row.id)}
         />
       </div>
 
@@ -295,6 +304,22 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
           </div>
         </>
       )}
+
+      <SideDrawer
+        isOpen={isCreateOpen || isEditOpen}
+        onClose={closePanel}
+        title={isCreateOpen ? "Add Product" : "Edit Product"}
+        mode={isCreateOpen ? "create" : "edit"}
+      >
+        {(isCreateOpen || isEditOpen) && (
+          <AdminProductEditorView
+            productId={editId ?? undefined}
+            onSaved={closePanel}
+            onDeleted={closePanel}
+            embedded
+          />
+        )}
+      </SideDrawer>
     </div>
   );
 }

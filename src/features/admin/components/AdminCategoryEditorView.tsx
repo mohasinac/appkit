@@ -21,6 +21,7 @@ export interface AdminCategoryEditorViewProps
   categoryId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  embedded?: boolean;
 }
 
 interface CategoryPayload {
@@ -59,6 +60,7 @@ export function AdminCategoryEditorView({
   categoryId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminCategoryEditorViewProps) {
   const isEdit = Boolean(categoryId);
@@ -138,14 +140,9 @@ export function AdminCategoryEditorView({
 
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Category" : "Create Category"}
-      sections={[
-        <Form
-          key="cat-form"
+  const formSection = (
+    <Form
+      key="cat-form"
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
@@ -247,8 +244,19 @@ export function AdminCategoryEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Category" : "Create Category"}
+      sections={[formSection]}
     />
   );
 }

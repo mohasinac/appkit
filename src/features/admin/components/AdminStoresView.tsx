@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -45,13 +46,12 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const hasChildren = React.Children.count(children) > 0;
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const { openEditPanel, closePanel, isEditOpen, editId } = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
     () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
   );
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedRow, setSelectedRow] = useState<StoreRow | null>(null);
 
   const openFilters = useCallback(() => {
     setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
@@ -112,6 +112,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const panelRow = editId ? (rows.find((r) => r.id === editId) ?? null) : null;
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
@@ -154,7 +155,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
             renderRowActions={(row) => (
               <RowActionMenu actions={[{
                 label: "Manage",
-                onClick: () => { setSelectedRow(row as StoreRow); setDrawerOpen(true); },
+                onClick: () => openEditPanel(row.id),
               }]} />
             )}
           />
@@ -199,12 +200,12 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
       </div>
 
       <AdminStoreEditorView
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        storeId={selectedRow?.id}
-        storeName={selectedRow?.primary}
-        currentStatus={selectedRow?.status?.toLowerCase()}
-        currentIsVerified={Boolean(selectedRow?._raw?.isVerified)}
+        open={isEditOpen}
+        onClose={closePanel}
+        storeId={editId ?? undefined}
+        storeName={panelRow?.primary}
+        currentStatus={panelRow?.status?.toLowerCase()}
+        currentIsVerified={Boolean(panelRow?._raw?.isVerified)}
       />
     </>
   );

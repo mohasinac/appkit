@@ -24,6 +24,7 @@ export interface AdminFaqEditorViewProps
   faqId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  embedded?: boolean;
 }
 
 // --- Constants ---------------------------------------------------------------
@@ -52,6 +53,7 @@ export function AdminFaqEditorView({
   faqId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminFaqEditorViewProps) {
   const isEdit = Boolean(faqId);
@@ -148,14 +150,9 @@ export function AdminFaqEditorView({
   const isSubmitting = saveMutation.isPending || faqQuery.isLoading;
   const canSave = Boolean(question.trim()) && Boolean(answer.trim());
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit FAQ" : "New FAQ"}
-      sections={[
-        <Form
-          key="faq-form"
+  const formSection = (
+    <Form
+      key="faq-form"
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
@@ -257,8 +254,19 @@ export function AdminFaqEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit FAQ" : "New FAQ"}
+      sections={[formSection]}
     />
   );
 }

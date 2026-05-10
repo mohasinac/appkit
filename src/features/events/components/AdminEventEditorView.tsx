@@ -22,6 +22,7 @@ import type { EventItem, EventType, EventStatus } from "../types";
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
   onSaved?: (id: string) => void;
+  embedded?: boolean;
 }
 
 function toLocalDatetime(iso: string | undefined): string {
@@ -73,6 +74,7 @@ interface EventApiResponse {
 export function AdminEventEditorView({
   eventId,
   onSaved,
+  embedded,
   ...rest
 }: AdminEventEditorViewProps) {
   const [type, setType] = React.useState<EventType>("sale");
@@ -231,24 +233,20 @@ export function AdminEventEditorView({
     (type !== "poll" || pollOptions.filter((o) => o.label.trim()).length >= 2) &&
     (type !== "offer" || (!!couponId.trim() && !!displayCode.trim()));
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={eventId ? "Edit Event" : "Create Event"}
-      sections={[
-        eventQuery.error ? (
-          <Alert variant="error" title="Could not load event">
-            {eventQuery.error instanceof Error ? eventQuery.error.message : "Unknown error"}
-          </Alert>
-        ) : null,
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }}
-          className="space-y-6"
-        >
+  const alertSection = eventQuery.error ? (
+    <Alert variant="error" title="Could not load event">
+      {eventQuery.error instanceof Error ? eventQuery.error.message : "Unknown error"}
+    </Alert>
+  ) : null;
+
+  const formSection = (
+    <Form
+      onSubmit={(e) => {
+        e.preventDefault();
+        saveMutation.mutate();
+      }}
+      className="space-y-6"
+    >
           {/* Type selector — create only */}
           {!eventId && (
             <Select
@@ -455,8 +453,24 @@ export function AdminEventEditorView({
               {saveMessage}
             </Alert>
           )}
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return (
+      <div className="overflow-y-auto p-4 space-y-4">
+        {alertSection}
+        {formSection}
+      </div>
+    );
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={eventId ? "Edit Event" : "Create Event"}
+      sections={[alertSection, formSection]}
     />
   );
 }

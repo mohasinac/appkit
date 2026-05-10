@@ -234,6 +234,8 @@ export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./feature
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
 export { usePanelStore } from "./stores/panel-store";
+export { usePanelUrlSync } from "./react/hooks/use-panel-url-sync";
+export type { PanelUrlSync } from "./react/hooks/use-panel-url-sync";
 export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
 export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
 export { SellerOffersPanel } from "./features/seller/components/SellerOffersPanel";

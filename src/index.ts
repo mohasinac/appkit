@@ -6797,6 +6797,8 @@ export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./feature
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
 export { usePanelStore } from "./stores/panel-store";
+export { usePanelUrlSync } from "./react/hooks/use-panel-url-sync";
+export type { PanelUrlSync } from "./react/hooks/use-panel-url-sync";
 // PRODUCT_ADMIN_SORT_OPTIONS - Constant used across modules.
 export { PRODUCT_ADMIN_SORT_OPTIONS } from "./features/products/index";
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.

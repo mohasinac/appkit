@@ -429,6 +429,10 @@ export { default as ImageGallery } from "./components/ImageGallery";
 export type { SideDrawerProps, DrawerMode } from "./components/SideDrawer";
 export { SideDrawer } from "./components/SideDrawer";
 
+// --- FormActionBar -----------------------------------------------------------
+export type { FormActionBarProps, FormActionBarBreadcrumb } from "./components/FormActionBar";
+export { FormActionBar } from "./components/FormActionBar";
+
 // --- ConfirmDeleteModal ------------------------------------------------------
 export type { ConfirmDeleteModalProps } from "./components/ConfirmDeleteModal";
 export { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";

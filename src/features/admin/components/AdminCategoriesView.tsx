@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
+import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -13,6 +14,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
 
 const PAGE_SIZE = 50;
 const FILTER_KEYS = ["isActive", "isFeatured"];
@@ -37,6 +39,7 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
   const hasChildren = React.Children.count(children) > 0;
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -127,6 +130,12 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        extra={
+          <Button size="sm" onClick={openCreatePanel} className="flex items-center gap-1.5">
+            <Plus className="h-4 w-4" />
+            Add Category
+          </Button>
+        }
       />
 
       {totalPages > 1 && (
@@ -141,7 +150,7 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No categories found" getRowHref={getRowHref as any} />
+        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No categories found" onRowClick={(row) => openEditPanel(row.id)} />
       </div>
 
       {filterOpen && (
@@ -191,6 +200,22 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
           </div>
         </>
       )}
+
+      <SideDrawer
+        isOpen={isCreateOpen || isEditOpen}
+        onClose={closePanel}
+        title={isCreateOpen ? "Add Category" : "Edit Category"}
+        mode={isCreateOpen ? "create" : "edit"}
+      >
+        {(isCreateOpen || isEditOpen) && (
+          <AdminCategoryEditorView
+            categoryId={editId ?? undefined}
+            onSaved={closePanel}
+            onDeleted={closePanel}
+            embedded
+          />
+        )}
+      </SideDrawer>
     </div>
   );
 }

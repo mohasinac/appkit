@@ -38,6 +38,7 @@ interface DataTableProps<T extends { id: string }> {
   rows: T[];
   isLoading?: boolean;
   getRowHref?: (row: T) => string;
+  onRowClick?: (row: T) => void;
   renderRowActions?: (row: T) => React.ReactNode;
   sortKey?: string;
   sortDir?: "asc" | "desc";
@@ -60,6 +61,7 @@ export function DataTable<T extends { id: string }>({
   onPageChange,
   emptyLabel = "No records found",
   getRowHref,
+  onRowClick,
   renderRowActions,
 }: DataTableProps<T>) {
   const columns = (columnsProp ?? DEFAULT_COLUMNS) as AdminTableColumn<T>[];
@@ -112,28 +114,25 @@ export function DataTable<T extends { id: string }>({
             ) : (
               rows.map((row) => {
                 const rowHref = getRowHref?.(row);
+                const handleClick = onRowClick
+                  ? () => onRowClick(row)
+                  : rowHref
+                    ? () => { window.location.href = rowHref; }
+                    : undefined;
+                const handleKeyDown = handleClick
+                  ? (event: React.KeyboardEvent) => {
+                      if (event.key === "Enter" || event.key === " ") handleClick();
+                    }
+                  : undefined;
+                const isInteractive = Boolean(onRowClick ?? rowHref);
                 return (
                   <tr
                     key={row.id}
-                    onClick={
-                      rowHref
-                        ? () => {
-                            window.location.href = rowHref;
-                          }
-                        : undefined
-                    }
-                    onKeyDown={
-                      rowHref
-                        ? (event) => {
-                            if (event.key === "Enter" || event.key === " ") {
-                              window.location.href = rowHref;
-                            }
-                          }
-                        : undefined
-                    }
-                    role={rowHref ? "link" : undefined}
-                    tabIndex={rowHref ? 0 : undefined}
-                    className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${rowHref ? "cursor-pointer" : ""}`}
+                    onClick={handleClick}
+                    onKeyDown={handleKeyDown}
+                    role={isInteractive ? "link" : undefined}
+                    tabIndex={isInteractive ? 0 : undefined}
+                    className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""}`}
                   >
                     {columns.map((col) => (
                       <td

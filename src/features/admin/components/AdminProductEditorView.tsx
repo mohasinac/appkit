@@ -30,6 +30,7 @@ export interface AdminProductEditorViewProps
   productId?: string;
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
+  embedded?: boolean;
 }
 
 type ProductMode = "standard" | "auction" | "preorder";
@@ -109,6 +110,7 @@ export function AdminProductEditorView({
   productId,
   onSaved,
   onDeleted,
+  embedded,
   ...rest
 }: AdminProductEditorViewProps) {
   const isEdit = Boolean(productId);
@@ -183,14 +185,9 @@ export function AdminProductEditorView({
 
   const isSubmitting = saveMutation.isPending || productQuery.isLoading;
 
-  return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Product" : "Create Product"}
-      sections={[
-        <Form
-          key="product-form"
+  const formSection = (
+    <Form
+      key="product-form"
           onSubmit={(e) => {
             e.preventDefault();
             saveMutation.mutate();
@@ -325,8 +322,19 @@ export function AdminProductEditorView({
               </Button>
             )}
           </div>
-        </Form>,
-      ]}
+    </Form>
+  );
+
+  if (embedded) {
+    return <div className="overflow-y-auto p-4">{formSection}</div>;
+  }
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Product" : "Create Product"}
+      sections={[formSection]}
     />
   );
 }
