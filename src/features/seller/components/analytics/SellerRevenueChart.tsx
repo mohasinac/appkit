@@ -5,27 +5,34 @@ import dynamic from "next/dynamic";
 import { Div, Heading, Text } from "../../../../ui";
 import type { SellerAnalyticsMonthEntry } from "../../types";
 
-const BarChart = dynamic(() => import("recharts").then((m) => m.BarChart), {
-  ssr: false,
-});
-const Bar = dynamic(() => import("recharts").then((m) => m.Bar), {
-  ssr: false,
-});
-const XAxis = dynamic(() => import("recharts").then((m) => m.XAxis), {
-  ssr: false,
-});
-const YAxis = dynamic(() => import("recharts").then((m) => m.YAxis), {
-  ssr: false,
-});
-const CartesianGrid = dynamic(
-  () => import("recharts").then((m) => m.CartesianGrid),
+// recharts exports generic components (<DataPointType>) that don't satisfy
+// next/dynamic's ComponentType<P> constraint — cast each to ComponentType<any>.
+const BarChart = dynamic(
+  () => import("recharts").then((m) => m.BarChart as React.ComponentType<any>),
   { ssr: false },
 );
-const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
-  ssr: false,
-});
+const Bar = dynamic(
+  () => import("recharts").then((m) => m.Bar as React.ComponentType<any>),
+  { ssr: false },
+);
+const XAxis = dynamic(
+  () => import("recharts").then((m) => m.XAxis as React.ComponentType<any>),
+  { ssr: false },
+);
+const YAxis = dynamic(
+  () => import("recharts").then((m) => m.YAxis as React.ComponentType<any>),
+  { ssr: false },
+);
+const CartesianGrid = dynamic(
+  () => import("recharts").then((m) => m.CartesianGrid as React.ComponentType<any>),
+  { ssr: false },
+);
+const Tooltip = dynamic(
+  () => import("recharts").then((m) => m.Tooltip as React.ComponentType<any>),
+  { ssr: false },
+);
 const ResponsiveContainer = dynamic(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
+  () => import("recharts").then((m) => m.ResponsiveContainer as React.ComponentType<any>),
   { ssr: false },
 );
 
@@ -67,12 +74,12 @@ export function SellerRevenueChart({
               <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.3} />
               <XAxis
                 dataKey="month"
-                tick={{ fontSize: 11, fill: "#6b7280" }}
+                tick={{ fontSize: 11, fill: "currentColor" }}
                 tickLine={false}
                 axisLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "#6b7280" }}
+                tick={{ fontSize: 11, fill: "currentColor" }}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value: number | string) =>
@@ -85,7 +92,7 @@ export function SellerRevenueChart({
                   labels.revenueLabel ?? "Revenue",
                 ]}
               />
-              <Bar dataKey="revenue" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="revenue" fill="var(--appkit-color-primary)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Div>

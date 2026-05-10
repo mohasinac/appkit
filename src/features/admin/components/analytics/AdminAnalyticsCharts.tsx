@@ -5,35 +5,44 @@ import dynamic from "next/dynamic";
 import { Div, Heading } from "../../../../ui";
 import type { AnalyticsMonthEntry } from "../../types";
 
+// recharts exports generic components (<DataPointType>) that don't satisfy
+// next/dynamic's ComponentType<P> constraint — cast each to ComponentType<any>.
 const ResponsiveContainer = dynamic(
-  () => import("recharts").then((m) => m.ResponsiveContainer),
+  () => import("recharts").then((m) => m.ResponsiveContainer as React.ComponentType<any>),
   { ssr: false },
 );
-const AreaChart = dynamic(() => import("recharts").then((m) => m.AreaChart), {
-  ssr: false,
-});
-const Area = dynamic(() => import("recharts").then((m) => m.Area), {
-  ssr: false,
-});
-const BarChart = dynamic(() => import("recharts").then((m) => m.BarChart), {
-  ssr: false,
-});
-const Bar = dynamic(() => import("recharts").then((m) => m.Bar), {
-  ssr: false,
-});
-const XAxis = dynamic(() => import("recharts").then((m) => m.XAxis), {
-  ssr: false,
-});
-const YAxis = dynamic(() => import("recharts").then((m) => m.YAxis), {
-  ssr: false,
-});
+const AreaChart = dynamic(
+  () => import("recharts").then((m) => m.AreaChart as React.ComponentType<any>),
+  { ssr: false },
+);
+const Area = dynamic(
+  () => import("recharts").then((m) => m.Area as React.ComponentType<any>),
+  { ssr: false },
+);
+const BarChart = dynamic(
+  () => import("recharts").then((m) => m.BarChart as React.ComponentType<any>),
+  { ssr: false },
+);
+const Bar = dynamic(
+  () => import("recharts").then((m) => m.Bar as React.ComponentType<any>),
+  { ssr: false },
+);
+const XAxis = dynamic(
+  () => import("recharts").then((m) => m.XAxis as React.ComponentType<any>),
+  { ssr: false },
+);
+const YAxis = dynamic(
+  () => import("recharts").then((m) => m.YAxis as React.ComponentType<any>),
+  { ssr: false },
+);
 const CartesianGrid = dynamic(
-  () => import("recharts").then((m) => m.CartesianGrid),
+  () => import("recharts").then((m) => m.CartesianGrid as React.ComponentType<any>),
   { ssr: false },
 );
-const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
-  ssr: false,
-});
+const Tooltip = dynamic(
+  () => import("recharts").then((m) => m.Tooltip as React.ComponentType<any>),
+  { ssr: false },
+);
 
 export interface AdminRevenueChartProps {
   data: AnalyticsMonthEntry[];
@@ -59,8 +68,8 @@ export function AdminRevenueChart({
         <AreaChart data={data}>
           <defs>
             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+              <stop offset="5%" stopColor="var(--appkit-color-primary)" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="var(--appkit-color-primary)" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" />
@@ -70,7 +79,7 @@ export function AdminRevenueChart({
           <Area
             type="monotone"
             dataKey="revenue"
-            stroke="#3b82f6"
+            stroke="var(--appkit-color-primary)"
             fillOpacity={1}
             fill="url(#colorRevenue)"
           />
@@ -106,7 +115,7 @@ export function AdminOrdersChart({
           <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="orders" fill="#10b981" />
+          <Bar dataKey="orders" fill="var(--appkit-color-secondary)" />
         </BarChart>
       </ResponsiveContainer>
     </Div>
