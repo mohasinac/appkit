@@ -32,27 +32,27 @@
   width: 1.25rem;
   appearance: none;
   border-radius: 0.375rem;
-  border: 1px solid #d4d4d8;
-  background: white;
+  border: 1px solid var(--appkit-color-zinc-300);
+  background: var(--appkit-color-surface);
   transition: all 0.15s ease;
   cursor: pointer;
 }
 .appkit-checkbox__input:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px white;
+  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px var(--appkit-color-surface);
 }
 .appkit-checkbox__input:not(:disabled):hover {
-  border-color: #65a30d;
+  border-color: var(--appkit-color-secondary);
 }
 .appkit-checkbox__input:checked {
-  border-color: #65a30d;
-  background-color: #65a30d;
+  border-color: var(--appkit-color-secondary);
+  background-color: var(--appkit-color-secondary);
 }
 .appkit-checkbox__input:disabled {
   cursor: not-allowed;
 }
 .appkit-checkbox__input--error {
-  border-color: #f87171;
+  border-color: var(--appkit-color-error);
 }
 
 .appkit-checkbox__icon {
@@ -60,7 +60,7 @@
   position: absolute;
   height: 0.875rem;
   width: 0.875rem;
-  color: white;
+  color: var(--appkit-color-text-on-primary);
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -80,7 +80,7 @@
 .appkit-checkbox__text {
   padding-top: 2px;
   font-size: 0.875rem;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .appkit-checkbox__error {
@@ -90,22 +90,22 @@
 
 /* Dark mode */
 .dark .appkit-checkbox__input {
-  border-color: #475569;
-  background: #0f172a;
+  border-color: var(--appkit-color-slate-600);
+  background: var(--appkit-color-surface);
 }
 .dark .appkit-checkbox__input:focus-visible {
-  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px var(--appkit-color-bg);
 }
 .dark .appkit-checkbox__input:not(:disabled):hover {
-  border-color: #ec4899;
+  border-color: var(--appkit-color-primary);
 }
 .dark .appkit-checkbox__input:checked {
-  border-color: #ec4899;
-  background-color: #ec4899;
+  border-color: var(--appkit-color-primary);
+  background-color: var(--appkit-color-primary);
 }
 .dark .appkit-checkbox__input--error {
-  border-color: #ef4444;
+  border-color: var(--appkit-color-error);
 }
 .dark .appkit-checkbox__text {
-  color: #e4e4e7;
+  color: var(--appkit-color-zinc-200);
 }

@@ -21,14 +21,14 @@
 
 .appkit-toggle__track:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px white;
+  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.3), 0 0 0 4px var(--appkit-color-surface);
 }
 
 .appkit-toggle__track--off {
-  background-color: #d4d4d8;
+  background-color: var(--appkit-color-zinc-300);
 }
 .appkit-toggle__track--on {
-  background-color: #65a30d;
+  background-color: var(--appkit-color-secondary);
 }
 
 .appkit-toggle__track--disabled {
@@ -39,7 +39,7 @@
 .appkit-toggle__thumb {
   display: inline-block;
   border-radius: 9999px;
-  background: white;
+  background: var(--appkit-color-surface);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
 }
@@ -92,14 +92,14 @@
 
 /* Dark mode */
 .dark .appkit-toggle__track:focus-visible {
-  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px #020617;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.3), 0 0 0 4px var(--appkit-color-bg);
 }
 .dark .appkit-toggle__track--off {
-  background-color: #334155;
+  background-color: var(--appkit-color-slate-700);
 }
 .dark .appkit-toggle__track--on {
-  background-color: #ec4899;
+  background-color: var(--appkit-color-primary);
 }
 .dark .appkit-toggle__thumb {
-  background: #020617;
+  background: var(--appkit-color-bg);
 }
