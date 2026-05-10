@@ -73,7 +73,7 @@ export function useProducts<T extends ProductItem = ProductItem>(
         `${PRODUCT_ENDPOINTS.LIST}${qs ? `?${qs}` : ""}`,
       ),
     initialData: opts?.initialData,
-    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
+    staleTime: opts?.staleTime ?? (opts?.initialData != null ? Infinity : 0),
     enabled: opts?.enabled,
   });
 
@@ -117,7 +117,7 @@ export function useProduct<T extends ProductItem = ProductItem>(
     queryKey: ["products", slug],
     queryFn: () => apiClient.get<ProductItem>(PRODUCT_ENDPOINTS.BY_SLUG(slug)),
     initialData: opts?.initialData,
-    staleTime: opts?.staleTime ?? (opts?.initialData !== undefined ? Infinity : 0),
+    staleTime: opts?.staleTime ?? (opts?.initialData != null ? Infinity : 0),
     enabled: opts?.enabled !== false && !!slug,
   });
 
