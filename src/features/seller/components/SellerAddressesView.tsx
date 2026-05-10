@@ -1,34 +1,375 @@
-import React from "react";
-import { StackedViewShell } from "../../../ui";
-import type { StackedViewShellProps } from "../../../ui";
+"use client";
 
-export interface SellerAddressesViewProps extends Omit<
-  StackedViewShellProps,
-  "sections" | "renderHeader"
-> {
-  labels?: { title?: string; addButton?: string };
-  renderHeader?: (onAdd: () => void) => React.ReactNode;
-  renderAddressList?: (isLoading: boolean) => React.ReactNode;
-  renderModal?: () => React.ReactNode;
-  isLoading?: boolean;
+import React, { useCallback, useEffect, useState } from "react";
+import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
+import { Button, Div, SideDrawer, Text } from "../../../ui";
+import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+
+const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
+
+function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1">
+      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</label>
+      {children}
+      {hint && <p className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</p>}
+    </div>
+  );
 }
 
-export function SellerAddressesView({
-  labels = {},
-  renderHeader,
-  renderAddressList,
-  renderModal,
-  isLoading = false,
-  ...rest
-}: SellerAddressesViewProps) {
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface AddressDoc {
+  id: string;
+  label: string;
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  isDefault: boolean;
+}
+
+interface AddressDraft {
+  label: string;
+  fullName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  landmark: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  isDefault: boolean;
+}
+
+export interface SellerAddressesViewProps {
+  apiBase?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const BLANK: AddressDraft = {
+  label: "",
+  fullName: "",
+  phone: "",
+  addressLine1: "",
+  addressLine2: "",
+  landmark: "",
+  city: "",
+  state: "",
+  postalCode: "",
+  country: "India",
+  isDefault: false,
+};
+
+function fromDoc(doc: AddressDoc): AddressDraft {
+  return {
+    label: doc.label,
+    fullName: doc.fullName,
+    phone: doc.phone,
+    addressLine1: doc.addressLine1,
+    addressLine2: doc.addressLine2 ?? "",
+    landmark: doc.landmark ?? "",
+    city: doc.city,
+    state: doc.state,
+    postalCode: doc.postalCode,
+    country: doc.country,
+    isDefault: doc.isDefault,
+  };
+}
+
+function AddressCard({
+  address,
+  onEdit,
+  onDelete,
+}: {
+  address: AddressDoc;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   return (
-    <StackedViewShell
-      portal="seller"
-      {...rest}
-      title={labels.title}
-      renderHeader={renderHeader ? () => renderHeader(() => {}) : undefined}
-      sections={[renderAddressList?.(isLoading)]}
-      overlays={renderModal?.()}
-    />
+    <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 flex flex-col gap-2">
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
+          <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">{address.label}</span>
+          {address.isDefault && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs px-2 py-0.5 font-medium">
+              <Star className="h-3 w-3" />
+              Default
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            type="button"
+            onClick={onEdit}
+            title="Edit address"
+            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onDelete}
+            title="Delete address"
+            className="rounded-lg p-1.5 text-zinc-500 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      <Text className="text-sm text-zinc-700 dark:text-zinc-300">
+        {address.fullName} · {address.phone}
+      </Text>
+      <Text className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+        {address.addressLine1}
+        {address.addressLine2 ? `, ${address.addressLine2}` : ""}
+        {address.landmark ? ` (near ${address.landmark})` : ""}<br />
+        {address.city}, {address.state} {address.postalCode}, {address.country}
+      </Text>
+    </Div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main Component
+// ---------------------------------------------------------------------------
+
+export function SellerAddressesView({
+  apiBase = SELLER_ENDPOINTS.STORE_ADDRESSES,
+}: SellerAddressesViewProps) {
+  const [addresses, setAddresses] = useState<AddressDoc[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState<AddressDraft>(BLANK);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      const res = await fetch(apiBase);
+      if (!res.ok) throw new Error("Failed to load addresses");
+      const json = await res.json();
+      const data = (json?.data?.addresses ?? json?.addresses ?? []) as AddressDoc[];
+      setAddresses(data);
+    } catch {
+      setErrorMessage("Could not load addresses. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [apiBase]);
+
+  useEffect(() => { load(); }, [load]);
+
+  const openAdd = () => {
+    setEditingId(null);
+    setDraft(BLANK);
+    setSaveError(null);
+    setDrawerOpen(true);
+  };
+
+  const openEdit = (addr: AddressDoc) => {
+    setEditingId(addr.id);
+    setDraft(fromDoc(addr));
+    setSaveError(null);
+    setDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setDrawerOpen(false);
+    setEditingId(null);
+  };
+
+  const handleSave = async () => {
+    setSaveError(null);
+    if (!draft.label.trim() || !draft.fullName.trim() || !draft.phone.trim() || !draft.addressLine1.trim() || !draft.city.trim() || !draft.state.trim() || !draft.postalCode.trim()) {
+      setSaveError("Please fill in all required fields.");
+      return;
+    }
+    setSaving(true);
+    try {
+      const url = editingId ? `${apiBase}/${editingId}` : apiBase;
+      const method = editingId ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...draft,
+          addressLine2: draft.addressLine2 || undefined,
+          landmark: draft.landmark || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error((data as { error?: string })?.error ?? "Failed to save address");
+      }
+      closeDrawer();
+      await load();
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save address");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (addr: AddressDoc) => {
+    if (!confirm(`Delete address "${addr.label}"? This cannot be undone.`)) return;
+    setDeletingId(addr.id);
+    try {
+      const res = await fetch(`${apiBase}/${addr.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
+      await load();
+    } catch {
+      alert("Failed to delete address. Please try again.");
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const set = (key: keyof AddressDraft, value: string | boolean) =>
+    setDraft((p) => ({ ...p, [key]: value }));
+
+  return (
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between" style={{ top: "var(--header-height, 0px)" }}>
+        <div>
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Manage your store&apos;s pickup and return locations</p>
+        </div>
+        <Button size="sm" onClick={openAdd} className="flex items-center gap-1.5">
+          <Plus className="h-4 w-4" />
+          <span>Add Address</span>
+        </Button>
+      </div>
+
+      <div className="py-6 px-4 sm:px-6 max-w-2xl">
+        {errorMessage && (
+          <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+            {errorMessage}
+          </Div>
+        )}
+
+        {isLoading ? (
+          <div className="flex justify-center py-16">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+          </div>
+        ) : addresses.length === 0 ? (
+          <Div className="rounded-xl border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3">
+            <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
+            <Text className="text-sm text-zinc-500 dark:text-zinc-400">No pickup addresses yet</Text>
+            <Button size="sm" variant="outline" onClick={openAdd}>
+              Add your first address
+            </Button>
+          </Div>
+        ) : (
+          <div className="grid gap-3">
+            {addresses.map((addr) => (
+              <div key={addr.id} className={deletingId === addr.id ? "opacity-50 pointer-events-none" : ""}>
+                <AddressCard
+                  address={addr}
+                  onEdit={() => openEdit(addr)}
+                  onDelete={() => handleDelete(addr)}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Add / Edit Drawer */}
+      <SideDrawer
+        isOpen={drawerOpen}
+        onClose={closeDrawer}
+        title={editingId ? "Edit Address" : "Add Address"}
+        footer={
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={closeDrawer} className="flex-1">Cancel</Button>
+            <Button onClick={handleSave} disabled={saving} className="flex-1">
+              {saving ? "Saving…" : editingId ? "Save Changes" : "Add Address"}
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4 py-1">
+          {saveError && (
+            <Div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-3 py-2 text-sm text-red-700 dark:text-red-200">
+              {saveError}
+            </Div>
+          )}
+
+          <Field label="Label *" hint="e.g. Warehouse, Shop, Home">
+            <input type="text" value={draft.label} onChange={(e) => set("label", e.target.value)} placeholder="Warehouse" maxLength={60} className={INPUT_CLS} />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Full Name *">
+              <input type="text" value={draft.fullName} onChange={(e) => set("fullName", e.target.value)} placeholder="Ravi Kumar" maxLength={100} className={INPUT_CLS} />
+            </Field>
+            <Field label="Phone *">
+              <input type="tel" value={draft.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+91 98765 43210" maxLength={20} className={INPUT_CLS} />
+            </Field>
+          </div>
+
+          <Field label="Address Line 1 *">
+            <input type="text" value={draft.addressLine1} onChange={(e) => set("addressLine1", e.target.value)} placeholder="Shop 12, Main Market" maxLength={200} className={INPUT_CLS} />
+          </Field>
+
+          <Field label="Address Line 2">
+            <input type="text" value={draft.addressLine2} onChange={(e) => set("addressLine2", e.target.value)} placeholder="Building / Floor (optional)" maxLength={200} className={INPUT_CLS} />
+          </Field>
+
+          <Field label="Landmark">
+            <input type="text" value={draft.landmark} onChange={(e) => set("landmark", e.target.value)} placeholder="Near metro station (optional)" maxLength={100} className={INPUT_CLS} />
+          </Field>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="City *">
+              <input type="text" value={draft.city} onChange={(e) => set("city", e.target.value)} placeholder="Mumbai" maxLength={100} className={INPUT_CLS} />
+            </Field>
+            <Field label="State *">
+              <input type="text" value={draft.state} onChange={(e) => set("state", e.target.value)} placeholder="Maharashtra" maxLength={100} className={INPUT_CLS} />
+            </Field>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Postal Code *">
+              <input type="text" value={draft.postalCode} onChange={(e) => set("postalCode", e.target.value)} placeholder="400001" maxLength={10} className={INPUT_CLS} />
+            </Field>
+            <Field label="Country *">
+              <input type="text" value={draft.country} onChange={(e) => set("country", e.target.value)} placeholder="India" maxLength={60} className={INPUT_CLS} />
+            </Field>
+          </div>
+
+          <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={draft.isDefault}
+              onChange={(e) => set("isDefault", e.target.checked)}
+              className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
+            />
+            <span className="text-sm text-zinc-700 dark:text-zinc-300">Set as default pickup address</span>
+          </label>
+        </div>
+      </SideDrawer>
+    </div>
   );
 }

@@ -7595,6 +7595,14 @@ export { SellerAuctionsView } from "./features/seller/index";
 // SellerCouponsView - Component for seller coupons view.
 export { SellerCouponsView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// SellerCouponEditorView - Form component for creating/editing seller coupons.
+export { SellerCouponEditorView } from "./features/seller/index";
+export type { SellerCouponEditorViewProps, CouponEditorDraft } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// SellerBidsView - Read-only view showing all bids on a seller's auction products.
+export { SellerBidsView } from "./features/seller/index";
+export type { SellerBidsViewProps } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerCreateProductView - Component for seller create product view.
 export { SellerCreateProductView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -7661,6 +7669,8 @@ export { SellersListView } from "./features/seller/index";
 // [CLIENT-SSR]-Store* aliases — same components, renamed for store-centric terminology
 // StoreAddressesView - Alias for SellerAddressesView.
 export { SellerAddressesView as StoreAddressesView } from "./features/seller/index";
+// StoreBidsView - Alias for SellerBidsView.
+export { SellerBidsView as StoreBidsView } from "./features/seller/index";
 // StoreAnalyticsView - Alias for SellerAnalyticsView.
 export { SellerAnalyticsView as StoreAnalyticsView } from "./features/seller/index";
 // StoreCouponsView - Alias for SellerCouponsView.

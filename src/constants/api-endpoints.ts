@@ -367,19 +367,22 @@ export const SEARCH_ENDPOINTS = {
 
 export const SELLER_ENDPOINTS = {
   BECOME: "/api/seller/become",
-  PRODUCTS: "/api/seller/products",
-  ORDERS: "/api/seller/orders",
-  ORDERS_BY_ID: (orderId: string) => `/api/seller/orders/${orderId}`,
-  AUCTIONS: "/api/seller/auctions",
-  COUPONS: "/api/seller/coupons",
-  OFFERS: "/api/seller/offers",
-  PAYOUTS: "/api/seller/payouts",
-  PAYOUT_SETTINGS: "/api/seller/payout-settings",
-  STORE: "/api/seller/store",
-  STORE_ADDRESSES: "/api/seller/store/addresses",
-  DASHBOARD: "/api/seller/dashboard",
+  PRODUCTS: "/api/store/products",
+  ORDERS: "/api/store/orders",
+  ORDERS_BY_ID: (orderId: string) => `/api/store/orders/${orderId}`,
+  AUCTIONS: "/api/store/products",
+  COUPONS: "/api/store/coupons",
+  COUPON_BY_ID: (id: string) => `/api/store/coupons/${id}`,
+  OFFERS: "/api/store/offers",
+  PAYOUTS: "/api/store/payouts",
+  PAYOUT_SETTINGS: "/api/store/payout-settings",
+  STORE: "/api/store/storefront",
+  STORE_ADDRESSES: "/api/store/addresses",
+  STORE_ADDRESS_BY_ID: (id: string) => `/api/store/addresses/${id}`,
+  BIDS: "/api/store/bids",
+  DASHBOARD: "/api/store/dashboard",
   ANALYTICS: (period?: string) =>
-    `/api/seller/analytics${period ? `?period=${period}` : ""}`,
+    `/api/store/analytics${period ? `?period=${period}` : ""}`,
 } as const;
 
 // ---------------------------------------------------------------------------

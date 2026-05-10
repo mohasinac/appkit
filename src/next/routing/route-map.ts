@@ -134,6 +134,7 @@ export const DEFAULT_ROUTE_MAP = {
     OFFERS: "/store/offers",
     WHATSAPP: "/store/whatsapp",
     REVIEWS: "/store/reviews",
+    BIDS: "/store/bids",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

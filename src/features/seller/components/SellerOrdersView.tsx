@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { X, Eye } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { Badge, Button, Div, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text } from "../../../ui";
+import type { ListingViewShellProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -14,6 +14,11 @@ import {
   useSellerListingData,
 } from "../hooks/useSellerListingData";
 import { DataTable } from "../../admin/components/DataTable";
+import type { AdminTableColumn } from "../../admin/types";
+
+// ---------------------------------------------------------------------------
+// Config
+// ---------------------------------------------------------------------------
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -24,15 +29,239 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = ["All", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED"];
 
+const STATUS_BADGE_VARIANT: Record<string, "success" | "warning" | "danger" | "info" | "default"> = {
+  DELIVERED: "success",
+  SHIPPED: "info",
+  PROCESSING: "warning",
+  PENDING: "default",
+  CANCELLED: "danger",
+  REFUNDED: "danger",
+};
+
+const UPDATE_STATUS_OPTIONS: SelectOption[] = [
+  { value: "", label: "— keep current —" },
+  { value: "processing", label: "Processing" },
+  { value: "shipped", label: "Shipped" },
+];
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface OrderRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  itemCount: number;
+  totalAmount: number;
+  buyerName: string;
+}
+
+interface OrderDetail {
+  id: string;
+  status: string;
+  totalAmount?: number;
+  buyerName?: string;
+  shippingAddress?: Record<string, unknown>;
+  items?: Array<{ productId?: string; title?: string; quantity?: number; price?: number }>;
+  trackingNumber?: string;
+  carrier?: string;
+  trackingUrl?: string;
+  paymentMethod?: string;
+  createdAt?: unknown;
+}
+
 interface SellerOrdersResponse {
   orders?: unknown[];
   meta?: { total: number };
 }
 
-export interface SellerOrdersViewProps extends ListingViewShellProps {}
+export interface SellerOrdersViewProps extends ListingViewShellProps {
+  orderDetailApiBase?: string;
+}
 
-export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) {
+// ---------------------------------------------------------------------------
+// Order Detail Drawer
+// ---------------------------------------------------------------------------
+
+function OrderDetailDrawer({
+  orderId,
+  apiBase,
+  onClose,
+}: {
+  orderId: string;
+  apiBase: string;
+  onClose: () => void;
+}) {
+  const [order, setOrder] = useState<OrderDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [newStatus, setNewStatus] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [carrier, setCarrier] = useState("");
+  const [trackingUrl, setTrackingUrl] = useState("");
+
+  React.useEffect(() => {
+    setLoading(true);
+    setFetchError(null);
+    fetch(`${apiBase}/${orderId}`)
+      .then((r) => r.json())
+      .then((json) => {
+        const o = (json?.data ?? json) as OrderDetail;
+        setOrder(o);
+        setTrackingNumber(o.trackingNumber ?? "");
+        setCarrier(o.carrier ?? "");
+        setTrackingUrl(o.trackingUrl ?? "");
+      })
+      .catch(() => setFetchError("Failed to load order details"))
+      .finally(() => setLoading(false));
+  }, [orderId, apiBase]);
+
+  const handleSave = async () => {
+    if (!order) return;
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const payload: Record<string, unknown> = {};
+      if (newStatus) payload.status = newStatus;
+      if (trackingNumber !== (order.trackingNumber ?? "")) payload.trackingNumber = trackingNumber;
+      if (carrier !== (order.carrier ?? "")) payload.shippingCarrier = carrier;
+      if (trackingUrl !== (order.trackingUrl ?? "")) payload.trackingUrl = trackingUrl;
+
+      if (Object.keys(payload).length === 0) { onClose(); return; }
+
+      const res = await fetch(`${apiBase}/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const d = await res.json().catch(() => ({}));
+        throw new Error((d as { error?: string })?.error ?? "Failed to update order");
+      }
+      const updated = await res.json();
+      setOrder((updated?.data ?? updated) as OrderDetail);
+      setNewStatus("");
+    } catch (err) {
+      setSaveError((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const addr = order?.shippingAddress ?? {};
+  const addrLine = [addr.addressLine1, addr.city, addr.state, addr.pincode].filter(Boolean).join(", ");
+
+  return (
+    <SideDrawer isOpen title={`Order ${order?.id ?? orderId}`} onClose={onClose}>
+      {loading && (
+        <Div className="flex items-center justify-center py-16">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+        </Div>
+      )}
+
+      {fetchError && (
+        <Div className="mx-4 mt-4 rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+          {fetchError}
+        </Div>
+      )}
+
+      {order && !loading && (
+        <Stack gap="none" className="flex flex-col">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+            {/* Status row */}
+            <Div className="flex items-center justify-between">
+              <Badge variant={STATUS_BADGE_VARIANT[order.status?.toUpperCase()] ?? "default"}>
+                {order.status ?? "Unknown"}
+              </Badge>
+              <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
+                {toRelativeDate(order.createdAt)}
+              </Text>
+            </Div>
+
+            {/* Items */}
+            {(order.items ?? []).length > 0 && (
+              <Div>
+                <Text size="sm" className="font-semibold text-[var(--appkit-color-text-primary)] mb-2">Items</Text>
+                <div className="divide-y divide-[var(--appkit-color-border)] dark:divide-slate-700 rounded-lg border border-[var(--appkit-color-border)] dark:border-slate-700">
+                  {(order.items ?? []).map((item, i) => (
+                    <div key={i} className="flex items-center justify-between px-3 py-2.5 gap-3">
+                      <div className="min-w-0">
+                        <Text size="sm" className="font-medium truncate">{item.title ?? item.productId ?? "Item"}</Text>
+                        <Text size="xs" className="text-[var(--appkit-color-text-secondary)]">Qty: {item.quantity ?? 1}</Text>
+                      </div>
+                      <Text size="sm" className="shrink-0 font-medium">{toRupees(item.price ?? 0)}</Text>
+                    </div>
+                  ))}
+                </div>
+              </Div>
+            )}
+
+            {/* Total */}
+            <Div className="flex items-center justify-between rounded-lg bg-zinc-50 dark:bg-slate-800/60 px-4 py-3">
+              <Text size="sm" className="font-semibold">Total</Text>
+              <Text size="sm" className="font-bold text-[var(--appkit-color-primary)]">{toRupees(order.totalAmount ?? 0)}</Text>
+            </Div>
+
+            {/* Shipping address */}
+            {addrLine && (
+              <Div>
+                <Text size="sm" className="font-semibold mb-1">Shipping address</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text-secondary)]">
+                  {[String(addr.fullName ?? ""), addrLine].filter(Boolean).join(" · ")}
+                </Text>
+              </Div>
+            )}
+
+            {/* Payment */}
+            {order.paymentMethod && (
+              <Div>
+                <Text size="sm" className="font-semibold mb-1">Payment</Text>
+                <Text size="sm" className="text-[var(--appkit-color-text-secondary)] capitalize">{order.paymentMethod}</Text>
+              </Div>
+            )}
+
+            {/* Update section */}
+            <div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 pt-4 space-y-3">
+              <Heading level={4} className="text-sm font-semibold">Update order</Heading>
+              <Select label="New status" value={newStatus} options={UPDATE_STATUS_OPTIONS} onChange={(e) => setNewStatus(e.target.value)} />
+              <Input label="Tracking number" value={trackingNumber} onChange={(e) => setTrackingNumber(e.target.value)} placeholder="e.g. 12345678901234" />
+              <Input label="Carrier" value={carrier} onChange={(e) => setCarrier(e.target.value)} placeholder="e.g. Delhivery, Bluedart" />
+              <Input label="Tracking URL (optional)" value={trackingUrl} onChange={(e) => setTrackingUrl(e.target.value)} placeholder="https://..." type="url" />
+              {saveError && (
+                <Div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-3 py-2 text-xs text-red-700 dark:text-red-200">
+                  {saveError}
+                </Div>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="border-t border-[var(--appkit-color-border)] dark:border-slate-700 px-4 py-3.5 flex items-center justify-end gap-3">
+            <Button variant="outline" onClick={onClose} disabled={saving}>Close</Button>
+            <Button onClick={handleSave} isLoading={saving} disabled={saving}>Save</Button>
+          </div>
+        </Stack>
+      )}
+    </SideDrawer>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main view
+// ---------------------------------------------------------------------------
+
+export function SellerOrdersView({
+  orderDetailApiBase = SELLER_ENDPOINTS.ORDERS,
+  children,
+  ...props
+}: SellerOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -64,9 +293,7 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
     setSearchInput("");
   }, [table]);
 
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
+  const commitSearch = useCallback(() => { table.set("q", searchInput.trim()); }, [searchInput, table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
@@ -76,7 +303,7 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
 
   const { rows, total, isLoading, errorMessage } = useSellerListingData<
     SellerOrdersResponse,
-    { id: string; primary: string; secondary: string; status: string; updatedAt: string }
+    OrderRow
   >({
     queryKey: ["seller", "orders", "listing"],
     endpoint: SELLER_ENDPOINTS.ORDERS,
@@ -86,22 +313,74 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
     filters,
     q: table.get("q") || undefined,
     mapRows: (response) =>
-      toRecordArray(response.orders).map((item, index) => ({
-        id: toStringValue(item.id, `order-${index}`),
-        primary: toStringValue(item.orderNumber ?? `#${item.id}`, "Order"),
-        secondary: [
-          toStringValue(item.buyerName ?? "Unknown buyer", "Unknown buyer"),
-          toRupees(item.totalAmount ?? item.total),
-        ].join(" · "),
-        status: toStringValue(item.status, "Unknown"),
-        updatedAt: toRelativeDate(item.updatedAt ?? item.orderDate ?? item.createdAt),
-      })),
+      toRecordArray(response.orders).map((item, index) => {
+        const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
+        return {
+          id: toStringValue(item.id, `order-${index}`),
+          primary: toStringValue(item.id, "Order"),
+          secondary: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          status: toStringValue(item.status, "PENDING"),
+          updatedAt: toRelativeDate(item.updatedAt ?? item.orderDate ?? item.createdAt),
+          itemCount: itemsArr.length,
+          totalAmount: Number(item.totalAmount ?? item.total ?? 0),
+          buyerName: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+        };
+      }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
   });
 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
+
+  const columns: AdminTableColumn<OrderRow>[] = [
+    {
+      key: "primary",
+      header: "Order",
+      render: (row) => (
+        <div className="space-y-0.5 min-w-0">
+          <p className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</p>
+        </div>
+      ),
+    },
+    {
+      key: "totalAmount",
+      header: "Total",
+      className: "w-28",
+      render: (row) => <span className="text-sm font-semibold">{toRupees(row.totalAmount)}</span>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "w-32",
+      render: (row) => (
+        <Badge variant={STATUS_BADGE_VARIANT[row.status?.toUpperCase()] ?? "default"}>
+          {row.status}
+        </Badge>
+      ),
+    },
+    {
+      key: "updatedAt",
+      header: "Date",
+      className: "w-28",
+      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
+    },
+  ];
+
+  const renderRowActions = useCallback(
+    (row: OrderRow) => (
+      <button
+        type="button"
+        onClick={() => setSelectedOrderId(row.id)}
+        title="View order details"
+        className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+      >
+        <Eye className="h-4 w-4" />
+      </button>
+    ),
+    [],
+  );
 
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
@@ -113,7 +392,7 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search by order #, buyer name, or product"
+        searchPlaceholder="Search by order ID or buyer name"
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
@@ -132,13 +411,20 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+          <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
             {errorMessage}
-          </div>
+          </Div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No orders found" />
+        <DataTable
+          rows={rows}
+          columns={columns}
+          isLoading={isLoading}
+          emptyLabel="No orders yet"
+          renderRowActions={renderRowActions}
+        />
       </div>
 
+      {/* Filter sidebar */}
       {filterOpen && (
         <>
           <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
@@ -147,7 +433,7 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
               <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
               <div className="flex items-center gap-2">
                 {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 transition-colors">Clear all</button>
                 )}
                 <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
                   <X className="h-5 w-5" />
@@ -165,7 +451,7 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
                       onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
                       className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
                         (pendingFilters.status || "All") === opt
-                          ? "bg-primary text-white border-primary"
+                          ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
                           : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
                       }`}
                     >
@@ -176,12 +462,21 @@ export function SellerOrdersView({ children, ...props }: SellerOrdersViewProps) 
               </div>
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white transition-colors active:scale-[0.98]">
+                Apply{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </button>
             </div>
           </div>
         </>
+      )}
+
+      {/* Order detail drawer */}
+      {selectedOrderId && (
+        <OrderDetailDrawer
+          orderId={selectedOrderId}
+          apiBase={orderDetailApiBase}
+          onClose={() => setSelectedOrderId(null)}
+        />
       )}
     </div>
   );

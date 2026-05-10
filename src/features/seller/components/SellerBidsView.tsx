@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Plus, ToggleLeft, ToggleRight, Trash2, Pencil } from "lucide-react";
+import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Button, Div, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { Badge, Div, ListingToolbar, Pagination } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
+  toRupees,
   toStringValue,
   useSellerListingData,
 } from "../hooks/useSellerListingData";
@@ -20,79 +20,61 @@ import type { AdminTableColumn } from "../../admin/types";
 // ---------------------------------------------------------------------------
 
 const PAGE_SIZE = 25;
-const FILTER_KEYS = ["isActive"];
-const DEFAULT_SORT = "-createdAt";
+const FILTER_KEYS = ["status"];
+const DEFAULT_SORT = "-bidDate";
 const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "code", label: "Code A–Z" },
+  { value: "-bidDate", label: "Newest" },
+  { value: "bidDate", label: "Oldest" },
+  { value: "-bidAmount", label: "Highest Bid" },
+  { value: "bidAmount", label: "Lowest Bid" },
 ];
+const STATUS_OPTIONS = ["", "active", "outbid", "won", "lost", "cancelled"];
+const STATUS_LABELS: Record<string, string> = {
+  "": "All",
+  active: "Active",
+  outbid: "Outbid",
+  won: "Won",
+  lost: "Lost",
+  cancelled: "Cancelled",
+};
+
+const STATUS_BADGE: Record<string, "success" | "info" | "warning" | "danger" | "default"> = {
+  active: "success",
+  won: "info",
+  outbid: "warning",
+  lost: "default",
+  cancelled: "danger",
+};
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
-interface CouponRow {
+interface BidRow {
   id: string;
-  primary: string;
-  secondary: string;
+  productTitle: string;
+  productId: string;
+  userName: string;
+  bidAmount: number;
   status: string;
-  updatedAt: string;
-  isActive: boolean;
+  bidDate: string;
 }
 
-interface SellerCouponsResponse {
-  coupons?: unknown[];
+interface SellerBidsResponse {
+  bids?: unknown[];
   total?: number;
+  auctions?: { id: string; title: string }[];
 }
 
-export interface SellerCouponsViewProps extends ListingViewShellProps {
-  onCreateClick?: () => void;
-  onEditClick?: (couponId: string) => void;
-  onToggle?: (couponId: string, currentlyActive: boolean) => Promise<void>;
-  onDelete?: (couponId: string) => Promise<void>;
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function formatDiscount(item: Record<string, unknown>): string {
-  const type = String(item.type ?? "");
-  const discount = item.discount as Record<string, unknown> | undefined;
-  const val = Number(discount?.value ?? 0);
-  if (type === "percentage") return `${val}% off`;
-  if (type === "fixed") return `₹${(val / 100).toFixed(0)} off`;
-  if (type === "free_shipping") return "Free shipping";
-  return `${val} off`;
-}
-
-function getValidityEnd(item: Record<string, unknown>): unknown {
-  const validity = item.validity as Record<string, unknown> | undefined;
-  return validity?.endDate ?? item.expiresAt;
-}
-
-function getIsActive(item: Record<string, unknown>): boolean {
-  const validity = item.validity as Record<string, unknown> | undefined;
-  return Boolean(validity?.isActive ?? item.isActive);
+export interface SellerBidsViewProps {
+  endpoint?: string;
 }
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export function SellerCouponsView({
-  onCreateClick,
-  onEditClick,
-  onToggle,
-  onDelete,
-  children,
-  ...props
-}: SellerCouponsViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
-  const [togglingId, setTogglingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-
+export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -128,28 +110,34 @@ export function SellerCouponsView({
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
 
-  const isActiveRaw = table.get("isActive");
-  const filters = isActiveRaw ? `isActive==${isActiveRaw}` : undefined;
+  const statusRaw = table.get("status");
+  const filters = statusRaw ? `status==${statusRaw}` : undefined;
+  const productIdFilter = table.get("productId") || undefined;
 
-  const { rows, total, isLoading, errorMessage, refetch } = useSellerListingData<
-    SellerCouponsResponse,
-    CouponRow
+  const endpointWithProduct = productIdFilter
+    ? `${endpoint}?productId=${encodeURIComponent(productIdFilter)}`
+    : endpoint;
+
+  const { rows, total, isLoading, errorMessage } = useSellerListingData<
+    SellerBidsResponse,
+    BidRow
   >({
-    queryKey: ["seller", "coupons", "listing"],
-    endpoint: SELLER_ENDPOINTS.COUPONS,
+    queryKey: ["seller", "bids", "listing"],
+    endpoint: endpointWithProduct,
     page: table.getNumber("page", 1),
     pageSize: PAGE_SIZE,
     sorts: table.get("sort") || DEFAULT_SORT,
     filters,
     q: table.get("q") || undefined,
     mapRows: (response) =>
-      toRecordArray(response.coupons).map((item, index) => ({
-        id: toStringValue(item.id, `coupon-${index}`),
-        primary: toStringValue(item.code, "Untitled"),
-        secondary: `${formatDiscount(item)} · Expires ${toRelativeDate(getValidityEnd(item))}`,
-        status: getIsActive(item) ? "Active" : "Inactive",
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-        isActive: getIsActive(item),
+      toRecordArray(response.bids).map((item, idx) => ({
+        id: toStringValue(item.id, `bid-${idx}`),
+        productTitle: toStringValue(item.productTitle, "Unknown auction"),
+        productId: toStringValue(item.productId, ""),
+        userName: toStringValue(item.userName, "—"),
+        bidAmount: Number(item.bidAmount ?? 0),
+        status: toStringValue(item.status, "active"),
+        bidDate: toRelativeDate(item.bidDate ?? item.createdAt),
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
@@ -158,87 +146,50 @@ export function SellerCouponsView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const columns: AdminTableColumn<CouponRow>[] = [
+  const columns: AdminTableColumn<BidRow>[] = [
     {
-      key: "primary",
-      header: "Code",
+      key: "productTitle",
+      header: "Auction",
       render: (row) => (
         <div className="space-y-0.5">
-          <p className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</p>
+          <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.productTitle}</p>
+          <p className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">{row.productId}</p>
         </div>
+      ),
+    },
+    {
+      key: "userName",
+      header: "Bidder",
+      className: "w-36",
+      render: (row) => <span className="text-sm text-zinc-700 dark:text-zinc-300">{row.userName}</span>,
+    },
+    {
+      key: "bidAmount",
+      header: "Bid",
+      className: "w-28 text-right",
+      render: (row) => (
+        <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
+          {toRupees(row.bidAmount)}
+        </span>
       ),
     },
     {
       key: "status",
       header: "Status",
-      className: "w-28",
+      className: "w-24",
       render: (row) => (
-        <Badge variant={row.isActive ? "success" : "default"}>{row.status}</Badge>
+        <Badge variant={STATUS_BADGE[row.status] ?? "default"}>
+          {STATUS_LABELS[row.status] ?? row.status}
+        </Badge>
       ),
     },
     {
-      key: "updatedAt",
-      header: "Updated",
+      key: "bidDate",
+      header: "Date",
       className: "w-28",
-      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
+      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.bidDate}</span>,
     },
   ];
-
-  const renderRowActions = useCallback(
-    (row: CouponRow) => (
-      <div className="flex items-center gap-1.5 justify-end">
-        {onEditClick && (
-          <button
-            type="button"
-            onClick={() => onEditClick(row.id)}
-            title="Edit"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-        )}
-        {onToggle && (
-          <button
-            type="button"
-            onClick={async () => {
-              setTogglingId(row.id);
-              try { await onToggle(row.id, row.isActive); await refetch?.(); }
-              finally { setTogglingId(null); }
-            }}
-            disabled={togglingId === row.id}
-            title={row.isActive ? "Deactivate" : "Activate"}
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
-          >
-            {row.isActive
-              ? <ToggleRight className="h-4 w-4 text-green-600 dark:text-green-400" />
-              : <ToggleLeft className="h-4 w-4" />}
-          </button>
-        )}
-        {onDelete && (
-          <button
-            type="button"
-            onClick={async () => {
-              if (!confirm(`Delete coupon "${row.primary}"? This cannot be undone.`)) return;
-              setDeletingId(row.id);
-              try { await onDelete(row.id); await refetch?.(); }
-              finally { setDeletingId(null); }
-            }}
-            disabled={deletingId === row.id}
-            title="Delete"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        )}
-      </div>
-    ),
-    [onEditClick, onToggle, onDelete, togglingId, deletingId, refetch],
-  );
-
-  if (hasChildren) {
-    return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
-  }
 
   return (
     <div className="min-h-screen">
@@ -246,7 +197,7 @@ export function SellerCouponsView({
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
-        searchPlaceholder="Search by coupon code"
+        searchPlaceholder="Search by bidder name"
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
@@ -255,16 +206,6 @@ export function SellerCouponsView({
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
-        extra={
-          onCreateClick
-            ? (
-                <Button size="sm" onClick={onCreateClick} className="flex items-center gap-1.5">
-                  <Plus className="h-4 w-4" />
-                  <span>Add Coupon</span>
-                </Button>
-              )
-            : undefined
-        }
       />
 
       {totalPages > 1 && (
@@ -283,8 +224,7 @@ export function SellerCouponsView({
           rows={rows}
           columns={columns}
           isLoading={isLoading}
-          emptyLabel="No coupons found — create your first coupon"
-          renderRowActions={renderRowActions}
+          emptyLabel="No bids found for your auctions"
         />
       </div>
 
@@ -305,20 +245,20 @@ export function SellerCouponsView({
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
+                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Bid Status</p>
                 <div className="flex flex-wrap gap-2">
-                  {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
+                  {STATUS_OPTIONS.map((opt) => (
                     <button
-                      key={opt.label}
+                      key={opt || "all"}
                       type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
+                      onClick={() => setPendingFilters((p) => ({ ...p, status: opt }))}
                       className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                        (pendingFilters.isActive || "") === opt.value
+                        (pendingFilters.status || "") === opt
                           ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
                           : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
                       }`}
                     >
-                      {opt.label}
+                      {STATUS_LABELS[opt] ?? opt}
                     </button>
                   ))}
                 </div>
