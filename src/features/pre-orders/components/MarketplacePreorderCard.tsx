@@ -163,67 +163,95 @@ export function MarketplacePreorderCard({
       </BaseListingCard.Hero>
 
       <BaseListingCard.Info variant={variant}>
-        <TextLink href={detailHref}>
-          <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900`}>
-            {product.title}
-          </Text>
-        </TextLink>
-        {product.description ? (
-          <RichText
-            html={normalizeRichTextHtml(product.description)}
-            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
-          />
-        ) : null}
-
-        <Row justify="between" className="mt-1 gap-2">
-          <Text className="text-sm font-semibold text-zinc-900">
-            {formatCurrency(product.price, getDefaultCurrency())}
-          </Text>
-          {shipDate && <PreorderBadge shipDate={shipDate} />}
-        </Row>
-
-        <Row justify="between" className="mt-2 gap-2">
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            className="flex-1 text-xs"
-            onClick={handleNavigate}
-          >
-            {mergedLabels.reserveNow}
-          </Button>
-          {onAddToCart ? (
+        {variant === "list" ? (
+          /* ── Compact list layout ── */
+          <>
+            <Div className="flex items-start justify-between gap-2 min-w-0">
+              <TextLink href={detailHref} className="min-w-0 flex-1">
+                <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
+                  {product.title}
+                </Text>
+              </TextLink>
+              {wishlistActions && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className={`shrink-0 p-1 text-base leading-none ${inWishlist ? "text-primary" : "text-zinc-400"}`}
+                  onClick={handleWishlist}
+                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
+                >
+                  {inWishlist ? "♥" : "♡"}
+                </Button>
+              )}
+            </Div>
+            <Div className="flex items-center gap-2 flex-wrap">
+              <Text className="text-sm font-bold text-primary">
+                {formatCurrency(product.price, getDefaultCurrency())}
+              </Text>
+              {shipDate && <PreorderBadge shipDate={shipDate} />}
+            </Div>
             <Button
               type="button"
-              variant="outline"
+              variant="primary"
               size="sm"
-              className="flex-1 text-xs"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddToCart(product);
-              }}
+              className="self-start text-xs mt-0.5"
+              onClick={handleNavigate}
             >
-              {mergedLabels.addToCart}
+              {mergedLabels.reserveNow}
             </Button>
-          ) : null}
-          {wishlistActions ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className={`text-base ${inWishlist ? "text-primary" : "text-zinc-500"}`}
-              onClick={handleWishlist}
-              aria-label={
-                inWishlist
-                  ? mergedLabels.removeFromWishlist
-                  : mergedLabels.addToWishlist
-              }
-            >
-              {inWishlist ? "♥" : "♡"}
-            </Button>
-          ) : null}
-        </Row>
+          </>
+        ) : (
+          /* ── Full grid layout ── */
+          <>
+            <TextLink href={detailHref}>
+              <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
+                {product.title}
+              </Text>
+            </TextLink>
+            {product.description ? (
+              <RichText
+                html={normalizeRichTextHtml(product.description)}
+                proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+                className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
+              />
+            ) : null}
+            <Row justify="between" className="mt-1 gap-2">
+              <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                {formatCurrency(product.price, getDefaultCurrency())}
+              </Text>
+              {shipDate && <PreorderBadge shipDate={shipDate} />}
+            </Row>
+            <Row justify="between" className="mt-2 gap-2">
+              <Button type="button" variant="primary" size="sm" className="flex-1 text-xs" onClick={handleNavigate}>
+                {mergedLabels.reserveNow}
+              </Button>
+              {onAddToCart ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 text-xs"
+                  onClick={(e) => { e.stopPropagation(); onAddToCart(product); }}
+                >
+                  {mergedLabels.addToCart}
+                </Button>
+              ) : null}
+              {wishlistActions ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className={`text-base ${inWishlist ? "text-primary" : "text-zinc-500"}`}
+                  onClick={handleWishlist}
+                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
+                >
+                  {inWishlist ? "♥" : "♡"}
+                </Button>
+              ) : null}
+            </Row>
+          </>
+        )}
       </BaseListingCard.Info>
     </BaseListingCard>
   );

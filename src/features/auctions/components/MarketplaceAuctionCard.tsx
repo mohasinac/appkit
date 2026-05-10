@@ -14,13 +14,11 @@ import {
   Button,
   Caption,
   Div,
-  RichText,
   Row,
   Span,
   Text,
   TextLink,
 } from "../../../ui";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 export interface MarketplaceAuctionCardData {
@@ -332,107 +330,128 @@ export function MarketplaceAuctionCard({
       </BaseListingCard.Hero>
 
       <BaseListingCard.Info variant={baseVariant}>
-        <Div className="flex items-start gap-2">
-          <TextLink
-            href={auctionHref ?? "#"}
-            className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 transition-colors hover:text-primary"
-          >
-            {product.title}
-          </TextLink>
-          {wishlistActions ? (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={handleWishlist}
-              disabled={wishlistLoading}
-              aria-label={
-                inWishlist
-                  ? mergedLabels.removeFromWishlist
-                  : mergedLabels.addToWishlist
-              }
-              className="-mt-0.5 rounded-full p-1"
-            >
-              <Heart
-                className={`h-4 w-4 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`}
-              />
-            </Button>
-          ) : null}
-        </Div>
+        {baseVariant === "list" ? (
+          /* ── Compact list layout ── */
+          <>
+            <Div className="flex items-start justify-between gap-2 min-w-0">
+              <TextLink
+                href={auctionHref ?? "#"}
+                className={`${THEME_CONSTANTS.utilities.textClamp2} flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`}
+              >
+                {product.title}
+              </TextLink>
+              {wishlistActions ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handleWishlist}
+                  disabled={wishlistLoading}
+                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
+                  className="shrink-0 rounded-full p-1"
+                >
+                  <Heart className={`h-3.5 w-3.5 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
+                </Button>
+              ) : null}
+            </Div>
 
-        {variant === "list" && product.description ? (
-          <RichText
-            html={normalizeRichTextHtml(product.description)}
-            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
-          />
-        ) : null}
+            <Div className="flex items-center gap-2 flex-wrap">
+              <Text className="text-sm font-bold text-primary">
+                {formatCurrency(displayBid, getDefaultCurrency())}
+              </Text>
+              <Div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`}>
+                <Clock className="h-2.5 w-2.5" />
+                <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
+              </Div>
+              {bidCount > 0 && (
+                <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>
+              )}
+            </Div>
 
-        <Div>
-          <Caption>
-            {isEnded && hasCurrentBid
-              ? mergedLabels.winningBid
-              : hasCurrentBid
-                ? mergedLabels.currentBid
-                : mergedLabels.startingBid}
-          </Caption>
-          <Text className="text-base font-bold leading-none text-primary">
-            {formatCurrency(displayBid, getDefaultCurrency())}
-          </Text>
-          {isEnded && product.winnerDisplayName && (
-            <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">
-              {mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}
-            </Caption>
-          )}
-        </Div>
-
-        <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
-          <Div
-            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${countdownClass}`}
-          >
-            <Clock className="h-3 w-3" />
-            <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
-          </Div>
-          <Caption>{mergedLabels.totalBids(bidCount)}</Caption>
-        </Row>
-
-        <Row wrap gap="xs" className="mt-auto">
-          {isEnded ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="flex-1 cursor-not-allowed gap-1 px-2 text-xs opacity-60"
-              disabled
-            >
-              <Span>{mergedLabels.ended}</Span>
-            </Button>
-          ) : (
-            <>
+            {!isEnded && (
               <Button
                 type="button"
                 variant="warning"
                 size="sm"
-                className="flex-1 gap-1 px-2 text-xs"
+                className="self-start gap-1 px-2.5 text-xs mt-0.5"
                 onClick={handleNavigate}
               >
                 <Gavel className="h-3 w-3" />
                 <Span>{mergedLabels.placeBid}</Span>
               </Button>
-              {resolvedBuyoutPrice ? (
+            )}
+          </>
+        ) : (
+          /* ── Full grid layout ── */
+          <>
+            <Div className="flex items-start gap-2">
+              <TextLink
+                href={auctionHref ?? "#"}
+                className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary"
+              >
+                {product.title}
+              </TextLink>
+              {wishlistActions ? (
                 <Button
                   type="button"
-                  variant="danger"
-                  size="sm"
-                  className="flex-1 gap-1 px-2 text-xs"
-                  onClick={handleNavigate}
+                  variant="ghost"
+                  onClick={handleWishlist}
+                  disabled={wishlistLoading}
+                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
+                  className="-mt-0.5 rounded-full p-1"
                 >
-                  <ShoppingBag className="h-3 w-3" />
-                  <Span>{mergedLabels.buyout}</Span>
+                  <Heart className={`h-4 w-4 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
                 </Button>
               ) : null}
-            </>
-          )}
-        </Row>
+            </Div>
+
+            <Div>
+              <Caption>
+                {isEnded && hasCurrentBid
+                  ? mergedLabels.winningBid
+                  : hasCurrentBid
+                    ? mergedLabels.currentBid
+                    : mergedLabels.startingBid}
+              </Caption>
+              <Text className="text-base font-bold leading-none text-primary">
+                {formatCurrency(displayBid, getDefaultCurrency())}
+              </Text>
+              {isEnded && product.winnerDisplayName && (
+                <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">
+                  {mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}
+                </Caption>
+              )}
+            </Div>
+
+            <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
+              <Div className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${countdownClass}`}>
+                <Clock className="h-3 w-3" />
+                <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
+              </Div>
+              <Caption>{mergedLabels.totalBids(bidCount)}</Caption>
+            </Row>
+
+            <Row wrap gap="xs" className="mt-auto">
+              {isEnded ? (
+                <Button type="button" variant="ghost" size="sm" className="flex-1 cursor-not-allowed gap-1 px-2 text-xs opacity-60" disabled>
+                  <Span>{mergedLabels.ended}</Span>
+                </Button>
+              ) : (
+                <>
+                  <Button type="button" variant="warning" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+                    <Gavel className="h-3 w-3" />
+                    <Span>{mergedLabels.placeBid}</Span>
+                  </Button>
+                  {resolvedBuyoutPrice ? (
+                    <Button type="button" variant="danger" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+                      <ShoppingBag className="h-3 w-3" />
+                      <Span>{mergedLabels.buyout}</Span>
+                    </Button>
+                  ) : null}
+                </>
+              )}
+            </Row>
+          </>
+        )}
       </BaseListingCard.Info>
     </BaseListingCard>
   );

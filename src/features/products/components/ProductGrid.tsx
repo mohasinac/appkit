@@ -1,14 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
-import { Button, Div, Grid, RichText, Row, Span, Text } from "../../../ui";
+import { Button, Div, Grid, Row, Span, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { getDefaultCurrency, getDefaultCurrencySymbol } from "../../../core/baseline-resolver";
-import { normalizeRichTextHtml } from "../../../utils/string.formatter";
+import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -404,16 +403,15 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       }
       onClick={onClick ? () => onClick(product) : undefined}
       className={[
-        "flex items-center gap-3 p-3 rounded-lg",
-        "border-b border-zinc-100 dark:border-zinc-800 last:border-0",
+        "flex items-center gap-3 p-2 sm:p-3",
         "hover:bg-zinc-50 dark:hover:bg-zinc-800/60 transition-colors",
         onClick ? "cursor-pointer" : "",
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      {/* Thumbnail — 72×72 */}
-      <Div className="flex-shrink-0 w-[72px] h-[72px] rounded-lg overflow-hidden bg-neutral-100 dark:bg-zinc-800">
+      {/* Thumbnail */}
+      <Div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden bg-neutral-100 dark:bg-zinc-800">
         {product.mainImage ? (
           <MediaImage
             src={product.mainImage}
@@ -425,45 +423,30 @@ function ProductListRow<T extends ProductItem = ProductItem>({
         )}
       </Div>
 
-      {/* Title — flex-1 */}
-      <Div className="flex-1 min-w-0">
-        <Text className="truncate text-sm font-medium text-neutral-900 dark:text-zinc-100">
+      {/* Content */}
+      <Div className="flex flex-1 flex-col min-w-0 gap-0.5">
+        <Text className={`${THEME_CONSTANTS.utilities.textClamp2} text-sm font-medium text-zinc-900 dark:text-zinc-100`}>
           {product.title}
         </Text>
-        {product.description && (
-          <RichText
-            html={normalizeRichTextHtml(product.description)}
-            proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-            className={`${THEME_CONSTANTS.utilities.textClamp1} text-xs text-neutral-500 dark:text-zinc-400`}
-          />
-        )}
-      </Div>
-
-      {/* Category — hidden on mobile */}
-      {product.categoryName && (
-        <Span className="hidden sm:block w-[110px] text-xs text-neutral-400 dark:text-zinc-500 truncate">
-          {product.categoryName}
-        </Span>
-      )}
-
-      {/* Rating — hidden on mobile */}
-      {product.rating !== undefined && (
-        <Span className="hidden sm:flex w-[72px] items-center gap-0.5 text-xs text-neutral-500">
-          <Span className="text-yellow-500">★</Span>
-          {product.rating.toFixed(1)}
-        </Span>
-      )}
-
-      {/* Price */}
-      <Div className="w-[80px] text-right flex-shrink-0">
-        <Span className="text-sm font-semibold text-neutral-900 dark:text-zinc-100">
-          {getDefaultCurrencySymbol()}{product.price.toLocaleString()}
-        </Span>
-        {discount && (
-          <Span className="block text-[10px] text-neutral-400 dark:text-zinc-500">
-            -{discount}%
+        {(product.categoryName || product.brand) && (
+          <Span className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
+            {[product.categoryName, product.brand].filter(Boolean).join(" · ")}
           </Span>
         )}
+        <Div className="flex items-center gap-2 flex-wrap mt-0.5">
+          <Span className="text-sm font-semibold text-primary">
+            {formatCurrency(product.price, getDefaultCurrency())}
+          </Span>
+          {discount && (
+            <Span className="text-[10px] font-bold text-rose-500">-{discount}%</Span>
+          )}
+          {product.rating !== undefined && (
+            <Span className="text-[11px] text-zinc-400 dark:text-zinc-500 flex items-center gap-0.5">
+              <Span className="text-amber-400">★</Span>
+              {product.rating.toFixed(1)}
+            </Span>
+          )}
+        </Div>
       </Div>
 
       {/* Wishlist action */}
@@ -477,7 +460,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             onAddToWishlist(product.id);
           }}
           aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className="flex-shrink-0 w-[36px] h-[36px] flex items-center justify-center rounded-lg text-neutral-400 hover:text-red-500 transition-colors"
+          className={`flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full text-base leading-none ${isWishlisted ? "text-rose-500" : "text-zinc-300 dark:text-zinc-600 hover:text-rose-400"}`}
         >
           {isWishlisted ? "♥" : "♡"}
         </Button>

@@ -9,7 +9,6 @@ export interface BaseListingCardRootProps {
   variant?: "grid" | "list";
   onClick?: () => void;
   children?: ReactNode;
-  /** Long-press / gesture event handlers forwarded to the root element */
   onMouseDown?: () => void;
   onMouseUp?: () => void;
   onMouseLeave?: () => void;
@@ -44,6 +43,7 @@ function BaseListingCardRoot({
   className = "",
   isSelected,
   isDisabled,
+  variant = "grid",
   onClick,
   onMouseDown,
   onMouseUp,
@@ -61,7 +61,8 @@ function BaseListingCardRoot({
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       className={[
-        "group relative flex flex-col w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
+        "group relative w-full min-w-0 overflow-hidden rounded-xl border bg-white dark:bg-zinc-900 transition-shadow",
+        variant === "list" ? "flex flex-row items-stretch" : "flex flex-col",
         isSelected
           ? "border-primary outline outline-2 outline-primary shadow-sm"
           : "border-zinc-200 dark:border-zinc-700 shadow-sm hover:shadow-md",
@@ -79,17 +80,37 @@ function BaseListingCardRoot({
 
 function BaseListingCardHero({
   aspect,
+  variant = "grid",
   className = "",
   children,
   onMouseEnter,
   onMouseLeave,
 }: BaseListingCardHeroProps) {
+  if (variant === "list") {
+    return (
+      <div
+        className={[
+          "relative overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex-shrink-0",
+          "w-20 h-20 sm:w-28 sm:h-28",
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        {children}
+      </div>
+    );
+  }
+
   const aspectClass =
     aspect === "square"
       ? "aspect-square"
       : aspect === "4/3" || !aspect
         ? "aspect-[4/3]"
         : `aspect-[${aspect}]`;
+
   return (
     <div
       className={[
@@ -108,13 +129,15 @@ function BaseListingCardHero({
 }
 
 function BaseListingCardInfo({
+  variant = "grid",
   className = "",
   children,
 }: BaseListingCardInfoProps) {
   return (
     <div
       className={[
-        "p-3 flex flex-col flex-1 gap-1.5",
+        "flex flex-col flex-1 min-w-0 gap-1",
+        variant === "list" ? "p-2 sm:p-3 justify-center" : "p-3",
         className,
       ]
         .filter(Boolean)
