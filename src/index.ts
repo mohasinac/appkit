@@ -7519,6 +7519,12 @@ export type { SearchCategoryOption } from "./features/search/index";
 // SearchLabels - Type contract for search labels.
 export type { SearchLabels } from "./features/search/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// SearchResourceType - Type union for search resource types.
+export type { SearchResourceType } from "./features/search/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// SearchResourceTypeOption - Type contract for search resource type option.
+export type { SearchResourceTypeOption } from "./features/search/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // SearchProductItem - Type contract for search product item.
 export type { SearchProductItem } from "./features/search/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
@@ -7856,7 +7862,7 @@ export type { SellerStoreSetupViewProps } from "./features/seller/index";
 export type { SellerStoreViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // SellerStorefrontViewProps - Type contract for seller storefront view props.
-export type { SellerStorefrontViewProps } from "./features/seller/index";
+export type { SellerStorefrontViewProps, StorefrontDraft } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // SellerTopProductsLabels - Type contract for seller top products labels.
 export type { SellerTopProductsLabels } from "./features/seller/index";

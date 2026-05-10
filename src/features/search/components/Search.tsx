@@ -1,9 +1,26 @@
 "use client"
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Button, Input, Li, Row, Span, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
 import type { NavSuggestionRecord } from "../hooks/useNavSuggestions";
+
+export type SearchResourceType =
+  | "products"
+  | "auctions"
+  | "pre-orders"
+  | "stores"
+  | "categories"
+  | "brands"
+  | "events"
+  | "blog"
+  | "faqs";
+
+export interface SearchResourceTypeOption {
+  value: SearchResourceType;
+  label: string;
+  shortLabel?: string;
+}
 
 export interface SearchQuickLink {
   href: string;
@@ -25,12 +42,13 @@ export interface SearchLabels {
   clearAriaLabel: string;
   ariaLabel: string;
   browseProducts: (query: string) => string;
+  resourceTypeLabel?: string;
 }
 
 export interface SearchProps {
   isOpen?: boolean;
   onClose?: () => void;
-  onSearch?: (query: string) => void;
+  onSearch?: (query: string, type: SearchResourceType) => void;
   onOpen?: () => void;
   value?: string;
   onChange?: (value: string) => void;
@@ -44,6 +62,9 @@ export interface SearchProps {
   labels: SearchLabels;
   suggestionTypeIcons?: Partial<Record<NavSuggestionRecord["type"], string>>;
   suggestionTypeBadges?: Partial<Record<NavSuggestionRecord["type"], string>>;
+  resourceTypes?: SearchResourceTypeOption[];
+  defaultResourceType?: SearchResourceType;
+  storageKey?: string;
 }
 
 const DEFAULT_TYPE_ICONS: Record<NavSuggestionRecord["type"], string> = {
@@ -77,19 +98,37 @@ export function Search({
   labels,
   suggestionTypeIcons,
   suggestionTypeBadges,
+  resourceTypes,
+  defaultResourceType = "products",
+  storageKey = "letitrip_search_type",
 }: SearchProps) {
   const isInlineMode = value !== undefined;
   const [query, setQuery] = useState(isInlineMode ? value : "");
   const [activeIndex, setActiveIndex] = useState(-1);
   const [isInlineOpen, setIsInlineOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState<SearchResourceType>(defaultResourceType);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inlineBlurRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { suggestions, isLoading: suggestionsLoading } =
-    useNavSuggestions(query);
+    useNavSuggestions(query, selectedType);
 
   const typeIcons = { ...DEFAULT_TYPE_ICONS, ...suggestionTypeIcons };
   const typeBadges = { ...DEFAULT_TYPE_BADGES, ...suggestionTypeBadges };
+
+  // Restore persisted type from localStorage after mount
+  useEffect(() => {
+    if (!resourceTypes?.length) return;
+    const stored = localStorage.getItem(storageKey);
+    if (stored && resourceTypes.some((t) => t.value === stored)) {
+      setSelectedType(stored as SearchResourceType);
+    }
+  }, [storageKey, resourceTypes]);
+
+  const handleTypeChange = useCallback((type: SearchResourceType) => {
+    setSelectedType(type);
+    localStorage.setItem(storageKey, type);
+  }, [storageKey]);
 
   useEffect(() => {
     if (isInlineMode || !onOpen) return;
@@ -137,7 +176,11 @@ export function Search({
   };
 
   const handleDeferredSubmit = () => {
-    onChange?.(query);
+    if (onSearch) {
+      onSearch(query, selectedType);
+    } else {
+      onChange?.(query);
+    }
   };
 
   const handleClear = () => {
@@ -154,7 +197,7 @@ export function Search({
   };
 
   const handleOverlaySearch = () => {
-    if (query.trim() && onSearch) onSearch(query);
+    if (query.trim() && onSearch) onSearch(query, selectedType);
   };
 
   if (isInlineMode) {
@@ -300,13 +343,27 @@ export function Search({
             </Button>
           )}
         </Row>
+        {resourceTypes && resourceTypes.length > 0 && (
+          <select
+            value={selectedType}
+            onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
+            aria-label={labels.resourceTypeLabel ?? "Search in"}
+            className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-300 cursor-pointer"
+          >
+            {resourceTypes.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        )}
         {deferred && (
           <Button
             type="button"
-            variant="ghost"
+            variant="primary"
             onClick={handleDeferredSubmit}
             aria-label={labels.ariaLabel}
-            className="flex-shrink-0 px-3 py-2 rounded-lg border border-zinc-300 text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 dark:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-zinc-200 transition-colors"
+            className="flex-shrink-0 px-3 py-2 rounded-lg"
           >
             <svg
               className="w-4 h-4"
@@ -529,6 +586,20 @@ export function Search({
             />
           </div>
 
+          {resourceTypes && resourceTypes.length > 0 && (
+            <select
+              value={selectedType}
+              onChange={(e) => handleTypeChange(e.target.value as SearchResourceType)}
+              aria-label={labels.resourceTypeLabel ?? "Search in"}
+              className="flex-shrink-0 rounded-lg border border-zinc-300 bg-white px-2 py-2 text-sm text-zinc-700 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-700 dark:bg-slate-900 dark:text-zinc-300 cursor-pointer"
+            >
+              {resourceTypes.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          )}
           <Button
             onClick={handleOverlaySearch}
             variant="primary"

@@ -143,7 +143,7 @@ export { GlobalError } from "./next/components/GlobalError";
 export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, DashboardNavProvider, LayoutClient } from "./features/layout/index";
 export type { AppLayoutShellProps, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
 export { Search } from "./features/search/components";
-export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter } from "./features/search/components";
+export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter, SearchResourceType, SearchResourceTypeOption } from "./features/search/components";
 export { ToastProvider, SkipToMain, NavigationLoader } from "./ui/index";
 export type { NavigationLoaderProps } from "./ui/index";
 export { ZodSetup } from "./validation/ZodSetup";

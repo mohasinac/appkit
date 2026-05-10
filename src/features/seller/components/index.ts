@@ -41,7 +41,7 @@ export type { SellerStoreSetupViewProps } from "./SellerStoreSetupView";
 export { SellerStoreView } from "./SellerStoreView";
 export type { SellerStoreViewProps } from "./SellerStoreView";
 export { SellerStorefrontView } from "./SellerStorefrontView";
-export type { SellerStorefrontViewProps } from "./SellerStorefrontView";
+export type { SellerStorefrontViewProps, StorefrontDraft } from "./SellerStorefrontView";
 export { SellerShippingView } from "./SellerShippingView";
 export type { SellerShippingViewProps } from "./SellerShippingView";
 export { SellerAddressesView } from "./SellerAddressesView";

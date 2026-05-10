@@ -9,7 +9,7 @@ export interface NavSuggestionRecord {
   url: string;
 }
 
-export function useNavSuggestions(query: string, debounceMs = 250) {
+export function useNavSuggestions(query: string, selectedType?: string, debounceMs = 250) {
   const [suggestions, setSuggestions] = useState<NavSuggestionRecord[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -36,7 +36,7 @@ export function useNavSuggestions(query: string, debounceMs = 250) {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [query, debounceMs]);
+  }, [query, selectedType, debounceMs]);
 
   return { suggestions, isLoading };
 }

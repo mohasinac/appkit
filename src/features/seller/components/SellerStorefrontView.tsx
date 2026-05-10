@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { StackedViewShell } from "../../../ui";
 import {
   Alert,
@@ -54,8 +54,6 @@ export function SellerStorefrontView({
   const [saved, setSaved] = useState(false);
   const { isDirty, markDirty, markClean } = useFormShell();
   const { upload } = useMediaUpload();
-  const logoRef = useRef(0);
-  const bannerRef = useRef(0);
 
   const update = useCallback(
     (partial: Partial<StorefrontDraft>) => {
@@ -121,10 +119,8 @@ export function SellerStorefrontView({
                   label="Store Logo"
                   currentImage={draft.storeLogoURL}
                   onUpload={(file) => {
-                    logoRef.current += 1;
                     return upload(file, "stores", true, {
                       type: "store-logo",
-                      name: draft.storeName ?? storeSlug,
                       store: storeSlug,
                     });
                   }}
@@ -135,10 +131,8 @@ export function SellerStorefrontView({
                   label="Store Banner"
                   currentImage={draft.storeBannerURL}
                   onUpload={(file) => {
-                    bannerRef.current += 1;
                     return upload(file, "stores", true, {
                       type: "store-banner",
-                      name: draft.storeName ?? storeSlug,
                       store: storeSlug,
                     });
                   }}
@@ -207,7 +201,7 @@ export function SellerStorefrontView({
                 <FormField
                   name="website"
                   label="Website"
-                  type="url"
+                  type="text"
                   value={draft.website ?? ""}
                   onChange={(v) => update({ website: v })}
                   placeholder="https://example.com"
@@ -227,7 +221,7 @@ export function SellerStorefrontView({
                 <FormField
                   name="twitter"
                   label="Twitter / X URL"
-                  type="url"
+                  type="text"
                   value={draft.socialLinks?.twitter ?? ""}
                   onChange={(v) => updateSocial("twitter", v)}
                   placeholder="https://twitter.com/..."
@@ -236,7 +230,7 @@ export function SellerStorefrontView({
                 <FormField
                   name="instagram"
                   label="Instagram URL"
-                  type="url"
+                  type="text"
                   value={draft.socialLinks?.instagram ?? ""}
                   onChange={(v) => updateSocial("instagram", v)}
                   placeholder="https://instagram.com/..."
@@ -247,7 +241,7 @@ export function SellerStorefrontView({
                 <FormField
                   name="facebook"
                   label="Facebook URL"
-                  type="url"
+                  type="text"
                   value={draft.socialLinks?.facebook ?? ""}
                   onChange={(v) => updateSocial("facebook", v)}
                   placeholder="https://facebook.com/..."
@@ -256,7 +250,7 @@ export function SellerStorefrontView({
                 <FormField
                   name="linkedin"
                   label="LinkedIn URL"
-                  type="url"
+                  type="text"
                   value={draft.socialLinks?.linkedin ?? ""}
                   onChange={(v) => updateSocial("linkedin", v)}
                   placeholder="https://linkedin.com/..."

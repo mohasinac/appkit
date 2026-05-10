@@ -4,6 +4,8 @@ export type {
   SearchProps,
   SearchQuickLink,
   SearchRouterAdapter,
+  SearchResourceType,
+  SearchResourceTypeOption,
 } from "./Search";
 export { SearchFiltersRow } from "./SearchFiltersRow";
 export type {} from "./SearchFiltersRow";
