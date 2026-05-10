@@ -37,21 +37,21 @@
 
 /* Variant icon backgrounds */
 .appkit-confirm-modal__icon--danger {
-  background-color: #fee2e2;
-  color: #dc2626;
+  background-color: var(--appkit-color-rose-100);
+  color: var(--appkit-color-error);
 }
 :is(.dark) .appkit-confirm-modal__icon--danger {
   background-color: rgba(127, 29, 29, 0.2);
-  color: #ef4444;
+  color: var(--appkit-color-error);
 }
 
 .appkit-confirm-modal__icon--warning {
-  background-color: #fef3c7;
-  color: #d97706;
+  background-color: var(--appkit-color-amber-100);
+  color: var(--appkit-color-warning);
 }
 :is(.dark) .appkit-confirm-modal__icon--warning {
   background-color: rgba(120, 53, 15, 0.2);
-  color: #f59e0b;
+  color: var(--appkit-color-amber-500);
 }
 
 .appkit-confirm-modal__icon--primary {

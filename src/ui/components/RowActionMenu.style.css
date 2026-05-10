@@ -16,15 +16,15 @@
   margin-top: 0.25rem;
   min-width: 160px;
   border-radius: 0.75rem;
-  border: 1px solid #e4e4e7;
-  background: white;
+  border: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
   padding-block: 0.375rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 }
 
 :is(.dark) .appkit-row-action-menu__dropdown {
-  border-color: #334155;
-  background: #0f172a;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
 }
 
 .appkit-row-action-menu__dropdown--left {
@@ -38,11 +38,11 @@
 .appkit-row-action-menu__separator {
   margin-block: 0.25rem;
   height: 1px;
-  background: #e4e4e7;
+  background: var(--appkit-color-border);
 }
 
 :is(.dark) .appkit-row-action-menu__separator {
-  background: #334155;
+  background: var(--appkit-color-border);
 }
 
 .appkit-row-action-menu__item {
@@ -53,31 +53,31 @@
   padding: 0.5rem 0.875rem;
   text-align: left;
   font-size: 0.875rem;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .appkit-row-action-menu__item:hover {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 :is(.dark) .appkit-row-action-menu__item {
-  color: #f4f4f5;
+  color: var(--appkit-color-zinc-100);
 }
 
 :is(.dark) .appkit-row-action-menu__item:hover {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-row-action-menu__item--destructive {
-  color: #dc2626;
+  color: var(--appkit-color-error);
 }
 
 .appkit-row-action-menu__item--destructive:hover {
-  background: #fef2f2;
+  background: var(--appkit-color-error-surface);
 }
 
 :is(.dark) .appkit-row-action-menu__item--destructive {
-  color: #f87171;
+  color: var(--appkit-color-rose-400);
 }
 
 :is(.dark) .appkit-row-action-menu__item--destructive:hover {
