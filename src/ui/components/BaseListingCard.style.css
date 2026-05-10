@@ -7,22 +7,22 @@
   width: 100%;
   min-width: 0;
   border-radius: 0.75rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--appkit-color-border);
   overflow: hidden;
   transition: box-shadow 0.2s ease;
-  background-color: #ffffff;
+  background-color: var(--appkit-color-surface);
 }
 
 :is(.dark) .appkit-listing-card {
-  background-color: #0f172a;  /* slate-900 — matches --appkit-color-surface dark */
-  border-color: #334155;       /* slate-700 — matches --appkit-color-border dark */
-  color: #f1f5f9;
+  background-color: var(--appkit-color-surface);
+  border-color: var(--appkit-color-border);
+  color: var(--appkit-color-slate-100);
 }
 
 .appkit-listing-card--selected {
   ring: 2px;
-  outline: 2px solid var(--color-primary);
-  border-color: var(--color-primary);
+  outline: 2px solid var(--appkit-color-secondary);
+  border-color: var(--appkit-color-secondary);
 }
 
 .appkit-listing-card--disabled {
@@ -40,12 +40,12 @@
 .appkit-listing-card__hero {
   position: relative;
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: var(--appkit-color-zinc-100);
   flex-shrink: 0;
 }
 
 :is(.dark) .appkit-listing-card__hero {
-  background-color: #1f2937;
+  background-color: var(--appkit-color-slate-800);
 }
 
 .appkit-listing-card__hero--square { aspect-ratio: 1 / 1; }
@@ -67,7 +67,7 @@
   height: 1.25rem;
   width: 1.25rem;
   border-radius: 0.25rem;
-  border: 2px solid #d1d5db;
+  border: 2px solid var(--appkit-color-zinc-300);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -75,12 +75,12 @@
 }
 
 .appkit-listing-card__checkbox--selected {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background-color: var(--appkit-color-secondary);
+  border-color: var(--appkit-color-secondary);
 }
 
 .appkit-listing-card__checkbox-icon {
-  color: white;
+  color: var(--appkit-color-text-on-primary);
   font-size: 0.75rem;
   line-height: 1;
 }

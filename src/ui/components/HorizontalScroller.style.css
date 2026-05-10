@@ -49,7 +49,7 @@
   z-index: 20;
   border-radius: 9999px;
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid #e5e7eb; /* gray-200 */
+  border: 1px solid var(--appkit-color-border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
@@ -58,7 +58,7 @@
   cursor: pointer;
 }
 .appkit-hscroller__arrow:hover {
-  background: #ffffff;
+  background: var(--appkit-color-surface);
 }
 
 .appkit-hscroller__arrow--prev { left: 0; }
@@ -69,11 +69,11 @@
 .appkit-hscroller__arrow--lg { width: 2.75rem;  height: 2.75rem;  font-size: 1.125rem; }
 
 .dark .appkit-hscroller__arrow {
-  background: rgba(31, 41, 55, 0.9); /* gray-800/90 */
-  border-color: #374151; /* gray-700 */
+  background: rgba(31, 41, 55, 0.9);
+  border-color: var(--appkit-color-slate-700);
 }
 .dark .appkit-hscroller__arrow:hover {
-  background: #374151;
+  background: var(--appkit-color-slate-700);
 }
 
 /* -- Fade edges -------------------------------------- */
@@ -89,17 +89,17 @@
 
 .appkit-hscroller__fade--left {
   left: 0;
-  background: linear-gradient(to right, white, transparent);
+  background: linear-gradient(to right, var(--appkit-color-surface), transparent);
 }
 
 .appkit-hscroller__fade--right {
   right: 0;
-  background: linear-gradient(to left, white, transparent);
+  background: linear-gradient(to left, var(--appkit-color-surface), transparent);
 }
 
 .dark .appkit-hscroller__fade--left {
-  background: linear-gradient(to right, #0f172a, transparent); /* slate-900 — matches surface dark */
+  background: linear-gradient(to right, var(--appkit-color-surface), transparent);
 }
 .dark .appkit-hscroller__fade--right {
-  background: linear-gradient(to left, #0f172a, transparent);
+  background: linear-gradient(to left, var(--appkit-color-surface), transparent);
 }

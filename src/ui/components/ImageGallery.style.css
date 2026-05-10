@@ -47,7 +47,7 @@
 
 .appkit-image-gallery__nav-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-primary, #6366f1);
+  box-shadow: 0 0 0 2px var(--appkit-color-secondary);
 }
 
 .appkit-image-gallery__nav-btn:disabled {
@@ -142,12 +142,12 @@
 }
 
 .appkit-image-gallery__thumbnail--active {
-  border-color: var(--color-primary, #6366f1);
-  box-shadow: 0 0 0 2px var(--color-primary-200, #c7d2fe);
+  border-color: var(--appkit-color-secondary-600);
+  box-shadow: 0 0 0 2px var(--appkit-color-secondary-200);
 }
 
 :is(.dark) .appkit-image-gallery__thumbnail--active {
-  box-shadow: 0 0 0 2px var(--color-primary-800, #3730a3);
+  box-shadow: 0 0 0 2px var(--appkit-color-secondary-800);
 }
 
 .appkit-image-gallery__help {
