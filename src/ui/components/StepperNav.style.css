@@ -39,20 +39,20 @@
 }
 
 .appkit-stepper-nav__bubble--complete {
-  border-color: #509c02;
-  background: #509c02;
-  color: #ffffff;
+  border-color: var(--appkit-color-secondary-600);
+  background: var(--appkit-color-secondary-600);
+  color: var(--appkit-color-text-on-primary);
 }
 
 .appkit-stepper-nav__bubble--active {
-  border-color: #509c02;
+  border-color: var(--appkit-color-secondary-600);
   background: transparent;
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 .appkit-stepper-nav__bubble--pending {
-  border-color: #d4d4d8;
-  color: #71717a;
+  border-color: var(--appkit-color-zinc-300);
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-stepper-nav__check {
@@ -72,9 +72,9 @@
   }
 }
 
-.appkit-stepper-nav__label--active { color: #509c02; }
-.appkit-stepper-nav__label--complete { color: #18181b; }
-.appkit-stepper-nav__label--pending { color: #71717a; }
+.appkit-stepper-nav__label--active { color: var(--appkit-color-secondary-600); }
+.appkit-stepper-nav__label--complete { color: var(--appkit-color-text); }
+.appkit-stepper-nav__label--pending { color: var(--appkit-color-zinc-500); }
 
 .appkit-stepper-nav__connector {
   flex: 1;
@@ -83,28 +83,28 @@
   transition: background-color 0.2s ease;
 }
 
-.appkit-stepper-nav__connector--complete { background: #509c02; }
-.appkit-stepper-nav__connector--pending  { background: #e4e4e7; }
+.appkit-stepper-nav__connector--complete { background: var(--appkit-color-secondary-600); }
+.appkit-stepper-nav__connector--pending  { background: var(--appkit-color-border); }
 
 /* dark */
 .dark .appkit-stepper-nav__bubble--complete {
-  border-color: #e91e8c;
-  background: #e91e8c;
+  border-color: var(--appkit-color-primary);
+  background: var(--appkit-color-primary);
 }
 
 .dark .appkit-stepper-nav__bubble--active {
-  border-color: #e91e8c;
-  color: #e91e8c;
+  border-color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary);
 }
 
 .dark .appkit-stepper-nav__bubble--pending {
-  border-color: #334155;
-  color: #94a3b8;
+  border-color: var(--appkit-color-border);
+  color: var(--appkit-color-slate-400);
 }
 
-.dark .appkit-stepper-nav__label--active  { color: #e91e8c; }
-.dark .appkit-stepper-nav__label--complete { color: #f1f5f9; }
-.dark .appkit-stepper-nav__label--pending  { color: #94a3b8; }
+.dark .appkit-stepper-nav__label--active  { color: var(--appkit-color-primary); }
+.dark .appkit-stepper-nav__label--complete { color: var(--appkit-color-text); }
+.dark .appkit-stepper-nav__label--pending  { color: var(--appkit-color-slate-400); }
 
-.dark .appkit-stepper-nav__connector--complete { background: #e91e8c; }
-.dark .appkit-stepper-nav__connector--pending  { background: #334155; }
+.dark .appkit-stepper-nav__connector--complete { background: var(--appkit-color-primary); }
+.dark .appkit-stepper-nav__connector--pending  { background: var(--appkit-color-border); }
