@@ -11,8 +11,8 @@
   margin-top: 0.5rem;
   min-width: 180px;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;
-  background: #fff;
+  border: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
   padding: 0.25rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
@@ -27,14 +27,14 @@
   padding: 0.5rem 0.75rem;
   text-align: left;
   font-size: 0.875rem;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
   transition: background-color 0.15s;
 }
 .appkit-dropdown__item--active {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 .appkit-dropdown__item--destructive {
-  color: #dc2626;
+  color: var(--appkit-color-error);
 }
 .appkit-dropdown__item:disabled {
   cursor: not-allowed;
@@ -49,8 +49,8 @@
   margin-top: 0.25rem;
   min-width: 160px;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;
-  background: #fff;
+  border: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
   padding: 0.25rem 0;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
@@ -63,10 +63,10 @@
   padding: 0.5rem 0.75rem;
   text-align: left;
   font-size: 0.875rem;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 .appkit-dropdown__composed-item:hover {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 .appkit-dropdown__composed-item:disabled {
   opacity: 0.5;
@@ -74,7 +74,7 @@
 
 .appkit-dropdown__separator {
   margin: 0.25rem 0;
-  border-top: 1px solid #e4e4e7;
+  border-top: 1px solid var(--appkit-color-border);
 }
 
 .appkit-dropdown__trigger {
@@ -83,28 +83,28 @@
 
 /* Dark mode */
 .dark .appkit-dropdown__menu {
-  border-color: #334155;
-  background: #0f172a;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
 }
 .dark .appkit-dropdown__item {
-  color: #e2e8f0;
+  color: var(--appkit-color-text);
 }
 .dark .appkit-dropdown__item--active {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 .dark .appkit-dropdown__item--destructive {
-  color: #f87171;
+  color: var(--appkit-color-rose-400);
 }
 .dark .appkit-dropdown__composed-menu {
-  border-color: #334155;
-  background: #0f172a;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
 }
 .dark .appkit-dropdown__composed-item {
-  color: #e2e8f0;
+  color: var(--appkit-color-text);
 }
 .dark .appkit-dropdown__composed-item:hover {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 .dark .appkit-dropdown__separator {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
 }
