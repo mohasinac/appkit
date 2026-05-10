@@ -9,16 +9,16 @@
   margin-bottom: 0.375rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 :is(.dark) .appkit-form-field__label {
-  color: #d4d4d8;
+  color: var(--appkit-color-zinc-300);
 }
 
 .appkit-form-field__required {
   margin-left: 0.25rem;
-  color: #ef4444;
+  color: var(--appkit-color-error);
 }
 
 .appkit-form-field__hint {

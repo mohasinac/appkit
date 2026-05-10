@@ -2,11 +2,11 @@
 
 .appkit-slider {
   width: 100%;
-  accent-color: var(--color-primary, #6366f1);
+  accent-color: var(--color-primary);
 }
 
 .dark .appkit-slider {
-  accent-color: var(--color-secondary, #818cf8);
+  accent-color: var(--color-secondary);
 }
 
 .appkit-slider--disabled {
