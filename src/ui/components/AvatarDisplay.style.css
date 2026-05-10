@@ -23,17 +23,17 @@
 .appkit-avatar-display__initials {
   user-select: none;
   font-weight: 600;
-  color: white;
+  color: var(--appkit-color-text-on-primary);
 }
 
 /* Image variant */
 .appkit-avatar-display--image {
   position: relative;
-  background-color: #f4f4f5;
+  background-color: var(--appkit-color-zinc-100);
 }
 
 :is(.dark) .appkit-avatar-display--image {
-  background-color: #1e293b;
+  background-color: var(--appkit-color-slate-800);
 }
 
 .appkit-avatar-display__image {
