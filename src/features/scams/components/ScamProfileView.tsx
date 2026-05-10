@@ -32,7 +32,11 @@ import {
   Breadcrumb,
   EmptyState,
 } from "../../../ui";
-import type { ScammerDocument } from "../schemas/firestore";
+import type {
+  ScammerDocument,
+  ScammerIncidentDocument,
+  ScammerCommentDocument,
+} from "../schemas/firestore";
 import {
   SCAM_PLATFORM_LABELS,
   SCAMMER_STATUS_LABELS,
@@ -94,9 +98,18 @@ export interface ScamProfileViewProps {
   scammer: ScammerDocument;
   /** When true the contest/report buttons are direct links; otherwise show sign-in prompts. */
   isAuthenticated: boolean;
+  incidents?: ScammerIncidentDocument[];
+  comments?: ScammerCommentDocument[];
+  relatedScammers?: ScammerDocument[];
 }
 
-export function ScamProfileView({ scammer, isAuthenticated }: ScamProfileViewProps) {
+export function ScamProfileView({
+  scammer,
+  isAuthenticated,
+  incidents = [],
+  comments = [],
+  relatedScammers = [],
+}: ScamProfileViewProps) {
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
   const registryHref = String(ROUTES.PUBLIC.SCAMS);
   const contestLoginHref = `${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(`/scams/${scammer.id}`)}`;
@@ -314,41 +327,158 @@ export function ScamProfileView({ scammer, isAuthenticated }: ScamProfileViewPro
                   </Row>
                 </Stack>
               )}
-              {/* Additional Incidents — placeholder */}
+              {/* Additional Incidents */}
               <Stack gap="sm">
-                <Heading level={2} className="text-base font-semibold">
-                  Additional Incidents
-                </Heading>
-                <EmptyState
-                  icon={<FileText className="h-8 w-8" />}
-                  title="No additional incidents yet"
-                  description="Other victims' reports linked to this profile will appear here once verified."
-                />
+                <Row justify="between" align="center">
+                  <Heading level={2} className="text-base font-semibold">
+                    Additional Incidents{incidents.length > 0 && ` (${incidents.length})`}
+                  </Heading>
+                </Row>
+                {incidents.length === 0 ? (
+                  <EmptyState
+                    icon={<FileText className="h-8 w-8" />}
+                    title="No additional incidents yet"
+                    description="Other victims' verified reports linked to this profile will appear here."
+                  />
+                ) : (
+                  <Stack gap="sm">
+                    {incidents.map((inc) => (
+                      <Card key={inc.id} variant="outlined" padding="md">
+                        <Stack gap="xs">
+                          <Row justify="between" align="start" gap="sm" className="flex-wrap">
+                            <Row gap="xs" wrap>
+                              <Badge variant="warning">
+                                {SCAM_TYPE_LABELS[inc.scamType] ?? inc.scamType}
+                              </Badge>
+                              <Badge variant="default">
+                                via {SCAM_PLATFORM_LABELS[inc.scamPlatform] ?? inc.scamPlatform}
+                              </Badge>
+                            </Row>
+                            <Text variant="secondary" className="text-xs">
+                              {formatDate(inc.createdAt)}
+                            </Text>
+                          </Row>
+                          {inc.itemInvolved && (
+                            <Text variant="secondary" className="text-xs">
+                              Item: {inc.itemInvolved}
+                            </Text>
+                          )}
+                          {inc.amountLost ? (
+                            <Text className="text-xs font-medium text-[color:var(--appkit-color-danger,theme(colors.red.600))]">
+                              {formatPaise(inc.amountLost)} lost
+                            </Text>
+                          ) : null}
+                          <Text variant="secondary" className="text-sm leading-relaxed">
+                            {inc.description.length > 200
+                              ? `${inc.description.slice(0, 200).trimEnd()}…`
+                              : inc.description}
+                          </Text>
+                          <Text variant="secondary" className="text-xs">
+                            Reported by: {inc.reportedByAnon ? "Anonymous" : "Verified victim"}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Stack>
+                )}
               </Stack>
 
-              {/* Community Discussion — placeholder */}
+              {/* Community Discussion */}
               <Stack gap="sm">
-                <Heading level={2} className="text-base font-semibold">
-                  Community Discussion
-                </Heading>
-                <EmptyState
-                  icon={<MessageSquare className="h-8 w-8" />}
-                  title="No comments yet"
-                  description="Comments and victim testimonials will appear here."
-                />
+                <Row justify="between" align="center">
+                  <Heading level={2} className="text-base font-semibold">
+                    Community Discussion{comments.length > 0 && ` (${comments.length})`}
+                  </Heading>
+                  {isAuthenticated ? (
+                    <Link
+                      href={String(ROUTES.PUBLIC.SCAM_REPORT)}
+                      className="text-xs text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
+                    >
+                      Leave a comment
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`${String(ROUTES.AUTH.LOGIN)}?redirect=${encodeURIComponent(`/scams/${scammer.id}`)}`}
+                      className="text-xs text-[color:var(--appkit-color-primary,theme(colors.blue.600))] hover:underline"
+                    >
+                      Sign in to comment
+                    </Link>
+                  )}
+                </Row>
+                {comments.length === 0 ? (
+                  <EmptyState
+                    icon={<MessageSquare className="h-8 w-8" />}
+                    title="No comments yet"
+                    description="Community comments and victim testimonials appear here."
+                  />
+                ) : (
+                  <Stack gap="sm">
+                    {comments.map((c) => (
+                      <Card key={c.id} variant="flat" padding="md">
+                        <Stack gap="xs">
+                          <Row justify="between" align="center" gap="sm">
+                            <Row gap="xs" align="center">
+                              <Text className="text-sm font-medium">{c.authorDisplayName}</Text>
+                              {c.authorRole !== "user" && (
+                                <Badge variant="default" className="text-[10px]">
+                                  {c.authorRole}
+                                </Badge>
+                              )}
+                              {c.isAccused && c.isAccusedVerified && (
+                                <Badge variant="warning" className="text-[10px]">Accused</Badge>
+                              )}
+                              {c.isVerifiedVictim && (
+                                <Badge variant="success" className="text-[10px]">Verified Victim</Badge>
+                              )}
+                            </Row>
+                            <Text variant="secondary" className="text-xs">
+                              {formatDate(c.createdAt)}
+                            </Text>
+                          </Row>
+                          <Text variant="secondary" className="text-sm leading-relaxed">
+                            {c.body}
+                          </Text>
+                        </Stack>
+                      </Card>
+                    ))}
+                  </Stack>
+                )}
               </Stack>
 
-              {/* Related Profiles — placeholder */}
-              <Stack gap="sm">
-                <Heading level={2} className="text-base font-semibold">
-                  Related Profiles
-                </Heading>
-                <EmptyState
-                  icon={<Link2 className="h-8 w-8" />}
-                  title="No related profiles"
-                  description="Other scammer profiles linked to this person will appear here."
-                />
-              </Stack>
+              {/* Related Profiles */}
+              {relatedScammers.length > 0 && (
+                <Stack gap="sm">
+                  <Heading level={2} className="text-base font-semibold">
+                    Related Profiles
+                  </Heading>
+                  <Stack gap="sm">
+                    {relatedScammers.map((rel) => (
+                      <Link
+                        key={rel.id}
+                        href={String(ROUTES.PUBLIC.SCAM_DETAIL(rel.id))}
+                        className="block"
+                      >
+                        <Card variant="outlined" padding="sm" className="hover:opacity-80 transition-opacity">
+                          <Row gap="sm" align="center" justify="between">
+                            <Stack gap="none">
+                              <Text className="text-sm font-medium">{rel.displayNames[0]}</Text>
+                              <Text variant="secondary" className="text-xs">
+                                {SCAM_TYPE_LABELS[rel.scamType] ?? rel.scamType}
+                              </Text>
+                            </Stack>
+                            <Row gap="xs" align="center">
+                              <Badge variant={statusVariant(rel.status)}>
+                                {SCAMMER_STATUS_LABELS[rel.status] ?? rel.status}
+                              </Badge>
+                              <Link2 className="h-4 w-4 text-[color:var(--appkit-color-text-muted,theme(colors.zinc.400))]" />
+                            </Row>
+                          </Row>
+                        </Card>
+                      </Link>
+                    ))}
+                  </Stack>
+                </Stack>
+              )}
             </Stack>
 
             {/* ── Right column — actions + meta ───────────────────────────── */}
