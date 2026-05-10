@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
@@ -178,46 +177,46 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
             <ProductGalleryClient images={images} productName={title} />
           )}
           renderInfo={() => (
-            <Stack gap="sm">
+            <Stack gap="md">
               {/* Auction badge + title */}
               <Div>
-                <Span className="mb-1.5 inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
-                  🏷️ Live Auction
-                </Span>
+                <Row gap="xs" className="mb-2 flex-wrap">
+                  <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
+                    🏷️ Live Auction
+                  </Span>
+                  {isEnded ? (
+                    <Span className="inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                      Ended
+                    </Span>
+                  ) : (
+                    <Span className="inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                      Active
+                    </Span>
+                  )}
+                </Row>
                 <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
                   {title}
                 </Heading>
               </Div>
 
-              {/* Current bid + bid count */}
-              <Row align="center" gap="sm" wrap>
-                <Div>
-                  <Text className="text-xs text-zinc-500">Current bid</Text>
+              {/* Current bid + bid count + timing */}
+              <Div>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Current bid</Text>
+                <Row align="center" gap="sm" wrap>
                   <Span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                </Div>
-                <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                  {bidCount} {bidCount === 1 ? "bid" : "bids"}
-                </Span>
-                {isEnded ? (
-                  <Span className="rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                    Ended
+                  <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
+                    {bidCount} {bidCount === 1 ? "bid" : "bids"}
                   </Span>
-                ) : (
-                  <Span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    Active
-                  </Span>
-                )}
-              </Row>
-
-              {/* Auction timing */}
-              {endDate && (
-                <Row align="center" gap="xs" className="text-sm text-zinc-600 dark:text-zinc-400">
-                  <Span>{isEnded ? "Ended" : "Ends"}:</Span>
-                  <Span className="font-medium">{endDate.toLocaleString()}</Span>
                 </Row>
-              )}
+                {endDate && (
+                  <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
+                    {isEnded ? "Ended" : "Ends"}{" "}
+                    <Span className="font-medium text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span>
+                  </Text>
+                )}
+              </Div>
 
               {/* Buy Now price */}
               {buyNowPrice !== null && !isEnded && (
@@ -251,25 +250,34 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
                 }}
               />
 
-              {/* Category + brand */}
+              {/* Category / brand pills */}
               {(categoryName || category || brand) && (
-                <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
-                  {category ? (
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Row gap="sm" wrap>
+                  {category && (
+                    <Link
+                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
+                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    >
                       {categoryName || category}
                     </Link>
-                  ) : categoryName ? (
-                    <Span>{categoryName}</Span>
-                  ) : null}
-                  {(category || categoryName) && brand && <Span>›</Span>}
-                  {brand && (
-                    brandSlug ? (
-                      <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        {brand}
-                      </Link>
-                    ) : (
-                      <Span className="font-medium text-zinc-600 dark:text-zinc-300">{brand}</Span>
-                    )
+                  )}
+                  {!category && categoryName && (
+                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                      {categoryName}
+                    </Span>
+                  )}
+                  {brand && brandSlug && (
+                    <Link
+                      href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
+                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    >
+                      {brand}
+                    </Link>
+                  )}
+                  {brand && !brandSlug && (
+                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                      {brand}
+                    </Span>
                   )}
                 </Row>
               )}
@@ -342,22 +350,11 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
                 />
               </Div>
             ) : (
+              /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
               <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
                 <Div className="space-y-1">
-                  <Row justify="between" align="center">
-                    <Text className="text-xs text-zinc-500">Current bid</Text>
-                    <Text className="text-xs text-zinc-500">Starting bid</Text>
-                  </Row>
-                  <Row justify="between" align="baseline">
-                    <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
-                      {formatCurrency(currentBid, currency)}
-                    </Span>
-                    <Span className="text-sm text-zinc-500">
-                      {formatCurrency(startingBid, currency)}
-                    </Span>
-                  </Row>
-                  <Text className="text-xs text-zinc-400 dark:text-zinc-500">
-                    {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
+                  <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                    Starting bid: {formatCurrency(startingBid, currency)} · min increment {formatCurrency(minBidIncrement, currency)}
                   </Text>
                 </Div>
                 <Stack gap="sm">

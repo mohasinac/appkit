@@ -340,11 +340,11 @@ export async function ProductDetailPageView({
             <ProductGalleryClient images={images} productName={title || undefined} />
           )}
           renderInfo={() => (
-            <Stack gap="sm">
-              {/* Title + condition */}
+            <Stack gap="md">
+              {/* Title + condition badge */}
               <Div>
                 {condition && (
-                  <Span className="mb-1.5 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:text-zinc-300">
+                  <Span className="mb-2 inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium capitalize text-zinc-600 dark:text-zinc-300">
                     {condition === "new"
                       ? "Brand New"
                       : condition === "like_new"
@@ -364,8 +364,8 @@ export async function ProductDetailPageView({
                 </Heading>
               </Div>
 
-              {/* Rating row */}
-              {avgRating !== null && (
+              {/* Rating + stock status */}
+              {avgRating !== null ? (
                 <Row align="center" gap="sm">
                   <StarRating value={avgRating} />
                   <Span className="text-sm text-zinc-600 dark:text-zinc-400">
@@ -385,29 +385,7 @@ export async function ProductDetailPageView({
                       : ""}
                   </Span>
                 </Row>
-              )}
-
-              {/* Price row */}
-              {formattedPrice && (
-                <Row align="baseline" gap="sm">
-                  <Span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                    {formattedPrice}
-                  </Span>
-                  {formattedOriginal && discount && (
-                    <>
-                      <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500">
-                        {formattedOriginal}
-                      </Span>
-                      <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-                        -{discount}%
-                      </Span>
-                    </>
-                  )}
-                </Row>
-              )}
-
-              {/* In-stock (when no rating row) */}
-              {avgRating === null && (
+              ) : (
                 <Span
                   className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
                     inStock
@@ -422,23 +400,34 @@ export async function ProductDetailPageView({
                 </Span>
               )}
 
-              {/* Category + brand path */}
-              {(categoryName || category || brand) && (
-                <Row align="center" gap="xs" className="text-xs text-zinc-400 dark:text-zinc-500 flex-wrap">
+              {/* Category / subcategory / brand pills */}
+              {(categoryName || category || subcategory || brand) && (
+                <Row gap="sm" wrap>
                   {category && (
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                    <Link
+                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
+                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    >
                       {categoryName || category}
                     </Link>
                   )}
-                  {category && brand && <Span>›</Span>}
-                  {brand && (
-                    brandSlug ? (
-                      <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="font-medium text-zinc-600 dark:text-zinc-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
-                        {brand}
-                      </Link>
-                    ) : (
-                      <Span className="font-medium text-zinc-600 dark:text-zinc-300">{brand}</Span>
-                    )
+                  {subcategory && (
+                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 capitalize">
+                      {subcategory}
+                    </Span>
+                  )}
+                  {brand && brandSlug && (
+                    <Link
+                      href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
+                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+                    >
+                      {brand}
+                    </Link>
+                  )}
+                  {brand && !brandSlug && (
+                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                      {brand}
+                    </Span>
                   )}
                 </Row>
               )}
@@ -466,7 +455,7 @@ export async function ProductDetailPageView({
                 }}
               />
 
-              {/* About this product / highlights */}
+              {/* Highlights */}
               {features.length > 0 && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
                   <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
@@ -483,7 +472,7 @@ export async function ProductDetailPageView({
                 </Div>
               )}
 
-              {/* Short description preview */}
+              {/* Description preview — full content is in the Description tab */}
               {descriptionHtml && (
                 <RichText
                   html={descriptionHtml}
@@ -519,14 +508,26 @@ export async function ProductDetailPageView({
           )}
           renderActions={() => (
             <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
-              {/* Price */}
+              {/* Price + discount */}
               {formattedPrice && (
                 <Div>
-                  <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                    {formattedPrice}
-                  </Text>
+                  <Row align="baseline" gap="sm" wrap>
+                    <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                      {formattedPrice}
+                    </Text>
+                    {formattedOriginal && discount && (
+                      <>
+                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500">
+                          {formattedOriginal}
+                        </Span>
+                        <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
+                          -{discount}%
+                        </Span>
+                      </>
+                    )}
+                  </Row>
                   {inStock && effectiveStock !== null && effectiveStock <= 10 && (
-                    <Text className="mt-0.5 text-xs text-amber-600 dark:text-amber-400">
+                    <Text className="mt-1 text-xs text-amber-600 dark:text-amber-400">
                       Only {effectiveStock} left — order soon!
                     </Text>
                   )}
