@@ -113,6 +113,7 @@ export interface ProductDocument {
   minOfferPercent?: number;
   customFields?: CustomField[];
   customSections?: CustomSection[];
+  sublistingCategoryId?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -215,6 +216,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "viewCount",
   "customFields",
   "customSections",
+  "sublistingCategoryId",
   "createdAt",
 ] as const;
 
@@ -257,6 +259,7 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "seoKeywords",
   "customFields",
   "customSections",
+  "sublistingCategoryId",
 ] as const;
 
 export type ProductCreateInput = Omit<

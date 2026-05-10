@@ -1,0 +1,183 @@
+"use client";
+
+import React from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  Button,
+  Form,
+  Input,
+  StackedViewShell,
+  useToast,
+} from "../../../ui";
+import type { StackedViewShellProps } from "../../../ui";
+import { ImageUpload } from "../../media/upload/ImageUpload";
+import { useMediaUpload } from "../../media";
+import { apiClient } from "../../../http";
+import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+
+export interface AdminSublistingCategoryEditorViewProps
+  extends Omit<StackedViewShellProps, "sections"> {
+  categoryId?: string;
+  onSaved?: (id: string) => void;
+  onDeleted?: () => void;
+}
+
+interface CategoryPayload {
+  name: string;
+  itemCode?: string;
+  description?: string;
+  coverImage?: string;
+}
+
+export function AdminSublistingCategoryEditorView({
+  categoryId,
+  onSaved,
+  onDeleted,
+  ...rest
+}: AdminSublistingCategoryEditorViewProps) {
+  const isEdit = Boolean(categoryId);
+  const { showToast } = useToast();
+
+  const [name, setName] = React.useState("");
+  const [itemCode, setItemCode] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [coverImage, setCoverImage] = React.useState("");
+
+  const categoryQuery = useQuery({
+    queryKey: ["admin", "sublisting-category", categoryId],
+    queryFn: async () => {
+      const res = await apiClient.get(ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID(categoryId!));
+      return (res as any)?.data ?? res;
+    },
+    enabled: isEdit,
+  });
+
+  React.useEffect(() => {
+    const cat = categoryQuery.data as CategoryPayload & { id?: string } | undefined;
+    if (!cat) return;
+    setName(cat.name ?? "");
+    setItemCode(cat.itemCode ?? "");
+    setDescription(cat.description ?? "");
+    setCoverImage(cat.coverImage ?? "");
+  }, [categoryQuery.data]);
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const payload: CategoryPayload = {
+        name,
+        itemCode: itemCode || undefined,
+        description: description || undefined,
+        coverImage: coverImage || undefined,
+      };
+      if (isEdit) {
+        return apiClient.put(ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID(categoryId!), payload);
+      }
+      return apiClient.post(ADMIN_ENDPOINTS.SUBLISTING_CATEGORIES, payload);
+    },
+    onSuccess: (res: unknown) => {
+      const id = (res as any)?.data?.id ?? (res as any)?.id ?? categoryId;
+      showToast(isEdit ? "Category updated." : "Category created.", "success");
+      if (onSaved && id) onSaved(String(id));
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to save category.", "error");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: () =>
+      apiClient.delete(ADMIN_ENDPOINTS.SUBLISTING_CATEGORY_BY_ID(categoryId!)),
+    onSuccess: () => {
+      showToast("Category deleted. All linked listings were unlinked.", "success");
+      if (onDeleted) onDeleted();
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to delete category.", "error");
+    },
+  });
+
+  const { upload } = useMediaUpload();
+  const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
+
+  return (
+    <StackedViewShell
+      portal="admin"
+      {...rest}
+      title={isEdit ? "Edit Sub-listing Category" : "New Sub-listing Category"}
+      sections={[
+        <Form
+          key="sc-editor-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            saveMutation.mutate();
+          }}
+          className="space-y-4"
+        >
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Input
+              label="Category name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder="e.g. Base Set Charizard 108/120"
+            />
+            <Input
+              label="Item code"
+              value={itemCode}
+              onChange={(e) => setItemCode(e.target.value)}
+              placeholder="e.g. PSA 10, 108/120, STH"
+              helperText="Grade, card number, or series code. Optional."
+            />
+          </div>
+
+          <Input
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Brief description shown on the public category page"
+          />
+
+          <ImageUpload
+            label="Cover image"
+            currentImage={coverImage}
+            onUpload={(file) =>
+              upload(file, "sublisting-categories", true, {
+                type: "category-image",
+                name: name || "sublisting",
+              })
+            }
+            onChange={setCoverImage}
+          />
+
+          <div className="flex gap-3 pt-2">
+            <Button
+              type="submit"
+              isLoading={isSubmitting}
+              disabled={!name || isSubmitting}
+            >
+              {isEdit ? "Save changes" : "Create category"}
+            </Button>
+            {isEdit && (
+              <Button
+                type="button"
+                variant="danger"
+                isLoading={deleteMutation.isPending}
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Delete this category? All linked listings will be unlinked. This cannot be undone.",
+                    )
+                  ) {
+                    deleteMutation.mutate();
+                  }
+                }}
+              >
+                Delete
+              </Button>
+            )}
+          </div>
+        </Form>,
+      ]}
+    />
+  );
+}

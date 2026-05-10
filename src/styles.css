@@ -18,3 +18,4 @@
 
 @import "./tokens/tokens.css";
 @import "./ui/components/index.style.css";
+@import "./tailwind-utilities.css";

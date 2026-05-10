@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.4.3",
+  "version": "2.4.5",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -98,7 +98,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify",
     "watch": "tsc -p tsconfig.build.json --watch"
   },
   "dependencies": {
@@ -133,8 +133,8 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.0.0",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
+    "@types/react": "19.1.0",
+    "@types/react-dom": "19.1.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
     "eslint": "^9.37.0",
@@ -148,6 +148,7 @@
     "react-dom": "^19.2.0",
     "resend": "^6.10.0",
     "server-only": "^0.0.1",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
   }
 }

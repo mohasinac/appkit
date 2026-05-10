@@ -13,6 +13,7 @@ import {
   Text,
 } from "../../../ui";
 import { CustomSectionsEditor } from "./CustomSectionsEditor";
+import { SublistingCategorySelect } from "./SublistingCategorySelect";
 import type { CustomSection } from "../schemas/firestore";
 import {
   ImageUpload,
@@ -729,6 +730,13 @@ export function ProductForm({
           disabled={isReadonly}
         />
       )}
+
+      {/* ── Sub-listing Category (SC3) ── */}
+      <SublistingCategorySelect
+        value={(product.sublistingCategoryId as string) ?? ""}
+        onChange={(id) => update({ sublistingCategoryId: id || undefined })}
+        disabled={isReadonly}
+      />
 
       {/* ── Custom Sections (L3) ── */}
       <Div>

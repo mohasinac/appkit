@@ -1606,6 +1606,13 @@ export { storeRepository } from "./repositories/index";
 // scammerRepository - Shared export for scammer profiles repository.
 export { scammerRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
+// sublistingCategoriesRepository - Server-only repository for sublisting categories.
+export { sublistingCategoriesRepository } from "./repositories/index";
+export type {
+  SublistingCategoryCreateInput,
+  SublistingCategoryUpdateInput,
+} from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // tokenRepository - Shared export for token repository.
 export { tokenRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
@@ -3270,6 +3277,11 @@ export { AdminSidebar } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminSiteView - Component for admin site view.
 export { AdminSiteView } from "./features/admin/index";
+// AdminSublistingCategoriesView - Admin list view for sublisting categories (SC1).
+export { AdminSublistingCategoriesView } from "./features/admin/index";
+// AdminSublistingCategoryEditorView - Admin create/edit form for sublisting categories (SC1).
+export { AdminSublistingCategoryEditorView } from "./features/admin/index";
+export type { AdminSublistingCategoryEditorViewProps } from "./features/admin/index";
 // AdminSiteSettingsView - 12-tab site settings form for admin (VA8).
 export { AdminSiteSettingsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8628,8 +8640,8 @@ export { generateCroppedImageFilename } from "./utils/id-generators";
 export { CONVERSATIONS_COLLECTION } from "./features/messages/schemas/firestore";
 export type { ConversationDocument, ConversationMessage } from "./features/messages/schemas/firestore";
 // Sublisting categories feature schemas
-export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/sublisting/schemas/firestore";
-export type { SublistingCategoryDocument } from "./features/sublisting/schemas/firestore";
+export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/products/schemas/sublisting-categories";
+export type { SublistingCategoryDocument } from "./features/products/schemas/sublisting-categories";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";

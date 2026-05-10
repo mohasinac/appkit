@@ -58,6 +58,7 @@ export interface ProductItem {
   listingType?: ListingType;
   isAuction?: boolean;
   isPreOrder?: boolean;
+  sublistingCategoryId?: string;
   isOnSale?: boolean;
   isSold?: boolean;
   inStock?: boolean;

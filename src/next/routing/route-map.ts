@@ -192,6 +192,9 @@ export const DEFAULT_ROUTE_MAP = {
     WISHLISTS: "/admin/wishlists",
     RETURN_REQUESTS: "/admin/return-requests",
     STORE_ADDRESSES: "/admin/store-addresses",
+    SUBLISTING_CATEGORIES: "/admin/sublisting-categories",
+    SUBLISTING_CATEGORIES_NEW: "/admin/sublisting-categories/new",
+    SUBLISTING_CATEGORIES_EDIT: (id: string) => `/admin/sublisting-categories/${id}/edit`,
   },
   DEMO: {
     SEED: "/demo/seed",
