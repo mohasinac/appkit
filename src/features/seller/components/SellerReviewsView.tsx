@@ -157,8 +157,8 @@ export function SellerReviewsView({
               aria-label="Filter by reply status"
               options={[
                 { value: "", label: "All reply statuses" },
-                { value: "true", label: "Replied" },
-                { value: "false", label: "Pending reply" },
+                { value: "true", label: "Store replied" },
+                { value: "false", label: "Awaiting reply" },
               ]}
             />
             {meta && (
@@ -196,7 +196,7 @@ export function SellerReviewsView({
                         {review.verified && <Badge variant="success">Verified</Badge>}
                         {statusBadge(review.status)}
                         <Badge variant={review.sellerReply ? "success" : "warning"}>
-                          {review.sellerReply ? "Replied" : "Pending reply"}
+                          {review.sellerReply ? "Store replied" : "Awaiting store reply"}
                         </Badge>
                       </Div>
 
@@ -209,7 +209,7 @@ export function SellerReviewsView({
                       {/* Existing reply */}
                       {review.sellerReply && (
                         <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
-                          <Text className="text-xs text-[var(--appkit-color-text-muted)]">Your reply:</Text>
+                          <Text className="text-xs text-[var(--appkit-color-text-muted)]">Store reply:</Text>
                           <Text className="text-sm">{review.sellerReply}</Text>
                         </Div>
                       )}
@@ -272,7 +272,7 @@ export function SellerReviewsView({
           )}
           {replyError && <Alert variant="error">{replyError}</Alert>}
           <Div>
-            <Text className="text-sm font-medium mb-1.5">Your reply</Text>
+            <Text className="text-sm font-medium mb-1.5">Store reply</Text>
             <textarea
               className="w-full rounded-md border border-[var(--appkit-color-border)] bg-[var(--appkit-color-input-bg,var(--appkit-color-surface))] p-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)] dark:bg-[var(--appkit-color-surface-dark,#1e2330)] dark:border-[var(--appkit-color-border-dark)]"
               rows={5}
