@@ -8604,3 +8604,69 @@ export type { SublistingCategoryDocument } from "./features/sublisting/schemas/f
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
+
+// Scam registry — seed data
+export { scammersSeedData } from "./seed/index";
+
+// Scam registry — schema types and constants
+export {
+  SCAMMER_COLLECTION,
+  SCAMMER_ID_PREFIX,
+  SCAMMER_MATCH_FIELDS,
+  SCAMMER_INDEXED_FIELDS,
+  SCAMMER_FIELDS,
+  SCAMMER_INCIDENTS_SUBCOLLECTION,
+  SCAMMER_COMMENTS_SUBCOLLECTION,
+  SCAMMER_CONTESTS_SUBCOLLECTION,
+  MAX_COMMENT_BODY_LENGTH,
+  MAX_PENDING_SCAMMER_REPORTS_PER_USER,
+  ScammerStatusValues,
+  ScamPlatformValues,
+  SocialPlatformValues,
+  ContestTypeValues,
+  ContestStatusValues,
+  SCAM_PLATFORM_LABELS,
+  SOCIAL_PLATFORM_LABELS,
+  SCAMMER_STATUS_LABELS,
+  CONTEST_TYPE_LABELS,
+  CONTEST_STATUS_LABELS,
+  DEFAULT_SCAMMER_DATA,
+  DEFAULT_SCAMMER_INCIDENT_DATA,
+  DEFAULT_SCAMMER_COMMENT_DATA,
+  DEFAULT_SCAMMER_CONTEST_DATA,
+} from "./features/scams/schemas/firestore";
+export type {
+  ScammerStatus,
+  ScamPlatform,
+  SocialPlatform,
+  ContestType,
+  ContestStatus,
+  ScammerMatchField,
+  ScammerMatchStrength,
+  ScammerSocialMedia,
+  ScammerDocument,
+  ScammerIncidentDocument,
+  ScammerCommentDocument,
+  ScammerContestDocument,
+  ScammerSuggestion,
+  ScammerCreateInput,
+  ScammerAdminUpdateInput,
+  ScammerIncidentCreateInput,
+  ScammerCommentCreateInput,
+  ScammerContestCreateInput,
+} from "./features/scams/schemas/firestore";
+
+// Scam registry — scam type definitions
+export {
+  SCAM_TYPES,
+  SCAM_TYPE_LABELS,
+  SCAM_CATEGORY_LABELS,
+  getScamType,
+  getScamTypesByCategory,
+  getCategoryForScamType,
+} from "./features/scams/constants/scam-types";
+export type {
+  ScamType,
+  ScamCategory,
+  ScamTypeDefinition,
+} from "./features/scams/constants/scam-types";

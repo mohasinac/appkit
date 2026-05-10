@@ -1,7 +1,7 @@
 /**
  * Demo Seed Domain Actions — appkit
  *
- * Dev-only actions for loading/deleting seed data.
+ * Admin-controlled seed actions.
  * Delegates to the consumer's POST /api/demo/seed route which contains
  * the actual collection-specific seeding logic (800+ lines with PII encryption,
  * Auth user creation, subcollection handling, etc.).
@@ -36,7 +36,8 @@ export type SeedCollectionName =
   | "wishlists"
   | "conversations"
   | "sublistingCategories"
-  | "groupedListings";
+  | "groupedListings"
+  | "scammerProfiles";
 
 export interface SeedOperationResult {
   success?: boolean;
