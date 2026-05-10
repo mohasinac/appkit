@@ -8,12 +8,12 @@
 
 .appkit-data-table__wrapper {
   border-radius: 1rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid var(--appkit-color-border);
   overflow: hidden;
 }
 
 :is(.dark) .appkit-data-table__wrapper {
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
 }
 
 .appkit-data-table__scroll {
@@ -30,11 +30,11 @@
 }
 
 .appkit-data-table__thead {
-  background: #fafafa;
+  background: var(--appkit-color-zinc-50);
 }
 
 :is(.dark) .appkit-data-table__thead {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-data-table__thead--sticky {
@@ -50,11 +50,11 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 :is(.dark) .appkit-data-table__th {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 .appkit-data-table__th--sortable {
@@ -63,19 +63,19 @@
 }
 
 .appkit-data-table__th--sortable:hover {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 :is(.dark) .appkit-data-table__th--sortable:hover {
-  background: #334155;
+  background: var(--appkit-color-border);
 }
 
 .appkit-data-table__tbody {
-  background: white;
+  background: var(--appkit-color-surface);
 }
 
 :is(.dark) .appkit-data-table__tbody {
-  background: #0f172a;
+  background: var(--appkit-color-surface);
 }
 
 .appkit-data-table__row {
@@ -83,11 +83,11 @@
 }
 
 .appkit-data-table__row--striped {
-  background: #fafafa;
+  background: var(--appkit-color-zinc-50);
 }
 
 :is(.dark) .appkit-data-table__row--striped {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-data-table__row--clickable {
@@ -95,7 +95,7 @@
 }
 
 .appkit-data-table__row--clickable:hover {
-  background: #fafafa;
+  background: var(--appkit-color-zinc-50);
 }
 
 :is(.dark) .appkit-data-table__row--clickable:hover {
@@ -106,11 +106,11 @@
   padding: 1rem 1.5rem;
   white-space: nowrap;
   font-size: 0.875rem;
-  color: #18181b;
+  color: var(--appkit-color-text);
 }
 
 :is(.dark) .appkit-data-table__td {
-  color: #f4f4f5;
+  color: var(--appkit-color-zinc-100);
 }
 
 .appkit-data-table__td--actions {
@@ -149,32 +149,34 @@
   justify-content: center;
   padding: 0.5rem;
   border-radius: 0.5rem;
-  box-shadow: inset 0 0 0 1px #e4e4e7;
+  box-shadow: inset 0 0 0 1px var(--appkit-color-border);
   transition: background-color 0.15s ease, color 0.15s ease;
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 :is(.dark) .appkit-data-table__view-btn {
-  color: #a1a1aa;
-  box-shadow: inset 0 0 0 1px #334155;
+  color: var(--appkit-color-text-faint);
+  box-shadow: inset 0 0 0 1px var(--appkit-color-border);
 }
 
 .appkit-data-table__view-btn:hover {
-  background: #f4f4f5;
+  background: var(--appkit-color-zinc-100);
 }
 
 :is(.dark) .appkit-data-table__view-btn:hover {
-  background: #1e293b;
+  background: var(--appkit-color-slate-800);
 }
 
 .appkit-data-table__view-btn--active {
-  background: rgba(var(--color-primary-rgb, 99, 102, 241), 0.05);
-  color: var(--color-primary, #6366f1);
-  box-shadow: inset 0 0 0 1px rgba(var(--color-primary-rgb, 99, 102, 241), 0.3);
+  background: rgba(80, 156, 2, 0.05);
+  color: var(--appkit-color-secondary-600);
+  box-shadow: inset 0 0 0 1px rgba(80, 156, 2, 0.3);
 }
 
 :is(.dark) .appkit-data-table__view-btn--active {
-  background: rgba(var(--color-primary-rgb, 99, 102, 241), 0.1);
+  background: rgba(233, 30, 140, 0.1);
+  color: var(--appkit-color-primary);
+  box-shadow: inset 0 0 0 1px rgba(233, 30, 140, 0.3);
 }
 
 .appkit-data-table__mobile-cards {

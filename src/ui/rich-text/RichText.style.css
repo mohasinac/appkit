@@ -7,37 +7,37 @@
  * these rules act as a reliable fallback with the same values.
  * -------------------------------------------------------------------------- */
 .appkit-rich-text-editor {
-  background: var(--appkit-color-surface, #ffffff);
-  border: 1px solid var(--appkit-color-border, #e4e4e7);
+  background: var(--appkit-color-surface);
+  border: 1px solid var(--appkit-color-border);
   border-radius: 0.5rem;
 }
 
 .dark .appkit-rich-text-editor {
-  background: #0f172a;    /* slate-900 = --appkit-color-surface dark */
-  border-color: #334155;  /* slate-700 = --appkit-color-border dark */
+  background: var(--appkit-color-surface);
+  border-color: var(--appkit-color-border);
 }
 
 .appkit-rich-text-editor__toolbar {
-  border-bottom: 1px solid var(--appkit-color-border, #e4e4e7);
+  border-bottom: 1px solid var(--appkit-color-border);
 }
 
 .dark .appkit-rich-text-editor__toolbar {
-  border-bottom-color: #334155;
+  border-bottom-color: var(--appkit-color-border);
 }
 
 .appkit-rich-text-editor__btn {
-  border: 1px solid #e4e4e7;
-  color: #3f3f46;
+  border: 1px solid var(--appkit-color-border);
+  color: var(--appkit-color-zinc-700);
   border-radius: 0.375rem;
 }
 
 .dark .appkit-rich-text-editor__btn {
-  border-color: #475569;
-  color: #e2e8f0;
+  border-color: var(--appkit-color-slate-600);
+  color: var(--appkit-color-slate-200);
 }
 
 .dark .appkit-rich-text-editor__btn:hover {
-  background-color: #1e293b;
+  background-color: var(--appkit-color-slate-800);
 }
 
 
@@ -74,13 +74,13 @@
   overflow-x: auto;
   font-size: 0.875em;
   line-height: 1.7;
-  background-color: #1e293b;                     /* slate-800 — always dark */
-  color: #e2e8f0;                                /* slate-200 */
+  background-color: var(--appkit-color-slate-800);  /* always dark */
+  color: var(--appkit-color-slate-200);
   border: 1px solid rgba(51, 65, 85, 0.6);
 }
 
 .dark .appkit-rich-text pre {
-  background-color: #0f172a;                     /* slate-900 */
+  background-color: var(--appkit-color-surface);
   border-color: rgba(30, 41, 59, 0.8);
 }
 
@@ -91,14 +91,14 @@
   margin: 1.25rem 0;
   border-radius: 0 0.375rem 0.375rem 0;
   background-color: rgba(53, 112, 252, 0.06);
-  color: #3f3f46;                                /* zinc-700 */
+  color: var(--appkit-color-zinc-700);
   font-style: italic;
 }
 
 .dark .appkit-rich-text blockquote {
   border-left-color: #f063b9;                    /* secondary-400 */
   background-color: rgba(240, 99, 185, 0.06);
-  color: #a1a1aa;                                /* zinc-400 */
+  color: var(--appkit-color-text-faint);
 }
 
 /* --- Mark / Highlight ----------------------------------------------------- */
@@ -111,7 +111,7 @@
 
 .dark .appkit-rich-text mark {
   background-color: rgba(101, 196, 8, 0.35);
-  color: #f4f4f5;                               /* zinc-100 */
+  color: var(--appkit-color-zinc-100);
 }
 
 /* --- Horizontal rule ------------------------------------------------------ */
@@ -157,37 +157,37 @@
   font-size: 0.9em;
   overflow: hidden;
   border-radius: 0.5rem;
-  border: 1px solid #e4e4e7;                    /* zinc-200 */
+  border: 1px solid var(--appkit-color-border);
 }
 
 .dark .appkit-rich-text table {
-  border-color: #334155;                        /* slate-700 */
+  border-color: var(--appkit-color-border);
 }
 
 .appkit-rich-text th {
-  background-color: #f4f4f5;                    /* zinc-100 */
-  color: #18181b;                               /* zinc-900 */
+  background-color: var(--appkit-color-zinc-100);
+  color: var(--appkit-color-text);
   font-weight: 600;
   padding: 0.6rem 0.875rem;
   text-align: left;
-  border-bottom: 1px solid #e4e4e7;
+  border-bottom: 1px solid var(--appkit-color-border);
 }
 
 .dark .appkit-rich-text th {
-  background-color: #1e293b;                    /* slate-800 */
-  color: #f4f4f5;                               /* zinc-100 */
-  border-bottom-color: #334155;
+  background-color: var(--appkit-color-slate-800);
+  color: var(--appkit-color-zinc-100);
+  border-bottom-color: var(--appkit-color-border);
 }
 
 .appkit-rich-text td {
   padding: 0.55rem 0.875rem;
-  border-bottom: 1px solid #f4f4f5;            /* zinc-100 */
-  color: #3f3f46;                               /* zinc-700 */
+  border-bottom: 1px solid var(--appkit-color-zinc-100);
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-rich-text td {
-  border-bottom-color: #1e293b;                 /* slate-800 */
-  color: #a1a1aa;                               /* zinc-400 */
+  border-bottom-color: var(--appkit-color-slate-800);
+  color: var(--appkit-color-text-faint);
 }
 
 .appkit-rich-text tr:last-child td {
@@ -210,13 +210,13 @@
 .appkit-rich-text figcaption {
   margin-top: 0.5rem;
   font-size: 0.8em;
-  color: #71717a;                               /* zinc-500 */
+  color: var(--appkit-color-zinc-500);
   text-align: center;
   font-style: italic;
 }
 
 .dark .appkit-rich-text figcaption {
-  color: #71717a;                               /* zinc-500 */
+  color: var(--appkit-color-zinc-500);
 }
 
 /* --- Images --------------------------------------------------------------- */
@@ -233,7 +233,7 @@
 .appkit-rich-text h4,
 .appkit-rich-text h5,
 .appkit-rich-text h6 {
-  color: #18181b;                               /* zinc-900 */
+  color: var(--appkit-color-text);
   font-weight: 700;
   line-height: 1.25;
   margin-top: 1.5em;
@@ -246,28 +246,28 @@
 .dark .appkit-rich-text h4,
 .dark .appkit-rich-text h5,
 .dark .appkit-rich-text h6 {
-  color: #fafafa;                               /* zinc-50 */
+  color: var(--appkit-color-text);
 }
 
 /* --- Body text fallback when not inside a prose wrapper ------------------- */
 .appkit-rich-text p {
-  color: #3f3f46;                               /* zinc-700 */
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-rich-text p {
-  color: #a1a1aa;                               /* zinc-400 */
+  color: var(--appkit-color-text-faint);
 }
 
 /* --- Lists ---------------------------------------------------------------- */
 .appkit-rich-text ul,
 .appkit-rich-text ol {
   padding-left: 1.5rem;
-  color: #3f3f46;
+  color: var(--appkit-color-zinc-700);
 }
 
 .dark .appkit-rich-text ul,
 .dark .appkit-rich-text ol {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 /* --- Ins / Del ------------------------------------------------------------ */
@@ -283,10 +283,10 @@
 
 .appkit-rich-text del {
   text-decoration: line-through;
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
   opacity: 0.75;
 }
 
 .dark .appkit-rich-text del {
-  color: #52525b;
+  color: var(--appkit-color-zinc-600);
 }
