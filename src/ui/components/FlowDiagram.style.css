@@ -69,9 +69,9 @@
 .appkit-flow-diagram__note {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px dashed #e2e8f0;
+  border-top: 1px dashed var(--appkit-color-slate-200);
 }
 
 :is(.dark) .appkit-flow-diagram__note {
-  border-top-color: #334155;
+  border-top-color: var(--appkit-color-border);
 }

@@ -38,9 +38,9 @@
 
 .appkit-stats-grid__item {
   padding: 1rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid var(--appkit-color-border);
   border-radius: 0.75rem;
-  background: #ffffff;
+  background: var(--appkit-color-surface);
 }
 
 .appkit-stats-grid__item-inner {
@@ -52,7 +52,7 @@
 .appkit-stats-grid__label {
   font-size: 0.875rem;
   font-weight: 500;
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-stats-grid__value {
@@ -62,13 +62,13 @@
 }
 
 .appkit-stats-grid__icon {
-  color: #a1a1aa;
+  color: var(--appkit-color-text-faint);
 }
 
 /* flat variant — no shadow, minimal border, for dense admin tables */
 .appkit-stats-grid--flat .appkit-stats-grid__item {
   background: transparent;
-  border-color: #e4e4e7;
+  border-color: var(--appkit-color-border);
   box-shadow: none;
   border-radius: 0.5rem;
 }
@@ -78,19 +78,19 @@
 }
 
 .dark .appkit-stats-grid__item {
-  border-color: #334155;
-  background: #0f172a;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
 }
 
 .dark .appkit-stats-grid__label {
-  color: #94a3b8;
+  color: var(--appkit-color-slate-400);
 }
 
 .dark .appkit-stats-grid__icon {
-  color: #64748b;
+  color: var(--appkit-color-slate-500);
 }
 
 .dark .appkit-stats-grid--flat .appkit-stats-grid__item {
   background: transparent;
-  border-color: #334155;
+  border-color: var(--appkit-color-border);
 }

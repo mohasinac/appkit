@@ -3,9 +3,9 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1.25rem;
-  border: 1px solid #e4e4e7;
+  border: 1px solid var(--appkit-color-border);
   border-radius: 0.75rem;
-  background: #ffffff;
+  background: var(--appkit-color-surface);
 }
 
 .appkit-summary-card__lines {
@@ -22,15 +22,15 @@
 }
 
 .appkit-summary-card__label {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-summary-card__value {
-  color: #18181b;
+  color: var(--appkit-color-text);
 }
 
 .appkit-summary-card__value--muted {
-  color: #71717a;
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-summary-card__total {
@@ -41,13 +41,13 @@
 
 .appkit-summary-card__total-label {
   font-weight: 700;
-  color: #18181b;
+  color: var(--appkit-color-text);
 }
 
 .appkit-summary-card__total-value {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #509c02;
+  color: var(--appkit-color-secondary-600);
 }
 
 /* sidebar variant — compact padding, tighter lines, for narrow checkout sidebars */
@@ -61,22 +61,20 @@
 }
 
 .dark .appkit-summary-card {
-  border-color: #334155;
-  background: #0f172a;
+  border-color: var(--appkit-color-border);
+  background: var(--appkit-color-surface);
 }
 
 .dark .appkit-summary-card__label,
 .dark .appkit-summary-card__value--muted {
-  color: #94a3b8;
+  color: var(--appkit-color-slate-400);
 }
 
 .dark .appkit-summary-card__value,
 .dark .appkit-summary-card__total-label {
-  color: #f1f5f9;
+  color: var(--appkit-color-slate-100);
 }
 
 .dark .appkit-summary-card__total-value {
-  color: #e91e8c;
+  color: var(--appkit-color-primary);
 }
-
-
