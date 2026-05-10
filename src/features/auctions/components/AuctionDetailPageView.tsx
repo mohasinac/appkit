@@ -37,6 +37,7 @@ import type { ReviewDocument } from "../../reviews/schemas/firestore";
 import { PlaceBidFormClient } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
+import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 
 export interface AuctionDetailPageViewProps {
   id: string;
@@ -142,6 +143,8 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
     ? (p.customSections as CustomSection[])
     : [];
   const descriptionHtml = toDescriptionHtml(p.description);
+
+  const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
 
   const relatedDocs: Record<string, unknown>[] = await productRepository
     .findByCategory(String(p.category ?? ""))
@@ -417,6 +420,16 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
                 </Button>
               </Div>
             ) : null
+          }
+          renderSublistingSection={
+            sublistingCategoryId
+              ? () => (
+                  <SublistingCarouselSection
+                    sublistingCategoryId={sublistingCategoryId}
+                    currentListingId={String(product.id)}
+                  />
+                )
+              : undefined
           }
           renderTabs={() => (
             <ProductTabsShell

@@ -4,7 +4,7 @@ import type { DetailViewShellProps } from "../../../ui";
 
 export interface ProductDetailViewProps extends Omit<
   DetailViewShellProps,
-  "mainSlots" | "belowFold" | "layout"
+  "mainSlots" | "belowFold" | "layout" | "afterMain"
 > {
   renderGallery?: (isLoading: boolean) => React.ReactNode;
   renderInfo?: (isLoading: boolean) => React.ReactNode;
@@ -13,6 +13,8 @@ export interface ProductDetailViewProps extends Omit<
    * `useBottomActions` in the consumer to also register mobile bottom actions.
    */
   renderActions?: () => React.ReactNode;
+  /** Rendered between the main grid and the below-fold tabs (e.g. sub-listing carousel). */
+  renderSublistingSection?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
   /**
@@ -31,6 +33,7 @@ export function ProductDetailView({
   renderGallery,
   renderInfo,
   renderActions,
+  renderSublistingSection,
   renderTabs,
   renderRelated,
   isLoading = false,
@@ -51,6 +54,7 @@ export function ProductDetailView({
         renderInfo?.(isLoading),
         renderActions?.(),
       ]}
+      afterMain={renderSublistingSection?.()}
       belowFold={[renderTabs?.(), renderRelated?.()]}
     />
   );

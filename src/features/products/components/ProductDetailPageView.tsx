@@ -29,6 +29,7 @@ import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 import { BuyBar } from "./BuyBar";
 import { ShareButton } from "./ShareButton";
 import { CustomSectionTabContent } from "./CustomSectionTabContent";
+import { SublistingCarouselSection } from "./SublistingCarouselSection";
 import type { CustomSection } from "../schemas/firestore";
 
 export interface ProductDetailPageViewProps {
@@ -273,6 +274,7 @@ export async function ProductDetailPageView({
       : null;
 
   const descriptionHtml = toDescriptionHtml(p.description);
+  const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
 
   // -- Fetch reviews + related in parallel ------------------------------------
   const [reviewDocs, relatedDocs] = await Promise.all([
@@ -627,6 +629,16 @@ export async function ProductDetailPageView({
               </Div>
             </Div>
           )}
+          renderSublistingSection={
+            sublistingCategoryId
+              ? () => (
+                  <SublistingCarouselSection
+                    sublistingCategoryId={sublistingCategoryId}
+                    currentListingId={String(product.id)}
+                  />
+                )
+              : undefined
+          }
           renderTabs={() => (
             <ProductTabsShell
               descriptionContent={

@@ -136,6 +136,9 @@ export const DEFAULT_ROUTE_MAP = {
     WHATSAPP: "/store/whatsapp",
     REVIEWS: "/store/reviews",
     BIDS: "/store/bids",
+    SUBLISTING_CATEGORIES: "/store/sublisting-categories",
+    SUBLISTING_CATEGORIES_NEW: "/store/sublisting-categories/new",
+    SUBLISTING_CATEGORIES_EDIT: (id: string) => `/store/sublisting-categories/${id}/edit`,
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

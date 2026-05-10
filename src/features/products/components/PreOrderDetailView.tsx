@@ -8,11 +8,13 @@ import type { DetailViewShellProps } from "../../../ui";
  */
 export interface PreOrderDetailViewProps extends Omit<
   DetailViewShellProps,
-  "mainSlots" | "belowFold" | "layout"
+  "mainSlots" | "belowFold" | "layout" | "afterMain"
 > {
   renderGallery?: (isLoading: boolean) => React.ReactNode;
   renderInfo?: (isLoading: boolean) => React.ReactNode;
   renderBuyBar?: () => React.ReactNode;
+  /** Rendered between the main grid and the below-fold tabs (e.g. sub-listing carousel). */
+  renderSublistingSection?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
 }
@@ -21,6 +23,7 @@ export function PreOrderDetailView({
   renderGallery,
   renderInfo,
   renderBuyBar,
+  renderSublistingSection,
   renderTabs,
   renderRelated,
   isLoading = false,
@@ -39,6 +42,7 @@ export function PreOrderDetailView({
           {renderBuyBar?.()}
         </React.Fragment>,
       ]}
+      afterMain={renderSublistingSection?.()}
       belowFold={[renderTabs?.(), renderRelated?.()]}
     />
   );

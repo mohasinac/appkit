@@ -57,3 +57,5 @@ export { CustomSectionsEditor } from "./CustomSectionsEditor";
 export type { CustomSectionsEditorProps } from "./CustomSectionsEditor";
 export { CustomSectionTabContent } from "./CustomSectionTabContent";
 export { RelatedProductsCarousel } from "./RelatedProductsCarousel";
+export { SublistingCategorySelect } from "./SublistingCategorySelect";
+export { SublistingCarouselSection } from "./SublistingCarouselSection";

@@ -26,6 +26,7 @@ import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
 import { ShareButton } from "../../products/components/ShareButton";
+import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 import type { CustomSection } from "../../products/schemas/firestore";
 
 export interface PreOrderDetailPageViewProps {
@@ -146,6 +147,7 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
     ? (p.customSections as CustomSection[])
     : [];
   const descriptionHtml = toDescriptionHtml(p.description);
+  const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;
 
   return (
     <Main>
@@ -310,6 +312,16 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
               )}
             </Stack>
           )}
+          renderSublistingSection={
+            sublistingCategoryId
+              ? () => (
+                  <SublistingCarouselSection
+                    sublistingCategoryId={sublistingCategoryId}
+                    currentListingId={String(product.id)}
+                  />
+                )
+              : undefined
+          }
           renderTabs={() => (
             <ProductTabsShell
               descriptionContent={
