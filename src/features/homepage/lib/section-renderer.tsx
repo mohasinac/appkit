@@ -49,6 +49,22 @@ import type {
   CustomCardsSectionConfig,
   GoogleReviewsSectionConfig,
 } from "../schemas";
+import type { ProductItem } from "../../products/types";
+import type { StoreListItem } from "../../stores/types";
+import type { CategoryItem } from "../../categories/types";
+import type { BlogPost } from "../../blog/types";
+import type { EventItem } from "../../events/types";
+
+export interface SectionData {
+  products?: ProductItem[];
+  auctions?: ProductItem[];
+  preOrders?: ProductItem[];
+  stores?: StoreListItem[];
+  categories?: CategoryItem[];
+  brands?: CategoryItem[];
+  blog?: BlogPost[];
+  events?: EventItem[];
+}
 
 export interface MarketplaceHomepageViewAdSlots {
   afterHero?: React.ReactNode;
@@ -72,6 +88,7 @@ function renderSectionElement(
   faqItems: FaqItem[],
   slides: any[],
   liveStats: LiveStatsMap,
+  sectionData: SectionData,
 ): React.ReactNode {
   const { type, config } = section;
 
@@ -109,6 +126,7 @@ function renderSectionElement(
           title={cleanTitle(cfg?.title) || "Shop by Category"}
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
           viewMoreLabel="All categories →"
+          initialItems={sectionData.categories}
         />
       );
     }
@@ -153,6 +171,7 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.PRODUCTS}
           viewMoreLabel="View all products →"
           filterByBrand={cfg?.filterByBrand}
+          initialItems={sectionData.products}
         />
       );
     }
@@ -165,6 +184,7 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.AUCTIONS}
           viewMoreLabel="View all auctions →"
           filterByBrand={cfg?.filterByBrand}
+          initialItems={sectionData.auctions}
         />
       );
     }
@@ -177,6 +197,7 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.PRE_ORDERS}
           viewMoreLabel="View all pre-orders →"
           filterByBrand={cfg?.filterByBrand}
+          initialItems={sectionData.preOrders}
         />
       );
     }
@@ -188,6 +209,7 @@ function renderSectionElement(
           title={cleanTitle(cfg?.title) || "Featured Stores"}
           viewMoreHref={ROUTES.PUBLIC.STORES}
           viewMoreLabel="View all stores →"
+          initialItems={sectionData.stores}
         />
       );
     }
@@ -199,6 +221,7 @@ function renderSectionElement(
           title={cleanTitle(cfg?.title) || "Events & Offers"}
           viewMoreHref={ROUTES.PUBLIC.EVENTS}
           viewMoreLabel="View all events →"
+          initialItems={sectionData.events}
         />
       );
     }
@@ -287,6 +310,7 @@ function renderSectionElement(
           title={cleanTitle(cfg?.title) || "From Our Blog"}
           viewMoreHref={ROUTES.BLOG.LIST}
           viewMoreLabel="View all posts →"
+          initialItems={sectionData.blog}
         />
       );
     }
@@ -311,6 +335,7 @@ function renderSectionElement(
           limit={cfg?.maxBrands || 12}
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
           viewMoreLabel="All brands →"
+          initialItems={sectionData.brands}
         />
       );
     }
@@ -376,6 +401,7 @@ export function renderSection(
   faqItems: FaqItem[],
   slides: any[],
   liveStats: LiveStatsMap,
+  sectionData: SectionData = {},
 ): React.ReactNode {
   const sectionElement = renderSectionElement(
     section,
@@ -383,6 +409,7 @@ export function renderSection(
     faqItems,
     slides,
     liveStats,
+    sectionData,
   );
   if (!sectionElement) return null;
 

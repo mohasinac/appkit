@@ -14,6 +14,7 @@ export interface FeaturedStoresSectionProps {
   viewMoreLabel?: string;
   limit?: number;
   className?: string;
+  initialItems?: StoreListItem[];
 }
 
 export function FeaturedStoresSection({
@@ -23,8 +24,9 @@ export function FeaturedStoresSection({
   viewMoreLabel = "View all stores →",
   limit = 8,
   className = "",
+  initialItems,
 }: FeaturedStoresSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedStores(limit);
+  const { data: items = [], isLoading } = useFeaturedStores(limit, { initialData: initialItems });
 
   return (
     <SectionCarousel

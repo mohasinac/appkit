@@ -13,6 +13,7 @@ export interface BlogArticlesSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  initialItems?: BlogPost[];
 }
 
 export function BlogArticlesSection({
@@ -21,8 +22,9 @@ export function BlogArticlesSection({
   viewMoreHref,
   viewMoreLabel = "View all posts →",
   className = "",
+  initialItems,
 }: BlogArticlesSectionProps) {
-  const { data, isLoading } = useBlogArticles();
+  const { data, isLoading } = useBlogArticles({ initialPosts: initialItems });
   const items = data?.posts ?? [];
 
   return (

@@ -8,9 +8,13 @@ export interface HomepageEventsListResponse {
   total: number;
 }
 
-export function useHomepageEvents(limit = 6) {
+export function useHomepageEvents(
+  limit = 6,
+  options?: { initialData?: EventItem[] },
+) {
   return useQuery<EventItem[]>({
     queryKey: ["events", "homepage", String(limit)],
+    initialData: options?.initialData,
     queryFn: async () => {
       const res = await apiClient.get<HomepageEventsListResponse>(
         `${EVENT_ENDPOINTS.LIST}?filters=status%3D%3Dactive&pageSize=${limit}`,

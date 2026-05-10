@@ -8,13 +8,17 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
-export function useFeaturedPreOrders(options?: { filterByBrand?: string }) {
+export function useFeaturedPreOrders(options?: {
+  filterByBrand?: string;
+  initialData?: ProductItem[];
+}) {
   const brandFilter = options?.filterByBrand
     ? `%2Cbrand%3D%3D${encodeURIComponent(options.filterByBrand)}`
     : "";
 
   return useQuery<ProductItem[]>({
     queryKey: ["pre-orders", "featured", options?.filterByBrand ?? "all"],
+    initialData: options?.initialData,
     queryFn: async () => {
       const featuredRes = await apiClient.get<ProductListResponse>(
         `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=preOrderDeliveryDate&pageSize=6`,

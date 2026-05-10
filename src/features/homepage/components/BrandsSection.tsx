@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
@@ -14,6 +15,7 @@ export interface BrandsSectionProps {
   viewMoreHref?: string;
   viewMoreLabel?: string;
   className?: string;
+  initialItems?: CategoryItem[];
 }
 
 function BrandLogo({ brand }: { brand: CategoryItem }) {
@@ -26,9 +28,11 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
       className="flex h-24 w-28 flex-col items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900"
     >
       {iconSrc || coverImage ? (
-        <img
-          src={iconSrc ?? coverImage}
+        <Image
+          src={iconSrc ?? coverImage!}
           alt={brand.name}
+          width={40}
+          height={40}
           className="h-10 w-10 rounded object-contain"
         />
       ) : (
@@ -50,9 +54,10 @@ export function BrandsSection({
   viewMoreHref,
   viewMoreLabel = "All brands →",
   className = "",
+  initialItems,
 }: BrandsSectionProps) {
   const { themed } = THEME_CONSTANTS;
-  const { data: brands = [], isLoading } = useTopBrands(limit);
+  const { data: brands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
 
   if (!isLoading && brands.length === 0) return null;
 

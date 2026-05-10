@@ -13,6 +13,7 @@ export interface EventsSectionProps {
   viewMoreLabel?: string;
   limit?: number;
   className?: string;
+  initialItems?: EventItem[];
 }
 
 export function EventsSection({
@@ -22,8 +23,9 @@ export function EventsSection({
   viewMoreLabel = "View all events →",
   limit = 6,
   className = "",
+  initialItems,
 }: EventsSectionProps) {
-  const { data: items = [], isLoading } = useHomepageEvents(limit);
+  const { data: items = [], isLoading } = useHomepageEvents(limit, { initialData: initialItems });
 
   return (
     <SectionCarousel

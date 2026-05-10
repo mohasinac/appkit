@@ -13,6 +13,7 @@ export interface FeaturedAuctionsSectionProps {
   viewMoreLabel?: string;
   className?: string;
   filterByBrand?: string;
+  initialItems?: ProductItem[];
 }
 
 export function FeaturedAuctionsSection({
@@ -22,8 +23,9 @@ export function FeaturedAuctionsSection({
   viewMoreLabel = "View all auctions →",
   className = "",
   filterByBrand,
+  initialItems,
 }: FeaturedAuctionsSectionProps) {
-  const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand });
+  const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand, initialData: initialItems });
 
   return (
     <SectionCarousel

@@ -8,13 +8,17 @@ import { PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const MIN_COUNT = 12;
 
-export function useFeaturedAuctions(options?: { filterByBrand?: string }) {
+export function useFeaturedAuctions(options?: {
+  filterByBrand?: string;
+  initialData?: ProductItem[];
+}) {
   const brandFilter = options?.filterByBrand
     ? `%2Cbrand%3D%3D${encodeURIComponent(options.filterByBrand)}`
     : "";
 
   return useQuery<ProductItem[]>({
     queryKey: ["auctions", "featured", options?.filterByBrand ?? "all"],
+    initialData: options?.initialData,
     queryFn: async () => {
       const promotedRes = await apiClient.get<ProductListResponse>(
         `${PRODUCT_ENDPOINTS.LIST}?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished%2CisPromoted%3D%3Dtrue${brandFilter}&pageSize=18`,

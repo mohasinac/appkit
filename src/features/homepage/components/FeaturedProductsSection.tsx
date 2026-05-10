@@ -13,6 +13,7 @@ export interface FeaturedProductsSectionProps {
   viewMoreLabel?: string;
   className?: string;
   filterByBrand?: string;
+  initialItems?: ProductItem[];
 }
 
 export function FeaturedProductsSection({
@@ -22,8 +23,14 @@ export function FeaturedProductsSection({
   viewMoreLabel = "View all products →",
   className = "",
   filterByBrand,
+  initialItems,
 }: FeaturedProductsSectionProps) {
-  const { data, isLoading } = useFeaturedProducts({ filterByBrand });
+  const { data, isLoading } = useFeaturedProducts({
+    filterByBrand,
+    initialData: initialItems?.length
+      ? { items: initialItems, total: initialItems.length, page: 1, pageSize: initialItems.length, totalPages: 1, hasMore: false }
+      : undefined,
+  });
   const items = data?.items ?? [];
 
   return (

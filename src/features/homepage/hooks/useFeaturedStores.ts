@@ -3,9 +3,13 @@ import { apiClient } from "../../../http";
 import type { StoreListItem, StoreListResponse } from "../../stores/types";
 import { STORE_ENDPOINTS } from "../../../constants/api-endpoints";
 
-export function useFeaturedStores(limit = 8) {
+export function useFeaturedStores(
+  limit = 8,
+  options?: { initialData?: StoreListItem[] },
+) {
   return useQuery<StoreListItem[]>({
     queryKey: ["stores", "featured", String(limit)],
+    initialData: options?.initialData,
     queryFn: async () => {
       const res = await apiClient.get<StoreListResponse>(
         `${STORE_ENDPOINTS.LIST}?pageSize=${limit}&sort=-averageRating`,

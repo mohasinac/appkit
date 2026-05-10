@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import type { LayoutSlots } from "../../../contracts";
 import { Button, Div, Grid, RichText, Row, Span, Text } from "../../../ui";
+import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { ViewMode } from "../../../ui";
 import type { ProductItem } from "../types";
@@ -93,11 +94,11 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       {/* Image area */}
       <Div className="relative overflow-hidden bg-zinc-100 dark:bg-slate-800 aspect-square">
         {product.mainImage ? (
-          <Div
-            role="img"
-            aria-label={product.title}
-            className="h-full w-full bg-center bg-cover transition-transform duration-500 group-hover:scale-105"
-            style={{ backgroundImage: `url(${product.mainImage})` }}
+          <MediaImage
+            src={product.mainImage}
+            alt={product.title}
+            size="card"
+            className="transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <Div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-slate-800 dark:to-slate-700">
@@ -406,11 +407,10 @@ function ProductListRow<T extends ProductItem = ProductItem>({
       {/* Thumbnail — 72×72 */}
       <Div className="flex-shrink-0 w-[72px] h-[72px] rounded-lg overflow-hidden bg-neutral-100 dark:bg-zinc-800">
         {product.mainImage ? (
-          <Div
-            role="img"
-            aria-label={product.title}
-            className="w-full h-full bg-center bg-cover"
-            style={{ backgroundImage: `url(${product.mainImage})` }}
+          <MediaImage
+            src={product.mainImage}
+            alt={product.title}
+            size="thumbnail"
           />
         ) : (
           <Div className="w-full h-full bg-neutral-200 dark:bg-zinc-700" />
