@@ -443,6 +443,15 @@ export const DEMO_ENDPOINTS = {
 } as const;
 
 // ---------------------------------------------------------------------------
+// WhatsApp Business (store-level settings + catalog sync)
+// ---------------------------------------------------------------------------
+
+export const WHATSAPP_SELLER_ENDPOINTS = {
+  SETTINGS: "/api/store/whatsapp-settings",
+  CATALOG_SYNC: "/api/store/whatsapp-settings/catalog-sync",
+} as const;
+
+// ---------------------------------------------------------------------------
 // Aggregate namespace export
 // ---------------------------------------------------------------------------
 
@@ -482,6 +491,7 @@ export const API_ENDPOINTS = {
   WISHLIST: WISHLIST_ENDPOINTS,
   PROFILE_STATS: PROFILE_STATS_ENDPOINTS,
   DEMO: DEMO_ENDPOINTS,
+  WHATSAPP_SELLER: WHATSAPP_SELLER_ENDPOINTS,
 } as const;
 
 /** Canonical alias — prefer API_ROUTES over API_ENDPOINTS in new code. */

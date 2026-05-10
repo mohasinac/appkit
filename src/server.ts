@@ -1244,6 +1244,9 @@ export { parseIncomingWebhookPayload } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendWhatsAppMessage - Shared export for send whats app message.
 export { sendWhatsAppMessage } from "./features/whatsapp-bot/server";
+// [SERVER-ONLY]-Server-only — Meta Cloud API helpers (WA3).
+export { sendWhatsAppBusinessMessage, syncProductsToCatalog, buildPurchaseAnnouncementMessage, buildGroupShareLink } from "./features/whatsapp-bot/server";
+export type { WaBusinessSendInput, CatalogSyncProduct, CatalogSyncInput, CatalogSyncResult, PurchaseAnnouncementInput } from "./features/whatsapp-bot/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addToWishlist - Helper for add to wishlist.
 export { addToWishlist } from "./features/wishlist/server";
