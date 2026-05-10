@@ -239,12 +239,12 @@ export function AdminProductEditorView({
                 ? (p) => (
                     <GroupSettingsPanel
                       productId={productId}
-                      productSlug={(p.slug as string | undefined) ?? productId}
-                      groupId={(p as Record<string, unknown>).groupId as string | undefined}
-                      isGroupParent={(p as Record<string, unknown>).isGroupParent as boolean | undefined}
-                      groupParentSlug={(p as Record<string, unknown>).groupParentSlug as string | undefined}
-                      groupChildSlugs={(p as Record<string, unknown>).groupChildSlugs as string[] | undefined}
-                      groupTitle={(p as Record<string, unknown>).groupTitle as string | undefined}
+                      productSlug={p.slug ?? productId}
+                      groupId={p.groupId}
+                      isGroupParent={p.isGroupParent}
+                      groupParentSlug={p.groupParentSlug}
+                      groupChildSlugs={p.groupChildSlugs}
+                      groupTitle={p.groupTitle}
                       isAuction={!!p.isAuction}
                       storeProductsEndpoint="/api/admin/products"
                       onGroupChanged={() => productQuery.refetch()}

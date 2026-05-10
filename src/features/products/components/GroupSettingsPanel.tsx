@@ -8,6 +8,7 @@ import {
   Heading,
   Modal,
   Row,
+  Select,
   SideDrawer,
   Stack,
   Text,
@@ -469,18 +470,12 @@ function AddChildContent({
               onChange={(v) => setCreateForm({ ...createForm, price: v })}
               placeholder="0"
             />
-            <div>
-              <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Condition</Text>
-              <select
-                value={createForm.condition}
-                onChange={(e) => setCreateForm({ ...createForm, condition: e.target.value })}
-                className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary,#6366f1)]"
-              >
-                {CONDITION_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            </div>
+            <Select
+              label="Condition"
+              value={createForm.condition}
+              onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
+              options={CONDITION_OPTIONS}
+            />
             <Text className="text-xs text-zinc-400 dark:text-zinc-500">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.

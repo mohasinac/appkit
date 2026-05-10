@@ -192,7 +192,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             <div className="flex gap-3 min-w-0">
               {/* Parent first */}
               {[...members]
-                .sort((a) => (a.isGroupParent ? -1 : 0))
+                .sort((a, b) => (b.isGroupParent ? 1 : 0) - (a.isGroupParent ? 1 : 0))
                 .map((m) => (
                   <MemberThumb
                     key={m.id}
