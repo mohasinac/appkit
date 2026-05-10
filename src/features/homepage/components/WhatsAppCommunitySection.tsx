@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Heading, Section, Span, Text } from "../../../ui";
+import { Button, Heading, RichText, Section, Span, Text } from "../../../ui";
 import { Users } from "lucide-react";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 
