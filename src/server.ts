@@ -616,8 +616,8 @@ export { generateToken } from "./features/auth/server";
 // getPublicUserProfile - Helper for get public user profile.
 export { getPublicUserProfile } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getStoreProducts - Helper for get store products.
-export { getStoreProducts } from "./features/auth/server";
+// getProfileStoreProducts - Helper for get store products for public profile view.
+export { getProfileStoreProducts } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerReviews - Helper for get seller reviews.
 export { getSellerReviews } from "./features/auth/server";

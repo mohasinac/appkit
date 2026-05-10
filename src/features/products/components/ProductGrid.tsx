@@ -200,7 +200,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )}
 
         {(() => {
-          const seller = safeDisplayName(product.sellerName, "");
+          const seller = safeDisplayName(product.storeName, "");
           return seller ? (
             <Text className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
               by {seller}

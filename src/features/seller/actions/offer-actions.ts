@@ -84,6 +84,9 @@ export async function makeOffer(
   const profile = await userRepository.findById(userId);
   const buyerDisplayName = profile?.displayName ?? "Buyer";
 
+  if (!product.storeId)
+    throw new ValidationError("Product is not associated with a store.");
+
   const offer = await offerRepository.create({
     productId,
     productTitle: product.title,
@@ -93,7 +96,7 @@ export async function makeOffer(
     buyerName: buyerDisplayName,
     buyerEmail: profile?.email ?? userEmail ?? "",
     storeId: product.storeId,
-    storeName: product.storeName,
+    storeName: product.storeName ?? "",
     offerAmount,
     listedPrice: product.price,
     currency: product.currency,
@@ -242,8 +245,10 @@ export async function counterOfferByBuyer(
     throw new ValidationError(ERROR_MESSAGES.OFFER.NOT_COUNTERED);
   if (new Date() > offer.expiresAt)
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
+  if (!offer.counterAmount)
+    throw new ValidationError("No counter amount found on this offer.");
 
-  const sellerCounter = offer.counterAmount!;
+  const sellerCounter = offer.counterAmount;
   const minAllowed = Math.floor(sellerCounter * 0.8);
   const maxAllowed = Math.ceil(sellerCounter * 1.2);
   if (counterAmount < minAllowed || counterAmount > maxAllowed)
@@ -342,7 +347,9 @@ export async function listBuyerOffers(
 export async function listSellerOffers(
   userId: string,
 ): Promise<OfferDocument[]> {
-  const result = await offerRepository.findBySeller(userId);
+  const store = await storeRepository.findByOwnerId(userId);
+  if (!store) return [];
+  const result = await offerRepository.findByStore(store.id);
   return result.items.map(maskOfferForSeller);
 }
 

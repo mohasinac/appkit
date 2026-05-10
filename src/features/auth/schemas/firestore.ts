@@ -6,6 +6,11 @@
  */
 
 import type { UserRole } from "../types";
+import type {
+  BannedAction,
+  EmployeeGroup,
+  Permission,
+} from "../permissions/constants";
 import {
   generateUserId,
   type GenerateUserIdInput,
@@ -110,6 +115,36 @@ export interface UserDocument {
 
   shippingConfig?: SellerShippingConfig;
   payoutDetails?: SellerPayoutDetails;
+
+  // ── Employee permissions (only populated when role === "employee") ──────────
+  /** Explicit permission set for this employee. admin role bypasses this field entirely. */
+  permissions?: Permission[];
+  /** Which preset group this employee was assigned at invite time (display only). */
+  permissionGroup?: EmployeeGroup;
+
+  // ── Soft bans (scoped action restrictions, independent of account disable) ──
+  softBans?: UserSoftBan[];
+
+  // ── Hard ban metadata (set alongside disabled: true) ────────────────────────
+  hardBanReason?: string;
+  hardBannedAt?: Date;
+  hardBannedBy?: string;
+
+  // ── Scam awareness acknowledgement ──────────────────────────────────────────
+  /** Timestamp when user confirmed they read the scam awareness guide. Required before full platform access. */
+  scamAwarenessAcknowledgedAt?: Date;
+}
+
+// ── Soft ban entry ─────────────────────────────────────────────────────────────
+
+export interface UserSoftBan {
+  action: BannedAction;
+  reason: string;
+  /** UID of the employee/admin who applied the ban. */
+  bannedBy: string;
+  bannedAt: Date;
+  /** Null or absent = permanent. Past date = expired (treated as lifted without deletion). */
+  expiresAt?: Date | null;
 }
 
 // -- Seller Shipping Config --------------------------------------------------

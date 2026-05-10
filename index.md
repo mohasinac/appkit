@@ -67,6 +67,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `Menu` | `Menu.tsx` | Context/action menu (used in RowActionMenu) |
 | `Modal` | `Modal.tsx` | Centred dialog overlay |
 | `NavigationLoader` | `NavigationLoader.tsx` | Top progress bar during route transitions |
+| `PageLoader` | `PageLoader.tsx` | Full-page centered loading state (spinner + "Loading…"); 15s timeout shows "Something went wrong" + Refresh button; replaces all `loading.tsx` skeletons (X5) |
 | `Pagination` | `Pagination.tsx` | Page number nav bar |
 | `PasswordStrengthIndicator` | `PasswordStrengthIndicator.tsx` | Visual password strength meter |
 | `PriceDisplay` | `PriceDisplay.tsx` | Formats paise → ₹ with strike-through sale price |

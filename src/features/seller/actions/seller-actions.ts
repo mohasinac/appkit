@@ -686,7 +686,9 @@ export async function listSellerMyProducts(
   userId: string,
   params?: SellerListParams,
 ) {
-  const products = await productRepository.findByStore(userId);
+  const store = await storeRepository.findByOwnerId(userId);
+  if (!store) return { items: [], total: 0, page: 1, pageSize: params?.pageSize ?? 20, totalPages: 0, hasMore: false };
+  const products = await productRepository.findByStore(store.id);
   let filtered = products;
   if (params?.filters?.includes("status==")) {
     const match = params.filters.match(/status==([\w]+)/);

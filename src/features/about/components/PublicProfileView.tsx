@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getPublicUserProfile, getStoreProducts, getSellerReviews } from "../../auth/actions/profile-actions";
+import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews } from "../../auth/actions/profile-actions";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section } from "../../../ui";
@@ -66,7 +66,7 @@ export async function PublicProfileView({
   const storeId = profile?.storeSlug ?? null;
 
   const [products, reviews] = await Promise.all([
-    storeId ? getStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
+    storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
   ]);
 

@@ -4,6 +4,7 @@ import { getTokenTimeRemaining, isTokenExpired } from "./token-helpers";
 const ROLE_HIERARCHY: Record<UserRole, number> = {
   user: 0,
   seller: 1,
+  employee: 2,
   moderator: 2,
   admin: 3,
 };

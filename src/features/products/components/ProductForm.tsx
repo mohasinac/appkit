@@ -126,7 +126,7 @@ export function ProductForm({
       index: galleryIndexRef.current,
       name: product.title || "product",
       category: product.category || "uncategorized",
-      store: product.sellerName || "store",
+      store: product.storeName || "store",
     });
   };
 
@@ -136,7 +136,7 @@ export function ProductForm({
       index: 1,
       name: product.title || "product",
       category: product.category || "uncategorized",
-      store: product.sellerName || "store",
+      store: product.storeName || "store",
     });
   };
 
@@ -334,7 +334,7 @@ export function ProductForm({
               index: 1,
               name: product.title || "product",
               category: product.category || "uncategorized",
-              store: product.sellerName || "store",
+              store: product.storeName || "store",
             })
           }
           onChange={(url) => update({ mainImage: url })}
@@ -747,12 +747,12 @@ export function ProductForm({
         placeholder="Return policy details..."
       />
 
-      {product.sellerName && (
+      {product.storeName && (
         <FormField
-          name="sellerName"
+          name="storeName"
           label={t("formSeller")}
           type="text"
-          value={product.sellerName}
+          value={product.storeName}
           onChange={() => {}}
           disabled
         />

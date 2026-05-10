@@ -1853,6 +1853,12 @@ export { usersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // wishlistsSeedData - Model for wishlists seed data.
 export { wishlistsSeedData } from "./seed/index";
+// conversationsSeedData - Model for conversations seed data.
+export { conversationsSeedData } from "./seed/index";
+// sublistingCategoriesSeedData - Model for sublisting categories seed data.
+export { sublistingCategoriesSeedData } from "./seed/index";
+// groupedListingsSeedData - Model for grouped listings seed data.
+export { groupedListingsSeedData } from "./seed/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.
 export type { CouponDiscountType } from "./seed/index";
@@ -3943,8 +3949,8 @@ export { generateToken } from "./features/auth/server";
 // getPublicUserProfile - Helper for get public user profile.
 export { getPublicUserProfile } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getStoreProducts - Helper for get store products.
-export { getStoreProducts } from "./features/auth/server";
+// getProfileStoreProducts - Helper for get store products for public profile view.
+export { getProfileStoreProducts } from "./features/auth/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSellerReviews - Helper for get seller reviews.
 export { getSellerReviews } from "./features/auth/server";

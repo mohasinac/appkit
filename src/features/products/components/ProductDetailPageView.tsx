@@ -61,7 +61,7 @@ function toProductItem(doc: Record<string, unknown>): ProductItem {
         : undefined,
     status: (doc.status as ProductItem["status"]) ?? "published",
     slug: typeof doc.slug === "string" ? doc.slug : undefined,
-    sellerName: typeof doc.sellerName === "string" ? doc.sellerName : undefined,
+    storeName: typeof doc.storeName === "string" ? doc.storeName : undefined,
     rating: typeof doc.rating === "number" ? doc.rating : undefined,
     reviewCount:
       typeof doc.reviewCount === "number" ? doc.reviewCount : undefined,

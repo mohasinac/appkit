@@ -102,7 +102,7 @@ export async function getSellerReviews(storeId: string) {
   }));
 }
 
-export async function getStoreProducts(storeId: string) {
+export async function getProfileStoreProducts(storeId: string) {
   const products = await productRepository.findByStore(storeId);
   return products.filter((p) => p.status === ProductStatusValues.PUBLISHED);
 }

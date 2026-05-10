@@ -34,10 +34,11 @@ export const resetPasswordSchema = z.object({
 // --- Auth user schema ---------------------------------------------------------
 
 export const userRoleSchema = z.enum([
-  "customer",
+  "user",
   "seller",
+  "moderator",
+  "employee",
   "admin",
-  "superadmin",
 ]);
 
 export const authUserSchema = z.object({

@@ -6,6 +6,7 @@
  */
 
 import { slugify } from "../../../utils/string.formatter";
+import type { StoreCapability } from "../../auth/permissions/constants";
 
 // -- Store Document -----------------------------------------------------------
 
@@ -56,9 +57,24 @@ export interface StoreDocument {
     averageRating?: number;
   };
 
+  // ── Store capabilities (admin-controlled feature flags) ──────────────────────
+  /**
+   * Explicit capability set for this store. Defaults: ["suggest_brands", "create_coupons"].
+   * Checked server-side on every relevant API route.
+   */
+  capabilities?: StoreCapability[];
+  /**
+   * Custom platform commission rate (0–100 as a percentage).
+   * Only meaningful when capabilities includes "lower_commission_rate".
+   */
+  customCommissionRate?: number;
+
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Re-export StoreCapability so consumers can import from this module
+export type { StoreCapability } from "../../auth/permissions/constants";
 
 export const STORE_COLLECTION = "stores" as const;
 
