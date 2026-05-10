@@ -169,6 +169,14 @@ export function AdminSiteSettingsView({
   const [gaMeasurementId, setGaMeasurementId] = React.useState("");
   const [fbPixelId, setFbPixelId] = React.useState("");
   const [gtmContainerId, setGtmContainerId] = React.useState("");
+  // Social platform API credentials (for Social Feed section)
+  const [metaPageAccessToken, setMetaPageAccessToken] = React.useState("");
+  const [metaPageId, setMetaPageId] = React.useState("");
+  const [tiktokClientKey, setTiktokClientKey] = React.useState("");
+  const [tiktokClientSecret, setTiktokClientSecret] = React.useState("");
+  const [tiktokAccessToken, setTiktokAccessToken] = React.useState("");
+  const [deviantartClientId, setDeviantartClientId] = React.useState("");
+  const [deviantartClientSecret, setDeviantartClientSecret] = React.useState("");
 
   // ⑨ Shipping
   const [freeShippingThreshold, setFreeShippingThreshold] = React.useState(999);
@@ -274,6 +282,13 @@ export function AdminSiteSettingsView({
     setGaMeasurementId(s.integrations?.googleAnalyticsId ?? "");
     setFbPixelId(s.integrations?.facebookPixelId ?? "");
     setGtmContainerId(s.integrations?.gtmContainerId ?? "");
+    setMetaPageAccessToken(s.credentialsMasked?.metaPageAccessToken ?? "");
+    setMetaPageId(s.credentialsMasked?.metaPageId ?? "");
+    setTiktokClientKey(s.credentialsMasked?.tiktokClientKey ?? "");
+    setTiktokClientSecret(s.credentialsMasked?.tiktokClientSecret ?? "");
+    setTiktokAccessToken(s.credentialsMasked?.tiktokAccessToken ?? "");
+    setDeviantartClientId(s.credentialsMasked?.deviantartClientId ?? "");
+    setDeviantartClientSecret(s.credentialsMasked?.deviantartClientSecret ?? "");
 
     setFreeShippingThreshold(Math.round((s.shipping?.freeShippingThreshold ?? 99900) / 100));
     setCodEnabled(s.shipping?.codEnabled ?? true);
@@ -346,7 +361,12 @@ export function AdminSiteSettingsView({
     fees: { platformCommission, buyerFee, razorpayFeePercent: razorpayFee, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
   }));
   const integrationsMutation = useSave("Integrations", () => ({
-    credentials: { razorpayKeyId, razorpaySecret, shiprocketToken, smtpPassword },
+    credentials: {
+      razorpayKeyId, razorpaySecret, shiprocketToken, smtpPassword,
+      metaPageAccessToken, metaPageId,
+      tiktokClientKey, tiktokClientSecret, tiktokAccessToken,
+      deviantartClientId, deviantartClientSecret,
+    },
     emailSettings: { host: smtpHost, port: Number(smtpPort), user: smtpUser, fromAddress: smtpFrom },
     integrations: { googleAnalyticsId: gaMeasurementId, facebookPixelId: fbPixelId, gtmContainerId },
   }));
@@ -625,6 +645,31 @@ export function AdminSiteSettingsView({
                   <Input label="Google Analytics ID" value={gaMeasurementId} onChange={(e) => setGaMeasurementId(e.target.value)} placeholder="G-XXXXXXXXXX" />
                   <Input label="Facebook Pixel ID" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} placeholder="XXXXXXXXXXXXXXXX" />
                   <Input label="GTM Container ID" value={gtmContainerId} onChange={(e) => setGtmContainerId(e.target.value)} placeholder="GTM-XXXXXXX" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Meta (Instagram &amp; Facebook Social Feed)</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInput label="Page Access Token" value={metaPageAccessToken} onChange={setMetaPageAccessToken} placeholder="EAAxxxxxxx…" />
+                  <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="letitrip" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">TikTok for Developers (Social Feed)</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInput label="Client Key" value={tiktokClientKey} onChange={setTiktokClientKey} placeholder="aw…" />
+                  <MaskedInput label="Client Secret" value={tiktokClientSecret} onChange={setTiktokClientSecret} placeholder="••••••••" />
+                  <MaskedInput label="Access Token (long-lived)" value={tiktokAccessToken} onChange={setTiktokAccessToken} placeholder="••••••••" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">DeviantArt OAuth2 (Social Feed)</p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <MaskedInput label="Client ID" value={deviantartClientId} onChange={setDeviantartClientId} placeholder="1234" />
+                  <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
                 </div>
               </div>
               <GroupSaveButton isPending={integrationsMutation.isPending} />

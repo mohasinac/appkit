@@ -1998,6 +1998,85 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderSocialFeedBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Social Feed Builder</Text>
+        <Input
+          label="Section title"
+          value={socialFeedBuilder.title}
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="LetItRip on Instagram"
+        />
+        <Input
+          label="Subtitle"
+          value={socialFeedBuilder.subtitle}
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          placeholder="Follow us for daily collection showcases"
+        />
+        <Select
+          label="Platform"
+          value={socialFeedBuilder.platform}
+          onValueChange={(v) => setSocialFeedBuilder((prev) => ({ ...prev, platform: v as SocialFeedBuilderState["platform"] }))}
+          options={[
+            { label: "Instagram", value: "instagram" },
+            { label: "Facebook", value: "facebook" },
+            { label: "TikTok", value: "tiktok" },
+            { label: "DeviantArt", value: "deviantart" },
+          ]}
+        />
+        <Input
+          label="Account handle / username"
+          value={socialFeedBuilder.handle}
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, handle: e.target.value }))}
+          placeholder="letitrip"
+        />
+        <Select
+          label="Post type"
+          value={socialFeedBuilder.postType}
+          onValueChange={(v) => setSocialFeedBuilder((prev) => ({ ...prev, postType: v as SocialFeedBuilderState["postType"] }))}
+          options={[
+            { label: "All", value: "all" },
+            { label: "Images only", value: "images" },
+            { label: "Videos only", value: "videos" },
+            { label: "Reels only", value: "reels" },
+          ]}
+        />
+        <Input
+          label="Post count (1–12)"
+          type="number"
+          min={1}
+          max={12}
+          value={String(socialFeedBuilder.count)}
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, count: Math.min(12, Math.max(1, Number(e.target.value) || 9)) }))}
+        />
+        <Select
+          label="Layout"
+          value={socialFeedBuilder.layout}
+          onValueChange={(v) => setSocialFeedBuilder((prev) => ({ ...prev, layout: v as SocialFeedBuilderState["layout"] }))}
+          options={[
+            { label: "Grid", value: "grid" },
+            { label: "Masonry", value: "masonry" },
+            { label: "Carousel (horizontal scroll)", value: "carousel" },
+          ]}
+        />
+        <Checkbox
+          checked={socialFeedBuilder.showCaption}
+          label="Show caption on hover"
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, showCaption: e.target.checked }))}
+        />
+        <Checkbox
+          checked={socialFeedBuilder.showStats}
+          label="Show like / view / comment counts on hover"
+          onChange={(e) => setSocialFeedBuilder((prev) => ({ ...prev, showStats: e.target.checked }))}
+        />
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          Social platform credentials (access tokens, client IDs) must be set in ⑧ Integrations before this section will load live posts.
+        </Text>
+      </Div>
+    );
+  }
+
   function renderTypedBuilder(): React.ReactNode {
     switch (sectionType) {
       case "products": return renderProductsBuilder();
@@ -2006,6 +2085,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "pre-orders": return renderPreOrdersBuilder();
       case "stores": return renderStoresBuilder();
       case "events": return renderEventsBuilder();
+      case "social-feed": return renderSocialFeedBuilder();
       case "welcome": return renderWelcomeBuilder();
       case "trust-indicators": return renderTrustIndicatorsBuilder();
       case "categories": return renderCategoriesBuilder();
