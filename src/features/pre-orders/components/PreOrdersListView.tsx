@@ -1,9 +1,14 @@
 import { productRepository } from "../../../repositories";
 import { Container, Main, Heading, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
+import { parseListingSearchParams } from "../../../utils/listing-params";
 import { PreOrdersIndexListing } from "./PreOrdersIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_SORT = "-createdAt";
 
 function sp(params: SearchParams, key: string): string {
   const v = params[key];
@@ -28,9 +33,10 @@ export interface PreOrdersListViewProps {
 }
 
 export async function PreOrdersListView({ searchParams = {} }: PreOrdersListViewProps) {
-  const sort = sp(searchParams, "sort") || "-createdAt";
-  const page = Number(sp(searchParams, "page")) || 1;
-  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const std = parseListingSearchParams(searchParams);
+  const sort = std.sorts ?? DEFAULT_SORT;
+  const page = std.page ?? DEFAULT_PAGE;
+  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
   const filters = buildPreOrderFilters(searchParams);
 
   const result = await productRepository

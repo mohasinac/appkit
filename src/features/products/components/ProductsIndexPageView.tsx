@@ -3,9 +3,14 @@ import { productRepository } from "../../../repositories";
 import { ROUTES } from "../../../constants";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
+import { parseListingSearchParams } from "../../../utils/listing-params";
 import { ProductsIndexListing } from "./ProductsIndexListing";
 
 type SearchParams = Record<string, string | string[]>;
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_SORT = "-createdAt";
 
 function sp(params: SearchParams, key: string): string {
   const v = params[key];
@@ -36,9 +41,10 @@ export interface ProductsIndexPageViewProps {
 }
 
 export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndexPageViewProps) {
-  const sort = sp(searchParams, "sort") || "-createdAt";
-  const page = Number(sp(searchParams, "page")) || 1;
-  const pageSize = Number(sp(searchParams, "pageSize")) || 24;
+  const std = parseListingSearchParams(searchParams);
+  const sort = std.sorts ?? DEFAULT_SORT;
+  const page = std.page ?? DEFAULT_PAGE;
+  const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
   const filters = buildProductFilters(searchParams);
 
   const result = await productRepository

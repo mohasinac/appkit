@@ -70,6 +70,55 @@ function readNumber(value: string | null): number | null {
 }
 
 /**
+ * Same precedence as parseListingParams but reads from a Next.js
+ * Server-Component `searchParams` object (`Record<string, string | string[]>`).
+ * Convenience wrapper so SSR listing pages don't have to construct a URL.
+ */
+export function parseListingSearchParams(
+  searchParams: Record<string, string | string[] | undefined> | undefined,
+): ListingParams {
+  const sp = searchParams ?? {};
+  function get(key: string): string | null {
+    const v = sp[key];
+    if (v == null) return null;
+    return Array.isArray(v) ? v[0] ?? null : v;
+  }
+  function firstOf(...keys: (string | undefined)[]): string | null {
+    for (const k of keys) {
+      if (!k) continue;
+      const v = get(k);
+      if (v != null) return v;
+    }
+    return null;
+  }
+  return {
+    filters: firstOf(
+      LISTING_PARAM_NAMES.filters.short,
+      LISTING_PARAM_NAMES.filters.long,
+    ),
+    sorts: firstOf(
+      LISTING_PARAM_NAMES.sorts.short,
+      LISTING_PARAM_NAMES.sorts.long,
+      LISTING_PARAM_NAMES.sorts.legacy,
+    ),
+    page: readNumber(
+      firstOf(LISTING_PARAM_NAMES.page.short, LISTING_PARAM_NAMES.page.long),
+    ),
+    pageSize: readNumber(
+      firstOf(
+        LISTING_PARAM_NAMES.pageSize.short,
+        LISTING_PARAM_NAMES.pageSize.long,
+      ),
+    ),
+    q: firstOf(LISTING_PARAM_NAMES.q.short, LISTING_PARAM_NAMES.q.long),
+    cursor: firstOf(
+      LISTING_PARAM_NAMES.cursor.short,
+      LISTING_PARAM_NAMES.cursor.long,
+    ),
+  };
+}
+
+/**
  * Parse a URL into the standard listing params bag. Returns nulls for keys
  * absent in the URL — callers apply their own defaults.
  */

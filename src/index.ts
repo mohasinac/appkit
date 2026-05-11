@@ -8747,6 +8747,19 @@ export { generateCroppedImageFilename } from "./utils/id-generators";
 // Messages / Conversations feature schemas
 export { CONVERSATIONS_COLLECTION } from "./features/messages/schemas/firestore";
 export type { ConversationDocument, ConversationMessage } from "./features/messages/schemas/firestore";
+// Messages server-side (D5 + VC7) — repository + actions
+export {
+  conversationsRepository,
+  ConversationsRepository,
+  ConversationFullError,
+  listConversationsForBuyer,
+  listConversationsForStore,
+  getConversation,
+  sendMessage,
+  markConversationRead,
+  MESSAGE_MAX_LENGTH,
+} from "./features/messages/server";
+export type { SendMessageInput } from "./features/messages/server";
 // Sublisting categories feature schemas
 export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/products/schemas/sublisting-categories";
 export type { SublistingCategoryDocument } from "./features/products/schemas/sublisting-categories";
@@ -8786,6 +8799,7 @@ export type {
 export {
   LISTING_PARAM_NAMES,
   parseListingParams,
+  parseListingSearchParams,
   serializeListingParams,
 } from "./utils/listing-params";
 export type { ListingParams } from "./utils/listing-params";
