@@ -14,7 +14,9 @@ import {
 } from "../../../ui";
 import { CustomSectionsEditor } from "./CustomSectionsEditor";
 import { SublistingCategorySelect } from "./SublistingCategorySelect";
+import { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 import type { CustomSection } from "../schemas/firestore";
+import type { ProductFeatureProductType } from "../schemas/product-features";
 import {
   ImageUpload,
   MediaUploadField,
@@ -746,6 +748,21 @@ export function ProductForm({
 
       {/* ── Group Settings (GP2) — edit mode only, hidden for auctions ── */}
       {!product.isAuction && renderGroupSettings?.(product)}
+
+      {/* ── Feature Badges (FI5) ── */}
+      <ProductFeaturesSelector
+        value={(product.features as string[]) ?? []}
+        onChange={(features) => update({ features })}
+        productType={
+          (product.isAuction
+            ? "auction"
+            : product.isPreOrder
+              ? "preorder"
+              : "product") as ProductFeatureProductType
+        }
+        storeId={product.storeId as string | undefined}
+        disabled={isReadonly}
+      />
 
       {/* ── Custom Sections (L3) ── */}
       <Div>

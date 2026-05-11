@@ -18,6 +18,8 @@ export { InteractiveProductCard } from "./InteractiveProductCard";
 export type { InteractiveProductCardProps } from "./InteractiveProductCard";
 export { ProductForm, PRODUCT_STATUS_OPTIONS } from "./ProductForm";
 export type { ProductFormProps, ProductFormValue } from "./ProductForm";
+export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
+export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
 export { BuyBar } from "./BuyBar";
 export type { BuyBarProps } from "./BuyBar";
