@@ -392,6 +392,8 @@ export const SELLER_ENDPOINTS = {
   DASHBOARD: "/api/store/dashboard",
   ANALYTICS: (period?: string) =>
     `/api/store/analytics${period ? `?period=${period}` : ""}`,
+  FEATURES: "/api/store/features",
+  FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------

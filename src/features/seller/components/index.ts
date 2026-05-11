@@ -56,6 +56,8 @@ export { SellerReviewsView } from "./SellerReviewsView";
 export type { SellerReviewsViewProps } from "./SellerReviewsView";
 export { SellerPayoutRequestView } from "./SellerPayoutRequestView";
 export type { SellerPayoutRequestViewProps } from "./SellerPayoutRequestView";
+export { SellerFeaturesView } from "./SellerFeaturesView";
+export { SellerFeaturesView as StoreFeaturesView } from "./SellerFeaturesView";
 export * from "./analytics";
 
 // Store* aliases — same components, renamed for store-centric terminology

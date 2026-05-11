@@ -7646,6 +7646,9 @@ export { SELLER_PAGE_PERMISSIONS } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerAddressesView - Component for seller addresses view.
 export { SellerAddressesView } from "./features/seller/index";
+// SellerFeaturesView - Seller store custom features CRUD (FI4).
+export { SellerFeaturesView } from "./features/seller/index";
+export { SellerFeaturesView as StoreFeaturesView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerAnalyticsStats - Shared export for seller analytics stats.
 export { SellerAnalyticsStats } from "./features/seller/index";
