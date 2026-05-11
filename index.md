@@ -438,6 +438,7 @@ Import: `import { x } from "@mohasinac/appkit"` or `"@mohasinac/appkit/client"`
 | `chunk`, `unique`, `groupBy` | `array.helper.ts` | Array utilities |
 | `buildPaginationModel`, `getPaginationRange` | `pagination.helper.ts` | Pagination math |
 | `buildSortModel` | `sorting.helper.ts` | Sort state builder |
+| `parseListingParams`, `parseListingSearchParams`, `serializeListingParams`, `LISTING_PARAM_NAMES` | `listing-params.ts` | Standardised short-name URL params for listing routes & SSR pages (Q2/S12). Short `f / s / p / ps / q / cursor` wins; long names retained for backwards compat. |
 | `buildFilterModel` | `filter.helper.ts` | Filter state builder |
 | `easeInOut`, `lerp` | `animation.helper.ts` | Animation math helpers |
 | `hexToRgb`, `rgbToHex`, `adjustBrightness` | `color.helper.ts` | Color manipulation |
