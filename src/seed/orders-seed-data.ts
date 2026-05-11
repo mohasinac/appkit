@@ -582,14 +582,14 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
   // ── 16. SHIPPED — Preeti / BX-01 Dran Sword ──────────────────────────────
   {
     id: "order-preeti-016-dran-sword",
-    productId: "product-beyblade-x-bx01-dran-sword",
+    productId: "product-beyblade-x-bx01-dran-sword-starter-pack",
     productTitle: "Beyblade X: BX-01 Dran Sword 3-60F — Starter Pack",
     userId: "user-preeti-joshi",
     userName: "Preeti Joshi",
     userEmail: "preeti.joshi@gmail.com",
     storeId: "store-beyblade-arena",
     storeName: "Beyblade Arena",
-    items: [{ productId: "product-beyblade-x-bx01-dran-sword", productTitle: "BX-01 Dran Sword Starter Pack", quantity: 2, unitPrice: 159900, totalPrice: 319800 }],
+    items: [{ productId: "product-beyblade-x-bx01-dran-sword-starter-pack", productTitle: "BX-01 Dran Sword Starter Pack", quantity: 2, unitPrice: 159900, totalPrice: 319800 }],
     quantity: 2,
     unitPrice: 159900,
     totalPrice: 319800,

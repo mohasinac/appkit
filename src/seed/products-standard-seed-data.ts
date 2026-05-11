@@ -3616,8 +3616,8 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
   // ── Store: Beyblade Arena — products 75–79 ───────────────────────────────────
 
   {
-    id: "product-beyblade-x-bx01-dran-sword",
-    slug: "product-beyblade-x-bx01-dran-sword",
+    id: "product-beyblade-x-bx01-dran-sword-starter-pack",
+    slug: "product-beyblade-x-bx01-dran-sword-starter-pack",
     title: "Beyblade X: BX-01 Dran Sword 3-60F — Starter Pack",
     description: "Official Beyblade X BX-01 Dran Sword 3-60F starter pack. The launch set that introduced the Beyblade X format with the new Xtreme Dash and Xtreme Line mechanics. Includes Dran Sword Beyblade, BX Launcher, and ripcord. Perfect entry point for the X-generation format.",
     category: "category-beyblade-x",
