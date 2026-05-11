@@ -62,6 +62,7 @@ export { siteSettingsRepository } from "../features/admin/repository/site-settin
 export { notificationRepository } from "../features/admin/repository/notification.repository";
 export { chatRepository } from "../features/admin/repository/chat.repository";
 export { carouselRepository } from "../features/homepage/repository/carousel.repository";
+export { carouselsRepository, CarouselsRepository } from "../features/homepage/repository/carousels.repository";
 export { homepageSectionsRepository } from "../features/homepage/repository/homepage-sections.repository";
 export {
   CategoriesRepository,

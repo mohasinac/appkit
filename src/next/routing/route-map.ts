@@ -147,6 +147,8 @@ export const DEFAULT_ROUTE_MAP = {
     CAROUSEL: "/admin/carousel",
     CAROUSEL_NEW: "/admin/carousel/new",
     CAROUSEL_EDIT: (id: string) => `/admin/carousel/${id}/edit`,
+    CAROUSELS: "/admin/carousels",
+    CAROUSEL_DETAIL: (id: string) => `/admin/carousels/${id}`,
     SECTIONS: "/admin/sections",
     NAVIGATION: "/admin/navigation",
     CATEGORIES: "/admin/categories",

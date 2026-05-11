@@ -1533,6 +1533,8 @@ export { blogRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // carouselRepository - Shared export for carousel repository.
 export { carouselRepository } from "./repositories/index";
+// carouselsRepository - Named carousel management repository (EX2).
+export { carouselsRepository, CarouselsRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // cartRepository - Shared export for cart repository.
 export { cartRepository } from "./repositories/index";
@@ -8498,6 +8500,13 @@ export type { BlogArticlesSectionConfig } from "./features/homepage/schemas/inde
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // BrandsSectionConfig - Type contract for brands section config.
 export type { BrandsSectionConfig } from "./features/homepage/schemas/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// CarouselDocument - Named carousel document type (EX2).
+export type { CarouselDocument, CarouselCreateInput, CarouselUpdateInput } from "./features/homepage/schemas/index";
+// TooManySlidesError - Thrown when a carousel already has MAX_SLIDES_PER_CAROUSEL slides.
+export { TooManySlidesError } from "./features/homepage/schemas/index";
+// CAROUSELS_COLLECTION - Firestore collection name for named carousels.
+export { CAROUSELS_COLLECTION, MAX_SLIDES_PER_CAROUSEL } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CarouselSlideCreateInput - Type contract for carousel slide create input.
 export type { CarouselSlideCreateInput } from "./features/homepage/schemas/index";

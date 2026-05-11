@@ -73,8 +73,35 @@ export interface CarouselCard {
 export type GridCard = CarouselCard;
 export type GridCardCreateInput = Omit<CarouselCard, "id">;
 
+/** A named carousel that holds up to MAX_SLIDES_PER_CAROUSEL slide references. */
+export interface CarouselDocument {
+  id: string;
+  name: string;
+  status: "active" | "draft";
+  /** Ordered slide IDs (max MAX_SLIDES_PER_CAROUSEL). */
+  slideIds: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+}
+
+export type CarouselCreateInput = Omit<CarouselDocument, "id" | "createdAt" | "updatedAt">;
+export type CarouselUpdateInput = Partial<Pick<CarouselDocument, "name" | "status" | "slideIds">>;
+
+export class TooManySlidesError extends Error {
+  constructor() {
+    super(`A carousel may have at most ${MAX_SLIDES_PER_CAROUSEL} slides.`);
+    this.name = "TooManySlidesError";
+  }
+}
+
 export interface CarouselSlideDocument {
   id: string;
+  /**
+   * Reference to a named CarouselDocument (EX2).
+   * null = default hero carousel (backward-compat with pre-EX2 slides).
+   */
+  carouselId?: string | null;
   title: string;
   order: number;
   active: boolean;
@@ -127,6 +154,7 @@ export interface CarouselSlideDocument {
 }
 
 export const CAROUSEL_SLIDES_COLLECTION = "carouselSlides" as const;
+export const CAROUSELS_COLLECTION = "carousels" as const;
 export const CAROUSEL_SLIDES_INDEXED_FIELDS = [
   "active",
   "order",
@@ -134,6 +162,8 @@ export const CAROUSEL_SLIDES_INDEXED_FIELDS = [
   "createdAt",
 ] as const;
 export const MAX_ACTIVE_SLIDES = 5 as const;
+/** Maximum slides per named carousel (EX2). */
+export const MAX_SLIDES_PER_CAROUSEL = 5 as const;
 export const GRID_CONFIG = { rows: 2, cols: 3 } as const;
 export const DEFAULT_CAROUSEL_SLIDE_DATA: Partial<CarouselSlideDocument> = {
   active: false,
@@ -208,6 +238,11 @@ export interface CarouselSectionConfig {
   pauseOnHover?: boolean;
   showDots?: boolean;
   showArrows?: boolean;
+  /**
+   * ID of a named CarouselDocument (EX2).
+   * When absent, the section loads all active slides (pre-EX2 default hero behavior).
+   */
+  carouselId?: string;
 }
 
 export interface WelcomeSectionConfig {
