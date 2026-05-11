@@ -210,6 +210,7 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `ProfileView` | `ProfileView.tsx` | User profile display + edit |
 | `UserAddressesView` | `UserAddressesView.tsx` | User address book list |
 | `UserOrdersView` | `UserOrdersView.tsx` | User order history list |
+| `UserReturnsView` | `UserReturnsView.tsx` | User return/refund requests list |
 | `OrderDetailView` | `OrderDetailView.tsx` | User order detail (items/address/tracking) |
 | `UserOrderTrackView` | `UserOrderTrackView.tsx` | Order tracking status view |
 | `UserNotificationsView` | `UserNotificationsView.tsx` | User notifications list |
@@ -304,6 +305,9 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useGuestWishlist` | `features/wishlist/hooks/useGuestWishlist.ts` | localStorage guest wishlist |
 | `useUserWishlist` | `features/wishlist/hooks/useUserWishlist.ts` | User wishlist data fetcher |
 | `useProfile` | `features/account/hooks/useProfile.ts` | Current user profile read/update |
+| `useChangePassword` | `features/auth/hooks/useAuth.ts` | Reauthenticate + change password (also exported from `client.ts`) |
+| `useSetDefaultAddress` | `features/account/hooks/useAddresses.ts` | Set an address as default (`{ addressId }`) |
+| `useDeleteAddress` | `features/account/hooks/useAddresses.ts` | Delete an address (`{ id }`) |
 | `useAddresses` | `features/account/hooks/useAddresses.ts` | User address list |
 | `useAddressForm` | `features/account/hooks/useAddressForm.ts` | Address create/edit form state |
 | `useAddressSelector` | `features/account/hooks/useAddressSelector.ts` | Address selector dropdown |
