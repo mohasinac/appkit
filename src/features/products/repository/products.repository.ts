@@ -38,6 +38,29 @@ const PRODUCT_FIELDS = {
   VIEW_COUNT: "viewCount",
 } as const;
 
+// Reused Sieve clauses for FILTER_ALIASES below. Keeping them as named
+// constants makes it obvious which alias produces which Firestore query
+// shape (and surfaces it for index audits).
+const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.PUBLISHED}`;
+const SIEVE_CLAUSE_NOT_AUCTION = `${PRODUCT_FIELDS.IS_AUCTION}==false`;
+const SIEVE_CLAUSE_NOT_PREORDER = `${PRODUCT_FIELDS.IS_PRE_ORDER}==false`;
+const SIEVE_CLAUSE_IS_AUCTION = `${PRODUCT_FIELDS.IS_AUCTION}==true`;
+const SIEVE_CLAUSE_IS_PREORDER = `${PRODUCT_FIELDS.IS_PRE_ORDER}==true`;
+
+type ProductListingKind = "auction" | "preorder" | "product";
+
+function buildListingKindClause(
+  kind: ProductListingKind,
+  inverted: boolean,
+): string {
+  const auctionTrue = inverted ? kind !== "auction" : kind === "auction";
+  const preorderTrue = inverted ? kind !== "preorder" : kind === "preorder";
+  return [
+    `${PRODUCT_FIELDS.IS_AUCTION}==${auctionTrue}`,
+    `${PRODUCT_FIELDS.IS_PRE_ORDER}==${preorderTrue}`,
+  ].join(",");
+}
+
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
 
@@ -429,18 +452,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      *   listingType!=auction   →  isAuction==false                  (drop preorder clause)
      */
     listingType: (value, operator) => {
-      const eq = operator === "==";
-      const neq = operator === "!=";
-      if (!eq && !neq) return "";
-      const want = (kind: "auction" | "preorder" | "product"): string => {
-        const isAuction = eq ? kind === "auction" : kind !== "auction";
-        const isPreOrder = eq ? kind === "preorder" : kind !== "preorder";
-        return `isAuction==${isAuction},isPreOrder==${isPreOrder}`;
-      };
-      if (value === "auction" || value === "preorder" || value === "product") {
-        return want(value);
-      }
-      return "";
+      if (operator !== "==" && operator !== "!=") return "";
+      if (value !== "auction" && value !== "preorder" && value !== "product")
+        return "";
+      return buildListingKindClause(value, operator === "!=");
     },
 
     /**
@@ -456,13 +471,17 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       if (operator !== "==") return "";
       switch (value) {
         case "publicProducts":
-          return "status==published,isAuction==false,isPreOrder==false";
+          return [
+            SIEVE_CLAUSE_PUBLISHED,
+            SIEVE_CLAUSE_NOT_AUCTION,
+            SIEVE_CLAUSE_NOT_PREORDER,
+          ].join(",");
         case "publicAuctions":
-          return "status==published,isAuction==true";
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_AUCTION].join(",");
         case "publicPreorders":
-          return "status==published,isPreOrder==true";
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_PREORDER].join(",");
         case "published":
-          return "status==published";
+          return SIEVE_CLAUSE_PUBLISHED;
         default:
           return "";
       }
@@ -471,13 +490,19 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     /** Shorthand for the homepage promoted strip. `promoted==true` only. */
     promoted: (value, operator) => {
       if (operator !== "==" || value !== "true") return "";
-      return "status==published,isPromoted==true";
+      return [
+        SIEVE_CLAUSE_PUBLISHED,
+        `${PRODUCT_FIELDS.IS_PROMOTED}==true`,
+      ].join(",");
     },
 
     /** Shorthand for the homepage featured strip. `featuredPublic==true` only. */
     featuredPublic: (value, operator) => {
       if (operator !== "==" || value !== "true") return "";
-      return "status==published,featured==true";
+      return [
+        SIEVE_CLAUSE_PUBLISHED,
+        `${PRODUCT_FIELDS.FEATURED}==true`,
+      ].join(",");
     },
   };
 
