@@ -35,6 +35,7 @@ interface AddressBookProps {
   addresses: (UserAddress | AddressCardAddress)[];
   onEdit?: (address: AddressCardAddress) => void;
   onDelete?: (id: string) => void;
+  onSetDefault?: (id: string) => void;
   onAdd?: () => void;
   emptyLabel?: string;
   addLabel?: string;
@@ -116,6 +117,7 @@ export function AddressBook({
   addresses,
   onEdit,
   onDelete,
+  onSetDefault,
   onAdd,
   emptyLabel = "No saved addresses",
   addLabel = "Add Address",
@@ -132,6 +134,7 @@ export function AddressBook({
             address={addr as AddressCardAddress}
             onEdit={onEdit}
             onDelete={onDelete}
+            onSetDefault={onSetDefault}
           />
         ))}
       </Div>

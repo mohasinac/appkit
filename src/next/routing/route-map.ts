@@ -106,6 +106,7 @@ export const DEFAULT_ROUTE_MAP = {
     OFFERS: "/user/offers",
     REVIEWS: "/user/reviews",
     BIDS: "/user/bids",
+    RETURNS: "/user/returns",
   },
   STORE: {
     DASHBOARD: "/store",

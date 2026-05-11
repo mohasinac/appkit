@@ -70,3 +70,8 @@ export type {
   UserOrderTrackViewProps,
   UserOrderTrackViewLabels,
 } from "./UserOrderTrackView";
+export { UserReturnsView } from "./UserReturnsView";
+export type {
+  UserReturnsViewProps,
+  UserReturnsViewLabels,
+} from "./UserReturnsView";

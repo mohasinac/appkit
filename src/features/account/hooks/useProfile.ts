@@ -18,6 +18,8 @@ export interface UpdateCurrentProfileInput {
   displayName?: string;
   phoneNumber?: string;
   photoURL?: string;
+  bio?: string;
+  profileIsPublic?: boolean;
 }
 
 export function useCurrentProfile(options?: {
