@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
@@ -7,6 +7,38 @@ import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopBrands } from "../hooks/useTopBrands";
 import type { CategoryItem } from "../../categories/types";
+import type { SectionCTA } from "../schemas/firestore";
+
+const CTA_CLASSES: Record<SectionCTA["variant"], string> = {
+  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90",
+  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
+  text: "text-sm font-medium text-[var(--appkit-color-primary)] hover:underline",
+};
+
+function BrandFilterChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={[
+        "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        active
+          ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
+          : "border-zinc-300 bg-white text-zinc-600 hover:border-[var(--appkit-color-primary)] dark:border-slate-600 dark:bg-slate-800 dark:text-zinc-300",
+      ].join(" ")}
+    >
+      {label}
+    </button>
+  );
+}
 
 export interface BrandsSectionProps {
   title?: string;
@@ -16,6 +48,11 @@ export interface BrandsSectionProps {
   viewMoreLabel?: string;
   className?: string;
   initialItems?: CategoryItem[];
+  cta?: SectionCTA;
+  filters?: {
+    featuredOnly?: boolean;
+    byCountry?: string;
+  };
 }
 
 function BrandLogo({ brand }: { brand: CategoryItem }) {
@@ -55,11 +92,22 @@ export function BrandsSection({
   viewMoreLabel = "All brands →",
   className = "",
   initialItems,
+  cta,
+  filters,
 }: BrandsSectionProps) {
   const { themed } = THEME_CONSTANTS;
-  const { data: brands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
+  const { data: allBrands = [], isLoading } = useTopBrands(limit, { initialData: initialItems });
+  const [activeFilter, setActiveFilter] = useState<string>("all");
 
-  if (!isLoading && brands.length === 0) return null;
+  // Available filter chips: "All" + "Featured" when featuredOnly filter is configured
+  const showFeaturedChip = filters?.featuredOnly !== undefined;
+
+  const brands = allBrands.filter((brand) => {
+    if (activeFilter === "featured" && !brand.isFeatured) return false;
+    return true;
+  });
+
+  if (!isLoading && allBrands.length === 0) return null;
 
   return (
     <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
@@ -75,12 +123,20 @@ export function BrandsSection({
               </Text>
             )}
           </div>
-          {viewMoreHref && (
-            <Link href={viewMoreHref} className="text-sm font-medium text-primary hover:underline">
+          {!cta && viewMoreHref && (
+            <Link href={viewMoreHref} className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline">
               {viewMoreLabel}
             </Link>
           )}
         </div>
+
+        {/* Filter chips */}
+        {showFeaturedChip && !isLoading && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            <BrandFilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
+            <BrandFilterChip label="Featured" active={activeFilter === "featured"} onClick={() => setActiveFilter(activeFilter === "featured" ? "all" : "featured")} />
+          </div>
+        )}
 
         {isLoading ? (
           <div className="flex gap-3 overflow-hidden">
@@ -97,6 +153,15 @@ export function BrandsSection({
             showArrows
             showScrollbar={false}
           />
+        )}
+
+        {/* CTA button */}
+        {cta && !isLoading && (
+          <div className="mt-6 text-center">
+            <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
+              {cta.label}
+            </Link>
+          </div>
         )}
       </div>
     </Section>

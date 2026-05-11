@@ -128,6 +128,8 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
           viewMoreLabel="All categories →"
           initialItems={sectionData.categories}
+          cta={cfg?.cta}
+          filters={cfg?.filters}
         />
       );
     }
@@ -364,6 +366,8 @@ function renderSectionElement(
           viewMoreHref={ROUTES.PUBLIC.CATEGORIES}
           viewMoreLabel="All brands →"
           initialItems={sectionData.brands}
+          cta={cfg?.cta}
+          filters={cfg?.filters}
         />
       );
     }

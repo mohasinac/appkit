@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { THEME_CONSTANTS } from "../../../tokens";
@@ -7,6 +7,7 @@ import { Heading, HorizontalScroller, Section, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { useTopCategories } from "../hooks/useTopCategories";
 import type { CategoryItem } from "../../categories/types";
+import type { SectionCTA } from "../schemas/firestore";
 
 export interface ShopByCategorySectionProps {
   title?: string;
@@ -16,6 +17,12 @@ export interface ShopByCategorySectionProps {
   viewMoreLabel?: string;
   className?: string;
   initialItems?: CategoryItem[];
+  cta?: SectionCTA;
+  filters?: {
+    featuredOnly?: boolean;
+    rootOnly?: boolean;
+    rootCategoryId?: string;
+  };
 }
 
 function isImageUrl(s: string): boolean {
@@ -77,6 +84,37 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   );
 }
 
+const CTA_CLASSES: Record<SectionCTA["variant"], string> = {
+  filled: "rounded-lg bg-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-white hover:opacity-90",
+  outline: "rounded-lg border border-[var(--appkit-color-primary)] px-5 py-2 text-sm font-semibold text-[var(--appkit-color-primary)] hover:bg-[var(--appkit-color-primary)]/10",
+  text: "text-sm font-medium text-[var(--appkit-color-primary)] hover:underline",
+};
+
+function FilterChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={[
+        "whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+        active
+          ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
+          : "border-zinc-300 bg-white text-zinc-600 hover:border-[var(--appkit-color-primary)] dark:border-slate-600 dark:bg-slate-800 dark:text-zinc-300",
+      ].join(" ")}
+    >
+      {label}
+    </button>
+  );
+}
+
 export function ShopByCategorySection({
   title = "Shop by Category",
   subtitle,
@@ -85,11 +123,37 @@ export function ShopByCategorySection({
   viewMoreLabel = "View all categories →",
   className = "",
   initialItems,
+  cta,
+  filters,
 }: ShopByCategorySectionProps) {
   const { themed } = THEME_CONSTANTS;
-  const { data: categories = [], isLoading } = useTopCategories(limit, { initialData: initialItems });
+  const { data: allCategories = [], isLoading } = useTopCategories(limit, { initialData: initialItems });
+  const [activeFilter, setActiveFilter] = useState<string>("all");
 
-  if (!isLoading && categories.length === 0) return null;
+  // Build client-side filter chip options from root-level parent IDs
+  const rootIds = filters?.rootCategoryId
+    ? [filters.rootCategoryId]
+    : Array.from(new Set(allCategories.flatMap((c) => c.parentIds ?? [c.id]).filter(Boolean)));
+
+  const hasFilters = !!(
+    filters?.featuredOnly !== undefined ||
+    filters?.rootCategoryId ||
+    rootIds.length > 1
+  );
+
+  const filtered = allCategories.filter((cat) => {
+    if (activeFilter !== "all") {
+      const inParents = cat.parentIds?.includes(activeFilter) ?? false;
+      if (!inParents && cat.id !== activeFilter) return false;
+    }
+    if (filters?.featuredOnly && !cat.isFeatured) return false;
+    if (filters?.rootOnly && (cat.parentIds?.length ?? 0) > 0) return false;
+    return true;
+  });
+
+  const categories = filtered.length > 0 ? filtered : allCategories;
+
+  if (!isLoading && allCategories.length === 0) return null;
 
   return (
     <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
@@ -105,13 +169,29 @@ export function ShopByCategorySection({
           )}
         </div>
 
+        {/* Filter chips */}
+        {hasFilters && !isLoading && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            <FilterChip label="All" active={activeFilter === "all"} onClick={() => setActiveFilter("all")} />
+            {rootIds.slice(0, 5).map((id) => {
+              const cat = allCategories.find((c) => c.id === id);
+              if (!cat) return null;
+              return (
+                <FilterChip
+                  key={id}
+                  label={cat.name}
+                  active={activeFilter === id}
+                  onClick={() => setActiveFilter(activeFilter === id ? "all" : id)}
+                />
+              );
+            })}
+          </div>
+        )}
+
         {isLoading ? (
           <div className="flex gap-3 overflow-hidden px-1">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700"
-              />
+              <div key={i} className="flex-none h-[104px] w-[108px] animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
             ))}
           </div>
         ) : (
@@ -131,12 +211,19 @@ export function ShopByCategorySection({
           />
         )}
 
-        {viewMoreHref && !isLoading && (
+        {/* CTA button */}
+        {cta && !isLoading && (
           <div className="mt-6 text-center">
-            <Link
-              href={viewMoreHref}
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80"
-            >
+            <Link href={cta.href} className={CTA_CLASSES[cta.variant]}>
+              {cta.label}
+            </Link>
+          </div>
+        )}
+
+        {/* Fallback view-more link when no CTA configured */}
+        {!cta && viewMoreHref && !isLoading && (
+          <div className="mt-6 text-center">
+            <Link href={viewMoreHref} className="inline-flex items-center gap-1 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80">
               {viewMoreLabel}
             </Link>
           </div>

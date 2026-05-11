@@ -264,11 +264,25 @@ export interface TrustIndicatorsSectionConfig {
   }>;
 }
 
+export interface SectionCTA {
+  label: string;
+  href: string;
+  variant: "outline" | "filled" | "text";
+}
+
 export interface CategoriesSectionConfig {
   title: string;
   maxCategories: 4;
   autoScroll: boolean;
   scrollInterval: number;
+  /** Optional CTA button rendered below the scroller. */
+  cta?: SectionCTA;
+  /** Optional client-side filter chips above the scroller. */
+  filters?: {
+    featuredOnly?: boolean;
+    rootOnly?: boolean;
+    rootCategoryId?: string;
+  };
 }
 
 export interface BrandsSectionConfig {
@@ -277,6 +291,13 @@ export interface BrandsSectionConfig {
   maxBrands: number;
   autoScroll: boolean;
   scrollInterval: number;
+  /** Optional CTA button rendered below the scroller. */
+  cta?: SectionCTA;
+  /** Optional client-side filter chips above the scroller. */
+  filters?: {
+    featuredOnly?: boolean;
+    byCountry?: string;
+  };
 }
 
 export interface ProductsSectionConfig {
