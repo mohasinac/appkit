@@ -8768,6 +8768,31 @@ export type {
   ProductFeatureProductType,
   ProductFeatureIcon,
 } from "./features/products/schemas/product-features";
+// Product features zod validators (S8 refactor — shared by admin + store API routes)
+export {
+  productFeatureAdminCreateSchema,
+  productFeatureStoreCreateSchema,
+  productFeatureUpdateSchema,
+  PRODUCT_FEATURE_PRODUCT_TYPE_ENUM,
+  PRODUCT_FEATURE_CATEGORY_ENUM,
+  PRODUCT_FEATURE_SCOPE_ENUM,
+} from "./features/products/schemas/product-features.validators";
+export type {
+  ProductFeatureAdminCreatePayload,
+  ProductFeatureStoreCreatePayload,
+  ProductFeatureUpdatePayload,
+} from "./features/products/schemas/product-features.validators";
+// Product features UI option lists (S8 refactor — shared by editor + selector)
+export {
+  PRODUCT_FEATURE_CATEGORY_OPTIONS,
+  PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS,
+  PRODUCT_FEATURE_SCOPE_OPTIONS,
+  PRODUCT_FEATURE_ICON_COLOR_OPTIONS,
+  PRODUCT_FEATURE_SCOPE_TABS,
+  PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+  PRODUCT_FEATURE_CARD_MAX_VISIBLE,
+  PRODUCT_FEATURE_QUERY_STALE_MS,
+} from "./features/products/constants/product-features.constants";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";

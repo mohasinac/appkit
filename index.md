@@ -410,8 +410,11 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `newsletterRepository` | singleton | `newsletter` | Newsletter subscribers |
 | `brandsRepository` | singleton | `brands` | Product brands |
 | `productTemplateRepository` | singleton | `product_templates` | Seller product templates (create, edit, delete, list by store) |
-| `productFeaturesRepository` | singleton | `productFeatures` | Reusable feature badges (FI1). `listPlatform()` / `listForStore(storeId)` / 20-per-store + delete-when-referenced guards. |
+| `productFeaturesRepository` | singleton | `productFeatures` | Reusable feature badges (FI1). `listPlatform()` / `listForStore(storeId)` / 20-per-store + delete-when-referenced guards. All thrown errors use `ERROR_MESSAGES.PRODUCT_FEATURES.*`. |
 | `loadProductFeaturesForStore` | helper | — | SSR helper combining listPlatform + listForStore + dedupe for detail/listing pages (FI6). |
+| `productFeatureAdminCreateSchema` / `productFeatureStoreCreateSchema` / `productFeatureUpdateSchema` | zod schemas | — | Shared body validators for the four feature route handlers (S8 refactor — `appkit/src/features/products/schemas/product-features.validators.ts`). |
+| `PRODUCT_FEATURE_CATEGORY_OPTIONS` / `*_PRODUCT_TYPE_OPTIONS` / `*_SCOPE_OPTIONS` / `*_ICON_COLOR_OPTIONS` / `*_SCOPE_TABS` | option lists | — | Centralised Select/pill option lists (S8 refactor — `appkit/src/features/products/constants/product-features.constants.ts`). Editor + Selector + AdminFeaturesView import from here. |
+| `PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER` / `PRODUCT_FEATURE_CARD_MAX_VISIBLE` / `PRODUCT_FEATURE_QUERY_STALE_MS` | tuning constants | — | Defaults: new feature displayOrder (100), max badges on a ProductCard (3), and React-Query staleTime (60s). |
 
 ---
 

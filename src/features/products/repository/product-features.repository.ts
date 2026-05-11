@@ -1,4 +1,5 @@
 import { DatabaseError, ValidationError } from "../../../errors";
+import { ERROR_MESSAGES } from "../../../errors/messages";
 import {
   BaseRepository,
   prepareForFirestore,
@@ -24,6 +25,10 @@ function slugify(value: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+function failureMessage(prefix: string, error: unknown): string {
+  return `${prefix}: ${error instanceof Error ? error.message : "Unknown error"}`;
 }
 
 export interface ProductFeatureListFilter {
@@ -78,7 +83,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
       return docs;
     } catch (error) {
       throw new DatabaseError(
-        `Failed to list product features: ${error instanceof Error ? error.message : "Unknown error"}`,
+        failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.FETCH_FAILED, error),
       );
     }
   }
@@ -95,18 +100,20 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
     input: ProductFeatureCreateInput,
   ): Promise<ProductFeatureDocument> {
     if (input.scope === "store" && !input.storeId) {
-      throw new ValidationError("storeId is required for scope=store features");
+      throw new ValidationError(
+        ERROR_MESSAGES.PRODUCT_FEATURES.SCOPE_STORE_REQUIRES_STORE_ID,
+      );
     }
     if (input.scope === "platform" && input.storeId) {
       throw new ValidationError(
-        "storeId must not be set for scope=platform features",
+        ERROR_MESSAGES.PRODUCT_FEATURES.SCOPE_PLATFORM_DISALLOWS_STORE_ID,
       );
     }
     if (input.scope === "store" && input.storeId) {
       const existing = await this.countByStore(input.storeId);
       if (existing >= MAX_STORE_CUSTOM_FEATURES) {
         throw new ValidationError(
-          `Store has reached the maximum of ${MAX_STORE_CUSTOM_FEATURES} custom features`,
+          `${ERROR_MESSAGES.PRODUCT_FEATURES.STORE_CAP_REACHED} (${MAX_STORE_CUSTOM_FEATURES})`,
         );
       }
     }
@@ -127,7 +134,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
     } catch (error) {
       if (error instanceof ValidationError) throw error;
       throw new DatabaseError(
-        `Failed to create product feature: ${error instanceof Error ? error.message : "Unknown error"}`,
+        failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.CREATE_FAILED, error),
       );
     }
   }
@@ -144,7 +151,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
       return this.findByIdOrFail(id);
     } catch (error) {
       throw new DatabaseError(
-        `Failed to update product feature: ${error instanceof Error ? error.message : "Unknown error"}`,
+        failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED, error),
       );
     }
   }
@@ -163,14 +170,14 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
         .get();
       if (!referencing.empty) {
         throw new ValidationError(
-          `Cannot delete product feature ${id}: still referenced by at least one product`,
+          ERROR_MESSAGES.PRODUCT_FEATURES.DELETE_REFERENCED,
         );
       }
       await this.db.collection(this.collection).doc(id).delete();
     } catch (error) {
       if (error instanceof ValidationError) throw error;
       throw new DatabaseError(
-        `Failed to delete product feature: ${error instanceof Error ? error.message : "Unknown error"}`,
+        failureMessage(ERROR_MESSAGES.PRODUCT_FEATURES.DELETE_FAILED, error),
       );
     }
   }
@@ -184,7 +191,7 @@ export class ProductFeaturesRepository extends BaseRepository<ProductFeatureDocu
       return snap.size;
     } catch (error) {
       throw new DatabaseError(
-        `Failed to count store features: ${error instanceof Error ? error.message : "Unknown error"}`,
+        failureMessage("Failed to count store features", error),
       );
     }
   }

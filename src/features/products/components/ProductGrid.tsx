@@ -12,6 +12,7 @@ import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
+import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -248,7 +249,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
             <FeatureBadgeList
               productFeatureIds={product.features}
               features={featuresList}
-              maxVisible={3}
+              maxVisible={PRODUCT_FEATURE_CARD_MAX_VISIBLE}
               className="mt-2"
             />
           )}

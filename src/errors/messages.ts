@@ -377,6 +377,25 @@ export const ERROR_MESSAGES = {
     NOT_FOUND: "Item not found in wishlist",
   },
 
+  // Product Feature Badges (FI1–FI6)
+  PRODUCT_FEATURES: {
+    FETCH_FAILED: "Failed to load product features",
+    CREATE_FAILED: "Failed to create feature",
+    UPDATE_FAILED: "Failed to update feature",
+    DELETE_FAILED: "Failed to delete feature",
+    NOT_FOUND: "Feature not found",
+    SCOPE_STORE_REQUIRES_STORE_ID:
+      "storeId is required for scope=store features",
+    SCOPE_PLATFORM_DISALLOWS_STORE_ID:
+      "storeId must not be set for scope=platform features",
+    STORE_CAP_REACHED:
+      "Store has reached the maximum number of custom features",
+    DELETE_REFERENCED:
+      "This feature is still referenced by at least one product",
+    NOT_OWNED_BY_STORE: "This feature is not owned by your store",
+    NO_STORE: "No store found for this account",
+  },
+
   BID: {
     FETCH_FAILED: "Failed to load bids",
     CREATE_FAILED: "Failed to place bid",

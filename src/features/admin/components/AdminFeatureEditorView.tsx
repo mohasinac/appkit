@@ -4,44 +4,49 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Div,
   Form,
+  Grid,
   Input,
   Select,
+  Stack,
   StackedViewShell,
+  Text,
   Toggle,
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ERROR_MESSAGES } from "../../../errors/messages";
+import {
+  PRODUCT_FEATURE_CATEGORY_OPTIONS,
+  PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
+  PRODUCT_FEATURE_ICON_COLOR_OPTIONS,
+  PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS,
+  PRODUCT_FEATURE_SCOPE_OPTIONS,
+} from "../../products/constants/product-features.constants";
+import type {
+  ProductFeatureCategory,
+  ProductFeatureProductType,
+  ProductFeatureScope,
+} from "../../products/schemas/product-features";
 
-const CATEGORY_OPTIONS = [
-  { value: "shipping", label: "Shipping" },
-  { value: "seller", label: "Seller" },
-  { value: "condition", label: "Condition" },
-  { value: "platform", label: "Platform" },
-  { value: "auction", label: "Auction" },
-  { value: "preorder", label: "Pre-order" },
-  { value: "custom", label: "Custom" },
-];
+const PILL_BASE_CLASS =
+  "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors";
+const PILL_CHECKED_CLASS = "bg-primary text-white border-primary";
+const PILL_UNCHECKED_CLASS =
+  "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800";
+const FIELD_LABEL_CLASS =
+  "text-sm font-medium text-zinc-700 dark:text-zinc-300";
+const DELETE_CONFIRM_TEXT =
+  "Delete this feature? It will fail if any product still references it.";
 
-const PRODUCT_TYPE_OPTIONS = [
-  { value: "all", label: "All product types" },
-  { value: "product", label: "Standard product" },
-  { value: "auction", label: "Auction" },
-  { value: "preorder", label: "Pre-order" },
-];
-
-const ICON_COLOR_OPTIONS = [
-  { value: "", label: "Neutral (default)" },
-  { value: "--appkit-color-primary", label: "Primary" },
-  { value: "--appkit-color-secondary", label: "Secondary" },
-];
-
-const SCOPE_OPTIONS = [
-  { value: "platform", label: "Platform (all stores)" },
-  { value: "store", label: "Store-specific" },
-];
+const TOAST = {
+  CREATED: "Feature created.",
+  UPDATED: "Feature updated.",
+  DELETED: "Feature deleted.",
+} as const;
 
 interface StoreOption {
   id: string;
@@ -54,9 +59,9 @@ interface AdminFeaturePayload {
   description?: string;
   icon: string;
   iconColor?: string;
-  category: string;
-  scope: "platform" | "store";
-  productTypes: string[];
+  category: ProductFeatureCategory;
+  scope: ProductFeatureScope;
+  productTypes: ProductFeatureProductType[];
   storeId?: string;
   isActive: boolean;
   displayOrder: number;
@@ -66,7 +71,7 @@ export interface AdminFeatureEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   featureId?: string;
   /** Force a fixed scope (store editor uses scope=store + readonly storeId). */
-  fixedScope?: "platform" | "store";
+  fixedScope?: ProductFeatureScope;
   /** Force a fixed storeId (store editor passes the seller's store). */
   fixedStoreId?: string;
   /** When true, omit StackedViewShell wrapper (SideDrawer body). */
@@ -97,14 +102,19 @@ export function AdminFeatureEditorView({
   const [description, setDescription] = React.useState("");
   const [icon, setIcon] = React.useState("");
   const [iconColor, setIconColor] = React.useState("");
-  const [category, setCategory] = React.useState<string>("platform");
-  const [scope, setScope] = React.useState<"platform" | "store">(
+  const [category, setCategory] =
+    React.useState<ProductFeatureCategory>("platform");
+  const [scope, setScope] = React.useState<ProductFeatureScope>(
     fixedScope ?? "platform",
   );
-  const [productTypes, setProductTypes] = React.useState<string[]>(["all"]);
+  const [productTypes, setProductTypes] = React.useState<
+    ProductFeatureProductType[]
+  >(["all"]);
   const [storeId, setStoreId] = React.useState<string>(fixedStoreId ?? "");
   const [isActive, setIsActive] = React.useState(true);
-  const [displayOrder, setDisplayOrder] = React.useState<string>("100");
+  const [displayOrder, setDisplayOrder] = React.useState<string>(
+    String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
+  );
 
   const createEndpoint =
     endpointOverride?.create ?? ADMIN_ENDPOINTS.PRODUCT_FEATURES;
@@ -127,8 +137,7 @@ export function AdminFeatureEditorView({
         `${ADMIN_ENDPOINTS.STORES}?pageSize=200&sorts=storeName`,
       );
       const body = (res as { data?: unknown })?.data ?? res;
-      const items = (body as { items?: StoreOption[] })?.items ?? [];
-      return items;
+      return (body as { items?: StoreOption[] })?.items ?? [];
     },
     enabled: scope === "store" && !fixedStoreId,
   });
@@ -146,11 +155,13 @@ export function AdminFeatureEditorView({
     if (!fixedStoreId) setStoreId(f.storeId ?? "");
     setIsActive(f.isActive ?? true);
     setDisplayOrder(
-      f.displayOrder !== undefined ? String(f.displayOrder) : "100",
+      f.displayOrder !== undefined
+        ? String(f.displayOrder)
+        : String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
     );
   }, [featureQuery.data, fixedScope, fixedStoreId]);
 
-  const toggleProductType = (value: string) => {
+  const toggleProductType = (value: ProductFeatureProductType) => {
     setProductTypes((prev) => {
       if (value === "all") return ["all"];
       const next = prev.filter((v) => v !== "all");
@@ -172,7 +183,8 @@ export function AdminFeatureEditorView({
         productTypes: productTypes.length === 0 ? ["all"] : productTypes,
         storeId: scope === "store" ? storeId || undefined : undefined,
         isActive,
-        displayOrder: Number(displayOrder) || 0,
+        displayOrder:
+          Number(displayOrder) || PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER,
       };
       if (isEdit) {
         return apiClient.put(byIdEndpoint(featureId!), payload);
@@ -184,35 +196,48 @@ export function AdminFeatureEditorView({
         (res as { data?: { id?: string } })?.data?.id ??
         (res as { id?: string })?.id ??
         featureId;
-      showToast(isEdit ? "Feature updated." : "Feature created.", "success");
+      showToast(isEdit ? TOAST.UPDATED : TOAST.CREATED, "success");
       if (onSaved && id) onSaved(String(id));
     },
     onError: (err: unknown) => {
-      showToast((err as Error)?.message ?? "Failed to save feature.", "error");
+      showToast(
+        (err as Error)?.message ??
+          (isEdit
+            ? ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED
+            : ERROR_MESSAGES.PRODUCT_FEATURES.CREATE_FAILED),
+        "error",
+      );
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: () => apiClient.delete(byIdEndpoint(featureId!)),
     onSuccess: () => {
-      showToast("Feature deleted.", "success");
+      showToast(TOAST.DELETED, "success");
       if (onDeleted) onDeleted();
     },
     onError: (err: unknown) =>
       showToast(
-        (err as Error)?.message ?? "Failed to delete feature.",
+        (err as Error)?.message ??
+          ERROR_MESSAGES.PRODUCT_FEATURES.DELETE_FAILED,
         "error",
       ),
   });
 
   const isSubmitting = saveMutation.isPending || featureQuery.isLoading;
-  const storeOptions: { value: string; label: string }[] = [
-    { value: "", label: "Select a store…" },
-    ...((storesQuery.data ?? []) as StoreOption[]).map((s) => ({
-      value: s.id,
-      label: s.storeName ?? s.id,
-    })),
-  ];
+  const storeOptions = React.useMemo(
+    () => [
+      { value: "", label: "Select a store…" },
+      ...((storesQuery.data ?? []) as StoreOption[]).map((s) => ({
+        value: s.id,
+        label: s.storeName ?? s.id,
+      })),
+    ],
+    [storesQuery.data],
+  );
+
+  const isDisabled =
+    !label || !icon || (scope === "store" && !storeId) || isSubmitting;
 
   const formSection = (
     <Form
@@ -221,146 +246,132 @@ export function AdminFeatureEditorView({
         e.preventDefault();
         saveMutation.mutate();
       }}
-      className="space-y-4"
     >
-      <Input
-        label="Label"
-        value={label}
-        onChange={(e) => setLabel(e.target.value)}
-        required
-        placeholder="e.g. Free Shipping"
-        helperText="Shown on product cards and detail pages."
-      />
-
-      <Input
-        label="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Optional — shown as a tooltip on the badge."
-      />
-
-      <div className="grid sm:grid-cols-2 gap-4">
+      <Stack gap="md">
         <Input
-          label="Icon"
-          value={icon}
-          onChange={(e) => setIcon(e.target.value)}
+          label="Label"
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
           required
-          placeholder="truck"
-          helperText="Icon-set name key (e.g. truck, star, trophy) OR an SVG path starting with M."
-        />
-
-        <Select
-          label="Icon colour"
-          value={iconColor}
-          onChange={(e) => setIconColor(e.target.value)}
-          options={ICON_COLOR_OPTIONS}
-        />
-      </div>
-
-      <div className="grid sm:grid-cols-2 gap-4">
-        <Select
-          label="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          options={CATEGORY_OPTIONS}
-          required
+          placeholder="e.g. Free Shipping"
+          helperText="Shown on product cards and detail pages."
         />
 
         <Input
-          label="Display order"
-          value={displayOrder}
-          onChange={(e) => setDisplayOrder(e.target.value)}
-          type="number"
-          min={0}
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Optional — shown as a tooltip on the badge."
         />
-      </div>
 
-      <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Applies to
-        </legend>
-        <div className="flex flex-wrap gap-2">
-          {PRODUCT_TYPE_OPTIONS.map((opt) => {
-            const checked = productTypes.includes(opt.value);
-            return (
-              <label
-                key={opt.value}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium cursor-pointer transition-colors ${checked ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-              >
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={checked}
-                  onChange={() => toggleProductType(opt.value)}
-                />
-                {opt.label}
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
+        <Grid cols="halves" gap="md">
+          <Input
+            label="Icon"
+            value={icon}
+            onChange={(e) => setIcon(e.target.value)}
+            required
+            placeholder="truck"
+            helperText="Icon-set name key (e.g. truck, star, trophy) OR an SVG path starting with M."
+          />
 
-      {!fixedScope && (
-        <Select
-          label="Scope"
-          value={scope}
-          onChange={(e) =>
-            setScope((e.target.value as "platform" | "store") ?? "platform")
-          }
-          options={SCOPE_OPTIONS}
-        />
-      )}
+          <Select
+            label="Icon colour"
+            value={iconColor}
+            onChange={(e) => setIconColor(e.target.value)}
+            options={PRODUCT_FEATURE_ICON_COLOR_OPTIONS}
+          />
+        </Grid>
 
-      {scope === "store" && !fixedStoreId && (
-        <Select
-          label="Store"
-          value={storeId}
-          onChange={(e) => setStoreId(e.target.value)}
-          options={storeOptions}
-          required
-          helperText="Store-scope features are visible only on this store's listings."
-        />
-      )}
+        <Grid cols="halves" gap="md">
+          <Select<ProductFeatureCategory>
+            label="Category"
+            value={category}
+            onChange={(e) =>
+              setCategory(e.target.value as ProductFeatureCategory)
+            }
+            options={PRODUCT_FEATURE_CATEGORY_OPTIONS}
+            required
+          />
 
-      <Toggle label="Active" checked={isActive} onChange={setIsActive} />
+          <Input
+            label="Display order"
+            value={displayOrder}
+            onChange={(e) => setDisplayOrder(e.target.value)}
+            type="number"
+            min={0}
+          />
+        </Grid>
 
-      <div className="flex gap-3 pt-2">
-        <Button
-          type="submit"
-          isLoading={isSubmitting}
-          disabled={
-            !label ||
-            !icon ||
-            (scope === "store" && !storeId) ||
-            isSubmitting
-          }
-        >
-          {isEdit ? "Save changes" : "Create feature"}
-        </Button>
-        {isEdit && (
-          <Button
-            type="button"
-            variant="danger"
-            isLoading={deleteMutation.isPending}
-            onClick={() => {
-              if (
-                confirm(
-                  "Delete this feature? It will fail if any product still references it.",
-                )
-              ) {
-                deleteMutation.mutate();
-              }
-            }}
-          >
-            Delete
-          </Button>
+        <Div>
+          <Text className={FIELD_LABEL_CLASS}>Applies to</Text>
+          <Div className="flex flex-wrap gap-2 mt-2">
+            {PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS.map((opt) => {
+              const checked = productTypes.includes(opt.value);
+              const pillClass = `${PILL_BASE_CLASS} ${checked ? PILL_CHECKED_CLASS : PILL_UNCHECKED_CLASS}`;
+              return (
+                <label key={opt.value} className={pillClass}>
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={checked}
+                    onChange={() => toggleProductType(opt.value)}
+                  />
+                  {opt.label}
+                </label>
+              );
+            })}
+          </Div>
+        </Div>
+
+        {!fixedScope && (
+          <Select<ProductFeatureScope>
+            label="Scope"
+            value={scope}
+            onChange={(e) =>
+              setScope(e.target.value as ProductFeatureScope)
+            }
+            options={PRODUCT_FEATURE_SCOPE_OPTIONS}
+          />
         )}
-      </div>
+
+        {scope === "store" && !fixedStoreId && (
+          <Select
+            label="Store"
+            value={storeId}
+            onChange={(e) => setStoreId(e.target.value)}
+            options={storeOptions}
+            required
+            helperText="Store-scope features are visible only on this store's listings."
+          />
+        )}
+
+        <Toggle label="Active" checked={isActive} onChange={setIsActive} />
+
+        <Div className="flex gap-3 pt-2">
+          <Button type="submit" isLoading={isSubmitting} disabled={isDisabled}>
+            {isEdit ? "Save changes" : "Create feature"}
+          </Button>
+          {isEdit && (
+            <Button
+              type="button"
+              variant="danger"
+              isLoading={deleteMutation.isPending}
+              onClick={() => {
+                if (confirm(DELETE_CONFIRM_TEXT)) {
+                  deleteMutation.mutate();
+                }
+              }}
+            >
+              Delete
+            </Button>
+          )}
+        </Div>
+      </Stack>
     </Form>
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
   }
 
   return (

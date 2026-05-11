@@ -3,19 +3,48 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, SideDrawer, Toggle, useToast } from "../../../ui";
+import {
+  Button,
+  Div,
+  Heading,
+  Row,
+  SideDrawer,
+  Stack,
+  Text,
+  Toggle,
+  useToast,
+} from "../../../ui";
 import { apiClient } from "../../../http";
+import { ERROR_MESSAGES } from "../../../errors/messages";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { AdminFeatureEditorView } from "../../admin/components/AdminFeatureEditorView";
 import { MAX_STORE_CUSTOM_FEATURES } from "../../products/schemas/product-features";
 import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 
+const TOAST = {
+  ENABLED: "Feature enabled.",
+  DISABLED: "Feature disabled.",
+} as const;
+
+const ROW_CLASS =
+  "flex items-center justify-between gap-3 px-4 py-3";
+const CAP_BANNER_CLASS =
+  "rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 px-4 py-2.5 text-xs text-amber-800 dark:text-amber-200";
+const EMPTY_STATE_CLASS =
+  "rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400";
+const LIST_CLASS =
+  "divide-y divide-zinc-200 dark:divide-slate-700 rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900";
+
 interface SellerFeaturesResponse {
   items?: ProductFeatureDocument[];
   total?: number;
   limit?: number;
   isFull?: boolean;
+}
+
+function unwrap(res: unknown): SellerFeaturesResponse {
+  return ((res as { data?: unknown })?.data ?? res) as SellerFeaturesResponse;
 }
 
 export function SellerFeaturesView() {
@@ -32,23 +61,23 @@ export function SellerFeaturesView() {
 
   const featuresQuery = useQuery({
     queryKey: ["seller", "features", "listing"],
-    queryFn: async () => {
-      const res = await apiClient.get(SELLER_ENDPOINTS.FEATURES);
-      return ((res as { data?: unknown })?.data ??
-        res) as SellerFeaturesResponse;
-    },
+    queryFn: async () => unwrap(await apiClient.get(SELLER_ENDPOINTS.FEATURES)),
   });
 
   const features = featuresQuery.data?.items ?? [];
   const limit = featuresQuery.data?.limit ?? MAX_STORE_CUSTOM_FEATURES;
   const isFull = featuresQuery.data?.isFull ?? features.length >= limit;
 
-  const onSaved = React.useCallback(() => {
+  const invalidate = React.useCallback(() => {
     queryClient.invalidateQueries({
       queryKey: ["seller", "features", "listing"],
     });
+  }, [queryClient]);
+
+  const onSaved = React.useCallback(() => {
+    invalidate();
     closePanel();
-  }, [closePanel, queryClient]);
+  }, [closePanel, invalidate]);
 
   const toggleActive = async (
     feature: ProductFeatureDocument,
@@ -58,33 +87,32 @@ export function SellerFeaturesView() {
       await apiClient.put(SELLER_ENDPOINTS.FEATURE_BY_ID(feature.id), {
         isActive: nextActive,
       });
-      showToast(
-        nextActive ? "Feature enabled." : "Feature disabled.",
-        "success",
-      );
-      queryClient.invalidateQueries({
-        queryKey: ["seller", "features", "listing"],
-      });
+      showToast(nextActive ? TOAST.ENABLED : TOAST.DISABLED, "success");
+      invalidate();
     } catch (err) {
       showToast(
-        (err as Error)?.message ?? "Failed to update feature.",
+        (err as Error)?.message ??
+          ERROR_MESSAGES.PRODUCT_FEATURES.UPDATE_FAILED,
         "error",
       );
     }
   };
 
   return (
-    <div className="min-h-screen px-3 sm:px-4 py-4">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+    <Stack gap="md" className="min-h-screen px-3 sm:px-4 py-4">
+      <Row align="center" justify="between">
+        <Div>
+          <Heading
+            level={1}
+            className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+          >
             Custom feature badges
-          </h1>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+          </Heading>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
             {features.length} of {limit} used. Platform features are always
             available on top of your custom ones.
-          </p>
-        </div>
+          </Text>
+        </Div>
         <Button
           size="sm"
           onClick={openCreatePanel}
@@ -94,48 +122,53 @@ export function SellerFeaturesView() {
           <Plus className="h-4 w-4" />
           Add Feature
         </Button>
-      </div>
+      </Row>
 
       {isFull && (
-        <div className="mb-3 rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 px-4 py-2.5 text-xs text-amber-800 dark:text-amber-200">
+        <Text as="div" className={CAP_BANNER_CLASS}>
           You have reached the {limit}-feature limit for your store. Delete an
           existing feature before adding a new one.
-        </div>
+        </Text>
       )}
 
       {featuresQuery.isLoading ? (
-        <div className="text-sm text-zinc-500 dark:text-zinc-400">Loading…</div>
+        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
+          Loading…
+        </Text>
       ) : features.length === 0 ? (
-        <div className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
-          You haven't created any custom features yet.
-        </div>
+        <Div className={EMPTY_STATE_CLASS}>
+          You haven&apos;t created any custom features yet.
+        </Div>
       ) : (
-        <ul className="divide-y divide-zinc-200 dark:divide-slate-700 rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <Stack as="ul" gap="none" className={LIST_CLASS}>
           {features.map((f) => (
-            <li
-              key={f.id}
-              className="flex items-center justify-between gap-3 px-4 py-3"
-            >
+            <Row as="li" key={f.id} className={ROW_CLASS} gap="sm">
               <button
                 type="button"
                 onClick={() => openEditPanel(f.id)}
                 className="flex-1 text-left"
               >
-                <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <Text
+                  as="div"
+                  className="text-sm font-medium text-zinc-900 dark:text-zinc-100"
+                >
                   {f.label}
-                </div>
-                <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                </Text>
+                <Text
+                  as="div"
+                  className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5"
+                >
                   {f.category} · {f.productTypes.join(" · ")}
-                </div>
+                </Text>
               </button>
               <Toggle
                 checked={f.isActive}
                 onChange={(checked) => toggleActive(f, checked)}
                 aria-label="Active"
               />
-            </li>
+            </Row>
           ))}
-        </ul>
+        </Stack>
       )}
 
       <SideDrawer
@@ -158,6 +191,6 @@ export function SellerFeaturesView() {
           />
         )}
       </SideDrawer>
-    </div>
+    </Stack>
   );
 }

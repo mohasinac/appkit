@@ -14,12 +14,25 @@ import {
   Trophy,
   Truck,
 } from "lucide-react";
+import { Row, Span } from "../../../ui";
 import {
   isFeatureIconPath,
   type ProductFeatureDocument,
 } from "../schemas/product-features";
 
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+/**
+ * Stable map of icon-set keys → React components.
+ *
+ * Adding a new platform feature with a new icon key requires:
+ *   1. add the key + lucide component here
+ *   2. reference the key as `icon: "<key>"` in the seed/admin form
+ *
+ * `Tag` is the fallback for unrecognised keys (instead of rendering nothing).
+ */
+export const FEATURE_ICON_MAP: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   truck: Truck,
   "badge-check": BadgeCheck,
   "refresh-ccw": RefreshCcw,
@@ -33,9 +46,15 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   tag: Tag,
 };
 
+const ICON_SIZE_CLASS = "h-3 w-3";
+const BADGE_BASE_CLASS =
+  "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[var(--appkit-font-size-2xs,11px)] font-medium border-zinc-200 dark:border-zinc-700";
+const MORE_BADGE_CLASS =
+  "inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 text-[var(--appkit-font-size-2xs,11px)] font-medium text-zinc-600 dark:text-zinc-300";
+
 function FeatureIcon({
   icon,
-  className,
+  className = ICON_SIZE_CLASS,
 }: {
   icon: string;
   className?: string;
@@ -56,8 +75,14 @@ function FeatureIcon({
       </svg>
     );
   }
-  const Cmp = ICON_MAP[icon] ?? Tag;
+  const Cmp = FEATURE_ICON_MAP[icon] ?? FEATURE_ICON_MAP.tag;
   return <Cmp className={className} />;
+}
+
+function colorStyleFor(iconColor: string | undefined): React.CSSProperties | undefined {
+  if (!iconColor) return undefined;
+  const ref = `var(${iconColor})`;
+  return { color: ref, borderColor: ref };
 }
 
 export interface FeatureBadgeProps {
@@ -68,18 +93,15 @@ export interface FeatureBadgeProps {
 export function FeatureBadge({ featureId, features }: FeatureBadgeProps) {
   const f = features.find((x) => x.id === featureId);
   if (!f) return null;
-  const colorStyle = f.iconColor
-    ? { color: `var(${f.iconColor})`, borderColor: `var(${f.iconColor})` }
-    : undefined;
   return (
-    <span
+    <Span
       title={f.description ?? undefined}
-      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium border-zinc-200 dark:border-zinc-700"
-      style={colorStyle}
+      className={BADGE_BASE_CLASS}
+      style={colorStyleFor(f.iconColor)}
     >
-      <FeatureIcon icon={f.icon} className="h-3 w-3" />
+      <FeatureIcon icon={f.icon} />
       {f.label}
-    </span>
+    </Span>
   );
 }
 
@@ -106,20 +128,19 @@ export function FeatureBadgeList({
     .filter((f): f is ProductFeatureDocument => Boolean(f));
   if (resolved.length === 0) return null;
 
-  const visible =
-    maxVisible > 0 ? resolved.slice(0, maxVisible) : resolved;
+  const visible = maxVisible > 0 ? resolved.slice(0, maxVisible) : resolved;
   const hidden = maxVisible > 0 ? Math.max(0, resolved.length - maxVisible) : 0;
 
   return (
-    <div className={`flex flex-wrap gap-1.5 ${className ?? ""}`}>
+    <Row wrap gap="xs" className={className}>
       {visible.map((f) => (
         <FeatureBadge key={f.id} featureId={f.id} features={features} />
       ))}
       {hidden > 0 && (
-        <span className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 text-[11px] font-medium text-zinc-600 dark:text-zinc-300">
+        <Span className={MORE_BADGE_CLASS} aria-label={`${hidden} more features`}>
           +{hidden} more
-        </span>
+        </Span>
       )}
-    </div>
+    </Row>
   );
 }
