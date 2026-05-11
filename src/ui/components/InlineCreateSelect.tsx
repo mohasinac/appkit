@@ -4,21 +4,32 @@ import type { DynamicSelectOption, DynamicSelectProps, AsyncPage } from "./Dynam
 import { DynamicSelect } from "./DynamicSelect";
 import { SideDrawer } from "./SideDrawer";
 import { Button } from "./Button";
+import { QuickFormDrawer } from "../../features/shell/QuickFormDrawer";
+import type { QuickFieldDef } from "../../features/shell/QuickFormDrawer";
 
 export interface InlineCreateSelectProps<V = string> extends DynamicSelectProps<V> {
   /** Label for the "+ Create new …" button shown at the bottom of the dropdown. */
   createLabel?: string;
-  /** Title shown in the SideDrawer header. Defaults to `createLabel`. */
+  /** Title shown in the create-form drawer header. Defaults to `createLabel`. */
   drawerTitle?: string;
   /**
-   * Render prop for the create form inside the SideDrawer.
+   * Render prop for the create form inside a SideDrawer.
    * Call `onCreated` with the new option to close the drawer and auto-select it.
    * Call `onCancel` to discard and close.
+   * Mutually exclusive with `createFields` — if both are provided, `renderCreateForm` wins.
    */
   renderCreateForm?: (props: {
     onCreated: (option: DynamicSelectOption<V>) => void;
     onCancel: () => void;
   }) => ReactNode;
+  /**
+   * Auto-generates a QuickFormDrawer from FieldDef[].
+   * Used when the create form is simple (≤ 5 fields with no custom logic).
+   * `onCreateSubmit` is called on submit — must return the newly created option.
+   */
+  createFields?: QuickFieldDef[];
+  onCreateSubmit?: (values: Record<string, unknown>) => Promise<DynamicSelectOption<V>>;
+  createSubmitLabel?: string;
 }
 
 /**
@@ -45,12 +56,16 @@ export function InlineCreateSelect<V = string>({
   createLabel = "item",
   drawerTitle,
   renderCreateForm,
+  createFields,
+  onCreateSubmit,
+  createSubmitLabel,
   onChange,
   options,
   loadOptions,
   ...selectProps
 }: InlineCreateSelectProps<V>) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const hasCreate = Boolean(renderCreateForm ?? (createFields && onCreateSubmit));
 
   function handleCreated(option: DynamicSelectOption<V>) {
     setDrawerOpen(false);
@@ -65,7 +80,7 @@ export function InlineCreateSelect<V = string>({
   // For async (loadOptions) mode we append the action after the list via a wrapper.
   const CREATE_SENTINEL = "__inline_create__" as unknown as V;
 
-  const augmentedOptions: DynamicSelectOption<V>[] | undefined = renderCreateForm
+  const augmentedOptions: DynamicSelectOption<V>[] | undefined = hasCreate
     ? [
         ...(options ?? []),
         {
@@ -76,7 +91,7 @@ export function InlineCreateSelect<V = string>({
     : options;
 
   // For async mode, wrap loadOptions to append the sentinel after each page.
-  const augmentedLoadOptions = renderCreateForm && loadOptions
+  const augmentedLoadOptions = hasCreate && loadOptions
     ? async (query: string, page: number): Promise<AsyncPage<DynamicSelectOption<V>>> => {
         const result = await loadOptions(query, page);
         const sentinel: DynamicSelectOption<V> = {
@@ -121,6 +136,18 @@ export function InlineCreateSelect<V = string>({
         >
           {renderCreateForm({ onCreated: handleCreated, onCancel: handleCancel })}
         </SideDrawer>
+      ) : createFields && onCreateSubmit ? (
+        <QuickFormDrawer
+          isOpen={drawerOpen}
+          onClose={handleCancel}
+          title={drawerTitle ?? `Create ${createLabel}`}
+          fields={createFields}
+          submitLabel={createSubmitLabel ?? `Create ${createLabel}`}
+          onSubmit={async (values) => {
+            const option = await onCreateSubmit(values);
+            handleCreated(option);
+          }}
+        />
       ) : null}
     </>
   );

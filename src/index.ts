@@ -8772,6 +8772,12 @@ export type { ScammerListResult } from "./features/scams/actions/scam-actions";
 // [CLIENT] SellerProductShell — full-flow create/edit shell for standard, auction, and pre-order listings.
 export { SellerProductShell } from "./features/seller/components/SellerProductShell";
 export type { SellerProductShellProps, SellerProductDraft, ProductListingMode } from "./features/seller/components/SellerProductShell";
+// [CLIENT] CategoryInlineSelect — searchable category selector with optional inline quick-create.
+export { CategoryInlineSelect } from "./features/seller/components/CategoryInlineSelect";
+export type { CategoryInlineSelectProps } from "./features/seller/components/CategoryInlineSelect";
+// [CLIENT] BrandInlineSelect — searchable brand selector with inline quick-create (default: allowCreate=true).
+export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
+export type { BrandInlineSelectProps } from "./features/seller/components/BrandInlineSelect";
 
 // --- Shell primitives (UX1/UX2/UX3) -------------------------------------------
 // [CLIENT] FormShell — full-viewport edit overlay with sticky top/bottom bars, left section nav, and dirty-state hook.

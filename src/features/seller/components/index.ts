@@ -92,3 +92,7 @@ export { SellerAddressesView as StoreAddressesView } from "./SellerAddressesView
 export type { SellerAddressesViewProps as StoreAddressesViewProps } from "./SellerAddressesView";
 export { SellerBidsView as StoreBidsView } from "./SellerBidsView";
 export type { SellerBidsViewProps as StoreBidsViewProps } from "./SellerBidsView";
+export { CategoryInlineSelect } from "./CategoryInlineSelect";
+export type { CategoryInlineSelectProps } from "./CategoryInlineSelect";
+export { BrandInlineSelect } from "./BrandInlineSelect";
+export type { BrandInlineSelectProps } from "./BrandInlineSelect";
