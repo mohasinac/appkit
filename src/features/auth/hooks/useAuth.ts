@@ -59,6 +59,11 @@ export interface ChangePasswordData {
   newPassword: string;
 }
 
+export interface ChangeEmailData {
+  currentPassword: string;
+  newEmail: string;
+}
+
 export interface ForgotPasswordData {
   email: string;
 }
@@ -346,6 +351,22 @@ export function useChangePassword(options?: {
         data.newPassword,
       );
       return apiClient.post(ACCOUNT_ENDPOINTS.CHANGE_PASSWORD, data);
+    },
+    onSuccess: options?.onSuccess,
+    onError: options?.onError,
+  });
+}
+
+export function useChangeEmail(options?: {
+  onSuccess?: (data: unknown) => void;
+  onError?: (error: unknown) => void;
+}) {
+  return useMutation<unknown, Error, ChangeEmailData>({
+    mutationFn: async (data) => {
+      await getClientAuthProvider().reauthenticateAndSendEmailUpdateVerification(
+        data.currentPassword,
+        data.newEmail,
+      );
     },
     onSuccess: options?.onSuccess,
     onError: options?.onError,

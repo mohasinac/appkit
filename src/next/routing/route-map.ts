@@ -97,6 +97,7 @@ export const DEFAULT_ROUTE_MAP = {
     ORDER_DETAIL: (id: string) => `/user/orders/view/${id}`,
     ORDER_CANCEL: (id: string) => `/user/orders/${id}/cancel`,
     ORDER_TRACK: (id: string) => `/user/orders/${id}/track`,
+    ORDER_INVOICE: (id: string) => `/user/orders/${id}/invoice`,
     NOTIFICATIONS: "/user/notifications",
     MESSAGES: "/user/messages",
     BECOME_SELLER: "/user/become-seller",

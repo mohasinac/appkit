@@ -24,6 +24,12 @@ export interface IClientAuthProvider {
     newPassword: string,
   ): Promise<void>;
 
+  /** Re-authenticate and send a verification email to the new address; email updates after user clicks the link */
+  reauthenticateAndSendEmailUpdateVerification(
+    currentPassword: string,
+    newEmail: string,
+  ): Promise<void>;
+
   /** Reload the current user's profile */
   reloadCurrentUser(): Promise<void>;
 }

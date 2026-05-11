@@ -7,6 +7,7 @@ import {
   sendPasswordResetEmail as fbSendPasswordResetEmail,
   signInWithEmailAndPassword as fbSignInWithEmailAndPassword,
   updatePassword,
+  verifyBeforeUpdateEmail,
 } from "firebase/auth";
 import type { IClientAuthProvider } from "../../contracts/client-auth";
 
@@ -45,6 +46,17 @@ export class FirebaseClientAuthProvider implements IClientAuthProvider {
     );
     await reauthenticateWithCredential(user, credential);
     await updatePassword(user, newPassword);
+  }
+
+  async reauthenticateAndSendEmailUpdateVerification(
+    currentPassword: string,
+    newEmail: string,
+  ): Promise<void> {
+    const user = getAuth().currentUser;
+    if (!user?.email) throw new Error("No authenticated user.");
+    const credential = EmailAuthProvider.credential(user.email, currentPassword);
+    await reauthenticateWithCredential(user, credential);
+    await verifyBeforeUpdateEmail(user, newEmail);
   }
 
   async reloadCurrentUser(): Promise<void> {
