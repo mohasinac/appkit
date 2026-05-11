@@ -4,6 +4,7 @@
  * the moment a user transitions from null → uid.
  */
 import { useEffect, useRef } from "react";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import { clearGuestHistory, getGuestHistory } from "../utils/guest-history";
 
 export function useHistoryMergeOnLogin(userId: string | null | undefined) {
@@ -21,7 +22,7 @@ export function useHistoryMergeOnLogin(userId: string | null | undefined) {
     const items = getGuestHistory();
     if (items.length === 0) return;
 
-    fetch("/api/user/history/merge", {
+    fetch(ACCOUNT_ENDPOINTS.HISTORY_MERGE, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

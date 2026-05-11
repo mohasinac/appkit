@@ -15,6 +15,19 @@ function getSyncableItems() {
   );
 }
 
+/** Custom event fired when the server reports the wishlist is full during a merge. */
+export const WISHLIST_CAP_EVENT = "appkit/wishlist/full";
+export interface WishlistCapEventDetail {
+  limit: number;
+  current: number;
+  skippedFull: number;
+}
+
+function dispatchCapEvent(detail: WishlistCapEventDetail) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent<WishlistCapEventDetail>(WISHLIST_CAP_EVENT, { detail }));
+}
+
 function pushToFirestore() {
   const items = getSyncableItems();
   if (!items.length) return;
@@ -22,7 +35,22 @@ function pushToFirestore() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ items: items.map((i) => ({ productId: i.itemId })) }),
-  }).catch(() => {});
+  })
+    .then(async (res) => {
+      if (!res.ok) return;
+      const json = (await res.json().catch(() => null)) as
+        | { data?: { capReached?: boolean; skippedFull?: number; limit?: number; merged?: number } }
+        | null;
+      const data = json?.data;
+      if (data?.capReached) {
+        dispatchCapEvent({
+          limit: data.limit ?? WISHLIST_MAX,
+          current: data.limit ?? WISHLIST_MAX,
+          skippedFull: data.skippedFull ?? 0,
+        });
+      }
+    })
+    .catch(() => {});
 }
 
 /**

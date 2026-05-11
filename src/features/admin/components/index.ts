@@ -63,6 +63,8 @@ export { AdminCartsView } from "./AdminCartsView";
 export type { AdminCartsViewProps } from "./AdminCartsView";
 export { AdminWishlistsView } from "./AdminWishlistsView";
 export type { AdminWishlistsViewProps } from "./AdminWishlistsView";
+export { AdminHistoryView } from "./AdminHistoryView";
+export type { AdminHistoryViewProps } from "./AdminHistoryView";
 export { AdminPayoutsView } from "./AdminPayoutsView";
 export type { AdminPayoutsViewProps } from "./AdminPayoutsView";
 export { AdminReviewsView } from "./AdminReviewsView";

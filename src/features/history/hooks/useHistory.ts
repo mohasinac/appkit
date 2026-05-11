@@ -2,13 +2,15 @@
 /**
  * useHistory — track + manage recently-viewed history.
  *
- * Auth users → POST/DELETE against `/api/user/history`.
- * Guest users → localStorage mirror via guest-history utils.
+ * Auth users    → POST/DELETE against /api/user/history (Firestore-backed).
+ * Guest users   → localStorage mirror via guest-history utils (same FIFO 50 cap).
  *
- * Track is debounced (1.5s after mount) and session-deduped to avoid bot/
- * back-button spam.
+ * Track is debounced (TRACK_DEBOUNCE_MS) and session-deduped to avoid bot /
+ * back-button spam. The deduper is module-scoped so a productId only fires once
+ * per page session even across remounts.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   type GuestHistoryItem,
   type GuestHistoryType,
@@ -20,6 +22,8 @@ import {
 
 const TRACK_DEBOUNCE_MS = 1500;
 const sessionTracked = new Set<string>();
+const sessionKey = (productType: string, productId: string) =>
+  `${productType}:${productId}`;
 
 export interface TrackArgs {
   productId: string;
@@ -37,16 +41,53 @@ export interface UseHistoryReturn {
   refetch: () => Promise<void>;
 }
 
+interface HistoryFetchResponse {
+  data?: { items?: GuestHistoryItem[] };
+}
+
 async function fetchAuthHistory(): Promise<GuestHistoryItem[]> {
   try {
-    const res = await fetch("/api/user/history", { credentials: "include" });
+    const res = await fetch(ACCOUNT_ENDPOINTS.HISTORY, { credentials: "include" });
     if (!res.ok) return [];
-    const json = (await res.json()) as {
-      data?: { items?: GuestHistoryItem[] };
-    };
+    const json = (await res.json()) as HistoryFetchResponse;
     return json.data?.items ?? [];
   } catch {
     return [];
+  }
+}
+
+async function postAuthTrack(args: TrackArgs): Promise<void> {
+  try {
+    await fetch(ACCOUNT_ENDPOINTS.HISTORY, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(args),
+    });
+  } catch {
+    // best-effort tracking
+  }
+}
+
+async function deleteAuthItem(productId: string): Promise<void> {
+  try {
+    await fetch(ACCOUNT_ENDPOINTS.HISTORY_ITEM(productId), {
+      method: "DELETE",
+      credentials: "include",
+    });
+  } catch {
+    // ignore
+  }
+}
+
+async function deleteAuthAll(): Promise<void> {
+  try {
+    await fetch(ACCOUNT_ENDPOINTS.HISTORY, {
+      method: "DELETE",
+      credentials: "include",
+    });
+  } catch {
+    // ignore
   }
 }
 
@@ -55,54 +96,50 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
   const [items, setItems] = useState<GuestHistoryItem[]>([]);
   const trackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
-  useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      if (isAuth) {
-        const fetched = await fetchAuthHistory();
-        if (!cancelled) setItems(fetched);
-      } else {
-        setItems(getGuestHistory());
-      }
-    }
-    void load();
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuth]);
-
-  const refetch = useCallback(async () => {
+  const loadItems = useCallback(async () => {
     if (isAuth) {
-      const fetched = await fetchAuthHistory();
-      setItems(fetched);
+      setItems(await fetchAuthHistory());
     } else {
       setItems(getGuestHistory());
     }
   }, [isAuth]);
 
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      if (cancelled) return;
+      await loadItems();
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loadItems]);
+
+  // Cleanup any pending track timers on unmount so we don't fire after the
+  // component goes away.
+  useEffect(() => {
+    const timers = trackTimers.current;
+    return () => {
+      for (const t of timers.values()) clearTimeout(t);
+      timers.clear();
+    };
+  }, []);
+
   const track = useCallback(
-    ({ productId, productType, snapshot }: TrackArgs) => {
+    (args: TrackArgs) => {
+      const { productId, productType } = args;
       if (!productId) return;
-      const key = `${productType}:${productId}`;
+      const key = sessionKey(productType, productId);
       if (sessionTracked.has(key)) return; // session-dedup
-      // Debounce
       const existing = trackTimers.current.get(key);
       if (existing) clearTimeout(existing);
-      const timer = setTimeout(async () => {
+      const timer = setTimeout(() => {
         sessionTracked.add(key);
+        trackTimers.current.delete(key);
         if (isAuth) {
-          try {
-            await fetch("/api/user/history", {
-              method: "POST",
-              credentials: "include",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ productId, productType, snapshot }),
-            });
-          } catch {
-            // best-effort
-          }
+          void postAuthTrack(args);
         } else {
-          trackGuestHistory(productId, productType, snapshot);
+          trackGuestHistory(productId, productType, args.snapshot);
           setItems(getGuestHistory());
         }
       }, TRACK_DEBOUNCE_MS);
@@ -114,38 +151,22 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
   const remove = useCallback(
     async (productId: string) => {
       if (isAuth) {
-        try {
-          await fetch(`/api/user/history/${encodeURIComponent(productId)}`, {
-            method: "DELETE",
-            credentials: "include",
-          });
-          await refetch();
-        } catch {
-          // ignore
-        }
+        await deleteAuthItem(productId);
+        await loadItems();
       } else {
-        const next = removeGuestHistoryItem(productId);
-        setItems(next);
+        setItems(removeGuestHistoryItem(productId));
       }
     },
-    [isAuth, refetch],
+    [isAuth, loadItems],
   );
 
   const clear = useCallback(async () => {
     if (isAuth) {
-      try {
-        await fetch("/api/user/history", {
-          method: "DELETE",
-          credentials: "include",
-        });
-        setItems([]);
-      } catch {
-        // ignore
-      }
+      await deleteAuthAll();
     } else {
       clearGuestHistory();
-      setItems([]);
     }
+    setItems([]);
   }, [isAuth]);
 
   return {
@@ -155,6 +176,6 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
     track,
     remove,
     clear,
-    refetch,
+    refetch: loadItems,
   };
 }

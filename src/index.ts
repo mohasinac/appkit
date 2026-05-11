@@ -1874,6 +1874,8 @@ export { usersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // wishlistsSeedData - Model for wishlists seed data.
 export { wishlistsSeedData } from "./seed/index";
+// historySeedData - Model for history (recently-viewed) seed data.
+export { historySeedData } from "./seed/index";
 // conversationsSeedData - Model for conversations seed data.
 export { conversationsSeedData } from "./seed/index";
 // sublistingCategoriesSeedData - Model for sublisting categories seed data.
@@ -3319,6 +3321,8 @@ export { AdminNotificationsView } from "./features/admin/index";
 export { AdminCartsView } from "./features/admin/index";
 // AdminWishlistsView - Admin read-only wishlist insights listing (LL15).
 export { AdminWishlistsView } from "./features/admin/index";
+// AdminHistoryView - Admin read-only history insights listing (S44 follow-up).
+export { AdminHistoryView } from "./features/admin/index";
 // AdminContactEditorView - Admin contact submission detail SideDrawer (B7/VA15).
 export { AdminContactEditorView } from "./features/admin/index";
 export type { AdminContactEditorViewProps } from "./features/admin/index";

@@ -35,6 +35,7 @@ export type SeedCollectionName =
   | "storeAddresses"
   | "carts"
   | "wishlists"
+  | "history"
   | "conversations"
   | "sublistingCategories"
   | "groupedListings"

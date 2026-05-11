@@ -53,6 +53,10 @@ export const ACCOUNT_ENDPOINTS = {
   ORDERS: "/api/user/orders",
   ORDER_BY_ID: (orderId: string) => `/api/user/orders/${orderId}`,
   WISHLIST: "/api/user/wishlist",
+  HISTORY: "/api/user/history",
+  HISTORY_ITEM: (productId: string) =>
+    `/api/user/history/${encodeURIComponent(productId)}`,
+  HISTORY_MERGE: "/api/user/history/merge",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -135,6 +139,7 @@ export const ADMIN_ENDPOINTS = {
   ADMIN_NOTIFICATION_RESEND: (id: string) => `/api/admin/notifications/${id}/resend`,
   ADMIN_CARTS: "/api/admin/carts",
   ADMIN_WISHLISTS: "/api/admin/wishlists",
+  ADMIN_HISTORY: "/api/admin/history",
   NEWSLETTER_EXPORT: "/api/admin/newsletter/export",
   FEATURE_FLAGS: "/api/admin/feature-flags",
   STORE_ADDRESSES: "/api/admin/store-addresses",

@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AdminHistoryView — read-only admin insights for the top-level `history` collection.
+ * One row per user with item count + last visit. Mirrors AdminWishlistsView.
+ */
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
@@ -14,21 +18,20 @@ import {
 import { DataTable } from "./DataTable";
 
 const PAGE_SIZE = 25;
-const FILTER_KEYS: string[] = [];
 const DEFAULT_SORT = "-updatedAt";
 const SORT_OPTIONS = [
-  { value: "-updatedAt", label: "Recently updated" },
+  { value: "-updatedAt", label: "Recently active" },
   { value: "-itemCount", label: "Largest first" },
 ];
 
-export interface AdminWishlistsViewProps extends ListingViewShellProps {}
+export interface AdminHistoryViewProps extends ListingViewShellProps {}
 
-interface AdminWishlistsResponse {
+interface AdminHistoryResponse {
   items?: unknown[];
   total?: number;
 }
 
-interface WishlistRow {
+interface HistoryRow {
   id: string;
   primary: string;
   secondary: string;
@@ -36,7 +39,7 @@ interface WishlistRow {
   updatedAt: string;
 }
 
-export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewProps) {
+export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) {
   const hasChildren = React.Children.count(children) > 0;
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
@@ -53,9 +56,9 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
 
   const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
 
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminWishlistsResponse, WishlistRow>({
-    queryKey: ["admin", "wishlists", "listing"],
-    endpoint: ADMIN_ENDPOINTS.ADMIN_WISHLISTS,
+  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminHistoryResponse, HistoryRow>({
+    queryKey: ["admin", "history", "listing"],
+    endpoint: ADMIN_ENDPOINTS.ADMIN_HISTORY,
     page: table.getNumber("page", 1),
     pageSize: PAGE_SIZE,
     sorts: table.get("sort") || DEFAULT_SORT,
@@ -63,13 +66,12 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const itemCount = typeof item.itemCount === "number" ? item.itemCount : 0;
-        const limit = typeof item.limit === "number" ? item.limit : 20;
-        const isFull = item.isFull === true;
+        const limit = typeof item.limit === "number" ? item.limit : 50;
         return {
-          id: toStringValue(item.id, `wish-${index}`),
+          id: toStringValue(item.id, `hist-${index}`),
           primary: toStringValue(item.userId, "Unknown user"),
-          secondary: `${itemCount} item${itemCount === 1 ? "" : "s"} of ${limit}`,
-          status: isFull ? "Full" : itemCount >= limit - 2 ? "Near cap" : "OK",
+          secondary: `${itemCount} of ${limit} items`,
+          status: itemCount >= limit ? "At cap" : itemCount >= limit - 5 ? "Near cap" : "OK",
           updatedAt: toRelativeDate(item.updatedAt),
         };
       }),
@@ -112,7 +114,7 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No user wishlists found" />
+        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No user history records found" />
       </div>
     </div>
   );

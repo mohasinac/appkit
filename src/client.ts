@@ -209,6 +209,9 @@ export {
 export type { AdSlotId, AdProvider, AdSlotConfig } from "./features/homepage/ad-registry";
 export { WishlistView, useGuestWishlist, useWishlistWithGuest } from "./features/wishlist/index";
 export type { WishlistViewProps, GuestWishlistItem, WishlistItem, WishlistResponse, WishlistProductData, EnrichedWishlistItem } from "./features/wishlist/index";
+export { WishlistCapWatcher } from "./features/wishlist/components/WishlistCapWatcher";
+export { useWishlistCount, useWishlistCountWithLimit, WISHLIST_CAP_EVENT } from "./features/wishlist/hooks/useWishlistCount";
+export type { WishlistCapEventDetail } from "./features/wishlist/hooks/useWishlistCount";
 export {
   getGuestWishlistItems,
   addToGuestWishlist,

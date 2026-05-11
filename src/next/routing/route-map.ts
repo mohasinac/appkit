@@ -199,6 +199,7 @@ export const DEFAULT_ROUTE_MAP = {
     NOTIFICATIONS: "/admin/notifications",
     CARTS: "/admin/carts",
     WISHLISTS: "/admin/wishlists",
+    HISTORY: "/admin/history",
     RETURN_REQUESTS: "/admin/return-requests",
     STORE_ADDRESSES: "/admin/store-addresses",
     SUBLISTING_CATEGORIES: "/admin/sublisting-categories",
