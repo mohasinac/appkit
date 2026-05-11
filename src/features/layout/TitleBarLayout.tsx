@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { BlockHeader, Button, Div, Row, Span } from "../../ui";
+import { BlockHeader, Button, Div, Row, SiteLogo, Span } from "../../ui";
 
 /** Minimal user shape required by the title bar. */
 export interface TitleBarUser {
@@ -19,6 +19,8 @@ export interface TitleBarLayoutProps {
   searchOpen: boolean;
   brandName: string;
   brandShortName?: string;
+  /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
+  siteLogoUrl?: string;
   logoHref: string;
   promotionsHref?: string;
   /** Href for the compare page/drawer. When provided, renders a Compare icon button. */
@@ -62,6 +64,7 @@ export function TitleBarLayout({
   searchOpen,
   brandName,
   brandShortName,
+  siteLogoUrl,
   logoHref,
   promotionsHref,
   compareHref,
@@ -84,6 +87,7 @@ export function TitleBarLayout({
   className = "",
 }: TitleBarLayoutProps) {
   void searchOpen;
+  void brandShortName;
 
   return (
     <BlockHeader
@@ -103,16 +107,14 @@ export function TitleBarLayout({
           <Row gap="3">
             <Link
               href={logoHref}
-              className="font-bold text-xl tracking-tight text-zinc-900 dark:text-zinc-50 hover:text-primary dark:hover:text-secondary transition-colors"
+              aria-label={brandName}
+              className="flex items-center transition-opacity hover:opacity-80"
             >
-              {brandShortName ? (
-                <>
-                  <Span className="md:hidden">{brandShortName}</Span>
-                  <Span className="hidden md:inline">{brandName}</Span>
-                </>
-              ) : (
-                brandName
-              )}
+              <SiteLogo
+                title={brandName}
+                src={siteLogoUrl}
+                className="h-7 md:h-9 lg:h-10"
+              />
             </Link>
           </Row>
 

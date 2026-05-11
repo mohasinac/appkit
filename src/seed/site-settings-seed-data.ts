@@ -97,7 +97,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     opacity: 20,
   },
   logo: {
-    url: "/favicon.svg",
+    url: "",
     alt: "LetItRip Logo",
     format: "svg",
   },

@@ -58,6 +58,8 @@ export interface AppLayoutShellProps {
   user?: BottomNavbarUser | null;
   brandName: string;
   brandShortName?: string;
+  /** Admin-uploaded site logo URL. Falls back to the SVG wordmark when empty. */
+  siteLogoUrl?: string;
   logoHref: string;
   promotionsHref?: string;
   cartHref: string;
@@ -248,6 +250,7 @@ export function AppLayoutShell({
   user,
   brandName,
   brandShortName,
+  siteLogoUrl,
   logoHref,
   promotionsHref,
   cartHref,
@@ -577,6 +580,7 @@ export function AppLayoutShell({
             searchOpen={searchOpen}
             brandName={brandName}
             brandShortName={brandShortName}
+            siteLogoUrl={siteLogoUrl}
             logoHref={logoHref}
             promotionsHref={promotionsHref}
             cartHref={cartHref}

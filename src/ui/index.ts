@@ -58,6 +58,9 @@ export type { SpinnerProps } from "./components/Spinner";
 export { Spinner } from "./components/Spinner";
 export { PageLoader } from "./components/PageLoader";
 
+export type { SiteLogoProps } from "./components/SiteLogo";
+export { SiteLogo } from "./components/SiteLogo";
+
 export type { SkeletonProps } from "./components/Skeleton";
 export { Skeleton } from "./components/Skeleton";
 

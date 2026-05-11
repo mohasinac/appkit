@@ -2,7 +2,7 @@
 
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Grid, Heading, Row, Section, Span, Text, TextLink } from "../../../ui";
+import { Button, Grid, Heading, Row, Section, SiteLogo, Span, Text, TextLink } from "../../../ui";
 
 // --- Props -------------------------------------------------------------------
 export interface WelcomeSectionChip {
@@ -183,16 +183,17 @@ export function WelcomeSection({
             )}
           </div>
 
-          {/* Right: brand placeholder (desktop only) */}
+          {/* Right: brand logo (desktop only) */}
           <div className="hidden lg:block" data-section="welcomesection-div-387">
             <div
               className={`relative rounded-3xl overflow-hidden aspect-[4/3] bg-gradient-to-br from-primary-100 via-cobalt-100/60 to-secondary-100 dark:from-primary-950/60 dark:via-cobalt-950/40 dark:to-secondary-950/60 border ${themed.border} shadow-2xl`}
              data-section="welcomesection-div-388">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-cobalt/5" />
-              <div className={`absolute inset-0 ${flex.center}`} data-section="welcomesection-div-389">
-                <Span className="font-display text-9xl font-black text-primary-400/30 dark:text-secondary-400/30 select-none">
-                  {brandLogoText}
-                </Span>
+              <div className={`absolute inset-0 ${flex.center} px-10`} data-section="welcomesection-div-389">
+                <SiteLogo
+                  title={brandLogoText || "LetItRip.in"}
+                  className="h-24 xl:h-32 2xl:h-40 max-w-full"
+                />
               </div>
             </div>
           </div>

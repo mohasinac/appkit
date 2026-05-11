@@ -336,6 +336,13 @@ export { verifySessionCookie } from "./providers/auth-firebase/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // applySieveToFirestore - Helper for apply sieve to firestore.
 export { applySieveToFirestore } from "./providers/db-firebase/index";
+// [SERVER-ONLY]-Server-only — Firebase Admin SDK providers (firestore, auth, storage, realtime db).
+export {
+  getAdminDb,
+  getAdminAuth,
+  getAdminStorage,
+  getAdminRealtimeDb,
+} from "./providers/db-firebase/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // buildFirebaseClientConfig - Helper for build firebase client config.
 export { buildFirebaseClientConfig } from "./providers/db-firebase/index";
