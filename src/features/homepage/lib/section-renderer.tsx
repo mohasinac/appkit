@@ -377,18 +377,20 @@ function renderSectionElement(
 
     case "social-feed": {
       const cfg = config as SocialFeedSectionConfig;
-      if (!cfg?.platform || !cfg?.handle) return null;
+      const hasStaticPosts = Array.isArray(cfg?.posts) && cfg.posts.length > 0;
+      if (!cfg?.platform || (!cfg?.handle && !hasStaticPosts)) return null;
       return (
         <SocialFeedSection
           title={cleanTitle(cfg.title) || ""}
           subtitle={cfg.subtitle}
           platform={cfg.platform}
-          handle={cfg.handle}
+          handle={cfg.handle ?? ""}
           postType={cfg.postType || "all"}
           count={cfg.count || 9}
           layout={cfg.layout || "grid"}
           showCaption={cfg.showCaption ?? true}
           showStats={cfg.showStats ?? true}
+          posts={cfg.posts}
         />
       );
     }

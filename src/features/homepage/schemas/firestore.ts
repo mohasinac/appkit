@@ -495,30 +495,55 @@ export interface EventsSectionConfig {
   loop?: boolean;
 }
 
-export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart";
+export type SocialPlatform = "instagram" | "facebook" | "tiktok" | "deviantart" | "youtube";
 export type SocialPostType = "all" | "images" | "videos" | "reels";
 export type SocialFeedLayout = "grid" | "masonry" | "carousel";
+
+/**
+ * A manually configured static social post — used for YouTube videos (no API token needed)
+ * and as a fallback when platform credentials are not configured.
+ * videoId is stored; thumbnail URL is computed at render time from the video ID.
+ * Do NOT store raw YouTube CDN thumbnail URLs in Firestore (they may expire).
+ */
+export interface StaticSocialPost {
+  id: string;
+  platform: SocialPlatform;
+  /** YouTube video ID (e.g. "dQw4w9WgXcQ"). Required when platform is "youtube". */
+  videoId?: string;
+  /** YouTube channel display name shown as a chip. */
+  channelName?: string;
+  caption?: string;
+}
 
 export interface SocialFeedSectionConfig {
   title: string;
   subtitle?: string;
   platform: SocialPlatform;
-  /** Username, page ID, or handle for the platform account */
-  handle: string;
+  /** Username, page ID, or handle for the platform account. Optional for YouTube (uses static posts). */
+  handle?: string;
   postType: SocialPostType;
   /** Number of posts to display (4–12) */
   count: number;
   layout: SocialFeedLayout;
   showCaption: boolean;
   showStats: boolean;
+  /**
+   * Manually configured static posts (YouTube videos, etc.).
+   * Rendered alongside or instead of platform-fetched posts.
+   */
+  posts?: StaticSocialPost[];
 }
 
 /** Normalised social post returned by /api/social-feed */
 export interface SocialPost {
   id: string;
   platform: SocialPlatform;
-  imageUrl: string;
+  imageUrl?: string;
   videoThumbnailUrl?: string;
+  /** YouTube video ID — present when platform is "youtube". */
+  videoId?: string;
+  /** YouTube channel display name. */
+  channelName?: string;
   caption?: string;
   permalink: string;
   mediaType: "image" | "video" | "carousel";
@@ -527,7 +552,7 @@ export interface SocialPost {
     views?: number;
     comments?: number;
   };
-  publishedAt: string;
+  publishedAt?: string;
 }
 
 export interface PreOrdersSectionConfig {

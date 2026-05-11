@@ -1,4 +1,3 @@
-import React from "react";
 import { Heading, Section, Text } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { SocialPostCard } from "./SocialPostCard";
@@ -18,6 +17,7 @@ const PLATFORM_LABELS: Record<SocialPlatform, string> = {
   facebook: "Facebook",
   tiktok: "TikTok",
   deviantart: "DeviantArt",
+  youtube: "YouTube",
 };
 
 function platformProfileUrl(platform: SocialPlatform, handle: string): string {
@@ -26,6 +26,7 @@ function platformProfileUrl(platform: SocialPlatform, handle: string): string {
     case "facebook": return `https://www.facebook.com/${handle}`;
     case "tiktok": return `https://www.tiktok.com/@${handle}`;
     case "deviantart": return `https://www.deviantart.com/${handle}`;
+    case "youtube": return `https://www.youtube.com/@${handle}`;
   }
 }
 
@@ -58,7 +59,26 @@ function SocialFeedEmpty({ platform }: { platform: SocialPlatform }) {
 // --- Server fetch ------------------------------------------------------------
 
 async function loadPosts(config: SocialFeedSectionConfig): Promise<{ posts: SocialPost[]; error?: string }> {
-  const { platform, handle, postType, count } = config;
+  const { platform, handle, postType, count, posts: staticPosts } = config;
+
+  // YouTube: no API token needed — render from static posts in config
+  if (platform === "youtube") {
+    const posts: SocialPost[] = (staticPosts ?? []).map((p) => ({
+      id: p.id,
+      platform: "youtube",
+      permalink: `https://youtu.be/${p.videoId ?? ""}`,
+      videoId: p.videoId,
+      channelName: p.channelName,
+      caption: p.caption,
+      mediaType: "video",
+      imageUrl: p.videoId ? `https://img.youtube.com/vi/${p.videoId}/maxresdefault.jpg` : undefined,
+      stats: {},
+    }));
+    return { posts };
+  }
+
+  if (!handle) return { posts: [], error: `A handle is required for ${PLATFORM_LABELS[platform]}.` };
+
   try {
     const credentials = await siteSettingsRepository.getDecryptedCredentials().catch(() => null);
     switch (platform) {
@@ -101,6 +121,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
   const { title, subtitle, platform, handle, layout, showCaption, showStats, count } = config;
   const { themed } = THEME_CONSTANTS;
   const { posts, error } = await loadPosts(config);
+  const profileUrl = handle ? platformProfileUrl(platform, handle) : null;
 
   const gridClass =
     layout === "carousel"
@@ -130,14 +151,16 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
               </Text>
             )}
           </div>
-          <a
-            href={platformProfileUrl(platform, handle)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shrink-0 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            Follow on {PLATFORM_LABELS[platform]} →
-          </a>
+          {profileUrl && (
+            <a
+              href={profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-sm font-medium text-[var(--appkit-color-primary)] hover:opacity-80"
+            >
+              Follow on {PLATFORM_LABELS[platform]} →
+            </a>
+          )}
         </div>
 
         {error ? (

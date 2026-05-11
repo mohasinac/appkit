@@ -399,4 +399,41 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     createdAt: daysAgo(30),
     updatedAt: daysAgo(30),
   },
+
+  // ── 20. social-feed YouTube (static posts — no API token needed) ──────────
+  {
+    id: "section-social-feed-youtube",
+    type: "social-feed",
+    order: 20,
+    enabled: false,
+    config: {
+      title: "LetItRip on YouTube",
+      subtitle: "Watch unboxings, collection reviews, and auction replays",
+      platform: "youtube",
+      handle: "letitrip",
+      postType: "all",
+      count: 6,
+      layout: "grid",
+      showCaption: true,
+      showStats: false,
+      posts: [
+        {
+          id: "yt-post-001",
+          platform: "youtube",
+          videoId: "dQw4w9WgXcQ",
+          channelName: "LetItRip",
+          caption: "Unboxing the rarest Pokémon cards of 2026 — Charizard PSA 10 reveal!",
+        },
+        {
+          id: "yt-post-002",
+          platform: "youtube",
+          videoId: "ScMzIvxBSi4",
+          channelName: "LetItRip",
+          caption: "Hot Wheels Super Treasure Hunt hunting at flea markets across Mumbai",
+        },
+      ],
+    },
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(15),
+  },
 ];
