@@ -1,50 +1,156 @@
+/**
+ * UserWishlistRepository — one document per user at top-level `wishlists/wishlist-{userSlug}`.
+ *
+ * Doc shape: { userId: string, items: UserWishlistItem[], updatedAt: Date }
+ * - id === slug === `wishlist-{userSlug}` (LetItRip id-equals-slug convention)
+ * - userSlug === user.uid (per users-seed-data.ts: id === uid === slug)
+ * - items ordered newest-first (addedAt desc)
+ * - hard cap WISHLIST_MAX (20); idempotent re-add is a no-op; over-cap throws WishlistFullError
+ * - all mutations run inside a Firestore transaction (concurrent-write safe)
+ */
+
 import { getAdminDb } from "../../../providers/db-firebase";
 import { serverLogger } from "../../../monitoring";
-import { USER_COLLECTION } from "../../auth/schemas";
+import {
+  WISHLIST_COLLECTION,
+  WISHLIST_DOC_ID,
+  WISHLIST_MAX,
+} from "../../../constants/limits";
+
+export interface WishlistItemSnapshot {
+  title?: string;
+  thumb?: string;
+  currentPrice?: number;
+}
 
 export interface UserWishlistItem {
   productId: string;
+  productType?: "product" | "auction" | "preorder";
   addedAt: Date;
+  priceAtAdd?: number;
+  productSnapshot?: WishlistItemSnapshot;
+}
+
+export interface WishlistDocument {
+  userId: string;
+  items: UserWishlistItem[];
+  updatedAt: Date;
+}
+
+export class WishlistFullError extends Error {
+  readonly code = "WISHLIST_FULL" as const;
+  readonly limit = WISHLIST_MAX;
+  readonly current: number;
+  constructor(current: number) {
+    super(`Wishlist full (${current}/${WISHLIST_MAX})`);
+    this.name = "WishlistFullError";
+    this.current = current;
+  }
+}
+
+function toDate(raw: unknown): Date {
+  if (raw instanceof Date) return raw;
+  if (raw && typeof (raw as { toDate?: () => Date }).toDate === "function") {
+    return (raw as { toDate: () => Date }).toDate();
+  }
+  if (typeof raw === "string" || typeof raw === "number") return new Date(raw);
+  return new Date();
+}
+
+function normaliseItems(raw: unknown): UserWishlistItem[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((r): r is Record<string, unknown> => !!r && typeof r === "object")
+    .map((r) => ({
+      productId: String(r.productId ?? ""),
+      productType: r.productType as UserWishlistItem["productType"],
+      addedAt: toDate(r.addedAt),
+      priceAtAdd: typeof r.priceAtAdd === "number" ? r.priceAtAdd : undefined,
+      productSnapshot: (r.productSnapshot ?? undefined) as WishlistItemSnapshot | undefined,
+    }))
+    .filter((i) => i.productId);
 }
 
 export class UserWishlistRepository {
-  private readonly subcollection = "wishlist";
-
-  private getUserWishlistRef(uid: string) {
+  private docRef(userSlug: string) {
     return getAdminDb()
-      .collection(USER_COLLECTION)
-      .doc(uid)
-      .collection(this.subcollection);
+      .collection(WISHLIST_COLLECTION)
+      .doc(WISHLIST_DOC_ID(userSlug));
   }
 
-  async getWishlistItems(uid: string): Promise<UserWishlistItem[]> {
+  async getWishlistItems(userSlug: string): Promise<UserWishlistItem[]> {
     try {
-      const snapshot = await this.getUserWishlistRef(uid)
-        .orderBy("addedAt", "desc")
-        .get();
-
-      return snapshot.docs.map((doc) => ({
-        productId: doc.id,
-        addedAt: doc.data().addedAt?.toDate?.() ?? new Date(),
-      }));
+      const snap = await this.docRef(userSlug).get();
+      if (!snap.exists) return [];
+      return normaliseItems(snap.data()?.items);
     } catch (error) {
       serverLogger.error("UserWishlistRepository.getWishlistItems error", {
-        uid,
+        userSlug,
         error,
       });
       throw error;
     }
   }
 
-  async addItem(uid: string, productId: string): Promise<void> {
+  async countByUser(userSlug: string): Promise<number> {
+    const snap = await this.docRef(userSlug).get();
+    if (!snap.exists) return 0;
+    const items = snap.data()?.items;
+    return Array.isArray(items) ? items.length : 0;
+  }
+
+  async isInWishlist(userSlug: string, productId: string): Promise<boolean> {
+    const items = await this.getWishlistItems(userSlug);
+    return items.some((i) => i.productId === productId);
+  }
+
+  /**
+   * Add a product to the wishlist. Idempotent on existing productId (no-op, no error).
+   * Throws WishlistFullError if at cap and productId is not already present.
+   * Returns the new total count.
+   */
+  async addItem(
+    userSlug: string,
+    productId: string,
+    extras?: {
+      productType?: UserWishlistItem["productType"];
+      priceAtAdd?: number;
+      productSnapshot?: WishlistItemSnapshot;
+    },
+  ): Promise<number> {
+    const db = getAdminDb();
+    const ref = this.docRef(userSlug);
     try {
-      await this.getUserWishlistRef(uid).doc(productId).set({
-        productId,
-        addedAt: new Date(),
+      return await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        const items: UserWishlistItem[] = snap.exists
+          ? normaliseItems(snap.data()?.items)
+          : [];
+        if (items.some((i) => i.productId === productId)) {
+          return items.length; // idempotent
+        }
+        if (items.length >= WISHLIST_MAX) {
+          throw new WishlistFullError(items.length);
+        }
+        const newItem: UserWishlistItem = {
+          productId,
+          productType: extras?.productType,
+          addedAt: new Date(),
+          priceAtAdd: extras?.priceAtAdd,
+          productSnapshot: extras?.productSnapshot,
+        };
+        const next = [newItem, ...items];
+        tx.set(ref, {
+          userId: userSlug,
+          items: next,
+          updatedAt: new Date(),
+        });
+        return next.length;
       });
     } catch (error) {
+      if (error instanceof WishlistFullError) throw error;
       serverLogger.error("UserWishlistRepository.addItem error", {
-        uid,
+        userSlug,
         productId,
         error,
       });
@@ -52,12 +158,25 @@ export class UserWishlistRepository {
     }
   }
 
-  async removeItem(uid: string, productId: string): Promise<void> {
+  async removeItem(userSlug: string, productId: string): Promise<void> {
+    const db = getAdminDb();
+    const ref = this.docRef(userSlug);
     try {
-      await this.getUserWishlistRef(uid).doc(productId).delete();
+      await db.runTransaction(async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists) return;
+        const items = normaliseItems(snap.data()?.items);
+        const next = items.filter((i) => i.productId !== productId);
+        if (next.length === items.length) return;
+        tx.set(ref, {
+          userId: userSlug,
+          items: next,
+          updatedAt: new Date(),
+        });
+      });
     } catch (error) {
       serverLogger.error("UserWishlistRepository.removeItem error", {
-        uid,
+        userSlug,
         productId,
         error,
       });
@@ -65,33 +184,36 @@ export class UserWishlistRepository {
     }
   }
 
-  async isInWishlist(uid: string, productId: string): Promise<boolean> {
+  async clearWishlist(userSlug: string): Promise<void> {
     try {
-      const doc = await this.getUserWishlistRef(uid).doc(productId).get();
-      return doc.exists;
-    } catch (error) {
-      serverLogger.error("UserWishlistRepository.isInWishlist error", {
-        uid,
-        productId,
-        error,
+      await this.docRef(userSlug).set({
+        userId: userSlug,
+        items: [],
+        updatedAt: new Date(),
       });
-      return false;
-    }
-  }
-
-  async clearWishlist(uid: string): Promise<void> {
-    try {
-      const snapshot = await this.getUserWishlistRef(uid).get();
-      const batch = getAdminDb().batch();
-      snapshot.docs.forEach((doc) => batch.delete(doc.ref));
-      await batch.commit();
     } catch (error) {
       serverLogger.error("UserWishlistRepository.clearWishlist error", {
-        uid,
+        userSlug,
         error,
       });
       throw error;
     }
+  }
+
+  /** Admin: returns one row per user (for the admin insights view). */
+  async findAllSummaries(): Promise<
+    { userId: string; itemCount: number; updatedAt: Date }[]
+  > {
+    const snap = await getAdminDb().collection(WISHLIST_COLLECTION).get();
+    return snap.docs.map((doc) => {
+      const data = doc.data();
+      const items = Array.isArray(data?.items) ? data.items : [];
+      return {
+        userId: String(data?.userId ?? doc.id.replace(/^wishlist-/, "")),
+        itemCount: items.length,
+        updatedAt: toDate(data?.updatedAt),
+      };
+    });
   }
 }
 

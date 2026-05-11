@@ -8608,7 +8608,13 @@ export {
   SEARCH_ENDPOINTS, SELLER_ENDPOINTS, BLOG_ENDPOINTS, WISHLIST_ENDPOINTS,
   DEMO_ENDPOINTS, COLLECTION_CACHE_PATHS, resolveEndpoint, resolveEndpointFn,
   ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES,
+  WISHLIST_MAX, HISTORY_MAX, CART_MAX_ITEMS,
+  WISHLIST_DOC_ID, HISTORY_DOC_ID,
+  WISHLIST_COLLECTION, HISTORY_COLLECTION,
 } from "./constants/index";
+
+// Wishlist server errors (server-only via tree-shake — class only, no firebase-admin at module scope)
+export { WishlistFullError } from "./features/wishlist/server";
 
 // Missing React hooks and providers
 export {

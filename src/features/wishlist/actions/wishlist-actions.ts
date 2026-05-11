@@ -6,39 +6,45 @@
  */
 
 import { ValidationError } from "../../../errors";
-import { wishlistRepository } from "../repository/user-wishlist.repository";
+import {
+  wishlistRepository,
+  WishlistFullError,
+  type UserWishlistItem,
+} from "../repository/user-wishlist.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import type { ProductDocument } from "../../products/schemas";
 
-export interface EnrichedWishlistItem {
-  productId: string;
-  addedAt: Date;
+export { WishlistFullError } from "../repository/user-wishlist.repository";
+
+export interface EnrichedWishlistItem extends UserWishlistItem {
   product: ProductDocument | null;
 }
 
 export async function addToWishlist(
-  userId: string,
+  userSlug: string,
   productId: string,
-): Promise<void> {
+  extras?: Parameters<typeof wishlistRepository.addItem>[2],
+): Promise<{ count: number }> {
   if (!productId || typeof productId !== "string")
     throw new ValidationError("productId is required");
-  await wishlistRepository.addItem(userId, productId);
+  const count = await wishlistRepository.addItem(userSlug, productId, extras);
+  return { count };
 }
 
 export async function removeFromWishlist(
-  userId: string,
+  userSlug: string,
   productId: string,
 ): Promise<void> {
   if (!productId || typeof productId !== "string")
     throw new ValidationError("productId is required");
-  await wishlistRepository.removeItem(userId, productId);
+  await wishlistRepository.removeItem(userSlug, productId);
 }
 
-export async function getWishlistForUser(userId: string): Promise<{
+export async function getWishlistForUser(userSlug: string): Promise<{
   items: EnrichedWishlistItem[];
   meta: { total: number };
 }> {
-  const items = await wishlistRepository.getWishlistItems(userId);
+  const items = await wishlistRepository.getWishlistItems(userSlug);
 
   const productResults = await Promise.allSettled(
     items.map((item) => productRepository.findById(item.productId)),
