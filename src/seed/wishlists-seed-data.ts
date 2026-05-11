@@ -1,10 +1,8 @@
 /**
- * Wishlist Seed Data — Pokemon TCG Themed
- * User wishlist items stored under users/{uid}/wishlist/{productId}
- *
- * All userId and productId references align with:
- *   - pokemon-users-seed-data.ts
- *   - pokemon-products-seed-data.ts
+ * Wishlist Seed Data
+ * One document per user+product pair, stored under users/{uid}/wishlist/{productId}.
+ * All userId and productId values verified against users-seed-data.ts and
+ * products-standard-seed-data.ts / products-auctions-seed-data.ts / products-preorders-seed-data.ts.
  */
 
 export interface WishlistSeedDocument {
@@ -17,116 +15,119 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const wishlistsSeedData: WishlistSeedDocument[] = [
-  // Ash wants Charizard and Blastoise — the classic rivalry cards
+  // ── Rahul Sharma (buyer) — Pokémon TCG & vintage ─────────────────────────
   {
-    userId: "user-ash-ketchum-buyer",
-    productId: "product-charizard-base1-4-holo-rare-fire-blaine-1",
-    addedAt: daysAgo(7),
-  },
-  {
-    userId: "user-ash-ketchum-buyer",
-    productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
-    addedAt: daysAgo(5),
-  },
-  {
-    userId: "user-ash-ketchum-buyer",
-    productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
-    addedAt: daysAgo(3),
-  },
-
-  // Gary wants the rarest — the 1st edition auction Charizard and Mewtwo PSA 9
-  {
-    userId: "user-gary-oak-buyer",
-    productId: "auction-charizard-1st-ed-base1-4-fire-blaine-auction-1",
-    addedAt: daysAgo(6),
-  },
-  {
-    userId: "user-gary-oak-buyer",
-    productId: "auction-mewtwo-base1-10-psychic-surge-auction-1",
-    addedAt: daysAgo(4),
-  },
-
-  // Brock wants solid Rock-type adjacent picks and sealed product
-  {
-    userId: "user-brock-pewter-buyer",
-    productId: "product-base-set-booster-pack-sealed-blaine-1",
-    addedAt: daysAgo(8),
-  },
-  {
-    userId: "user-brock-pewter-buyer",
-    productId: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
-    addedAt: daysAgo(4),
-  },
-
-  // Misty has Electric cards on her wishlist — covets the rival type
-  {
-    userId: "user-misty-water-gym-misty",
-    productId: "product-zapdos-base1-16-holo-rare-electric-surge-1",
-    addedAt: daysAgo(4),
-  },
-  {
-    userId: "user-misty-water-gym-misty",
-    productId: "product-zap-theme-deck-sealed-surge-1",
-    addedAt: daysAgo(2),
-  },
-
-  // Surge has Water cards on his wishlist — covets Misty's inventory
-  {
-    userId: "user-lt-surge-electric-surge",
-    productId: "product-blastoise-base1-2-holo-rare-water-misty-1",
-    addedAt: daysAgo(3),
-  },
-  {
-    userId: "user-lt-surge-electric-surge",
-    productId: "product-gyarados-base1-6-holo-rare-water-misty-1",
-    addedAt: daysAgo(1),
-  },
-
-  // Blaine wants Grass and Colorless to round out his collection
-  {
-    userId: "user-blaine-fire-gym-blaine",
-    productId: "product-venusaur-base1-15-holo-rare-grass-blaine-1",
-    addedAt: daysAgo(2),
-  },
-  {
-    userId: "user-blaine-fire-gym-blaine",
-    productId: "product-chansey-base1-3-holo-rare-colorless-misty-1",
-    addedAt: daysAgo(1),
-  },
-
-  // Professor Oak wants everything for research — the binder and trainer cards
-  {
-    userId: "user-dawn-sinnoh-buyer",
-    productId: "product-pokemon-9-pocket-binder-misty-1",
+    userId: "user-rahul-sharma",
+    productId: "product-pokemon-sv-etb",
     addedAt: daysAgo(10),
   },
   {
-    userId: "user-dawn-sinnoh-buyer",
-    productId: "product-professor-oak-base1-88-uncommon-trainer-surge-1",
-    addedAt: daysAgo(6),
+    userId: "user-rahul-sharma",
+    productId: "product-vintage-pokemon-charizard-base-lp",
+    addedAt: daysAgo(7),
+  },
+  {
+    userId: "user-rahul-sharma",
+    productId: "auction-pokemon-charizard-base1-psa9",
+    addedAt: daysAgo(5),
   },
 
-  // Sabrina loves Psychic — and the Haunter is a natural fit
+  // ── Priya Patel (buyer) — Hot Wheels & diecast ───────────────────────────
   {
-    userId: "user-may-hoenn-buyer",
-    productId: "product-haunter-base1-24-non-holo-rare-psychic-surge-1",
+    userId: "user-priya-patel",
+    productId: "product-hot-wheels-redline-1969-camaro",
+    addedAt: daysAgo(12),
+  },
+  {
+    userId: "user-priya-patel",
+    productId: "product-hot-wheels-rlc-bone-shaker",
+    addedAt: daysAgo(8),
+  },
+  {
+    userId: "user-priya-patel",
+    productId: "auction-hot-wheels-redline-camaro-pink",
+    addedAt: daysAgo(3),
+  },
+
+  // ── Arjun Singh (buyer) — Beyblade ───────────────────────────────────────
+  {
+    userId: "user-arjun-singh",
+    productId: "product-beyblade-x-bx01-dran-sword",
+    addedAt: daysAgo(6),
+  },
+  {
+    userId: "user-arjun-singh",
+    productId: "product-beyblade-burst-b200-valkyrie",
+    addedAt: daysAgo(4),
+  },
+
+  // ── Meera Nair (buyer) — Anime figures ───────────────────────────────────
+  {
+    userId: "user-meera-nair",
+    productId: "product-shf-goku-ultra-instinct",
+    addedAt: daysAgo(9),
+  },
+  {
+    userId: "user-meera-nair",
+    productId: "product-nendoroid-rem-rezero",
     addedAt: daysAgo(5),
   },
   {
-    userId: "user-may-hoenn-buyer",
-    productId: "product-mewtwo-base1-10-holo-rare-psychic-surge-1",
-    addedAt: daysAgo(3),
+    userId: "user-meera-nair",
+    productId: "product-gsc-racing-miku-2023",
+    addedAt: daysAgo(2),
   },
 
-  // Erika loves Grass — Beedrill and Clefairy are her targets
+  // ── Kavya Iyer (buyer) — Gunpla ──────────────────────────────────────────
   {
-    userId: "user-dawn-sinnoh-buyer",
-    productId: "product-beedrill-base1-17-non-holo-rare-grass-blaine-1",
+    userId: "user-kavya-iyer",
+    productId: "product-gundam-rx78-mg",
+    addedAt: daysAgo(14),
+  },
+  {
+    userId: "user-kavya-iyer",
+    productId: "product-gundam-wing-zero-rg",
+    addedAt: daysAgo(9),
+  },
+  {
+    userId: "user-kavya-iyer",
+    productId: "preorder-gundam-pg-unicorn-ver15",
+    addedAt: daysAgo(4),
+  },
+
+  // ── Sneha Kumar (buyer) — Trading cards ──────────────────────────────────
+  {
+    userId: "user-sneha-kumar",
+    productId: "product-yugioh-25th-tin",
+    addedAt: daysAgo(11),
+  },
+  {
+    userId: "user-sneha-kumar",
+    productId: "product-pokemon-151-booster-box",
+    addedAt: daysAgo(6),
+  },
+
+  // ── Kartik Nair (buyer) — Vintage & rare ─────────────────────────────────
+  {
+    userId: "user-kartik-nair",
+    productId: "product-vintage-hot-wheels-deora-1968",
+    addedAt: daysAgo(13),
+  },
+  {
+    userId: "user-kartik-nair",
+    productId: "product-vintage-motu-he-man-1982",
+    addedAt: daysAgo(7),
+  },
+
+  // ── Divya Menon (buyer) — Pre-orders ─────────────────────────────────────
+  {
+    userId: "user-divya-menon",
+    productId: "preorder-beyblade-x-bx10-booster",
     addedAt: daysAgo(3),
   },
   {
-    userId: "user-dawn-sinnoh-buyer",
-    productId: "product-clefairy-base1-35-uncommon-colorless-misty-1",
+    userId: "user-divya-menon",
+    productId: "preorder-shf-broly-super-hero",
     addedAt: daysAgo(1),
   },
 ];
