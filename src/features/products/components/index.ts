@@ -62,3 +62,5 @@ export { SublistingCarouselSection } from "./SublistingCarouselSection";
 export { ShowGroupSection } from "./ShowGroupSection";
 export { GroupSettingsPanel } from "./GroupSettingsPanel";
 export type { GroupSettingsPanelProps } from "./GroupSettingsPanel";
+export { PrizeDrawsSection } from "./PrizeDrawsSection";
+export type { PrizeDrawsSectionProps } from "./PrizeDrawsSection";

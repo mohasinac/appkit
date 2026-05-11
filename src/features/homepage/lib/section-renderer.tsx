@@ -25,6 +25,10 @@ import { BrandsSection } from "../components/BrandsSection";
 import { SocialFeedSection } from "../components/SocialFeedSection";
 import { CustomCardsSection } from "../components/CustomCardsSection";
 import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
+import { FeaturedBundlesSection } from "../../bundles/components/FeaturedBundlesSection";
+import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
+import { EventRafflesSection } from "../../events/components/EventRafflesSection";
+import { CollectionCardsSection } from "../components/CollectionCardsSection";
 import type { CarouselSlide } from "../types/index";
 import type {
   HomepageSectionDocument,
@@ -49,6 +53,10 @@ import type {
   SocialFeedSectionConfig,
   CustomCardsSectionConfig,
   GoogleReviewsSectionConfig,
+  FeaturedBundlesSectionConfig,
+  PrizeDrawsSectionConfig,
+  EventRafflesSectionConfig,
+  CollectionCardsSectionConfig,
 } from "../schemas";
 import type { ProductItem } from "../../products/types";
 import type { StoreListItem } from "../../stores/types";
@@ -422,6 +430,30 @@ function renderSectionElement(
           showDate={cfg?.showDate ?? true}
           linkToGoogleMaps={cfg?.linkToGoogleMaps ?? true}
           googleMapsUrl={cfg?.googleMapsUrl}
+        />
+      );
+    }
+
+    case "featured-bundles": {
+      const cfg = config as FeaturedBundlesSectionConfig;
+      return <FeaturedBundlesSection config={cfg ?? {}} />;
+    }
+
+    case "prize-draws": {
+      const cfg = config as PrizeDrawsSectionConfig;
+      return <PrizeDrawsSection config={cfg ?? {}} />;
+    }
+
+    case "event-raffles": {
+      const cfg = config as EventRafflesSectionConfig;
+      return <EventRafflesSection config={cfg ?? {}} />;
+    }
+
+    case "collection-cards": {
+      const cfg = config as CollectionCardsSectionConfig;
+      return (
+        <CollectionCardsSection
+          config={cfg ?? { collections: [] }}
         />
       );
     }

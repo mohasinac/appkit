@@ -32,3 +32,5 @@ export { EventBanner } from "./EventBanner";
 export type { EventBannerProps } from "./EventBanner";
 export { EventPollWidget } from "./EventPollWidget";
 export type { } from "./EventPollWidget";
+export { EventRafflesSection } from "./EventRafflesSection";
+export type { EventRafflesSectionProps } from "./EventRafflesSection";

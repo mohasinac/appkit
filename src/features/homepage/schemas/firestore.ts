@@ -615,6 +615,69 @@ export interface CustomCardsSectionConfig {
   scrollIntervalMs?: number;
 }
 
+export type CollectionCardType =
+  | "products"
+  | "auctions"
+  | "pre-orders"
+  | "stores"
+  | "events"
+  | "blog-posts"
+  | "reviews"
+  | "brands"
+  | "categories";
+
+export interface CollectionCardsEntry {
+  type: CollectionCardType;
+  label?: string;
+  limit?: number;
+  storeId?: string;
+  categorySlug?: string;
+  brandSlug?: string;
+  featuredOnly?: boolean;
+}
+
+export interface CollectionCardsSectionConfig {
+  title?: string;
+  subtitle?: string;
+  collections: CollectionCardsEntry[];
+  layout?: "carousel" | "grid" | "mixed-row";
+  itemsPerRow?: 3 | 4 | 5;
+  maxItems?: number;
+  showCollectionTabs?: boolean;
+  cta?: SectionCTA;
+}
+
+export const COLLECTION_CARDS_MAX_ENTRIES = 3 as const;
+
+export interface FeaturedBundlesSectionConfig {
+  title?: string;
+  subtitle?: string;
+  maxItems?: number;
+  storeId?: string;
+  categorySlug?: string;
+  sortBy?: "newest" | "savings-desc" | "price-asc";
+  showSavingsBadge?: boolean;
+}
+
+export interface PrizeDrawsSectionConfig {
+  title?: string;
+  subtitle?: string;
+  maxItems?: number;
+  storeId?: string;
+  revealStatus?: "pending" | "open" | "all";
+  showCountdown?: boolean;
+  showEntriesRemaining?: boolean;
+}
+
+export interface EventRafflesSectionConfig {
+  title?: string;
+  subtitle?: string;
+  maxItems?: number;
+  raffleType?: "raffle" | "spin_wheel" | "all";
+  showEntryCount?: boolean;
+  showCountdown?: boolean;
+}
+
 export interface GoogleReviewsSectionConfig {
   placeId: string;
   maxReviews?: number;
@@ -647,7 +710,11 @@ export type SectionType =
   | "events"
   | "social-feed"
   | "custom-cards"
-  | "google-reviews";
+  | "google-reviews"
+  | "featured-bundles"
+  | "prize-draws"
+  | "event-raffles"
+  | "collection-cards";
 
 export type SectionConfig =
   | CarouselSectionConfig
@@ -670,7 +737,11 @@ export type SectionConfig =
   | EventsSectionConfig
   | SocialFeedSectionConfig
   | CustomCardsSectionConfig
-  | GoogleReviewsSectionConfig;
+  | GoogleReviewsSectionConfig
+  | FeaturedBundlesSectionConfig
+  | PrizeDrawsSectionConfig
+  | EventRafflesSectionConfig
+  | CollectionCardsSectionConfig;
 
 export interface HomepageSectionDocument {
   id: string;
@@ -711,6 +782,10 @@ export const DEFAULT_SECTION_ORDER: Record<SectionType, number> = {
   "social-feed": 12,
   "custom-cards": 13,
   "google-reviews": 14,
+  "featured-bundles": 20,
+  "prize-draws": 21,
+  "event-raffles": 22,
+  "collection-cards": 23,
 };
 
 export const BANNER_HEIGHTS: Record<BannerSectionConfig["height"], string> = {

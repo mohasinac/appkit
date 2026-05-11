@@ -46,6 +46,10 @@ import {
   DEFAULT_CAROUSEL_BUILDER,
   DEFAULT_CUSTOM_CARDS_BUILDER,
   DEFAULT_GOOGLE_REVIEWS_BUILDER,
+  DEFAULT_FEATURED_BUNDLES_BUILDER,
+  DEFAULT_PRIZE_DRAWS_BUILDER,
+  DEFAULT_EVENT_RAFFLES_BUILDER,
+  DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./sections/adminSectionsTypes";
 import type {
   SectionType,
@@ -78,6 +82,11 @@ import type {
   CustomCardsCardBuilderEntry,
   CustomCardsBuilderState,
   GoogleReviewsBuilderState,
+  FeaturedBundlesBuilderState,
+  PrizeDrawsBuilderState,
+  EventRafflesBuilderState,
+  CollectionCardsBuilderState,
+  CollectionCardEntryType,
 } from "./sections/adminSectionsTypes";
 import {
   toStringValue,
@@ -105,6 +114,10 @@ import {
   buildCarouselConfig,
   buildCustomCardsConfig,
   buildGoogleReviewsConfig,
+  buildFeaturedBundlesConfig,
+  buildPrizeDrawsConfig,
+  buildEventRafflesConfig,
+  buildCollectionCardsConfig,
   parseProductsBuilder,
   parseAuctionsBuilder,
   parseStatsBuilder,
@@ -126,6 +139,10 @@ import {
   parseCarouselBuilder,
   parseCustomCardsBuilder,
   parseGoogleReviewsBuilder,
+  parseFeaturedBundlesBuilder,
+  parsePrizeDrawsBuilder,
+  parseEventRafflesBuilder,
+  parseCollectionCardsBuilder,
 } from "./sections/adminSectionsBuildParse";
 
 export interface AdminSectionsViewProps {
@@ -164,6 +181,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
   const [carouselBuilder, setCarouselBuilder] = React.useState<CarouselBuilderState>(DEFAULT_CAROUSEL_BUILDER);
   const [customCardsBuilder, setCustomCardsBuilder] = React.useState<CustomCardsBuilderState>(DEFAULT_CUSTOM_CARDS_BUILDER);
   const [googleReviewsBuilder, setGoogleReviewsBuilder] = React.useState<GoogleReviewsBuilderState>(DEFAULT_GOOGLE_REVIEWS_BUILDER);
+  const [featuredBundlesBuilder, setFeaturedBundlesBuilder] = React.useState<FeaturedBundlesBuilderState>(DEFAULT_FEATURED_BUNDLES_BUILDER);
+  const [prizeDrawsBuilder, setPrizeDrawsBuilder] = React.useState<PrizeDrawsBuilderState>(DEFAULT_PRIZE_DRAWS_BUILDER);
+  const [eventRafflesBuilder, setEventRafflesBuilder] = React.useState<EventRafflesBuilderState>(DEFAULT_EVENT_RAFFLES_BUILDER);
+  const [collectionCardsBuilder, setCollectionCardsBuilder] = React.useState<CollectionCardsBuilderState>(DEFAULT_COLLECTION_CARDS_BUILDER);
   const [reorderDraft, setReorderDraft] = React.useState<ReorderItem[]>([]);
   const [reorderServerSnapshot, setReorderServerSnapshot] = React.useState<ReorderItem[]>([]);
   const [reorderUndoStack, setReorderUndoStack] = React.useState<ReorderItem[][]>([]);
@@ -226,6 +247,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "carousel": return buildCarouselConfig(carouselBuilder);
       case "custom-cards": return buildCustomCardsConfig(customCardsBuilder);
       case "google-reviews": return buildGoogleReviewsConfig(googleReviewsBuilder);
+      case "featured-bundles": return buildFeaturedBundlesConfig(featuredBundlesBuilder);
+      case "prize-draws": return buildPrizeDrawsConfig(prizeDrawsBuilder);
+      case "event-raffles": return buildEventRafflesConfig(eventRafflesBuilder);
+      case "collection-cards": return buildCollectionCardsConfig(collectionCardsBuilder);
       default: return null;
     }
   }, [
@@ -251,6 +276,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     carouselBuilder,
     customCardsBuilder,
     googleReviewsBuilder,
+    featuredBundlesBuilder,
+    prizeDrawsBuilder,
+    eventRafflesBuilder,
+    collectionCardsBuilder,
   ]);
 
   React.useEffect(() => {
@@ -387,6 +416,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "carousel": setCarouselBuilder(parseCarouselBuilder(selectedConfig)); break;
       case "custom-cards": setCustomCardsBuilder(parseCustomCardsBuilder(selectedConfig)); break;
       case "google-reviews": setGoogleReviewsBuilder(parseGoogleReviewsBuilder(selectedConfig)); break;
+      case "featured-bundles": setFeaturedBundlesBuilder(parseFeaturedBundlesBuilder(selectedConfig)); break;
+      case "prize-draws": setPrizeDrawsBuilder(parsePrizeDrawsBuilder(selectedConfig)); break;
+      case "event-raffles": setEventRafflesBuilder(parseEventRafflesBuilder(selectedConfig)); break;
+      case "collection-cards": setCollectionCardsBuilder(parseCollectionCardsBuilder(selectedConfig)); break;
     }
   }, [mode, sections, selectedSectionId]);
 
@@ -417,6 +450,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "carousel": setCarouselBuilder(DEFAULT_CAROUSEL_BUILDER); break;
       case "custom-cards": setCustomCardsBuilder(DEFAULT_CUSTOM_CARDS_BUILDER); break;
       case "google-reviews": setGoogleReviewsBuilder(DEFAULT_GOOGLE_REVIEWS_BUILDER); break;
+      case "featured-bundles": setFeaturedBundlesBuilder(DEFAULT_FEATURED_BUNDLES_BUILDER); break;
+      case "prize-draws": setPrizeDrawsBuilder(DEFAULT_PRIZE_DRAWS_BUILDER); break;
+      case "event-raffles": setEventRafflesBuilder(DEFAULT_EVENT_RAFFLES_BUILDER); break;
+      case "collection-cards": setCollectionCardsBuilder(DEFAULT_COLLECTION_CARDS_BUILDER); break;
     }
   }, [isModalOpen, mode, sectionType]);
 
@@ -1998,6 +2035,371 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderFeaturedBundlesBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Featured Bundles Builder
+        </Text>
+        <Input
+          label="Section title"
+          value={featuredBundlesBuilder.title}
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="Curated Bundles"
+        />
+        <Input
+          label="Subtitle"
+          value={featuredBundlesBuilder.subtitle}
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          placeholder="Everything you need in one deal"
+        />
+        <Input
+          label="Max items"
+          type="number"
+          min={1}
+          max={12}
+          value={String(featuredBundlesBuilder.maxItems)}
+          onChange={(e) =>
+            setFeaturedBundlesBuilder((prev) => ({
+              ...prev,
+              maxItems: Math.max(1, Math.min(12, Number(e.target.value) || 8)),
+            }))
+          }
+        />
+        <Input
+          label="Filter by store (storeId)"
+          value={featuredBundlesBuilder.storeId}
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, storeId: e.target.value }))}
+          placeholder="store-pokemon-palace"
+          helperText="Leave blank to show bundles from all stores."
+        />
+        <Input
+          label="Filter by category slug"
+          value={featuredBundlesBuilder.categorySlug}
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, categorySlug: e.target.value }))}
+          placeholder="category-trading-cards"
+          helperText="Leave blank to show bundles from all categories."
+        />
+        <Select
+          label="Sort by"
+          value={featuredBundlesBuilder.sortBy}
+          onValueChange={(value) =>
+            setFeaturedBundlesBuilder((prev) => ({ ...prev, sortBy: value as FeaturedBundlesBuilderState["sortBy"] }))
+          }
+          options={[
+            { label: "Newest first", value: "newest" },
+            { label: "Biggest savings", value: "savings-desc" },
+            { label: "Price: low → high", value: "price-asc" },
+          ]}
+        />
+        <Checkbox
+          checked={featuredBundlesBuilder.showSavingsBadge}
+          label="Show savings % badge on each bundle"
+          onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, showSavingsBadge: e.target.checked }))}
+        />
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          The bundles collection lands later in the bundle / prize-draw work; until then this section renders an empty state.
+        </Text>
+      </Div>
+    );
+  }
+
+  function renderPrizeDrawsBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Prize Draws Builder
+        </Text>
+        <Input
+          label="Section title"
+          value={prizeDrawsBuilder.title}
+          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="Prize Draws"
+        />
+        <Input
+          label="Subtitle"
+          value={prizeDrawsBuilder.subtitle}
+          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          placeholder="Enter for a chance to win rare collectibles"
+        />
+        <Input
+          label="Max items"
+          type="number"
+          min={1}
+          max={12}
+          value={String(prizeDrawsBuilder.maxItems)}
+          onChange={(e) =>
+            setPrizeDrawsBuilder((prev) => ({
+              ...prev,
+              maxItems: Math.max(1, Math.min(12, Number(e.target.value) || 6)),
+            }))
+          }
+        />
+        <Input
+          label="Filter by store (storeId)"
+          value={prizeDrawsBuilder.storeId}
+          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, storeId: e.target.value }))}
+          placeholder="Leave blank for all stores"
+        />
+        <Select
+          label="Reveal status"
+          value={prizeDrawsBuilder.revealStatus}
+          onValueChange={(value) =>
+            setPrizeDrawsBuilder((prev) => ({ ...prev, revealStatus: value as PrizeDrawsBuilderState["revealStatus"] }))
+          }
+          options={[
+            { label: "All (pending + open)", value: "all" },
+            { label: "Pending only", value: "pending" },
+            { label: "Open only", value: "open" },
+          ]}
+        />
+        <Checkbox
+          checked={prizeDrawsBuilder.showCountdown}
+          label="Show countdown to reveal window"
+          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, showCountdown: e.target.checked }))}
+        />
+        <Checkbox
+          checked={prizeDrawsBuilder.showEntriesRemaining}
+          label="Show entries-remaining bar"
+          onChange={(e) => setPrizeDrawsBuilder((prev) => ({ ...prev, showEntriesRemaining: e.target.checked }))}
+        />
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          Prize-draw listing type is added with the prize-draw feature; until then this section renders an empty state.
+        </Text>
+      </Div>
+    );
+  }
+
+  function renderEventRafflesBuilder(): React.ReactNode {
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Event Raffles Builder
+        </Text>
+        <Input
+          label="Section title"
+          value={eventRafflesBuilder.title}
+          onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="Live Raffles & Spin Wheels"
+        />
+        <Input
+          label="Subtitle"
+          value={eventRafflesBuilder.subtitle}
+          onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          placeholder="Participate in community events and win prizes"
+        />
+        <Input
+          label="Max items"
+          type="number"
+          min={1}
+          max={8}
+          value={String(eventRafflesBuilder.maxItems)}
+          onChange={(e) =>
+            setEventRafflesBuilder((prev) => ({
+              ...prev,
+              maxItems: Math.max(1, Math.min(8, Number(e.target.value) || 4)),
+            }))
+          }
+        />
+        <Select
+          label="Raffle type"
+          value={eventRafflesBuilder.raffleType}
+          onValueChange={(value) =>
+            setEventRafflesBuilder((prev) => ({ ...prev, raffleType: value as EventRafflesBuilderState["raffleType"] }))
+          }
+          options={[
+            { label: "All raffles", value: "all" },
+            { label: "Raffle only", value: "raffle" },
+            { label: "Spin wheel only", value: "spin_wheel" },
+          ]}
+        />
+        <Checkbox
+          checked={eventRafflesBuilder.showEntryCount}
+          label="Show entry count on each event"
+          onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, showEntryCount: e.target.checked }))}
+        />
+        <Checkbox
+          checked={eventRafflesBuilder.showCountdown}
+          label="Show countdown to event start/end"
+          onChange={(e) => setEventRafflesBuilder((prev) => ({ ...prev, showCountdown: e.target.checked }))}
+        />
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          The hasRaffle flag on events ships with the raffle feature; until then this section renders an empty state.
+        </Text>
+      </Div>
+    );
+  }
+
+  function renderCollectionCardsBuilder(): React.ReactNode {
+    const COLLECTION_TYPE_OPTIONS: { label: string; value: CollectionCardEntryType }[] = [
+      { label: "Products", value: "products" },
+      { label: "Auctions", value: "auctions" },
+      { label: "Pre-orders", value: "pre-orders" },
+      { label: "Stores", value: "stores" },
+      { label: "Events", value: "events" },
+      { label: "Blog posts", value: "blog-posts" },
+      { label: "Reviews", value: "reviews" },
+      { label: "Brands", value: "brands" },
+      { label: "Categories", value: "categories" },
+    ];
+    const entries = collectionCardsBuilder.collections;
+    const canAdd = entries.length < 3;
+    return (
+      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+        <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+          Collection Cards Builder
+        </Text>
+        <Input
+          label="Section title"
+          value={collectionCardsBuilder.title}
+          onChange={(e) => setCollectionCardsBuilder((prev) => ({ ...prev, title: e.target.value }))}
+          placeholder="Featured Collections"
+        />
+        <Input
+          label="Subtitle"
+          value={collectionCardsBuilder.subtitle}
+          onChange={(e) => setCollectionCardsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))}
+          placeholder="Hand-picked across the marketplace"
+        />
+        <Select
+          label="Layout"
+          value={collectionCardsBuilder.layout}
+          onValueChange={(value) =>
+            setCollectionCardsBuilder((prev) => ({ ...prev, layout: value as CollectionCardsBuilderState["layout"] }))
+          }
+          options={[
+            { label: "Carousel", value: "carousel" },
+            { label: "Grid", value: "grid" },
+            { label: "Mixed row", value: "mixed-row" },
+          ]}
+        />
+        <Select
+          label="Items per row"
+          value={String(collectionCardsBuilder.itemsPerRow)}
+          onValueChange={(value) =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              itemsPerRow: Number(value) as CollectionCardsBuilderState["itemsPerRow"],
+            }))
+          }
+          options={[
+            { label: "3", value: "3" },
+            { label: "4", value: "4" },
+            { label: "5", value: "5" },
+          ]}
+        />
+        <Input
+          label="Max total items"
+          type="number"
+          min={4}
+          max={20}
+          value={String(collectionCardsBuilder.maxItems)}
+          onChange={(e) =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              maxItems: Math.max(4, Math.min(20, Number(e.target.value) || 12)),
+            }))
+          }
+        />
+        <Checkbox
+          checked={collectionCardsBuilder.showCollectionTabs}
+          label="Show collection tabs (filter chips)"
+          onChange={(e) => setCollectionCardsBuilder((prev) => ({ ...prev, showCollectionTabs: e.target.checked }))}
+        />
+
+        <Div className="space-y-3">
+          <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+            Collections ({entries.length}/3)
+          </Text>
+          {entries.map((entry, idx) => (
+            <Div
+              key={`collection-${idx}`}
+              className="space-y-2 rounded-lg border border-zinc-200 p-3 dark:border-slate-700"
+            >
+              <Select
+                label={`Collection ${idx + 1} type`}
+                value={entry.type}
+                onValueChange={(value) =>
+                  setCollectionCardsBuilder((prev) => ({
+                    ...prev,
+                    collections: prev.collections.map((c, i) =>
+                      i === idx ? { ...c, type: value as CollectionCardEntryType } : c,
+                    ),
+                  }))
+                }
+                options={COLLECTION_TYPE_OPTIONS}
+              />
+              <Input
+                label="Display label (optional)"
+                value={entry.label}
+                onChange={(e) =>
+                  setCollectionCardsBuilder((prev) => ({
+                    ...prev,
+                    collections: prev.collections.map((c, i) => (i === idx ? { ...c, label: e.target.value } : c)),
+                  }))
+                }
+                placeholder="Leave blank to use the type name"
+              />
+              <Input
+                label="Items in this collection"
+                type="number"
+                min={1}
+                max={20}
+                value={String(entry.limit)}
+                onChange={(e) =>
+                  setCollectionCardsBuilder((prev) => ({
+                    ...prev,
+                    collections: prev.collections.map((c, i) =>
+                      i === idx ? { ...c, limit: Math.max(1, Math.min(20, Number(e.target.value) || 4)) } : c,
+                    ),
+                  }))
+                }
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() =>
+                  setCollectionCardsBuilder((prev) => ({
+                    ...prev,
+                    collections: prev.collections.filter((_, i) => i !== idx),
+                  }))
+                }
+              >
+                Remove
+              </Button>
+            </Div>
+          ))}
+          {canAdd ? (
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() =>
+                setCollectionCardsBuilder((prev) => ({
+                  ...prev,
+                  collections: [
+                    ...prev.collections,
+                    { type: "products", label: "", limit: 4, storeId: "", categorySlug: "", brandSlug: "", featuredOnly: false },
+                  ],
+                }))
+              }
+            >
+              + Add collection
+            </Button>
+          ) : (
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+              Maximum of 3 collections per section.
+            </Text>
+          )}
+        </Div>
+
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          Data fetching wires into the per-resource repositories — the section renders an
+          empty state until the wiring lands.
+        </Text>
+      </Div>
+    );
+  }
+
   function renderSocialFeedBuilder(): React.ReactNode {
     return (
       <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
@@ -2100,6 +2502,10 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       case "carousel": return renderCarouselBuilder();
       case "custom-cards": return renderCustomCardsBuilder();
       case "google-reviews": return renderGoogleReviewsBuilder();
+      case "featured-bundles": return renderFeaturedBundlesBuilder();
+      case "prize-draws": return renderPrizeDrawsBuilder();
+      case "event-raffles": return renderEventRafflesBuilder();
+      case "collection-cards": return renderCollectionCardsBuilder();
       default: return null;
     }
   }

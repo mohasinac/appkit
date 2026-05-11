@@ -20,6 +20,10 @@ export const SECTION_TYPE_OPTIONS = [
   "carousel",
   "custom-cards",
   "google-reviews",
+  "featured-bundles",
+  "prize-draws",
+  "event-raffles",
+  "collection-cards",
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPE_OPTIONS)[number];
@@ -304,6 +308,66 @@ export interface GoogleReviewsBuilderState {
   googleMapsUrl: string;
 }
 
+export interface FeaturedBundlesBuilderState {
+  title: string;
+  subtitle: string;
+  maxItems: number;
+  storeId: string;
+  categorySlug: string;
+  sortBy: "newest" | "savings-desc" | "price-asc";
+  showSavingsBadge: boolean;
+}
+
+export interface PrizeDrawsBuilderState {
+  title: string;
+  subtitle: string;
+  maxItems: number;
+  storeId: string;
+  revealStatus: "pending" | "open" | "all";
+  showCountdown: boolean;
+  showEntriesRemaining: boolean;
+}
+
+export interface EventRafflesBuilderState {
+  title: string;
+  subtitle: string;
+  maxItems: number;
+  raffleType: "raffle" | "spin_wheel" | "all";
+  showEntryCount: boolean;
+  showCountdown: boolean;
+}
+
+export type CollectionCardEntryType =
+  | "products"
+  | "auctions"
+  | "pre-orders"
+  | "stores"
+  | "events"
+  | "blog-posts"
+  | "reviews"
+  | "brands"
+  | "categories";
+
+export interface CollectionCardsEntryBuilderState {
+  type: CollectionCardEntryType;
+  label: string;
+  limit: number;
+  storeId: string;
+  categorySlug: string;
+  brandSlug: string;
+  featuredOnly: boolean;
+}
+
+export interface CollectionCardsBuilderState {
+  title: string;
+  subtitle: string;
+  layout: "carousel" | "grid" | "mixed-row";
+  itemsPerRow: 3 | 4 | 5;
+  maxItems: number;
+  showCollectionTabs: boolean;
+  collections: CollectionCardsEntryBuilderState[];
+}
+
 export const DEFAULT_PRODUCTS_BUILDER: ProductsBuilderState = {
   title: "Featured Products",
   subtitle: "",
@@ -548,6 +612,47 @@ export const DEFAULT_GOOGLE_REVIEWS_BUILDER: GoogleReviewsBuilderState = {
   googleMapsUrl: "",
 };
 
+export const DEFAULT_FEATURED_BUNDLES_BUILDER: FeaturedBundlesBuilderState = {
+  title: "Curated Bundles",
+  subtitle: "Everything you need in one deal",
+  maxItems: 8,
+  storeId: "",
+  categorySlug: "",
+  sortBy: "savings-desc",
+  showSavingsBadge: true,
+};
+
+export const DEFAULT_PRIZE_DRAWS_BUILDER: PrizeDrawsBuilderState = {
+  title: "Prize Draws",
+  subtitle: "Enter for a chance to win rare collectibles",
+  maxItems: 6,
+  storeId: "",
+  revealStatus: "all",
+  showCountdown: true,
+  showEntriesRemaining: true,
+};
+
+export const DEFAULT_EVENT_RAFFLES_BUILDER: EventRafflesBuilderState = {
+  title: "Live Raffles & Spin Wheels",
+  subtitle: "Participate in community events and win prizes",
+  maxItems: 4,
+  raffleType: "all",
+  showEntryCount: true,
+  showCountdown: true,
+};
+
+export const DEFAULT_COLLECTION_CARDS_BUILDER: CollectionCardsBuilderState = {
+  title: "Featured Collections",
+  subtitle: "",
+  layout: "mixed-row",
+  itemsPerRow: 4,
+  maxItems: 12,
+  showCollectionTabs: false,
+  collections: [
+    { type: "products", label: "", limit: 4, storeId: "", categorySlug: "", brandSlug: "", featuredOnly: true },
+  ],
+};
+
 export const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "products",
   "auctions",
@@ -570,6 +675,10 @@ export const SUPPORTED_TYPED_BUILDERS: SectionType[] = [
   "carousel",
   "custom-cards",
   "google-reviews",
+  "featured-bundles",
+  "prize-draws",
+  "event-raffles",
+  "collection-cards",
 ];
 
 export const RESOURCE_SORT_OPTIONS = [

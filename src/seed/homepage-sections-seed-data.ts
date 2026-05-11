@@ -436,4 +436,60 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     createdAt: daysAgo(15),
     updatedAt: daysAgo(15),
   },
+
+  // ── 20. featured-bundles (SB11) ──────────────────────────────────────────
+  // Disabled until bundles collection lands (S19+). Section type union covers it now.
+  {
+    id: "section-featured-bundles",
+    type: "featured-bundles",
+    order: 20,
+    enabled: false,
+    config: {
+      title: "Curated Bundles",
+      subtitle: "Everything you need in one deal",
+      maxItems: 8,
+      sortBy: "savings-desc",
+      showSavingsBadge: true,
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── 21. prize-draws (SB11) ───────────────────────────────────────────────
+  // Disabled until products gain listingType="prize-draw" + prizeRevealStatus (S19+).
+  {
+    id: "section-prize-draws",
+    type: "prize-draws",
+    order: 21,
+    enabled: false,
+    config: {
+      title: "Prize Draws",
+      subtitle: "Enter for a chance to win rare collectibles",
+      maxItems: 6,
+      showCountdown: true,
+      showEntriesRemaining: true,
+      revealStatus: "all",
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── 22. event-raffles (SB11) ─────────────────────────────────────────────
+  // Disabled until events gain hasRaffle flag (S19+).
+  {
+    id: "section-event-raffles",
+    type: "event-raffles",
+    order: 22,
+    enabled: false,
+    config: {
+      title: "Live Raffles & Spin Wheels",
+      subtitle: "Participate in community events and win prizes",
+      maxItems: 4,
+      raffleType: "all",
+      showEntryCount: true,
+      showCountdown: true,
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
 ];

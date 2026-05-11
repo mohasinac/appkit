@@ -48,6 +48,16 @@ import {
   TrustIndicatorsBuilderState,
   WelcomeBuilderState,
   WhatsAppBuilderState,
+  FeaturedBundlesBuilderState,
+  PrizeDrawsBuilderState,
+  EventRafflesBuilderState,
+  DEFAULT_FEATURED_BUNDLES_BUILDER,
+  DEFAULT_PRIZE_DRAWS_BUILDER,
+  DEFAULT_EVENT_RAFFLES_BUILDER,
+  CollectionCardsBuilderState,
+  CollectionCardsEntryBuilderState,
+  CollectionCardEntryType,
+  DEFAULT_COLLECTION_CARDS_BUILDER,
 } from "./adminSectionsTypes";
 
 export function parseCsvValues(value: string): string[] {
@@ -781,5 +791,143 @@ export function parseGoogleReviewsBuilder(config: Record<string, unknown>): Goog
     showDate: toBooleanValue(config.showDate, DEFAULT_GOOGLE_REVIEWS_BUILDER.showDate),
     linkToGoogleMaps: toBooleanValue(config.linkToGoogleMaps, DEFAULT_GOOGLE_REVIEWS_BUILDER.linkToGoogleMaps),
     googleMapsUrl: toStringValue(config.googleMapsUrl),
+  };
+}
+
+export function buildFeaturedBundlesConfig(builder: FeaturedBundlesBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    subtitle: builder.subtitle || undefined,
+    maxItems: builder.maxItems,
+    storeId: builder.storeId || undefined,
+    categorySlug: builder.categorySlug || undefined,
+    sortBy: builder.sortBy,
+    showSavingsBadge: builder.showSavingsBadge,
+  };
+}
+
+export function parseFeaturedBundlesBuilder(config: Record<string, unknown>): FeaturedBundlesBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_FEATURED_BUNDLES_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_FEATURED_BUNDLES_BUILDER.subtitle),
+    maxItems: toNumberValue(config.maxItems, DEFAULT_FEATURED_BUNDLES_BUILDER.maxItems),
+    storeId: toStringValue(config.storeId),
+    categorySlug: toStringValue(config.categorySlug),
+    sortBy: toStringValue(config.sortBy, DEFAULT_FEATURED_BUNDLES_BUILDER.sortBy) as FeaturedBundlesBuilderState["sortBy"],
+    showSavingsBadge: toBooleanValue(config.showSavingsBadge, DEFAULT_FEATURED_BUNDLES_BUILDER.showSavingsBadge),
+  };
+}
+
+export function buildPrizeDrawsConfig(builder: PrizeDrawsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    subtitle: builder.subtitle || undefined,
+    maxItems: builder.maxItems,
+    storeId: builder.storeId || undefined,
+    revealStatus: builder.revealStatus,
+    showCountdown: builder.showCountdown,
+    showEntriesRemaining: builder.showEntriesRemaining,
+  };
+}
+
+export function parsePrizeDrawsBuilder(config: Record<string, unknown>): PrizeDrawsBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_PRIZE_DRAWS_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_PRIZE_DRAWS_BUILDER.subtitle),
+    maxItems: toNumberValue(config.maxItems, DEFAULT_PRIZE_DRAWS_BUILDER.maxItems),
+    storeId: toStringValue(config.storeId),
+    revealStatus: toStringValue(config.revealStatus, DEFAULT_PRIZE_DRAWS_BUILDER.revealStatus) as PrizeDrawsBuilderState["revealStatus"],
+    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_PRIZE_DRAWS_BUILDER.showCountdown),
+    showEntriesRemaining: toBooleanValue(config.showEntriesRemaining, DEFAULT_PRIZE_DRAWS_BUILDER.showEntriesRemaining),
+  };
+}
+
+export function buildEventRafflesConfig(builder: EventRafflesBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    subtitle: builder.subtitle || undefined,
+    maxItems: builder.maxItems,
+    raffleType: builder.raffleType,
+    showEntryCount: builder.showEntryCount,
+    showCountdown: builder.showCountdown,
+  };
+}
+
+export function parseEventRafflesBuilder(config: Record<string, unknown>): EventRafflesBuilderState {
+  return {
+    title: toStringValue(config.title, DEFAULT_EVENT_RAFFLES_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_EVENT_RAFFLES_BUILDER.subtitle),
+    maxItems: toNumberValue(config.maxItems, DEFAULT_EVENT_RAFFLES_BUILDER.maxItems),
+    raffleType: toStringValue(config.raffleType, DEFAULT_EVENT_RAFFLES_BUILDER.raffleType) as EventRafflesBuilderState["raffleType"],
+    showEntryCount: toBooleanValue(config.showEntryCount, DEFAULT_EVENT_RAFFLES_BUILDER.showEntryCount),
+    showCountdown: toBooleanValue(config.showCountdown, DEFAULT_EVENT_RAFFLES_BUILDER.showCountdown),
+  };
+}
+
+const COLLECTION_CARD_ENTRY_TYPES: readonly CollectionCardEntryType[] = [
+  "products",
+  "auctions",
+  "pre-orders",
+  "stores",
+  "events",
+  "blog-posts",
+  "reviews",
+  "brands",
+  "categories",
+];
+
+function parseCollectionCardsEntry(raw: unknown): CollectionCardsEntryBuilderState {
+  const r = (raw ?? {}) as Record<string, unknown>;
+  const typeRaw = toStringValue(r.type, "products");
+  const type = (COLLECTION_CARD_ENTRY_TYPES.includes(typeRaw as CollectionCardEntryType)
+    ? typeRaw
+    : "products") as CollectionCardEntryType;
+  return {
+    type,
+    label: toStringValue(r.label),
+    limit: toNumberValue(r.limit, 4),
+    storeId: toStringValue(r.storeId),
+    categorySlug: toStringValue(r.categorySlug),
+    brandSlug: toStringValue(r.brandSlug),
+    featuredOnly: toBooleanValue(r.featuredOnly, false),
+  };
+}
+
+export function buildCollectionCardsConfig(builder: CollectionCardsBuilderState): Record<string, unknown> {
+  return {
+    title: builder.title || undefined,
+    subtitle: builder.subtitle || undefined,
+    layout: builder.layout,
+    itemsPerRow: builder.itemsPerRow,
+    maxItems: builder.maxItems,
+    showCollectionTabs: builder.showCollectionTabs,
+    collections: builder.collections.slice(0, 3).map((entry) => ({
+      type: entry.type,
+      label: entry.label || undefined,
+      limit: entry.limit,
+      storeId: entry.storeId || undefined,
+      categorySlug: entry.categorySlug || undefined,
+      brandSlug: entry.brandSlug || undefined,
+      featuredOnly: entry.featuredOnly || undefined,
+    })),
+  };
+}
+
+export function parseCollectionCardsBuilder(config: Record<string, unknown>): CollectionCardsBuilderState {
+  const rawCollections = Array.isArray(config.collections) ? config.collections : [];
+  const layoutRaw = toStringValue(config.layout, DEFAULT_COLLECTION_CARDS_BUILDER.layout);
+  const itemsPerRowRaw = toNumberValue(config.itemsPerRow, DEFAULT_COLLECTION_CARDS_BUILDER.itemsPerRow);
+  return {
+    title: toStringValue(config.title, DEFAULT_COLLECTION_CARDS_BUILDER.title),
+    subtitle: toStringValue(config.subtitle, DEFAULT_COLLECTION_CARDS_BUILDER.subtitle),
+    layout: (["carousel", "grid", "mixed-row"].includes(layoutRaw)
+      ? layoutRaw
+      : DEFAULT_COLLECTION_CARDS_BUILDER.layout) as CollectionCardsBuilderState["layout"],
+    itemsPerRow: ([3, 4, 5].includes(itemsPerRowRaw)
+      ? itemsPerRowRaw
+      : DEFAULT_COLLECTION_CARDS_BUILDER.itemsPerRow) as CollectionCardsBuilderState["itemsPerRow"],
+    maxItems: toNumberValue(config.maxItems, DEFAULT_COLLECTION_CARDS_BUILDER.maxItems),
+    showCollectionTabs: toBooleanValue(config.showCollectionTabs, DEFAULT_COLLECTION_CARDS_BUILDER.showCollectionTabs),
+    collections: rawCollections.slice(0, 3).map(parseCollectionCardsEntry),
   };
 }
