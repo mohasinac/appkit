@@ -1614,6 +1614,13 @@ export type {
   SublistingCategoryCreateInput,
   SublistingCategoryUpdateInput,
 } from "./repositories/index";
+// productTemplateRepository - Server-only repository for store product templates.
+export { productTemplateRepository } from "./repositories/index";
+export type {
+  ProductTemplateDocument,
+  ProductTemplateCreateInput,
+  ProductTemplateUpdateInput,
+} from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // tokenRepository - Shared export for token repository.
 export { tokenRepository } from "./repositories/index";

@@ -142,3 +142,13 @@ export type {
   SublistingCategoryCreateInput,
   SublistingCategoryUpdateInput,
 } from "../features/products/schemas/sublisting-categories";
+
+export {
+  ProductTemplateRepository,
+  productTemplateRepository,
+} from "../features/products/repository/product-templates.repository";
+export type {
+  ProductTemplateDocument,
+  ProductTemplateCreateInput,
+  ProductTemplateUpdateInput,
+} from "../features/products/schemas/product-templates";

@@ -5,6 +5,7 @@ import { FormShell, StepForm, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import {
   Alert,
+  Button,
   FormField,
   FormGroup,
   Heading,
@@ -89,6 +90,15 @@ export interface SellerProductShellProps {
     value: string;
     onChange: (v: string) => void;
   }) => React.ReactNode;
+  /**
+   * Render a template selector at the top of the Basic step.
+   * Receives a callback to apply the selected template to the draft.
+   */
+  renderTemplateSelector?: (props: {
+    onApply: (partial: Partial<SellerProductDraft>) => void;
+  }) => React.ReactNode;
+  /** Called with current draft when user clicks "Save as Template". */
+  onSaveAsTemplate?: (draft: SellerProductDraft) => void | Promise<void>;
 }
 
 const CONDITION_OPTIONS = [
@@ -120,14 +130,17 @@ function StepBasic({
   onChange,
   renderCategorySelector,
   renderBrandSelector,
+  renderTemplateSelector,
 }: {
   values: SellerProductDraft;
   onChange: (p: Partial<SellerProductDraft>) => void;
   renderCategorySelector?: SellerProductShellProps["renderCategorySelector"];
   renderBrandSelector?: SellerProductShellProps["renderBrandSelector"];
+  renderTemplateSelector?: SellerProductShellProps["renderTemplateSelector"];
 }) {
   return (
     <Stack gap="md">
+      {renderTemplateSelector?.({ onApply: onChange })}
       <FormField
         name="title"
         label="Title"
@@ -611,6 +624,8 @@ export function SellerProductShell({
   renderCategorySelector,
   renderBrandSelector,
   renderAddressSelector,
+  renderTemplateSelector,
+  onSaveAsTemplate,
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
   const [currentStep, setCurrentStep] = useState(0);
@@ -668,6 +683,7 @@ export function SellerProductShell({
           onChange={onChange}
           renderCategorySelector={renderCategorySelector}
           renderBrandSelector={renderBrandSelector}
+          renderTemplateSelector={renderTemplateSelector}
         />
       ),
       validate: (v) => (!v.title?.trim() ? "Title is required" : null),
@@ -755,7 +771,13 @@ export function SellerProductShell({
       <Stack gap="lg">
         <section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>
-          <StepBasic values={draft} onChange={update} renderCategorySelector={renderCategorySelector} renderBrandSelector={renderBrandSelector} />
+          <StepBasic
+            values={draft}
+            onChange={update}
+            renderCategorySelector={renderCategorySelector}
+            renderBrandSelector={renderBrandSelector}
+            renderTemplateSelector={renderTemplateSelector}
+          />
         </section>
         <section id="media">
           <Heading level={3} className="mb-4">Media</Heading>
@@ -784,6 +806,21 @@ export function SellerProductShell({
         <section id="publish">
           <Heading level={3} className="mb-4">Publish</Heading>
           <StepPublish values={draft} onChange={update} />
+          {onSaveAsTemplate && (
+            <div className="mt-4 border-t border-[var(--appkit-color-border,#e4e4e7)] pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onSaveAsTemplate(draft)}
+              >
+                Save as Template
+              </Button>
+              <Text className="mt-1 text-xs text-[var(--appkit-color-secondary-text,#71717a)]">
+                Save these settings as a reusable template for future listings.
+              </Text>
+            </div>
+          )}
         </section>
       </Stack>
     </FormShell>

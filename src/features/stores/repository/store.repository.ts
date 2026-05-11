@@ -231,6 +231,49 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     const snap = await this.db.collection(this.collection).select().get();
     return snap.docs.map((d) => d.id);
   }
+
+  /**
+   * Check whether a slug is available (not taken by any existing store).
+   */
+  async isSlugAvailable(slug: string): Promise<boolean> {
+    const existing = await this.findById(slug);
+    return existing === null;
+  }
+
+  /**
+   * Atomically migrate a store to a new slug (new document ID).
+   * Creates a new doc with the new slug, copies all data, then deletes the old doc.
+   * Throws if newSlug is already taken.
+   */
+  async changeSlug(currentSlug: string, newSlug: string): Promise<StoreDocument> {
+    if (currentSlug === newSlug) throw new DatabaseError("New slug must differ from current slug");
+    if (newSlug === "" || !/^[a-z0-9-]+$/.test(newSlug)) {
+      throw new DatabaseError("Slug may only contain lowercase letters, numbers, and hyphens");
+    }
+
+    const existing = await this.findById(currentSlug);
+    if (!existing) throw new DatabaseError(`Store "${currentSlug}" not found`);
+
+    const available = await this.isSlugAvailable(newSlug);
+    if (!available) throw new DatabaseError(`Slug "${newSlug}" is already taken`);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _id, ...data } = existing;
+    const newDoc: Omit<StoreDocument, "id"> = {
+      ...data,
+      storeSlug: newSlug,
+      updatedAt: new Date(),
+    };
+
+    const batch = this.db.batch();
+    const newRef = this.db.collection(this.collection).doc(newSlug);
+    const oldRef = this.db.collection(this.collection).doc(currentSlug);
+    batch.create(newRef, prepareForFirestore(newDoc));
+    batch.delete(oldRef);
+    await batch.commit();
+
+    return { id: newSlug, ...newDoc };
+  }
 }
 
 export const storeRepository = new StoreRepository();
