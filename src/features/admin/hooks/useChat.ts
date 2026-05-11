@@ -137,7 +137,7 @@ export function useChatRooms() {
 
 export function useCreateChatRoom() {
   return useMutation({
-    mutationFn: (data: { orderId: string; sellerId: string }) =>
+    mutationFn: (data: { orderId: string; ownerId: string }) =>
       apiClient
         .post<{ room: unknown }>(CHAT_ENDPOINTS.LIST, data)
         .then((r) => r.room),

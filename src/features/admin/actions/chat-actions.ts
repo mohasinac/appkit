@@ -27,7 +27,7 @@ export interface ChatRoomsResult {
 
 export interface CreateRoomInput {
   orderId: string;
-  sellerId: string;
+  ownerId: string;
 }
 
 export interface CreateRoomResult {
@@ -52,14 +52,14 @@ export async function createOrGetChatRoom(
   if (!chatEnabled)
     throw new AuthorizationError("Chat is temporarily unavailable.");
 
-  const { orderId, sellerId } = input;
+  const { orderId, ownerId } = input;
   const order = await orderRepository.findById(orderId);
   if (!order) throw new NotFoundError(ERROR_MESSAGES.ORDER.NOT_FOUND);
-  if (order.userId !== userId && sellerId !== userId)
+  if (order.userId !== userId && ownerId !== userId)
     throw new AuthorizationError(ERROR_MESSAGES.CHAT.NOT_AUTHORIZED);
 
   const buyerId = order.userId;
-  const existing = await chatRepository.findRoom(buyerId, sellerId, orderId);
+  const existing = await chatRepository.findRoom(buyerId, ownerId, orderId);
   if (existing) {
     const deletedBy: string[] = existing.deletedBy ?? [];
     if (deletedBy.includes(userId)) {
@@ -70,20 +70,20 @@ export async function createOrGetChatRoom(
     return { room: existing };
   }
 
-  const [buyer, seller] = await Promise.all([
+  const [buyer, owner] = await Promise.all([
     userRepository.findById(buyerId),
-    userRepository.findById(sellerId),
+    userRepository.findById(ownerId),
   ]);
 
   const room = await chatRepository.create({
     buyerId,
-    sellerId,
+    ownerId,
     orderId,
     productId: (order as any).productId,
     productTitle: (order as any).productTitle,
     buyerName: buyer?.displayName ?? "Buyer",
-    sellerName: seller?.displayName ?? "Seller",
-    participantIds: [buyerId, sellerId],
+    ownerName: owner?.displayName ?? "Seller",
+    participantIds: [buyerId, ownerId],
   } as any);
 
   serverLogger.info("createOrGetChatRoom: room created", { userId, orderId });
@@ -109,8 +109,8 @@ export async function sendChatMessage(
   const userName =
     userId === room.buyerId
       ? (room.buyerName ?? "Buyer")
-      : userId === room.sellerId
-        ? (room.sellerName ?? "Seller")
+      : userId === room.ownerId
+        ? (room.ownerName ?? "Seller")
         : (room.buyerName ?? "Member");
   await msgRef.set({ userId, userName, message, timestamp: Date.now() });
   chatRepository.updateLastMessage(chatId, message).catch((err) => {

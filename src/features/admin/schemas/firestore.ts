@@ -150,12 +150,12 @@ export const notificationQueryHelpers = {
 export interface ChatRoomDocument {
   id: string;
   buyerId: string;
-  sellerId: string;
+  ownerId: string;
   orderId: string;
   productId?: string;
   productTitle?: string;
   buyerName: string;
-  sellerName: string;
+  ownerName: string;
   lastMessage?: string;
   lastMessageAt?: Date;
   createdAt: Date;
@@ -164,7 +164,7 @@ export interface ChatRoomDocument {
   deletedBy: string[];
   /** True for admin-created group chats (> 2 participants). */
   isGroup: boolean;
-  /** All participant UIDs. For 1-1 rooms: [buyerId, sellerId]. */
+  /** All participant UIDs. For 1-1 rooms: [buyerId, ownerId]. */
   participantIds: string[];
   /** Set by admin to permanently revoke all access. */
   adminDeleted: boolean;
@@ -174,7 +174,7 @@ export const CHAT_ROOM_COLLECTION = "chatRooms" as const;
 
 export const CHAT_ROOM_INDEXED_FIELDS = [
   "buyerId",
-  "sellerId",
+  "ownerId",
   "orderId",
   "participantIds",
   "adminDeleted",
@@ -184,12 +184,12 @@ export const CHAT_ROOM_INDEXED_FIELDS = [
 export const CHAT_ROOM_FIELDS = {
   ID: "id",
   BUYER_ID: "buyerId",
-  SELLER_ID: "sellerId",
+  OWNER_ID: "ownerId",
   ORDER_ID: "orderId",
   PRODUCT_ID: "productId",
   PRODUCT_TITLE: "productTitle",
   BUYER_NAME: "buyerName",
-  SELLER_NAME: "sellerName",
+  OWNER_NAME: "ownerName",
   LAST_MESSAGE: "lastMessage",
   LAST_MESSAGE_AT: "lastMessageAt",
   CREATED_AT: "createdAt",
@@ -211,10 +211,10 @@ export const DEFAULT_CHAT_ROOM_DATA: Omit<
   | "productTitle"
 > = {
   buyerId: "",
-  sellerId: "",
+  ownerId: "",
   orderId: "",
   buyerName: "",
-  sellerName: "",
+  ownerName: "",
   deletedBy: [],
   isGroup: false,
   participantIds: [],
@@ -239,7 +239,7 @@ export type ChatRoomUpdateInput = Pick<
 
 export const chatRoomQueryHelpers = {
   byBuyer: (buyerId: string) => ["buyerId", "==", buyerId] as const,
-  bySeller: (sellerId: string) => ["sellerId", "==", sellerId] as const,
+  byOwner: (ownerId: string) => ["ownerId", "==", ownerId] as const,
   byOrder: (orderId: string) => ["orderId", "==", orderId] as const,
   active: () => ["adminDeleted", "==", false] as const,
 } as const;

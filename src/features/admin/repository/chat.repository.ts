@@ -56,7 +56,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
   async create(input: ChatRoomCreateInput): Promise<ChatRoomDocument> {
     const id = input.isGroup
       ? `chat_group_${Date.now()}`
-      : `chat_${input.buyerId}_${input.sellerId}_${input.orderId}`;
+      : `chat_${input.buyerId}_${input.ownerId}_${input.orderId}`;
 
     const doc: Omit<ChatRoomDocument, "id"> = {
       ...input,
@@ -80,14 +80,14 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
   }
 
   /**
-   * Find existing room by buyerId + sellerId + orderId (idempotent create)
+   * Find existing room by buyerId + ownerId + orderId (idempotent create)
    */
   async findRoom(
     buyerId: string,
-    sellerId: string,
+    ownerId: string,
     orderId: string,
   ): Promise<ChatRoomDocument | null> {
-    const id = `chat_${buyerId}_${sellerId}_${orderId}`;
+    const id = `chat_${buyerId}_${ownerId}_${orderId}`;
     return this.findById(id);
   }
 
@@ -103,7 +103,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
           .where("adminDeleted", "==", false)
           .get(),
         this.getCollection()
-          .where("sellerId", "==", userId)
+          .where("ownerId", "==", userId)
           .where("adminDeleted", "==", false)
           .get(),
       ]);
@@ -137,7 +137,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
           .orderBy("updatedAt", "desc")
           .get(),
         this.getCollection()
-          .where("sellerId", "==", userId)
+          .where("ownerId", "==", userId)
           .where("adminDeleted", "==", false)
           .orderBy("updatedAt", "desc")
           .get(),
@@ -224,7 +224,7 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
       const bothDeleted =
         !data.isGroup &&
         deletedBy.includes(data.buyerId) &&
-        deletedBy.includes(data.sellerId);
+        deletedBy.includes(data.ownerId);
 
       if (bothDeleted) {
         // Permanently remove Firestore doc + RTDB messages
