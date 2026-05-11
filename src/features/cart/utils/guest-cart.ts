@@ -1,9 +1,22 @@
+import { CART_MAX_ITEMS } from "../../../constants/limits";
+
 const DEFAULT_GUEST_CART_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_cart`
   : "guest_cart";
 const DEFAULT_GUEST_RETURN_TO_KEY = process.env.NEXT_PUBLIC_APP_ID
   ? `${process.env.NEXT_PUBLIC_APP_ID}_guest_return_to`
   : "guest_return_to";
+
+export class CartFullError extends Error {
+  readonly code = "CART_FULL" as const;
+  readonly limit = CART_MAX_ITEMS;
+  readonly current: number;
+  constructor(current: number) {
+    super(`Cart full (${current}/${CART_MAX_ITEMS})`);
+    this.name = "CartFullError";
+    this.current = current;
+  }
+}
 
 export interface GuestCartItem {
   productId: string;
@@ -64,6 +77,10 @@ export function addToGuestCart(
 ): GuestCartItem[] {
   const items = readItems(storage, key);
   const existing = items.find((i) => i.productId === productId);
+  // Cart hard-cap: distinct items only. Quantity bumps to an existing item are unrestricted.
+  if (!existing && items.length >= CART_MAX_ITEMS) {
+    throw new CartFullError(items.length);
+  }
   const updated: GuestCartItem[] = existing
     ? items.map((i) =>
         i.productId === productId

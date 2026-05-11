@@ -32,6 +32,7 @@ import { CustomSectionTabContent } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
 import { ShowGroupSection } from "./ShowGroupSection";
 import type { CustomSection } from "../schemas/firestore";
+import { HistoryTracker } from "../../history/components/HistoryTracker";
 
 export interface ProductDetailPageViewProps {
   slug: string;
@@ -299,6 +300,17 @@ export async function ProductDetailPageView({
 
   return (
     <Main>
+      <HistoryTracker
+        productId={product.id}
+        productType="product"
+        snapshot={{
+          title: product.title,
+          thumb: product.mainImage ?? product.images?.[0],
+          price: product.price,
+          storeId: product.storeId,
+          storeName: product.storeName,
+        }}
+      />
       <Container size="xl" className="px-4 py-6">
         <ProductDetailView
           renderBreadcrumb={() => (

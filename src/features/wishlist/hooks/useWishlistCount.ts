@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useGuestWishlist } from "./useGuestWishlist";
 import { getGuestWishlistItems } from "../utils/guest-wishlist";
+import { WISHLIST_MAX } from "../../../constants/limits";
 
 const WISHLIST_API = "/api/wishlist";
 const WISHLIST_MERGE_API = "/api/wishlist/merge";
@@ -101,4 +102,18 @@ export function useWishlistCount(userId: string | null | undefined) {
   }, [pathname, userId]);
 
   return count;
+}
+
+/**
+ * useWishlistCountWithLimit — extends useWishlistCount with limit + isFull so
+ * UI can show "12/20" badges and disable add buttons at the cap.
+ */
+export function useWishlistCountWithLimit(userId: string | null | undefined) {
+  const count = useWishlistCount(userId);
+  return {
+    count,
+    limit: WISHLIST_MAX,
+    isFull: count >= WISHLIST_MAX,
+    isNearLimit: count >= WISHLIST_MAX - 2,
+  };
 }

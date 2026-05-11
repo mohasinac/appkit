@@ -28,6 +28,7 @@ import { BuyBar } from "../../products/components/BuyBar";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
+import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShareButton } from "../../products/components/ShareButton";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
@@ -147,6 +148,22 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
 
   return (
     <Main>
+      <HistoryTracker
+        productId={String(p.id ?? p.slug ?? "")}
+        productType="auction"
+        snapshot={{
+          title: typeof p.title === "string" ? p.title : undefined,
+          thumb:
+            typeof p.mainImage === "string"
+              ? p.mainImage
+              : Array.isArray(p.images) && typeof p.images[0] === "string"
+                ? p.images[0]
+                : undefined,
+          price: typeof p.price === "number" ? p.price : undefined,
+          storeId: typeof p.storeId === "string" ? p.storeId : undefined,
+          storeName: typeof p.storeName === "string" ? p.storeName : undefined,
+        }}
+      />
       <Container size="xl" className="px-4 py-6">
         {/* Breadcrumb + share */}
         <div className="mb-4 flex items-center justify-between flex-wrap gap-2">

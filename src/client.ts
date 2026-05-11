@@ -279,3 +279,28 @@ export {
   ScamPlatformValues,
 } from "./features/scams/schemas/firestore";
 export type { ScamPlatform } from "./features/scams/schemas/firestore";
+
+// History (recently-viewed) — client hook + guest util + cap constants
+export {
+  useHistory,
+  useHistoryMergeOnLogin,
+  getGuestHistory,
+  trackGuestHistory,
+  removeGuestHistoryItem,
+  clearGuestHistory,
+  getGuestHistoryCount,
+  HistoryTracker,
+} from "./features/history/index";
+export type {
+  GuestHistoryItem,
+  GuestHistoryType,
+  UserHistoryItem,
+  HistoryProductType,
+  HistoryItemSnapshot,
+} from "./features/history/index";
+export type { TrackArgs as TrackHistoryArgs } from "./features/history/hooks/useHistory";
+export {
+  WISHLIST_MAX,
+  HISTORY_MAX,
+  CART_MAX_ITEMS,
+} from "./constants/limits";

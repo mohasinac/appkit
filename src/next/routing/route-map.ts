@@ -91,6 +91,7 @@ export const DEFAULT_ROUTE_MAP = {
     SETTINGS: "/user/settings",
     ORDERS: "/user/orders",
     WISHLIST: "/wishlist",
+    HISTORY: "/user/history",
     ADDRESSES: "/user/addresses",
     ADDRESSES_ADD: "/user/addresses/add",
     ADDRESSES_EDIT: (id: string) => `/user/addresses/edit/${id}`,

@@ -8616,6 +8616,32 @@ export {
 // Wishlist server errors (server-only via tree-shake — class only, no firebase-admin at module scope)
 export { WishlistFullError } from "./features/wishlist/server";
 
+// History — client hook + guest util are safe in main barrel; repository is server-only
+export {
+  useHistory,
+  useHistoryMergeOnLogin,
+  getGuestHistory,
+  trackGuestHistory,
+  removeGuestHistoryItem,
+  clearGuestHistory,
+  getGuestHistoryCount,
+  type GuestHistoryItem,
+  type GuestHistoryType,
+  type UserHistoryItem,
+  type HistoryProductType,
+  type HistoryItemSnapshot,
+  type TrackArgs as TrackHistoryArgs,
+} from "./features/history";
+export {
+  historyRepository,
+  UserHistoryRepository,
+  trackHistoryView,
+  getHistoryForUser,
+  removeHistoryItem,
+  clearHistory,
+  mergeGuestHistory,
+} from "./features/history/server";
+
 // Missing React hooks and providers
 export {
   useMediaQuery, useBreakpoint, useClickOutside, useKeyPress, useLongPress,
