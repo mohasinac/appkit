@@ -152,3 +152,9 @@ export type {
   ProductTemplateCreateInput,
   ProductTemplateUpdateInput,
 } from "../features/products/schemas/product-templates";
+
+export {
+  ProductFeaturesRepository,
+  productFeaturesRepository,
+} from "../features/products/repository/product-features.repository";
+export type { ProductFeatureListFilter } from "../features/products/repository/product-features.repository";

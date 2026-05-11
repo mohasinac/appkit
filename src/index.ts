@@ -1614,6 +1614,10 @@ export type {
   SublistingCategoryCreateInput,
   SublistingCategoryUpdateInput,
 } from "./repositories/index";
+// [DB]-Database layer — uses firebase-admin; server-only.
+// productFeaturesRepository - Server-only repository for productFeatures (FI1).
+export { productFeaturesRepository } from "./repositories/index";
+export type { ProductFeatureListFilter } from "./repositories/index";
 // productTemplateRepository - Server-only repository for store product templates.
 export { productTemplateRepository } from "./repositories/index";
 export type {
@@ -8720,6 +8724,24 @@ export type { ConversationDocument, ConversationMessage } from "./features/messa
 // Sublisting categories feature schemas
 export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/products/schemas/sublisting-categories";
 export type { SublistingCategoryDocument } from "./features/products/schemas/sublisting-categories";
+// Product features feature schemas (FI1)
+export {
+  PRODUCT_FEATURES_COLLECTION,
+  PRODUCT_FEATURE_PREFIX,
+  MAX_STORE_CUSTOM_FEATURES,
+  MAX_FEATURES_PER_PRODUCT,
+  PRODUCT_FEATURE_SIEVE_FIELDS,
+  isFeatureIconPath,
+} from "./features/products/schemas/product-features";
+export type {
+  ProductFeatureDocument,
+  ProductFeatureCreateInput,
+  ProductFeatureUpdateInput,
+  ProductFeatureScope,
+  ProductFeatureCategory,
+  ProductFeatureProductType,
+  ProductFeatureIcon,
+} from "./features/products/schemas/product-features";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
