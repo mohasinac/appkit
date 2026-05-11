@@ -1332,3 +1332,5 @@ export type {
 // -- Google Reviews (server-only: calls Google Places API) --------------------
 export { fetchGoogleReviews } from "./features/homepage/lib/google-reviews-fetcher";
 export type { GoogleReview, GoogleReviewsResult } from "./features/homepage/lib/google-reviews-fetcher";
+export { GoogleReviewsSection } from "./features/homepage/components/GoogleReviewsSection";
+export type { GoogleReviewsSectionProps } from "./features/homepage/components/GoogleReviewsSection";

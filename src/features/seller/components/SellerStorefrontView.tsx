@@ -34,6 +34,13 @@ export interface StorefrontDraft {
   isVacationMode?: boolean;
   vacationMessage?: string;
   isPublic?: boolean;
+  googleReviews?: {
+    placeId: string;
+    enabled: boolean;
+    maxReviews?: number;
+    minRating?: number;
+    layout?: "grid" | "carousel";
+  };
 }
 
 export interface SellerStorefrontViewProps {
@@ -66,6 +73,17 @@ export function SellerStorefrontView({
 
   const updateSocial = (key: keyof NonNullable<StorefrontDraft["socialLinks"]>, value: string) => {
     update({ socialLinks: { ...draft.socialLinks, [key]: value } });
+  };
+
+  const updateGoogleReviews = (patch: Partial<NonNullable<StorefrontDraft["googleReviews"]>>) => {
+    update({
+      googleReviews: {
+        placeId: draft.googleReviews?.placeId ?? "",
+        enabled: draft.googleReviews?.enabled ?? false,
+        ...draft.googleReviews,
+        ...patch,
+      },
+    });
   };
 
   const handleSave = async () => {
@@ -298,6 +316,54 @@ export function SellerStorefrontView({
                 Your store is hidden. Existing orders are unaffected.
               </Text>
             )}
+          </section>
+
+          {/* ── Google Business Reviews ───────────────────── */}
+          <section>
+            <Heading level={3} className="mb-1">Google Business Reviews</Heading>
+            <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-4">
+              Display real Google reviews on your store About page. Requires a Google Place ID.
+            </Text>
+            <Stack gap="md">
+              <Toggle
+                checked={!!draft.googleReviews?.enabled}
+                onChange={(checked) => updateGoogleReviews({ enabled: checked })}
+                label="Show Google reviews on my store About page"
+                disabled={busy}
+              />
+              {draft.googleReviews?.enabled && (
+                <>
+                  <FormField
+                    name="googlePlaceId"
+                    label="Google Place ID"
+                    type="text"
+                    value={draft.googleReviews.placeId ?? ""}
+                    onChange={(v) => updateGoogleReviews({ placeId: v })}
+                    placeholder="ChIJ..."
+                    helpText="Find your Place ID at developers.google.com/maps/documentation/places/web-service/place-id"
+                    disabled={busy}
+                  />
+                  <FormGroup columns={2}>
+                    <FormField
+                      name="googleMaxReviews"
+                      label="Max reviews to show"
+                      type="number"
+                      value={String(draft.googleReviews.maxReviews ?? 6)}
+                      onChange={(v) => updateGoogleReviews({ maxReviews: Number(v) })}
+                      disabled={busy}
+                    />
+                    <FormField
+                      name="googleMinRating"
+                      label="Minimum star rating (1–5)"
+                      type="number"
+                      value={String(draft.googleReviews.minRating ?? 0)}
+                      onChange={(v) => updateGoogleReviews({ minRating: Number(v) })}
+                      disabled={busy}
+                    />
+                  </FormGroup>
+                </>
+              )}
+            </Stack>
           </section>
 
           {/* ── Save Button ───────────────────────────────── */}

@@ -69,6 +69,15 @@ export interface StoreDocument {
    */
   customCommissionRate?: number;
 
+  // ── Google Business Reviews (per-store, seller-managed) ──────────────────
+  googleReviews?: {
+    placeId: string;
+    enabled: boolean;
+    maxReviews?: number;
+    minRating?: number;
+    layout?: "grid" | "carousel";
+  };
+
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {
     /** Seller's WhatsApp Business phone number, digits-only with country code e.g. "919876543210" */
