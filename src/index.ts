@@ -6915,6 +6915,9 @@ export { getProductTableColumns } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // normalizeListingType - Helper for normalize listing type.
 export { normalizeListingType } from "./features/products/index";
+// [SERVER-ONLY]-Safe in browser but intended for server routes.
+// sanitizeProductForPublic - Strip sellerId/sellerName/sellerEmail/ownerId before returning a product in a public response.
+export { sanitizeProductForPublic, sanitizeProductsForPublic } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // productAdminColumns - Shared export for product admin columns.
 export { productAdminColumns } from "./features/products/index";

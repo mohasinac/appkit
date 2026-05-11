@@ -25,6 +25,9 @@ export interface AdminUserEditorViewProps {
   currentRole?: string;
   currentIsDisabled?: boolean;
   currentEmailVerified?: boolean;
+  /** Store the user owns (for sellers/admins). storeId === storeSlug in this project. */
+  ownedStoreId?: string;
+  ownedStoreName?: string;
 }
 
 const ROLE_OPTIONS = [
@@ -43,6 +46,8 @@ export function AdminUserEditorView({
   currentRole,
   currentIsDisabled,
   currentEmailVerified,
+  ownedStoreId,
+  ownedStoreName,
 }: AdminUserEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -112,6 +117,24 @@ export function AdminUserEditorView({
           }}
           className="space-y-4 p-4"
         >
+          {userId && (
+            <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900/40">
+              <div className="flex flex-col gap-1 text-zinc-700 dark:text-zinc-300">
+                <div>
+                  <span className="font-semibold">Owner ID (Firebase UID):</span>{" "}
+                  <code className="select-all font-mono">{userId}</code>
+                </div>
+                {ownedStoreId && (
+                  <div>
+                    <span className="font-semibold">Owns store:</span>{" "}
+                    <code className="select-all font-mono">{ownedStoreId}</code>
+                    {ownedStoreName ? ` — ${ownedStoreName}` : ""}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           <Select
             label="Role"
             options={ROLE_OPTIONS}

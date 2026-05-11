@@ -126,15 +126,11 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
   const freeShipping = shippingPaidBy === "seller";
   const storeName = typeof p.storeName === "string" ? p.storeName : null;
-  const sellerName = typeof p.sellerName === "string" ? p.sellerName : null;
-  const safeSeller = (storeName || sellerName) ? safeDisplayName((storeName || sellerName) ?? "", "") : null;
+  const safeSeller = storeName ? safeDisplayName(storeName, "") : null;
   const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
-  const preOrderSellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
-    : preOrderSellerId
-      ? String(ROUTES.PUBLIC.SELLER_DETAIL(preOrderSellerId))
-      : null;
+    : null;
   const category = typeof p.category === "string" ? (p.category as string) : null;
   const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;

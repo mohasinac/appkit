@@ -19,8 +19,8 @@ function buildAuctionFilters(params: SearchParams): string {
   const store = sp(params, "store");
   if (store) {
     const values = store.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`sellerId==${values[0]}`);
-    else if (values.length > 1) parts.push(`sellerId==${values.join("|")}`);
+    if (values.length === 1) parts.push(`storeId==${values[0]}`);
+    else if (values.length > 1) parts.push(`storeId==${values.join("|")}`);
   }
   const dateFrom = sp(params, "dateFrom");
   const dateTo = sp(params, "dateTo");

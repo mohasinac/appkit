@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews } from "../../auth/actions/profile-actions";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Heading, Text, Section } from "../../../ui";
@@ -65,14 +66,20 @@ export async function PublicProfileView({
   const profile = await getPublicUserProfile(userId).catch(() => null);
   const storeId = profile?.storeSlug ?? null;
 
-  const [products, reviews] = await Promise.all([
+  const [products, reviews, store] = await Promise.all([
     storeId ? getProfileStoreProducts(storeId).catch(() => []) : Promise.resolve([]),
     storeId ? getSellerReviews(storeId).catch(() => []) : Promise.resolve([]),
+    storeId ? storeRepository.findById(storeId).catch(() => null) : Promise.resolve(null),
   ]);
 
-  const displayName = profile?.displayName ?? t("profileTitle");
-  const photoURL = profile?.photoURL ?? null;
   const isSeller = profile?.role === "seller" || profile?.role === "admin";
+  // For sellers: lead with store identity (name + logo). For buyers: user identity.
+  const displayName = isSeller && store?.storeName
+    ? store.storeName
+    : (profile?.displayName ?? t("profileTitle"));
+  const photoURL = isSeller && store?.storeLogoURL
+    ? store.storeLogoURL
+    : (profile?.photoURL ?? null);
   const memberSince = profile?.createdAt
     ? `Member since ${profile.createdAt.toLocaleDateString("en", { month: "long", year: "numeric" })}`
     : t("memberSince");
@@ -87,8 +94,8 @@ export async function PublicProfileView({
   const totalOrders = stats?.totalOrders ?? 0;
 
   const storeSlug = profile?.storeSlug;
-  const storeName = pub?.storeName ?? displayName;
-  const storeDescription = pub?.storeDescription;
+  const storeName = store?.storeName ?? pub?.storeName ?? displayName;
+  const storeDescription = store?.storeDescription ?? pub?.storeDescription;
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="publicprofileview-div-186">

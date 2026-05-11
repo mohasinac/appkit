@@ -261,18 +261,11 @@ export async function ProductDetailPageView({
   const freeShipping = shippingPaidBy === "seller";
   const featured = p.featured === true;
   const storeName = typeof p.storeName === "string" ? (p.storeName as string) : null;
-  const sellerName =
-    typeof p.sellerName === "string" ? (p.sellerName as string) : null;
-  const safeSeller = (storeName || sellerName)
-    ? safeDisplayName((storeName || sellerName) ?? "", "")
-    : null;
+  const safeSeller = storeName ? safeDisplayName(storeName, "") : null;
   const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
-  const sellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
-    : sellerId
-      ? String(ROUTES.PUBLIC.SELLER_DETAIL(sellerId))
-      : null;
+    : null;
 
   const descriptionHtml = toDescriptionHtml(p.description);
   const sublistingCategoryId = typeof p.sublistingCategoryId === "string" ? p.sublistingCategoryId : null;

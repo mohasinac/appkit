@@ -25,16 +25,16 @@ const COUPON_TYPES: { value: CouponType; label: string }[] = [
 export interface CouponsIndexListingProps {
   /** Pre-fetched coupons to show on first render */
   initialCoupons?: any[];
-  /** If set, only show coupons from this store */
+  /** If set, only show coupons from this store (slug, for display) */
   storeSlug?: string;
-  /** If set, only show coupons from this seller */
-  sellerId?: string;
+  /** If set, only show coupons from this store (id, for filtering) */
+  storeId?: string;
 }
 
 export function CouponsIndexListing({
   initialCoupons,
   storeSlug,
-  sellerId,
+  storeId,
 }: CouponsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "12", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -49,7 +49,7 @@ export function CouponsIndexListing({
     if (dateFrom) parts.push(`validity.startDate>=${dateFrom}`);
     const dateTo = table.get("dateTo");
     if (dateTo) parts.push(`validity.endDate<=${dateTo}`);
-    if (sellerId) parts.push(`sellerId==${sellerId}`);
+    if (storeId) parts.push(`storeId==${storeId}`);
     return parts.join(",");
   };
 

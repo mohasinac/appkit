@@ -19,12 +19,10 @@ const FILTER_KEYS = ["minPrice", "maxPrice"];
 
 export interface StorePreOrdersListingProps {
   storeId?: string;
-  /** @deprecated Use storeId */
-  sellerId?: string;
   initialData?: any;
 }
 
-export function StorePreOrdersListing({ storeId, sellerId, initialData }: StorePreOrdersListingProps) {
+export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
@@ -98,7 +96,6 @@ export function StorePreOrdersListing({ storeId, sellerId, initialData }: StoreP
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    sellerId: !storeId ? sellerId : undefined,
     isPreOrder: true,
   };
 

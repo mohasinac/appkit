@@ -21,14 +21,12 @@ const AUCTION_SORT_OPTIONS = [
 const FILTER_KEYS = ["minPrice", "maxPrice"];
 
 export interface StoreAuctionsListingProps {
-  /** Store document ID — preferred for filtering */
+  /** Store document ID — used for filtering */
   storeId?: string;
-  /** @deprecated Use storeId */
-  sellerId?: string;
   initialData?: any;
 }
 
-export function StoreAuctionsListing({ storeId, sellerId, initialData }: StoreAuctionsListingProps) {
+export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "auctionEndDate" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -108,7 +106,6 @@ export function StoreAuctionsListing({ storeId, sellerId, initialData }: StoreAu
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    sellerId: !storeId ? sellerId : undefined,
     isAuction: true,
   };
 

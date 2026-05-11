@@ -17,6 +17,7 @@ import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
+import { sanitizeProductForPublic } from "../../utils/sanitize";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -96,7 +97,10 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ success: true, data: item });
+    const sanitized = sanitizeProductForPublic(
+      item as unknown as Record<string, unknown>,
+    );
+    return NextResponse.json({ success: true, data: sanitized });
   } catch (error) {
     console.error("[feat-products] GET /api/products/[id] failed", error);
     return NextResponse.json(

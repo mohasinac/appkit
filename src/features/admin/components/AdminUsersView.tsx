@@ -228,6 +228,8 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         currentRole={toStringValue(selectedRow?._raw?.role, "user")}
         currentIsDisabled={selectedRow?.status === "Disabled"}
         currentEmailVerified={Boolean(selectedRow?._raw?.emailVerified)}
+        ownedStoreId={toStringValue(selectedRow?._raw?.storeId, "") || undefined}
+        ownedStoreName={toStringValue(selectedRow?._raw?.storeName, "") || undefined}
       />
     </>
   );

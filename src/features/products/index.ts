@@ -9,3 +9,7 @@ export * from "./schemas";
 export * from "./columns";
 export { manifest } from "./manifest";
 export { normalizeListingType } from "./utils/listing-type";
+export {
+  sanitizeProductForPublic,
+  sanitizeProductsForPublic,
+} from "./utils/sanitize";

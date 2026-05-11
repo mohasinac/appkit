@@ -19,6 +19,7 @@ import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { ProductItem, ProductListResponse } from "../types/index";
 import { mediaFieldSchema } from "../../media/types/index";
+import { sanitizeProductsForPublic } from "../utils/sanitize";
 
 type ProductRecord = ProductItem & {
   sellerId?: string;
@@ -177,7 +178,9 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     const totalPages = Math.max(1, Math.ceil(result.total / pageSize));
     const body: ProductListResponse = {
-      items: result.data,
+      items: sanitizeProductsForPublic(
+        result.data as unknown as Array<Record<string, unknown>>,
+      ) as unknown as ProductItem[],
       total: result.total,
       page: result.page,
       pageSize,

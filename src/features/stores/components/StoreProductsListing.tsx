@@ -15,14 +15,12 @@ import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 const FILTER_KEYS = ["condition", "brand", "minPrice", "maxPrice"];
 
 export interface StoreProductsListingProps {
-  /** Store document ID — preferred for filtering */
+  /** Store document ID — used for filtering */
   storeId?: string;
-  /** @deprecated Use storeId */
-  sellerId?: string;
   initialData?: any;
 }
 
-export function StoreProductsListing({ storeId, sellerId, initialData }: StoreProductsListingProps) {
+export function StoreProductsListing({ storeId, initialData }: StoreProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -105,7 +103,6 @@ export function StoreProductsListing({ storeId, sellerId, initialData }: StorePr
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    sellerId: !storeId ? sellerId : undefined,
     isAuction: false,
   };
 

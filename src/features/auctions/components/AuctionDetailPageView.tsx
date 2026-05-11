@@ -55,9 +55,9 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
     ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
     : null;
 
-  const sellerId = (product as unknown as Record<string, unknown>)?.sellerId as string | undefined;
-  const storeReviews: ReviewDocument[] = sellerId
-    ? await listReviewsBySeller(sellerId).catch(() => [])
+  const storeId = (product as unknown as Record<string, unknown>)?.storeId as string | undefined;
+  const storeReviews: ReviewDocument[] = storeId
+    ? await listReviewsBySeller(storeId).catch(() => [])
     : [];
 
   if (!product) {
@@ -120,15 +120,11 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
   const freeShipping = shippingPaidBy === "seller";
   const storeName = typeof p.storeName === "string" ? p.storeName : null;
-  const sellerName = typeof p.sellerName === "string" ? p.sellerName : null;
-  const safeSeller = (storeName || sellerName) ? safeDisplayName((storeName || sellerName) ?? "", "") : null;
+  const safeSeller = storeName ? safeDisplayName(storeName, "") : null;
   const storeSlug = (typeof p.storeSlug === "string" ? p.storeSlug : null) || (typeof p.storeId === "string" ? p.storeId : null);
-  const auctionSellerId = typeof p.sellerId === "string" ? (p.sellerId as string) : null;
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
-    : auctionSellerId
-      ? String(ROUTES.PUBLIC.SELLER_DETAIL(auctionSellerId))
-      : null;
+    : null;
   const category = typeof p.category === "string" ? (p.category as string) : null;
   const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;
