@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { X, AlertTriangle } from "lucide-react";
+import { X, AlertTriangle, Eye, ArrowLeft } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
@@ -27,6 +27,12 @@ export interface FormShellProps {
   publishLabel?: string;
   /** Override the entire bottom action bar. */
   renderBottomBar?: () => ReactNode;
+  /**
+   * When provided, a 👁 Preview button appears in the top bar.
+   * Clicking it replaces the form body with this read-only render.
+   * A draft banner and "← Back to Edit" button are injected automatically.
+   */
+  previewSlot?: () => ReactNode;
   children: ReactNode;
 }
 
@@ -61,6 +67,7 @@ export function FormShell({
   saveLabel = FORM_ACTION_META[FORM_ACTION_ID.SAVE_DRAFT].label,
   publishLabel = FORM_ACTION_META[FORM_ACTION_ID.PUBLISH].label,
   renderBottomBar,
+  previewSlot,
   children,
 }: FormShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -68,6 +75,7 @@ export function FormShell({
   const [showUnsaved, setShowUnsaved] = useState(false);
   const [savingDraft, setSavingDraft] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [previewMode, setPreviewMode] = useState(false);
 
   const attemptClose = useCallback(() => {
     if (isDirty) {
@@ -150,52 +158,80 @@ export function FormShell({
       >
         {/* ── Top bar ─────────────────────────────────────── */}
         <div className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={attemptClose}
-            aria-label="Close"
-            className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {previewMode ? (
+            <button
+              type="button"
+              onClick={() => setPreviewMode(false)}
+              aria-label="Back to edit"
+              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0 flex items-center gap-1.5 text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span className="hidden sm:inline">Back to Edit</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={attemptClose}
+              aria-label="Close"
+              className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
 
           <div className="flex-1 min-w-0">
             {breadcrumb && (
               <p className="text-xs text-[var(--appkit-color-text-muted)] truncate mb-0.5">{breadcrumb}</p>
             )}
-            <p className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">{title}</p>
+            <p className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">
+              {previewMode ? `Preview — ${title}` : title}
+            </p>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            {onSaveDraft && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleSaveDraft}
-                disabled={isLoading || savingDraft || publishing}
-                isLoading={savingDraft}
-              >
-                {saveLabel}
-              </Button>
-            )}
-            {onPublish && (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={handlePublish}
-                disabled={isLoading || savingDraft || publishing}
-                isLoading={publishing}
-              >
-                {publishLabel}
-              </Button>
+            {previewMode ? null : (
+              <>
+                {previewSlot && (
+                  <button
+                    type="button"
+                    onClick={() => setPreviewMode(true)}
+                    className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors border border-[var(--appkit-color-border)]"
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span className="hidden sm:inline">Preview</span>
+                  </button>
+                )}
+                {onSaveDraft && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSaveDraft}
+                    disabled={isLoading || savingDraft || publishing}
+                    isLoading={savingDraft}
+                  >
+                    {saveLabel}
+                  </Button>
+                )}
+                {onPublish && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handlePublish}
+                    disabled={isLoading || savingDraft || publishing}
+                    isLoading={publishing}
+                  >
+                    {publishLabel}
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </div>
 
         {/* ── Body (left nav + scrollable content) ───────── */}
         <div className="flex flex-1 overflow-hidden">
-          {/* Left section nav — desktop only (lg+) */}
-          {sections && sections.length > 0 && (
+          {/* Left section nav — desktop only (lg+), hidden in preview mode */}
+          {sections && sections.length > 0 && !previewMode && (
             <nav
               aria-label="Form sections"
               className="hidden lg:flex flex-col flex-shrink-0 w-48 border-r border-[var(--appkit-color-border)] py-4 px-3 gap-1 overflow-y-auto"
@@ -214,7 +250,7 @@ export function FormShell({
           )}
 
           {/* Mobile horizontal section strip */}
-          {sections && sections.length > 0 && (
+          {sections && sections.length > 0 && !previewMode && (
             <div className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 flex overflow-x-auto gap-1 px-4 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
               {sections.map((sec) => (
                 <button
@@ -229,24 +265,36 @@ export function FormShell({
             </div>
           )}
 
-          {/* Scrollable form body */}
+          {/* Scrollable form body / preview pane */}
           <div
             ref={bodyRef}
             className={classNames(
               "flex-1 overflow-y-auto",
-              sections && sections.length > 0 ? "pt-0 lg:pt-0" : "",
+              sections && sections.length > 0 && !previewMode ? "pt-0 lg:pt-0" : "",
             )}
           >
-            <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6">
-              {children}
-            </div>
+            {previewMode && previewSlot ? (
+              <>
+                <div className="sticky top-0 z-10 flex items-center gap-2 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 py-2 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]">
+                  <Eye className="w-4 h-4 flex-shrink-0" />
+                  <span>Preview — not visible to buyers until published</span>
+                </div>
+                <div className="py-4">
+                  {previewSlot()}
+                </div>
+              </>
+            ) : (
+              <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6">
+                {children}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* ── Bottom bar ──────────────────────────────────── */}
-        {renderBottomBar ? (
+        {/* ── Bottom bar — hidden in preview mode ─────────── */}
+        {!previewMode && renderBottomBar ? (
           renderBottomBar()
-        ) : (onSaveDraft || onPublish) ? (
+        ) : !previewMode && (onSaveDraft || onPublish) ? (
           <div className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3 flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}

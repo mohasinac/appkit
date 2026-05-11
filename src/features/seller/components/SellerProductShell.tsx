@@ -100,6 +100,11 @@ export interface SellerProductShellProps {
   }) => React.ReactNode;
   /** Called with current draft when user clicks "Save as Template". */
   onSaveAsTemplate?: (draft: SellerProductDraft) => void | Promise<void>;
+  /**
+   * When provided, a 👁 Preview button appears in the FormShell top bar.
+   * Should return a read-only render of the product using current draft values.
+   */
+  previewSlot?: () => React.ReactNode;
 }
 
 const CONDITION_OPTIONS = [
@@ -627,6 +632,7 @@ export function SellerProductShell({
   renderAddressSelector,
   renderTemplateSelector,
   onSaveAsTemplate,
+  previewSlot,
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
   const [currentStep, setCurrentStep] = useState(0);
@@ -733,6 +739,7 @@ export function SellerProductShell({
         breadcrumb={breadcrumb}
         isDirty={isDirty}
         isLoading={isLoading}
+        previewSlot={previewSlot}
       >
         <StepForm<SellerProductDraft>
           steps={steps}
@@ -768,6 +775,7 @@ export function SellerProductShell({
       onPublish={handlePublish}
       saveLabel="Save Changes"
       publishLabel="Update"
+      previewSlot={previewSlot}
     >
       <Stack gap="lg">
         <section id="basic">
