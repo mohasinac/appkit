@@ -57,7 +57,7 @@ Import: `import { X } from "@mohasinac/appkit/ui"` (or `/client` for client-only
 | `IconButton` | `IconButton.tsx` | Icon-only button with accessible label |
 | `ImageGallery` | `ImageGallery.tsx` | Thumbnail strip + main image viewer |
 | `ImageLightbox` | `ImageLightbox.tsx` | Full-screen image zoom overlay |
-| `InlineCreateSelect` | `InlineCreateSelect.tsx` | DynamicSelect + "+ Create new" option that opens inline SideDrawer |
+| `InlineCreateSelect` | `InlineCreateSelect.tsx` | DynamicSelect + "+ Create new" option that opens SideDrawer (`renderCreateForm`) or QuickFormDrawer (`createFields`+`onCreateSubmit`) |
 | `Input` | `Input.tsx` | Text/number/email/password input |
 | `ItemRow` | `ItemRow.tsx` | Single row item with label/value/action |
 | `Layout` | `Layout.tsx` | Container/Stack/Row/Grid/Section/Main layout primitives |
@@ -125,7 +125,11 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `DashboardStats` | `DashboardStats.tsx` | Stats grid for admin dashboard |
 | `QuickActionsPanel` | `QuickActionsPanel.tsx` | Admin quick-action shortcut panel |
 | `DrawerFormFooter` | `DrawerFormFooter.tsx` | Save/Cancel footer for SideDrawer forms |
+| `FormShell` | `features/shell/FormShell.tsx` | Full-viewport edit overlay — sticky top/bottom bars, left section nav, dirty-state confirm dialog, `previewSlot` preview toggle (UX4) |
+| `QuickFormDrawer` | `features/shell/QuickFormDrawer.tsx` | 40%-width right-anchored drawer; auto-generates form from `fields: QuickFieldDef[]`; used for quick actions |
+| `StepForm` | `features/shell/StepForm.tsx` | Multi-step wizard (renders inside FormShell body); step indicator + per-step validate gate |
 | `DataTable` | `DataTable.tsx` | Generic data table (prefer SlottedListingView for full CRUD tables); supports `renderRowActions` prop for per-row ⋮ menu |
+| `QuickEditMenu` | `features/admin/components/QuickEditMenu.tsx` | ⋮ row action menu where each action can open a `QuickFormDrawer`; use in `renderRowActions` for inline quick-edit |
 | `AdminProductsView` | `AdminProductsView.tsx` | Admin products listing (list page) |
 | `AdminProductEditorView` | `AdminProductEditorView.tsx` | Admin product create/edit form (3-mode: standard/auction/preorder) |
 | `AdminCouponsView` | `AdminCouponsView.tsx` | Admin coupons listing |
@@ -199,6 +203,8 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `SellerPayoutHistoryTable` | `SellerPayoutHistoryTable.tsx` | Payout history table component |
 | `SellerPayoutStats` | `SellerPayoutStats.tsx` | Payout stats summary |
 | `SellersListView` | `SellersListView.tsx` | Public sellers listing page |
+| `CategoryInlineSelect` | `CategoryInlineSelect.tsx` | Async searchable category selector; `allowCreate` prop enables CategoryQuickCreateForm inline |
+| `BrandInlineSelect` | `BrandInlineSelect.tsx` | Async searchable brand selector with inline BrandQuickCreateForm (allowCreate defaults to true) |
 
 ---
 
