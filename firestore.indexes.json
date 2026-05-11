@@ -65,7 +65,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -133,7 +133,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -151,7 +151,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -390,6 +390,20 @@
         },
         {
           "fieldPath": "lastActivity",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "carousels",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "createdBy",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
           "order": "DESCENDING"
         }
       ]
@@ -1343,6 +1357,20 @@
       ]
     },
     {
+      "collectionGroup": "carouselSlides",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "carouselId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "order",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "homepageSections",
       "queryScope": "COLLECTION",
       "fields": [
@@ -1771,7 +1799,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -2883,7 +2911,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -3405,7 +3433,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -3503,7 +3531,7 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "sellerId",
+          "fieldPath": "storeId",
           "order": "ASCENDING"
         },
         {
@@ -4123,6 +4151,52 @@
       ]
     },
     {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "sublistingCategoryId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "price",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "sublistingCategories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "name",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "sublistingCategories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "productCount",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "scammerProfiles",
       "queryScope": "COLLECTION",
       "fields": [
@@ -4264,6 +4338,78 @@
         },
         {
           "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "groupId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isAuction",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "groupId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "price",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "groupedListings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "storeId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "groupedListings",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "isFeatured",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isActive",
           "order": "ASCENDING"
         },
         {
