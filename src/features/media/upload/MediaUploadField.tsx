@@ -59,6 +59,18 @@ function isImage(url: string): boolean {
   return /\.(jpe?g|png|gif|webp|svg)(\?|$)/i.test(url);
 }
 
+function isPdf(url: string): boolean {
+  return /\.pdf(\?|$)/i.test(url);
+}
+
+function isPdfAccept(accept: string): boolean {
+  return accept
+    .toLowerCase()
+    .split(",")
+    .map((s) => s.trim())
+    .some((s) => s === "application/pdf" || s === ".pdf");
+}
+
 function filenameFromUrl(url: string): string {
   try {
     const parts = new URL(url).pathname.split("/");
@@ -119,6 +131,10 @@ export function MediaUploadField({
   const [extError, setExtError] = useState("");
 
   const hasAlternateSources = showYoutube || showExternal;
+  // PDF mode: derived from the `accept` prop. Hides camera capture + alternate
+  // URL tabs (YouTube/External never make sense for invoice/payout-doc fields)
+  // and trim/thumbnail flow.
+  const pdfMode = isPdfAccept(accept);
 
   function handleYtApply() {
     const id = extractYouTubeId(ytInput);
@@ -195,12 +211,14 @@ export function MediaUploadField({
   const tMediaEditor = useTranslations("mediaEditor");
   const { isSupported: isCameraSupported } = useCamera();
 
+  // PDF uploads never come from a camera capture — force file-only in pdfMode.
+  const effectiveCaptureSource = pdfMode ? "file-only" : captureSource;
   const showCamera =
-    captureSource === "camera-only" ||
-    (captureSource === "both" && inputMode === "camera");
+    effectiveCaptureSource === "camera-only" ||
+    (effectiveCaptureSource === "both" && inputMode === "camera");
   const showFileInput =
-    captureSource === "file-only" ||
-    (captureSource === "both" && inputMode === "file");
+    effectiveCaptureSource === "file-only" ||
+    (effectiveCaptureSource === "both" && inputMode === "file");
 
   const captureModeAccept =
     captureMode === "video"
@@ -401,6 +419,23 @@ export function MediaUploadField({
                 objectFit="contain"
               />
             </Div>
+          ) : isPdf(value) ? (
+            <Row gap="md" align="center">
+              <Div
+                aria-hidden
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300"
+              >
+                <span className="text-xs font-bold">PDF</span>
+              </Div>
+              <a
+                href={value}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400"
+              >
+                {filenameFromUrl(value)}
+              </a>
+            </Row>
           ) : (
             <a
               href={value}

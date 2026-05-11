@@ -301,6 +301,8 @@ export const ERROR_MESSAGES = {
     TRIM_FAILED: "Failed to trim video",
     CROP_FAILED: "Failed to crop image",
     NO_FILE: "No file provided",
+    NOT_FOUND: "Media not found",
+    PROXY_FAILED: "Failed to serve media",
   },
 
   // Address Errors

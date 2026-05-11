@@ -433,6 +433,26 @@ export interface SiteSettingsDocument {
     enabled: boolean;
     message: string;
   };
+  /**
+   * Image watermark configuration applied by the `/api/media/[...slug]` CDN
+   * proxy. When absent the proxy falls back to text watermark "letitrip.in" at
+   * 30% width with 20% opacity.
+   */
+  watermark?: {
+    /** `"text"` renders the `text` field; `"image"` overlays `imageUrl`. */
+    type: "text" | "image";
+    /** Text content for `type: "text"`. Default `"letitrip.in"`. */
+    text?: string;
+    /**
+     * `/media/<slug>` proxy URL of the watermark image (when `type: "image"`).
+     * Never store raw `firebasestorage.googleapis.com` URLs.
+     */
+    imageUrl?: string;
+    /** Percentage of target image width (0–100). 0 disables the watermark. */
+    size?: number;
+    /** Percentage opacity (0–100). Default 20. */
+    opacity?: number;
+  };
   /** Encrypted provider credentials � never return raw to the client. */
   credentials?: SiteSettingsCredentials;
   featuredResults?: FeaturedResult[];

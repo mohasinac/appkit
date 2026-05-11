@@ -86,6 +86,16 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     enabled: true,
     message: "🎉 Up to 25% off Pokémon non-holos + Free stadium with 2 Beyblade tops — See Events for codes",
   },
+  // I7 — watermark applied by /api/media/[...slug] proxy. Defaults to text
+  // "letitrip.in" at 30 % of target image width with 20 % opacity. Image mode
+  // requires `imageUrl` to be a /media/<slug> proxy URL (never raw Storage).
+  watermark: {
+    type: "text",
+    text: "letitrip.in",
+    imageUrl: "",
+    size: 30,
+    opacity: 20,
+  },
   logo: {
     url: "/favicon.svg",
     alt: "LetItRip Logo",
