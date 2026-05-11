@@ -306,6 +306,7 @@ Import: `import { useX } from "@mohasinac/appkit/client"`
 | `useUserWishlist` | `features/wishlist/hooks/useUserWishlist.ts` | User wishlist data fetcher |
 | `useProfile` | `features/account/hooks/useProfile.ts` | Current user profile read/update |
 | `useChangePassword` | `features/auth/hooks/useAuth.ts` | Reauthenticate + change password (also exported from `client.ts`) |
+| `useChangeEmail` | `features/auth/hooks/useAuth.ts` | Reauthenticate + `verifyBeforeUpdateEmail`; sends verification link to new address (also exported from `client.ts`) |
 | `useSetDefaultAddress` | `features/account/hooks/useAddresses.ts` | Set an address as default (`{ addressId }`) |
 | `useDeleteAddress` | `features/account/hooks/useAddresses.ts` | Delete an address (`{ id }`) |
 | `useAddresses` | `features/account/hooks/useAddresses.ts` | User address list |
