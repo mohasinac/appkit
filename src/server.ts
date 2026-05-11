@@ -67,8 +67,9 @@ export { categoriesSeedData } from "./seed/index";
 // couponsSeedData - Model for coupons seed data.
 export { couponsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// demoSeed - Shared export for demo seed.
-export { demoSeed } from "./seed/index";
+// demoSeed - Shared export for demo seed. Sourced directly from actions to keep
+// the server runtime out of the client-facing `./seed/index` barrel.
+export { demoSeed } from "./seed/actions/demo-seed-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
 export { eventEntriesSeedData } from "./seed/index";
@@ -196,8 +197,8 @@ export { registerSeedLocale } from "./seed/index";
 // reviewsSeedData - Model for reviews seed data.
 export { reviewsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// runSeed - Helper for run seed.
-export { runSeed } from "./seed/index";
+// runSeed - Helper for run seed. Sourced directly from the runner module.
+export { runSeed } from "./seed/runner";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // seedForTest - Shared export for seed for test.
 export { seedForTest } from "./seed/index";

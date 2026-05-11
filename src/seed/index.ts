@@ -1,6 +1,10 @@
 // appkit/src/seed/index.ts
+//
+// Pure fixture data + factories. Server-only seed runner / demoSeed action
+// live in `./server.ts` so client-bundles that touch the main appkit barrel
+// for fixtures do not transitively reach firebase-admin via the runner.
+
 export type { SeedCollection, SeedConfig, SeedResult } from "./types";
-export { runSeed } from "./runner";
 
 // Seed market config (for consumer locale registration)
 export type { SeedLocaleData } from "./seed-market-config";
@@ -11,12 +15,11 @@ export {
   makeSeedPhone,
 } from "./seed-market-config";
 
-// Demo seed actions
+// Demo seed action — type only here (the runtime action is in ./server)
 export type {
   SeedCollectionName,
   SeedOperationResult,
 } from "./actions/demo-seed-actions";
-export { demoSeed } from "./actions/demo-seed-actions";
 
 // Factories — user
 export type { SeedBaseUserDocument } from "./factories/user.factory";

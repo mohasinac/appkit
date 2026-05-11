@@ -29,6 +29,21 @@ import { createFirebaseAdapter } from "@mohasinac/sievejs/adapters/firebase";
 
 import { FirebaseRepository } from "./base";
 import { deserializeTimestamps, getFirestoreCount } from "./helpers";
+import {
+  expandFilterAliases as _expandFilterAliases,
+  type SieveFilterAlias,
+  type SieveFilterAliases,
+} from "./filter-aliases";
+
+// Re-export the pure alias helper + types so consumers that already imported
+// from `./sieve` keep working. Anyone who only needs the alias machinery
+// should prefer importing from `./filter-aliases` directly — that path has
+// zero runtime deps and is client-safe.
+export {
+  _expandFilterAliases as expandFilterAliases,
+  type SieveFilterAlias,
+  type SieveFilterAliases,
+};
 
 // --- Types --------------------------------------------------------------------
 
@@ -40,47 +55,6 @@ export type SieveFieldConfig = {
 };
 
 export type SieveFields = Record<string, SieveFieldConfig>;
-
-/**
- * Virtual filter aliases — a clause like `listingType==auction` is expanded
- * into one or more real Sieve clauses (`isAuction==true,isPreOrder==false`)
- * before the model reaches the underlying Sieve processor.
- *
- * The expander receives the raw operator + value the caller used (e.g. `==`,
- * `!=`) and the value string. Return a comma-separated Sieve clause string,
- * or empty string to drop the clause silently.
- */
-export type SieveFilterAlias = (value: string, operator: string) => string;
-export type SieveFilterAliases = Record<string, SieveFilterAlias>;
-
-/**
- * Expand virtual filter clauses into real Sieve clauses.
- * Pure function — exported for direct use in route helpers + unit testing.
- */
-export function expandFilterAliases(
-  filters: string | undefined,
-  aliases: SieveFilterAliases | undefined,
-): string | undefined {
-  if (!filters || !aliases) return filters;
-  const aliasKeys = Object.keys(aliases);
-  if (aliasKeys.length === 0) return filters;
-  return filters
-    .split(",")
-    .map((clause) => clause.trim())
-    .filter(Boolean)
-    .map((clause) => {
-      // Match field, operator (==, !=, <=, >=, <, >, @=*, @=, _=), value.
-      const m = clause.match(/^([A-Za-z_][\w.]*)\s*(==|!=|<=|>=|<|>|@=\*?|_=)\s*(.*)$/);
-      if (!m) return clause;
-      const [, field, op, value] = m;
-      const alias = aliases[field];
-      if (!alias) return clause;
-      const expanded = alias(value, op);
-      return expanded || "";
-    })
-    .filter(Boolean)
-    .join(",");
-}
 
 export interface SieveModel {
   /** Comma-delimited filter expressions, e.g. `status==published,price>=100` */
@@ -133,7 +107,7 @@ function withAliasesExpanded(
   aliases: SieveFilterAliases | undefined,
 ): SieveModel {
   if (!aliases) return model;
-  const expanded = expandFilterAliases(model.filters, aliases);
+  const expanded = _expandFilterAliases(model.filters, aliases);
   if (expanded === model.filters) return model;
   return { ...model, filters: expanded };
 }

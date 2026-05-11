@@ -1718,9 +1718,9 @@ export { couponsSeedData } from "./seed/index";
 // couponUsageSeedData - Per-user coupon redemption records (subcollection seed).
 export type { CouponUsageSeedRecord } from "./seed/index";
 export { couponUsageSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// demoSeed - Shared export for demo seed.
-export { demoSeed } from "./seed/index";
+// demoSeed has been moved to "@mohasinac/appkit/server" — it transitively
+// reaches firebase-admin via the seed runner, which must not leak into client
+// bundles. Import from `@mohasinac/appkit/server` in server-only code.
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // eventEntriesSeedData - Model for event entries seed data.
 export { eventEntriesSeedData } from "./seed/index";
@@ -1856,9 +1856,7 @@ export { registerSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // reviewsSeedData - Model for reviews seed data.
 export { reviewsSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// runSeed - Helper for run seed.
-export { runSeed } from "./seed/index";
+// runSeed has been moved to "@mohasinac/appkit/server" — see demoSeed above.
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // seedForTest - Shared export for seed for test.
 export { seedForTest } from "./seed/index";
