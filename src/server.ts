@@ -378,6 +378,12 @@ export { verifyWebhookSignature } from "./providers/payment-razorpay/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // SHIPROCKET_TOKEN_TTL_MS - Constant used across modules.
 export { SHIPROCKET_TOKEN_TTL_MS } from "./providers/shipping-shiprocket/index";
+// SHIPROCKET_TRACKING_URL_BASE / buildShiprocketTrackingUrl / SHIPROCKET_STATUS_PICKUP_SCHEDULED — see I5/O5
+export {
+  SHIPROCKET_TRACKING_URL_BASE,
+  buildShiprocketTrackingUrl,
+  SHIPROCKET_STATUS_PICKUP_SCHEDULED,
+} from "./providers/shipping-shiprocket/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ShiprocketProvider - Component for shiprocket provider.
 export { ShiprocketProvider } from "./providers/shipping-shiprocket/index";

@@ -510,3 +510,17 @@ export function isShiprocketTokenExpired(expiry: Date | undefined): boolean {
   if (!expiry) return true;
   return new Date() >= new Date(expiry);
 }
+
+/**
+ * Public tracking URL Shiprocket exposes for every AWB. All consumers that
+ * record `trackingUrl` on an order should build it via this helper so the
+ * base URL stays single-source-of-truth.
+ */
+export const SHIPROCKET_TRACKING_URL_BASE = "https://shiprocket.co/tracking";
+
+export function buildShiprocketTrackingUrl(awb: string): string {
+  return `${SHIPROCKET_TRACKING_URL_BASE}/${encodeURIComponent(awb)}`;
+}
+
+/** Status saved on an order immediately after pickup is generated. */
+export const SHIPROCKET_STATUS_PICKUP_SCHEDULED = "Pickup Scheduled";
