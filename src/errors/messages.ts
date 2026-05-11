@@ -396,6 +396,16 @@ export const ERROR_MESSAGES = {
     NO_STORE: "No store found for this account",
   },
 
+  // Buyer ↔ seller conversations (D5 + VC7)
+  CONVERSATIONS: {
+    NOT_FOUND: "Conversation not found",
+    FETCH_FAILED: "Failed to load conversations",
+    SEND_FAILED: "Failed to send message",
+    BODY_REQUIRED: "Message body is required",
+    BODY_TOO_LONG: "Message too long",
+    NOT_PARTICIPANT: "You are not a participant of this conversation",
+  },
+
   BID: {
     FETCH_FAILED: "Failed to load bids",
     CREATE_FAILED: "Failed to place bid",

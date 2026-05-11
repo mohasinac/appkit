@@ -8758,8 +8758,16 @@ export {
   sendMessage,
   markConversationRead,
   MESSAGE_MAX_LENGTH,
+  pingConversationRtdb,
 } from "./features/messages/server";
 export type { SendMessageInput } from "./features/messages/server";
+// Messages realtime channel — shared between client + server (D5 + VC7)
+export {
+  conversationPingPath,
+  userConversationsPingPath,
+  buildConversationPingPaths,
+} from "./features/messages/realtime";
+export type { ConversationPingTargets } from "./features/messages/realtime";
 // Sublisting categories feature schemas
 export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/products/schemas/sublisting-categories";
 export type { SublistingCategoryDocument } from "./features/products/schemas/sublisting-categories";

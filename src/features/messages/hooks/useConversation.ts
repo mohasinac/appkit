@@ -11,19 +11,23 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
+import {
+  conversationPingPath,
+  userConversationsPingPath,
+} from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
 
-/** RTDB path bumped on every write to a single conversation. */
-export const CONVERSATIONS_PING_PATH = (id: string) =>
-  `chats/${id}/lastUpdate`;
+/**
+ * @deprecated Re-exported for backwards compat — import `conversationPingPath`
+ * from `@mohasinac/appkit` instead.
+ */
+export const CONVERSATIONS_PING_PATH = conversationPingPath;
 
 /**
- * RTDB path bumped on every write across all of a user's conversations. The
- * server fans out to this path on every message so the list view + nav-bell
- * can refresh without subscribing to every individual conversation.
+ * @deprecated Re-exported for backwards compat — import
+ * `userConversationsPingPath` from `@mohasinac/appkit` instead.
  */
-export const CONVERSATIONS_PING_USER_PATH = (userId: string) =>
-  `chats/user/${userId}/lastUpdate`;
+export const CONVERSATIONS_PING_USER_PATH = userConversationsPingPath;
 
 const DETAIL_ENDPOINT = (id: string) =>
   `/api/user/conversations/${encodeURIComponent(id)}`;
@@ -83,7 +87,7 @@ export function useConversation(conversationId: string | null): UseConversationR
     }
     try {
       const unsubscribe = getClientRealtimeProvider().subscribe(
-        CONVERSATIONS_PING_PATH(conversationId),
+        conversationPingPath(conversationId),
         () => {
           setIsConnected(true);
           void refetch();

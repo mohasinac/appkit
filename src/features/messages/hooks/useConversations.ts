@@ -6,7 +6,7 @@
  */
 import { useCallback, useEffect, useState } from "react";
 import { getClientRealtimeProvider } from "../../../contracts/client-realtime";
-import { CONVERSATIONS_PING_USER_PATH } from "./useConversation";
+import { userConversationsPingPath } from "../realtime";
 import type { ConversationDocument } from "../schemas/firestore";
 
 const LIST_ENDPOINT = "/api/user/conversations";
@@ -57,7 +57,7 @@ export function useConversations(userId: string | null | undefined): UseConversa
     if (!userId) return;
     try {
       const unsubscribe = getClientRealtimeProvider().subscribe(
-        CONVERSATIONS_PING_USER_PATH(userId),
+        userConversationsPingPath(userId),
         () => {
           void refetch();
         },

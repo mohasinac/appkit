@@ -3,6 +3,7 @@
  * caller's responsibility.
  */
 import { ValidationError } from "../../../errors";
+import { ERROR_MESSAGES } from "../../../errors/messages";
 import {
   conversationsRepository,
   type ConversationsRepository,
@@ -43,10 +44,10 @@ export async function sendMessage(
   input: SendMessageInput,
 ): Promise<ConversationDocument> {
   const body = input.body?.trim();
-  if (!body) throw new ValidationError("Message body is required");
+  if (!body) throw new ValidationError(ERROR_MESSAGES.CONVERSATIONS.BODY_REQUIRED);
   if (body.length > MESSAGE_MAX_LENGTH) {
     throw new ValidationError(
-      `Message too long (max ${MESSAGE_MAX_LENGTH} characters)`,
+      `${ERROR_MESSAGES.CONVERSATIONS.BODY_TOO_LONG} (max ${MESSAGE_MAX_LENGTH} characters)`,
     );
   }
   return conversationsRepository.appendMessage(input.conversationId, {
