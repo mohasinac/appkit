@@ -28,15 +28,11 @@ interface StoreEntity {
 
 type RouteContext = { params: Promise<{ storeSlug: string }> };
 
-function param(url: URL, key: string): string | null {
-  return url.searchParams.get(key);
-}
+import { parseListingParams } from "../../../../../utils/listing-params";
 
-function numParam(url: URL, key: string, fallback: number): number {
-  const v = url.searchParams.get(key);
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 24;
+const DEFAULT_SORT = "-createdAt";
 
 const SAFE_STORE_PRODUCT_FILTER_FIELDS = new Set([
   "category",
@@ -90,19 +86,19 @@ export async function GET(
       );
     }
 
-    const sort = param(url, "sorts") ?? "-createdAt";
-    const page = numParam(url, "page", 1);
-    const pageSize = numParam(url, "pageSize", 24);
+    const std = parseListingParams(url);
+    const sort = std.sorts ?? DEFAULT_SORT;
+    const page = std.page ?? DEFAULT_PAGE;
+    const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
 
     const filterParts = [
       `storeId==${store.id}`,
       "status==published",
       "isAuction==false",
     ];
-    const extra = param(url, "filters");
-    if (extra) {
+    if (std.filters) {
       const safe = validateSieveFilters(
-        extra,
+        std.filters,
         SAFE_STORE_PRODUCT_FILTER_FIELDS,
       );
       if (safe) filterParts.push(safe);

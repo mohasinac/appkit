@@ -8782,6 +8782,13 @@ export type {
   ProductFeatureStoreCreatePayload,
   ProductFeatureUpdatePayload,
 } from "./features/products/schemas/product-features.validators";
+// parseListingParams / serializeListingParams — short-name URL params (Q2 / S12)
+export {
+  LISTING_PARAM_NAMES,
+  parseListingParams,
+  serializeListingParams,
+} from "./utils/listing-params";
+export type { ListingParams } from "./utils/listing-params";
 // Product features UI option lists (S8 refactor — shared by editor + selector)
 export {
   PRODUCT_FEATURE_CATEGORY_OPTIONS,

@@ -11,23 +11,24 @@
 
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
+import { parseListingParams } from "../../../utils/listing-params";
 
-function numParam(url: URL, key: string, fallback: number): number {
-  const v = url.searchParams.get(key);
-  const n = v !== null ? Number(v) : NaN;
-  return Number.isFinite(n) ? n : fallback;
-}
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 20;
+const MAX_PAGE_SIZE = 100;
+const DEFAULT_SORT = "-createdAt";
 
 export async function GET(request: Request): Promise<NextResponse> {
   try {
     const url = new URL(request.url);
-    const page = Math.max(1, numParam(url, "page", 1));
-    const pageSize = Math.min(100, Math.max(1, numParam(url, "pageSize", 20)));
-    const filters = url.searchParams.get("filters") ?? undefined;
-    const sort =
-      url.searchParams.get("sorts") ??
-      url.searchParams.get("sort") ??
-      "-createdAt";
+    const std = parseListingParams(url);
+    const page = Math.max(1, std.page ?? DEFAULT_PAGE);
+    const pageSize = Math.min(
+      MAX_PAGE_SIZE,
+      Math.max(1, std.pageSize ?? DEFAULT_PAGE_SIZE),
+    );
+    const filters = std.filters ?? undefined;
+    const sort = std.sorts ?? DEFAULT_SORT;
 
     const { db } = getProviders();
     if (!db)
