@@ -243,6 +243,17 @@ export { usePanelUrlSync } from "./react/hooks/use-panel-url-sync";
 export type { PanelUrlSync } from "./react/hooks/use-panel-url-sync";
 export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
 export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
+// productFeatures (FI6) — client-safe components + context
+export {
+  ProductFeaturesProvider,
+  useProductFeatures,
+} from "./features/products/components/ProductFeaturesContext";
+export type { ProductFeaturesProviderProps } from "./features/products/components/ProductFeaturesContext";
+export { FeatureBadge, FeatureBadgeList } from "./features/products/components/FeatureBadge";
+export type {
+  FeatureBadgeProps,
+  FeatureBadgeListProps,
+} from "./features/products/components/FeatureBadge";
 export { SellerOffersPanel } from "./features/seller/components/SellerOffersPanel";
 export type { SellerOffersPanelProps, SellerOfferAction } from "./features/seller/components/SellerOffersPanel";
 export { UserOffersPanel } from "./features/account/components/UserOffersPanel";

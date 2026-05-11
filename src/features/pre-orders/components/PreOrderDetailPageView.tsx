@@ -25,6 +25,8 @@ import { CustomSectionTabContent } from "../../products/components/CustomSection
 import { PreOrderActionsClient } from "./PreOrderActionsClient";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
+import { FeatureBadgeList } from "../../products/components/FeatureBadge";
+import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 import { ShareButton } from "../../products/components/ShareButton";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
@@ -34,6 +36,8 @@ import type { CustomSection } from "../../products/schemas/firestore";
 export interface PreOrderDetailPageViewProps {
   id: string;
   onReserveNow?: (productId: string) => Promise<void>;
+  /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
+  productFeatures?: ProductFeatureDocument[];
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -48,7 +52,7 @@ const PRODUCTION_STATUS_LABELS: Record<string, string> = {
   ready_to_ship: "Ready to Ship",
 };
 
-export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetailPageViewProps) {
+export async function PreOrderDetailPageView({ id, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
   const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
 
   if (!product) {
@@ -278,8 +282,16 @@ export async function PreOrderDetailPageView({ id, onReserveNow }: PreOrderDetai
                 </Row>
               )}
 
-              {/* Highlights */}
-              {features.length > 0 && (
+              {/* Feature badges (FI6) — when productFeatures prop is passed */}
+              {productFeatures && features.length > 0 && (
+                <FeatureBadgeList
+                  productFeatureIds={features}
+                  features={productFeatures}
+                />
+              )}
+
+              {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
+              {!productFeatures && features.length > 0 && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
                   <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     About this product

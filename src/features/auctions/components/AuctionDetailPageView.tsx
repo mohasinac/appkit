@@ -28,6 +28,8 @@ import { BuyBar } from "../../products/components/BuyBar";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
+import { FeatureBadgeList } from "../../products/components/FeatureBadge";
+import type { ProductFeatureDocument } from "../../products/schemas/product-features";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { ShareButton } from "../../products/components/ShareButton";
 import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
@@ -42,6 +44,8 @@ import { SublistingCarouselSection } from "../../products/components/SublistingC
 export interface AuctionDetailPageViewProps {
   id: string;
   onPlaceBid?: (input: PlaceBidInput) => Promise<unknown>;
+  /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
+  productFeatures?: ProductFeatureDocument[];
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -50,7 +54,7 @@ function toDescriptionHtml(raw: unknown): string {
   return normalizeRichTextHtml(s);
 }
 
-export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPageViewProps) {
+export async function AuctionDetailPageView({ id, onPlaceBid, productFeatures }: AuctionDetailPageViewProps) {
   const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
   const bidsResult = product
     ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
@@ -295,8 +299,16 @@ export async function AuctionDetailPageView({ id, onPlaceBid }: AuctionDetailPag
                 </Row>
               )}
 
-              {/* Highlights */}
-              {features.length > 0 && (
+              {/* Feature badges (FI6) — when productFeatures prop is passed */}
+              {productFeatures && features.length > 0 && (
+                <FeatureBadgeList
+                  productFeatureIds={features}
+                  features={productFeatures}
+                />
+              )}
+
+              {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
+              {!productFeatures && features.length > 0 && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
                   <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     About this item

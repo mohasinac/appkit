@@ -25,6 +25,8 @@ import { ProductDetailView } from "./ProductDetailView";
 import { ProductGalleryClient } from "./ProductGalleryClient";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ProductFeatureBadges } from "./ProductFeatureBadges";
+import { FeatureBadgeList } from "./FeatureBadge";
+import type { ProductFeatureDocument } from "../schemas/product-features";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
 import { BuyBar } from "./BuyBar";
 import { ShareButton } from "./ShareButton";
@@ -46,6 +48,13 @@ export interface ProductDetailPageViewProps {
     currency: string;
     minOfferPercent: number;
   }) => React.ReactNode;
+  /**
+   * SSR-loaded productFeatures (platform + store-scope). When present, the
+   * product.features[] IDs render as FeatureBadge pills; the legacy text
+   * Highlights list is suppressed to avoid double-render. When absent, the
+   * legacy bullets render unchanged.
+   */
+  productFeatures?: ProductFeatureDocument[];
 }
 
 // ---------------------------------------------------------------------------
@@ -148,6 +157,7 @@ function StarRating({ value }: { value: number }) {
 export async function ProductDetailPageView({
   slug,
   renderOfferAction,
+  productFeatures,
 }: ProductDetailPageViewProps) {
   const product = await productRepository
     .findByIdOrSlug(slug)
@@ -460,8 +470,16 @@ export async function ProductDetailPageView({
                 }}
               />
 
-              {/* Highlights */}
-              {features.length > 0 && (
+              {/* Feature badges (FI6) — when productFeatures prop is passed */}
+              {productFeatures && features.length > 0 && (
+                <FeatureBadgeList
+                  productFeatureIds={features}
+                  features={productFeatures}
+                />
+              )}
+
+              {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
+              {!productFeatures && features.length > 0 && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
                   <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                     About this product

@@ -10,6 +10,8 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
 import { useLongPress } from "../../../react/hooks/useLongPress";
+import { FeatureBadgeList } from "./FeatureBadge";
+import { useProductFeatures } from "./ProductFeaturesContext";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -60,6 +62,8 @@ export function ProductCard<T extends ProductItem = ProductItem>({
       : null;
 
   const longPress = useLongPress(() => onSelect?.(product.id));
+
+  const featuresList = useProductFeatures();
 
   const handleCardClick = selectionMode
     ? (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); onSelect?.(product.id); }
@@ -238,6 +242,16 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               </Span>
             )}
           </Row>
+
+          {/* Feature badges (FI6) — gated on ProductFeaturesProvider */}
+          {featuresList && product.features && product.features.length > 0 && (
+            <FeatureBadgeList
+              productFeatureIds={product.features}
+              features={featuresList}
+              maxVisible={3}
+              className="mt-2"
+            />
+          )}
 
           {/* Action buttons */}
           {(onAddToCart || onBuyNow) && (

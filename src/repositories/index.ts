@@ -158,3 +158,4 @@ export {
   productFeaturesRepository,
 } from "../features/products/repository/product-features.repository";
 export type { ProductFeatureListFilter } from "../features/products/repository/product-features.repository";
+export { loadProductFeaturesForStore } from "../features/products/repository/loadProductFeatures";

@@ -21,6 +21,16 @@ export type { ProductFormProps, ProductFormValue } from "./ProductForm";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
+export { FeatureBadge, FeatureBadgeList } from "./FeatureBadge";
+export type {
+  FeatureBadgeProps,
+  FeatureBadgeListProps,
+} from "./FeatureBadge";
+export {
+  ProductFeaturesProvider,
+  useProductFeatures,
+} from "./ProductFeaturesContext";
+export type { ProductFeaturesProviderProps } from "./ProductFeaturesContext";
 export { BuyBar } from "./BuyBar";
 export type { BuyBarProps } from "./BuyBar";
 export { ProductsView } from "./ProductsView";

@@ -1618,6 +1618,8 @@ export type {
 // productFeaturesRepository - Server-only repository for productFeatures (FI1).
 export { productFeaturesRepository } from "./repositories/index";
 export type { ProductFeatureListFilter } from "./repositories/index";
+// loadProductFeaturesForStore - SSR helper combining listPlatform + listForStore (FI6).
+export { loadProductFeaturesForStore } from "./repositories/index";
 // productTemplateRepository - Server-only repository for store product templates.
 export { productTemplateRepository } from "./repositories/index";
 export type {
@@ -6878,6 +6880,15 @@ export { ShareButton } from "./features/products/components/ShareButton";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFeatureBadges - Shared export for product feature badges.
 export { ProductFeatureBadges } from "./features/products/index";
+// FeatureBadge / FeatureBadgeList - productFeatures-backed pill badges (FI6).
+export { FeatureBadge, FeatureBadgeList } from "./features/products/index";
+export type { FeatureBadgeProps, FeatureBadgeListProps } from "./features/products/index";
+// ProductFeaturesProvider / useProductFeatures - context for ProductCard feature badges (FI6).
+export { ProductFeaturesProvider, useProductFeatures } from "./features/products/index";
+export type { ProductFeaturesProviderProps } from "./features/products/index";
+// ProductFeaturesSelector - product-form checkbox grid (FI5).
+export { ProductFeaturesSelector } from "./features/products/index";
+export type { ProductFeaturesSelectorProps } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductFilters - Shared export for product filters.
 export { ProductFilters } from "./features/products/index";
