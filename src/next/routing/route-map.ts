@@ -142,6 +142,9 @@ export const DEFAULT_ROUTE_MAP = {
     SUBLISTING_CATEGORIES: "/store/sublisting-categories",
     SUBLISTING_CATEGORIES_NEW: "/store/sublisting-categories/new",
     SUBLISTING_CATEGORIES_EDIT: (id: string) => `/store/sublisting-categories/${id}/edit`,
+    FEATURES: "/store/features",
+    FEATURES_NEW: "/store/features/new",
+    FEATURES_EDIT: (id: string) => `/store/features/${id}/edit`,
     SLUG: "/store/slug",
   },
   ADMIN: {
@@ -205,6 +208,9 @@ export const DEFAULT_ROUTE_MAP = {
     SUBLISTING_CATEGORIES: "/admin/sublisting-categories",
     SUBLISTING_CATEGORIES_NEW: "/admin/sublisting-categories/new",
     SUBLISTING_CATEGORIES_EDIT: (id: string) => `/admin/sublisting-categories/${id}/edit`,
+    FEATURES: "/admin/features",
+    FEATURES_NEW: "/admin/features/new",
+    FEATURES_EDIT: (id: string) => `/admin/features/${id}/edit`,
   },
   DEMO: {
     SEED: "/demo/seed",

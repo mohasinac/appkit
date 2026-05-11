@@ -3301,6 +3301,12 @@ export { AdminSublistingCategoriesView } from "./features/admin/index";
 // AdminSublistingCategoryEditorView - Admin create/edit form for sublisting categories (SC1).
 export { AdminSublistingCategoryEditorView } from "./features/admin/index";
 export type { AdminSublistingCategoryEditorViewProps } from "./features/admin/index";
+// AdminFeaturesView - Admin list view for productFeatures (FI3).
+export { AdminFeaturesView } from "./features/admin/index";
+export type { AdminFeaturesViewProps } from "./features/admin/index";
+// AdminFeatureEditorView - Admin create/edit form for a single productFeature (FI3).
+export { AdminFeatureEditorView } from "./features/admin/index";
+export type { AdminFeatureEditorViewProps } from "./features/admin/index";
 // AdminSiteSettingsView - 12-tab site settings form for admin (VA8).
 export { AdminSiteSettingsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.

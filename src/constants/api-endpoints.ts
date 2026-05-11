@@ -151,6 +151,8 @@ export const ADMIN_ENDPOINTS = {
   ADMIN_SITE: "/api/admin/site",
   SUBLISTING_CATEGORIES: "/api/admin/sublisting-categories",
   SUBLISTING_CATEGORY_BY_ID: (id: string) => `/api/admin/sublisting-categories/${id}`,
+  PRODUCT_FEATURES: "/api/admin/features",
+  PRODUCT_FEATURE_BY_ID: (id: string) => `/api/admin/features/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------
