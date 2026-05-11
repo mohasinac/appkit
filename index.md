@@ -398,6 +398,7 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `eventEntryRepository` | singleton | `eventEntries` | Event registrations |
 | `newsletterRepository` | singleton | `newsletter` | Newsletter subscribers |
 | `brandsRepository` | singleton | `brands` | Product brands |
+| `productTemplateRepository` | singleton | `product_templates` | Seller product templates (create, edit, delete, list by store) |
 
 ---
 

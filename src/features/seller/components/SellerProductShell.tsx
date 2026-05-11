@@ -6,6 +6,7 @@ import type { FormShellSection, StepDef } from "../../shell";
 import {
   Alert,
   Button,
+  Div,
   FormField,
   FormGroup,
   Heading,
@@ -807,7 +808,7 @@ export function SellerProductShell({
           <Heading level={3} className="mb-4">Publish</Heading>
           <StepPublish values={draft} onChange={update} />
           {onSaveAsTemplate && (
-            <div className="mt-4 border-t border-[var(--appkit-color-border,#e4e4e7)] pt-4">
+            <Div className="mt-4 border-t border-[var(--appkit-color-border)] pt-4">
               <Button
                 type="button"
                 variant="outline"
@@ -816,10 +817,10 @@ export function SellerProductShell({
               >
                 Save as Template
               </Button>
-              <Text className="mt-1 text-xs text-[var(--appkit-color-secondary-text,#71717a)]">
+              <Text className="mt-1 text-xs text-[var(--appkit-color-secondary-text)]">
                 Save these settings as a reusable template for future listings.
               </Text>
-            </div>
+            </Div>
           )}
         </section>
       </Stack>
