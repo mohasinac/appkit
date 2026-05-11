@@ -300,13 +300,20 @@ export interface BrandsSectionConfig {
   };
 }
 
+export type SectionPagination = "load-more" | "arrows" | "auto-scroll";
+
 export interface ProductsSectionConfig {
   title: string;
   subtitle?: string;
-  maxProducts: 18;
-  rows: 2;
-  itemsPerRow: 3;
-  mobileItemsPerRow: 1;
+  maxProducts?: number;
+  /** Number of display rows (1–4). Each row shows itemsPerRow cards. Default: 1. */
+  rows?: number;
+  itemsPerRow?: number;
+  mobileItemsPerRow?: number;
+  /** Maximum total items to show (5–20). Default: rows * 5. */
+  maxItems?: number;
+  /** Pagination mode for multi-row display. */
+  pagination?: SectionPagination;
   autoScroll: boolean;
   scrollInterval: number;
   filterByBrand?: string;

@@ -176,6 +176,9 @@ function renderSectionElement(
           viewMoreLabel="View all products →"
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.products}
+          rows={cfg?.rows}
+          maxItems={cfg?.maxItems}
+          pagination={cfg?.pagination}
         />
       );
     }
