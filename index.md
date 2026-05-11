@@ -238,7 +238,12 @@ Import: `import { X } from "@mohasinac/appkit"`
 | `ProductDetailView` | `features/products/components/ProductDetailView.tsx` | Standard product detail page |
 | `PreOrderDetailView` | `features/products/components/PreOrderDetailView.tsx` | Pre-order detail page |
 | `BuyBar` | `features/products/components/BuyBar.tsx` | Sticky buy/bid bar on product detail |
-| `ProductFeatureBadges` | `features/products/components/ProductFeatureBadges.tsx` | Featured/promoted/new/sale badges |
+| `ProductFeatureBadges` | `features/products/components/ProductFeatureBadges.tsx` | Featured/promoted/new/sale built-in pills (legacy boolean-driven) |
+| `FeatureBadge` / `FeatureBadgeList` | `features/products/components/FeatureBadge.tsx` | productFeatures-backed pills (FI6) — render by feature id against a passed-in features array; FeatureBadgeList caps via `maxVisible` and shows a "+N more" pill |
+| `ProductFeaturesProvider` / `useProductFeatures` | `features/products/components/ProductFeaturesContext.tsx` | Context for ProductCard so listing pages provide features once, no waterfall |
+| `ProductFeaturesSelector` | `features/products/components/ProductFeaturesSelector.tsx` | Product form checkbox grid (platform + store sections), filtered by productType, 10-per-product cap (FI5) |
+| `AdminFeaturesView` / `AdminFeatureEditorView` | `features/admin/components/Admin{Features,FeatureEditor}View.tsx` | Admin Feature Badges CRUD (FI3); editor reusable via `fixedScope`/`endpointOverride` |
+| `SellerFeaturesView` (aliased `StoreFeaturesView`) | `features/seller/components/SellerFeaturesView.tsx` | Seller dashboard custom feature badges (FI4) |
 | `ReviewsListView` | `features/reviews/components/ReviewsListView.tsx` | Reviews listing for a product/store |
 | `ReviewSummary` | `features/reviews/components/ReviewSummary.tsx` | Star rating summary + distribution |
 | `EventsListView` | `features/events/components/EventsListView.tsx` | Public events listing |
@@ -405,6 +410,8 @@ Import: `import { xRepository } from "@mohasinac/appkit"` (server-only)
 | `newsletterRepository` | singleton | `newsletter` | Newsletter subscribers |
 | `brandsRepository` | singleton | `brands` | Product brands |
 | `productTemplateRepository` | singleton | `product_templates` | Seller product templates (create, edit, delete, list by store) |
+| `productFeaturesRepository` | singleton | `productFeatures` | Reusable feature badges (FI1). `listPlatform()` / `listForStore(storeId)` / 20-per-store + delete-when-referenced guards. |
+| `loadProductFeaturesForStore` | helper | — | SSR helper combining listPlatform + listForStore + dedupe for detail/listing pages (FI6). |
 
 ---
 
