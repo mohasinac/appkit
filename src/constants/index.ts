@@ -54,3 +54,13 @@ export { COLLECTION_CACHE_PATHS } from "./cache-invalidation";
 export { resolveEndpoint, resolveEndpointFn } from "./api-endpoint-resolver";
 
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "../next/routing/route-map";
+
+export {
+  WISHLIST_MAX,
+  HISTORY_MAX,
+  CART_MAX_ITEMS,
+  WISHLIST_DOC_ID,
+  HISTORY_DOC_ID,
+  WISHLIST_COLLECTION,
+  HISTORY_COLLECTION,
+} from "./limits";
