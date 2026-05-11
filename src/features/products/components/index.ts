@@ -76,3 +76,9 @@ export { GroupSettingsPanel } from "./GroupSettingsPanel";
 export type { GroupSettingsPanelProps } from "./GroupSettingsPanel";
 export { PrizeDrawsSection } from "./PrizeDrawsSection";
 export type { PrizeDrawsSectionProps } from "./PrizeDrawsSection";
+export { CompareOverlay } from "./CompareOverlay";
+export type {
+  CompareOverlayProps,
+  CompareOverlayLabels,
+  CompareProductLike,
+} from "./CompareOverlay";

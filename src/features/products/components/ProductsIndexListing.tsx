@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { X, ShoppingCart, Heart, SlidersHorizontal } from "lucide-react";
+import { X, ShoppingCart, Heart, SlidersHorizontal, Columns } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
 import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
-import { ACTION_ID, ACTION_META } from "../constants/action-defs";
+import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
+import { CompareOverlay } from "./CompareOverlay";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
@@ -27,6 +28,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const { showToast } = useToast();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
   const showSold = table.get("showSold") === "true";
   const [view, setView] = useState<ViewMode>(
     (table.get("view") as ViewMode) || "card",
@@ -301,7 +303,31 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
               selection.clearSelection();
             },
           },
+          {
+            key: ACTION_ID.COMPARE,
+            label: ACTION_META[ACTION_ID.COMPARE].label,
+            icon: <Columns className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
+            onClick: () => {
+              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
+              setCompareIds(ids);
+            },
+          },
         ]}
+      />
+
+      <CompareOverlay
+        isOpen={compareIds.length > 0}
+        productIds={compareIds}
+        productType="product"
+        onClose={() => {
+          setCompareIds([]);
+          selection.clearSelection();
+        }}
+        onRemove={(id) =>
+          setCompareIds((ids) => ids.filter((i) => i !== id))
+        }
       />
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}

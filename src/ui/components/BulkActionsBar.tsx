@@ -10,6 +10,8 @@ export interface BulkAction {
   onClick: () => void;
   variant?: "primary" | "secondary" | "danger";
   requiresAuth?: boolean;
+  /** When true the button renders disabled (e.g. selection count out of range). */
+  disabled?: boolean;
 }
 
 export interface BulkActionsBarProps {
@@ -60,10 +62,15 @@ export function BulkActionsBar({
                   key={action.key}
                   type="button"
                   onClick={action.onClick}
+                  disabled={action.disabled}
+                  aria-disabled={action.disabled || undefined}
                   className={[
                     "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all active:scale-95",
                     ACTION_VARIANT_CLASS[action.variant ?? "secondary"],
-                  ].join(" ")}
+                    action.disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
                   {action.icon}
                   {action.label}

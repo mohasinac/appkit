@@ -223,6 +223,36 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { CompareOverlay } from "./features/products/components/CompareOverlay";
+export type {
+  CompareOverlayProps,
+  CompareOverlayLabels,
+  CompareProductLike,
+} from "./features/products/components/CompareOverlay";
+export { COMPARE_MAX_ITEMS } from "./features/products/constants/action-defs";
+
+// Messages — RTDB-pinged Firestore conversations (D5 + VC7)
+export { MessagesView } from "./features/account/components/MessagesView";
+export type { MessagesViewProps, MessagesViewLabels } from "./features/account/components/MessagesView";
+export { ChatList } from "./features/account/components/ChatList";
+export type { ChatListProps, ChatListLabels } from "./features/account/components/ChatList";
+export { ChatWindow } from "./features/account/components/ChatWindow";
+export type { ChatWindowProps, ChatWindowLabels } from "./features/account/components/ChatWindow";
+export { useConversations, useConversation } from "./features/messages/index";
+export {
+  CONVERSATIONS_COLLECTION,
+  CONVERSATIONS_INDEXED_FIELDS,
+} from "./features/messages/index";
+export type {
+  ConversationDocument,
+  ConversationMessage,
+  UseConversationsReturn,
+  UseConversationReturn,
+} from "./features/messages/index";
+export {
+  CONVERSATIONS_PING_PATH,
+  CONVERSATIONS_PING_USER_PATH,
+} from "./features/messages/hooks/useConversation";
 // Product / listing actions
 export { ACTION_ID, ACTION_META, DETAIL_ACTIONS, MOBILE_PRIMARY_ACTIONS, LISTING_BULK_ACTIONS } from "./features/products/index";
 export type { ActionId, ActionMeta, ActionVariant } from "./features/products/index";

@@ -39,6 +39,7 @@ export const ACTION_ID = {
   REMOVE_FROM_WISHLIST: "remove-from-wishlist",
   MAKE_OFFER:           "make-offer",
   SHARE:                "share",
+  COMPARE:              "compare",
   // Auction
   PLACE_BID:            "place-bid",
   BUY_NOW_AUCTION:      "buy-now-auction",
@@ -69,6 +70,7 @@ export const ACTION_META: Record<ActionId, ActionMeta> = {
   [ACTION_ID.REMOVE_FROM_WISHLIST]: { id: ACTION_ID.REMOVE_FROM_WISHLIST, label: "Remove from Wishlist", variant: "ghost",     iconName: "HeartOff"       },
   [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: "Make an Offer",        variant: "outline",   iconName: "Tag",            requiresAuth: true },
   [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: "Share",                variant: "ghost",     iconName: "Share2"         },
+  [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: "Compare",              variant: "secondary", iconName: "Columns"        },
   [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: "Place Bid",            variant: "primary",                               requiresAuth: true },
   [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: "Buy Now",              variant: "secondary",                             requiresAuth: true },
   [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: "Watch",                variant: "ghost",     iconName: "Eye"            },
@@ -95,11 +97,14 @@ export const MOBILE_PRIMARY_ACTIONS = {
 
 // Listing page bulk actions — shown in BulkActionsBar when items are selected
 export const LISTING_BULK_ACTIONS = {
-  products:  [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST],
-  auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.ADD_TO_WISHLIST],
-  preorders: [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST],
-  stores:    [] as ActionId[],
+  products:  [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  preorders: [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  stores:    [ACTION_ID.COMPARE] as ActionId[],
 } as const satisfies Record<string, readonly ActionId[]>;
+
+/** Maximum number of items the Compare overlay (BK3) supports at once. */
+export const COMPARE_MAX_ITEMS = 4;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // § 2  Row / table actions

@@ -161,6 +161,21 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     return byId ?? undefined;
   }
 
+  /**
+   * Batch read for the Compare overlay (BK3). Reads up to ~10 products in a
+   * single `getAll` round-trip. Missing IDs are silently dropped — callers
+   * (CompareOverlay) treat the returned array as "what we could find".
+   */
+  async listByIds(ids: string[]): Promise<ProductDocument[]> {
+    const unique = Array.from(new Set(ids.filter((id) => typeof id === "string" && id.length > 0)));
+    if (unique.length === 0) return [];
+    const refs = unique.map((id) => this.db.collection(this.collection).doc(id));
+    const snaps = await this.db.getAll(...refs);
+    return snaps
+      .filter((s) => s.exists)
+      .map((s) => this.mapDoc<ProductDocument>(s));
+  }
+
   async findAuctions(): Promise<ProductDocument[]> {
     return this.findBy(PRODUCT_FIELDS.IS_AUCTION, true);
   }
