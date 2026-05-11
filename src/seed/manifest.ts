@@ -37,6 +37,7 @@ import { conversationsSeedData } from "./conversations-seed-data";
 import { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
 import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 import { scammersSeedData } from "./scammers-seed-data";
+import { productFeaturesSeedData } from "./product-features-seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -199,6 +200,12 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(scammersSeedData).map((s) => ({
       ...s,
       name: (s.displayNames as string[] | undefined)?.[0] ?? s.id,
+    })),
+  ),
+  productFeatures: pick(
+    asArr(productFeaturesSeedData).map((f) => ({
+      ...f,
+      name: f.label ?? f.id,
     })),
   ),
 };

@@ -179,6 +179,7 @@ export { conversationsSeedData } from "./conversations-seed-data";
 export { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
+export { productFeaturesSeedData } from "./product-features-seed-data";
 
 // Seed manifest — lightweight index for SeedPanel previews
 export type { SeedManifest, SeedManifestEntry } from "./manifest";

@@ -8749,6 +8749,9 @@ export type { GroupedListingDocument } from "./features/grouped/schemas/firestor
 // Scam registry — seed data
 export { scammersSeedData } from "./seed/index";
 
+// Product features — seed data (FI2)
+export { productFeaturesSeedData } from "./seed/index";
+
 // Scam registry — schema types and constants
 export {
   SCAMMER_COLLECTION,
