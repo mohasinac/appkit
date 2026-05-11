@@ -455,6 +455,21 @@ export interface SiteSettingsDocument {
   };
   /** Encrypted provider credentials � never return raw to the client. */
   credentials?: SiteSettingsCredentials;
+  /**
+   * Theme color overrides — injected as CSS custom properties by LayoutShellClient.
+   * Keys map to --appkit-color-* variables (e.g. primary → --appkit-color-primary).
+   * When absent, the compiled token defaults from dist/tokens.css apply.
+   */
+  theme?: {
+    /** Light-mode brand colour overrides (default / all modes when dark variants absent) */
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+    /** Dark-mode brand colour overrides — applied under .dark selector */
+    primaryDark?: string;
+    secondaryDark?: string;
+    accentDark?: string;
+  };
   featuredResults?: FeaturedResult[];
   createdAt: Date;
   updatedAt: Date;

@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": false,
+    "composite": true
+  },
+  "references": [{ "path": "./tsconfig.shared.json" }],
+  "include": ["src/_internal/server/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

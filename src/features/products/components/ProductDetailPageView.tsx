@@ -39,6 +39,13 @@ import { HistoryTracker } from "../../history/components/HistoryTracker";
 export interface ProductDetailPageViewProps {
   slug: string;
   /**
+   * Pre-fetched product document from the page's server data layer.
+   * When provided, the internal repository call is skipped — deduplicating
+   * the fetch with generateMetadata() via React.cache().
+   * When absent, the component falls back to fetching by slug (backward compat).
+   */
+  initialProduct?: import("../schemas/firestore").ProductDocument | null;
+  /**
    * Render prop for offer UI. Receives the resolved product fields.
    * Only called when product.allowOffers is true and product.type is "simple".
    */
@@ -156,12 +163,16 @@ function StarRating({ value }: { value: number }) {
 
 export async function ProductDetailPageView({
   slug,
+  initialProduct,
   renderOfferAction,
   productFeatures,
 }: ProductDetailPageViewProps) {
-  const product = await productRepository
-    .findByIdOrSlug(slug)
-    .catch(() => undefined);
+  // Use pre-fetched data when available to avoid a redundant repository call.
+  // The page layer wraps getProductForDetail in React.cache(), so both
+  // generateMetadata() and this component share the same in-flight promise.
+  const product = initialProduct !== undefined
+    ? (initialProduct ?? undefined)
+    : await productRepository.findByIdOrSlug(slug).catch(() => undefined);
 
   if (!product) {
     return (

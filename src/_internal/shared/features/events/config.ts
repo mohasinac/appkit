@@ -1,0 +1,5 @@
+export const EVENTS_PAGE_SIZE = 20;
+export const EVENTS_UPCOMING_LIMIT = 10;
+export const EVENT_MAX_ENTRIES_DEFAULT = 500;
+export const EVENT_TITLE_MAX_LENGTH = 200;
+export const EVENT_DESCRIPTION_MAX_LENGTH = 5000;

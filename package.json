@@ -5,12 +5,17 @@
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
+  "sideEffects": ["**/*.css"],
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "react-server": "./dist/server-entry.js",
+      "edge-light": "./dist/server-entry.js",
+      "worker": "./dist/client-entry.js",
+      "browser": "./dist/client-entry.js",
+      "types": "./dist/server-entry.d.ts",
+      "import": "./dist/server-entry.js",
+      "default": "./dist/server-entry.js"
     },
     "./client": {
       "types": "./dist/client.d.ts",
@@ -92,14 +97,48 @@
       "style": "./dist/tokens/tokens.css",
       "default": "./dist/tokens/tokens.css"
     },
+    "./configs": {
+      "types": "./dist/configs/index.d.ts",
+      "import": "./dist/configs/index.js"
+    },
+    "./tsconfig.base.json": "./tsconfig.base.json",
     "./messages/*": "./dist/features/*/messages/en.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "tsconfig.base.json",
+    "scripts/sieve-audit.mjs",
+    "scripts/audit-violations.mjs",
+    "scripts/verify-entries.mjs",
+    "scripts/verify-css-build.mjs",
+    "scripts/smoke-ssr.mjs",
+    "scripts/smoke-bundle.mjs",
+    "scripts/smoke-theme.mjs",
+    "scripts/init-config.mjs",
+    "scripts/labels-extract.mjs",
+    "scripts/seed-cli.mjs",
+    "scripts/seed-cli-loader.mjs"
   ],
+  "bin": {
+    "appkit-sieve-audit": "./scripts/sieve-audit.mjs",
+    "appkit-audit": "./scripts/audit-violations.mjs",
+    "appkit-verify-entries": "./scripts/verify-entries.mjs",
+    "appkit-verify-css": "./scripts/verify-css-build.mjs",
+    "appkit-smoke-ssr": "./scripts/smoke-ssr.mjs",
+    "appkit-smoke-bundle": "./scripts/smoke-bundle.mjs",
+    "appkit-smoke-theme": "./scripts/smoke-theme.mjs",
+    "appkit-init-config": "./scripts/init-config.mjs",
+    "appkit-labels-extract": "./scripts/labels-extract.mjs",
+    "appkit-seed": "./scripts/seed-cli.mjs",
+    "appkit-seed-add": "./scripts/seed-cli.mjs",
+    "appkit-seed-remove": "./scripts/seed-cli.mjs",
+    "appkit-seed-status": "./scripts/seed-cli.mjs"
+  },
   "scripts": {
     "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/verify-css-build.mjs",
-    "watch": "tsc -p tsconfig.build.json --watch"
+    "watch": "concurrently --kill-others --restart-tries 0 --names \"ts,css\" \"tsc -p tsconfig.build.json --watch\" \"npm run watch:css\"",
+    "watch:css": "tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --watch",
+    "audit": "node scripts/audit-violations.mjs"
   },
   "dependencies": {
     "@mohasinac/sievejs": "^1.0.0",
@@ -138,6 +177,7 @@
     "@tanstack/react-query": "^5.0.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.37.0",
     "firebase": "^12.8.0",
     "firebase-admin": "^10.3.0",

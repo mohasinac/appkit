@@ -1,0 +1,4 @@
+export const BRANDS_PAGE_SIZE = 50;
+export const BRANDS_FEATURED_LIMIT = 12;
+export const BRAND_NAME_MAX_LENGTH = 100;
+export const BRAND_DESCRIPTION_MAX_LENGTH = 2000;

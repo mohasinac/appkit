@@ -1,0 +1,71 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {},
+  "overrides": [
+    {
+      "files": ["src/_internal/client/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["firebase-admin", "firebase-admin/*"],
+                "message": "_internal/client may not import firebase-admin. Move to _internal/server/."
+              },
+              {
+                "group": ["**/_internal/server/**"],
+                "message": "_internal/client may not import from _internal/server/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/_internal/server/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/_internal/client/**"],
+                "message": "_internal/server may not import from _internal/client/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/_internal/shared/**/*.{ts,tsx}"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["firebase-admin", "firebase-admin/*"],
+                "message": "_internal/shared may not import firebase-admin. Shared code must be provider-agnostic."
+              },
+              {
+                "group": ["**/_internal/client/**"],
+                "message": "_internal/shared may not import from _internal/client/."
+              },
+              {
+                "group": ["**/_internal/server/**"],
+                "message": "_internal/shared may not import from _internal/server/."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

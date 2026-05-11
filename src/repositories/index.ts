@@ -87,7 +87,14 @@ export {
 export {
   wishlistRepository,
   type UserWishlistItem as WishlistItem,
+  WishlistFullError,
 } from "../features/wishlist/repository/user-wishlist.repository";
+
+export {
+  historyRepository,
+  type UserHistoryItem,
+  type HistoryProductType,
+} from "../features/history/repository/user-history.repository";
 
 // Feature repositories already appkit-owned
 export {
