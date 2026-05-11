@@ -44,6 +44,8 @@ export interface BlogPostViewProps {
   renderError?: (error: Error | null) => React.ReactNode;
   /** Render a related post card */
   renderRelatedCard?: (post: BlogPost, index: number) => React.ReactNode;
+  /** TS12/VD10 — Render an author bio block (above the article content) */
+  renderAuthorBio?: (post: BlogPost) => React.ReactNode;
   className?: string;
 }
 
@@ -57,6 +59,7 @@ export function BlogPostView({
   renderLoading,
   renderError,
   renderRelatedCard,
+  renderAuthorBio,
   className = "",
 }: BlogPostViewProps) {
   const { post, related, isLoading, error } = useBlogPost(slug, {
@@ -177,6 +180,13 @@ export function BlogPostView({
               </Span>
             ))}
           </Row>
+        )}
+
+        {/* TS12/VD10 — Author bio block (optional) */}
+        {renderAuthorBio && (
+          <Div className="mb-6">
+            {renderAuthorBio(post)}
+          </Div>
         )}
 
         {/* Content */}

@@ -82,7 +82,9 @@ export class UserWishlistRepository {
     try {
       const snap = await this.docRef(userSlug).get();
       if (!snap.exists) return [];
-      return normaliseItems(snap.data()?.items);
+      const items = normaliseItems(snap.data()?.items);
+      // TS10: drop entries whose product no longer exists (was deleted/unpublished).
+      return await this.filterExistingProducts(items);
     } catch (error) {
       serverLogger.error("UserWishlistRepository.getWishlistItems error", {
         userSlug,
@@ -90,6 +92,24 @@ export class UserWishlistRepository {
       });
       throw error;
     }
+  }
+
+  private async filterExistingProducts(
+    items: UserWishlistItem[],
+  ): Promise<UserWishlistItem[]> {
+    if (items.length === 0) return items;
+    const db = getAdminDb();
+    const checks = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const doc = await db.collection("products").doc(item.productId).get();
+          return doc.exists ? item : null;
+        } catch {
+          return item;
+        }
+      }),
+    );
+    return checks.filter((i): i is UserWishlistItem => i !== null);
   }
 
   async countByUser(userSlug: string): Promise<number> {

@@ -5,6 +5,8 @@ import {
   Alert,
   Button,
   Div,
+  Input,
+  Select,
   StackedViewShell,
   Text,
 } from "../../../ui";
@@ -16,6 +18,162 @@ import {
   useMediaCleanup,
   useMediaUpload,
 } from "../../media";
+
+interface BrowsedFile {
+  name: string;
+  size: number;
+  contentType: string | null;
+  updatedAt: string;
+  downloadURL: string;
+}
+
+const PREFIX_OPTIONS = [
+  { value: "", label: "All" },
+  { value: "products/", label: "Products" },
+  { value: "auctions/", label: "Auctions" },
+  { value: "preorders/", label: "Pre-orders" },
+  { value: "stores/", label: "Stores" },
+  { value: "blog/", label: "Blog" },
+  { value: "events/", label: "Events" },
+  { value: "carousel/", label: "Carousel" },
+  { value: "users/", label: "Users" },
+  { value: "admin/", label: "Admin sandbox" },
+];
+
+function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
+  const [prefix, setPrefix] = React.useState("");
+  const [search, setSearch] = React.useState("");
+  const [files, setFiles] = React.useState<BrowsedFile[]>([]);
+  const [nextPageToken, setNextPageToken] = React.useState<string | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const load = React.useCallback(
+    async (token: string | null) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        if (prefix) params.set("prefix", prefix);
+        if (token) params.set("pageToken", token);
+        const res = await fetch(`/api/admin/media?${params.toString()}`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to list media");
+        const data = (await res.json()) as {
+          data: { files: BrowsedFile[]; nextPageToken: string | null };
+        };
+        setFiles((prev) => (token ? [...prev, ...data.data.files] : data.data.files));
+        setNextPageToken(data.data.nextPageToken ?? null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [prefix],
+  );
+
+  React.useEffect(() => {
+    void load(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefix]);
+
+  const filtered = React.useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return files;
+    return files.filter((f) => f.name.toLowerCase().includes(q));
+  }, [files, search]);
+
+  return (
+    <Div className="space-y-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900">
+      <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        Browse existing media
+      </Text>
+      <Div className="flex flex-wrap items-center gap-2">
+        <Select
+          value={prefix}
+          onChange={(e) => setPrefix(e.target.value)}
+          options={PREFIX_OPTIONS}
+          aria-label="Prefix filter"
+          className="min-w-[140px]"
+        />
+        <Input
+          type="text"
+          placeholder="Search filename…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="flex-1 min-w-[160px]"
+        />
+      </Div>
+      {error && (
+        <Alert variant="error" title="Load failed">
+          {error}
+        </Alert>
+      )}
+      <Div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+        {filtered.map((f) => {
+          const isImage = (f.contentType ?? "").startsWith("image/");
+          return (
+            <Div
+              key={f.name}
+              className="group rounded-lg border border-zinc-200 dark:border-slate-700 overflow-hidden bg-zinc-50 dark:bg-slate-800"
+            >
+              <Div className="aspect-square flex items-center justify-center bg-zinc-100 dark:bg-slate-700 text-xs text-zinc-500 dark:text-zinc-400">
+                {isImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={f.downloadURL}
+                    alt={f.name}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                ) : (
+                  <Text className="px-2 text-center break-all">
+                    {f.contentType ?? "file"}
+                  </Text>
+                )}
+              </Div>
+              <Div className="p-1.5">
+                <Text className="truncate text-[10px] text-zinc-600 dark:text-zinc-400 font-mono">
+                  {f.name.split("/").pop()}
+                </Text>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="mt-1 w-full text-xs"
+                  onClick={() => onCopy(f.downloadURL)}
+                >
+                  Copy URL
+                </Button>
+              </Div>
+            </Div>
+          );
+        })}
+        {filtered.length === 0 && !isLoading && (
+          <Text className="col-span-full py-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            No files found.
+          </Text>
+        )}
+      </Div>
+      <Div className="flex items-center justify-between">
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          {filtered.length} file(s){nextPageToken ? " · more available" : ""}
+        </Text>
+        {nextPageToken && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => void load(nextPageToken)}
+            disabled={isLoading}
+          >
+            {isLoading ? "Loading…" : "Load more"}
+          </Button>
+        )}
+      </Div>
+    </Div>
+  );
+}
 
 export interface AdminMediaViewProps extends Omit<
   StackedViewShellProps,
@@ -99,9 +257,10 @@ export function AdminMediaView({
       {...rest}
       title={labels.title ?? "Media Library"}
       sections={[
-        <Alert key="media-info" variant="info" title="Upload sandbox">
-          Upload files and copy the resulting URL for use in forms. Browsing all stored media files requires the I4 media library infrastructure (deferred).
+        <Alert key="media-info" variant="info" title="Media Library">
+          Upload new files in the sandbox below, or browse the existing Storage bucket via the grid.
         </Alert>,
+        <MediaBrowser key="media-browser" onCopy={copyToClipboard} />,
         operationMessage ? (
           <Alert
             key="media-op-message"
