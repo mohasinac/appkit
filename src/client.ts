@@ -76,6 +76,13 @@ export { usePullToRefresh } from "./react/hooks/usePullToRefresh";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useSwipe - React hook for use swipe.
 export { useSwipe } from "./react/hooks/useSwipe";
+// [CLIENT-ONLY]-Cannot run in SSR mode — uses IntersectionObserver.
+// useInfiniteScroll - IntersectionObserver primitive for cursor-based listings (Q6 — S13).
+export { useInfiniteScroll } from "./react/hooks/useInfiniteScroll";
+export type {
+  UseInfiniteScrollOptions,
+  UseInfiniteScrollResult,
+} from "./react/hooks/useInfiniteScroll";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useTheme - React hook for use theme.
 export { useTheme } from "./react/contexts/ThemeContext";
