@@ -43,6 +43,7 @@ import {
   ReviewsBuilderState,
   SocialFeedBuilderState,
   StatsBuilderState,
+  StatsStatSource,
   StoresBuilderState,
   TrustIndicatorsBuilderState,
   WelcomeBuilderState,
@@ -138,11 +139,26 @@ export function buildAuctionsConfig(builder: AuctionsBuilderState): Record<strin
 export function buildStatsConfig(builder: StatsBuilderState): Record<string, unknown> {
   return {
     title: builder.title || undefined,
-    stats: builder.stats.map((item, index) => ({
-      key: item.key.trim() || `stat-${index + 1}`,
-      label: item.label,
-      value: item.value,
-    })),
+    stats: builder.stats.map((item, index) => {
+      const key = item.key.trim() || `stat-${index + 1}`;
+      const base = { key, label: item.label, value: item.value, suffix: item.suffix || undefined };
+      if (item.source === "live-preset") {
+        return { ...base, source: "live-preset", metric: item.metric || undefined };
+      }
+      if (item.source === "live-collection") {
+        return {
+          ...base,
+          source: "live-collection",
+          collectionQuery: {
+            type: "collection-query" as const,
+            collection: item.collection,
+            filterField: item.filterField || undefined,
+            filterValue: item.filterValue || undefined,
+          },
+        };
+      }
+      return { ...base, source: "static" };
+    }),
   };
 }
 
@@ -263,22 +279,40 @@ export function parseAuctionsBuilder(config: Record<string, unknown>): AuctionsB
 
 export function parseStatsBuilder(config: Record<string, unknown>): StatsBuilderState {
   const statsArray = Array.isArray(config.stats) ? config.stats : [];
-  const parsedStats = statsArray
-    .slice(0, 4)
-    .map((item, index) => {
-      const row = (item ?? {}) as Record<string, unknown>;
-      return {
-        key: toStringValue(row.key, `stat-${index + 1}`),
-        label: toStringValue(row.label),
-        value: toStringValue(row.value),
-      };
-    });
+  const parsedStats = statsArray.slice(0, 4).map((item, index) => {
+    const row = (item ?? {}) as Record<string, unknown>;
+    const cq = (row.collectionQuery ?? {}) as Record<string, unknown>;
+    const rawSource = toStringValue(row.source, "static");
+    const source: StatsStatSource =
+      rawSource === "live-preset" || rawSource === "live"
+        ? "live-preset"
+        : rawSource === "live-collection"
+          ? "live-collection"
+          : "static";
+    return {
+      key:         toStringValue(row.key, `stat-${index + 1}`),
+      label:       toStringValue(row.label),
+      value:       toStringValue(row.value),
+      suffix:      toStringValue(row.suffix),
+      source,
+      metric:      toStringValue(row.metric),
+      collection:  toStringValue(cq.collection),
+      filterField: toStringValue(cq.filterField),
+      filterValue: toStringValue(cq.filterValue),
+    };
+  });
 
   while (parsedStats.length < 4) {
     parsedStats.push({
-      key: `stat-${parsedStats.length + 1}`,
-      label: "",
-      value: "",
+      key:         `stat-${parsedStats.length + 1}`,
+      label:       "",
+      value:       "",
+      suffix:      "",
+      source:      "static" as StatsStatSource,
+      metric:      "",
+      collection:  "",
+      filterField: "",
+      filterValue: "",
     });
   }
 

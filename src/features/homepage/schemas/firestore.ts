@@ -261,17 +261,44 @@ export interface ProductsSectionConfig {
 }
 
 /**
- * Metrics that the homepage stats section can resolve live from Firestore.
- * When a stat has source "live" and a matching metric, the value field is
- * used only as a fallback (shown if the live fetch fails or is still loading).
+ * Preset metrics the homepage stats section resolves live from Firestore.
+ * Each string corresponds to a repository query in live-stats.ts.
  */
-export type LiveStatMetric =
+export type LiveStatPreset =
   | "total_listings"     // all products (standard + auction + pre-order)
   | "verified_sellers"   // total stores
   | "total_buyers"       // users with role "user"
   | "platform_rating"    // average rating across all approved reviews
   | "total_orders"       // all orders
   | "total_reviews";     // all approved reviews
+
+/**
+ * A custom Firestore collection count query used when source is "live-collection".
+ * The collection must be in ALLOWED_LIVE_COLLECTIONS to prevent arbitrary access.
+ */
+export interface CollectionQueryMetric {
+  type: "collection-query";
+  collection: string;
+  filterField?: string;
+  filterValue?: string | number | boolean;
+  suffix?: string;
+}
+
+/** @deprecated Alias kept for backward compatibility — use LiveStatPreset. */
+export type LiveStatMetric = LiveStatPreset;
+
+/** Collections that may be queried via CollectionQueryMetric on the homepage. */
+export const ALLOWED_LIVE_COLLECTIONS = [
+  "products",
+  "stores",
+  "users",
+  "reviews",
+  "orders",
+  "events",
+  "bids",
+] as const;
+
+export type AllowedLiveCollection = (typeof ALLOWED_LIVE_COLLECTIONS)[number];
 
 export interface StatsSectionConfig {
   title?: string;
@@ -280,10 +307,16 @@ export interface StatsSectionConfig {
     label: string;
     /** Fallback value shown when source is "static" or when a live fetch fails. */
     value: string;
-    /** "live" resolves the value from Firestore at render time; "static" uses value as-is. */
-    source?: "static" | "live";
-    /** Which Firestore metric to fetch when source is "live". */
-    metric?: LiveStatMetric;
+    /**
+     * "static"      — use value as-is (no Firestore query).
+     * "live" / "live-preset" — query a preset Firestore metric; specify metric.
+     * "live-collection"      — run a custom collection count query; specify collectionQuery.
+     */
+    source?: "static" | "live" | "live-preset" | "live-collection";
+    /** Which preset metric to fetch when source is "live" or "live-preset". */
+    metric?: LiveStatPreset;
+    /** Custom collection query when source is "live-collection". */
+    collectionQuery?: CollectionQueryMetric;
     /** Optional suffix appended after the live value (e.g. "★", "+"). */
     suffix?: string;
   }>;

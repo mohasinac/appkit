@@ -80,12 +80,25 @@ export interface AuctionsBuilderState {
   loop: boolean;
 }
 
+export type StatsStatSource = "static" | "live-preset" | "live-collection";
+
 export interface StatsBuilderState {
   title: string;
   stats: Array<{
     key: string;
     label: string;
     value: string;
+    source: StatsStatSource;
+    /** Preset metric key when source is "live-preset". */
+    metric: string;
+    /** Firestore collection name when source is "live-collection". */
+    collection: string;
+    /** Optional field to filter by when source is "live-collection". */
+    filterField: string;
+    /** Filter value (string form) when source is "live-collection". */
+    filterValue: string;
+    /** Appended after the live value, e.g. "+" or "★". */
+    suffix: string;
   }>;
 }
 
@@ -325,13 +338,22 @@ export const DEFAULT_AUCTIONS_BUILDER: AuctionsBuilderState = {
   loop: false,
 };
 
+const DEFAULT_STAT_ROW = {
+  source: "static" as StatsStatSource,
+  metric: "",
+  collection: "",
+  filterField: "",
+  filterValue: "",
+  suffix: "",
+};
+
 export const DEFAULT_STATS_BUILDER: StatsBuilderState = {
   title: "Marketplace Stats",
   stats: [
-    { key: "products", label: "Products Listed", value: "10,000+" },
-    { key: "sellers", label: "Verified Sellers", value: "2,000+" },
-    { key: "buyers", label: "Happy Buyers", value: "50,000+" },
-    { key: "rating", label: "Average Rating", value: "4.8/5" },
+    { ...DEFAULT_STAT_ROW, key: "products", label: "Products Listed",  value: "10,000+", source: "live-preset", metric: "total_listings", suffix: "+" },
+    { ...DEFAULT_STAT_ROW, key: "sellers",  label: "Verified Sellers", value: "2,000+",  source: "live-preset", metric: "verified_sellers", suffix: "+" },
+    { ...DEFAULT_STAT_ROW, key: "buyers",   label: "Happy Buyers",     value: "50,000+", source: "live-preset", metric: "total_buyers", suffix: "+" },
+    { ...DEFAULT_STAT_ROW, key: "rating",   label: "Average Rating",   value: "4.8/5",   source: "live-preset", metric: "platform_rating" },
   ],
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { ROUTES } from "../../../next";
 import { cleanTitle, parseWelcomeDescription } from "./section-helpers";
 import { DEFAULT_TRUST_FEATURES, DEFAULT_SECURITY_ITEMS } from "./section-defaults";
-import { type LiveStatsMap } from "./live-stats";
+import type { LiveStatsMap } from "./live-stats";
 import { AnnouncementBar } from "../components/AnnouncementBar";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { StatsCounterSection } from "../components/StatsCounterSection";
@@ -30,7 +30,7 @@ import type {
   HomepageSectionDocument,
   WelcomeSectionConfig,
   StatsSectionConfig,
-  LiveStatMetric,
+
   ProductsSectionConfig,
   AuctionsSectionConfig,
   PreOrdersSectionConfig,
@@ -144,10 +144,11 @@ function renderSectionElement(
                 item.value.trim().length > 0,
             )
             .map((item, index) => {
-              const liveRaw =
-                item.source === "live" && item.metric
-                  ? liveStats[item.metric as LiveStatMetric]
-                  : undefined;
+              const isLive =
+                item.source === "live" ||
+                item.source === "live-preset" ||
+                item.source === "live-collection";
+              const liveRaw = isLive ? liveStats[item.key] : undefined;
               const displayValue =
                 liveRaw !== undefined ? liveRaw + (item.suffix ?? "") : item.value;
               return {

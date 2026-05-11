@@ -12,7 +12,6 @@ import { listPublicEvents } from "../../events/actions/event-actions";
 import type {
   HomepageSectionDocument,
   StatsSectionConfig,
-  LiveStatMetric,
   CarouselSlideDocument,
 } from "../schemas";
 import type { CarouselSlide } from "../types/index";
@@ -59,20 +58,26 @@ export async function MarketplaceHomepageView({
     faqsRepository.getHomepageFAQs().catch(() => []),
   ]);
 
-  // Collect only the live metric keys that are actually configured in this deployment
-  const liveMetricsNeeded = new Set<LiveStatMetric>();
+  // Collect live metric requests from all enabled stats sections
+  const liveStatRequests: import("../lib/live-stats").LiveStatRequest[] = [];
   for (const section of enabledSections) {
-    if (section.type === "stats") {
-      const cfg = section.config as StatsSectionConfig;
-      for (const stat of cfg?.stats ?? []) {
-        if (stat.source === "live" && stat.metric) {
-          liveMetricsNeeded.add(stat.metric as LiveStatMetric);
+    if (section.type !== "stats") continue;
+    const cfg = section.config as StatsSectionConfig;
+    for (const stat of cfg?.stats ?? []) {
+      const src = stat.source;
+      if (src === "live" || src === "live-preset") {
+        if (stat.metric) {
+          liveStatRequests.push({ key: stat.key, source: src, preset: stat.metric });
+        }
+      } else if (src === "live-collection") {
+        if (stat.collectionQuery) {
+          liveStatRequests.push({ key: stat.key, source: src, collectionQuery: stat.collectionQuery });
         }
       }
     }
   }
   const liveStats: LiveStatsMap =
-    liveMetricsNeeded.size > 0 ? await fetchLiveStats([...liveMetricsNeeded]) : {};
+    liveStatRequests.length > 0 ? await fetchLiveStats(liveStatRequests) : {};
 
   const orderedSections = [...enabledSections].sort((a, b) => {
     if (a.order !== b.order) return a.order - b.order;
