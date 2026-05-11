@@ -173,6 +173,7 @@ export { faqSeedData } from "./faq-seed-data";
 export { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 export { siteSettingsSeedData } from "./site-settings-seed-data";
 export { carouselSlidesSeedData } from "./carousel-slides-seed-data";
+export { carouselsSeedData } from "./carousels-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
 export { conversationsSeedData } from "./conversations-seed-data";
 export { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";

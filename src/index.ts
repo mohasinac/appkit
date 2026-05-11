@@ -1689,6 +1689,9 @@ export { blogPostsSeedData } from "./seed/index";
 // carouselSlidesSeedData - Model for carousel slides seed data.
 export { carouselSlidesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// carouselsSeedData - Seed data for named carousels (EX2).
+export { carouselsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // cartsSeedData - Model for carts seed data.
 export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

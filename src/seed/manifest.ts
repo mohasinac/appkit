@@ -18,6 +18,7 @@ import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
 import { couponsSeedData } from "./coupons-seed-data";
+import { carouselsSeedData } from "./carousels-seed-data";
 import { carouselSlidesSeedData } from "./carousel-slides-seed-data";
 import { homepageSectionsSeedData } from "./homepage-sections-seed-data";
 import { siteSettingsSeedData } from "./site-settings-seed-data";
@@ -93,6 +94,7 @@ export const SEED_MANIFEST: SeedManifest = {
       name: c.code ?? c.id,
     })),
   ),
+  carousels: pick(asArr(carouselsSeedData)),
   carouselSlides: pick(
     asArr(carouselSlidesSeedData).map((s) => ({
       ...s,

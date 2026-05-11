@@ -21,6 +21,7 @@ export type SeedCollectionName =
   | "reviews"
   | "bids"
   | "coupons"
+  | "carousels"
   | "carouselSlides"
   | "homepageSections"
   | "siteSettings"
