@@ -190,9 +190,6 @@ export { ordersSeedData } from "./seed/index";
 // payoutsSeedData - Model for payouts seed data.
 export { payoutsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsSeedData - Model for products seed data.
-export { productsSeedData } from "./seed/index";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

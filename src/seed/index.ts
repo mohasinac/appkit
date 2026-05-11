@@ -154,7 +154,6 @@ export { addressesSeedData } from "./addresses-seed-data";
 export { storesSeedData } from "./stores-seed-data";
 export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { categoriesSeedData } from "./categories-seed-data";
-export { productsSeedData } from "./products-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
 export { productsAuctionsSeedData } from "./products-auctions-seed-data";
 export { productsPreOrdersSeedData } from "./products-preorders-seed-data";
