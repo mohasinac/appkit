@@ -18,6 +18,7 @@ import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { AdminProductEditorView } from "./AdminProductEditorView";
+import { QuickEditMenu } from "./QuickEditMenu";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "type"];
@@ -182,6 +183,19 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
     }
   };
 
+  const handleQuickEdit = useCallback(async (id: string, values: Record<string, unknown>) => {
+    const prev = fetchedRows.find((r) => r.id === id);
+    setOverrides((o) => ({ ...o, [id]: { ...o[id], ...values } }));
+    try {
+      await apiClient.patch(ADMIN_ENDPOINTS.PRODUCT_BY_ID(id), values);
+      showToast("Product updated.", "success");
+    } catch (err) {
+      if (prev) setOverrides((o) => ({ ...o, [id]: prev }));
+      showToast((err as Error)?.message ?? "Failed to update product.", "error");
+      throw err;
+    }
+  }, [fetchedRows, showToast]);
+
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -254,6 +268,30 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
           isLoading={isLoading}
           emptyLabel="No products found"
           onRowClick={(row) => openEditPanel(row.id)}
+          renderRowActions={(row) => (
+            <QuickEditMenu
+              actions={[
+                {
+                  label: "Quick edit",
+                  formTitle: "Quick Edit Product",
+                  fields: [
+                    { name: "status", label: "Status", type: "select", required: true,
+                      options: STATUS_OPTIONS.filter((o) => o !== "All").map((o) => ({ value: o, label: o })) },
+                    { name: "featured", label: "Featured", type: "toggle" },
+                    { name: "isPromoted", label: "Promoted", type: "toggle" },
+                  ],
+                  defaultValues: { status: row.status, featured: row.featured, isPromoted: row.isPromoted },
+                  onSubmit: (vals) => handleQuickEdit(row.id, vals),
+                  submitLabel: "Save",
+                },
+                {
+                  label: "Open full editor",
+                  separator: true,
+                  onClick: () => openEditPanel(row.id),
+                },
+              ]}
+            />
+          )}
         />
       </div>
 

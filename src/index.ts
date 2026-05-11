@@ -3251,6 +3251,10 @@ export { AdminOrdersChart } from "./features/admin/index";
 // AdminOrdersView - Component for admin orders view.
 export { AdminOrdersView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// QuickEditMenu - ⋮ row action menu that opens QuickFormDrawer for inline quick-edit actions.
+export { QuickEditMenu } from "./features/admin/index";
+export type { QuickEditAction, QuickEditMenuProps } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminPageHeader - Shared export for admin page header.
 export { AdminPageHeader } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.

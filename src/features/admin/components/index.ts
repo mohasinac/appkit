@@ -1,4 +1,6 @@
 export { DataTable } from "./DataTable";
+export { QuickEditMenu } from "./QuickEditMenu";
+export type { QuickEditAction, QuickEditMenuProps } from "./QuickEditMenu";
 export { AdminListingScaffold } from "./AdminListingScaffold";
 export type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 export { DashboardStatsGrid } from "./DashboardStats";

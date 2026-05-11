@@ -3,7 +3,9 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import { ListingToolbar, Pagination, ListingViewShell, useToast } from "../../../ui";
+import { apiClient } from "../../../http";
+import { QuickEditMenu } from "./QuickEditMenu";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -43,6 +45,7 @@ export interface AdminOrdersViewProps extends ListingViewShellProps {}
 
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -110,6 +113,16 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
   });
 
+  const handleQuickStatus = useCallback(async (id: string, status: string) => {
+    try {
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(id), { status });
+      showToast("Order status updated.", "success");
+    } catch (err) {
+      showToast((err as Error)?.message ?? "Failed to update order.", "error");
+      throw err;
+    }
+  }, [showToast]);
+
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -152,10 +165,26 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             isLoading={isLoading}
             emptyLabel="No orders found"
             renderRowActions={(row) => (
-              <RowActionMenu actions={[{
-                label: "Update order",
-                onClick: () => { setSelectedRow(row as OrderRow); setDrawerOpen(true); },
-              }]} />
+              <QuickEditMenu
+                actions={[
+                  {
+                    label: "View full details",
+                    onClick: () => { setSelectedRow(row as OrderRow); setDrawerOpen(true); },
+                  },
+                  {
+                    label: "Update status",
+                    separator: true,
+                    formTitle: "Update Order Status",
+                    fields: [
+                      { name: "status", label: "Status", type: "select", required: true,
+                        options: STATUS_OPTIONS.filter((o) => o !== "All").map((o) => ({ value: o, label: o })) },
+                    ],
+                    defaultValues: { status: (row as OrderRow).status },
+                    onSubmit: (vals) => handleQuickStatus(row.id, String(vals.status ?? "")),
+                    submitLabel: "Update",
+                  },
+                ]}
+              />
             )}
           />
         </div>
