@@ -78,9 +78,11 @@ export type {
   SieveFieldConfig,
   SieveOptions,
   SieveResult,
+  SieveFilterAlias,
+  SieveFilterAliases,
   FirebaseSieveFieldConfig,
   FirebaseSieveFields,
   FirebaseSieveOptions,
   FirebaseSieveResult,
 } from "./sieve";
-export { applySieveToFirestore } from "./sieve";
+export { applySieveToFirestore, expandFilterAliases } from "./sieve";

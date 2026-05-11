@@ -6,6 +6,7 @@ import {
   BaseRepository,
   prepareForFirestore,
   type FirebaseSieveResult,
+  type SieveFilterAliases,
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
@@ -410,6 +411,76 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     freeShipping: { canFilter: true, canSort: false },
   };
 
+  /**
+   * Virtual filter aliases — callers can pass `f=listingType==auction` instead
+   * of `f=isAuction==true,isPreOrder==false`. The Sieve adapter expands the
+   * alias into real clauses before reaching Firestore.
+   *
+   * Adding a new alias here makes it usable everywhere `productRepository.list`
+   * is called from — Vercel routes, listingProcessor, server-action views.
+   */
+  static readonly FILTER_ALIASES: SieveFilterAliases = {
+    /**
+     * One key for the three product kinds. Equivalent to the explicit flag pair.
+     *
+     *   listingType==auction   →  isAuction==true,isPreOrder==false
+     *   listingType==preorder  →  isAuction==false,isPreOrder==true
+     *   listingType==product   →  isAuction==false,isPreOrder==false
+     *   listingType!=auction   →  isAuction==false                  (drop preorder clause)
+     */
+    listingType: (value, operator) => {
+      const eq = operator === "==";
+      const neq = operator === "!=";
+      if (!eq && !neq) return "";
+      const want = (kind: "auction" | "preorder" | "product"): string => {
+        const isAuction = eq ? kind === "auction" : kind !== "auction";
+        const isPreOrder = eq ? kind === "preorder" : kind !== "preorder";
+        return `isAuction==${isAuction},isPreOrder==${isPreOrder}`;
+      };
+      if (value === "auction" || value === "preorder" || value === "product") {
+        return want(value);
+      }
+      return "";
+    },
+
+    /**
+     * Public catalog scope shorthand. Maps a single token to the canonical
+     * combination most public pages use.
+     *
+     *   scope==publicProducts   →  status==published,isAuction==false,isPreOrder==false
+     *   scope==publicAuctions   →  status==published,isAuction==true
+     *   scope==publicPreorders  →  status==published,isPreOrder==true
+     *   scope==published        →  status==published
+     */
+    scope: (value, operator) => {
+      if (operator !== "==") return "";
+      switch (value) {
+        case "publicProducts":
+          return "status==published,isAuction==false,isPreOrder==false";
+        case "publicAuctions":
+          return "status==published,isAuction==true";
+        case "publicPreorders":
+          return "status==published,isPreOrder==true";
+        case "published":
+          return "status==published";
+        default:
+          return "";
+      }
+    },
+
+    /** Shorthand for the homepage promoted strip. `promoted==true` only. */
+    promoted: (value, operator) => {
+      if (operator !== "==" || value !== "true") return "";
+      return "status==published,isPromoted==true";
+    },
+
+    /** Shorthand for the homepage featured strip. `featuredPublic==true` only. */
+    featuredPublic: (value, operator) => {
+      if (operator !== "==" || value !== "true") return "";
+      return "status==published,featured==true";
+    },
+  };
+
   async list(
     model: SieveModel,
     opts?: { storeId?: string; status?: string; categoriesIn?: string[] },
@@ -447,6 +518,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
         baseQuery,
         defaultPageSize: 20,
         maxPageSize: 100,
+        aliases: ProductRepository.FILTER_ALIASES,
       },
     );
   }

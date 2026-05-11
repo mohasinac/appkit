@@ -41,6 +41,47 @@ export type SieveFieldConfig = {
 
 export type SieveFields = Record<string, SieveFieldConfig>;
 
+/**
+ * Virtual filter aliases — a clause like `listingType==auction` is expanded
+ * into one or more real Sieve clauses (`isAuction==true,isPreOrder==false`)
+ * before the model reaches the underlying Sieve processor.
+ *
+ * The expander receives the raw operator + value the caller used (e.g. `==`,
+ * `!=`) and the value string. Return a comma-separated Sieve clause string,
+ * or empty string to drop the clause silently.
+ */
+export type SieveFilterAlias = (value: string, operator: string) => string;
+export type SieveFilterAliases = Record<string, SieveFilterAlias>;
+
+/**
+ * Expand virtual filter clauses into real Sieve clauses.
+ * Pure function — exported for direct use in route helpers + unit testing.
+ */
+export function expandFilterAliases(
+  filters: string | undefined,
+  aliases: SieveFilterAliases | undefined,
+): string | undefined {
+  if (!filters || !aliases) return filters;
+  const aliasKeys = Object.keys(aliases);
+  if (aliasKeys.length === 0) return filters;
+  return filters
+    .split(",")
+    .map((clause) => clause.trim())
+    .filter(Boolean)
+    .map((clause) => {
+      // Match field, operator (==, !=, <=, >=, <, >, @=*, @=, _=), value.
+      const m = clause.match(/^([A-Za-z_][\w.]*)\s*(==|!=|<=|>=|<|>|@=\*?|_=)\s*(.*)$/);
+      if (!m) return clause;
+      const [, field, op, value] = m;
+      const alias = aliases[field];
+      if (!alias) return clause;
+      const expanded = alias(value, op);
+      return expanded || "";
+    })
+    .filter(Boolean)
+    .join(",");
+}
+
 export interface SieveModel {
   /** Comma-delimited filter expressions, e.g. `status==published,price>=100` */
   filters?: string;
@@ -55,6 +96,13 @@ export interface SieveOptions {
   defaultPageSize?: number;
   maxPageSize?: number;
   throwExceptions?: boolean;
+  /**
+   * Optional virtual-field expansions applied to `model.filters` before the
+   * Sieve processor sees the string. Each entry maps an alias key to a
+   * function that returns the real Sieve clauses for that key. See
+   * `expandFilterAliases` for the parser contract.
+   */
+  aliases?: SieveFilterAliases;
 }
 
 export interface SieveResult<T> {
@@ -72,12 +120,23 @@ export type FirebaseSieveFields = SieveFields;
 export type FirebaseSieveOptions = SieveOptions;
 export type FirebaseSieveResult<T> = SieveResult<T>;
 
-const SIEVE_DEFAULTS: Required<SieveOptions> = {
+const SIEVE_DEFAULTS: Omit<Required<SieveOptions>, "aliases"> = {
   caseSensitive: false,
   defaultPageSize: 20,
   maxPageSize: 100,
   throwExceptions: false,
 };
+
+/** Apply alias expansion to a model in-place-safe (returns a new model). */
+function withAliasesExpanded(
+  model: SieveModel,
+  aliases: SieveFilterAliases | undefined,
+): SieveModel {
+  if (!aliases) return model;
+  const expanded = expandFilterAliases(model.filters, aliases);
+  if (expanded === model.filters) return model;
+  return { ...model, filters: expanded };
+}
 
 /**
  * Apply Sieve DSL to a CollectionReference/Query without requiring repository subclassing.
@@ -89,7 +148,9 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
   options?: SieveOptions;
 }): Promise<SieveResult<T>> {
   const { baseQuery, model, fields, options } = params;
-  const merged = { ...SIEVE_DEFAULTS, ...(options ?? {}) };
+  const { aliases, ...rest } = options ?? {};
+  const merged = { ...SIEVE_DEFAULTS, ...rest };
+  const effective = withAliasesExpanded(model, aliases);
 
   const processor = new SieveProcessorBase({
     adapter: createFirebaseAdapter() as never,
@@ -98,12 +159,12 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
     fields,
   } as never);
 
-  const filteredQ = processor.apply(model, baseQuery, {
+  const filteredQ = processor.apply(effective, baseQuery, {
     applyPagination: false,
   } as never) as unknown as Query;
   const total = await getFirestoreCount(filteredQ);
 
-  const pagedQ = processor.apply(model, baseQuery) as unknown as Query;
+  const pagedQ = processor.apply(effective, baseQuery) as unknown as Query;
   const snap = await pagedQ.get();
 
   const items = snap.docs.map(
@@ -144,9 +205,10 @@ export abstract class FirebaseSieveRepository<
     fields: SieveFields,
     options?: SieveOptions & { baseQuery?: CollectionReference | Query },
   ): Promise<SieveResult<TResult>> {
-    const { baseQuery, ...sieveOptions } = options ?? {};
+    const { baseQuery, aliases, ...sieveOptions } = options ?? {};
     const merged = { ...SIEVE_DEFAULTS, ...sieveOptions };
     const base = baseQuery ?? this.getCollection();
+    const effective = withAliasesExpanded(model, aliases);
 
     const processor = new SieveProcessorBase({
       adapter: createFirebaseAdapter() as never,
@@ -156,13 +218,13 @@ export abstract class FirebaseSieveRepository<
     } as never);
 
     // Count (no docs fetched)
-    const filteredQ = processor.apply(model, base, {
+    const filteredQ = processor.apply(effective, base, {
       applyPagination: false,
     } as never) as unknown as Query;
     const total = await getFirestoreCount(filteredQ);
 
     // Paginated result
-    const pagedQ = processor.apply(model, base) as unknown as Query;
+    const pagedQ = processor.apply(effective, base) as unknown as Query;
     const snap = await pagedQ.get();
 
     const items = snap.docs.map(
