@@ -432,6 +432,8 @@ Import: `import { x } from "@mohasinac/appkit"` or `"@mohasinac/appkit/client"`
 | `easeInOut`, `lerp` | `animation.helper.ts` | Animation math helpers |
 | `hexToRgb`, `rgbToHex`, `adjustBrightness` | `color.helper.ts` | Color manipulation |
 | `buildMediaField`, `isMediaField` | `media-field.ts` | Media field type guards |
+| `sanitizeProductForPublic`, `sanitizeProductsForPublic` | `features/products/utils/sanitize.ts` | Strip `sellerId`/`sellerName`/`sellerEmail`/`ownerId` from a product before returning it in a public API response (ARCH1). |
+| `normalizeListingType` | `features/products/utils/listing-type.ts` | Coerce `listingType` field to canonical value. |
 
 ---
 
