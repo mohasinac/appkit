@@ -35,6 +35,13 @@ import type { CustomSection } from "../../products/schemas/firestore";
 
 export interface PreOrderDetailPageViewProps {
   id: string;
+  /**
+   * Pre-fetched product document from the page's server data layer.
+   * When provided, the internal repository call is skipped — deduplicating
+   * the fetch with generateMetadata() via React.cache().
+   * When absent, falls back to fetching by slug/id (backward compat).
+   */
+  initialPreOrder?: import("../../products/schemas/firestore").ProductDocument | null;
   onReserveNow?: (productId: string) => Promise<void>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
@@ -52,8 +59,10 @@ const PRODUCTION_STATUS_LABELS: Record<string, string> = {
   ready_to_ship: "Ready to Ship",
 };
 
-export async function PreOrderDetailPageView({ id, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
-  const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
+export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
+  const product = initialPreOrder !== undefined
+    ? (initialPreOrder ?? undefined)
+    : await productRepository.findByIdOrSlug(id).catch(() => undefined);
 
   if (!product) {
     return (

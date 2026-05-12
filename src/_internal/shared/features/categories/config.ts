@@ -1,0 +1,6 @@
+export const CATEGORIES_PAGE_SIZE = 50;
+export const CATEGORIES_ROOT_TIER = 1;
+export const CATEGORIES_MAX_DEPTH = 3;
+export const CATEGORIES_SITEMAP_LIMIT = 200;
+export const CATEGORIES_FEATURED_LIMIT = 12;
+export const CATEGORIES_MENU_LIMIT = 8;

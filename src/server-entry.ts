@@ -159,6 +159,35 @@ export {
   type SearchQuery,
 } from "./_internal/server/features/search/index";
 
+// S3: categories data layer
+export {
+  getCategoryForDetail,
+  listRootCategories,
+  listFeaturedCategories,
+  listMenuCategories,
+  getCategoryTree,
+  listSitemapCategories,
+  CATEGORIES_PAGE_SIZE,
+  CATEGORIES_ROOT_TIER,
+  CATEGORIES_MAX_DEPTH,
+  CATEGORIES_SITEMAP_LIMIT,
+  CATEGORIES_FEATURED_LIMIT,
+  CATEGORIES_MENU_LIMIT,
+} from "./_internal/server/features/categories/index";
+
+// S3: stores data layer
+export {
+  getStoreForDetail,
+  listStoreProductsInitial,
+  listStoreAuctionsInitial,
+  listStorePreOrdersInitial,
+  listSitemapStores,
+  STORES_PAGE_SIZE,
+  STORES_PRODUCTS_PAGE_SIZE,
+  STORES_SITEMAP_LIMIT,
+  STORES_FEATURED_LIMIT,
+} from "./_internal/server/features/stores/index";
+
 // Shared domain errors
 export {
   AppkitError,

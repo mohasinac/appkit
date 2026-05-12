@@ -43,6 +43,13 @@ import { SublistingCarouselSection } from "../../products/components/SublistingC
 
 export interface AuctionDetailPageViewProps {
   id: string;
+  /**
+   * Pre-fetched auction document from the page's server data layer.
+   * When provided, the internal repository call is skipped — deduplicating
+   * the fetch with generateMetadata() via React.cache().
+   * When absent, falls back to fetching by slug/id (backward compat).
+   */
+  initialAuction?: import("../../products/schemas/firestore").ProductDocument | null;
   onPlaceBid?: (input: PlaceBidInput) => Promise<unknown>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
@@ -54,8 +61,10 @@ function toDescriptionHtml(raw: unknown): string {
   return normalizeRichTextHtml(s);
 }
 
-export async function AuctionDetailPageView({ id, onPlaceBid, productFeatures }: AuctionDetailPageViewProps) {
-  const product = await productRepository.findByIdOrSlug(id).catch(() => undefined);
+export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, productFeatures }: AuctionDetailPageViewProps) {
+  const product = initialAuction !== undefined
+    ? (initialAuction ?? undefined)
+    : await productRepository.findByIdOrSlug(id).catch(() => undefined);
   const bidsResult = product
     ? await listBidsByProduct(String(product.id), { pageSize: 20 }).catch(() => null)
     : null;
