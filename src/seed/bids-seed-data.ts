@@ -479,4 +479,204 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     createdAt: daysAgo(30),
     updatedAt: daysAgo(30),
   },
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-pokemon-lugia-neo-genesis-psa9 — active, 7 bids → ₹69,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-pokemon-lugia-neo-genesis-psa9",
+    productTitle: "Pokémon Neo Genesis Lugia #9 Holo — PSA 9 MINT (AUCTION)",
+    amounts: [3499900, 4000000, 4500000, 5000000, 5500000, 6000000, 6999900],
+    bidders: [
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-meera-nair", name: "Meera Nair", email: "meera.nair@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+      { id: "user-kavya-iyer", name: "Kavya Iyer", email: "kavya.iyer@gmail.com" },
+      { id: "user-priya-patel", name: "Priya Patel", email: "priya.patel@gmail.com" },
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+    ],
+    daysAgoForFirst: 9,
+    endsActive: true,
+    slugPrefix: "bid-lugia-neo",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-funko-stan-lee-glow-chase — active, 4 bids → ₹10,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-funko-stan-lee-glow-chase",
+    productTitle: "Funko Pop Stan Lee Glow-in-the-Dark Chase Variant — Vaulted (AUCTION)",
+    amounts: [599900, 749900, 899900, 1099900],
+    bidders: [
+      { id: "user-kartik-nair", name: "Kartik Nair", email: "kartik.nair@gmail.com" },
+      { id: "user-sneha-kumar", name: "Sneha Kumar", email: "sneha.kumar@gmail.com" },
+      { id: "user-naman-gupta", name: "Naman Gupta", email: "naman.gupta@gmail.com" },
+      { id: "user-kartik-nair", name: "Kartik Nair", email: "kartik.nair@gmail.com" },
+    ],
+    daysAgoForFirst: 7,
+    endsActive: true,
+    slugPrefix: "bid-funko-stan-lee",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-beyblade-spriggan-requiem-tournament — active, 6 bids → ₹8,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-beyblade-spriggan-requiem-tournament",
+    productTitle: "Beyblade Burst B-100 Spriggan Requiem — Tournament Limited Edition (AUCTION)",
+    amounts: [399900, 499900, 599900, 699900, 799900, 899900],
+    bidders: [
+      { id: "user-aryan-kapoor", name: "Aryan Kapoor", email: "aryan.kapoor@gmail.com" },
+      { id: "user-rohit-joshi", name: "Rohit Joshi", email: "rohit.joshi@gmail.com" },
+      { id: "user-tanvi-desai", name: "Tanvi Desai", email: "tanvi.desai@gmail.com" },
+      { id: "user-aryan-kapoor", name: "Aryan Kapoor", email: "aryan.kapoor@gmail.com" },
+      { id: "user-ankit-gupta", name: "Ankit Gupta", email: "ankit.gupta@gmail.com" },
+      { id: "user-tanvi-desai", name: "Tanvi Desai", email: "tanvi.desai@gmail.com" },
+    ],
+    daysAgoForFirst: 6,
+    endsActive: true,
+    slugPrefix: "bid-spriggan-req",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-shf-goku-ultra-instinct — ENDED (3 days ago), 6 bids → ₹14,999 WON
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-shf-goku-ultra-instinct",
+    productTitle: "S.H.Figuarts Son Goku Ultra Instinct — Tamashii Limited (AUCTION ENDED)",
+    amounts: [599900, 799900, 999900, 1199900, 1349900, 1499900],
+    bidders: [
+      { id: "user-rohit-verma", name: "Rohit Verma", email: "rohit.verma@gmail.com" },
+      { id: "user-divya-menon", name: "Divya Menon", email: "divya.menon@gmail.com" },
+      { id: "user-siddharth-rao", name: "Siddharth Rao", email: "siddharth.rao@gmail.com" },
+      { id: "user-rohit-verma", name: "Rohit Verma", email: "rohit.verma@gmail.com" },
+      { id: "user-pooja-sharma", name: "Pooja Sharma", email: "pooja.sharma@gmail.com" },
+      { id: "user-divya-menon", name: "Divya Menon", email: "divya.menon@gmail.com" },
+    ],
+    daysAgoForFirst: 17,
+    endsActive: false,
+    closedDaysAgo: 3,
+    winningIndex: 5,
+    slugPrefix: "bid-goku-ui",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-pokemon-blastoise-shadowless-bgs — ENDED (14d ago), 8 bids → ₹39,999 WON
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-pokemon-blastoise-shadowless-bgs",
+    productTitle: "Pokémon Base Set Shadowless Blastoise #2 Holo — BGS 8.5 (AUCTION ENDED)",
+    amounts: [1499900, 1799900, 2099900, 2499900, 2899900, 3299900, 3599900, 3999900],
+    bidders: [
+      { id: "user-priya-singh", name: "Priya Singh", email: "priya.singh@gmail.com" },
+      { id: "user-amit-sharma", name: "Amit Sharma", email: "amit.sharma@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+      { id: "user-priya-singh", name: "Priya Singh", email: "priya.singh@gmail.com" },
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-amit-sharma", name: "Amit Sharma", email: "amit.sharma@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+    ],
+    daysAgoForFirst: 28,
+    endsActive: false,
+    closedDaysAgo: 14,
+    winningIndex: 7,
+    slugPrefix: "bid-blastoise-sl",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-vintage-tomica-skyline-no-reserve-fail — ENDED no-winner, 3 bids
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-vintage-tomica-skyline-no-reserve-fail",
+    productTitle: "Vintage Tomica Nissan Skyline GT-R Hakosuka 1973 — Reserve Not Met (AUCTION ENDED)",
+    amounts: [199900, 349900, 499900],
+    bidders: [
+      { id: "user-kiran-reddy", name: "Kiran Reddy", email: "kiran.reddy@gmail.com" },
+      { id: "user-preeti-joshi", name: "Preeti Joshi", email: "preeti.joshi@gmail.com" },
+      { id: "user-varun-bhat", name: "Varun Bhat", email: "varun.bhat@gmail.com" },
+    ],
+    daysAgoForFirst: 20,
+    endsActive: false,
+    closedDaysAgo: 10,
+    winningIndex: -1, // reserve not met — no winner
+    slugPrefix: "bid-skyline-fail",
+  }),
 ];
+
+interface BidLadderParams {
+  productId: string;
+  productTitle: string;
+  amounts: number[];
+  bidders: Array<{ id: string; name: string; email: string }>;
+  daysAgoForFirst: number;
+  endsActive: boolean;
+  /** Days ago the auction closed. Required when endsActive=false. */
+  closedDaysAgo?: number;
+  /** Index of the winning bid for ended auctions. -1 if no winner (reserve unmet / zero bids). */
+  winningIndex?: number;
+  /** Prefix for bid IDs — typically a short auction tag. */
+  slugPrefix: string;
+}
+
+/**
+ * Builds a strictly-increasing bid ladder for an auction. Status flags are
+ * applied so consumers can reason about isWinning + outbid history without
+ * recomputing from raw amounts.
+ */
+function buildBidLadder({
+  productId,
+  productTitle,
+  amounts,
+  bidders,
+  daysAgoForFirst,
+  endsActive,
+  closedDaysAgo,
+  winningIndex,
+  slugPrefix,
+}: BidLadderParams): Partial<BidDocument>[] {
+  if (amounts.length !== bidders.length) {
+    throw new Error(
+      `buildBidLadder: amounts.length (${amounts.length}) !== bidders.length (${bidders.length}) for ${productId}`,
+    );
+  }
+  const last = amounts.length - 1;
+  const winIdx = winningIndex ?? (endsActive ? -1 : last);
+  return amounts.map((amount, i) => {
+    const bidder = bidders[i];
+    const isLast = i === last;
+    // Spread bid times linearly across (first → now/close)
+    const totalSpanDays = endsActive
+      ? daysAgoForFirst
+      : daysAgoForFirst - (closedDaysAgo ?? 0);
+    const offsetDays = totalSpanDays * (1 - i / Math.max(1, last));
+    const ageDays = (closedDaysAgo ?? 0) + offsetDays;
+    const status: BidDocument["status"] =
+      winIdx === i
+        ? endsActive
+          ? "active"
+          : "won"
+        : isLast && endsActive
+          ? "active"
+          : !endsActive && winIdx === -1
+            ? "outbid"
+            : "outbid";
+    return {
+      id: `${slugPrefix}-${bidder.id.replace("user-", "")}-${i + 1}`,
+      productId,
+      productTitle,
+      userId: bidder.id,
+      userName: bidder.name,
+      userEmail: bidder.email,
+      bidAmount: amount,
+      currency: "INR" as const,
+      status,
+      isWinning: isLast && endsActive ? true : winIdx === i,
+      previousBidAmount: i > 0 ? amounts[i - 1] : undefined,
+      bidDate: daysAgo(ageDays),
+      createdAt: daysAgo(ageDays),
+      updatedAt: daysAgo(ageDays),
+    };
+  });
+}

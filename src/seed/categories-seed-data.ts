@@ -37,6 +37,9 @@ const rawCategories: Partial<CategoryDocument>[] = [
       "category-nendoroids-chibis",
       "category-scale-figures",
       "category-poseable-figures",
+      "category-anime-figures",
+      "category-funko-pops",
+      "category-superhero-figures",
     ],
     tier: 0,
     path: "action-figures",
@@ -216,6 +219,9 @@ const rawCategories: Partial<CategoryDocument>[] = [
       "category-pokemon-tcg",
       "category-yugioh-tcg",
       "category-sealed-product",
+      "category-one-piece-cards",
+      "category-magic-cards",
+      "category-flesh-blood-cards",
     ],
     tier: 0,
     path: "trading-cards",
@@ -418,6 +424,8 @@ const rawCategories: Partial<CategoryDocument>[] = [
       "category-hot-wheels",
       "category-tomica",
       "category-premium-diecast",
+      "category-matchbox-cars",
+      "category-corgi-cars",
     ],
     tier: 0,
     path: "diecast-vehicles",
@@ -813,6 +821,8 @@ const rawCategories: Partial<CategoryDocument>[] = [
     childrenIds: [
       "category-gunpla",
       "category-non-gundam-kits",
+      "category-gundam-master-grade",
+      "category-gundam-perfect-grade",
     ],
     tier: 0,
     path: "model-kits",
@@ -1149,7 +1159,189 @@ const rawCategories: Partial<CategoryDocument>[] = [
     updatedAt: daysAgo(30),
     ancestors: [{ id: "category-vintage-rare", name: "Vintage & Rare", tier: 0 }],
   },
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // P25 expansion — additional leaf categories (Session S15 2026-05-12)
+  // ──────────────────────────────────────────────────────────────────────────
+
+  // Trading Cards > One Piece Card Game (tier 1)
+  ...mkLeaves([
+    {
+      id: "category-one-piece-cards",
+      name: "One Piece Card Game",
+      description:
+        "Bandai's One Piece Card Game — booster boxes, starter decks, singles, and tournament-grade cards from the OP01–OP08 sets.",
+      rootId: "category-trading-cards",
+      keywords: ["one piece card", "op tcg", "bandai card game", "luffy card"],
+      icon: "🏴‍☠️",
+      cover: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+      order: 4,
+    },
+    {
+      id: "category-magic-cards",
+      name: "Magic: The Gathering",
+      description:
+        "Wizards of the Coast Magic: The Gathering — Standard, Modern, Commander, and reserved-list singles. Sealed product, fat packs, and bundles.",
+      rootId: "category-trading-cards",
+      keywords: ["magic the gathering", "mtg", "commander", "wizards of the coast"],
+      icon: "🪄",
+      cover: "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
+      order: 5,
+    },
+    {
+      id: "category-flesh-blood-cards",
+      name: "Flesh and Blood TCG",
+      description:
+        "Legend Story Studios Flesh and Blood — booster boxes, blitz decks, hero decks, and competitive singles.",
+      rootId: "category-trading-cards",
+      keywords: ["flesh and blood", "fab tcg", "lss", "blitz deck"],
+      icon: "⚔️",
+      cover: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
+      order: 6,
+    },
+    {
+      id: "category-matchbox-cars",
+      name: "Matchbox 1:64",
+      description:
+        "Matchbox 1:64 scale diecast — basic releases, MBX series, premium recasts, and vintage Lesney Matchbox.",
+      rootId: "category-diecast-vehicles",
+      keywords: ["matchbox", "1:64 diecast", "lesney", "mbx"],
+      icon: "🚙",
+      cover: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
+      order: 4,
+    },
+    {
+      id: "category-corgi-cars",
+      name: "Corgi Toys",
+      description:
+        "Corgi Toys diecast — TV/movie tie-in vehicles (James Bond, Batman, Chitty Chitty Bang Bang) and classic British cars.",
+      rootId: "category-diecast-vehicles",
+      keywords: ["corgi toys", "diecast british", "james bond car", "batmobile"],
+      icon: "🇬🇧",
+      cover: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
+      order: 5,
+    },
+    {
+      id: "category-anime-figures",
+      name: "Anime Figures",
+      description:
+        "Dragon Ball, Naruto, One Piece, and other shonen anime character figures — S.H.Figuarts, Banpresto, and Megahouse releases.",
+      rootId: "category-action-figures",
+      keywords: ["dragon ball figure", "naruto figure", "one piece figure", "shf"],
+      icon: "🎌",
+      cover: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+      order: 4,
+    },
+    {
+      id: "category-funko-pops",
+      name: "Funko Pops",
+      description:
+        "Funko Pop vinyl figures — Marvel, DC, anime, gaming, and movie/TV licenses. Common, chase, and vaulted variants.",
+      rootId: "category-action-figures",
+      keywords: ["funko pop", "vinyl figure", "chase variant", "vaulted pop"],
+      icon: "🥤",
+      cover: "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
+      order: 5,
+    },
+    {
+      id: "category-superhero-figures",
+      name: "Marvel & DC Figures",
+      description:
+        "Marvel Legends, DC Multiverse, Mafex, and Hot Toys 1:6 sixth-scale figures — Avengers, Spider-Man, Batman, Justice League.",
+      rootId: "category-action-figures",
+      keywords: ["marvel legends", "dc multiverse", "hot toys", "mafex", "spider-man figure"],
+      icon: "🦸",
+      cover: "https://images.unsplash.com/photo-1560762484-813fc97650a0?w=800&h=800&fit=crop",
+      order: 6,
+    },
+    {
+      id: "category-gundam-master-grade",
+      name: "Gundam Master Grade (MG)",
+      description:
+        "Bandai Master Grade 1/100 Gundam model kits — intermediate-difficulty builds with full inner frame and panel detail.",
+      rootId: "category-model-kits",
+      keywords: ["master grade", "mg gundam", "1/100 gunpla", "bandai mg"],
+      icon: "🛠️",
+      cover: "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+      order: 3,
+    },
+    {
+      id: "category-gundam-perfect-grade",
+      name: "Gundam Perfect Grade (PG)",
+      description:
+        "Bandai Perfect Grade 1/60 Gundam — flagship kits with internal frame, LED-ready, advanced builders only.",
+      rootId: "category-model-kits",
+      keywords: ["perfect grade", "pg gundam", "1/60 gunpla", "bandai flagship"],
+      icon: "🏗️",
+      cover: "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
+      order: 4,
+    },
+  ]),
 ];
+
+/**
+ * Compact constructor for tier-1 leaf categories — keeps P25 expansion entries
+ * short while still emitting the full CategoryDocument shape consumed by the
+ * seed runner. Defaults: isLeaf=true, isActive=true, admin-authored, today-30d.
+ */
+function mkLeaves(
+  specs: Array<{
+    id: string;
+    name: string;
+    description: string;
+    rootId: string;
+    keywords: string[];
+    icon: string;
+    cover: string;
+    order: number;
+  }>,
+): Partial<CategoryDocument>[] {
+  // Resolve the root name once per unique rootId via a tiny inline map. Keeps
+  // ancestors[] correct without re-reading the full rawCategories array.
+  const rootNames: Record<string, string> = {
+    "category-action-figures": "Action Figures & Statues",
+    "category-trading-cards": "Trading Cards",
+    "category-diecast-vehicles": "Diecast & Vehicles",
+    "category-model-kits": "Model Kits & Gunpla",
+  };
+  return specs.map((s) => ({
+    id: s.id,
+    slug: s.id,
+    name: s.name,
+    description: s.description,
+    rootId: s.rootId,
+    parentIds: [s.rootId],
+    childrenIds: [],
+    tier: 1,
+    path: `${s.rootId.replace("category-", "")}/${s.id.replace("category-", "")}`,
+    order: s.order,
+    isLeaf: true,
+    position: 0,
+    subtreeSize: 1,
+    metrics: emptyMetrics,
+    isFeatured: false,
+    isBrand: false,
+    seo: {
+      title: `${s.name} | LetItRip`,
+      description: s.description.slice(0, 155),
+      keywords: s.keywords,
+    },
+    display: {
+      icon: s.icon,
+      coverImage: s.cover,
+      showInMenu: true,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(7),
+    ancestors: [
+      { id: s.rootId, name: rootNames[s.rootId] ?? s.rootId, tier: 0 },
+    ],
+  }));
+}
 
 const STORE_CREATOR: Record<
   string,
