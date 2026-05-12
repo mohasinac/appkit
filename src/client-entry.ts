@@ -24,6 +24,18 @@ export * from "./index";
 export { LabelsProvider, useLabels } from "./_internal/client/i18n/LabelsProvider";
 export type { AppkitLabelSet } from "./_internal/client/i18n/LabelsProvider";
 
+// Scaffolds — slot-driven shell + dashboard chrome (S6)
+export { AppShell, DashboardScaffold } from "./_internal/client/scaffolds/index";
+export type {
+  AppShellProps,
+  AppShellRenderContext,
+  DashboardScaffoldProps,
+  DashboardScaffoldRenderContext,
+} from "./_internal/client/scaffolds/index";
+
+// Hydration helpers (CC-3) — safe to call from RSC and client
+export { toClient, clientInitial } from "./_internal/shared/serialization/index";
+
 // New shared tokens and config types
 export type { AppkitConfig } from "./_internal/shared/config/schema";
 export {
