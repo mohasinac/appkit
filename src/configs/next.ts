@@ -44,6 +44,7 @@ const FIREBASE_EXTERNAL_PACKAGES = [
 export interface NextConfigOverride {
   serverExternalPackages?: string[];
   experimental?: Record<string, unknown>;
+  outputFileTracingIncludes?: Record<string, string[]>;
   images?: Record<string, unknown>;
   webpack?: (config: unknown, ctx: unknown) => unknown;
   [key: string]: unknown;
@@ -67,6 +68,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     serverExternalPackages: consumerExternal = [],
     experimental: consumerExperimental = {},
     webpack: consumerWebpack,
+    outputFileTracingIncludes: consumerOutputFileTracingIncludes = {},
     ...rest
   } = override;
 
@@ -79,22 +81,25 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
 
   const defaultExperimental: Record<string, unknown> = {
     serverActions: { bodySizeLimit: "4mb" },
-    outputFileTracingIncludes: {
-      "/api/**": [
-        "./node_modules/firebase-admin/lib/database/**",
-        "./node_modules/firebase-admin/lib/esm/database/**",
-      ],
-    },
   };
 
   const mergedExperimental: Record<string, unknown> = {
     ...defaultExperimental,
     ...consumerExperimental,
-    // Merge outputFileTracingIncludes
-    outputFileTracingIncludes: {
-      ...(defaultExperimental.outputFileTracingIncludes as Record<string, unknown>),
-      ...((consumerExperimental.outputFileTracingIncludes as Record<string, unknown>) ?? {}),
-    },
+  };
+
+  // Next 16 moved `outputFileTracingIncludes` out of `experimental` to the
+  // top-level config. Keep the same firebase-admin/lib/database forcing the
+  // old position used, and merge consumer overrides if provided.
+  const defaultOutputFileTracingIncludes: Record<string, string[]> = {
+    "/api/**": [
+      "./node_modules/firebase-admin/lib/database/**",
+      "./node_modules/firebase-admin/lib/esm/database/**",
+    ],
+  };
+  const mergedOutputFileTracingIncludes: Record<string, string[]> = {
+    ...defaultOutputFileTracingIncludes,
+    ...(consumerOutputFileTracingIncludes as Record<string, string[]>),
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -136,6 +141,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     ...rest,
     serverExternalPackages: mergedExternal,
     experimental: mergedExperimental,
+    outputFileTracingIncludes: mergedOutputFileTracingIncludes,
     webpack: mergedWebpack,
   };
 }
