@@ -10,7 +10,7 @@ import type { ProductDocument } from "../features/products/schemas";
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const productsStandardSeedData: Partial<ProductDocument>[] = [
+const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   // ── Store: Pokémon Palace (user-aryan-kapoor) — 5 products ─────────────────
 
   // 1. Pokémon SV Paldean Fates ETB
@@ -4547,3 +4547,14 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(7),
   },
 ];
+
+/**
+ * SB1-G (S21 2026-05-12): every standard product is stamped with
+ * `listingType: "standard"`. Keeps the legacy `isAuction: false` /
+ * `isPreOrder: false` booleans in place until the schema drops them.
+ */
+export const productsStandardSeedData: Partial<ProductDocument>[] =
+  _rawProductsStandardSeedData.map((p) => ({
+    ...p,
+    listingType: "standard" as const,
+  }));

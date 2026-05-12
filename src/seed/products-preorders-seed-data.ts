@@ -12,7 +12,7 @@ const NOW = new Date();
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
-export const productsPreOrdersSeedData: Partial<ProductDocument>[] = [
+const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
   // ── 1. ACTIVE — Beyblade X BX-10 Booster (deposit 30%, shipping 45 days) ──
   {
     id: "preorder-beyblade-x-bx10-booster",
@@ -534,3 +534,14 @@ export const productsPreOrdersSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(3),
   },
 ];
+
+/**
+ * SB1-D backfill (S21 2026-05-12): every pre-order document is stamped with
+ * `listingType: "pre-order"`. Keeps `isPreOrder: true` in place until the
+ * boolean is removed from `ProductDocument`.
+ */
+export const productsPreOrdersSeedData: Partial<ProductDocument>[] =
+  _rawProductsPreOrdersSeedData.map((p) => ({
+    ...p,
+    listingType: "pre-order" as const,
+  }));

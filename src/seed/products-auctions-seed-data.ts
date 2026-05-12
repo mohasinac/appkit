@@ -17,7 +17,7 @@ const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 const hoursAgo = (h: number) =>
   new Date(NOW.getTime() - h * 3_600_000);
 
-export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
+const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
   // ── 1. ACTIVE — ending in 12h (Charizard Base Set #4 PSA 9) ───────────────
   {
     id: "auction-pokemon-charizard-base1-psa9",
@@ -1262,3 +1262,14 @@ export const productsAuctionsSeedData: Partial<ProductDocument>[] = [
     updatedAt: daysAgo(5),
   },
 ];
+
+/**
+ * SB1-D backfill (S21 2026-05-12): every auction document is stamped with
+ * `listingType: "auction"`. Keeps the existing `isAuction: true` flag in place
+ * for backwards-compat until the boolean is removed from `ProductDocument`.
+ */
+export const productsAuctionsSeedData: Partial<ProductDocument>[] =
+  _rawProductsAuctionsSeedData.map((p) => ({
+    ...p,
+    listingType: "auction" as const,
+  }));

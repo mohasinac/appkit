@@ -8,7 +8,12 @@ export * from "./components";
 export * from "./schemas";
 export * from "./columns";
 export { manifest } from "./manifest";
-export { normalizeListingType } from "./utils/listing-type";
+export {
+  normalizeListingType,
+  isAuctionListing,
+  isPreOrderListing,
+  isStandardListing,
+} from "./utils/listing-type";
 export {
   sanitizeProductForPublic,
   sanitizeProductsForPublic,

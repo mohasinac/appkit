@@ -29,6 +29,9 @@ const PRODUCT_FIELDS = {
   FEATURED: "featured",
   CATEGORY: "category",
   SLUG: "slug",
+  // SB1-G (S21 2026-05-12) — canonical discriminator. Boolean flags below kept
+  // as deprecated aliases for any consumer code that hasn't migrated yet.
+  LISTING_TYPE: "listingType",
   IS_AUCTION: "isAuction",
   IS_PRE_ORDER: "isPreOrder",
   PRE_ORDER_DELIVERY_DATE: "preOrderDeliveryDate",
@@ -38,14 +41,26 @@ const PRODUCT_FIELDS = {
   VIEW_COUNT: "viewCount",
 } as const;
 
-// Reused Sieve clauses for FILTER_ALIASES below. Keeping them as named
-// constants makes it obvious which alias produces which Firestore query
-// shape (and surfaces it for index audits).
+/**
+ * Canonical listing-kind tokens used in `listingType`. Note: the public Sieve
+ * alias accepts the legacy "preorder" / "product" spelling; we normalise to
+ * the Firestore-stored value here.
+ */
+const LISTING_TYPE_VALUES = {
+  AUCTION: "auction",
+  PRE_ORDER: "pre-order",
+  STANDARD: "standard",
+  PRIZE_DRAW: "prize-draw",
+  BUNDLE: "bundle",
+} as const;
+
+// Reused Sieve clauses for FILTER_ALIASES. SB1-G replaced the boolean-combo
+// clauses with single-field `listingType==X` clauses now that every doc
+// carries the discriminator.
 const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.PUBLISHED}`;
-const SIEVE_CLAUSE_NOT_AUCTION = `${PRODUCT_FIELDS.IS_AUCTION}==false`;
-const SIEVE_CLAUSE_NOT_PREORDER = `${PRODUCT_FIELDS.IS_PRE_ORDER}==false`;
-const SIEVE_CLAUSE_IS_AUCTION = `${PRODUCT_FIELDS.IS_AUCTION}==true`;
-const SIEVE_CLAUSE_IS_PREORDER = `${PRODUCT_FIELDS.IS_PRE_ORDER}==true`;
+const SIEVE_CLAUSE_IS_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
+const SIEVE_CLAUSE_IS_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
+const SIEVE_CLAUSE_IS_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
 
 type ProductListingKind = "auction" | "preorder" | "product";
 
@@ -53,12 +68,15 @@ function buildListingKindClause(
   kind: ProductListingKind,
   inverted: boolean,
 ): string {
-  const auctionTrue = inverted ? kind !== "auction" : kind === "auction";
-  const preorderTrue = inverted ? kind !== "preorder" : kind === "preorder";
-  return [
-    `${PRODUCT_FIELDS.IS_AUCTION}==${auctionTrue}`,
-    `${PRODUCT_FIELDS.IS_PRE_ORDER}==${preorderTrue}`,
-  ].join(",");
+  // Map the public alias tokens to canonical Firestore values.
+  const canonical =
+    kind === "auction"
+      ? LISTING_TYPE_VALUES.AUCTION
+      : kind === "preorder"
+        ? LISTING_TYPE_VALUES.PRE_ORDER
+        : LISTING_TYPE_VALUES.STANDARD;
+  const op = inverted ? "!=" : "==";
+  return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
 
 export class ProductRepository extends BaseRepository<ProductDocument> {
@@ -201,18 +219,24 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async findAuctions(): Promise<ProductDocument[]> {
-    return this.findBy(PRODUCT_FIELDS.IS_AUCTION, true);
+    return this.findBy(
+      PRODUCT_FIELDS.LISTING_TYPE,
+      LISTING_TYPE_VALUES.AUCTION,
+    );
   }
 
   async findPreOrders(): Promise<ProductDocument[]> {
-    return this.findBy(PRODUCT_FIELDS.IS_PRE_ORDER, true);
+    return this.findBy(
+      PRODUCT_FIELDS.LISTING_TYPE,
+      LISTING_TYPE_VALUES.PRE_ORDER,
+    );
   }
 
   async findActivePreOrders(): Promise<ProductDocument[]> {
     const now = new Date();
     const snapshot = await this.db
       .collection(this.collection)
-      .where(PRODUCT_FIELDS.IS_PRE_ORDER, "==", true)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.PRE_ORDER)
       .where(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, ">=", now)
       .get();
 
@@ -267,7 +291,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const snapshot = await this.db
       .collection(this.collection)
       .where("groupId", "==", groupId)
-      .where(PRODUCT_FIELDS.IS_AUCTION, "==", false)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.STANDARD)
       .get();
     return snapshot.docs.map((doc) => this.mapDoc<ProductDocument>(doc));
   }
@@ -276,7 +300,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     const now = new Date();
     const snapshot = await this.db
       .collection(this.collection)
-      .where(PRODUCT_FIELDS.IS_AUCTION, "==", true)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.AUCTION)
       .where(PRODUCT_FIELDS.AUCTION_END_DATE, ">=", now)
       .get();
 
@@ -444,12 +468,16 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
    */
   static readonly FILTER_ALIASES: SieveFilterAliases = {
     /**
-     * One key for the three product kinds. Equivalent to the explicit flag pair.
+     * Canonical listing-kind alias (SB1-G).
      *
-     *   listingType==auction   →  isAuction==true,isPreOrder==false
-     *   listingType==preorder  →  isAuction==false,isPreOrder==true
-     *   listingType==product   →  isAuction==false,isPreOrder==false
-     *   listingType!=auction   →  isAuction==false                  (drop preorder clause)
+     *   listingType==auction   →  listingType==auction
+     *   listingType==preorder  →  listingType==pre-order  (normalises spelling)
+     *   listingType==product   →  listingType==standard   (canonical token)
+     *   listingType!=auction   →  listingType!=auction
+     *
+     * The alias is kept (instead of letting raw `listingType==X` through) so
+     * the public Sieve API still accepts the legacy `preorder` / `product`
+     * tokens for backwards compatibility with existing consumer routes.
      */
     listingType: (value, operator) => {
       if (operator !== "==" && operator !== "!=") return "";
@@ -471,11 +499,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       if (operator !== "==") return "";
       switch (value) {
         case "publicProducts":
-          return [
-            SIEVE_CLAUSE_PUBLISHED,
-            SIEVE_CLAUSE_NOT_AUCTION,
-            SIEVE_CLAUSE_NOT_PREORDER,
-          ].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_STANDARD].join(",");
         case "publicAuctions":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_AUCTION].join(",");
         case "publicPreorders":
@@ -572,7 +596,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   > {
     const snap = await this.db
       .collection(this.collection)
-      .where(PRODUCT_FIELDS.IS_AUCTION, "==", true)
+      .where(PRODUCT_FIELDS.LISTING_TYPE, "==", LISTING_TYPE_VALUES.AUCTION)
       .where(PRODUCT_FIELDS.AUCTION_END_DATE, "<", now)
       .where(PRODUCT_FIELDS.STATUS, "==", ProductStatusValues.PUBLISHED)
       .limit(500)
