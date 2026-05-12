@@ -9,7 +9,7 @@
  *   module.exports = defineNextConfig({ images: { domains: [...] } });
  */
 
-export { defineNextConfig } from "./next";
-export { definePostcssConfig } from "./postcss";
-export { defineTailwindConfig } from "./tailwind";
-export { defineEslintConfig } from "./eslint";
+export { defineNextConfig } from "./next.js";
+export { definePostcssConfig } from "./postcss.js";
+export { defineTailwindConfig } from "./tailwind.js";
+export { defineEslintConfig } from "./eslint.js";

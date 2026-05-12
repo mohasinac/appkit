@@ -8840,6 +8840,37 @@ export type {
   BundleStatus,
   BundleItemListingType,
 } from "./features/bundles/schemas";
+// SB3 bundle UI views + constants + form value type (client-safe components)
+export {
+  BundleItemsPicker,
+  BundleForm,
+  SellerBundleCreateView,
+  SellerBundleEditView,
+  AdminBundleEditorView,
+  BundlesListingView,
+  BundleDetailPageView,
+  FeaturedBundlesSection,
+} from "./features/bundles/components";
+export type {
+  BundleItemsPickerProps,
+  BundleFormProps,
+  BundleFormValue,
+  SellerBundleCreateViewProps,
+  SellerBundleEditViewProps,
+  AdminBundleEditorViewProps,
+  BundlesListingViewProps,
+  BundleDetailPageViewProps,
+  FeaturedBundlesSectionProps,
+} from "./features/bundles/components";
+export {
+  BUNDLE_VALIDATION,
+  BUNDLES_CURRENCY,
+  BUNDLE_STATUS_OPTIONS,
+  BUNDLE_ITEM_TYPE_LABEL,
+  BUNDLE_ITEM_TYPE_OPTIONS,
+  BUNDLE_SORT_OPTIONS,
+} from "./features/bundles/constants";
+export type { BundleSort } from "./features/bundles/constants";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
 
 // Scam registry — seed data

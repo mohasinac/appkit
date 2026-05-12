@@ -1273,6 +1273,8 @@ export { removeFromWishlist } from "./features/wishlist/server";
 export { siteSettingsRepository } from "./repositories/index";
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./repositories/index";
+// bundlesRepository - SB1-H bundles CRUD + stock sync.
+export { bundlesRepository, BundlesRepository } from "./repositories/index";
 
 // -- Monitoring --------------------------------------------------------------
 // serverLogger - Structured server-side logger.
