@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -38,6 +38,10 @@
     "./server": {
       "types": "./dist/server.d.ts",
       "import": "./dist/server.js"
+    },
+    "./jobs": {
+      "types": "./dist/jobs.d.ts",
+      "import": "./dist/jobs.js"
     },
     "./providers": {
       "types": "./dist/providers.d.ts",

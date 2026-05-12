@@ -17,6 +17,12 @@
 
 const FIREBASE_EXTERNAL_PACKAGES = [
   "firebase-admin",
+  // firebase-functions is only ever resolved inside the actual Firebase
+  // Functions runtime (appkit/functions). Next.js API routes in Vercel
+  // lambdas never call these binders, but the import chain reaches
+  // `_internal/server/jobs/runtime/adapters/firebase.js` via server-entry.
+  // Externalising avoids needing `firebase-functions` in consumer deps.
+  "firebase-functions",
   "@google-cloud/firestore",
   "@google-cloud/storage",
   "@google-cloud/common",

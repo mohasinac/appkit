@@ -248,59 +248,11 @@ export {
   STORES_FEATURED_LIMIT,
 } from "./_internal/server/features/stores/index";
 
-// S4–S5: Job handlers + runtime (dormant until consumer's functions/ wires them via bindToFirebase)
-export {
-  couponExpiryHandler,
-  offerExpiryHandler,
-  cartPruneHandler,
-  notificationPruneHandler,
-  dailyDataCleanupHandler,
-  cleanupRtdbEventsHandler,
-  auctionSettlementHandler,
-  autoPayoutEligibilityHandler,
-  countersReconcileHandler,
-  onOrderCreateHandler,
-  onOrderStatusChangeHandler,
-  onBidPlacedHandler,
-  onReviewWriteHandler,
-  promotionsHandler,
-  type PromotionsCallableResult,
-  mediaTmpCleanupHandler,
-  pendingOrderTimeoutHandler,
-  productStatsSyncHandler,
-  positionsReconcileHandler,
-  payoutBatchHandler,
-  weeklyPayoutEligibilityHandler,
-  onCategoryWriteHandler,
-  onProductWriteHandler,
-  onStoreWriteHandler,
-  adminAnalyticsHandler,
-  type AdminAnalyticsResult,
-  storeAnalyticsHandler,
-  type StoreAnalyticsInput,
-  type StoreAnalyticsResult,
-  listingProcessorHandler,
-  supportedListingCollections,
-  type ListingRequestBody,
-  type ListingResponseBody,
-  bindSchedule,
-  bindDocumentWritten,
-  bindDocumentCreated,
-  bindDocumentUpdated,
-  bindCallable,
-  bindHttps,
-  bindToFirebase,
-} from "./_internal/server/jobs/index";
-
-export type {
-  JobContext,
-  JobLogger,
-  JobHandlers,
-  ScheduleHandler,
-  FirestoreTriggerHandler,
-  FirestoreTriggerEvent,
-  CallableHandler,
-} from "./_internal/server/jobs/index";
+// S4–S5: Job handlers + Firebase binders moved to the `@mohasinac/appkit/jobs`
+// subpath (2.6.0, 2026-05-12). The chain reaches `firebase-functions/v2/*`
+// which is only available in the Firebase Functions runtime, not in Vercel
+// Next.js lambdas. Consumers that need them (i.e. `functions/src/index.ts`)
+// import directly from `@mohasinac/appkit/jobs`.
 
 // S6: client scaffolds (server-side type-aware import; runtime is "use client")
 export { AppShell, DashboardScaffold } from "./_internal/client/scaffolds/index";
