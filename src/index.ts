@@ -1886,6 +1886,8 @@ export { conversationsSeedData } from "./seed/index";
 export { sublistingCategoriesSeedData } from "./seed/index";
 // groupedListingsSeedData - Model for grouped listings seed data.
 export { groupedListingsSeedData } from "./seed/index";
+// bundlesSeedData - Tier SB sample bundles (homogeneous standard / pre-order).
+export { bundlesSeedData } from "./seed/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.
 export type { CouponDiscountType } from "./seed/index";
@@ -8822,6 +8824,17 @@ export {
 } from "./features/products/constants/product-features.constants";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
+// Tier SB bundles feature schemas (BundleDocument lives in features/bundles)
+export {
+  BUNDLES_COLLECTION,
+  BUNDLE_INDEXED_FIELDS,
+} from "./features/bundles/schemas";
+export type {
+  BundleDocument,
+  BundleItem,
+  BundleStatus,
+  BundleItemListingType,
+} from "./features/bundles/schemas";
 export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
 
 // Scam registry — seed data

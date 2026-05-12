@@ -181,6 +181,7 @@ export { historySeedData } from "./history-seed-data";
 export { conversationsSeedData } from "./conversations-seed-data";
 export { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
+export { bundlesSeedData } from "./bundles-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 
