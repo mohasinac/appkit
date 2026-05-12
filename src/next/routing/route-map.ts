@@ -25,6 +25,13 @@ export const DEFAULT_ROUTE_MAP = {
     AUCTION_DETAIL: (id: string) => `/auctions/${id}`,
     PRE_ORDERS: "/pre-orders",
     PRE_ORDER_DETAIL: (id: string) => `/pre-orders/${id}`,
+    // SB1-J — bundles + prize draws (additive, pages not yet built)
+    BUNDLES: "/bundles",
+    BUNDLE_DETAIL: (slug: string) => `/bundles/${slug}`,
+    PRIZE_DRAWS: "/prize-draws",
+    PRIZE_DRAW_DETAIL: (slug: string) => `/prize-draws/${slug}`,
+    SELLER_GUIDE_BUNDLES: "/seller-guide/bundles",
+    SELLER_GUIDE_PRIZE_DRAWS: "/seller-guide/prize-draws",
     SELLERS: "/sellers",
     SELLER_DETAIL: (id: string) => `/sellers/${id}`,
     STORES: "/stores",
@@ -146,6 +153,13 @@ export const DEFAULT_ROUTE_MAP = {
     FEATURES_NEW: "/store/features/new",
     FEATURES_EDIT: (id: string) => `/store/features/${id}/edit`,
     SLUG: "/store/slug",
+    // SB1-J — bundles + prize draws
+    BUNDLES: "/store/bundles",
+    BUNDLES_NEW: "/store/bundles/new",
+    BUNDLES_EDIT: (id: string) => `/store/bundles/${id}/edit`,
+    PRIZE_DRAWS: "/store/prize-draws",
+    PRIZE_DRAWS_NEW: "/store/prize-draws/new",
+    PRIZE_DRAWS_EDIT: (id: string) => `/store/prize-draws/${id}/edit`,
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
@@ -211,6 +225,11 @@ export const DEFAULT_ROUTE_MAP = {
     FEATURES: "/admin/features",
     FEATURES_NEW: "/admin/features/new",
     FEATURES_EDIT: (id: string) => `/admin/features/${id}/edit`,
+    // SB1-J — bundles + prize draws (admin moderation)
+    BUNDLES: "/admin/bundles",
+    BUNDLES_EDIT: (id: string) => `/admin/bundles/${id}/edit`,
+    PRIZE_DRAWS: "/admin/prize-draws",
+    PRIZE_DRAWS_EDIT: (id: string) => `/admin/prize-draws/${id}/edit`,
   },
   DEMO: {
     SEED: "/demo/seed",

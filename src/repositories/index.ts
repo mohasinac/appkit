@@ -166,3 +166,9 @@ export {
 } from "../features/products/repository/product-features.repository";
 export type { ProductFeatureListFilter } from "../features/products/repository/product-features.repository";
 export { loadProductFeaturesForStore } from "../features/products/repository/loadProductFeatures";
+
+// SB1-H — bundles
+export {
+  BundlesRepository,
+  bundlesRepository,
+} from "../features/bundles/repository";
