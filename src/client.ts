@@ -355,3 +355,11 @@ export {
   HISTORY_MAX,
   CART_MAX_ITEMS,
 } from "./constants/limits";
+
+// SB1-G canonical listing-type accessors (pure functions, client-safe).
+export {
+  normalizeListingType,
+  isAuctionListing,
+  isPreOrderListing,
+  isStandardListing,
+} from "./features/products/utils/listing-type";
