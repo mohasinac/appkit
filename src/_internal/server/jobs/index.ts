@@ -6,5 +6,7 @@ export {
   bindDocumentCreated,
   bindDocumentUpdated,
   bindCallable,
+  bindHttps,
   bindToFirebase,
 } from "./runtime/adapters/firebase";
+export type { BindHttpsOptions } from "./runtime/adapters/firebase";
