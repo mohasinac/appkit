@@ -5,7 +5,9 @@
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": ["**/*.css"],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -154,6 +156,7 @@
     "@types/react": ">=18",
     "@types/react-dom": ">=18",
     "firebase-admin": "^10.3.0",
+    "firebase-functions": ">=6.0.0",
     "next": ">=14",
     "next-intl": ">=3",
     "razorpay": ">=2.9.0",
@@ -164,6 +167,9 @@
   },
   "peerDependenciesMeta": {
     "firebase-admin": {
+      "optional": true
+    },
+    "firebase-functions": {
       "optional": true
     },
     "resend": {
@@ -184,6 +190,7 @@
     "eslint": "^9.37.0",
     "firebase": "^12.8.0",
     "firebase-admin": "^10.3.0",
+    "firebase-functions": "^6.6.0",
     "lucide-react": "^1.7.0",
     "next": "^15.0.0",
     "next-intl": "^4.9.1",

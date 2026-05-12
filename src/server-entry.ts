@@ -38,6 +38,7 @@ export {
 // S3: brands data layer + actions
 export {
   getBrandForDetail,
+  getBrandCategoryForDetail,
   createBrandAction,
   updateBrandAction,
   deleteBrandAction,
@@ -176,6 +177,64 @@ export {
   CATEGORIES_MENU_LIMIT,
 } from "./_internal/server/features/categories/index";
 
+// S3: grouped listings data layer
+export {
+  getGroupedListingForDetail,
+  getGroupedListingWithItems,
+  listGroupedListings,
+  listFeaturedGroupedListings,
+  listSitemapGroupedListings,
+  GROUPED_LISTINGS_PAGE_SIZE,
+  GROUPED_LISTINGS_FEATURED_LIMIT,
+  GROUPED_LISTINGS_SITEMAP_LIMIT,
+  type GroupedListingWithItems,
+  type ListGroupedListingsParams,
+  type SitemapGroupedListing,
+} from "./_internal/server/features/grouped/index";
+
+// S3: bundles data layer (consumer alias over groupedListings)
+export {
+  getBundleForDetail,
+  getBundleWithItems,
+  listBundles,
+  listFeaturedBundles,
+  listSitemapBundles,
+  BUNDLES_PAGE_SIZE,
+  BUNDLES_FEATURED_LIMIT,
+  BUNDLES_SITEMAP_LIMIT,
+  type BundleWithItems,
+  type ListBundlesParams,
+  type SitemapBundle,
+} from "./_internal/server/features/bundles/index";
+
+// S4: checkout actions
+export {
+  createCheckoutOrderAction,
+  attachPaymentAction,
+  formatShippingAddress,
+  CHECKOUT_DEFAULT_COMMISSIONS,
+  CHECKOUT_PAYMENT_METHODS,
+  type CreateCheckoutOrderInput,
+  type CheckoutOrderResult,
+  type CheckoutPaymentMethod,
+} from "./_internal/server/features/checkout/index";
+
+// S4: payments actions
+export {
+  createPaymentIntentAction,
+  verifyPaymentSignatureAction,
+  resolvePaymentFee,
+  PAYMENTS_DEFAULT_RAZORPAY_FEE_PERCENT,
+  PAYMENTS_RECEIPT_PREFIX,
+  type CreatePaymentIntentInput,
+  type CreatePaymentIntentResult,
+  type VerifyPaymentSignatureInput,
+  type ResolvedPaymentFee,
+} from "./_internal/server/features/payments/index";
+
+// S3: sublisting categories data layer
+export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";
+
 // S3: stores data layer
 export {
   getStoreForDetail,
@@ -188,6 +247,41 @@ export {
   STORES_SITEMAP_LIMIT,
   STORES_FEATURED_LIMIT,
 } from "./_internal/server/features/stores/index";
+
+// S4–S5: Job handlers + runtime (dormant until consumer's functions/ wires them via bindToFirebase)
+export {
+  couponExpiryHandler,
+  offerExpiryHandler,
+  cartPruneHandler,
+  notificationPruneHandler,
+  dailyDataCleanupHandler,
+  cleanupRtdbEventsHandler,
+  auctionSettlementHandler,
+  autoPayoutEligibilityHandler,
+  countersReconcileHandler,
+  onOrderCreateHandler,
+  onOrderStatusChangeHandler,
+  onBidPlacedHandler,
+  onReviewWriteHandler,
+  promotionsHandler,
+  type PromotionsCallableResult,
+  bindSchedule,
+  bindDocumentWritten,
+  bindDocumentCreated,
+  bindDocumentUpdated,
+  bindCallable,
+  bindToFirebase,
+} from "./_internal/server/jobs/index";
+
+export type {
+  JobContext,
+  JobLogger,
+  JobHandlers,
+  ScheduleHandler,
+  FirestoreTriggerHandler,
+  FirestoreTriggerEvent,
+  CallableHandler,
+} from "./_internal/server/jobs/index";
 
 // Shared domain errors
 export {

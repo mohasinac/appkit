@@ -1,0 +1,2 @@
+export const PAYMENTS_DEFAULT_RAZORPAY_FEE_PERCENT = 5;
+export const PAYMENTS_RECEIPT_PREFIX = "rcpt_";

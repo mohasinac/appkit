@@ -1,4 +1,4 @@
-export { getBrandForDetail } from "./data";
+export { getBrandForDetail, getBrandCategoryForDetail } from "./data";
 export { assertBrandExists, assertBrandSlugUnique } from "./service";
 export { createBrandAction, updateBrandAction, deleteBrandAction, toggleBrandActiveAction } from "./actions";
 export {

@@ -5,15 +5,17 @@ import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
+import type { CategoryDocument } from "../schemas/firestore";
 
 export interface BrandDetailPageViewProps {
   slug: string;
+  initialBrand?: CategoryDocument | null;
 }
 
-export async function BrandDetailPageView({ slug }: BrandDetailPageViewProps) {
-  const brand = await categoriesRepository
+export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPageViewProps) {
+  const brand = (initialBrand ?? (await categoriesRepository
     .getCategoryBySlug(slug)
-    .catch(() => undefined) as CategoryItem | undefined;
+    .catch(() => undefined))) as CategoryItem | undefined;
 
   const brandName = brand?.name;
 
