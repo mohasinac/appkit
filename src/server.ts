@@ -1348,3 +1348,34 @@ export { fetchGoogleReviews } from "./features/homepage/lib/google-reviews-fetch
 export type { GoogleReview, GoogleReviewsResult } from "./features/homepage/lib/google-reviews-fetcher";
 export { GoogleReviewsSection } from "./features/homepage/components/GoogleReviewsSection";
 export type { GoogleReviewsSectionProps } from "./features/homepage/components/GoogleReviewsSection";
+
+// ---------------------------------------------------------------------------
+// SSR Rearchitecture (Arch-S1+) — request-scoped data layers + OG renderers.
+// Mirrors the exports in server-entry.ts so consumers can use the explicit
+// `@mohasinac/appkit/server` subpath (preferred for SSR route files).
+// ---------------------------------------------------------------------------
+
+// Data layers — each wrapped in React.cache for request-scoped dedup
+export { getProductForDetail, listSitemapProducts, type SitemapProduct } from "./_internal/server/features/products/index";
+export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
+export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
+export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";
+export { getBrandForDetail } from "./_internal/server/features/brands/index";
+export { getBlogPostForDetail } from "./_internal/server/features/blog/index";
+export { getEventForDetail } from "./_internal/server/features/events/index";
+export { getSublistingCategoryForDetail } from "./_internal/server/features/sublisting-categories/index";
+export { getCategoryForDetail, listRootCategories, listFeaturedCategories, listMenuCategories, getCategoryTree, listSitemapCategories } from "./_internal/server/features/categories/index";
+
+// OG image renderers — high-level (renderXOg) + low-level primitive (renderXOgImage)
+export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptions } from "./_internal/server/features/products/og";
+export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
+export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
+export { renderBrandOg, renderBrandOgImage, type BrandOgData } from "./_internal/server/features/brands/og";
+export { renderBlogOg, renderBlogOgImage, type BlogOgData } from "./_internal/server/features/blog/og";
+export { renderEventOg, renderEventOgImage, type EventOgData } from "./_internal/server/features/events/og";
+export { renderSublistingCategoryOg, renderSublistingCategoryOgImage, type SublistingCategoryOgData } from "./_internal/server/features/sublisting-categories/og";
+export { renderProfileOg, renderPrivateProfileOgImage, renderUserProfileOgImage, type UserProfileOgData } from "./_internal/server/features/profile/og";
+
+// Adapters
+export { orderDocumentToOrder } from "./_internal/server/features/orders/adapters";

@@ -8931,3 +8931,23 @@ export type { QuickFieldType, QuickFieldDef, QuickFormDrawerProps } from "./feat
 // [CLIENT] StepForm — multi-step wizard with step indicator, prev/next, localStorage persistence.
 export { StepForm, StepFormActions, StepIndicator } from "./features/shell/index";
 export type { StepDef, StepFormProps, StepFormActionsProps } from "./features/shell/index";
+
+// OG image renderers (server-side JSX, used with next/og ImageResponse)
+export { renderProductOgImage } from "./_internal/server/features/products/og";
+export type { ProductOgData } from "./_internal/server/features/products/og";
+export { renderAuctionOgImage } from "./_internal/server/features/auctions/og";
+export type { AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderPreOrderOgImage } from "./_internal/server/features/pre-orders/og";
+export type { PreOrderOgData } from "./_internal/server/features/pre-orders/og";
+export { renderStoreOgImage } from "./_internal/server/features/stores/og";
+export type { StoreOgData } from "./_internal/server/features/stores/og";
+export { renderBrandOgImage } from "./_internal/server/features/brands/og";
+export type { BrandOgData } from "./_internal/server/features/brands/og";
+export { renderBlogOgImage } from "./_internal/server/features/blog/og";
+export type { BlogOgData } from "./_internal/server/features/blog/og";
+export { renderEventOgImage } from "./_internal/server/features/events/og";
+export type { EventOgData } from "./_internal/server/features/events/og";
+export { renderSublistingCategoryOgImage } from "./_internal/server/features/sublisting-categories/og";
+export type { SublistingCategoryOgData } from "./_internal/server/features/sublisting-categories/og";
+export { renderPrivateProfileOgImage, renderUserProfileOgImage } from "./_internal/server/features/profile/og";
+export type { UserProfileOgData } from "./_internal/server/features/profile/og";

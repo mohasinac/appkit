@@ -6,3 +6,4 @@ export {
   BRANDS_FEATURED_LIMIT,
   BRAND_NAME_MAX_LENGTH,
 } from "../../../shared/features/brands/config";
+export { renderBrandOgImage, renderBrandOg, type BrandOgData } from "./og";

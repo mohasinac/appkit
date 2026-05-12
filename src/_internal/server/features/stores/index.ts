@@ -11,3 +11,4 @@ export {
   STORES_SITEMAP_LIMIT,
   STORES_FEATURED_LIMIT,
 } from "../../../shared/features/stores/config";
+export { renderStoreOgImage, renderStoreOg, type StoreOgData } from "./og";

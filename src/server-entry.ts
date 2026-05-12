@@ -92,7 +92,7 @@ export {
   CART_GUEST_STORAGE_KEY,
 } from "./_internal/server/features/cart/index";
 
-// S4: orders data + actions
+// S4: orders data + actions + adapters
 export {
   getOrderForDetail,
   getOrdersForBuyer,
@@ -102,6 +102,7 @@ export {
   requestReturnAction,
   updateOrderStatusAction,
   ORDERS_PAGE_SIZE,
+  orderDocumentToOrder,
 } from "./_internal/server/features/orders/index";
 
 // S4: promotions (coupons)
@@ -212,3 +213,19 @@ export {
   PLATFORM_LIMITS,
 } from "./_internal/shared/tokens/index";
 export type { Responsive, Breakpoint, SemanticColor } from "./_internal/shared/tokens/index";
+
+// OG image renderers — pure JSX, no next/og dependency; wrap with ImageResponse in consumer.
+// Two layers per feature:
+//   - renderXOg(doc, opts)  — high-level: takes the raw doc from the data layer, does field
+//                             mapping internally. Use this for ~5-line consumer shims.
+//   - renderXOgImage(data, siteName)  — low-level primitive: takes a pre-mapped data shape.
+//                             Use only when overriding the default field extraction.
+export { renderProductOg, renderProductOgImage, type ProductOgData, type OgOptions } from "./_internal/server/features/products/og";
+export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_internal/server/features/auctions/og";
+export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
+export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
+export { renderBrandOg, renderBrandOgImage, type BrandOgData } from "./_internal/server/features/brands/og";
+export { renderBlogOg, renderBlogOgImage, type BlogOgData } from "./_internal/server/features/blog/og";
+export { renderEventOg, renderEventOgImage, type EventOgData } from "./_internal/server/features/events/og";
+export { renderSublistingCategoryOg, renderSublistingCategoryOgImage, type SublistingCategoryOgData } from "./_internal/server/features/sublisting-categories/og";
+export { renderProfileOg, renderPrivateProfileOgImage, renderUserProfileOgImage, type UserProfileOgData } from "./_internal/server/features/profile/og";

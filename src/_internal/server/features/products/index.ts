@@ -21,3 +21,4 @@ export {
   setProductFeaturedAction,
 } from "./actions";
 export { PRODUCTS_PAGE_SIZE, PRODUCTS_FEATURED_LIMIT, PRODUCTS_RELATED_LIMIT, PRODUCTS_SITEMAP_LIMIT } from "../../../shared/features/products/config";
+export { renderProductOgImage, renderProductOg, type ProductOgData, type OgOptions } from "./og";

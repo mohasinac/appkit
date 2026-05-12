@@ -15,7 +15,7 @@ export async function createBlogPostAction(input: unknown) {
   return blogRepository.createWithId(parsed.data.slug, {
     ...(parsed.data as any),
     authorId: user.uid,
-    authorName: user.name ?? "LetItRip Team",
+    authorName: user.name ?? "Editorial Team",
     readTimeMinutes: readTime,
     views: 0,
     publishedAt: parsed.data.status === "published" ? new Date() : undefined,

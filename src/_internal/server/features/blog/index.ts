@@ -13,3 +13,4 @@ export {
   BLOG_RELATED_LIMIT,
   BLOG_SITEMAP_LIMIT,
 } from "../../../shared/features/blog/config";
+export { renderBlogOgImage, renderBlogOg, type BlogOgData } from "./og";
