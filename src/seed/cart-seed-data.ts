@@ -201,4 +201,169 @@ export const cartsSeedData: CartDocument[] = [
     createdAt: daysAgo(27),
     updatedAt: daysAgo(9),
   },
+
+  // ── P29 expansion (S17 2026-05-12) — 15 more carts via helper ───────────
+  ...mkCart("user-kavya-iyer", 6, [
+    {
+      productId: "product-pokemon-151-booster-box",
+      title: "Pokémon 151 Booster Box (36-pack)",
+      price: 1799900,
+      store: ["store-pokemon-palace", "Pokémon Palace"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-sneha-kumar", 12, [
+    {
+      productId: "product-hot-wheels-treasure-hunt-2024",
+      title: "Hot Wheels 2024 Treasure Hunt (Single)",
+      price: 49900,
+      store: ["store-diecast-depot", "Diecast Depot"],
+      qty: 2,
+    },
+    {
+      productId: "product-funko-pop-naruto-sage-mode",
+      title: "Funko Pop Naruto Sage Mode",
+      price: 129900,
+      store: ["store-tokyo-toys-india", "Tokyo Toys India"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-kartik-nair", 3, [
+    {
+      productId: "product-beyblade-x-bx18-leon-crest",
+      title: "Beyblade X BX-18 Leon Crest Booster",
+      price: 199900,
+      store: ["store-beyblade-arena", "Beyblade Arena"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-divya-menon", 8, [
+    {
+      productId: "preorder-pokemon-stellar-crown-etb",
+      title: "PRE-ORDER: Pokémon Stellar Crown ETB",
+      price: 599900,
+      store: ["store-pokemon-palace", "Pokémon Palace"],
+      qty: 1,
+      isPreOrder: true,
+    },
+  ]),
+  ...mkCart("user-ankit-gupta", 14, [
+    {
+      productId: "product-gundam-rg-nu-gundam",
+      title: "Bandai RG 1/144 Nu Gundam",
+      price: 449900,
+      store: ["store-gundam-galaxy", "Gundam Galaxy"],
+      qty: 1,
+    },
+    {
+      productId: "product-gunpla-action-base-clear",
+      title: "Gunpla Action Base Clear (Display Stand)",
+      price: 59900,
+      store: ["store-gundam-galaxy", "Gundam Galaxy"],
+      qty: 2,
+    },
+  ]),
+  ...mkCart("user-siddharth-rao", 5, [
+    {
+      productId: "product-shf-luffy-gear-5",
+      title: "S.H.Figuarts Luffy Gear 5",
+      price: 1199900,
+      store: ["store-tokyo-toys-india", "Tokyo Toys India"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-tanvi-desai", 2, [
+    {
+      productId: "product-yugioh-25th-quarter-century-tin",
+      title: "Yu-Gi-Oh! 25th Quarter Century Stampede Tin",
+      price: 599900,
+      store: ["store-cardgame-hub", "CardGame Hub"],
+      qty: 1,
+    },
+    {
+      productId: "product-yugioh-rarity-collection-pack",
+      title: "Yu-Gi-Oh! Rarity Collection Pack",
+      price: 119900,
+      store: ["store-cardgame-hub", "CardGame Hub"],
+      qty: 3,
+    },
+  ]),
+  ...mkCart("user-anjali-verma", 1, [
+    {
+      productId: "product-pokemon-charizard-ex-obsidian",
+      title: "Pokémon Charizard ex Obsidian Flames Hyper Rare",
+      price: 1499900,
+      store: ["store-cardgame-hub", "CardGame Hub"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-rohit-verma", 7, [
+    {
+      productId: "product-tomica-limited-vintage-skyline",
+      title: "Tomica Limited Vintage Nissan Skyline GT-R",
+      price: 349900,
+      store: ["store-vintage-vault", "Vintage Vault"],
+      qty: 1,
+    },
+  ]),
+  ...mkCart("user-pooja-sharma", 4, [
+    {
+      productId: "auction-pokemon-lugia-neo-genesis-psa9",
+      title: "Pokémon Neo Genesis Lugia #9 PSA 9 (AUCTION)",
+      price: 6999900,
+      store: ["store-pokemon-palace", "Pokémon Palace"],
+      qty: 1,
+      isAuction: true,
+    },
+  ]),
+  // Guest carts skipped — sessionId is a runtime-only optional field on the
+  // Zod input but not on the `CartDocument` interface used by the seed array.
+  // Guest cart behavior is exercised at runtime via localStorage merge tests.
 ];
+
+interface CartItemSpec {
+  productId: string;
+  title: string;
+  price: number;
+  store: [string, string];
+  qty: number;
+  isAuction?: boolean;
+  isPreOrder?: boolean;
+}
+
+/**
+ * Compact constructor for authenticated user carts. Each item gets a
+ * deterministic itemId derived from the cart id + product id so the seed
+ * is idempotent across re-runs.
+ */
+function mkCart(
+  userId: string,
+  ageDays: number,
+  items: CartItemSpec[],
+): CartDocument[] {
+  const created = daysAgo(ageDays);
+  return [
+    {
+      id: userId,
+      userId,
+      items: items.map((it) => ({
+        itemId: `cartitem-${userId.replace("user-", "")}-${it.productId.split("-").slice(-3).join("-")}`,
+        productId: it.productId,
+        productTitle: it.title,
+        productImage: `/media/${it.productId.startsWith("auction-") ? "auction" : it.productId.startsWith("preorder-") ? "preorder" : "product"}-image-${it.productId.replace(/^(auction|preorder|product)-/, "")}-1-20260101.jpg`,
+        price: it.price,
+        currency: _CURRENCY,
+        quantity: it.qty,
+        storeId: it.store[0],
+        storeName: it.store[1],
+        isAuction: it.isAuction ?? false,
+        isPreOrder: it.isPreOrder ?? false,
+        addedAt: created,
+        updatedAt: created,
+      })),
+      createdAt: created,
+      updatedAt: created,
+    },
+  ];
+}
+

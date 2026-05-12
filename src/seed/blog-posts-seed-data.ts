@@ -327,4 +327,445 @@ export const blogPostsSeedData: Partial<BlogPostDocument>[] = [
     createdAt: daysAgo(6),
     updatedAt: daysAgo(4),
   },
+
+  // ── 9. Pokémon TCG SV Era Set Review ─────────────────────────────────────
+  {
+    id: "blog-pokemon-scarlet-violet-era-set-review",
+    slug: "blog-pokemon-scarlet-violet-era-set-review",
+    title: "Pokémon TCG Scarlet & Violet Era — Best Sets to Invest In",
+    excerpt:
+      "The SV block has produced some of the most printed Pokémon sets ever — but a few releases stand out as long-term investment plays. Here is our 18-month outlook.",
+    content: `<h2>SV Era — Context</h2>
+<p>Scarlet & Violet kicked off in March 2023 with a base set that printed at unprecedented volumes. The era has seen 9 main sets so far, plus special expansions and Pokémon Center exclusives.</p>
+<h2>Sets Worth Holding Sealed</h2>
+<p><strong>Paldea Evolved</strong> — Iono Special Illustration Rare drove secondary prices on character art chases. Booster boxes still trade near MSRP. Long-term sealed potential: moderate.</p>
+<p><strong>151</strong> — The nostalgia-driven Kanto reprint set is the strongest SV-era performer. Booster boxes have appreciated 40% since release. Hold sealed.</p>
+<p><strong>Shrouded Fable</strong> — Pecharunt mini-set with strong art rares. Limited print compared to mainline sets. Speculative hold.</p>
+<h2>Cards to Watch in Singles</h2>
+<ol>
+<li>Iono SIR (Paldea Evolved) — character art chase, female trainer demand.</li>
+<li>Charizard ex Obsidian Flames Hyper Rare — flagship card of the era.</li>
+<li>Mew ex 151 — nostalgia chase, low alt-art print run.</li>
+<li>Pikachu ex Surging Sparks — Special Illustration Rare with strong eye-appeal.</li>
+</ol>
+<p>Buy what you like, hold long-term, and never YOLO an entire investment thesis on one set.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["pokemon", "tcg", "investment", "sv-era", "set-review"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(50),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 6,
+    views: 3210,
+    metaTitle: "Pokémon SV Era Set Review — Best Sets to Invest | LetItRip",
+    metaDescription:
+      "Detailed review of Scarlet & Violet Pokémon TCG sets — which to hold sealed, which singles to chase, and 18-month outlook.",
+    createdAt: daysAgo(52),
+    updatedAt: daysAgo(50),
+  },
+
+  // ── 10. Hot Wheels Treasure Hunt Pulls Strategy ──────────────────────────
+  {
+    id: "blog-hot-wheels-treasure-hunt-pulls-strategy",
+    slug: "blog-hot-wheels-treasure-hunt-pulls-strategy",
+    title: "Hot Wheels Treasure Hunt Pulls — Maximising Your Hunt",
+    excerpt:
+      "Treasure Hunts and Super Treasure Hunts are the holy grail for HW collectors. Here is how to actually find them at retail in India.",
+    content: `<h2>TH vs STH</h2>
+<p>Treasure Hunts have a flame logo on the card and standard wheel-and-tyre combo. Super Treasure Hunts have Real Riders rubber tyres, Spectraflame paint, and a TH logo hidden inside the artwork. STH cards trade 5–20× retail; TH cards 2–4×.</p>
+<h2>Case-Hit Ratios</h2>
+<p>An A/B/C/D case mix has roughly 1 STH per 72 cars and 1 TH per 72 cars. That means a single case yields one of each. Knowing the case codes printed on the cardback (J24, K24, L24, etc.) is what separates hunters from random shoppers.</p>
+<h2>Where to Hunt in India</h2>
+<ol>
+<li><strong>Hamleys, Reliance Smart, and Hypercity</strong> — restock Wednesdays in metro cities.</li>
+<li><strong>Mall toy stores</strong> — Crossword, Funskool boutiques — restock weekly.</li>
+<li><strong>Toy section in Big Bazaar / Star Bazaar</strong> — sometimes carries STH overlooked.</li>
+<li><strong>Online: Flipkart, Amazon</strong> — pricing inflated; better for verified STH.</li>
+</ol>
+<h2>Identifying STH at a Glance</h2>
+<p>Flip the car and look at the wheels. Real Riders (rubber, separate wheel + tyre piece) = STH. Standard 5-spoke or HW basic wheels = regular release. The Spectraflame paint flashes blue/green/purple under store fluorescent light. Practice in front of a mirror with a known STH so your eye gets calibrated.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["hot-wheels", "treasure-hunt", "super-th", "hunting", "diecast"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(45),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 5,
+    views: 2890,
+    metaTitle: "Hot Wheels Treasure Hunt Hunting Strategy India | LetItRip",
+    metaDescription:
+      "How to find Hot Wheels Treasure Hunts and Super Treasure Hunts at retail in India — case-hit ratios, restock days, and identification tips.",
+    createdAt: daysAgo(47),
+    updatedAt: daysAgo(45),
+  },
+
+  // ── 11. Selling Tips for First-Time Sellers ──────────────────────────────
+  {
+    id: "blog-first-time-seller-tips-photography-shipping",
+    slug: "blog-first-time-seller-tips-photography-shipping",
+    title: "First-Time Seller's Guide — Photography, Pricing, and Shipping",
+    excerpt:
+      "About to list your first collectibles on LetItRip? This guide covers the three biggest mistakes new sellers make and how to avoid them.",
+    content: `<h2>Photography</h2>
+<p>Bad photos lose 70% of potential buyers in the first three seconds. Use natural light from a north-facing window. Shoot the front, back, and any defects honestly. Show the slab cert number for graded cards. Six photos minimum per listing.</p>
+<h2>Pricing</h2>
+<p>Check completed sales (not active listings) on three or more platforms for comps. Underprice slightly for first sales to build reviews — a 4.9-star seller commands a 10–15% premium across the board.</p>
+<h2>Shipping</h2>
+<p>Use rigid mailers for cards. Foam-lined boxes for figures and diecast. Always include tracking. India Post Speed Post is reliable for under ₹5,000 items; Blue Dart or DTDC Plus for higher value. Insure anything over ₹3,000.</p>
+<h2>Common Mistakes</h2>
+<ol>
+<li>Generic stock photos instead of actual item — buyers will dispute.</li>
+<li>No defect disclosure — leads to refunds and bad reviews.</li>
+<li>Ignoring offers and messages — kills repeat business.</li>
+<li>Soft-packing fragile items — broken in transit means losing both shipping and item cost.</li>
+</ol>
+<p>Start small, build a track record, then scale your store inventory.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["selling", "seller-tips", "photography", "shipping", "pricing"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(38),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 4,
+    views: 1640,
+    metaTitle: "First-Time Seller Guide — Photos, Pricing, Shipping | LetItRip",
+    metaDescription:
+      "Three biggest mistakes new collectibles sellers make and how to avoid them. Photography, pricing, and shipping basics.",
+    createdAt: daysAgo(40),
+    updatedAt: daysAgo(38),
+  },
+
+  // ── 12. Anime Figure Bootleg Detection ───────────────────────────────────
+  {
+    id: "blog-anime-figure-bootleg-detection-guide",
+    slug: "blog-anime-figure-bootleg-detection-guide",
+    title: "How to Spot a Bootleg Anime Figure",
+    excerpt:
+      "The Chinese bootleg figure market is sophisticated enough that even seasoned collectors get fooled. Here are the tells that separate authentic from KO.",
+    content: `<h2>Box Tells</h2>
+<p>Authentic Good Smile, Bandai, and Alter boxes have crisp four-colour printing with consistent registration. Bootleg boxes often show slight misalignment on dark colours, lower-resolution character art, and Japanese text that's clearly photocopied.</p>
+<h2>Sculpt Tells</h2>
+<p>Compare the production figure against the official prototype photos. Eye paint is the #1 bootleg giveaway — bootlegs have crooked, asymmetric, or smudged eyes. Hair flow lines that should be sharp will be soft or blobby on a bootleg.</p>
+<h2>Paint Tells</h2>
+<p>Look at gradient skin tones. Authentic figures use 3–4 layer airbrushed paint. Bootlegs are usually a single flat tone or have visible brush strokes. Hair highlights look painted-on, not airbrushed.</p>
+<h2>Base + Accessories</h2>
+<p>Authentic bases are heavy plastic with smooth molding. Bootleg bases warp and have visible mold-line seams. Accessories like swords or magic effects come in separate compartments in authentic packaging; bootlegs often dump them all together.</p>
+<h2>Where to Buy Safely</h2>
+<p>AmiAmi, HobbyLink Japan, BBTS, and Solaris Japan are authorised. On LetItRip we verify every figure seller's box photos and run cross-checks against official prototype images before approval. Avoid any "deal too good to be true" — bootleg pricing is usually 30–50% below MSRP.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["anime-figures", "bootleg-detection", "authentication", "buying-guide"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(32),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 6,
+    views: 2450,
+    metaTitle: "How to Spot a Bootleg Anime Figure | LetItRip",
+    metaDescription:
+      "Detailed guide to spotting bootleg anime figures — box, sculpt, paint, and base tells. Stay safe buying figures online.",
+    createdAt: daysAgo(34),
+    updatedAt: daysAgo(32),
+  },
+
+  // ── 13. Gunpla Build Tips for Beginners ──────────────────────────────────
+  {
+    id: "blog-gunpla-beginner-build-tips-essential-tools",
+    slug: "blog-gunpla-beginner-build-tips-essential-tools",
+    title: "Gunpla for Beginners — Essential Tools and First Build Tips",
+    excerpt:
+      "Starting your first Gunpla can be intimidating with 200+ parts. Here is exactly what tools you need and which kits to start with.",
+    content: `<h2>Tools You Actually Need</h2>
+<ol>
+<li><strong>God Hand SPN-120 nippers</strong> (₹3,500) — single-edge cutters for clean cuts. Worth every rupee.</li>
+<li><strong>Hobby knife with replacement blades</strong> — for cleaning nub marks.</li>
+<li><strong>Sanding sticks 400/600/800 grit</strong> — smooth nub remnants.</li>
+<li><strong>Gundam markers</strong> — panel lining without ink bleed.</li>
+<li><strong>Top coat spray</strong> — matte or gloss finish protects paint and decals.</li>
+</ol>
+<h2>Kits to Start With</h2>
+<p><strong>HG RX-78-2 Revive</strong> (₹2,500) — modern engineering, snap-fit, no glue. 90 minutes to build. Perfect first kit.</p>
+<p><strong>HG Barbatos</strong> (₹2,800) — Iron-Blooded Orphans series, popular silhouette, articulated frame.</p>
+<p><strong>RG Zaku II</strong> (₹4,200) — Real Grade engineering with internal frame and runners. Step up from HG.</p>
+<h2>Build Process</h2>
+<p>Read the instruction book front-to-back before cutting any plastic. Cut twice — first cut leaves a nub on the part, second cut trims close, then sand smooth. Test-fit major sections before final assembly. Panel-line in stages so the ink doesn't dry on your hands.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["gunpla", "gundam", "model-kits", "beginner", "tools"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(28),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 5,
+    views: 1980,
+    metaTitle: "Gunpla for Beginners — Tools and First Build | LetItRip",
+    metaDescription:
+      "Essential tools for your first Gunpla build, recommended starter kits, and a step-by-step process. Beginner-friendly guide.",
+    createdAt: daysAgo(30),
+    updatedAt: daysAgo(28),
+  },
+
+  // ── 14. Yu-Gi-Oh! Investment Cards ───────────────────────────────────────
+  {
+    id: "blog-yugioh-investment-cards-2026",
+    slug: "blog-yugioh-investment-cards-2026",
+    title: "Yu-Gi-Oh! Investment Cards to Watch in 2026",
+    excerpt:
+      "Yu-Gi-Oh! singles market has matured into a serious investment space. Five cards we expect to outperform over the next 12 months.",
+    content: `<h2>Why Yu-Gi-Oh! Now</h2>
+<p>The 25th Anniversary Quarter Century Secret Rares have shifted price floors permanently higher. PSA-graded vintage 1st Edition LOB has appreciated 280% over five years. The market is real.</p>
+<h2>Cards to Watch</h2>
+<ol>
+<li><strong>LOB-001 Blue-Eyes White Dragon 1st Edition PSA 9</strong> — flagship vintage card; appreciation track record is the strongest in the game.</li>
+<li><strong>LOB-000 Exodia the Forbidden One 1st Edition</strong> — pop-culture iconic, low PSA 9+ population.</li>
+<li><strong>Magician of Black Chaos LC01 25th Quarter Century</strong> — Yugi's anime ace, sub-200 PSA 10 globally.</li>
+<li><strong>Dark Magician Girl 1st Edition Magician's Force</strong> — strong female-character demand.</li>
+<li><strong>Tournament Black-Eyes prize cards</strong> — limited distribution, ultra-low supply.</li>
+</ol>
+<p>Always buy graded slabs from PSA/BGS — Yu-Gi-Oh! has a higher bootleg/reprint rate than Pokémon.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["yugioh", "investment", "vintage", "psa", "1st-edition"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(22),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 4,
+    views: 1320,
+    metaTitle: "Yu-Gi-Oh! Investment Cards 2026 | LetItRip",
+    metaDescription:
+      "Five Yu-Gi-Oh! cards expected to outperform in 2026 — vintage LOB classics, 25th anniversary Quarter Century, tournament prize cards.",
+    createdAt: daysAgo(24),
+    updatedAt: daysAgo(22),
+  },
+
+  // ── 15. Funko Pop Vaulting Strategy ──────────────────────────────────────
+  {
+    id: "blog-funko-pop-vaulting-strategy-collectors",
+    slug: "blog-funko-pop-vaulting-strategy-collectors",
+    title: "Understanding Funko Pop Vaulting — Buy or Wait?",
+    excerpt:
+      "Funko 'vaults' over 100 pops per year — making yesterday's $10 figure tomorrow's $80 chase. Should you stockpile or play the secondary market?",
+    content: `<h2>What Vaulting Means</h2>
+<p>When Funko vaults a Pop, they stop production permanently. Existing units become the only supply. Demand-driven appreciation follows for 12–36 months until the market saturates with secondary listings.</p>
+<h2>Top Recent Vaultings</h2>
+<ol>
+<li>Stan Lee Glow Chase (vaulted 2023) — now ₹8,000 from ₹1,200 MSRP.</li>
+<li>Marvel Mech Strike Iron Man Translucent — vaulted 2024, tripled secondary.</li>
+<li>Demon Slayer Nezuko in Box (vaulted 2024) — anime category continues to outperform.</li>
+</ol>
+<h2>How to Play It</h2>
+<p><strong>Stockpile strategy:</strong> Buy 2–3 of any pop you genuinely like at MSRP. One for display, one sealed, one to sell when vaulted. Works long-term; ties up capital.</p>
+<p><strong>Secondary-market strategy:</strong> Wait 18–24 months after a vault is announced, then buy mint-in-box from established sellers. Pricing usually peaks around 24–30 months then plateaus.</p>
+<h2>Pop Protectors</h2>
+<p>Use UV-rated rigid acrylic protectors (₹250 each) — sun-faded box artwork can lose 50% of value. Storage in original outer cardboard helps.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["funko-pop", "vaulting", "investment", "secondary-market", "stan-lee"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(18),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 4,
+    views: 970,
+    metaTitle: "Funko Pop Vaulting Strategy — Buy or Wait | LetItRip",
+    metaDescription:
+      "How Funko vaulting drives secondary-market appreciation. Stockpile vs wait-and-buy strategies and recent vaulted hits.",
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(18),
+  },
+
+  // ── 16. Beyblade X Tournament Format ─────────────────────────────────────
+  {
+    id: "blog-beyblade-x-tournament-format-guide",
+    slug: "blog-beyblade-x-tournament-format-guide",
+    title: "Beyblade X Tournament Format — Sanctioned Rules Explained",
+    excerpt:
+      "Beyblade X tournaments use a different ruleset from Burst. Here is everything you need to know before entering your first sanctioned event.",
+    content: `<h2>Match Format</h2>
+<p>Best of 5 rounds. Each round awards 1 point for ring-out/burst, 2 points for extreme-finish (X-finish). First to 5 wins.</p>
+<h2>Deck Building</h2>
+<p>Each player brings a 3-Bey deck. Players choose 1 Bey before each round; opponent must choose simultaneously and reveal at the same time. No mid-match swaps.</p>
+<h2>Banned Parts</h2>
+<p>As of January 2026, Hells Hammer / Hells Reaper are banned in sanctioned play due to consistency exploits. Always check the WBO/Takara-Tomy official banned-parts list before competition.</p>
+<h2>Match Etiquette</h2>
+<p>Bow at start and end. Shake hands. No tampering with launchers or Beys during opponent's setup. Judges may inspect any Bey at any time.</p>
+<h2>India Tournament Calendar</h2>
+<p>Mumbai Open (Q1), Bangalore Beyblade League (Q2), Delhi WBO Regional (Q3), Hyderabad Championship (Q4). Prize support varies by region; usually merchandise + cash for top 4.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.NEWS,
+    tags: ["beyblade-x", "tournament", "rules", "competitive", "wbo"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(14),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 3,
+    views: 760,
+    metaTitle: "Beyblade X Tournament Format — Sanctioned Rules | LetItRip",
+    metaDescription:
+      "Complete Beyblade X tournament format guide — match rules, deck building, banned parts, and India calendar.",
+    createdAt: daysAgo(16),
+    updatedAt: daysAgo(14),
+  },
+
+  // ── 17. Hot Wheels RLC Membership Worth It? ──────────────────────────────
+  {
+    id: "blog-hot-wheels-rlc-membership-worth-it-2026",
+    slug: "blog-hot-wheels-rlc-membership-worth-it-2026",
+    title: "Is Hot Wheels Red Line Club Membership Worth It in 2026?",
+    excerpt:
+      "RLC membership costs $19.99/year and grants access to exclusive Spectraflame releases. Here is whether it actually pays off for an Indian collector.",
+    content: `<h2>What RLC Includes</h2>
+<p>Annual membership grants: limited-edition exclusive Hot Wheels release (Real Riders, Spectraflame paint, individually numbered), 4–6 RLC-only catalogue car releases, access to RLC convention pre-orders, and discount on Mattel Creations drops.</p>
+<h2>The Math for India</h2>
+<p>Membership: $19.99 (~₹1,700). Exclusive arrives via FedEx (~₹1,200 international shipping). Total landed cost: ~₹2,900. Secondary-market value of past 5 years' RLC exclusives: ₹3,500–₹6,000 each. Net positive even if you flip immediately.</p>
+<h2>Risks</h2>
+<p>Membership opens January 1, sells out within 4 hours. If you miss the window, no resale of memberships allowed. Some years' exclusives are duds — 2022 Datsun 510 underperformed. Quality control: 5% of exclusives ship damaged.</p>
+<h2>Should You Join?</h2>
+<p>Yes, if: you collect Spectraflame, you can be online 1 January 9 AM IST, and you have a reliable US shipping forwarder. No, if: you only collect mainline, you can't justify ₹3,000 entry, or you don't want to track membership renewal dates.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["hot-wheels", "rlc", "membership", "spectraflame", "exclusive"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(10),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 4,
+    views: 510,
+    metaTitle: "Hot Wheels RLC Membership Worth It 2026 | LetItRip",
+    metaDescription:
+      "Detailed cost-benefit analysis of Hot Wheels Red Line Club membership for Indian collectors in 2026.",
+    createdAt: daysAgo(12),
+    updatedAt: daysAgo(10),
+  },
+
+  // ── 18. Display & Storage for High-Value Collectibles ────────────────────
+  {
+    id: "blog-displaying-high-value-collectibles-tips",
+    slug: "blog-displaying-high-value-collectibles-tips",
+    title: "Displaying High-Value Collectibles — UV, Humidity, and Theft-Proofing",
+    excerpt:
+      "Investing in collectibles is one thing — protecting them is another. Three environmental threats and how to mitigate each.",
+    content: `<h2>UV Damage</h2>
+<p>Direct sunlight fades any printed cardboard, foil, or coloured plastic within months. Use UV-filtered acrylic display cases (₹2,000–₹8,000 depending on size). Keep display rooms east-facing or interior; avoid south-facing rooms in tropical India.</p>
+<h2>Humidity</h2>
+<p>India's monsoon humidity (60–85% RH) is a card collector's worst enemy. Cards warp, slab labels mildew, autograph signatures fade. Use silica gel packs in sealed display containers. Maintain 35–45% RH with a small dehumidifier in dedicated rooms (₹6,000–₹15,000).</p>
+<h2>Theft-Proofing</h2>
+<p>Don't post specific high-value items on public social media. If displaying at events, photograph items beforehand for insurance documentation. Home safe with bolt-down mount for ₹50k+ items; bank locker for ₹2L+ items. Renter's/homeowner's insurance with collectibles rider costs ~₹2,000/year and covers up to ₹5L in covered items.</p>
+<h2>Cleaning</h2>
+<p>Microfibre cloth only for figures. For cards in slabs, soft brush + can of compressed air. Never use solvents or sprays on direct paint. Dust acrylic cases monthly to prevent buildup that scratches when wiped.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["display", "storage", "uv-protection", "humidity", "insurance"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(5),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 5,
+    views: 380,
+    metaTitle: "Displaying High-Value Collectibles | LetItRip",
+    metaDescription:
+      "Protect your collectibles from UV, humidity, and theft. Display case, dehumidifier, and insurance recommendations for India.",
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(5),
+  },
+
+  // ── 19. Pre-Order Anatomy: Pokémon Sets ──────────────────────────────────
+  {
+    id: "blog-pre-order-anatomy-pokemon-tcg-sets",
+    slug: "blog-pre-order-anatomy-pokemon-tcg-sets",
+    title: "Pre-Order Anatomy — How Pokémon TCG Sets Get to India",
+    excerpt:
+      "Why do Pokémon pre-orders take 45–90 days from announcement to your hands? The supply chain explained.",
+    content: `<h2>Announcement → Production</h2>
+<p>Pokémon Company International announces a set 6 months before street date. Production at Toppan/DNP Japan begins 3 months out. Print quantities are decided based on distributor pre-orders.</p>
+<h2>Distribution → India</h2>
+<p>Sets ship via sea freight from Japan/USA to Mumbai/Chennai ports — typically 4–6 weeks. Customs clearance adds 1–2 weeks. Distributors then ship to retailers across India.</p>
+<h2>Why Pre-Orders Make Sense</h2>
+<p>Allocation. Premium sets (Crown Zenith, 151, Hidden Fates) are produced in capped quantities. Distributors fulfil pre-orders first; remaining stock is unpredictable. Pre-ordering at LetItRip locks your unit and your price (no street-price markup).</p>
+<h2>What Goes Wrong</h2>
+<p>Production delays (Charizard ex shortage 2023 added 6 weeks). Customs hold-ups during Diwali season. Currency fluctuation (USD spike means seller may revise price). All these are reasons we offer cancellable pre-orders with full deposit refund.</p>
+<h2>Tips</h2>
+<p>Pre-order from sellers with multi-year track record. Check fulfilment ETAs against announced street date — if a seller promises faster than the official street date, be suspicious. Pay deposits via Razorpay/UPI only; never advance the full amount.</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.GUIDES,
+    tags: ["pre-orders", "pokemon", "supply-chain", "distribution", "buying-guide"],
+    isFeatured: false,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(3),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 4,
+    views: 220,
+    metaTitle: "Pokémon TCG Pre-Order Anatomy — Supply Chain | LetItRip",
+    metaDescription:
+      "Why Pokémon TCG pre-orders take 45–90 days and how the supply chain works. Pre-ordering tips for Indian collectors.",
+    createdAt: daysAgo(4),
+    updatedAt: daysAgo(3),
+  },
+
+  // ── 20. LetItRip Marketplace Year in Review ──────────────────────────────
+  {
+    id: "blog-letitrip-year-in-review-2026",
+    slug: "blog-letitrip-year-in-review-2026",
+    title: "LetItRip Year in Review — Highlights from 2026 So Far",
+    excerpt:
+      "Our collectibles community has grown to 15,000+ active buyers and 50+ verified sellers. Here is what stood out in the first half of 2026.",
+    content: `<h2>Community Growth</h2>
+<p>Active monthly users: 15,200 (up from 4,800 in 2025). Verified sellers: 52. Average listings per day: 340.</p>
+<h2>Most-Searched Categories</h2>
+<ol>
+<li>Pokémon TCG singles (32% of searches)</li>
+<li>Hot Wheels mainline + STH (18%)</li>
+<li>Anime figures — S.H.Figuarts + Nendoroids (14%)</li>
+<li>Beyblade X (9%)</li>
+<li>Gunpla HG/RG (8%)</li>
+</ol>
+<h2>Auction Highlights</h2>
+<p>Biggest auction sale: 1st Edition Base Set Charizard PSA 9 — ₹2,99,999. Most bids: Hot Wheels Spectraflame Pink Camaro Redline — 14 bids.</p>
+<h2>Coming Soon</h2>
+<p>Bundle listings (Q3), Prize Draw system (Q4), Live Streaming for sellers (early 2027). Stay tuned to our blog for the roadmap.</p>
+<h2>Thank You</h2>
+<p>To every seller, buyer, and lurker — thank you for trusting LetItRip with your collectibles journey. Keep ripping!</p>`,
+    coverImage:
+      "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&h=630&fit=crop",
+    category: BLOG_POST_FIELDS.CATEGORY_VALUES.NEWS,
+    tags: ["letitrip", "year-in-review", "community", "marketplace", "stats"],
+    isFeatured: true,
+    status: BLOG_POST_FIELDS.STATUS_VALUES.PUBLISHED,
+    publishedAt: daysAgo(1),
+    authorId: "user-admin-letitrip",
+    authorName: "LetItRip Admin",
+    readTimeMinutes: 3,
+    views: 1820,
+    metaTitle: "LetItRip Year in Review 2026 | LetItRip",
+    metaDescription:
+      "Highlights from the first half of 2026 on LetItRip — community stats, top categories, auction records, and coming features.",
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+  },
 ];

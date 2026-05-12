@@ -194,4 +194,79 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     createdAt: daysAgo(2),
     updatedAt: daysAgo(1),
   },
+
+  // ── P29 expansion (S17 2026-05-12) — 30 more notifications via helper ───
+  ...buildNotificationBatch([
+    { user: "user-priya-patel", type: "ORDER_PLACED", title: "Order confirmed — 2 items", message: "Your order for 2 items has been placed. We'll notify you when it ships.", read: true, hours: 72 },
+    { user: "user-priya-patel", type: "ORDER_CONFIRMED", title: "Payment confirmed", message: "Razorpay payment successful for ₹4,499. Your order is being prepared.", read: true, hours: 70 },
+    { user: "user-priya-patel", type: "ORDER_SHIPPED", title: "Order shipped via Blue Dart", message: "Tracking BD3458912 — estimated delivery in 3 days.", read: false, hours: 24 },
+    { user: "user-meera-nair", type: "ORDER_DELIVERED", title: "Delivered — Hot Wheels Premium Set", message: "Your Hot Wheels Premium 5-pack has been delivered. Please leave a review.", read: false, hours: 6 },
+    { user: "user-arjun-singh", type: "ORDER_CANCELLED", title: "Order cancelled — refund initiated", message: "Your order was cancelled. Refund of ₹1,299 will reflect in 5–7 business days.", read: true, hours: 96 },
+    { user: "user-rohit-joshi", type: "REFUND_INITIATED", title: "Refund processed", message: "₹999 has been refunded to your original payment method.", read: false, hours: 12 },
+    { user: "user-kavya-iyer", type: "BID_PLACED", title: "Bid placed on Funko Stan Lee Glow Chase", message: "Your bid of ₹7,499 is now the highest. Auction ends in 96 hours.", read: true, hours: 36 },
+    { user: "user-kartik-nair", type: "BID_OUTBID", title: "You've been outbid on Funko Stan Lee", message: "Someone placed ₹8,999. Bid again — auction ends in 48 hours.", read: false, hours: 8 },
+    { user: "user-naman-gupta", type: "BID_PLACED", title: "Bid placed on Spriggan Requiem", message: "Your bid of ₹6,999 is now the highest.", read: false, hours: 4 },
+    { user: "user-tanvi-desai", type: "BID_OUTBID", title: "Outbid on Spriggan Requiem", message: "₹8,999 is the current high bid. Auction ends in 5 days.", read: false, hours: 2 },
+    { user: "user-priya-singh", type: "BID_WON", title: "You won the Shadowless Blastoise BGS 8.5! 🏆", message: "Congratulations — final bid ₹39,999. Please pay within 48 hours.", read: true, hours: 336 },
+    { user: "user-amit-sharma", type: "BID_LOST", title: "Auction ended — outbid on Blastoise", message: "Shadowless Blastoise sold for ₹39,999. Better luck next time!", read: true, hours: 336 },
+    { user: "user-rohit-verma", type: "BID_WON", title: "You won the Goku Ultra Instinct! 🏆", message: "Final bid ₹14,999. Payment due within 48 hours.", read: false, hours: 72 },
+    { user: "user-divya-menon", type: "PRODUCT_AVAILABLE", title: "Pokémon Stellar Crown ETB back in stock!", message: "The Pokémon Stellar Crown Elite Trainer Box is available for pre-order again.", read: false, hours: 18 },
+    { user: "user-ankit-gupta", type: "PRODUCT_AVAILABLE", title: "Beyblade X BX-20 Phoenix Wing pre-orders open", message: "Pre-orders for Phoenix Wing BX-20 are now open. Ships in 60 days.", read: true, hours: 48 },
+    { user: "user-rahul-sharma", type: "REVIEW_APPROVED", title: "Your review was approved", message: "Your 5-star review on the PSA 9 Charizard has been published.", read: true, hours: 24 },
+    { user: "user-priya-patel", type: "REVIEW_REPLIED", title: "Seller replied to your review", message: "CardGame Hub responded to your review. Tap to read.", read: false, hours: 6 },
+    { user: "user-sneha-kumar", type: "REVIEW_APPROVED", title: "Review published", message: "Your review of the Hot Wheels Treasure Hunt set is now live.", read: false, hours: 3 },
+    { user: "user-kiran-reddy", type: "OFFER_RECEIVED", title: "Offer of ₹3,999 received on your Mafex Spider-Man", message: "Naman G has offered ₹3,999. Tap to accept, decline, or counter.", read: false, hours: 5 },
+    { user: "user-preeti-joshi", type: "OFFER_RESPONDED", title: "Your offer was accepted!", message: "Tokyo Toys India accepted your ₹2,499 offer. Pay now to confirm.", read: false, hours: 7 },
+    { user: "user-varun-bhat", type: "OFFER_EXPIRED", title: "Offer expired — no response from seller", message: "Your offer of ₹4,499 on the PG Unicorn pre-order has expired.", read: true, hours: 72 },
+    { user: "user-naman-gupta", type: "OFFER_COUNTER_ACCEPTED", title: "Seller's counter accepted", message: "You accepted the counter-offer of ₹3,200 on the S.H.Figuarts Broly. Order placed.", read: true, hours: 12 },
+    { user: "user-aryan-kapoor", type: "PROMOTION", title: "20% off all auctions this weekend", message: "Use code AUCTION25 for 25% off shipping on any auction this weekend.", read: false, hours: 14 },
+    { user: "user-nisha-reddy", type: "PROMOTION", title: "BIGBANG2026 — ₹1,000 off orders ₹10k+", message: "Limited offer. Once per user. Valid 90 days.", read: false, hours: 20 },
+    { user: "user-vikram-mehta", type: "SYSTEM", title: "Profile verification complete", message: "Your seller profile has been verified. You can now list auctions and pre-orders.", read: true, hours: 168 },
+    { user: "user-rohit-joshi", type: "SYSTEM", title: "Payout settings updated", message: "Next payout will reflect the new UPI VPA.", read: true, hours: 72 },
+    { user: "user-priya-singh", type: "WELCOME", title: "Welcome to LetItRip, Priya!", message: "Browse premium anime figures from Tokyo Toys India and 7 other verified sellers.", read: true, hours: 720 },
+    { user: "user-amit-sharma", type: "WELCOME", title: "Welcome to LetItRip Seller Tools", message: "Your store Gundam Galaxy is now live. List your first product to get started.", read: true, hours: 1440 },
+    { user: "user-anjali-verma", type: "WELCOME", title: "Welcome, Anjali!", message: "Use NEWUSER5 for ₹50 off your first order.", read: false, hours: 4 },
+    { user: "user-pooja-sharma", type: "PROMOTION", title: "Wishlist sale — items in your wishlist are 15% off", message: "3 items in your wishlist are now on sale. Tap to view.", read: false, hours: 9 },
+  ]),
 ];
+
+interface NotifSpec {
+  user: string;
+  type: keyof typeof NOTIFICATION_FIELDS.TYPE_VALUES;
+  title: string;
+  message: string;
+  read: boolean;
+  /** Hours ago the notification was created. */
+  hours: number;
+}
+
+/**
+ * Compact constructor for the P29 expansion. Keeps each row a single line of
+ * spec and lets the helper backfill `id`, `priority`, `readAt`, timestamps.
+ * High-priority types: bidding, OFFER_RECEIVED, ORDER_DELIVERED.
+ */
+function buildNotificationBatch(
+  specs: NotifSpec[],
+): Partial<NotificationDocument>[] {
+  return specs.map((s, i) => {
+    const created = hoursAgo(s.hours);
+    const high =
+      s.type.startsWith("BID_") ||
+      s.type === "ORDER_DELIVERED" ||
+      s.type === "OFFER_RECEIVED";
+    return {
+      id: `notif-batch-${s.user.replace("user-", "")}-${String(i + 1).padStart(3, "0")}`,
+      userId: s.user,
+      type: NOTIFICATION_FIELDS.TYPE_VALUES[s.type],
+      priority: high
+        ? NOTIFICATION_FIELDS.PRIORITY_VALUES.HIGH
+        : NOTIFICATION_FIELDS.PRIORITY_VALUES.NORMAL,
+      title: s.title,
+      message: s.message,
+      isRead: s.read,
+      readAt: s.read ? hoursAgo(Math.max(0, s.hours - 1)) : undefined,
+      createdAt: created,
+      updatedAt: created,
+    };
+  });
+}
