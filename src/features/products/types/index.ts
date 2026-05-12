@@ -18,7 +18,13 @@ export type ProductCondition =
   | "used"
   | "refurbished"
   | "broken";
-export type ListingType = "fixed" | "standard" | "auction" | "pre-order";
+export type ListingType =
+  | "fixed"
+  | "standard"
+  | "auction"
+  | "pre-order"
+  | "prize-draw"
+  | "bundle";
 
 export interface ProductImage {
   url: string;

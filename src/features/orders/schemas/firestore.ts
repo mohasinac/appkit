@@ -126,6 +126,30 @@ export interface OrderDocument {
   payoutStatus?: OrderPayoutStatus;
   payoutId?: string;
   offerId?: string;
+
+  // ── SB1-F (S19 2026-05-12) — prize-draw + bundle additive fields ─────────
+  /**
+   * Populated when the linked product is a prize-draw and the reveal has
+   * assigned a prize to this order. `wonAt` is the moment of assignment, not
+   * the moment the order was placed.
+   */
+  prizeWon?: {
+    itemNumber: number;
+    title: string;
+    images: string[];
+    wonAt: Date;
+  };
+  /** Deadline for the buyer to claim the won prize (typically 7 days). */
+  prizeRevealDeadline?: Date;
+  /** True once `prizeRevealDeadline` passes without a claim — auto-forfeit. */
+  prizeRevealExpired?: boolean;
+  /** Source product id when the order came from a prize-draw entry. */
+  prizeDrawProductId?: string;
+  /** True for prize-draw entries and bundle purchases that bypass refund. */
+  isNonRefundable?: boolean;
+  /** Set when the order came from a bundle — points back to `bundles/{id}`. */
+  bundleId?: string;
+
   createdAt: Date;
   updatedAt: Date;
 }

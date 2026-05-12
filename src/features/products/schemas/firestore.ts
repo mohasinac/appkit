@@ -119,8 +119,51 @@ export interface ProductDocument {
   groupParentSlug?: string;
   groupChildSlugs?: string[];
   groupTitle?: string;
+
+  // ── SB1 (S19 2026-05-12) — additive listingType + prize-draw + bundle wiring
+  /**
+   * Discriminator for listing kind. Optional during the additive migration:
+   * existing docs still rely on `isAuction` / `isPreOrder` booleans. New code
+   * paths (prize-draw, bundle) require this set. Migration to drop the booleans
+   * is its own session (SB1-D script + SB1-G repository refactor).
+   */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** Hard cap on units a single user may purchase (SB1-B; bundle/prize-draw). */
+  maxPerUser?: number;
+  /** Reverse pointers — bundle ids that include this product. */
+  partOfBundleIds?: string[];
+  partOfBundleTitles?: string[];
+
+  // ── Prize-draw fields (SB1-B). Only populated when listingType === "prize-draw".
+  prizeDrawItems?: PrizeDrawItem[];
+  pricePerEntry?: number;
+  prizeMaxEntries?: number;
+  prizeCurrentEntries?: number;
+  prizeRevealWindowStart?: Date;
+  prizeRevealWindowEnd?: Date;
+  prizeRevealStatus?: "pending" | "open" | "closed";
+  prizeRevealDeadlineDays?: number;
+  /** Public proof-of-fairness file (commit-reveal scheme). */
+  prizeGithubFileUrl?: string;
+
   createdAt: Date;
   updatedAt: Date;
+}
+
+/**
+ * Single prize within a prize-draw listing. A draw can have between 3 and 16
+ * prizes; each is revealed in `itemNumber` order during the reveal window.
+ * `isWon` flips to `true` when the draw assigns this prize to a participant.
+ */
+export interface PrizeDrawItem {
+  itemNumber: number;
+  title: string;
+  description?: string;
+  images: string[];
+  video?: { url: string; thumbnailUrl?: string };
+  condition: string;
+  estimatedValue?: number;
+  isWon: boolean;
 }
 
 /** Runtime-accessible product status values — use instead of bare string literals. */

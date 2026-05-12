@@ -73,9 +73,43 @@ export const productItemSchema = z.object({
       "broken",
     ])
     .optional(),
-  listingType: z.enum(["fixed", "standard", "auction", "pre-order"]).optional(),
+  listingType: z
+    .enum(["fixed", "standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .optional(),
   isAuction: z.boolean().optional(),
   isPreOrder: z.boolean().optional(),
+  // SB1-C — prize-draw + bundle additive fields. All optional during the
+  // additive migration; SB1-D script will backfill `listingType` from
+  // `isAuction`/`isPreOrder` before the boolean flags are removed.
+  maxPerUser: z.number().int().positive().optional(),
+  partOfBundleIds: z.array(z.string()).optional(),
+  partOfBundleTitles: z.array(z.string()).optional(),
+  prizeDrawItems: z
+    .array(
+      z.object({
+        itemNumber: z.number().int().positive(),
+        title: z.string().min(1),
+        description: z.string().optional(),
+        images: z.array(z.string()).min(1).max(2),
+        video: z
+          .object({ url: z.string(), thumbnailUrl: z.string().optional() })
+          .optional(),
+        condition: z.string(),
+        estimatedValue: z.number().optional(),
+        isWon: z.boolean(),
+      }),
+    )
+    .min(3)
+    .max(16)
+    .optional(),
+  pricePerEntry: z.number().positive().optional(),
+  prizeMaxEntries: z.number().int().positive().optional(),
+  prizeCurrentEntries: z.number().int().nonnegative().optional(),
+  prizeRevealWindowStart: z.union([z.string(), z.date()]).optional(),
+  prizeRevealWindowEnd: z.union([z.string(), z.date()]).optional(),
+  prizeRevealStatus: z.enum(["pending", "open", "closed"]).optional(),
+  prizeRevealDeadlineDays: z.number().int().positive().optional(),
+  prizeGithubFileUrl: z.string().url().optional(),
   inStock: z.boolean().optional(),
   stockCount: z.number().optional(),
   rating: z.number().optional(),
