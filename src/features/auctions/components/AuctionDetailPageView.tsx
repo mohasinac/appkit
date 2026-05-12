@@ -511,7 +511,9 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
           }}
           renderRelated={() => {
             const related: MarketplaceAuctionCardData[] = relatedDocs
-              .filter((r) => r.id !== product.id && r.isAuction !== false)
+              .filter(
+                (r) => r.id !== product.id && r.listingType === "auction",
+              )
               .slice(0, 4)
               .map((r) => ({
                 id: String(r.id ?? ""),
@@ -523,7 +525,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
                   : typeof r.mainImage === "string"
                     ? r.mainImage
                     : undefined,
-                isAuction: true,
+                listingType: "auction",
                 auctionEndDate: r.auctionEndDate as Date | undefined,
                 startingBid: typeof r.startingBid === "number" ? r.startingBid : undefined,
                 currentBid: typeof r.currentBid === "number" ? r.currentBid : undefined,

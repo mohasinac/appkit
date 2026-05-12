@@ -73,14 +73,11 @@ export const productItemSchema = z.object({
       "broken",
     ])
     .optional(),
+  // SB1-G Phase 4 — canonical discriminator (legacy `isAuction`/`isPreOrder` booleans removed).
   listingType: z
-    .enum(["fixed", "standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
     .optional(),
-  isAuction: z.boolean().optional(),
-  isPreOrder: z.boolean().optional(),
-  // SB1-C — prize-draw + bundle additive fields. All optional during the
-  // additive migration; SB1-D script will backfill `listingType` from
-  // `isAuction`/`isPreOrder` before the boolean flags are removed.
+  // SB1-C — prize-draw + bundle fields. All optional.
   maxPerUser: z.number().int().positive().optional(),
   partOfBundleIds: z.array(z.string()).optional(),
   partOfBundleTitles: z.array(z.string()).optional(),

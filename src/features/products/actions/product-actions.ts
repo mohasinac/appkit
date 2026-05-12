@@ -16,33 +16,13 @@ const PUBLISHED_CLAUSE = "status==published";
 const AUCTIONS_PUBLISHED = `listingType==auction,${PUBLISHED_CLAUSE}`;
 const PREORDERS_PUBLISHED = `listingType==pre-order,${PUBLISHED_CLAUSE}`;
 
-/** Map of the legacy boolean inputs → canonical `listingType` token. */
-function listingTypeClauseFromLegacy(
-  isAuction?: boolean,
-  isPreOrder?: boolean,
-): string | null {
-  if (isAuction === true) return "listingType==auction";
-  if (isPreOrder === true) return "listingType==pre-order";
-  if (isAuction === false && isPreOrder === false)
-    return "listingType==standard";
-  return null;
-}
-
 export interface ProductListActionParams {
   filters?: string;
   sorts?: string;
   page?: number;
   pageSize?: number;
-  /**
-   * Canonical discriminator. Pass this on new code paths. Mutually exclusive
-   * with the legacy boolean inputs below; if both are present, `listingType`
-   * wins.
-   */
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
-  /** @deprecated SB1-G — pass `listingType: "auction"` instead. */
-  isAuction?: boolean;
-  /** @deprecated SB1-G — pass `listingType: "pre-order"` instead. */
-  isPreOrder?: boolean;
   featured?: boolean;
   storeId?: string;
   categoriesIn?: string[];
@@ -59,20 +39,13 @@ export async function listProducts(
     page = 1,
     pageSize = 20,
     listingType,
-    isAuction,
-    isPreOrder,
     featured,
     storeId,
     categoriesIn,
   } = params;
 
   const compoundFilters: string[] = [];
-  if (listingType) {
-    compoundFilters.push(`listingType==${listingType}`);
-  } else {
-    const legacy = listingTypeClauseFromLegacy(isAuction, isPreOrder);
-    if (legacy) compoundFilters.push(legacy);
-  }
+  if (listingType) compoundFilters.push(`listingType==${listingType}`);
   if (featured === true) compoundFilters.push("featured==true");
   if (storeId) compoundFilters.push(`storeId==${storeId}`);
   if (filters) compoundFilters.push(filters);

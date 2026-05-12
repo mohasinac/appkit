@@ -27,16 +27,9 @@ export class SearchRepository {
     if (query.maxPrice !== undefined)
       filterParts.push(`price<=${String(query.maxPrice)}`);
     if (query.condition) filterParts.push(`condition==${query.condition}`);
-    // SB1-G — canonical discriminator. The Sieve `listingType` alias maps the
-    // public `preorder`/`product` tokens to the Firestore values.
+    // SB1-G Phase 4 — canonical listingType discriminator.
     if (query.listingType) {
       filterParts.push(`listingType==${query.listingType}`);
-    } else if (query.isAuction === true) {
-      filterParts.push("listingType==auction");
-    } else if (query.isPreOrder === true) {
-      filterParts.push("listingType==pre-order");
-    } else if (query.isAuction === false) {
-      filterParts.push("listingType==standard");
     }
     if (query.inStock === true) filterParts.push("availableQuantity>0");
     if (query.minRating !== undefined)

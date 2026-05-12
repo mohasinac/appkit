@@ -25,16 +25,8 @@ export interface WishlistProductData {
   images?: string[];
   status?: "draft" | "published" | "archived" | "sold" | "out_of_stock" | "discontinued";
   isFeatured?: boolean;
-  /**
-   * Canonical listing-kind discriminator (SB1-G). Consumers should branch on
-   * this; the boolean fallbacks below remain optional during the additive
-   * migration so older payloads still deserialise.
-   */
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
-  /** @deprecated SB1-G — read via `isAuctionListing(p)`. */
-  isAuction?: boolean;
-  /** @deprecated SB1-G — read via `isPreOrderListing(p)`. */
-  isPreOrder?: boolean;
 }
 
 /** WishlistItem enriched with inline product details returned by the wishlist GET endpoint. */

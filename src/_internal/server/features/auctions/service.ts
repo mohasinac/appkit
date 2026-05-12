@@ -1,5 +1,6 @@
 import { productRepository } from "../../../../repositories";
 import { bidRepository } from "../../../../repositories";
+import { isAuctionListing } from "../../../../features/products/utils/listing-type";
 import {
   AuctionNotFoundError,
   AuctionEndedError,
@@ -16,7 +17,7 @@ import type { ProductDocument } from "../../../shared/features/products/types";
 /** Assert an auction exists, is published, and is still active. Returns the product. */
 export async function assertAuctionActive(auctionId: string): Promise<ProductDocument> {
   const product = await productRepository.findByIdOrSlug(auctionId).catch(() => null);
-  if (!product || !product.isAuction) throw new AuctionNotFoundError(auctionId);
+  if (!product || !isAuctionListing(product)) throw new AuctionNotFoundError(auctionId);
 
   const endDate = product.auctionEndDate instanceof Date
     ? product.auctionEndDate

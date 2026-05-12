@@ -43,8 +43,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-pokemon-palace",
         storeName: "Pokémon Palace",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(9),
         updatedAt: daysAgo(9),
       },
@@ -58,8 +57,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-diecast-depot",
         storeName: "Diecast Depot",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(9),
         updatedAt: daysAgo(9),
       },
@@ -73,8 +71,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 2,
         storeId: "store-beyblade-arena",
         storeName: "Beyblade Arena",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(9),
         updatedAt: daysAgo(9),
       },
@@ -99,8 +96,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-letitrip-official",
         storeName: "LetItRip Official",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(10),
         updatedAt: daysAgo(10),
       },
@@ -125,8 +121,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-pokemon-palace",
         storeName: "Pokémon Palace",
-        isAuction: true,
-        isPreOrder: false,
+        listingType: "auction",
         addedAt: daysAgo(17),
         updatedAt: daysAgo(17),
       },
@@ -140,8 +135,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-cardgame-hub",
         storeName: "CardGame Hub",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(12),
         updatedAt: daysAgo(12),
       },
@@ -166,8 +160,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 3,
         storeId: "store-pokemon-palace",
         storeName: "Pokémon Palace",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(11),
         updatedAt: daysAgo(11),
       },
@@ -181,8 +174,7 @@ export const cartsSeedData: CartDocument[] = [
         quantity: 1,
         storeId: "store-diecast-depot",
         storeName: "Diecast Depot",
-        isAuction: false,
-        isPreOrder: false,
+        listingType: "standard",
         addedAt: daysAgo(11),
         updatedAt: daysAgo(11),
       },
@@ -244,7 +236,7 @@ export const cartsSeedData: CartDocument[] = [
       price: 599900,
       store: ["store-pokemon-palace", "Pokémon Palace"],
       qty: 1,
-      isPreOrder: true,
+      listingType: "pre-order",
     },
   ]),
   ...mkCart("user-ankit-gupta", 14, [
@@ -313,7 +305,7 @@ export const cartsSeedData: CartDocument[] = [
       price: 6999900,
       store: ["store-pokemon-palace", "Pokémon Palace"],
       qty: 1,
-      isAuction: true,
+      listingType: "auction",
     },
   ]),
   // Guest carts skipped — sessionId is a runtime-only optional field on the
@@ -327,14 +319,15 @@ interface CartItemSpec {
   price: number;
   store: [string, string];
   qty: number;
-  isAuction?: boolean;
-  isPreOrder?: boolean;
+  /** Canonical listing-kind snapshot (SB1-G Phase 4). Defaults to "standard". */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
 }
 
 /**
  * Compact constructor for authenticated user carts. Each item gets a
  * deterministic itemId derived from the cart id + product id so the seed
- * is idempotent across re-runs.
+ * is idempotent across re-runs. The id-prefix on `productId` infers a default
+ * listingType when the spec doesn't pass one (auction-* / preorder-* / *).
  */
 function mkCart(
   userId: string,
@@ -356,8 +349,13 @@ function mkCart(
         quantity: it.qty,
         storeId: it.store[0],
         storeName: it.store[1],
-        isAuction: it.isAuction ?? false,
-        isPreOrder: it.isPreOrder ?? false,
+        listingType:
+          it.listingType ??
+          (it.productId.startsWith("auction-")
+            ? "auction"
+            : it.productId.startsWith("preorder-")
+              ? "pre-order"
+              : "standard"),
         addedAt: created,
         updatedAt: created,
       })),

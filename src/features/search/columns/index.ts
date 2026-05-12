@@ -37,10 +37,10 @@ export const searchResultAdminColumns: TableColumn<SearchProductItem>[] = [
     render: (item) => renderBoolean(item.featured),
   },
   {
-    key: "isAuction",
-    header: "Auction",
+    key: "listingType",
+    header: "Type",
     sortable: false,
-    render: (item) => renderBoolean(item.isAuction),
+    render: (item) => item.listingType ?? "standard",
   },
 ];
 
@@ -50,7 +50,7 @@ export const searchResultAdminColumns: TableColumn<SearchProductItem>[] = [
  * @example
  * const cols = buildSearchResultColumns<MySearchItem>({
  *   extras: [{ key: "brandTag", header: "Brand", render: (s) => s.brandTag }],
- *   omit: ["isAuction"],
+ *   omit: ["listingType"],
  * });
  */
 export function buildSearchResultColumns<

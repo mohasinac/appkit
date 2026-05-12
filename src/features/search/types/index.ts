@@ -12,10 +12,8 @@ export interface SearchProductItem {
   images?: string[];
   status: string;
   featured?: boolean;
-  /** Canonical listing-kind discriminator (SB1-G). */
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
-  /** @deprecated SB1-G — read via `isAuctionListing(p)`. */
-  isAuction?: boolean;
   currentBid?: number;
   isPromoted?: boolean;
   slug: string;
@@ -43,12 +41,8 @@ export interface SearchQuery {
   minPrice?: number;
   maxPrice?: number;
   condition?: string;
-  /** Canonical listing-kind discriminator. Public URL param: `?listingType=auction|pre-order|standard`. */
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
-  /** @deprecated SB1-G — public URL still accepts `?isAuction=true` (translated server-side). */
-  isAuction?: boolean;
-  /** @deprecated SB1-G — public URL still accepts `?isPreOrder=true`. */
-  isPreOrder?: boolean;
   inStock?: boolean;
   minRating?: number;
   sort?: string;

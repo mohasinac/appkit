@@ -129,7 +129,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    isPreOrder: true,
+    listingType: "pre-order" as const,
     status: showClosed ? undefined : ("published" as const),
   };
 

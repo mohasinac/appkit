@@ -37,8 +37,8 @@ export interface ProductDetailInitial {
   featured: boolean;
   tags: string[];
   condition?: string;
-  isAuction?: boolean;
-  isPreOrder?: boolean;
+  /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped legacy booleans). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   auctionEndDate?: string;
   startingBid?: number;
   currentBid?: number;

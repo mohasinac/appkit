@@ -26,8 +26,8 @@ export type CouponCartItem = {
   storeId: string;
   price: number;
   quantity: number;
-  isPreOrder: boolean;
-  isAuction: boolean;
+  /** Canonical listing-kind snapshot (SB1-G Phase 4). */
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
 };
 
 export async function validateCoupon(

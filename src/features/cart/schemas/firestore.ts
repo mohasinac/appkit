@@ -18,8 +18,13 @@ export interface CartItemDocument {
   /** Store slug (= storeId = store.id) used for order grouping and store link (/stores/[storeId]) */
   storeId: string;
   storeName: string;
-  isAuction: boolean;
-  isPreOrder: boolean;
+  /**
+   * Snapshot of the product's listing-kind at add-to-cart time (SB1-G Phase 4).
+   * Drives order-grouping (auctions/pre-orders settle separately from standard
+   * carts) and cart-side UI badges. Replaces the legacy `isAuction`/`isPreOrder`
+   * pair on the cart item.
+   */
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   /** True when item was added from an accepted Make-an-Offer */
   isOffer?: boolean;
   offerId?: string;
@@ -76,8 +81,7 @@ export const CART_FIELDS = {
     QUANTITY: "quantity",
     STORE_ID: "storeId",
     STORE_NAME: "storeName",
-    IS_AUCTION: "isAuction",
-    IS_PRE_ORDER: "isPreOrder",
+    LISTING_TYPE: "listingType",
     ADDED_AT: "addedAt",
     UPDATED_AT: "updatedAt",
   },
@@ -102,8 +106,7 @@ export type AddToCartInput = {
   /** Store slug (= storeId = store.id) */
   storeId: string;
   storeName: string;
-  isAuction?: boolean;
-  isPreOrder?: boolean;
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;

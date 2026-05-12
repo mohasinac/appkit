@@ -514,13 +514,7 @@ export function ProductForm({
         label={t("formIsAuction")}
         checked={isAuctionListing(product)}
         onChange={(e) =>
-          // SB1-G — write both the legacy boolean (kept for transitional schema)
-          // AND the canonical listingType so new docs are queryable today.
-          update(
-            e.target.checked
-              ? { isAuction: true, isPreOrder: false, listingType: "auction" }
-              : { isAuction: false, listingType: "standard" },
-          )
+          update({ listingType: e.target.checked ? "auction" : "standard" })
         }
         disabled={isReadonly}
       />
@@ -650,11 +644,7 @@ export function ProductForm({
         label={t("formIsPreOrder")}
         checked={isPreOrderListing(product)}
         onChange={(e) =>
-          update(
-            e.target.checked
-              ? { isPreOrder: true, isAuction: false, listingType: "pre-order" }
-              : { isPreOrder: false, listingType: "standard" },
-          )
+          update({ listingType: e.target.checked ? "pre-order" : "standard" })
         }
         disabled={isReadonly}
       />

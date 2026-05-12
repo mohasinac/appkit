@@ -38,7 +38,7 @@ type ProductMode = "standard" | "auction" | "preorder";
 
 function modeFromProduct(product: ProductFormValue): ProductMode {
   const lt = normalizeListingType(
-    product as { listingType?: import("../../products/types").ListingType; isAuction?: boolean; isPreOrder?: boolean },
+    product as { listingType?: import("../../products/types").ListingType },
   );
   if (lt === "auction") return "auction";
   if (lt === "pre-order") return "preorder";
@@ -46,15 +46,12 @@ function modeFromProduct(product: ProductFormValue): ProductMode {
 }
 
 /**
- * SB1-G — applies the selected mode by writing BOTH the canonical
- * `listingType` AND the legacy boolean flags so the doc remains queryable
- * during the transitional schema period.
+ * SB1-G Phase 4 — applies the selected mode by writing the canonical
+ * `listingType` discriminator. Nothing else needs to be written for the mode flip.
  */
 function applyMode(product: ProductFormValue, mode: ProductMode): ProductFormValue {
   return {
     ...product,
-    isAuction: mode === "auction",
-    isPreOrder: mode === "preorder",
     listingType:
       mode === "auction"
         ? "auction"
@@ -117,11 +114,8 @@ async function loadBrandOptions(query: string, page: number) {
 const EMPTY_PRODUCT: ProductFormValue = {
   title: "",
   status: "draft",
-  // SB1-G — new products default to standard; both fields written for the
-  // transitional schema period.
+  // SB1-G Phase 4 — listingType is the only listing-kind field on the schema.
   listingType: "standard",
-  isAuction: false,
-  isPreOrder: false,
 };
 
 export function AdminProductEditorView({

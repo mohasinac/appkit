@@ -33,7 +33,8 @@ export const productInputSchema = z.object({
 export const productUpdateSchema = productInputSchema.partial();
 
 export const auctionInputSchema = productInputSchema.extend({
-  isAuction: z.literal(true),
+  // SB1-G — canonical discriminator. Locked to "auction" via literal.
+  listingType: z.literal("auction"),
   startingBid: priceSchema,
   reservePrice: priceSchema.optional(),
   buyNowPrice: priceSchema.optional(),
@@ -45,7 +46,8 @@ export const auctionInputSchema = productInputSchema.extend({
 });
 
 export const preOrderInputSchema = productInputSchema.extend({
-  isPreOrder: z.literal(true),
+  // SB1-G — canonical discriminator. Locked to "pre-order" via literal.
+  listingType: z.literal("pre-order"),
   preOrderDeliveryDate: z.string().datetime({ offset: true }),
   preOrderDepositPercent: z.number().min(0).max(100).optional(),
   preOrderMaxQuantity: z.number().int().min(1).optional(),

@@ -18,8 +18,14 @@ export type ProductCondition =
   | "used"
   | "refurbished"
   | "broken";
+/**
+ * Canonical listing-kind discriminator (SB1-G Phase 4).
+ *
+ * Set on every `ProductDocument` / `ProductItem` at creation. The Sieve adapter
+ * accepts legacy alias tokens (`preorder` → `pre-order`, `product` → `standard`)
+ * but stored values are always one of these five.
+ */
 export type ListingType =
-  | "fixed"
   | "standard"
   | "auction"
   | "pre-order"
@@ -61,9 +67,8 @@ export interface ProductItem {
   sellerAvatar?: string;
   status: ProductStatus;
   condition?: ProductCondition;
+  /** Canonical listing-kind discriminator (SB1-G Phase 4 — booleans removed). */
   listingType?: ListingType;
-  isAuction?: boolean;
-  isPreOrder?: boolean;
   sublistingCategoryId?: string;
   groupId?: string;
   isGroupParent?: boolean;
@@ -162,12 +167,8 @@ export interface ProductListParams {
   minPrice?: number;
   maxPrice?: number;
   inStock?: boolean;
-  /** Canonical discriminator (SB1-G). Prefer over the legacy boolean inputs. */
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: ListingType;
-  /** @deprecated SB1-G — pass `listingType: "auction"` instead. */
-  isAuction?: boolean;
-  /** @deprecated SB1-G — pass `listingType: "pre-order"` instead. */
-  isPreOrder?: boolean;
   storeId?: string;
   sort?: string;
   page?: number;

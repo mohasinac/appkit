@@ -96,7 +96,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    isPreOrder: true,
+    listingType: "pre-order" as const,
   };
 
   const { products: preOrders, total, totalPages, page, isLoading } = useProducts(params as any, { initialData });

@@ -2,7 +2,7 @@
  * Auctions Seed Data — Collectibles Edition
  * 6 auctions in all lifecycle states: active-ending-soon, active×2,
  * upcoming, ended (winner), ended (settled).
- * Stored as ProductDocument with isAuction: true.
+ * Stored as ProductDocument with listingType: "auction".
  * id === slug convention enforced throughout.
  * Prices in INR paise (₹1 = 100 paise).
  */
@@ -30,7 +30,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isAuction: true,
     auctionEndDate: hoursAhead(12),
     startingBid: 9999900,
     currentBid: 29999900,
@@ -104,7 +103,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "Konami",
     brandSlug: "brand-konami",
-    isAuction: true,
     auctionEndDate: hoursAhead(48),
     startingBid: 1499900,
     currentBid: 4999900,
@@ -178,7 +176,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Hot Wheels",
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
-    isAuction: true,
     auctionEndDate: hoursAhead(6),
     startingBid: 499900,
     currentBid: 1299900,
@@ -253,7 +250,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Metal Fight Classic",
     brand: "Beyblade",
     brandSlug: "brand-beyblade",
-    isAuction: true,
     auctionEndDate: daysAhead(7),
     startingBid: 299900,
     currentBid: 0,
@@ -325,7 +321,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Gunpla",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isAuction: true,
     auctionEndDate: daysAgo(7),
     startingBid: 999900,
     currentBid: 2999900,
@@ -393,7 +388,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isAuction: true,
     auctionEndDate: hoursAhead(24),
     startingBid: 9999900,
     currentBid: 14999900,
@@ -454,7 +448,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "Konami",
     brandSlug: "brand-konami",
-    isAuction: true,
     auctionEndDate: hoursAhead(72),
     startingBid: 2999900,
     currentBid: 7999900,
@@ -515,7 +508,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Hot Wheels",
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
-    isAuction: true,
     auctionEndDate: hoursAhead(36),
     startingBid: 899900,
     currentBid: 1799900,
@@ -577,7 +569,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Gunpla",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isAuction: true,
     auctionEndDate: daysAhead(12),
     startingBid: 999900,
     currentBid: 0,
@@ -636,7 +627,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Nendoroids & Chibis",
     brand: "Good Smile Company",
     brandSlug: "brand-good-smile",
-    isAuction: true,
     auctionEndDate: hoursAhead(4),
     startingBid: 499900,
     currentBid: 1199900,
@@ -697,7 +687,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage Figures",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isAuction: true,
     auctionEndDate: daysAgo(30),
     startingBid: 299900,
     currentBid: 799900,
@@ -767,7 +756,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isAuction: true,
     auctionEndDate: hoursAhead(60),
     startingBid: 3499900,
     currentBid: 6999900,
@@ -826,7 +814,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Funko Pops",
     brand: "Funko",
     brandSlug: "brand-funko",
-    isAuction: true,
     auctionEndDate: hoursAhead(96),
     startingBid: 599900,
     currentBid: 1099900,
@@ -884,7 +871,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Beyblade Burst",
     brand: "Beyblade",
     brandSlug: "brand-beyblade",
-    isAuction: true,
     auctionEndDate: daysAhead(5),
     startingBid: 399900,
     currentBid: 899900,
@@ -943,7 +929,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isAuction: true,
     auctionEndDate: daysAhead(11),
     startingBid: 49999900,
     currentBid: 0,
@@ -1000,7 +985,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Hot Wheels",
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
-    isAuction: true,
     auctionEndDate: daysAhead(17),
     startingBid: 1499900,
     currentBid: 0,
@@ -1059,7 +1043,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Anime Figures",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isAuction: true,
     auctionEndDate: daysAgo(3),
     startingBid: 599900,
     currentBid: 1499900,
@@ -1113,7 +1096,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isAuction: true,
     auctionEndDate: daysAgo(14),
     startingBid: 1499900,
     currentBid: 3999900,
@@ -1167,7 +1149,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Tomica",
     brand: "Takara Tomy",
     brandSlug: "brand-takara-tomy",
-    isAuction: true,
     auctionEndDate: daysAgo(10),
     startingBid: 199900,
     currentBid: 499900,
@@ -1221,7 +1202,6 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     categoryName: "Vintage TCG",
     brand: "Konami",
     brandSlug: "brand-konami",
-    isAuction: true,
     auctionEndDate: daysAgo(5),
     startingBid: 999900,
     currentBid: 0,
@@ -1264,9 +1244,9 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
 ];
 
 /**
- * SB1-D backfill (S21 2026-05-12): every auction document is stamped with
- * `listingType: "auction"`. Keeps the existing `isAuction: true` flag in place
- * for backwards-compat until the boolean is removed from `ProductDocument`.
+ * SB1-G Phase 4 (S22 2026-05-12): every auction document is stamped with
+ * `listingType: "auction"`. The legacy `isAuction` boolean has been removed
+ * from `ProductDocument`; this map-wrapper is the canonical write site.
  */
 export const productsAuctionsSeedData: Partial<ProductDocument>[] =
   _rawProductsAuctionsSeedData.map((p) => ({

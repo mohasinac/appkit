@@ -126,7 +126,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     sort: table.get("sort") || "auctionEndDate",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    isAuction: true,
+    listingType: "auction" as const,
   };
 
   const { products: auctions, totalPages, page, isLoading } = useProducts(

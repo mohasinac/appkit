@@ -32,8 +32,6 @@ function toProductItem(p: ProductDocument): ProductItem {
     status: p.status,
     condition: p.condition as ProductItem["condition"],
     listingType: p.listingType,
-    isAuction: p.isAuction,
-    isPreOrder: p.isPreOrder,
     isOnSale: p.isOnSale,
     isSold: p.isSold,
     isPromoted: p.isPromoted,

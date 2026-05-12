@@ -21,11 +21,13 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
 
   const leafCounts: Record<string, { productIds: string[]; auctionIds: string[] }> = {};
   for (const doc of snap.docs) {
-    const data = doc.data() as { category?: string; isAuction?: boolean };
+    // SB1-G — split off canonical listingType. Auctions go into auctionIds;
+    // everything else (standard, pre-order, prize-draw, bundle) into productIds.
+    const data = doc.data() as { category?: string; listingType?: string };
     const catId = data.category;
     if (!catId) continue;
     if (!leafCounts[catId]) leafCounts[catId] = { productIds: [], auctionIds: [] };
-    if (data.isAuction) leafCounts[catId].auctionIds.push(doc.id);
+    if (data.listingType === "auction") leafCounts[catId].auctionIds.push(doc.id);
     else leafCounts[catId].productIds.push(doc.id);
   }
 

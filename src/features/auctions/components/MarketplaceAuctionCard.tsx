@@ -30,10 +30,8 @@ export interface MarketplaceAuctionCardData {
   mainImage?: string;
   images?: string[];
   video?: { url?: string; thumbnailUrl?: string };
-  /** Canonical discriminator (SB1-G). Matches the full ListingType union. */
-  listingType?: "fixed" | "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
-  /** @deprecated SB1-G — derive via `isAuctionListing(card)`. */
-  isAuction?: boolean;
+  /** Canonical discriminator (SB1-G Phase 4). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   auctionEndDate?: string | Date;
   startingBid?: number;
   currentBid?: number;

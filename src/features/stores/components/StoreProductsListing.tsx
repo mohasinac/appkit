@@ -103,7 +103,7 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    isAuction: false,
+    listingType: "standard" as const,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(params as any, { initialData });

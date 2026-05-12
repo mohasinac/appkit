@@ -1,4 +1,5 @@
 import { productRepository } from "../../../../repositories";
+import { isPreOrderListing } from "../../../../features/products/utils/listing-type";
 import {
   PreOrderNotFoundError,
   PreOrderSoldOutError,
@@ -9,7 +10,7 @@ import type { ProductDocument } from "../../../shared/features/products/types";
 /** Assert a pre-order exists, is published, and has remaining capacity. */
 export async function assertPreOrderAvailable(preOrderId: string, requestedQty = 1): Promise<ProductDocument> {
   const product = await productRepository.findByIdOrSlug(preOrderId).catch(() => null);
-  if (!product || !product.isPreOrder) throw new PreOrderNotFoundError(preOrderId);
+  if (!product || !isPreOrderListing(product)) throw new PreOrderNotFoundError(preOrderId);
   if (product.status !== "published") throw new PreOrderNotOpenError(product.status);
 
   const maxQty = product.preOrderMaxQuantity ?? Infinity;

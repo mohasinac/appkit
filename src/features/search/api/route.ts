@@ -47,16 +47,24 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    const isAuctionRaw = param(url, "isAuction");
-    const isAuction =
-      isAuctionRaw === "true"
-        ? true
-        : isAuctionRaw === "false"
-          ? false
-          : undefined;
-
-    const isPreOrderRaw = param(url, "isPreOrder");
-    const isPreOrder = isPreOrderRaw === "true" ? true : undefined;
+    // SB1-G Phase 4 — canonical `?listingType=auction|pre-order|standard|prize-draw|bundle`.
+    const listingTypeRaw = param(url, "listingType");
+    const VALID_LISTING_TYPES = new Set([
+      "standard",
+      "auction",
+      "pre-order",
+      "prize-draw",
+      "bundle",
+    ] as const);
+    const listingType =
+      listingTypeRaw && VALID_LISTING_TYPES.has(listingTypeRaw as "standard")
+        ? (listingTypeRaw as
+            | "standard"
+            | "auction"
+            | "pre-order"
+            | "prize-draw"
+            | "bundle")
+        : undefined;
 
     const inStockRaw = param(url, "inStock");
     const inStock = inStockRaw === "true" ? true : undefined;
@@ -77,8 +85,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       minPrice: minPriceRaw > 0 ? minPriceRaw : undefined,
       maxPrice: maxPriceRaw > 0 ? maxPriceRaw : undefined,
       condition: param(url, "condition") ?? undefined,
-      isAuction,
-      isPreOrder,
+      listingType,
       inStock,
       minRating: numParam(url, "minRating", 0) || undefined,
       sort: param(url, "sort") ?? "-createdAt",

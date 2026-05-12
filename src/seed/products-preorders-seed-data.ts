@@ -1,7 +1,7 @@
 ﻿/**
  * Pre-Orders Seed Data — Collectibles Edition
  * 5 pre-orders in all states: active×3, upcoming×1, soldOut×1.
- * Stored as ProductDocument with isPreOrder: true.
+ * Stored as ProductDocument with listingType: "pre-order".
  * id === slug convention enforced throughout.
  * Prices in INR paise (₹1 = 100 paise).
  */
@@ -25,7 +25,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Beyblade X",
     brand: "Beyblade",
     brandSlug: "brand-beyblade",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(45),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 149900,
@@ -94,7 +93,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Sealed Product",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(60),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 299900,
@@ -164,7 +162,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Poseable Action Figures",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(30),
     preOrderDepositPercent: 50,
     preOrderDepositAmount: 349950,
@@ -234,7 +231,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Gunpla",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(134),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 449970,
@@ -304,7 +300,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Pokémon TCG",
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(30),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 134970,
@@ -362,7 +357,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Beyblade X",
     brand: "Beyblade",
     brandSlug: "brand-beyblade",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(60),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 179970,
@@ -420,7 +414,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Gunpla",
     brand: "Bandai",
     brandSlug: "brand-bandai",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(90),
     preOrderDepositPercent: 30,
     preOrderDepositAmount: 119970,
@@ -478,7 +471,6 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     categoryName: "Hot Wheels",
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
-    isPreOrder: true,
     preOrderDeliveryDate: daysAhead(180),
     preOrderDepositPercent: 100,
     preOrderDepositAmount: 649900,
@@ -536,9 +528,9 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
 ];
 
 /**
- * SB1-D backfill (S21 2026-05-12): every pre-order document is stamped with
- * `listingType: "pre-order"`. Keeps `isPreOrder: true` in place until the
- * boolean is removed from `ProductDocument`.
+ * SB1-G Phase 4 (S22 2026-05-12): every pre-order document is stamped with
+ * `listingType: "pre-order"`. The legacy `isPreOrder` boolean has been
+ * removed from `ProductDocument`; this map-wrapper is the canonical write site.
  */
 export const productsPreOrdersSeedData: Partial<ProductDocument>[] =
   _rawProductsPreOrdersSeedData.map((p) => ({

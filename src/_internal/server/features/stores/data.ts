@@ -27,7 +27,7 @@ export const listStoreProductsInitial = cache(
   ): Promise<{ items: ProductDocument[]; total: number }> => {
     const result = await productRepository
       .list({
-        filters: `storeId==${storeId},status==published,isAuction==false,isPreOrder==false`,
+        filters: `storeId==${storeId},status==published,listingType==standard`,
         sorts: "-createdAt",
         page,
         pageSize: STORES_PRODUCTS_PAGE_SIZE,
@@ -47,7 +47,7 @@ export const listStoreAuctionsInitial = cache(
   ): Promise<{ items: ProductDocument[]; total: number }> => {
     const result = await productRepository
       .list({
-        filters: `storeId==${storeId},status==published,isAuction==true`,
+        filters: `storeId==${storeId},status==published,listingType==auction`,
         sorts: "-createdAt",
         page,
         pageSize: STORES_PRODUCTS_PAGE_SIZE,
@@ -67,7 +67,7 @@ export const listStorePreOrdersInitial = cache(
   ): Promise<{ items: ProductDocument[]; total: number }> => {
     const result = await productRepository
       .list({
-        filters: `storeId==${storeId},status==published,isPreOrder==true`,
+        filters: `storeId==${storeId},status==published,listingType==pre-order`,
         sorts: "-createdAt",
         page,
         pageSize: STORES_PRODUCTS_PAGE_SIZE,

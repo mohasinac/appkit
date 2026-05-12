@@ -8,6 +8,7 @@
 import { serverLogger } from "../../../monitoring";
 import { cartRepository } from "../repository/cart.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { normalizeListingType } from "../../products/utils/listing-type";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import type {
   AddToCartInput,
@@ -64,7 +65,7 @@ export async function mergeGuestCart(
       quantity: safeQty,
       storeId: product.storeId,
       storeName: product.storeName ?? "",
-      isAuction: product.isAuction ?? false,
+      listingType: normalizeListingType(product),
     });
   }
 

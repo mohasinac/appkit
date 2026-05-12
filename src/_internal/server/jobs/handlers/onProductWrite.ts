@@ -30,8 +30,10 @@ export const onProductWriteHandler: FirestoreTriggerHandler<ProductDoc, ProductD
     ((before?.storeId as string | undefined) || (before?.sellerId as string | undefined)) ?? null;
   const afterStoreId =
     ((after?.storeId as string | undefined) || (after?.sellerId as string | undefined)) ?? null;
-  const isAuction = (after?.isAuction as boolean) ?? false;
-  const beforeIsAuction = (before?.isAuction as boolean) ?? false;
+  // SB1-G — counters drive product-vs-auction split off the canonical
+  // listingType discriminator. Anything not "auction" counts toward products.
+  const isAuction = (after?.listingType as string | undefined) === "auction";
+  const beforeIsAuction = (before?.listingType as string | undefined) === "auction";
 
   const wasPublished = beforeStatus === ProductStatusValues.PUBLISHED;
   const isPublished = afterStatus === ProductStatusValues.PUBLISHED;

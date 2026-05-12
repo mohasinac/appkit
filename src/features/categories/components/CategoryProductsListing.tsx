@@ -50,7 +50,7 @@ export function CategoryProductsListing({
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    isAuction: false,
+    listingType: "standard" as const,
   };
 
   const { products, total, totalPages, page, isLoading } = useProducts(

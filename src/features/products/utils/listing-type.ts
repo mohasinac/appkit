@@ -1,33 +1,29 @@
-import type { ListingType, ProductItem } from "../types/index";
+import type { ListingType } from "../types/index";
 
 /**
- * Canonical accessor for the listing-kind discriminator. SB1-G (S21 2026-05-12)
- * made `listingType` the single source of truth on every product doc; the
- * legacy `isAuction` / `isPreOrder` boolean fallbacks remain in this signature
- * only until Lane B finishes migrating `_internal/server/features/{products,
- * auctions,pre-orders}` to read `listingType` directly. Once that lands, the
- * Pick<> below can be tightened to `"listingType"` only.
+ * Canonical accessor for the listing-kind discriminator. SB1-G Phase 4
+ * (S22 2026-05-12) made `listingType` the single source of truth on every
+ * `ProductDocument` / `ProductItem` — the legacy `isAuction` / `isPreOrder`
+ * booleans were removed in the same session.
+ *
+ * Returns `"standard"` when the input is undefined or missing the field, so
+ * legacy payloads still classify safely without a separate guard.
  */
 export function normalizeListingType(
-  input?: Partial<
-    Pick<ProductItem, "listingType" | "isAuction" | "isPreOrder">
-  >,
+  input?: { listingType?: ListingType },
 ): ListingType {
-  if (input?.listingType) return input.listingType;
-  if (input?.isAuction) return "auction";
-  if (input?.isPreOrder) return "pre-order";
-  return "standard";
+  return input?.listingType ?? "standard";
 }
 
 /** Convenience predicates that read the canonical `listingType` discriminator. */
 export const isAuctionListing = (
-  input?: Partial<Pick<ProductItem, "listingType" | "isAuction" | "isPreOrder">>,
+  input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "auction";
 
 export const isPreOrderListing = (
-  input?: Partial<Pick<ProductItem, "listingType" | "isAuction" | "isPreOrder">>,
+  input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "pre-order";
 
 export const isStandardListing = (
-  input?: Partial<Pick<ProductItem, "listingType" | "isAuction" | "isPreOrder">>,
+  input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "standard";

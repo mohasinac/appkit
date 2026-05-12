@@ -255,7 +255,7 @@ export function SellerProductsView({
       toRecordArray(response.products).map((item, index) => {
         // SB1-G — derive kind from canonical listingType with legacy fallback.
         const lt = normalizeListingType(
-          item as { listingType?: import("../../products/types").ListingType; isAuction?: boolean; isPreOrder?: boolean },
+          item as { listingType?: import("../../products/types").ListingType },
         );
         const kind: ListingKind =
           lt === "auction" ? "auction" : lt === "pre-order" ? "pre-order" : "standard";

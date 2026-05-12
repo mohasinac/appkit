@@ -201,9 +201,9 @@ async function suiteProducts() {
   const sDesc = await baseline("products", path, { ps: 5, s: "-price" });
   expectDifferent("products", "sort price asc vs desc", sAsc.ex.ids, sDesc.ex.ids, sDesc.url, "sort=-price");
 
-  const fAuc = await baseline("products", path, { ps: 5, f: "isAuction==true" });
-  const fNon = await baseline("products", path, { ps: 5, f: "isAuction==false" });
-  expectDifferent("products", "filter isAuction", fAuc.ex.ids, fNon.ex.ids, fNon.url, "isAuction toggle");
+  const fAuc = await baseline("products", path, { ps: 5, f: "listingType==auction" });
+  const fNon = await baseline("products", path, { ps: 5, f: "listingType==standard" });
+  expectDifferent("products", "filter listingType", fAuc.ex.ids, fNon.ex.ids, fNon.url, "listingType toggle");
 
   const fBrand = await baseline("products", path, { ps: 5, f: `brandSlug==${SEED.brands[0]}` });
   expectDifferent("products", `filter brandSlug=${SEED.brands[0]}`, base.ex.ids, fBrand.ex.ids, fBrand.url, "brand filter");
@@ -341,7 +341,7 @@ async function suitePreOrders() {
 
 async function suiteAuctions() {
   // No /api/auctions route exists at the moment — check that the listing-equivalent
-  // works through /api/products with isAuction filter, AND probe the explicit path.
+  // works through /api/products with listingType filter, AND probe the explicit path.
   const explicit = await baseline("auctions", "/api/auctions", { ps: 5 });
   const looksLikeHtml = explicit.res.isHtml || (explicit.res.contentType || "").includes("text/html");
   record({
@@ -352,12 +352,12 @@ async function suiteAuctions() {
     detail: looksLikeHtml ? "App Router served HTML page — no API route" : `status=${explicit.res.status} items=${explicit.ex.items.length}`,
   });
 
-  // Fallback: products filtered by isAuction
-  const proxied = await baseline("auctions", "/api/products", { ps: 5, f: "isAuction==true" });
+  // Fallback: products filtered by listingType (SB1-G Phase 4).
+  const proxied = await baseline("auctions", "/api/products", { ps: 5, f: "listingType==auction" });
   record({
     collection: "auctions",
-    name: "products?f=isAuction==true returns auctions",
-    pass: proxied.res.status === 200 && proxied.ex.items.length > 0 && proxied.ex.items.every((it) => it.isAuction === true || String(it.id || "").startsWith("auction-")),
+    name: "products?f=listingType==auction returns auctions",
+    pass: proxied.res.status === 200 && proxied.ex.items.length > 0 && proxied.ex.items.every((it) => it.listingType === "auction" || String(it.id || "").startsWith("auction-")),
     url: proxied.url,
     detail: `items=${proxied.ex.items.length}`,
   });

@@ -48,15 +48,16 @@ export interface StoreProductItem {
   images?: string[];
   status: string;
   featured: boolean;
-  isAuction: boolean;
+  /** Canonical listing-kind discriminator (SB1-G Phase 4). */
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   currentBid?: number;
   isPromoted?: boolean;
   slug: string;
   availableQuantity?: number;
 }
 
-export interface StoreAuctionItem extends StoreProductItem {
-  isAuction: true;
+export interface StoreAuctionItem extends Omit<StoreProductItem, "listingType"> {
+  listingType: "auction";
   auctionEndDate: string;
   startingBid: number;
   bidCount: number;

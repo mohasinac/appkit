@@ -84,7 +84,13 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsPreOrdersSeedData),
     ].map((p) => ({
       ...p,
-      type: p.isAuction ? "auction" : p.isPreOrder ? "preorder" : "standard",
+      // SB1-G Phase 4 — canonical listingType drives the manifest "type" tag.
+      type:
+        p.listingType === "auction"
+          ? "auction"
+          : p.listingType === "pre-order"
+            ? "preorder"
+            : "standard",
     })),
     "title",
   ),

@@ -25,8 +25,7 @@ export async function createProductAction(input: unknown) {
     ...(parsed.data as any),
     storeId: user.uid,
     status: "draft",
-    isAuction: false,
-    isPreOrder: false,
+    listingType: "standard",
     featured: false,
   } as any);
 }
@@ -39,7 +38,7 @@ export async function createAuctionAction(input: unknown) {
     ...(parsed.data as any),
     storeId: user.uid,
     status: "draft",
-    isPreOrder: false,
+    listingType: "auction",
     featured: false,
   } as any);
 }
@@ -52,7 +51,7 @@ export async function createPreOrderAction(input: unknown) {
     ...(parsed.data as any),
     storeId: user.uid,
     status: "draft",
-    isAuction: false,
+    listingType: "pre-order",
     featured: false,
   } as any);
 }

@@ -54,10 +54,8 @@ const productUpdateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
-    isAuction: z.boolean().optional(),
-    isPreOrder: z.boolean().optional(),
     listingType: z
-      .enum(["fixed", "standard", "auction", "pre-order"])
+      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })

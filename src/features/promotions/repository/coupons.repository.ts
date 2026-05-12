@@ -463,8 +463,8 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
       storeId: string;
       price: number;
       quantity: number;
-      isPreOrder: boolean;
-      isAuction: boolean;
+      /** Canonical listing-kind snapshot (SB1-G Phase 4). */
+      listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
     }>,
   ): Promise<{
     valid: boolean;
@@ -492,13 +492,13 @@ export class CouponsRepository extends BaseRepository<CouponDocument> {
     }
 
     // Apply product-type filter based on the coupon's own flag:
-    //   true  â†’ auction-only coupon
-    //   false â†’ explicitly excludes auctions (but includes pre-orders & simple)
-    //   undefined â†’ no restriction; applies to all product types
+    //   true       → auction-only coupon
+    //   false      → explicitly excludes auctions (still allows pre-orders + standard)
+    //   undefined  → no restriction; applies to every listing type
     if (coupon.applicableToAuctions === true) {
-      eligible = eligible.filter((item) => item.isAuction);
+      eligible = eligible.filter((item) => item.listingType === "auction");
     } else if (coupon.applicableToAuctions === false) {
-      eligible = eligible.filter((item) => !item.isAuction);
+      eligible = eligible.filter((item) => item.listingType !== "auction");
     }
 
     // Apply product/category restrictions from the coupon itself

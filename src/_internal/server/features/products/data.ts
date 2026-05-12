@@ -29,7 +29,8 @@ export const getReviewsForProduct = cache(
 export interface SitemapProduct {
   slugOrId: string;
   updatedAt: Date;
-  isAuction: boolean;
+  /** Canonical listing-kind discriminator (SB1-G — Phase 4 dropped booleans). */
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
 }
 
 /** List all published products for sitemap generation. */
@@ -39,16 +40,24 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
     const snapshot = await db
       .collection(PRODUCT_COLLECTION)
       .where("status", "==", "published")
-      .select("slug", "id", "updatedAt", "isAuction")
+      .select("slug", "id", "updatedAt", "listingType")
       .limit(PRODUCTS_SITEMAP_LIMIT)
       .get();
 
     return snapshot.docs.map((doc) => {
       const data = doc.data();
+      const rawListingType = data.listingType;
+      const listingType: SitemapProduct["listingType"] =
+        rawListingType === "auction" ||
+        rawListingType === "pre-order" ||
+        rawListingType === "prize-draw" ||
+        rawListingType === "bundle"
+          ? rawListingType
+          : "standard";
       return {
         slugOrId: (data.slug as string | undefined) ?? doc.id,
         updatedAt: (data.updatedAt as { toDate?: () => Date } | undefined)?.toDate?.() ?? new Date(),
-        isAuction: data.isAuction === true,
+        listingType,
       };
     });
   } catch {

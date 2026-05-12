@@ -104,8 +104,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
           quantity: input.quantity,
           storeId: input.storeId,
           storeName: input.storeName,
-          isAuction: input.isAuction ?? false,
-          isPreOrder: input.isPreOrder ?? false,
+          listingType: input.listingType,
           ...(input.isOffer !== undefined && { isOffer: input.isOffer }),
           ...(input.offerId !== undefined && { offerId: input.offerId }),
           ...(input.lockedPrice !== undefined && {

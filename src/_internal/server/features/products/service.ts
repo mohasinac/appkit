@@ -1,5 +1,9 @@
 import { productRepository } from "../../../../repositories";
 import {
+  isAuctionListing,
+  isPreOrderListing,
+} from "../../../../features/products/utils/listing-type";
+import {
   ProductNotFoundError,
   ProductOwnershipError,
   ProductStatusError,
@@ -46,7 +50,7 @@ export function assertInStock(product: ProductDocument, quantity = 1): void {
 
 /** Derive effective price (respects currentBid for auctions, base price otherwise). */
 export function effectivePrice(product: ProductDocument): number {
-  if (product.isAuction && product.currentBid) return product.currentBid;
+  if (isAuctionListing(product) && product.currentBid) return product.currentBid;
   return product.price;
 }
 
@@ -54,12 +58,12 @@ export function effectivePrice(product: ProductDocument): number {
 export function isAvailableForPurchase(product: ProductDocument): boolean {
   if (product.status !== "published") return false;
   if (product.isSold) return false;
-  if (product.isAuction) {
+  if (isAuctionListing(product)) {
     const endDate = product.auctionEndDate instanceof Date
       ? product.auctionEndDate
       : product.auctionEndDate ? new Date(product.auctionEndDate as unknown as string) : null;
     return endDate ? endDate.getTime() > Date.now() : false;
   }
-  if (product.isPreOrder) return true;
+  if (isPreOrderListing(product)) return true;
   return (product.availableQuantity ?? 0) > 0;
 }

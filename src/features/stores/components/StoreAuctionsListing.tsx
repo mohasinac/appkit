@@ -106,7 +106,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     storeId: storeId || undefined,
-    isAuction: true,
+    listingType: "auction" as const,
   };
 
   const { products: rawAuctions, totalPages, page, isLoading } = useProducts(params as any, { initialData });
@@ -119,7 +119,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
     currency: p.currency || getDefaultCurrency(),
     mainImage: p.mainImage ?? p.images?.[0],
     images: p.images,
-    isAuction: true as const,
+    listingType: "auction" as const,
     auctionEndDate: p.auctionEndDate,
     startingBid: p.startingBid ?? p.price,
     currentBid: p.currentBid,

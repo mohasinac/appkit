@@ -78,7 +78,6 @@ export interface ProductDocument {
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
-  isAuction?: boolean;
   auctionEndDate?: Date;
   startingBid?: number;
   currentBid?: number;
@@ -90,7 +89,6 @@ export interface ProductDocument {
   auctionExtensionMinutes?: number;
   auctionOriginalEndDate?: Date;
   auctionShippingPaidBy?: "seller" | "winner";
-  isPreOrder?: boolean;
   preOrderDeliveryDate?: Date;
   preOrderDepositPercent?: number;
   preOrderDepositAmount?: number;
@@ -120,14 +118,14 @@ export interface ProductDocument {
   groupChildSlugs?: string[];
   groupTitle?: string;
 
-  // ── SB1 (S19 2026-05-12) — additive listingType + prize-draw + bundle wiring
+  // ── SB1 (S19 / S22 Phase 4 2026-05-12) — canonical listing-kind discriminator
   /**
-   * Discriminator for listing kind. Optional during the additive migration:
-   * existing docs still rely on `isAuction` / `isPreOrder` booleans. New code
-   * paths (prize-draw, bundle) require this set. Migration to drop the booleans
-   * is its own session (SB1-D script + SB1-G repository refactor).
+   * Required since Phase 4 dropped the legacy `isAuction` / `isPreOrder`
+   * booleans. Every product document carries this; queries route through
+   * `where("listingType", "==", X)` against the `listingType+...` composite
+   * indexes in `appkit/firebase/base/firestore.indexes.json`.
    */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   /** Hard cap on units a single user may purchase (SB1-B; bundle/prize-draw). */
   maxPerUser?: number;
   /** Reverse pointers — bundle ids that include this product. */
@@ -183,8 +181,7 @@ export const PRODUCT_INDEXED_FIELDS = [
   "status",
   "category",
   "featured",
-  "isAuction",
-  "isPreOrder",
+  "listingType",
   "isPromoted",
   "isOnSale",
   "isSold",
@@ -197,8 +194,9 @@ export const DEFAULT_PRODUCT_DATA: Partial<ProductDocument> = {
   images: [],
   tags: [],
   availableQuantity: 0,
-  isAuction: false,
-  isPreOrder: false,
+  // SB1-G Phase 4 — listingType is the canonical discriminator. Defaults to
+  // "standard"; the editor flips it when the seller chooses auction or pre-order.
+  listingType: "standard",
   isPromoted: false,
   isOnSale: false,
   isSold: false,
@@ -231,7 +229,7 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "features",
   "shippingInfo",
   "returnPolicy",
-  "isAuction",
+  "listingType",
   "auctionEndDate",
   "startingBid",
   "currentBid",
@@ -242,7 +240,6 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "autoExtendable",
   "auctionExtensionMinutes",
   "auctionShippingPaidBy",
-  "isPreOrder",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",
   "preOrderDepositAmount",
@@ -298,7 +295,7 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "reservePrice",
   "buyNowPrice",
   "minBidIncrement",
-  "isPreOrder",
+  "listingType",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",
   "preOrderDepositAmount",

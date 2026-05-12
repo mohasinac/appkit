@@ -117,8 +117,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
-    isAuction: false,
-    isPreOrder: false,
+    listingType: "standard" as const,
     status: showSold ? undefined : ("published" as const),
   };
 

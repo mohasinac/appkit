@@ -22,7 +22,8 @@ export interface AuctionItem {
   storeId?: string;
   storeSlug?: string;
   featured: boolean;
-  isAuction: true;
+  /** Canonical listing-kind discriminator — always "auction" for AuctionItem. */
+  listingType: "auction";
   video?: { url: string; thumbnailUrl?: string };
   createdAt: string;
   updatedAt: string;
