@@ -18,6 +18,11 @@ export { InteractiveProductCard } from "./InteractiveProductCard";
 export type { InteractiveProductCardProps } from "./InteractiveProductCard";
 export { ProductForm, PRODUCT_STATUS_OPTIONS } from "./ProductForm";
 export type { ProductFormProps, ProductFormValue } from "./ProductForm";
+export { NonRefundableConsentModal } from "./NonRefundableConsentModal";
+export type {
+  NonRefundableConsentModalProps,
+  NonRefundableListingType,
+} from "./NonRefundableConsentModal";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
