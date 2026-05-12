@@ -16,7 +16,7 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildAuctionFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "isAuction==true"];
+  const parts: string[] = ["status==published", "listingType==auction"];
   const minBid = sp(params, "minBid");
   const maxBid = sp(params, "maxBid");
   if (minBid) parts.push(`currentBid>=${minBid}`);

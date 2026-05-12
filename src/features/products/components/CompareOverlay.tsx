@@ -23,6 +23,7 @@ import { useSwipe } from "../../../react/hooks/useSwipe";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { COMPARE_MAX_ITEMS } from "../constants/action-defs";
+import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
 /** Subset of ProductDocument the overlay needs. Kept loose so it can be fed
  * sanitized public payloads directly. */
@@ -40,7 +41,11 @@ export interface CompareProductLike {
   categoryName?: string;
   storeName?: string;
   storeSlug?: string;
+  /** Canonical discriminator (SB1-G). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** @deprecated SB1-G — derive via `isAuctionListing(item)`. */
   isAuction?: boolean;
+  /** @deprecated SB1-G — derive via `isPreOrderListing(item)`. */
   isPreOrder?: boolean;
   features?: string[];
 }
@@ -116,10 +121,10 @@ const COLUMN_CARD_CLASS =
 
 function detailHref(item: CompareProductLike, type: CompareOverlayProps["productType"]): string {
   const id = item.slug ?? item.id;
-  if (type === "auction" || item.isAuction) {
+  if (type === "auction" || isAuctionListing(item)) {
     return String(ROUTES.PUBLIC.AUCTION_DETAIL(id));
   }
-  if (type === "preorder" || item.isPreOrder) {
+  if (type === "preorder" || isPreOrderListing(item)) {
     return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(id));
   }
   return String(ROUTES.PUBLIC.PRODUCT_DETAIL(id));

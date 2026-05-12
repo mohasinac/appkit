@@ -47,15 +47,15 @@ export async function StoreDetailLayoutView({
   const [productsCount, auctionsCount, preOrdersCount] = storeId
     ? await Promise.all([
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,isAuction==false,isPreOrder==false`, page: 1, pageSize: 1 })
+          .list({ filters: `storeId==${storeId},status==published,listingType==standard`, page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,isAuction==true`, page: 1, pageSize: 1 })
+          .list({ filters: `storeId==${storeId},status==published,listingType==auction`, page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
         productRepository
-          .list({ filters: `storeId==${storeId},status==published,isPreOrder==true`, page: 1, pageSize: 1 })
+          .list({ filters: `storeId==${storeId},status==published,listingType==pre-order`, page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
       ])

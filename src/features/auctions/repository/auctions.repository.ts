@@ -18,7 +18,7 @@ export class AuctionsRepository {
 
   async findBySlug(slug: string): Promise<AuctionItem | null> {
     const result = await this.repo.findAll({
-      filters: `slug==${slug},status==published,isAuction==true`,
+      filters: `slug==${slug},status==published,listingType==auction`,
       perPage: 1,
     });
     return result.data[0] ?? null;
@@ -26,7 +26,7 @@ export class AuctionsRepository {
 
   async findActive(page = 1, perPage = 20): Promise<PagedResult<AuctionItem>> {
     return this.repo.findAll({
-      filters: "status==published,isAuction==true",
+      filters: "status==published,listingType==auction",
       sort: "auctionEndDate",
       page,
       perPage,
@@ -39,7 +39,7 @@ export class AuctionsRepository {
     perPage = 20,
   ): Promise<PagedResult<AuctionItem>> {
     return this.repo.findAll({
-      filters: `storeSlug==${storeSlug},status==published,isAuction==true`,
+      filters: `storeSlug==${storeSlug},status==published,listingType==auction`,
       sort: "auctionEndDate",
       page,
       perPage,
@@ -48,7 +48,7 @@ export class AuctionsRepository {
 
   async findFeatured(limit = 6): Promise<AuctionItem[]> {
     const result = await this.repo.findAll({
-      filters: "status==published,isAuction==true,featured==true",
+      filters: "status==published,listingType==auction,featured==true",
       sort: "auctionEndDate",
       perPage: limit,
     });

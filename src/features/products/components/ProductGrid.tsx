@@ -13,6 +13,7 @@ import { useLongPress } from "../../../react/hooks/useLongPress";
 import { FeatureBadgeList } from "./FeatureBadge";
 import { useProductFeatures } from "./ProductFeaturesContext";
 import { PRODUCT_FEATURE_CARD_MAX_VISIBLE } from "../constants/product-features.constants";
+import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
 // --- ProductCard --------------------------------------------------------------
 
@@ -53,8 +54,9 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         )
       : null;
 
-  const isAuction = product.isAuction || product.listingType === "auction";
-  const isPreOrder = product.isPreOrder || product.listingType === "pre-order";
+  // SB1-G — canonical accessors that handle the legacy boolean fallback.
+  const isAuction = isAuctionListing(product);
+  const isPreOrder = isPreOrderListing(product);
 
   const typeBadge = isAuction
     ? { label: "Auction", cls: "bg-amber-500 text-white" }

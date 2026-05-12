@@ -33,7 +33,7 @@ export async function StoreProductsPageView({
 
   const result = await productRepository
     .list({
-      filters: `storeId==${storeId},status==published,isAuction==false`,
+      filters: `storeId==${storeId},status==published,listingType==standard`,
       sorts,
       page,
       pageSize,

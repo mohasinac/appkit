@@ -18,7 +18,7 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildProductFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "isAuction==false"];
+  const parts: string[] = ["status==published", "listingType==standard"];
   const condition = sp(params, "condition");
   if (condition) {
     const values = condition.split("|").filter(Boolean);

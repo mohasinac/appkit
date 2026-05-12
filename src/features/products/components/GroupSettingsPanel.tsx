@@ -219,7 +219,7 @@ export function GroupSettingsPanel({
   async function loadLinkOptions(query: string, page: number) {
     const params = new URLSearchParams({ page: String(page), pageSize: "25" });
     if (query) params.set("q", query);
-    params.set("filters", "isAuction==false");
+    params.set("filters", "listingType==standard");
     const res = (await apiClient.get(`${storeProductsEndpoint}?${params.toString()}`)) as {
       products?: { id: string; title: string }[];
       items?: { id: string; title: string }[];

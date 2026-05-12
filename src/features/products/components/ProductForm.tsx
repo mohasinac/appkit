@@ -27,6 +27,10 @@ import { useMediaUpload } from "../../media";
 import { resolveDate } from "../../../utils/date.formatter";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { ProductItem, ProductStatus } from "../types";
+import {
+  isAuctionListing,
+  isPreOrderListing,
+} from "../utils/listing-type";
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
   [
@@ -508,12 +512,20 @@ export function ProductForm({
 
       <Checkbox
         label={t("formIsAuction")}
-        checked={!!product.isAuction}
-        onChange={(e) => update({ isAuction: e.target.checked })}
+        checked={isAuctionListing(product)}
+        onChange={(e) =>
+          // SB1-G — write both the legacy boolean (kept for transitional schema)
+          // AND the canonical listingType so new docs are queryable today.
+          update(
+            e.target.checked
+              ? { isAuction: true, isPreOrder: false, listingType: "auction" }
+              : { isAuction: false, listingType: "standard" },
+          )
+        }
         disabled={isReadonly}
       />
 
-      {product.isAuction && (
+      {isAuctionListing(product) && (
         <>
           <FormGroup columns={2}>
             <FormField
@@ -636,12 +648,18 @@ export function ProductForm({
 
       <Checkbox
         label={t("formIsPreOrder")}
-        checked={!!product.isPreOrder}
-        onChange={(e) => update({ isPreOrder: e.target.checked })}
+        checked={isPreOrderListing(product)}
+        onChange={(e) =>
+          update(
+            e.target.checked
+              ? { isPreOrder: true, isAuction: false, listingType: "pre-order" }
+              : { isPreOrder: false, listingType: "standard" },
+          )
+        }
         disabled={isReadonly}
       />
 
-      {product.isPreOrder && (
+      {isPreOrderListing(product) && (
         <>
           <FormGroup columns={2}>
             <FormField
@@ -747,16 +765,16 @@ export function ProductForm({
       />
 
       {/* ── Group Settings (GP2) — edit mode only, hidden for auctions ── */}
-      {!product.isAuction && renderGroupSettings?.(product)}
+      {!isAuctionListing(product) && renderGroupSettings?.(product)}
 
       {/* ── Feature Badges (FI5) ── */}
       <ProductFeaturesSelector
         value={(product.features as string[]) ?? []}
         onChange={(features) => update({ features })}
         productType={
-          (product.isAuction
+          (isAuctionListing(product)
             ? "auction"
-            : product.isPreOrder
+            : isPreOrderListing(product)
               ? "preorder"
               : "product") as ProductFeatureProductType
         }

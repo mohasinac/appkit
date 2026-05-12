@@ -94,7 +94,7 @@ export async function GET(
     const filterParts = [
       `storeId==${store.id}`,
       "status==published",
-      "isAuction==false",
+      "listingType==standard",
     ];
     if (std.filters) {
       const safe = validateSieveFilters(

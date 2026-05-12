@@ -23,7 +23,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},isAuction==false,isPreOrder==false`,
+            filters: `status==published,brand==${brandName},listingType==standard`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 24,
@@ -33,7 +33,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},isAuction==true`,
+            filters: `status==published,brand==${brandName},listingType==auction`,
             sorts: "auctionEndDate",
             page: 1,
             pageSize: 1,
@@ -43,7 +43,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     brandName
       ? productRepository
           .list({
-            filters: `status==published,brand==${brandName},isPreOrder==true`,
+            filters: `status==published,brand==${brandName},listingType==pre-order`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 1,

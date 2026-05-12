@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ROUTES } from "../../../next";
 import { Row, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
 interface CarouselListing {
   id: string;
@@ -14,7 +15,11 @@ interface CarouselListing {
   images?: string[];
   mainImage?: string;
   slug?: string;
+  /** Canonical discriminator (SB1-G). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** @deprecated SB1-G — derive via `isAuctionListing(listing)`. */
   isAuction?: boolean;
+  /** @deprecated SB1-G — derive via `isPreOrderListing(listing)`. */
   isPreOrder?: boolean;
 }
 
@@ -38,8 +43,8 @@ interface Props {
 
 function getHref(listing: CarouselListing): string {
   const slug = listing.slug ?? listing.id;
-  if (listing.isAuction) return String(ROUTES.PUBLIC.AUCTION_DETAIL(slug));
-  if (listing.isPreOrder) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
+  if (isAuctionListing(listing)) return String(ROUTES.PUBLIC.AUCTION_DETAIL(slug));
+  if (isPreOrderListing(listing)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
   return String(ROUTES.PUBLIC.PRODUCT_DETAIL(slug));
 }
 

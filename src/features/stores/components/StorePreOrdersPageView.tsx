@@ -14,7 +14,7 @@ export async function StorePreOrdersPageView({ storeSlug }: StorePreOrdersPageVi
   const result = storeId
     ? await productRepository
         .list({
-          filters: `storeId==${storeId},status==published,isPreOrder==true`,
+          filters: `storeId==${storeId},status==published,listingType==pre-order`,
           sorts: "-createdAt",
           page: 1,
           pageSize: 24,

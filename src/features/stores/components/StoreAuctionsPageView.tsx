@@ -14,7 +14,7 @@ export async function StoreAuctionsPageView({ storeSlug }: StoreAuctionsPageView
   const result = storeId
     ? await productRepository
         .list({
-          filters: `storeId==${storeId},status==published,isAuction==true`,
+          filters: `storeId==${storeId},status==published,listingType==auction`,
           sorts: "auctionEndDate",
           page: 1,
           pageSize: 24,

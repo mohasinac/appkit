@@ -21,6 +21,7 @@ import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ProductForm } from "../../products/components/ProductForm";
 import type { ProductFormValue, BrandSelectorRenderArgs } from "../../products/components/ProductForm";
+import { normalizeListingType } from "../../products/utils/listing-type";
 import { GroupSettingsPanel } from "../../products/components/GroupSettingsPanel";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
 import { BrandQuickCreateForm } from "./BrandQuickCreateForm";
@@ -36,16 +37,30 @@ export interface AdminProductEditorViewProps
 type ProductMode = "standard" | "auction" | "preorder";
 
 function modeFromProduct(product: ProductFormValue): ProductMode {
-  if (product.isAuction) return "auction";
-  if (product.isPreOrder) return "preorder";
+  const lt = normalizeListingType(
+    product as { listingType?: import("../../products/types").ListingType; isAuction?: boolean; isPreOrder?: boolean },
+  );
+  if (lt === "auction") return "auction";
+  if (lt === "pre-order") return "preorder";
   return "standard";
 }
 
+/**
+ * SB1-G — applies the selected mode by writing BOTH the canonical
+ * `listingType` AND the legacy boolean flags so the doc remains queryable
+ * during the transitional schema period.
+ */
 function applyMode(product: ProductFormValue, mode: ProductMode): ProductFormValue {
   return {
     ...product,
     isAuction: mode === "auction",
     isPreOrder: mode === "preorder",
+    listingType:
+      mode === "auction"
+        ? "auction"
+        : mode === "preorder"
+          ? "pre-order"
+          : "standard",
   };
 }
 
@@ -102,6 +117,9 @@ async function loadBrandOptions(query: string, page: number) {
 const EMPTY_PRODUCT: ProductFormValue = {
   title: "",
   status: "draft",
+  // SB1-G — new products default to standard; both fields written for the
+  // transitional schema period.
+  listingType: "standard",
   isAuction: false,
   isPreOrder: false,
 };
@@ -242,7 +260,7 @@ export function AdminProductEditorView({
                       groupParentSlug={p.groupParentSlug}
                       groupChildSlugs={p.groupChildSlugs}
                       groupTitle={p.groupTitle}
-                      isAuction={!!p.isAuction}
+                      isAuction={modeFromProduct(p) === "auction"}
                       storeProductsEndpoint="/api/admin/products"
                       onGroupChanged={() => productQuery.refetch()}
                     />

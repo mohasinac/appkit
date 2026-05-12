@@ -16,7 +16,7 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildPreOrderFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "isPreOrder==true"];
+  const parts: string[] = ["status==published", "listingType==pre-order"];
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
   if (minPrice) parts.push(`price>=${minPrice}`);

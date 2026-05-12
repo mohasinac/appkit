@@ -59,7 +59,7 @@ const productMutateSchema = z
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
     listingType: z
-      .enum(["fixed", "standard", "auction", "pre-order"])
+      .enum(["fixed", "standard", "auction", "pre-order", "prize-draw", "bundle"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })
@@ -86,6 +86,8 @@ const SAFE_PRODUCT_FILTER_FIELDS = new Set([
   "storeId",
   "title",
   "price",
+  // SB1-G — canonical discriminator first; legacy booleans retained transitional.
+  "listingType",
   "isAuction",
   "isPreOrder",
   "featured",
@@ -135,10 +137,21 @@ function buildFilters(url: URL): string {
     parts.push(`price<=${maxPrice}`);
   const inStock = param(url, "inStock");
   if (inStock === "true") parts.push("stockQuantity>0");
+  // SB1-G — public URL still accepts the legacy boolean params; map them to
+  // the canonical listingType clause. ?listingType=auction|pre-order|standard
+  // takes precedence when present.
+  const listingTypeParam = param(url, "listingType");
   const isAuction = param(url, "isAuction");
-  if (isAuction !== null) parts.push(`isAuction==${isAuction}`);
   const isPreOrder = param(url, "isPreOrder");
-  if (isPreOrder !== null) parts.push(`isPreOrder==${isPreOrder}`);
+  if (listingTypeParam) {
+    parts.push(`listingType==${listingTypeParam}`);
+  } else if (isAuction === "true") {
+    parts.push("listingType==auction");
+  } else if (isPreOrder === "true") {
+    parts.push("listingType==pre-order");
+  } else if (isAuction === "false" && isPreOrder === "false") {
+    parts.push("listingType==standard");
+  }
   const featured = param(url, "featured");
   if (featured === "true") parts.push("featured==true");
   // Merge validated Sieve filters — only safe public fields allowed

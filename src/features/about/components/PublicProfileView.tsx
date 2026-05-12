@@ -8,6 +8,7 @@ import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import type { ProductItem } from "../../products/types";
 import type { ProductDocument } from "../../products/schemas/firestore";
+import { isAuctionListing, isPreOrderListing } from "../../products/utils/listing-type";
 import { User, Star, ShoppingBag, Package, Trophy, Globe, MapPin, ExternalLink } from "lucide-react";
 
 const DEFAULT_HERO_CLASS =
@@ -30,6 +31,7 @@ function toProductItem(p: ProductDocument): ProductItem {
     images: p.images,
     status: p.status,
     condition: p.condition as ProductItem["condition"],
+    listingType: p.listingType,
     isAuction: p.isAuction,
     isPreOrder: p.isPreOrder,
     isOnSale: p.isOnSale,
@@ -50,8 +52,8 @@ function toProductItem(p: ProductDocument): ProductItem {
 }
 
 function getProductHref(p: ProductDocument): string {
-  if (p.isAuction) return String(ROUTES.PUBLIC.AUCTION_DETAIL(p.id));
-  if (p.isPreOrder) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id));
+  if (isAuctionListing(p)) return String(ROUTES.PUBLIC.AUCTION_DETAIL(p.id));
+  if (isPreOrderListing(p)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(p.id));
   return String(ROUTES.PUBLIC.PRODUCT_DETAIL(p.id));
 }
 

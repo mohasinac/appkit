@@ -81,7 +81,7 @@ export async function getStoreProducts(
   const filtersArr = [
     `storeId==${storeDoc.id}`,
     "status==published",
-    "isAuction==false",
+    "listingType==standard",
   ];
   if (filters) filtersArr.push(filters);
 
@@ -111,7 +111,7 @@ export async function getStoreAuctions(
   const filtersArr = [
     `storeId==${storeDoc.id}`,
     "status==published",
-    "isAuction==true",
+    "listingType==auction",
   ];
   if (filters) filtersArr.push(filters);
 

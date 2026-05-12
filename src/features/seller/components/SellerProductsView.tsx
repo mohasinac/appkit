@@ -8,6 +8,7 @@ import { Alert, ListingToolbar, Pagination, ListingViewShell, Badge, Button } fr
 import type { ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../../constants";
+import { normalizeListingType } from "../../products/utils/listing-type";
 import {
   toRecordArray,
   toRelativeDate,
@@ -226,13 +227,15 @@ export function SellerProductsView({
 
   const statusRaw = table.get("status");
   const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
+  // SB1-G — single-field listingType clause. The repository's Sieve aliases
+  // accept both `==auction|preorder|standard` and `==pre-order` directly.
   const kindFilter =
     listingKind === "auction"
-      ? "isAuction==true"
+      ? "listingType==auction"
       : listingKind === "pre-order"
-        ? "isPreOrder==true"
+        ? "listingType==pre-order"
         : listingKind === "standard"
-          ? "isAuction==false,isPreOrder==false"
+          ? "listingType==standard"
           : undefined;
 
   const filters = [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
@@ -250,9 +253,12 @@ export function SellerProductsView({
     q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => {
-        const isAuction = !!item.isAuction;
-        const isPreOrder = !!item.isPreOrder;
-        const kind: ListingKind = isAuction ? "auction" : isPreOrder ? "pre-order" : "standard";
+        // SB1-G — derive kind from canonical listingType with legacy fallback.
+        const lt = normalizeListingType(
+          item as { listingType?: import("../../products/types").ListingType; isAuction?: boolean; isPreOrder?: boolean },
+        );
+        const kind: ListingKind =
+          lt === "auction" ? "auction" : lt === "pre-order" ? "pre-order" : "standard";
         const priceRaw = typeof item.price === "number" ? item.price : 0;
         return {
           id: toStringValue(item.id, `product-${index}`),

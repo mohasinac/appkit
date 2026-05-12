@@ -19,7 +19,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     category?.id
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},isAuction==false,isPreOrder==false`,
+            filters: `status==published,category==${category.id},listingType==standard`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 24,
@@ -29,7 +29,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     category?.id
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},isAuction==true`,
+            filters: `status==published,category==${category.id},listingType==auction`,
             sorts: "auctionEndDate",
             page: 1,
             pageSize: 1,
@@ -39,7 +39,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     category?.id
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},isPreOrder==true`,
+            filters: `status==published,category==${category.id},listingType==pre-order`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 1,

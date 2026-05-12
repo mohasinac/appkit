@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ROUTES } from "../../../next";
 import { Row, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { isPreOrderListing } from "../utils/listing-type";
 
 interface GroupMember {
   id: string;
@@ -13,6 +14,9 @@ interface GroupMember {
   currency?: string;
   images?: string[];
   slug?: string;
+  /** Canonical discriminator (SB1-G). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** @deprecated SB1-G — derive via `isPreOrderListing(m)`. */
   isPreOrder?: boolean;
   isGroupParent?: boolean;
   groupTitle?: string;
@@ -32,7 +36,7 @@ interface Props {
 
 function memberHref(m: GroupMember): string {
   const slug = m.slug ?? m.id;
-  if (m.isPreOrder) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
+  if (isPreOrderListing(m)) return String(ROUTES.PUBLIC.PRE_ORDER_DETAIL(slug));
   return String(ROUTES.PUBLIC.PRODUCT_DETAIL(slug));
 }
 
