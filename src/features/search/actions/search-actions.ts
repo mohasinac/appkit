@@ -30,6 +30,7 @@ export async function searchProducts(
     minPrice = 0,
     maxPrice = 0,
     condition,
+    listingType,
     isAuction,
     isPreOrder,
     sort = "-createdAt",
@@ -44,8 +45,14 @@ export async function searchProducts(
   if (maxPrice > 0 && maxPrice >= minPrice)
     filterParts.push(`price<=${maxPrice}`);
   if (condition) filterParts.push(`condition==${condition}`);
-  if (isAuction === true) filterParts.push("isAuction==true");
-  if (isPreOrder === true) filterParts.push("isPreOrder==true");
+  // SB1-G — canonical discriminator. Legacy boolean inputs translate one-way.
+  if (listingType) {
+    filterParts.push(`listingType==${listingType}`);
+  } else if (isAuction === true) {
+    filterParts.push("listingType==auction");
+  } else if (isPreOrder === true) {
+    filterParts.push("listingType==pre-order");
+  }
   if (q.trim()) filterParts.push(`title_=${q.trim()}`);
 
   const sieveResult = await productRepository.list({

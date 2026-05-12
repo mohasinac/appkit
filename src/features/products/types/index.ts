@@ -162,7 +162,11 @@ export interface ProductListParams {
   minPrice?: number;
   maxPrice?: number;
   inStock?: boolean;
+  /** Canonical discriminator (SB1-G). Prefer over the legacy boolean inputs. */
+  listingType?: ListingType;
+  /** @deprecated SB1-G — pass `listingType: "auction"` instead. */
   isAuction?: boolean;
+  /** @deprecated SB1-G — pass `listingType: "pre-order"` instead. */
   isPreOrder?: boolean;
   storeId?: string;
   sort?: string;

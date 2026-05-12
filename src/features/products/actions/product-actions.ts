@@ -1,4 +1,4 @@
-﻿import { productRepository } from "../repository/products.repository";
+import { productRepository } from "../repository/products.repository";
 import { ProductStatusValues } from "../schemas";
 import type { ProductDocument } from "../schemas";
 import type {
@@ -6,12 +6,42 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 
+/**
+ * Reusable Sieve clauses. Single source of truth for the listing-type
+ * discriminator across every action helper in this file. SB1-G (S21 2026-05-12)
+ * routes everything through `listingType==X` — the legacy boolean flags are
+ * never emitted by code under our control any more.
+ */
+const PUBLISHED_CLAUSE = "status==published";
+const AUCTIONS_PUBLISHED = `listingType==auction,${PUBLISHED_CLAUSE}`;
+const PREORDERS_PUBLISHED = `listingType==pre-order,${PUBLISHED_CLAUSE}`;
+
+/** Map of the legacy boolean inputs → canonical `listingType` token. */
+function listingTypeClauseFromLegacy(
+  isAuction?: boolean,
+  isPreOrder?: boolean,
+): string | null {
+  if (isAuction === true) return "listingType==auction";
+  if (isPreOrder === true) return "listingType==pre-order";
+  if (isAuction === false && isPreOrder === false)
+    return "listingType==standard";
+  return null;
+}
+
 export interface ProductListActionParams {
   filters?: string;
   sorts?: string;
   page?: number;
   pageSize?: number;
+  /**
+   * Canonical discriminator. Pass this on new code paths. Mutually exclusive
+   * with the legacy boolean inputs below; if both are present, `listingType`
+   * wins.
+   */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** @deprecated SB1-G — pass `listingType: "auction"` instead. */
   isAuction?: boolean;
+  /** @deprecated SB1-G — pass `listingType: "pre-order"` instead. */
   isPreOrder?: boolean;
   featured?: boolean;
   storeId?: string;
@@ -28,6 +58,7 @@ export async function listProducts(
     sorts = "-createdAt",
     page = 1,
     pageSize = 20,
+    listingType,
     isAuction,
     isPreOrder,
     featured,
@@ -36,9 +67,12 @@ export async function listProducts(
   } = params;
 
   const compoundFilters: string[] = [];
-  if (isAuction !== undefined) compoundFilters.push(`isAuction==${isAuction}`);
-  if (isPreOrder !== undefined)
-    compoundFilters.push(`isPreOrder==${isPreOrder}`);
+  if (listingType) {
+    compoundFilters.push(`listingType==${listingType}`);
+  } else {
+    const legacy = listingTypeClauseFromLegacy(isAuction, isPreOrder);
+    if (legacy) compoundFilters.push(legacy);
+  }
   if (featured === true) compoundFilters.push("featured==true");
   if (storeId) compoundFilters.push(`storeId==${storeId}`);
   if (filters) compoundFilters.push(filters);
@@ -65,7 +99,7 @@ export async function getFeaturedProducts(
   pageSize = 8,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "featured==true,status==published",
+    filters: `featured==true,${PUBLISHED_CLAUSE}`,
     sorts: "-createdAt",
     page: 1,
     pageSize,
@@ -76,7 +110,7 @@ export async function getFeaturedAuctions(
   pageSize = 6,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "isAuction==true,status==published",
+    filters: AUCTIONS_PUBLISHED,
     sorts: "auctionEndDate",
     page: 1,
     pageSize,
@@ -87,7 +121,7 @@ export async function getLatestProducts(
   pageSize = 12,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "status==published",
+    filters: PUBLISHED_CLAUSE,
     sorts: "-createdAt",
     page: 1,
     pageSize,
@@ -98,7 +132,7 @@ export async function getLatestAuctions(
   pageSize = 12,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "isAuction==true,status==published",
+    filters: AUCTIONS_PUBLISHED,
     sorts: "-createdAt",
     page: 1,
     pageSize,
@@ -109,9 +143,8 @@ export async function listAuctions(
   params: ProductListActionParams = {},
 ): Promise<ProductListResult> {
   const { filters, sorts = "auctionEndDate", page = 1, pageSize = 20 } = params;
-  const base = "isAuction==true,status==published";
   return productRepository.list({
-    filters: filters ? `${base},${filters}` : base,
+    filters: filters ? `${AUCTIONS_PUBLISHED},${filters}` : AUCTIONS_PUBLISHED,
     sorts,
     page,
     pageSize,
@@ -122,7 +155,7 @@ export async function getFeaturedPreOrders(
   pageSize = 6,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "isPreOrder==true,status==published",
+    filters: PREORDERS_PUBLISHED,
     sorts: "preOrderDeliveryDate",
     page: 1,
     pageSize,
@@ -133,7 +166,7 @@ export async function getLatestPreOrders(
   pageSize = 12,
 ): Promise<ProductListResult> {
   return productRepository.list({
-    filters: "isPreOrder==true,status==published",
+    filters: PREORDERS_PUBLISHED,
     sorts: "-createdAt",
     page: 1,
     pageSize,
@@ -149,9 +182,8 @@ export async function listPreOrders(
     page = 1,
     pageSize = 20,
   } = params;
-  const base = "isPreOrder==true,status==published";
   return productRepository.list({
-    filters: filters ? `${base},${filters}` : base,
+    filters: filters ? `${PREORDERS_PUBLISHED},${filters}` : PREORDERS_PUBLISHED,
     sorts,
     page,
     pageSize,
@@ -164,7 +196,7 @@ export async function getRelatedProducts(
   limit = 6,
 ): Promise<ProductListResult> {
   const result = await productRepository.list({
-    filters: `categoryId==${categoryId},status==published`,
+    filters: `categoryId==${categoryId},${PUBLISHED_CLAUSE}`,
     sorts: "-createdAt",
     page: 1,
     pageSize: limit + 1,

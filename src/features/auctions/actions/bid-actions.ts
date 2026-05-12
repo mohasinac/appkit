@@ -8,6 +8,7 @@
 import { serverLogger } from "../../../monitoring";
 import { bidRepository } from "../repository/bid.repository";
 import { productRepository } from "../../products/repository/products.repository";
+import { isAuctionListing } from "../../products/utils/listing-type";
 import { userRepository } from "../../auth/repository/user.repository";
 import { unitOfWork } from "../../../core/unit-of-work";
 import { storeRepository } from "../../stores/repository/store.repository";
@@ -45,7 +46,7 @@ export async function placeBid(
 
   const product = await productRepository.findById(productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.BID.AUCTION_NOT_FOUND);
-  if (!product.isAuction)
+  if (!isAuctionListing(product))
     throw new ValidationError(ERROR_MESSAGES.BID.NOT_AN_AUCTION);
 
   if (product.auctionEndDate) {

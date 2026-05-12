@@ -55,7 +55,15 @@ export interface AdminProduct {
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
+  /**
+   * Canonical listing-kind discriminator. SB1-G (S21 2026-05-12) — read this
+   * via `isAuctionListing()`/`isPreOrderListing()` from `@mohasinac/appkit`.
+   * The legacy `isAuction?`/`isPreOrder?` booleans below are kept transitional
+   * until Lane B `_internal/` migrates and Phase 4 lands a coordinated drop.
+   */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
   // Auction fields
+  /** @deprecated SB1-G — read `listingType === "auction"` via `isAuctionListing(p)`. */
   isAuction?: boolean;
   auctionEndDate?: string;
   startingBid?: number;
@@ -73,6 +81,7 @@ export interface AdminProduct {
   promotionEndDate?: string;
   pickupAddressId?: string;
   // Pre-order fields
+  /** @deprecated SB1-G — read `listingType === "pre-order"` via `isPreOrderListing(p)`. */
   isPreOrder?: boolean;
   preOrderDeliveryDate?: string; // ISO date string — ETA for delivery
   preOrderDepositPercent?: number;

@@ -8,6 +8,7 @@ import type {
   PublicBid,
 } from "../types";
 import type { ProductItem } from "../../products/types";
+import { isAuctionListing } from "../../products/utils/listing-type";
 import { AUCTION_ENDPOINTS, BID_ENDPOINTS, PRODUCT_ENDPOINTS } from "../../../constants/api-endpoints";
 
 type AuctionListQuery = AuctionListParams | URLSearchParams | string;
@@ -133,7 +134,7 @@ export function useAuctionDetail(id: string, opts?: UseAuctionDetailOptions) {
   const bidsQuery = useQuery<PublicBid[]>({
     queryKey: [bidsQueryKeyPrefix, id, bidsEndpoint],
     queryFn: () => apiClient.get<PublicBid[]>(bidsEndpoint),
-    enabled: enabled && Boolean(product?.isAuction),
+    enabled: enabled && isAuctionListing(product ?? undefined),
     refetchInterval: refetchIntervalMs,
   });
 

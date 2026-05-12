@@ -50,6 +50,10 @@ export function useProducts<T extends ProductItem = ProductItem>(
   if (params.maxPrice !== undefined)
     sp.set("maxPrice", String(params.maxPrice));
   if (params.inStock !== undefined) sp.set("inStock", String(params.inStock));
+  // SB1-G — prefer the canonical `listingType` URL param; the /api/products
+  // route still accepts `isAuction`/`isPreOrder` and translates them.
+  if (params.listingType !== undefined)
+    sp.set("listingType", params.listingType);
   if (params.isAuction !== undefined)
     sp.set("isAuction", String(params.isAuction));
   if (params.isPreOrder !== undefined)
