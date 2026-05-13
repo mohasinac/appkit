@@ -282,6 +282,40 @@ export class CartRepository extends BaseRepository<CartDocument> {
       .set({ appliedCoupons: updated, updatedAt: new Date() }, { merge: true });
   }
 
+  async updateItemShipping(
+    userId: string,
+    itemId: string,
+    providerId: string,
+    feeInPaise: number,
+  ): Promise<CartDocument> {
+    try {
+      const cart = await this.findByUserId(userId);
+      if (!cart) throw new NotFoundError("Cart not found");
+
+      const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
+      if (itemIndex < 0) throw new NotFoundError("Cart item not found");
+
+      const items = [...cart.items];
+      items[itemIndex] = {
+        ...items[itemIndex],
+        chosenShippingProviderId: providerId,
+        chosenShippingFeeInPaise: feeInPaise,
+        updatedAt: new Date(),
+      };
+
+      const updatedCart: CartDocument = { ...cart, items, updatedAt: new Date() };
+      await this.db
+        .collection(this.collection)
+        .doc(userId)
+        .set(prepareForFirestore(updatedCart as unknown as Record<string, unknown>));
+
+      return updatedCart;
+    } catch (error) {
+      if (error instanceof DatabaseError || error instanceof NotFoundError) throw error;
+      throw new DatabaseError("Failed to update cart item shipping", error);
+    }
+  }
+
   async clearAllCoupons(userId: string): Promise<void> {
     await this.db
       .collection(this.collection)

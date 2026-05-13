@@ -1,9 +1,28 @@
 import React from "react";
 import { Div, Heading } from "../../../ui";
 
+/** Minimal shape of a per-store/per-type order group surfaced to the slot. */
+export interface CartOrderGroup {
+  /** Unique key for this group (e.g. `${storeId}:${orderType}`). */
+  key: string;
+  storeId: string;
+  storeName: string;
+  orderType: string;
+  items: unknown[];
+  subtotalInPaise: number;
+  shippingFeeInPaise: number;
+}
+
 export interface CartViewProps {
   labels?: { title?: string; emptyText?: string; checkoutButton?: string };
   renderItems: (isLoading: boolean) => React.ReactNode;
+  /**
+   * When provided, replaces `renderItems` + `renderPromoCode` with a
+   * per-group tabbed breakdown. Each group shows its own subtotal + shipping.
+   */
+  renderGroups?: (groups: CartOrderGroup[], isLoading: boolean) => React.ReactNode;
+  /** Computed groups passed to `renderGroups`. Ignored when `renderGroups` is absent. */
+  groups?: CartOrderGroup[];
   renderSummary?: () => React.ReactNode;
   renderPromoCode?: () => React.ReactNode;
   renderCheckoutButton?: (onCheckout: () => void, isLoading: boolean) => React.ReactNode;
@@ -16,6 +35,8 @@ export interface CartViewProps {
 export function CartView({
   labels = {},
   renderItems,
+  renderGroups,
+  groups = [],
   renderSummary,
   renderPromoCode,
   renderCheckoutButton,
@@ -32,8 +53,9 @@ export function CartView({
       )}
       <Div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
         <Div className="flex-1">
-          {renderItems(isLoading)}
-          {renderPromoCode?.()}
+          {renderGroups ? renderGroups(groups, isLoading) : renderItems(isLoading)}
+          {!renderGroups && renderPromoCode?.()}
+          {renderGroups && renderPromoCode?.()}
         </Div>
         <Div className="w-full lg:w-80">
           {renderSummary?.()}

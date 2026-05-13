@@ -842,6 +842,11 @@ export {
   triggerEventRaffleAction,
   assignSpinPrizeAction,
 } from "./_internal/server/features/raffle/actions";
+// [SERVER-ONLY] S-SBUNI-RULES — refund action (Razorpay + manual paths)
+export {
+  processRefundAction,
+  type ProcessRefundInput,
+} from "./_internal/server/features/refunds/actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createFaq - Helper for create faq.
 export { createFaq } from "./features/faq/server";

@@ -45,6 +45,7 @@ export const BUNDLE_COPY = {
     ctaSuccess: "Bundle added to cart",
     ctaSignInRequired: "Sign in to add to cart",
     ctaErrorFallback: "Couldn't add bundle to cart",
+    ctaBuyNow: "Buy now",
     qtyLabel: "Qty",
     qtyAriaLabel: "Bundle quantity",
   },

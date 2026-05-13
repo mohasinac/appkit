@@ -210,6 +210,12 @@ export {
   type CheckoutPaymentMethod,
 } from "./_internal/server/features/checkout/index";
 
+// S-SBUNI-RULES: refund action
+export {
+  processRefundAction,
+  type ProcessRefundInput,
+} from "./_internal/server/features/refunds/actions";
+
 // S4: payments actions
 export {
   createPaymentIntentAction,

@@ -1,5 +1,5 @@
 import type { DocumentReference, WriteBatch } from "firebase-admin/firestore";
-import { DatabaseError } from "../../../errors";
+import { DatabaseError, NotFoundError } from "../../../errors";
 import type {
   FirebaseSieveResult,
   SieveModel,
@@ -20,6 +20,7 @@ import {
   OrderStatusValues,
   type OrderCreateInput,
   type OrderDocument,
+  type OrderRefundEvent,
 } from "../schemas";
 import type { OrderStatus, PaymentStatus } from "../types";
 
@@ -351,6 +352,37 @@ class OrderRepository extends BaseRepository<OrderDocument> {
         maxPageSize: 200,
       },
     );
+  }
+
+  /**
+   * Append one refund event to the order and mark it non-contestable.
+   * If `becomeRefunded` is true, also transitions the order status to "refunded".
+   */
+  async postRefundEvent(
+    orderId: string,
+    event: OrderRefundEvent,
+    becomeRefunded = false,
+  ): Promise<OrderDocument> {
+    const order = await this.findById(orderId);
+    if (!order) throw new NotFoundError(`Order ${orderId} not found`);
+
+    const existing = order.refunds ?? [];
+    return this.update(orderId, {
+      refunds: [...existing, event],
+      contestable: false,
+      ...(becomeRefunded ? { status: "refunded" as OrderStatus } : {}),
+      updatedAt: new Date(),
+    });
+  }
+
+  /** Fetch all orders sharing a paymentBatchId (for sibling-orders display). */
+  async findByPaymentBatchId(batchId: string): Promise<OrderDocument[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("paymentBatchId", "==", batchId)
+      .limit(20)
+      .get();
+    return snap.docs.map((d) => this.decryptOrder({ id: d.id, ...d.data() } as OrderDocument));
   }
 
   /**

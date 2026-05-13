@@ -1,6 +1,164 @@
 {
   "indexes": [
     {
+      "collectionGroup": "addresses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ownerType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ownerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "addresses",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "ownerType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "ownerId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isDefault",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "grading.service",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "grading.grade",
+          "order": "DESCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "card.setName",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "card.cardNumber",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "classified.meetupArea.city",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "liveItem.species",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "catalogProductId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "price",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "condition",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "catalogProducts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "brandSlug",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "categorySlug",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "minOfferPriceInPaise",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "catalogProducts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "card.setName",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "card.cardNumber",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
       "fields": [
@@ -181,6 +339,20 @@
         {
           "fieldPath": "createdAt",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "orders",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "paymentBatchId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
         }
       ]
     },
@@ -1430,7 +1602,7 @@
         },
         {
           "fieldPath": "priority",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     },
@@ -3643,11 +3815,29 @@
       ]
     },
     {
-      "collectionGroup": "sublistingCategories",
+      "collectionGroup": "categories",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "name",
+          "fieldPath": "categoryType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "order",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "categories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "categoryType",
           "order": "ASCENDING"
         },
         {
@@ -3657,12 +3847,20 @@
       ]
     },
     {
-      "collectionGroup": "sublistingCategories",
+      "collectionGroup": "categories",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "productCount",
-          "order": "DESCENDING"
+          "fieldPath": "categoryType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdByStoreId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "createdAt",
@@ -3880,56 +4078,6 @@
       "fields": [
         {
           "fieldPath": "storeId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "bundles",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "bundles",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "storeId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "bundles",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "categorySlug",
           "order": "ASCENDING"
         },
         {
@@ -4241,11 +4389,11 @@
       ]
     },
     {
-      "collectionGroup": "bundles",
+      "collectionGroup": "eventEntries",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "storeId",
+          "fieldPath": "eventId",
           "order": "ASCENDING"
         },
         {
@@ -4253,17 +4401,17 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
+          "fieldPath": "points",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "bundles",
+      "collectionGroup": "eventEntries",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "categorySlug",
+          "fieldPath": "eventId",
           "order": "ASCENDING"
         },
         {
@@ -4272,16 +4420,16 @@
         },
         {
           "fieldPath": "createdAt",
-          "order": "DESCENDING"
+          "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "bundles",
+      "collectionGroup": "events",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "isFeatured",
+          "fieldPath": "hasRaffle",
           "order": "ASCENDING"
         },
         {
@@ -4289,8 +4437,8 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
+          "fieldPath": "raffleWinnerUserId",
+          "order": "ASCENDING"
         }
       ]
     }

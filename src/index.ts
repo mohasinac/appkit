@@ -4479,6 +4479,8 @@ export { removeCartItem } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateCartItem - Helper for update cart item.
 export { updateCartItem } from "./features/cart/server";
+// [SERVER-ONLY]-Server-only — cart item shipping provider update.
+export { updateCartItemShipping } from "./features/cart/server";
 
 // ./features/cart/schemas/index
 // [SCHEMA]-Schema / data-shape constant — Zod validator, default-value object, or Firestore collection/field name constant.
@@ -6494,6 +6496,12 @@ export { OrderStatusValues } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // OrdersList - Shared export for orders list.
 export { OrdersList } from "./features/orders/index";
+export { OrderSiblingPayments } from "./features/orders/index";
+export type { OrderSiblingPaymentsProps } from "./features/orders/index";
+export { RefundHistoryTable } from "./features/orders/index";
+export type { RefundHistoryTableProps } from "./features/orders/index";
+export { RefundRequestView } from "./features/orders/index";
+export type { RefundRequestViewProps } from "./features/orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PaymentGatewayValues - Model for payment gateway values.
 export { PaymentGatewayValues } from "./features/orders/index";
@@ -6817,8 +6825,8 @@ export type { BundlesListViewProps } from "./features/categories/components/Bund
 export { BundleDetailView } from "./features/categories/components/BundleDetailView";
 export type { BundleDetailViewProps } from "./features/categories/components/BundleDetailView";
 // S-SBUNI-5 2026-05-13 — functional Add-to-cart CTA client island.
-export { BundleAddToCartCta } from "./features/categories/components/BundleAddToCartCta";
-export type { BundleAddToCartCtaProps } from "./features/categories/components/BundleAddToCartCta";
+export { BundleBuyNowCta } from "./features/categories/components/BundleBuyNowCta";
+export type { BundleBuyNowCtaProps } from "./features/categories/components/BundleBuyNowCta";
 // CategoryBundlesListing is also re-exported lower in this file (line ~8871);
 // the canonical export lives there next to BUNDLE_MIN_ITEMS / BUNDLE_MAX_ITEMS.
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8803,7 +8811,8 @@ export type {
 } from "./features/auth/index";
 
 // Missing cart and checkout feature components
-export { CartItemRow, CartDrawer, CartView, CartSummary } from "./features/cart/index";
+export { CartItemRow, CartDrawer, CartView, CartSummary, ShippingPicker } from "./features/cart/index";
+export type { ShippingPickerProps } from "./features/cart/index";
 export { CheckoutView, CheckoutAddressStep, CheckoutOtpModal, CheckoutSuccessView } from "./features/cart/index";
 export { CheckoutStepper, useCheckout } from "./features/checkout/index";
 // PaymentGateway already exported from checkout types above

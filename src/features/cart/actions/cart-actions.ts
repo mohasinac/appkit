@@ -91,3 +91,16 @@ export async function mergeGuestCart(
 export async function getCart(userId: string): Promise<CartDocument | null> {
   return cartRepository.findByUserId(userId);
 }
+
+export async function updateCartItemShipping(
+  userId: string,
+  itemId: string,
+  providerId: string,
+  feeInPaise: number,
+): Promise<CartDocument> {
+  if (!itemId || !providerId) throw new ValidationError("itemId and providerId are required");
+  if (!Number.isFinite(feeInPaise) || feeInPaise < 0) {
+    throw new ValidationError("feeInPaise must be a non-negative number");
+  }
+  return cartRepository.updateItemShipping(userId, itemId, providerId, feeInPaise);
+}

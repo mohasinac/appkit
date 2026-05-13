@@ -59,9 +59,9 @@ export type { BundlesListViewProps } from "./BundlesListView";
 export { BundleDetailView } from "./BundleDetailView";
 export type { BundleDetailViewProps } from "./BundleDetailView";
 
-// S-SBUNI-5 2026-05-13 — functional Add-to-cart CTA client island.
-export { BundleAddToCartCta } from "./BundleAddToCartCta";
-export type { BundleAddToCartCtaProps } from "./BundleAddToCartCta";
+// S-SBUNI-RULES 2026-05-13 — direct-checkout CTA (replaces deleted BundleAddToCartCta).
+export { BundleBuyNowCta } from "./BundleBuyNowCta";
+export type { BundleBuyNowCtaProps } from "./BundleBuyNowCta";
 
 // S-SBUNI-5 2026-05-13 — admin dynamic-rule editor (paired with BundleItemsPicker).
 export { BundleDynamicRuleEditor } from "./BundleDynamicRuleEditor";

@@ -32,7 +32,7 @@ import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
-import { BundleAddToCartCta } from "./BundleAddToCartCta";
+import { BundleBuyNowCta } from "./BundleBuyNowCta";
 
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
@@ -47,23 +47,14 @@ const PLACEHOLDER_EMOJI = "📦" as const;
 export interface BundleDetailViewProps {
   bundle: CategoryDocument;
   members?: ProductDocument[];
-  /**
-   * Server-action callback wired by the consumer page (e.g. the
-   * `addBundleToCartAction` re-export). When supplied, the active "Add to
-   * cart" CTA renders via `<BundleAddToCartCta>`. When omitted, the legacy
-   * "coming soon" notice renders as a fallback so the page degrades
-   * gracefully for embeds that haven't been migrated yet.
-   */
-  onAddToCart?: (input: {
-    bundleSlug: string;
-    quantity: number;
-  }) => Promise<unknown>;
+  /** Direct-checkout callback (S-SBUNI-RULES). When supplied, renders the "Buy now" CTA. */
+  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
 export function BundleDetailView({
   bundle,
   members = [],
-  onAddToCart,
+  onBuyNow,
 }: BundleDetailViewProps) {
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
@@ -124,11 +115,11 @@ export function BundleDetailView({
                   </Stack>
                 )}
 
-                {onAddToCart ? (
-                  <BundleAddToCartCta
+                {onBuyNow ? (
+                  <BundleBuyNowCta
                     bundleSlug={bundle.slug}
                     outOfStock={stock === "out_of_stock"}
-                    onAddToCart={onAddToCart}
+                    onBuyNow={onBuyNow}
                   />
                 ) : (
                   <Div

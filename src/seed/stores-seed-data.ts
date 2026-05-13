@@ -36,6 +36,30 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "7-day hassle-free returns on all items. Items must be in original condition. Full refund or replacement guaranteed.",
     shippingPolicy:
       "Free shipping on orders above ₹999. Orders dispatched within 24 hours. 3–5 business day delivery across India. Express shipping available.",
+    // S-SBUNI-RULES 2026-05-13 — ShippingProviderConfig seed
+    shippingConfig: {
+      defaultProviderId: "provider-letitrip-standard",
+      providers: [
+        {
+          providerId: "provider-letitrip-standard",
+          label: "Standard Shipping",
+          type: "shiprocket" as const,
+          fee: { flatInPaise: 4900, freeAboveInPaise: 99900 },
+          etaDaysMin: 3,
+          etaDaysMax: 5,
+          requiresAwbUpload: true,
+        },
+        {
+          providerId: "provider-letitrip-express",
+          label: "Express Shipping",
+          type: "shiprocket" as const,
+          fee: { flatInPaise: 9900 },
+          etaDaysMin: 1,
+          etaDaysMax: 2,
+          requiresAwbUpload: true,
+        },
+      ],
+    },
     isPublic: true,
     isVacationMode: false,
     stats: {
@@ -71,6 +95,37 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "7-day return policy on factory-sealed product (seal must be intact). No returns on opened packs or singles. Graded slabs: 3-day return if slab is cracked on arrival.",
     shippingPolicy:
       "Singles and small orders: bubble-padded envelope (₹49 shipping). Sealed boxes and ETBs: double-boxed with foam inserts. Free shipping on orders above ₹1,499. 3–7 business days.",
+    // S-SBUNI-RULES 2026-05-13 — ShippingProviderConfig seed
+    shippingConfig: {
+      defaultProviderId: "provider-palace-standard",
+      providers: [
+        {
+          providerId: "provider-palace-standard",
+          label: "Bubble Mailer (Singles)",
+          type: "self-courier" as const,
+          fee: { flatInPaise: 4900, freeAboveInPaise: 149900 },
+          etaDaysMin: 3,
+          etaDaysMax: 7,
+        },
+        {
+          providerId: "provider-palace-box",
+          label: "Double-boxed (Sealed Product)",
+          type: "self-courier" as const,
+          fee: { flatInPaise: 14900 },
+          etaDaysMin: 4,
+          etaDaysMax: 7,
+        },
+        {
+          providerId: "provider-palace-pickup",
+          label: "Store Pickup — Mumbai",
+          type: "store-pickup" as const,
+          fee: { flatInPaise: 0 },
+          etaDaysMin: 0,
+          etaDaysMax: 1,
+          regions: ["400"],
+        },
+      ],
+    },
     isPublic: true,
     isVacationMode: false,
     stats: {

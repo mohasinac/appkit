@@ -131,6 +131,8 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     platformFee: 14995,
     orderDate: daysAgo(7),
     shippingDate: daysAgo(5),
+    // S-SBUNI-RULES 2026-05-13 — demo paymentBatchId sibling link
+    paymentBatchId: "batch-razorpay-demo-001",
     payoutStatus: "eligible",
     createdAt: daysAgo(7),
     updatedAt: daysAgo(5),
@@ -204,9 +206,11 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     shippingAddress: "204 Koramangala 5th Block, Bengaluru, Karnataka 560095",
     shippingFee: 0,
     platformFee: 14995,
-    orderDate: daysAgo(2),
+    orderDate: daysAgo(7),
+    // S-SBUNI-RULES 2026-05-13 — sibling of order-arjun-003 (same Razorpay payment)
+    paymentBatchId: "batch-razorpay-demo-001",
     payoutStatus: "eligible",
-    createdAt: daysAgo(2),
+    createdAt: daysAgo(7),
     updatedAt: daysAgo(1),
   },
 
@@ -324,6 +328,19 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     refundAmount: 1299900,
     refundStatus: "completed",
     refundNote: "Car not Redline era — post-1977 baseplate found after delivery. Full refund issued after dispute mediation.",
+    // S-SBUNI-RULES 2026-05-13 — refund machinery fields
+    contestable: false,
+    refunds: [
+      {
+        refundId: "refund-order08-full-001",
+        type: "full" as const,
+        amount: 1299900,
+        reason: "Item not as described — post-1977 baseplate found after delivery. Buyer provided photographic proof.",
+        refundedAt: daysAgo(25),
+        refundedBy: "user-admin-letitrip",
+        razorpayRefundId: "rfnd_mock_order08_001",
+      },
+    ],
     payoutStatus: "eligible",
     createdAt: daysAgo(35),
     updatedAt: daysAgo(25),
@@ -925,6 +942,28 @@ export const ordersSeedData: Partial<OrderDocument>[] = [
     orderDate: daysAgo(25),
     shippingDate: daysAgo(23),
     deliveryDate: daysAgo(20),
+    // S-SBUNI-RULES 2026-05-13 — refund machinery fields
+    contestable: false,
+    refunds: [
+      {
+        refundId: "refund-order27-partial-001",
+        type: "partial" as const,
+        amount: 300000,
+        reason: "Packaging damaged in transit — partial goodwill refund agreed by seller.",
+        refundedAt: daysAgo(18),
+        refundedBy: "user-admin-letitrip",
+        manualTransactionId: "NEFT-ORDER27-PARTIAL-001",
+      },
+      {
+        refundId: "refund-order27-full-002",
+        type: "full" as const,
+        amount: 649900,
+        reason: "Item not received after reshipment failed — full refund issued.",
+        refundedAt: daysAgo(12),
+        refundedBy: "user-admin-letitrip",
+        razorpayRefundId: "rfnd_mock_order27_002",
+      },
+    ],
     payoutStatus: "eligible",
     createdAt: daysAgo(25),
     updatedAt: daysAgo(12),
