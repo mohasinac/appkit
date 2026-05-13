@@ -50,8 +50,7 @@ export async function listSitemapProducts(): Promise<SitemapProduct[]> {
       const listingType: SitemapProduct["listingType"] =
         rawListingType === "auction" ||
         rawListingType === "pre-order" ||
-        rawListingType === "prize-draw" ||
-        rawListingType === "bundle"
+        rawListingType === "prize-draw"
           ? rawListingType
           : "standard";
       return {

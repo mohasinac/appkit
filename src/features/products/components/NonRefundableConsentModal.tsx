@@ -22,7 +22,9 @@ import {
   Text,
 } from "../../../ui";
 
-export type NonRefundableListingType = "bundle" | "prize-draw";
+// SB-UNI-E 2026-05-13 — "bundle" dropped (bundle UI deleted in SB-UNI-V; bundles
+// are now a category discriminator). Prize draws remain the only consumer.
+export type NonRefundableListingType = "prize-draw";
 
 export interface NonRefundableConsentModalProps {
   /** Modal visibility — controlled by the parent. */
@@ -50,17 +52,6 @@ const COPY: Record<
   NonRefundableListingType,
   { heading: string; bullets: string[]; cta: string; consent: string }
 > = {
-  bundle: {
-    heading: "This bundle is non-refundable once paid",
-    bullets: [
-      "All items in the bundle ship together. We don't process partial refunds for individual items inside the bundle.",
-      "If the seller cancels the bundle before shipping, your full payment is refunded automatically.",
-      "Once shipped, normal item-level shipping/return guarantees apply — but the bundle price itself is final.",
-    ],
-    cta: "Agree & Buy Bundle",
-    consent:
-      "I understand this purchase is non-refundable once paid. The seller will ship all items together.",
-  },
   "prize-draw": {
     heading: "Entry fee is non-refundable",
     bullets: [

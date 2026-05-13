@@ -345,6 +345,8 @@ export const productQueryHelpers = {
   available: () => ["availableQuantity", ">", 0] as const,
   auctions: () => ["listingType", "==", "auction"] as const,
   preOrders: () => ["listingType", "==", "pre-order"] as const,
+  prizeDraws: () => ["listingType", "==", "prize-draw"] as const,
+  standardListings: () => ["listingType", "==", "standard"] as const,
   promoted: () => ["isPromoted", "==", true] as const,
   activeAuction: (date: Date) => ["auctionEndDate", ">=", date] as const,
 } as const;

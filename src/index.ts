@@ -6965,7 +6965,16 @@ export {
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
+  isPrizeDrawListing,
 } from "./features/products/index";
+// User-role predicates — SB-UNI-E 2026-05-13.
+export {
+  isAdminUser,
+  isSellerUser,
+  isModeratorUser,
+  isEmployeeUser,
+  isBuyerUser,
+} from "./features/auth/role-predicates";
 // [SERVER-ONLY]-Safe in browser but intended for server routes.
 // sanitizeProductForPublic - Strip sellerId/sellerName/sellerEmail/ownerId before returning a product in a public response.
 export { sanitizeProductForPublic, sanitizeProductsForPublic } from "./features/products/index";

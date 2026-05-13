@@ -14,6 +14,7 @@ export {
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
+  isPrizeDrawListing,
 } from "./utils/listing-type";
 export {
   sanitizeProductForPublic,

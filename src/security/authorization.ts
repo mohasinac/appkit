@@ -11,12 +11,14 @@
 
 import { AuthenticationError, AuthorizationError } from "../errors";
 import { ERROR_MESSAGES } from "../errors/messages";
+import type { UserRole } from "../features/auth/types";
 
-export type UserRole = "admin" | "moderator" | "seller" | "user";
+export type { UserRole };
 
 const ROLE_HIERARCHY: Record<UserRole, number> = {
-  admin: 4,
-  moderator: 3,
+  admin: 5,
+  moderator: 4,
+  employee: 3,
   seller: 2,
   user: 1,
 };

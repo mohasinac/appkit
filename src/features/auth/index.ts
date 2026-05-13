@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./schemas";
+export * from "./role-predicates";
 export * from "./auth-helpers";
 export * from "./token-helpers";
 export * from "./hooks/useAuth";

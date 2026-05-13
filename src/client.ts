@@ -362,7 +362,17 @@ export {
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
+  isPrizeDrawListing,
 } from "./features/products/utils/listing-type";
+
+// SB-UNI-E user-role predicates (pure functions, client-safe).
+export {
+  isAdminUser,
+  isSellerUser,
+  isModeratorUser,
+  isEmployeeUser,
+  isBuyerUser,
+} from "./features/auth/role-predicates";
 
 // Layout feature — client islands (unifies admin/store/user dashboard layouts).
 export { DashboardLayoutClient, RoleGuard } from "./_internal/client/features/layout/index";
