@@ -369,6 +369,24 @@ export {
   isLiveListing,
 } from "./features/products/utils/listing-type";
 
+// SB-UNI-X4 2026-05-13 — per-type feature-flag helpers (client-safe).
+export {
+  isListingTypeEnabled,
+  isCategoryTypeEnabled,
+  enabledListingTypes,
+  enabledCategoryTypes,
+} from "./_internal/shared/listing-types/feature-flags";
+
+// SB-UNI-X5 2026-05-13 — action telemetry sink (client-safe; defaults to
+// a no-op + console.debug in dev).
+export {
+  actionTracker,
+  setActionTrackerSink,
+  resetActionTrackerSink,
+  type ActionEvent,
+  type ActionTrackerSink,
+} from "./_internal/shared/listing-types/action-tracker";
+
 // SB-UNI-E user-role predicates (pure functions, client-safe).
 export {
   isAdminUser,

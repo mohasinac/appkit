@@ -395,6 +395,24 @@ export interface SiteSettingsDocument {
     sellerRegistration: boolean;
     preOrders: boolean;
     seedPanel: boolean;
+    // SB-UNI-X4 2026-05-13 — per-type feature flags. Disabled types are
+    // hidden from listings + reject create/add-to-cart via the
+    // isListingTypeEnabled / isCategoryTypeEnabled helpers.
+    listingTypes?: {
+      standard?: boolean;
+      auction?: boolean;
+      "pre-order"?: boolean;
+      "prize-draw"?: boolean;
+      classified?: boolean;
+      "digital-code"?: boolean;
+      live?: boolean;
+    };
+    categoryTypes?: {
+      category?: boolean;
+      sublisting?: boolean;
+      brand?: boolean;
+      bundle?: boolean;
+    };
   };
   legalPages: {
     termsOfService: string;
@@ -518,6 +536,24 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     sellerRegistration: true,
     preOrders: false,
     seedPanel: true,
+    // SB-UNI-X4 2026-05-13 — Phase 1 types enabled by default; Phase 2 types
+    // (classified / digital-code / live) gated until per-type Phase 3 + 5
+    // surfaces ship. Admin Feature Flags UI lets the operator flip them.
+    listingTypes: {
+      standard: true,
+      auction: true,
+      "pre-order": true,
+      "prize-draw": true,
+      classified: false,
+      "digital-code": false,
+      live: false,
+    },
+    categoryTypes: {
+      category: true,
+      sublisting: true,
+      brand: true,
+      bundle: true,
+    },
   },
   shipping: {
     estimatedDays: 5,

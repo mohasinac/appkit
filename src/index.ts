@@ -7001,6 +7001,21 @@ export {
   isDigitalCodeListing,
   isLiveListing,
 } from "./features/products/index";
+// SB-UNI-X4 2026-05-13 — per-type feature-flag helpers.
+export {
+  isListingTypeEnabled,
+  isCategoryTypeEnabled,
+  enabledListingTypes,
+  enabledCategoryTypes,
+} from "./_internal/shared/listing-types/feature-flags";
+// SB-UNI-X5 2026-05-13 — action telemetry sink.
+export {
+  actionTracker,
+  setActionTrackerSink,
+  resetActionTrackerSink,
+  type ActionEvent,
+  type ActionTrackerSink,
+} from "./_internal/shared/listing-types/action-tracker";
 // User-role predicates — SB-UNI-E 2026-05-13.
 export {
   isAdminUser,
