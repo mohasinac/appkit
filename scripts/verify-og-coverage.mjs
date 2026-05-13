@@ -62,6 +62,9 @@ const OG_KNOWN_GAPS = new Set([
   "reviews/[id]",
   "scams/[id]",
   "sellers/[id]",
+  // Added S7-PrizeDraws-prep3 — page shim landed; OG renderer comes
+  // with SB4-G in S7-PrizeDraws-2 alongside the real detail view.
+  "prize-draws/[slug]",
 ]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;

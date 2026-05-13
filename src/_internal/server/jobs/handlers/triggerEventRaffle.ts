@@ -117,7 +117,7 @@ export const triggerEventRaffleHandler: CallableHandler<
     raffleWinnerEntryId: winner.id,
     raffleTriggeredAt: ctx.now,
     raffleEntryCount: entriesSnap.size,
-    raffleGithubFunctionUrl: `https://github.com/letitripin/proof-of-fairness/blob/main/raffles/${input.eventId}.json`,
+    raffleGithubFunctionUrl: `${ctx.env("PROOF_OF_FAIRNESS_BASE_URL") ?? ""}/raffles/${input.eventId}.json`,
     updatedAt: ctx.now,
   });
 
