@@ -59,8 +59,14 @@ const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.
 const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
 const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
+const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRIZE_DRAW}`;
 
-type ProductListingKind = "auction" | "preorder" | "product";
+type ProductListingKind =
+  | "auction"
+  | "preorder"
+  | "product"
+  | "prizedraw"
+  | "prize-draw";
 
 function buildListingKindClause(
   kind: ProductListingKind,
@@ -72,7 +78,9 @@ function buildListingKindClause(
       ? LISTING_TYPE_VALUES.AUCTION
       : kind === "preorder"
         ? LISTING_TYPE_VALUES.PRE_ORDER
-        : LISTING_TYPE_VALUES.STANDARD;
+        : kind === "prizedraw" || kind === "prize-draw"
+          ? LISTING_TYPE_VALUES.PRIZE_DRAW
+          : LISTING_TYPE_VALUES.STANDARD;
   const op = inverted ? "!=" : "==";
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
@@ -478,9 +486,18 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     listingType: (value, operator) => {
       if (operator !== "==" && operator !== "!=") return "";
-      if (value !== "auction" && value !== "preorder" && value !== "product")
+      if (
+        value !== "auction" &&
+        value !== "preorder" &&
+        value !== "product" &&
+        value !== "prizedraw" &&
+        value !== "prize-draw"
+      )
         return "";
-      return buildListingKindClause(value, operator === "!=");
+      return buildListingKindClause(
+        value as ProductListingKind,
+        operator === "!=",
+      );
     },
 
     /**
@@ -501,6 +518,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_AUCTION].join(",");
         case "publicPreorders":
           return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
+        case "publicPrizeDraws":
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PRIZE_DRAW].join(",");
         case "published":
           return SIEVE_CLAUSE_PUBLISHED;
         default:
