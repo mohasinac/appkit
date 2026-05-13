@@ -46,6 +46,13 @@ export interface AdminOrdersViewProps extends ListingViewShellProps {}
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const { showToast } = useToast();
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const toggleSelect = (id: string, next: boolean) =>
+    setSelectedIds((prev) => {
+      const s = new Set(prev);
+      if (next) s.add(id); else s.delete(id);
+      return s;
+    });
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -164,6 +171,11 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
             rows={rows}
             isLoading={isLoading}
             emptyLabel="No orders found"
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={(next) =>
+              setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
+            }
             renderRowActions={(row) => (
               <QuickEditMenu
                 actions={[

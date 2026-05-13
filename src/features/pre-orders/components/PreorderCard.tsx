@@ -1,10 +1,11 @@
 import Link from "next/link";
 import React from "react";
-import { Div, Heading, Span, Text } from "../../../ui";
+import { BaseListingCard, Div, Heading, Span, Text } from "../../../ui";
 import type { PreorderItem, PreorderStatus } from "../types";
 import { getPreorderStatus } from "../types";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const STATUS_LABELS: Record<PreorderStatus, string> = {
   available: "Pre-order now",
@@ -37,14 +38,35 @@ export function PreorderBadge({ shipDate, className }: PreorderBadgeProps) {
 interface PreorderCardProps {
   item: PreorderItem;
   href: string;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
-export function PreorderCard({ item, href }: PreorderCardProps) {
+export function PreorderCard({ item, href, selectable = false, isSelected = false, onSelect }: PreorderCardProps) {
+  const longPress = useLongPress(() => onSelect?.(item.id, !isSelected));
   return (
-    <Link
-      href={href}
-      className="group relative block overflow-hidden rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 transition-shadow hover:shadow-md"
+    <Div
+      className={`group relative block overflow-hidden rounded-xl border bg-white dark:bg-slate-900 transition-shadow hover:shadow-md ${isSelected ? "border-primary outline outline-2 outline-primary" : "border-gray-200 dark:border-slate-700"}`}
+      onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
     >
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={(e) => { e.preventDefault(); onSelect(item.id, !isSelected); }}
+          label={isSelected ? "Deselect pre-order" : "Select pre-order"}
+          position="top-2 left-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
+      )}
+      <Link
+        href={href}
+        className="block"
+      >
       {item.images[0] ? (
         <Div
           role="img"
@@ -87,6 +109,7 @@ export function PreorderCard({ item, href }: PreorderCardProps) {
           </Text>
         )}
       </Div>
-    </Link>
+      </Link>
+    </Div>
   );
 }

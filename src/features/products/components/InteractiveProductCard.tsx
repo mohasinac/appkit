@@ -31,25 +31,26 @@ export function InteractiveProductCard({
   onAddToCart,
   onBuyNow,
 }: InteractiveProductCardProps) {
+  // When selection is enabled, render ProductCard directly so its built-in
+  // checkbox + long-press (BaseListingCard.Checkbox) work; wrap with Link
+  // only outside of selection mode.
+  if (onSelect) {
+    return (
+      <ProductCard
+        product={product}
+        className={className}
+        isWishlisted={isWishlisted}
+        onAddToWishlist={onToggleWishlist}
+        onAddToCart={onAddToCart}
+        onBuyNow={onBuyNow}
+        selectionMode={selectable}
+        isSelected={isSelected}
+        onSelect={(id) => onSelect(id, !isSelected)}
+      />
+    );
+  }
   return (
-    <Link
-      href={href}
-      className={[
-        "block",
-        selectable ? "cursor-pointer" : "",
-        isSelected ? "ring-2 ring-primary-600" : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      onClick={
-        selectable && onSelect
-          ? (e) => {
-              e.preventDefault();
-              onSelect(product.id, !isSelected);
-            }
-          : undefined
-      }
-    >
+    <Link href={href} className="block">
       <ProductCard
         product={product}
         className={className}

@@ -1,19 +1,17 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Plus, ToggleLeft, ToggleRight, Trash2, Pencil } from "lucide-react";
+import { X, Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Button, Div, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { Button, Div, ListingToolbar, Pagination, ListingViewShell, Text } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
-  toRelativeDate,
   toStringValue,
   useSellerListingData,
 } from "../hooks/useSellerListingData";
-import { DataTable } from "../../admin/components/DataTable";
-import type { AdminTableColumn } from "../../admin/types";
+import { CouponCard } from "../../promotions/components/CouponCard";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -34,10 +32,7 @@ const SORT_OPTIONS = [
 
 interface CouponRow {
   id: string;
-  primary: string;
-  secondary: string;
-  status: string;
-  updatedAt: string;
+  raw: Record<string, unknown>;
   isActive: boolean;
 }
 
@@ -56,21 +51,6 @@ export interface SellerCouponsViewProps extends ListingViewShellProps {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-function formatDiscount(item: Record<string, unknown>): string {
-  const type = String(item.type ?? "");
-  const discount = item.discount as Record<string, unknown> | undefined;
-  const val = Number(discount?.value ?? 0);
-  if (type === "percentage") return `${val}% off`;
-  if (type === "fixed") return `₹${(val / 100).toFixed(0)} off`;
-  if (type === "free_shipping") return "Free shipping";
-  return `${val} off`;
-}
-
-function getValidityEnd(item: Record<string, unknown>): unknown {
-  const validity = item.validity as Record<string, unknown> | undefined;
-  return validity?.endDate ?? item.expiresAt;
-}
 
 function getIsActive(item: Record<string, unknown>): boolean {
   const validity = item.validity as Record<string, unknown> | undefined;
@@ -145,10 +125,7 @@ export function SellerCouponsView({
     mapRows: (response) =>
       toRecordArray(response.coupons).map((item, index) => ({
         id: toStringValue(item.id, `coupon-${index}`),
-        primary: toStringValue(item.code, "Untitled"),
-        secondary: `${formatDiscount(item)} · Expires ${toRelativeDate(getValidityEnd(item))}`,
-        status: getIsActive(item) ? "Active" : "Inactive",
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        raw: item,
         isActive: getIsActive(item),
       })),
     getTotal: (response, mappedRows) =>
@@ -158,83 +135,21 @@ export function SellerCouponsView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const columns: AdminTableColumn<CouponRow>[] = [
-    {
-      key: "primary",
-      header: "Code",
-      render: (row) => (
-        <div className="space-y-0.5">
-          <p className="font-mono font-semibold text-zinc-900 dark:text-zinc-100">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</p>
-        </div>
-      ),
-    },
-    {
-      key: "status",
-      header: "Status",
-      className: "w-28",
-      render: (row) => (
-        <Badge variant={row.isActive ? "success" : "default"}>{row.status}</Badge>
-      ),
-    },
-    {
-      key: "updatedAt",
-      header: "Updated",
-      className: "w-28",
-      render: (row) => <span className="text-xs text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
-    },
-  ];
+  const handleEdit = useCallback((id: string) => { onEditClick?.(id); }, [onEditClick]);
 
-  const renderRowActions = useCallback(
-    (row: CouponRow) => (
-      <div className="flex items-center gap-1.5 justify-end">
-        {onEditClick && (
-          <button
-            type="button"
-            onClick={() => onEditClick(row.id)}
-            title="Edit"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-          >
-            <Pencil className="h-4 w-4" />
-          </button>
-        )}
-        {onToggle && (
-          <button
-            type="button"
-            onClick={async () => {
-              setTogglingId(row.id);
-              try { await onToggle(row.id, row.isActive); await refetch?.(); }
-              finally { setTogglingId(null); }
-            }}
-            disabled={togglingId === row.id}
-            title={row.isActive ? "Deactivate" : "Activate"}
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
-          >
-            {row.isActive
-              ? <ToggleRight className="h-4 w-4 text-green-600 dark:text-green-400" />
-              : <ToggleLeft className="h-4 w-4" />}
-          </button>
-        )}
-        {onDelete && (
-          <button
-            type="button"
-            onClick={async () => {
-              if (!confirm(`Delete coupon "${row.primary}"? This cannot be undone.`)) return;
-              setDeletingId(row.id);
-              try { await onDelete(row.id); await refetch?.(); }
-              finally { setDeletingId(null); }
-            }}
-            disabled={deletingId === row.id}
-            title="Delete"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
-          >
-            <Trash2 className="h-4 w-4" />
-          </button>
-        )}
-      </div>
-    ),
-    [onEditClick, onToggle, onDelete, togglingId, deletingId, refetch],
-  );
+  const handleToggle = useCallback(async (id: string, currentlyActive: boolean) => {
+    if (!onToggle) return;
+    setTogglingId(id);
+    try { await onToggle(id, currentlyActive); refetch?.(); }
+    finally { setTogglingId(null); }
+  }, [onToggle, refetch]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    if (!onDelete) return;
+    setDeletingId(id);
+    try { await onDelete(id); refetch?.(); }
+    finally { setDeletingId(null); }
+  }, [onDelete, refetch]);
 
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
@@ -279,13 +194,37 @@ export function SellerCouponsView({
             {errorMessage}
           </Div>
         )}
-        <DataTable
-          rows={rows}
-          columns={columns}
-          isLoading={isLoading}
-          emptyLabel="No coupons found — create your first coupon"
-          renderRowActions={renderRowActions}
-        />
+        {isLoading ? (
+          <Div className="fluid-grid-card gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Div
+                key={i}
+                className="rounded-xl border-2 border-zinc-100 dark:border-slate-700 p-4 animate-pulse space-y-3"
+              >
+                <Div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+                <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+              </Div>
+            ))}
+          </Div>
+        ) : rows.length === 0 ? (
+          <Div className="py-16 text-center">
+            <Text className="text-zinc-400 dark:text-zinc-500">No coupons found — create your first coupon</Text>
+          </Div>
+        ) : (
+          <Div className="fluid-grid-card gap-3">
+            {rows.map((row) => (
+              <CouponCard
+                key={row.id}
+                coupon={row.raw}
+                onEdit={onEditClick ? handleEdit : undefined}
+                onToggleActive={onToggle ? handleToggle : undefined}
+                onDelete={onDelete ? handleDelete : undefined}
+                className={togglingId === row.id || deletingId === row.id ? "pointer-events-none opacity-60" : undefined}
+              />
+            ))}
+          </Div>
+        )}
       </div>
 
       {filterOpen && (

@@ -49,6 +49,13 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const toggleSelect = (id: string, next: boolean) =>
+    setSelectedIds((prev) => {
+      const s = new Set(prev);
+      if (next) s.add(id); else s.delete(id);
+      return s;
+    });
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
     () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
   );
@@ -162,6 +169,11 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
             rows={rows}
             isLoading={isLoading}
             emptyLabel="No users found"
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+            onToggleSelectAll={(next) =>
+              setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
+            }
             renderRowActions={(row) => (
               <RowActionMenu actions={[{
                 label: "Manage",

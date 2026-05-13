@@ -1,10 +1,11 @@
 import React from "react";
-import { Article, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
+import { Article, BaseListingCard, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
 import type { BlogPost, BlogPostCategory } from "../types";
 import { getMediaUrl } from "../../media/types/index";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { safeDisplayName } from "../../../security";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
   news: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
@@ -22,6 +23,9 @@ export interface BlogFeaturedCardProps {
     readTime?: string;
   };
   className?: string;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
 export function BlogFeaturedCard({
@@ -29,7 +33,11 @@ export function BlogFeaturedCard({
   href,
   labels = {},
   className = "",
+  selectable = false,
+  isSelected = false,
+  onSelect,
 }: BlogFeaturedCardProps) {
+  const longPress = useLongPress(() => onSelect?.(post.id, !isSelected));
   const safeTitle = post.title?.trim() || "Untitled post";
   const coverImageUrl = getMediaUrl(post.coverImage);
   const date = post.publishedAt
@@ -41,10 +49,24 @@ export function BlogFeaturedCard({
     : "";
 
   return (
-    <TextLink href={href} className="block h-full">
-      <Article
-        className={`flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-200 ${className}`}
-      >
+    <Article
+      className={`group relative flex h-full flex-col overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-200 ${isSelected ? "ring-2 ring-primary outline outline-2 outline-primary" : ""} ${className}`}
+      onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
+    >
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={(e) => { e.preventDefault(); onSelect(post.id, !isSelected); }}
+          label={isSelected ? "Deselect post" : "Select post"}
+          position="top-2 left-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
+      )}
+      <TextLink href={href} className="flex h-full flex-col">
         {/* Cover image — aspect-video like EventCard */}
         <Div className="aspect-video overflow-hidden flex-shrink-0">
           {coverImageUrl ? (
@@ -109,7 +131,7 @@ export function BlogFeaturedCard({
             {date && <Span>{date}</Span>}
           </Row>
         </Div>
-      </Article>
-    </TextLink>
+      </TextLink>
+    </Article>
   );
 }

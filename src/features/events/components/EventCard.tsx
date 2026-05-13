@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { Article, Button, Div, Heading, RichText, Span, TextLink } from "../../../ui";
+import { Article, BaseListingCard, Button, Div, Heading, RichText, Span, TextLink } from "../../../ui";
 import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import type { EventItem, EventType } from "../types";
 import { EVENT_FIELDS } from "../schemas";
 import { EventStatusBadge } from "./EventStatusBadge";
 import { ROUTES } from "../../../next";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const TYPE_ICONS: Record<EventType, string> = {
   sale: "🏷️",
@@ -25,6 +26,9 @@ interface EventCardProps {
   };
   onParticipate?: (event: EventItem) => void;
   className?: string;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
 export function EventCard({
@@ -32,7 +36,11 @@ export function EventCard({
   labels = {},
   onParticipate,
   className = "",
+  selectable = false,
+  isSelected = false,
+  onSelect,
 }: EventCardProps) {
+  const longPress = useLongPress(() => onSelect?.(event.id, !isSelected));
   const safeTitle = event.title?.trim() || "Untitled event";
   const now = new Date();
   const endsAt = new Date(event.endsAt);
@@ -43,8 +51,22 @@ export function EventCard({
 
   return (
     <Article
-      className={`group flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-700 dark:bg-slate-900 ${className}`}
+      className={`group relative flex h-full ${LAYOUT.cardHeight.event} flex-col overflow-hidden rounded-xl border bg-white shadow-sm transition-shadow hover:shadow-md dark:bg-slate-900 ${isSelected ? "border-primary outline outline-2 outline-primary" : "border-zinc-200 dark:border-slate-700"} ${className}`}
+      onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
     >
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={(e) => { e.preventDefault(); onSelect(event.id, !isSelected); }}
+          label={isSelected ? "Deselect event" : "Select event"}
+          position="top-2 left-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
+      )}
       <Link href={detailHref} className="block flex-shrink-0">
         {event.coverImageUrl ? (
           <Div className="aspect-video overflow-hidden">

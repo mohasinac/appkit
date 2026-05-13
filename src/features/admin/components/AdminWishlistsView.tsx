@@ -41,6 +41,13 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const toggleSelect = (id: string, next: boolean) =>
+    setSelectedIds((prev) => {
+      const s = new Set(prev);
+      if (next) s.add(id); else s.delete(id);
+      return s;
+    });
 
   const resetAll = useCallback(() => {
     table.setMany({ q: "", sort: "" });
@@ -112,7 +119,16 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No user wishlists found" />
+        <DataTable
+          rows={rows}
+          isLoading={isLoading}
+          emptyLabel="No user wishlists found"
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onToggleSelectAll={(next) =>
+            setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
+          }
+        />
       </div>
     </div>
   );

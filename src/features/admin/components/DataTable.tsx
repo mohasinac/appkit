@@ -2,7 +2,8 @@
 
 import React from "react";
 import type { AdminTableColumn } from "../types";
-import { Button, Div, Span } from "../../../ui";
+import { BaseListingCard, Button, Div, Span } from "../../../ui";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
   {
@@ -47,6 +48,83 @@ interface DataTableProps<T extends { id: string }> {
   currentPage?: number;
   onPageChange?: (page: number) => void;
   emptyLabel?: string;
+  /** When provided, renders a leading checkbox column + long-press to toggle. */
+  selectedIds?: Set<string>;
+  onToggleSelect?: (id: string, selected: boolean) => void;
+  onToggleSelectAll?: (nextAllSelected: boolean) => void;
+}
+
+function SelectableRow<T extends { id: string }>({
+  row,
+  columns,
+  isSelected,
+  onToggle,
+  renderRowActions,
+  onRowClick,
+  rowHref,
+  selectionEnabled,
+}: {
+  row: T;
+  columns: AdminTableColumn<T>[];
+  isSelected: boolean;
+  onToggle?: (id: string, selected: boolean) => void;
+  renderRowActions?: (row: T) => React.ReactNode;
+  onRowClick?: (row: T) => void;
+  rowHref?: string;
+  selectionEnabled: boolean;
+}) {
+  const longPress = useLongPress(() => onToggle?.(row.id, !isSelected));
+  const handleClick = onRowClick
+    ? () => onRowClick(row)
+    : rowHref
+      ? () => { window.location.href = rowHref; }
+      : undefined;
+  const handleKeyDown = handleClick
+    ? (event: React.KeyboardEvent) => {
+        if (event.key === "Enter" || event.key === " ") handleClick();
+      }
+    : undefined;
+  const isInteractive = Boolean(onRowClick ?? rowHref);
+  return (
+    <tr
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      role={isInteractive ? "link" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      onMouseDown={selectionEnabled && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={selectionEnabled && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={selectionEnabled && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={selectionEnabled && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={selectionEnabled && !isSelected ? longPress.onTouchEnd : undefined}
+      className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""} ${isSelected ? "bg-primary/5 dark:bg-primary/10" : ""}`}
+    >
+      {selectionEnabled && (
+        <td className="relative w-10 px-2 py-3" onClick={(e) => e.stopPropagation()}>
+          <BaseListingCard.Checkbox
+            selected={isSelected}
+            onSelect={(e) => { e.preventDefault(); onToggle?.(row.id, !isSelected); }}
+            label={isSelected ? "Deselect row" : "Select row"}
+            position="top-1/2 left-2 -translate-y-1/2"
+          />
+        </td>
+      )}
+      {columns.map((col) => (
+        <td
+          key={col.key}
+          className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
+        >
+          {col.render
+            ? col.render(row)
+            : String((row as Record<string, unknown>)[col.key] ?? "")}
+        </td>
+      ))}
+      {renderRowActions && (
+        <td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
+          {renderRowActions(row)}
+        </td>
+      )}
+    </tr>
+  );
 }
 
 export function DataTable<T extends { id: string }>({
@@ -63,14 +141,33 @@ export function DataTable<T extends { id: string }>({
   getRowHref,
   onRowClick,
   renderRowActions,
+  selectedIds,
+  onToggleSelect,
+  onToggleSelectAll,
 }: DataTableProps<T>) {
   const columns = (columnsProp ?? DEFAULT_COLUMNS) as AdminTableColumn<T>[];
+  const selectionEnabled = Boolean(onToggleSelect);
+  const allRowsSelected =
+    selectionEnabled && rows.length > 0 && rows.every((r) => selectedIds?.has(r.id));
   return (
     <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
       <Div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">
+              {selectionEnabled && (
+                <th scope="col" className="w-10 px-2 py-3">
+                  {onToggleSelectAll && (
+                    <input
+                      type="checkbox"
+                      aria-label={allRowsSelected ? "Deselect all" : "Select all"}
+                      checked={allRowsSelected}
+                      onChange={() => onToggleSelectAll(!allRowsSelected)}
+                      className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 accent-zinc-900 dark:accent-zinc-100"
+                    />
+                  )}
+                </th>
+              )}
               {columns.map((col) => (
                 <th
                   key={col.key}
@@ -95,6 +192,7 @@ export function DataTable<T extends { id: string }>({
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <tr key={i} className="border-b border-neutral-100 dark:border-slate-700">
+                  {selectionEnabled && <td className="w-10 px-2 py-3" />}
                   {columns.map((col) => (
                     <td key={col.key} className="px-4 py-3">
                       <Div className="h-4 w-full animate-pulse rounded bg-neutral-200 dark:bg-slate-700" />
@@ -105,58 +203,26 @@ export function DataTable<T extends { id: string }>({
             ) : rows.length === 0 ? (
               <tr>
                 <td
-                  colSpan={columns.length}
+                  colSpan={columns.length + (selectionEnabled ? 1 : 0) + (renderRowActions ? 1 : 0)}
                   className="px-4 py-12 text-center text-neutral-500 dark:text-zinc-400"
                 >
                   {emptyLabel}
                 </td>
               </tr>
             ) : (
-              rows.map((row) => {
-                const rowHref = getRowHref?.(row);
-                const handleClick = onRowClick
-                  ? () => onRowClick(row)
-                  : rowHref
-                    ? () => { window.location.href = rowHref; }
-                    : undefined;
-                const handleKeyDown = handleClick
-                  ? (event: React.KeyboardEvent) => {
-                      if (event.key === "Enter" || event.key === " ") handleClick();
-                    }
-                  : undefined;
-                const isInteractive = Boolean(onRowClick ?? rowHref);
-                return (
-                  <tr
-                    key={row.id}
-                    onClick={handleClick}
-                    onKeyDown={handleKeyDown}
-                    role={isInteractive ? "link" : undefined}
-                    tabIndex={isInteractive ? 0 : undefined}
-                    className={`border-b border-neutral-100 dark:border-slate-700 hover:bg-neutral-50 dark:hover:bg-slate-800 ${isInteractive ? "cursor-pointer" : ""}`}
-                  >
-                    {columns.map((col) => (
-                      <td
-                        key={col.key}
-                        className={`px-4 py-3 text-neutral-700 dark:text-zinc-300 ${col.className ?? ""}`}
-                      >
-                        {col.render
-                          ? col.render(row)
-                          : String(
-                              (row as Record<string, unknown>)[col.key] ?? "",
-                            )}
-                      </td>
-                    ))}
-                    {renderRowActions && (
-                      <td
-                        className="px-2 py-3"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {renderRowActions(row)}
-                      </td>
-                    )}
-                  </tr>
-                );
-              })
+              rows.map((row) => (
+                <SelectableRow
+                  key={row.id}
+                  row={row}
+                  columns={columns}
+                  isSelected={selectedIds?.has(row.id) ?? false}
+                  onToggle={onToggleSelect}
+                  renderRowActions={renderRowActions}
+                  onRowClick={onRowClick}
+                  rowHref={getRowHref?.(row)}
+                  selectionEnabled={selectionEnabled}
+                />
+              ))
             )}
           </tbody>
         </table>

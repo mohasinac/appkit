@@ -1,10 +1,11 @@
 "use client"
 import { useState, useEffect } from "react";
 import type { AuctionItem } from "../types";
-import { Article, Button, Div, Heading, Row, Span, Text } from "../../../ui";
+import { Article, BaseListingCard, Button, Div, Heading, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { THEME_CONSTANTS } from "../../../tokens";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 interface AuctionCountdownProps {
   endsAt: string;
@@ -77,6 +78,9 @@ interface AuctionCardProps {
   };
   onBid?: (auction: AuctionItem) => void;
   className?: string;
+  selectable?: boolean;
+  isSelected?: boolean;
+  onSelect?: (id: string, selected: boolean) => void;
 }
 
 export function AuctionCard({
@@ -84,14 +88,32 @@ export function AuctionCard({
   labels = {},
   onBid,
   className = "",
+  selectable = false,
+  isSelected = false,
+  onSelect,
 }: AuctionCardProps) {
   const hasEnded = new Date(auction.auctionEndDate) <= new Date();
   const displayBid = auction.currentBid ?? auction.startingBid;
+  const longPress = useLongPress(() => onSelect?.(auction.id, !isSelected));
 
   return (
     <Article
-      className={`rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${className}`}
+      className={`group relative rounded-xl border bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-md transition-shadow ${isSelected ? "border-primary outline outline-2 outline-primary" : "border-gray-200 dark:border-slate-700"} ${className}`}
+      onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
     >
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={(e) => { e.preventDefault(); onSelect(auction.id, !isSelected); }}
+          label={isSelected ? "Deselect auction" : "Select auction"}
+          position="top-2 right-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
+      )}
       {auction.mainImage && (
         <Div className="aspect-square overflow-hidden relative">
           <Div

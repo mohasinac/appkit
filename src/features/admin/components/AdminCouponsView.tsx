@@ -4,18 +4,18 @@ import React, { useState, useCallback } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
+import { Button, Div, ListingToolbar, Pagination, ListingViewShell, SideDrawer, Text, useToast } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { apiClient } from "../../../http";
 import {
   toRecordArray,
-  toRelativeDate,
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
-import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import { AdminCouponEditorView } from "./AdminCouponEditorView";
+import { CouponCard } from "../../promotions/components/CouponCard";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["type"];
@@ -81,9 +81,9 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
   const typeRaw = table.get("type");
   const filters = typeRaw && typeRaw !== "All" ? `type==${typeRaw}` : undefined;
 
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<
+  const { rows, total, isLoading, errorMessage, refetch } = useAdminListingData<
     AdminCouponsResponse,
-    { id: string; primary: string; secondary: string; status: string; updatedAt: string }
+    { id: string; raw: Record<string, unknown> }
   >({
     queryKey: ["admin", "coupons", "listing"],
     endpoint: ADMIN_ENDPOINTS.COUPONS,
@@ -95,20 +95,34 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `coupon-${index}`),
-        primary: toStringValue(item.code, "Unknown code"),
-        secondary: [
-          toStringValue(item.name, "Untitled campaign"),
-          toStringValue(item.type, "Unknown type"),
-        ].join(" · "),
-        status: toStringValue(
-          ((item.validity as { isActive?: boolean } | undefined)?.isActive ? "Active" : item.status),
-          "Inactive",
-        ),
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        raw: item,
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
   });
+  const { showToast } = useToast();
+
+  const handleToggle = useCallback(async (id: string, currentlyActive: boolean) => {
+    try {
+      await apiClient.patch(ADMIN_ENDPOINTS.COUPON_BY_ID(id), {
+        validity: { isActive: !currentlyActive },
+      });
+      showToast(currentlyActive ? "Coupon deactivated." : "Coupon activated.", "success");
+      refetch();
+    } catch {
+      showToast("Could not update coupon status.", "error");
+    }
+  }, [showToast, refetch]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    try {
+      await apiClient.delete(ADMIN_ENDPOINTS.COUPON_BY_ID(id));
+      showToast("Coupon deleted.", "success");
+      refetch();
+    } catch {
+      showToast("Could not delete coupon.", "error");
+    }
+  }, [showToast, refetch]);
 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -152,7 +166,36 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No coupons found" onRowClick={(row) => openEditPanel(row.id)} />
+        {isLoading ? (
+          <Div className="fluid-grid-card gap-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Div
+                key={i}
+                className="rounded-xl border-2 border-zinc-100 dark:border-slate-700 p-4 animate-pulse space-y-3"
+              >
+                <Div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+                <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+              </Div>
+            ))}
+          </Div>
+        ) : rows.length === 0 ? (
+          <Div className="py-16 text-center">
+            <Text className="text-zinc-400 dark:text-zinc-500">No coupons found</Text>
+          </Div>
+        ) : (
+          <Div className="fluid-grid-card gap-3">
+            {rows.map((row) => (
+              <CouponCard
+                key={row.id}
+                coupon={row.raw}
+                onEdit={openEditPanel}
+                onToggleActive={handleToggle}
+                onDelete={handleDelete}
+              />
+            ))}
+          </Div>
+        )}
       </div>
 
       {filterOpen && (

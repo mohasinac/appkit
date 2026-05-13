@@ -45,6 +45,13 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const toggleSelect = (id: string, next: boolean) =>
+    setSelectedIds((prev) => {
+      const s = new Set(prev);
+      if (next) s.add(id); else s.delete(id);
+      return s;
+    });
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
     () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
   );
@@ -145,7 +152,16 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No carts found" />
+        <DataTable
+          rows={rows}
+          isLoading={isLoading}
+          emptyLabel="No carts found"
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onToggleSelectAll={(next) =>
+            setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
+          }
+        />
       </div>
 
       {filterOpen && (

@@ -22,6 +22,7 @@ export interface UseAdminListingDataResult<TRow extends { id: string }> {
   total: number;
   isLoading: boolean;
   errorMessage?: string;
+  refetch: () => void;
 }
 
 function withQueryParams(endpoint: string, params: Record<string, string>): string {
@@ -71,6 +72,7 @@ export function useAdminListingData<TResponse, TRow extends { id: string }>({
         : query.error
           ? "Unable to load records"
           : undefined,
+    refetch: () => { void query.refetch(); },
   };
 }
 
