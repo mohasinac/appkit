@@ -14,6 +14,7 @@ import { storesSeedData } from "./stores-seed-data";
 import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsAuctionsSeedData } from "./products-auctions-seed-data";
 import { productsPreOrdersSeedData } from "./products-preorders-seed-data";
+import { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
 import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
@@ -82,6 +83,7 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsStandardSeedData),
       ...asArr(productsAuctionsSeedData),
       ...asArr(productsPreOrdersSeedData),
+      ...asArr(productsPrizeDrawsSeedData),
     ].map((p) => ({
       ...p,
       // SB1-G Phase 4 — canonical listingType drives the manifest "type" tag.
@@ -90,7 +92,9 @@ export const SEED_MANIFEST: SeedManifest = {
           ? "auction"
           : p.listingType === "pre-order"
             ? "preorder"
-            : "standard",
+            : p.listingType === "prize-draw"
+              ? "prize-draw"
+              : "standard",
     })),
     "title",
   ),
