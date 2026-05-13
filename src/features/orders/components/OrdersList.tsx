@@ -33,6 +33,19 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
   const statusColor =
     STATUS_COLORS[order.orderStatus] ?? "bg-neutral-100 text-neutral-700";
 
+  // SB8-F — count unrevealed prize-draw entries to surface a "reveals pending" badge.
+  const unrevealedPrizeDraws = order.items.filter(
+    (it) =>
+      it.listingType === "prize-draw" &&
+      it.prizeRevealStatus !== undefined &&
+      it.prizeRevealStatus !== "revealed",
+  );
+  const revealsRemaining = unrevealedPrizeDraws.length;
+  const earliestDeadline = unrevealedPrizeDraws
+    .map((it) => it.prizeRevealDeadline)
+    .filter((d): d is string => !!d)
+    .sort()[0];
+
   return (
     <Div
       role={onClick ? "button" : undefined}
@@ -60,6 +73,18 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
           {labels[order.orderStatus] ?? order.orderStatus.replace(/_/g, " ")}
         </Span>
       </Row>
+      {revealsRemaining > 0 && (
+        <Row gap="sm" className="mt-2">
+          <Span className="inline-flex items-center rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+            {revealsRemaining} {revealsRemaining === 1 ? "reveal" : "reveals"} pending
+          </Span>
+          {earliestDeadline && (
+            <Span className="text-xs text-zinc-500 dark:text-zinc-400">
+              before {new Date(earliestDeadline).toLocaleDateString(getDefaultLocale(), { month: "short", day: "numeric" })}
+            </Span>
+          )}
+        </Row>
+      )}
       <Row wrap gap="3" className="mt-4">
         {order.items.slice(0, 3).map((item, i) => (
           <Row key={i} className="gap-2">

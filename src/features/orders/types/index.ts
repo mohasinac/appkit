@@ -45,6 +45,18 @@ export interface OrderItem {
   currency?: string;
   storeId?: string;
   attributes?: Record<string, string>;
+  /** Listing kind at the time of order — needed for prize-draw / bundle UI hints (SB8-F). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /**
+   * Per-item prize-draw reveal status (SB8-F). Populated by the checkout
+   * actions when listingType === "prize-draw". Used to render the
+   * "X reveals pending" badge on user orders.
+   */
+  prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
+  /** ISO timestamp — when the user must claim their reveal before forfeit. */
+  prizeRevealDeadline?: string;
+  /** Set after the reveal endpoint picks a winner — the prize item index. */
+  revealedItemNumber?: number;
 }
 
 export interface OrderTimeline {
