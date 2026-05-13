@@ -135,6 +135,20 @@ export interface ProductItem {
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   preOrderCancellable?: boolean;
 
+  // Prize-draw detail fields (SB4)
+  prizeDrawItems?: import("../schemas/firestore").PrizeDrawItem[];
+  pricePerEntry?: number;
+  prizeMaxEntries?: number;
+  prizeCurrentEntries?: number;
+  prizeRevealWindowStart?: string | Date;
+  prizeRevealWindowEnd?: string | Date;
+  prizeRevealStatus?: "pending" | "open" | "closed";
+  prizeRevealDeadlineDays?: number;
+  prizeGithubFileUrl?: string;
+
+  // SB1-B — hard cap on units a single user may purchase (bundle / prize-draw / pre-order)
+  maxPerUser?: number;
+
   /** Winner's display name for ended auctions — shown masked in public UI */
   winnerDisplayName?: string;
 

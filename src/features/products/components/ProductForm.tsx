@@ -30,7 +30,10 @@ import type { ProductItem, ProductStatus } from "../types";
 import {
   isAuctionListing,
   isPreOrderListing,
+  isPrizeDrawListing,
 } from "../utils/listing-type";
+import { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
+import type { PrizeDrawItem } from "../schemas/firestore";
 
 export const PRODUCT_STATUS_OPTIONS: { value: ProductStatus; label: string }[] =
   [
@@ -648,6 +651,148 @@ export function ProductForm({
         }
         disabled={isReadonly}
       />
+
+      {/* ── Prize-Draw section (SB4-C) ── */}
+      <Heading level={4} className="mt-4">
+        Prize Draw Settings
+      </Heading>
+
+      <Checkbox
+        label="This is a prize-draw listing"
+        checked={isPrizeDrawListing(product)}
+        onChange={(e) =>
+          update({ listingType: e.target.checked ? "prize-draw" : "standard" })
+        }
+        disabled={isReadonly}
+      />
+
+      {isPrizeDrawListing(product) && (
+        <>
+          <Alert variant="warning" title="Non-refundable">
+            Prize-draw entries are non-refundable once the reveal window opens.
+            Buyers see and must accept this notice before paying.
+          </Alert>
+
+          <FormGroup columns={2}>
+            <FormField
+              name="pricePerEntry"
+              label="Price per entry (₹)"
+              type="number"
+              value={
+                product.pricePerEntry != null
+                  ? String(Math.round(product.pricePerEntry / 100))
+                  : ""
+              }
+              onChange={(value) =>
+                update({
+                  pricePerEntry: Math.round((parseFloat(value) || 0) * 100),
+                })
+              }
+              disabled={isReadonly}
+              placeholder="299"
+            />
+            <FormField
+              name="prizeMaxEntries"
+              label="Max entries (pool size)"
+              type="number"
+              value={String(product.prizeMaxEntries ?? "")}
+              onChange={(value) =>
+                update({ prizeMaxEntries: Number(value) || undefined })
+              }
+              disabled={isReadonly}
+              placeholder="100"
+            />
+          </FormGroup>
+
+          <FormGroup columns={2}>
+            <FormField
+              name="prizeRevealWindowStart"
+              label="Reveal window start"
+              type="datetime-local"
+              value={(() => {
+                const d = resolveDate(
+                  product.prizeRevealWindowStart as Date | string | undefined,
+                );
+                if (!d) return "";
+                return d.toISOString().slice(0, 16);
+              })()}
+              onChange={(value) =>
+                update({ prizeRevealWindowStart: value })
+              }
+              disabled={isReadonly}
+            />
+            <FormField
+              name="prizeRevealWindowEnd"
+              label="Reveal window end"
+              type="datetime-local"
+              value={(() => {
+                const d = resolveDate(
+                  product.prizeRevealWindowEnd as Date | string | undefined,
+                );
+                if (!d) return "";
+                return d.toISOString().slice(0, 16);
+              })()}
+              onChange={(value) => update({ prizeRevealWindowEnd: value })}
+              disabled={isReadonly}
+            />
+          </FormGroup>
+
+          <FormGroup columns={2}>
+            <FormField
+              name="prizeRevealDeadlineDays"
+              label="Reveal deadline (days)"
+              type="number"
+              value={String(product.prizeRevealDeadlineDays ?? 3)}
+              onChange={(value) =>
+                update({
+                  prizeRevealDeadlineDays: Number(value) || 3,
+                })
+              }
+              disabled={isReadonly}
+              placeholder="3"
+              helpText="After window opens, buyers have this many days to claim."
+            />
+            <FormField
+              name="maxPerUser"
+              label="Max entries per customer (blank = unlimited)"
+              type="number"
+              value={String(product.maxPerUser ?? "")}
+              onChange={(value) =>
+                update({ maxPerUser: Number(value) || undefined })
+              }
+              disabled={isReadonly}
+              placeholder=""
+            />
+          </FormGroup>
+
+          {product.prizeGithubFileUrl ? (
+            <FormField
+              name="prizeGithubFileUrl"
+              label="RNG Source Code URL (read-only)"
+              type="text"
+              value={product.prizeGithubFileUrl}
+              onChange={() => {}}
+              disabled
+              helpText="Auto-set on first save. Public proof-of-fairness link."
+            />
+          ) : null}
+
+          <PrizeDrawItemsEditor
+            items={(product.prizeDrawItems ?? []) as PrizeDrawItem[]}
+            onChange={(items) => update({ prizeDrawItems: items })}
+            onUploadImage={async (file) => {
+              // Caller is expected to wire a real uploader by overriding
+              // renderPrizeDrawImageUpload — fall back to data URL preview
+              // so the editor still functions in unwired admin contexts.
+              return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result ?? ""));
+                reader.readAsDataURL(file);
+              });
+            }}
+          />
+        </>
+      )}
 
       {isPreOrderListing(product) && (
         <>

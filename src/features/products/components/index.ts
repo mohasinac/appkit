@@ -23,6 +23,10 @@ export type {
   NonRefundableConsentModalProps,
   NonRefundableListingType,
 } from "./NonRefundableConsentModal";
+export { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
+export type { PrizeDrawItemsEditorProps } from "./PrizeDrawItemsEditor";
+export { PrizeDrawCollage } from "./PrizeDrawCollage";
+export type { PrizeDrawCollageProps } from "./PrizeDrawCollage";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";

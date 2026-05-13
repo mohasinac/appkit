@@ -27,3 +27,11 @@ export const isPreOrderListing = (
 export const isStandardListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "standard";
+
+export const isPrizeDrawListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "prize-draw";
+
+export const isBundleListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "bundle";

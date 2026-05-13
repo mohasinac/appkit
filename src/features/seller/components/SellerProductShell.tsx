@@ -18,7 +18,11 @@ import { ImageUpload, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
 
-export type ProductListingMode = "standard" | "auction" | "pre-order";
+export type ProductListingMode =
+  | "standard"
+  | "auction"
+  | "pre-order"
+  | "prize-draw";
 
 export interface SellerProductDraft {
   title?: string;

@@ -1,0 +1,306 @@
+"use client";
+
+/**
+ * PrizeDrawItemsEditor (SB4-A)
+ *
+ * Editor for the `prizeDrawItems` array on a prize-draw ProductDocument.
+ * Owns: add / remove / reorder, per-item title/description/condition/
+ * estimatedValue, 1–2 images per item, optional video, and a locked-overlay
+ * for items already won during a previous reveal.
+ *
+ * Min 3 items, max 16 (mirrors PrizeDrawItem schema constraints).
+ */
+
+import React, { useCallback } from "react";
+import { Button, Div, FormField, Heading, Row, Stack, Text } from "../../../ui";
+import { ImageUpload } from "../../media";
+import type { PrizeDrawItem } from "../schemas/firestore";
+
+const MIN_ITEMS = 3;
+const MAX_ITEMS = 16;
+const MAX_IMAGES_PER_ITEM = 2;
+
+const CONDITION_OPTIONS = [
+  { value: "new", label: "New" },
+  { value: "like_new", label: "Like New" },
+  { value: "good", label: "Good" },
+  { value: "used", label: "Used" },
+  { value: "graded", label: "Graded" },
+  { value: "refurbished", label: "Refurbished" },
+];
+
+export interface PrizeDrawItemsEditorProps {
+  items: PrizeDrawItem[];
+  onChange: (items: PrizeDrawItem[]) => void;
+  /** Upload an image File → returns the resolved storage URL (or media slug). */
+  onUploadImage: (file: File, itemNumber: number) => Promise<string>;
+  /** Optional video uploader. */
+  onUploadVideo?: (file: File, itemNumber: number) => Promise<string>;
+  /** Show a non-editable warning above the editor (e.g. "Draw already opened"). */
+  warning?: string;
+}
+
+export function PrizeDrawItemsEditor({
+  items,
+  onChange,
+  onUploadImage,
+  onUploadVideo,
+  warning,
+}: PrizeDrawItemsEditorProps) {
+  const update = useCallback(
+    (index: number, patch: Partial<PrizeDrawItem>) => {
+      const next = items.map((it, i) => (i === index ? { ...it, ...patch } : it));
+      onChange(next);
+    },
+    [items, onChange],
+  );
+
+  const renumber = (list: PrizeDrawItem[]): PrizeDrawItem[] =>
+    list.map((it, i) => ({ ...it, itemNumber: i + 1 }));
+
+  const addItem = () => {
+    if (items.length >= MAX_ITEMS) return;
+    onChange(
+      renumber([
+        ...items,
+        {
+          itemNumber: items.length + 1,
+          title: "",
+          description: "",
+          images: [],
+          condition: "new",
+          isWon: false,
+        },
+      ]),
+    );
+  };
+
+  const removeItem = (index: number) => {
+    const target = items[index];
+    if (target?.isWon) return; // cannot remove a won item
+    if (items.length <= MIN_ITEMS) return;
+    onChange(renumber(items.filter((_, i) => i !== index)));
+  };
+
+  const move = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= items.length) return;
+    const next = [...items];
+    [next[index], next[target]] = [next[target], next[index]];
+    onChange(renumber(next));
+  };
+
+  const setImage = (index: number, slot: number, url: string) => {
+    const cur = items[index];
+    const nextImgs = [...(cur.images ?? [])];
+    nextImgs[slot] = url;
+    update(index, { images: nextImgs.filter(Boolean) });
+  };
+
+  const removeImage = (index: number, slot: number) => {
+    const cur = items[index];
+    const nextImgs = (cur.images ?? []).filter((_, i) => i !== slot);
+    update(index, { images: nextImgs });
+  };
+
+  return (
+    <Stack gap="md">
+      <Row justify="between" align="center">
+        <Heading level={3}>Prize Items ({items.length})</Heading>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={addItem}
+          disabled={items.length >= MAX_ITEMS}
+        >
+          + Add prize ({items.length}/{MAX_ITEMS})
+        </Button>
+      </Row>
+      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+        Add between {MIN_ITEMS} and {MAX_ITEMS} prizes. Each entry will reveal
+        exactly one of these. Items marked won during a prior reveal cannot be
+        edited or removed.
+      </Text>
+      {warning ? (
+        <Div className="rounded border border-yellow-400/40 bg-yellow-50 px-3 py-2 text-sm text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100">
+          {warning}
+        </Div>
+      ) : null}
+
+      <Stack gap="md">
+        {items.map((it, index) => {
+          const locked = it.isWon;
+          return (
+            <Div
+              key={`prize-item-${it.itemNumber}-${index}`}
+              className={`relative rounded-lg border border-[var(--appkit-color-border)] p-4 ${
+                locked ? "opacity-60" : ""
+              }`}
+            >
+              {locked ? (
+                <Div className="absolute inset-0 z-10 flex items-center justify-center bg-black/10 dark:bg-black/40 rounded-lg pointer-events-none">
+                  <Text className="rounded bg-red-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                    Won — locked
+                  </Text>
+                </Div>
+              ) : null}
+
+              <Row justify="between" align="center" className="mb-3">
+                <Heading level={4}>Prize #{it.itemNumber}</Heading>
+                <Row gap="xs">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => move(index, -1)}
+                    disabled={locked || index === 0}
+                    aria-label="Move up"
+                  >
+                    ↑
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => move(index, 1)}
+                    disabled={locked || index === items.length - 1}
+                    aria-label="Move down"
+                  >
+                    ↓
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="danger"
+                    size="sm"
+                    onClick={() => removeItem(index)}
+                    disabled={locked || items.length <= MIN_ITEMS}
+                  >
+                    Remove
+                  </Button>
+                </Row>
+              </Row>
+
+              <Stack gap="sm">
+                <FormField
+                  name={`item-${index}-title`}
+                  label="Title"
+                  type="text"
+                  value={it.title}
+                  onChange={(v) => update(index, { title: v })}
+                  disabled={locked}
+                  placeholder="e.g. PSA 9 Charizard Base Set Holo"
+                />
+                <FormField
+                  name={`item-${index}-description`}
+                  label="Description (optional)"
+                  type="textarea"
+                  value={it.description ?? ""}
+                  onChange={(v) => update(index, { description: v })}
+                  disabled={locked}
+                  placeholder="What makes this prize special?"
+                />
+                <Row gap="md">
+                  <Div className="flex-1">
+                    <FormField
+                      name={`item-${index}-condition`}
+                      label="Condition"
+                      type="select"
+                      value={it.condition}
+                      onChange={(v) => update(index, { condition: v })}
+                      disabled={locked}
+                      options={CONDITION_OPTIONS}
+                    />
+                  </Div>
+                  <Div className="flex-1">
+                    <FormField
+                      name={`item-${index}-value`}
+                      label="Estimated value (₹)"
+                      type="number"
+                      value={
+                        it.estimatedValue != null
+                          ? String(Math.round(it.estimatedValue / 100))
+                          : ""
+                      }
+                      onChange={(v) =>
+                        update(index, {
+                          estimatedValue: Math.round((parseFloat(v) || 0) * 100),
+                        })
+                      }
+                      disabled={locked}
+                      placeholder="2999"
+                    />
+                  </Div>
+                </Row>
+
+                {/* Image slots (min 1, max 2) */}
+                <Stack gap="xs">
+                  <Text className="text-sm font-medium">
+                    Images ({(it.images ?? []).length}/{MAX_IMAGES_PER_ITEM})
+                  </Text>
+                  <Row gap="sm" className="flex-wrap">
+                    {Array.from({ length: MAX_IMAGES_PER_ITEM }).map((_, slot) => {
+                      const existing = (it.images ?? [])[slot];
+                      return (
+                        <Div key={slot} className="w-40">
+                          <ImageUpload
+                            currentImage={existing}
+                            label={existing ? "Replace" : `Image ${slot + 1}`}
+                            onUpload={(file) =>
+                              onUploadImage(file, it.itemNumber)
+                            }
+                            onChange={(url) => setImage(index, slot, url)}
+                          />
+                          {existing && !locked ? (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeImage(index, slot)}
+                            >
+                              Remove
+                            </Button>
+                          ) : null}
+                        </Div>
+                      );
+                    })}
+                  </Row>
+                </Stack>
+
+                {/* Optional video */}
+                {onUploadVideo ? (
+                  <Stack gap="xs">
+                    <Text className="text-sm font-medium">Video (optional)</Text>
+                    <input
+                      type="file"
+                      accept="video/mp4,video/webm"
+                      disabled={locked}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const url = await onUploadVideo(file, it.itemNumber);
+                        update(index, { video: { url } });
+                      }}
+                    />
+                    {it.video?.url ? (
+                      <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate">
+                        Current: {it.video.url}
+                      </Text>
+                    ) : null}
+                  </Stack>
+                ) : null}
+              </Stack>
+            </Div>
+          );
+        })}
+      </Stack>
+
+      {items.length < MIN_ITEMS ? (
+        <Div className="rounded border border-red-400/40 bg-red-50 px-3 py-2 text-sm text-red-900 dark:bg-red-900/30 dark:text-red-100">
+          At least {MIN_ITEMS} prizes are required.
+        </Div>
+      ) : null}
+    </Stack>
+  );
+}
+
+export default PrizeDrawItemsEditor;
