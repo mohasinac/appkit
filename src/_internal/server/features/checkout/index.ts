@@ -1,7 +1,9 @@
 export {
   createCheckoutOrderAction,
   attachPaymentAction,
+  verifyAndPlaceRazorpayOrderAction,
   type CreateCheckoutOrderInput,
+  type VerifyAndPlaceRazorpayOrderInput,
 } from "./actions";
 export {
   formatShippingAddress,

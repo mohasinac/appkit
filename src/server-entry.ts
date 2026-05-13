@@ -211,10 +211,12 @@ export {
 export {
   createCheckoutOrderAction,
   attachPaymentAction,
+  verifyAndPlaceRazorpayOrderAction,
   formatShippingAddress,
   CHECKOUT_DEFAULT_COMMISSIONS,
   CHECKOUT_PAYMENT_METHODS,
   type CreateCheckoutOrderInput,
+  type VerifyAndPlaceRazorpayOrderInput,
   type CheckoutOrderResult,
   type CheckoutPaymentMethod,
 } from "./_internal/server/features/checkout/index";

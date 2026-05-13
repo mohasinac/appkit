@@ -15,13 +15,21 @@ import {
   userRepository,
   storeRepository,
   couponsRepository,
+  notificationRepository,
 } from "../../../../repositories";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
-import type { FailedCheckoutReason } from "../../../../features/checkout/schemas/firestore";
+import type {
+  FailedCheckoutReason,
+  FailedPaymentReason,
+} from "../../../../features/checkout/schemas/firestore";
 import { sendOrderConfirmationEmail } from "../../../../features/contact/server";
 import { splitCartIntoOrderGroups } from "../../../../features/orders/index";
 import { resolveDate } from "../../../../utils";
-import { getAdminDb } from "../../../../providers/db-firebase";
+import {
+  getAdminDb,
+  getAdminRealtimeDb,
+  RTDB_PATHS,
+} from "../../../../providers/db-firebase";
 import { PRODUCT_COLLECTION, ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
@@ -31,10 +39,76 @@ import {
   consentOtpRateLimitRef,
   CONSENT_OTP_MAX_BYPASS_CREDITS,
 } from "../../../../features/auth/server";
-import { OrderStatusValues, PaymentStatusValues } from "../../../../features/orders/schemas/index";
+import {
+  OrderStatusValues,
+  PaymentStatusValues,
+  PaymentMethodValues,
+} from "../../../../features/orders/schemas/index";
 import { getDefaultCurrency } from "../../../../core/index";
+import {
+  verifyPaymentSignatureWithKeys,
+  fetchRazorpayOrder,
+  paiseToRupees,
+} from "../../../../providers/payment-razorpay/index";
 import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
+
+/**
+ * Fire-and-forget in-app notifications when an order is created.
+ *
+ * The Cloud Function `onOrderStatusChange` only fires on status transitions
+ * (not on creates), so a brand-new order never produces an in-app row for
+ * either party. We emit the buyer + seller rows here at the create boundary.
+ */
+function emitOrderPlacedNotifications(args: {
+  orderId: string;
+  buyerUid: string;
+  buyerName: string;
+  storeOwnerId: string | undefined;
+  productLabel: string;
+  paid: boolean;
+}): void {
+  const { orderId, buyerUid, buyerName, storeOwnerId, productLabel, paid } = args;
+  const buyerNotif = notificationRepository
+    .create({
+      userId: buyerUid,
+      type: "order_placed",
+      priority: "normal",
+      title: "Order placed",
+      message: `Your order for ${productLabel} has been placed.`,
+      relatedId: orderId,
+      relatedType: "order",
+      actionUrl: `/user/orders/view/${orderId}`,
+    } as never)
+    .catch((err: unknown) =>
+      serverLogger.warn("Failed to create buyer order_placed notification", {
+        err,
+        orderId,
+      }),
+    );
+  const sellerNotif = storeOwnerId
+    ? notificationRepository
+        .create({
+          userId: storeOwnerId,
+          type: "order_placed",
+          priority: "high",
+          title: "New order received",
+          message: `${paid ? "New paid order" : "New order"} from ${
+            buyerName || "a buyer"
+          } for ${productLabel}.`,
+          relatedId: orderId,
+          relatedType: "order",
+          actionUrl: `/store/orders/${orderId}/view`,
+        } as never)
+        .catch((err: unknown) =>
+          serverLogger.warn("Failed to create seller order_placed notification", {
+            err,
+            orderId,
+          }),
+        )
+    : Promise.resolve();
+  void Promise.all([buyerNotif, sellerNotif]);
+}
 
 export interface CreateCheckoutOrderInput {
   userId: string;
@@ -242,10 +316,11 @@ export async function createCheckoutOrderAction(
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
     let shippingFee = 0;
+    let storeOwnerId: string | undefined;
     const storeId = firstItem.storeId;
     if (storeId) {
       const store = await storeRepository.findById(storeId);
-      const storeOwnerId = store?.ownerId;
+      storeOwnerId = store?.ownerId;
       if (storeOwnerId) {
         const sellerUser = await userRepository.findById(storeOwnerId);
         const shippingConfig = sellerUser?.shippingConfig;
@@ -392,6 +467,16 @@ export async function createCheckoutOrderAction(
         items: orderItems,
       });
     }
+
+    emitOrderPlacedNotifications({
+      orderId: order.id,
+      buyerUid: uid,
+      buyerName: userName,
+      storeOwnerId,
+      productLabel:
+        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+      paid: false,
+    });
   }
 
   if (couponUsageAccumulator.size > 0) {
@@ -456,4 +541,386 @@ export async function attachPaymentAction(input: {
     status: OrderStatusValues.PROCESSING as never,
     updatedAt: new Date(),
   } as never);
+}
+
+// ---------------------------------------------------------------------------
+// Razorpay-confirmed checkout: signature verify + amount re-check + atomic
+// stock decrement + cart clear + multi-order create + notifications.
+// ---------------------------------------------------------------------------
+
+export interface VerifyAndPlaceRazorpayOrderInput {
+  userId: string;
+  userName: string;
+  userEmail: string;
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+  addressId: string;
+  notes?: string;
+}
+
+/**
+ * Place order(s) from the user's cart after a Razorpay payment is verified.
+ * Mirrors the existing /api/payment/verify route handler.
+ *
+ * Consumers must authenticate the user before calling. The action performs:
+ *   1. HMAC signature verification (rejects forged callbacks)
+ *   2. Cart re-validation against current product prices/stock
+ *   3. Amount cross-check against the Razorpay order record
+ *   4. Atomic stock decrement + cart clear via unitOfWork batch
+ *   5. Multi-coupon pro-rating per order group
+ *   6. order_placed notifications (buyer + seller)
+ *   7. Confirmation email + RTDB success signal (both fire-and-forget)
+ */
+export async function verifyAndPlaceRazorpayOrderAction(
+  input: VerifyAndPlaceRazorpayOrderInput,
+): Promise<CheckoutOrderResult> {
+  const {
+    userId: uid,
+    userName,
+    userEmail,
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+    addressId,
+    notes,
+  } = input;
+
+  const siteSettings = await siteSettingsRepository.getSingleton();
+  const razorpayFeePercent = siteSettings?.commissions?.razorpayFeePercent ?? 5;
+  const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
+
+  const isValid = await verifyPaymentSignatureWithKeys({
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+  });
+  if (!isValid) {
+    serverLogger.warn(`Payment signature verification failed for user ${uid}`);
+    failedCheckoutRepository
+      .logPayment(uid, "signature_mismatch", "HMAC signature invalid", {
+        gatewayOrderId: razorpay_order_id,
+        gatewayPaymentId: razorpay_payment_id,
+        addressId,
+      })
+      .catch(() => {});
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
+  }
+
+  const cart = await unitOfWork.carts.getOrCreate(uid);
+  if (!cart.items || cart.items.length === 0) {
+    throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
+  }
+
+  const address = await unitOfWork.addresses.findById(uid, addressId);
+  if (!address) {
+    throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+  }
+  const shippingAddress = formatShippingAddress(address);
+
+  const db = getAdminDb();
+  const otpRef = consentOtpRef(db, uid, addressId);
+  {
+    const otpSnap = await otpRef.get();
+    const otpData = otpSnap.exists
+      ? (otpSnap.data() as {
+          verified?: boolean;
+          expiresAt?: FirebaseFirestore.Timestamp;
+        })
+      : null;
+    const isConsentValid =
+      otpData?.verified === true &&
+      otpData.expiresAt &&
+      (resolveDate(otpData.expiresAt)?.getTime() ?? 0) > Date.now();
+    if (!isConsentValid) {
+      const reason = !otpData ? "otp_not_verified" : "consent_expired";
+      failedCheckoutRepository
+        .logPayment(
+          uid,
+          reason as FailedPaymentReason,
+          "Consent OTP missing or expired at payment verify time",
+          {
+            gatewayOrderId: razorpay_order_id,
+            gatewayPaymentId: razorpay_payment_id,
+            addressId,
+          },
+        )
+        .catch(() => {});
+      throw new ApiError(
+        403,
+        "Order verification required. Please complete OTP verification and retry.",
+      );
+    }
+  }
+
+  const productChecks = await Promise.all(
+    cart.items.map(async (item) => {
+      const product = await unitOfWork.products.findById(item.productId);
+      return { item, product };
+    }),
+  );
+
+  for (const { item, product } of productChecks) {
+    if (!product || product.status !== ProductStatusValues.PUBLISHED) {
+      failedCheckoutRepository
+        .logPayment(uid, "product_unavailable", `Product ${item.productId} not published`, {
+          gatewayOrderId: razorpay_order_id,
+          gatewayPaymentId: razorpay_payment_id,
+          addressId,
+        })
+        .catch(() => {});
+      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PRODUCT_UNAVAILABLE);
+    }
+    if (product.availableQuantity < item.quantity) {
+      failedCheckoutRepository
+        .logPayment(
+          uid,
+          "stock_insufficient",
+          `Product ${item.productId} has ${product.availableQuantity} left, requested ${item.quantity}`,
+          {
+            gatewayOrderId: razorpay_order_id,
+            gatewayPaymentId: razorpay_payment_id,
+            addressId,
+          },
+        )
+        .catch(() => {});
+      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
+    }
+  }
+
+  {
+    const cartSubtotalRs = productChecks.reduce(
+      (sum, { item, product }) => sum + product!.price * item.quantity,
+      0,
+    );
+    const expectedPlatformFee =
+      Math.round(cartSubtotalRs * (razorpayFeePercent / 100) * 100) / 100;
+    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee;
+    const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
+    const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
+    if (paidAmountRs < expectedPaymentAmountRs - 1) {
+      serverLogger.warn(
+        `Payment amount mismatch for user ${uid}: paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
+      );
+      failedCheckoutRepository
+        .logPayment(
+          uid,
+          "amount_mismatch",
+          `Paid ₹${paidAmountRs}, expected ≥ ₹${expectedPaymentAmountRs}`,
+          {
+            gatewayOrderId: razorpay_order_id,
+            gatewayPaymentId: razorpay_payment_id,
+            amountRs: paidAmountRs,
+            addressId,
+          },
+        )
+        .catch(() => {});
+      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PAYMENT_FAILED);
+    }
+  }
+
+  const appliedCoupons = cart.appliedCoupons ?? [];
+  const orderGroups = splitCartIntoOrderGroups(productChecks);
+
+  const orderIds: string[] = [];
+  let total = 0;
+  const emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][] = [];
+
+  const cartSubtotal = orderGroups.reduce(
+    (s, { items: g }) =>
+      s +
+      g.reduce(
+        (gs, { item, product }) => gs + product!.price * item.quantity,
+        0,
+      ),
+    0,
+  );
+
+  for (const { items: group, orderType } of orderGroups) {
+    const firstItem = group[0].item;
+    const groupTotal = group.reduce(
+      (sum, { item, product }) => sum + product!.price * item.quantity,
+      0,
+    );
+
+    let shippingFee = 0;
+    let storeOwnerId: string | undefined;
+    const storeId = firstItem.storeId;
+    if (storeId) {
+      const store = await storeRepository.findById(storeId);
+      storeOwnerId = store?.ownerId;
+      const sellerUser = storeOwnerId ? await userRepository.findById(storeOwnerId) : null;
+      const shippingConfig = sellerUser?.shippingConfig;
+      if (shippingConfig?.isConfigured) {
+        if (shippingConfig.method === "custom") {
+          shippingFee = shippingConfig.customShippingPrice ?? 0;
+        } else if (shippingConfig.method === "shiprocket") {
+          const percentFee = groupTotal * (commissions.platformShippingPercent / 100);
+          shippingFee = Math.max(percentFee, commissions.platformShippingFixedMin);
+        }
+      }
+    }
+
+    let couponDiscount = 0;
+    const appliedDiscounts: {
+      code: string;
+      couponId?: string;
+      type: "coupon" | "deal" | "auto";
+      discountAmount: number;
+      scope?: "admin" | "seller";
+      storeId?: string;
+    }[] = [];
+
+    for (const coupon of appliedCoupons) {
+      let couponGroupDiscount = 0;
+      const isSellerScoped = coupon.scope === "seller" && coupon.storeId;
+      if (isSellerScoped) {
+        if (coupon.storeId !== firstItem.storeId) continue;
+        if (coupon.applicableItemIds?.length) {
+          const eligibleTotal = group
+            .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
+            .reduce((s, { item, product }) => s + product!.price * item.quantity, 0);
+          couponGroupDiscount =
+            eligibleTotal > 0
+              ? Math.min(
+                  Math.round((eligibleTotal / groupTotal) * coupon.discountAmount * 100) / 100,
+                  eligibleTotal,
+                )
+              : 0;
+        } else {
+          couponGroupDiscount = Math.min(coupon.discountAmount, groupTotal);
+        }
+      } else if (cartSubtotal > 0) {
+        couponGroupDiscount = Math.min(
+          Math.round((groupTotal / cartSubtotal) * coupon.discountAmount * 100) / 100,
+          groupTotal,
+        );
+      }
+
+      if (couponGroupDiscount > 0) {
+        couponDiscount += couponGroupDiscount;
+        appliedDiscounts.push({
+          code: coupon.code,
+          couponId: coupon.couponId,
+          type: "coupon",
+          discountAmount: couponGroupDiscount,
+          scope: coupon.scope,
+          storeId: coupon.storeId,
+        });
+      }
+    }
+
+    couponDiscount = Math.min(couponDiscount, groupTotal);
+    const platformFee = Math.round(groupTotal * (razorpayFeePercent / 100) * 100) / 100;
+    const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
+    total += orderTotal;
+
+    const orderItems = group.map(({ item, product }) => ({
+      productId: item.productId,
+      productTitle: item.productTitle,
+      quantity: item.quantity,
+      unitPrice: product!.price,
+      totalPrice: product!.price * item.quantity,
+    }));
+    const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
+
+    const imageUrls = [
+      ...new Set(
+        group
+          .map(({ product }) => product?.mainImage)
+          .filter((url): url is string => typeof url === "string" && url.length > 0),
+      ),
+    ];
+
+    const order = await unitOfWork.orders.create({
+      productId: firstItem.productId,
+      productTitle: firstItem.productTitle,
+      userId: uid,
+      userName,
+      userEmail,
+      quantity: totalQuantity,
+      unitPrice: group[0].product!.price,
+      totalPrice: orderTotal,
+      currency: firstItem.currency ?? getDefaultCurrency(),
+      storeId: firstItem.storeId || undefined,
+      storeName: firstItem.storeName || undefined,
+      items: orderItems,
+      orderType,
+      offerId: firstItem.offerId ?? undefined,
+      status: OrderStatusValues.CONFIRMED,
+      paymentStatus: PaymentStatusValues.PAID,
+      paymentMethod: PaymentMethodValues.ONLINE,
+      paymentId: razorpay_payment_id,
+      shippingAddress,
+      notes,
+      platformFee,
+      shippingFee: shippingFee > 0 ? shippingFee : undefined,
+      couponCode: appliedDiscounts[0]?.code,
+      couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
+      appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
+      imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+    } as never);
+
+    orderIds.push(order.id);
+
+    if (userEmail) {
+      emailsToSend.push({
+        to: userEmail,
+        userName,
+        orderId: order.id,
+        productTitle:
+          orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+        quantity: totalQuantity,
+        totalPrice: orderTotal,
+        currency: firstItem.currency ?? getDefaultCurrency(),
+        shippingAddress,
+        paymentMethod: PaymentMethodValues.ONLINE,
+        items: orderItems,
+      });
+    }
+
+    emitOrderPlacedNotifications({
+      orderId: order.id,
+      buyerUid: uid,
+      buyerName: userName,
+      storeOwnerId,
+      productLabel:
+        orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
+      paid: true,
+    });
+  }
+
+  await unitOfWork.runBatch((batch) => {
+    for (const { item, product } of productChecks) {
+      if (!product) continue;
+      unitOfWork.products.updateInBatch(batch, item.productId, {
+        availableQuantity: product.availableQuantity - item.quantity,
+      } as never);
+    }
+    unitOfWork.carts.updateInBatch(batch, uid, {
+      items: [],
+      appliedCoupons: [],
+      selectedItemIds: null,
+    } as never);
+  });
+  otpRef.delete().catch(() => {});
+
+  if (emailsToSend.length > 0) {
+    Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(
+      (err: unknown) => serverLogger.error("Order confirmation email error:", err),
+    );
+  }
+
+  serverLogger.info(
+    `verifyAndPlaceRazorpayOrderAction: ${orderIds.length} order(s) placed for uid=${uid} — payment ${razorpay_payment_id}`,
+  );
+
+  getAdminRealtimeDb()
+    .ref(`${RTDB_PATHS.PAYMENT_EVENTS}/${razorpay_order_id}`)
+    .update({ status: "success", orderIds, updatedAt: Date.now() })
+    .catch((err: unknown) =>
+      serverLogger.warn("Payment event RTDB signal failed (non-critical)", { err }),
+    );
+
+  return { orderIds, total, itemCount: orderIds.length };
 }
