@@ -75,6 +75,7 @@ export const DEFAULT_ROUTE_MAP = {
     EVENTS: "/events",
     EVENT_DETAIL: (id: string) => `/events/${id}`,
     EVENT_PARTICIPATE: (id: string) => `/events/${id}/participate`,
+    EVENT_LEADERBOARD: (id: string) => `/events/${id}/leaderboard`,
     SUBLISTING_CATEGORIES: "/sublisting-categories",
     SUBLISTING_CATEGORY: (slug: string) => `/sublisting-categories/${slug}`,
     SUPPORT: "/support",
