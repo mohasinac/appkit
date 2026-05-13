@@ -1374,6 +1374,7 @@ export { renderAuctionOg, renderAuctionOgImage, type AuctionOgData } from "./_in
 export { renderPreOrderOg, renderPreOrderOgImage, type PreOrderOgData } from "./_internal/server/features/pre-orders/og";
 export { renderStoreOg, renderStoreOgImage, type StoreOgData } from "./_internal/server/features/stores/og";
 export { renderBrandOg, renderBrandOgImage, type BrandOgData } from "./_internal/server/features/brands/og";
+export { renderCategoryOg, renderCategoryOgImage, type CategoryOgData } from "./_internal/server/features/categories/og";
 export { renderBlogOg, renderBlogOgImage, type BlogOgData } from "./_internal/server/features/blog/og";
 export { renderEventOg, renderEventOgImage, type EventOgData } from "./_internal/server/features/events/og";
 export { renderSublistingCategoryOg, renderSublistingCategoryOgImage, type SublistingCategoryOgData } from "./_internal/server/features/sublisting-categories/og";

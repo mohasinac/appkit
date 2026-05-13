@@ -314,3 +314,4 @@ export { renderBlogOg, renderBlogOgImage, type BlogOgData } from "./_internal/se
 export { renderEventOg, renderEventOgImage, type EventOgData } from "./_internal/server/features/events/og";
 export { renderSublistingCategoryOg, renderSublistingCategoryOgImage, type SublistingCategoryOgData } from "./_internal/server/features/sublisting-categories/og";
 export { renderProfileOg, renderPrivateProfileOgImage, renderUserProfileOgImage, type UserProfileOgData } from "./_internal/server/features/profile/og";
+export { renderCategoryOg, renderCategoryOgImage, type CategoryOgData } from "./_internal/server/features/categories/og";
