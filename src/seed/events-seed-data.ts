@@ -181,6 +181,93 @@ export const eventsSeedData: EventDocument[] = [
     updatedAt: daysAgo(30),
   },
 
+  // ── 7. ACTIVE — Collectibles Mega Raffle (open raffle, SB9) ────────────────
+  {
+    id: "event-collectibles-mega-raffle-2026",
+    slug: "event-collectibles-mega-raffle-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
+    title: "LetItRip Mega Raffle — Win a ₹10,000 Store Credit",
+    description:
+      "<p>Enter the LetItRip <strong>Mega Raffle</strong> for a chance to win a ₹10,000 store credit usable across any LetItRip seller. One entry per registered user. Winner picked by verifiable on-chain randomness on the closing date.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(2),
+    endsAt: daysAhead(14),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&h=630&fit=crop",
+    tags: ["raffle", "store-credit", "open-raffle", "verifiable-rng"],
+    hasRaffle: true,
+    raffleType: "open_raffle",
+    raffleTopN: 0,
+    rafflePrize: "₹10,000 platform store credit + exclusive LetItRip merch pack",
+    rafflePrizeCouponId: "coupon-vip-2026",
+    stats: { totalEntries: 184, approvedEntries: 184, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── 8. ACTIVE — Spin the Wheel (SB9 spin-wheel event) ─────────────────────
+  {
+    id: "event-spin-the-wheel-2026",
+    slug: "event-spin-the-wheel-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.SPIN_WHEEL,
+    title: "Daily Spin the Wheel — Win Coupons Every Day",
+    description:
+      "<p>Spin the wheel <strong>once per day</strong> for a chance to win coupons and bonus credit. Higher-weight prizes appear more often; the rarer ones land less than 5% of spins. All spins use verifiable on-chain randomness.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ACTIVE,
+    startsAt: daysAgo(7),
+    endsAt: daysAhead(30),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=630&fit=crop",
+    tags: ["spin-wheel", "daily", "coupons", "rng"],
+    hasRaffle: true,
+    raffleType: "spin_wheel",
+    spinPrizes: [
+      { id: "prize-50-off", label: "₹50 off coupon", couponId: "coupon-spin-50", weight: 60, isActive: true },
+      { id: "prize-100-off", label: "₹100 off coupon", couponId: "coupon-spin-100", weight: 25, isActive: true },
+      { id: "prize-free-shipping", label: "Free shipping", couponId: "coupon-spin-shipping", weight: 10, isActive: true },
+      { id: "prize-500-off", label: "₹500 off coupon", couponId: "coupon-spin-500", weight: 4, isActive: true },
+      { id: "prize-mystery", label: "Mystery booster pack", weight: 1, isActive: true },
+    ],
+    spinMaxPerUser: 1,
+    spinWindowStart: daysAgo(7),
+    spinWindowEnd: daysAhead(30),
+    stats: { totalEntries: 0, approvedEntries: 0, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(8),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── 9. ENDED — Top-N Scorer Raffle (drawn) ────────────────────────────────
+  {
+    id: "event-top-scorer-raffle-april-2026",
+    slug: "event-top-scorer-raffle-april-2026",
+    type: EVENT_FIELDS.TYPE_VALUES.RAFFLE,
+    title: "Top 10 Scorers Raffle — April Trivia Champions",
+    description:
+      "<p>The top 10 scorers from the April collectibles trivia survey were entered into a raffle for a Pokémon Booster Box. The winner was drawn using verifiable on-chain randomness on the close date.</p>",
+    status: EVENT_FIELDS.STATUS_VALUES.ENDED,
+    startsAt: daysAgo(45),
+    endsAt: daysAgo(30),
+    coverImageUrl:
+      "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=1200&h=630&fit=crop",
+    tags: ["raffle", "top-n", "trivia", "pokemon"],
+    hasRaffle: true,
+    raffleType: "top_n_scorers",
+    raffleTopN: 10,
+    rafflePrize: "Sealed Pokémon Scarlet & Violet Booster Box",
+    raffleWinnerUserId: "user-priya-patel",
+    raffleWinnerDisplayName: "Priya Patel",
+    raffleTriggeredAt: daysAgo(30),
+    raffleEntryCount: 10,
+    raffleGithubFunctionUrl:
+      "https://github.com/letitrip-in/proof-of-fairness/blob/main/raffles/event-top-scorer-raffle-april-2026.json",
+    stats: { totalEntries: 47, approvedEntries: 47, flaggedEntries: 0 },
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(50),
+    updatedAt: daysAgo(30),
+  },
+
   // ── 6. ENDED — Beyblade X India Launch Sale ───────────────────────────────
   {
     id: "event-beyblade-x-india-launch-sale-2026",

@@ -15,6 +15,8 @@ import type {
   PollConfig,
   SurveyConfig,
   FeedbackConfig,
+  RaffleType,
+  SpinPrize,
 } from "../types";
 
 export const EVENTS_COLLECTION = "events" as const;
@@ -39,6 +41,21 @@ export interface EventDocument {
   pollConfig?: PollConfig;
   surveyConfig?: SurveyConfig;
   feedbackConfig?: FeedbackConfig;
+  hasRaffle?: boolean;
+  raffleType?: RaffleType;
+  raffleTopN?: number;
+  rafflePrize?: string;
+  rafflePrizeCouponId?: string;
+  raffleGithubFunctionUrl?: string;
+  raffleWinnerUserId?: string;
+  raffleWinnerDisplayName?: string;
+  raffleWinnerEntryId?: string;
+  raffleTriggeredAt?: Date;
+  raffleEntryCount?: number;
+  spinPrizes?: SpinPrize[];
+  spinMaxPerUser?: number;
+  spinWindowStart?: Date;
+  spinWindowEnd?: Date;
   stats: {
     totalEntries: number;
     approvedEntries: number;
@@ -63,6 +80,11 @@ export interface EventEntryDocument {
   reviewedAt?: Date;
   reviewNote?: string;
   points?: number;
+  raffleEligible?: boolean;
+  spinUsed?: boolean;
+  spinPrizeId?: string;
+  spinPrizeCouponCode?: string | null;
+  spinWonAt?: Date;
   ipAddress?: string;
   submittedAt: Date;
 }
@@ -111,6 +133,8 @@ export const EVENT_FIELDS = {
     POLL: "poll" as EventType,
     SURVEY: "survey" as EventType,
     FEEDBACK: "feedback" as EventType,
+    RAFFLE: "raffle" as EventType,
+    SPIN_WHEEL: "spin_wheel" as EventType,
   },
   STATS: {
     TOTAL_ENTRIES: "stats.totalEntries",
@@ -153,4 +177,9 @@ export const eventQueryHelpers = {
   byStatus: (status: EventStatus) => ["status", "==", status] as const,
   upcoming: (date: Date) => ["startsAt", ">", date] as const,
   past: (date: Date) => ["endsAt", "<", date] as const,
+  // SB9 raffle/spin helpers
+  raffles: () => ["type", "==", "raffle" as EventType] as const,
+  spinWheels: () => ["type", "==", "spin_wheel" as EventType] as const,
+  withRaffle: () => ["hasRaffle", "==", true] as const,
+  raffleNotYetDrawn: () => ["raffleWinnerUserId", "==", null] as const,
 } as const;

@@ -34,3 +34,7 @@ export { EventPollWidget } from "./EventPollWidget";
 export type { } from "./EventPollWidget";
 export { EventRafflesSection } from "./EventRafflesSection";
 export type { EventRafflesSectionProps } from "./EventRafflesSection";
+export { EventRaffleWinnerView } from "./EventRaffleWinnerView";
+export type { EventRaffleWinnerViewProps } from "./EventRaffleWinnerView";
+export { SpinWheelView } from "./SpinWheelView";
+export type { SpinWheelViewProps } from "./SpinWheelView";

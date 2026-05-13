@@ -2,7 +2,28 @@ import type { MediaField } from "../../media/types/index";
 
 // --- Enums / union types ------------------------------------------------------
 
-export type EventType = "sale" | "offer" | "poll" | "survey" | "feedback";
+export type EventType =
+  | "sale"
+  | "offer"
+  | "poll"
+  | "survey"
+  | "feedback"
+  | "raffle"
+  | "spin_wheel";
+
+export type RaffleType =
+  | "top_n_scorers"
+  | "top_n_participants"
+  | "open_raffle"
+  | "spin_wheel";
+
+export interface SpinPrize {
+  id: string;
+  label: string;
+  couponId?: string;
+  weight: number;
+  isActive: boolean;
+}
 export type EventStatus = "draft" | "active" | "paused" | "ended";
 export type EntryReviewStatus = "pending" | "approved" | "flagged";
 export type PollResultsVisibility = "always" | "after_vote" | "after_end";
@@ -96,6 +117,20 @@ export interface EventItem {
   pollConfig?: PollConfig;
   surveyConfig?: SurveyConfig;
   feedbackConfig?: FeedbackConfig;
+  hasRaffle?: boolean;
+  raffleType?: RaffleType;
+  raffleTopN?: number;
+  rafflePrize?: string;
+  rafflePrizeCouponId?: string;
+  raffleGithubFunctionUrl?: string;
+  raffleWinnerUserId?: string;
+  raffleWinnerDisplayName?: string;
+  raffleTriggeredAt?: string;
+  raffleEntryCount?: number;
+  spinPrizes?: SpinPrize[];
+  spinMaxPerUser?: number;
+  spinWindowStart?: string;
+  spinWindowEnd?: string;
   stats: {
     totalEntries: number;
     approvedEntries: number;
@@ -120,6 +155,10 @@ export interface EventEntryItem {
   reviewedAt?: string;
   reviewNote?: string;
   points?: number;
+  raffleEligible?: boolean;
+  spinUsed?: boolean;
+  spinPrizeId?: string;
+  spinWonAt?: string;
   submittedAt: string;
 }
 

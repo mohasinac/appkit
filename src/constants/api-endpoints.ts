@@ -121,6 +121,8 @@ export const ADMIN_ENDPOINTS = {
   EVENT_ENTRIES: (id: string) => `/api/admin/events/${id}/entries`,
   EVENT_ENTRY_BY_ID: (eventId: string, entryId: string) =>
     `/api/admin/events/${eventId}/entries/${entryId}`,
+  // SB9-D — admin manual raffle trigger
+  EVENT_TRIGGER_RAFFLE: (id: string) => `/api/admin/events/${id}/trigger-raffle`,
   COUPONS: "/api/admin/coupons",
   COUPON_BY_ID: (id: string) => `/api/admin/coupons/${id}`,
   SECTIONS: "/api/admin/sections",
@@ -270,6 +272,8 @@ export const EVENT_ENDPOINTS = {
   ENTRIES: (id: string) => `/api/events/${id}/entries`,
   LEADERBOARD: (id: string, limit?: number) =>
     `/api/events/${id}/leaderboard${limit !== undefined ? `?limit=${limit}` : ""}`,
+  // SB9-E user spin assignment
+  SPIN: (id: string) => `/api/events/${id}/spin`,
 } as const;
 
 // ---------------------------------------------------------------------------

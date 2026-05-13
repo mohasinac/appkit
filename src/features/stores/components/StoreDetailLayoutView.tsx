@@ -3,9 +3,21 @@ import type { ReactNode } from "react";
 import { storeRepository, productRepository, categoriesRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
+import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
 import type { StoreDetail } from "../types";
+
+const STORE_LISTING_HREF: Record<
+  (typeof STORE_PAGE_TABS)[number]["id"],
+  (slug: string) => string
+> = {
+  products: (slug) => String(ROUTES.PUBLIC.STORE_PRODUCTS(slug)),
+  auctions: (slug) => String(ROUTES.PUBLIC.STORE_AUCTIONS(slug)),
+  "pre-orders": (slug) => String(ROUTES.PUBLIC.STORE_PRE_ORDERS(slug)),
+  "prize-draws": (slug) => String(ROUTES.PUBLIC.STORE_PRIZE_DRAWS(slug)),
+  bundles: (slug) => String(ROUTES.PUBLIC.STORE_BUNDLES(slug)),
+};
 
 export const getStoreBySlug = cache((slug: string) =>
   storeRepository.findBySlug(slug).catch(() => undefined),
@@ -71,12 +83,20 @@ export async function StoreDetailLayoutView({
       ])
     : [0, 0, 0, 0, 0];
 
+  const listingCounts: Record<(typeof STORE_PAGE_TABS)[number]["id"], number> = {
+    products: productsCount,
+    auctions: auctionsCount,
+    "pre-orders": preOrdersCount,
+    "prize-draws": prizeDrawsCount,
+    bundles: bundlesCount,
+  };
+
   const tabs = [
-    { value: "products", label: tabLabel("Products", productsCount), href: String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug)) },
-    { value: "auctions", label: tabLabel("Auctions", auctionsCount), href: String(ROUTES.PUBLIC.STORE_AUCTIONS(storeSlug)) },
-    { value: "pre-orders", label: tabLabel("Pre-Orders", preOrdersCount), href: String(ROUTES.PUBLIC.STORE_PRE_ORDERS(storeSlug)) },
-    { value: "prize-draws", label: tabLabel("Prize Draws", prizeDrawsCount), href: String(ROUTES.PUBLIC.STORE_PRIZE_DRAWS(storeSlug)) },
-    { value: "bundles", label: tabLabel("Bundles", bundlesCount), href: String(ROUTES.PUBLIC.STORE_BUNDLES(storeSlug)) },
+    ...STORE_PAGE_TABS.map((tab) => ({
+      value: tab.id,
+      label: tabLabel(tab.label, listingCounts[tab.id]),
+      href: STORE_LISTING_HREF[tab.id](storeSlug),
+    })),
     { value: "coupons", label: "Coupons", href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
     { value: "reviews", label: "Reviews", href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },

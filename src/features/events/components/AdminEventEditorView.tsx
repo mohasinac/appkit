@@ -17,7 +17,13 @@ import {
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
-import type { EventItem, EventType, EventStatus } from "../types";
+import type {
+  EventItem,
+  EventType,
+  EventStatus,
+  RaffleType,
+  SpinPrize,
+} from "../types";
 
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
@@ -52,6 +58,15 @@ const EVENT_TYPE_OPTIONS = [
   { label: "Poll", value: "poll" },
   { label: "Survey", value: "survey" },
   { label: "Feedback", value: "feedback" },
+  { label: "Raffle", value: "raffle" },
+  { label: "Spin Wheel", value: "spin_wheel" },
+];
+
+const RAFFLE_TYPE_OPTIONS = [
+  { label: "Open raffle (all confirmed entries)", value: "open_raffle" },
+  { label: "Top N scorers", value: "top_n_scorers" },
+  { label: "Top N earliest participants", value: "top_n_participants" },
+  { label: "Spin wheel", value: "spin_wheel" },
 ];
 
 const EVENT_STATUS_OPTIONS = [
@@ -106,7 +121,23 @@ export function AdminEventEditorView({
 
   const [anonymous, setAnonymous] = React.useState(false);
 
+  const [hasRaffle, setHasRaffle] = React.useState(false);
+  const [raffleType, setRaffleType] = React.useState<RaffleType>("open_raffle");
+  const [raffleTopN, setRaffleTopN] = React.useState("10");
+  const [rafflePrize, setRafflePrize] = React.useState("");
+  const [rafflePrizeCouponId, setRafflePrizeCouponId] = React.useState("");
+  const [spinPrizes, setSpinPrizes] = React.useState<SpinPrize[]>([]);
+  const [spinMaxPerUser, setSpinMaxPerUser] = React.useState("1");
+  const [spinWindowStart, setSpinWindowStart] = React.useState("");
+  const [spinWindowEnd, setSpinWindowEnd] = React.useState("");
+  const [raffleWinnerName, setRaffleWinnerName] = React.useState("");
+  const [raffleEntryCount, setRaffleEntryCount] = React.useState<number | null>(
+    null,
+  );
+  const [raffleGithubUrl, setRaffleGithubUrl] = React.useState("");
+
   const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const [triggerMessage, setTriggerMessage] = React.useState<string | null>(null);
 
   const eventQuery = useQuery<EventApiResponse>({
     queryKey: ["admin-event-by-id", eventId],
@@ -148,6 +179,20 @@ export function AdminEventEditorView({
     if (event.feedbackConfig) {
       setAnonymous(Boolean(event.feedbackConfig.anonymous));
     }
+    setHasRaffle(Boolean(event.hasRaffle));
+    setRaffleType((event.raffleType as RaffleType) || "open_raffle");
+    setRaffleTopN(String(event.raffleTopN ?? 10));
+    setRafflePrize(event.rafflePrize || "");
+    setRafflePrizeCouponId(event.rafflePrizeCouponId || "");
+    setSpinPrizes(Array.isArray(event.spinPrizes) ? event.spinPrizes : []);
+    setSpinMaxPerUser(String(event.spinMaxPerUser ?? 1));
+    setSpinWindowStart(toLocalDatetime(event.spinWindowStart));
+    setSpinWindowEnd(toLocalDatetime(event.spinWindowEnd));
+    setRaffleWinnerName(event.raffleWinnerDisplayName || "");
+    setRaffleEntryCount(
+      typeof event.raffleEntryCount === "number" ? event.raffleEntryCount : null,
+    );
+    setRaffleGithubUrl(event.raffleGithubFunctionUrl || "");
   }, [eventQuery.data]);
 
   const saveMutation = useMutation({
@@ -186,6 +231,28 @@ export function AdminEventEditorView({
         return {};
       };
 
+      const isRaffleType = type === "raffle" || type === "spin_wheel";
+      const raffleFields: Record<string, unknown> = {};
+      if (hasRaffle || isRaffleType) {
+        raffleFields.hasRaffle = true;
+        raffleFields.raffleType = isRaffleType && type === "spin_wheel"
+          ? "spin_wheel"
+          : raffleType;
+        if (Number(raffleTopN) > 0) raffleFields.raffleTopN = Number(raffleTopN);
+        if (rafflePrize) raffleFields.rafflePrize = rafflePrize;
+        if (rafflePrizeCouponId)
+          raffleFields.rafflePrizeCouponId = rafflePrizeCouponId;
+        if (raffleType === "spin_wheel" || type === "spin_wheel") {
+          raffleFields.spinPrizes = spinPrizes;
+          if (Number(spinMaxPerUser) > 0)
+            raffleFields.spinMaxPerUser = Number(spinMaxPerUser);
+          if (spinWindowStart)
+            raffleFields.spinWindowStart = toISOString(spinWindowStart);
+          if (spinWindowEnd)
+            raffleFields.spinWindowEnd = toISOString(spinWindowEnd);
+        }
+      }
+
       const payload: Record<string, unknown> = {
         type,
         title,
@@ -194,6 +261,7 @@ export function AdminEventEditorView({
         endsAt: toISOString(endsAt),
         coverImageUrl: coverImageUrl || undefined,
         ...buildTypeConfig(),
+        ...raffleFields,
       };
 
       if (eventId) {
@@ -213,6 +281,50 @@ export function AdminEventEditorView({
     },
     onError: (error) => {
       setSaveMessage(error instanceof Error ? error.message : "Save failed");
+    },
+  });
+
+  const addSpinPrize = () => {
+    setSpinPrizes((prev) => [
+      ...prev,
+      {
+        id: `prize-${Date.now()}`,
+        label: "",
+        couponId: undefined,
+        weight: 1,
+        isActive: true,
+      },
+    ]);
+  };
+  const removeSpinPrize = (id: string) => {
+    setSpinPrizes((prev) => prev.filter((p) => p.id !== id));
+  };
+  const updateSpinPrize = (id: string, patch: Partial<SpinPrize>) => {
+    setSpinPrizes((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  };
+
+  const triggerRaffleMutation = useMutation({
+    mutationFn: async () => {
+      if (!eventId) throw new Error("Save the event before triggering");
+      return apiClient.post<{ data: { raffleWinnerDisplayName?: string; raffleEntryCount?: number } }>(
+        ADMIN_ENDPOINTS.EVENT_TRIGGER_RAFFLE(eventId),
+        {},
+      );
+    },
+    onSuccess: (res) => {
+      const data = (res as any).data ?? res;
+      setTriggerMessage(
+        data?.raffleWinnerDisplayName
+          ? `Winner: ${data.raffleWinnerDisplayName}`
+          : "Raffle triggered.",
+      );
+      if (data?.raffleWinnerDisplayName)
+        setRaffleWinnerName(data.raffleWinnerDisplayName);
+      if (typeof data?.raffleEntryCount === "number")
+        setRaffleEntryCount(data.raffleEntryCount);
+    },
+    onError: (err) => {
+      setTriggerMessage(err instanceof Error ? err.message : "Trigger failed");
     },
   });
 
@@ -431,6 +543,198 @@ export function AdminEventEditorView({
               </Text>
             </div>
           )}
+
+          {/* Raffle config — available for any type, mandatory for raffle/spin_wheel */}
+          <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                Raffle &amp; spin wheel
+              </Text>
+              {type !== "raffle" && type !== "spin_wheel" && (
+                <Toggle
+                  checked={hasRaffle}
+                  onChange={setHasRaffle}
+                  label="Attach raffle"
+                />
+              )}
+            </div>
+
+            {(hasRaffle || type === "raffle" || type === "spin_wheel") && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Select
+                    label="Raffle type"
+                    value={type === "spin_wheel" ? "spin_wheel" : raffleType}
+                    options={RAFFLE_TYPE_OPTIONS}
+                    onChange={(e) => setRaffleType(e.target.value as RaffleType)}
+                    disabled={type === "spin_wheel"}
+                  />
+                  <Input
+                    label="Top N (for top-N raffle types)"
+                    type="number"
+                    value={raffleTopN}
+                    onChange={(e) => setRaffleTopN(e.target.value)}
+                    placeholder="10"
+                  />
+                </div>
+                <Input
+                  label="Prize description"
+                  value={rafflePrize}
+                  onChange={(e) => setRafflePrize(e.target.value)}
+                  placeholder="₹2,000 store credit + exclusive Pikachu sticker"
+                />
+                <Input
+                  label="Coupon ID for winner (optional)"
+                  value={rafflePrizeCouponId}
+                  onChange={(e) => setRafflePrizeCouponId(e.target.value)}
+                  placeholder="coupon-vip-winner-2026"
+                />
+
+                {(raffleType === "spin_wheel" || type === "spin_wheel") && (
+                  <div className="rounded-lg border border-zinc-200 dark:border-slate-700 p-3 space-y-3">
+                    <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-300">
+                      Spin prizes (weighted random)
+                    </Text>
+                    {spinPrizes.length === 0 && (
+                      <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                        No spin prizes yet. Add at least one to enable spinning.
+                      </Text>
+                    )}
+                    {spinPrizes.map((p) => (
+                      <div
+                        key={p.id}
+                        className="grid grid-cols-12 gap-2 items-end"
+                      >
+                        <div className="col-span-5">
+                          <Input
+                            label="Label"
+                            value={p.label}
+                            onChange={(e) =>
+                              updateSpinPrize(p.id, { label: e.target.value })
+                            }
+                            placeholder="₹100 off"
+                          />
+                        </div>
+                        <div className="col-span-3">
+                          <Input
+                            label="Coupon ID"
+                            value={p.couponId ?? ""}
+                            onChange={(e) =>
+                              updateSpinPrize(p.id, {
+                                couponId: e.target.value || undefined,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <Input
+                            label="Weight"
+                            type="number"
+                            value={String(p.weight)}
+                            onChange={(e) =>
+                              updateSpinPrize(p.id, {
+                                weight: Number(e.target.value) || 0,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="col-span-1 flex items-center justify-center pb-2">
+                          <Toggle
+                            checked={p.isActive}
+                            onChange={(v) => updateSpinPrize(p.id, { isActive: v })}
+                            label=""
+                          />
+                        </div>
+                        <div className="col-span-1 flex items-center justify-center pb-2">
+                          <button
+                            type="button"
+                            onClick={() => removeSpinPrize(p.id)}
+                            className="text-zinc-400 hover:text-red-500 text-lg leading-none px-2"
+                            aria-label="Remove prize"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addSpinPrize}
+                    >
+                      + Add spin prize
+                    </Button>
+                    <Input
+                      label="Max spins per user"
+                      type="number"
+                      value={spinMaxPerUser}
+                      onChange={(e) => setSpinMaxPerUser(e.target.value)}
+                      placeholder="1"
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <Input
+                        label="Spin window start"
+                        type="datetime-local"
+                        value={spinWindowStart}
+                        onChange={(e) => setSpinWindowStart(e.target.value)}
+                      />
+                      <Input
+                        label="Spin window end"
+                        type="datetime-local"
+                        value={spinWindowEnd}
+                        onChange={(e) => setSpinWindowEnd(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Manual trigger + winner readonly */}
+                {eventId && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20 p-3 space-y-2">
+                    <div className="flex items-center justify-between gap-3">
+                      <Text className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                        {raffleWinnerName
+                          ? `Winner: ${raffleWinnerName}`
+                          : "Raffle not yet triggered"}
+                      </Text>
+                      <Button
+                        type="button"
+                        variant="primary"
+                        size="sm"
+                        onClick={() => triggerRaffleMutation.mutate()}
+                        disabled={
+                          triggerRaffleMutation.isPending ||
+                          Boolean(raffleWinnerName)
+                        }
+                      >
+                        {triggerRaffleMutation.isPending
+                          ? "Triggering…"
+                          : raffleWinnerName
+                            ? "Already triggered"
+                            : "Trigger Raffle Now"}
+                      </Button>
+                    </div>
+                    {raffleEntryCount !== null && (
+                      <Text className="text-xs text-amber-800 dark:text-amber-200">
+                        Pool size: {raffleEntryCount}
+                      </Text>
+                    )}
+                    {raffleGithubUrl && (
+                      <Text className="text-xs text-amber-800 dark:text-amber-200 break-all">
+                        Fairness proof: {raffleGithubUrl}
+                      </Text>
+                    )}
+                    {triggerMessage && (
+                      <Text className="text-xs text-amber-900 dark:text-amber-100">
+                        {triggerMessage}
+                      </Text>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
 
           <FormActions align="right">
             <Button

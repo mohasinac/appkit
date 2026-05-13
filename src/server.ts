@@ -837,6 +837,11 @@ export { listPublicEvents } from "./features/events/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // updateEvent - Helper for update event.
 export { updateEvent } from "./features/events/server";
+// [SERVER-ONLY] SB9-H — manual trigger + spin actions
+export {
+  triggerEventRaffleAction,
+  assignSpinPrizeAction,
+} from "./_internal/server/features/raffle/actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createFaq - Helper for create faq.
 export { createFaq } from "./features/faq/server";
