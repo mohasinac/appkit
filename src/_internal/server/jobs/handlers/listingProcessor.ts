@@ -10,7 +10,6 @@
 import {
   bidRepository,
   blogRepository,
-  brandsRepository,
   categoriesRepository,
   couponsRepository,
   eventEntryRepository,
@@ -99,7 +98,13 @@ const LISTERS: Record<string, Lister> = {
   products: (m, o) =>
     productRepository.list(m, o as Parameters<typeof productRepository.list>[1]),
   categories: (m) => categoriesRepository.list(m),
-  brands: (m) => brandsRepository.list(m),
+  brands: (m) =>
+    categoriesRepository.list({
+      ...m,
+      filters: m.filters
+        ? `${m.filters},categoryType==brand`
+        : "categoryType==brand",
+    }),
   orders: (m) => orderRepository.listAll(m),
   reviews: (m) => reviewRepository.listAll(m),
   coupons: (m) => couponsRepository.list(m),

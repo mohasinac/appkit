@@ -120,15 +120,8 @@ export type {
 
 export { CopilotLogRepository, copilotLogRepository } from "../core";
 
-export {
-  BrandsRepository,
-  brandsRepository,
-} from "../features/brands/repository/brands.repository";
-export type {
-  BrandDocument,
-  BrandCreateInput,
-  BrandUpdateInput,
-} from "../features/brands/schemas";
+// SB-UNI-C — BrandsRepository + BrandDocument deleted; brands live on
+// categoriesRepository with categoryType:"brand".
 export type {
   CopilotFeedback,
   CopilotLogDocument,

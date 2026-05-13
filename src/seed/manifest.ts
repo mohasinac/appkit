@@ -7,7 +7,7 @@
  */
 
 import type { SeedCollectionName } from "./actions/demo-seed-actions";
-import { brandsSeedData } from "./brands-seed-data";
+// SB-UNI-C — brandsSeedData merged into categoriesSeedData.
 import { categoriesSeedData } from "./categories-seed-data";
 import { usersSeedData } from "./users-seed-data";
 import { storesSeedData } from "./stores-seed-data";
@@ -64,7 +64,6 @@ function pick(items: unknown[], nameKey = "name"): SeedManifestEntry[] {
 }
 
 export const SEED_MANIFEST: SeedManifest = {
-  brands: pick(asArr(brandsSeedData)),
   categories: pick(asArr(categoriesSeedData)),
   users: pick(
     asArr(usersSeedData).map((u) => ({

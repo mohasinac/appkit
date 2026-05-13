@@ -13,7 +13,6 @@ import { serverLogger } from "../../monitoring/index";
 export type SeedCollectionName =
   | "users"
   | "addresses"
-  | "brands"
   | "categories"
   | "stores"
   | "products"

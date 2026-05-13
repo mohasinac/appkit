@@ -1538,12 +1538,11 @@ export { carouselsRepository, CarouselsRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // cartRepository - Shared export for cart repository.
 export { cartRepository } from "./repositories/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// brandsRepository - Shared export for brands repository.
-export { brandsRepository } from "./repositories/index";
-export type { BrandDocument, BrandCreateInput, BrandUpdateInput } from "./repositories/index";
-// BRANDS_COLLECTION - Firestore collection name constant for brands.
-export { BRANDS_COLLECTION } from "./features/brands/schemas";
+// SB-UNI-C — brandsRepository + BrandDocument + BRANDS_COLLECTION deleted.
+// Brands now live in the categories collection with categoryType:"brand".
+// Use categoriesRepository.findBySlugAndType(slug, "brand") and
+// categoriesRepository.findActiveBrands(). CategoryDocument carries
+// brandWebsite / brandCountry / brandFounded / brandBannerImage.
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // categoriesRepository - Shared export for categories repository.
 export { categoriesRepository } from "./repositories/index";
@@ -1703,8 +1702,7 @@ export { carouselsSeedData } from "./seed/index";
 // cartsSeedData - Model for carts seed data.
 export { cartsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// brandsSeedData - Seed data for brands collection (15 franchise brands).
-export { brandsSeedData } from "./seed/index";
+// SB-UNI-C — brandsSeedData merged into categoriesSeedData with categoryType:"brand".
 // categoriesSeedData - Model for categories seed data.
 export { categoriesSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -4418,9 +4416,8 @@ export { createBlogPostSchema } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteBlogPost - Helper for delete blog post.
 export { deleteBlogPost } from "./features/blog/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getBrandBySlug - Helper for get brand by slug.
-export { getBrandBySlug } from "./features/brands/server";
+// SB-UNI-C — getBrandBySlug deleted with features/brands/. Use
+// categoriesRepository.findBySlugAndType(slug, "brand") instead.
 // getBlogPostById - Helper for get blog post by id.
 export { getBlogPostById } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

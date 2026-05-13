@@ -1,24 +1,20 @@
 import { cache } from "react";
-import { brandsRepository, categoriesRepository } from "../../../../repositories";
-import type { BrandDocument } from "../../../../features/brands/schemas";
+import { categoriesRepository } from "../../../../repositories";
 import type { CategoryDocument } from "../../../../features/categories/schemas/firestore";
 
+/**
+ * Brand detail loader — SB-UNI-C moved brands into the `categories`
+ * collection with `categoryType: "brand"`. Both `generateMetadata` and
+ * `BrandDetailPageView` consume the same `CategoryDocument` shape.
+ */
 export const getBrandForDetail = cache(
-  async (slug: string): Promise<BrandDocument | null> => {
-    return (await brandsRepository.findBySlug(slug).catch(() => undefined)) ?? null;
+  async (slug: string): Promise<CategoryDocument | null> => {
+    return categoriesRepository.findBySlugAndType(slug, "brand").catch(() => null);
   },
 );
 
 /**
- * Brand-as-category lookup for the brand detail view, deduped per request.
- *
- * BrandDetailPageView renders the categories-collection record (display + metrics
- * fields), not the brands-collection record. Keep both fetchers so
- * generateMetadata can pull BrandDocument fields (logoURL) while the view pulls
- * CategoryDocument.
+ * @deprecated Identical to getBrandForDetail after SB-UNI-C. Kept as an
+ * alias so existing imports don't break.
  */
-export const getBrandCategoryForDetail = cache(
-  async (slug: string): Promise<CategoryDocument | null> => {
-    return categoriesRepository.getCategoryBySlug(slug).catch(() => null);
-  },
-);
+export const getBrandCategoryForDetail = getBrandForDetail;

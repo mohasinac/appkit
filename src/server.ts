@@ -680,9 +680,8 @@ export { createBlogPostSchema } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // deleteBlogPost - Helper for delete blog post.
 export { deleteBlogPost } from "./features/blog/server";
-// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// getBrandBySlug - Helper for get brand by slug.
-export { getBrandBySlug } from "./features/brands/server";
+// SB-UNI-C — getBrandBySlug deleted with features/brands/. Use
+// categoriesRepository.findBySlugAndType(slug, "brand") instead.
 // getBlogPostById - Helper for get blog post by id.
 export { getBlogPostById } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

@@ -607,6 +607,20 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
   }
 
   /**
+   * SB-UNI-C — list active brand categories ordered by displayOrder.
+   * Replaces the old `brandsRepository.findActive()` call site.
+   */
+  async findActiveBrands(): Promise<CategoryDocument[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("categoryType", "==", "brand")
+      .where("isActive", "==", true)
+      .orderBy("order", "asc")
+      .get();
+    return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+  }
+
+  /**
    * SB-UNI-B — derive the canonical `sublisting-{slug}` ID from a
    * human-entered category name.
    */
