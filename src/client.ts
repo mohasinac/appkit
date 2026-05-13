@@ -363,3 +363,24 @@ export {
   isPreOrderListing,
   isStandardListing,
 } from "./features/products/utils/listing-type";
+
+// Layout feature — client islands (unifies admin/store/user dashboard layouts).
+export { DashboardLayoutClient, RoleGuard } from "./_internal/client/features/layout/index";
+export type {
+  DashboardLayoutClientProps,
+  RoleGuardProps,
+} from "./_internal/client/features/layout/index";
+export type {
+  LayoutBreakpoint,
+  DashboardVariant,
+  LayoutRole,
+  SidebarNavItem,
+  SidebarNavGroup,
+  MainNavItem as LayoutMainNavItem,
+  BrandingConfig,
+  FooterConfig,
+  SectionResponsive,
+  SectionTheming,
+  LayoutConfig,
+  DashboardLayoutConfig,
+} from "./_internal/shared/features/layout/index";
