@@ -184,6 +184,7 @@ export { conversationsSeedData } from "./conversations-seed-data";
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 // SB-UNI-V — bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 export { scammersSeedData } from "./scammers-seed-data";
+export { supportTicketsSeedData } from "./support-tickets-seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 
 // Seed manifest — lightweight index for SeedPanel previews

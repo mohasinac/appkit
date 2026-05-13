@@ -1616,7 +1616,16 @@ export type {
   TicketStatus,
   TicketPriority,
 } from "./repositories/index";
-export { ELIGIBLE_ORDER_STATUSES_FOR_TICKET } from "./features/support/schemas/firestore";
+export {
+  ELIGIBLE_ORDER_STATUSES_FOR_TICKET,
+  SUPPORT_TICKET_COLLECTION,
+  ACTIVE_TICKET_STATUSES,
+  TicketCategoryValues,
+  TicketStatusValues,
+  TicketPriorityValues,
+} from "./features/support/schemas/firestore";
+// Support tickets — seed data
+export { supportTicketsSeedData } from "./seed/index";
 // SB-UNI-B — sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer — uses firebase-admin; server-only.
@@ -2685,11 +2694,6 @@ export type { ShiprocketVerifyPickupOTPResponse } from "./providers/shipping-shi
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // ShiprocketWebhookPayload - Type contract for shiprocket webhook payload.
 export type { ShiprocketWebhookPayload } from "./providers/shipping-shiprocket/index";
-
-// ./providers/storage-firebase/index
-// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
-// firebaseStorageProvider - Component for firebase storage provider.
-export { firebaseStorageProvider } from "./providers/storage-firebase/index";
 
 // ./providers/storage-firebase/client
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.

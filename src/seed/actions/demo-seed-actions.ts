@@ -37,6 +37,7 @@ export type SeedCollectionName =
   | "conversations"
   | "groupedListings"
   | "scammerProfiles"
+  | "supportTickets"
   | "productFeatures";
 
 export interface SeedOperationResult {
