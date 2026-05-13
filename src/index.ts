@@ -3217,6 +3217,20 @@ export { AdminCategoriesView } from "./features/admin/index";
 // AdminCategoryEditorView - Component for admin category create/edit form.
 export { AdminCategoryEditorView } from "./features/admin/index";
 export type { AdminCategoryEditorViewProps } from "./features/admin/index";
+// S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
+export { AdminBundlesView } from "./features/admin/index";
+export type { AdminBundlesViewProps } from "./features/admin/index";
+export { AdminBundleEditorView } from "./features/admin/index";
+export type { AdminBundleEditorViewProps } from "./features/admin/index";
+// S-SBUNI-4 2026-05-13 — multi-select bundle items picker (centerpiece UI primitive).
+export {
+  BundleItemsPicker,
+  defaultBundleItemsFetch,
+} from "./features/categories/components/BundleItemsPicker";
+export type {
+  BundleItemsPickerProps,
+  BundleItemSearchResult,
+} from "./features/categories/components/BundleItemsPicker";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminCouponsView - Component for admin coupons view.
 export { AdminCouponsView } from "./features/admin/index";

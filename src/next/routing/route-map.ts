@@ -76,6 +76,7 @@ export const DEFAULT_ROUTE_MAP = {
     EVENT_DETAIL: (id: string) => `/events/${id}`,
     EVENT_PARTICIPATE: (id: string) => `/events/${id}/participate`,
     EVENT_LEADERBOARD: (id: string) => `/events/${id}/leaderboard`,
+    EVENT_WINNER: (id: string) => `/events/${id}/winner`,
     SUBLISTING_CATEGORIES: "/sublisting-categories",
     SUBLISTING_CATEGORY: (slug: string) => `/sublisting-categories/${slug}`,
     SUPPORT: "/support",
@@ -229,7 +230,9 @@ export const DEFAULT_ROUTE_MAP = {
     FEATURES_NEW: "/admin/features/new",
     FEATURES_EDIT: (id: string) => `/admin/features/${id}/edit`,
     // SB1-J — bundles + prize draws (admin moderation)
+    // S-SBUNI-4 — BUNDLES_NEW added alongside BUNDLES_EDIT.
     BUNDLES: "/admin/bundles",
+    BUNDLES_NEW: "/admin/bundles/new",
     BUNDLES_EDIT: (id: string) => `/admin/bundles/${id}/edit`,
     PRIZE_DRAWS: "/admin/prize-draws",
     PRIZE_DRAWS_EDIT: (id: string) => `/admin/prize-draws/${id}/edit`,

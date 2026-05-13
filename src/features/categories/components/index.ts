@@ -59,5 +59,15 @@ export type { BundlesListViewProps } from "./BundlesListView";
 export { BundleDetailView } from "./BundleDetailView";
 export type { BundleDetailViewProps } from "./BundleDetailView";
 
+// S-SBUNI-4 2026-05-13 — multi-select product picker for bundle editor.
+export {
+  BundleItemsPicker,
+  defaultBundleItemsFetch,
+} from "./BundleItemsPicker";
+export type {
+  BundleItemsPickerProps,
+  BundleItemSearchResult,
+} from "./BundleItemsPicker";
+
 export { CategoryBundlesListing } from "./CategoryBundlesListing";
 export type { CategoryBundlesListingProps } from "./CategoryBundlesListing";

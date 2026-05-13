@@ -30,6 +30,11 @@ export { AdminBrandsView } from "./AdminBrandsView";
 export type { AdminBrandsViewProps } from "./AdminBrandsView";
 export { AdminBrandEditorView } from "./AdminBrandEditorView";
 export type { AdminBrandEditorViewProps } from "./AdminBrandEditorView";
+// S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
+export { AdminBundlesView } from "./AdminBundlesView";
+export type { AdminBundlesViewProps } from "./AdminBundlesView";
+export { AdminBundleEditorView } from "./AdminBundleEditorView";
+export type { AdminBundleEditorViewProps } from "./AdminBundleEditorView";
 export { AdminSublistingCategoriesView } from "./AdminSublistingCategoriesView";
 export { AdminSublistingCategoryEditorView } from "./AdminSublistingCategoryEditorView";
 export type { AdminSublistingCategoryEditorViewProps } from "./AdminSublistingCategoryEditorView";
