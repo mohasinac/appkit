@@ -6875,6 +6875,19 @@ export { PreOrderDetailView } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // PreOrdersView - Component for pre orders view.
 export { PreOrdersView } from "./features/products/index";
+// [SERVER-RSC]-Public listing for prize-draw products (SB4-F).
+export { PrizeDrawsListingView } from "./features/products/index";
+export type { PrizeDrawsListingViewProps } from "./features/products/index";
+// [CLIENT]-Client toolbar+grid for prize draws (SB4-F).
+export { PrizeDrawsIndexListing } from "./features/products/index";
+export type { PrizeDrawsIndexListingProps } from "./features/products/index";
+// [CLIENT]-Marketplace card for prize draws (SB4-F).
+export { MarketplacePrizeDrawCard } from "./features/products/index";
+export type {
+  MarketplacePrizeDrawCardProps,
+  MarketplacePrizeDrawCardData,
+  MarketplacePrizeDrawCardLabels,
+} from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductCard - Component for product card.
 export { ProductCard } from "./features/products/index";

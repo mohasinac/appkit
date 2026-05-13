@@ -32,6 +32,16 @@ export type {
   PrizeRevealModalProps,
   PrizeRevealResponse,
 } from "./PrizeRevealModal";
+export { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
+export type {
+  MarketplacePrizeDrawCardProps,
+  MarketplacePrizeDrawCardData,
+  MarketplacePrizeDrawCardLabels,
+} from "./MarketplacePrizeDrawCard";
+export { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
+export type { PrizeDrawsIndexListingProps } from "./PrizeDrawsIndexListing";
+export { PrizeDrawsListingView } from "./PrizeDrawsListingView";
+export type { PrizeDrawsListingViewProps } from "./PrizeDrawsListingView";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
