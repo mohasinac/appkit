@@ -53,11 +53,6 @@ export type { CategoriesIndexListingProps } from "./CategoriesIndexListing";
 export { CategoryDetailTabs } from "./CategoryDetailTabs";
 export type { CategoryDetailTabsProps } from "./CategoryDetailTabs";
 
-export { BundlesListView } from "./BundlesListView";
-export type { BundlesListViewProps } from "./BundlesListView";
-
-export { BundleDetailView } from "./BundleDetailView";
-export type { BundleDetailViewProps } from "./BundleDetailView";
 
 // S-SBUNI-RULES 2026-05-13 — direct-checkout CTA (replaces deleted BundleAddToCartCta).
 export { BundleBuyNowCta } from "./BundleBuyNowCta";

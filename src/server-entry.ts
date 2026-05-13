@@ -16,6 +16,35 @@
 // firebase-admin is correctly reachable here since this is the server entry.
 export * from "./index";
 
+// Server-only RSC views — removed from index.ts to prevent firebase-admin
+// leaking into the client bundle via client-entry.ts's export * from "./index".
+// These are async React Server Components that fetch data via repositories.
+export { PolicyPageView } from "./features/about/index";
+export { BlogIndexPageView } from "./features/blog/components/BlogIndexPageView";
+export { CategoriesIndexPageView } from "./features/categories/components/CategoriesIndexPageView";
+export { CategoryDetailPageView } from "./features/categories/components/CategoryDetailPageView";
+export { BrandDetailPageView } from "./features/categories/components/BrandDetailPageView";
+export { EventsListPageView } from "./features/events/components/EventsListPageView";
+export { MarketplaceHomepageView } from "./features/homepage/index";
+export { PreOrdersListView } from "./features/pre-orders/index";
+export { PreOrderDetailPageView } from "./features/pre-orders/index";
+export { AuctionDetailPageView } from "./features/auctions/index";
+export { AuctionsListView } from "./features/auctions/components/AuctionsListView";
+export { BundlesListView } from "./features/categories/components/BundlesListView";
+export { PrizeDrawsListingView } from "./features/products/components/PrizeDrawsListingView";
+export { PrizeDrawDetailPageView } from "./features/products/components/PrizeDrawDetailPageView";
+export { ProductDetailPageView } from "./features/products/components/ProductDetailPageView";
+export { ProductsIndexPageView } from "./features/products/components/ProductsIndexPageView";
+export { ReviewsIndexPageView } from "./features/reviews/components/ReviewsIndexPageView";
+export { ReviewDetailPageView } from "./features/reviews/components/ReviewDetailPageView";
+export { StoresIndexPageView } from "./features/stores/components/StoresIndexPageView";
+export { StoreDetailLayoutView } from "./features/stores/components/StoreDetailLayoutView";
+export { StoreProductsPageView } from "./features/stores/components/StoreProductsPageView";
+export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
+export { StorePreOrdersPageView } from "./features/stores/components/StorePreOrdersPageView";
+export { StorePrizeDrawsPageView } from "./features/stores/components/StorePrizeDrawsPageView";
+export { StoreBundlesPageView } from "./features/stores/components/StoreBundlesPageView";
+
 // S2: products data layer — deduped via React.cache()
 export {
   getProductForDetail,
