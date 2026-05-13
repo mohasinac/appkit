@@ -45,7 +45,7 @@ export const auctionItemSchema = z.object({
   storeId: z.string().optional(),
   storeSlug: z.string().optional(),
   featured: z.boolean(),
-  isAuction: z.literal(true),
+  listingType: z.literal("auction"),
   createdAt: z.string(),
   updatedAt: z.string(),
 });

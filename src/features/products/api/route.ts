@@ -52,8 +52,6 @@ const productMutateSchema = z
     tags: z.array(z.string()).optional(),
     featured: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
-    isAuction: z.boolean().optional(),
-    isPreOrder: z.boolean().optional(),
     sellerId: z.string().optional(),
     sellerName: z.string().optional(),
     sellerEmail: z.string().email().optional(),
@@ -86,10 +84,7 @@ const SAFE_PRODUCT_FILTER_FIELDS = new Set([
   "storeId",
   "title",
   "price",
-  // SB1-G — canonical discriminator first; legacy booleans retained transitional.
   "listingType",
-  "isAuction",
-  "isPreOrder",
   "featured",
   "isPromoted",
   "stockQuantity",
@@ -137,20 +132,10 @@ function buildFilters(url: URL): string {
     parts.push(`price<=${maxPrice}`);
   const inStock = param(url, "inStock");
   if (inStock === "true") parts.push("stockQuantity>0");
-  // SB1-G — public URL still accepts the legacy boolean params; map them to
-  // the canonical listingType clause. ?listingType=auction|pre-order|standard
-  // takes precedence when present.
+  // SB1-G — canonical discriminator. Public URL accepts only ?listingType=X.
   const listingTypeParam = param(url, "listingType");
-  const isAuction = param(url, "isAuction");
-  const isPreOrder = param(url, "isPreOrder");
   if (listingTypeParam) {
     parts.push(`listingType==${listingTypeParam}`);
-  } else if (isAuction === "true") {
-    parts.push("listingType==auction");
-  } else if (isPreOrder === "true") {
-    parts.push("listingType==pre-order");
-  } else if (isAuction === "false" && isPreOrder === "false") {
-    parts.push("listingType==standard");
   }
   const featured = param(url, "featured");
   if (featured === "true") parts.push("featured==true");

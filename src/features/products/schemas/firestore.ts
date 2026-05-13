@@ -343,8 +343,8 @@ export const productQueryHelpers = {
   featured: () => ["featured", "==", true] as const,
   published: () => ["status", "==", "published"] as const,
   available: () => ["availableQuantity", ">", 0] as const,
-  auctions: () => ["isAuction", "==", true] as const,
-  preOrders: () => ["isPreOrder", "==", true] as const,
+  auctions: () => ["listingType", "==", "auction"] as const,
+  preOrders: () => ["listingType", "==", "pre-order"] as const,
   promoted: () => ["isPromoted", "==", true] as const,
   activeAuction: (date: Date) => ["auctionEndDate", ">=", date] as const,
 } as const;

@@ -236,7 +236,9 @@ export const productListParamsSchema = z.object({
   minPrice: z.coerce.number().optional(),
   maxPrice: z.coerce.number().optional(),
   inStock: z.coerce.boolean().optional(),
-  isAuction: z.coerce.boolean().optional(),
+  listingType: z
+    .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .optional(),
   storeId: z.string().optional(),
   sort: z.string().optional(),
   page: z.coerce.number().optional(),

@@ -136,8 +136,8 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   if (statusRaw && statusRaw !== "All") filterParts.push(`status==${statusRaw}`);
   const typeRaw = table.get("type");
   if (typeRaw && typeRaw !== "All") {
-    if (typeRaw === "Auctions") filterParts.push("isAuction==true");
-    else if (typeRaw === "Pre-orders") filterParts.push("isPreOrder==true");
+    if (typeRaw === "Auctions") filterParts.push("listingType==auction");
+    else if (typeRaw === "Pre-orders") filterParts.push("listingType==pre-order");
   }
   const filters = filterParts.join(",") || undefined;
 

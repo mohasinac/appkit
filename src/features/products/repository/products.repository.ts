@@ -29,11 +29,9 @@ const PRODUCT_FIELDS = {
   FEATURED: "featured",
   CATEGORY: "category",
   SLUG: "slug",
-  // SB1-G (S21 2026-05-12) — canonical discriminator. Boolean flags below kept
-  // as deprecated aliases for any consumer code that hasn't migrated yet.
+  // SB1-G (S3 2026-05-13) — canonical discriminator. Legacy `isAuction` /
+  // `isPreOrder` boolean fields were removed in this session.
   LISTING_TYPE: "listingType",
-  IS_AUCTION: "isAuction",
-  IS_PRE_ORDER: "isPreOrder",
   PRE_ORDER_DELIVERY_DATE: "preOrderDeliveryDate",
   IS_PROMOTED: "isPromoted",
   AUCTION_END_DATE: "auctionEndDate",
@@ -428,8 +426,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     storeId: { canFilter: true, canSort: false },
     storeName: { canFilter: true, canSort: true },
     featured: { canFilter: true, canSort: false },
-    isAuction: { canFilter: true, canSort: false },
-    isPreOrder: { canFilter: true, canSort: false },
+    listingType: { canFilter: true, canSort: false },
     isPromoted: { canFilter: true, canSort: false },
     price: { canFilter: true, canSort: true },
     stockQuantity: { canFilter: true, canSort: true },
@@ -459,8 +456,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   };
 
   /**
-   * Virtual filter aliases — callers can pass `f=listingType==auction` instead
-   * of `f=isAuction==true,isPreOrder==false`. The Sieve adapter expands the
+   * Virtual filter aliases — callers can pass `f=listingType==auction` for
+   * the canonical listing-kind discriminator. The Sieve adapter expands the
    * alias into real clauses before reaching Firestore.
    *
    * Adding a new alias here makes it usable everywhere `productRepository.list`
@@ -490,9 +487,9 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      * Public catalog scope shorthand. Maps a single token to the canonical
      * combination most public pages use.
      *
-     *   scope==publicProducts   →  status==published,isAuction==false,isPreOrder==false
-     *   scope==publicAuctions   →  status==published,isAuction==true
-     *   scope==publicPreorders  →  status==published,isPreOrder==true
+     *   scope==publicProducts   →  status==published,listingType==standard
+     *   scope==publicAuctions   →  status==published,listingType==auction
+     *   scope==publicPreorders  →  status==published,listingType==pre-order
      *   scope==published        →  status==published
      */
     scope: (value, operator) => {

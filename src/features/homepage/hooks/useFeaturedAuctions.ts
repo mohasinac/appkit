@@ -21,7 +21,7 @@ export function useFeaturedAuctions(options?: {
     initialData: options?.initialData,
     queryFn: async () => {
       const promotedRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished%2CisPromoted%3D%3Dtrue${brandFilter}&pageSize=18`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dauction%2Cstatus%3D%3Dpublished%2CisPromoted%3D%3Dtrue${brandFilter}&pageSize=18`,
       );
       const promoted = promotedRes?.items ?? [];
 
@@ -29,7 +29,7 @@ export function useFeaturedAuctions(options?: {
 
       const remaining = MIN_COUNT - promoted.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isAuction%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dauction%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + promoted.length}`,
       );
       const latest = latestRes?.items ?? [];
 

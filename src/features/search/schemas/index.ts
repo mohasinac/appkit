@@ -18,7 +18,9 @@ export const searchProductItemSchema = z.object({
   mainImage: z.string().optional(),
   status: z.string().optional(),
   featured: z.boolean().optional(),
-  isAuction: z.boolean().optional(),
+  listingType: z
+    .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
+    .optional(),
   isPromoted: z.boolean().optional(),
   slug: z.string(),
 });

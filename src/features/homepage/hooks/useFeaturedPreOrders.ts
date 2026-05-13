@@ -21,7 +21,7 @@ export function useFeaturedPreOrders(options?: {
     initialData: options?.initialData,
     queryFn: async () => {
       const featuredRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=preOrderDeliveryDate&pageSize=6`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dpre-order%2Cstatus%3D%3Dpublished${brandFilter}&sorts=preOrderDeliveryDate&pageSize=6`,
       );
       const featured = featuredRes?.items ?? [];
 
@@ -29,7 +29,7 @@ export function useFeaturedPreOrders(options?: {
 
       const remaining = MIN_COUNT - featured.length;
       const latestRes = await apiClient.get<ProductListResponse>(
-        `${PRODUCT_ENDPOINTS.LIST}?filters=isPreOrder%3D%3Dtrue%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + featured.length}`,
+        `${PRODUCT_ENDPOINTS.LIST}?filters=listingType%3D%3Dpre-order%2Cstatus%3D%3Dpublished${brandFilter}&sorts=-createdAt&pageSize=${remaining + featured.length}`,
       );
       const latest = latestRes?.items ?? [];
 
