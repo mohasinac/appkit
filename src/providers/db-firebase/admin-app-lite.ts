@@ -62,6 +62,33 @@ export function getAdminAppLite(): App {
       }),
       databaseURL: dbUrl,
     });
+  } else if (
+    // Application Default Credentials path — used by Firebase Functions /
+    // Cloud Run / GCE / GKE. The runtime sets `FUNCTION_TARGET` (gen 2
+    // Functions) or `K_SERVICE` (Cloud Run); FIREBASE_CONFIG carries the
+    // project info Firebase auto-injects. When any of those is present, defer
+    // to ADC by calling `initializeApp()` with no credential — the SDK pulls
+    // creds from the GCE metadata server.
+    process.env.FUNCTION_TARGET ||
+    process.env.K_SERVICE ||
+    process.env.FIREBASE_CONFIG ||
+    process.env.GOOGLE_APPLICATION_CREDENTIALS
+  ) {
+    const firebaseConfig = process.env.FIREBASE_CONFIG
+      ? (JSON.parse(process.env.FIREBASE_CONFIG) as {
+          projectId?: string;
+          databaseURL?: string;
+        })
+      : {};
+    const projectId =
+      firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
+    const dbUrl =
+      firebaseConfig.databaseURL ??
+      process.env.FIREBASE_ADMIN_DATABASE_URL ??
+      process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
+      (projectId ? `https://${projectId}-default-rtdb.firebaseio.com` : undefined);
+
+    app = initializeApp(dbUrl ? { databaseURL: dbUrl } : undefined);
   } else {
     throw new Error(
       "@mohasinac/db-firebase: Firebase Admin credentials not found.",
