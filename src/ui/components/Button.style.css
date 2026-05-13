@@ -11,6 +11,40 @@
   transition: all 0.2s ease;
   cursor: pointer;
   user-select: none;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.appkit-button__ripple {
+  position: absolute;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.28;
+  pointer-events: none;
+  transform: scale(0);
+  animation: appkit-button-ripple 520ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  z-index: 0;
+}
+
+.appkit-button__content,
+.appkit-button__spinner {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes appkit-button-ripple {
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .appkit-button__ripple {
+    animation-duration: 1ms;
+    opacity: 0;
+  }
 }
 
 .appkit-button:focus-visible {

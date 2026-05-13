@@ -1,6 +1,19 @@
-import React from "react";
+"use client";
+import React, { useCallback } from "react";
 import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
+
+function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
+  const rect = host.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement("span");
+  ripple.className = "appkit-button__ripple";
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${clientY - rect.top - size / 2}px`;
+  host.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+}
 
 /**
  * Button — versatile button with multiple variants, sizes, and loading state.
@@ -53,6 +66,17 @@ export function Button({
     className,
   );
 
+  const userOnClick = props.onClick;
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (!disabled && !isLoading) {
+        spawnRipple(event.currentTarget, event.clientX, event.clientY);
+      }
+      userOnClick?.(event);
+    },
+    [disabled, isLoading, userOnClick],
+  );
+
   if (asChild && React.isValidElement(children)) {
     const child = children as React.ReactElement<Record<string, unknown>>;
     return React.cloneElement(child, {
@@ -68,6 +92,7 @@ export function Button({
       disabled={disabled || isLoading}
       aria-busy={isLoading || undefined}
       {...props}
+      onClick={handleClick}
     >
       {isLoading && (
         <Loader2 className="appkit-button__spinner" aria-hidden="true" />

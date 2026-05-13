@@ -214,11 +214,13 @@ export function createRouteHandler<
 
       return response;
     } catch (err: unknown) {
-      // Structured errors thrown with .status
+      const e = err as { status?: unknown; statusCode?: unknown };
       const status =
-        typeof (err as { status?: unknown })?.status === "number"
-          ? (err as { status: number }).status
-          : 500;
+        typeof e?.statusCode === "number"
+          ? (e.statusCode as number)
+          : typeof e?.status === "number"
+            ? (e.status as number)
+            : 500;
       const message =
         err instanceof Error ? err.message : "Internal server error";
 
