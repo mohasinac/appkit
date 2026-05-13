@@ -57,7 +57,7 @@ const OG_EXEMPT_ROUTES = new Set([
 // Known gaps awaiting follow-up tracker entries. Listed here so the gate
 // only blocks on NEW regressions; existing gaps count toward the baseline.
 const OG_KNOWN_GAPS = new Set([
-  "bundles/[slug]",
+  // SB-UNI-4 2026-05-13 — bundles/[slug] OG renderer shipped, dropped from baseline.
   "faqs/[category]",
   "reviews/[id]",
   "scams/[id]",
