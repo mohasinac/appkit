@@ -8797,6 +8797,12 @@ export { SUCCESS_MESSAGES } from "./values/index";
 
 // -- Missing order utils
 export { splitCartIntoOrderGroups } from "./features/orders/index";
+// S-SBUNI-5 2026-05-13 — bundle-aware order item grouping for receipts.
+export {
+  groupOrderItemsByBundle,
+  type BundleOrderGroup,
+  type OrderItemForBundleGrouping,
+} from "./features/orders/index";
 
 // -- Missing utils
 export { buildSieveFilters } from "./utils/filter.helper";
