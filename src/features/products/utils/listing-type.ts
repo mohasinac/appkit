@@ -1,10 +1,10 @@
 import type { ListingType } from "../types/index";
 
 /**
- * Canonical accessor for the listing-kind discriminator. SB1-G Phase 4
- * (S22 2026-05-12) made `listingType` the single source of truth on every
- * `ProductDocument` / `ProductItem` — the legacy `isAuction` / `isPreOrder`
- * booleans were removed in the same session.
+ * Canonical accessor for the listing-kind discriminator. `listingType` is the
+ * single source of truth on every `ProductDocument` / `ProductItem` — the
+ * legacy `isAuction` / `isPreOrder` booleans were removed in S3 (SB1-G final,
+ * 2026-05-13).
  *
  * Returns `"standard"` when the input is undefined or missing the field, so
  * legacy payloads still classify safely without a separate guard.

@@ -56,9 +56,9 @@ const LISTING_TYPE_VALUES = {
 // clauses with single-field `listingType==X` clauses now that every doc
 // carries the discriminator.
 const SIEVE_CLAUSE_PUBLISHED = `${PRODUCT_FIELDS.STATUS}==${ProductStatusValues.PUBLISHED}`;
-const SIEVE_CLAUSE_IS_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
-const SIEVE_CLAUSE_IS_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
-const SIEVE_CLAUSE_IS_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
+const SIEVE_CLAUSE_LT_AUCTION = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.AUCTION}`;
+const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRE_ORDER}`;
+const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
 
 type ProductListingKind = "auction" | "preorder" | "product";
 
@@ -496,11 +496,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       if (operator !== "==") return "";
       switch (value) {
         case "publicProducts":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_STANDARD].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_STANDARD].join(",");
         case "publicAuctions":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_AUCTION].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_AUCTION].join(",");
         case "publicPreorders":
-          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_IS_PREORDER].join(",");
+          return [SIEVE_CLAUSE_PUBLISHED, SIEVE_CLAUSE_LT_PREORDER].join(",");
         case "published":
           return SIEVE_CLAUSE_PUBLISHED;
         default:

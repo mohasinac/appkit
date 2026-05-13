@@ -9,7 +9,7 @@
  *
  * Performs Sieve-based product search via SearchRepository.
  * Supports: q, category, subcategory, minPrice, maxPrice, condition,
- *   isAuction, isPreOrder, inStock, minRating, sort, page, pageSize.
+ *   listingType, inStock, minRating, sort, page, pageSize.
  *
  * Note: external search providers are not built into this route. To enable one,
  * register an ISearchProvider via registerProviders() and handle it at
