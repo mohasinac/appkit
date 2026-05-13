@@ -111,6 +111,14 @@ export const VIDEO_CONVERSION_HINTS: Record<string, string> = {
   "video/mp2t": "M2TS/TS streams are not supported — please convert to MP4",
   "video/x-flv": "FLV is not supported — please convert to MP4",
   "video/x-ms-wmv": "WMV is not supported — please convert to MP4",
+  // SB-UNI-Z4 2026-05-13 — HEVC / H.265 + HEIC/HEIF preview hint. The bytes
+  // upload fine via the signed-URL flow; the issue is in-browser preview —
+  // most browsers can't decode HEVC inline without an OS codec license.
+  "video/hevc": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
+  "video/x-hevc": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
+  "video/H265": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
+  "image/heic": "HEIC image is accepted but doesn't preview in most browsers — please convert to JPEG or WebP for inline preview",
+  "image/heif": "HEIF image is accepted but doesn't preview in most browsers — please convert to JPEG or WebP for inline preview",
 };
 
 export function getConversionHint(mime: string): string | null {
