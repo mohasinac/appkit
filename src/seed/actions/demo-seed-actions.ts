@@ -37,7 +37,6 @@ export type SeedCollectionName =
   | "wishlists"
   | "history"
   | "conversations"
-  | "sublistingCategories"
   | "groupedListings"
   | "bundles"
   | "scammerProfiles"

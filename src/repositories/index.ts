@@ -140,15 +140,8 @@ export {
   scammerRepository,
 } from "../features/scams/repository/scammer.repository";
 
-export {
-  SublistingCategoriesRepository,
-  sublistingCategoriesRepository,
-} from "../features/products/repository/sublisting-categories.repository";
-export type {
-  SublistingCategoryDocument,
-  SublistingCategoryCreateInput,
-  SublistingCategoryUpdateInput,
-} from "../features/products/schemas/sublisting-categories";
+// SB-UNI-B — SublistingCategoriesRepository deleted; sublistings now live on
+// categoriesRepository with categoryType:"sublisting".
 
 export {
   ProductTemplateRepository,

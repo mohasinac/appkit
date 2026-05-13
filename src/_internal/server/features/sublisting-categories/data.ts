@@ -1,8 +1,8 @@
 import { cache } from "react";
-import { sublistingCategoriesRepository } from "../../../../repositories";
+import { categoriesRepository } from "../../../../repositories";
 
 export const getSublistingCategoryForDetail = cache(
   async (slug: string) => {
-    return sublistingCategoriesRepository.findBySlug(slug).catch(() => null);
+    return categoriesRepository.findBySlugAndType(slug, "sublisting").catch(() => null);
   },
 );

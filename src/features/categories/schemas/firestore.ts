@@ -75,8 +75,24 @@ export interface CategoryDocument {
 
   isFeatured: boolean;
   featuredPriority?: number;
+  /** @deprecated Use categoryType === "brand". Will be removed once seed + admin form fully migrate. */
   isBrand?: boolean;
-  type?: import("../types").CategoryType;
+  /**
+   * Discriminator — distinguishes plain categories from sublistings (tier-4
+   * leaf groups under a parent category) and brands (storefront-facing
+   * brand pages). SB-UNI-D will add `"bundle"` to this union.
+   */
+  categoryType?: import("../types").CategoryType;
+  /** Sublisting/grading code (e.g. "108/120", "PSA 10") — categoryType==="sublisting". */
+  itemCode?: string;
+  /** Brand homepage URL — categoryType==="brand". */
+  brandWebsite?: string;
+  /** Brand country of origin — categoryType==="brand". */
+  brandCountry?: string;
+  /** Brand founding year — categoryType==="brand". */
+  brandFounded?: number;
+  /** Banner image for the brand storefront page — categoryType==="brand". */
+  brandBannerImage?: string;
 
   seo: CategoryDocumentSEO;
   display: CategoryDocumentDisplay;
@@ -109,6 +125,7 @@ export const CATEGORIES_INDEXED_FIELDS = [
   "isFeatured",
   "featuredPriority",
   "isBrand",
+  "categoryType",
   "isActive",
   "isSearchable",
   "showOnHomepage",
@@ -219,7 +236,13 @@ export const categoryQueryHelpers = {
   children: (parentId: string) =>
     ["parentIds", "array-contains", parentId] as const,
   featured: () => ["isFeatured", "==", true] as const,
+  /** @deprecated Use byCategoryType("brand"). */
   brands: () => ["isBrand", "==", true] as const,
+  /** SB-UNI B + C + D — discriminator-based listing. */
+  byCategoryType: (type: import("../types").CategoryType) =>
+    ["categoryType", "==", type] as const,
+  sublistings: () => ["categoryType", "==", "sublisting" as const] as const,
+  brandPages: () => ["categoryType", "==", "brand" as const] as const,
   active: () => ["isActive", "==", true] as const,
   searchable: () => ["isSearchable", "==", true] as const,
   byCreator: (userId: string) => ["createdBy", "==", userId] as const,

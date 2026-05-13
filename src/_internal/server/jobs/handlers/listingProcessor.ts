@@ -26,7 +26,6 @@ import {
   reviewRepository,
   scammerRepository,
   storeRepository,
-  sublistingCategoriesRepository,
   userRepository,
 } from "../../../../repositories";
 import type { CallableHandler } from "../runtime/types";
@@ -111,7 +110,13 @@ const LISTERS: Record<string, Lister> = {
   faqs: (m) => faqsRepository.list(m),
   notifications: (m) => notificationRepository.list(m),
   scammers: (m) => scammerRepository.listAll(m),
-  sublistingCategories: (m) => sublistingCategoriesRepository.list(m),
+  sublistingCategories: (m) =>
+    categoriesRepository.list({
+      ...m,
+      filters: m.filters
+        ? `${m.filters},categoryType==sublisting`
+        : "categoryType==sublisting",
+    }),
   productFeatures: (m) => productFeaturesRepository.list(m),
   homepageSections: (m) => homepageSectionsRepository.list(m),
   users: (m) => userRepository.list(m),

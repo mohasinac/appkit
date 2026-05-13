@@ -165,7 +165,7 @@ const {
   carouselsSeedData, carouselSlidesSeedData, homepageSectionsSeedData,
   siteSettingsSeedData, faqSeedData,
   wishlistsSeedData, historySeedData, conversationsSeedData,
-  sublistingCategoriesSeedData, groupedListingsSeedData,
+  groupedListingsSeedData,
   scammersSeedData, productFeaturesSeedData,
   // collection constants
   USER_COLLECTION, ADDRESS_SUBCOLLECTION, STORE_ADDRESS_SUBCOLLECTION,
@@ -175,7 +175,7 @@ const {
   HOMEPAGE_SECTIONS_COLLECTION, SITE_SETTINGS_COLLECTION, FAQS_COLLECTION,
   NOTIFICATIONS_COLLECTION, PAYOUT_COLLECTION, BLOG_POSTS_COLLECTION,
   EVENTS_COLLECTION, EVENT_ENTRIES_COLLECTION, SESSION_COLLECTION,
-  CART_COLLECTION, CONVERSATIONS_COLLECTION, SUBLISTING_CATEGORIES_COLLECTION,
+  CART_COLLECTION, CONVERSATIONS_COLLECTION,
   GROUPED_LISTINGS_COLLECTION, SCAMMER_COLLECTION,
   WISHLIST_COLLECTION, HISTORY_COLLECTION, PRODUCT_FEATURES_COLLECTION,
   // PII helpers
@@ -219,7 +219,6 @@ const COLLECTION_MAP = {
   wishlists: WISHLIST_COLLECTION,
   history: HISTORY_COLLECTION,
   conversations: CONVERSATIONS_COLLECTION,
-  sublistingCategories: SUBLISTING_CATEGORIES_COLLECTION,
   groupedListings: GROUPED_LISTINGS_COLLECTION,
   scammerProfiles: SCAMMER_COLLECTION,
   productFeatures: PRODUCT_FEATURES_COLLECTION,
@@ -253,7 +252,6 @@ const SEED_DATA_MAP = {
   wishlists: wishlistsSeedData,
   history: historySeedData,
   conversations: conversationsSeedData,
-  sublistingCategories: sublistingCategoriesSeedData,
   groupedListings: groupedListingsSeedData,
   scammerProfiles: scammersSeedData,
   productFeatures: productFeaturesSeedData,

@@ -34,6 +34,7 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
     isActive: { canFilter: true, canSort: false },
     isFeatured: { canFilter: true, canSort: false },
     isBrand: { canFilter: true, canSort: false },
+    categoryType: { canFilter: true, canSort: false },
     isSearchable: { canFilter: true, canSort: false },
     parentId: { canFilter: true, canSort: false, path: "parentIds" },
     order: { canFilter: true, canSort: true },
@@ -537,6 +538,85 @@ export class CategoriesRepository extends BaseRepository<CategoryDocument> {
         "metrics.lastUpdated": new Date(),
         updatedAt: new Date(),
       });
+  }
+
+  /** SB-UNI — discriminator-keyed listing (sublistings, brands, bundles). */
+  async listByType(
+    type: import("../types").CategoryType,
+    opts: { limit?: number; activeOnly?: boolean } = {},
+  ): Promise<CategoryDocument[]> {
+    let q: FirebaseFirestore.Query = this.db
+      .collection(this.collection)
+      .where("categoryType", "==", type);
+    if (opts.activeOnly) q = q.where("isActive", "==", true);
+    if (opts.limit) q = q.limit(opts.limit);
+    const snap = await q.get();
+    return snap.docs.map((d) => this.mapDoc<CategoryDocument>(d));
+  }
+
+  /** SB-UNI — locate a category by slug, optionally constrained by discriminator. */
+  async findBySlugAndType(
+    slug: string,
+    type?: import("../types").CategoryType,
+  ): Promise<CategoryDocument | null> {
+    let q: FirebaseFirestore.Query = this.db
+      .collection(this.collection)
+      .where("slug", "==", slug)
+      .limit(1);
+    if (type) q = q.where("categoryType", "==", type);
+    const snap = await q.get();
+    if (snap.empty) return null;
+    return this.mapDoc<CategoryDocument>(snap.docs[0]);
+  }
+
+  /**
+   * SB-UNI-B — fetch products linked to a sublisting category (legacy
+   * sublistingCategoryId field on ProductDocument), ordered by price asc.
+   * Used by /api/sublisting-categories/[slug]/listings.
+   */
+  async getSublistingListings(
+    sublistingId: string,
+    limit = 20,
+  ): Promise<Record<string, unknown>[]> {
+    const snap = await this.db
+      .collection("products")
+      .where("sublistingCategoryId", "==", sublistingId)
+      .where("status", "==", "published")
+      .orderBy("price", "asc")
+      .limit(limit)
+      .get();
+    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  }
+
+  /**
+   * SB-UNI-B — delete a sublisting category and unlink all products
+   * that referenced it. Mirrors the cascade behavior of the old
+   * SublistingCategoriesRepository.delete().
+   */
+  async deleteWithSublistingUnlink(categoryId: string): Promise<void> {
+    const batch = this.db.batch();
+    const productsSnap = await this.db
+      .collection("products")
+      .where("sublistingCategoryId", "==", categoryId)
+      .get();
+    for (const doc of productsSnap.docs) {
+      batch.update(doc.ref, { sublistingCategoryId: null, updatedAt: new Date() });
+    }
+    batch.delete(this.db.collection(this.collection).doc(categoryId));
+    await batch.commit();
+  }
+
+  /**
+   * SB-UNI-B — derive the canonical `sublisting-{slug}` ID from a
+   * human-entered category name.
+   */
+  generateSublistingId(name: string): string {
+    const base = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    return base.startsWith("sublisting-") ? base : `sublisting-${base}`;
   }
 }
 

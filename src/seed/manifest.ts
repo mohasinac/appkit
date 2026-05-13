@@ -35,7 +35,7 @@ import { cartsSeedData } from "./cart-seed-data";
 import { wishlistsSeedData } from "./wishlists-seed-data";
 import { historySeedData } from "./history-seed-data";
 import { conversationsSeedData } from "./conversations-seed-data";
-import { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
+// SB-UNI-B — sublistingCategoriesSeedData absorbed into categoriesSeedData.
 import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 import { bundlesSeedData } from "./bundles-seed-data";
 import { scammersSeedData } from "./scammers-seed-data";
@@ -193,12 +193,6 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(conversationsSeedData).map((c) => ({
       ...c,
       name: c.productTitle ?? c.id,
-    })),
-  ),
-  sublistingCategories: pick(
-    asArr(sublistingCategoriesSeedData).map((s) => ({
-      ...s,
-      name: s.title ?? s.id,
     })),
   ),
   groupedListings: pick(

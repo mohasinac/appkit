@@ -1607,13 +1607,8 @@ export { storeRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // scammerRepository - Shared export for scammer profiles repository.
 export { scammerRepository } from "./repositories/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// sublistingCategoriesRepository - Server-only repository for sublisting categories.
-export { sublistingCategoriesRepository } from "./repositories/index";
-export type {
-  SublistingCategoryCreateInput,
-  SublistingCategoryUpdateInput,
-} from "./repositories/index";
+// SB-UNI-B — sublistingCategoriesRepository + SublistingCategoryDocument deleted.
+// Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer — uses firebase-admin; server-only.
 // productFeaturesRepository - Server-only repository for productFeatures (FI1).
 export { productFeaturesRepository } from "./repositories/index";
@@ -1885,8 +1880,7 @@ export { wishlistsSeedData } from "./seed/index";
 export { historySeedData } from "./seed/index";
 // conversationsSeedData - Model for conversations seed data.
 export { conversationsSeedData } from "./seed/index";
-// sublistingCategoriesSeedData - Model for sublisting categories seed data.
-export { sublistingCategoriesSeedData } from "./seed/index";
+// SB-UNI-B — sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 // groupedListingsSeedData - Model for grouped listings seed data.
 export { groupedListingsSeedData } from "./seed/index";
 // bundlesSeedData - Tier SB sample bundles (homogeneous standard / pre-order).
@@ -8801,9 +8795,7 @@ export {
   buildConversationPingPaths,
 } from "./features/messages/realtime";
 export type { ConversationPingTargets } from "./features/messages/realtime";
-// Sublisting categories feature schemas
-export { SUBLISTING_CATEGORIES_COLLECTION } from "./features/products/schemas/sublisting-categories";
-export type { SublistingCategoryDocument } from "./features/products/schemas/sublisting-categories";
+// SB-UNI-B — SublistingCategoryDocument deleted; sublistings are CategoryDocument with categoryType:"sublisting".
 // Product features feature schemas (FI1)
 export {
   PRODUCT_FEATURES_COLLECTION,

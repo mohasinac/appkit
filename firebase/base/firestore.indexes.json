@@ -3625,26 +3625,30 @@
       ]
     },
     {
-      "collectionGroup": "sublistingCategories",
+      "collectionGroup": "categories",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "name",
+          "fieldPath": "categoryType",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "createdAt",
-          "order": "DESCENDING"
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "order",
+          "order": "ASCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "sublistingCategories",
+      "collectionGroup": "categories",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "productCount",
-          "order": "DESCENDING"
+          "fieldPath": "categoryType",
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "createdAt",

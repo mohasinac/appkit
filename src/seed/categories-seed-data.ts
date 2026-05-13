@@ -1343,6 +1343,328 @@ function mkLeaves(
   }));
 }
 
+// SB-UNI-B — sublistings folded in as tier-N+1 leaves with categoryType:"sublisting".
+// Original collection `sublistingCategories` dropped; same 12 seeded rows live here.
+const ADMIN_ID = "user-admin-letitrip";
+const sublistingRows: Partial<CategoryDocument>[] = [
+  // ── Trading Cards ─────────────────────────────────────────────────────
+  {
+    id: "sublisting-pokemon-base-set",
+    slug: "sublisting-pokemon-base-set",
+    name: "Base Set (102/102)",
+    categoryType: "sublisting",
+    itemCode: "BS-102",
+    description:
+      "All 102 Base Set Pokémon TCG cards — Shadowless, 1st Edition, and Unlimited.",
+    rootId: "category-trading-cards",
+    parentIds: ["category-trading-cards"],
+    tier: 1,
+    path: "trading-cards/sublisting-pokemon-base-set",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(60),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "sublisting-pokemon-psa-graded",
+    slug: "sublisting-pokemon-psa-graded",
+    name: "PSA Graded Pokémon Cards",
+    categoryType: "sublisting",
+    itemCode: "PSA",
+    description: "Investment-grade Pokémon cards authenticated by PSA.",
+    rootId: "category-trading-cards",
+    parentIds: ["category-trading-cards"],
+    tier: 1,
+    path: "trading-cards/sublisting-pokemon-psa-graded",
+    isLeaf: true,
+    order: 1,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(55),
+    updatedAt: daysAgo(2),
+  },
+  {
+    id: "sublisting-pokemon-sealed-boxes",
+    slug: "sublisting-pokemon-sealed-boxes",
+    name: "Sealed Pokémon Booster Boxes",
+    categoryType: "sublisting",
+    description:
+      "Factory-sealed Pokémon TCG booster boxes — current, vintage, Japanese.",
+    rootId: "category-trading-cards",
+    parentIds: ["category-trading-cards"],
+    tier: 1,
+    path: "trading-cards/sublisting-pokemon-sealed-boxes",
+    isLeaf: true,
+    order: 2,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(50),
+    updatedAt: daysAgo(3),
+  },
+  {
+    id: "sublisting-vintage-wotc-era",
+    slug: "sublisting-vintage-wotc-era",
+    name: "WOTC Era Pokémon (1999–2003)",
+    categoryType: "sublisting",
+    itemCode: "WOTC",
+    description:
+      "All Wizards of the Coast era Pokémon TCG sets: Base Set through Legendary Collection.",
+    rootId: "category-vintage-rare",
+    parentIds: ["category-vintage-rare"],
+    tier: 1,
+    path: "vintage-rare/sublisting-vintage-wotc-era",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(8),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "sublisting-yugioh-lob-1st-edition",
+    slug: "sublisting-yugioh-lob-1st-edition",
+    name: "Yu-Gi-Oh! LOB 1st Edition",
+    categoryType: "sublisting",
+    itemCode: "LOB-1E",
+    description:
+      "Legend of Blue-Eyes White Dragon 1st Edition singles — iconic 2002 WOTC-era Yu-Gi-Oh!.",
+    rootId: "category-trading-cards",
+    parentIds: ["category-trading-cards"],
+    tier: 1,
+    path: "trading-cards/sublisting-yugioh-lob-1st-edition",
+    isLeaf: true,
+    order: 3,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(5),
+  },
+
+  // ── Diecast Vehicles ──────────────────────────────────────────────────
+  {
+    id: "sublisting-hotwheels-redlines",
+    slug: "sublisting-hotwheels-redlines",
+    name: "Hot Wheels Vintage Redlines (1968–1977)",
+    categoryType: "sublisting",
+    itemCode: "Redline",
+    description: "Original Hot Wheels Redline-era cars (1968–1977).",
+    rootId: "category-diecast-vehicles",
+    parentIds: ["category-diecast-vehicles"],
+    tier: 1,
+    path: "diecast-vehicles/sublisting-hotwheels-redlines",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(38),
+    updatedAt: daysAgo(1),
+  },
+  {
+    id: "sublisting-hotwheels-super-treasure-hunts",
+    slug: "sublisting-hotwheels-super-treasure-hunts",
+    name: "Hot Wheels Super Treasure Hunts",
+    categoryType: "sublisting",
+    itemCode: "STH",
+    description:
+      "Rare Hot Wheels regular-production releases with Real Riders tyres.",
+    rootId: "category-diecast-vehicles",
+    parentIds: ["category-diecast-vehicles"],
+    tier: 1,
+    path: "diecast-vehicles/sublisting-hotwheels-super-treasure-hunts",
+    isLeaf: true,
+    order: 1,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(35),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── Spinning Tops ─────────────────────────────────────────────────────
+  {
+    id: "sublisting-beyblade-x-series",
+    slug: "sublisting-beyblade-x-series",
+    name: "Beyblade X Series (2023+)",
+    categoryType: "sublisting",
+    itemCode: "BX",
+    description:
+      "All Beyblade X generation products — xtreme dash ratchet system.",
+    rootId: "category-spinning-tops",
+    parentIds: ["category-spinning-tops"],
+    tier: 1,
+    path: "spinning-tops/sublisting-beyblade-x-series",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Model Kits ────────────────────────────────────────────────────────
+  {
+    id: "sublisting-gundam-master-grade",
+    slug: "sublisting-gundam-master-grade",
+    name: "Gundam Master Grade (MG) 1/100",
+    categoryType: "sublisting",
+    itemCode: "MG",
+    description: "Bandai Gundam MG 1/100 kits with full inner frame.",
+    rootId: "category-model-kits",
+    parentIds: ["category-model-kits"],
+    tier: 1,
+    path: "model-kits/sublisting-gundam-master-grade",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1536896407451-6e3dd976edd6?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(2),
+  },
+  {
+    id: "sublisting-gundam-high-grade",
+    slug: "sublisting-gundam-high-grade",
+    name: "Gundam High Grade (HG) 1/144",
+    categoryType: "sublisting",
+    itemCode: "HG",
+    description:
+      "Entry-level Bandai Gundam HG 1/144 kits across all series.",
+    rootId: "category-model-kits",
+    parentIds: ["category-model-kits"],
+    tier: 1,
+    path: "model-kits/sublisting-gundam-high-grade",
+    isLeaf: true,
+    order: 1,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1536896407451-6e3dd976edd6?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(10),
+    updatedAt: daysAgo(4),
+  },
+
+  // ── Action Figures ────────────────────────────────────────────────────
+  {
+    id: "sublisting-nendoroid-early-series",
+    slug: "sublisting-nendoroid-early-series",
+    name: "Nendoroid Early Series (#001–#100)",
+    categoryType: "sublisting",
+    itemCode: "GSC-001-100",
+    description: "Discontinued Good Smile Company Nendoroid figures #001–#100.",
+    rootId: "category-action-figures",
+    parentIds: ["category-action-figures"],
+    tier: 1,
+    path: "action-figures/sublisting-nendoroid-early-series",
+    isLeaf: true,
+    order: 0,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1536896407451-6e3dd976edd6?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(28),
+    updatedAt: daysAgo(2),
+  },
+  {
+    id: "sublisting-shf-dragonball",
+    slug: "sublisting-shf-dragonball",
+    name: "S.H.Figuarts Dragon Ball Series",
+    categoryType: "sublisting",
+    itemCode: "SHF-DBZ",
+    description:
+      "Bandai S.H.Figuarts Dragon Ball Z and Super articulated figures.",
+    rootId: "category-action-figures",
+    parentIds: ["category-action-figures"],
+    tier: 1,
+    path: "action-figures/sublisting-shf-dragonball",
+    isLeaf: true,
+    order: 1,
+    display: {
+      coverImage:
+        "https://images.unsplash.com/photo-1536896407451-6e3dd976edd6?w=800&h=600&fit=crop",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isActive: true,
+    isSearchable: true,
+    createdBy: ADMIN_ID,
+    createdAt: daysAgo(25),
+    updatedAt: daysAgo(1),
+  },
+];
+
 const STORE_CREATOR: Record<
   string,
   { createdByType: "store"; createdByStoreId: string; createdByStoreName: string }
@@ -1355,11 +1677,12 @@ const STORE_CREATOR: Record<
   "user-priya-singh":   { createdByType: "store", createdByStoreId: "store-tokyo-toys-india",    createdByStoreName: "Tokyo Toys India" },
 };
 
-export const categoriesSeedData: Partial<CategoryDocument>[] = rawCategories.map(
-  (c) => ({
+export const categoriesSeedData: Partial<CategoryDocument>[] = [
+  ...rawCategories.map((c) => ({
     ...c,
     ...(c.createdBy && STORE_CREATOR[c.createdBy]
       ? STORE_CREATOR[c.createdBy]
       : { createdByType: "admin" as const }),
-  }),
-);
+  })),
+  ...sublistingRows.map((s) => ({ ...s, createdByType: "admin" as const })),
+];

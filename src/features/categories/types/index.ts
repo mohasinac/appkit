@@ -1,4 +1,6 @@
-export type CategoryType = "category" | "concern" | "collection" | "brand";
+// SB-UNI B + C + D — single discriminator for categories vs sublistings vs
+// brands vs bundles. Old "concern" / "collection" values were never used.
+export type CategoryType = "category" | "sublisting" | "brand" | "bundle";
 
 export interface CategorySeo {
   title?: string;
@@ -29,7 +31,15 @@ export interface CategoryAncestor {
 
 export interface CategoryItem {
   id: string;
-  type?: CategoryType;
+  categoryType?: CategoryType;
+  /** Sublisting/grading code, e.g. "108/120" or "PSA 10" — only set when categoryType==="sublisting". */
+  itemCode?: string;
+  /** Brand website — only set when categoryType==="brand". */
+  brandWebsite?: string;
+  /** Brand country — only set when categoryType==="brand". */
+  brandCountry?: string;
+  /** Brand founded year — only set when categoryType==="brand". */
+  brandFounded?: number;
   name: string;
   slug: string;
   description?: string;
@@ -43,7 +53,7 @@ export interface CategoryItem {
   metrics?: CategoryMetrics;
   isFeatured?: boolean;
   featuredPriority?: number;
-  /** @deprecated Use type === "brand" */ isBrand?: boolean;
+  /** @deprecated Use categoryType === "brand" */ isBrand?: boolean;
   seo?: CategorySeo;
   display?: CategoryDisplay;
   ancestors?: CategoryAncestor[];

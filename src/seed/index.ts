@@ -180,7 +180,7 @@ export { carouselsSeedData } from "./carousels-seed-data";
 export { wishlistsSeedData } from "./wishlists-seed-data";
 export { historySeedData } from "./history-seed-data";
 export { conversationsSeedData } from "./conversations-seed-data";
-export { sublistingCategoriesSeedData } from "./sublisting-categories-seed-data";
+// SB-UNI-B — sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 export { bundlesSeedData } from "./bundles-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
