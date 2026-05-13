@@ -2319,6 +2319,154 @@ const brandRows: Partial<CategoryDocument>[] = [
   },
 ];
 
+// SB-UNI-D + V — bundles folded into categories with categoryType:"bundle".
+const bundleRows: Partial<CategoryDocument>[] = [
+  {
+    id: "bundle-pokemon-tcg-starter-pack-2026",
+    slug: "bundle-pokemon-tcg-starter-pack-2026",
+    name: "Pokémon TCG Starter Pack 2026",
+    categoryType: "bundle",
+    description:
+      "A curated 3-item bundle for new Pokémon TCG collectors — a Paldean Fates ETB, a tin of Stellar Crown boosters, and a deck box. Save ₹650 vs buying separately.",
+    rootId: "bundle-pokemon-tcg-starter-pack-2026",
+    parentIds: [],
+    tier: 0,
+    path: "bundle-pokemon-tcg-starter-pack-2026",
+    isLeaf: true,
+    order: 0,
+    bundlePriceInPaise: 649900,
+    bundleQueryRule: {
+      type: "static",
+      productIds: [
+        "product-pokemon-sv-etb",
+        "product-pokemon-stellar-crown-tin",
+        "product-pokemon-deck-box-pikachu",
+      ],
+    },
+    bundleProductIds: [
+      "product-pokemon-sv-etb",
+      "product-pokemon-stellar-crown-tin",
+      "product-pokemon-deck-box-pikachu",
+    ],
+    bundleStockStatus: "in_stock",
+    display: {
+      coverImage:
+        "/media/bundle-image-pokemon-tcg-starter-pack-2026-1-20260101.jpg",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isFeatured: true,
+    isActive: true,
+    isSearchable: true,
+    createdBy: "user-aryan-kapoor",
+    createdByStoreId: "store-pokemon-palace",
+    createdByStoreName: "Pokémon Palace",
+    seo: {
+      title: "Pokémon TCG Starter Pack 2026",
+      description:
+        "3-item Pokémon TCG starter bundle — ETB + booster tin + deck box.",
+      keywords: ["pokemon", "tcg", "bundle", "starter"],
+    },
+    createdAt: daysAgo(15),
+    updatedAt: daysAgo(2),
+  },
+  {
+    id: "bundle-gunpla-pg-arrivals-2026",
+    slug: "bundle-gunpla-pg-arrivals-2026",
+    name: "Gundam PG Arrivals 2026",
+    categoryType: "bundle",
+    description:
+      "Pre-order bundle — three premium PG/RG kits + S.H.Figuarts Broly Super Hero. Save ₹1200.",
+    rootId: "bundle-gunpla-pg-arrivals-2026",
+    parentIds: [],
+    tier: 0,
+    path: "bundle-gunpla-pg-arrivals-2026",
+    isLeaf: true,
+    order: 0,
+    bundlePriceInPaise: 1679700,
+    bundleQueryRule: {
+      type: "static",
+      productIds: [
+        "preorder-gundam-pg-unicorn-ver15",
+        "preorder-gundam-rg-hi-nu-verka",
+        "preorder-shf-broly-super-hero",
+      ],
+    },
+    bundleProductIds: [
+      "preorder-gundam-pg-unicorn-ver15",
+      "preorder-gundam-rg-hi-nu-verka",
+      "preorder-shf-broly-super-hero",
+    ],
+    bundleStockStatus: "in_stock",
+    display: {
+      coverImage: "/media/bundle-image-gunpla-pg-arrivals-2026-1-20260101.jpg",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isFeatured: false,
+    isActive: true,
+    isSearchable: true,
+    createdBy: "user-amit-sharma",
+    createdByStoreId: "store-gundam-galaxy",
+    createdByStoreName: "Gundam Galaxy",
+    seo: {
+      title: "Gundam PG Arrivals 2026 Bundle",
+      description: "Pre-order bundle of 3 premium Bandai PG/RG kits.",
+      keywords: ["gunpla", "pg", "pre-order", "bundle"],
+    },
+    createdAt: daysAgo(20),
+    updatedAt: daysAgo(4),
+  },
+  {
+    id: "bundle-beyblade-x-launch-pack-2025",
+    slug: "bundle-beyblade-x-launch-pack-2025",
+    name: "Beyblade X Launch Pack 2025 (SOLD OUT)",
+    categoryType: "bundle",
+    description:
+      "Four-item Beyblade X launch pack — original 2025 release. One of the four items has sold; bundle marked OOS until restock.",
+    rootId: "bundle-beyblade-x-launch-pack-2025",
+    parentIds: [],
+    tier: 0,
+    path: "bundle-beyblade-x-launch-pack-2025",
+    isLeaf: true,
+    order: 0,
+    bundlePriceInPaise: 499900,
+    bundleQueryRule: {
+      type: "static",
+      productIds: [
+        "product-beyblade-x-bx18-leon-crest",
+        "product-beyblade-x-bx10-dran-dagger",
+        "product-beyblade-x-launcher-grip",
+      ],
+    },
+    bundleProductIds: [
+      "product-beyblade-x-bx18-leon-crest",
+      "product-beyblade-x-bx10-dran-dagger",
+      "product-beyblade-x-launcher-grip",
+    ],
+    bundleStockStatus: "out_of_stock",
+    display: {
+      coverImage:
+        "/media/bundle-image-beyblade-x-launch-pack-2025-1-20260101.jpg",
+      showInMenu: false,
+      showInFooter: false,
+    },
+    isFeatured: false,
+    isActive: false,
+    isSearchable: false,
+    createdBy: "user-rohit-joshi",
+    createdByStoreId: "store-beyblade-arena",
+    createdByStoreName: "Beyblade Arena",
+    seo: {
+      title: "Beyblade X Launch Pack 2025",
+      description: "4-item Beyblade X launch bundle — currently sold out.",
+      keywords: ["beyblade-x", "bundle", "launch"],
+    },
+    createdAt: daysAgo(45),
+    updatedAt: daysAgo(10),
+  },
+];
+
 const STORE_CREATOR: Record<
   string,
   { createdByType: "store"; createdByStoreId: string; createdByStoreName: string }
@@ -2340,4 +2488,8 @@ export const categoriesSeedData: Partial<CategoryDocument>[] = [
   })),
   ...sublistingRows.map((s) => ({ ...s, createdByType: "admin" as const })),
   ...brandRows.map((b) => ({ ...b, createdByType: "admin" as const })),
+  ...bundleRows.map((bundle) => ({
+    ...bundle,
+    createdByType: bundle.createdByStoreId ? ("store" as const) : ("admin" as const),
+  })),
 ];

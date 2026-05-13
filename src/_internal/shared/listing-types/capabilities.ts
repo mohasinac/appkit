@@ -61,17 +61,6 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
   },
-  // SB-UNI-D will drop the "bundle" row from this map; bundles become a
-  // category-level concept. Until then, the row matches the cart-line
-  // semantics that ship today.
-  bundle: {
-    canAddToCart: true,
-    canBid: false,
-    supportsShipping: true,
-    requiresVendorVerified: false,
-    requiresJurisdictionCheck: false,
-    hasInstantFulfillment: false,
-  },
 };
 
 export function capabilityFor(type: ListingType): ListingTypeCapability {

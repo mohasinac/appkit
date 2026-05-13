@@ -32,6 +32,6 @@ export const isPrizeDrawListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "prize-draw";
 
-export const isBundleListing = (
-  input?: { listingType?: ListingType },
-): boolean => normalizeListingType(input) === "bundle";
+// SB-UNI-D — isBundleListing removed. Bundles are now a categoryType
+// discriminator on CategoryDocument; consumers should query
+// `categoriesRepository.findBySlugAndType(slug, "bundle")` instead.

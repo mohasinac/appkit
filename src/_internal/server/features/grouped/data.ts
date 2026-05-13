@@ -18,17 +18,33 @@ function mapDoc(doc: FirebaseFirestore.QueryDocumentSnapshot): GroupedListingDoc
     const d = (v as { toDate?: () => Date } | undefined)?.toDate?.();
     return d ?? (v instanceof Date ? v : new Date());
   };
+  const productIds = Array.isArray(data.productIds)
+    ? (data.productIds as string[])
+    : [];
+  const minActiveMembers = (data.minActiveMembers as number | undefined) ?? 2;
+  const activeMemberCount =
+    (data.activeMemberCount as number | undefined) ?? productIds.length;
   return {
     id: doc.id,
     slug: (data.slug as string | undefined) ?? doc.id,
     title: (data.title as string | undefined) ?? "",
     description: data.description as string | undefined,
-    productIds: Array.isArray(data.productIds) ? (data.productIds as string[]) : [],
+    productIds,
     coverImage: data.coverImage as string | undefined,
-    bundlePrice: data.bundlePrice as number | undefined,
-    originalPrice: data.originalPrice as number | undefined,
-    discountPercent: data.discountPercent as number | undefined,
-    currency: ((data.currency as string | undefined) ?? "INR") as "INR",
+    // SB-UNI-V — pricing fields dropped; theme-group semantics.
+    groupTheme:
+      (data.groupTheme as
+        | "related"
+        | "character"
+        | "lineage"
+        | "set"
+        | "generic"
+        | undefined) ?? "generic",
+    minActiveMembers,
+    activeMemberCount,
+    visibilityStatus:
+      (data.visibilityStatus as "visible" | "hidden" | undefined) ??
+      (activeMemberCount >= minActiveMembers ? "visible" : "hidden"),
     isActive: data.isActive === true,
     isFeatured: data.isFeatured === true,
     storeId: data.storeId as string | undefined,

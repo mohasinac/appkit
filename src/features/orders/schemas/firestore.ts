@@ -63,7 +63,7 @@ export interface OrderDocumentItem {
   unitPrice: number;
   totalPrice: number;
   /** SB8-F — set when the item is a prize-draw entry; drives the reveals badge. */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   /** SB8-F — per-item reveal status; flips through pending → open → revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
   /** SB8-F — ISO timestamp; deadline by which the buyer must claim the prize. */

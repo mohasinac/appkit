@@ -1,10 +1,12 @@
+// SB-UNI-D — "bundle" dropped from OrderType; bundle cart lines (once
+// add-to-cart-bundle ships) will expand to N product order lines at
+// checkout rather than persisting as a bundle order group.
 export type OrderType =
   | "standard"
   | "preorder"
   | "auction"
   | "offer"
-  | "prize-draw"
-  | "bundle";
+  | "prize-draw";
 
 export interface OrderGroup<T> {
   items: T[];
@@ -27,7 +29,7 @@ export function splitCartIntoOrderGroups<
     item: {
       itemId: string;
       storeId?: string;
-      listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+      listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
       isOffer?: boolean;
     };
   },
@@ -49,9 +51,6 @@ export function splitCartIntoOrderGroups<
       // Each prize-draw entry is its own order (single reveal per order).
       key = `prize-draw:${item.itemId}`;
       orderType = "prize-draw";
-    } else if (item.listingType === "bundle") {
-      key = `bundle:${item.itemId}`;
-      orderType = "bundle";
     } else if (item.listingType === "pre-order") {
       key = `preorder:${item.storeId ?? "unknown"}`;
       orderType = "preorder";

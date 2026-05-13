@@ -51,5 +51,9 @@ export { prizeRevealCloseHandler } from "./prizeRevealClose";
 export { prizeRevealExpiryHandler } from "./prizeRevealExpiry";
 export { prizeRevealReminderHandler } from "./prizeRevealReminder";
 export { bundleStockSyncHandler } from "./bundleStockSync";
+// SB-UNI-V — Firestore onWrite trigger for product stock changes (recomputes
+// bundleStockStatus on categoryType:"bundle" rows + activeMemberCount on
+// groupedListings).
+export { onProductStockChangeHandler } from "./onProductStockChange";
 export { triggerEventRaffleHandler } from "./triggerEventRaffle";
 export { assignSpinPrizeHandler } from "./assignSpinPrize";

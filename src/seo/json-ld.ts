@@ -35,7 +35,7 @@ export interface ProductJsonLdInput {
   status?: string;
   auctionEndDate?: Date;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
 }
 
 export interface ReviewJsonLdInput {

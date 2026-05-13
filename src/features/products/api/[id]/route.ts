@@ -17,7 +17,8 @@ import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
-import { bundlesRepository } from "../../../bundles/repository/bundles.repository";
+// SB-UNI-V — bundlesRepository deleted; bundle stock-sync moves to the
+// `onProductStockChange` Firebase Function (see functions/src/bundle-stock-sync.ts).
 import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 
@@ -27,29 +28,12 @@ const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
   "discontinued",
 ]);
 
-/**
- * Fire-and-forget bundle stock-sync. SB1-H — when a product transitions to
- * an unavailable status (sold / out_of_stock / discontinued), flip its
- * `isSold` flag inside every bundle that lists it via `partOfBundleIds[]`.
- */
-function syncBundlesForUnavailableProduct(
-  productId: string,
-  partOfBundleIds: string[] | undefined,
-): void {
-  if (!partOfBundleIds?.length) return;
-  Promise.all(
-    partOfBundleIds.map((bundleId) =>
-      bundlesRepository.markItemSold(bundleId, productId).catch(
-        (err: unknown) =>
-          serverLogger.warn("Bundle stock-sync failed (non-critical)", {
-            err,
-            bundleId,
-            productId,
-          }),
-      ),
-    ),
-  ).catch(() => {});
-}
+// SB-UNI-V — `syncBundlesForUnavailableProduct` removed. Bundle stock
+// state is recomputed by the `onProductStockChange` Firebase Function
+// (Firestore onWrite trigger on products), which reads
+// `partOfBundleCategoryIds[]` on the product and recomputes each bundle
+// category's `bundleStockStatus`. No fire-and-forget call from the API
+// route is needed.
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -214,12 +198,11 @@ export const PATCH = createRouteHandler<
       typeof afterStatus === "string" &&
       UNAVAILABLE_PRODUCT_STATUSES.has(afterStatus) &&
       beforeStatus !== afterStatus;
-    if (becameUnavailable) {
-      syncBundlesForUnavailableProduct(
-        id,
-        (product as { partOfBundleIds?: string[] }).partOfBundleIds,
-      );
-    }
+    // SB-UNI-V — bundle stock-sync moved to onProductStockChange Function;
+    // the API route no longer fires fire-and-forget. The product write
+    // triggers the Function via Firestore onWrite. Reference to
+    // `becameUnavailable` retained for telemetry callers.
+    void becameUnavailable;
 
     return NextResponse.json({ success: true, data: updated });
   },
@@ -265,11 +248,7 @@ export const DELETE = createRouteHandler<never, { id: string }>({
       updatedAt: new Date().toISOString(),
     });
 
-    syncBundlesForUnavailableProduct(
-      id,
-      (product as { partOfBundleIds?: string[] }).partOfBundleIds,
-    );
-
+    // SB-UNI-V — bundle stock-sync handled by onProductStockChange Function.
     return NextResponse.json({ success: true });
   },
 });

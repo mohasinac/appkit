@@ -45,8 +45,8 @@ export interface OrderItem {
   currency?: string;
   storeId?: string;
   attributes?: Record<string, string>;
-  /** Listing kind at the time of order — needed for prize-draw / bundle UI hints (SB8-F). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  /** Listing kind at the time of order — needed for prize-draw UI hints (SB8-F). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   /**
    * Per-item prize-draw reveal status (SB8-F). Populated by the checkout
    * actions when listingType === "prize-draw". Used to render the

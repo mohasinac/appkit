@@ -26,7 +26,7 @@ export interface WishlistProductData {
   status?: "draft" | "published" | "archived" | "sold" | "out_of_stock" | "discontinued";
   isFeatured?: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
 }
 
 /** WishlistItem enriched with inline product details returned by the wishlist GET endpoint. */

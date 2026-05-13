@@ -37,7 +37,6 @@ export type SeedCollectionName =
   | "history"
   | "conversations"
   | "groupedListings"
-  | "bundles"
   | "scammerProfiles"
   | "productFeatures";
 

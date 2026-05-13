@@ -1881,8 +1881,7 @@ export { conversationsSeedData } from "./seed/index";
 // SB-UNI-B — sublistingCategoriesSeedData merged into categoriesSeedData with categoryType:"sublisting".
 // groupedListingsSeedData - Model for grouped listings seed data.
 export { groupedListingsSeedData } from "./seed/index";
-// bundlesSeedData - Tier SB sample bundles (homogeneous standard / pre-order).
-export { bundlesSeedData } from "./seed/index";
+// SB-UNI-V — bundlesSeedData merged into categoriesSeedData with categoryType:"bundle".
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // CouponDiscountType - Type contract for coupon discount type.
 export type { CouponDiscountType } from "./seed/index";
@@ -8846,55 +8845,23 @@ export {
 } from "./features/products/constants/product-features.constants";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
-// Tier SB bundles feature schemas (BundleDocument lives in features/bundles)
+// SB-UNI-D + V — BundleDocument + bundlesRepository + features/bundles/
+// folder all deleted. Bundles are now `categoryType:"bundle"` rows on the
+// categories collection with `bundlePriceInPaise` / `bundleQueryRule` /
+// `bundleStockStatus` / `bundleQueryResolvedAt` / `bundleProductIds[]`.
+// Replacement component: CategoryBundlesListing in features/categories/components.
+export { CategoryBundlesListing } from "./features/categories/components/CategoryBundlesListing";
+export type { CategoryBundlesListingProps } from "./features/categories/components/CategoryBundlesListing";
+export type { BundleQueryRule } from "./features/categories/schemas/firestore";
 export {
-  BUNDLES_COLLECTION,
-  BUNDLE_INDEXED_FIELDS,
-  BUNDLE_ITEM_MIN,
-  BUNDLE_ITEM_MAX,
-  bundleCreateInputSchema,
-  bundleUpdateInputSchema,
-} from "./features/bundles/schemas";
-export type {
-  BundleDocument,
-  BundleItem,
-  BundleStatus,
-  BundleItemListingType,
-  BundleCreateInput,
-  BundleUpdateInput,
-} from "./features/bundles/schemas";
-// SB3 bundle UI views + constants + form value type (client-safe components)
-export {
-  BundleItemsPicker,
-  BundleForm,
-  SellerBundleCreateView,
-  SellerBundleEditView,
-  AdminBundleEditorView,
-  BundlesListingView,
-  BundleDetailPageView,
-  FeaturedBundlesSection,
-} from "./features/bundles/components";
-export type {
-  BundleItemsPickerProps,
-  BundleFormProps,
-  BundleFormValue,
-  SellerBundleCreateViewProps,
-  SellerBundleEditViewProps,
-  AdminBundleEditorViewProps,
-  BundlesListingViewProps,
-  BundleDetailPageViewProps,
-  FeaturedBundlesSectionProps,
-} from "./features/bundles/components";
-export {
-  BUNDLE_VALIDATION,
-  BUNDLES_CURRENCY,
-  BUNDLE_STATUS_OPTIONS,
-  BUNDLE_ITEM_TYPE_LABEL,
-  BUNDLE_ITEM_TYPE_OPTIONS,
-  BUNDLE_SORT_OPTIONS,
-} from "./features/bundles/constants";
-export type { BundleSort } from "./features/bundles/constants";
-export type { GroupedListingDocument } from "./features/grouped/schemas/firestore";
+  BUNDLE_MIN_ITEMS,
+  BUNDLE_MAX_ITEMS,
+  BUNDLE_MAX_PER_USER_DEFAULT,
+  BUNDLES_PAGE_SIZE,
+  BUNDLES_FEATURED_LIMIT,
+} from "./_internal/shared/features/categories/bundle-config";
+
+export type { GroupedListingDocument, GroupTheme, GroupVisibility } from "./features/grouped/schemas/firestore";
 
 // Scam registry — seed data
 export { scammersSeedData } from "./seed/index";

@@ -15,7 +15,7 @@ interface GroupMember {
   images?: string[];
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   isGroupParent?: boolean;
   groupTitle?: string;
   condition?: string;

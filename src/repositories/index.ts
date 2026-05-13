@@ -153,8 +153,6 @@ export {
 export type { ProductFeatureListFilter } from "../features/products/repository/product-features.repository";
 export { loadProductFeaturesForStore } from "../features/products/repository/loadProductFeatures";
 
-// SB1-H — bundles
-export {
-  BundlesRepository,
-  bundlesRepository,
-} from "../features/bundles/repository";
+// SB-UNI-V — BundlesRepository deleted; bundles live on categoriesRepository
+// with categoryType:"bundle". See features/categories/repository for the
+// listByType / findBySlugAndType helpers.

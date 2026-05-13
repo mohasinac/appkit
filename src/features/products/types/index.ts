@@ -25,12 +25,14 @@ export type ProductCondition =
  * accepts legacy alias tokens (`preorder` → `pre-order`, `product` → `standard`)
  * but stored values are always one of these five.
  */
+// SB-UNI-D — "bundle" dropped from the ListingType union; bundles are now
+// a categoryType discriminator on CategoryDocument. Cart/order/product
+// records no longer carry a "bundle" listingType value.
 export type ListingType =
   | "standard"
   | "auction"
   | "pre-order"
-  | "prize-draw"
-  | "bundle";
+  | "prize-draw";
 
 export interface ProductImage {
   url: string;

@@ -15,6 +15,33 @@ import type {
 
 export type { CategoryAncestor, CategoryMetrics };
 
+// ── Bundle query rule (SB-UNI-D) ────────────────────────────────────────
+/**
+ * How a bundle resolves its member products.
+ *
+ * `static` — hand-picked product IDs. The admin editor multi-select writes
+ * here; bundleProductIds mirrors for index-friendly queries.
+ *
+ * `dynamic` — publisher-pack style: filter against the products collection
+ * (e.g. "all Pokémon TCG products in this category, ordered by price asc,
+ * limit N"). Resolved by onProductStockChange + a scheduled job; the
+ * resolved IDs are cached on `bundleProductIds` with a `bundleQueryResolvedAt`
+ * timestamp.
+ */
+export type BundleQueryRule =
+  | { type: "static"; productIds: string[] }
+  | {
+      type: "dynamic";
+      filter: {
+        categorySlug?: string;
+        brandSlug?: string;
+        tags?: string[];
+        listingType?: "standard" | "pre-order";
+      };
+      orderBy?: "price-asc" | "price-desc" | "createdAt-desc";
+      limit: number;
+    };
+
 // -- Category Document --------------------------------------------------------
 
 /** Full Firestore category document (includes server-only fields) */
@@ -93,6 +120,18 @@ export interface CategoryDocument {
   brandFounded?: number;
   /** Banner image for the brand storefront page — categoryType==="brand". */
   brandBannerImage?: string;
+
+  // ── Bundle fields — categoryType==="bundle" (SB-UNI-D) ────────────────
+  /** Discounted bundle price in paise. */
+  bundlePriceInPaise?: number;
+  /** Rule resolving the bundle's member products — static list or live query. */
+  bundleQueryRule?: BundleQueryRule;
+  /** Snapshot stock state — recomputed by onProductStockChange. */
+  bundleStockStatus?: "in_stock" | "partial" | "out_of_stock";
+  /** Timestamp of the last dynamic-rule resolution. */
+  bundleQueryResolvedAt?: Date;
+  /** Hand-picked products list (mirror of bundleQueryRule for static rules); kept for index-friendly queries. */
+  bundleProductIds?: string[];
 
   seo: CategoryDocumentSEO;
   display: CategoryDocumentDisplay;

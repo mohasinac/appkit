@@ -31,7 +31,7 @@ export interface MarketplaceAuctionCardData {
   images?: string[];
   video?: { url?: string; thumbnailUrl?: string };
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   auctionEndDate?: string | Date;
   startingBid?: number;
   currentBid?: number;

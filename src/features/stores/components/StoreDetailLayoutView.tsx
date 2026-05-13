@@ -1,6 +1,6 @@
 import React, { cache } from "react";
 import type { ReactNode } from "react";
-import { storeRepository, productRepository, bundlesRepository } from "../../../repositories";
+import { storeRepository, productRepository, categoriesRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
 import { StoreHeader } from "./StoreHeader";
@@ -62,9 +62,11 @@ export async function StoreDetailLayoutView({
           .list({ filters: `storeId==${storeId},status==published,listingType==prize-draw`, page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
-        bundlesRepository
-          .findByStore(storeId, "published")
-          .then((b) => b.length)
+        // SB-UNI-D — bundles live on categories with categoryType:"bundle"
+        // + createdByStoreId scoping.
+        categoriesRepository
+          .listByType("bundle", { activeOnly: true, limit: 100 })
+          .then((rows) => rows.filter((c) => c.createdByStoreId === storeId).length)
           .catch(() => 0),
       ])
     : [0, 0, 0, 0, 0];

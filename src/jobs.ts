@@ -56,6 +56,8 @@ export {
   prizeRevealExpiryHandler,
   prizeRevealReminderHandler,
   bundleStockSyncHandler,
+  // SB-UNI-V — Firestore onWrite trigger for product stock changes.
+  onProductStockChangeHandler,
   triggerEventRaffleHandler,
   assignSpinPrizeHandler,
   // Firebase binder adapter

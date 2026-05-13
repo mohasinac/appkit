@@ -23,18 +23,12 @@ export interface ListingTypePlugin {
   cartLine: "single-product" | "blocked" | "bundle-expand";
 }
 
+// SB-UNI-D — bundle entry removed; bundles are a categoryType, not a listingType.
 export const LISTING_TYPE_REGISTRY = {
   standard: standard.config,
   auction: auction.config,
   "pre-order": preOrder.config,
   "prize-draw": prizeDraw.config,
-  // SB-UNI-D will drop the bundle entry when bundles move to categoryType.
-  // Until then, bundles use the standard cart-line semantics.
-  bundle: {
-    listingType: "bundle" as ListingType,
-    slugPrefix: "bundle-",
-    cartLine: "bundle-expand" as const,
-  },
 } as const;
 
 export function pluginFor(type: ListingType) {

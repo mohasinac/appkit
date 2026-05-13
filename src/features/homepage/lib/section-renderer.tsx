@@ -25,7 +25,8 @@ import { BrandsSection } from "../components/BrandsSection";
 import { SocialFeedSection } from "../components/SocialFeedSection";
 import { CustomCardsSection } from "../components/CustomCardsSection";
 import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
-import { FeaturedBundlesSection } from "../../bundles/components/FeaturedBundlesSection";
+// SB-UNI-V — FeaturedBundlesSection deleted; bundle homepage section to be
+// rebuilt against categoryType:"bundle" queries in a follow-up cohort.
 import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
 import { EventRafflesSection } from "../../events/components/EventRafflesSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
@@ -435,8 +436,9 @@ function renderSectionElement(
     }
 
     case "featured-bundles": {
-      const cfg = config as FeaturedBundlesSectionConfig;
-      return <FeaturedBundlesSection config={cfg ?? {}} />;
+      // SB-UNI-V — FeaturedBundlesSection deleted with features/bundles/. The
+      // category-based replacement lands in a follow-up.
+      return null;
     }
 
     case "prize-draws": {

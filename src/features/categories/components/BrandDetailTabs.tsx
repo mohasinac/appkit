@@ -4,9 +4,9 @@ import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
 import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
-import { BundlesByCategoryListing } from "../../bundles/components/BundlesByCategoryListing";
+import { CategoryBundlesListing } from "./CategoryBundlesListing";
 import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants/listing-tabs";
-import type { BundleDocument } from "../../bundles/schemas/firestore";
+import type { CategoryDocument } from "../schemas";
 
 function tabLabel(label: string, count?: number) {
   if (!count) return label;
@@ -16,7 +16,7 @@ function tabLabel(label: string, count?: number) {
 export interface BrandDetailTabsProps {
   brandName: string;
   initialProductsData?: any;
-  initialBundles?: BundleDocument[];
+  initialBundles?: CategoryDocument[];
   counts?: {
     products?: number;
     auctions?: number;
@@ -87,7 +87,7 @@ export function BrandDetailTabs({
         <PrizeDrawsIndexListing brandName={brandName} />
       )}
       {activeTab === "bundles" && (
-        <BundlesByCategoryListing
+        <CategoryBundlesListing
           initialBundles={initialBundles}
           brandName={brandName}
         />

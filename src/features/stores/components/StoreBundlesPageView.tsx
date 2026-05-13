@@ -1,17 +1,19 @@
 import React from "react";
-import { bundlesRepository } from "../../../repositories";
+import { categoriesRepository } from "../../../repositories";
 import { getStoreBySlug } from "./StoreDetailLayoutView";
-import { BundlesByCategoryListing } from "../../bundles/components/BundlesByCategoryListing";
+import { CategoryBundlesListing } from "../../categories/components/CategoryBundlesListing";
 
 export interface StoreBundlesPageViewProps {
   storeSlug: string;
 }
 
 /**
- * Public store → Bundles tab (SB7-D / S7-PrizeDraws-3).
+ * Public store → Bundles tab.
  *
- * Server-fetches all published bundles for the seller and hands them to
- * `BundlesByCategoryListing`. Mirrors the StorePrizeDrawsPageView pattern.
+ * SB-UNI-D + V: bundles are categoryType:"bundle" rows on the categories
+ * collection, scoped to the seller via `createdByStoreId`. Server-fetches
+ * the seller's active bundle categories and hands them to
+ * `CategoryBundlesListing`. Mirrors the StorePrizeDrawsPageView pattern.
  */
 export async function StoreBundlesPageView({
   storeSlug,
@@ -23,9 +25,10 @@ export async function StoreBundlesPageView({
     return null;
   }
 
-  const bundles = await bundlesRepository
-    .findByStore(storeId, "published")
+  const bundles = await categoriesRepository
+    .listByType("bundle", { activeOnly: true, limit: 50 })
+    .then((rows) => rows.filter((c) => c.createdByStoreId === storeId))
     .catch(() => []);
 
-  return <BundlesByCategoryListing initialBundles={bundles} />;
+  return <CategoryBundlesListing initialBundles={bundles} />;
 }

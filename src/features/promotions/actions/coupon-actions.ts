@@ -27,7 +27,7 @@ export type CouponCartItem = {
   price: number;
   quantity: number;
   /** Canonical listing-kind snapshot (SB1-G Phase 4). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
 };
 
 export async function validateCoupon(

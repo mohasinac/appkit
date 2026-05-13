@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import {
-  bundlesRepository,
   categoriesRepository,
   productRepository,
 } from "../../../repositories";
@@ -60,8 +59,12 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           })
           .catch(() => null)
       : Promise.resolve(null),
+    // SB-UNI-D — bundles fetched from the categories collection. We pull
+    // all active bundle rows; the carousel filters by category affinity.
     category?.id
-      ? bundlesRepository.findByCategory(category.id).catch(() => [])
+      ? categoriesRepository
+          .listByType("bundle", { activeOnly: true, limit: 50 })
+          .catch(() => [])
       : Promise.resolve([]),
     category?.id
       ? categoriesRepository.getChildren(category.id).catch(() => []) as Promise<CategoryItem[]>

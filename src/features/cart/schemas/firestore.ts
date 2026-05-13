@@ -24,7 +24,7 @@ export interface CartItemDocument {
    * carts) and cart-side UI badges. Replaces the legacy `isAuction`/`isPreOrder`
    * pair on the cart item.
    */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
   /** True when item was added from an accepted Make-an-Offer */
   isOffer?: boolean;
   offerId?: string;
@@ -106,7 +106,7 @@ export type AddToCartInput = {
   /** Store slug (= storeId = store.id) */
   storeId: string;
   storeName: string;
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;

@@ -22,7 +22,7 @@ export interface ProductListActionParams {
   page?: number;
   pageSize?: number;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   featured?: boolean;
   storeId?: string;
   categoriesIn?: string[];

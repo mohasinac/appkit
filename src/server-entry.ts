@@ -192,20 +192,9 @@ export {
   type SitemapGroupedListing,
 } from "./_internal/server/features/grouped/index";
 
-// S3: bundles data layer (consumer alias over groupedListings)
-export {
-  getBundleForDetail,
-  getBundleWithItems,
-  listBundles,
-  listFeaturedBundles,
-  listSitemapBundles,
-  BUNDLES_PAGE_SIZE,
-  BUNDLES_FEATURED_LIMIT,
-  BUNDLES_SITEMAP_LIMIT,
-  type BundleWithItems,
-  type ListBundlesParams,
-  type SitemapBundle,
-} from "./_internal/server/features/bundles/index";
+// SB-UNI-V — bundles data layer deleted; consumers should query
+// `categoriesRepository.findBySlugAndType(slug, "bundle")` /
+// `.listByType("bundle", opts)` / `.findById(id)` directly.
 
 // S4: checkout actions
 export {

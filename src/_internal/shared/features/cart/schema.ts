@@ -10,12 +10,12 @@ const cartItemBaseSchema = z.object({
   storeName: z.string().default(""),
   quantity: z.number().int().min(1).max(99).default(1),
   // SB1-G Phase 4 — canonical listing-kind snapshot.
+  // SB-UNI-D — "bundle" removed from the listing-kind enum.
   listingType: z.enum([
     "standard",
     "auction",
     "pre-order",
     "prize-draw",
-    "bundle",
   ]),
   isOffer: z.boolean().optional(),
   offerId: z.string().optional(),

@@ -471,9 +471,10 @@ export async function createCheckoutOrderAction(
       ),
     ];
 
-    // SB6-C / SB8-A — prize-draw + bundle order-level fields.
+    // SB-UNI-D — "bundle" order-type removed; bundle cart lines will expand
+    // to N product order lines at checkout (forward-looking feature, not
+    // wired yet). Prize-draw fields only.
     const isPrizeDrawOrder = orderType === "prize-draw";
-    const isBundleOrder = orderType === "bundle";
     const prizeDrawFields =
       isPrizeDrawOrder
         ? {
@@ -481,9 +482,7 @@ export async function createCheckoutOrderAction(
             isNonRefundable: true,
             prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
           }
-        : isBundleOrder
-          ? { isNonRefundable: true }
-          : {};
+        : {};
 
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,
@@ -941,9 +940,9 @@ export async function verifyAndPlaceRazorpayOrderAction(
       ),
     ];
 
-    // SB6-C / SB8-A — prize-draw + bundle order-level fields.
+    // SB-UNI-D — "bundle" order-type removed; bundle cart lines will expand
+    // to N product order lines at checkout (forward-looking, not wired).
     const isPrizeDrawOrder = orderType === "prize-draw";
-    const isBundleOrder = orderType === "bundle";
     const prizeDrawFields =
       isPrizeDrawOrder && group[0].product
         ? {
@@ -951,9 +950,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
             isNonRefundable: true,
             prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
           }
-        : isBundleOrder
-          ? { isNonRefundable: true }
-          : {};
+        : {};
 
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,

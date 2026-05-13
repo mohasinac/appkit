@@ -1,70 +1,93 @@
 /**
- * scheduledBundleStockSync — daily 10am IST.
+ * scheduledBundleStockSync — daily 10am IST safety net.
  *
- * Sweeps every active bundle and flips `isSold=true` if any of its
- * referenced products are sold / out_of_stock / discontinued.
+ * SB-UNI-V: bundles live on the `categories` collection with
+ * categoryType:"bundle". Each bundle row owns `bundleProductIds[]` +
+ * `bundleStockStatus`. This sweep recomputes `bundleStockStatus` for
+ * every active bundle by inspecting its members' product status.
  *
- * Same logic as `onProductWriteHandler`'s reverse-ref sync, but runs as a
- * safety net for cases where the trigger missed a write (manual Firestore
- * edit, batch import, etc.).
+ * Status transitions:
+ *   all members published + available   → "in_stock"
+ *   ≥1 member unavailable, ≥minActive   → "partial"
+ *   ≥1 member unavailable, <minActive   → "out_of_stock"
+ *
+ * The realtime onProductStockChange Firestore-trigger handles individual
+ * writes; this is the cheap nightly safety net for any missed events.
  */
 
 import type { ScheduleHandler } from "../runtime/types";
 
-const BUNDLES_COLLECTION = "bundles";
+const CATEGORIES_COLLECTION = "categories";
 const PRODUCT_COLLECTION = "products";
 const UNAVAILABLE = new Set(["sold", "out_of_stock", "discontinued"]);
+const MIN_ACTIVE_DEFAULT = 1;
+
+type BundleCategoryDoc = {
+  bundleProductIds?: string[];
+  bundleStockStatus?: "in_stock" | "partial" | "out_of_stock";
+  minActiveMembers?: number;
+};
+
+async function computeBundleStockStatus(
+  productIds: string[],
+  minActive: number,
+  ctx: { db: FirebaseFirestore.Firestore },
+): Promise<"in_stock" | "partial" | "out_of_stock"> {
+  if (productIds.length === 0) return "out_of_stock";
+  let unavailable = 0;
+  for (let i = 0; i < productIds.length; i += 30) {
+    const chunk = productIds.slice(i, i + 30);
+    const snap = await ctx.db
+      .collection(PRODUCT_COLLECTION)
+      .where("__name__", "in", chunk)
+      .get();
+    for (const doc of snap.docs) {
+      const status = (doc.data() as { status?: string }).status;
+      if (!status || UNAVAILABLE.has(status)) unavailable++;
+    }
+    // Account for missing docs (deleted products).
+    if (snap.size < chunk.length) unavailable += chunk.length - snap.size;
+  }
+  const active = productIds.length - unavailable;
+  if (unavailable === 0) return "in_stock";
+  if (active < minActive) return "out_of_stock";
+  return "partial";
+}
 
 export const bundleStockSyncHandler: ScheduleHandler = async (ctx) => {
-  ctx.logger.info("Bundle stock sync starting");
+  ctx.logger.info("Bundle stock sync starting (SB-UNI-V categories)");
 
-  const bundlesSnap = await ctx.db
-    .collection(BUNDLES_COLLECTION)
-    .where("isSold", "==", false)
+  const snap = await ctx.db
+    .collection(CATEGORIES_COLLECTION)
+    .where("categoryType", "==", "bundle")
+    .where("isActive", "==", true)
     .limit(500)
     .get();
 
-  if (bundlesSnap.empty) {
-    ctx.logger.info("No active bundles to scan");
+  if (snap.empty) {
+    ctx.logger.info("No active bundle categories to scan");
     return;
   }
 
-  let flipped = 0;
-  for (const bundleDoc of bundlesSnap.docs) {
-    const bundle = bundleDoc.data() as {
-      bundleItems?: Array<{ productId: string }>;
-    };
-    const productIds = (bundle.bundleItems ?? [])
-      .map((it) => it.productId)
-      .filter(Boolean);
+  let updated = 0;
+  for (const bundleDoc of snap.docs) {
+    const data = bundleDoc.data() as BundleCategoryDoc;
+    const productIds = data.bundleProductIds ?? [];
     if (productIds.length === 0) continue;
+    const minActive = data.minActiveMembers ?? MIN_ACTIVE_DEFAULT;
 
-    // Firestore "in" caps at 30 — batch the reads.
-    let anyUnavailable = false;
-    for (let i = 0; i < productIds.length && !anyUnavailable; i += 30) {
-      const chunk = productIds.slice(i, i + 30);
-      const productsSnap = await ctx.db
-        .collection(PRODUCT_COLLECTION)
-        .where("__name__", "in", chunk)
-        .get();
-      for (const p of productsSnap.docs) {
-        const status = (p.data() as { status?: string }).status;
-        if (status && UNAVAILABLE.has(status)) {
-          anyUnavailable = true;
-          break;
-        }
-      }
-    }
-    if (anyUnavailable) {
+    const nextStatus = await computeBundleStockStatus(productIds, minActive, ctx);
+    if (nextStatus !== data.bundleStockStatus) {
       await bundleDoc.ref.update({
-        isSold: true,
+        bundleStockStatus: nextStatus,
+        bundleQueryResolvedAt: ctx.now,
         updatedAt: ctx.now,
       });
-      flipped++;
+      updated++;
     }
   }
   ctx.logger.info("Bundle stock sync complete", {
-    scanned: bundlesSnap.size,
-    flipped,
+    scanned: snap.size,
+    updated,
   });
 };

@@ -320,7 +320,7 @@ interface CartItemSpec {
   store: [string, string];
   qty: number;
   /** Canonical listing-kind snapshot (SB1-G Phase 4). Defaults to "standard". */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
 }
 
 /**

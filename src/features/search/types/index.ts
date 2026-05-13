@@ -13,7 +13,7 @@ export interface SearchProductItem {
   status: string;
   featured?: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   currentBid?: number;
   isPromoted?: boolean;
   slug: string;
@@ -42,7 +42,7 @@ export interface SearchQuery {
   maxPrice?: number;
   condition?: string;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
   inStock?: boolean;
   minRating?: number;
   sort?: string;

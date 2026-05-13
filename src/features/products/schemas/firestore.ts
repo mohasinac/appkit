@@ -125,7 +125,7 @@ export interface ProductDocument {
    * `where("listingType", "==", X)` against the `listingType+...` composite
    * indexes in `appkit/firebase/base/firestore.indexes.json`.
    */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "bundle";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
   /** Hard cap on units a single user may purchase (SB1-B; bundle/prize-draw). */
   maxPerUser?: number;
   /** Reverse pointers — bundle ids that include this product. */

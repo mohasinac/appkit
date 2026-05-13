@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import {
-  bundlesRepository,
   categoriesRepository,
   productRepository,
 } from "../../../repositories";
@@ -64,24 +63,22 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           })
           .catch(() => null)
       : Promise.resolve(null),
-    // bundles aren't keyed by brand directly; we fetch the recent set
-    // and let `BundlesByCategoryListing` filter client-side by brand.
+    // SB-UNI-D — bundles are categoryType:"bundle" rows on the categories
+    // collection. We pull all bundle categories and filter client-side by
+    // brand affinity until the bundle storage carries an explicit brandSlug.
     brandName
-      ? bundlesRepository.findAll().catch(() => [])
+      ? categoriesRepository
+          .listByType("bundle", { activeOnly: true, limit: 50 })
+          .catch(() => [])
       : Promise.resolve([]),
   ]);
 
-  // Lower-bound brand filter client-side: by brand match on bundle items.
   const brandLower = brandName?.toLowerCase();
   const brandBundles = brandLower
-    ? (allBundles as any[]).filter(
-        (b) =>
-          (b as any).brand?.toLowerCase?.() === brandLower ||
-          (b as any).brandSlug?.toLowerCase?.() === brandLower ||
-          (b.bundleItems ?? []).some(
-            (it: any) => String(it?.brand ?? "").toLowerCase() === brandLower,
-          ),
-      )
+    ? (allBundles as CategoryDocument[]).filter((b) => {
+        const seo = b.seo?.keywords?.map((k) => k.toLowerCase()) ?? [];
+        return seo.includes(brandLower);
+      })
     : [];
 
   const coverImage = brand?.display?.coverImage;

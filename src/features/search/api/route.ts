@@ -47,14 +47,14 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    // SB1-G Phase 4 — canonical `?listingType=auction|pre-order|standard|prize-draw|bundle`.
+    // SB1-G Phase 4 — canonical `?listingType=auction|pre-order|standard|prize-draw`.
+    // SB-UNI-D — "bundle" removed; bundles are a categoryType, not a listingType.
     const listingTypeRaw = param(url, "listingType");
     const VALID_LISTING_TYPES = new Set([
       "standard",
       "auction",
       "pre-order",
       "prize-draw",
-      "bundle",
     ] as const);
     const listingType =
       listingTypeRaw && VALID_LISTING_TYPES.has(listingTypeRaw as "standard")
@@ -62,8 +62,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             | "standard"
             | "auction"
             | "pre-order"
-            | "prize-draw"
-            | "bundle")
+            | "prize-draw")
         : undefined;
 
     const inStockRaw = param(url, "inStock");
