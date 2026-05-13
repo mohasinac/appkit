@@ -1,63 +1,95 @@
 "use client";
 
 /**
- * CategoryBundlesListing — SB-UNI-D + V (replaces the deleted
- * BundlesByCategoryListing). Renders a list of bundles that live as
- * categoryType:"bundle" rows on the categories collection.
+ * CategoryBundlesListing — SB-UNI-D + V replacement for the deleted
+ * BundlesByCategoryListing. Renders a sortable list of bundles that live
+ * as `categoryType:"bundle"` rows on the categories collection.
  *
- * Slim wrapper — parent server-fetches the bundle categories and ships
- * the list as `initialBundles`. Client owns sort state only; no refetch.
+ * Parent server-fetches the list; client owns only the sort state.
  */
 
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { Badge, Div, Row, Stack, Text } from "../../../ui";
+import { Badge, Div, Row, Select, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
+import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
+
+// ── Sort options ──────────────────────────────────────────────────────────
+type BundleSort = "newest" | "price-asc" | "price-desc";
+
+const SORT_OPTIONS: Array<{ label: string; value: BundleSort }> = [
+  { label: "Newest", value: "newest" },
+  { label: "Price ↑", value: "price-asc" },
+  { label: "Price ↓", value: "price-desc" },
+];
+
+// ── Stock status presentation ─────────────────────────────────────────────
+type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
+
+const STOCK_BADGE_TEXT: Record<StockKey, string> = {
+  in_stock: "",
+  partial: "Partial",
+  out_of_stock: "Out of stock",
+};
+
+const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning" | "danger"> = {
+  in_stock: "success",
+  partial: "warning",
+  out_of_stock: "danger",
+};
+
+const PLACEHOLDER_EMOJI = "📦" as const;
+const COPY = {
+  empty: "No bundles available",
+  forBrand: (name: string) => ` for ${name}`,
+  yetSuffix: " yet.",
+  sortLabel: "Sort:",
+  items: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
+  priceFallback: "—",
+} as const;
 
 export interface CategoryBundlesListingProps {
   initialBundles: CategoryDocument[];
   brandName?: string;
 }
 
-function formatRupees(paise: number): string {
-  return `₹${(paise / 100).toLocaleString("en-IN")}`;
+function comparator(sort: BundleSort) {
+  return (a: CategoryDocument, b: CategoryDocument) => {
+    if (sort === "price-asc") {
+      return (a.bundlePriceInPaise ?? 0) - (b.bundlePriceInPaise ?? 0);
+    }
+    if (sort === "price-desc") {
+      return (b.bundlePriceInPaise ?? 0) - (a.bundlePriceInPaise ?? 0);
+    }
+    const aT = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
+    const bT = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
+    return bT - aT;
+  };
 }
 
 export function CategoryBundlesListing({
   initialBundles,
   brandName,
 }: CategoryBundlesListingProps) {
-  const [sort, setSort] = useState<"newest" | "price-asc" | "price-desc">(
-    "newest",
-  );
+  const [sort, setSort] = useState<BundleSort>("newest");
 
-  const filtered = useMemo(() => {
-    const items = [...initialBundles].filter((c) => c.categoryType === "bundle");
-    if (sort === "price-asc") {
-      items.sort(
-        (a, b) => (a.bundlePriceInPaise ?? 0) - (b.bundlePriceInPaise ?? 0),
-      );
-    } else if (sort === "price-desc") {
-      items.sort(
-        (a, b) => (b.bundlePriceInPaise ?? 0) - (a.bundlePriceInPaise ?? 0),
-      );
-    } else {
-      items.sort((a, b) => {
-        const aT = a.createdAt instanceof Date ? a.createdAt.getTime() : 0;
-        const bT = b.createdAt instanceof Date ? b.createdAt.getTime() : 0;
-        return bT - aT;
-      });
-    }
-    return items;
-  }, [initialBundles, sort]);
+  const filtered = useMemo(
+    () =>
+      initialBundles
+        .filter((c) => c.categoryType === "bundle")
+        .slice()
+        .sort(comparator(sort)),
+    [initialBundles, sort],
+  );
 
   if (filtered.length === 0) {
     return (
-      <Div className="rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-700 py-16 text-center">
+      <Div className="rounded-2xl border border-dashed border-zinc-200 py-16 text-center dark:border-zinc-700">
         <Text color="muted">
-          No bundles available
-          {brandName ? ` for ${brandName}` : ""} yet.
+          {COPY.empty}
+          {brandName ? COPY.forBrand(brandName) : ""}
+          {COPY.yetSuffix}
         </Text>
       </Div>
     );
@@ -67,71 +99,72 @@ export function CategoryBundlesListing({
     <Stack gap="md">
       <Row gap="sm" align="center" justify="end">
         <Text size="sm" color="muted">
-          Sort:
+          {COPY.sortLabel}
         </Text>
-        <select
+        <Select<BundleSort>
+          options={SORT_OPTIONS}
           value={sort}
-          onChange={(e) =>
-            setSort(e.target.value as "newest" | "price-asc" | "price-desc")
-          }
-          className="appkit-input text-sm"
-        >
-          <option value="newest">Newest</option>
-          <option value="price-asc">Price ↑</option>
-          <option value="price-desc">Price ↓</option>
-        </select>
+          onValueChange={setSort}
+          aria-label={COPY.sortLabel}
+        />
       </Row>
 
       <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((bundle) => {
-          const memberCount = bundle.bundleProductIds?.length ?? 0;
-          const stock = bundle.bundleStockStatus ?? "in_stock";
-          return (
-            <Link
-              key={bundle.id}
-              href={String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#")}
-              className="group rounded-xl border border-zinc-200 bg-white p-3 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
-            >
-              <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-                {bundle.display?.coverImage ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={bundle.display.coverImage}
-                    alt={bundle.name}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                    loading="lazy"
-                  />
-                ) : (
-                  <Div className="flex h-full w-full items-center justify-center text-3xl">
-                    📦
-                  </Div>
-                )}
-              </Div>
-              <Text className="line-clamp-2 text-sm font-semibold">
-                {bundle.name}
-              </Text>
-              <Row gap="sm" align="center" className="mt-1">
-                <Text size="sm" weight="bold">
-                  {bundle.bundlePriceInPaise
-                    ? formatRupees(bundle.bundlePriceInPaise)
-                    : "—"}
-                </Text>
-                <Text size="xs" color="muted">
-                  {memberCount} item{memberCount !== 1 ? "s" : ""}
-                </Text>
-              </Row>
-              {stock !== "in_stock" && (
-                <Badge
-                  variant={stock === "out_of_stock" ? "danger" : "warning"}
-                  className="mt-1"
-                >
-                  {stock === "out_of_stock" ? "Out of stock" : "Partial"}
-                </Badge>
-              )}
-            </Link>
-          );
-        })}
+        {filtered.map((bundle) => (
+          <BundleCard key={bundle.id} bundle={bundle} />
+        ))}
       </Div>
     </Stack>
+  );
+}
+
+interface BundleCardProps {
+  bundle: CategoryDocument;
+}
+
+function BundleCard({ bundle }: BundleCardProps) {
+  const memberCount = bundle.bundleProductIds?.length ?? 0;
+  const stock = bundle.bundleStockStatus ?? "in_stock";
+  const badge = STOCK_BADGE_TEXT[stock];
+  const cover = bundle.display?.coverImage;
+  const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
+
+  return (
+    <Link
+      href={href}
+      className="group rounded-xl border border-zinc-200 bg-white p-3 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+    >
+      <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+        {cover ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={cover}
+            alt={bundle.name}
+            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <Div className="flex h-full w-full items-center justify-center text-3xl">
+            {PLACEHOLDER_EMOJI}
+          </Div>
+        )}
+      </Div>
+      <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
+      <Row gap="sm" align="center" className="mt-1">
+        <Text size="sm" weight="bold">
+          {bundle.bundlePriceInPaise
+            ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
+            : COPY.priceFallback}
+        </Text>
+        <Text size="xs" color="muted">
+          {COPY.items(memberCount)}
+        </Text>
+      </Row>
+      {badge && (
+        <Badge variant={STOCK_BADGE_VARIANT[stock]} className="mt-1">
+          {badge}
+        </Badge>
+      )}
+    </Link>
   );
 }
