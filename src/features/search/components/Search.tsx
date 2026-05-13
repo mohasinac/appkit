@@ -9,6 +9,8 @@ export type SearchResourceType =
   | "products"
   | "auctions"
   | "pre-orders"
+  | "prize-draws"
+  | "bundles"
   | "stores"
   | "categories"
   | "brands"
