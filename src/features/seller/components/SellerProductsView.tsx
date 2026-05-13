@@ -31,7 +31,7 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = ["All", "active", "draft", "archived", "sold"];
 
-type ListingKind = "all" | "standard" | "auction" | "pre-order";
+type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw";
 
 interface ProductRow {
   id: string;
@@ -65,6 +65,7 @@ function TypeChips({
     { kind: "standard", label: "Standard" },
     { kind: "auction", label: "Auction" },
     { kind: "pre-order", label: "Pre-order" },
+    { kind: "prize-draw", label: "Prize Draw" },
   ];
   return (
     <div className="flex items-center gap-2 px-3 sm:px-4 py-2 overflow-x-auto border-b border-[var(--appkit-color-border)]">
@@ -90,6 +91,7 @@ function TypeChips({
 const KIND_BADGE_VARIANT: Record<string, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
   auction: "warning",
   "pre-order": "secondary",
+  "prize-draw": "primary",
   standard: "default",
 };
 
@@ -234,9 +236,11 @@ export function SellerProductsView({
       ? "listingType==auction"
       : listingKind === "pre-order"
         ? "listingType==pre-order"
-        : listingKind === "standard"
-          ? "listingType==standard"
-          : undefined;
+        : listingKind === "prize-draw"
+          ? "listingType==prize-draw"
+          : listingKind === "standard"
+            ? "listingType==standard"
+            : undefined;
 
   const filters = [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
 
@@ -258,7 +262,13 @@ export function SellerProductsView({
           item as { listingType?: import("../../products/types").ListingType },
         );
         const kind: ListingKind =
-          lt === "auction" ? "auction" : lt === "pre-order" ? "pre-order" : "standard";
+          lt === "auction"
+            ? "auction"
+            : lt === "pre-order"
+              ? "pre-order"
+              : lt === "prize-draw"
+                ? "prize-draw"
+                : "standard";
         const priceRaw = typeof item.price === "number" ? item.price : 0;
         return {
           id: toStringValue(item.id, `product-${index}`),
@@ -292,7 +302,9 @@ export function SellerProductsView({
         ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
         : row.listingKind === "pre-order"
           ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
-          : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
+          : row.listingKind === "prize-draw"
+            ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
+            : String(ROUTES.STORE.PRODUCTS_EDIT(row.id));
     void dispatch({ type: "NAVIGATE", href });
   };
 
@@ -358,7 +370,9 @@ export function SellerProductsView({
                 ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
                 : row.listingKind === "pre-order"
                   ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
-                  : String(ROUTES.STORE.PRODUCTS_EDIT(row.id))
+                  : row.listingKind === "prize-draw"
+                    ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
+                    : String(ROUTES.STORE.PRODUCTS_EDIT(row.id))
             }
             renderRowActions={
               onDeleteProduct

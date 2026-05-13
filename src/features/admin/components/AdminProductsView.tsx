@@ -30,7 +30,7 @@ const SORT_OPTIONS = [
   { value: "-price", label: "Highest price" },
 ];
 const STATUS_OPTIONS = ["All", "pending", "published", "draft", "archived"];
-const TYPE_OPTIONS = ["All", "Products", "Auctions", "Pre-orders"];
+const TYPE_OPTIONS = ["All", "Products", "Auctions", "Pre-orders", "Prize Draws"];
 
 export interface AdminProductsViewProps extends ListingViewShellProps {
   actionHref?: string;
@@ -138,6 +138,8 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   if (typeRaw && typeRaw !== "All") {
     if (typeRaw === "Auctions") filterParts.push("listingType==auction");
     else if (typeRaw === "Pre-orders") filterParts.push("listingType==pre-order");
+    else if (typeRaw === "Prize Draws") filterParts.push("listingType==prize-draw");
+    else if (typeRaw === "Products") filterParts.push("listingType==standard");
   }
   const filters = filterParts.join(",") || undefined;
 
