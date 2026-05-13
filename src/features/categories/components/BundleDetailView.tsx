@@ -28,32 +28,20 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas/firestore";
 
+import {
+  BUNDLE_COPY,
+  BUNDLE_STOCK_VARIANT,
+} from "../../../_internal/shared/features/categories/bundle-copy";
+
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
 const STOCK_BADGE_TEXT: Record<StockKey, string> = {
-  in_stock: "In stock",
-  partial: "Some items unavailable",
-  out_of_stock: "Currently out of stock",
-};
-
-const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning" | "danger"> = {
-  in_stock: "success",
-  partial: "warning",
-  out_of_stock: "danger",
+  in_stock: BUNDLE_COPY.stockBadge.in_stock,
+  partial: BUNDLE_COPY.stockBadge.partial,
+  out_of_stock: BUNDLE_COPY.stockBadge.out_of_stock,
 };
 
 const PLACEHOLDER_EMOJI = "📦" as const;
-
-const COPY = {
-  emptyMembers: "Bundle contents are being updated. Check back shortly.",
-  itemsHeading: "What's included",
-  priceLabel: "Bundle price",
-  itemCount: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
-  ctaDisabled: "Add to cart coming soon",
-  ctaHint:
-    "Bundle checkout is being wired up — buyers can browse contents now and the buy flow ships in the next release.",
-  description: "About this bundle",
-} as const;
 
 export interface BundleDetailViewProps {
   bundle: CategoryDocument;
@@ -69,7 +57,7 @@ export function BundleDetailView({
   const cover = bundle.display?.coverImage;
   const priceLabel = bundle.bundlePriceInPaise
     ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
-    : "—";
+    : BUNDLE_COPY.detail.priceFallback;
 
   return (
     <Main>
@@ -105,9 +93,9 @@ export function BundleDetailView({
                     {priceLabel}
                   </Text>
                   <Text size="sm" color="muted">
-                    · {COPY.itemCount(memberCount)}
+                    · {BUNDLE_COPY.detail.itemCount(memberCount)}
                   </Text>
-                  <Badge variant={STOCK_BADGE_VARIANT[stock]}>
+                  <Badge variant={BUNDLE_STOCK_VARIANT[stock]}>
                     {STOCK_BADGE_TEXT[stock]}
                   </Badge>
                 </Row>
@@ -115,7 +103,7 @@ export function BundleDetailView({
                 {bundle.description && (
                   <Stack gap="xs">
                     <Heading level={2} className="text-sm font-semibold text-[var(--appkit-color-text-muted)]">
-                      {COPY.description}
+                      {BUNDLE_COPY.detailDescriptionHeading}
                     </Heading>
                     <Text className="whitespace-pre-line">
                       {bundle.description}
@@ -128,10 +116,10 @@ export function BundleDetailView({
                   aria-live="polite"
                 >
                   <Text weight="semibold" className="mb-1 block">
-                    {COPY.ctaDisabled}
+                    {BUNDLE_COPY.detail.ctaDisabled}
                   </Text>
                   <Text size="sm" color="muted">
-                    {COPY.ctaHint}
+                    {BUNDLE_COPY.detail.ctaHint}
                   </Text>
                 </Div>
               </Stack>
@@ -142,11 +130,11 @@ export function BundleDetailView({
                 level={2}
                 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100"
               >
-                {COPY.itemsHeading}
+                {BUNDLE_COPY.detailItemsHeading}
               </Heading>
 
               {members.length === 0 ? (
-                <Text color="muted">{COPY.emptyMembers}</Text>
+                <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
                 <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                   {members.map((p) => (

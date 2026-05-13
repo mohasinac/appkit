@@ -12,25 +12,13 @@ import Link from "next/link";
 import { Badge, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
+import {
+  BUNDLE_COPY,
+  BUNDLE_STOCK_VARIANT,
+} from "../../../_internal/shared/features/categories/bundle-copy";
 import type { CategoryDocument } from "../../categories/schemas";
 
 const PLACEHOLDER_EMOJI = "📦" as const;
-
-const COPY = {
-  defaultTitle: "Curated Bundles",
-  viewAll: "View all bundles →",
-  empty: "Bundles coming soon — curated multi-item drops launching shortly.",
-  itemCount: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
-  priceFallback: "—",
-} as const;
-
-type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
-
-const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning" | "danger"> = {
-  in_stock: "success",
-  partial: "warning",
-  out_of_stock: "danger",
-};
 
 export interface FeaturedBundlesSectionProps {
   title?: string;
@@ -40,7 +28,7 @@ export interface FeaturedBundlesSectionProps {
 }
 
 export function FeaturedBundlesSection({
-  title = COPY.defaultTitle,
+  title = BUNDLE_COPY.featuredDefaultTitle,
   description,
   initialItems = [],
   className = "",
@@ -68,13 +56,13 @@ export function FeaturedBundlesSection({
             href={String(ROUTES.PUBLIC.BUNDLES ?? "/bundles")}
             className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline"
           >
-            {COPY.viewAll}
+            {BUNDLE_COPY.featured.viewAll}
           </Link>
         </Row>
 
         {items.length === 0 ? (
           <Div className="rounded-xl border border-dashed border-zinc-200 py-12 text-center dark:border-zinc-700">
-            <Text color="muted">{COPY.empty}</Text>
+            <Text color="muted">{BUNDLE_COPY.featured.empty}</Text>
           </Div>
         ) : (
           <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -123,14 +111,16 @@ function FeaturedBundleCard({ bundle }: FeaturedBundleCardProps) {
         <Text size="sm" weight="bold">
           {bundle.bundlePriceInPaise
             ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
-            : COPY.priceFallback}
+            : BUNDLE_COPY.featured.priceFallback}
         </Text>
         <Text size="xs" color="muted">
-          · {COPY.itemCount(memberCount)}
+          · {BUNDLE_COPY.featured.itemCount(memberCount)}
         </Text>
         {stock !== "in_stock" && (
-          <Badge variant={STOCK_BADGE_VARIANT[stock]}>
-            {stock === "partial" ? "Partial" : "Out of stock"}
+          <Badge variant={BUNDLE_STOCK_VARIANT[stock]}>
+            {stock === "partial"
+              ? BUNDLE_COPY.stockBadge.listVariantPartial
+              : BUNDLE_COPY.stockBadge.listVariantOutOfStock}
           </Badge>
         )}
       </Row>

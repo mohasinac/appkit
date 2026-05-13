@@ -5194,6 +5194,12 @@ export { EventPollWidget } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // EventStatusBadge - Component for event status badge.
 export { EventStatusBadge } from "./features/events/index";
+// EventRaffleWinnerView - Public-facing winner card for an event raffle.
+export { EventRaffleWinnerView } from "./features/events/index";
+export type { EventRaffleWinnerViewProps } from "./features/events/index";
+// SpinWheelView - Spin-the-wheel client component for spin-wheel events.
+export { SpinWheelView } from "./features/events/index";
+export type { SpinWheelViewProps } from "./features/events/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // EventsListView - Component for events list view.
 export { EventsListView } from "./features/events/index";
@@ -8893,6 +8899,20 @@ export {
   BUNDLES_PAGE_SIZE,
   BUNDLES_FEATURED_LIMIT,
 } from "./_internal/shared/features/categories/bundle-config";
+// S-SBUNI-4 follow-up — shared bundle UI copy + stock-badge variant map.
+export {
+  BUNDLE_COPY,
+  BUNDLE_STOCK_VARIANT,
+} from "./_internal/shared/features/categories/bundle-copy";
+// S-SBUNI-4 follow-up — shared admin bundle zod schemas.
+export {
+  bundleCreateSchema,
+  bundleUpdateSchema,
+  bundleQueryRuleSchema,
+  bundleDisplaySchema,
+  type BundleCreateBody,
+  type BundleUpdateBody,
+} from "./_internal/shared/features/categories/bundle-schemas";
 
 export type { GroupedListingDocument, GroupTheme, GroupVisibility } from "./features/grouped/schemas/firestore";
 

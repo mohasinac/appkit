@@ -25,6 +25,10 @@ import {
   Stack,
   Text,
 } from "../../../ui";
+import {
+  BUNDLE_COPY,
+  BUNDLE_STOCK_VARIANT,
+} from "../../../_internal/shared/features/categories/bundle-copy";
 import type { CategoryDocument } from "../../categories/schemas";
 
 export interface AdminBundlesViewProps {
@@ -34,13 +38,13 @@ export interface AdminBundlesViewProps {
   newHref: string;
 }
 
-const STOCK_BADGE: Record<
+const STOCK_LIST_LABEL: Record<
   NonNullable<CategoryDocument["bundleStockStatus"]>,
-  { label: string; variant: "success" | "warning" | "danger" }
+  string
 > = {
-  in_stock: { label: "In stock", variant: "success" },
-  partial: { label: "Partial", variant: "warning" },
-  out_of_stock: { label: "Out of stock", variant: "danger" },
+  in_stock: BUNDLE_COPY.stockBadge.listVariantInStock,
+  partial: BUNDLE_COPY.stockBadge.listVariantPartial,
+  out_of_stock: BUNDLE_COPY.stockBadge.listVariantOutOfStock,
 };
 
 function formatPrice(paise: number | undefined | null): string {
@@ -86,10 +90,10 @@ export function AdminBundlesView({
               level={1}
               className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
             >
-              Bundles
+              {BUNDLE_COPY.adminListTitle}
             </Heading>
             <Button asChild variant="primary">
-              <Link href={newHref}>+ New bundle</Link>
+              <Link href={newHref}>{BUNDLE_COPY.adminList.newButton}</Link>
             </Button>
           </Row>
 
@@ -100,29 +104,37 @@ export function AdminBundlesView({
           )}
 
           {loading ? (
-            <Text>Loading bundles…</Text>
+            <Text>{BUNDLE_COPY.adminList.loading}</Text>
           ) : bundles.length === 0 ? (
             <Div className="rounded-2xl border border-dashed border-zinc-200 py-16 text-center dark:border-zinc-700">
-              <Text color="muted">
-                No bundles yet. Create one to get started.
-              </Text>
+              <Text color="muted">{BUNDLE_COPY.adminList.empty}</Text>
             </Div>
           ) : (
             <Div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
               <table className="w-full text-sm">
                 <thead className="bg-zinc-50 text-left dark:bg-zinc-900">
                   <tr>
-                    <th className="px-3 py-2 font-semibold">Name</th>
-                    <th className="px-3 py-2 font-semibold">Price</th>
-                    <th className="px-3 py-2 font-semibold">Members</th>
-                    <th className="px-3 py-2 font-semibold">Stock</th>
-                    <th className="px-3 py-2 font-semibold">Status</th>
+                    <th className="px-3 py-2 font-semibold">
+                      {BUNDLE_COPY.adminList.columns.name}
+                    </th>
+                    <th className="px-3 py-2 font-semibold">
+                      {BUNDLE_COPY.adminList.columns.price}
+                    </th>
+                    <th className="px-3 py-2 font-semibold">
+                      {BUNDLE_COPY.adminList.columns.members}
+                    </th>
+                    <th className="px-3 py-2 font-semibold">
+                      {BUNDLE_COPY.adminList.columns.stock}
+                    </th>
+                    <th className="px-3 py-2 font-semibold">
+                      {BUNDLE_COPY.adminList.columns.status}
+                    </th>
                     <th className="px-3 py-2"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {bundles.map((b) => {
-                    const stock = STOCK_BADGE[b.bundleStockStatus ?? "in_stock"];
+                    const stockKey = b.bundleStockStatus ?? "in_stock";
                     const memberCount = b.bundleProductIds?.length ?? 0;
                     return (
                       <tr
@@ -144,16 +156,22 @@ export function AdminBundlesView({
                         </td>
                         <td className="px-3 py-2">{memberCount}</td>
                         <td className="px-3 py-2">
-                          <Badge variant={stock.variant}>{stock.label}</Badge>
+                          <Badge variant={BUNDLE_STOCK_VARIANT[stockKey]}>
+                            {STOCK_LIST_LABEL[stockKey]}
+                          </Badge>
                         </td>
                         <td className="px-3 py-2">
                           <Badge variant={b.isActive ? "success" : "default"}>
-                            {b.isActive ? "Active" : "Inactive"}
+                            {b.isActive
+                              ? BUNDLE_COPY.adminList.activeBadge
+                              : BUNDLE_COPY.adminList.inactiveBadge}
                           </Badge>
                         </td>
                         <td className="px-3 py-2 text-right">
                           <Button asChild variant="ghost" size="sm">
-                            <Link href={getEditHref({ id: b.id })}>Edit</Link>
+                            <Link href={getEditHref({ id: b.id })}>
+                              {BUNDLE_COPY.adminList.editLabel}
+                            </Link>
                           </Button>
                         </td>
                       </tr>

@@ -16,6 +16,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
+  Checkbox,
   Container,
   Heading,
   Input,
@@ -30,6 +31,7 @@ import {
   defaultBundleItemsFetch,
   type BundleItemSearchResult,
 } from "../../categories/components/BundleItemsPicker";
+import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 import type { CategoryDocument } from "../../categories/schemas";
 
 export interface AdminBundleEditorViewProps {
@@ -114,7 +116,11 @@ export function AdminBundleEditorView({
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        setError(err instanceof Error ? err.message : "Failed to load");
+        setError(
+          err instanceof Error
+            ? err.message
+            : BUNDLE_COPY.adminEditor.errors.loadFailed,
+        );
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -128,11 +134,11 @@ export function AdminBundleEditorView({
     setError(null);
     const priceInPaise = parsePriceRupees(form.priceRupees);
     if (!form.name.trim()) {
-      setError("Bundle name is required");
+      setError(BUNDLE_COPY.adminEditor.errors.nameRequired);
       return;
     }
     if (priceInPaise === null) {
-      setError("Bundle price must be a positive number (rupees)");
+      setError(BUNDLE_COPY.adminEditor.errors.priceInvalid);
       return;
     }
 
@@ -183,7 +189,11 @@ export function AdminBundleEditorView({
         if (newId) onSaved?.(newId);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Save failed");
+      setError(
+        err instanceof Error
+          ? err.message
+          : BUNDLE_COPY.adminEditor.errors.saveFailed,
+      );
     } finally {
       setSaving(false);
     }
@@ -191,9 +201,7 @@ export function AdminBundleEditorView({
 
   const handleDelete = useCallback(async () => {
     if (!bundleId) return;
-    if (
-      !window.confirm("Delete this bundle? This action cannot be undone.")
-    ) {
+    if (!window.confirm(BUNDLE_COPY.adminEditor.deleteConfirm)) {
       return;
     }
     setDeleting(true);
@@ -206,7 +214,11 @@ export function AdminBundleEditorView({
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
       onDeleted?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Delete failed");
+      setError(
+        err instanceof Error
+          ? err.message
+          : BUNDLE_COPY.adminEditor.errors.deleteFailed,
+      );
     } finally {
       setDeleting(false);
     }
@@ -218,7 +230,7 @@ export function AdminBundleEditorView({
     return (
       <Section className="py-10">
         <Container size="lg">
-          <Text>Loading bundle…</Text>
+          <Text>{BUNDLE_COPY.adminEditor.loading}</Text>
         </Container>
       </Section>
     );
@@ -233,7 +245,9 @@ export function AdminBundleEditorView({
               level={1}
               className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
             >
-              {isEdit ? "Edit bundle" : "New bundle"}
+              {isEdit
+                ? BUNDLE_COPY.adminEditorTitleEdit
+                : BUNDLE_COPY.adminEditorTitleNew}
             </Heading>
             {isEdit && (
               <Button
@@ -241,7 +255,7 @@ export function AdminBundleEditorView({
                 onClick={handleDelete}
                 disabled={deleting}
               >
-                {deleting ? "Deleting…" : "Delete bundle"}
+                {BUNDLE_COPY.adminEditor.deleteButton(deleting)}
               </Button>
             )}
           </Row>
@@ -255,27 +269,29 @@ export function AdminBundleEditorView({
           <Stack gap="md">
             <Stack gap="xs">
               <Text size="sm" weight="semibold">
-                Name *
+                {BUNDLE_COPY.adminEditor.fields.nameLabel}
               </Text>
               <Input
                 type="text"
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="Pokémon TCG Starter Pack 2026"
+                placeholder={BUNDLE_COPY.adminEditor.fields.namePlaceholder}
                 disabled={saving}
               />
             </Stack>
 
             <Stack gap="xs">
               <Text size="sm" weight="semibold">
-                Description
+                {BUNDLE_COPY.adminEditor.fields.descriptionLabel}
               </Text>
               <Textarea
                 value={form.description}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, description: e.target.value }))
                 }
-                placeholder="One paragraph describing what's in the bundle and who it's for."
+                placeholder={
+                  BUNDLE_COPY.adminEditor.fields.descriptionPlaceholder
+                }
                 rows={4}
                 disabled={saving}
               />
@@ -283,7 +299,7 @@ export function AdminBundleEditorView({
 
             <Stack gap="xs">
               <Text size="sm" weight="semibold">
-                Bundle price (₹) *
+                {BUNDLE_COPY.adminEditor.fields.priceLabel}
               </Text>
               <Input
                 type="number"
@@ -294,17 +310,19 @@ export function AdminBundleEditorView({
                 onChange={(e) =>
                   setForm((f) => ({ ...f, priceRupees: e.target.value }))
                 }
-                placeholder="6499"
+                placeholder={BUNDLE_COPY.adminEditor.fields.pricePlaceholder}
                 disabled={saving}
               />
               <Text size="xs" color="muted">
-                Stored as paise: {parsePriceRupees(form.priceRupees) ?? "—"}
+                {BUNDLE_COPY.adminEditor.fields.pricePaiseHint(
+                  parsePriceRupees(form.priceRupees),
+                )}
               </Text>
             </Stack>
 
             <Stack gap="xs">
               <Text size="sm" weight="semibold">
-                Cover image URL
+                {BUNDLE_COPY.adminEditor.fields.coverImageLabel}
               </Text>
               <Input
                 type="url"
@@ -317,22 +335,14 @@ export function AdminBundleEditorView({
               />
             </Stack>
 
-            <Stack gap="xs">
-              <Row gap="sm" align="center">
-                <input
-                  id="bundle-active"
-                  type="checkbox"
-                  checked={form.isActive}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, isActive: e.target.checked }))
-                  }
-                  disabled={saving}
-                />
-                <label htmlFor="bundle-active">
-                  <Text size="sm">Bundle is active (visible to buyers)</Text>
-                </label>
-              </Row>
-            </Stack>
+            <Checkbox
+              checked={form.isActive}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, isActive: e.target.checked }))
+              }
+              disabled={saving}
+              label={BUNDLE_COPY.adminEditor.fields.activeLabel}
+            />
 
             <BundleItemsPicker
               value={form.productIds}
@@ -349,7 +359,7 @@ export function AdminBundleEditorView({
               disabled={saving}
               aria-busy={saving}
             >
-              {saving ? "Saving…" : isEdit ? "Save changes" : "Create bundle"}
+              {BUNDLE_COPY.adminEditor.saveButton(saving, isEdit)}
             </Button>
           </Row>
         </Stack>

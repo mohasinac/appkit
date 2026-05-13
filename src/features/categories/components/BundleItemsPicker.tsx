@@ -15,11 +15,12 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Badge, Button, Div, Input, Row, Stack, Text } from "../../../ui";
+import { Badge, Button, Checkbox, Div, Input, Row, Stack, Text } from "../../../ui";
 import {
   BUNDLE_MAX_ITEMS,
   BUNDLE_MIN_ITEMS,
 } from "../../../_internal/shared/features/categories/bundle-config";
+import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
 export interface BundleItemSearchResult {
   id: string;
@@ -125,7 +126,11 @@ export function BundleItemsPicker({
 
   const tooFew = value.length < minItems;
   const tooMany = value.length > maxItems;
-  const countLabel = `${value.length} selected · min ${minItems}, max ${maxItems}`;
+  const countLabel = BUNDLE_COPY.picker.selectedCount(
+    value.length,
+    minItems,
+    maxItems,
+  );
   const countVariant: "success" | "warning" | "danger" =
     tooFew || tooMany ? "warning" : "success";
 
@@ -133,7 +138,7 @@ export function BundleItemsPicker({
     <Stack gap="md">
       <Row gap="sm" align="center" justify="between" className="flex-wrap">
         <Text size="sm" weight="semibold">
-          Bundle members
+          {BUNDLE_COPY.picker.title}
         </Text>
         <Badge variant={countVariant}>{countLabel}</Badge>
       </Row>
@@ -142,6 +147,7 @@ export function BundleItemsPicker({
         <Div className="flex flex-wrap gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900">
           {value.map((id) => {
             const meta = metadata[id];
+            const label = meta?.title ?? id;
             return (
               <Row
                 key={id}
@@ -150,12 +156,12 @@ export function BundleItemsPicker({
                 className="rounded-full border border-zinc-300 bg-white px-3 py-1 text-xs dark:border-zinc-600 dark:bg-zinc-800"
               >
                 <Text size="xs" className="max-w-[200px] truncate">
-                  {meta?.title ?? id}
+                  {label}
                 </Text>
                 <Button
                   variant="ghost"
                   size="sm"
-                  aria-label={`Remove ${meta?.title ?? id}`}
+                  aria-label={BUNDLE_COPY.picker.removeAria(label)}
                   onClick={() => remove(id)}
                 >
                   ×
@@ -169,10 +175,10 @@ export function BundleItemsPicker({
       <Stack gap="sm">
         <Input
           type="search"
-          placeholder="Search products to add (type at least 2 characters)"
+          placeholder={BUNDLE_COPY.picker.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search bundle member products"
+          aria-label={BUNDLE_COPY.picker.searchAriaLabel}
         />
 
         {searchError && (
@@ -183,7 +189,7 @@ export function BundleItemsPicker({
 
         {isSearching && (
           <Text size="sm" color="muted">
-            Searching…
+            {BUNDLE_COPY.picker.searchingHint}
           </Text>
         )}
 
@@ -192,7 +198,7 @@ export function BundleItemsPicker({
           results.length === 0 &&
           !searchError && (
             <Text size="sm" color="muted">
-              No matches for &ldquo;{debouncedQuery}&rdquo;.
+              {BUNDLE_COPY.picker.noMatches(debouncedQuery)}
             </Text>
           )}
 
@@ -210,12 +216,11 @@ export function BundleItemsPicker({
                     isSelected ? "bg-blue-50 dark:bg-blue-950" : ""
                   } ${atCap ? "opacity-50" : ""}`}
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={isSelected}
                     disabled={atCap}
                     onChange={() => toggle(r.id)}
-                    aria-label={`Toggle ${r.title}`}
+                    aria-label={BUNDLE_COPY.picker.toggleAria(r.title)}
                   />
                   <Stack gap="xs" className="flex-1">
                     <Text size="sm" weight="medium">
