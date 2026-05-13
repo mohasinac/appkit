@@ -52,3 +52,6 @@ export type { CategoriesIndexListingProps } from "./CategoriesIndexListing";
 
 export { CategoryDetailTabs } from "./CategoryDetailTabs";
 export type { CategoryDetailTabsProps } from "./CategoryDetailTabs";
+
+export { BundlesListView } from "./BundlesListView";
+export type { BundlesListViewProps } from "./BundlesListView";

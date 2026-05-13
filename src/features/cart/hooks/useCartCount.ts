@@ -24,5 +24,10 @@ export function useCartCount(enabled = false) {
     enabled,
   });
 
-  return data?.itemCount ?? guestCount;
+  // When authenticated, the server is authoritative — never mix in the guest
+  // count, otherwise stale localStorage entries leak into the badge after
+  // login (the cart-merge clears the local store but `useGuestCart`'s React
+  // state holds the pre-clear snapshot until remount).
+  if (enabled) return data?.itemCount ?? 0;
+  return guestCount;
 }

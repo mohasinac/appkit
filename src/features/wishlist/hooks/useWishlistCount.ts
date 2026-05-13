@@ -1,19 +1,17 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
+import { apiClient } from "../../../http";
 import { useGuestWishlist } from "./useGuestWishlist";
-import { getGuestWishlistItems } from "../utils/guest-wishlist";
+import {
+  clearGuestWishlist,
+  getGuestWishlistItems,
+} from "../utils/guest-wishlist";
 import { WISHLIST_MAX } from "../../../constants/limits";
+import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
 
-const WISHLIST_API = "/api/wishlist";
 const WISHLIST_MERGE_API = "/api/wishlist/merge";
-const SYNC_MS = 60_000;
-
-function getSyncableItems() {
-  return getGuestWishlistItems().filter((i) =>
-    ["product", "auction", "preorder"].includes(i.type),
-  );
-}
 
 /** Custom event fired when the server reports the wishlist is full during a merge. */
 export const WISHLIST_CAP_EVENT = "appkit/wishlist/full";
@@ -25,111 +23,113 @@ export interface WishlistCapEventDetail {
 
 function dispatchCapEvent(detail: WishlistCapEventDetail) {
   if (typeof window === "undefined") return;
-  window.dispatchEvent(new CustomEvent<WishlistCapEventDetail>(WISHLIST_CAP_EVENT, { detail }));
+  window.dispatchEvent(
+    new CustomEvent<WishlistCapEventDetail>(WISHLIST_CAP_EVENT, { detail }),
+  );
 }
 
-function pushToFirestore() {
-  const items = getSyncableItems();
-  if (!items.length) return;
-  fetch(WISHLIST_MERGE_API, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items: items.map((i) => ({ productId: i.itemId })) }),
-  })
-    .then(async (res) => {
-      if (!res.ok) return;
-      const json = (await res.json().catch(() => null)) as
-        | { data?: { capReached?: boolean; skippedFull?: number; limit?: number; merged?: number } }
-        | null;
-      const data = json?.data;
-      if (data?.capReached) {
-        dispatchCapEvent({
-          limit: data.limit ?? WISHLIST_MAX,
-          current: data.limit ?? WISHLIST_MAX,
-          skippedFull: data.skippedFull ?? 0,
-        });
-      }
-    })
-    .catch(() => {});
+interface ServerWishlistResp {
+  items?: Array<unknown>;
+  total?: number;
+}
+
+async function fetchServerCount(userId: string): Promise<number> {
+  const data = await apiClient.get<ServerWishlistResp | null>(
+    WISHLIST_ENDPOINTS.BY_USER(userId),
+  );
+  return data?.total ?? data?.items?.length ?? 0;
 }
 
 /**
  * useWishlistCount
  *
- * Returns wishlist count always from localStorage — same source for guest and
- * authenticated users, so the badge is instant with no API round-trip.
+ * Server-authoritative count for the badge. For authenticated users this
+ * mirrors `/api/wishlist` via react-query (same `["wishlist", uid]` key as
+ * `useWishlist`), so mutations on the wishlist page propagate to the badge
+ * via standard query invalidation. For guests, falls back to the localStorage
+ * guest store.
  *
- * When userId changes from null → a real uid (login):
- *   1. Fetches Firestore wishlist and merges into localStorage.
- *   2. Pushes any guest-only localStorage items up to Firestore.
- *
- * While authenticated:
- *   - Syncs localStorage → Firestore every 60 s.
- *   - Also syncs when the user visits /wishlist or /cart.
+ * On login the hook pushes any guest items up to the server once, then clears
+ * the guest store so the two stores cannot drift.
  */
 export function useWishlistCount(userId: string | null | undefined) {
-  const { count, add } = useGuestWishlist();
-  const prevUserIdRef = useRef<string | null | undefined>(undefined);
-  const mergedRef = useRef(false);
+  const { count: guestCount } = useGuestWishlist();
+  const queryClient = useQueryClient();
+  const mergedRef = useRef<string | null>(null);
   const pathname = usePathname();
 
-  // Merge on login: pull Firestore → localStorage, push guest items → Firestore
+  const { data: serverTotal } = useQuery<number>({
+    queryKey: ["wishlist", userId],
+    queryFn: () => fetchServerCount(userId as string),
+    enabled: !!userId,
+    staleTime: 30_000,
+  });
+
+  // Merge on login: push guest items → server once, then clear local store.
   useEffect(() => {
-    const prev = prevUserIdRef.current;
-    prevUserIdRef.current = userId;
+    if (!userId) {
+      mergedRef.current = null;
+      return;
+    }
+    if (mergedRef.current === userId) return;
+    mergedRef.current = userId;
 
-    // Only fire on the null/undefined → real-uid transition
-    if (!userId || prev === userId) return;
-    if (mergedRef.current) return;
-    mergedRef.current = true;
+    const items = getGuestWishlistItems().filter((i) =>
+      ["product", "auction", "preorder"].includes(i.type),
+    );
 
-    async function merge() {
-      try {
-        // 1. Pull server wishlist into localStorage (handles new device login)
-        const resp = await fetch(WISHLIST_API);
-        if (resp.ok) {
-          const json = await resp.json() as {
-            data?: { items?: Array<{ productId: string; productTitle?: string; productImage?: string }> };
-          };
-          const firestoreItems = json.data?.items ?? [];
-          for (const item of firestoreItems) {
-            add(item.productId, "product", {
-              title: item.productTitle,
-              image: item.productImage,
-            });
-          }
-        }
-        // 2. Push any guest-only items up to Firestore
-        pushToFirestore();
-      } catch {
-        // Non-fatal — local count still shows correctly
-      }
+    const finish = () => {
+      clearGuestWishlist();
+      void queryClient.invalidateQueries({ queryKey: ["wishlist", userId] });
+    };
+
+    if (items.length === 0) {
+      finish();
+      return;
     }
 
-    void merge();
-  }, [userId, add]);
+    fetch(WISHLIST_MERGE_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: items.map((i) => ({ productId: i.itemId })),
+      }),
+    })
+      .then(async (res) => {
+        if (!res.ok) return;
+        const json = (await res.json().catch(() => null)) as
+          | {
+              data?: {
+                capReached?: boolean;
+                skippedFull?: number;
+                limit?: number;
+              };
+            }
+          | null;
+        const data = json?.data;
+        if (data?.capReached) {
+          dispatchCapEvent({
+            limit: data.limit ?? WISHLIST_MAX,
+            current: data.limit ?? WISHLIST_MAX,
+            skippedFull: data.skippedFull ?? 0,
+          });
+        }
+      })
+      .catch(() => {})
+      .finally(finish);
+  }, [userId, queryClient]);
 
-  // Reset merge flag on logout so next login re-runs the merge
-  useEffect(() => {
-    if (!userId) mergedRef.current = false;
-  }, [userId]);
-
-  // 60 s periodic sync: localStorage → Firestore
-  useEffect(() => {
-    if (!userId) return;
-    const id = setInterval(pushToFirestore, SYNC_MS);
-    return () => clearInterval(id);
-  }, [userId]);
-
-  // Extra sync when the user lands on /wishlist or /cart
+  // Refetch when the user lands on /wishlist or /cart so the badge matches
+  // whatever the page is about to render.
   useEffect(() => {
     if (!userId || !pathname) return;
     if (/\/(wishlist|cart)(\/|$)/.test(pathname)) {
-      pushToFirestore();
+      void queryClient.invalidateQueries({ queryKey: ["wishlist", userId] });
     }
-  }, [pathname, userId]);
+  }, [pathname, userId, queryClient]);
 
-  return count;
+  if (userId) return serverTotal ?? 0;
+  return guestCount;
 }
 
 /**

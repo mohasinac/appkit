@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { StoreListItem } from "../types";
-import { Heading, Span, Row, Button, RichText, Div } from "../../../ui";
+import { BaseListingCard, Heading, Span, Row, RichText, Div } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { normalizeRichTextHtml } from "../../../utils";
@@ -52,28 +52,16 @@ export function InteractiveStoreCard({
     >
       {/* Hover/selection checkbox */}
       {onSelect && (
-        <Button
-          type="button"
-          aria-label={isSelected ? "Deselect store" : "Select store"}
-          onClick={(e) => {
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={(e) => {
             e.preventDefault();
-            e.stopPropagation();
             onSelect(store.id, !isSelected);
           }}
-          className={[
-            "absolute top-2.5 left-2.5 z-10 h-6 w-6 rounded-md border-2 flex items-center justify-center bg-white/90 dark:bg-zinc-800/90 shadow-sm transition-all duration-150",
-            isSelected
-              ? "bg-[var(--appkit-color-primary,theme(colors.violet.600))] border-[var(--appkit-color-primary,theme(colors.violet.600))] text-white opacity-100"
-              : "border-zinc-300 dark:border-zinc-600",
-            selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100",
-          ].join(" ")}
-        >
-          {isSelected && (
-            <svg className="h-3.5 w-3.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2 6l3 3 5-5" />
-            </svg>
-          )}
-        </Button>
+          label={isSelected ? "Deselect store" : "Select store"}
+          position="top-2 left-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
       )}
 
       <Link href={href} className="flex flex-col flex-1 min-h-0">

@@ -6789,6 +6789,9 @@ export { AuctionDetailView } from "./features/products/index";
 export { AuctionDetailPageView } from "./features/auctions/index";
 // [SERVER-RSC]-Self-fetching index page view for auctions.
 export { AuctionsListView } from "./features/auctions/components/AuctionsListView";
+// [SERVER-RSC]-Self-fetching index page view for `/bundles` (categoryType:"bundle" rows).
+export { BundlesListView } from "./features/categories/components/BundlesListView";
+export type { BundlesListViewProps } from "./features/categories/components/BundlesListView";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AuctionsView - Component for auctions view.
 export { AuctionsView } from "./features/products/index";

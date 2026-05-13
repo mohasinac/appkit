@@ -52,12 +52,24 @@ export function PlaceBidFormClient({
     setSuccess(false);
     startTransition(async () => {
       try {
-        await onPlaceBid({ productId, bidAmount: amount });
+        const result = await onPlaceBid({ productId, bidAmount: amount });
+        if (
+          result &&
+          typeof result === "object" &&
+          "ok" in result &&
+          (result as { ok: boolean }).ok === false
+        ) {
+          const msg = (result as { error?: string }).error;
+          setError(msg || "Failed to place bid. Please try again.");
+          return;
+        }
         setSuccess(true);
         setBidAmount(String(amount + minBidIncrement));
       } catch (err: unknown) {
         setError(
-          err instanceof Error ? err.message : "Failed to place bid. Please try again.",
+          err instanceof Error && err.message
+            ? err.message
+            : "Failed to place bid. Please try again.",
         );
       }
     });

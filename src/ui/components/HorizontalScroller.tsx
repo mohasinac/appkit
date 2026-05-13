@@ -95,6 +95,8 @@ export function HorizontalScroller<T = unknown>({
 }: HorizontalScrollerProps<T>) {
   const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
   const [isPaused, setIsPaused] = useState(false);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(true);
 
   const internalRef = useRef<HTMLDivElement>(null);
   const containerRef = (externalRef ??
@@ -175,6 +177,20 @@ export function HorizontalScroller<T = unknown>({
     [containerRef],
   );
 
+  const updateExtents = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    // 1px tolerance for sub-pixel rounding
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 1) {
+      setAtStart(true);
+      setAtEnd(true);
+      return;
+    }
+    setAtStart(el.scrollLeft <= 1);
+    setAtEnd(el.scrollLeft >= maxScroll - 1);
+  }, [containerRef]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowRight") {
@@ -209,10 +225,16 @@ export function HorizontalScroller<T = unknown>({
       if (count > 0) {
         setItemWidth((w - (count - 1) * gap) / count);
       }
+      updateExtents();
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [perView, gap, containerRef]);
+  }, [perView, gap, containerRef, updateExtents]);
+
+  // Recompute extents when content size changes (itemWidth resolved, items count changes).
+  useEffect(() => {
+    updateExtents();
+  }, [updateExtents, itemWidth, itemCount]);
 
   const content = itemsMode ? (
     rows > 1 ? (
@@ -345,14 +367,16 @@ export function HorizontalScroller<T = unknown>({
       }
     : {};
 
-  const combinedOnScroll = loop
-    ? () => {
-        handleScrollLoop();
-        onScroll?.();
-      }
-    : onScroll;
+  const combinedOnScroll = () => {
+    if (loop) handleScrollLoop();
+    if (!loop) updateExtents();
+    onScroll?.();
+  };
 
   if (showArrows) {
+    const prevDisabled = !loop && atStart;
+    const nextDisabled = !loop && atEnd;
+    const arrowsHidden = !loop && atStart && atEnd; // no scrollable overflow
     return (
       <div
         className={["appkit-hscroller appkit-hscroller--with-arrows", className]
@@ -369,14 +393,18 @@ export function HorizontalScroller<T = unknown>({
             <div className="appkit-hscroller__fade appkit-hscroller__fade--right" />
           </>
         )}
+        {!arrowsHidden && (
         <button
           type="button"
           onClick={() => scrollBy(-1)}
           aria-label="Previous"
+          aria-disabled={prevDisabled || undefined}
+          disabled={prevDisabled}
           className={`appkit-hscroller__arrow appkit-hscroller__arrow--prev appkit-hscroller__arrow--${arrowSize}`}
         >
           <ChevronLeft className="w-4 h-4" />
         </button>
+        )}
         <div
           ref={containerRef}
           onScroll={combinedOnScroll}
@@ -386,14 +414,18 @@ export function HorizontalScroller<T = unknown>({
         >
           {content}
         </div>
+        {!arrowsHidden && (
         <button
           type="button"
           onClick={() => scrollBy(1)}
           aria-label="Next"
+          aria-disabled={nextDisabled || undefined}
+          disabled={nextDisabled}
           className={`appkit-hscroller__arrow appkit-hscroller__arrow--next appkit-hscroller__arrow--${arrowSize}`}
         >
           <ChevronRight className="w-4 h-4" />
         </button>
+        )}
       </div>
     );
   }

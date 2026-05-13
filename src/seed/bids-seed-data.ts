@@ -1,7 +1,7 @@
 /**
  * Bids Seed Data — Collectibles Edition
- * Realistic bid progressions for the 4 active/ended auctions in P17.
- * Upcoming auction (auction-beyblade-metal-fusion-signed) has 0 bids.
+ * Realistic bid progressions for every auction with bidCount > 0.
+ * Auctions with bidCount = 0 (upcoming / no-bid) are intentionally absent.
  * Buyer IDs from P15 users seed data.
  */
 
@@ -602,6 +602,89 @@ export const bidsSeedData: Partial<BidDocument>[] = [
     closedDaysAgo: 10,
     winningIndex: -1, // reserve not met — no winner
     slugPrefix: "bid-skyline-fail",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-nendoroid-miku-100-limited — ACTIVE, ends in 4h, 7 bids → current ₹11,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-nendoroid-miku-100-limited",
+    productTitle:
+      "Good Smile Company Nendoroid Hatsune Miku #100 (Original Release, Rare) — AUCTION",
+    amounts: [499900, 599900, 699900, 799900, 899900, 1049900, 1199900],
+    bidders: [
+      { id: "user-priya-patel", name: "Priya Patel", email: "priya.patel@gmail.com" },
+      { id: "user-divya-menon", name: "Divya Menon", email: "divya.menon@gmail.com" },
+      { id: "user-priya-patel", name: "Priya Patel", email: "priya.patel@gmail.com" },
+      { id: "user-pooja-sharma", name: "Pooja Sharma", email: "pooja.sharma@gmail.com" },
+      { id: "user-divya-menon", name: "Divya Menon", email: "divya.menon@gmail.com" },
+      { id: "user-meera-nair", name: "Meera Nair", email: "meera.nair@gmail.com" },
+      { id: "user-priya-patel", name: "Priya Patel", email: "priya.patel@gmail.com" },
+    ],
+    daysAgoForFirst: 9,
+    endsActive: true,
+    slugPrefix: "bid-miku-100",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-pokemon-mew-1st-edition-psa10 — ACTIVE, ends in 24h, 3 bids → current ₹1,49,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-pokemon-mew-1st-edition-psa10",
+    productTitle:
+      "Pokémon Mew #151 1st Edition — PSA 10 GEM MINT (AUCTION)",
+    amounts: [9999900, 12499900, 14999900],
+    bidders: [
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-siddharth-rao", name: "Siddharth Rao", email: "siddharth.rao@gmail.com" },
+    ],
+    daysAgoForFirst: 5,
+    endsActive: true,
+    slugPrefix: "bid-mew-1ed",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-yugioh-blue-eyes-lob-1st-psa9 — ACTIVE, ends in 72h, 8 bids → current ₹79,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-yugioh-blue-eyes-lob-1st-psa9",
+    productTitle:
+      "Yu-Gi-Oh! Blue-Eyes White Dragon LOB 1st Edition — PSA 9 MINT (AUCTION)",
+    amounts: [2999900, 3499900, 4249900, 4999900, 5749900, 6499900, 7249900, 7999900],
+    bidders: [
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-priya-singh", name: "Priya Singh", email: "priya.singh@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+      { id: "user-amit-sharma", name: "Amit Sharma", email: "amit.sharma@gmail.com" },
+      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
+      { id: "user-rohit-verma", name: "Rohit Verma", email: "rohit.verma@gmail.com" },
+      { id: "user-priya-singh", name: "Priya Singh", email: "priya.singh@gmail.com" },
+      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
+    ],
+    daysAgoForFirst: 7,
+    endsActive: true,
+    slugPrefix: "bid-bewd-lob",
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // auction-hot-wheels-redline-deora-japan — ACTIVE, ends in 36h, 5 bids → current ₹17,999
+  // ═══════════════════════════════════════════════════════════════════════════
+  ...buildBidLadder({
+    productId: "auction-hot-wheels-redline-deora-japan",
+    productTitle:
+      "Hot Wheels Redline Deora — Japan Issue (AUCTION)",
+    amounts: [899900, 1099900, 1299900, 1499900, 1799900],
+    bidders: [
+      { id: "user-varun-bhat", name: "Varun Bhat", email: "varun.bhat@gmail.com" },
+      { id: "user-kiran-reddy", name: "Kiran Reddy", email: "kiran.reddy@gmail.com" },
+      { id: "user-preeti-joshi", name: "Preeti Joshi", email: "preeti.joshi@gmail.com" },
+      { id: "user-varun-bhat", name: "Varun Bhat", email: "varun.bhat@gmail.com" },
+      { id: "user-meera-nair", name: "Meera Nair", email: "meera.nair@gmail.com" },
+    ],
+    daysAgoForFirst: 6,
+    endsActive: true,
+    slugPrefix: "bid-deora-jp",
   }),
 ];
 

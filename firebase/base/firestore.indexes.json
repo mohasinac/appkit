@@ -1430,7 +1430,7 @@
         },
         {
           "fieldPath": "priority",
-          "order": "ASCENDING"
+          "order": "DESCENDING"
         }
       ]
     },

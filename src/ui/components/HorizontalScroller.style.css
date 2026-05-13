@@ -60,6 +60,12 @@
 .appkit-hscroller__arrow:hover {
   background: var(--appkit-color-surface);
 }
+.appkit-hscroller__arrow:disabled,
+.appkit-hscroller__arrow[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 
 .appkit-hscroller__arrow--prev { left: 0; }
 .appkit-hscroller__arrow--next { right: 0; }

@@ -2,15 +2,17 @@
 import { useCallback } from "react";
 import { Package } from "lucide-react";
 import {
-  Button,
+  BaseListingCard,
   Caption,
   Span,
   StatusBadge,
   Text,
   TextLink,
+  Button,
 } from "../../../ui";
 import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
+import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const STATUS_MAP: Record<
   string,
@@ -113,37 +115,28 @@ export function MarketplaceOrderCard({
     [orderId, isSelected, onSelect],
   );
 
+  const longPress = useLongPress(() => onSelect?.(orderId, !isSelected));
+
   const isListVariant = variant === "list";
   const itemCount = order.items?.length ?? 0;
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
+      className={`group relative overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 ${isSelected ? "ring-2 ring-primary-500 dark:ring-primary-400" : ""} ${className}`}
+      onMouseDown={onSelect && !isSelected ? longPress.onMouseDown : undefined}
+      onMouseUp={onSelect && !isSelected ? longPress.onMouseUp : undefined}
+      onMouseLeave={onSelect && !isSelected ? longPress.onMouseLeave : undefined}
+      onTouchStart={onSelect && !isSelected ? longPress.onTouchStart : undefined}
+      onTouchEnd={onSelect && !isSelected ? longPress.onTouchEnd : undefined}
      data-section="marketplaceordercard-div-411">
-      {selectable && (
-        <Button
-          variant="ghost"
-          aria-label={isSelected ? "Deselect order" : "Select order"}
-          aria-pressed={isSelected}
-          onClick={handleSelect}
-          className={`absolute top-3 left-3 z-10 h-6 w-6 cursor-pointer rounded-md border-2 p-0 shadow-md transition-colors ${isSelected ? "border-primary bg-primary" : "border-zinc-400 bg-white/95 hover:border-primary dark:border-slate-500 dark:bg-slate-800/95"}`}
-        >
-          {isSelected && (
-            <svg
-              className="h-3.5 w-3.5 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={3}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-          )}
-        </Button>
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={handleSelect}
+          label={isSelected ? "Deselect order" : "Select order"}
+          position="top-2 left-2"
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
       )}
 
       <div

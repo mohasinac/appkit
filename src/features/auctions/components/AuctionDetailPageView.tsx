@@ -505,7 +505,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
               bidderId: String(b.userId ?? b.bidderId ?? ""),
               bidderName: (b.bidderName ?? b.userName) as string | undefined,
               amount: (typeof b.bidAmount === "number" ? b.bidAmount : typeof b.amount === "number" ? b.amount : 0),
-              placedAt: (b.createdAt ?? b.bidAt ?? "") as string,
+              placedAt: (b.bidDate ?? b.createdAt ?? b.bidAt ?? "") as string,
             }));
             return <CollapsibleBidHistory bids={bids} currency={currency} />;
           }}

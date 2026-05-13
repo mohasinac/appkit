@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "../../http";
 import {
   getCartOps,
@@ -68,6 +69,7 @@ async function replayWishlistOps(): Promise<void> {
 
 export function useSyncManager(userId: string | null | undefined): void {
   const isSyncing = useRef(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!userId) return; // Guest — keep ops in queue, don't sync
@@ -76,7 +78,17 @@ export function useSyncManager(userId: string | null | undefined): void {
       if (isSyncing.current) return;
       isSyncing.current = true;
       try {
+        const hadCartOps = getCartOps().length > 0;
+        const hadWishlistOps = getWishlistOps().length > 0;
         await Promise.all([replayCartOps(), replayWishlistOps()]);
+        if (hadCartOps) {
+          await queryClient.invalidateQueries({ queryKey: ["cart"] });
+        }
+        if (hadWishlistOps) {
+          await queryClient.invalidateQueries({
+            queryKey: ["wishlist", userId],
+          });
+        }
       } finally {
         isSyncing.current = false;
       }
@@ -87,5 +99,5 @@ export function useSyncManager(userId: string | null | undefined): void {
 
     const id = setInterval(sync, SYNC_INTERVAL_MS);
     return () => clearInterval(id);
-  }, [userId]);
+  }, [userId, queryClient]);
 }
