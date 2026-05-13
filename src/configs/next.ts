@@ -120,6 +120,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       "./node_modules/@grpc/**",
       // Transitive deps of google-gax / @grpc hoisted to root node_modules
       "./node_modules/protobufjs/**",
+      "./node_modules/@protobufjs/**",
       "./node_modules/object-hash/**",
       "./node_modules/proto3-json-serializer/**",
       "./node_modules/long/**",
@@ -128,6 +129,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       "./node_modules/retry-request/**",
       "./node_modules/duplexify/**",
       "./node_modules/uuid/**",
+      "./node_modules/lodash.camelcase/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {
