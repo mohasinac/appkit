@@ -4,7 +4,7 @@ import React, { useState, useCallback } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
+import { Button, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BLOG_STATUS_TABS } from "../constants/filter-tabs";
@@ -28,6 +28,10 @@ const SORT_OPTIONS = [
   { value: "title", label: "Title A–Z" },
 ];
 const STATUS_OPTIONS = ADMIN_BLOG_STATUS_TABS;
+const FEATURED_TABS = [
+  { id: "", label: "All" },
+  { id: "true", label: "Featured only" },
+] as const;
 
 interface AdminBlogResponse {
   posts?: unknown[];
@@ -176,28 +180,19 @@ export function AdminBlogView({ children, getRowHref, ...props }: AdminBlogViewP
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
-                <div className="flex flex-wrap gap-2">
-                  {STATUS_OPTIONS.map((tab) => (
-                    <button key={tab.id} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, status: tab.id === "All" ? "" : tab.id }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{tab.label}</button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Featured</p>
-                <div className="flex flex-wrap gap-2">
-                  {[{ label: "All", value: "" }, { label: "Featured only", value: "true" }].map((opt) => (
-                    <button key={opt.label} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, isFeatured: opt.value }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.isFeatured || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt.label}</button>
-                  ))}
-                </div>
-              </div>
+              <FilterChipGroup
+                label="Status"
+                tabs={STATUS_OPTIONS}
+                value={pendingFilters.status ?? ""}
+                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+              />
+              <FilterChipGroup
+                label="Featured"
+                tabs={FEATURED_TABS}
+                value={pendingFilters.isFeatured ?? ""}
+                onChange={(id) => setPendingFilters((p) => ({ ...p, isFeatured: id }))}
+                allId=""
+              />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">

@@ -4,9 +4,10 @@ import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { X, Pencil, Trash2 } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Alert, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
+import { Alert, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import {
@@ -29,7 +30,7 @@ const SORT_OPTIONS = [
   { value: "-price", label: "Price High" },
   { value: "price", label: "Price Low" },
 ];
-const STATUS_OPTIONS = ["All", "active", "draft", "archived", "sold"];
+const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 
 type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw";
 
@@ -436,30 +437,12 @@ export function SellerProductsView({
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
-                    Status
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {STATUS_OPTIONS.map((opt) => (
-                      <button
-                        key={opt}
-                        type="button"
-                        onClick={() =>
-                          setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))
-                        }
-                        className={[
-                          "rounded-full px-3 py-1 text-xs font-medium border transition-colors",
-                          (pendingFilters.status || "All") === opt
-                            ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
-                            : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)]",
-                        ].join(" ")}
-                      >
-                        {opt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <FilterChipGroup
+                  label="Status"
+                  tabs={STATUS_OPTIONS}
+                  value={pendingFilters.status ?? ""}
+                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+                />
               </div>
               <div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
                 <button

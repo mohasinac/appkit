@@ -7,6 +7,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import {
   Button,
   ConfirmDeleteModal,
+  FilterChipGroup,
   ListingToolbar,
   ListingViewShell,
   Pagination,
@@ -15,6 +16,7 @@ import {
 } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_NEWSLETTER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -31,7 +33,7 @@ const SORT_OPTIONS = [
   { value: "-subscribedAt", label: "Newest" },
   { value: "subscribedAt", label: "Oldest" },
 ];
-const STATUS_OPTIONS = ["All", "active", "unsubscribed"];
+const STATUS_OPTIONS = ADMIN_NEWSLETTER_STATUS_TABS;
 
 export interface AdminNewsletterViewProps extends ListingViewShellProps {}
 
@@ -232,17 +234,12 @@ export function AdminNewsletterView({ children, ...props }: AdminNewsletterViewP
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
-                  <div className="flex flex-wrap gap-2">
-                    {STATUS_OPTIONS.map((opt) => (
-                      <button key={opt} type="button"
-                        onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
-                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                      >{opt}</button>
-                    ))}
-                  </div>
-                </div>
+                <FilterChipGroup
+                  label="Status"
+                  tabs={STATUS_OPTIONS}
+                  value={pendingFilters.status ?? ""}
+                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+                />
               </div>
               <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
                 <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">

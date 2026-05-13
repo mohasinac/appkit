@@ -3,9 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_CART_OWNERSHIP_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -22,7 +23,7 @@ const SORT_OPTIONS = [
   { value: "-updatedAt", label: "Recently updated" },
   { value: "updatedAt", label: "Oldest" },
 ];
-const TYPE_OPTIONS = ["All", "guest", "auth"];
+const TYPE_OPTIONS = ADMIN_CART_OWNERSHIP_TABS;
 
 export interface AdminCartsViewProps extends ListingViewShellProps {}
 
@@ -180,17 +181,12 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Type</p>
-                <div className="flex flex-wrap gap-2">
-                  {TYPE_OPTIONS.map((opt) => (
-                    <button key={opt} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.type || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt}</button>
-                  ))}
-                </div>
-              </div>
+              <FilterChipGroup
+                label="Type"
+                tabs={TYPE_OPTIONS}
+                value={pendingFilters.type ?? ""}
+                onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
+              />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">

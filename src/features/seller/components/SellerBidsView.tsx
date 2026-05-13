@@ -3,8 +3,9 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Div, ListingToolbar, Pagination } from "../../../ui";
+import { Badge, Div, FilterChipGroup, ListingToolbar, Pagination } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -28,15 +29,10 @@ const SORT_OPTIONS = [
   { value: "-bidAmount", label: "Highest Bid" },
   { value: "bidAmount", label: "Lowest Bid" },
 ];
-const STATUS_OPTIONS = ["", "active", "outbid", "won", "lost", "cancelled"];
-const STATUS_LABELS: Record<string, string> = {
-  "": "All",
-  active: "Active",
-  outbid: "Outbid",
-  won: "Won",
-  lost: "Lost",
-  cancelled: "Cancelled",
-};
+const STATUS_OPTIONS = SELLER_BID_STATUS_TABS;
+const STATUS_LABELS: Record<string, string> = Object.fromEntries(
+  SELLER_BID_STATUS_TABS.map((t) => [t.id, t.label]),
+);
 
 const STATUS_BADGE: Record<string, "success" | "info" | "warning" | "danger" | "default"> = {
   active: "success",
@@ -244,25 +240,13 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
               </div>
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Bid Status</p>
-                <div className="flex flex-wrap gap-2">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <button
-                      key={opt || "all"}
-                      type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, status: opt }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                        (pendingFilters.status || "") === opt
-                          ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
-                          : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                      }`}
-                    >
-                      {STATUS_LABELS[opt] ?? opt}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <FilterChipGroup
+                label="Bid Status"
+                tabs={STATUS_OPTIONS}
+                value={pendingFilters.status ?? ""}
+                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+                allId=""
+              />
             </div>
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
               <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white transition-colors active:scale-[0.98]">

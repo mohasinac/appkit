@@ -53,6 +53,13 @@ export { Div } from "./components/Div";
 // --- Typography primitives ----------------------------------------------------
 export { Heading, Text, Label, Caption, Span } from "./components/Typography";
 
+// --- Filter chip group (SB10-C completion, S8 2026-05-13) --------------------
+export { FilterChipGroup } from "./components/FilterChipGroup";
+export type {
+  FilterChipGroupProps,
+  FilterChipGroupTab,
+} from "./components/FilterChipGroup";
+
 // --- Loading / Feedback -------------------------------------------------------
 export type { SpinnerProps } from "./components/Spinner";
 export { Spinner } from "./components/Spinner";
