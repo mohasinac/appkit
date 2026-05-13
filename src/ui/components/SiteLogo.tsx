@@ -48,7 +48,7 @@ export function SiteLogo({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 260 64"
+      viewBox="0 0 226 56"
       role="img"
       aria-label={title}
       className={`block w-auto ${className}`}
@@ -74,7 +74,7 @@ export function SiteLogo({
       )}
       <text
         x="0"
-        y="46"
+        y="44"
         fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
         fontWeight="800"
         fontSize="44"
@@ -84,11 +84,12 @@ export function SiteLogo({
         LetItRip
       </text>
       <text
-        x="218"
-        y="24"
+        x="184"
+        y="22"
         fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
         fontWeight="700"
-        fontSize="18"
+        fontSize="20"
+        letterSpacing="-0.5"
         fill={fill}
       >
         .in
