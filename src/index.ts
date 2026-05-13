@@ -6866,8 +6866,8 @@ export { PreOrderDetailView } from "./features/products/index";
 // PreOrdersView - Component for pre orders view.
 export { PreOrdersView } from "./features/products/index";
 // [SERVER-RSC]-Public listing for prize-draw products (SB4-F).
-export { PrizeDrawsListingView } from "./features/products/index";
-export type { PrizeDrawsListingViewProps } from "./features/products/index";
+export { PrizeDrawsListingView } from "./features/products/components/PrizeDrawsListingView";
+export type { PrizeDrawsListingViewProps } from "./features/products/components/PrizeDrawsListingView";
 // [CLIENT]-Client toolbar+grid for prize draws (SB4-F).
 export { PrizeDrawsIndexListing } from "./features/products/index";
 export type { PrizeDrawsIndexListingProps } from "./features/products/index";
@@ -6879,8 +6879,8 @@ export type {
   MarketplacePrizeDrawCardLabels,
 } from "./features/products/index";
 // [SERVER-RSC]-Public detail page for a prize-draw product (SB4-G).
-export { PrizeDrawDetailPageView } from "./features/products/index";
-export type { PrizeDrawDetailPageViewProps } from "./features/products/index";
+export { PrizeDrawDetailPageView } from "./features/products/components/PrizeDrawDetailPageView";
+export type { PrizeDrawDetailPageViewProps } from "./features/products/components/PrizeDrawDetailPageView";
 // [CLIENT]-Buy panel client for prize-draw detail (consent + add-to-cart) (SB4-G).
 export { PrizeDrawEntryActions } from "./features/products/index";
 export type { PrizeDrawEntryActionsProps } from "./features/products/index";

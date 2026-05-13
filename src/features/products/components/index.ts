@@ -40,10 +40,11 @@ export type {
 } from "./MarketplacePrizeDrawCard";
 export { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 export type { PrizeDrawsIndexListingProps } from "./PrizeDrawsIndexListing";
-export { PrizeDrawsListingView } from "./PrizeDrawsListingView";
-export type { PrizeDrawsListingViewProps } from "./PrizeDrawsListingView";
-export { PrizeDrawDetailPageView } from "./PrizeDrawDetailPageView";
-export type { PrizeDrawDetailPageViewProps } from "./PrizeDrawDetailPageView";
+// PrizeDrawsListingView + PrizeDrawDetailPageView are server components that
+// import productRepository (→ firebase-admin). Re-exporting them from this
+// client-mixed barrel pulls firebase-admin into client bundles via webpack/
+// Turbopack tree-shaking gaps (see CLAUDE.md "appkit Export Rules"). Consume
+// them directly from their file paths via the appkit main index instead.
 export { PrizeDrawEntryActions } from "./PrizeDrawEntryActions";
 export type { PrizeDrawEntryActionsProps } from "./PrizeDrawEntryActions";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";

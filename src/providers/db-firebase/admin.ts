@@ -1,9 +1,13 @@
 /**
  * Firebase Admin SDK singletons.
  *
- * Supports two init methods (checked in order):
+ * Supports three init methods (checked in order):
  *   1. `firebase-admin-key.json` in process.cwd() — development
- *   2. FIREBASE_ADMIN_PROJECT_ID / CLIENT_EMAIL / PRIVATE_KEY env vars — production
+ *   2. FIREBASE_ADMIN_PROJECT_ID / CLIENT_EMAIL / PRIVATE_KEY env vars — Vercel
+ *   3. Application Default Credentials — Firebase Functions / Cloud Run /
+ *      GCE / GKE. Detected via FUNCTION_TARGET / K_SERVICE / FIREBASE_CONFIG /
+ *      GOOGLE_APPLICATION_CREDENTIALS. Calls `initializeApp()` with no
+ *      credential — the SDK resolves credentials via the GCE metadata server.
  *
  * All getters are lazy — the SDK is not touched until first use.
  */
@@ -145,6 +149,35 @@ export function getAdminApp(): App {
         }),
         databaseURL: dbUrl,
       });
+    } else if (
+      // Application Default Credentials — Firebase Functions / Cloud Run / GCE.
+      // FUNCTION_TARGET is set by Gen 2 Functions; K_SERVICE by Cloud Run;
+      // FIREBASE_CONFIG is auto-injected by Firebase; GOOGLE_APPLICATION_CREDENTIALS
+      // is set when a JSON key path is provided. In any of these cases call
+      // `initializeApp()` with no credential — the SDK resolves creds from the
+      // metadata server.
+      process.env.FUNCTION_TARGET ||
+      process.env.K_SERVICE ||
+      process.env.FIREBASE_CONFIG ||
+      process.env.GOOGLE_APPLICATION_CREDENTIALS
+    ) {
+      const firebaseConfig = process.env.FIREBASE_CONFIG
+        ? (JSON.parse(process.env.FIREBASE_CONFIG) as {
+            projectId?: string;
+            databaseURL?: string;
+          })
+        : {};
+      const projectId =
+        firebaseConfig.projectId ?? process.env.GCLOUD_PROJECT ?? "";
+      const dbUrl =
+        firebaseConfig.databaseURL ??
+        process.env.FIREBASE_ADMIN_DATABASE_URL ??
+        process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
+        (projectId
+          ? `https://${projectId}-default-rtdb.firebaseio.com`
+          : undefined);
+
+      app = initializeApp(dbUrl ? { databaseURL: dbUrl } : undefined);
     } else {
       throw new Error(
         "@mohasinac/db-firebase: Firebase Admin credentials not found.\n" +

@@ -25,6 +25,13 @@ import {
   type CallableRequest,
   type HttpsOptions,
 } from "firebase-functions/v2/https";
+// Note: we intentionally pass secret NAMES (as strings) — not `defineSecret`
+// Param refs — to `onRequest({ secrets: [...] })`. firebase-functions v2
+// accepts both forms; the string form skips the firebase-tools Param-value
+// preflight that requires either an interactive prompt or a
+// functions/.env.<project> file (which would defeat the purpose of using
+// Secret Manager for the value). At runtime the SDK resolves the secret name
+// from Cloud Secret Manager directly and injects it into process.env.
 import { getAdminDb } from "../../../../../providers/db-firebase";
 import { serverLogger } from "../../../../../monitoring";
 import type {
@@ -187,6 +194,22 @@ export function bindHttps<TInput = unknown, TOutput = unknown>(
   options: BindHttpsOptions,
 ) {
   const { secretEnvVar, methods = ["POST"], ...httpsOptions } = options;
+
+  // Firebase Functions v2 requires secrets to be DECLARED via `secrets: [...]`
+  // in the `onRequest` options for the runtime to inject them into
+  // `process.env`. Just *reading* `process.env[secretEnvVar]` returns
+  // undefined unless the secret is bound here. Declare it via `defineSecret`
+  // so the deploy step provisions the binding (and developers see the secret
+  // listed in `firebase deploy` output).
+  if (secretEnvVar) {
+    const existing = Array.isArray(httpsOptions.secrets)
+      ? httpsOptions.secrets
+      : [];
+    if (!existing.includes(secretEnvVar)) {
+      httpsOptions.secrets = [...existing, secretEnvVar];
+    }
+  }
+
   return onRequest(httpsOptions, async (req, res) => {
     const ctx = buildContext(job);
     if (secretEnvVar) {
