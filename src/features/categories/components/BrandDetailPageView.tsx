@@ -1,6 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { categoriesRepository, productRepository } from "../../../repositories";
+import {
+  bundlesRepository,
+  categoriesRepository,
+  productRepository,
+} from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
 import { BrandDetailTabs } from "./BrandDetailTabs";
@@ -19,7 +23,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
 
   const brandName = brand?.name;
 
-  const [productsResult, auctionsResult, preOrdersResult] = await Promise.all([
+  const [productsResult, auctionsResult, preOrdersResult, prizeDrawsResult, allBundles] = await Promise.all([
     brandName
       ? productRepository
           .list({
@@ -50,7 +54,35 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           })
           .catch(() => null)
       : Promise.resolve(null),
+    brandName
+      ? productRepository
+          .list({
+            filters: `status==published,brand==${brandName},listingType==prize-draw`,
+            sorts: "-createdAt",
+            page: 1,
+            pageSize: 1,
+          })
+          .catch(() => null)
+      : Promise.resolve(null),
+    // bundles aren't keyed by brand directly; we fetch the recent set
+    // and let `BundlesByCategoryListing` filter client-side by brand.
+    brandName
+      ? bundlesRepository.findAll().catch(() => [])
+      : Promise.resolve([]),
   ]);
+
+  // Lower-bound brand filter client-side: by brand match on bundle items.
+  const brandLower = brandName?.toLowerCase();
+  const brandBundles = brandLower
+    ? (allBundles as any[]).filter(
+        (b) =>
+          (b as any).brand?.toLowerCase?.() === brandLower ||
+          (b as any).brandSlug?.toLowerCase?.() === brandLower ||
+          (b.bundleItems ?? []).some(
+            (it: any) => String(it?.brand ?? "").toLowerCase() === brandLower,
+          ),
+      )
+    : [];
 
   const coverImage = brand?.display?.coverImage;
   const hasCover = Boolean(coverImage);
@@ -60,9 +92,16 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
     products: productsResult?.total ?? brand?.metrics?.productCount ?? 0,
     auctions: auctionsResult?.total ?? brand?.metrics?.auctionCount ?? 0,
     preOrders: preOrdersResult?.total ?? 0,
+    prizeDraws: prizeDrawsResult?.total ?? 0,
+    bundles: brandBundles.length,
   };
 
-  const totalItems = counts.products + counts.auctions + counts.preOrders;
+  const totalItems =
+    counts.products +
+    counts.auctions +
+    counts.preOrders +
+    counts.prizeDraws +
+    counts.bundles;
 
   return (
     <Main>
@@ -164,6 +203,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
             <BrandDetailTabs
               brandName={brandName}
               initialProductsData={productsResult ?? undefined}
+              initialBundles={brandBundles as any}
               counts={counts}
             />
           ) : (

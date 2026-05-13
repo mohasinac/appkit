@@ -1,6 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { categoriesRepository, productRepository } from "../../../repositories";
+import {
+  bundlesRepository,
+  categoriesRepository,
+  productRepository,
+} from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section } from "../../../ui";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
@@ -15,7 +19,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .getCategoryBySlug(slug)
     .catch(() => undefined) as CategoryItem | undefined;
 
-  const [productsResult, auctionsCountResult, preOrdersCountResult, childCategories] = await Promise.all([
+  const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories] = await Promise.all([
     category?.id
       ? productRepository
           .list({
@@ -47,6 +51,19 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           .catch(() => null)
       : Promise.resolve(null),
     category?.id
+      ? productRepository
+          .list({
+            filters: `status==published,category==${category.id},listingType==prize-draw`,
+            sorts: "-createdAt",
+            page: 1,
+            pageSize: 1,
+          })
+          .catch(() => null)
+      : Promise.resolve(null),
+    category?.id
+      ? bundlesRepository.findByCategory(category.id).catch(() => [])
+      : Promise.resolve([]),
+    category?.id
       ? categoriesRepository.getChildren(category.id).catch(() => []) as Promise<CategoryItem[]>
       : Promise.resolve([] as CategoryItem[]),
   ]);
@@ -54,7 +71,9 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   const productCount = productsResult?.total ?? category?.metrics?.productCount ?? 0;
   const auctionCount = auctionsCountResult?.total ?? category?.metrics?.auctionCount ?? 0;
   const preOrderCount = preOrdersCountResult?.total ?? 0;
-  const totalCount = productCount + auctionCount + preOrderCount;
+  const prizeDrawCount = prizeDrawsCountResult?.total ?? 0;
+  const bundleCount = bundlesResult?.length ?? 0;
+  const totalCount = productCount + auctionCount + preOrderCount + prizeDrawCount + bundleCount;
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -165,7 +184,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             categorySlug={slug}
             categoryId={category?.id}
             initialProductsData={productsResult ?? undefined}
-            counts={{ products: productCount, auctions: auctionCount, preOrders: preOrderCount }}
+            initialBundles={bundlesResult ?? []}
+            counts={{
+              products: productCount,
+              auctions: auctionCount,
+              preOrders: preOrderCount,
+              prizeDraws: prizeDrawCount,
+              bundles: bundleCount,
+            }}
           />
         </Container>
       </Section>

@@ -24,3 +24,6 @@ export type {
 
 export { BundleDetailPageView } from "./BundleDetailPageView";
 export type { BundleDetailPageViewProps } from "./BundleDetailPageView";
+
+export { BundlesByCategoryListing } from "./BundlesByCategoryListing";
+export type { BundlesByCategoryListingProps } from "./BundlesByCategoryListing";

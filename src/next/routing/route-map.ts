@@ -40,6 +40,7 @@ export const DEFAULT_ROUTE_MAP = {
     STORE_AUCTIONS: (storeSlug: string) => `/stores/${storeSlug}/auctions`,
     STORE_PRE_ORDERS: (storeSlug: string) => `/stores/${storeSlug}/pre-orders`,
     STORE_PRIZE_DRAWS: (storeSlug: string) => `/stores/${storeSlug}/prize-draws`,
+    STORE_BUNDLES: (storeSlug: string) => `/stores/${storeSlug}/bundles`,
     STORE_REVIEWS: (storeSlug: string) => `/stores/${storeSlug}/reviews`,
     STORE_ABOUT: (storeSlug: string) => `/stores/${storeSlug}/about`,
     STORE_COUPONS: (storeSlug: string) => `/stores/${storeSlug}/coupons`,

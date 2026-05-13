@@ -32,3 +32,5 @@ export type { StorePreOrdersListingProps } from "./StorePreOrdersListing";
 export type { StorePreOrdersPageViewProps } from "./StorePreOrdersPageView";
 // StorePrizeDrawsPageView is an RSC — exported directly from src/index.ts, NOT here
 export type { StorePrizeDrawsPageViewProps } from "./StorePrizeDrawsPageView";
+// StoreBundlesPageView is an RSC — exported directly from src/index.ts, NOT here
+export type { StoreBundlesPageViewProps } from "./StoreBundlesPageView";
