@@ -32,6 +32,7 @@ import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
+import { BundleAddToCartCta } from "./BundleAddToCartCta";
 
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
@@ -46,11 +47,23 @@ const PLACEHOLDER_EMOJI = "📦" as const;
 export interface BundleDetailViewProps {
   bundle: CategoryDocument;
   members?: ProductDocument[];
+  /**
+   * Server-action callback wired by the consumer page (e.g. the
+   * `addBundleToCartAction` re-export). When supplied, the active "Add to
+   * cart" CTA renders via `<BundleAddToCartCta>`. When omitted, the legacy
+   * "coming soon" notice renders as a fallback so the page degrades
+   * gracefully for embeds that haven't been migrated yet.
+   */
+  onAddToCart?: (input: {
+    bundleSlug: string;
+    quantity: number;
+  }) => Promise<unknown>;
 }
 
 export function BundleDetailView({
   bundle,
   members = [],
+  onAddToCart,
 }: BundleDetailViewProps) {
   const memberCount = members.length || bundle.bundleProductIds?.length || 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
@@ -111,17 +124,25 @@ export function BundleDetailView({
                   </Stack>
                 )}
 
-                <Div
-                  className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-                  aria-live="polite"
-                >
-                  <Text weight="semibold" className="mb-1 block">
-                    {BUNDLE_COPY.detail.ctaDisabled}
-                  </Text>
-                  <Text size="sm" color="muted">
-                    {BUNDLE_COPY.detail.ctaHint}
-                  </Text>
-                </Div>
+                {onAddToCart ? (
+                  <BundleAddToCartCta
+                    bundleSlug={bundle.slug}
+                    outOfStock={stock === "out_of_stock"}
+                    onAddToCart={onAddToCart}
+                  />
+                ) : (
+                  <Div
+                    className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50 p-4 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                    aria-live="polite"
+                  >
+                    <Text weight="semibold" className="mb-1 block">
+                      {BUNDLE_COPY.detail.ctaDisabled}
+                    </Text>
+                    <Text size="sm" color="muted">
+                      {BUNDLE_COPY.detail.ctaHint}
+                    </Text>
+                  </Div>
+                )}
               </Stack>
             </Row>
 

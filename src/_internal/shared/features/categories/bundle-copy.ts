@@ -33,9 +33,29 @@ export const BUNDLE_COPY = {
     priceFallback: "—",
     itemCount: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
     emptyMembers: "Bundle contents are being updated. Check back shortly.",
+    // SB-UNI-5 2026-05-13 — CTA functional. Disabled-CTA copy retained for
+    // consumers that opt out of the wired CTA (the new client island reads
+    // the active strings below).
     ctaDisabled: "Add to cart coming soon",
     ctaHint:
       "Bundle checkout is being wired up — buyers can browse contents now and the buy flow ships in the next release.",
+    ctaAddToCart: "Add bundle to cart",
+    ctaAdding: "Adding…",
+    ctaOutOfStock: "Currently out of stock",
+    ctaSuccess: "Bundle added to cart",
+    ctaSignInRequired: "Sign in to add to cart",
+    ctaErrorFallback: "Couldn't add bundle to cart",
+    qtyLabel: "Qty",
+    qtyAriaLabel: "Bundle quantity",
+  },
+
+  // Order detail bundle grouping (SB-UNI-5)
+  orderDetail: {
+    bundleHeader: (name: string) => `Bundle: ${name}`,
+    bundleItemCount: (n: number) =>
+      `Includes ${n} item${n !== 1 ? "s" : ""}`,
+    expandLabel: "Show items",
+    collapseLabel: "Hide items",
   },
 
   // Featured strip

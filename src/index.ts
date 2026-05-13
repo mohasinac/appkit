@@ -6817,6 +6817,9 @@ export type { BundlesListViewProps } from "./features/categories/components/Bund
 // S-SBUNI-3 2026-05-13 — public bundle detail view (rebuilt after SB-UNI-V deletion).
 export { BundleDetailView } from "./features/categories/components/BundleDetailView";
 export type { BundleDetailViewProps } from "./features/categories/components/BundleDetailView";
+// S-SBUNI-5 2026-05-13 — functional Add-to-cart CTA client island.
+export { BundleAddToCartCta } from "./features/categories/components/BundleAddToCartCta";
+export type { BundleAddToCartCtaProps } from "./features/categories/components/BundleAddToCartCta";
 // CategoryBundlesListing is also re-exported lower in this file (line ~8871);
 // the canonical export lives there next to BUNDLE_MIN_ITEMS / BUNDLE_MAX_ITEMS.
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
@@ -8882,6 +8885,20 @@ export {
   PRODUCT_FEATURE_CARD_MAX_VISIBLE,
   PRODUCT_FEATURE_QUERY_STALE_MS,
 } from "./features/products/constants/product-features.constants";
+// SB10-A listing tab constants
+export {
+  CATEGORY_PAGE_TABS,
+  STORE_PAGE_TABS,
+  SELLER_LISTING_TABS,
+  SEARCH_RESULT_TABS,
+} from "./features/products/constants/listing-tabs";
+export type {
+  ListingTab,
+  CategoryTabId,
+  StoreTabId,
+  SellerListingTabId,
+  SearchTabId,
+} from "./features/products/constants/listing-tabs";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 // SB-UNI-D + V — BundleDocument + bundlesRepository + features/bundles/

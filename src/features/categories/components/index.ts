@@ -59,6 +59,10 @@ export type { BundlesListViewProps } from "./BundlesListView";
 export { BundleDetailView } from "./BundleDetailView";
 export type { BundleDetailViewProps } from "./BundleDetailView";
 
+// S-SBUNI-5 2026-05-13 — functional Add-to-cart CTA client island.
+export { BundleAddToCartCta } from "./BundleAddToCartCta";
+export type { BundleAddToCartCtaProps } from "./BundleAddToCartCta";
+
 // S-SBUNI-4 2026-05-13 — multi-select product picker for bundle editor.
 export {
   BundleItemsPicker,
