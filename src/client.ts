@@ -400,9 +400,11 @@ export {
   ALLOWED_TYPES_LABEL,
   MIME_TO_EXT,
   PDF_MAGIC,
+  VIDEO_CONVERSION_HINTS,
   classifyMime,
   isAllowedMime,
   maxBytesFor,
+  getConversionHint,
 } from "./_internal/shared/media/limits";
 export type {
   MediaKind,

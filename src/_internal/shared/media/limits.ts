@@ -100,3 +100,19 @@ export function maxBytesFor(mime: string): number | null {
 }
 
 export const PDF_MAGIC = "%PDF-";
+
+// Known-but-rejected video formats. Mapping returns a user-actionable
+// conversion hint so the upload error can say "convert your .avi to .mp4"
+// rather than the generic "invalid type" response.
+export const VIDEO_CONVERSION_HINTS: Record<string, string> = {
+  "video/x-msvideo": "AVI is not supported — please convert to MP4 or WebM",
+  "video/avi": "AVI is not supported — please convert to MP4 or WebM",
+  "video/MP2T": "M2TS/TS streams are not supported — please convert to MP4",
+  "video/mp2t": "M2TS/TS streams are not supported — please convert to MP4",
+  "video/x-flv": "FLV is not supported — please convert to MP4",
+  "video/x-ms-wmv": "WMV is not supported — please convert to MP4",
+};
+
+export function getConversionHint(mime: string): string | null {
+  return VIDEO_CONVERSION_HINTS[mime] ?? null;
+}
