@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
+import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
 
-type TabId = "products" | "auctions" | "pre-orders";
+type TabId = "products" | "auctions" | "pre-orders" | "prize-draws";
 
 function tabLabel(label: string, count?: number) {
   if (!count) return label;
@@ -19,6 +20,7 @@ export interface CategoryDetailTabsProps {
     products?: number;
     auctions?: number;
     preOrders?: number;
+    prizeDraws?: number;
   };
 }
 
@@ -29,6 +31,7 @@ export function CategoryDetailTabs({ categorySlug, categoryId, initialProductsDa
     { id: "products", label: tabLabel("Products", counts?.products) },
     { id: "auctions", label: tabLabel("Auctions", counts?.auctions) },
     { id: "pre-orders", label: tabLabel("Pre-Orders", counts?.preOrders) },
+    { id: "prize-draws", label: tabLabel("Prize Draws", counts?.prizeDraws) },
   ];
 
   return (
@@ -64,6 +67,9 @@ export function CategoryDetailTabs({ categorySlug, categoryId, initialProductsDa
       )}
       {activeTab === "pre-orders" && (
         <PreOrdersIndexListing categorySlug={categorySlug} />
+      )}
+      {activeTab === "prize-draws" && (
+        <PrizeDrawsIndexListing categorySlug={categorySlug} />
       )}
     </div>
   );

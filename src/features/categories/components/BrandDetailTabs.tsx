@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { CategoryProductsListing } from "./CategoryProductsListing";
 import { AuctionsIndexListing } from "../../products/components/AuctionsIndexListing";
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
+import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
 
-type TabId = "products" | "auctions" | "pre-orders";
+type TabId = "products" | "auctions" | "pre-orders" | "prize-draws";
 
 export interface BrandDetailTabsProps {
   brandName: string;
@@ -13,6 +14,7 @@ export interface BrandDetailTabsProps {
     products?: number;
     auctions?: number;
     preOrders?: number;
+    prizeDraws?: number;
   };
 }
 
@@ -28,6 +30,7 @@ export function BrandDetailTabs({ brandName, initialProductsData, counts }: Bran
     { id: "products", label: tabLabel("Products", counts?.products) },
     { id: "auctions", label: tabLabel("Auctions", counts?.auctions) },
     { id: "pre-orders", label: tabLabel("Pre-Orders", counts?.preOrders) },
+    { id: "prize-draws", label: tabLabel("Prize Draws", counts?.prizeDraws) },
   ];
 
   return (
@@ -62,6 +65,9 @@ export function BrandDetailTabs({ brandName, initialProductsData, counts }: Bran
       )}
       {activeTab === "pre-orders" && (
         <PreOrdersIndexListing brandName={brandName} />
+      )}
+      {activeTab === "prize-draws" && (
+        <PrizeDrawsIndexListing brandName={brandName} />
       )}
     </div>
   );

@@ -31,12 +31,15 @@ export interface PrizeDrawsIndexListingProps {
   initialData?: any;
   categorySlug?: string;
   brandName?: string;
+  /** When set, the listing is hard-scoped to this store id — overrides URL `storeId`. */
+  storeId?: string;
 }
 
 export function PrizeDrawsIndexListing({
   initialData,
   categorySlug,
   brandName,
+  storeId: forcedStoreId,
 }: PrizeDrawsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -121,7 +124,7 @@ export function PrizeDrawsIndexListing({
     brand: brandName || table.get("brand") || undefined,
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
-    storeId: table.get("storeId") || undefined,
+    storeId: forcedStoreId || table.get("storeId") || undefined,
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),

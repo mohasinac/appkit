@@ -44,7 +44,7 @@ export async function StoreDetailLayoutView({
 
   const storeId = (store as Record<string, any>)?.id;
 
-  const [productsCount, auctionsCount, preOrdersCount] = storeId
+  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount] = storeId
     ? await Promise.all([
         productRepository
           .list({ filters: `storeId==${storeId},status==published,listingType==standard`, page: 1, pageSize: 1 })
@@ -58,13 +58,18 @@ export async function StoreDetailLayoutView({
           .list({ filters: `storeId==${storeId},status==published,listingType==pre-order`, page: 1, pageSize: 1 })
           .then((r) => r.total)
           .catch(() => 0),
+        productRepository
+          .list({ filters: `storeId==${storeId},status==published,listingType==prize-draw`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
       ])
-    : [0, 0, 0];
+    : [0, 0, 0, 0];
 
   const tabs = [
     { value: "products", label: tabLabel("Products", productsCount), href: String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug)) },
     { value: "auctions", label: tabLabel("Auctions", auctionsCount), href: String(ROUTES.PUBLIC.STORE_AUCTIONS(storeSlug)) },
     { value: "pre-orders", label: tabLabel("Pre-Orders", preOrdersCount), href: String(ROUTES.PUBLIC.STORE_PRE_ORDERS(storeSlug)) },
+    { value: "prize-draws", label: tabLabel("Prize Draws", prizeDrawsCount), href: String(ROUTES.PUBLIC.STORE_PRIZE_DRAWS(storeSlug)) },
     { value: "coupons", label: "Coupons", href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
     { value: "reviews", label: "Reviews", href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },

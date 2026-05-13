@@ -8229,6 +8229,9 @@ export { StoreProductsPageView } from "./features/stores/components/StoreProduct
 export { StoreAuctionsPageView } from "./features/stores/components/StoreAuctionsPageView";
 export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsPageView";
 export { StorePreOrdersPageView } from "./features/stores/components/StorePreOrdersPageView";
+// [SERVER-RSC]-Public store → Prize Draws tab (SB7-D).
+export { StorePrizeDrawsPageView } from "./features/stores/components/StorePrizeDrawsPageView";
+export type { StorePrizeDrawsPageViewProps } from "./features/stores/components/StorePrizeDrawsPageView";
 export { StorePreOrdersListing } from "./features/stores/components/StorePreOrdersListing";
 export type { StorePreOrdersListingProps } from "./features/stores/components/StorePreOrdersListing";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
