@@ -6,7 +6,12 @@
  *
  * Notable defaults:
  * - `serverExternalPackages` includes firebase-admin + GCP deps
- * - `outputFileTracingIncludes` forces firebase-admin/lib/database/** into Lambda bundles
+ * - `outputFileTracingIncludes` uses broad org-level globs (**) so every
+ *   current and future @google-cloud/* subpackage (incl. build/protos/**) is
+ *   included in Vercel Lambda bundles without needing per-package entries.
+ * - Consumer additions to the same route key are MERGED (union), not replaced.
+ * - `images.remotePatterns` restricts to Firebase Storage + localhost; consumer
+ *   can append additional patterns via `images.remotePatterns`.
  * - `experimental.serverActions.bodySizeLimit` set to "4mb"
  * - Optional `IgnorePlugin` for optional native deps (request, fast-crc32c)
  *
@@ -95,25 +100,48 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   };
 
   // Next 16 moved `outputFileTracingIncludes` out of `experimental` to the
-  // top-level config. Keep the same firebase-admin/lib/database forcing the
-  // old position used, and merge consumer overrides if provided.
+  // top-level config. Use broad org-level globs (**) so protos/, build/cjs/,
+  // build/esm/, and any future subpackages are always included — no more
+  // per-subdirectory entries that silently miss e.g. build/protos/admin_v1.json.
+  // Consumer additions for the same route key are MERGED (array union), not replaced.
   const defaultOutputFileTracingIncludes: Record<string, string[]> = {
     "/api/**": [
-      "./node_modules/firebase-admin/lib/database/**",
-      "./node_modules/firebase-admin/lib/esm/database/**",
-      "./node_modules/firebase-admin/lib/firestore/**",
-      "./node_modules/firebase-admin/lib/esm/firestore/**",
-      "./node_modules/firebase-admin/lib/auth/**",
-      "./node_modules/firebase-admin/lib/esm/auth/**",
-      "./node_modules/firebase-admin/lib/app/**",
-      "./node_modules/firebase-admin/lib/esm/app/**",
-      "./node_modules/@google-cloud/firestore/build/src/**",
+      // Firebase Admin — entire package (lib/ + esm/, all sub-SDKs)
+      "./node_modules/firebase-admin/**",
+      // All @google-cloud packages: firestore (incl. protos/**), storage, paginator, etc.
+      "./node_modules/@google-cloud/**",
+      // Auth libraries used by Firebase Admin token verification
+      "./node_modules/google-auth-library/**",
+      "./node_modules/google-gax/**",
+      "./node_modules/gtoken/**",
+      "./node_modules/jws/**",
+      "./node_modules/gaxios/**",
+      // gRPC transport layer used by @google-cloud/firestore via google-gax
+      "./node_modules/@grpc/**",
+      // Transitive deps of google-gax / @grpc hoisted to root node_modules
+      "./node_modules/protobufjs/**",
+      "./node_modules/object-hash/**",
+      "./node_modules/proto3-json-serializer/**",
+      "./node_modules/long/**",
+      "./node_modules/node-fetch/**",
+      "./node_modules/abort-controller/**",
+      "./node_modules/retry-request/**",
+      "./node_modules/duplexify/**",
+      "./node_modules/uuid/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {
     ...defaultOutputFileTracingIncludes,
-    ...(consumerOutputFileTracingIncludes as Record<string, string[]>),
   };
+  for (const [route, patterns] of Object.entries(
+    consumerOutputFileTracingIncludes as Record<string, string[]>,
+  )) {
+    const existing = mergedOutputFileTracingIncludes[route] ?? [];
+    mergedOutputFileTracingIncludes[route] = [
+      ...existing,
+      ...patterns.filter((p) => !existing.includes(p)),
+    ];
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function mergedWebpack(config: any, ctx: any): any {
@@ -143,13 +171,33 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     return consumerWebpack ? consumerWebpack(config, ctx) : config;
   }
 
+  // Default remotePatterns: Firebase Storage + localhost only.
+  // External URLs are watermarked via /api/media/ext — they must never be
+  // loaded directly by next/image. Consumer can append additional patterns.
+  const defaultRemotePatterns = [
+    { protocol: "https", hostname: "firebasestorage.googleapis.com" },
+    { protocol: "https", hostname: "*.firebasestorage.googleapis.com" },
+    { protocol: "http", hostname: "localhost" },
+    { protocol: "http", hostname: "127.0.0.1" },
+  ];
+  const consumerImages = (override.images as Record<string, unknown>) ?? {};
+  const consumerRemotePatterns = (consumerImages.remotePatterns as unknown[]) ?? [];
+  const mergedRemotePatterns = [
+    ...defaultRemotePatterns,
+    ...consumerRemotePatterns.filter(
+      (p) =>
+        !defaultRemotePatterns.some(
+          (d) =>
+            (d as Record<string, unknown>).hostname ===
+            (p as Record<string, unknown>).hostname,
+        ),
+    ),
+  ];
+
   return {
     images: {
-      remotePatterns: [
-        { protocol: "https", hostname: "**" },
-        { protocol: "http", hostname: "**" },
-      ],
-      ...((override.images as Record<string, unknown>) ?? {}),
+      ...consumerImages,
+      remotePatterns: mergedRemotePatterns,
     },
     ...rest,
     serverExternalPackages: mergedExternal,
