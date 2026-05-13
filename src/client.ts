@@ -398,6 +398,8 @@ export {
   assertNever,
 } from "./_internal/shared/listing-types/capabilities";
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
+export { LISTING_TYPE_REGISTRY, pluginFor } from "./_internal/shared/listing-types/_registry";
+export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
 
 // Media upload limits — shared by client uploaders + server sign/finalize routes.
 export {
