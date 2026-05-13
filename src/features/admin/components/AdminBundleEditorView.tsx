@@ -22,6 +22,7 @@ import {
   Input,
   Row,
   Section,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -31,8 +32,26 @@ import {
   defaultBundleItemsFetch,
   type BundleItemSearchResult,
 } from "../../categories/components/BundleItemsPicker";
+import { BundleDynamicRuleEditor } from "../../categories/components/BundleDynamicRuleEditor";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
-import type { CategoryDocument } from "../../categories/schemas";
+import type { BundleQueryRule, CategoryDocument } from "../../categories/schemas";
+
+type DynamicRule = Extract<BundleQueryRule, { type: "dynamic" }>;
+
+const DEFAULT_DYNAMIC_RULE: DynamicRule = {
+  type: "dynamic",
+  filter: {},
+  orderBy: "createdAt-desc",
+  limit: 6,
+};
+
+const RULE_TYPE_OPTIONS: Array<{
+  label: string;
+  value: "static" | "dynamic";
+}> = [
+  { label: BUNDLE_COPY.adminEditor.ruleTypeStatic, value: "static" },
+  { label: BUNDLE_COPY.adminEditor.ruleTypeDynamic, value: "dynamic" },
+];
 
 export interface AdminBundleEditorViewProps {
   /** When set, the form loads an existing bundle; otherwise it runs as "new". */
@@ -47,7 +66,9 @@ interface FormState {
   name: string;
   description: string;
   priceRupees: string;
+  ruleType: "static" | "dynamic";
   productIds: string[];
+  dynamicRule: DynamicRule;
   isActive: boolean;
   coverImage: string;
 }
@@ -56,7 +77,9 @@ const EMPTY_FORM: FormState = {
   name: "",
   description: "",
   priceRupees: "",
+  ruleType: "static",
   productIds: [],
+  dynamicRule: DEFAULT_DYNAMIC_RULE,
   isActive: true,
   coverImage: "",
 };
@@ -64,6 +87,7 @@ const EMPTY_FORM: FormState = {
 function bundleToForm(bundle: CategoryDocument | null): FormState {
   if (!bundle) return EMPTY_FORM;
   const rule = bundle.bundleQueryRule;
+  const isDynamic = rule?.type === "dynamic";
   const fromRule = rule?.type === "static" ? rule.productIds : [];
   const idsFromMirror = bundle.bundleProductIds ?? [];
   return {
@@ -73,7 +97,9 @@ function bundleToForm(bundle: CategoryDocument | null): FormState {
       typeof bundle.bundlePriceInPaise === "number"
         ? String(Math.round(bundle.bundlePriceInPaise / 100))
         : "",
+    ruleType: isDynamic ? "dynamic" : "static",
     productIds: fromRule.length ? fromRule : idsFromMirror,
+    dynamicRule: isDynamic ? (rule as DynamicRule) : DEFAULT_DYNAMIC_RULE,
     isActive: bundle.isActive !== false,
     coverImage: bundle.display?.coverImage ?? "",
   };
@@ -144,15 +170,27 @@ export function AdminBundleEditorView({
 
     setSaving(true);
     try {
+      // SB-UNI-5 2026-05-13 — static vs dynamic rule branching.
+      const bundleQueryRule: BundleQueryRule =
+        form.ruleType === "dynamic"
+          ? form.dynamicRule
+          : {
+              type: "static",
+              productIds: form.productIds,
+            };
+      // For static rules, the mirror equals the picker selection. For dynamic
+      // rules, the Function resolver writes the mirror; we send an empty list
+      // on create + leave it untouched on update so we don't clobber the
+      // resolver's cache.
+      const bundleProductIds =
+        form.ruleType === "static" ? form.productIds : [];
+
       const body = {
         name: form.name.trim(),
         description: form.description.trim() || undefined,
         bundlePriceInPaise: priceInPaise,
-        bundleQueryRule: {
-          type: "static" as const,
-          productIds: form.productIds,
-        },
-        bundleProductIds: form.productIds,
+        bundleQueryRule,
+        bundleProductIds,
         display: form.coverImage.trim()
           ? { coverImage: form.coverImage.trim() }
           : undefined,
@@ -344,12 +382,39 @@ export function AdminBundleEditorView({
               label={BUNDLE_COPY.adminEditor.fields.activeLabel}
             />
 
-            <BundleItemsPicker
-              value={form.productIds}
-              onChange={(next) => setForm((f) => ({ ...f, productIds: next }))}
-              fetchProducts={fetchProducts}
-              initialMetadata={metadata}
-            />
+            <Stack gap="xs">
+              <Text size="sm" weight="semibold">
+                {BUNDLE_COPY.adminEditor.ruleTypeLabel}
+              </Text>
+              <Select<"static" | "dynamic">
+                options={RULE_TYPE_OPTIONS}
+                value={form.ruleType}
+                onValueChange={(next) =>
+                  setForm((f) => ({ ...f, ruleType: next }))
+                }
+                disabled={saving}
+                aria-label={BUNDLE_COPY.adminEditor.ruleTypeLabel}
+              />
+            </Stack>
+
+            {form.ruleType === "static" ? (
+              <BundleItemsPicker
+                value={form.productIds}
+                onChange={(next) =>
+                  setForm((f) => ({ ...f, productIds: next }))
+                }
+                fetchProducts={fetchProducts}
+                initialMetadata={metadata}
+              />
+            ) : (
+              <BundleDynamicRuleEditor
+                value={form.dynamicRule}
+                onChange={(next) =>
+                  setForm((f) => ({ ...f, dynamicRule: next }))
+                }
+                disabled={saving}
+              />
+            )}
           </Stack>
 
           <Row gap="sm" align="center" justify="end">

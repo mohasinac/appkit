@@ -63,6 +63,10 @@ export type { BundleDetailViewProps } from "./BundleDetailView";
 export { BundleAddToCartCta } from "./BundleAddToCartCta";
 export type { BundleAddToCartCtaProps } from "./BundleAddToCartCta";
 
+// S-SBUNI-5 2026-05-13 — admin dynamic-rule editor (paired with BundleItemsPicker).
+export { BundleDynamicRuleEditor } from "./BundleDynamicRuleEditor";
+export type { BundleDynamicRuleEditorProps } from "./BundleDynamicRuleEditor";
+
 // S-SBUNI-4 2026-05-13 — multi-select product picker for bundle editor.
 export {
   BundleItemsPicker,

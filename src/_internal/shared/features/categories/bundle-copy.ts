@@ -104,6 +104,22 @@ export const BUNDLE_COPY = {
       coverImageLabel: "Cover image URL",
       activeLabel: "Bundle is active (visible to buyers)",
     },
+    // SB-UNI-5 2026-05-13 — static/dynamic rule-type toggle.
+    ruleTypeLabel: "Bundle members source",
+    ruleTypeStatic: "Hand-picked products",
+    ruleTypeDynamic: "Dynamic query (auto-resolves)",
+    dynamic: {
+      title: "Dynamic query rule",
+      hint: "onProductStockChange resolves bundleProductIds; bundleQueryResolvedAt tracks the last refresh.",
+      fields: {
+        categorySlug: "Category slug filter",
+        brandSlug: "Brand slug filter",
+        tags: "Tags (comma-separated)",
+        listingType: "Listing type",
+        orderBy: "Order by",
+        limit: "Limit",
+      },
+    },
     errors: {
       nameRequired: "Bundle name is required",
       priceInvalid: "Bundle price must be a positive number (rupees)",
