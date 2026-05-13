@@ -1,14 +1,16 @@
-/**
- * Trigger handler: stores/{id} onWrite — currently a no-op. The previous
- * implementation synced an external search index that has since been removed.
- * The handler stays so the binding remains canonical and can be reactivated
- * without touching the consumer's functions/src/index.ts.
- */
-
 import type { FirestoreTriggerHandler } from "../runtime/types";
+import { handleStoreWrite, type StoreDoc } from "../core/onStoreWrite";
 
-type StoreDoc = Record<string, unknown>;
-
-export const onStoreWriteHandler: FirestoreTriggerHandler<StoreDoc, StoreDoc> = async () => {
-  // Intentionally empty — search provider removed; Firestore queries handle search now.
+export const onStoreWriteHandler: FirestoreTriggerHandler<StoreDoc, StoreDoc> = async (
+  event,
+  ctx,
+) => {
+  await handleStoreWrite(
+    {
+      storeId: event.params.storeId as string,
+      before: event.before,
+      after: event.after,
+    },
+    ctx,
+  );
 };

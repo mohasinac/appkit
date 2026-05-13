@@ -1,4 +1,5 @@
 export * from "./handlers/index";
+export * from "./core/index";
 export * from "./runtime/types";
 export {
   bindSchedule,
