@@ -9035,6 +9035,20 @@ export type { SublistingCategoryOgData } from "./_internal/server/features/subli
 export { renderPrivateProfileOgImage, renderUserProfileOgImage } from "./_internal/server/features/profile/og";
 export type { UserProfileOgData } from "./_internal/server/features/profile/og";
 
+// Listing-type capability registry — SB-UNI X1.
+export {
+  LISTING_TYPE_CAPABILITIES,
+  capabilityFor,
+  canAddToCart,
+  canBid,
+  supportsShipping,
+  requiresVendorVerified,
+  requiresJurisdictionCheck,
+  hasInstantFulfillment,
+  assertNever,
+} from "./_internal/shared/listing-types/capabilities";
+export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
+
 // Media upload limits — pure constants, safe in both client and server bundles.
 export {
   MEGABYTE,

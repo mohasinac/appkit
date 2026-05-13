@@ -385,6 +385,20 @@ export type {
   DashboardLayoutConfig,
 } from "./_internal/shared/features/layout/index";
 
+// Listing-type capability registry — SB-UNI X1.
+export {
+  LISTING_TYPE_CAPABILITIES,
+  capabilityFor,
+  canAddToCart,
+  canBid,
+  supportsShipping,
+  requiresVendorVerified,
+  requiresJurisdictionCheck,
+  hasInstantFulfillment,
+  assertNever,
+} from "./_internal/shared/listing-types/capabilities";
+export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
+
 // Media upload limits — shared by client uploaders + server sign/finalize routes.
 export {
   MEGABYTE,

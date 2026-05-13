@@ -1383,6 +1383,20 @@ export { renderProfileOg, renderPrivateProfileOgImage, renderUserProfileOgImage,
 // Adapters
 export { orderDocumentToOrder } from "./_internal/server/features/orders/adapters";
 
+// Listing-type capability registry — SB-UNI X1.
+export {
+  LISTING_TYPE_CAPABILITIES,
+  capabilityFor,
+  canAddToCart,
+  canBid,
+  supportsShipping,
+  requiresVendorVerified,
+  requiresJurisdictionCheck,
+  hasInstantFulfillment,
+  assertNever,
+} from "./_internal/shared/listing-types/capabilities";
+export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
+
 // Media context guards — shared by /api/media/sign + legacy /api/media/upload.
 export {
   applyMediaContextGuards,
