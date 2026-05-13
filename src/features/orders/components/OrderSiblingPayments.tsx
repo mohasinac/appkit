@@ -13,6 +13,7 @@ import React from "react";
 import Link from "next/link";
 import { Div, Heading, Row, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
+import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { OrderDocument } from "../schemas";
 
@@ -32,9 +33,11 @@ export function OrderSiblingPayments({
   if (others.length === 0) return null;
 
   return (
-    <Div className={`rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900 ${className}`}>
+    <Div
+      className={`rounded-xl border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-800 dark:bg-zinc-900 ${className}`}
+    >
       <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-        Other orders from this payment ({others.length})
+        {REFUND_COPY.siblingPayments.heading(others.length)}
       </Heading>
       <Stack gap="xs">
         {others.map((o) => {
@@ -43,7 +46,7 @@ export function OrderSiblingPayments({
             <Row key={o.id} justify="between" align="center" gap="sm">
               <Link
                 href={href}
-                className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-400"
+                className="text-sm font-medium text-[color:var(--appkit-color-primary)] hover:underline"
               >
                 {o.id}
               </Link>

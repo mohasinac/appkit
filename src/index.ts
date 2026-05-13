@@ -9006,6 +9006,8 @@ export {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "./_internal/shared/features/categories/bundle-copy";
+// S-SBUNI-RULES 2026-05-13 — shared copy for refund / shipping / sibling-payment UI.
+export { REFUND_COPY } from "./_internal/shared/features/orders/refund-copy";
 // S-SBUNI-4 follow-up — shared admin bundle zod schemas.
 export {
   bundleCreateSchema,

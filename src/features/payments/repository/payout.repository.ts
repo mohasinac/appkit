@@ -321,6 +321,7 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
     status: { canFilter: true, canSort: true },
     paymentMethod: { canFilter: true, canSort: false },
     amount: { canFilter: true, canSort: true },
+    netAmount: { canFilter: true, canSort: true },
     requestedAt: { canFilter: true, canSort: true },
     createdAt: { canFilter: true, canSort: true },
     processedAt: { canFilter: true, canSort: true },

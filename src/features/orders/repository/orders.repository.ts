@@ -268,6 +268,7 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     totalPrice: { canFilter: true, canSort: true },
     orderDate: { canFilter: true, canSort: true },
     createdAt: { canFilter: true, canSort: true },
+    contestable: { canFilter: true, canSort: false },
   };
 
   async listForSeller(
@@ -339,6 +340,9 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     totalPrice: { canFilter: true, canSort: true },
     orderDate: { canFilter: true, canSort: true },
     createdAt: { canFilter: true, canSort: true },
+    // S-SBUNI-RULES 2026-05-13 — refund + batch fields
+    paymentBatchId: { canFilter: true, canSort: false },
+    contestable: { canFilter: true, canSort: false },
   };
 
   async listAll(

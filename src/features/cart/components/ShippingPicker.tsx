@@ -11,6 +11,7 @@
 import React, { useState } from "react";
 import { Button, Div, Row, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { ShippingProviderConfig } from "../../stores/schemas/firestore";
 
 export interface ShippingPickerProps {
@@ -50,7 +51,7 @@ export function ShippingPicker({
   if (providers.length === 0) {
     return (
       <Text size="sm" color="muted" className={className}>
-        No shipping options available for this item.
+        {REFUND_COPY.shipping.noOptions}
       </Text>
     );
   }
@@ -89,11 +90,11 @@ export function ShippingPicker({
                   {p.label}
                 </Text>
                 <Text size="xs" color="muted">
-                  {p.etaDaysMin}–{p.etaDaysMax} days
+                  {REFUND_COPY.shipping.etaFormat(p.etaDaysMin, p.etaDaysMax)}
                 </Text>
               </Div>
               <Text size="sm" weight="semibold">
-                {fee === 0 ? "Free" : formatCurrency(fee / 100, "INR")}
+                {fee === 0 ? REFUND_COPY.shipping.freeLabel : formatCurrency(fee / 100, "INR")}
               </Text>
             </Row>
           </Button>

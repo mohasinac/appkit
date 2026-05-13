@@ -10,6 +10,7 @@
 import React from "react";
 import { Badge, Div, Heading, Row, Stack, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import type { OrderDocument, OrderRefundEvent } from "../schemas";
 
 export interface RefundHistoryTableProps {
@@ -33,7 +34,7 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
       <Stack gap="xs" className="flex-1">
         <Row gap="sm" align="center">
           <Badge variant={event.type === "full" ? "danger" : "warning"}>
-            {event.type === "full" ? "Full refund" : "Partial refund"}
+            {event.type === "full" ? REFUND_COPY.history.badgeFull : REFUND_COPY.history.badgePartial}
           </Badge>
           <Text size="xs" color="muted">
             {formatDate(event.refundedAt)}
@@ -42,12 +43,12 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
         <Text size="sm">{event.reason}</Text>
         {event.manualTransactionId && (
           <Text size="xs" color="muted">
-            Txn: {event.manualTransactionId}
+            {REFUND_COPY.history.labelTxn} {event.manualTransactionId}
           </Text>
         )}
         {event.razorpayRefundId && (
           <Text size="xs" color="muted">
-            Razorpay: {event.razorpayRefundId}
+            {REFUND_COPY.history.labelRazorpay} {event.razorpayRefundId}
           </Text>
         )}
       </Stack>
@@ -55,6 +56,24 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
         {formatCurrency(event.amount / 100, currency)}
       </Text>
     </Row>
+  );
+}
+
+/** Warning triangle icon — inline SVG kept here since it's a single-use decorative element. */
+function WarningIcon() {
+  return (
+    <svg
+      className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+      aria-hidden="true"
+    >
+      <path
+        fillRule="evenodd"
+        d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"
+        clipRule="evenodd"
+      />
+    </svg>
   );
 }
 
@@ -69,11 +88,9 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
       {order.contestable === false && (
         <Div className="rounded-t-xl bg-amber-50 px-4 py-3 dark:bg-amber-950/30">
           <Row gap="sm" align="center">
-            <svg className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-              <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-            </svg>
+            <WarningIcon />
             <Text size="sm" weight="semibold" className="text-amber-700 dark:text-amber-400">
-              Disputes, RMA requests, and "Item Not Received" claims are no longer available for this order.
+              {REFUND_COPY.history.nonContestableBanner}
             </Text>
           </Row>
         </Div>
@@ -82,7 +99,7 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
       {events.length > 0 && (
         <Div className="p-4">
           <Heading level={4} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-            Refund history
+            {REFUND_COPY.history.heading}
           </Heading>
           <Stack gap="none">
             {events.map((e) => (
