@@ -52,6 +52,11 @@ import {
 } from "../../../../providers/payment-razorpay/index";
 import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../../shared/features/checkout/config";
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
+import {
+  enforceMaxPerUserForCart,
+  enforcePrizePoolCap,
+  computePrizeRevealDeadline,
+} from "./prize-bundle-gates";
 
 /**
  * Fire-and-forget in-app notifications when an order is created.
@@ -178,6 +183,25 @@ export async function createCheckoutOrderAction(
   const db = getAdminDb();
   const otpRef = consentOtpRef(db, uid, addressId);
 
+  // SB6-C — pre-tx fetch products so we can run the maxPerUser cap check
+  // (count queries can't run inside a Firestore transaction). The same
+  // product docs are re-read inside the transaction below for stock + prize
+  // pool checks; this is intentional (the tx is the source of truth for the
+  // counts we actually mutate).
+  const preTxProductRefs = cartItems.map((item) =>
+    db.collection(PRODUCT_COLLECTION).doc(item.productId),
+  );
+  const preTxProductSnaps = await Promise.all(preTxProductRefs.map((r) => r.get()));
+  const preTxPairs = cartItems
+    .map((item, i) => {
+      const data = preTxProductSnaps[i].exists
+        ? (preTxProductSnaps[i].data() as ProductDocument)
+        : undefined;
+      return data ? { item, product: data } : null;
+    })
+    .filter((pair): pair is { item: CartItemDocument; product: ProductDocument } => pair !== null);
+  await enforceMaxPerUserForCart({ userId: uid, items: preTxPairs });
+
   let stockResult: StockResult;
   try {
     stockResult = await db.runTransaction(async (tx): Promise<StockResult> => {
@@ -229,10 +253,20 @@ export async function createCheckoutOrderAction(
             availableQty: productData?.availableQuantity ?? 0,
           });
         } else {
-          tx.update(productRefs[i], {
+          // SB6-C — prize-draw pool cap (in-tx, atomic with availableQuantity).
+          enforcePrizePoolCap({
+            productSnapshot: productData,
+            requestedQuantity: item.quantity,
+          });
+          const productUpdate: Record<string, unknown> = {
             availableQuantity: productData.availableQuantity - item.quantity,
             updatedAt: new Date(),
-          });
+          };
+          if (productData.listingType === "prize-draw") {
+            productUpdate.prizeCurrentEntries =
+              (productData.prizeCurrentEntries ?? 0) + item.quantity;
+          }
+          tx.update(productRefs[i], productUpdate);
           availableItems.push({ item, product: productData });
         }
       }
@@ -417,6 +451,20 @@ export async function createCheckoutOrderAction(
       ),
     ];
 
+    // SB6-C / SB8-A — prize-draw + bundle order-level fields.
+    const isPrizeDrawOrder = orderType === "prize-draw";
+    const isBundleOrder = orderType === "bundle";
+    const prizeDrawFields =
+      isPrizeDrawOrder
+        ? {
+            prizeDrawProductId: group[0].product.id,
+            isNonRefundable: true,
+            prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
+          }
+        : isBundleOrder
+          ? { isNonRefundable: true }
+          : {};
+
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,
       productTitle: firstItem.productTitle,
@@ -444,6 +492,7 @@ export async function createCheckoutOrderAction(
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
       imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+      ...prizeDrawFields,
     });
 
     orderIds.push(order.id);
@@ -660,6 +709,26 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }),
   );
 
+  // SB6-C — maxPerUser cap check before we touch any state.
+  await enforceMaxPerUserForCart({
+    userId: uid,
+    items: productChecks
+      .filter(
+        (p): p is { item: CartItemDocument; product: ProductDocument } =>
+          p.product !== null && p.product !== undefined,
+      )
+      .map(({ item, product }) => ({ item, product })),
+  });
+
+  // SB6-C — prize-pool cap. Runs against the freshly-read product snapshots.
+  for (const { item, product } of productChecks) {
+    if (!product) continue;
+    enforcePrizePoolCap({
+      productSnapshot: product,
+      requestedQuantity: item.quantity,
+    });
+  }
+
   for (const { item, product } of productChecks) {
     if (!product || product.status !== ProductStatusValues.PUBLISHED) {
       failedCheckoutRepository
@@ -832,6 +901,20 @@ export async function verifyAndPlaceRazorpayOrderAction(
       ),
     ];
 
+    // SB6-C / SB8-A — prize-draw + bundle order-level fields.
+    const isPrizeDrawOrder = orderType === "prize-draw";
+    const isBundleOrder = orderType === "bundle";
+    const prizeDrawFields =
+      isPrizeDrawOrder && group[0].product
+        ? {
+            prizeDrawProductId: group[0].product.id,
+            isNonRefundable: true,
+            prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
+          }
+        : isBundleOrder
+          ? { isNonRefundable: true }
+          : {};
+
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,
       productTitle: firstItem.productTitle,
@@ -859,6 +942,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
       imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
+      ...prizeDrawFields,
     } as never);
 
     orderIds.push(order.id);
@@ -893,8 +977,16 @@ export async function verifyAndPlaceRazorpayOrderAction(
   await unitOfWork.runBatch((batch) => {
     for (const { item, product } of productChecks) {
       if (!product) continue;
+      const prizeBump =
+        product.listingType === "prize-draw"
+          ? {
+              prizeCurrentEntries:
+                (product.prizeCurrentEntries ?? 0) + item.quantity,
+            }
+          : {};
       unitOfWork.products.updateInBatch(batch, item.productId, {
         availableQuantity: product.availableQuantity - item.quantity,
+        ...prizeBump,
       } as never);
     }
     unitOfWork.carts.updateInBatch(batch, uid, {

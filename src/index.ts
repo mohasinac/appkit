@@ -1851,6 +1851,9 @@ export { productsAuctionsSeedData } from "./seed/index";
 // productsPreOrdersSeedData - Seed data for pre-order product listings.
 export { productsPreOrdersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
+// productsPrizeDrawsSeedData - Seed data for prize-draw product listings (SB5-E).
+export { productsPrizeDrawsSeedData } from "./seed/index";
+// [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).

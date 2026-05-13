@@ -644,6 +644,27 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       updatedAt: serverTimestamp(),
     });
   }
+
+  /**
+   * SB6-C / SB4-H — atomically bump `prizeCurrentEntries` by `count`. The
+   * checkout transaction calls this after pool-cap validation; the reveal
+   * code-path uses it as a defence-in-depth check (already incremented at
+   * order create, so this is a no-op unless we shift accounting later).
+   */
+  incrementPrizeEntriesInBatch(
+    batch: WriteBatch,
+    productId: string,
+    count: number,
+  ): void {
+    batch.update(this.db.collection(this.collection).doc(productId), {
+      prizeCurrentEntries: increment(count),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  productRef(productId: string): DocumentReference {
+    return this.db.collection(this.collection).doc(productId) as DocumentReference;
+  }
 }
 
 export class ProductsRepository extends ProductRepository {}
