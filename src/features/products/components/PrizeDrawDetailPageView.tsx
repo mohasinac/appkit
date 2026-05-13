@@ -150,6 +150,10 @@ export async function PrizeDrawDetailPageView({
     : null;
   const githubUrl =
     typeof p.prizeGithubFileUrl === "string" ? p.prizeGithubFileUrl : undefined;
+  const maxPerUser =
+    typeof p.maxPerUser === "number" && p.maxPerUser > 0
+      ? (p.maxPerUser as number)
+      : null;
   const thumb = items[0]?.images?.[0];
   const storeName = typeof p.storeName === "string" ? p.storeName : null;
   const safeSeller = storeName ? safeDisplayName(storeName, "") : null;
@@ -215,6 +219,11 @@ export async function PrizeDrawDetailPageView({
                   >
                     {statusLabel(revealStatus)}
                   </Span>
+                  {maxPerUser !== null && (
+                    <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                      Limit: {maxPerUser} entries per customer
+                    </Span>
+                  )}
                 </Row>
                 <Heading
                   level={1}

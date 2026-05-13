@@ -135,6 +135,10 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
       : null;
   const isCancellable = p.preOrderCancellable === true;
 
+  const maxPerUser =
+    typeof p.maxPerUser === "number" && p.maxPerUser > 0
+      ? (p.maxPerUser as number)
+      : null;
   const condition = typeof p.condition === "string" ? p.condition : null;
   const featured = p.featured === true;
   const shippingPaidBy = p.shippingPaidBy as "seller" | "buyer" | undefined;
@@ -217,6 +221,11 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
                   {productionStatus && (
                     <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300">
                       {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
+                    </Span>
+                  )}
+                  {maxPerUser !== null && (
+                    <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-200">
+                      Limit: {maxPerUser} per customer
                     </Span>
                   )}
                 </Row>
