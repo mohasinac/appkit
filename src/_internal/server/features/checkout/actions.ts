@@ -340,13 +340,33 @@ export async function createCheckoutOrderAction(
     const groupTotal = group.reduce((sum, { item }) => sum + item.price * item.quantity, 0);
     total += groupTotal;
 
-    const orderItems = group.map(({ item }) => ({
-      productId: item.productId,
-      productTitle: item.productTitle,
-      quantity: item.quantity,
-      unitPrice: item.price,
-      totalPrice: item.price * item.quantity,
-    }));
+    // SB8-F — when a line is a prize-draw entry, stamp the listingType +
+    // reveal status + deadline so the user-orders surface can render the
+    // reveals-remaining badge immediately after order creation.
+    const groupRevealDeadline =
+      orderType === "prize-draw"
+        ? computePrizeRevealDeadline(group[0].product)
+        : undefined;
+    const orderItems = group.map(({ item, product }) => {
+      const isPrizeDrawLine = product.listingType === "prize-draw";
+      return {
+        productId: item.productId,
+        productTitle: item.productTitle,
+        quantity: item.quantity,
+        unitPrice: item.price,
+        totalPrice: item.price * item.quantity,
+        ...(isPrizeDrawLine
+          ? {
+              listingType: "prize-draw" as const,
+              prizeRevealStatus:
+                product.prizeRevealStatus === "open" ? "open" as const : "pending" as const,
+              prizeRevealDeadline: groupRevealDeadline?.toISOString(),
+            }
+          : product.listingType
+            ? { listingType: product.listingType }
+            : {}),
+      };
+    });
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
     let shippingFee = 0;
@@ -884,13 +904,33 @@ export async function verifyAndPlaceRazorpayOrderAction(
     const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
     total += orderTotal;
 
-    const orderItems = group.map(({ item, product }) => ({
-      productId: item.productId,
-      productTitle: item.productTitle,
-      quantity: item.quantity,
-      unitPrice: product!.price,
-      totalPrice: product!.price * item.quantity,
-    }));
+    // SB8-F — stamp listingType + reveal-status + deadline for prize-draw lines.
+    const groupRevealDeadlineRzp =
+      orderType === "prize-draw" && group[0].product
+        ? computePrizeRevealDeadline(group[0].product)
+        : undefined;
+    const orderItems = group.map(({ item, product }) => {
+      const isPrizeDrawLine = product?.listingType === "prize-draw";
+      return {
+        productId: item.productId,
+        productTitle: item.productTitle,
+        quantity: item.quantity,
+        unitPrice: product!.price,
+        totalPrice: product!.price * item.quantity,
+        ...(isPrizeDrawLine
+          ? {
+              listingType: "prize-draw" as const,
+              prizeRevealStatus:
+                product?.prizeRevealStatus === "open"
+                  ? "open" as const
+                  : "pending" as const,
+              prizeRevealDeadline: groupRevealDeadlineRzp?.toISOString(),
+            }
+          : product?.listingType
+            ? { listingType: product.listingType }
+            : {}),
+      };
+    });
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
     const imageUrls = [

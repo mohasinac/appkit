@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { productRepository } from "../../../repositories";
+import { orderRepository, productRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -37,6 +37,12 @@ export interface PrizeDrawDetailPageViewProps {
    * the fetch with generateMetadata() via React.cache().
    */
   initialPrizeDraw?: ProductDocument | null;
+  /**
+   * Authenticated buyer's uid. When set, the view server-fetches the
+   * buyer's existing-entry count for this draw and renders the SB6-D
+   * personalised "You have X/Y entries used" badge.
+   */
+  currentUserId?: string;
 }
 
 function toDescriptionHtml(raw: unknown): string {
@@ -87,6 +93,7 @@ function stripIsWon(items: PrizeDrawItem[] | undefined): PrizeDrawItem[] {
 export async function PrizeDrawDetailPageView({
   id,
   initialPrizeDraw,
+  currentUserId,
 }: PrizeDrawDetailPageViewProps) {
   const product =
     initialPrizeDraw !== undefined
@@ -154,6 +161,18 @@ export async function PrizeDrawDetailPageView({
     typeof p.maxPerUser === "number" && p.maxPerUser > 0
       ? (p.maxPerUser as number)
       : null;
+
+  // SB6-D post-auth — fetch this buyer's existing-entry count when we have
+  // an authenticated uid. `orderRepository.countByUserAndProduct` already
+  // filters by active statuses (pending/confirmed/processing/shipped/
+  // delivered) so cancelled/refunded entries don't count.
+  const userEntriesUsed =
+    currentUserId && maxPerUser != null
+      ? await orderRepository
+          .countByUserAndProduct(currentUserId, String(product.id))
+          .catch(() => 0)
+      : null;
+
   const thumb = items[0]?.images?.[0];
   const storeName = typeof p.storeName === "string" ? p.storeName : null;
   const safeSeller = storeName ? safeDisplayName(storeName, "") : null;
@@ -222,6 +241,11 @@ export async function PrizeDrawDetailPageView({
                   {maxPerUser !== null && (
                     <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:text-zinc-300">
                       Limit: {maxPerUser} entries per customer
+                    </Span>
+                  )}
+                  {maxPerUser !== null && userEntriesUsed !== null && (
+                    <Span className="inline-block rounded-full bg-fuchsia-100 dark:bg-fuchsia-900/30 px-2.5 py-0.5 text-xs font-semibold text-fuchsia-700 dark:text-fuchsia-300">
+                      You have used {userEntriesUsed}/{maxPerUser}
                     </Span>
                   )}
                 </Row>

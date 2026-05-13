@@ -10,6 +10,18 @@ export function orderDocumentToOrder(doc: OrderDocument): Order {
         quantity: item.quantity,
         currency: doc.currency,
         storeId: doc.storeId,
+        // SB8-F — surface prize-draw reveal-state to the API response so
+        // user-orders pages can render the "X reveals pending" badge.
+        ...(item.listingType ? { listingType: item.listingType } : {}),
+        ...(item.prizeRevealStatus
+          ? { prizeRevealStatus: item.prizeRevealStatus }
+          : {}),
+        ...(item.prizeRevealDeadline
+          ? { prizeRevealDeadline: item.prizeRevealDeadline }
+          : {}),
+        ...(item.revealedItemNumber != null
+          ? { revealedItemNumber: item.revealedItemNumber }
+          : {}),
       }))
     : [
         {
