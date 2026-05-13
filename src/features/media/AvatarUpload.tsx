@@ -67,7 +67,7 @@ export function AvatarUpload({
   const { showToast } = useToast();
 
   const {
-    mutateAsync: uploadMedia,
+    upload: uploadMedia,
     isPending: isUploading,
     error: uploadApiError,
   } = useMediaUpload();
@@ -104,46 +104,21 @@ export function AvatarUpload({
   const handleConfirmSave = async () => {
     if (!pendingUploadFile || !pendingCropData) return;
 
-    const formData = new FormData();
-    formData.append("file", pendingUploadFile);
-
     const nameParts = (displayName ?? "").trim().split(/\s+/).filter(Boolean);
     const firstName = nameParts[0] || userId;
     const lastName = nameParts.slice(1).join("-") || firstName;
 
-    formData.append(
-      "context",
-      JSON.stringify({
-        type: "user-avatar",
-        firstName,
-        lastName,
-      }),
-    );
-    formData.append("folder", "users");
-    formData.append("public", "true");
-    formData.append(
-      "metadata",
-      JSON.stringify({
-        cropX: 0,
-        cropY: 0,
-        cropWidth: 400,
-        cropHeight: 400,
-        zoom: pendingCropData.zoom ?? 1,
-        focalX: (pendingCropData.position?.x ?? 50) / 100,
-        focalY: (pendingCropData.position?.y ?? 50) / 100,
-        aspectRatio: "1:1",
-        objectFit: "cover",
-        displayMode: "avatar",
-        originalWidth: 400,
-        originalHeight: 400,
-        mimeType: pendingUploadFile.type,
-        fileSize: pendingUploadFile.size,
-      }),
-    );
-
     try {
-      const result = await uploadMedia(formData);
-      const downloadURL = result.url;
+      const downloadURL = await uploadMedia(
+        pendingUploadFile,
+        "users",
+        true,
+        {
+          type: "user-avatar",
+          firstName,
+          lastName,
+        },
+      );
 
       await onUploadSuccess?.(downloadURL, pendingCropData);
 

@@ -1383,6 +1383,13 @@ export { renderProfileOg, renderPrivateProfileOgImage, renderUserProfileOgImage,
 // Adapters
 export { orderDocumentToOrder } from "./_internal/server/features/orders/adapters";
 
+// Media context guards — shared by /api/media/sign + legacy /api/media/upload.
+export {
+  applyMediaContextGuards,
+  CONTEXT_LIMITS,
+} from "./_internal/server/features/media/contextGuards";
+export type { GuardResult, GuardError, GuardSuccess } from "./_internal/server/features/media/contextGuards";
+
 // Media upload limits — shared by /api/media/sign + /api/media/finalize + /api/media/upload.
 export {
   MEGABYTE,

@@ -1,12 +1,24 @@
 /**
  * useMedia — upload/crop/trim hooks for @mohasinac/feat-media.
  *
- * Wraps @mohasinac/http apiClient via TanStack Query mutations.
- * Endpoint paths can be overridden per call for non-standard deployments.
+ * useMediaUpload uses the signed-URL flow:
+ *   1. POST /api/media/sign — server issues v4 signed PUT URL
+ *   2. PUT directly to GCS — bytes bypass the Vercel function (Rule #6)
+ *   3. POST /api/media/finalize — server runs magic-byte check + returns URL
+ *
+ * The hook surface (`upload(file, folder, isPublic, context) => Promise<string>`)
+ * is unchanged so existing field components (MediaUploadField, MediaUploadList,
+ * ImageUpload, MediaPickerModal) keep working without modification.
  */
 
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "../../../http";
+import {
+  classifyMime,
+  MAX_BYTES,
+  MAX_LABEL,
+  isAllowedMime,
+} from "../../../_internal/shared/media/limits";
 import type { MediaFilenameContext } from "../../../utils/id-generators";
 import { MEDIA_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -18,6 +30,22 @@ export interface MediaUploadResult {
   filename?: string;
   size?: number;
   type?: string;
+}
+
+interface SignResponse {
+  uploadUrl: string;
+  storagePath: string;
+  filename: string;
+  contentType: string;
+  isPublic: boolean;
+  expiresAt: string;
+}
+
+interface UploadVariables {
+  file: File;
+  folder: string;
+  isPublic: boolean;
+  context?: MediaFilenameContext | Record<string, unknown>;
 }
 
 export interface MediaCropInput {
@@ -43,16 +71,63 @@ export interface MediaTrimInput {
 // --- Hooks --------------------------------------------------------------------
 
 /**
- * useMediaUpload — uploads a file via FormData to /api/media/upload.
+ * useMediaUpload — uploads a file via the signed-URL flow.
  *
  * @example
  * const { upload, isPending } = useMediaUpload();
  * const url = await upload(file, "products", true);
  */
-export function useMediaUpload(endpoint: string = MEDIA_ENDPOINTS.UPLOAD) {
-  const mutation = useMutation<MediaUploadResult, Error, FormData>({
-    mutationFn: (formData) =>
-      apiClient.upload<MediaUploadResult>(endpoint, formData),
+export function useMediaUpload(
+  endpoints: { sign?: string; finalize?: string } = {},
+) {
+  const signEndpoint = endpoints.sign ?? MEDIA_ENDPOINTS.SIGN;
+  const finalizeEndpoint = endpoints.finalize ?? MEDIA_ENDPOINTS.FINALIZE;
+
+  const mutation = useMutation<MediaUploadResult, Error, UploadVariables>({
+    mutationFn: async ({ file, folder, isPublic, context }) => {
+      const contentType = file.type;
+
+      // Client-side precheck — fail fast before any network call. Catches
+      // image-vs-video kind mismatch and oversize files with the same
+      // user-facing message the server would have returned.
+      if (!isAllowedMime(contentType)) {
+        throw new Error(
+          `Unsupported file type: ${contentType || "unknown"}`,
+        );
+      }
+      const kind = classifyMime(contentType)!;
+      if (file.size > MAX_BYTES[kind]) {
+        throw new Error(
+          `File too large — ${kind} uploads must be ≤ ${MAX_LABEL[kind]}`,
+        );
+      }
+
+      const signResponse = await apiClient.post<SignResponse>(signEndpoint, {
+        contentType,
+        size: file.size,
+        folder,
+        isPublic,
+        context,
+      });
+
+      // PUT bytes directly to Cloud Storage. The browser does NOT send
+      // credentials and the bucket must allow the request origin via CORS.
+      const putResponse = await fetch(signResponse.uploadUrl, {
+        method: "PUT",
+        body: file,
+        headers: { "Content-Type": signResponse.contentType },
+      });
+      if (!putResponse.ok) {
+        throw new Error(
+          `Storage PUT failed with status ${putResponse.status}`,
+        );
+      }
+
+      return apiClient.post<MediaUploadResult>(finalizeEndpoint, {
+        storagePath: signResponse.storagePath,
+        isPublic,
+      });
+    },
   });
 
   const upload = async (
@@ -61,14 +136,7 @@ export function useMediaUpload(endpoint: string = MEDIA_ENDPOINTS.UPLOAD) {
     isPublic = true,
     context?: MediaFilenameContext | Record<string, unknown>,
   ): Promise<string> => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("folder", folder);
-    formData.append("public", isPublic.toString());
-    if (context) {
-      formData.append("context", JSON.stringify(context));
-    }
-    const data = await mutation.mutateAsync(formData);
+    const data = await mutation.mutateAsync({ file, folder, isPublic, context });
     return data.url;
   };
 

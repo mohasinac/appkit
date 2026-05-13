@@ -3,7 +3,7 @@
  * MediaUploadField — single-file upload field for @mohasinac/feat-media.
  *
  * For video: optionally opens VideoTrimModal then VideoThumbnailSelector after upload.
- * Stage locally → caller-provided onUpload() → /api/media/upload.
+ * Stage locally → caller-provided onUpload() → sign+PUT+finalize signed-URL flow.
  */
 
 import { useState, useRef, useEffect, ChangeEvent } from "react";

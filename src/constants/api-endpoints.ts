@@ -307,7 +307,8 @@ export const LOYALTY_ENDPOINTS = {
 
 export const MEDIA_ENDPOINTS = {
   BASE: "/api/media",
-  UPLOAD: "/api/media/upload",
+  SIGN: "/api/media/sign",
+  FINALIZE: "/api/media/finalize",
   CROP: "/api/media/crop",
   TRIM: "/api/media/trim",
   DELETE: (url: string) => `/api/media?url=${encodeURIComponent(url)}`,

@@ -2,7 +2,7 @@
 /**
  * ImageUpload — canonical image upload component for @mohasinac/feat-media.
  *
- * Stage locally → caller-provided onUpload() → /api/media/upload.
+ * Stage locally → caller-provided onUpload() → sign+PUT+finalize signed-URL flow.
  * Optional focal-point crop (enableCrop, default true).
  * Optional camera capture (captureSource="both").
  */

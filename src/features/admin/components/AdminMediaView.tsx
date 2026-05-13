@@ -282,7 +282,7 @@ export function AdminMediaView({
             value={heroAssetUrl}
             onChange={setHeroAssetUrl}
             onUpload={onUpload}
-            helperText="Uploads to /api/media/upload and previews the returned URL."
+            helperText="Uploads via signed URL (sign → PUT → finalize) and previews the returned URL."
             onAbort={handleAbort}
             onStagedUrlsChange={setStagedUrls}
           />

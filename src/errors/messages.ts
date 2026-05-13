@@ -474,7 +474,7 @@ export const ERROR_MESSAGES = {
     CART_POST_ERROR: "POST /api/cart error:",
     CART_ITEM_PATCH_ERROR: "error:", // Template: `PATCH /api/cart/${itemId} error:`
     CART_ITEM_DELETE_ERROR: "error:", // Template: `DELETE /api/cart/${itemId} error:`
-    MEDIA_UPLOAD_ERROR: "POST /api/media/upload error:",
+    MEDIA_UPLOAD_ERROR: "Media upload (sign+PUT+finalize) error:",
     MEDIA_TRIM_ERROR: "POST /api/media/trim error:",
     MEDIA_CROP_ERROR: "POST /api/media/crop error:",
     PROFILE_UPDATE_ERROR: "Profile update error:",
