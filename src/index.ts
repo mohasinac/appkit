@@ -6888,6 +6888,12 @@ export type {
   MarketplacePrizeDrawCardData,
   MarketplacePrizeDrawCardLabels,
 } from "./features/products/index";
+// [SERVER-RSC]-Public detail page for a prize-draw product (SB4-G).
+export { PrizeDrawDetailPageView } from "./features/products/index";
+export type { PrizeDrawDetailPageViewProps } from "./features/products/index";
+// [CLIENT]-Buy panel client for prize-draw detail (consent + add-to-cart) (SB4-G).
+export { PrizeDrawEntryActions } from "./features/products/index";
+export type { PrizeDrawEntryActionsProps } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // ProductCard - Component for product card.
 export { ProductCard } from "./features/products/index";
