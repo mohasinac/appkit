@@ -52,7 +52,7 @@ interface RouteHandlerOptions<
    * If provided, the verified user's `role` must be in this list.
    * Implies `auth: true`.
    */
-  roles?: string[];
+  roles?: readonly string[];
   /**
    * Fine-grained permission required for this route.
    * When set: also allows `"employee"` role through the role check, then
