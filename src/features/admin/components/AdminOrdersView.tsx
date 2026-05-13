@@ -8,6 +8,7 @@ import { apiClient } from "../../../http";
 import { QuickEditMenu } from "./QuickEditMenu";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -25,7 +26,7 @@ const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest" },
   { value: "createdAt", label: "Oldest" },
 ];
-const STATUS_OPTIONS = ["All", "PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED", "REFUNDED", "RETURN_REQUESTED"];
+const STATUS_OPTIONS = ADMIN_ORDER_STATUS_TABS;
 
 interface AdminOrdersResponse {
   orders?: unknown[];
@@ -189,7 +190,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
                     formTitle: "Update Order Status",
                     fields: [
                       { name: "status", label: "Status", type: "select", required: true,
-                        options: STATUS_OPTIONS.filter((o) => o !== "All").map((o) => ({ value: o, label: o })) },
+                        options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
                     ],
                     defaultValues: { status: (row as OrderRow).status },
                     onSubmit: (vals) => handleQuickStatus(row.id, String(vals.status ?? "")),
@@ -220,18 +221,18 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
                 <div className="space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
                   <div className="flex flex-wrap gap-2">
-                    {STATUS_OPTIONS.map((opt) => (
+                    {STATUS_OPTIONS.map((tab) => (
                       <button
-                        key={opt}
+                        key={tab.id}
                         type="button"
-                        onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
+                        onClick={() => setPendingFilters((p) => ({ ...p, status: tab.id === "All" ? "" : tab.id }))}
                         className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                          (pendingFilters.status || "All") === opt
+                          (pendingFilters.status || "All") === tab.id
                             ? "bg-primary text-white border-primary"
                             : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
                         }`}
                       >
-                        {opt}
+                        {tab.label}
                       </button>
                     ))}
                   </div>

@@ -7,6 +7,7 @@ import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_BLOG_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -26,7 +27,7 @@ const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest draft" },
   { value: "title", label: "Title A–Z" },
 ];
-const STATUS_OPTIONS = ["All", "published", "draft", "archived"];
+const STATUS_OPTIONS = ADMIN_BLOG_STATUS_TABS;
 
 interface AdminBlogResponse {
   posts?: unknown[];
@@ -178,11 +179,11 @@ export function AdminBlogView({ children, getRowHref, ...props }: AdminBlogViewP
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
                 <div className="flex flex-wrap gap-2">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <button key={opt} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt}</button>
+                  {STATUS_OPTIONS.map((tab) => (
+                    <button key={tab.id} type="button"
+                      onClick={() => setPendingFilters((p) => ({ ...p, status: tab.id === "All" ? "" : tab.id }))}
+                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                    >{tab.label}</button>
                   ))}
                 </div>
               </div>

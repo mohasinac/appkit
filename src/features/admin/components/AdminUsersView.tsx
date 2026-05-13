@@ -6,6 +6,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ADMIN_USER_STATUS_TABS, ADMIN_USER_ROLE_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -23,8 +24,8 @@ const SORT_OPTIONS = [
   { value: "createdAt", label: "Oldest" },
   { value: "displayName", label: "Name A–Z" },
 ];
-const STATUS_OPTIONS = ["All", "Active", "Disabled"];
-const ROLE_OPTIONS = ["All", "admin", "seller", "buyer", "moderator"];
+const STATUS_OPTIONS = ADMIN_USER_STATUS_TABS;
+const ROLE_OPTIONS = ADMIN_USER_ROLE_TABS;
 
 interface AdminUsersResponse {
   users?: unknown[];
@@ -202,22 +203,22 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
                 <div className="space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
                   <div className="flex flex-wrap gap-2">
-                    {STATUS_OPTIONS.map((opt) => (
-                      <button key={opt} type="button"
-                        onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
-                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                      >{opt}</button>
+                    {STATUS_OPTIONS.map((tab) => (
+                      <button key={tab.id} type="button"
+                        onClick={() => setPendingFilters((p) => ({ ...p, status: tab.id === "All" ? "" : tab.id }))}
+                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                      >{tab.label}</button>
                     ))}
                   </div>
                 </div>
                 <div className="space-y-2">
                   <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Role</p>
                   <div className="flex flex-wrap gap-2">
-                    {ROLE_OPTIONS.map((opt) => (
-                      <button key={opt} type="button"
-                        onClick={() => setPendingFilters((p) => ({ ...p, role: opt === "All" ? "" : opt }))}
-                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.role || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                      >{opt}</button>
+                    {ROLE_OPTIONS.map((tab) => (
+                      <button key={tab.id} type="button"
+                        onClick={() => setPendingFilters((p) => ({ ...p, role: tab.id === "All" ? "" : tab.id }))}
+                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.role || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                      >{tab.label}</button>
                     ))}
                   </div>
                 </div>

@@ -8924,6 +8924,19 @@ export type {
   SellerListingTabId,
   SearchTabId,
 } from "./features/products/constants/listing-tabs";
+// SB10-C admin filter-chip tab sets (S8 2026-05-13)
+export {
+  ALL_TAB,
+  ADMIN_PRODUCT_STATUS_TABS,
+  ADMIN_PRODUCT_LISTING_TYPE_TABS,
+  ADMIN_BLOG_STATUS_TABS,
+  ADMIN_USER_STATUS_TABS,
+  ADMIN_USER_ROLE_TABS,
+  ADMIN_STORE_STATUS_TABS,
+  ADMIN_PAYOUT_STATUS_TABS,
+  ADMIN_ORDER_STATUS_TABS,
+} from "./features/admin/constants/filter-tabs";
+export type { AdminFilterTab } from "./features/admin/constants/filter-tabs";
 // Grouped listings feature schemas
 export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestore";
 // SB-UNI-D + V — BundleDocument + bundlesRepository + features/bundles/

@@ -8,6 +8,10 @@ import { Button, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Toggl
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
+  ADMIN_PRODUCT_STATUS_TABS,
+  ADMIN_PRODUCT_LISTING_TYPE_TABS,
+} from "../constants/filter-tabs";
+import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
@@ -29,8 +33,8 @@ const SORT_OPTIONS = [
   { value: "title", label: "Title A–Z" },
   { value: "-price", label: "Highest price" },
 ];
-const STATUS_OPTIONS = ["All", "pending", "published", "draft", "archived"];
-const TYPE_OPTIONS = ["All", "Products", "Auctions", "Pre-orders", "Prize Draws"];
+const STATUS_OPTIONS = ADMIN_PRODUCT_STATUS_TABS;
+const TYPE_OPTIONS = ADMIN_PRODUCT_LISTING_TYPE_TABS;
 
 export interface AdminProductsViewProps extends ListingViewShellProps {
   actionHref?: string;
@@ -278,7 +282,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
                   formTitle: "Quick Edit Product",
                   fields: [
                     { name: "status", label: "Status", type: "select", required: true,
-                      options: STATUS_OPTIONS.filter((o) => o !== "All").map((o) => ({ value: o, label: o })) },
+                      options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
                     { name: "featured", label: "Featured", type: "toggle" },
                     { name: "isPromoted", label: "Promoted", type: "toggle" },
                   ],
@@ -316,22 +320,22 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
                 <div className="flex flex-wrap gap-2">
-                  {STATUS_OPTIONS.map((opt) => (
-                    <button key={opt} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, status: opt === "All" ? "" : opt }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt}</button>
+                  {STATUS_OPTIONS.map((tab) => (
+                    <button key={tab.id} type="button"
+                      onClick={() => setPendingFilters((p) => ({ ...p, status: tab.id === "All" ? "" : tab.id }))}
+                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.status || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                    >{tab.label}</button>
                   ))}
                 </div>
               </div>
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Type</p>
                 <div className="flex flex-wrap gap-2">
-                  {TYPE_OPTIONS.map((opt) => (
-                    <button key={opt} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.type || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt}</button>
+                  {TYPE_OPTIONS.map((tab) => (
+                    <button key={tab.id} type="button"
+                      onClick={() => setPendingFilters((p) => ({ ...p, type: tab.id === "All" ? "" : tab.id }))}
+                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.type || "All") === tab.id ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                    >{tab.label}</button>
                   ))}
                 </div>
               </div>
