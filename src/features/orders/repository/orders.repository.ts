@@ -26,13 +26,31 @@ import type { OrderStatus, PaymentStatus } from "../types";
 const ORDER_FIELDS = {
   USER_ID: "userId",
   PRODUCT_ID: "productId",
+  BUNDLE_ID: "bundleId",
   STATUS: "status",
   STATUS_VALUES: {
+    PENDING: "pending",
     CONFIRMED: "confirmed",
+    PROCESSING: "processing",
     SHIPPED: "shipped",
     DELIVERED: "delivered",
+    CANCELLED: "cancelled",
+    REFUNDED: "refunded",
   },
 } as const;
+
+/**
+ * Statuses that count toward a user's per-product / per-bundle purchase
+ * allowance (SB6 maxPerUser enforcement). Cancelled and refunded orders are
+ * intentionally excluded — the inventory was returned to circulation.
+ */
+const ACTIVE_ALLOWANCE_STATUSES: ReadonlyArray<string> = [
+  ORDER_FIELDS.STATUS_VALUES.PENDING,
+  ORDER_FIELDS.STATUS_VALUES.CONFIRMED,
+  ORDER_FIELDS.STATUS_VALUES.PROCESSING,
+  ORDER_FIELDS.STATUS_VALUES.SHIPPED,
+  ORDER_FIELDS.STATUS_VALUES.DELIVERED,
+];
 
 class OrderRepository extends BaseRepository<OrderDocument> {
   constructor() {
@@ -174,6 +192,46 @@ class OrderRepository extends BaseRepository<OrderDocument> {
     return snapshot.docs.some((doc) =>
       purchasedStatuses.has(doc.data()[ORDER_FIELDS.STATUS] as string),
     );
+  }
+
+  /**
+   * SB6-B — count this user's "active" orders for a given product. Used by
+   * the order-creation API to enforce `product.maxPerUser` on pre-orders +
+   * prize draws. Active = pending / confirmed / processing / shipped /
+   * delivered. Cancelled + refunded are intentionally excluded.
+   *
+   * Firestore caveat: an `in` over the 5-status set keeps this a single
+   * round-trip; we filter in memory if the active set ever grows past 10.
+   */
+  async countByUserAndProduct(
+    userId: string,
+    productId: string,
+  ): Promise<number> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.USER_ID, "==", userId)
+      .where(ORDER_FIELDS.PRODUCT_ID, "==", productId)
+      .where(ORDER_FIELDS.STATUS, "in", ACTIVE_ALLOWANCE_STATUSES)
+      .get();
+    return snapshot.size;
+  }
+
+  /**
+   * SB6-B — count this user's active orders for a given bundle. Same
+   * active-status filter as `countByUserAndProduct`. Bundle orders set
+   * `order.bundleId` at creation time (SB3 / SB6-C).
+   */
+  async countByUserAndBundle(
+    userId: string,
+    bundleId: string,
+  ): Promise<number> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(ORDER_FIELDS.USER_ID, "==", userId)
+      .where(ORDER_FIELDS.BUNDLE_ID, "==", bundleId)
+      .where(ORDER_FIELDS.STATUS, "in", ACTIVE_ALLOWANCE_STATUSES)
+      .get();
+    return snapshot.size;
   }
 
   async deleteByUser(userId: string): Promise<number> {

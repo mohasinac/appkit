@@ -438,12 +438,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ── 20. featured-bundles (SB11) ──────────────────────────────────────────
-  // Disabled until bundles collection lands (S19+). Section type union covers it now.
+  // Enabled — bundles collection live since S4 (SB3 closeout). 3 bundles
+  // seeded in bundles-seed-data.ts; section renders them on the homepage.
   {
     id: "section-featured-bundles",
     type: "featured-bundles",
     order: 20,
-    enabled: false,
+    enabled: true,
     config: {
       title: "Curated Bundles",
       subtitle: "Everything you need in one deal",
@@ -456,12 +457,13 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
   },
 
   // ── 21. prize-draws (SB11) ───────────────────────────────────────────────
-  // Disabled until products gain listingType="prize-draw" + prizeRevealStatus (S19+).
+  // Enabled — listingType="prize-draw" schema + prizeRevealStatus fields are
+  // live (SB1-B). Seed prize-draw product docs ship in S7-PrizeDraws.
   {
     id: "section-prize-draws",
     type: "prize-draws",
     order: 21,
-    enabled: false,
+    enabled: true,
     config: {
       title: "Prize Draws",
       subtitle: "Enter for a chance to win rare collectibles",
@@ -474,12 +476,58 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // ── 22. event-raffles (SB11) ─────────────────────────────────────────────
+  // ── 22a. brand-filtered products: Hot Wheels (SB5-D) ─────────────────────
+  // Uses the standard `products` section type with a brand filter — no
+  // separate "brand-products" type needed (filterByBrand is on the config).
+  {
+    id: "section-brand-hot-wheels",
+    type: "products",
+    order: 22,
+    enabled: true,
+    config: {
+      title: "Hot Wheels Spotlight",
+      subtitle: "Vintage Redlines, Super TH hunts, and current mainline",
+      maxProducts: 12,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 0,
+      filterByBrand: "brand-hot-wheels",
+      sortBy: "featured",
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── 22b. brand-filtered products: Pokémon Company (SB5-D) ────────────────
+  {
+    id: "section-brand-pokemon",
+    type: "products",
+    order: 23,
+    enabled: true,
+    config: {
+      title: "Pokémon TCG Hub",
+      subtitle: "Latest sets, vintage holos, and PSA-graded slabs",
+      maxProducts: 12,
+      rows: 2,
+      itemsPerRow: 3,
+      mobileItemsPerRow: 1,
+      autoScroll: false,
+      scrollInterval: 0,
+      filterByBrand: "brand-pokemon-company",
+      sortBy: "featured",
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(2),
+  },
+
+  // ── 24. event-raffles (SB11) ─────────────────────────────────────────────
   // Disabled until events gain hasRaffle flag (S19+).
   {
     id: "section-event-raffles",
     type: "event-raffles",
-    order: 22,
+    order: 24,
     enabled: false,
     config: {
       title: "Live Raffles & Spin Wheels",
