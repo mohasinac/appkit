@@ -7016,6 +7016,26 @@ export {
   type ActionEvent,
   type ActionTrackerSink,
 } from "./_internal/shared/listing-types/action-tracker";
+// SB-UNI-S 2026-05-13 — cart-level shipping-requirement helpers.
+export {
+  cartRequiresShipping,
+  cartIsDigitalOnly,
+  cartIsChatOnly,
+} from "./_internal/shared/listing-types/cart-shipping";
+// SB-UNI-W-1 2026-05-13 — CTA action registry shell.
+export {
+  ACTIONS,
+  action,
+  act,
+  canPerformAction,
+  actionsForListingType,
+  actionLabel,
+  type ActionDef,
+  type ActionKind,
+  type ActionResource,
+  type ActionTree,
+  type ActionConfirmation,
+} from "./_internal/shared/actions/action-registry";
 // User-role predicates — SB-UNI-E 2026-05-13.
 export {
   isAdminUser,
@@ -8924,9 +8944,10 @@ export type {
   SellerListingTabId,
   SearchTabId,
 } from "./features/products/constants/listing-tabs";
-// SB10-C admin filter-chip tab sets (S8 2026-05-13)
+// SB10-C admin + seller filter-chip tab sets (S8 2026-05-13)
 export {
   ALL_TAB,
+  EMPTY_TAB,
   ADMIN_PRODUCT_STATUS_TABS,
   ADMIN_PRODUCT_LISTING_TYPE_TABS,
   ADMIN_BLOG_STATUS_TABS,
@@ -8935,6 +8956,20 @@ export {
   ADMIN_STORE_STATUS_TABS,
   ADMIN_PAYOUT_STATUS_TABS,
   ADMIN_ORDER_STATUS_TABS,
+  ADMIN_REVIEW_STATUS_TABS,
+  ADMIN_REVIEW_RATING_TABS,
+  ADMIN_BID_STATUS_TABS,
+  ADMIN_CONTACT_STATUS_TABS,
+  ADMIN_NEWSLETTER_STATUS_TABS,
+  ADMIN_EVENT_ENTRY_STATUS_TABS,
+  ADMIN_EVENT_STATUS_TABS,
+  ADMIN_CART_OWNERSHIP_TABS,
+  ADMIN_COUPON_TYPE_TABS,
+  SELLER_PRODUCT_STATUS_TABS,
+  SELLER_AUCTION_STATUS_TABS,
+  SELLER_ORDER_STATUS_TABS,
+  SELLER_OFFER_STATUS_TABS,
+  SELLER_BID_STATUS_TABS,
 } from "./features/admin/constants/filter-tabs";
 export type { AdminFilterTab } from "./features/admin/constants/filter-tabs";
 // Grouped listings feature schemas

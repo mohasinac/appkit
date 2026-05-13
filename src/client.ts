@@ -387,6 +387,29 @@ export {
   type ActionTrackerSink,
 } from "./_internal/shared/listing-types/action-tracker";
 
+// SB-UNI-S 2026-05-13 — cart-level shipping-requirement helpers (client-safe).
+export {
+  cartRequiresShipping,
+  cartIsDigitalOnly,
+  cartIsChatOnly,
+} from "./_internal/shared/listing-types/cart-shipping";
+
+// SB-UNI-W-1 2026-05-13 — CTA action registry shell (client-safe).
+// Phase 7 W-2..W-4 sweeps fill the per-resource buckets surface by surface.
+export {
+  ACTIONS,
+  action,
+  act,
+  canPerformAction,
+  actionsForListingType,
+  actionLabel,
+  type ActionDef,
+  type ActionKind,
+  type ActionResource,
+  type ActionTree,
+  type ActionConfirmation,
+} from "./_internal/shared/actions/action-registry";
+
 // SB-UNI-E user-role predicates (pure functions, client-safe).
 export {
   isAdminUser,
