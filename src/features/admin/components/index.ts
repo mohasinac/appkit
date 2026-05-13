@@ -30,6 +30,9 @@ export { AdminBrandsView } from "./AdminBrandsView";
 export type { AdminBrandsViewProps } from "./AdminBrandsView";
 export { AdminBrandEditorView } from "./AdminBrandEditorView";
 export type { AdminBrandEditorViewProps } from "./AdminBrandEditorView";
+// SB4-E 2026-05-14 — admin prize draws listing view.
+export { AdminPrizeDrawsView } from "./AdminPrizeDrawsView";
+export type { AdminPrizeDrawsViewProps } from "./AdminPrizeDrawsView";
 // S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
 export { AdminBundlesView } from "./AdminBundlesView";
 export type { AdminBundlesViewProps } from "./AdminBundlesView";

@@ -3282,6 +3282,10 @@ export { AdminPageHeader } from "./features/admin/index";
 // AdminPayoutsView - Component for admin payouts view.
 export { AdminPayoutsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// AdminPrizeDrawsView - Component for admin prize draws listing view (SB4-E).
+export { AdminPrizeDrawsView } from "./features/admin/index";
+export type { AdminPrizeDrawsViewProps } from "./features/admin/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
 export { AdminProductsView } from "./features/admin/index";
 // AdminProductEditorView - Component for admin product create/edit form (3-mode: standard/auction/pre-order).
@@ -7828,6 +7832,14 @@ export { SellerPayoutStats } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerPayoutsView - Component for seller payouts view.
 export { SellerPayoutsView } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// SellerPreOrdersView - Component for seller pre-orders listing view (SB4-E).
+export { SellerPreOrdersView } from "./features/seller/index";
+export type { SellerPreOrdersViewProps } from "./features/seller/index";
+// [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
+// SellerPrizeDrawsView - Component for seller prize draws listing view (SB4-E).
+export { SellerPrizeDrawsView } from "./features/seller/index";
+export type { SellerPrizeDrawsViewProps } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // SellerProductsView - Component for seller products view.
 export { SellerProductsView } from "./features/seller/index";

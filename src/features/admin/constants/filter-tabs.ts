@@ -198,6 +198,24 @@ export const SELLER_AUCTION_STATUS_TABS = [
   { id: "cancelled", label: "Cancelled" },
 ] as const satisfies readonly AdminFilterTab[];
 
+/** Seller > Pre-orders — pre-order-state filter chip set. */
+export const SELLER_PRE_ORDER_STATUS_TABS = [
+  ALL_TAB,
+  { id: "active", label: "Active" },
+  { id: "draft", label: "Draft" },
+  { id: "archived", label: "Archived" },
+  { id: "cancelled", label: "Cancelled" },
+] as const satisfies readonly AdminFilterTab[];
+
+/** Seller > Prize Draws — draw-state filter chip set. */
+export const SELLER_PRIZE_DRAW_STATUS_TABS = [
+  ALL_TAB,
+  { id: "active", label: "Active" },
+  { id: "draft", label: "Draft" },
+  { id: "ended", label: "Ended" },
+  { id: "cancelled", label: "Cancelled" },
+] as const satisfies readonly AdminFilterTab[];
+
 /** Seller > Orders — order-state filter chip set. Subset of
  *  `ADMIN_ORDER_STATUS_TABS` — sellers don't see `RETURN_REQUESTED` until
  *  the buyer initiates one through support. */
