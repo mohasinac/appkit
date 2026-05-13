@@ -45,6 +45,96 @@ export interface CustomSection {
   fields?: CustomField[];
 }
 
+// SB-UNI-G 2026-05-13 — TCGPlayer-style grading metadata.
+export type GradingService = "PSA" | "BGS" | "CGC" | "SGC" | "OTHER";
+
+export interface ProductGrading {
+  /** Grading service (PSA / BGS / CGC / SGC / OTHER) — sortable index field. */
+  service: GradingService;
+  /** Numeric grade out of 10 (BGS uses 0.5 increments; PSA/CGC integer). */
+  grade: number;
+  /** Slab cert number (PSA cert lookup URL is built from this client-side). */
+  certNumber?: string;
+  /** Slab/grade image media slug (uploaded via the signed-URL flow). */
+  slabImageMedia?: string;
+  /** Free-form key/value attrs (e.g. autograph=yes, subgrades=9.5/10/10/9.5). */
+  attributes?: Record<string, string>;
+}
+
+// SB-UNI-G 2026-05-13 — single-card aftermarket metadata.
+export interface ProductCardMetadata {
+  /** TCG set name (e.g. "Pokémon Base Set"). */
+  setName: string;
+  /** Year the set was published. */
+  setYear?: number;
+  /** Card number within the set (e.g. "108/120"). */
+  cardNumber?: string;
+  /** Rarity tier (Common / Uncommon / Rare / Holo / etc — free-form). */
+  rarity?: string;
+  /** Card language (en, jp, etc). */
+  language?: string;
+}
+
+// SB-UNI-I 2026-05-13 — Classified-listing fields (OLX / Facebook Marketplace pattern).
+// Add-to-cart is rejected at the capability layer; the PDP CTA routes to
+// `conversations` chat with product context attached.
+export interface ProductClassifiedMeta {
+  /** Where the item is — drives the (listingType, classified.meetupArea.city, createdAt) index. */
+  meetupArea: {
+    city: string;
+    locality?: string;
+    pincode?: string;
+  };
+  /** How the buyer reaches the seller (chat | phone | both). */
+  contactMethod?: "chat" | "phone" | "both";
+  /** Seller offers shipping in addition to meetup. */
+  acceptsShipping?: boolean;
+  /** Price is negotiable — UI hints "₹X (negotiable)". */
+  negotiable?: boolean;
+}
+
+// SB-UNI-J 2026-05-13 — Digital-code listing fields (Steam pattern).
+// Codes themselves live in the encrypted subcollection
+// `products/{id}/codes/{codeId}` (added when Phase 5 SB-UNI-N reveal flow ships).
+export interface ProductDigitalCodeMeta {
+  /** How the code is fulfilled — claim-at-paid / manual-via-email / etc. */
+  codeDeliveryMethod: "auto-claim" | "manual-email";
+  /** Total codes in the pool — operational view. */
+  codePoolSize?: number;
+  /** Atomic counter decremented on claim; never goes negative. */
+  codesAvailable?: number;
+  /** Free-form redemption instructions surfaced on the order detail page. */
+  redemptionInstructions?: string;
+  /** Codes expire at — orders past this point reject claim. */
+  expiresAt?: Date;
+}
+
+// SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
+// `listingType:"live"` requires vendor verification + jurisdiction match
+// at add-to-cart. Carrier handoff may bypass Shiprocket (handled per-store).
+export interface ProductLiveItemMeta {
+  /** Species or cultivar name (taxonomic where applicable). */
+  species: string;
+  /** Animal/plant age in months at the time of listing. */
+  ageMonths?: number;
+  /** Biological sex / not-applicable. */
+  sex?: "male" | "female" | "unknown" | "n/a";
+  /** Free-form care instructions surfaced at checkout consent. */
+  careInfo?: string;
+  /** Transport details — carrier method, fees, insurance flag. */
+  transport: {
+    method: "courier" | "in-person" | "specialist";
+    handlingFeeInPaise?: number;
+    insuranceIncluded?: boolean;
+  };
+  /** Allowed buyer-state ISO 3166-2 codes (e.g. "IN-MH"). */
+  jurisdictionAllowed: string[];
+  /** Set by admin verification workflow — gate for listing creation. */
+  vendorVerified?: boolean;
+  /** CITES permit number (Appendix I/II species). */
+  cites?: string;
+}
+
 export interface ProductDocument {
   id: string;
   title: string;
@@ -89,6 +179,24 @@ export interface ProductDocument {
   auctionExtensionMinutes?: number;
   auctionOriginalEndDate?: Date;
   auctionShippingPaidBy?: "seller" | "winner";
+  // SB-UNI-H 2026-05-13 — eBay-style hybrid auction + Buy It Now.
+  // BIN is offered while the auction has zero bids; once `bidsHaveStarted`
+  // flips to true the PDP hides the BIN button per eBay rules. Sellers
+  // can leave `buyItNowPriceInPaise` unset to disable BIN entirely.
+  buyItNowPriceInPaise?: number;
+  bidsHaveStarted?: boolean;
+  // SB-UNI-G 2026-05-13 — TCGPlayer-style grading + card metadata.
+  // Applies to listingType:"standard" + "auction". Composite indices
+  // (grading.service, grading.grade desc, createdAt desc) + (card.setName,
+  // card.cardNumber, status) deployed alongside this schema add.
+  grading?: ProductGrading;
+  card?: ProductCardMetadata;
+  // SB-UNI-I 2026-05-13 — Classified-listing fields (OLX / FB Marketplace).
+  classified?: ProductClassifiedMeta;
+  // SB-UNI-J 2026-05-13 — Digital-code listing fields (Steam pattern).
+  digitalCode?: ProductDigitalCodeMeta;
+  // SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
+  liveItem?: ProductLiveItemMeta;
   preOrderDeliveryDate?: Date;
   preOrderDepositPercent?: number;
   preOrderDepositAmount?: number;
@@ -240,6 +348,16 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "autoExtendable",
   "auctionExtensionMinutes",
   "auctionShippingPaidBy",
+  // SB-UNI-H 2026-05-13 — eBay hybrid BIN.
+  "buyItNowPriceInPaise",
+  "bidsHaveStarted",
+  // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata.
+  "grading",
+  "card",
+  // SB-UNI-I / J / K 2026-05-13 — per-type field blocks.
+  "classified",
+  "digitalCode",
+  "liveItem",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",
   "preOrderDepositAmount",
@@ -295,6 +413,16 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "reservePrice",
   "buyNowPrice",
   "minBidIncrement",
+  // SB-UNI-H 2026-05-13 — eBay hybrid BIN updatable.
+  "buyItNowPriceInPaise",
+  "bidsHaveStarted",
+  // SB-UNI-G 2026-05-13 — TCGPlayer grading + card metadata updatable.
+  "grading",
+  "card",
+  // SB-UNI-I / J / K 2026-05-13 — per-type field blocks updatable.
+  "classified",
+  "digitalCode",
+  "liveItem",
   "listingType",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",

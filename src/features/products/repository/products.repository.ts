@@ -672,6 +672,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     batch.update(this.db.collection(this.collection).doc(productId), {
       currentBid,
       bidCount: increment(1),
+      // SB-UNI-H 2026-05-13 — flip `bidsHaveStarted` when any bid lands.
+      // Idempotent on subsequent bids; the BIN button is hidden by the PDP
+      // as soon as this is true (eBay-style hybrid auction rule).
+      bidsHaveStarted: true,
       updatedAt: serverTimestamp(),
     });
   }
