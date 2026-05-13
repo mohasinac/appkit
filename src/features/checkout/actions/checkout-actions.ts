@@ -22,7 +22,15 @@ import {
   readConsentOtp,
   patchConsentOtp,
 } from "../../auth/consent-otp";
-import { addressRepository } from "../../account/repository/address.repository";
+import { addressesRepository } from "../../addresses/repository/addresses.repository";
+
+async function findUserAddress(userId: string, addressId: string) {
+  const address = await addressesRepository.findById(addressId);
+  if (!address || address.ownerType !== "user" || address.ownerId !== userId) {
+    return null;
+  }
+  return address;
+}
 import { userRepository } from "../../auth/repository/user.repository";
 import { resolveDate } from "../../../utils";
 
@@ -32,7 +40,7 @@ export async function sendCheckoutConsentOtp(
   userEmail: string,
   addressId: string,
 ): Promise<{ maskedEmail: string }> {
-  const address = await addressRepository.findById(userId, addressId);
+  const address = await findUserAddress(userId, addressId);
   if (!address) throw new ValidationError("Address not found.");
 
   await enforceConsentOtpRateLimit(userId);
@@ -122,7 +130,7 @@ export async function grantCheckoutConsentViaSms(
   if (!userPhone)
     throw new ValidationError("No phone number registered on your account.");
 
-  const address = await addressRepository.findById(userId, addressId);
+  const address = await findUserAddress(userId, addressId);
   if (!address) throw new ValidationError("Address not found.");
 
   const normalizePhone = (s: string) => s.replace(/[^0-9]/g, "").slice(-10);

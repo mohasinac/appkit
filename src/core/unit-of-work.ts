@@ -19,7 +19,7 @@ import {
   tokenRepository,
   sessionRepository,
 } from "../features/auth/repository";
-import { addressRepository } from "../features/account/repository/address.repository";
+import { addressesRepository } from "../features/addresses/repository/addresses.repository";
 import { cartRepository } from "../features/cart/repository/cart.repository";
 import { categoriesRepository } from "../features/categories/repository/categories.repository";
 import { productRepository } from "../features/products/repository/products.repository";
@@ -45,7 +45,7 @@ export class UnitOfWork {
     return userRepository;
   }
   get addresses() {
-    return addressRepository;
+    return addressesRepository;
   }
   get tokens() {
     return tokenRepository;

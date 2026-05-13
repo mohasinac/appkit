@@ -6,7 +6,9 @@
 export * from "./actions";
 
 export { AccountRepository } from "./repository/account.repository";
+// SB-UNI-A 2026-05-13 — AddressRepository deleted. Use addressesRepository
+// (top-level addresses collection with ownerType:"user").
 export {
-  AddressRepository,
-  addressRepository,
-} from "./repository/address.repository";
+  AddressesRepository,
+  addressesRepository,
+} from "../addresses";

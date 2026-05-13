@@ -1,19 +1,25 @@
 /**
  * Store Address Domain Actions (appkit)
  *
- * Pure business functions for store pickup address CRUD.
- * Auth, rate-limiting, and Next.js specifics are handled by the consumer.
+ * SB-UNI-A 2026-05-13 — re-pointed at the unified `addressesRepository`
+ * (ownerType:"store"). The seller's store is resolved off their UID first;
+ * `store.storeSlug` is the ownerId for the address row.
  */
 
 import { NotFoundError, ValidationError } from "../../../errors";
 import { serverLogger } from "../../../monitoring";
-import { storeAddressRepository } from "../repository/store-address.repository";
+import { addressesRepository } from "../../addresses/repository/addresses.repository";
 import { storeRepository } from "../repository/store.repository";
 import type {
-  StoreAddressDocument,
-  StoreAddressCreateInput,
-  StoreAddressUpdateInput,
-} from "../schemas";
+  AddressDocument,
+  AddressCreateInput,
+  AddressUpdateInput,
+} from "../../addresses/schemas";
+
+// Backwards-compat aliases — keep the old type names exported for callers.
+export type StoreAddressDocument = AddressDocument;
+export type StoreAddressCreateInput = AddressCreateInput;
+export type StoreAddressUpdateInput = AddressUpdateInput;
 
 async function resolveSellerStore(uid: string) {
   const store = await storeRepository.findByOwnerId(uid);
@@ -23,32 +29,32 @@ async function resolveSellerStore(uid: string) {
 
 export async function listStoreAddressesForSeller(
   userId: string,
-): Promise<StoreAddressDocument[]> {
+): Promise<AddressDocument[]> {
   const store = await resolveSellerStore(userId);
   serverLogger.debug("listStoreAddressesForSeller", {
     userId,
     storeSlug: store.storeSlug,
   });
-  return storeAddressRepository.findByStore(store.storeSlug);
+  return addressesRepository.listByOwner("store", store.storeSlug);
 }
 
 export async function createStoreAddressForSeller(
   userId: string,
-  input: StoreAddressCreateInput,
-): Promise<StoreAddressDocument> {
+  input: AddressCreateInput,
+): Promise<AddressDocument> {
   const store = await resolveSellerStore(userId);
   serverLogger.debug("createStoreAddressForSeller", {
     userId,
     storeSlug: store.storeSlug,
   });
-  return storeAddressRepository.create(store.storeSlug, input);
+  return addressesRepository.createForOwner("store", store.storeSlug, input);
 }
 
 export async function updateStoreAddressForSeller(
   userId: string,
   addressId: string,
-  input: StoreAddressUpdateInput,
-): Promise<StoreAddressDocument> {
+  input: AddressUpdateInput,
+): Promise<AddressDocument> {
   if (!addressId?.trim()) throw new ValidationError("addressId is required");
   const store = await resolveSellerStore(userId);
   serverLogger.debug("updateStoreAddressForSeller", {
@@ -56,7 +62,7 @@ export async function updateStoreAddressForSeller(
     storeSlug: store.storeSlug,
     addressId,
   });
-  return storeAddressRepository.update(store.storeSlug, addressId, input);
+  return addressesRepository.updateForOwner("store", store.storeSlug, addressId, input);
 }
 
 export async function deleteStoreAddressForSeller(
@@ -70,5 +76,5 @@ export async function deleteStoreAddressForSeller(
     storeSlug: store.storeSlug,
     addressId,
   });
-  return storeAddressRepository.delete(store.storeSlug, addressId);
+  return addressesRepository.deleteForOwner("store", store.storeSlug, addressId);
 }

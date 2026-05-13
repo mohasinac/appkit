@@ -10,7 +10,8 @@ export {
   StoreRepository,
   storeRepository,
 } from "./repository/store.repository";
-export { storeAddressRepository } from "./repository/store-address.repository";
+// SB-UNI-A 2026-05-13 — storeAddressRepository deleted. Use addressesRepository
+// (top-level addresses collection with ownerType:"store").
 
 export { GET as storesGET, GET } from "./api/route";
 export { GET as storeSlugGET } from "./api/[storeSlug]/route";

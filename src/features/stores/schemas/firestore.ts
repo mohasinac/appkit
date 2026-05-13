@@ -163,85 +163,27 @@ export function generateStoreSlug(
 }
 
 // -- Store Address Subcollection ----------------------------------------------
+// SB-UNI-A 2026-05-13 — store addresses unified into top-level `addresses`
+// collection with `ownerType:"store"`. The types below are kept as aliases
+// so existing consumers don't need to rename imports immediately.
 
-export interface StoreAddressDocument {
-  id: string;
-  label: string;
-  fullName: string;
-  phone: string;
-  addressLine1: string;
-  addressLine2?: string;
-  landmark?: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  isDefault: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import type {
+  AddressDocument as _Addr,
+  AddressCreateInput as _AddrCreate,
+  AddressUpdateInput as _AddrUpdate,
+} from "../../addresses/schemas";
 
+export type StoreAddressDocument = _Addr;
+export type StoreAddressCreateInput = _AddrCreate;
+export type StoreAddressUpdateInput = _AddrUpdate;
+
+export {
+  ADDRESS_FIELDS as STORE_ADDRESS_FIELDS,
+  ADDRESS_INDEXED_FIELDS as STORE_ADDRESS_INDEXED_FIELDS,
+  ADDRESS_PUBLIC_FIELDS as STORE_ADDRESS_PUBLIC_FIELDS,
+  ADDRESS_UPDATABLE_FIELDS as STORE_ADDRESS_UPDATABLE_FIELDS,
+  DEFAULT_ADDRESS_DATA as DEFAULT_STORE_ADDRESS_DATA,
+} from "../../addresses/schemas";
+
+/** @deprecated SB-UNI-A — literal alias only. Use ADDRESSES_COLLECTION. */
 export const STORE_ADDRESS_SUBCOLLECTION = "addresses" as const;
-
-export const STORE_ADDRESS_INDEXED_FIELDS = ["isDefault", "createdAt"] as const;
-
-export const DEFAULT_STORE_ADDRESS_DATA: Partial<StoreAddressDocument> = {
-  isDefault: false,
-};
-
-export const STORE_ADDRESS_PUBLIC_FIELDS = [
-  "id",
-  "label",
-  "fullName",
-  "phone",
-  "addressLine1",
-  "addressLine2",
-  "landmark",
-  "city",
-  "state",
-  "postalCode",
-  "country",
-  "isDefault",
-  "createdAt",
-  "updatedAt",
-] as const;
-
-export const STORE_ADDRESS_UPDATABLE_FIELDS = [
-  "label",
-  "fullName",
-  "phone",
-  "addressLine1",
-  "addressLine2",
-  "landmark",
-  "city",
-  "state",
-  "postalCode",
-  "country",
-  "isDefault",
-] as const;
-
-export type StoreAddressCreateInput = Omit<
-  StoreAddressDocument,
-  "id" | "createdAt" | "updatedAt"
->;
-
-export type StoreAddressUpdateInput = Partial<
-  Pick<StoreAddressDocument, (typeof STORE_ADDRESS_UPDATABLE_FIELDS)[number]>
->;
-
-export const STORE_ADDRESS_FIELDS = {
-  ID: "id",
-  LABEL: "label",
-  FULL_NAME: "fullName",
-  PHONE: "phone",
-  ADDRESS_LINE_1: "addressLine1",
-  ADDRESS_LINE_2: "addressLine2",
-  LANDMARK: "landmark",
-  CITY: "city",
-  STATE: "state",
-  POSTAL_CODE: "postalCode",
-  COUNTRY: "country",
-  IS_DEFAULT: "isDefault",
-  CREATED_AT: "createdAt",
-  UPDATED_AT: "updatedAt",
-} as const;

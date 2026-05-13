@@ -1447,8 +1447,8 @@ export type { UserRole } from "./security/index";
 
 // ./repositories/index
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// AddressRepository - Shared export for address repository.
-export { AddressRepository } from "./repositories/index";
+// AddressesRepository - unified top-level addresses collection (SB-UNI-A 2026-05-13).
+export { AddressesRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // BaseRepository - Shared export for base repository.
 export { BaseRepository } from "./repositories/index";
@@ -1522,8 +1522,8 @@ export { StoreRepository } from "./repositories/index";
 // UserRepository - Shared export for user repository.
 export { UserRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// addressRepository - Shared export for address repository.
-export { addressRepository } from "./repositories/index";
+// addressesRepository - unified addresses repo (ownerType discriminator). SB-UNI-A 2026-05-13.
+export { addressesRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // bidRepository - Shared export for bid repository.
 export { bidRepository } from "./repositories/index";
@@ -1597,9 +1597,8 @@ export { siteSettingsRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // smsCounterRepository - Shared export for sms counter repository.
 export { smsCounterRepository } from "./repositories/index";
-// [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// storeAddressRepository - Shared export for store address repository.
-export { storeAddressRepository } from "./repositories/index";
+// SB-UNI-A 2026-05-13 — storeAddressRepository deleted. Use addressesRepository
+// with ownerType:"store" via the unified addresses collection.
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // storeRepository - Shared export for store repository.
 export { storeRepository } from "./repositories/index";

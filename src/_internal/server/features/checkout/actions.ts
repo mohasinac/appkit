@@ -171,7 +171,11 @@ export async function createCheckoutOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
 
-  const address = await unitOfWork.addresses.findById(uid, addressId);
+  const addressDoc = await unitOfWork.addresses.findById(addressId);
+  const address =
+    addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
+      ? addressDoc
+      : null;
   if (!address) {
     failedCheckoutRepository
       .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
@@ -680,7 +684,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
 
-  const address = await unitOfWork.addresses.findById(uid, addressId);
+  const addressDoc = await unitOfWork.addresses.findById(addressId);
+  const address =
+    addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
+      ? addressDoc
+      : null;
   if (!address) {
     throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
   }

@@ -27,10 +27,12 @@ export {
   SmsCounterRepository,
   smsCounterRepository,
 } from "../features/auth/repository/sms-counter.repository";
+// SB-UNI-A 2026-05-13 — top-level `addresses` collection with ownerType discriminator.
+// Replaces the two prior subcollection repositories (account/address + stores/store-address).
 export {
-  AddressRepository,
-  addressRepository,
-} from "../features/account/repository/address.repository";
+  AddressesRepository,
+  addressesRepository,
+} from "../features/addresses";
 export {
   ProductRepository,
   ProductsRepository,
@@ -57,7 +59,8 @@ export {
   StoreRepository,
   storeRepository,
 } from "../features/stores/repository/store.repository";
-export { storeAddressRepository } from "../features/stores/repository/store-address.repository";
+// SB-UNI-A 2026-05-13 — storeAddressRepository deleted. Use addressesRepository
+// with ownerType:"store" instead.
 export { siteSettingsRepository } from "../features/admin/repository/site-settings.repository";
 export { notificationRepository } from "../features/admin/repository/notification.repository";
 export { chatRepository } from "../features/admin/repository/chat.repository";

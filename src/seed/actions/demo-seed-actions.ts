@@ -31,7 +31,6 @@ export type SeedCollectionName =
   | "events"
   | "eventEntries"
   | "sessions"
-  | "storeAddresses"
   | "carts"
   | "wishlists"
   | "history"

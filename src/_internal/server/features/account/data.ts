@@ -4,7 +4,7 @@
  */
 
 import { cache } from "react";
-import { userRepository, addressRepository } from "../../../../repositories";
+import { userRepository, addressesRepository } from "../../../../repositories";
 
 export interface AccountDataOptions {
   /** Reserved for future overrides. */
@@ -30,6 +30,6 @@ export const listAddressesForUser = cache(
   async (uid: string, _opts?: AccountDataOptions) => {
     void _opts;
     if (!uid) return [];
-    return addressRepository.findByUser(uid);
+    return addressesRepository.listByOwner("user", uid);
   },
 );

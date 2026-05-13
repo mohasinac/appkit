@@ -158,17 +158,23 @@ export const SEED_MANIFEST: SeedManifest = {
       name: s.userId ?? s.id,
     })),
   ),
+  // SB-UNI-A 2026-05-13 — user + store addresses merged into the unified
+  // top-level `addresses` collection w/ ownerType discriminator.
   addresses: pick(
-    asArr(addressesSeedData).map((a) => ({
-      ...a,
-      name: a.label ?? a.fullName ?? a.id,
-    })),
-  ),
-  storeAddresses: pick(
-    asArr(storeAddressesSeedData).map((a) => ({
-      ...a,
-      name: a.label ?? a.fullName ?? a.id,
-    })),
+    [
+      ...asArr(addressesSeedData).map((a) => ({
+        ...a,
+        ownerType: "user" as const,
+        ownerId: a.userId,
+        name: a.label ?? a.fullName ?? a.id,
+      })),
+      ...asArr(storeAddressesSeedData).map((a) => ({
+        ...a,
+        ownerType: "store" as const,
+        ownerId: a.storeSlug,
+        name: a.label ?? a.fullName ?? a.id,
+      })),
+    ],
   ),
   carts: pick(
     asArr(cartsSeedData).map((c) => ({
