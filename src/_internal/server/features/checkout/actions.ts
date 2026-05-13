@@ -34,6 +34,12 @@ import { PRODUCT_COLLECTION, ProductStatusValues } from "../../../../features/pr
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
+// SB-UNI-5 2026-05-13 — bundle cart-line stock fan-out helpers.
+import {
+  getCartItemMemberIds,
+  getExpandedDecrements,
+  validateCartItemStock,
+} from "./bundle-expansion";
 import {
   consentOtpRef,
   consentOtpRateLimitRef,
@@ -192,16 +198,31 @@ export async function createCheckoutOrderAction(
   // product docs are re-read inside the transaction below for stock + prize
   // pool checks; this is intentional (the tx is the source of truth for the
   // counts we actually mutate).
-  const preTxProductRefs = cartItems.map((item) =>
-    db.collection(PRODUCT_COLLECTION).doc(item.productId),
+  //
+  // SB-UNI-5 2026-05-13 — for bundle cart-lines we pair the bundle item with
+  // its FIRST member product (so the maxPerUser cap check uses real product
+  // data instead of failing the bundle's category-id lookup). The full
+  // bundle-member stock fan-out happens in-tx below.
+  const preTxLookup = getExpandedDecrements(cartItems);
+  const preTxProductRefs = preTxLookup.productIds.map((pid) =>
+    db.collection(PRODUCT_COLLECTION).doc(pid),
   );
   const preTxProductSnaps = await Promise.all(preTxProductRefs.map((r) => r.get()));
+  const preTxProductById = new Map<string, ProductDocument>();
+  for (let i = 0; i < preTxLookup.productIds.length; i++) {
+    const snap = preTxProductSnaps[i];
+    if (snap.exists) {
+      preTxProductById.set(
+        preTxLookup.productIds[i],
+        snap.data() as ProductDocument,
+      );
+    }
+  }
   const preTxPairs = cartItems
-    .map((item, i) => {
-      const data = preTxProductSnaps[i].exists
-        ? (preTxProductSnaps[i].data() as ProductDocument)
-        : undefined;
-      return data ? { item, product: data } : null;
+    .map((item): { item: CartItemDocument; product: ProductDocument } | null => {
+      const [firstMember] = getCartItemMemberIds(item);
+      const product = preTxProductById.get(firstMember);
+      return product ? { item, product } : null;
     })
     .filter((pair): pair is { item: CartItemDocument; product: ProductDocument } => pair !== null);
   await enforceMaxPerUserForCart({ userId: uid, items: preTxPairs });
@@ -233,45 +254,88 @@ export async function createCheckoutOrderAction(
       }
       const emailOtpUsed = otpData.verifiedVia !== "sms";
 
-      const productRefs = cartItems.map((item) =>
-        db.collection(PRODUCT_COLLECTION).doc(item.productId),
+      // SB-UNI-5 2026-05-13 — bundle-aware stock fan-out. Build the unique
+      // product-id set across the whole cart (regular items + each bundle's
+      // members) and fetch each one ONCE. Validation walks per cart-line and
+      // checks every required member against the cart-cumulative decrement.
+      const expansion = getExpandedDecrements(cartItems);
+      const productRefById = new Map<
+        string,
+        FirebaseFirestore.DocumentReference
+      >();
+      for (const pid of expansion.productIds) {
+        productRefById.set(pid, db.collection(PRODUCT_COLLECTION).doc(pid));
+      }
+      const productDocs = await Promise.all(
+        expansion.productIds.map((pid) =>
+          tx.get(productRefById.get(pid) as FirebaseFirestore.DocumentReference),
+        ),
       );
-      const productDocs = await Promise.all(productRefs.map((ref) => tx.get(ref)));
+      const productById = new Map<string, ProductDocument>();
+      for (let i = 0; i < expansion.productIds.length; i++) {
+        const doc = productDocs[i];
+        if (doc.exists) {
+          productById.set(
+            expansion.productIds[i],
+            doc.data() as ProductDocument,
+          );
+        }
+      }
 
       const availableItems: StockResult["available"] = [];
       const unavailableItems: StockResult["unavailable"] = [];
 
-      for (let i = 0; i < cartItems.length; i++) {
-        const item = cartItems[i];
-        const doc = productDocs[i];
-        const productData = doc.exists ? (doc.data() as ProductDocument) : null;
-        if (
-          !productData ||
-          productData.status !== ProductStatusValues.PUBLISHED ||
-          productData.availableQuantity < item.quantity
-        ) {
+      for (const item of cartItems) {
+        const shortfall = validateCartItemStock(
+          item,
+          productById,
+          expansion.decrements,
+        );
+        if (shortfall) {
           unavailableItems.push({
-            productId: item.productId,
+            productId: shortfall.productId,
             productTitle: item.productTitle,
             requestedQty: item.quantity,
-            availableQty: productData?.availableQuantity ?? 0,
+            availableQty: shortfall.availableQty,
           });
+          continue;
+        }
+        // Bundle cart-lines surface the first member as the "product" so
+        // downstream listingType branching (prize-draw) stays sound — bundle
+        // pricing is always "standard" so the prize-draw cap isn't enforced.
+        const memberIds = getCartItemMemberIds(item);
+        const representative = productById.get(memberIds[0]) as ProductDocument;
+        if (item.bundleProductIds && item.bundleProductIds.length > 0) {
+          availableItems.push({ item, product: representative });
         } else {
-          // SB6-C — prize-draw pool cap (in-tx, atomic with availableQuantity).
+          // Regular item — preserve prize-draw pool cap + prizeCurrentEntries
+          // bookkeeping. Bundles never use this branch.
           enforcePrizePoolCap({
-            productSnapshot: productData,
+            productSnapshot: representative,
             requestedQuantity: item.quantity,
           });
-          const productUpdate: Record<string, unknown> = {
-            availableQuantity: productData.availableQuantity - item.quantity,
+          availableItems.push({ item, product: representative });
+        }
+      }
+
+      // Apply per-product decrements ONCE per unique product (sums across the
+      // cart) so two cart lines sharing a product don't double-decrement.
+      if (availableItems.length > 0) {
+        for (const [pid, qtyDelta] of expansion.decrements) {
+          const product = productById.get(pid);
+          if (!product) continue;
+          const update: Record<string, unknown> = {
+            availableQuantity: product.availableQuantity - qtyDelta,
             updatedAt: new Date(),
           };
-          if (productData.listingType === "prize-draw") {
-            productUpdate.prizeCurrentEntries =
-              (productData.prizeCurrentEntries ?? 0) + item.quantity;
+          if (product.listingType === "prize-draw") {
+            update.prizeCurrentEntries =
+              (product.prizeCurrentEntries ?? 0) + qtyDelta;
           }
-          tx.update(productRefs[i], productUpdate);
-          availableItems.push({ item, product: productData });
+          tx.update(
+            productRefById.get(pid) as FirebaseFirestore.DocumentReference,
+            update,
+          );
         }
       }
 
@@ -353,12 +417,23 @@ export async function createCheckoutOrderAction(
         : undefined;
     const orderItems = group.map(({ item, product }) => {
       const isPrizeDrawLine = product.listingType === "prize-draw";
+      // SB-UNI-5 2026-05-13 — forward bundle identifiers + member snapshot
+      // so the order-detail UI can collapse expanded lines back under a
+      // "Bundle: <name>" header.
+      const bundleFields =
+        item.bundleCategorySlug && item.bundleProductIds
+          ? {
+              bundleCategorySlug: item.bundleCategorySlug,
+              bundleProductIds: item.bundleProductIds,
+            }
+          : {};
       return {
         productId: item.productId,
         productTitle: item.productTitle,
         quantity: item.quantity,
         unitPrice: item.price,
         totalPrice: item.price * item.quantity,
+        ...bundleFields,
         ...(isPrizeDrawLine
           ? {
               listingType: "prize-draw" as const,
@@ -729,12 +804,21 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }
   }
 
-  const productChecks = await Promise.all(
-    cart.items.map(async (item) => {
-      const product = await unitOfWork.products.findById(item.productId);
-      return { item, product };
-    }),
-  );
+  // SB-UNI-5 2026-05-13 — bundle-aware product fetch + validation. Each
+  // cart line gets paired with a "representative" product (first member id
+  // for bundles, productId for regular items). The full bundle-member
+  // decrement runs against `expansionPaid.decrements` lower down.
+  const expansionPaid = getExpandedDecrements(cart.items);
+  const productByIdPaid = new Map<string, ProductDocument>();
+  for (const pid of expansionPaid.productIds) {
+    const product = await unitOfWork.products.findById(pid);
+    if (product) productByIdPaid.set(pid, product);
+  }
+  const productChecks = cart.items.map((item) => {
+    const [firstMember] = getCartItemMemberIds(item);
+    const product = productByIdPaid.get(firstMember) ?? null;
+    return { item, product };
+  });
 
   // SB6-C — maxPerUser cap check before we touch any state.
   await enforceMaxPerUserForCart({
@@ -748,31 +832,35 @@ export async function verifyAndPlaceRazorpayOrderAction(
   });
 
   // SB6-C — prize-pool cap. Runs against the freshly-read product snapshots.
+  // Bundle items skip the prize-draw cap by design (bundle pricing is "standard").
   for (const { item, product } of productChecks) {
     if (!product) continue;
+    if (item.bundleProductIds && item.bundleProductIds.length > 0) continue;
     enforcePrizePoolCap({
       productSnapshot: product,
       requestedQuantity: item.quantity,
     });
   }
 
-  for (const { item, product } of productChecks) {
-    if (!product || product.status !== ProductStatusValues.PUBLISHED) {
-      failedCheckoutRepository
-        .logPayment(uid, "product_unavailable", `Product ${item.productId} not published`, {
-          gatewayOrderId: razorpay_order_id,
-          gatewayPaymentId: razorpay_payment_id,
-          addressId,
-        })
-        .catch(() => {});
-      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.PRODUCT_UNAVAILABLE);
-    }
-    if (product.availableQuantity < item.quantity) {
+  // SB-UNI-5 — validate every required member product across the cart with
+  // cumulative decrement awareness (two bundles sharing a member must NOT
+  // both succeed unless the product has enough stock for the sum).
+  for (const item of cart.items) {
+    const shortfall = validateCartItemStock(
+      item,
+      productByIdPaid,
+      expansionPaid.decrements,
+    );
+    if (shortfall) {
+      const exists = productByIdPaid.has(shortfall.productId);
+      const reason = exists ? "stock_insufficient" : "product_unavailable";
       failedCheckoutRepository
         .logPayment(
           uid,
-          "stock_insufficient",
-          `Product ${item.productId} has ${product.availableQuantity} left, requested ${item.quantity}`,
+          reason,
+          exists
+            ? `Product ${shortfall.productId} has ${shortfall.availableQty} left, requested ${item.quantity}`
+            : `Product ${shortfall.productId} not published`,
           {
             gatewayOrderId: razorpay_order_id,
             gatewayPaymentId: razorpay_payment_id,
@@ -780,15 +868,24 @@ export async function verifyAndPlaceRazorpayOrderAction(
           },
         )
         .catch(() => {});
-      throw new ValidationError(ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK);
+      throw new ValidationError(
+        exists
+          ? ERROR_MESSAGES.CHECKOUT.INSUFFICIENT_STOCK
+          : ERROR_MESSAGES.CHECKOUT.PRODUCT_UNAVAILABLE,
+      );
     }
   }
 
   {
-    const cartSubtotalRs = productChecks.reduce(
-      (sum, { item, product }) => sum + product!.price * item.quantity,
-      0,
-    );
+    // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked
+    // bundlePriceInPaise) instead of the representative member's product.price.
+    const cartSubtotalRs = productChecks.reduce((sum, { item, product }) => {
+      const isBundle = Boolean(
+        item.bundleCategorySlug && item.bundleProductIds?.length,
+      );
+      const unit = isBundle ? item.price : product!.price;
+      return sum + unit * item.quantity;
+    }, 0);
     const expectedPlatformFee =
       Math.round(cartSubtotalRs * (razorpayFeePercent / 100) * 100) / 100;
     const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee;
@@ -822,11 +919,18 @@ export async function verifyAndPlaceRazorpayOrderAction(
   let total = 0;
   const emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][] = [];
 
+  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
+  // price); regular lines use product.price. The helper keeps the math
+  // local to this block.
+  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
+    item.bundleCategorySlug && item.bundleProductIds?.length
+      ? item.price
+      : (product as ProductDocument).price;
   const cartSubtotal = orderGroups.reduce(
     (s, { items: g }) =>
       s +
       g.reduce(
-        (gs, { item, product }) => gs + product!.price * item.quantity,
+        (gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity,
         0,
       ),
     0,
@@ -835,7 +939,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
   for (const { items: group, orderType } of orderGroups) {
     const firstItem = group[0].item;
     const groupTotal = group.reduce(
-      (sum, { item, product }) => sum + product!.price * item.quantity,
+      (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
       0,
     );
 
@@ -875,7 +979,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
         if (coupon.applicableItemIds?.length) {
           const eligibleTotal = group
             .filter(({ item }) => coupon.applicableItemIds!.includes(item.itemId))
-            .reduce((s, { item, product }) => s + product!.price * item.quantity, 0);
+            .reduce((s, { item, product }) => s + unitPriceFor(item, product) * item.quantity, 0);
           couponGroupDiscount =
             eligibleTotal > 0
               ? Math.min(
@@ -918,12 +1022,26 @@ export async function verifyAndPlaceRazorpayOrderAction(
         : undefined;
     const orderItems = group.map(({ item, product }) => {
       const isPrizeDrawLine = product?.listingType === "prize-draw";
+      // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
+      // bundlePriceInPaise (item.price), not the representative member's
+      // product.price. Stock decrement still runs per member elsewhere.
+      const isBundle = Boolean(
+        item.bundleCategorySlug && item.bundleProductIds?.length,
+      );
+      const unitPrice = isBundle ? item.price : product!.price;
+      const bundleFields = isBundle
+        ? {
+            bundleCategorySlug: item.bundleCategorySlug as string,
+            bundleProductIds: item.bundleProductIds as string[],
+          }
+        : {};
       return {
         productId: item.productId,
         productTitle: item.productTitle,
         quantity: item.quantity,
-        unitPrice: product!.price,
-        totalPrice: product!.price * item.quantity,
+        unitPrice,
+        totalPrice: unitPrice * item.quantity,
+        ...bundleFields,
         ...(isPrizeDrawLine
           ? {
               listingType: "prize-draw" as const,
@@ -1019,18 +1137,23 @@ export async function verifyAndPlaceRazorpayOrderAction(
     });
   }
 
+  // SB-UNI-5 2026-05-13 — bundle-aware batch decrement. We iterate the
+  // cumulative `decrements` map (one entry per unique member product) so a
+  // bundle's members + any sibling cart line touching the same product
+  // collapse into ONE update per product.
   await unitOfWork.runBatch((batch) => {
-    for (const { item, product } of productChecks) {
+    for (const [pid, qtyDelta] of expansionPaid.decrements) {
+      const product = productByIdPaid.get(pid);
       if (!product) continue;
       const prizeBump =
         product.listingType === "prize-draw"
           ? {
               prizeCurrentEntries:
-                (product.prizeCurrentEntries ?? 0) + item.quantity,
+                (product.prizeCurrentEntries ?? 0) + qtyDelta,
             }
           : {};
-      unitOfWork.products.updateInBatch(batch, item.productId, {
-        availableQuantity: product.availableQuantity - item.quantity,
+      unitOfWork.products.updateInBatch(batch, pid, {
+        availableQuantity: product.availableQuantity - qtyDelta,
         ...prizeBump,
       } as never);
     }
