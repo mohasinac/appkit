@@ -20,6 +20,7 @@ import { getProviders } from "../../../../contracts/registry";
 import { orderRepository } from "../../../..";
 import { NotFoundError, ValidationError } from "../../../../errors";
 import type { OrderRefundEvent, RefundType } from "../../../../features/orders/schemas";
+import { applyRefundDeductionAction } from "../payouts/actions";
 
 export type ProcessRefundInput = {
   orderId: string;
@@ -101,6 +102,18 @@ export async function processRefundAction(
   };
 
   await orderRepository.postRefundEvent(input.orderId, event, isFull);
+
+  // Fire-and-forget: deduct from the store's pending payout if one exists.
+  // Failure here must not roll back the already-posted refund event.
+  if (order.storeId) {
+    applyRefundDeductionAction({
+      storeId: order.storeId,
+      orderId: input.orderId,
+      refundId,
+      refundedAmountInPaise: input.amountInPaise,
+      reason: input.reason,
+    }).catch(() => {/* payout deduction is best-effort */});
+  }
 
   return { success: true, refundId };
 }

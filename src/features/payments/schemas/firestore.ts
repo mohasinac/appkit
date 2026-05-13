@@ -16,6 +16,23 @@ export interface PayoutBankAccount {
 
 export type PayoutStatus = "pending" | "processing" | "completed" | "failed";
 
+/**
+ * A single refund deduction applied against a payout before dispatch.
+ *
+ * deductedAmount = refundedAmount − (refundedAmount × platformFeeRate)
+ * The platform keeps its fee share; only the net seller portion is deducted.
+ */
+export interface PayoutRefundDeduction {
+  orderId: string;
+  refundId: string;
+  /** Gross refund amount in paise (for audit trail). */
+  refundedAmount: number;
+  /** Net amount deducted from the seller payout in paise. */
+  deductedAmount: number;
+  reason: string;
+  appliedAt: Date;
+}
+
 export const PayoutStatusValues = {
   PENDING: "pending",
   PROCESSING: "processing",
@@ -47,6 +64,16 @@ export interface PayoutDocument {
   gstAmount?: number;
   gstRate?: number;
   isAutomatic?: boolean;
+  /**
+   * Refund deductions applied before dispatch (while status = "pending").
+   * Each entry reduces the seller's net payout by deductedAmount.
+   */
+  refundDeductions?: PayoutRefundDeduction[];
+  /**
+   * amount − sum(refundDeductions.deductedAmount). Undefined when no
+   * deductions have been applied; dispatch code must use `netAmount ?? amount`.
+   */
+  netAmount?: number;
   requestedAt: Date;
   processedAt?: Date;
   createdAt: Date;

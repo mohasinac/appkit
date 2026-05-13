@@ -53,7 +53,8 @@ async function dispatch(ctx: JobContext, entry: { ref: DocumentReference; data: 
         ...fundAccount,
         contact: { name: payout.sellerEmail, type: "vendor", email: payout.sellerEmail },
       },
-      amount: Math.round(payout.amount * 100),
+      // Use netAmount when refund deductions have been applied, otherwise gross amount.
+      amount: Math.round((payout.netAmount ?? payout.amount) * 100),
       currency: payout.currency.toUpperCase(),
       mode: payout.paymentMethod === "upi" ? "UPI" : "NEFT",
       purpose: "payout",

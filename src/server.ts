@@ -847,6 +847,12 @@ export {
   processRefundAction,
   type ProcessRefundInput,
 } from "./_internal/server/features/refunds/actions";
+// [SERVER-ONLY] Payout refund deduction action
+export {
+  applyRefundDeductionAction,
+  type ApplyRefundDeductionInput,
+  type ApplyRefundDeductionResult,
+} from "./_internal/server/features/payouts/actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createFaq - Helper for create faq.
 export { createFaq } from "./features/faq/server";

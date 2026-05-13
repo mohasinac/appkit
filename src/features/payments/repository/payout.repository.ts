@@ -15,6 +15,7 @@ import type { DocumentReference, WriteResult } from "firebase-admin/firestore";
 import type {
   PayoutDocument,
   PayoutCreateInput,
+  PayoutRefundDeduction,
   PayoutStatus,
   PayoutUpdateInput,
 } from "../schemas";
@@ -254,6 +255,57 @@ export class PayoutRepository extends BaseRepository<PayoutDocument> {
       (data.orderIds ?? []).forEach((oid) => ids.add(oid));
     });
     return ids;
+  }
+
+  /**
+   * Find the most recent pending payout for a store.
+   * Used to locate the deduction target when a refund is issued.
+   */
+  async findPendingByStore(storeId: string): Promise<PayoutDocument | null> {
+    const snapshot = await this.db
+      .collection(this.collection)
+      .where(PAYOUT_FIELDS.STORE_ID, "==", storeId)
+      .where(PAYOUT_FIELDS.STATUS, "==", "pending")
+      .orderBy(PAYOUT_FIELDS.CREATED_AT, "desc")
+      .limit(1)
+      .get();
+    if (snapshot.empty) return null;
+    return this.decryptPayout({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as PayoutDocument);
+  }
+
+  /**
+   * Atomically append a refund deduction and recalculate netAmount.
+   *
+   * Only valid while status = "pending". Throws if the payout is not found
+   * or is no longer pending. netAmount is floored at 0.
+   */
+  async applyRefundDeduction(
+    payoutId: string,
+    deduction: Omit<PayoutRefundDeduction, "appliedAt">,
+  ): Promise<PayoutDocument> {
+    const ref = this.db.collection(this.collection).doc(payoutId);
+    const entry: PayoutRefundDeduction = { ...deduction, appliedAt: new Date() };
+
+    const updated = await this.db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) throw new Error(`Payout ${payoutId} not found`);
+      const doc = { id: snap.id, ...snap.data() } as PayoutDocument;
+      if (doc.status !== "pending") {
+        throw new Error(`Cannot deduct from payout ${payoutId} in status "${doc.status}"`);
+      }
+      const existing = doc.refundDeductions ?? [];
+      const newDeductions = [...existing, entry];
+      const totalDeducted = newDeductions.reduce((s, d) => s + d.deductedAmount, 0);
+      const netAmount = Math.max(0, doc.amount - totalDeducted);
+      tx.update(ref, {
+        refundDeductions: newDeductions.map((d) => prepareForFirestore(d as unknown as Record<string, unknown>)),
+        netAmount,
+        updatedAt: new Date(),
+      });
+      return { ...doc, refundDeductions: newDeductions, netAmount, updatedAt: new Date() };
+    });
+
+    return this.decryptPayout(updated);
   }
 
   // ---------------------------------------------------------------------------

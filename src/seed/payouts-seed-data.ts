@@ -9,7 +9,7 @@ const _CURRENCY = getDefaultCurrency();
  * Store IDs from stores-seed-data.ts; order IDs from orders-seed-data.ts.
  */
 
-import type { PayoutDocument } from "../features/payments/schemas";
+import type { PayoutDocument, PayoutRefundDeduction } from "../features/payments/schemas";
 import {
   PAYOUT_FIELDS,
   DEFAULT_PLATFORM_FEE_RATE,
@@ -26,6 +26,18 @@ function payoutAmounts(grossINR: number) {
   const platformFee = Math.round(grossAmount * DEFAULT_PLATFORM_FEE_RATE);
   const amount = grossAmount - platformFee;
   return { grossAmount, platformFee, amount };
+}
+
+// Helper: build a seed refund deduction entry
+function seedDeduction(
+  orderId: string,
+  refundId: string,
+  refundedAmountInPaise: number,
+  reason: string,
+  daysAgoN: number,
+): PayoutRefundDeduction {
+  const deductedAmount = Math.round(refundedAmountInPaise * (1 - DEFAULT_PLATFORM_FEE_RATE));
+  return { orderId, refundId, refundedAmount: refundedAmountInPaise, deductedAmount, reason, appliedAt: daysAgo(daysAgoN) };
 }
 
 export const payoutsSeedData: Partial<PayoutDocument>[] = [
@@ -461,7 +473,7 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     updatedAt: daysAgo(2),
   },
 
-  // 19. CardGame Hub — May 2026 — PENDING
+  // 19. CardGame Hub — May 2026 — PENDING (full refund deduction: order fully refunded)
   {
     id: "payout-cardgame-hub-may-2026-pending",
     storeId: "store-cardgame-hub",
@@ -480,12 +492,24 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     },
     notes: "May 2026 payout — Yu-Gi-Oh! 25th Anniversary Tin + Digimon BT-16 booster",
     orderIds: ["order-priya-020-yugioh-25th-tin"],
+    // Full refund on the order — entire gross (284900 paise = ₹2849) refunded.
+    // deducted = 284900 × 0.95 = 270655; netAmount floored at 0.
+    refundDeductions: [
+      seedDeduction(
+        "order-priya-020-yugioh-25th-tin",
+        "refund-order-priya-020-full-001",
+        284900,
+        "Item not received — courier confirmed lost in transit",
+        1,
+      ),
+    ],
+    netAmount: 0,
     requestedAt: daysAgo(1),
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),
   },
 
-  // 20. Pokémon Palace — May 2026 — PENDING
+  // 20. Pokémon Palace — May 2026 — PENDING (partial refund deduction applied)
   {
     id: "payout-pokemon-palace-may-2026-pending",
     storeId: "store-pokemon-palace",
@@ -504,6 +528,17 @@ export const payoutsSeedData: Partial<PayoutDocument>[] = [
     },
     notes: "May 2026 payout — Pokémon 151 UPC + Temporal Forces ETB batch",
     orderIds: ["order-aarav-021-pokemon-151-upc"],
+    // Partial refund of ₹500 (50000 paise) — deducted: ₹475 (47500 paise = 50000 × 0.95)
+    refundDeductions: [
+      seedDeduction(
+        "order-aarav-021-pokemon-151-upc",
+        "refund-order-aarav-021-partial-001",
+        50000,
+        "Item arrived with damaged outer sleeve — buyer requested partial refund",
+        1,
+      ),
+    ],
+    netAmount: payoutAmounts(5199).amount - 47500,
     requestedAt: daysAgo(1),
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),

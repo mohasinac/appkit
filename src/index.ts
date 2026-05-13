@@ -6726,6 +6726,9 @@ export type { PayoutCreateInput } from "./features/payments/index";
 // PayoutDocument - Type contract for payout document.
 export type { PayoutDocument } from "./features/payments/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
+// PayoutRefundDeduction - Type contract for payout refund deduction entry.
+export type { PayoutRefundDeduction } from "./features/payments/index";
+// [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // PayoutPaymentMethod - Type contract for payout payment method.
 export type { PayoutPaymentMethod } from "./features/payments/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
