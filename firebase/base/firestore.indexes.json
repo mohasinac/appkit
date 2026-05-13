@@ -3657,6 +3657,28 @@
       ]
     },
     {
+      "collectionGroup": "categories",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "categoryType",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdByStoreId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "isActive",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "scammerProfiles",
       "queryScope": "COLLECTION",
       "fields": [

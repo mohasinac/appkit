@@ -61,26 +61,41 @@ const SIEVE_CLAUSE_LT_PREORDER = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE
 const SIEVE_CLAUSE_LT_STANDARD = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.STANDARD}`;
 const SIEVE_CLAUSE_LT_PRIZE_DRAW = `${PRODUCT_FIELDS.LISTING_TYPE}==${LISTING_TYPE_VALUES.PRIZE_DRAW}`;
 
+// Canonical tokens match the `ListingType` union in
+// `appkit/src/features/products/types/index.ts`. Legacy aliases (`preorder`,
+// `product`, `prizedraw`) are accepted for backwards compatibility with older
+// consumer routes/clients; they normalise to the canonical value before
+// reaching Firestore.
 type ProductListingKind =
+  | "standard"
   | "auction"
+  | "pre-order"
+  | "prize-draw"
+  // Legacy aliases — see `LISTING_KIND_ALIAS_MAP` below.
   | "preorder"
   | "product"
-  | "prizedraw"
-  | "prize-draw";
+  | "prizedraw";
+
+const LISTING_KIND_ALIAS_MAP: Record<ProductListingKind, string> = {
+  standard: LISTING_TYPE_VALUES.STANDARD,
+  auction: LISTING_TYPE_VALUES.AUCTION,
+  "pre-order": LISTING_TYPE_VALUES.PRE_ORDER,
+  "prize-draw": LISTING_TYPE_VALUES.PRIZE_DRAW,
+  // Legacy → canonical.
+  product: LISTING_TYPE_VALUES.STANDARD,
+  preorder: LISTING_TYPE_VALUES.PRE_ORDER,
+  prizedraw: LISTING_TYPE_VALUES.PRIZE_DRAW,
+};
+
+const LISTING_KIND_ACCEPTED = new Set<string>(
+  Object.keys(LISTING_KIND_ALIAS_MAP),
+);
 
 function buildListingKindClause(
   kind: ProductListingKind,
   inverted: boolean,
 ): string {
-  // Map the public alias tokens to canonical Firestore values.
-  const canonical =
-    kind === "auction"
-      ? LISTING_TYPE_VALUES.AUCTION
-      : kind === "preorder"
-        ? LISTING_TYPE_VALUES.PRE_ORDER
-        : kind === "prizedraw" || kind === "prize-draw"
-          ? LISTING_TYPE_VALUES.PRIZE_DRAW
-          : LISTING_TYPE_VALUES.STANDARD;
+  const canonical = LISTING_KIND_ALIAS_MAP[kind];
   const op = inverted ? "!=" : "==";
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
@@ -486,14 +501,11 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
      */
     listingType: (value, operator) => {
       if (operator !== "==" && operator !== "!=") return "";
-      if (
-        value !== "auction" &&
-        value !== "preorder" &&
-        value !== "product" &&
-        value !== "prizedraw" &&
-        value !== "prize-draw"
-      )
-        return "";
+      // Accept both canonical tokens (`standard`, `auction`, `pre-order`,
+      // `prize-draw`) and legacy aliases (`product`, `preorder`, `prizedraw`).
+      // `LISTING_KIND_ACCEPTED` is the single source of truth — keep it in
+      // sync with `LISTING_KIND_ALIAS_MAP`.
+      if (!LISTING_KIND_ACCEPTED.has(value)) return "";
       return buildListingKindClause(
         value as ProductListingKind,
         operator === "!=",
