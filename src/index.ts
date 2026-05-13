@@ -8833,12 +8833,18 @@ export { GROUPED_LISTINGS_COLLECTION } from "./features/grouped/schemas/firestor
 export {
   BUNDLES_COLLECTION,
   BUNDLE_INDEXED_FIELDS,
+  BUNDLE_ITEM_MIN,
+  BUNDLE_ITEM_MAX,
+  bundleCreateInputSchema,
+  bundleUpdateInputSchema,
 } from "./features/bundles/schemas";
 export type {
   BundleDocument,
   BundleItem,
   BundleStatus,
   BundleItemListingType,
+  BundleCreateInput,
+  BundleUpdateInput,
 } from "./features/bundles/schemas";
 // SB3 bundle UI views + constants + form value type (client-safe components)
 export {
