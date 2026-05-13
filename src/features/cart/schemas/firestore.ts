@@ -30,6 +30,19 @@ export interface CartItemDocument {
   offerId?: string;
   /** Locked offer price — overrides normal product price at checkout */
   lockedPrice?: number;
+  /**
+   * SB-UNI-4 2026-05-13 — bundle identifier when this cart line represents a
+   * bundle (categoryType:"bundle" row on the categories collection). When set,
+   * `productId` points at the bundle category's id, `price` is the locked
+   * bundlePriceInPaise, and `bundleProductIds` snapshots the member product
+   * ids at add-to-cart time. Order-side fan-out into per-product OrderItem
+   * entries lands in S-SBUNI-5 (checkout-side stock decrement + per-store
+   * grouping); until then the foundation is here but BundleDetailView keeps
+   * the "Add to cart coming soon" notice up.
+   */
+  bundleCategorySlug?: string;
+  /** Snapshot of `bundle.bundleProductIds` at add-to-cart time. */
+  bundleProductIds?: string[];
   addedAt: Date;
   updatedAt: Date;
 }
@@ -110,6 +123,10 @@ export type AddToCartInput = {
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;
+  /** SB-UNI-4 2026-05-13 — bundle identifier when the line is a bundle. */
+  bundleCategorySlug?: string;
+  /** Snapshot of bundle members at add-to-cart time. */
+  bundleProductIds?: string[];
 };
 
 export type UpdateCartItemInput = {

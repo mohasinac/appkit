@@ -57,6 +57,15 @@ export interface OrderItem {
   prizeRevealDeadline?: string;
   /** Set after the reveal endpoint picks a winner — the prize item index. */
   revealedItemNumber?: number;
+  /**
+   * SB-UNI-4 2026-05-13 — bundle identifier when this order line represents a
+   * bundle purchase. `productId` then points at the bundle category id and
+   * `bundleProductIds` snapshots the included member product ids. Per-member
+   * stock decrement + order fan-out lands in S-SBUNI-5.
+   */
+  bundleCategorySlug?: string;
+  /** Snapshot of bundle.bundleProductIds at order-creation time. */
+  bundleProductIds?: string[];
 }
 
 export interface OrderTimeline {

@@ -4450,6 +4450,8 @@ export type { UpdateBlogPostInput } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
 export { addItemToCart } from "./features/cart/server";
+// SB-UNI-4 2026-05-13 — addBundleToCart adds a categoryType:"bundle" row as a single cart line.
+export { addBundleToCart } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";

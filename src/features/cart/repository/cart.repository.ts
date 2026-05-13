@@ -110,6 +110,13 @@ export class CartRepository extends BaseRepository<CartDocument> {
           ...(input.lockedPrice !== undefined && {
             lockedPrice: input.lockedPrice,
           }),
+          // SB-UNI-4 2026-05-13 — propagate bundle identifiers when present.
+          ...(input.bundleCategorySlug !== undefined && {
+            bundleCategorySlug: input.bundleCategorySlug,
+          }),
+          ...(input.bundleProductIds !== undefined && {
+            bundleProductIds: input.bundleProductIds,
+          }),
           addedAt: new Date(),
           updatedAt: new Date(),
         };
