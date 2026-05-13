@@ -6,6 +6,7 @@ import { renderSection, AnnouncementBar, type SectionData } from "../lib/section
 import { homepageSectionsRepository } from "../repository/homepage-sections.repository";
 import { getFeaturedProducts, getFeaturedAuctions, getFeaturedPreOrders } from "../../products/actions/product-actions";
 import { listTopLevelCategories, listBrandCategories } from "../../categories/actions/category-actions";
+import { listFeaturedBundles } from "../../../_internal/server/features/bundles/data";
 import { listStores } from "../../stores/actions/store-query-actions";
 import { getFeaturedBlogPosts } from "../../blog/actions/blog-actions";
 import { listPublicEvents } from "../../events/actions/event-actions";
@@ -103,6 +104,7 @@ export async function MarketplaceHomepageView({
     preOrdersResult,
     categoriesResult,
     brandsResult,
+    bundlesResult,
     storesResult,
     blogResult,
     eventsResult,
@@ -112,6 +114,7 @@ export async function MarketplaceHomepageView({
     activeTypes.has("pre-orders") ? getFeaturedPreOrders(12).catch(() => null) : null,
     activeTypes.has("categories") ? listTopLevelCategories(12).catch(() => null) : null,
     activeTypes.has("brands") ? listBrandCategories(12).catch(() => null) : null,
+    activeTypes.has("featured-bundles") ? listFeaturedBundles(8).catch(() => null) : null,
     activeTypes.has("stores") ? listStores({ pageSize: 8, sorts: "-averageRating" }).catch(() => null) : null,
     activeTypes.has("blog-articles") ? getFeaturedBlogPosts(6).catch(() => null) : null,
     activeTypes.has("events") ? listPublicEvents({ filters: "status==active", pageSize: 6 }).catch(() => null) : null,
@@ -136,6 +139,7 @@ export async function MarketplaceHomepageView({
     brands: brandsResult?.length
       ? (brandsResult as unknown as CategoryItem[])
       : undefined,
+    bundles: bundlesResult?.length ? bundlesResult : undefined,
     stores: storesResult?.items?.length
       ? (storesResult.items as unknown as StoreListItem[])
       : undefined,

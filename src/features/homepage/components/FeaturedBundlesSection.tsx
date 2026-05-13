@@ -1,0 +1,139 @@
+/**
+ * FeaturedBundlesSection — S-SBUNI-3 2026-05-13 rebuild.
+ *
+ * Rebuilt after SB-UNI-V deletion. Renders a horizontal grid of bundle
+ * cards driven by `initialItems` (CategoryDocument with categoryType:"bundle").
+ * Server-friendly — no data fetching here; the renderer passes pre-fetched
+ * items from `MarketplaceHomepageView.sectionData.bundles`.
+ */
+
+import React from "react";
+import Link from "next/link";
+import { Badge, Div, Heading, Row, Section, Stack, Text } from "../../../ui";
+import { ROUTES } from "../../../next/routing/route-map";
+import { formatCurrency } from "../../../utils/number.formatter";
+import type { CategoryDocument } from "../../categories/schemas";
+
+const PLACEHOLDER_EMOJI = "📦" as const;
+
+const COPY = {
+  defaultTitle: "Curated Bundles",
+  viewAll: "View all bundles →",
+  empty: "Bundles coming soon — curated multi-item drops launching shortly.",
+  itemCount: (n: number) => `${n} item${n !== 1 ? "s" : ""}`,
+  priceFallback: "—",
+} as const;
+
+type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
+
+const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning" | "danger"> = {
+  in_stock: "success",
+  partial: "warning",
+  out_of_stock: "danger",
+};
+
+export interface FeaturedBundlesSectionProps {
+  title?: string;
+  description?: string;
+  initialItems?: CategoryDocument[];
+  className?: string;
+}
+
+export function FeaturedBundlesSection({
+  title = COPY.defaultTitle,
+  description,
+  initialItems = [],
+  className = "",
+}: FeaturedBundlesSectionProps) {
+  const items = initialItems.filter((c) => c.categoryType === "bundle");
+
+  return (
+    <Section className={`py-10 ${className}`}>
+      <Stack gap="md">
+        <Row gap="sm" align="center" justify="between" className="flex-wrap">
+          <Stack gap="xs">
+            <Heading
+              level={2}
+              className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
+            >
+              {title}
+            </Heading>
+            {description && (
+              <Text size="sm" color="muted">
+                {description}
+              </Text>
+            )}
+          </Stack>
+          <Link
+            href={String(ROUTES.PUBLIC.BUNDLES ?? "/bundles")}
+            className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline"
+          >
+            {COPY.viewAll}
+          </Link>
+        </Row>
+
+        {items.length === 0 ? (
+          <Div className="rounded-xl border border-dashed border-zinc-200 py-12 text-center dark:border-zinc-700">
+            <Text color="muted">{COPY.empty}</Text>
+          </Div>
+        ) : (
+          <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {items.map((bundle) => (
+              <FeaturedBundleCard key={bundle.id} bundle={bundle} />
+            ))}
+          </Div>
+        )}
+      </Stack>
+    </Section>
+  );
+}
+
+interface FeaturedBundleCardProps {
+  bundle: CategoryDocument;
+}
+
+function FeaturedBundleCard({ bundle }: FeaturedBundleCardProps) {
+  const stock = bundle.bundleStockStatus ?? "in_stock";
+  const memberCount = bundle.bundleProductIds?.length ?? 0;
+  const cover = bundle.display?.coverImage;
+  const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
+
+  return (
+    <Link
+      href={href}
+      className="group rounded-xl border border-zinc-200 bg-white p-3 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+    >
+      <Div className="mb-2 aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+        {cover ? (
+          // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
+          <img
+            src={cover}
+            alt={bundle.name}
+            className="h-full w-full object-cover transition-transform group-hover:scale-105"
+            loading="lazy"
+          />
+        ) : (
+          <Div className="flex h-full w-full items-center justify-center text-3xl">
+            {PLACEHOLDER_EMOJI}
+          </Div>
+        )}
+      </Div>
+      <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
+      <Row gap="sm" align="center" className="mt-1 flex-wrap">
+        <Text size="sm" weight="bold">
+          {bundle.bundlePriceInPaise
+            ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
+            : COPY.priceFallback}
+        </Text>
+        <Text size="xs" color="muted">
+          · {COPY.itemCount(memberCount)}
+        </Text>
+        {stock !== "in_stock" && (
+          <Badge variant={STOCK_BADGE_VARIANT[stock]}>
+            {stock === "partial" ? "Partial" : "Out of stock"}
+          </Badge>
+        )}
+      </Row>
+    </Link>
+  );
+}

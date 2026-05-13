@@ -25,8 +25,9 @@ import { BrandsSection } from "../components/BrandsSection";
 import { SocialFeedSection } from "../components/SocialFeedSection";
 import { CustomCardsSection } from "../components/CustomCardsSection";
 import { GoogleReviewsSection } from "../components/GoogleReviewsSection";
-// SB-UNI-V — FeaturedBundlesSection deleted; bundle homepage section to be
-// rebuilt against categoryType:"bundle" queries in a follow-up cohort.
+// S-SBUNI-3 2026-05-13 — FeaturedBundlesSection rebuilt against
+// categoryType:"bundle" rows on the categories collection.
+import { FeaturedBundlesSection } from "../components/FeaturedBundlesSection";
 import { PrizeDrawsSection } from "../../products/components/PrizeDrawsSection";
 import { EventRafflesSection } from "../../events/components/EventRafflesSection";
 import { CollectionCardsSection } from "../components/CollectionCardsSection";
@@ -64,6 +65,7 @@ import type { StoreListItem } from "../../stores/types";
 import type { CategoryItem } from "../../categories/types";
 import type { BlogPost } from "../../blog/types";
 import type { EventItem } from "../../events/types";
+import type { CategoryDocument } from "../../categories/schemas";
 
 export interface SectionData {
   products?: ProductItem[];
@@ -72,6 +74,8 @@ export interface SectionData {
   stores?: StoreListItem[];
   categories?: CategoryItem[];
   brands?: CategoryItem[];
+  // S-SBUNI-3 2026-05-13 — featured bundles (CategoryDocument w/ categoryType:"bundle")
+  bundles?: CategoryDocument[];
   blog?: BlogPost[];
   events?: EventItem[];
 }
@@ -436,9 +440,13 @@ function renderSectionElement(
     }
 
     case "featured-bundles": {
-      // SB-UNI-V — FeaturedBundlesSection deleted with features/bundles/. The
-      // category-based replacement lands in a follow-up.
-      return null;
+      const cfg = config as FeaturedBundlesSectionConfig;
+      return (
+        <FeaturedBundlesSection
+          title={cleanTitle(cfg?.title) || "Curated Bundles"}
+          initialItems={sectionData.bundles}
+        />
+      );
     }
 
     case "prize-draws": {

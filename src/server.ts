@@ -1357,6 +1357,15 @@ export type { GoogleReviewsSectionProps } from "./features/homepage/components/G
 
 // Data layers — each wrapped in React.cache for request-scoped dedup
 export { getProductForDetail, listSitemapProducts, type SitemapProduct } from "./_internal/server/features/products/index";
+// S-SBUNI-3 2026-05-13 — bundle data/metadata layer.
+export {
+  getBundleForDetail,
+  listBundleMembers,
+  listFeaturedBundles,
+  buildBundleMetadata,
+  type BundleDataOptions,
+  type BundleMetadataOptions,
+} from "./_internal/server/features/bundles/index";
 export { getAuctionForDetail, getProductFeaturesForAuction } from "./_internal/server/features/auctions/index";
 export { getPreOrderForDetail, getProductFeaturesForPreOrder } from "./_internal/server/features/pre-orders/index";
 export { getStoreForDetail, listStoreProductsInitial, listStoreAuctionsInitial, listStorePreOrdersInitial, listSitemapStores } from "./_internal/server/features/stores/index";

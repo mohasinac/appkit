@@ -6791,6 +6791,12 @@ export { AuctionsListView } from "./features/auctions/components/AuctionsListVie
 // [SERVER-RSC]-Self-fetching index page view for `/bundles` (categoryType:"bundle" rows).
 export { BundlesListView } from "./features/categories/components/BundlesListView";
 export type { BundlesListViewProps } from "./features/categories/components/BundlesListView";
+
+// S-SBUNI-3 2026-05-13 — public bundle detail view (rebuilt after SB-UNI-V deletion).
+export { BundleDetailView } from "./features/categories/components/BundleDetailView";
+export type { BundleDetailViewProps } from "./features/categories/components/BundleDetailView";
+// CategoryBundlesListing is also re-exported lower in this file (line ~8871);
+// the canonical export lives there next to BUNDLE_MIN_ITEMS / BUNDLE_MAX_ITEMS.
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // AuctionsView - Component for auctions view.
 export { AuctionsView } from "./features/products/index";

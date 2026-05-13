@@ -55,3 +55,9 @@ export type { CategoryDetailTabsProps } from "./CategoryDetailTabs";
 
 export { BundlesListView } from "./BundlesListView";
 export type { BundlesListViewProps } from "./BundlesListView";
+
+export { BundleDetailView } from "./BundleDetailView";
+export type { BundleDetailViewProps } from "./BundleDetailView";
+
+export { CategoryBundlesListing } from "./CategoryBundlesListing";
+export type { CategoryBundlesListingProps } from "./CategoryBundlesListing";
