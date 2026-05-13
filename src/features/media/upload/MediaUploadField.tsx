@@ -17,6 +17,28 @@ import { VideoThumbnailSelector } from "../modals/VideoThumbnailSelector";
 import CameraCapture from "./CameraCapture";
 import { inferMediaTypeFromMime, type MediaField } from "../types/index";
 
+/**
+ * SB-UNI-Z5 2026-05-13 — `kind` prop UX sugar. When set, the component
+ * auto-derives `accept` + `maxSizeMB` from the canonical media-limits
+ * registry so callers don't have to remember the MIME list per type.
+ * Explicit `accept` / `maxSizeMB` props still win when provided.
+ */
+export type MediaUploadFieldKind = "image" | "video" | "pdf" | "auto";
+
+const KIND_DEFAULTS: Record<
+  Exclude<MediaUploadFieldKind, "auto">,
+  { accept: string; maxSizeMB: number }
+> = {
+  image: { accept: "image/*", maxSizeMB: 25 },
+  video: { accept: "video/*", maxSizeMB: 200 },
+  pdf: { accept: "application/pdf", maxSizeMB: 10 },
+};
+
+const AUTO_KIND_DEFAULTS = {
+  accept: "image/*,video/*,application/pdf",
+  maxSizeMB: 200,
+};
+
 export interface MediaUploadFieldProps {
   label: string;
   value: string;
@@ -25,6 +47,13 @@ export interface MediaUploadFieldProps {
   onUpload: (file: File) => Promise<string>;
   accept?: string;
   maxSizeMB?: number;
+  /**
+   * SB-UNI-Z5 2026-05-13 — derives `accept` + `maxSizeMB` defaults when
+   * those props aren't explicitly set. Useful so per-context fields
+   * (avatar = "image", product video = "video", etc.) don't have to
+   * duplicate the MIME list. Explicit `accept` / `maxSizeMB` override.
+   */
+  kind?: MediaUploadFieldKind;
   disabled?: boolean;
   helperText?: string;
   captureSource?: "file-only" | "camera-only" | "both";
@@ -103,8 +132,12 @@ export function MediaUploadField({
   onChange,
   onChangeField,
   onUpload,
-  accept = "*",
-  maxSizeMB = 50,
+  // SB-UNI-Z5 2026-05-13 — `kind` derives accept/maxSizeMB when not set
+  // explicitly; explicit props still win. "*" + 50 stay as the floor for
+  // back-compat with callers that pass neither.
+  kind,
+  accept: acceptProp,
+  maxSizeMB: maxSizeMBProp,
   disabled = false,
   helperText,
   captureSource = "both",
@@ -134,6 +167,15 @@ export function MediaUploadField({
   // PDF mode: derived from the `accept` prop. Hides camera capture + alternate
   // URL tabs (YouTube/External never make sense for invoice/payout-doc fields)
   // and trim/thumbnail flow.
+  // SB-UNI-Z5 2026-05-13 — fold `kind` defaults under explicit props.
+  const kindDefaults =
+    kind === "auto"
+      ? AUTO_KIND_DEFAULTS
+      : kind
+        ? KIND_DEFAULTS[kind]
+        : null;
+  const accept = acceptProp ?? kindDefaults?.accept ?? "*";
+  const maxSizeMB = maxSizeMBProp ?? kindDefaults?.maxSizeMB ?? 50;
   const pdfMode = isPdfAccept(accept);
 
   function handleYtApply() {
