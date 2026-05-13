@@ -384,3 +384,30 @@ export type {
   LayoutConfig,
   DashboardLayoutConfig,
 } from "./_internal/shared/features/layout/index";
+
+// Media upload limits — shared by client uploaders + server sign/finalize routes.
+export {
+  MEGABYTE,
+  MAX_IMAGE_BYTES,
+  MAX_PDF_BYTES,
+  MAX_VIDEO_BYTES,
+  MAX_LABEL,
+  MAX_BYTES,
+  ALLOWED_IMAGE_MIMES,
+  ALLOWED_VIDEO_MIMES,
+  ALLOWED_DOC_MIMES,
+  ALLOWED_MIMES,
+  ALLOWED_TYPES_LABEL,
+  MIME_TO_EXT,
+  PDF_MAGIC,
+  classifyMime,
+  isAllowedMime,
+  maxBytesFor,
+} from "./_internal/shared/media/limits";
+export type {
+  MediaKind,
+  AllowedImageMime,
+  AllowedVideoMime,
+  AllowedDocMime,
+  AllowedMime,
+} from "./_internal/shared/media/limits";
