@@ -29,7 +29,17 @@ export function splitCartIntoOrderGroups<
     item: {
       itemId: string;
       storeId?: string;
-      listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+      // SB-UNI-F 2026-05-13 — Phase 2 union extension. classified/live can't
+      // hit checkout (capability gate at addToCart), but the type still lets
+      // them flow through this splitter as "standard" if they somehow do.
+      listingType?:
+        | "standard"
+        | "auction"
+        | "pre-order"
+        | "prize-draw"
+        | "classified"
+        | "digital-code"
+        | "live";
       isOffer?: boolean;
     };
   },

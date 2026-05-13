@@ -357,12 +357,16 @@ export {
 } from "./constants/limits";
 
 // SB1-G canonical listing-type accessors (pure functions, client-safe).
+// SB-UNI-F 2026-05-13 — Phase 2 predicates surfaced through client barrel.
 export {
   normalizeListingType,
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
   isPrizeDrawListing,
+  isClassifiedListing,
+  isDigitalCodeListing,
+  isLiveListing,
 } from "./features/products/utils/listing-type";
 
 // SB-UNI-E user-role predicates (pure functions, client-safe).

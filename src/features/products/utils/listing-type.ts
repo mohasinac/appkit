@@ -32,6 +32,19 @@ export const isPrizeDrawListing = (
   input?: { listingType?: ListingType },
 ): boolean => normalizeListingType(input) === "prize-draw";
 
+// SB-UNI-F 2026-05-13 — Phase 2 union extension predicates.
+export const isClassifiedListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "classified";
+
+export const isDigitalCodeListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "digital-code";
+
+export const isLiveListing = (
+  input?: { listingType?: ListingType },
+): boolean => normalizeListingType(input) === "live";
+
 // SB-UNI-D — isBundleListing removed. Bundles are now a categoryType
 // discriminator on CategoryDocument; consumers should query
 // `categoriesRepository.findBySlugAndType(slug, "bundle")` instead.

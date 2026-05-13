@@ -24,7 +24,17 @@ export interface CartItemDocument {
    * carts) and cart-side UI badges. Replaces the legacy `isAuction`/`isPreOrder`
    * pair on the cart item.
    */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
+  // enforced by the action layer (capabilityFor / canAddToCart) — classified
+  // and live are blocked at addToCart, digital-code is allowed.
+  listingType:
+    | "standard"
+    | "auction"
+    | "pre-order"
+    | "prize-draw"
+    | "classified"
+    | "digital-code"
+    | "live";
   /** True when item was added from an accepted Make-an-Offer */
   isOffer?: boolean;
   offerId?: string;
@@ -119,7 +129,17 @@ export type AddToCartInput = {
   /** Store slug (= storeId = store.id) */
   storeId: string;
   storeName: string;
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  // SB-UNI-F 2026-05-13 — Phase 2 union extension. Cart capability is
+  // enforced by the action layer (capabilityFor / canAddToCart) — classified
+  // and live are blocked at addToCart, digital-code is allowed.
+  listingType:
+    | "standard"
+    | "auction"
+    | "pre-order"
+    | "prize-draw"
+    | "classified"
+    | "digital-code"
+    | "live";
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;

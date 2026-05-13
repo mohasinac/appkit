@@ -45,8 +45,16 @@ export interface OrderItem {
   currency?: string;
   storeId?: string;
   attributes?: Record<string, string>;
-  /** Listing kind at the time of order — needed for prize-draw UI hints (SB8-F). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  /** Listing kind at the time of order — needed for prize-draw UI hints (SB8-F).
+   *  SB-UNI-F 2026-05-13 — Phase 2 union extension. */
+  listingType?:
+    | "standard"
+    | "auction"
+    | "pre-order"
+    | "prize-draw"
+    | "classified"
+    | "digital-code"
+    | "live";
   /**
    * Per-item prize-draw reveal status (SB8-F). Populated by the checkout
    * actions when listingType === "prize-draw". Used to render the

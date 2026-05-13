@@ -1,6 +1,6 @@
 "use client";
 /**
- * CompareOverlay — BK3
+ * CompareOverlay â€” BK3
  *
  * Fullscreen comparison overlay triggered by the Compare bulk action on
  * Products / Auctions / Pre-orders listings.
@@ -42,7 +42,7 @@ export interface CompareProductLike {
   storeName?: string;
   storeSlug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
   features?: string[];
 }
 
@@ -93,7 +93,7 @@ export interface CompareOverlayProps {
   isOpen: boolean;
   /** Pre-loaded items. Takes precedence over `productIds`. */
   items?: CompareProductLike[];
-  /** When provided, the overlay fetches /api/products?ids=… on open. */
+  /** When provided, the overlay fetches /api/products?ids=â€¦ on open. */
   productIds?: string[];
   /** Discriminates which detail-page ROUTE to link to. */
   productType?: "product" | "auction" | "preorder";
@@ -127,7 +127,7 @@ function detailHref(item: CompareProductLike, type: CompareOverlayProps["product
 }
 
 function priceLabel(item: CompareProductLike): string {
-  if (typeof item.price !== "number") return "—";
+  if (typeof item.price !== "number") return "â€”";
   return formatCurrency(item.price, item.currency ?? "INR");
 }
 
@@ -201,11 +201,11 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <FieldRow label={labels.field.condition}>
-        <Text>{item.condition ? <span className={CHIP_CLASS}>{item.condition}</span> : "—"}</Text>
+        <Text>{item.condition ? <span className={CHIP_CLASS}>{item.condition}</span> : "â€”"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.brand}>
-        <Text>{item.brand ? <span className={CHIP_CLASS}>{item.brand}</span> : "—"}</Text>
+        <Text>{item.brand ? <span className={CHIP_CLASS}>{item.brand}</span> : "â€”"}</Text>
       </FieldRow>
 
       <FieldRow label={labels.field.category}>
@@ -213,14 +213,14 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
           {item.categoryName || item.category ? (
             <span className={CHIP_CLASS}>{item.categoryName ?? item.category}</span>
           ) : (
-            "—"
+            "â€”"
           )}
         </Text>
       </FieldRow>
 
       <FieldRow label={labels.field.store}>
         <Text className="text-sm text-zinc-700 dark:text-zinc-300">
-          {item.storeName ?? "—"}
+          {item.storeName ?? "â€”"}
         </Text>
       </FieldRow>
 
@@ -348,7 +348,7 @@ export function CompareOverlay({
       <Div className="flex-1 overflow-auto p-4">
         {isLoading ? (
           <Text variant="secondary" className="text-center py-12">
-            Loading…
+            Loadingâ€¦
           </Text>
         ) : trimmed.length === 0 ? (
           <Text variant="secondary" className="text-center py-12">
@@ -356,7 +356,7 @@ export function CompareOverlay({
           </Text>
         ) : (
           <>
-            {/* Desktop / tablet — grid of columns */}
+            {/* Desktop / tablet â€” grid of columns */}
             <Div
               className="hidden md:grid gap-4"
               style={{
@@ -375,7 +375,7 @@ export function CompareOverlay({
               ))}
             </Div>
 
-            {/* Mobile — swipeable single card + dots */}
+            {/* Mobile â€” swipeable single card + dots */}
             <Div className="md:hidden">
               <Div ref={swipeRef} className="touch-pan-y">
                 {trimmed[activeIndex] && (

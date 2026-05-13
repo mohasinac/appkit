@@ -16,7 +16,7 @@ interface CarouselListing {
   mainImage?: string;
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
 }
 
 interface CategoryMeta {
@@ -78,7 +78,7 @@ function ListingThumb({
           />
         ) : (
           <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
-            ◯
+            â—¯
           </div>
         )}
       </div>
@@ -129,7 +129,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
       >
         <Row align="center" gap="xs">
           <span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">
-            {open ? "▼" : "▶"}
+            {open ? "â–¼" : "â–¶"}
           </span>
           <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
             More listings like this:{" "}
@@ -145,7 +145,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
             onClick={(e) => e.stopPropagation()}
             className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline ml-3 flex-shrink-0"
           >
-            View all →
+            View all â†’
           </Link>
         )}
       </button>

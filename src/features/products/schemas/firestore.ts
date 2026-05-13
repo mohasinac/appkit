@@ -347,6 +347,10 @@ export const productQueryHelpers = {
   preOrders: () => ["listingType", "==", "pre-order"] as const,
   prizeDraws: () => ["listingType", "==", "prize-draw"] as const,
   standardListings: () => ["listingType", "==", "standard"] as const,
+  // SB-UNI-F 2026-05-13 — Phase 2 query helpers.
+  classifieds: () => ["listingType", "==", "classified"] as const,
+  digitalCodes: () => ["listingType", "==", "digital-code"] as const,
+  liveItems: () => ["listingType", "==", "live"] as const,
   promoted: () => ["isPromoted", "==", true] as const,
   activeAuction: (date: Date) => ["auctionEndDate", ">=", date] as const,
 } as const;

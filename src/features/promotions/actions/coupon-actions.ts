@@ -1,7 +1,7 @@
 /**
  * Promotions / Coupon Domain Actions (appkit)
  *
- * Pure business functions — auth, rate-limiting, and Next.js specifics
+ * Pure business functions â€” auth, rate-limiting, and Next.js specifics
  * are handled by the calling server action in the consumer.
  */
 
@@ -27,7 +27,7 @@ export type CouponCartItem = {
   price: number;
   quantity: number;
   /** Canonical listing-kind snapshot (SB1-G Phase 4). */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
 };
 
 export async function validateCoupon(

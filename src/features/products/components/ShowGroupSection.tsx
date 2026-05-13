@@ -15,7 +15,7 @@ interface GroupMember {
   images?: string[];
   slug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
   isGroupParent?: boolean;
   groupTitle?: string;
   condition?: string;
@@ -61,7 +61,7 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
           <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
         ) : (
           <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
-            ◯
+            â—¯
           </div>
         )}
         {member.isGroupParent && (
@@ -105,14 +105,14 @@ function GroupTableRow({ member }: { member: GroupMember }) {
         <Text className="text-sm text-zinc-700 dark:text-zinc-300">{price}</Text>
       </td>
       <td className="py-2 pr-3">
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400 capitalize">{member.condition ?? "—"}</Text>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400 capitalize">{member.condition ?? "â€”"}</Text>
       </td>
       <td className="py-2">
         <Link
           href={href}
           className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline"
         >
-          View →
+          View â†’
         </Link>
       </td>
     </tr>
@@ -170,7 +170,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
-            <span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">{open ? "▼" : "▶"}</span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">{open ? "â–¼" : "â–¶"}</span>
             <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
               {parentLabel}
             </Text>
@@ -185,7 +185,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
             onClick={(e) => { e.stopPropagation(); setShowAll(true); }}
             className="text-xs text-[var(--appkit-color-primary,#6366f1)] hover:underline ml-3 flex-shrink-0"
           >
-            View whole group →
+            View whole group â†’
           </Button>
         </button>
 

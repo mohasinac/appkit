@@ -6990,12 +6990,16 @@ export { getProductSortOptions } from "./features/products/index";
 export { getProductTableColumns } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // normalizeListingType + predicate helpers — canonical SB1-G accessors.
+// SB-UNI-F 2026-05-13 — Phase 2 predicates added (classified/digital-code/live).
 export {
   normalizeListingType,
   isAuctionListing,
   isPreOrderListing,
   isStandardListing,
   isPrizeDrawListing,
+  isClassifiedListing,
+  isDigitalCodeListing,
+  isLiveListing,
 } from "./features/products/index";
 // User-role predicates — SB-UNI-E 2026-05-13.
 export {

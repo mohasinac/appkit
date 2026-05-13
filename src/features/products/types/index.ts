@@ -28,11 +28,18 @@ export type ProductCondition =
 // SB-UNI-D — "bundle" dropped from the ListingType union; bundles are now
 // a categoryType discriminator on CategoryDocument. Cart/order/product
 // records no longer carry a "bundle" listingType value.
+// SB-UNI-F 2026-05-13 — additive extension: classified | digital-code | live.
+// Capability registry decides whether cart accepts each type. Classified is
+// chat-only (canAddToCart=false). Digital-code skips shipping address +
+// instant-fulfills. Live requires vendor verification + jurisdiction check.
 export type ListingType =
   | "standard"
   | "auction"
   | "pre-order"
-  | "prize-draw";
+  | "prize-draw"
+  | "classified"
+  | "digital-code"
+  | "live";
 
 export interface ProductImage {
   url: string;

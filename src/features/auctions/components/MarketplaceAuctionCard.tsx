@@ -30,8 +30,15 @@ export interface MarketplaceAuctionCardData {
   mainImage?: string;
   images?: string[];
   video?: { url?: string; thumbnailUrl?: string };
-  /** Canonical discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  /** Canonical discriminator (SB1-G Phase 4 · SB-UNI-F 2026-05-13 union extension). */
+  listingType?:
+    | "standard"
+    | "auction"
+    | "pre-order"
+    | "prize-draw"
+    | "classified"
+    | "digital-code"
+    | "live";
   auctionEndDate?: string | Date;
   startingBid?: number;
   currentBid?: number;

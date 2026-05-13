@@ -55,8 +55,8 @@ export interface AdminProduct {
   insurance?: boolean;
   insuranceCost?: number;
   shippingPaidBy?: "seller" | "buyer";
-  /** Canonical listing-kind discriminator (SB1-G Phase 4 — booleans removed). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  /** Canonical listing-kind discriminator (SB1-G Phase 4 â€” booleans removed). */
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
   // Auction fields
   auctionEndDate?: string;
   startingBid?: number;
@@ -74,7 +74,7 @@ export interface AdminProduct {
   promotionEndDate?: string;
   pickupAddressId?: string;
   // Pre-order fields
-  preOrderDeliveryDate?: string; // ISO date string — ETA for delivery
+  preOrderDeliveryDate?: string; // ISO date string â€” ETA for delivery
   preOrderDepositPercent?: number;
   preOrderMaxQuantity?: number;
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";

@@ -61,6 +61,31 @@ export const LISTING_TYPE_CAPABILITIES: Record<ListingType, ListingTypeCapabilit
     requiresJurisdictionCheck: false,
     hasInstantFulfillment: false,
   },
+  // SB-UNI-F 2026-05-13 — Phase 2 union extension.
+  classified: {
+    canAddToCart: false,        // chat-only (OLX / Facebook Marketplace pattern)
+    canBid: false,
+    supportsShipping: false,    // local meetup; shipping is a "negotiable" flag, not a flow
+    requiresVendorVerified: false,
+    requiresJurisdictionCheck: false,
+    hasInstantFulfillment: false,
+  },
+  "digital-code": {
+    canAddToCart: true,
+    canBid: false,
+    supportsShipping: false,    // codes delivered electronically — no address
+    requiresVendorVerified: false,
+    requiresJurisdictionCheck: false,
+    hasInstantFulfillment: true, // atomic code claim at order paid
+  },
+  live: {
+    canAddToCart: true,         // but jurisdictionAllowed must include buyer's state
+    canBid: false,
+    supportsShipping: true,     // physical, often via specialised carrier
+    requiresVendorVerified: true,
+    requiresJurisdictionCheck: true,
+    hasInstantFulfillment: false,
+  },
 };
 
 export function capabilityFor(type: ListingType): ListingTypeCapability {

@@ -9,7 +9,7 @@ import type {
 /**
  * Reusable Sieve clauses. Single source of truth for the listing-type
  * discriminator across every action helper in this file. SB1-G (S21 2026-05-12)
- * routes everything through `listingType==X` — the legacy boolean flags are
+ * routes everything through `listingType==X` â€” the legacy boolean flags are
  * never emitted by code under our control any more.
  */
 const PUBLISHED_CLAUSE = "status==published";
@@ -22,7 +22,7 @@ export interface ProductListActionParams {
   page?: number;
   pageSize?: number;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
   featured?: boolean;
   storeId?: string;
   categoriesIn?: string[];

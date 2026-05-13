@@ -23,6 +23,17 @@ export async function addItemToCart(
   input: AddToCartInput,
 ): Promise<CartDocument> {
   serverLogger.debug("addItemToCart", { userId, productId: input.productId });
+  // SB-UNI-F 2026-05-13 — capability gate. Classified + live listings reject
+  // add-to-cart at the action layer. UI surfaces a chat-only / jurisdiction
+  // CTA for those types instead.
+  const { canAddToCart } = await import(
+    "../../../_internal/shared/listing-types/capabilities"
+  );
+  if (!canAddToCart(input.listingType)) {
+    throw new ValidationError(
+      `Listings of type "${input.listingType}" cannot be added to the cart.`,
+    );
+  }
   return cartRepository.addItem(userId, input);
 }
 

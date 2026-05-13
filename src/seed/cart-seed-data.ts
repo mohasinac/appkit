@@ -3,21 +3,21 @@ import { getDefaultCurrency } from "./seed-market-config";
 const _CURRENCY = getDefaultCurrency();
 
 /**
- * Carts Seed Data — LetItRip Collectibles
+ * Carts Seed Data â€” LetItRip Collectibles
  *
  * Covers all cart states for testing Add-to-Cart / Update / Remove / Checkout flows:
- *   — Multi-item cart (cross-store, mixed categories) — Rahul Sharma
- *   — Single-item cart                                — Priya Patel
- *   — Cart with auction item                          — Arjun Singh
- *   — Cart with quantity > 1                          — Meera Nair
- *   — Empty cart (items: [])                          — Amit Sharma
+ *   â€” Multi-item cart (cross-store, mixed categories) â€” Rahul Sharma
+ *   â€” Single-item cart                                â€” Priya Patel
+ *   â€” Cart with auction item                          â€” Arjun Singh
+ *   â€” Cart with quantity > 1                          â€” Meera Nair
+ *   â€” Empty cart (items: [])                          â€” Amit Sharma
  *
- * Cart document ID = userId (O(1) lookup — see cart.ts schema).
+ * Cart document ID = userId (O(1) lookup â€” see cart.ts schema).
  *
  * All FK references:
- *   userId             → users/{uid}  (see users-seed-data.ts)
- *   items[].productId  → products/{id} (see products-standard/auctions-seed-data.ts)
- *   items[].storeId    → stores/{id}  (see stores-seed-data.ts)
+ *   userId             â†’ users/{uid}  (see users-seed-data.ts)
+ *   items[].productId  â†’ products/{id} (see products-standard/auctions-seed-data.ts)
+ *   items[].storeId    â†’ stores/{id}  (see stores-seed-data.ts)
  */
 
 import type { CartDocument } from "../features/cart/schemas";
@@ -36,13 +36,13 @@ export const cartsSeedData: CartDocument[] = [
       {
         itemId: "cartitem-rahul-pokemon-etb-001",
         productId: "product-pokemon-sv-etb",
-        productTitle: "Pokémon Scarlet & Violet Elite Trainer Box",
+        productTitle: "PokÃ©mon Scarlet & Violet Elite Trainer Box",
         productImage: "/media/product-image-pokemon-sv-etb-1-20260101.jpg",
         price: 349900,
         currency: _CURRENCY,
         quantity: 1,
         storeId: "store-pokemon-palace",
-        storeName: "Pokémon Palace",
+        storeName: "PokÃ©mon Palace",
         listingType: "standard",
         addedAt: daysAgo(9),
         updatedAt: daysAgo(9),
@@ -114,13 +114,13 @@ export const cartsSeedData: CartDocument[] = [
       {
         itemId: "cartitem-arjun-pokemon-base-auction-001",
         productId: "auction-pokemon-base-set-booster-box",
-        productTitle: "Pokémon Base Set 1st Edition Booster Box (SEALED AUCTION)",
+        productTitle: "PokÃ©mon Base Set 1st Edition Booster Box (SEALED AUCTION)",
         productImage: "/media/auction-image-pokemon-base-set-booster-box-1-20260101.jpg",
         price: 45000000,
         currency: _CURRENCY,
         quantity: 1,
         storeId: "store-pokemon-palace",
-        storeName: "Pokémon Palace",
+        storeName: "PokÃ©mon Palace",
         listingType: "auction",
         addedAt: daysAgo(17),
         updatedAt: daysAgo(17),
@@ -153,13 +153,13 @@ export const cartsSeedData: CartDocument[] = [
       {
         itemId: "cartitem-meera-pokemon151-001",
         productId: "product-pokemon-151-booster-box",
-        productTitle: "Pokémon 151 Booster Box (Japanese)",
+        productTitle: "PokÃ©mon 151 Booster Box (Japanese)",
         productImage: "/media/product-image-pokemon-151-booster-box-1-20260101.jpg",
         price: 699900,
         currency: _CURRENCY,
         quantity: 3,
         storeId: "store-pokemon-palace",
-        storeName: "Pokémon Palace",
+        storeName: "PokÃ©mon Palace",
         listingType: "standard",
         addedAt: daysAgo(11),
         updatedAt: daysAgo(11),
@@ -194,13 +194,13 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(9),
   },
 
-  // ── P29 expansion (S17 2026-05-12) — 15 more carts via helper ───────────
+  // â”€â”€ P29 expansion (S17 2026-05-12) â€” 15 more carts via helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   ...mkCart("user-kavya-iyer", 6, [
     {
       productId: "product-pokemon-151-booster-box",
-      title: "Pokémon 151 Booster Box (36-pack)",
+      title: "PokÃ©mon 151 Booster Box (36-pack)",
       price: 1799900,
-      store: ["store-pokemon-palace", "Pokémon Palace"],
+      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
       qty: 1,
     },
   ]),
@@ -232,9 +232,9 @@ export const cartsSeedData: CartDocument[] = [
   ...mkCart("user-divya-menon", 8, [
     {
       productId: "preorder-pokemon-stellar-crown-etb",
-      title: "PRE-ORDER: Pokémon Stellar Crown ETB",
+      title: "PRE-ORDER: PokÃ©mon Stellar Crown ETB",
       price: 599900,
-      store: ["store-pokemon-palace", "Pokémon Palace"],
+      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
       qty: 1,
       listingType: "pre-order",
     },
@@ -283,7 +283,7 @@ export const cartsSeedData: CartDocument[] = [
   ...mkCart("user-anjali-verma", 1, [
     {
       productId: "product-pokemon-charizard-ex-obsidian",
-      title: "Pokémon Charizard ex Obsidian Flames Hyper Rare",
+      title: "PokÃ©mon Charizard ex Obsidian Flames Hyper Rare",
       price: 1499900,
       store: ["store-cardgame-hub", "CardGame Hub"],
       qty: 1,
@@ -301,14 +301,14 @@ export const cartsSeedData: CartDocument[] = [
   ...mkCart("user-pooja-sharma", 4, [
     {
       productId: "auction-pokemon-lugia-neo-genesis-psa9",
-      title: "Pokémon Neo Genesis Lugia #9 PSA 9 (AUCTION)",
+      title: "PokÃ©mon Neo Genesis Lugia #9 PSA 9 (AUCTION)",
       price: 6999900,
-      store: ["store-pokemon-palace", "Pokémon Palace"],
+      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
       qty: 1,
       listingType: "auction",
     },
   ]),
-  // Guest carts skipped — sessionId is a runtime-only optional field on the
+  // Guest carts skipped â€” sessionId is a runtime-only optional field on the
   // Zod input but not on the `CartDocument` interface used by the seed array.
   // Guest cart behavior is exercised at runtime via localStorage merge tests.
 ];
@@ -320,7 +320,7 @@ interface CartItemSpec {
   store: [string, string];
   qty: number;
   /** Canonical listing-kind snapshot (SB1-G Phase 4). Defaults to "standard". */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
 }
 
 /**
