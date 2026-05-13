@@ -197,6 +197,12 @@ export interface ProductDocument {
   digitalCode?: ProductDigitalCodeMeta;
   // SB-UNI-K 2026-05-13 — Live-item listing fields (animals / plants).
   liveItem?: ProductLiveItemMeta;
+  // SB-UNI-L 2026-05-13 — Catalog/Offer split foundation slice. When set,
+  // this ProductDocument is a "seller offer" linked to a shared
+  // CatalogProductDocument row. The PDP aggregates all offers with the same
+  // catalogProductId at /catalog/{slug}. Migration + admin "Promote to
+  // catalog" flow lands in Phase 4 cohort 2.
+  catalogProductId?: string;
   preOrderDeliveryDate?: Date;
   preOrderDepositPercent?: number;
   preOrderDepositAmount?: number;
@@ -358,6 +364,8 @@ export const PRODUCT_PUBLIC_FIELDS = [
   "classified",
   "digitalCode",
   "liveItem",
+  // SB-UNI-L 2026-05-13 — catalog link (offer-side reference).
+  "catalogProductId",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",
   "preOrderDepositAmount",
@@ -423,6 +431,8 @@ export const PRODUCT_UPDATABLE_FIELDS = [
   "classified",
   "digitalCode",
   "liveItem",
+  // SB-UNI-L 2026-05-13 — catalog link updatable.
+  "catalogProductId",
   "listingType",
   "preOrderDeliveryDate",
   "preOrderDepositPercent",
