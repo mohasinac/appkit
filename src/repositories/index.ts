@@ -136,6 +136,20 @@ export {
   scammerRepository,
 } from "../features/scams/repository/scammer.repository";
 
+export {
+  SupportRepository,
+  supportRepository,
+} from "../features/support/repository/support.repository";
+export type {
+  SupportTicketDocument,
+  SupportTicketCreateInput,
+  SupportTicketUpdateInput,
+  TicketMessage,
+  TicketCategory,
+  TicketStatus,
+  TicketPriority,
+} from "../features/support/schemas/firestore";
+
 // SB-UNI-B — SublistingCategoriesRepository deleted; sublistings now live on
 // categoriesRepository with categoryType:"sublisting".
 

@@ -300,8 +300,8 @@ export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboa
 export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, SellerPreOrdersView, SellerPrizeDrawsView } from "./features/seller/components/index";
 export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerReviewsViewProps, SellerPayoutRequestViewProps, SellerAnalyticsViewProps, SellerPayoutsViewProps, SellerCouponEditorViewProps, CouponEditorDraft, SellerBidsViewProps, SellerAddressesViewProps, SellerPreOrdersViewProps, SellerPrizeDrawsViewProps } from "./features/seller/components/index";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
-export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView } from "./features/account/index";
-export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserReturnsViewLabels } from "./features/account/index";
+export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView } from "./features/account/index";
+export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserReturnsViewLabels, UserSupportViewProps } from "./features/account/index";
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";
 export { BlogPostView } from "./features/blog/components/BlogPostView";
@@ -484,3 +484,6 @@ export type {
   AllowedDocMime,
   AllowedMime,
 } from "./_internal/shared/media/limits";
+
+export { ScamAwarenessModal } from "./features/scams/components/ScamAwarenessModal";
+export type { ScamAwarenessModalProps } from "./features/scams/components/ScamAwarenessModal";

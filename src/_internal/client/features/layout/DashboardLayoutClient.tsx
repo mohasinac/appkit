@@ -35,6 +35,13 @@ export interface DashboardLayoutClientProps {
   variant: DashboardVariant;
   /** Grouped nav items. Shape matches all three sidebar components. */
   groups: SidebarNavGroup[];
+  /**
+   * Resolved permissions for the current user (serialised from RSC layout).
+   * When provided, nav items with `requiredPermission` are filtered server-side
+   * before reaching this component; pass `null` to skip (admin sees everything).
+   * When absent, all items are shown (backwards-compatible).
+   */
+  permissions?: string[] | null;
   /** Override active-link highlight. Defaults to usePathname(). */
   activeHref?: string;
   /** Responsive controls — currently only hideAt is honoured. */
@@ -90,9 +97,29 @@ function useResponsiveDrawer() {
   return { desktopOpen, mobileOpen, close, toggle };
 }
 
+/** Filter admin nav groups to only show items the user has permission to see. */
+function filterAdminGroups(
+  groups: AdminNavGroup[],
+  permissions: string[] | null | undefined,
+): AdminNavGroup[] {
+  // null = admin (show everything); undefined = no filtering (backwards compat)
+  if (permissions === null || permissions === undefined) return groups;
+  return groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter(
+        (item) =>
+          !item.requiredPermission ||
+          permissions.includes(item.requiredPermission),
+      ),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
 export function DashboardLayoutClient({
   variant,
   groups,
+  permissions,
   activeHref: explicitActiveHref,
   responsive: _responsive,
   className,
@@ -102,6 +129,11 @@ export function DashboardLayoutClient({
   const activeHref = explicitActiveHref ?? pathname ?? "";
   const { desktopOpen, mobileOpen, close, toggle } = useResponsiveDrawer();
 
+  const adminGroups =
+    variant === "admin"
+      ? filterAdminGroups(groups as AdminNavGroup[], permissions)
+      : (groups as AdminNavGroup[]);
+
   return (
     <>
       {variant === "admin" && (
@@ -110,7 +142,7 @@ export function DashboardLayoutClient({
           desktopOpen={desktopOpen}
           mobileOpen={mobileOpen}
           activePath={activeHref}
-          groups={groups as AdminNavGroup[]}
+          groups={adminGroups}
           onCloseMobile={close}
           onToggle={toggle}
           className={className}

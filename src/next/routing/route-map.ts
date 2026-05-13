@@ -84,6 +84,7 @@ export const DEFAULT_ROUTE_MAP = {
     SCAM_DETAIL: (id: string) => `/scams/${id}`,
     SCAM_REPORT: "/scams/report",
     SCAM_TYPES: "/scams/types",
+    SCAM_FAQS: "/scams/faqs",
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",
@@ -120,6 +121,8 @@ export const DEFAULT_ROUTE_MAP = {
     REVIEWS: "/user/reviews",
     BIDS: "/user/bids",
     RETURNS: "/user/returns",
+    SUPPORT: "/user/support",
+    SUPPORT_TICKET: (id: string) => `/user/support/${id}`,
   },
   STORE: {
     DASHBOARD: "/store",
@@ -236,6 +239,11 @@ export const DEFAULT_ROUTE_MAP = {
     BUNDLES_EDIT: (id: string) => `/admin/bundles/${id}/edit`,
     PRIZE_DRAWS: "/admin/prize-draws",
     PRIZE_DRAWS_EDIT: (id: string) => `/admin/prize-draws/${id}/edit`,
+    TEAM: "/admin/team",
+    SUPPORT_TICKETS: "/admin/support-tickets",
+    SUPPORT_TICKET_BY_ID: (id: string) => `/admin/support-tickets/${id}`,
+    SCAMMERS: "/admin/scammers",
+    SCAMMER_BY_ID: (id: string) => `/admin/scammers/${id}`,
   },
   DEMO: {
     SEED: "/demo/seed",

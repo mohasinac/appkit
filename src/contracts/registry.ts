@@ -8,6 +8,13 @@ import type { ICacheProvider, IQueueProvider, IEventBus } from "./infra";
 import type { IStyleAdapter } from "./style";
 import type { IDbProvider } from "./repository";
 
+export interface IRbacProvider {
+  /** Resolve the permission list for a user UID. Admin role returns []. */
+  getPermissions: (uid: string) => Promise<string[]>;
+  /** True when the user has the admin role (bypasses all permission checks). */
+  isAdmin: (uid: string) => Promise<boolean>;
+}
+
 export interface ProviderRegistry {
   auth: IAuthProvider;
   session: ISessionProvider;
@@ -21,6 +28,7 @@ export interface ProviderRegistry {
   cache?: ICacheProvider;
   queue?: IQueueProvider;
   eventBus?: IEventBus;
+  rbac?: IRbacProvider;
 }
 
 let _registry: ProviderRegistry | null = null;

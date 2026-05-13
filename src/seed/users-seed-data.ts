@@ -56,7 +56,11 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Aryan Kapoor",
     photoURL:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
-    avatarMetadata: null,
+    avatarMetadata: {
+      url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+      position: { x: 50, y: 40 },
+      zoom: 1.1,
+    },
     role: "seller",
     emailVerified: true,
     disabled: false,
@@ -246,7 +250,11 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Priya Patel",
     photoURL:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
-    avatarMetadata: null,
+    avatarMetadata: {
+      url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face",
+      position: { x: 50, y: 35 },
+      zoom: 1.15,
+    },
     role: "user",
     emailVerified: true,
     disabled: false,
@@ -588,7 +596,11 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Siddharth Rao",
     photoURL:
       "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face",
-    avatarMetadata: null,
+    avatarMetadata: {
+      url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face",
+      position: { x: 50, y: 45 },
+      zoom: 1.05,
+    },
     role: "user",
     emailVerified: true,
     disabled: false,
@@ -862,5 +874,75 @@ export const usersSeedData: Partial<UserDocument>[] = [
     },
     createdAt: daysAgo(20),
     updatedAt: daysAgo(10),
+  },
+
+  // ── Moderator ──────────────────────────────────────────────────────────────
+  {
+    uid: "user-deepak-verma",
+    email: "deepak.mod@letitrip.in",
+    phoneNumber: `${_ph}9876500001`,
+    phoneVerified: true,
+    displayName: "Deepak Verma",
+    photoURL:
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
+    avatarMetadata: {
+      url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
+      position: { x: 50, y: 35 },
+      zoom: 1.1,
+    },
+    role: "moderator",
+    emailVerified: true,
+    disabled: false,
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "LetItRip content moderator. Keeps the marketplace clean and scam-free.",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: {
+      lastSignInTime: daysAgo(1),
+      creationTime: daysAgo(300).toISOString(),
+      loginCount: 210,
+    },
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── Employee ───────────────────────────────────────────────────────────────
+  {
+    uid: "user-simran-kaur",
+    email: "simran.support@letitrip.in",
+    phoneNumber: `${_ph}9876500002`,
+    phoneVerified: true,
+    displayName: "Simran Kaur",
+    photoURL:
+      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
+    avatarMetadata: {
+      url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
+      position: { x: 50, y: 30 },
+      zoom: 1.2,
+    },
+    role: "employee",
+    emailVerified: true,
+    disabled: false,
+    publicProfile: {
+      isPublic: false,
+      showEmail: false,
+      showPhone: false,
+      showOrders: false,
+      showWishlist: false,
+      bio: "Customer support specialist at LetItRip. Here to help buyers and sellers.",
+    },
+    stats: { totalOrders: 0, auctionsWon: 0, itemsSold: 0, reviewsCount: 0 },
+    metadata: {
+      lastSignInTime: daysAgo(1),
+      creationTime: daysAgo(250).toISOString(),
+      loginCount: 175,
+    },
+    createdAt: daysAgo(250),
+    updatedAt: daysAgo(1),
   },
 ];

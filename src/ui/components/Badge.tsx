@@ -25,6 +25,7 @@ const BADGE_CLASSES = {
   admin: "appkit-badge appkit-badge--admin",
   moderator: "appkit-badge appkit-badge--moderator",
   seller: "appkit-badge appkit-badge--seller",
+  employee: "appkit-badge appkit-badge--employee",
   user: "appkit-badge appkit-badge--user",
   // Legacy / generic variants
   default: "appkit-badge appkit-badge--default",

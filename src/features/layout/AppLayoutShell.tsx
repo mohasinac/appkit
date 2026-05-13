@@ -10,10 +10,16 @@ import {
   Ul,
   Li,
   AvatarDisplay,
-  RoleBadge,
   BackgroundRenderer,
   UnsavedChangesModal,
 } from "../../ui";
+
+const ROLE_DOT_COLORS: Record<string, string> = {
+  admin: "#9333ea",
+  moderator: "#0ea5e9",
+  seller: "#0d9488",
+  employee: "#f59e0b",
+};
 import { useTheme } from "../../react";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import BottomActions from "./BottomActions";
@@ -68,6 +74,7 @@ export interface AppLayoutShellProps {
   userId?: string | null;
   profileHref: string;
   loginHref: string;
+  registerHref?: string;
   homeHref: string;
   shopHref: string;
   footer: FooterLayoutProps;
@@ -258,6 +265,7 @@ export function AppLayoutShell({
   userId,
   profileHref,
   loginHref,
+  registerHref,
   homeHref,
   shopHref,
   footer,
@@ -587,6 +595,8 @@ export function AppLayoutShell({
             wishlistHref={wishlistHref}
             userId={userId}
             profileHref={profileHref}
+            loginHref={loginHref}
+            registerHref={registerHref}
             user={user}
             navSlot={titleBarNavSlot}
             notificationSlot={titleBarNotificationSlot}
@@ -639,9 +649,14 @@ export function AppLayoutShell({
                         displayName={user.displayName}
                         email={user.email}
                       />
-                      {user.role && (
-                        <Div className="absolute -bottom-1 -right-1">
-                          <RoleBadge role={user.role} />
+                      {user.role && user.role !== "user" && (
+                        <Div
+                          className="absolute -bottom-0.5 -right-0.5 flex items-center justify-center w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 text-white text-[9px] font-bold leading-none select-none"
+                          style={{ background: ROLE_DOT_COLORS[user.role] ?? "#6b7280" }}
+                          title={user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                          aria-label={user.role}
+                        >
+                          {user.role.charAt(0).toUpperCase()}
                         </Div>
                       )}
                     </Div>

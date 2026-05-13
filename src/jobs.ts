@@ -60,6 +60,13 @@ export {
   onProductStockChangeHandler,
   triggerEventRaffleHandler,
   assignSpinPrizeHandler,
+  // BAN9 — support ticket lifecycle + ban audit trail
+  onSupportTicketCreateHandler,
+  onSupportTicketUpdateHandler,
+  onUserBanChangeHandler,
+  // SCAM8 — scam report notifications
+  onScamReportCreateHandler,
+  onScamReportUpdateHandler,
   // Firebase binder adapter
   bindSchedule,
   bindDocumentWritten,

@@ -62,6 +62,7 @@ export const FAQ_CATEGORY_LABELS: Record<FAQCategory, string> = {
   account_security: "Account & Security",
   technical_support: "Technical Support",
   general: "General Questions",
+  scam_awareness: "Scam Awareness",
 };
 
 export const DEFAULT_FAQ_DATA: Partial<FAQDocument> = {

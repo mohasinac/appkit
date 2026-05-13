@@ -111,17 +111,26 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
     filters,
     q: table.get("q") || undefined,
     mapRows: (response) =>
-      toRecordArray(response.users).map((item, index) => ({
-        id: toStringValue(item.id ?? item.uid, `user-${index}`),
-        primary: toStringValue(item.displayName, "Unnamed user"),
-        secondary: [
-          toStringValue(item.email, "No email"),
-          toStringValue(item.role, "Unknown role"),
-        ].join(" · "),
-        status: typeof item.disabled === "boolean" ? (item.disabled ? "Disabled" : "Active") : "Active",
-        updatedAt: toRelativeDate(item.lastLoginAt ?? item.createdAt),
-        _raw: item,
-      })),
+      toRecordArray(response.users).map((item, index) => {
+        const isDisabled = Boolean(item.isDisabled ?? item.disabled);
+        const isHardBanned = isDisabled && Boolean(item.hardBanReason);
+        const softBanCount = Array.isArray(item.softBans) ? item.softBans.length : 0;
+        let status = "Active";
+        if (isHardBanned) status = "Hard banned";
+        else if (isDisabled) status = "Disabled";
+        else if (softBanCount > 0) status = `Soft bans (${softBanCount})`;
+        return {
+          id: toStringValue(item.id ?? item.uid, `user-${index}`),
+          primary: toStringValue(item.displayName, "Unnamed user"),
+          secondary: [
+            toStringValue(item.email, "No email"),
+            toStringValue(item.role, "Unknown role"),
+          ].join(" · "),
+          status,
+          updatedAt: toRelativeDate(item.lastLoginAt ?? item.createdAt),
+          _raw: item,
+        };
+      }),
     getTotal: (response, mappedRows) => {
       if (typeof response.meta?.total === "number") return response.meta.total;
       if (typeof response.total === "number") return response.total;
@@ -229,10 +238,37 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
         userId={selectedRow?.id}
         displayName={selectedRow?.primary}
         currentRole={toStringValue(selectedRow?._raw?.role, "user")}
-        currentIsDisabled={selectedRow?.status === "Disabled"}
         currentEmailVerified={Boolean(selectedRow?._raw?.emailVerified)}
         ownedStoreId={toStringValue(selectedRow?._raw?.storeId, "") || undefined}
         ownedStoreName={toStringValue(selectedRow?._raw?.storeName, "") || undefined}
+        currentIsHardBanned={Boolean(
+          (selectedRow?._raw?.isDisabled ?? selectedRow?._raw?.disabled) &&
+            selectedRow?._raw?.hardBanReason,
+        )}
+        currentHardBanReason={toStringValue(selectedRow?._raw?.hardBanReason, "") || undefined}
+        currentSoftBans={
+          Array.isArray(selectedRow?._raw?.softBans)
+            ? (selectedRow!._raw!.softBans as Array<Record<string, unknown>>).map((b) => ({
+                action: toStringValue(b.action, ""),
+                reason: toStringValue(b.reason, ""),
+                bannedAt: toStringValue(
+                  b.bannedAt instanceof Date
+                    ? b.bannedAt.toISOString()
+                    : (b.bannedAt as string | undefined),
+                  "",
+                ),
+                expiresAt: b.expiresAt
+                  ? toStringValue(
+                      b.expiresAt instanceof Date
+                        ? b.expiresAt.toISOString()
+                        : (b.expiresAt as string | undefined),
+                      "",
+                    ) || null
+                  : null,
+                bannedBy: toStringValue(b.bannedBy, ""),
+              }))
+            : undefined
+        }
       />
     </>
   );

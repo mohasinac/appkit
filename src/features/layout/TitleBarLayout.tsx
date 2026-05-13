@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { BlockHeader, Button, Div, Row, SiteLogo, Span } from "../../ui";
@@ -30,6 +29,8 @@ export interface TitleBarLayoutProps {
   cartHref?: string;
   cartCount?: number;
   profileHref?: string;
+  loginHref?: string;
+  registerHref?: string;
   user?: TitleBarUser | null;
   /** Slot rendered beside the profile link (e.g. NotificationBell). */
   notificationSlot?: React.ReactNode;
@@ -84,6 +85,8 @@ export function TitleBarLayout({
   cartHref,
   cartCount = 0,
   profileHref,
+  loginHref,
+  registerHref,
   user,
   notificationSlot,
   devSlot,
@@ -219,7 +222,8 @@ export function TitleBarLayout({
       className={iconBtn}
     >
       {user?.photoURL ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={user.photoURL}
           alt={user.displayName ?? "Profile"}
           width={28}
@@ -232,6 +236,27 @@ export function TitleBarLayout({
         </svg>
       )}
     </Link>
+  ) : null;
+
+  const authButtonsEl = !user && (loginHref || registerHref) ? (
+    <Row gap="xs" className="hidden lg:flex items-center">
+      {loginHref && (
+        <Link
+          href={loginHref}
+          className="px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-primary-700 dark:hover:text-secondary-400 transition-colors rounded-lg hover:bg-primary-50 dark:hover:bg-slate-800"
+        >
+          Sign in
+        </Link>
+      )}
+      {registerHref && (
+        <Link
+          href={registerHref}
+          className="px-3 py-1.5 text-sm font-semibold rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors btn-glow shadow-sm"
+        >
+          Register
+        </Link>
+      )}
+    </Row>
   ) : null;
 
   const hasTb2 = !!(wishlistEl || cartEl || profileEl);
@@ -279,7 +304,10 @@ export function TitleBarLayout({
             {notificationSlot}
             {wishlistEl && <Div className="hidden lg:flex">{wishlistEl}</Div>}
             {cartEl && <Div className="hidden lg:flex">{cartEl}</Div>}
-            {profileEl && <Div className="hidden lg:flex">{profileEl}</Div>}
+            {user
+              ? profileEl && <Div className="hidden lg:flex">{profileEl}</Div>
+              : authButtonsEl ?? (profileEl && <Div className="hidden lg:flex">{profileEl}</Div>)
+            }
             {searchBtn}
             {promotionsEl}
             {themeBtn}

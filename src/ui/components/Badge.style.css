@@ -58,6 +58,12 @@
   border-color: rgba(20, 184, 166, 0.25);
 }
 
+.appkit-badge--employee {
+  background: var(--appkit-color-amber-50);
+  color: var(--appkit-color-amber-800);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
 .appkit-badge--primary,
 .appkit-badge--secondary {
   background: var(--appkit-color-secondary-50);
@@ -105,6 +111,11 @@
 .dark .appkit-badge--seller {
   background: rgba(19, 78, 74, 0.35);
   color: var(--appkit-color-teal-200);
+}
+
+.dark .appkit-badge--employee {
+  background: rgba(120, 53, 15, 0.35);
+  color: var(--appkit-color-amber-300);
 }
 
 .dark .appkit-badge--primary,

@@ -75,3 +75,5 @@ export type {
   UserReturnsViewProps,
   UserReturnsViewLabels,
 } from "./UserReturnsView";
+export { UserSupportView } from "./UserSupportView";
+export type { UserSupportViewProps } from "./UserSupportView";

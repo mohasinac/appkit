@@ -19,3 +19,4 @@ export * from "./repository";
 export * from "./actions";
 
 export { authMeGET } from "./api/route";
+export { isSoftBanned, getBanSummary } from "./server/checkSoftBan";

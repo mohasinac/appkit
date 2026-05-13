@@ -76,3 +76,6 @@ export const EVENT_ENTRY_PII_FIELDS = [
   "userEmail",
   "ipAddress",
 ] as const;
+
+/** Store OAuth bearer tokens — encrypted via SETTINGS_ENCRYPTION_KEY */
+export const STORE_SECRET_FIELDS = ["whatsappConfig.accessToken"] as const;

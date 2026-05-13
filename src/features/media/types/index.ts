@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { resolveMediaUrl } from "../../../utils/media-url";
 
 export type MediaFieldType = "image" | "video" | "file";
 
@@ -59,7 +60,7 @@ export function coerceMediaFieldArray(
 }
 
 export function getMediaUrl(value: MediaFieldInput): string | undefined {
-  return coerceMediaField(value)?.url;
+  return resolveMediaUrl(coerceMediaField(value)?.url);
 }
 
 export function inferMediaTypeFromMime(

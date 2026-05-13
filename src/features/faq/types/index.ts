@@ -7,7 +7,8 @@ export type FAQCategory =
   | "product_information"
   | "account_security"
   | "technical_support"
-  | "general";
+  | "general"
+  | "scam_awareness";
 
 export interface FAQAnswer {
   text: string;

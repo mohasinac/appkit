@@ -1605,6 +1605,18 @@ export { storeRepository } from "./repositories/index";
 // [DB]-Database layer — uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // scammerRepository - Shared export for scammer profiles repository.
 export { scammerRepository } from "./repositories/index";
+// supportRepository - Server-only repository for support tickets (BAN1).
+export { supportRepository, SupportRepository } from "./repositories/index";
+export type {
+  SupportTicketDocument,
+  SupportTicketCreateInput,
+  SupportTicketUpdateInput,
+  TicketMessage,
+  TicketCategory,
+  TicketStatus,
+  TicketPriority,
+} from "./repositories/index";
+export { ELIGIBLE_ORDER_STATUSES_FOR_TICKET } from "./features/support/schemas/firestore";
 // SB-UNI-B — sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer — uses firebase-admin; server-only.
@@ -3397,6 +3409,14 @@ export { DashboardStatsGrid } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // DemoSeedView - Component for demo seed view.
 export { DemoSeedView } from "./features/admin/index";
+// AdminTeamView - Employee management list view.
+export { AdminTeamView } from "./features/admin/index";
+// AdminEmployeeEditorView - Invite/edit employee permissions SideDrawer.
+export { AdminEmployeeEditorView } from "./features/admin/index";
+// AdminSupportTicketsView - Admin support ticket list view.
+export { AdminSupportTicketsView } from "./features/admin/index";
+// AdminSupportTicketDetailView - Admin support ticket detail/reply SideDrawer.
+export { AdminSupportTicketDetailView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser — React component or hook that does not depend on browser-only APIs.
 // DrawerFormFooter - Shared export for drawer form footer.
 export { DrawerFormFooter } from "./features/admin/index";
@@ -3613,6 +3633,22 @@ export type { DashboardStats } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // DemoSeedViewProps - Type contract for demo seed view props.
 export type { DemoSeedViewProps } from "./features/admin/index";
+// AdminTeamViewProps - Type contract for AdminTeamView props.
+export type { AdminTeamViewProps } from "./features/admin/index";
+// AdminEmployeeEditorViewProps - Type contract for AdminEmployeeEditorView props.
+export type { AdminEmployeeEditorViewProps } from "./features/admin/index";
+// AdminSupportTicketsViewProps - Type contract for AdminSupportTicketsView props.
+export type { AdminSupportTicketsViewProps } from "./features/admin/index";
+// AdminSupportTicketDetailViewProps - Type contract for AdminSupportTicketDetailView props.
+export type { AdminSupportTicketDetailViewProps } from "./features/admin/index";
+// AdminScammersView - Admin scammer profile list view.
+export { AdminScammersView } from "./features/admin/index";
+// AdminScammerEditorView - Scammer profile review/status SideDrawer.
+export { AdminScammerEditorView } from "./features/admin/index";
+// AdminScammersViewProps - Type contract for AdminScammersView props.
+export type { AdminScammersViewProps } from "./features/admin/index";
+// AdminScammerEditorViewProps - Type contract for AdminScammerEditorView props.
+export type { AdminScammerEditorViewProps } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // DrawerFormFooterProps - Type contract for drawer form footer props.
 export type { DrawerFormFooterProps } from "./features/admin/index";
@@ -8873,6 +8909,7 @@ export { formatFileSize } from "./utils/number.formatter";
 export { formatMonthYear } from "./utils/date.formatter";
 export { generateMediaFilename } from "./utils/id-generators"; // generateProductImageFilename already exported from "./utils/id-generators";
 export type { MediaFilenameContext } from "./utils/id-generators";
+export { resolveMediaUrl } from "./utils/media-url";
 
 export { generateFAQId } from "./utils/id-generators";
 export type { GenerateFAQIdInput } from "./utils/id-generators";
@@ -9108,6 +9145,8 @@ export { ScamRegistryView } from "./features/scams/components/ScamRegistryView";
 export type { ScamRegistryViewProps } from "./features/scams/components/ScamRegistryView";
 export { ScamProfileView } from "./features/scams/components/ScamProfileView";
 export type { ScamProfileViewProps } from "./features/scams/components/ScamProfileView";
+export { ScamAwarenessModal } from "./features/scams/components/ScamAwarenessModal";
+export type { ScamAwarenessModalProps } from "./features/scams/components/ScamAwarenessModal";
 
 // Scam server actions
 export {

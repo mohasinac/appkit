@@ -11,6 +11,7 @@ import {
   applySieveToFirestore,
   type SieveModel,
   type FirebaseSieveResult,
+  type DocumentSnapshot,
 } from "../../../providers/db-firebase";
 import { increment } from "../../../contracts/field-ops";
 import {
@@ -21,10 +22,43 @@ import {
   StoreStatusValues,
 } from "../schemas";
 import { DatabaseError } from "../../../errors";
+import {
+  encryptSecret,
+  decryptSecret,
+} from "../../../security/settings-encryption";
 
 export class StoreRepository extends BaseRepository<StoreDocument> {
   constructor() {
     super(STORE_COLLECTION);
+  }
+
+  private encryptSecrets<D extends Partial<StoreDocument>>(data: D): D {
+    const token = data.whatsappConfig?.accessToken;
+    if (!token) return data;
+    return {
+      ...data,
+      whatsappConfig: { ...data.whatsappConfig, accessToken: encryptSecret(token) },
+    };
+  }
+
+  private decryptSecrets<D extends Partial<StoreDocument>>(data: D): D {
+    const token = data.whatsappConfig?.accessToken;
+    if (!token) return data;
+    return {
+      ...data,
+      whatsappConfig: { ...data.whatsappConfig, accessToken: decryptSecret(token) },
+    };
+  }
+
+  protected override mapDoc<D = StoreDocument>(snap: DocumentSnapshot): D {
+    return this.decryptSecrets(super.mapDoc<StoreDocument>(snap)) as unknown as D;
+  }
+
+  override async update(
+    id: string,
+    data: Partial<StoreDocument>,
+  ): Promise<StoreDocument> {
+    return super.update(id, this.encryptSecrets(data));
   }
 
   /**
@@ -58,7 +92,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
       await this.db
         .collection(this.collection)
         .doc(input.storeSlug)
-        .create(prepareForFirestore(storeData));
+        .create(prepareForFirestore(this.encryptSecrets(storeData)));
     } catch (err: unknown) {
       // gRPC ALREADY_EXISTS = code 6
       if ((err as { code?: number }).code === 6) {
@@ -268,7 +302,7 @@ export class StoreRepository extends BaseRepository<StoreDocument> {
     const batch = this.db.batch();
     const newRef = this.db.collection(this.collection).doc(newSlug);
     const oldRef = this.db.collection(this.collection).doc(currentSlug);
-    batch.create(newRef, prepareForFirestore(newDoc));
+    batch.create(newRef, prepareForFirestore(this.encryptSecrets(newDoc)));
     batch.delete(oldRef);
     await batch.commit();
 

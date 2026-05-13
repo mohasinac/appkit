@@ -202,6 +202,11 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
         storeName={panelRow?.primary}
         currentStatus={panelRow?.status?.toLowerCase()}
         currentIsVerified={Boolean(panelRow?._raw?.isVerified)}
+        currentCapabilities={
+          Array.isArray(panelRow?._raw?.capabilities)
+            ? (panelRow!._raw!.capabilities as string[])
+            : undefined
+        }
       />
     </>
   );

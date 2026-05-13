@@ -12,6 +12,7 @@ const DEFAULT_ROLE_LABELS: Record<string, string> = {
   admin: "Admin",
   moderator: "Moderator",
   seller: "Seller",
+  employee: "Employee",
   user: "User",
 };
 
@@ -19,6 +20,7 @@ const DEFAULT_ROLE_COLORS: Record<string, string> = {
   admin: "admin",
   moderator: "moderator",
   seller: "seller",
+  employee: "employee",
   user: "user",
 };
 
@@ -30,7 +32,7 @@ export function RoleBadge({
 }: RoleBadgeProps) {
   const variant = (roleColorMap?.[role] ??
     DEFAULT_ROLE_COLORS[role] ??
-    "default") as "admin" | "moderator" | "seller" | "user" | "default";
+    "default") as "admin" | "moderator" | "seller" | "employee" | "user" | "default";
 
   return (
     <Badge variant={variant} className={`appkit-role-badge ${className ?? ""}`}>

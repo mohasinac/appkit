@@ -57,3 +57,10 @@ export { bundleStockSyncHandler } from "./bundleStockSync";
 export { onProductStockChangeHandler } from "./onProductStockChange";
 export { triggerEventRaffleHandler } from "./triggerEventRaffle";
 export { assignSpinPrizeHandler } from "./assignSpinPrize";
+// BAN9 — support ticket lifecycle + user ban audit
+export { onSupportTicketCreateHandler } from "./onSupportTicketCreate";
+export { onSupportTicketUpdateHandler } from "./onSupportTicketUpdate";
+export { onUserBanChangeHandler } from "./onUserBanChange";
+// SCAM8 — scam report notifications
+export { onScamReportCreateHandler } from "./onScamReportCreate";
+export { onScamReportUpdateHandler } from "./onScamReportUpdate";

@@ -154,6 +154,34 @@ export const ADMIN_EVENT_STATUS_TABS = [
   { id: "ended", label: "Ended" },
 ] as const satisfies readonly AdminFilterTab[];
 
+/** Admin > Scammers — scammer profile status filter chip set. */
+export const ADMIN_SCAMMER_STATUS_TABS = [
+  ALL_TAB,
+  { id: "pending_review", label: "Pending" },
+  { id: "verified", label: "Verified" },
+  { id: "rejected", label: "Rejected" },
+  { id: "removed", label: "Removed" },
+] as const satisfies readonly AdminFilterTab[];
+
+/** Admin > Support Tickets — ticket-status filter chip set. */
+export const ADMIN_SUPPORT_TICKET_STATUS_TABS = [
+  ALL_TAB,
+  { id: "open", label: "Open" },
+  { id: "in_progress", label: "In Progress" },
+  { id: "waiting_on_user", label: "Waiting" },
+  { id: "resolved", label: "Resolved" },
+  { id: "closed", label: "Closed" },
+] as const satisfies readonly AdminFilterTab[];
+
+/** Admin > Support Tickets — priority filter chip set. */
+export const ADMIN_SUPPORT_TICKET_PRIORITY_TABS = [
+  ALL_TAB,
+  { id: "urgent", label: "Urgent" },
+  { id: "high", label: "High" },
+  { id: "normal", label: "Normal" },
+  { id: "low", label: "Low" },
+] as const satisfies readonly AdminFilterTab[];
+
 /** Admin > Carts — cart-ownership filter chip set. */
 export const ADMIN_CART_OWNERSHIP_TABS = [
   ALL_TAB,

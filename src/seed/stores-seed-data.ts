@@ -5,6 +5,7 @@
  */
 
 import type { StoreDocument } from "../features/stores/schemas";
+import type { StoreCapability } from "../features/auth/permissions/constants";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -68,6 +69,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 0,
       averageRating: 0,
     },
+    capabilities: ["host_auctions", "host_preorders", "suggest_brands", "create_coupons", "bulk_listing_import", "verified_seller", "featured_placement", "promotional_banner", "advanced_analytics", "api_access", "multiple_stores", "early_access_features", "whatsapp_catalog_sync"] as StoreCapability[],
     createdAt: daysAgo(400),
     updatedAt: daysAgo(1),
   },
@@ -134,6 +136,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 42,
       averageRating: 4.8,
     },
+    capabilities: ["host_auctions", "host_preorders", "suggest_brands", "create_coupons", "verified_seller", "featured_placement", "extended_return_window"] as StoreCapability[],
     createdAt: daysAgo(380),
     updatedAt: daysAgo(2),
   },
@@ -169,6 +172,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 31,
       averageRating: 4.6,
     },
+    capabilities: ["suggest_brands", "create_coupons", "verified_seller", "extended_return_window"] as StoreCapability[],
     createdAt: daysAgo(350),
     updatedAt: daysAgo(3),
   },
@@ -205,6 +209,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 58,
       averageRating: 4.9,
     },
+    capabilities: ["suggest_brands", "create_coupons"] as StoreCapability[],
     createdAt: daysAgo(320),
     updatedAt: daysAgo(1),
   },
@@ -240,6 +245,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 47,
       averageRating: 4.7,
     },
+    capabilities: ["host_auctions", "suggest_brands", "create_coupons", "extended_return_window"] as StoreCapability[],
     createdAt: daysAgo(290),
     updatedAt: daysAgo(2),
   },
@@ -276,6 +282,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 28,
       averageRating: 4.8,
     },
+    capabilities: ["suggest_brands", "create_coupons", "whatsapp_catalog_sync"] as StoreCapability[],
     createdAt: daysAgo(260),
     updatedAt: daysAgo(1),
   },
@@ -312,6 +319,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 22,
       averageRating: 4.7,
     },
+    capabilities: ["host_preorders", "suggest_brands", "create_coupons", "extended_return_window"] as StoreCapability[],
     createdAt: daysAgo(230),
     updatedAt: daysAgo(2),
   },
@@ -347,6 +355,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       totalReviews: 19,
       averageRating: 4.9,
     },
+    capabilities: ["suggest_brands", "create_coupons", "featured_placement"] as StoreCapability[],
     createdAt: daysAgo(200),
     updatedAt: daysAgo(3),
   },

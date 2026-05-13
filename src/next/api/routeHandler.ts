@@ -53,6 +53,14 @@ interface RouteHandlerOptions<
    * Implies `auth: true`.
    */
   roles?: string[];
+  /**
+   * Fine-grained permission required for this route.
+   * When set: also allows `"employee"` role through the role check, then
+   * verifies the permission via the registered `rbac` provider.
+   * Admin role always bypasses. Requires `rbac` provider to be registered.
+   * Implies `auth: true`.
+   */
+  permission?: string;
   /** Zod schema to validate + parse the JSON request body. */
   schema?: ParseableSchema<TInput>;
   /**
@@ -139,7 +147,9 @@ export function createRouteHandler<
       // -- Auth --------------------------------------------------------------
       let user: RouteUser | undefined;
       const needsAuth =
-        options.auth || (options.roles && options.roles.length > 0);
+        options.auth ||
+        (options.roles && options.roles.length > 0) ||
+        !!options.permission;
 
       if (needsAuth) {
         user = await verifySession(request);
@@ -151,8 +161,35 @@ export function createRouteHandler<
         }
       }
 
-      if (options.roles && options.roles.length > 0) {
-        if (!user || !options.roles.includes(user.role ?? "")) {
+      // Role check — when `permission` is set, also allow "employee" through
+      const effectiveRoles = options.roles
+        ? options.permission
+          ? [...new Set([...options.roles, "employee"])]
+          : options.roles
+        : options.permission
+          ? ["admin", "employee"]
+          : [];
+
+      if (effectiveRoles.length > 0) {
+        if (!user || !effectiveRoles.includes(user.role ?? "")) {
+          return NextResponse.json(
+            { success: false, error: "Insufficient permissions" },
+            { status: 403 },
+          );
+        }
+      }
+
+      // -- Permission check (employee fine-grained) --------------------------
+      if (options.permission && user && user.role !== "admin") {
+        const { rbac } = getProviders();
+        if (!rbac) {
+          return NextResponse.json(
+            { success: false, error: "RBAC provider not configured" },
+            { status: 503 },
+          );
+        }
+        const perms = await rbac.getPermissions(user.uid);
+        if (!perms.includes(options.permission)) {
           return NextResponse.json(
             { success: false, error: "Insufficient permissions" },
             { status: 403 },

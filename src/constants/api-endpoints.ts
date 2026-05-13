@@ -155,6 +155,17 @@ export const ADMIN_ENDPOINTS = {
   SUBLISTING_CATEGORY_BY_ID: (id: string) => `/api/admin/sublisting-categories/${id}`,
   PRODUCT_FEATURES: "/api/admin/features",
   PRODUCT_FEATURE_BY_ID: (id: string) => `/api/admin/features/${id}`,
+  TEAM: "/api/admin/team",
+  TEAM_MEMBER: (uid: string) => `/api/admin/team/${uid}`,
+  USER_HARD_BAN: (uid: string) => `/api/admin/users/${uid}/hard-ban`,
+  USER_UNBAN: (uid: string) => `/api/admin/users/${uid}/unban`,
+  USER_SOFT_BAN: (uid: string) => `/api/admin/users/${uid}/soft-ban`,
+  USER_SOFT_BAN_LIFT: (uid: string, action: string) =>
+    `/api/admin/users/${uid}/soft-ban/${encodeURIComponent(action)}`,
+  SUPPORT_TICKETS: "/api/admin/support-tickets",
+  SUPPORT_TICKET_BY_ID: (id: string) => `/api/admin/support-tickets/${id}`,
+  SCAMMERS: "/api/admin/scammers",
+  SCAMMER_BY_ID: (id: string) => `/api/admin/scammers/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -316,6 +327,9 @@ export const MEDIA_ENDPOINTS = {
   CROP: "/api/media/crop",
   TRIM: "/api/media/trim",
   DELETE: (url: string) => `/api/media?url=${encodeURIComponent(url)}`,
+  /** Watermark-proxy for external (non-Firebase-Storage) image URLs. */
+  EXT: "/api/media/ext",
+  EXT_URL: (url: string) => `/api/media/ext?url=${encodeURIComponent(url)}`,
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -449,6 +463,30 @@ export const PROFILE_STATS_ENDPOINTS = {
 // Before / After
 // ---------------------------------------------------------------------------
 
+// ---------------------------------------------------------------------------
+// Support Tickets (user-facing)
+// ---------------------------------------------------------------------------
+
+export const SUPPORT_ENDPOINTS = {
+  TICKETS: "/api/support/tickets",
+  TICKET_BY_ID: (id: string) => `/api/support/tickets/${id}`,
+  TICKET_MESSAGES: (id: string) => `/api/support/tickets/${id}/messages`,
+} as const;
+
+// ---------------------------------------------------------------------------
+// Scammers (public)
+// ---------------------------------------------------------------------------
+
+export const SCAMMER_ENDPOINTS = {
+  LIST: "/api/scammers",
+  BY_SLUG: (slug: string) => `/api/scammers/${slug}`,
+  REPORT: "/api/scammers/report",
+} as const;
+
+// ---------------------------------------------------------------------------
+// Before / After
+// ---------------------------------------------------------------------------
+
 export const BEFORE_AFTER_ENDPOINTS = {
   LIST: "/api/before-after",
 } as const;
@@ -511,6 +549,8 @@ export const API_ENDPOINTS = {
   PROFILE_STATS: PROFILE_STATS_ENDPOINTS,
   DEMO: DEMO_ENDPOINTS,
   WHATSAPP_SELLER: WHATSAPP_SELLER_ENDPOINTS,
+  SUPPORT: SUPPORT_ENDPOINTS,
+  SCAMMERS: SCAMMER_ENDPOINTS,
 } as const;
 
 /** Canonical alias — prefer API_ROUTES over API_ENDPOINTS in new code. */

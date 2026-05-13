@@ -65,6 +65,7 @@ export interface SessionUser {
   publicProfile?: Record<string, unknown>;
   stats?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
+  scamAwarenessAcknowledgedAt?: Date | null;
 }
 
 export interface SessionContextValue {
@@ -198,6 +199,9 @@ function buildSessionUser(
     publicProfile: serverData.publicProfile,
     stats: serverData.stats,
     metadata: serverData.metadata,
+    scamAwarenessAcknowledgedAt: serverData.scamAwarenessAcknowledgedAt
+      ? new Date(serverData.scamAwarenessAcknowledgedAt)
+      : null,
   };
 }
 
@@ -284,6 +288,9 @@ export function SessionProvider({
           publicProfile: data.publicProfile,
           stats: data.stats,
           metadata: data.metadata,
+          scamAwarenessAcknowledgedAt: data.scamAwarenessAcknowledgedAt
+            ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
+            : null,
         };
       } catch {
         return null;

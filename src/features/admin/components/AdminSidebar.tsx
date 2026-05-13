@@ -9,6 +9,8 @@ export interface AdminNavItem {
   href: string;
   label: string;
   icon?: React.ReactNode;
+  /** Permission required to see this item. If omitted, always visible. */
+  requiredPermission?: string;
 }
 
 export interface AdminNavGroup {

@@ -1460,3 +1460,25 @@ export type {
   AllowedDocMime,
   AllowedMime,
 } from "./_internal/shared/media/limits";
+
+// ── RBAC server helpers ───────────────────────────────────────────────────────
+// getServerPermissions, checkPermission, makeAdminSectionLayout
+export {
+  getServerPermissions,
+  checkPermission,
+  checkAnyPermission,
+  makeAdminSectionLayout,
+} from "./_internal/server/features/auth/permissions";
+export type {
+  ResolvedPermissions,
+  AdminSectionLayoutOpts,
+} from "./_internal/server/features/auth/permissions";
+export {
+  getStoreCapabilities,
+  storeHasCapability,
+} from "./_internal/server/features/auth/capabilities";
+
+// ── Soft ban helpers ──────────────────────────────────────────────────────────
+export { isSoftBanned, getBanSummary } from "./features/auth/server/checkSoftBan";
+export type { UserSoftBan } from "./features/auth/schemas/firestore";
+export type { BannedAction } from "./features/auth/permissions/constants";
