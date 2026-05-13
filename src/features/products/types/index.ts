@@ -69,6 +69,12 @@ export interface ProductItem {
   condition?: ProductCondition;
   /** Canonical listing-kind discriminator (SB1-G Phase 4 — booleans removed). */
   listingType?: ListingType;
+  /** Reverse refs maintained by the bundles repository (SB3) — IDs of every
+   * bundle whose `bundleItems[]` includes this product. Powers the "In bundle"
+   * badge on cards (SB7-A) + detail pages (SB7-B). */
+  partOfBundleIds?: string[];
+  /** Parallel array of titles — same length + index as `partOfBundleIds`. */
+  partOfBundleTitles?: string[];
   sublistingCategoryId?: string;
   groupId?: string;
   isGroupParent?: boolean;

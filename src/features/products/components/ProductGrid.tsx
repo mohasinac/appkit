@@ -150,6 +150,22 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   {typeBadge.label}
                 </Span>
               )}
+              {/* SB7-A — "In bundle" pill when this product is a bundle member.
+                  Badge is visual only; the bundle link lives on the product
+                  detail page (SB7-B) where it has room to be a real Link
+                  without nesting inside the card's outer Link. */}
+              {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
+                <Span
+                  className="rounded-full bg-teal-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  title={
+                    product.partOfBundleTitles && product.partOfBundleTitles.length > 0
+                      ? `In bundle: ${product.partOfBundleTitles[0]}`
+                      : "In a bundle"
+                  }
+                >
+                  Bundled
+                </Span>
+              )}
             </>
           )}
         </Div>

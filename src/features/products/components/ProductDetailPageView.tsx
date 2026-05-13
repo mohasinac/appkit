@@ -249,6 +249,19 @@ export async function ProductDetailPageView({
   const condition =
     typeof p.condition === "string" ? (p.condition as string) : null;
 
+  // SB7-B — bundle reverse refs. partOfBundleIds + partOfBundleTitles are
+  // parallel arrays maintained by the bundles repository's syncReverseRefs.
+  const partOfBundleIds: string[] = Array.isArray(p.partOfBundleIds)
+    ? (p.partOfBundleIds as string[])
+    : [];
+  const partOfBundleTitles: string[] = Array.isArray(p.partOfBundleTitles)
+    ? (p.partOfBundleTitles as string[])
+    : [];
+  const bundleMemberships = partOfBundleIds.map((id, i) => ({
+    id,
+    title: partOfBundleTitles[i] ?? id,
+  }));
+
   const tags: string[] = Array.isArray(p.tags) ? (p.tags as string[]) : [];
   const features: string[] = Array.isArray(p.features)
     ? (p.features as string[])
@@ -455,6 +468,24 @@ export async function ProductDetailPageView({
                       {brand}
                     </Span>
                   )}
+                </Row>
+              )}
+
+              {/* SB7-B — In-bundle pills. One Link per bundle membership;
+                  clicking jumps to /bundles/{id}. Sits below category pills
+                  so the buyer sees membership in the same visual band. */}
+              {bundleMemberships.length > 0 && (
+                <Row gap="sm" wrap>
+                  {bundleMemberships.map((b) => (
+                    <Link
+                      key={b.id}
+                      href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
+                      className="inline-flex items-center gap-1 rounded-full border border-teal-300 bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700 transition-colors hover:border-teal-500 hover:bg-teal-100 dark:border-teal-800/60 dark:bg-teal-900/30 dark:text-teal-300 dark:hover:border-teal-600 dark:hover:bg-teal-900/50"
+                    >
+                      <Span aria-hidden="true">📦</Span>
+                      In bundle: {b.title}
+                    </Link>
+                  ))}
                 </Row>
               )}
 
