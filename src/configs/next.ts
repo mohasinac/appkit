@@ -101,6 +101,13 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     "/api/**": [
       "./node_modules/firebase-admin/lib/database/**",
       "./node_modules/firebase-admin/lib/esm/database/**",
+      "./node_modules/firebase-admin/lib/firestore/**",
+      "./node_modules/firebase-admin/lib/esm/firestore/**",
+      "./node_modules/firebase-admin/lib/auth/**",
+      "./node_modules/firebase-admin/lib/esm/auth/**",
+      "./node_modules/firebase-admin/lib/app/**",
+      "./node_modules/firebase-admin/lib/esm/app/**",
+      "./node_modules/@google-cloud/firestore/build/src/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {

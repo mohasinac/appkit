@@ -83,13 +83,15 @@ export function SiteLogo({
       >
         LetItRip
       </text>
+      {/* .in TLD badge — pill background makes it read as a designed element, not a floating label */}
+      <rect x="181" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
       <text
-        x="184"
-        y="22"
+        x="186"
+        y="21"
         fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
         fontWeight="700"
-        fontSize="20"
-        letterSpacing="-0.5"
+        fontSize="15"
+        letterSpacing="0.2"
         fill={fill}
       >
         .in
