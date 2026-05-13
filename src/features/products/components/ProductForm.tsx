@@ -663,11 +663,29 @@ export function ProductForm({
         onChange={(e) =>
           update({ listingType: e.target.checked ? "prize-draw" : "standard" })
         }
-        disabled={isReadonly}
+        disabled={
+          isReadonly ||
+          ((product.prizeDrawItems as PrizeDrawItem[] | undefined) ?? []).some(
+            (it) => it.isWon,
+          )
+        }
       />
 
       {isPrizeDrawListing(product) && (
+        (() => {
+          const prizeItems = (product.prizeDrawItems ?? []) as PrizeDrawItem[];
+          const anyWon = prizeItems.some((it) => it.isWon);
+          const lockedForReveal = anyWon;
+          const fieldDisabled = isReadonly || lockedForReveal;
+          return (
         <>
+          {lockedForReveal ? (
+            <Alert variant="error" title="Listing locked">
+              At least one prize has been revealed for this draw — the listing
+              and its fields are now frozen. To rerun a similar draw, clone it
+              into a new prize-draw listing.
+            </Alert>
+          ) : null}
           <Alert variant="warning" title="Non-refundable">
             Prize-draw entries are non-refundable once the reveal window opens.
             Buyers see and must accept this notice before paying.
@@ -688,7 +706,7 @@ export function ProductForm({
                   pricePerEntry: Math.round((parseFloat(value) || 0) * 100),
                 })
               }
-              disabled={isReadonly}
+              disabled={fieldDisabled}
               placeholder="299"
             />
             <FormField
@@ -699,7 +717,7 @@ export function ProductForm({
               onChange={(value) =>
                 update({ prizeMaxEntries: Number(value) || undefined })
               }
-              disabled={isReadonly}
+              disabled={fieldDisabled}
               placeholder="100"
             />
           </FormGroup>
@@ -719,7 +737,7 @@ export function ProductForm({
               onChange={(value) =>
                 update({ prizeRevealWindowStart: value })
               }
-              disabled={isReadonly}
+              disabled={fieldDisabled}
             />
             <FormField
               name="prizeRevealWindowEnd"
@@ -733,7 +751,7 @@ export function ProductForm({
                 return d.toISOString().slice(0, 16);
               })()}
               onChange={(value) => update({ prizeRevealWindowEnd: value })}
-              disabled={isReadonly}
+              disabled={fieldDisabled}
             />
           </FormGroup>
 
@@ -748,7 +766,7 @@ export function ProductForm({
                   prizeRevealDeadlineDays: Number(value) || 3,
                 })
               }
-              disabled={isReadonly}
+              disabled={fieldDisabled}
               placeholder="3"
               helpText="After window opens, buyers have this many days to claim."
             />
@@ -760,7 +778,7 @@ export function ProductForm({
               onChange={(value) =>
                 update({ maxPerUser: Number(value) || undefined })
               }
-              disabled={isReadonly}
+              disabled={fieldDisabled}
               placeholder=""
             />
           </FormGroup>
@@ -792,6 +810,8 @@ export function ProductForm({
             }}
           />
         </>
+        );
+        })()
       )}
 
       {isPreOrderListing(product) && (

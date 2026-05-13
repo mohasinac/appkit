@@ -50,6 +50,14 @@ export {
   storeAnalyticsHandler,
   listingProcessorHandler,
   supportedListingCollections,
+  // SB1-L (S7-PrizeDraws)
+  prizeRevealOpenHandler,
+  prizeRevealCloseHandler,
+  prizeRevealExpiryHandler,
+  prizeRevealReminderHandler,
+  bundleStockSyncHandler,
+  triggerEventRaffleHandler,
+  assignSpinPrizeHandler,
   // Firebase binder adapter
   bindSchedule,
   bindDocumentWritten,

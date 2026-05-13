@@ -179,6 +179,28 @@ export const PATCH = createRouteHandler<
       );
     }
 
+    // SB4 — once any prize in a prize-draw listing has been won, the listing
+    // is frozen. Sellers can no longer edit it; admins inherit the same lock
+    // (anything they need to change should go through a new listing or a
+    // dedicated remediation script).
+    const prizeItems =
+      (product as { prizeDrawItems?: { isWon?: boolean }[] }).prizeDrawItems ??
+      [];
+    const anyPrizeWon = prizeItems.some((it) => it?.isWon);
+    if (
+      (product as { listingType?: string }).listingType === "prize-draw" &&
+      anyPrizeWon
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "This prize-draw listing is locked because at least one prize has been revealed. Clone it into a new listing if you want to rerun the draw.",
+        },
+        { status: 409 },
+      );
+    }
+
     const updated = await repo.update(id, {
       ...(body as Partial<ProductItem>),
       updatedAt: new Date().toISOString(),

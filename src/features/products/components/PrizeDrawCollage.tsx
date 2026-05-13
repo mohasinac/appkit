@@ -21,6 +21,16 @@ export interface PrizeDrawCollageProps {
   onItemClick?: (item: PrizeDrawItem) => void;
   /** Defaults to "Won". Use for localisation. */
   wonLabel?: string;
+  /**
+   * Public buyer surfaces pass `true` so the diagonal "Won" overlay never
+   * renders — otherwise potential buyers would see their favorite prize is
+   * already gone and drop out. The seller / admin / winner views leave this
+   * `false` (default) to show real pool state.
+   *
+   * The product adapter for public reads should ALSO strip `isWon` before
+   * sending the items array client-side; this prop is the visual fallback.
+   */
+  hideWonState?: boolean;
 }
 
 export function PrizeDrawCollage({
@@ -28,6 +38,7 @@ export function PrizeDrawCollage({
   highlightItemNumber,
   onItemClick,
   wonLabel = "Won",
+  hideWonState = false,
 }: PrizeDrawCollageProps) {
   if (!items.length) {
     return (
@@ -79,7 +90,7 @@ export function PrizeDrawCollage({
                 #{it.itemNumber}
               </Div>
 
-              {it.isWon ? (
+              {it.isWon && !hideWonState ? (
                 <>
                   <Div
                     aria-hidden

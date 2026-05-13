@@ -43,3 +43,13 @@ export {
   type ListingRequestBody,
   type ListingResponseBody,
 } from "./listingProcessor";
+
+// SB1-L (S7-PrizeDraws) — 7 functions covering prize draws, bundle sync,
+// event raffles, and spin-the-wheel.
+export { prizeRevealOpenHandler } from "./prizeRevealOpen";
+export { prizeRevealCloseHandler } from "./prizeRevealClose";
+export { prizeRevealExpiryHandler } from "./prizeRevealExpiry";
+export { prizeRevealReminderHandler } from "./prizeRevealReminder";
+export { bundleStockSyncHandler } from "./bundleStockSync";
+export { triggerEventRaffleHandler } from "./triggerEventRaffle";
+export { assignSpinPrizeHandler } from "./assignSpinPrize";

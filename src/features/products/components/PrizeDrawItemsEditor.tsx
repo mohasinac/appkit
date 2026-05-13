@@ -11,7 +11,7 @@
  * Min 3 items, max 16 (mirrors PrizeDrawItem schema constraints).
  */
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { Button, Div, FormField, Heading, Row, Stack, Text } from "../../../ui";
 import { ImageUpload } from "../../media";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -47,6 +47,10 @@ export function PrizeDrawItemsEditor({
   onUploadVideo,
   warning,
 }: PrizeDrawItemsEditorProps) {
+  // Once any prize has been revealed (isWon=true), the array is frozen for
+  // the seller — add/remove/reorder are all blocked. Per-item edits already
+  // respect the per-item `locked` flag below.
+  const anyWon = items.some((it) => it.isWon);
   const update = useCallback(
     (index: number, patch: Partial<PrizeDrawItem>) => {
       const next = items.map((it, i) => (i === index ? { ...it, ...patch } : it));
@@ -111,7 +115,7 @@ export function PrizeDrawItemsEditor({
           type="button"
           variant="secondary"
           onClick={addItem}
-          disabled={items.length >= MAX_ITEMS}
+          disabled={anyWon || items.length >= MAX_ITEMS}
         >
           + Add prize ({items.length}/{MAX_ITEMS})
         </Button>
@@ -121,7 +125,13 @@ export function PrizeDrawItemsEditor({
         exactly one of these. Items marked won during a prior reveal cannot be
         edited or removed.
       </Text>
-      {warning ? (
+      {anyWon ? (
+        <Div className="rounded border border-red-400/40 bg-red-50 px-3 py-2 text-sm text-red-900 dark:bg-red-900/30 dark:text-red-100">
+          <strong>Draw locked.</strong> At least one prize has been revealed —
+          this listing can no longer be edited. To run a similar draw, clone it
+          into a new prize-draw listing.
+        </Div>
+      ) : warning ? (
         <Div className="rounded border border-yellow-400/40 bg-yellow-50 px-3 py-2 text-sm text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100">
           {warning}
         </Div>
@@ -129,7 +139,7 @@ export function PrizeDrawItemsEditor({
 
       <Stack gap="md">
         {items.map((it, index) => {
-          const locked = it.isWon;
+          const locked = it.isWon || anyWon;
           return (
             <Div
               key={`prize-item-${it.itemNumber}-${index}`}

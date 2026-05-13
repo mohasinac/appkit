@@ -27,6 +27,11 @@ export { PrizeDrawItemsEditor } from "./PrizeDrawItemsEditor";
 export type { PrizeDrawItemsEditorProps } from "./PrizeDrawItemsEditor";
 export { PrizeDrawCollage } from "./PrizeDrawCollage";
 export type { PrizeDrawCollageProps } from "./PrizeDrawCollage";
+export { PrizeRevealModal } from "./PrizeRevealModal";
+export type {
+  PrizeRevealModalProps,
+  PrizeRevealResponse,
+} from "./PrizeRevealModal";
 export { ProductFeaturesSelector } from "./ProductFeaturesSelector";
 export type { ProductFeaturesSelectorProps } from "./ProductFeaturesSelector";
 export { ProductFeatureBadges } from "./ProductFeatureBadges";
