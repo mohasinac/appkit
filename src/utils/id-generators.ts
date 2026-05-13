@@ -595,7 +595,9 @@ export type MediaFilenameContext =
   | { type: "user-avatar"; firstName: string; lastName: string; ext?: string }
   | { type: "carousel-image"; title: string; ext?: string }
   | { type: "invoice"; orderId: string; date?: Date }
-  | { type: "payout-doc"; sellerName: string; date?: Date };
+  | { type: "payout-doc"; sellerName: string; date?: Date }
+  | { type: "shipping-proof"; orderId: string; ext?: string; date?: Date }
+  | { type: "refund-proof"; orderId: string; refundId: string; ext?: string; date?: Date };
 
 export function generateMediaFilename(ctx: MediaFilenameContext): string {
   switch (ctx.type) {
@@ -647,5 +649,21 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
       return generateInvoiceFilename(ctx.orderId, ctx.date);
     case "payout-doc":
       return generatePayoutDocFilename(ctx.sellerName, ctx.date);
+    case "shipping-proof": {
+      const d = ctx.date ?? new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const ext = ctx.ext ?? "pdf";
+      return `shipping-proof-${ctx.orderId}-${y}${m}${day}.${ext}`;
+    }
+    case "refund-proof": {
+      const d = ctx.date ?? new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const ext = ctx.ext ?? "pdf";
+      return `refund-proof-${ctx.orderId}-${ctx.refundId}-${y}${m}${day}.${ext}`;
+    }
   }
 }

@@ -7,6 +7,7 @@ import type { OrderStatus, PaymentStatus } from "../types";
 import type { OrderType } from "../utils/order-splitter";
 
 export type ShippingMethod = "custom" | "shiprocket";
+export type RefundType = "full" | "partial";
 export type OrderPayoutStatus = "eligible" | "requested" | "paid";
 export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 
@@ -70,6 +71,33 @@ export interface OrderDocumentItem {
   prizeRevealDeadline?: string;
   /** SB8-F â€” set after the reveal API picks a winner. */
   revealedItemNumber?: number;
+}
+
+/**
+ * One refund event on an order. Multiple partial refund events are allowed
+ * until the cumulative amount equals the order total, at which point the order
+ * transitions to full-refund terminal state. Once any refund is posted the
+ * order's `contestable` flag becomes false permanently.
+ */
+export interface OrderRefundEvent {
+  refundId: string;
+  type: RefundType;
+  /** Amount in paise. */
+  amount: number;
+  /** ProductIds / itemIds that were refunded (for partial refunds). */
+  itemIds?: string[];
+  reason: string;
+  refundedAt: Date;
+  refundedBy: string; // userId of admin / seller who issued the refund
+  /** Set when Razorpay processed the refund. */
+  razorpayRefundId?: string;
+  /** Set when refund was processed manually (offline). */
+  manualTransactionId?: string;
+  /** Proof document URL (via /api/media signed-URL flow). */
+  proofDocumentUrl?: string;
+  proofDocumentMimeType?: string;
+  /** Required for Razorpay-override path ("failed auto-refund, settled manually"). */
+  overrideReason?: string;
 }
 
 /** One applied discount/coupon saved on the order for accounting and display */
@@ -157,6 +185,35 @@ export interface OrderDocument {
   isNonRefundable?: boolean;
   /** Set when the order came from a bundle â€” points back to `bundles/{id}`. */
   bundleId?: string;
+
+  // ── Multi-order payment batch (S-SBUNI-RULES 2026-05-13) ────────────────
+  /**
+   * Internal reference linking sibling orders created from the same checkout
+   * transaction (one Razorpay payment, N orders). Not a contractual record —
+   * orders are the source of truth for invoicing, refunds, and disputes.
+   */
+  paymentBatchId?: string;
+
+  // ── Refund machinery (S-SBUNI-RULES 2026-05-13) ─────────────────────────
+  /**
+   * Append-only log of refund events on this order. Multiple partial refund
+   * events are allowed until the cumulative amount equals `totalPrice`.
+   */
+  refunds?: OrderRefundEvent[];
+  /**
+   * False once ANY refund (full or partial) has been posted. Once false it
+   * stays false — no dispute, RMA request, or “Item Not Received” claim may
+   * be filed. Both buyer and seller must acknowledge this in the refund UI
+   * via `confirmIrrevocable: true` before the refund is posted.
+   */
+  contestable?: boolean;
+
+  // ── Shipping proof (S-SBUNI-RULES 2026-05-13) ───────────────────────────
+  /** Signed-URL media slug for a shipping-proof document (label, AWB scan). */
+  shippingProofUrl?: string;
+  shippingProofMimeType?: string;
+  shippingProofUploadedAt?: Date;
+  shippingProofUploadedBy?: string;
 
   createdAt: Date;
   updatedAt: Date;

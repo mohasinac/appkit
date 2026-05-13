@@ -34,7 +34,7 @@ import { PRODUCT_COLLECTION, ProductStatusValues } from "../../../../features/pr
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
-// SB-UNI-5 2026-05-13 — bundle cart-line stock fan-out helpers.
+// S-SBUNI-RULES 2026-05-13 — bundle cart-line stock fan-out helpers.
 import {
   getCartItemMemberIds,
   getExpandedDecrements,
@@ -60,9 +60,13 @@ import { CHECKOUT_DEFAULT_COMMISSIONS, type CheckoutPaymentMethod } from "../../
 import { formatShippingAddress, type CheckoutOrderResult } from "./data";
 import {
   enforceMaxPerUserForCart,
-  enforcePrizePoolCap,
   computePrizeRevealDeadline,
 } from "./prize-bundle-gates";
+import type { ListingType } from "../../../../features/products/types/index";
+import {
+  getListingRule,
+  runSyncPreflight,
+} from "../../../shared/checkout/rules";
 
 /**
  * Fire-and-forget in-app notifications when an order is created.
@@ -305,17 +309,12 @@ export async function createCheckoutOrderAction(
         // pricing is always "standard" so the prize-draw cap isn't enforced.
         const memberIds = getCartItemMemberIds(item);
         const representative = productById.get(memberIds[0]) as ProductDocument;
-        if (item.bundleProductIds && item.bundleProductIds.length > 0) {
-          availableItems.push({ item, product: representative });
-        } else {
-          // Regular item — preserve prize-draw pool cap + prizeCurrentEntries
-          // bookkeeping. Bundles never use this branch.
-          enforcePrizePoolCap({
-            productSnapshot: representative,
-            requestedQuantity: item.quantity,
-          });
-          availableItems.push({ item, product: representative });
+        // S-SBUNI-RULES 2026-05-13 — sync preflight (prize-pool cap, pre-order
+        // quota) via rule registry. Bundles skip — they bypass the cart path.
+        if (!item.bundleProductIds?.length) {
+          runSyncPreflight([{ item, product: representative }]);
         }
+        availableItems.push({ item, product: representative });
       }
 
       // Apply per-product decrements ONCE per unique product (sums across the
@@ -324,14 +323,13 @@ export async function createCheckoutOrderAction(
         for (const [pid, qtyDelta] of expansion.decrements) {
           const product = productById.get(pid);
           if (!product) continue;
+          const lt = (product.listingType ?? "standard") as ListingType;
+          const rule = getListingRule(lt);
           const update: Record<string, unknown> = {
             availableQuantity: product.availableQuantity - qtyDelta,
             updatedAt: new Date(),
+            ...rule.stockDecrementExtras(product, qtyDelta),
           };
-          if (product.listingType === "prize-draw") {
-            update.prizeCurrentEntries =
-              (product.prizeCurrentEntries ?? 0) + qtyDelta;
-          }
           tx.update(
             productRefById.get(pid) as FirebaseFirestore.DocumentReference,
             update,
@@ -408,18 +406,12 @@ export async function createCheckoutOrderAction(
     const groupTotal = group.reduce((sum, { item }) => sum + item.price * item.quantity, 0);
     total += groupTotal;
 
-    // SB8-F — when a line is a prize-draw entry, stamp the listingType +
-    // reveal status + deadline so the user-orders surface can render the
-    // reveals-remaining badge immediately after order creation.
-    const groupRevealDeadline =
-      orderType === "prize-draw"
-        ? computePrizeRevealDeadline(group[0].product)
-        : undefined;
+    // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
     const orderItems = group.map(({ item, product }) => {
-      const isPrizeDrawLine = product.listingType === "prize-draw";
-      // SB-UNI-5 2026-05-13 — forward bundle identifiers + member snapshot
-      // so the order-detail UI can collapse expanded lines back under a
-      // "Bundle: <name>" header.
+      const lt = (product.listingType ?? "standard") as ListingType;
+      const itemRule = getListingRule(lt);
+      // SB-UNI-5 2026-05-13 — forward bundle identifiers so the order-detail
+      // UI can collapse expanded lines back under a "Bundle: <name>" header.
       const bundleFields =
         item.bundleCategorySlug && item.bundleProductIds
           ? {
@@ -427,24 +419,15 @@ export async function createCheckoutOrderAction(
               bundleProductIds: item.bundleProductIds,
             }
           : {};
-      return {
+      const baseLine = {
         productId: item.productId,
         productTitle: item.productTitle,
         quantity: item.quantity,
         unitPrice: item.price,
         totalPrice: item.price * item.quantity,
         ...bundleFields,
-        ...(isPrizeDrawLine
-          ? {
-              listingType: "prize-draw" as const,
-              prizeRevealStatus:
-                product.prizeRevealStatus === "open" ? "open" as const : "pending" as const,
-              prizeRevealDeadline: groupRevealDeadline?.toISOString(),
-            }
-          : product.listingType
-            ? { listingType: product.listingType }
-            : {}),
       };
+      return itemRule.decorateOrderItem(baseLine, product);
     });
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
@@ -550,18 +533,15 @@ export async function createCheckoutOrderAction(
       ),
     ];
 
-    // SB-UNI-D — "bundle" order-type removed; bundle cart lines will expand
-    // to N product order lines at checkout (forward-looking feature, not
-    // wired yet). Prize-draw fields only.
-    const isPrizeDrawOrder = orderType === "prize-draw";
-    const prizeDrawFields =
-      isPrizeDrawOrder
-        ? {
-            prizeDrawProductId: group[0].product.id,
-            isNonRefundable: true,
-            prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
-          }
-        : {};
+    // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
+    const lt0 = (group[0].product.listingType ?? "standard") as ListingType;
+    const groupRule = getListingRule(lt0);
+    const extraOrderFields = {
+      ...groupRule.decorateOrderDoc(group[0].item, group[0].product),
+      ...(orderType === "prize-draw"
+        ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
+        : {}),
+    };
 
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,
@@ -590,7 +570,7 @@ export async function createCheckoutOrderAction(
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
       imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
-      ...prizeDrawFields,
+      ...extraOrderFields,
     });
 
     orderIds.push(order.id);
@@ -831,16 +811,13 @@ export async function verifyAndPlaceRazorpayOrderAction(
       .map(({ item, product }) => ({ item, product })),
   });
 
-  // SB6-C — prize-pool cap. Runs against the freshly-read product snapshots.
-  // Bundle items skip the prize-draw cap by design (bundle pricing is "standard").
-  for (const { item, product } of productChecks) {
-    if (!product) continue;
-    if (item.bundleProductIds && item.bundleProductIds.length > 0) continue;
-    enforcePrizePoolCap({
-      productSnapshot: product,
-      requestedQuantity: item.quantity,
-    });
-  }
+  // S-SBUNI-RULES 2026-05-13 — sync preflight via rule registry.
+  // Bundle items bypass the cart flow so skip the prize-pool cap.
+  const preflightPairs = productChecks.filter(
+    (p): p is { item: CartItemDocument; product: ProductDocument } =>
+      p.product !== null && p.product !== undefined && !p.item.bundleProductIds?.length,
+  );
+  runSyncPreflight(preflightPairs);
 
   // SB-UNI-5 — validate every required member product across the cart with
   // cumulative decrement awareness (two bundles sharing a member must NOT
@@ -1015,13 +992,10 @@ export async function verifyAndPlaceRazorpayOrderAction(
     const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
     total += orderTotal;
 
-    // SB8-F — stamp listingType + reveal-status + deadline for prize-draw lines.
-    const groupRevealDeadlineRzp =
-      orderType === "prize-draw" && group[0].product
-        ? computePrizeRevealDeadline(group[0].product)
-        : undefined;
+    // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
     const orderItems = group.map(({ item, product }) => {
-      const isPrizeDrawLine = product?.listingType === "prize-draw";
+      const lt = (product?.listingType ?? "standard") as ListingType;
+      const itemRule = getListingRule(lt);
       // SB-UNI-5 2026-05-13 — bundle cart-lines surface the locked
       // bundlePriceInPaise (item.price), not the representative member's
       // product.price. Stock decrement still runs per member elsewhere.
@@ -1035,26 +1009,15 @@ export async function verifyAndPlaceRazorpayOrderAction(
             bundleProductIds: item.bundleProductIds as string[],
           }
         : {};
-      return {
+      const baseLine = {
         productId: item.productId,
         productTitle: item.productTitle,
         quantity: item.quantity,
         unitPrice,
         totalPrice: unitPrice * item.quantity,
         ...bundleFields,
-        ...(isPrizeDrawLine
-          ? {
-              listingType: "prize-draw" as const,
-              prizeRevealStatus:
-                product?.prizeRevealStatus === "open"
-                  ? "open" as const
-                  : "pending" as const,
-              prizeRevealDeadline: groupRevealDeadlineRzp?.toISOString(),
-            }
-          : product?.listingType
-            ? { listingType: product.listingType }
-            : {}),
       };
+      return itemRule.decorateOrderItem(baseLine, product!);
     });
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
@@ -1066,17 +1029,15 @@ export async function verifyAndPlaceRazorpayOrderAction(
       ),
     ];
 
-    // SB-UNI-D — "bundle" order-type removed; bundle cart lines will expand
-    // to N product order lines at checkout (forward-looking, not wired).
-    const isPrizeDrawOrder = orderType === "prize-draw";
-    const prizeDrawFields =
-      isPrizeDrawOrder && group[0].product
-        ? {
-            prizeDrawProductId: group[0].product.id,
-            isNonRefundable: true,
-            prizeRevealDeadline: computePrizeRevealDeadline(group[0].product),
-          }
-        : {};
+    // S-SBUNI-RULES 2026-05-13 — order-doc decoration via rule registry.
+    const lt0Rzp = (group[0].product?.listingType ?? "standard") as ListingType;
+    const groupRuleRzp = getListingRule(lt0Rzp);
+    const extraOrderFields = {
+      ...groupRuleRzp.decorateOrderDoc(group[0].item, group[0].product!),
+      ...(orderType === "prize-draw" && group[0].product
+        ? { prizeRevealDeadline: computePrizeRevealDeadline(group[0].product) }
+        : {}),
+    };
 
     const order = await unitOfWork.orders.create({
       productId: firstItem.productId,
@@ -1105,7 +1066,7 @@ export async function verifyAndPlaceRazorpayOrderAction(
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
       imageUrls: imageUrls.length > 0 ? imageUrls : undefined,
-      ...prizeDrawFields,
+      ...extraOrderFields,
     } as never);
 
     orderIds.push(order.id);
@@ -1145,16 +1106,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
     for (const [pid, qtyDelta] of expansionPaid.decrements) {
       const product = productByIdPaid.get(pid);
       if (!product) continue;
-      const prizeBump =
-        product.listingType === "prize-draw"
-          ? {
-              prizeCurrentEntries:
-                (product.prizeCurrentEntries ?? 0) + qtyDelta,
-            }
-          : {};
+      const lt = (product.listingType ?? "standard") as ListingType;
+      const batchRule = getListingRule(lt);
       unitOfWork.products.updateInBatch(batch, pid, {
         availableQuantity: product.availableQuantity - qtyDelta,
-        ...prizeBump,
+        ...batchRule.stockDecrementExtras(product, qtyDelta),
       } as never);
     }
     unitOfWork.carts.updateInBatch(batch, uid, {

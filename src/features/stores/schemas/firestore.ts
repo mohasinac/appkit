@@ -8,6 +8,49 @@
 import { slugify } from "../../../utils/string.formatter";
 import type { StoreCapability } from "../../auth/permissions/constants";
 
+// -- Shipping config ----------------------------------------------------------
+
+export type ShippingProviderType =
+  | "shiprocket"
+  | "self-courier"
+  | "store-pickup"
+  | "custom";
+
+export interface ShippingProviderConfig {
+  /** Stable slug — never changes after creation. */
+  providerId: string;
+  /** Buyer-facing label (e.g. "Standard Shipping", "Store Pickup"). */
+  label: string;
+  type: ShippingProviderType;
+  fee: {
+    /** Flat fee in paise. */
+    flatInPaise?: number;
+    /** Per-kg surcharge in paise. */
+    perKgInPaise?: number;
+    /** Percentage of order subtotal (0–100). */
+    percentOfOrder?: number;
+    /** If order subtotal exceeds this threshold, shipping is free. */
+    freeAboveInPaise?: number;
+    /** Minimum charge in paise (floor after all other rules). */
+    minInPaise?: number;
+  };
+  etaDaysMin: number;
+  etaDaysMax: number;
+  /** Pincode-prefix or state allowlist; empty = all India. */
+  regions?: string[];
+  /**
+   * When true the seller's order-detail page prompts for an AWB upload
+   * after marking the order as shipped.
+   */
+  requiresAwbUpload?: boolean;
+}
+
+export interface StoreShippingConfig {
+  providers: ShippingProviderConfig[];
+  /** providerId that pre-selects in the ShippingPicker. */
+  defaultProviderId: string;
+}
+
 // -- Store Document -----------------------------------------------------------
 
 export const StoreStatusValues = {
@@ -77,6 +120,13 @@ export interface StoreDocument {
     minRating?: number;
     layout?: "grid" | "carousel";
   };
+
+  // ── Shipping provider config (S-SBUNI-RULES 2026-05-13) ─────────────────────
+  /**
+   * Shipping providers available for this store. Buyers pick one in the cart
+   * ShippingPicker; the chosen provider + fee lock onto each CartItem.
+   */
+  shippingConfig?: StoreShippingConfig;
 
   // ── WhatsApp Business integration (per-store, seller-managed) ─────────────
   whatsappConfig?: {

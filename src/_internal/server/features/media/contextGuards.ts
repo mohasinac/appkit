@@ -39,6 +39,10 @@ export const CONTEXT_LIMITS = {
   RICH_TEXT_IMAGE_MAX: 20,
 } as const;
 
+// Contexts that accept both image and PDF (proof documents).
+const IMAGE_OR_PDF_CONTEXTS = ["shipping-proof", "refund-proof"] as const;
+type ImageOrPdfContextType = (typeof IMAGE_OR_PDF_CONTEXTS)[number];
+
 const PDF_ONLY_CONTEXTS = ["invoice", "payout-doc"] as const;
 type PdfOnlyContextType = (typeof PDF_ONLY_CONTEXTS)[number];
 
@@ -270,6 +274,11 @@ export function applyMediaContextGuards({
   ): c is Extract<MediaFilenameContext, { type: PdfOnlyContextType }> =>
     (PDF_ONLY_CONTEXTS as readonly string[]).includes(c.type);
 
+  const isImageOrPdfContext = (
+    c: MediaFilenameContext,
+  ): c is Extract<MediaFilenameContext, { type: ImageOrPdfContextType }> =>
+    (IMAGE_OR_PDF_CONTEXTS as readonly string[]).includes(c.type);
+
   const ext = MIME_TO_EXT[detectedMime] ?? "bin";
 
   if (isPdfOnlyContext(ctx)) {
@@ -284,11 +293,23 @@ export function applyMediaContextGuards({
     return { ok: true, filename: generateMediaFilename(ctx), ext };
   }
 
+  if (isImageOrPdfContext(ctx)) {
+    // shipping-proof and refund-proof accept images or PDFs, not video.
+    if (isVideo) {
+      return {
+        ok: false,
+        status: 400,
+        error: `${ctx.type} must be an image or PDF, not a video`,
+      };
+    }
+    return { ok: true, filename: generateMediaFilename(ctx), ext };
+  }
+
   if (isPdf) {
     return {
       ok: false,
       status: 400,
-      error: "PDF uploads are only allowed for invoice or payout-doc contexts",
+      error: "PDF uploads are only allowed for invoice, payout-doc, shipping-proof, or refund-proof contexts",
       details: { context: ctx.type, detected: detectedMime },
     };
   }

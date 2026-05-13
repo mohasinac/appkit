@@ -258,6 +258,30 @@ export interface ProductDocument {
   /** Public proof-of-fairness file (commit-reveal scheme). */
   prizeGithubFileUrl?: string;
 
+  // ── Per-product shipping overrides (S-SBUNI-RULES 2026-05-13) ───────────
+  /**
+   * Optional per-item shipping constraints. When absent the store's
+   * shippingConfig applies unchanged.
+   */
+  shipping?: {
+    /**
+     * Restrict this item to a subset of the store's providers
+     * (e.g. heavy item not eligible for store-pickup).
+     */
+    allowedProviderIds?: string[];
+    /**
+     * Per-provider fee / ETA overrides for this item (e.g. oversized surcharge).
+     * Merged on top of the provider's store-wide config when displaying the
+     * ShippingPicker.
+     */
+    overrides?: Array<{
+      providerId: string;
+      feeInPaise?: number;
+      etaDaysMin?: number;
+      etaDaysMax?: number;
+    }>;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }

@@ -6,10 +6,9 @@
  */
 
 import { serverLogger } from "../../../monitoring";
-import { ValidationError, NotFoundError } from "../../../errors";
+import { ValidationError } from "../../../errors";
 import { cartRepository } from "../repository/cart.repository";
 import { productRepository } from "../../products/repository/products.repository";
-import { categoriesRepository } from "../../categories/repository/categories.repository";
 import { normalizeListingType } from "../../products/utils/listing-type";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import type {
@@ -56,66 +55,6 @@ export async function clearCart(userId: string): Promise<CartDocument> {
   return cartRepository.clearCart(userId);
 }
 
-/**
- * SB-UNI-4 2026-05-13 — add a bundle (categoryType:"bundle" row) to the
- * cart as a single cart line. Validates the bundle exists, has at least one
- * product mirror, and is not out-of-stock at the bundle level. Order-side
- * fan-out into N OrderItem entries + per-member stock decrement lands in
- * S-SBUNI-5; until then the cart write succeeds but the checkout finalize
- * step still treats bundle lines as un-resolvable products. BundleDetailView
- * keeps its "Add to cart coming soon" notice up.
- */
-export async function addBundleToCart(
-  userId: string,
-  bundleSlug: string,
-  quantity = 1,
-): Promise<CartDocument> {
-  if (!bundleSlug?.trim()) {
-    throw new ValidationError("bundleSlug is required");
-  }
-  if (!Number.isInteger(quantity) || quantity < 1) {
-    throw new ValidationError("quantity must be a positive integer");
-  }
-
-  const bundle = await categoriesRepository.findBySlugAndType(
-    bundleSlug,
-    "bundle",
-  );
-  if (!bundle) {
-    throw new NotFoundError(`Bundle not found: ${bundleSlug}`);
-  }
-  if (!bundle.bundlePriceInPaise || bundle.bundlePriceInPaise <= 0) {
-    throw new ValidationError("Bundle price is not set");
-  }
-  if (bundle.bundleStockStatus === "out_of_stock") {
-    throw new ValidationError("Bundle is out of stock");
-  }
-  const memberIds = bundle.bundleProductIds ?? [];
-  if (memberIds.length === 0) {
-    throw new ValidationError("Bundle has no product members configured");
-  }
-
-  serverLogger.debug("addBundleToCart", {
-    userId,
-    bundleSlug,
-    quantity,
-    memberCount: memberIds.length,
-  });
-
-  return cartRepository.addItem(userId, {
-    productId: bundle.id,
-    productTitle: bundle.name,
-    productImage: bundle.display?.coverImage ?? "",
-    price: bundle.bundlePriceInPaise,
-    currency: "INR",
-    quantity,
-    storeId: bundle.createdByStoreId ?? "",
-    storeName: "",
-    listingType: "standard",
-    bundleCategorySlug: bundle.slug,
-    bundleProductIds: memberIds,
-  });
-}
 
 export async function mergeGuestCart(
   userId: string,

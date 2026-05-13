@@ -1,9 +1,10 @@
 /**
- * Prize-draw + bundle + maxPerUser gates for the checkout pipeline (SB6-C, SB8-A).
+ * maxPerUser gate + prize reveal deadline helper for the checkout pipeline
+ * (SB6-C, SB8-A).
  *
- * Shared helper used by both `createCheckoutOrderAction` (COD/UPI-manual path)
- * and `verifyAndPlaceRazorpayOrderAction` (Razorpay path). Pulled out here so
- * the two transactional flows enforce the same rules.
+ * `enforcePrizePoolCap` was removed in S-SBUNI-RULES (2026-05-13) — the
+ * equivalent check now lives in `prizeDrawRule.preflightChecks` in the rule
+ * registry and is invoked via `runSyncPreflight`.
  */
 
 import { ValidationError } from "../../../../errors";
@@ -121,28 +122,3 @@ export function computePrizeRevealDeadline(
   return candidate.getTime() < windowEnd.getTime() ? candidate : windowEnd;
 }
 
-/**
- * Inside the existing checkout transaction, validate the prize-pool cap for
- * each prize-draw line. Caller must pass the fresh product snapshot read
- * within the transaction (so `prizeCurrentEntries` is up-to-date).
- *
- * Throws ValidationError if any item would overflow the pool.
- */
-export function enforcePrizePoolCap(args: {
-  productSnapshot: ProductDocument;
-  requestedQuantity: number;
-}): void {
-  const { productSnapshot, requestedQuantity } = args;
-  if (productSnapshot.listingType !== "prize-draw") return;
-
-  const max = productSnapshot.prizeMaxEntries ?? 0;
-  const current = productSnapshot.prizeCurrentEntries ?? 0;
-  if (max > 0 && current + requestedQuantity > max) {
-    throw Object.assign(
-      new ValidationError(
-        `Draw is full for "${productSnapshot.title}". ${current}/${max} entries already in.`,
-      ),
-      { code: "PRIZE_POOL_FULL", productId: productSnapshot.id },
-    );
-  }
-}

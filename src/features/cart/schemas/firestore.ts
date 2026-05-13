@@ -53,6 +53,14 @@ export interface CartItemDocument {
   bundleCategorySlug?: string;
   /** Snapshot of `bundle.bundleProductIds` at add-to-cart time. */
   bundleProductIds?: string[];
+  /**
+   * S-SBUNI-RULES 2026-05-13 — buyer's chosen shipping provider for this
+   * item, snapshotted at cart time. Locked at checkout; the per-tab
+   * ShippingPicker writes this when the buyer selects a provider.
+   */
+  chosenShippingProviderId?: string;
+  /** Fee in paise for the chosen provider, snapshotted at cart time. */
+  chosenShippingFeeInPaise?: number;
   addedAt: Date;
   updatedAt: Date;
 }

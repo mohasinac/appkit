@@ -4464,8 +4464,6 @@ export type { UpdateBlogPostInput } from "./features/blog/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addItemToCart - Helper for add item to cart.
 export { addItemToCart } from "./features/cart/server";
-// SB-UNI-4 2026-05-13 — addBundleToCart adds a categoryType:"bundle" row as a single cart line.
-export { addBundleToCart } from "./features/cart/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // clearCart - Shared export for clear cart.
 export { clearCart } from "./features/cart/server";
@@ -6579,6 +6577,7 @@ export type { OrderCreateInput } from "./features/orders/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // OrderDocument - Type contract for order document.
 export type { OrderDocument } from "./features/orders/index";
+export type { OrderRefundEvent, RefundType } from "./features/orders/schemas/firestore";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // OrderDocumentItem - Type contract for order document item.
 export type { OrderDocumentItem } from "./features/orders/index";
@@ -8377,6 +8376,7 @@ export type { StoreDetail } from "./features/stores/index";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // StoreDocument - Type contract for store document.
 export type { StoreDocument } from "./features/stores/index";
+export type { StoreShippingConfig, ShippingProviderConfig, ShippingProviderType } from "./features/stores/schemas/firestore";
 // [TYPE]-TypeScript type-only export — erased at compile time, zero runtime cost.
 // StoreListItem - Type contract for store list item.
 export type { StoreListItem } from "./features/stores/index";
@@ -9149,6 +9149,28 @@ export {
 export type { ListingTypeCapability } from "./_internal/shared/listing-types/capabilities";
 export { LISTING_TYPE_REGISTRY, pluginFor } from "./_internal/shared/listing-types/_registry";
 export type { ListingTypePlugin } from "./_internal/shared/listing-types/_registry";
+
+// Checkout rule registry — pure TS, safe in both client and server bundles.
+export {
+  getListingRule,
+  getCategoryRule,
+  pickOrderType,
+  getSplitKey,
+  runSyncPreflight,
+  CHECKOUT_RULES,
+  CATEGORY_CHECKOUT_RULES,
+  CHECKOUT_MAX_ORDERS_PER_TX,
+  PRIZE_DRAW_MAX_REVEALS_PER_ORDER,
+  BUNDLE_MAX_QTY_PER_TX,
+  STANDARD_MAX_QTY_PER_LINE,
+} from "./_internal/shared/checkout/rules";
+export type {
+  ListingCheckoutRule,
+  CategoryCheckoutRule,
+  CartItemProductPair,
+  OrderItemInput,
+  RefundPolicy,
+} from "./_internal/shared/checkout/rules";
 
 // Media upload limits — pure constants, safe in both client and server bundles.
 export {
