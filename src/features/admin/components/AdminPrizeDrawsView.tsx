@@ -3,7 +3,15 @@
 import React, { useState, useCallback } from "react";
 import { Pencil, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination } from "../../../ui";
+import {
+  Alert,
+  Badge,
+  Button,
+  FilterChipGroup,
+  ListingToolbar,
+  ListingViewShell,
+  Pagination,
+} from "../../../ui";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PRODUCT_STATUS_TABS } from "../constants/filter-tabs";
@@ -34,7 +42,10 @@ const SORT_OPTIONS = [
 
 const STATUS_OPTIONS = ADMIN_PRODUCT_STATUS_TABS;
 
-const STATUS_VARIANT: Record<string, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
+const STATUS_VARIANT: Record<
+  string,
+  "default" | "primary" | "secondary" | "success" | "warning" | "danger"
+> = {
   published: "success",
   active: "success",
   draft: "default",
@@ -61,8 +72,8 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Prize Draw",
     render: (row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.primary}</p>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.storeName}</p>
+        <p className="font-semibold text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</p>
+        <p className="text-xs text-[var(--appkit-color-text-muted)]">{row.storeName}</p>
       </div>
     ),
   },
@@ -71,7 +82,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Entry Fee",
     className: "w-28 text-right",
     render: (row) => (
-      <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{row.entryFee}</span>
+      <span className="text-sm font-medium text-[var(--appkit-color-text)]">{row.entryFee}</span>
     ),
   },
   {
@@ -88,7 +99,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Draw Date",
     className: "w-32",
     render: (row) => (
-      <span className="text-sm text-zinc-600 dark:text-zinc-300">{row.drawDate}</span>
+      <span className="text-sm text-[var(--appkit-color-text-muted)]">{row.drawDate}</span>
     ),
   },
   {
@@ -97,7 +108,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     sortable: true,
     className: "w-32",
     render: (row) => (
-      <span className="text-sm text-zinc-600 dark:text-zinc-300">{row.updatedAt}</span>
+      <span className="text-sm text-[var(--appkit-color-text-muted)]">{row.updatedAt}</span>
     ),
   },
 ];
@@ -142,11 +153,14 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
   }, [searchInput, table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
+  const hasActiveState =
+    !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
 
   const statusRaw = table.get("status");
-  const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
-  const filters = [LISTING_TYPE_FILTER, statusFilter].filter(Boolean).join(",") || undefined;
+  const statusFilter =
+    statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
+  const filters =
+    [LISTING_TYPE_FILTER, statusFilter].filter(Boolean).join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useAdminListingData<
     AdminProductsResponse,
@@ -183,7 +197,11 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   if (hasChildren) {
-    return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
+    return (
+      <ListingViewShell portal="admin" {...props}>
+        {children}
+      </ListingViewShell>
+    );
   }
 
   return (
@@ -197,23 +215,33 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => {
+          table.set("sort", v);
+          table.setPage(1);
+        }}
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
+        <div
+          className="sticky z-10 flex justify-center bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5"
+          style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(p) => table.setPage(p)}
+          />
         </div>
       )}
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+          <Alert variant="error" className="mb-4">
             {errorMessage}
-          </div>
+          </Alert>
         )}
         <DataTable
           columns={PRIZE_DRAW_COLUMNS}
@@ -222,11 +250,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
           emptyLabel="No prize draws found"
           getRowHref={(row) => String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))}
           renderRowActions={(row) => (
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-            >
+            <Button variant="ghost" size="sm" asChild>
               <a href={String(ROUTES.ADMIN.PRIZE_DRAWS_EDIT(row.id))} aria-label="Edit">
                 <Pencil className="w-4 h-4" />
               </a>
@@ -242,15 +266,17 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
             aria-hidden="true"
             onClick={() => setFilterOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
+            <div className="flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5">
+              <span className="text-base font-semibold text-[var(--appkit-color-text)]">
+                Filters
+              </span>
               <div className="flex items-center gap-2">
                 {activeFilterCount > 0 && (
                   <button
                     type="button"
                     onClick={clearFilters}
-                    className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors"
+                    className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)] transition-colors"
                   >
                     Clear all
                   </button>
@@ -259,7 +285,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
                   type="button"
                   onClick={() => setFilterOpen(false)}
                   aria-label="Close"
-                  className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
+                  className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -273,11 +299,11 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
                 onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
               />
             </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+            <div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
               <button
                 type="button"
                 onClick={applyFilters}
-                className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
+                className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity active:scale-[0.98]"
               >
                 Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
               </button>
