@@ -3,11 +3,69 @@
  * product document is written. Only published products count.
  */
 
-import { categoriesRepository, storeRepository } from "../../../../repositories";
+import {
+  bundlesRepository,
+  categoriesRepository,
+  storeRepository,
+} from "../../../../repositories";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import type { FirestoreTriggerHandler, JobContext } from "../runtime/types";
 
 type ProductDoc = Record<string, unknown>;
+
+const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
+  ProductStatusValues.SOLD,
+  ProductStatusValues.OUT_OF_STOCK,
+  ProductStatusValues.DISCONTINUED,
+]);
+
+/**
+ * SB1-H bundle stock-sync — runs in the onProductWrite trigger so any path
+ * that flips a product to `sold` / `out_of_stock` / `discontinued`
+ * (admin tools, scripts, order-side stock-decrement that bottoms out at
+ * `availableQuantity === 0`) propagates the `isSold` flag to every bundle
+ * that lists the product in `partOfBundleIds[]`.
+ */
+async function syncBundlesOnUnavailableTransition(
+  productId: string,
+  before: ProductDoc | null,
+  after: ProductDoc | null,
+  ctx: JobContext,
+): Promise<void> {
+  const beforeStatus = (before?.status as string | undefined) ?? null;
+  const afterStatus = (after?.status as string | undefined) ?? null;
+  const isDelete = !after;
+
+  const becameUnavailable = !isDelete
+    && afterStatus !== null
+    && UNAVAILABLE_PRODUCT_STATUSES.has(afterStatus)
+    && beforeStatus !== afterStatus;
+  if (!becameUnavailable && !isDelete) return;
+
+  const bundleIds =
+    ((after?.partOfBundleIds as string[] | undefined)
+      ?? (before?.partOfBundleIds as string[] | undefined)
+      ?? []);
+  if (bundleIds.length === 0) return;
+
+  await Promise.all(
+    bundleIds.map((bundleId) =>
+      bundlesRepository
+        .markItemSold(bundleId, productId)
+        .catch((err) =>
+          ctx.logger.warn("Bundle stock-sync failed (non-critical)", {
+            err,
+            bundleId,
+            productId,
+          }),
+        ),
+    ),
+  );
+  ctx.logger.info("Bundle stock-sync done", {
+    productId,
+    bundleCount: bundleIds.length,
+  });
+}
 
 async function getParentIds(categoryId: string): Promise<string[]> {
   if (!categoryId) return [];
@@ -131,5 +189,11 @@ export const onProductWriteHandler: FirestoreTriggerHandler<ProductDoc, ProductD
     }
   } catch (err) {
     ctx.logger.error("Counter update failed (non-fatal)", err, { productId });
+  }
+
+  try {
+    await syncBundlesOnUnavailableTransition(productId, before, after, ctx);
+  } catch (err) {
+    ctx.logger.error("Bundle stock-sync failed (non-fatal)", err, { productId });
   }
 };

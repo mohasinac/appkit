@@ -17,7 +17,39 @@ import { createRouteHandler } from "../../../../next";
 import type { ProductItem } from "../../types/index";
 import { mediaFieldSchema } from "../../../media/types/index";
 import { storeRepository } from "../../../stores/repository/store.repository";
+import { bundlesRepository } from "../../../bundles/repository/bundles.repository";
 import { sanitizeProductForPublic } from "../../utils/sanitize";
+import { serverLogger } from "../../../../monitoring/server-logger";
+
+const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
+  "sold",
+  "out_of_stock",
+  "discontinued",
+]);
+
+/**
+ * Fire-and-forget bundle stock-sync. SB1-H — when a product transitions to
+ * an unavailable status (sold / out_of_stock / discontinued), flip its
+ * `isSold` flag inside every bundle that lists it via `partOfBundleIds[]`.
+ */
+function syncBundlesForUnavailableProduct(
+  productId: string,
+  partOfBundleIds: string[] | undefined,
+): void {
+  if (!partOfBundleIds?.length) return;
+  Promise.all(
+    partOfBundleIds.map((bundleId) =>
+      bundlesRepository.markItemSold(bundleId, productId).catch(
+        (err: unknown) =>
+          serverLogger.warn("Bundle stock-sync failed (non-critical)", {
+            err,
+            bundleId,
+            productId,
+          }),
+      ),
+    ),
+  ).catch(() => {});
+}
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -151,6 +183,22 @@ export const PATCH = createRouteHandler<
       ...(body as Partial<ProductItem>),
       updatedAt: new Date().toISOString(),
     });
+
+    // SB1-H stock-sync — if this PATCH transitioned the product to an
+    // unavailable status, propagate `isSold` to every bundle that lists it.
+    const beforeStatus = product.status as string | undefined;
+    const afterStatus = (body as { status?: string } | null)?.status;
+    const becameUnavailable =
+      typeof afterStatus === "string" &&
+      UNAVAILABLE_PRODUCT_STATUSES.has(afterStatus) &&
+      beforeStatus !== afterStatus;
+    if (becameUnavailable) {
+      syncBundlesForUnavailableProduct(
+        id,
+        (product as { partOfBundleIds?: string[] }).partOfBundleIds,
+      );
+    }
+
     return NextResponse.json({ success: true, data: updated });
   },
 });
@@ -194,6 +242,12 @@ export const DELETE = createRouteHandler<never, { id: string }>({
       status: "discontinued" as ProductItem["status"],
       updatedAt: new Date().toISOString(),
     });
+
+    syncBundlesForUnavailableProduct(
+      id,
+      (product as { partOfBundleIds?: string[] }).partOfBundleIds,
+    );
+
     return NextResponse.json({ success: true });
   },
 });
