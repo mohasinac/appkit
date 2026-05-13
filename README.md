@@ -56,6 +56,24 @@ Only publish when explicitly requested. See `CLAUDE.md § Appkit Publish & Deplo
 
 ## Version History
 
+### v2.7.3 — 2026-05-14
+
+**Barrel cleanup — RSC views moved to server-entry; routeHandler readonly roles fix**
+
+- `server-entry.ts`: RSC page views (bundles, categories, events, stores, products, etc.) moved here from main index to prevent firebase-admin leaking into client bundles
+- `src/features/categories/components/index.ts`: `BundlesListView` + `BundleDetailView` removed from client barrel (now server-only)
+- `src/next/api/routeHandler.ts`: `roles` option widened to `readonly string[]` — fixes TS error when passing `ROLES_TRUST_SAFETY` (readonly tuple) to `createRouteHandler`
+
+### v2.7.2 — 2026-05-14
+
+**routeHandler readonly roles type fix**
+
+- `src/next/api/routeHandler.ts`: `roles?: string[]` → `roles?: readonly string[]`
+
+### v2.7.1 — 2026-05-14
+
+**Patch publish to clear npm "already published" state**
+
 ### v2.7.0 — 2026-05-14
 
 **Support Tickets seed data + Firestore indices + seed pipeline wiring (BAN9/SCAM9 followup)**
