@@ -132,6 +132,11 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       "./node_modules/duplexify/**",
       "./node_modules/uuid/**",
       "./node_modules/lodash.camelcase/**",
+      // gaxios transitive deps missing from Vercel tracer (dynamic require, not statically analysed)
+      "./node_modules/is-stream/**",
+      "./node_modules/extend/**",
+      "./node_modules/https-proxy-agent/**",
+      "./node_modules/agent-base/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {
