@@ -131,7 +131,7 @@ export function CategoryProductsListing({
             <span className="hidden md:inline whitespace-nowrap">Sort by</span>
             <SortDropdown
               value={table.get("sort") || "-createdAt"}
-              onChange={(v) => { table.set("sort", v); table.setPage(1); }}
+              onChange={(v) => { table.set("sort", v); }}
               options={PRODUCT_PUBLIC_SORT_OPTIONS as any}
             />
           </div>

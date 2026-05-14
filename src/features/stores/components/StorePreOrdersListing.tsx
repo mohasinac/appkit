@@ -120,7 +120,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={PREORDER_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         view={view}
         onViewChange={(v) => { setView(v); table.set("view", v); }}
         onResetAll={resetAll}

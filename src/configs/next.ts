@@ -1,3 +1,5 @@
+import path from "path";
+
 /**
  * defineNextConfig — appkit-aware Next.js config factory.
  *
@@ -147,7 +149,22 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function mergedWebpack(config: any, ctx: any): any {
-    const { isServer, webpack } = ctx as { isServer: boolean; webpack: { IgnorePlugin: new (opts: unknown) => unknown } };
+    const { isServer, webpack } = ctx as { isServer: boolean; webpack: { IgnorePlugin: new (opts: unknown) => unknown; NormalModuleReplacementPlugin: new (regex: RegExp, fn: (resource: { request: string }) => void) => unknown } };
+
+    // Deduplicate firebase client SDK across the monorepo.
+    // appkit ships its own node_modules/firebase (from standalone dev). Without
+    // this alias, webpack may resolve firebase/app to two separate module
+    // instances — one from appkit/node_modules and one from root node_modules —
+    // producing two separate Firebase app registries. getApps()/getAuth() then
+    // disagree on which apps exist, causing "No Firebase App '[DEFAULT]'" errors.
+    // Pinning every firebase/* import to the root copy ensures the singleton
+    // registry is shared regardless of which file imports firebase.
+    const _firebaseRoot = path.resolve(process.cwd(), "node_modules", "firebase");
+    config.resolve.alias = {
+      ...(config.resolve.alias ?? {}),
+      "firebase": _firebaseRoot,
+    };
+
     if (isServer) {
       const externalFn = ({ request }: { request?: string }, callback: (err: null, result?: string) => void) => {
         if (
@@ -169,6 +186,61 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       config.plugins.push(
         new webpack.IgnorePlugin({ resourceRegExp: /^(request|fast-crc32c)$/ }),
       );
+    } else {
+      // ── Client bundle ──────────────────────────────────────────────────────
+      // client-entry.ts re-exports ALL of index.ts (including repositories,
+      // email providers, and payment SDKs) via `export * from "./index"`.
+      // sideEffects:false should tree-shake unused server-only exports, but
+      // webpack must first PARSE the full module graph to enumerate all exports.
+      // That parse phase hits Node.js-only requires deep in firebase-admin,
+      // resend, razorpay, etc. and throws "Module not found" errors.
+      //
+      // Fix: alias every server-only package to `false` so webpack replaces them
+      // with empty stubs during the parse phase. Tree-shaking then eliminates the
+      // dead code paths that would have called them. This mirrors what the server
+      // branch does with `externals`, but for client bundles.
+
+      // Strip the "node:" URI scheme prefix — webpack 5 browser target doesn't
+      // handle it by default, causing UnhandledSchemeError.
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(/^node:/, (resource: { request: string }) => {
+          resource.request = resource.request.replace(/^node:/, "");
+        }),
+      );
+
+      // Stub out server-only packages: reuse FIREBASE_EXTERNAL_PACKAGES plus
+      // additional email/payment SDKs that also import Node.js built-ins.
+      const CLIENT_STUB_PACKAGES = [
+        ...FIREBASE_EXTERNAL_PACKAGES,
+        "resend",
+        "@react-email/render",
+        "razorpay",
+        "firebase-functions",
+      ];
+      const clientStubAliases = Object.fromEntries(
+        CLIENT_STUB_PACKAGES.flatMap((pkg) => [
+          [pkg, false as const],
+          // Also stub sub-paths so `import ... from 'pkg/sub'` is covered.
+          // Webpack resolves these via the alias before following sub-paths,
+          // so the top-level alias alone handles most cases, but explicit
+          // sub-path aliases cover edge cases like `firebase-admin/app`.
+        ]),
+      );
+      config.resolve.alias = {
+        ...(config.resolve.alias ?? {}),
+        ...clientStubAliases,
+      };
+
+      // Fallbacks for Node.js built-ins that have no browser polyfill and are
+      // reached before the alias can intercept (e.g. inline require("fs")).
+      // DO NOT stub path/os/url/stream — Next.js provides browser polyfills.
+      config.resolve.fallback = {
+        ...(config.resolve.fallback ?? {}),
+        child_process: false,
+        fs: false,
+        net: false,
+        tls: false,
+      };
     }
     return consumerWebpack ? consumerWebpack(config, ctx) : config;
   }

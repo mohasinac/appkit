@@ -179,7 +179,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get("sort") || "auctionEndDate"}
         sortOptions={AUCTION_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

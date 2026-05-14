@@ -135,7 +135,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={STORE_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

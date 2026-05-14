@@ -143,7 +143,7 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

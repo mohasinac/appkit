@@ -129,7 +129,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "startsAt"}
         sortOptions={EVENT_PUBLIC_SORT_OPTIONS as any}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

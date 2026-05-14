@@ -120,7 +120,7 @@ export function CouponsIndexListing({
             {searchInput && (
               <button
                 type="button"
-                onClick={() => { setSearchInput(""); table.set("q", ""); table.setPage(1); }}
+                onClick={() => { setSearchInput(""); table.set("q", ""); }}
                 className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                 aria-label="Clear search"
               >
@@ -142,7 +142,7 @@ export function CouponsIndexListing({
             <span className="hidden md:inline whitespace-nowrap">Sort by</span>
             <SortDropdown
               value={table.get("sort") || "-createdAt"}
-              onChange={(v) => { table.set("sort", v); table.setPage(1); }}
+              onChange={(v) => { table.set("sort", v); }}
               options={COUPON_SORT_OPTIONS as any}
             />
           </div>
@@ -154,7 +154,7 @@ export function CouponsIndexListing({
             {activeType && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 {COUPON_TYPES.find((t) => t.value === activeType)?.label ?? activeType}
-                <button type="button" onClick={() => { table.set("type", ""); table.setPage(1); }} aria-label="Remove type filter">
+                <button type="button" onClick={() => { table.set("type", ""); }} aria-label="Remove type filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -162,7 +162,7 @@ export function CouponsIndexListing({
             {table.get("dateFrom") && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 From: {table.get("dateFrom")}
-                <button type="button" onClick={() => { table.set("dateFrom", ""); table.setPage(1); }} aria-label="Remove from-date filter">
+                <button type="button" onClick={() => { table.set("dateFrom", ""); }} aria-label="Remove from-date filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -170,7 +170,7 @@ export function CouponsIndexListing({
             {table.get("dateTo") && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 To: {table.get("dateTo")}
-                <button type="button" onClick={() => { table.set("dateTo", ""); table.setPage(1); }} aria-label="Remove to-date filter">
+                <button type="button" onClick={() => { table.set("dateTo", ""); }} aria-label="Remove to-date filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -281,7 +281,7 @@ export function CouponsIndexListing({
                         name="coupon-type"
                         value={t.value}
                         checked={table.get("type") === t.value}
-                        onChange={() => { table.set("type", t.value); table.setPage(1); }}
+                        onChange={() => { table.set("type", t.value); }}
                         className="accent-primary"
                       />
                       {t.label}
@@ -290,7 +290,7 @@ export function CouponsIndexListing({
                   {table.get("type") && (
                     <button
                       type="button"
-                      onClick={() => { table.set("type", ""); table.setPage(1); }}
+                      onClick={() => { table.set("type", ""); }}
                       className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 underline"
                     >
                       Clear type
@@ -310,7 +310,7 @@ export function CouponsIndexListing({
                     <input
                       type="date"
                       value={table.get("dateFrom") || ""}
-                      onChange={(e) => { table.set("dateFrom", e.target.value); table.setPage(1); }}
+                      onChange={(e) => { table.set("dateFrom", e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
@@ -319,7 +319,7 @@ export function CouponsIndexListing({
                     <input
                       type="date"
                       value={table.get("dateTo") || ""}
-                      onChange={(e) => { table.set("dateTo", e.target.value); table.setPage(1); }}
+                      onChange={(e) => { table.set("dateTo", e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>

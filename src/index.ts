@@ -1747,9 +1747,6 @@ export { faqSeedData } from "./seed/index";
 // formatSeedPrice - Helper for format seed price.
 export { formatSeedPrice } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// generateMergedFirestoreIndexFile - Helper for generate merged firestore index file.
-export { generateMergedFirestoreIndexFile } from "./seed/index";
-// [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getSeedLocale - Helper for get seed locale.
 export { getSeedLocale } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -1842,9 +1839,6 @@ export { makeUser } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeWinningBid - Shared export for make winning bid.
 export { makeWinningBid } from "./seed/index";
-// [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// mergeFirestoreIndices - Helper for merge firestore indices.
-export { mergeFirestoreIndices } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€” uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // notificationsSeedData - Model for notifications seed data.
 export { notificationsSeedData } from "./seed/index";

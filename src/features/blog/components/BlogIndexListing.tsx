@@ -111,7 +111,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "-publishedAt"}
         sortOptions={BLOG_PUBLIC_SORT_OPTIONS as any}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         hideViewToggle
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

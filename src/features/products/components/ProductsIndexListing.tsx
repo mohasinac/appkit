@@ -188,7 +188,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onSearchKeyDown={handleSearchKeyDown}
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         view={view === "card" ? "grid" : "list"}
         onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
         onResetAll={resetAll}

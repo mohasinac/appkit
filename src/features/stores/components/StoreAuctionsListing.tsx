@@ -165,7 +165,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "auctionEndDate"}
         sortOptions={AUCTION_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); table.setPage(1); }}
+        onSortChange={(v) => { table.set("sort", v); }}
         view={view}
         onViewChange={(v) => { setView(v); table.set("view", v); }}
         onResetAll={resetAll}
