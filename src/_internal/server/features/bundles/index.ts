@@ -11,3 +11,4 @@ export {
   renderBundleOgImage,
   type BundleOgData,
 } from "./og";
+export { addBundleToCartAction } from "./actions";

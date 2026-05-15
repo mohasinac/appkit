@@ -36,11 +36,25 @@ export type BundleQueryRule =
         categorySlug?: string;
         brandSlug?: string;
         tags?: string[];
-        listingType?: "standard" | "pre-order";
+        /** Eligible listing types that may appear in a dynamic bundle. */
+        listingType?: "standard" | "pre-order" | "prize-draw";
       };
       orderBy?: "price-asc" | "price-desc" | "createdAt-desc";
       limit: number;
     };
+
+/**
+ * Per-member metadata stored alongside `bundleProductIds`.
+ * `drawCount` — only meaningful when the member product has
+ * `listingType === "prize-draw"`. Represents how many draw entries
+ * the buyer receives for that product when they purchase the bundle
+ * (e.g. drawCount=5 means 5 raffle entries, not 5 copies of the draw).
+ */
+export interface BundleItemDetail {
+  productId: string;
+  /** Number of draw entries included when product is a prize-draw. */
+  drawCount?: number;
+}
 
 // -- Category Document --------------------------------------------------------
 
@@ -122,6 +136,14 @@ export interface CategoryDocument {
   brandBannerImage?: string;
 
   // ── Bundle fields — categoryType==="bundle" (SB-UNI-D) ────────────────
+  /**
+   * "special" — admin-curated bundle; writes reverse `partOfBundleIds`
+   * pointers on member products and shows the "Bundled" badge on cards.
+   *
+   * "brand" — auto-generated brand collection (dynamic brandSlug query).
+   * Does NOT update `partOfBundleIds`; used as a discovery surface only.
+   */
+  bundleKind?: "special" | "brand";
   /** Discounted bundle price in paise. */
   bundlePriceInPaise?: number;
   /** Rule resolving the bundle's member products — static list or live query. */
@@ -132,6 +154,13 @@ export interface CategoryDocument {
   bundleQueryResolvedAt?: Date;
   /** Hand-picked products list (mirror of bundleQueryRule for static rules); kept for index-friendly queries. */
   bundleProductIds?: string[];
+  /**
+   * Per-member metadata parallel to `bundleProductIds`.
+   * Carries `drawCount` for prize-draw members (how many raffle entries
+   * the buyer receives). Flat `bundleProductIds` is kept for Firestore
+   * array-contains queries; this array holds the richer shape.
+   */
+  bundleItemDetails?: BundleItemDetail[];
 
   seo: CategoryDocumentSEO;
   display: CategoryDocumentDisplay;

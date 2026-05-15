@@ -122,35 +122,9 @@ export function AuctionCard({
             className="h-full w-full bg-center bg-cover"
             style={{ backgroundImage: `url(${auction.mainImage})` }}
           />
-          <Div className="absolute top-2 left-2 flex flex-col gap-1">
-            <Span className="rounded-full bg-orange-500 px-2 py-0.5 text-xs font-bold text-white">
-              AUCTION
-            </Span>
-            {auction.partOfBundleIds && auction.partOfBundleIds.length > 0 && (
-              <Span
-                className="rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white"
-                title={auction.partOfBundleTitles?.[0] ? `In bundle: ${auction.partOfBundleTitles[0]}` : "In a bundle"}
-              >
-                Bundled
-              </Span>
-            )}
-            {auction.groupId && (
-              <Span
-                className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white"
-                title={auction.groupTitle ? `Part of set: ${auction.groupTitle}` : "Part of a set"}
-              >
-                {auction.isGroupParent ? "Set Parent" : "In Set"}
-              </Span>
-            )}
-            {auction.sublistingCategoryId && (
-              <Span
-                className="rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white"
-                title="Has variants or sub-listings"
-              >
-                Has Variants
-              </Span>
-            )}
-          </Div>
+          <Span className="absolute top-2 left-2 rounded-full bg-orange-500 px-2 py-0.5 text-xs font-bold text-white">
+            AUCTION
+          </Span>
         </Div>
       )}
       <Div className="p-4">

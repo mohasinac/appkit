@@ -1385,6 +1385,7 @@ export {
   buildBundleMetadata,
   renderBundleOg,
   renderBundleOgImage,
+  addBundleToCartAction,
   type BundleDataOptions,
   type BundleMetadataOptions,
   type BundleOgData,

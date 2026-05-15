@@ -572,7 +572,7 @@ export async function createCheckoutOrderAction(
       offerId: firstItem.offerId ?? undefined,
       status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
       paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
-      paymentMethod: adminBypass ? "admin_bypass" : paymentMethod,
+      paymentMethod: adminBypass ? PaymentMethodValues.ADMIN_BYPASS : paymentMethod,
       paymentId: adminBatchId,
       adminBypassBy: adminBypassBy,
       shippingAddress,
@@ -728,7 +728,8 @@ export async function verifyAndPlaceRazorpayOrderAction(
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
-  const razorpayFeePercent = siteSettings?.commissions?.razorpayFeePercent ?? 5;
+  const platformFeePercent = siteSettings?.commissions?.platformFeePercent ?? 5;
+  const gstPercent = siteSettings?.commissions?.gstPercent ?? 18;
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
 
   const isValid = await verifyPaymentSignatureWithKeys({
@@ -878,8 +879,9 @@ export async function verifyAndPlaceRazorpayOrderAction(
       return sum + unit * item.quantity;
     }, 0);
     const expectedPlatformFee =
-      Math.round(cartSubtotalRs * (razorpayFeePercent / 100) * 100) / 100;
-    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee;
+      Math.round(cartSubtotalRs * (platformFeePercent / 100) * 100) / 100;
+    const expectedGstOnFee = Math.round(expectedPlatformFee * (gstPercent / 100) * 100) / 100;
+    const expectedPaymentAmountRs = cartSubtotalRs + expectedPlatformFee + expectedGstOnFee;
     const rzpOrderRecord = await fetchRazorpayOrder(razorpay_order_id);
     const paidAmountRs = paiseToRupees(rzpOrderRecord.amount);
     if (paidAmountRs < expectedPaymentAmountRs - 1) {
@@ -1002,7 +1004,9 @@ export async function verifyAndPlaceRazorpayOrderAction(
     }
 
     couponDiscount = Math.min(couponDiscount, groupTotal);
-    const platformFee = Math.round(groupTotal * (razorpayFeePercent / 100) * 100) / 100;
+    const rawPlatformFee = Math.round(groupTotal * (platformFeePercent / 100) * 100) / 100;
+    const gstOnFee = Math.round(rawPlatformFee * (gstPercent / 100) * 100) / 100;
+    const platformFee = rawPlatformFee + gstOnFee;
     const orderTotal = Math.max(0, groupTotal - couponDiscount) + shippingFee;
     total += orderTotal;
 

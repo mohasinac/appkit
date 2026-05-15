@@ -18,12 +18,15 @@ export interface BundleBuyNowCtaProps {
   bundleSlug: string;
   outOfStock?: boolean;
   onBuyNow: (input: { bundleSlug: string }) => Promise<unknown>;
+  /** Renders a smaller single-line button suited for list cards. */
+  compact?: boolean;
 }
 
 export function BundleBuyNowCta({
   bundleSlug,
   outOfStock = false,
   onBuyNow,
+  compact = false,
 }: BundleBuyNowCtaProps) {
   const { showToast } = useToast();
   const [submitting, setSubmitting] = useState(false);
@@ -51,10 +54,12 @@ export function BundleBuyNowCta({
   if (outOfStock) {
     return (
       <Stack gap="xs" aria-live="polite">
-        <Button variant="primary" disabled aria-disabled>
+        <Button variant="primary" size={compact ? "sm" : "md"} disabled aria-disabled className={compact ? "w-full" : undefined}>
           {BUNDLE_COPY.detail.ctaOutOfStock}
         </Button>
-        <Text size="xs" color="muted">{BUNDLE_COPY.detail.ctaHint}</Text>
+        {!compact && (
+          <Text size="xs" color="muted">{BUNDLE_COPY.detail.ctaHint}</Text>
+        )}
       </Stack>
     );
   }
@@ -69,9 +74,11 @@ export function BundleBuyNowCta({
       <Stack gap="sm">
         <Button
           variant="primary"
+          size={compact ? "sm" : "md"}
           onClick={handleClick}
           disabled={submitting}
           aria-busy={submitting}
+          className={compact ? "w-full" : undefined}
         >
           {submitting ? BUNDLE_COPY.detail.ctaAdding : BUNDLE_COPY.detail.ctaBuyNow}
         </Button>

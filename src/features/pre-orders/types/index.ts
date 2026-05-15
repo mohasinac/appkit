@@ -18,18 +18,6 @@ export interface PreorderItem {
   status?: PreOrderStatus;
   /** Admin note for status updates */
   adminNote?: string;
-  /** Reverse refs — bundle IDs that include this pre-order. */
-  partOfBundleIds?: string[];
-  /** Parallel titles for partOfBundleIds. */
-  partOfBundleTitles?: string[];
-  /** Feature badge IDs opted into by this listing. */
-  featureIds?: string[];
-  /** Links to a sublisting category — signals "has variants". */
-  sublistingCategoryId?: string;
-  /** Curated set/group membership. */
-  groupId?: string;
-  isGroupParent?: boolean;
-  groupTitle?: string;
   createdAt: string;
   updatedAt: string;
 }

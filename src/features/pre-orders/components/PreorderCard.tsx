@@ -67,44 +67,16 @@ export function PreorderCard({ item, href, selectable = false, isSelected = fals
         href={href}
         className="block"
       >
-      <Div className="relative">
-        {item.images[0] ? (
-          <Div
-            role="img"
-            aria-label={item.name}
-            className="aspect-square w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
-            style={{ backgroundImage: `url(${item.images[0]})` }}
-          />
-        ) : (
-          <Div className="aspect-square w-full bg-gray-100" />
-        )}
-        <Div className="absolute top-2 left-2 flex flex-col gap-1 pointer-events-none">
-          {item.partOfBundleIds && item.partOfBundleIds.length > 0 && (
-            <Span
-              className="rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white"
-              title={item.partOfBundleTitles?.[0] ? `In bundle: ${item.partOfBundleTitles[0]}` : "In a bundle"}
-            >
-              Bundled
-            </Span>
-          )}
-          {item.groupId && (
-            <Span
-              className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white"
-              title={item.groupTitle ? `Part of set: ${item.groupTitle}` : "Part of a set"}
-            >
-              {item.isGroupParent ? "Set Parent" : "In Set"}
-            </Span>
-          )}
-          {item.sublistingCategoryId && (
-            <Span
-              className="rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white"
-              title="Has variants or sub-listings"
-            >
-              Has Variants
-            </Span>
-          )}
-        </Div>
-      </Div>
+      {item.images[0] ? (
+        <Div
+          role="img"
+          aria-label={item.name}
+          className="aspect-square w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
+          style={{ backgroundImage: `url(${item.images[0]})` }}
+        />
+      ) : (
+        <Div className="aspect-square w-full bg-gray-100" />
+      )}
       <Div className="p-4">
         <PreorderBadge shipDate={item.preorderShipDate} />
         <Heading

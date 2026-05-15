@@ -15,6 +15,7 @@ function sp(params: SearchParams, key: string): string {
 
 export interface BundlesListViewProps {
   searchParams?: SearchParams;
+  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
 /**
@@ -26,6 +27,7 @@ export interface BundlesListViewProps {
  */
 export async function BundlesListView({
   searchParams = {},
+  onBuyNow,
 }: BundlesListViewProps) {
   const storeId = sp(searchParams, "storeId");
 
@@ -53,7 +55,7 @@ export async function BundlesListView({
             one checkout, one shipment.
           </Text>
           <AdSlot id="listing-sidebar-top" className="mb-6" />
-          <CategoryBundlesListing initialBundles={bundles} />
+          <CategoryBundlesListing initialBundles={bundles} onBuyNow={onBuyNow} />
           <AdSlot id="listing-sidebar-bottom" className="mt-8" />
         </Container>
       </Section>

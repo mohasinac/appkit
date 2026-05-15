@@ -490,8 +490,10 @@ export const CATEGORY_FIELDS = {
   IS_ACTIVE: "isActive",
   // SB-UNI — categoryType discriminator (category/brand/sublisting/bundle)
   CATEGORY_TYPE: "categoryType",
-  // Bundle-specific fields (SB3)
+  // Bundle-specific fields (SB3 + bundle-eligibility rules)
+  BUNDLE_KIND: "bundleKind",
   BUNDLE_PRODUCT_IDS: "bundleProductIds",
+  BUNDLE_ITEM_DETAILS: "bundleItemDetails",
   BUNDLE_STOCK_STATUS: "bundleStockStatus",
   BUNDLE_QUERY_RESOLVED_AT: "bundleQueryResolvedAt",
   DISPLAY: "display",
@@ -955,11 +957,16 @@ export const SITE_SETTINGS_FIELDS = {
   },
   COMMISSIONS: "commissions",
   COMMISSION_FIELDS: {
-    RAZORPAY_FEE_PERCENT: "commissions.razorpayFeePercent",
+    PLATFORM_FEE_PERCENT: "commissions.platformFeePercent",
+    GST_PERCENT: "commissions.gstPercent",
+    MINIMUM_TRANSACTION_FEE: "commissions.minimumTransactionFee",
+    GATEWAY_FEE_PERCENT: "commissions.gatewayFeePercent",
     COD_DEPOSIT_PERCENT: "commissions.codDepositPercent",
     SELLER_SHIPPING_FIXED: "commissions.sellerShippingFixed",
     PLATFORM_SHIPPING_PERCENT: "commissions.platformShippingPercent",
     PLATFORM_SHIPPING_FIXED_MIN: "commissions.platformShippingFixedMin",
+    PAYOUT_HOLD_DAYS: "commissions.payoutHoldDays",
+    MIN_PAYOUT_AMOUNT: "commissions.minPayoutAmount",
   },
   SOCIAL_LINKS: "socialLinks",
   EMAIL_SETTINGS: "emailSettings",

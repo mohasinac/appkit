@@ -14,6 +14,7 @@ import { Badge, Div, Row, Select, Stack, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
+import { BundleBuyNowCta } from "./BundleBuyNowCta";
 
 // ── Sort options ──────────────────────────────────────────────────────────
 type BundleSort = "newest" | "price-asc" | "price-desc";
@@ -50,6 +51,7 @@ const COPY = {
 export interface CategoryBundlesListingProps {
   initialBundles: CategoryDocument[];
   brandName?: string;
+  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
 function comparator(sort: BundleSort) {
@@ -69,6 +71,7 @@ function comparator(sort: BundleSort) {
 export function CategoryBundlesListing({
   initialBundles,
   brandName,
+  onBuyNow,
 }: CategoryBundlesListingProps) {
   const [sort, setSort] = useState<BundleSort>("newest");
 
@@ -109,7 +112,7 @@ export function CategoryBundlesListing({
 
       <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((bundle) => (
-          <BundleCard key={bundle.id} bundle={bundle} />
+          <BundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
         ))}
       </Div>
     </Stack>
@@ -118,9 +121,10 @@ export function CategoryBundlesListing({
 
 interface BundleCardProps {
   bundle: CategoryDocument;
+  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
-function BundleCard({ bundle }: BundleCardProps) {
+function BundleCard({ bundle, onBuyNow }: BundleCardProps) {
   const memberCount = bundle.bundleProductIds?.length ?? 0;
   const stock = bundle.bundleStockStatus ?? "in_stock";
   const badge = STOCK_BADGE_TEXT[stock];
@@ -128,41 +132,56 @@ function BundleCard({ bundle }: BundleCardProps) {
   const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
 
   return (
-    <Link
-      href={href}
-      className="group rounded-xl border border-zinc-200 bg-white p-3 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
+    <Stack
+      gap="none"
+      className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900"
     >
-      <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-        {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={cover}
-            alt={bundle.name}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <Div className="flex h-full w-full items-center justify-center text-3xl">
-            {PLACEHOLDER_EMOJI}
-          </Div>
+      <Link
+        href={href}
+        className="group block p-3 hover:no-underline"
+      >
+        <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
+          {cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cover}
+              alt={bundle.name}
+              className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <Div className="flex h-full w-full items-center justify-center text-3xl">
+              {PLACEHOLDER_EMOJI}
+            </Div>
+          )}
+        </Div>
+        <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
+        <Row gap="sm" align="center" className="mt-1">
+          <Text size="sm" weight="bold">
+            {bundle.bundlePriceInPaise
+              ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
+              : COPY.priceFallback}
+          </Text>
+          <Text size="xs" color="muted">
+            {COPY.items(memberCount)}
+          </Text>
+        </Row>
+        {badge && (
+          <Badge variant={STOCK_BADGE_VARIANT[stock]} className="mt-1">
+            {badge}
+          </Badge>
         )}
-      </Div>
-      <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
-      <Row gap="sm" align="center" className="mt-1">
-        <Text size="sm" weight="bold">
-          {bundle.bundlePriceInPaise
-            ? formatCurrency(bundle.bundlePriceInPaise / 100, "INR")
-            : COPY.priceFallback}
-        </Text>
-        <Text size="xs" color="muted">
-          {COPY.items(memberCount)}
-        </Text>
-      </Row>
-      {badge && (
-        <Badge variant={STOCK_BADGE_VARIANT[stock]} className="mt-1">
-          {badge}
-        </Badge>
+      </Link>
+      {onBuyNow && (
+        <Div className="border-t border-zinc-100 p-3 pt-2 dark:border-zinc-800">
+          <BundleBuyNowCta
+            bundleSlug={bundle.slug}
+            outOfStock={stock === "out_of_stock"}
+            onBuyNow={onBuyNow}
+            compact
+          />
+        </Div>
       )}
-    </Link>
+    </Stack>
   );
 }

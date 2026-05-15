@@ -109,6 +109,15 @@ export const BUNDLE_COPY = {
     ruleTypeLabel: "Bundle members source",
     ruleTypeStatic: "Hand-picked products",
     ruleTypeDynamic: "Dynamic query (auto-resolves)",
+    // Bundle kind
+    bundleKindLabel: "Bundle kind",
+    bundleKindHint: "Special bundles show the 'Bundled' badge on product cards and update member product metadata. Brand bundles are discovery collections only.",
+    bundleKindSpecial: "Special bundle",
+    bundleKindBrand: "Brand collection",
+    // Prize-draw draw count
+    drawCountLabel: "Draw entries included",
+    drawCountHint: "How many raffle entries the buyer receives for this prize-draw when purchasing the bundle.",
+    drawCountPlaceholder: "e.g. 5",
     dynamic: {
       title: "Dynamic query rule",
       hint: "onProductStockChange resolves bundleProductIds; bundleQueryResolvedAt tracks the last refresh.",

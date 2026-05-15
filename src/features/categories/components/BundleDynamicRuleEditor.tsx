@@ -25,7 +25,7 @@ type DynamicRule = {
     categorySlug?: string;
     brandSlug?: string;
     tags?: string[];
-    listingType?: "standard" | "pre-order";
+    listingType?: "standard" | "pre-order" | "prize-draw";
   };
   orderBy?: "price-asc" | "price-desc" | "createdAt-desc";
   limit: number;
@@ -48,9 +48,10 @@ const LISTING_TYPE_OPTIONS: Array<{
   label: string;
   value: NonNullable<DynamicRule["filter"]["listingType"]> | "";
 }> = [
-  { label: "Any (standard + pre-order)", value: "" },
+  { label: "Any", value: "" },
   { label: "Standard only", value: "standard" },
   { label: "Pre-order only", value: "pre-order" },
+  { label: "Prize draw only", value: "prize-draw" },
 ];
 
 export interface BundleDynamicRuleEditorProps {

@@ -146,10 +146,11 @@ export function AdminSiteSettingsView({
   const [watermarkSize, setWatermarkSize] = React.useState(30);
   const [watermarkOpacity, setWatermarkOpacity] = React.useState(20);
 
-  // ⑦ Fees
-  const [platformCommission, setPlatformCommission] = React.useState(5);
-  const [buyerFee, setBuyerFee] = React.useState(2);
-  const [razorpayFee, setRazorpayFee] = React.useState(2.36);
+  // ⑦ Fees — all read/written under commissions key
+  const [platformFeePercent, setPlatformFeePercent] = React.useState(5);
+  const [gstPercent, setGstPercent] = React.useState(18);
+  const [minimumTransactionFee, setMinimumTransactionFee] = React.useState(0);
+  const [gatewayFeePercent, setGatewayFeePercent] = React.useState(2);
   const [payoutHoldDays, setPayoutHoldDays] = React.useState(7);
   const [minPayoutAmount, setMinPayoutAmount] = React.useState(100);
   const [auctionListingFee, setAuctionListingFee] = React.useState(0);
@@ -261,15 +262,16 @@ export function AdminSiteSettingsView({
     setWatermarkSize(s.watermark?.size ?? 30);
     setWatermarkOpacity(s.watermark?.opacity ?? 20);
 
-    setPlatformCommission(s.fees?.platformCommission ?? 5);
-    setBuyerFee(s.fees?.buyerFee ?? 2);
-    setRazorpayFee(s.fees?.razorpayFeePercent ?? 2.36);
-    setPayoutHoldDays(s.fees?.payoutHoldDays ?? 7);
-    setMinPayoutAmount(s.fees?.minPayoutAmount ?? 100);
-    setAuctionListingFee(s.fees?.auctionListingFee ?? 0);
-    setPreOrderListingFee(s.fees?.preOrderListingFee ?? 0);
-    setFeaturedSlotFee(s.fees?.featuredSlotFee ?? 999);
-    setPromotedSlotFee(s.fees?.promotedSlotFee ?? 499);
+    setPlatformFeePercent(s.commissions?.platformFeePercent ?? 5);
+    setGstPercent(s.commissions?.gstPercent ?? 18);
+    setMinimumTransactionFee(s.commissions?.minimumTransactionFee ?? 0);
+    setGatewayFeePercent(s.commissions?.gatewayFeePercent ?? 2);
+    setPayoutHoldDays(s.commissions?.payoutHoldDays ?? 7);
+    setMinPayoutAmount(s.commissions?.minPayoutAmount ?? 100);
+    setAuctionListingFee(s.commissions?.auctionListingFee ?? 0);
+    setPreOrderListingFee(s.commissions?.preOrderListingFee ?? 0);
+    setFeaturedSlotFee(s.commissions?.featuredSlotFee ?? 999);
+    setPromotedSlotFee(s.commissions?.promotedSlotFee ?? 499);
 
     setRazorpayKeyId(s.credentialsMasked?.razorpayKeyId ?? "");
     setRazorpaySecret(s.credentialsMasked?.razorpaySecret ?? "");
@@ -358,7 +360,7 @@ export function AdminSiteSettingsView({
     watermark: { type: watermarkType, text: watermarkText, imageUrl: watermarkImageUrl, size: watermarkSize, opacity: watermarkOpacity },
   }));
   const feesMutation = useSave("Fees", () => ({
-    fees: { platformCommission, buyerFee, razorpayFeePercent: razorpayFee, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
+    commissions: { platformFeePercent, gstPercent, minimumTransactionFee, gatewayFeePercent, payoutHoldDays, minPayoutAmount, auctionListingFee, preOrderListingFee, featuredSlotFee, promotedSlotFee },
   }));
   const integrationsMutation = useSave("Integrations", () => ({
     credentials: {
@@ -600,9 +602,10 @@ export function AdminSiteSettingsView({
           <TabsContent value="fees">
             <Form onSubmit={(e) => { e.preventDefault(); feesMutation.mutate(); }} className="space-y-4 pt-4">
               <div className="grid grid-cols-2 gap-4">
-                <Input label="Platform commission (%)" value={String(platformCommission)} onChange={(e) => setPlatformCommission(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="Buyer convenience fee (%)" value={String(buyerFee)} onChange={(e) => setBuyerFee(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
-                <Input label="Razorpay gateway fee (%)" value={String(razorpayFee)} onChange={(e) => setRazorpayFee(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
+                <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
+                <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
+                <Input label="Razorpay gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
+                <Input label="Minimum transaction fee (₹)" helperText="Per-transaction floor. Total charge will never be below base + this." value={String(minimumTransactionFee)} onChange={(e) => setMinimumTransactionFee(parseFloat(e.target.value) || 0)} type="number" min={0} step={0.01} />
                 <Input label="Seller payout hold (days)" value={String(payoutHoldDays)} onChange={(e) => setPayoutHoldDays(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Minimum payout amount (₹)" value={String(minPayoutAmount)} onChange={(e) => setMinPayoutAmount(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Auction listing fee (₹)" value={String(auctionListingFee)} onChange={(e) => setAuctionListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />

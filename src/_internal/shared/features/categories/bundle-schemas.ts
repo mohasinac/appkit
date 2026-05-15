@@ -9,9 +9,23 @@
  */
 
 import { z } from "zod";
-import { BUNDLE_MAX_ITEMS } from "./bundle-config";
+import {
+  BUNDLE_MAX_ITEMS,
+  BUNDLE_DRAW_COUNT_MAX,
+  BUNDLE_KIND_SPECIAL,
+  BUNDLE_KIND_BRAND,
+} from "./bundle-config";
 
 const productIdsSchema = z.array(z.string().min(1)).min(0).max(BUNDLE_MAX_ITEMS);
+
+/**
+ * Per-member detail — mirrors BundleItemDetail in the Firestore schema.
+ * `drawCount` is required when the member is a prize-draw listing (1–BUNDLE_DRAW_COUNT_MAX).
+ */
+const bundleItemDetailSchema = z.object({
+  productId: z.string().min(1),
+  drawCount: z.number().int().min(1).max(BUNDLE_DRAW_COUNT_MAX).optional(),
+});
 
 export const bundleQueryRuleSchema = z.discriminatedUnion("type", [
   z.object({
@@ -24,7 +38,8 @@ export const bundleQueryRuleSchema = z.discriminatedUnion("type", [
       categorySlug: z.string().optional(),
       brandSlug: z.string().optional(),
       tags: z.array(z.string()).optional(),
-      listingType: z.enum(["standard", "pre-order"]).optional(),
+      /** Eligible listing types for a dynamic bundle rule. */
+      listingType: z.enum(["standard", "pre-order", "prize-draw"]).optional(),
     }),
     orderBy: z
       .enum(["price-asc", "price-desc", "createdAt-desc"])
@@ -43,9 +58,16 @@ export const bundleCreateSchema = z.object({
   name: z.string().min(2).max(120),
   slug: z.string().min(2).max(120).optional(),
   description: z.string().max(2000).optional(),
+  /**
+   * "special" — curated bundle; updates partOfBundleIds on member products.
+   * "brand" — brand discovery collection; does not touch product reverse pointers.
+   */
+  bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]),
   bundlePriceInPaise: z.number().int().min(100),
   bundleQueryRule: bundleQueryRuleSchema,
   bundleProductIds: productIdsSchema,
+  /** Richer per-member metadata (draw counts for prize-draws). */
+  bundleItemDetails: z.array(bundleItemDetailSchema).optional(),
   display: bundleDisplaySchema.optional(),
   isActive: z.boolean().optional(),
 });
@@ -53,9 +75,11 @@ export const bundleCreateSchema = z.object({
 export const bundleUpdateSchema = z.object({
   name: z.string().min(2).max(120).optional(),
   description: z.string().max(2000).optional(),
+  bundleKind: z.enum([BUNDLE_KIND_SPECIAL, BUNDLE_KIND_BRAND]).optional(),
   bundlePriceInPaise: z.number().int().min(100).optional(),
   bundleQueryRule: bundleQueryRuleSchema.optional(),
   bundleProductIds: productIdsSchema.optional(),
+  bundleItemDetails: z.array(bundleItemDetailSchema).optional(),
   display: bundleDisplaySchema.optional(),
   isActive: z.boolean().optional(),
 });

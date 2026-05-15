@@ -347,17 +347,27 @@ export interface SiteSettingsDocument {
     codEnabled: boolean;
   };
   commissions: {
-    razorpayFeePercent: number;
+    /** Our platform cut charged to the buyer as a % of order value (e.g. 5 = 5%). */
+    platformFeePercent: number;
+    /** GST applied on top of our platform fee (18%). buyer pays platformFee × (1 + gstPercent/100). */
+    gstPercent: number;
+    /** Per-transaction gateway minimum fee in rupees. Ensures total charge is never below this floor. 0 = no minimum. */
+    minimumTransactionFee: number;
+    /** Razorpay gateway cost % (absorbed by platform, not passed through separately). */
+    gatewayFeePercent: number;
     codDepositPercent: number;
     sellerShippingFixed: number;
     platformShippingPercent: number;
     platformShippingFixedMin: number;
-    processingFeePercent?: number;
-    gstPercent?: number;
-    gatewayFeePercent?: number;
     autoPayoutWindowDays?: number;
-    /** Minimum amount in rupees that a user must pay per online transaction. 0 = no minimum. No order or fee can be negative. */
-    minimumOrderFee?: number;
+    /** Days before a settled order's funds are released for payout. */
+    payoutHoldDays?: number;
+    /** Minimum payout amount in rupees. */
+    minPayoutAmount?: number;
+    auctionListingFee?: number;
+    preOrderListingFee?: number;
+    featuredSlotFee?: number;
+    promotedSlotFee?: number;
   };
   socialLinks: {
     facebook?: string;
@@ -520,11 +530,21 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     codEnabled: true,
   },
   commissions: {
-    razorpayFeePercent: 5,
+    platformFeePercent: 5,
+    gstPercent: 18,
+    minimumTransactionFee: 0,
+    gatewayFeePercent: 2,
     codDepositPercent: 10,
     sellerShippingFixed: 0,
     platformShippingPercent: 10,
     platformShippingFixedMin: 0,
+    autoPayoutWindowDays: 7,
+    payoutHoldDays: 2,
+    minPayoutAmount: 100,
+    auctionListingFee: 0,
+    preOrderListingFee: 0,
+    featuredSlotFee: 999,
+    promotedSlotFee: 499,
   },
   featureFlags: {
     chats: true,

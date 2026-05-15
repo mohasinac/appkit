@@ -116,6 +116,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
+  const pendingFilterCount = FILTER_KEYS.filter((k) => !!pendingFilters[k]).length;
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     table.get(TABLE_KEYS.SHOW_CLOSED) === "true" ||
@@ -382,7 +383,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 Filters
               </span>
               <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
+                {pendingFilterCount > 0 && (
                   <button
                     type="button"
                     onClick={clearFilters}
@@ -410,7 +411,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
                 onClick={applyFilters}
                 className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
               >
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+                Apply Filters{pendingFilterCount > 0 ? ` (${pendingFilterCount})` : ""}
               </button>
             </div>
           </div>

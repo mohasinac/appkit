@@ -49,17 +49,6 @@ export interface MarketplaceAuctionCardData {
   buyNowPrice?: number;
   /** Display name of the auction winner — shown masked when the auction has ended */
   winnerDisplayName?: string;
-  /** Reverse refs — bundle IDs that include this auction. */
-  partOfBundleIds?: string[];
-  partOfBundleTitles?: string[];
-  /** Feature badge IDs. */
-  featureIds?: string[];
-  /** Sublisting category ID — signals "has variants". */
-  sublistingCategoryId?: string;
-  /** Curated set/group membership. */
-  groupId?: string;
-  isGroupParent?: boolean;
-  groupTitle?: string;
 }
 
 export interface MarketplaceAuctionCardLabels {
@@ -342,30 +331,6 @@ export function MarketplaceAuctionCard({
           {product.status === "sold" ? (
             <Span className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-xs font-bold text-white">
               {mergedLabels.sold}
-            </Span>
-          ) : null}
-          {product.partOfBundleIds && product.partOfBundleIds.length > 0 ? (
-            <Span
-              className="rounded-full bg-teal-600/90 px-2 py-0.5 text-xs font-bold text-white"
-              title={product.partOfBundleTitles?.[0] ? `In bundle: ${product.partOfBundleTitles[0]}` : "In a bundle"}
-            >
-              Bundled
-            </Span>
-          ) : null}
-          {product.groupId ? (
-            <Span
-              className="rounded-full bg-indigo-600/90 px-2 py-0.5 text-xs font-bold text-white"
-              title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
-            >
-              {product.isGroupParent ? "Set Parent" : "In Set"}
-            </Span>
-          ) : null}
-          {product.sublistingCategoryId ? (
-            <Span
-              className="rounded-full bg-sky-600/90 px-2 py-0.5 text-xs font-bold text-white"
-              title="Has variants or sub-listings"
-            >
-              Has Variants
             </Span>
           ) : null}
         </Div>

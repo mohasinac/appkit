@@ -5,6 +5,7 @@ import { CategoryBundlesListing } from "../../categories/components/CategoryBund
 
 export interface StoreBundlesPageViewProps {
   storeSlug: string;
+  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
 }
 
 /**
@@ -17,6 +18,7 @@ export interface StoreBundlesPageViewProps {
  */
 export async function StoreBundlesPageView({
   storeSlug,
+  onBuyNow,
 }: StoreBundlesPageViewProps) {
   const store = await getStoreBySlug(storeSlug);
   const storeId = (store as Record<string, any>)?.id;
@@ -30,5 +32,5 @@ export async function StoreBundlesPageView({
     .then((rows) => rows.filter((c) => c.createdByStoreId === storeId))
     .catch(() => []);
 
-  return <CategoryBundlesListing initialBundles={bundles} />;
+  return <CategoryBundlesListing initialBundles={bundles} onBuyNow={onBuyNow} />;
 }

@@ -17,7 +17,8 @@ import { RefundStatusValues } from "../../orders/schemas";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
 import { notificationRepository } from "../../admin/repository/notification.repository";
 
-const DEFAULT_PROCESSING_FEE_PERCENT = 2.36;
+const DEFAULT_PLATFORM_FEE_PERCENT = 5;
+const DEFAULT_GST_PERCENT = 18;
 
 export interface PartialRefundResult {
   orderId: string;
@@ -41,13 +42,13 @@ export async function issuePartialRefund(
     throw new ValidationError("Order has already been fully refunded.");
 
   const settings = await siteSettingsRepository.getSingleton();
-  const feePercent =
-    settings.commissions?.processingFeePercent ??
-    DEFAULT_PROCESSING_FEE_PERCENT;
+  const platformFeePercent = settings.commissions?.platformFeePercent ?? DEFAULT_PLATFORM_FEE_PERCENT;
+  const gstPercent = settings.commissions?.gstPercent ?? DEFAULT_GST_PERCENT;
+  const effectiveRate = platformFeePercent * (1 + gstPercent / 100);
 
   const grossRefund = order.totalPrice;
   const feeDeducted = deductFees
-    ? parseFloat(((grossRefund * feePercent) / 100).toFixed(2))
+    ? parseFloat(((grossRefund * effectiveRate) / 100).toFixed(2))
     : 0;
   const netRefund = parseFloat((grossRefund - feeDeducted).toFixed(2));
 
@@ -101,12 +102,12 @@ export async function previewCancellationRefund(
   if (order.paymentStatus !== "paid") return null;
 
   const settings = await siteSettingsRepository.getSingleton();
-  const feePercent =
-    settings.commissions?.processingFeePercent ??
-    DEFAULT_PROCESSING_FEE_PERCENT;
+  const platformFeePercent = settings.commissions?.platformFeePercent ?? DEFAULT_PLATFORM_FEE_PERCENT;
+  const gstPercent = settings.commissions?.gstPercent ?? DEFAULT_GST_PERCENT;
+  const effectiveRate = platformFeePercent * (1 + gstPercent / 100);
 
   const grossRefund = order.totalPrice;
-  const feeDeducted = parseFloat(((grossRefund * feePercent) / 100).toFixed(2));
+  const feeDeducted = parseFloat(((grossRefund * effectiveRate) / 100).toFixed(2));
   const netRefund = parseFloat((grossRefund - feeDeducted).toFixed(2));
 
   return {
