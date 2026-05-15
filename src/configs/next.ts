@@ -179,6 +179,8 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       "./node_modules/stream-events/**",
       "./node_modules/stubs/**",
       "./node_modules/string_decoder/**",
+      // Crypto / TLS utilities (used by firebase-admin token verification):
+      "./node_modules/node-forge/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {
