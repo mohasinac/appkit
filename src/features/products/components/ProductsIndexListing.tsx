@@ -4,7 +4,8 @@ import { X, ShoppingCart, Heart, SlidersHorizontal, Columns } from "lucide-react
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, useToast, BulkActionBar, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, BulkActionBar, ListingToolbar, LoginRequiredModal } from "../../../ui";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
@@ -32,6 +33,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const router = useRouter();
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -153,16 +155,18 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
   const handleWishlistToggle = useCallback((productId: string) => {
     const isWishlisted = wishlistedIds.has(productId);
-    if (isWishlisted) {
-      localWishlist.remove(productId, "product");
-      pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
-      showToast("Removed from wishlist", "info");
-    } else {
-      localWishlist.add(productId, "product");
-      pushWishlistOp({ op: "add", itemId: productId, type: "product" });
-      showToast("Added to wishlist", "success");
-    }
-  }, [wishlistedIds, localWishlist, showToast]);
+    requireAuth(isWishlisted ? ACTION_ID.REMOVE_FROM_WISHLIST : ACTION_ID.ADD_TO_WISHLIST, () => {
+      if (isWishlisted) {
+        localWishlist.remove(productId, "product");
+        pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+        showToast("Removed from wishlist", "info");
+      } else {
+        localWishlist.add(productId, "product");
+        pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+        showToast("Added to wishlist", "success");
+      }
+    });
+  }, [wishlistedIds, localWishlist, showToast, requireAuth]);
 
   const handleAddToCart = useCallback((product: any) => {
     localCart.add(product.id, 1, {
@@ -175,14 +179,16 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   }, [localCart, showToast]);
 
   const handleBuyNow = useCallback((product: any) => {
-    localCart.add(product.id, 1, {
-      productTitle: product.title,
-      productImage: product.mainImage,
-      price: product.price,
+    requireAuth(ACTION_ID.BUY_NOW, () => {
+      localCart.add(product.id, 1, {
+        productTitle: product.title,
+        productImage: product.mainImage,
+        price: product.price,
+      });
+      pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+      router.push(String(ROUTES.USER.CART));
     });
-    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
-    router.push(String(ROUTES.USER.CART));
-  }, [localCart, router]);
+  }, [localCart, router, requireAuth]);
 
   return (
     <div className="min-h-screen">
@@ -257,13 +263,15 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
             onClick: () => {
-              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localWishlist.add(p.id, "product");
-                pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+              requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
+                const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+                selected.forEach((p) => {
+                  localWishlist.add(p.id, "product");
+                  pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+                });
+                showToast(`${selected.length} items added to wishlist`, "success");
+                selection.clearSelection();
               });
-              showToast(`${selected.length} items added to wishlist`, "success");
-              selection.clearSelection();
             },
           },
           {
@@ -396,6 +404,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
           </div>
         </>
       )}
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 }

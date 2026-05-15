@@ -3,7 +3,9 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, useToast, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, ListingToolbar, LoginRequiredModal } from "../../../ui";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
+import { ACTION_ID } from "../../products/constants/action-defs";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
 import { ProductFilters } from "../../products/components/ProductFilters";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
@@ -29,6 +31,7 @@ export interface StoreAuctionsListingProps {
 export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "auctionEndDate" } });
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">((table.get("view") as "grid" | "list") || "grid");
@@ -137,15 +140,19 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
 
   const wishlistActions = {
     addToWishlist: (productId: string) => {
-      localWishlist.add(productId, "auction");
-      pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
-      showToast("Added to wishlist", "success");
+      requireAuth(ACTION_ID.WATCH_AUCTION, () => {
+        localWishlist.add(productId, "auction");
+        pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
+        showToast("Added to wishlist", "success");
+      });
       return Promise.resolve();
     },
     removeFromWishlist: (productId: string) => {
-      localWishlist.remove(productId, "auction");
-      pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
-      showToast("Removed from wishlist", "info");
+      requireAuth(ACTION_ID.UNWATCH_AUCTION, () => {
+        localWishlist.remove(productId, "auction");
+        pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
+        showToast("Removed from wishlist", "info");
+      });
       return Promise.resolve();
     },
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
@@ -250,6 +257,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
           </div>
         </>
       )}
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 }

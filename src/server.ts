@@ -1491,3 +1491,12 @@ export type { BannedAction } from "./features/auth/permissions/constants";
 // -- SEO builders (sitemap / robots / manifest / og-image) --
 export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE } from "./_internal/server/features/seo";
 export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions } from "./_internal/server/features/seo";
+
+
+// -- Action gate + nav route helpers (server-side) --
+export { checkActionAllowed } from "./features/admin/utils/checkActionAllowed";
+export { getDisabledRoutes } from "./features/admin/utils/getDisabledRoutes";
+export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlobal";
+
+// -- Site-settings domain actions (updateActionConfig / updateNavConfig) --
+export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/server/features/site-settings/actions";

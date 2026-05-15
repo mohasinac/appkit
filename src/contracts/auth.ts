@@ -14,6 +14,8 @@ export interface AuthPayload {
   phoneNumber?: string | null;
   /** Any extra custom claims stored on the token */
   claims?: Record<string, unknown>;
+  /** RBAC permission keys granted to this user. */
+  permissions?: string[];
 }
 
 export interface AuthUser {

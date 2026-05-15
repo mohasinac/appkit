@@ -200,7 +200,7 @@ export function ListingLayout({
                   "text-zinc-600 dark:text-slate-300",
                   "hover:bg-zinc-50 dark:hover:bg-slate-800/60 transition-colors",
                   filterActiveCount > 0
-                    ? "border-primary/40 bg-primary/5 text-primary"
+                    ? "border-primary/40 bg-primary/5 text-zinc-800 dark:text-zinc-100"
                     : "",
                 ].join(" ")}
               >

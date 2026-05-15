@@ -13,6 +13,10 @@ export interface MainNavbarItem {
   label: string;
   icon?: React.ReactNode;
   highlighted?: boolean;
+  /** Stable nav-* slug for siteSettings.navConfig toggling. */
+  id?: string;
+  /** RBAC permission key — item hidden when user lacks this permission. */
+  requiredPermission?: string;
 }
 
 export interface MainNavbarProps {

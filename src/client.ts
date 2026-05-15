@@ -278,6 +278,9 @@ export type { FormActionId, FormActionMeta } from "./features/products/index";
 // Dashboard quick actions
 export { DASHBOARD_QUICK_ACTION_ID, DASHBOARD_QUICK_ACTION_META, DASHBOARD_QUICK_ACTIONS } from "./features/products/index";
 export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./features/products/index";
+// [CLIENT-ONLY] useAuthGate: pre-dispatch auth gate using ACTION_ID registry.
+export { useAuthGate } from "./react/hooks/useAuthGate";
+export type { UseAuthGateReturn } from "./react/hooks/useAuthGate";
 // Action dispatch hook + panel store
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";

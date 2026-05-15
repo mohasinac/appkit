@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, useToast, ListingToolbar, BulkActionBar } from "../../../ui";
+import { Pagination, useToast, ListingToolbar, BulkActionBar, LoginRequiredModal } from "../../../ui";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
@@ -16,6 +16,8 @@ import { useBrands } from "../hooks/useBrands";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
+import { ACTION_ID } from "../constants/action-defs";
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC");
 
@@ -40,6 +42,7 @@ export interface AuctionsIndexListingProps {
 export function AuctionsIndexListing({ initialData, categorySlug, brandName }: AuctionsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const showEnded = table.get(TABLE_KEYS.SHOW_ENDED) === "true";
@@ -160,15 +163,19 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
 
   const wishlistActions = {
     addToWishlist: (productId: string) => {
-      localWishlist.add(productId, "auction");
-      pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
-      showToast("Added to wishlist", "success");
+      requireAuth(ACTION_ID.WATCH_AUCTION, () => {
+        localWishlist.add(productId, "auction");
+        pushWishlistOp({ op: "add", itemId: productId, type: "auction" });
+        showToast("Added to wishlist", "success");
+      });
       return Promise.resolve();
     },
     removeFromWishlist: (productId: string) => {
-      localWishlist.remove(productId, "auction");
-      pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
-      showToast("Removed from wishlist", "info");
+      requireAuth(ACTION_ID.UNWATCH_AUCTION, () => {
+        localWishlist.remove(productId, "auction");
+        pushWishlistOp({ op: "remove", itemId: productId, type: "auction" });
+        showToast("Removed from wishlist", "info");
+      });
       return Promise.resolve();
     },
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
@@ -229,26 +236,22 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onClearSelection={selection.clearSelection}
         actions={[
           {
-            id: "watchlist",
+            id: ACTION_ID.WATCH_AUCTION,
             label: "Add to Watchlist",
             variant: "primary",
             onClick: () => {
               const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
-              selected.forEach((a) => {
-                wishlistActions.addToWishlist(a.id);
-              });
+              selected.forEach((a) => { wishlistActions.addToWishlist(a.id); });
               selection.clearSelection();
             },
           },
           {
-            id: "remove-watchlist",
+            id: ACTION_ID.UNWATCH_AUCTION,
             label: "Remove from Watchlist",
             variant: "secondary",
             onClick: () => {
               const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
-              selected.forEach((a) => {
-                wishlistActions.removeFromWishlist(a.id);
-              });
+              selected.forEach((a) => { wishlistActions.removeFromWishlist(a.id); });
               selection.clearSelection();
             },
           },
@@ -342,6 +345,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
           </div>
         </>
       )}
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 }

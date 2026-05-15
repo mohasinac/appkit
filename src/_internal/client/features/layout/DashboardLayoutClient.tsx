@@ -29,6 +29,8 @@ import { StoreSidebar, type StoreNavGroup } from "../../../../features/seller/co
 import { UserSidebar, type UserNavGroup } from "../../../../features/account/components/UserSidebar";
 import type { DashboardVariant, SidebarNavGroup, SectionResponsive } from "../../../shared/features/layout/types";
 import { DASHBOARD_DESKTOP_MEDIA_QUERY } from "../../../shared/features/layout/config";
+import { filterNavItems } from "./filterNavItems";
+import { useSiteSettings } from "../../../../core/hooks/useSiteSettings";
 
 export interface DashboardLayoutClientProps {
   /** Drives sidebar component selection + accent colour. */
@@ -97,23 +99,20 @@ function useResponsiveDrawer() {
   return { desktopOpen, mobileOpen, close, toggle };
 }
 
-/** Filter admin nav groups to only show items the user has permission to see. */
-function filterAdminGroups(
-  groups: AdminNavGroup[],
+/** Filter nav groups by navConfig (enabled toggle) + requiredPermission. */
+function filterGroups<T extends SidebarNavGroup>(
+  groups: T[],
+  navConfig: Record<string, { enabled: boolean }> | undefined,
   permissions: string[] | null | undefined,
-): AdminNavGroup[] {
-  // null = admin (show everything); undefined = no filtering (backwards compat)
-  if (permissions === null || permissions === undefined) return groups;
+): T[] {
+  // null permissions = admin (show everything); undefined = no filtering (backwards compat)
+  if (permissions === null && !navConfig) return groups;
   return groups
     .map((group) => ({
       ...group,
-      items: group.items.filter(
-        (item) =>
-          !item.requiredPermission ||
-          permissions.includes(item.requiredPermission),
-      ),
+      items: filterNavItems(group.items, navConfig, permissions ?? undefined),
     }))
-    .filter((group) => group.items.length > 0);
+    .filter((group) => group.items.length > 0) as T[];
 }
 
 export function DashboardLayoutClient({
@@ -128,10 +127,13 @@ export function DashboardLayoutClient({
   const pathname = usePathname();
   const activeHref = explicitActiveHref ?? pathname ?? "";
   const { desktopOpen, mobileOpen, close, toggle } = useResponsiveDrawer();
+  const { data: settings } = useSiteSettings<{ navConfig?: Record<string, { enabled: boolean }> }>();
+  const navConfig = (settings as { navConfig?: Record<string, { enabled: boolean }> } | undefined)?.navConfig;
 
+  const filteredGroups = filterGroups(groups, navConfig, permissions);
   const adminGroups =
     variant === "admin"
-      ? filterAdminGroups(groups as AdminNavGroup[], permissions)
+      ? (filteredGroups as AdminNavGroup[])
       : (groups as AdminNavGroup[]);
 
   return (
@@ -155,7 +157,7 @@ export function DashboardLayoutClient({
           mobileOpen={mobileOpen}
           activeHref={activeHref}
           items={[]}
-          groups={groups as StoreNavGroup[]}
+          groups={filteredGroups as StoreNavGroup[]}
           onCloseMobile={close}
           onToggle={toggle}
           className={className}
@@ -166,8 +168,8 @@ export function DashboardLayoutClient({
           variant="sidebar"
           desktopOpen={desktopOpen}
           mobileOpen={mobileOpen}
-          items={groups.flatMap((g) => g.items)}
-          groups={groups as UserNavGroup[]}
+          items={filteredGroups.flatMap((g) => g.items)}
+          groups={filteredGroups as UserNavGroup[]}
           onCloseMobile={close}
           onToggle={toggle}
           className={className}

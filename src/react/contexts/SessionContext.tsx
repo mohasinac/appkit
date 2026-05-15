@@ -66,6 +66,8 @@ export interface SessionUser {
   stats?: Record<string, unknown>;
   metadata?: Record<string, unknown>;
   scamAwarenessAcknowledgedAt?: Date | null;
+  /** RBAC permission keys granted to this user (from their role's permission set). */
+  permissions?: string[];
 }
 
 export interface SessionContextValue {

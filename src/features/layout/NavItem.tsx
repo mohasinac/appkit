@@ -66,7 +66,7 @@ export function NavItem({
       <Link
         href={href}
         className={[
-          "flex items-center gap-2 px-3 py-1 rounded-full border border-primary-700/30 dark:border-primary/30 bg-primary-700/5 dark:bg-primary/5 text-primary-700 dark:text-primary text-sm font-medium transition-all hover:bg-primary-700/10 dark:hover:bg-primary/10",
+          "flex items-center gap-2 px-3 py-1 rounded-full border border-primary-700/30 dark:border-primary/30 bg-primary-700/5 dark:bg-primary/5 text-zinc-800 dark:text-zinc-100 text-sm font-medium transition-all hover:bg-primary-700/10 dark:hover:bg-primary/10",
           className,
         ]
           .filter(Boolean)

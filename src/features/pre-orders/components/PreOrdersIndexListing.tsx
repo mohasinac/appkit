@@ -3,7 +3,8 @@ import React, { useState, useCallback, useMemo } from "react";
 import { Columns, Heart, ShoppingCart, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, useToast, BulkActionBar, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, BulkActionBar, ListingToolbar, LoginRequiredModal } from "../../../ui";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../../products/constants/action-defs";
 import { CompareOverlay } from "../../products/components/CompareOverlay";
@@ -43,6 +44,7 @@ export interface PreOrdersIndexListingProps {
 export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: PreOrdersIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -164,15 +166,19 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
 
   const wishlistActions = {
     addToWishlist: (productId: string) => {
-      localWishlist.add(productId, "preorder");
-      pushWishlistOp({ op: "add", itemId: productId, type: "preorder" });
-      showToast("Added to wishlist", "success");
+      requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
+        localWishlist.add(productId, "preorder");
+        pushWishlistOp({ op: "add", itemId: productId, type: "preorder" });
+        showToast("Added to wishlist", "success");
+      });
       return Promise.resolve();
     },
     removeFromWishlist: (productId: string) => {
-      localWishlist.remove(productId, "preorder");
-      pushWishlistOp({ op: "remove", itemId: productId, type: "preorder" });
-      showToast("Removed from wishlist", "info");
+      requireAuth(ACTION_ID.REMOVE_FROM_WISHLIST, () => {
+        localWishlist.remove(productId, "preorder");
+        pushWishlistOp({ op: "remove", itemId: productId, type: "preorder" });
+        showToast("Removed from wishlist", "info");
+      });
       return Promise.resolve();
     },
     isWishlisted: (productId: string) => wishlistedIds.has(productId),
@@ -264,13 +270,15 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
             icon: <Heart className="h-3.5 w-3.5" />,
             variant: "secondary",
             onClick: () => {
-              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localWishlist.add(p.id, "preorder");
-                pushWishlistOp({ op: "add", itemId: p.id, type: "preorder" });
+              requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
+                const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+                selected.forEach((p) => {
+                  localWishlist.add(p.id, "preorder");
+                  pushWishlistOp({ op: "add", itemId: p.id, type: "preorder" });
+                });
+                showToast(`${selected.length} items added to wishlist`, "success");
+                selection.clearSelection();
               });
-              showToast(`${selected.length} items added to wishlist`, "success");
-              selection.clearSelection();
             },
           },
           {
@@ -417,6 +425,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
           </div>
         </>
       )}
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 }

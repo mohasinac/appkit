@@ -28,6 +28,13 @@ export interface SidebarNavItem {
   label: string;
   icon?: ReactNode;
   badge?: number;
+  /**
+   * Stable nav-* slug used as the key in siteSettings.navConfig.
+   * If absent, item is always visible (no admin toggle, no permission check).
+   */
+  id?: string;
+  /** RBAC permission key — item only shows to users with this permission. */
+  requiredPermission?: string;
 }
 
 /** Sidebar group with title + items + default-open state. */
@@ -44,6 +51,10 @@ export interface MainNavItem {
   icon?: ReactNode;
   /** Translation key (consumer fills in `label` at render time via t(key)). */
   key?: string;
+  /** Stable nav-* slug used as the key in siteSettings.navConfig. */
+  id?: string;
+  /** RBAC permission key — item only shows to users with this permission. */
+  requiredPermission?: string;
 }
 
 /** Branding config — propagated to TitleBar / Footer / mobile chrome. */

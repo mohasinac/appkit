@@ -3,7 +3,9 @@ import React, { useState, useCallback } from "react";
 import { Search, SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, SortDropdown, useToast } from "../../../ui";
+import { Pagination, SortDropdown, useToast, LoginRequiredModal } from "../../../ui";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
+import { ACTION_ID } from "../../products/constants/action-defs";
 import type { ViewMode } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { ProductGrid } from "../../products/components/ProductGrid";
@@ -29,6 +31,7 @@ export function CategoryProductsListing({
 }: CategoryProductsListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<ViewMode>(
@@ -65,16 +68,18 @@ export function CategoryProductsListing({
 
   const handleWishlistToggle = useCallback((productId: string) => {
     const isWishlisted = wishlistedIds.has(productId);
-    if (isWishlisted) {
-      localWishlist.remove(productId, "product");
-      pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
-      showToast("Removed from wishlist", "info");
-    } else {
-      localWishlist.add(productId, "product");
-      pushWishlistOp({ op: "add", itemId: productId, type: "product" });
-      showToast("Added to wishlist", "success");
-    }
-  }, [wishlistedIds, localWishlist, showToast]);
+    requireAuth(isWishlisted ? ACTION_ID.REMOVE_FROM_WISHLIST : ACTION_ID.ADD_TO_WISHLIST, () => {
+      if (isWishlisted) {
+        localWishlist.remove(productId, "product");
+        pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+        showToast("Removed from wishlist", "info");
+      } else {
+        localWishlist.add(productId, "product");
+        pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+        showToast("Added to wishlist", "success");
+      }
+    });
+  }, [wishlistedIds, localWishlist, showToast, requireAuth]);
 
   const handleAddToCart = useCallback((product: any) => {
     localCart.add(product.id, 1, {
