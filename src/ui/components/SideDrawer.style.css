@@ -25,41 +25,84 @@
   background: var(--appkit-color-surface);
 }
 
-/* Full-viewport width on all breakpoints — navbars (z-50) render over this */
+/* Full-viewport width on mobile; 80% on desktop */
 .appkit-side-drawer--left { left: 0; width: 100%; }
 .appkit-side-drawer--right { right: 0; width: 100%; }
 
+@media (min-width: 1024px) {
+  .appkit-side-drawer--left  { width: 80%; }
+  .appkit-side-drawer--right { width: 80%; }
+}
+
 /* Header */
 .appkit-side-drawer__header {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-bottom-width: 1px;
+  position: relative;
+}
+
+/* 3-px brand-gradient rule at the very top of the drawer */
+.appkit-side-drawer__header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    to right,
+    var(--appkit-color-primary-700, #1343de) 0%,
+    var(--appkit-color-cobalt, #3570fc)      55%,
+    var(--appkit-color-secondary-400, #84e122) 100%
+  );
+  pointer-events: none;
 }
 
 .appkit-side-drawer__header--view {
-  background-color: var(--appkit-color-bg);
+  background: var(--appkit-color-surface);
   border-color: var(--appkit-color-border);
 }
 :is(.dark) .appkit-side-drawer__header--view {
-  background-color: rgba(15, 23, 42, 0.8);
+  background: rgba(15, 23, 42, 0.9);
   border-color: var(--appkit-color-border);
 }
 
+/* create — soft blue-to-lime wash, echoes the wordmark gradient */
 .appkit-side-drawer__header--create {
-  background: linear-gradient(to right, rgba(var(--color-primary-rgb, 59, 130, 246), 0.05), transparent, rgba(20, 184, 166, 0.03));
-  border-color: var(--appkit-color-border);
+  background: linear-gradient(
+    135deg,
+    rgba(19, 67, 222, 0.07) 0%,
+    rgba(53, 112, 252, 0.05) 55%,
+    rgba(132, 225, 34, 0.04) 100%
+  );
+  border-color: rgba(53, 112, 252, 0.2);
 }
 :is(.dark) .appkit-side-drawer__header--create {
-  background: linear-gradient(to right, rgba(var(--color-primary-rgb, 59, 130, 246), 0.1), transparent, rgba(20, 184, 166, 0.025));
-  border-color: var(--appkit-color-border);
+  background: linear-gradient(
+    135deg,
+    rgba(19, 67, 222, 0.18) 0%,
+    rgba(53, 112, 252, 0.12) 55%,
+    rgba(132, 225, 34, 0.06) 100%
+  );
+  border-color: rgba(53, 112, 252, 0.25);
 }
 
+/* edit — warmer blue wash */
 .appkit-side-drawer__header--edit {
-  background: linear-gradient(to right, rgba(251, 191, 36, 0.04), transparent, rgba(var(--color-primary-rgb, 59, 130, 246), 0.05));
-  border-color: var(--appkit-color-border);
+  background: linear-gradient(
+    135deg,
+    rgba(53, 112, 252, 0.06) 0%,
+    rgba(132, 225, 34, 0.04) 100%
+  );
+  border-color: rgba(53, 112, 252, 0.15);
 }
 :is(.dark) .appkit-side-drawer__header--edit {
-  background: linear-gradient(to right, rgba(120, 53, 15, 0.15), transparent, rgba(var(--color-primary-rgb, 59, 130, 246), 0.1));
-  border-color: var(--appkit-color-border);
+  background: linear-gradient(
+    135deg,
+    rgba(53, 112, 252, 0.14) 0%,
+    rgba(132, 225, 34, 0.06) 100%
+  );
+  border-color: rgba(53, 112, 252, 0.2);
 }
 
 .appkit-side-drawer__header--delete {

@@ -9,7 +9,7 @@ import { ValidationError } from "../../../shared/errors/index";
 export async function reservePreOrderAction(input: unknown) {
   const user = await requireRoleUser(["buyer", "seller", "admin"]);
   const parsed = reservePreOrderSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid reservation input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid reservation input");
 
   const { preOrderId, quantity } = parsed.data;
   const product = await assertPreOrderAvailable(preOrderId, quantity);

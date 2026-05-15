@@ -14,7 +14,7 @@ import { ValidationError } from "../../../shared/errors/index";
 export async function applyCouponAction(input: unknown) {
   const user = await requireRoleUser(["buyer", "seller", "admin"]);
   const parsed = applyCouponSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid coupon input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid coupon input");
 
   const coupon = await validateCoupon(parsed.data, user.uid);
   const discount = computeDiscount(coupon, parsed.data.cartTotal);
@@ -27,7 +27,7 @@ export async function applyCouponAction(input: unknown) {
 export async function createCouponAction(input: unknown) {
   const user = await requireRoleUser(["admin", "seller"]);
   const parsed = createCouponSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid coupon input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid coupon input");
   return couponsRepository.createWithId(
     `coupon-${parsed.data.code.toLowerCase()}`,
     { ...parsed.data, createdBy: user.uid, usage: { ...parsed.data.usage, currentUsage: 0 } } as any,
@@ -39,7 +39,7 @@ export async function updateCouponAction(couponId: string, input: unknown) {
   const coupon = await couponsRepository.findById(couponId).catch(() => null);
   if (!coupon) throw new CouponNotFoundError(couponId);
   const parsed = updateCouponSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid coupon input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid coupon input");
   return couponsRepository.update(couponId, parsed.data as any);
 }
 

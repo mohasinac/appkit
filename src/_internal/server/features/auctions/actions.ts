@@ -15,7 +15,7 @@ import { ValidationError } from "../../../shared/errors/index";
 export async function placeBidAction(input: unknown) {
   const user = await requireRoleUser(["buyer", "seller", "admin"]);
   const parsed = placeBidSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid bid input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid bid input");
 
   const { auctionId, amount } = parsed.data;
   const product = await assertAuctionActive(auctionId);

@@ -1,31 +1,74 @@
+"use client";
+
+import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Div, Text, Grid } from "../../../ui";
+import { Grid } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
+
+// Brand gradient stop colors (mirrors SiteLogo wordmark gradient)
+const BRAND_FROM = "var(--appkit-color-primary-700, #1343de)";
+const BRAND_MID  = "var(--appkit-color-cobalt, #3570fc)";
+const BRAND_TO   = "var(--appkit-color-secondary-400, #84e122)";
 
 interface StatCardProps {
   label: string;
   value: string | number;
   sub?: string;
-  color?: "default" | "blue" | "green" | "amber" | "red";
+  icon: LucideIcon;
+  gradient: string;       // CSS gradient string for the top strip + icon bg
+  iconColor: string;      // icon fill color
 }
 
-function StatCard({ label, value, sub, color = "default" }: StatCardProps) {
-  const colorClass = {
-    default: "bg-white dark:bg-slate-900",
-    blue: "bg-blue-50 dark:bg-blue-900/20",
-    green: "bg-green-50 dark:bg-green-900/20",
-    amber: "bg-amber-50 dark:bg-amber-900/20",
-    red: "bg-red-50 dark:bg-red-900/20",
-  }[color];
+function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCardProps) {
   return (
-    <Div className={`rounded-xl border border-neutral-200 dark:border-slate-700 p-5 ${colorClass}`}>
-      <Text className="text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-zinc-400">
-        {label}
-      </Text>
-      <Text className="mt-2 text-2xl font-bold text-neutral-900 dark:text-zinc-100">{value}</Text>
-      {sub && <Text className="mt-1 text-xs text-neutral-500 dark:text-zinc-400">{sub}</Text>}
-    </Div>
+    <div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      {/* 3-px gradient top accent */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[3px]"
+        style={{ background: gradient }}
+        aria-hidden="true"
+      />
+
+      <div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
+        {/* Text block */}
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+            {label}
+          </p>
+          <p className="mt-2 text-2xl font-bold text-[var(--appkit-color-text)] tabular-nums leading-none">
+            {value}
+          </p>
+          {sub && (
+            <p className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</p>
+          )}
+        </div>
+
+        {/* Icon pill */}
+        <div
+          className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+          style={{ background: gradient, opacity: 0.92 }}
+        >
+          <Icon className="w-5 h-5 text-white drop-shadow-sm" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="relative rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden p-5 animate-pulse">
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-[var(--appkit-color-border)]" />
+      <div className="flex items-start justify-between gap-3 pt-1">
+        <div className="flex-1 space-y-2">
+          <div className="h-2.5 w-20 rounded bg-[var(--appkit-color-border)]" />
+          <div className="h-7 w-24 rounded bg-[var(--appkit-color-border)]" />
+        </div>
+        <div className="w-10 h-10 rounded-lg bg-[var(--appkit-color-border)]" />
+      </div>
+    </div>
   );
 }
 
@@ -43,52 +86,66 @@ export function DashboardStatsGrid({
   if (isLoading) {
     return (
       <Grid cols="statTiles">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Div
-            key={i}
-            className="animate-pulse rounded-xl border border-neutral-200 dark:border-slate-700 p-5"
-          >
-            <Div className="h-3 w-20 rounded bg-neutral-200 dark:bg-slate-700" />
-            <Div className="mt-2 h-8 w-24 rounded bg-neutral-200 dark:bg-slate-700" />
-          </Div>
-        ))}
+        {Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)}
       </Grid>
     );
   }
 
   const currency = stats.currency ?? getDefaultCurrency();
+
+  // Brand gradient (left→right, matches logo wordmark)
+  const brandGrad   = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 55%, ${BRAND_TO} 100%)`;
+  const blueGrad    = `linear-gradient(135deg, ${BRAND_FROM} 0%, ${BRAND_MID} 100%)`;
+  const greenGrad   = `linear-gradient(135deg, ${BRAND_MID} 0%, ${BRAND_TO} 100%)`;
+  const amberGrad   = "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)";
+  const roseGrad    = "linear-gradient(135deg, #f43f5e 0%, #e11d48 100%)";
+
   return (
     <Grid cols="statTiles">
       <StatCard
         label={labels.totalOrders ?? "Total Orders"}
         value={stats.totalOrders ?? 0}
+        icon={ShoppingBag}
+        gradient={brandGrad}
+        iconColor="#fff"
       />
       <StatCard
         label={labels.totalRevenue ?? "Total Revenue"}
         value={formatCurrency(stats.totalRevenue ?? 0, currency)}
-        color="green"
+        icon={TrendingUp}
+        gradient={greenGrad}
+        iconColor="#fff"
       />
       <StatCard
         label={labels.totalUsers ?? "Total Users"}
         value={stats.totalUsers ?? 0}
-        color="blue"
+        icon={Users}
+        gradient={blueGrad}
+        iconColor="#fff"
       />
       <StatCard
         label={labels.totalProducts ?? "Total Products"}
         value={stats.totalProducts ?? 0}
+        icon={Package}
+        gradient={brandGrad}
+        iconColor="#fff"
       />
       {stats.pendingOrders !== undefined && (
         <StatCard
           label={labels.pendingOrders ?? "Pending Orders"}
           value={stats.pendingOrders}
-          color="amber"
+          icon={Clock}
+          gradient={amberGrad}
+          iconColor="#fff"
         />
       )}
       {stats.pendingReviews !== undefined && (
         <StatCard
           label={labels.pendingReviews ?? "Pending Reviews"}
           value={stats.pendingReviews}
-          color="amber"
+          icon={Star}
+          gradient={roseGrad}
+          iconColor="#fff"
         />
       )}
     </Grid>

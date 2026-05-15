@@ -10,7 +10,7 @@ import { ValidationError } from "../../../shared/errors/index";
 export async function createEventAction(input: unknown) {
   const user = await requireRoleUser(["admin", "moderator"]);
   const parsed = eventInputSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid event input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid event input");
   return eventRepository.createEvent({
     ...(parsed.data as any),
     createdBy: user.uid,
@@ -24,14 +24,14 @@ export async function updateEventAction(eventId: string, input: unknown) {
   const event = await eventRepository.findById(eventId).catch(() => null);
   if (!event) throw new EventNotFoundError(eventId);
   const parsed = eventUpdateSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid event input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid event input");
   return eventRepository.updateEvent(eventId, parsed.data as any);
 }
 
 export async function registerForEventAction(input: unknown) {
   const user = await requireRoleUser(["buyer", "seller", "admin"]);
   const parsed = registerForEventSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid registration input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid registration input");
 
   const { eventId } = parsed.data;
   await assertEventActive(eventId);

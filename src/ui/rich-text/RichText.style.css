@@ -130,7 +130,7 @@
 .appkit-rich-text a {
   color: #1a55f2;                               /* primary-600 cobalt */
   text-decoration: underline;
-  text-decoration-color: rgba(26, 85, 242, 0.4);
+  text-decoration-color: rgba(26, 85, 242, 0.6);
   text-underline-offset: 2px;
   transition: color 150ms, text-decoration-color 150ms;
 }
@@ -142,7 +142,7 @@
 
 .dark .appkit-rich-text a {
   color: #84e122;                               /* lime green — high contrast on dark bg */
-  text-decoration-color: rgba(132, 225, 34, 0.4);
+  text-decoration-color: rgba(132, 225, 34, 0.6);
 }
 
 .dark .appkit-rich-text a:hover {
@@ -216,7 +216,7 @@
 }
 
 .dark .appkit-rich-text figcaption {
-  color: var(--appkit-color-zinc-500);
+  color: var(--appkit-color-zinc-400);
 }
 
 /* --- Images --------------------------------------------------------------- */
@@ -284,9 +284,8 @@
 .appkit-rich-text del {
   text-decoration: line-through;
   color: var(--appkit-color-zinc-500);
-  opacity: 0.75;
 }
 
 .dark .appkit-rich-text del {
-  color: var(--appkit-color-zinc-600);
+  color: var(--appkit-color-zinc-400);
 }

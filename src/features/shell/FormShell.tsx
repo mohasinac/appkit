@@ -153,7 +153,7 @@ export function FormShell({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="fixed inset-0 flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
+        className="fixed top-0 bottom-0 left-0 right-0 lg:left-[10%] lg:right-[10%] flex flex-col bg-[var(--appkit-color-surface)] shadow-2xl"
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}

@@ -34,7 +34,7 @@ function brandInputToCategoryFields(input: BrandInput | BrandUpdate) {
 export async function createBrandAction(input: unknown) {
   await requireRoleUser("admin");
   const parsed = brandInputSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid brand input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
   await assertBrandSlugUnique(parsed.data.slug);
   const fields = brandInputToCategoryFields(parsed.data);
   return categoriesRepository.createWithId(parsed.data.slug, {
@@ -78,7 +78,7 @@ export async function updateBrandAction(brandId: string, input: unknown) {
   await requireRoleUser("admin");
   await assertBrandExists(brandId);
   const parsed = brandUpdateSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid brand input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid brand input");
   return categoriesRepository.update(brandId, brandInputToCategoryFields(parsed.data));
 }
 

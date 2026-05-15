@@ -162,7 +162,7 @@
 }
 
 .appkit-caption--inverse {
-  color: rgba(101, 196, 8, 0.4);
+  color: var(--appkit-color-secondary-600);     /* dark green — readable on white */
 }
 
 .dark .appkit-caption--default {
@@ -174,5 +174,5 @@
 }
 
 .dark .appkit-caption--inverse {
-  color: rgba(240, 99, 185, 0.5);
+  color: var(--appkit-color-primary-300);       /* #f79dd2 — light pink, readable on dark */
 }

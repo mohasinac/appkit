@@ -9,7 +9,7 @@ import { ValidationError } from "../../../shared/errors/index";
 export async function createBlogPostAction(input: unknown) {
   const user = await requireRoleUser(["admin", "moderator"]);
   const parsed = blogPostInputSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid blog post input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid blog post input");
   await assertBlogSlugUnique(parsed.data.slug);
   const readTime = computeReadTime(parsed.data.content);
   return blogRepository.createWithId(parsed.data.slug, {
@@ -26,7 +26,7 @@ export async function updateBlogPostAction(postId: string, input: unknown) {
   await requireRoleUser(["admin", "moderator"]);
   const post = await assertBlogPostExists(postId);
   const parsed = blogPostUpdateSchema.safeParse(input);
-  if (!parsed.success) throw new ValidationError(parsed.error.errors[0]?.message ?? "Invalid blog post input");
+  if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid blog post input");
   const updates: Record<string, unknown> = { ...parsed.data };
   if (parsed.data.content) updates.readTimeMinutes = computeReadTime(parsed.data.content);
   if (parsed.data.status === "published" && post.status !== "published") {

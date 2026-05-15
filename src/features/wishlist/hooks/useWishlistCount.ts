@@ -10,6 +10,7 @@ import {
 } from "../utils/guest-wishlist";
 import { WISHLIST_MAX } from "../../../constants/limits";
 import { WISHLIST_ENDPOINTS } from "../../../constants/api-endpoints";
+import type { WishlistResponse } from "../types";
 
 const WISHLIST_MERGE_API = "/api/wishlist/merge";
 
@@ -28,25 +29,13 @@ function dispatchCapEvent(detail: WishlistCapEventDetail) {
   );
 }
 
-interface ServerWishlistResp {
-  items?: Array<unknown>;
-  total?: number;
-}
-
-async function fetchServerCount(userId: string): Promise<number> {
-  const data = await apiClient.get<ServerWishlistResp | null>(
-    WISHLIST_ENDPOINTS.BY_USER(userId),
-  );
-  return data?.total ?? data?.items?.length ?? 0;
-}
-
 /**
  * useWishlistCount
  *
  * Server-authoritative count for the badge. For authenticated users this
  * mirrors `/api/wishlist` via react-query (same `["wishlist", uid]` key as
- * `useWishlist`), so mutations on the wishlist page propagate to the badge
- * via standard query invalidation. For guests, falls back to the localStorage
+ * `useWishlist`), storing a full WishlistResponse so both hooks share the
+ * cache without type collisions. For guests, falls back to the localStorage
  * guest store.
  *
  * On login the hook pushes any guest items up to the server once, then clears
@@ -58,12 +47,13 @@ export function useWishlistCount(userId: string | null | undefined) {
   const mergedRef = useRef<string | null>(null);
   const pathname = usePathname();
 
-  const { data: serverTotal } = useQuery<number>({
+  const { data: wishlistData } = useQuery<WishlistResponse | null>({
     queryKey: ["wishlist", userId],
-    queryFn: () => fetchServerCount(userId as string),
+    queryFn: () => apiClient.get<WishlistResponse | null>(WISHLIST_ENDPOINTS.BY_USER(userId as string)),
     enabled: !!userId,
     staleTime: 30_000,
   });
+  const serverTotal = wishlistData?.total ?? wishlistData?.items?.length ?? 0;
 
   // Merge on login: push guest items → server once, then clear local store.
   useEffect(() => {

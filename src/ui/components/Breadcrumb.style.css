@@ -25,7 +25,7 @@
 }
 
 .dark .appkit-breadcrumb__separator {
-  color: var(--appkit-color-zinc-600);
+  color: var(--appkit-color-zinc-500);
 }
 
 .appkit-breadcrumb__text {
