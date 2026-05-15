@@ -3,7 +3,9 @@
 import React, { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -13,6 +15,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
 
 const PAGE_SIZE = 25;
@@ -49,6 +52,7 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const resetAll = useCallback(() => {
     table.setMany({ q: "", sort: "" });
@@ -119,6 +123,8 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
+
   return (
     <>
       <div className="min-h-screen">
@@ -131,7 +137,9 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

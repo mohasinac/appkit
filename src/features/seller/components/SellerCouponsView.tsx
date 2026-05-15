@@ -3,8 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X, Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Button, Div, ListingToolbar, Pagination, ListingViewShell, Text } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { AdminViewCards } from "../../admin/components/AdminViewCards";
+import { BulkActionBar, Button, Div, ListingToolbar, Pagination, ListingViewShell, Text } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -70,6 +72,7 @@ export function SellerCouponsView({
   ...props
 }: SellerCouponsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -151,6 +154,8 @@ export function SellerCouponsView({
     finally { setDeletingId(null); }
   }, [onDelete, refetch]);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
   }
@@ -167,7 +172,9 @@ export function SellerCouponsView({
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={

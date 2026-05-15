@@ -4,8 +4,10 @@ import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { X, Pencil, Trash2 } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Alert, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { AdminViewCards } from "../../admin/components/AdminViewCards";
+import { BulkActionBar, Alert, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
@@ -173,6 +175,7 @@ export function SellerProductsView({
   ...props
 }: SellerProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const dispatch = useActionDispatch();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
@@ -289,6 +292,8 @@ export function SellerProductsView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return (
       <ListingViewShell portal="seller" {...props}>
@@ -333,7 +338,9 @@ export function SellerProductsView({
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

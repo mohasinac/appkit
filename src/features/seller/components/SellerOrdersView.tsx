@@ -3,8 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X, Eye } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text } from "../../../ui";
-import type { ListingViewShellProps, SelectOption } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { AdminViewCards } from "../../admin/components/AdminViewCards";
+import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
@@ -262,6 +264,7 @@ export function SellerOrdersView({
   ...props
 }: SellerOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
@@ -383,6 +386,8 @@ export function SellerOrdersView({
     [],
   );
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
   }
@@ -399,7 +404,9 @@ export function SellerOrdersView({
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

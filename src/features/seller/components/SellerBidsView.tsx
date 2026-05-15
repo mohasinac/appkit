@@ -3,7 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Badge, Div, FilterChipGroup, ListingToolbar, Pagination } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { AdminViewCards } from "../../admin/components/AdminViewCards";
+import { BulkActionBar, Badge, Div, FilterChipGroup, ListingToolbar, Pagination } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
@@ -72,6 +75,8 @@ export interface SellerBidsViewProps {
 
 export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
+
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -187,6 +192,8 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
     },
   ];
 
+  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
+
   return (
     <div className="min-h-screen">
       <ListingToolbar
@@ -199,7 +206,9 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

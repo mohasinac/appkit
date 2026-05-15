@@ -4,8 +4,8 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import {
-  Button,
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, Button,
   Form,
   FormActions,
   FilterChipGroup,
@@ -15,9 +15,8 @@ import {
   Modal,
   Pagination,
   RowActionMenu,
-  useToast,
-} from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+  useToast, } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../constants/filter-tabs";
 import {
@@ -28,6 +27,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
 
 const PAGE_SIZE = 25;
@@ -57,6 +57,7 @@ interface PayoutRow {
 
 export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [markPaidOpen, setMarkPaidOpen] = useState(false);
   const [selectedPayoutId, setSelectedPayoutId] = useState<string | null>(null);
   const [transactionId, setTransactionId] = useState("");
@@ -172,6 +173,8 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -189,7 +192,9 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
           extra={

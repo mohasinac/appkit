@@ -3,9 +3,12 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, useToast } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, useToast } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { apiClient } from "../../../http";
 import { QuickEditMenu } from "./QuickEditMenu";
+import { AdminViewCards } from "./AdminViewCards";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
@@ -47,13 +50,7 @@ export interface AdminOrdersViewProps extends ListingViewShellProps {}
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const { showToast } = useToast();
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const toggleSelect = (id: string, next: boolean) =>
-    setSelectedIds((prev) => {
-      const s = new Set(prev);
-      if (next) s.add(id); else s.delete(id);
-      return s;
-    });
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -134,6 +131,8 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -151,9 +150,21 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+          showTableView
+          view={view}
+          onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+        />
+
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "mark-shipped", label: "Mark as Shipped", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "SHIPPED"); selection.clearSelection(); } },
+            { id: "mark-delivered", label: "Mark as Delivered", variant: "primary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "DELIVERED"); selection.clearSelection(); } },
+            { id: "mark-cancelled", label: "Cancel Orders", variant: "danger", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "CANCELLED"); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
         />
 
         {totalPages > 1 && (
@@ -168,38 +179,48 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
               {errorMessage}
             </div>
           )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No orders found"
-            selectedIds={selectedIds}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={(next) =>
-              setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
-            }
-            renderRowActions={(row) => (
-              <QuickEditMenu
-                actions={[
-                  {
-                    label: "View full details",
-                    onClick: () => { setSelectedRow(row as OrderRow); setDrawerOpen(true); },
-                  },
-                  {
-                    label: "Update status",
-                    separator: true,
-                    formTitle: "Update Order Status",
-                    fields: [
-                      { name: "status", label: "Status", type: "select", required: true,
-                        options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
-                    ],
-                    defaultValues: { status: (row as OrderRow).status },
-                    onSubmit: (vals) => handleQuickStatus(row.id, String(vals.status ?? "")),
-                    submitLabel: "Update",
-                  },
-                ]}
-              />
-            )}
-          />
+          {view === "table" ? (
+            <DataTable
+              rows={rows}
+              isLoading={isLoading}
+              emptyLabel="No orders found"
+              selectedIds={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+              onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
+              renderRowActions={(row) => (
+                <QuickEditMenu
+                  actions={[
+                    {
+                      label: "View full details",
+                      onClick: () => { setSelectedRow(row as OrderRow); setDrawerOpen(true); },
+                    },
+                    {
+                      label: "Update status",
+                      separator: true,
+                      formTitle: "Update Order Status",
+                      fields: [
+                        { name: "status", label: "Status", type: "select", required: true,
+                          options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
+                      ],
+                      defaultValues: { status: (row as OrderRow).status },
+                      onSubmit: (vals) => handleQuickStatus(row.id, String(vals.status ?? "")),
+                      submitLabel: "Update",
+                    },
+                  ]}
+                />
+              )}
+            />
+          ) : (
+            <AdminViewCards
+              rows={rows}
+              view={view}
+              isLoading={isLoading}
+              emptyLabel="No orders found"
+              onRowClick={(row) => { setSelectedRow(row as OrderRow); setDrawerOpen(true); }}
+              selectedIdSet={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+            />
+          )}
         </div>
 
         {filterOpen && (

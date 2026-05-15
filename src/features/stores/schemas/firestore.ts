@@ -90,6 +90,7 @@ export interface StoreDocument {
   shippingPolicy?: string;
 
   isPublic: boolean;
+  isFeatured?: boolean;
   isVacationMode?: boolean;
   vacationMessage?: string;
 

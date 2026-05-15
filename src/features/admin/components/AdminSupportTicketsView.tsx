@@ -3,14 +3,13 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import {
-  FilterChipGroup,
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, FilterChipGroup,
   ListingToolbar,
   ListingViewShell,
   Pagination,
-  RowActionMenu,
-} from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+  RowActionMenu, } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   ADMIN_SUPPORT_TICKET_STATUS_TABS,
@@ -23,6 +22,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { AdminSupportTicketDetailView } from "./AdminSupportTicketDetailView";
 
 const PAGE_SIZE = 25;
@@ -68,6 +68,7 @@ const STATUS_BADGE: Record<string, string> = {
 
 export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -153,6 +154,8 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return (
       <ListingViewShell portal="admin" {...props}>
@@ -176,7 +179,9 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
           onSortChange={(v) => {
             table.set("sort", v);
           }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

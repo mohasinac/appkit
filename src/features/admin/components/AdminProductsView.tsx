@@ -250,7 +250,9 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
@@ -259,6 +261,16 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
             Add Product
           </Button>
         }
+      />
+
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={([
+          { id: "feature", label: "Toggle Featured", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "featured", !rows.find(r => r.id === id)?.featured); selection.clearSelection(); } },
+          { id: "promote", label: "Toggle Promoted", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isPromoted", !rows.find(r => r.id === id)?.isPromoted); selection.clearSelection(); } },
+          { id: "sale", label: "Toggle On Sale", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isOnSale", !rows.find(r => r.id === id)?.isOnSale); selection.clearSelection(); } },
+        ] satisfies BulkActionItem[])}
       />
 
       {totalPages > 1 && (
@@ -273,37 +285,52 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
             {errorMessage}
           </div>
         )}
-        <DataTable
-          rows={rows}
-          columns={[...buildBaseColumns(), flagColumn]}
-          isLoading={isLoading}
-          emptyLabel="No products found"
-          onRowClick={(row) => openEditPanel(row.id)}
-          renderRowActions={(row) => (
-            <QuickEditMenu
-              actions={[
-                {
-                  label: "Quick edit",
-                  formTitle: "Quick Edit Product",
-                  fields: [
-                    { name: "status", label: "Status", type: "select", required: true,
-                      options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
-                    { name: "featured", label: "Featured", type: "toggle" },
-                    { name: "isPromoted", label: "Promoted", type: "toggle" },
-                  ],
-                  defaultValues: { status: row.status, featured: row.featured, isPromoted: row.isPromoted },
-                  onSubmit: (vals) => handleQuickEdit(row.id, vals),
-                  submitLabel: "Save",
-                },
-                {
-                  label: "Open full editor",
-                  separator: true,
-                  onClick: () => openEditPanel(row.id),
-                },
-              ]}
-            />
-          )}
-        />
+        {view === "table" ? (
+          <DataTable
+            rows={rows}
+            columns={[...buildBaseColumns(), flagColumn]}
+            isLoading={isLoading}
+            emptyLabel="No products found"
+            onRowClick={(row) => openEditPanel(row.id)}
+            selectedIds={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+            onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
+            renderRowActions={(row) => (
+              <QuickEditMenu
+                actions={[
+                  {
+                    label: "Quick edit",
+                    formTitle: "Quick Edit Product",
+                    fields: [
+                      { name: "status", label: "Status", type: "select", required: true,
+                        options: STATUS_OPTIONS.filter((t) => t.id !== "All").map((t) => ({ value: t.id, label: t.label })) },
+                      { name: "featured", label: "Featured", type: "toggle" },
+                      { name: "isPromoted", label: "Promoted", type: "toggle" },
+                    ],
+                    defaultValues: { status: row.status, featured: row.featured, isPromoted: row.isPromoted },
+                    onSubmit: (vals) => handleQuickEdit(row.id, vals),
+                    submitLabel: "Save",
+                  },
+                  {
+                    label: "Open full editor",
+                    separator: true,
+                    onClick: () => openEditPanel(row.id),
+                  },
+                ]}
+              />
+            )}
+          />
+        ) : (
+          <AdminViewCards
+            rows={rows}
+            view={view}
+            isLoading={isLoading}
+            emptyLabel="No products found"
+            onRowClick={(row) => openEditPanel(row.id)}
+            selectedIdSet={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+          />
+        )}
       </div>
 
       {filterOpen && (

@@ -3,8 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
+import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_USER_STATUS_TABS, ADMIN_USER_ROLE_TABS } from "../constants/filter-tabs";
 import {
@@ -46,17 +48,11 @@ export interface AdminUsersViewProps extends ListingViewShellProps {}
 
 export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const toggleSelect = (id: string, next: boolean) =>
-    setSelectedIds((prev) => {
-      const s = new Set(prev);
-      if (next) s.add(id); else s.delete(id);
-      return s;
-    });
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
     () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
   );
@@ -141,6 +137,8 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -158,9 +156,19 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+          showTableView
+          view={view}
+          onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+        />
+
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "manage", label: "Manage Selected", variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
         />
 
         {totalPages > 1 && (
@@ -175,22 +183,32 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               {errorMessage}
             </div>
           )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No users found"
-            selectedIds={selectedIds}
-            onToggleSelect={toggleSelect}
-            onToggleSelectAll={(next) =>
-              setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
-            }
-            renderRowActions={(row) => (
-              <RowActionMenu actions={[{
-                label: "Manage",
-                onClick: () => { setSelectedRow(row as UserRow); setDrawerOpen(true); },
-              }]} />
-            )}
-          />
+          {view === "table" ? (
+            <DataTable
+              rows={rows}
+              isLoading={isLoading}
+              emptyLabel="No users found"
+              selectedIds={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+              onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
+              renderRowActions={(row) => (
+                <RowActionMenu actions={[{
+                  label: "Manage",
+                  onClick: () => { setSelectedRow(row as UserRow); setDrawerOpen(true); },
+                }]} />
+              )}
+            />
+          ) : (
+            <AdminViewCards
+              rows={rows}
+              view={view}
+              isLoading={isLoading}
+              emptyLabel="No users found"
+              onRowClick={(row) => { setSelectedRow(row as UserRow); setDrawerOpen(true); }}
+              selectedIdSet={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+            />
+          )}
         </div>
 
         {filterOpen && (

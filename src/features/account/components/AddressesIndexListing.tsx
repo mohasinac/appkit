@@ -2,8 +2,10 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useAddresses } from "../hooks/useAddresses";
-import { ListingToolbar } from "../../../ui";
+import { BulkActionBar, ListingToolbar } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -22,6 +24,7 @@ export function AddressesIndexListing({
   onDelete,
 }: AddressesIndexListingProps) {
   const table = useUrlTable({ defaults: {} });
+  const [view, setView] = useState<"grid" | "list">((table.get("view") as "grid" | "list") || "grid");
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
@@ -105,7 +108,8 @@ export function AddressesIndexListing({
         searchPlaceholder="Search by address, postcode or label..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
-        hideViewToggle
+        view={view}
+        onViewChange={(v) => { if (v === "table") return; setView(v as "grid" | "list"); }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

@@ -4,8 +4,10 @@ import React, { useState, useCallback } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
+import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
+import { AdminViewCards } from "./AdminViewCards";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -37,6 +39,7 @@ export interface AdminCategoriesViewProps extends ListingViewShellProps {
 
 export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCategoriesViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
@@ -110,6 +113,7 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
@@ -127,7 +131,9 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
@@ -136,6 +142,14 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
             Add Category
           </Button>
         }
+      />
+
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={([
+          { id: "edit", label: "Edit Category", variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+        ] satisfies BulkActionItem[])}
       />
 
       {totalPages > 1 && (
@@ -150,7 +164,27 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No categories found" onRowClick={(row) => openEditPanel(row.id)} />
+        {view === "table" ? (
+          <DataTable
+            rows={rows}
+            isLoading={isLoading}
+            emptyLabel="No categories found"
+            selectedIds={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+            onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
+            onRowClick={(row) => openEditPanel(row.id)}
+          />
+        ) : (
+          <AdminViewCards
+            rows={rows}
+            view={view}
+            isLoading={isLoading}
+            emptyLabel="No categories found"
+            onRowClick={(row) => openEditPanel(row.id)}
+            selectedIdSet={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+          />
+        )}
       </div>
 
       {filterOpen && (

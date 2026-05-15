@@ -36,6 +36,9 @@ const SAFE_STORE_FILTER_FIELDS = new Set([
   "storeCategory",
   "status",
   "isPublic",
+  "isFeatured",
+  "averageRating",
+  "stats.totalProducts",
 ]);
 
 function validateSieveFilters(
@@ -59,7 +62,13 @@ export async function GET(request: Request): Promise<NextResponse> {
     const std = parseListingParams(url);
     const page = std.page ?? DEFAULT_PAGE;
     const pageSize = std.pageSize ?? DEFAULT_PAGE_SIZE;
-    const sort = std.sorts ?? DEFAULT_SORT;
+    // Translate user-friendly sort names to Firestore nested field paths.
+    const rawSort = std.sorts ?? DEFAULT_SORT;
+    const sort = rawSort
+      .replace(/^-itemsSold$/, "-stats.itemsSold")
+      .replace(/^itemsSold$/, "stats.itemsSold")
+      .replace(/^-averageRating$/, "-stats.averageRating")
+      .replace(/^averageRating$/, "stats.averageRating");
 
     const parts: string[] = ["status==active,isPublic==true"];
     if (std.q) parts.push(`storeName@=*${std.q}`);

@@ -4,8 +4,9 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, Pagination, ListingViewShell, RowActionMenu, ConfirmDeleteModal, useToast } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, ConfirmDeleteModal, useToast } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -14,6 +15,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
 
 const PAGE_SIZE = 25;
@@ -49,6 +51,7 @@ interface SessionRow {
 
 export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [revokeTarget, setRevokeTarget] = useState<SessionRow | null>(null);
@@ -144,6 +147,8 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -161,7 +166,9 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

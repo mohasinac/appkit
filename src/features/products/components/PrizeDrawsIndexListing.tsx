@@ -117,6 +117,8 @@ export function PrizeDrawsIndexListing({
     table.get("sort") !== "-createdAt" ||
     activeFilterCount > 0;
 
+  const revealFilter = (table.get("prizeRevealStatus") || undefined) as "pending" | "open" | "closed" | undefined;
+
   const params = {
     q: table.get("q") || undefined,
     category: table.get("category") || undefined,
@@ -125,6 +127,7 @@ export function PrizeDrawsIndexListing({
     minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
     maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
     storeId: forcedStoreId || table.get("storeId") || undefined,
+    prizeRevealStatus: revealFilter,
     sort: table.get("sort") || "-createdAt",
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
@@ -136,13 +139,11 @@ export function PrizeDrawsIndexListing({
     { initialData },
   );
 
-  // Client-side filter for prizeRevealStatus until the server query supports it.
-  const revealFilter = table.get("prizeRevealStatus");
-  const filteredDraws = revealFilter
-    ? (draws as any[]).filter((d) => d.prizeRevealStatus === revealFilter)
-    : !showClosed
-      ? (draws as any[]).filter((d) => d.prizeRevealStatus !== "closed")
-      : (draws as any[]);
+  // When no explicit reveal-status filter is set, hide closed draws client-side
+  // as a UX default (showClosed toggle). Server handles explicit status filters.
+  const filteredDraws = !revealFilter && !showClosed
+    ? (draws as any[]).filter((d) => d.prizeRevealStatus !== "closed")
+    : (draws as any[]);
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());

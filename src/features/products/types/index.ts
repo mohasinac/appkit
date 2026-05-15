@@ -211,6 +211,8 @@ export interface ProductListParams {
   dateTo?: string;
   /** Pre-order production status */
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
+  /** Prize-draw reveal status */
+  prizeRevealStatus?: "pending" | "open" | "closed";
   /** Filter by brand name */
   brand?: string;
   /** Shipping / free shipping */

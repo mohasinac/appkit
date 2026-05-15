@@ -4,8 +4,10 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
+import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_STORE_STATUS_TABS } from "../constants/filter-tabs";
 import {
@@ -45,6 +47,7 @@ export interface AdminStoresViewProps extends ListingViewShellProps {}
 
 export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const { openEditPanel, closePanel, isEditOpen, editId } = usePanelUrlSync();
@@ -114,6 +117,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const panelRow = editId ? (rows.find((r) => r.id === editId) ?? null) : null;
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
@@ -132,9 +136,19 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+          showTableView
+          view={view}
+          onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+        />
+
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "manage", label: "Manage Store", variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
         />
 
         {totalPages > 1 && (
@@ -149,17 +163,32 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
               {errorMessage}
             </div>
           )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No stores found"
-            renderRowActions={(row) => (
-              <RowActionMenu actions={[{
-                label: "Manage",
-                onClick: () => openEditPanel(row.id),
-              }]} />
-            )}
-          />
+          {view === "table" ? (
+            <DataTable
+              rows={rows}
+              isLoading={isLoading}
+              emptyLabel="No stores found"
+              selectedIds={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+              onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
+              renderRowActions={(row) => (
+                <RowActionMenu actions={[{
+                  label: "Manage",
+                  onClick: () => openEditPanel(row.id),
+                }]} />
+              )}
+            />
+          ) : (
+            <AdminViewCards
+              rows={rows}
+              view={view}
+              isLoading={isLoading}
+              emptyLabel="No stores found"
+              onRowClick={(row) => openEditPanel(row.id)}
+              selectedIdSet={selection.selectedIdSet}
+              onToggleSelect={selection.toggle}
+            />
+          )}
         </div>
 
         {filterOpen && (

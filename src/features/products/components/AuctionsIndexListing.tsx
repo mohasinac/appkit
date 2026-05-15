@@ -23,7 +23,7 @@ const AUCTION_SORT_OPTIONS = [
   { value: "createdAt", label: "Oldest Listed" },
 ] as const;
 
-const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFrom", "dateTo", "condition"];
+const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFrom", "dateTo"];
 
 export interface AuctionsIndexListingProps {
   initialData?: any;

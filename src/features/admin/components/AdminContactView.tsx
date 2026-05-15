@@ -4,16 +4,15 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import {
-  ConfirmDeleteModal,
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, ConfirmDeleteModal,
   FilterChipGroup,
   ListingToolbar,
   ListingViewShell,
   Pagination,
   RowActionMenu,
-  useToast,
-} from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+  useToast, } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_CONTACT_STATUS_TABS } from "../constants/filter-tabs";
 import {
@@ -23,6 +22,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { AdminContactEditorView } from "./AdminContactEditorView";
 import { apiClient } from "../../../http";
 
@@ -53,6 +53,7 @@ interface ContactRow {
 
 export function AdminContactView({ children, ...props }: AdminContactViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -157,6 +158,8 @@ export function AdminContactView({ children, ...props }: AdminContactViewProps) 
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -174,7 +177,9 @@ export function AdminContactView({ children, ...props }: AdminContactViewProps) 
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

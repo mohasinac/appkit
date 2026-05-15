@@ -3,9 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { BulkActionBar, Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -14,6 +15,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import { AdminFaqEditorView } from "./AdminFaqEditorView";
 
@@ -38,6 +40,7 @@ export interface AdminFaqsViewProps extends ListingViewShellProps {
 
 export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
@@ -106,6 +109,8 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -122,7 +127,9 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
@@ -145,7 +152,11 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No FAQs found" onRowClick={(row) => openEditPanel(row.id)} />
+        {view === "table" ? (
+          <DataTable rows={rows} isLoading={isLoading} emptyLabel="No FAQs found" onRowClick={(row) => openEditPanel(row.id)} />
+        ) : (
+          <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No FAQs found" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
+        )}
       </div>
 
       {filterOpen && (

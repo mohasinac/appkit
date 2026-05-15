@@ -4,8 +4,9 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingToolbar, ListingViewShell, Pagination } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, ListingToolbar, ListingViewShell, Pagination } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -14,6 +15,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { RowActionMenu } from "../../../ui/components/RowActionMenu";
 import { apiClient } from "../../../http";
 import type { AdminTableColumn } from "../types";
@@ -42,6 +44,7 @@ interface CarouselRow {
 
 export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [localRows, setLocalRows] = useState<CarouselRow[]>([]);
   const queryClient = useQueryClient();
@@ -158,6 +161,8 @@ export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: fetchedRows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -246,7 +251,9 @@ export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps
         searchPlaceholder="Search slide titles"
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

@@ -4,8 +4,9 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Modal, RowActionMenu, Button, useToast } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Modal, RowActionMenu, Button, useToast } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_REVIEW_STATUS_TABS, ADMIN_REVIEW_RATING_TABS } from "../constants/filter-tabs";
 import {
@@ -15,6 +16,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { ViewReviewModal } from "../../reviews/components/ReviewModal";
 import type { Review, ReviewStatus } from "../../reviews/types";
 import { apiClient } from "../../../http";
@@ -53,6 +55,7 @@ interface ReviewRow {
 
 export function AdminReviewsView({ renderDetailView, children, ...props }: AdminReviewsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const hasDetailView = Boolean(renderDetailView);
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -167,6 +170,8 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
     );
   }
 
+  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
+
   return (
     <>
       <div className="min-h-screen">
@@ -180,7 +185,9 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
           sortValue={table.get("sort") || DEFAULT_SORT}
           sortOptions={SORT_OPTIONS}
           onSortChange={(v) => { table.set("sort", v); }}
-          hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
         />

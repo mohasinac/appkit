@@ -1,20 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import {
-  Button,
+import { BulkActionBar, Button,
   Div,
   ListingToolbar,
   ListingViewShell,
   Pagination,
   Row,
   SideDrawer,
-  Text,
-} from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+  Text, } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -23,6 +22,7 @@ import {
   useAdminListingData,
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
+import { AdminViewCards } from "./AdminViewCards";
 import { AdminFeatureEditorView } from "./AdminFeatureEditorView";
 import { PRODUCT_FEATURE_SCOPE_TABS } from "../../products/constants/product-features.constants";
 import type { ProductFeatureScope } from "../../products/schemas/product-features";
@@ -96,6 +96,7 @@ export function AdminFeaturesView({
   ...props
 }: AdminFeaturesViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const table = useUrlTable({
     defaults: {
       pageSize: String(PAGE_SIZE),
@@ -148,6 +149,8 @@ export function AdminFeaturesView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return (
       <ListingViewShell portal="admin" {...props}>
@@ -171,7 +174,9 @@ export function AdminFeaturesView({
         onSortChange={(v) => {
           table.set("sort", v);
         }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={

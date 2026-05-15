@@ -37,7 +37,7 @@ export const PRODUCT_FILTER_KEYS = {
     "minPrice",
     "maxPrice",
     "brand",
-    "seller",
+    "storeId",
     "tags",
   ],
 } as const;
@@ -49,7 +49,7 @@ export const PRODUCT_ADMIN_SORT_OPTIONS = [
   { value: "price", label: "Price: Low to High" },
   { value: "title", label: "Title A-Z" },
   { value: "-title", label: "Title Z-A" },
-  { value: "-views", label: "Most Viewed" },
+  { value: "-viewCount", label: "Most Viewed" },
 ] as const;
 
 export const PRODUCT_SELLER_SORT_OPTIONS = [
@@ -67,7 +67,7 @@ export const PRODUCT_PUBLIC_SORT_OPTIONS = [
   { value: "price", label: "Price: Low to High" },
   { value: "title", label: "Title A–Z" },
   { value: "-title", label: "Title Z–A" },
-  { value: "-views", label: "Most Viewed" },
+  { value: "-viewCount", label: "Most Viewed" },
 ] as const;
 
 export function getProductFilterKeys(

@@ -3,8 +3,10 @@
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { AdminViewCards } from "../../admin/components/AdminViewCards";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
@@ -38,6 +40,7 @@ export interface SellerAuctionsViewProps extends ListingViewShellProps {
 
 export function SellerAuctionsView({ renderHeader, children, ...props }: SellerAuctionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -108,6 +111,8 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
   }
@@ -124,7 +129,9 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
         sortValue={table.get("sort") || DEFAULT_SORT}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        showTableView
+        view={view}
+        onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
@@ -141,7 +148,11 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
             {errorMessage}
           </div>
         )}
-        <DataTable rows={rows} isLoading={isLoading} emptyLabel="No auctions found" />
+        {view === "table" ? (
+          <DataTable rows={rows} isLoading={isLoading} emptyLabel="No auctions found" />
+        ) : (
+          <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No auctions found" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
+        )}
       </div>
 
       {filterOpen && (
