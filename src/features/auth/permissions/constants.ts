@@ -80,6 +80,7 @@ export type Permission =
   // Site / CMS
   | "admin:site:read"
   | "admin:site:write"
+  | "admin:settings:write"
   | "admin:navigation:read"
   | "admin:navigation:write"
   | "admin:sections:read"
@@ -290,6 +291,7 @@ export const PERMISSION_GROUPS: Record<
     "admin:dashboard:view",
     "admin:site:read",
     "admin:site:write",
+    "admin:settings:write",
     "admin:navigation:read",
     "admin:navigation:write",
     "admin:sections:read",
@@ -457,6 +459,7 @@ export const ROUTE_PERMISSION_MAP: Record<string, Permission> = {
   "/admin/bids": "admin:bids:read",
   "/admin/media": "admin:media:read",
   "/admin/site": "admin:site:read",
+  "/admin/settings": "admin:settings:write",
   "/admin/navigation": "admin:navigation:read",
   "/admin/sections": "admin:sections:read",
   "/admin/carousel": "admin:carousel:read",
