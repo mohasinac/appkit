@@ -11,13 +11,13 @@ export type RefundType = "full" | "partial";
 export type OrderPayoutStatus = "eligible" | "requested" | "paid";
 export type RefundStatus = "pending" | "processing" | "completed" | "rejected";
 
-/** Runtime-accessible shipping method values â€” use instead of bare string literals. */
+/** Runtime-accessible shipping method values â€" use instead of bare string literals. */
 export const ShippingMethodValues = {
   CUSTOM: "custom",
   SHIPROCKET: "shiprocket",
 } as const satisfies Record<string, ShippingMethod>;
 
-/** Runtime-accessible order status values â€” use instead of bare string literals. */
+/** Runtime-accessible order status values â€" use instead of bare string literals. */
 export const OrderStatusValues = {
   PENDING: "pending",
   CONFIRMED: "confirmed",
@@ -30,7 +30,7 @@ export const OrderStatusValues = {
   RETURNED: "returned",
 } as const satisfies Record<string, OrderStatus>;
 
-/** Runtime-accessible payment status values â€” use instead of bare string literals. */
+/** Runtime-accessible payment status values â€" use instead of bare string literals. */
 export const PaymentStatusValues = {
   PENDING: "pending",
   PROCESSING: "processing",
@@ -40,15 +40,16 @@ export const PaymentStatusValues = {
   PARTIAL_REFUND: "partial_refund",
 } as const satisfies Record<string, PaymentStatus>;
 
-/** Runtime-accessible payment method values â€” use instead of bare string literals. */
+/** Runtime-accessible payment method values â€" use instead of bare string literals. */
 export const PaymentMethodValues = {
   COD: "cod",
   ONLINE: "online",
   UPI_MANUAL: "upi_manual",
   RAZORPAY: "razorpay",
+  ADMIN_BYPASS: "admin_bypass",
 } as const;
 
-/** Runtime-accessible refund status values â€” use instead of bare string literals. */
+/** Runtime-accessible refund status values â€" use instead of bare string literals. */
 export const RefundStatusValues = {
   PENDING: "pending",
   PROCESSING: "processing",
@@ -56,20 +57,20 @@ export const RefundStatusValues = {
   REJECTED: "rejected",
 } as const satisfies Record<string, RefundStatus>;
 
-/** Firestore storage shape for an order line item â€” distinct from the API display model OrderItem */
+/** Firestore storage shape for an order line item â€" distinct from the API display model OrderItem */
 export interface OrderDocumentItem {
   productId: string;
   productTitle: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
-  /** SB8-F â€” set when the item is a prize-draw entry; drives the reveals badge. */
+  /** SB8-F â€" set when the item is a prize-draw entry; drives the reveals badge. */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
-  /** SB8-F â€” per-item reveal status; flips through pending â†’ open â†’ revealed/closed. */
+  /** SB8-F â€" per-item reveal status; flips through pending â†' open â†' revealed/closed. */
   prizeRevealStatus?: "pending" | "open" | "closed" | "revealed";
-  /** SB8-F â€” ISO timestamp; deadline by which the buyer must claim the prize. */
+  /** SB8-F â€" ISO timestamp; deadline by which the buyer must claim the prize. */
   prizeRevealDeadline?: string;
-  /** SB8-F â€” set after the reveal API picks a winner. */
+  /** SB8-F â€" set after the reveal API picks a winner. */
   revealedItemNumber?: number;
 }
 
@@ -163,7 +164,7 @@ export interface OrderDocument {
   payoutId?: string;
   offerId?: string;
 
-  // â”€â”€ SB1-F (S19 2026-05-12) â€” prize-draw + bundle additive fields â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ SB1-F (S19 2026-05-12) â€" prize-draw + bundle additive fields â"€â"€â"€â"€â"€â"€â"€â"€â"€
   /**
    * Populated when the linked product is a prize-draw and the reveal has
    * assigned a prize to this order. `wonAt` is the moment of assignment, not
@@ -177,13 +178,13 @@ export interface OrderDocument {
   };
   /** Deadline for the buyer to claim the won prize (typically 7 days). */
   prizeRevealDeadline?: Date;
-  /** True once `prizeRevealDeadline` passes without a claim â€” auto-forfeit. */
+  /** True once `prizeRevealDeadline` passes without a claim â€" auto-forfeit. */
   prizeRevealExpired?: boolean;
   /** Source product id when the order came from a prize-draw entry. */
   prizeDrawProductId?: string;
   /** True for prize-draw entries and bundle purchases that bypass refund. */
   isNonRefundable?: boolean;
-  /** Set when the order came from a bundle â€” points back to `bundles/{id}`. */
+  /** Set when the order came from a bundle â€" points back to `bundles/{id}`. */
   bundleId?: string;
 
   // ── Multi-order payment batch (S-SBUNI-RULES 2026-05-13) ────────────────
@@ -202,11 +203,14 @@ export interface OrderDocument {
   refunds?: OrderRefundEvent[];
   /**
    * False once ANY refund (full or partial) has been posted. Once false it
-   * stays false — no dispute, RMA request, or “Item Not Received” claim may
+   * stays false — no dispute, RMA request, or "Item Not Received" claim may
    * be filed. Both buyer and seller must acknowledge this in the refund UI
    * via `confirmIrrevocable: true` before the refund is posted.
    */
   contestable?: boolean;
+
+  /** UID of the admin who triggered an admin-bypass checkout. Set only when paymentMethod === "admin_bypass". */
+  adminBypassBy?: string;
 
   // ── Shipping proof (S-SBUNI-RULES 2026-05-13) ───────────────────────────
   /** Signed-URL media slug for a shipping-proof document (label, AWB scan). */

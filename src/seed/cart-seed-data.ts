@@ -3,21 +3,21 @@ import { getDefaultCurrency } from "./seed-market-config";
 const _CURRENCY = getDefaultCurrency();
 
 /**
- * Carts Seed Data â€” LetItRip Collectibles
+ * Carts Seed Data â€" LetItRip Collectibles
  *
  * Covers all cart states for testing Add-to-Cart / Update / Remove / Checkout flows:
- *   â€” Multi-item cart (cross-store, mixed categories) â€” Rahul Sharma
- *   â€” Single-item cart                                â€” Priya Patel
- *   â€” Cart with auction item                          â€” Arjun Singh
- *   â€” Cart with quantity > 1                          â€” Meera Nair
- *   â€” Empty cart (items: [])                          â€” Amit Sharma
+ *   â€" Multi-item cart (cross-store, mixed categories) â€" Rahul Sharma
+ *   â€" Single-item cart                                â€" Priya Patel
+ *   â€" Cart with auction item                          â€" Arjun Singh
+ *   â€" Cart with quantity > 1                          â€" Meera Nair
+ *   â€" Empty cart (items: [])                          â€" Amit Sharma
  *
- * Cart document ID = userId (O(1) lookup â€” see cart.ts schema).
+ * Cart document ID = userId (O(1) lookup â€" see cart.ts schema).
  *
  * All FK references:
- *   userId             â†’ users/{uid}  (see users-seed-data.ts)
- *   items[].productId  â†’ products/{id} (see products-standard/auctions-seed-data.ts)
- *   items[].storeId    â†’ stores/{id}  (see stores-seed-data.ts)
+ *   userId             â†' users/{uid}  (see users-seed-data.ts)
+ *   items[].productId  â†' products/{id} (see products-standard/auctions-seed-data.ts)
+ *   items[].storeId    â†' stores/{id}  (see stores-seed-data.ts)
  */
 
 import type { CartDocument } from "../features/cart/schemas";
@@ -194,7 +194,7 @@ export const cartsSeedData: CartDocument[] = [
     updatedAt: daysAgo(9),
   },
 
-  // â”€â”€ P29 expansion (S17 2026-05-12) â€” 15 more carts via helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // â"€â"€ P29 expansion (S17 2026-05-12) â€" 15 more carts via helper â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
   ...mkCart("user-kavya-iyer", 6, [
     {
       productId: "product-pokemon-151-booster-box",
@@ -308,9 +308,47 @@ export const cartsSeedData: CartDocument[] = [
       listingType: "auction",
     },
   ]),
-  // Guest carts skipped â€” sessionId is a runtime-only optional field on the
+  // Guest carts skipped — sessionId is a runtime-only optional field on the
   // Zod input but not on the `CartDocument` interface used by the seed array.
   // Guest cart behavior is exercised at runtime via localStorage merge tests.
+
+  // -- Admin: personal collector cart (buying rare items from other stores) ---
+  {
+    id: "user-admin-letitrip",
+    userId: "user-admin-letitrip",
+    items: [
+      {
+        itemId: "cartitem-admin-nendoroid-miku-001",
+        productId: "product-nendoroid-hatsune-miku-v4x",
+        productTitle: "Nendoroid: Hatsune Miku V4X — Good Smile Company",
+        productImage: "/media/product-image-nendoroid-hatsune-miku-v4x-1-20260101.jpg",
+        price: 499900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-letitrip-official",
+        storeName: "LetItRip Official",
+        listingType: "standard" as const,
+        addedAt: daysAgo(3),
+        updatedAt: daysAgo(3),
+      },
+      {
+        itemId: "cartitem-admin-alter-rem-001",
+        productId: "product-alter-rem-wedding-scale",
+        productTitle: "ALTER: Re:Zero — Rem Wedding Ver. 1/7 Scale",
+        productImage: "/media/product-image-alter-rem-wedding-scale-1-20260101.jpg",
+        price: 1899900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-tokyo-toys-india",
+        storeName: "Tokyo Toys India",
+        listingType: "standard" as const,
+        addedAt: daysAgo(2),
+        updatedAt: daysAgo(2),
+      },
+    ],
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(2),
+  },
 ];
 
 interface CartItemSpec {

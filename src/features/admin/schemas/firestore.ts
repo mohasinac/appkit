@@ -356,6 +356,8 @@ export interface SiteSettingsDocument {
     gstPercent?: number;
     gatewayFeePercent?: number;
     autoPayoutWindowDays?: number;
+    /** Minimum amount in rupees that a user must pay per online transaction. 0 = no minimum. No order or fee can be negative. */
+    minimumOrderFee?: number;
   };
   socialLinks: {
     facebook?: string;
@@ -395,6 +397,8 @@ export interface SiteSettingsDocument {
     sellerRegistration: boolean;
     preOrders: boolean;
     seedPanel: boolean;
+    /** When true, admin users see a bypass button in checkout that skips OTP and payment. Server-enforced. */
+    adminCheckoutBypass?: boolean;
     // SB-UNI-X4 2026-05-13 — per-type feature flags. Disabled types are
     // hidden from listings + reject create/add-to-cart via the
     // isListingTypeEnabled / isCategoryTypeEnabled helpers.

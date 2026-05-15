@@ -75,4 +75,12 @@ export const wishlistsSeedData: WishlistSeedDocument[] = [
     { productId: "preorder-beyblade-x-bx10-booster", productType: "preorder", addedAt: daysAgo(3) },
     { productId: "preorder-shf-broly-super-hero", productType: "preorder", addedAt: daysAgo(1) },
   ]),
+
+  // Admin's personal wishlist — rare high-value collectibles
+  makeDoc("user-admin-letitrip", [
+    { productId: "product-mafex-miles-morales-spiderman", productType: "product", addedAt: daysAgo(60) },
+    { productId: "product-figma-link-totk", productType: "product", addedAt: daysAgo(45) },
+    { productId: "auction-pokemon-mew-1st-edition-psa10", productType: "auction", addedAt: daysAgo(20) },
+    { productId: "product-alter-rem-wedding-scale", productType: "product", addedAt: daysAgo(8) },
+  ]),
 ];

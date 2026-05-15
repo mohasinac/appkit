@@ -148,6 +148,33 @@ export function MarketplacePreorderCard({
           )}
         </Div>
 
+        <Div className="absolute left-2 top-2 flex flex-col gap-1 pointer-events-none">
+          {product.partOfBundleIds && product.partOfBundleIds.length > 0 && (
+            <Span
+              className="rounded-full bg-teal-600 px-2 py-0.5 text-xs font-bold text-white"
+              title={product.partOfBundleTitles?.[0] ? `In bundle: ${product.partOfBundleTitles[0]}` : "In a bundle"}
+            >
+              Bundled
+            </Span>
+          )}
+          {product.groupId && (
+            <Span
+              className="rounded-full bg-indigo-600 px-2 py-0.5 text-xs font-bold text-white"
+              title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
+            >
+              {product.isGroupParent ? "Set Parent" : "In Set"}
+            </Span>
+          )}
+          {product.sublistingCategoryId && (
+            <Span
+              className="rounded-full bg-sky-600 px-2 py-0.5 text-xs font-bold text-white"
+              title="Has variants or sub-listings"
+            >
+              Has Variants
+            </Span>
+          )}
+        </Div>
+
         {onSelect && (
           <BaseListingCard.Checkbox
             selected={isSelected}

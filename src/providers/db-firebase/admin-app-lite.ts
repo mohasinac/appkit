@@ -34,6 +34,9 @@ export function getAdminAppLite(): App {
   }
 
   const keyPath = nodePath().join(nodeCwd(), "firebase-admin-key.json");
+  const storageBucket =
+    process.env.FIREBASE_ADMIN_STORAGE_BUCKET?.trim() ??
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET?.trim();
   let app: App;
 
   if (nodeFs().existsSync(keyPath)) {
@@ -42,7 +45,7 @@ export function getAdminAppLite(): App {
       process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
       `https://${sa.project_id}-default-rtdb.firebaseio.com`;
 
-    app = initializeApp({ credential: cert(keyPath), databaseURL: dbUrl });
+    app = initializeApp({ credential: cert(keyPath), databaseURL: dbUrl, ...(storageBucket && { storageBucket }) });
   } else if (
     process.env.FIREBASE_ADMIN_PROJECT_ID &&
     process.env.FIREBASE_ADMIN_CLIENT_EMAIL &&
@@ -61,6 +64,7 @@ export function getAdminAppLite(): App {
         privateKey: parsePrivateKey(process.env.FIREBASE_ADMIN_PRIVATE_KEY),
       }),
       databaseURL: dbUrl,
+      ...(storageBucket && { storageBucket }),
     });
   } else if (
     // Application Default Credentials path — used by Firebase Functions /
@@ -88,7 +92,10 @@ export function getAdminAppLite(): App {
       process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
       (projectId ? `https://${projectId}-default-rtdb.firebaseio.com` : undefined);
 
-    app = initializeApp(dbUrl ? { databaseURL: dbUrl } : undefined);
+    app = initializeApp({
+      ...(dbUrl && { databaseURL: dbUrl }),
+      ...(storageBucket && { storageBucket }),
+    });
   } else {
     throw new Error(
       "@mohasinac/db-firebase: Firebase Admin credentials not found.",

@@ -226,14 +226,14 @@ export const addressesSeedData: AddressSeedData[] = [
   },
 
   // ============================================
-  // Admin User's Address
+  // Admin User's Addresses (user-admin-letitrip)
   // ============================================
   {
     id: "addr-admin-primary-1707400017",
-    userId: "user-admin-user-admin",
-    label: "Primary",
-    fullName: "Admin User",
-    phone: `${_phonePrefix}9876543210`,
+    userId: "user-admin-letitrip",
+    label: "Office (LetItRip HQ)",
+    fullName: "LetItRip Admin",
+    phone: `${_phonePrefix}9876500000`,
     addressLine1: "LetItRip HQ, 10th Floor",
     addressLine2: "BKC, G Block",
     city: "Mumbai",
@@ -241,7 +241,24 @@ export const addressesSeedData: AddressSeedData[] = [
     postalCode: "400051",
     country: _locale.countryName,
     isDefault: true,
-    createdAt: daysAgo(799),
-    updatedAt: daysAgo(799),
+    createdAt: daysAgo(399),
+    updatedAt: daysAgo(30),
+  },
+  {
+    id: "addr-admin-home-1707400018",
+    userId: "user-admin-letitrip",
+    label: "Home",
+    fullName: "LetItRip Admin",
+    phone: `${_phonePrefix}9876500000`,
+    addressLine1: "A-1204, Kalpataru Horizon",
+    addressLine2: "S.K. Ahire Marg, Worli",
+    landmark: "Near Worli Sea Face",
+    city: "Mumbai",
+    state: "Maharashtra",
+    postalCode: "400018",
+    country: _locale.countryName,
+    isDefault: false,
+    createdAt: daysAgo(300),
+    updatedAt: daysAgo(30),
   },
 ];

@@ -133,6 +133,10 @@ export interface CreateCheckoutOrderInput {
   paymentMethod: CheckoutPaymentMethod;
   notes?: string;
   excludedProductIds?: string[];
+  /** When true this is an admin test order — OTP consent is pre-granted and the order is created paid/processing. */
+  adminBypass?: boolean;
+  /** UID of the admin who triggered the bypass. Set when adminBypass is true. */
+  adminBypassBy?: string;
 }
 
 interface StockResult {
@@ -158,6 +162,8 @@ export async function createCheckoutOrderAction(
     paymentMethod,
     notes,
     excludedProductIds = [],
+    adminBypass = false,
+    adminBypassBy,
   } = input;
 
   const siteSettings = await siteSettingsRepository.getSingleton();
@@ -256,7 +262,7 @@ export async function createCheckoutOrderAction(
           { _failReason: reason },
         );
       }
-      const emailOtpUsed = otpData.verifiedVia !== "sms";
+      const emailOtpUsed = otpData.verifiedVia !== "sms" && otpData.verifiedVia !== "admin_bypass";
 
       // SB-UNI-5 2026-05-13 — bundle-aware stock fan-out. Build the unique
       // product-id set across the whole cart (regular items + each bundle's
@@ -386,6 +392,12 @@ export async function createCheckoutOrderAction(
 
   const appliedCoupons = cart.appliedCoupons ?? [];
   const orderGroups = splitCartIntoOrderGroups(available);
+
+  // Admin-bypass orders are immediately paid and processing; generate a shared
+  // transaction reference for all orders in this checkout batch.
+  const adminBatchId = adminBypass
+    ? `ADMIN-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`
+    : undefined;
 
   const orderIds: string[] = [];
   let total = 0;
@@ -558,14 +570,16 @@ export async function createCheckoutOrderAction(
       items: orderItems,
       orderType,
       offerId: firstItem.offerId ?? undefined,
-      status: OrderStatusValues.PENDING,
-      paymentStatus: PaymentStatusValues.PENDING,
-      paymentMethod,
+      status: adminBypass ? OrderStatusValues.PROCESSING : OrderStatusValues.PENDING,
+      paymentStatus: adminBypass ? PaymentStatusValues.PAID : PaymentStatusValues.PENDING,
+      paymentMethod: adminBypass ? "admin_bypass" : paymentMethod,
+      paymentId: adminBatchId,
+      adminBypassBy: adminBypassBy,
       shippingAddress,
       notes,
       shippingFee: shippingFee > 0 ? shippingFee : undefined,
-      depositAmount,
-      codRemainingAmount,
+      depositAmount: adminBypass ? undefined : depositAmount,
+      codRemainingAmount: adminBypass ? undefined : codRemainingAmount,
       couponCode: appliedDiscounts[0]?.code,
       couponDiscount: couponDiscount > 0 ? couponDiscount : undefined,
       appliedDiscounts: appliedDiscounts.length > 0 ? appliedDiscounts : undefined,
@@ -602,7 +616,7 @@ export async function createCheckoutOrderAction(
       storeOwnerId,
       productLabel:
         orderItems.length > 1 ? `${orderItems.length} items` : firstItem.productTitle,
-      paid: false,
+      paid: adminBypass,
     });
   }
 

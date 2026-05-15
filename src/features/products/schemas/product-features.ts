@@ -36,6 +36,10 @@ export type ProductFeatureProductType =
   | "product"
   | "auction"
   | "preorder"
+  | "prize-draw"
+  | "classified"
+  | "digital-code"
+  | "live"
   | "all";
 
 /**

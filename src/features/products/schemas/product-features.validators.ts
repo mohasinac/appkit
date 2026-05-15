@@ -12,6 +12,10 @@ export const PRODUCT_FEATURE_PRODUCT_TYPE_ENUM = z.enum([
   "product",
   "auction",
   "preorder",
+  "prize-draw",
+  "classified",
+  "digital-code",
+  "live",
   "all",
 ]);
 

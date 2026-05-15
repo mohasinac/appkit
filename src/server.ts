@@ -776,6 +776,8 @@ export { sendCheckoutConsentOtp } from "./features/checkout/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // verifyCheckoutConsentOtp - Shared export for verify checkout consent otp.
 export { verifyCheckoutConsentOtp } from "./features/checkout/server";
+// grantAdminCheckoutBypass - Admin bypass that skips OTP + payment for admin-placed orders.
+export { grantAdminCheckoutBypass } from "./features/checkout/server";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // sendContactEmail - Shared export for send contact email.
 export { sendContactEmail } from "./features/contact/server";

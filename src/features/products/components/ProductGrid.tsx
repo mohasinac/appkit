@@ -157,6 +157,24 @@ export function ProductCard<T extends ProductItem = ProductItem>({
                   Bundled
                 </Span>
               )}
+              {/* "Set" pill — product is part of a curated group/set */}
+              {product.groupId && (
+                <Span
+                  className="rounded-full bg-indigo-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  title={product.groupTitle ? `Part of set: ${product.groupTitle}` : "Part of a set"}
+                >
+                  {product.isGroupParent ? "Set Parent" : "In Set"}
+                </Span>
+              )}
+              {/* "Variants" pill — product has sub-listings/variants */}
+              {product.sublistingCategoryId && (
+                <Span
+                  className="rounded-full bg-sky-600 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm"
+                  title="Has variants or sub-listings"
+                >
+                  Has Variants
+                </Span>
+              )}
             </>
           )}
         </Div>
@@ -209,12 +227,18 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {(product.categoryName || product.brand) && (
           <Row className="mt-1 gap-1 flex-wrap">
             {product.categoryName && (
-              <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[90px]">
+              <Span className="inline-flex items-center gap-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[100px]">
+                <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
+                </svg>
                 {product.categoryName}
               </Span>
             )}
             {product.brand && (
-              <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[80px]">
+              <Span className="inline-flex items-center gap-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[90px]">
+                <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
                 {product.brand}
               </Span>
             )}

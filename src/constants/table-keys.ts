@@ -38,6 +38,9 @@ export const TABLE_KEYS = {
   CATEGORY_SLUG: "categorySlug",
   SHOW_UNREAD: "showUnread",
   TYPE: "type",
+  IS_PART_OF_BUNDLE: "isPartOfBundle",
+  SUBLISTING_CATEGORY: "sublistingCategory",
+  FEATURES: "features",
 } as const;
 
 export type TableKey = (typeof TABLE_KEYS)[keyof typeof TABLE_KEYS];

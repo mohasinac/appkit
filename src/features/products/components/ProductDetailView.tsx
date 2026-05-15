@@ -18,6 +18,8 @@ export interface ProductDetailViewProps extends Omit<
   /** Rendered below the sub-listing section and above the tabs (e.g. group carousel). */
   renderGroupSection?: () => React.ReactNode;
   renderTabs?: () => React.ReactNode;
+  /** Bundle membership section rendered below tabs and above related products. */
+  renderBundleSection?: () => React.ReactNode;
   renderRelated?: () => React.ReactNode;
   /**
    * When true (default), the action rail (col 3) becomes sticky on desktop so
@@ -38,6 +40,7 @@ export function ProductDetailView({
   renderSublistingSection,
   renderGroupSection,
   renderTabs,
+  renderBundleSection,
   renderRelated,
   isLoading = false,
   stickyActionRail = true,
@@ -68,7 +71,7 @@ export function ProductDetailView({
         renderActions?.(),
       ]}
       afterMain={afterMainNode}
-      belowFold={[renderTabs?.(), renderRelated?.()]}
+      belowFold={[renderTabs?.(), renderBundleSection?.(), renderRelated?.()]}
     />
   );
 }

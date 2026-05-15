@@ -401,6 +401,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     gstPercent: 18,
     gatewayFeePercent: 2,
     autoPayoutWindowDays: 7,
+    minimumOrderFee: 0,
   },
   featureFlags: {
     chats: true,
@@ -416,6 +417,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     sellerRegistration: true,
     preOrders: true,
     seedPanel: true,
+    adminCheckoutBypass: false,
   },
   // VA8 ⑧ Integrations — placeholder credentials (replace with real values in Firestore/admin panel)
   credentials: {

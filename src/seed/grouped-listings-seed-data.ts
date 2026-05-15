@@ -193,6 +193,55 @@ export const groupedListingsSeedData: Partial<GroupedListingDocument>[] = [
     updatedAt: daysAgo(1),
   },
 
+  // ── 9. Admin Curated — Articulated Figure Display Set (LetItRip Official) ─
+  {
+    id: "group-letitrip-figure-display-set",
+    slug: "group-letitrip-figure-display-set",
+    title: "LetItRip Curated: Premium Articulated Figure Display Set",
+    description: "Hand-picked by LetItRip's curation team — three of the finest articulated figures available right now. figma Link (TotK) for the gaming shelf, MAFEX Miles Morales for the superhero cabinet, and S.H.Figuarts UI Goku for the anime corner. All official, all brand-new. Bundled for a saving of ₹1,500 vs buying separately.",
+    productIds: [
+      "product-figma-link-totk",
+      "product-mafex-miles-morales-spiderman",
+      "product-shf-ultra-instinct-goku",
+    ],
+    groupTheme: "related" as const,
+    minActiveMembers: 2,
+    activeMemberCount: 3,
+    visibilityStatus: "visible" as const,
+    coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
+    isActive: true,
+    isFeatured: true,
+    storeId: "store-letitrip-official",
+    categorySlug: "category-poseable-figures",
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── 10. Admin Curated — Anime Funko Pop Starter Set (LetItRip Official) ───
+  {
+    id: "group-letitrip-funko-anime-starter",
+    slug: "group-letitrip-funko-anime-starter",
+    title: "LetItRip Curated: Anime Funko Pop Starter Collection",
+    description: "Build your Funko Pop shelf from scratch with this admin-curated set. Gojo Satoru (#1373, blindfold ver.) + Tanjiro & Nezuko Deluxe Diorama — two of the most requested Funko Pops in our anime lineup. Perfect entry point or gift set.",
+    productIds: [
+      "product-funko-pop-gojo-satoru",
+      "product-funko-pop-tanjiro-dlx",
+    ],
+    groupTheme: "related" as const,
+    minActiveMembers: 2,
+    activeMemberCount: 2,
+    visibilityStatus: "visible" as const,
+    coverImage: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop",
+    isActive: true,
+    isFeatured: true,
+    storeId: "store-letitrip-official",
+    categorySlug: "category-vinyl-figures",
+    createdBy: "user-admin-letitrip",
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(1),
+  },
+
   // ── 8. Funko Pop Anime Collector Set (Tokyo Toys India) ───────────────────
   {
     id: "group-funko-pop-anime-trio",

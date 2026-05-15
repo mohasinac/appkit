@@ -239,6 +239,8 @@ export {
   type CheckoutPaymentMethod,
 } from "./_internal/server/features/checkout/index";
 
+export { grantAdminCheckoutBypass } from "./features/checkout/server";
+
 // S-SBUNI-RULES: refund action
 export {
   processRefundAction,

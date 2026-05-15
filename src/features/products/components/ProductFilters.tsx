@@ -24,6 +24,9 @@ export const PRODUCT_FILTER_KEYS = {
     TABLE_KEYS.SELLER,
     TABLE_KEYS.TAGS,
     TABLE_KEYS.STATUS,
+    TABLE_KEYS.SUBLISTING_CATEGORY,
+    TABLE_KEYS.IS_PART_OF_BUNDLE,
+    TABLE_KEYS.FEATURES,
   ],
   seller: [
     TABLE_KEYS.CATEGORY,
@@ -33,6 +36,9 @@ export const PRODUCT_FILTER_KEYS = {
     TABLE_KEYS.BRAND,
     TABLE_KEYS.TAGS,
     TABLE_KEYS.STATUS,
+    TABLE_KEYS.SUBLISTING_CATEGORY,
+    TABLE_KEYS.IS_PART_OF_BUNDLE,
+    TABLE_KEYS.FEATURES,
   ],
   public: [
     TABLE_KEYS.CATEGORY,
@@ -42,6 +48,9 @@ export const PRODUCT_FILTER_KEYS = {
     TABLE_KEYS.BRAND,
     TABLE_KEYS.STORE_ID,
     TABLE_KEYS.TAGS,
+    TABLE_KEYS.SUBLISTING_CATEGORY,
+    TABLE_KEYS.IS_PART_OF_BUNDLE,
+    TABLE_KEYS.FEATURES,
   ],
 } as const;
 
@@ -103,12 +112,18 @@ export interface ProductFiltersProps {
   /** @deprecated use storeOptions */
   sellerOptions?: FacetOption[];
   tagOptions?: FacetOption[];
+  /** Sublisting category options — separate from main category filter */
+  sublistingCategoryOptions?: FacetOption[];
+  /** Feature badge options for filtering by product features */
+  featureOptions?: FacetOption[];
   showStatus?: boolean;
   variant?: ProductFilterVariant;
   statusOptions?: FacetOption[];
   currencyPrefix?: string;
   /** Show free-shipping toggle */
   showShipping?: boolean;
+  /** Show "part of a bundle" switch filter (default true) */
+  showBundleFilter?: boolean;
 }
 
 export function ProductFilters({
@@ -118,11 +133,14 @@ export function ProductFilters({
   storeOptions = [],
   sellerOptions,
   tagOptions = [],
+  sublistingCategoryOptions = [],
+  featureOptions = [],
   showStatus = false,
   variant,
   statusOptions,
   currencyPrefix = "",
   showShipping = true,
+  showBundleFilter = true,
 }: ProductFiltersProps) {
   const resolvedStoreOptions = storeOptions.length > 0 ? storeOptions : (sellerOptions ?? []);
   const t = useTranslations("filters");
@@ -140,20 +158,18 @@ export function ProductFilters({
     { value: PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK, label: t("statusOutOfStock") },
   ];
 
-  const selectedCategories = table.get(TABLE_KEYS.CATEGORY)
-    ? table.get(TABLE_KEYS.CATEGORY).split("|").filter(Boolean)
-    : [];
-  const selectedBrands = table.get(TABLE_KEYS.BRAND) ? [table.get(TABLE_KEYS.BRAND)] : [];
-  const selectedSellers = table.get(TABLE_KEYS.STORE_ID) ? [table.get(TABLE_KEYS.STORE_ID)] : [];
-  const selectedConditions = table.get(TABLE_KEYS.CONDITION)
-    ? table.get(TABLE_KEYS.CONDITION).split("|").filter(Boolean)
-    : [];
-  const selectedTags = table.get(TABLE_KEYS.TAGS)
-    ? table.get(TABLE_KEYS.TAGS).split("|").filter(Boolean)
-    : [];
-  const selectedStatuses = table.get(TABLE_KEYS.STATUS)
-    ? table.get(TABLE_KEYS.STATUS).split("|").filter(Boolean)
-    : [];
+  const splitPipe = (key: string) =>
+    table.get(key) ? table.get(key).split("|").filter(Boolean) : [];
+
+  const selectedCategories = splitPipe(TABLE_KEYS.CATEGORY);
+  const selectedBrands = splitPipe(TABLE_KEYS.BRAND);
+  const selectedSellers = splitPipe(TABLE_KEYS.STORE_ID);
+  const selectedConditions = splitPipe(TABLE_KEYS.CONDITION);
+  const selectedTags = splitPipe(TABLE_KEYS.TAGS);
+  const selectedStatuses = splitPipe(TABLE_KEYS.STATUS);
+  const selectedSublistings = splitPipe(TABLE_KEYS.SUBLISTING_CATEGORY);
+  const selectedFeatures = splitPipe(TABLE_KEYS.FEATURES);
+
   const resolvedVariant: ProductFilterVariant =
     variant ?? (showStatus ? "admin" : "public");
   const shouldShowStatus = resolvedVariant !== "public" || showStatus;
@@ -201,7 +217,7 @@ export function ProductFilters({
           title={t("brand")}
           options={brandOptions}
           selected={selectedBrands}
-          onChange={(vals) => table.set(TABLE_KEYS.BRAND, vals[0] ?? "")}
+          onChange={(vals) => table.set(TABLE_KEYS.BRAND, vals.join("|"))}
           searchable={brandOptions.length > 4}
           defaultCollapsed={brandOptions.length > 6}
         />
@@ -212,7 +228,7 @@ export function ProductFilters({
           title={t("store")}
           options={resolvedStoreOptions}
           selected={selectedSellers}
-          onChange={(vals) => table.set(TABLE_KEYS.STORE_ID, vals[0] ?? "")}
+          onChange={(vals) => table.set(TABLE_KEYS.STORE_ID, vals.join("|"))}
           searchable={resolvedStoreOptions.length > 4}
           defaultCollapsed={resolvedStoreOptions.length > 6}
         />
@@ -247,6 +263,38 @@ export function ProductFilters({
           onChange={(vals) => table.set(TABLE_KEYS.STATUS, vals.join("|"))}
           searchable={false}
           defaultCollapsed={false}
+        />
+      )}
+
+      {sublistingCategoryOptions.length > 0 && (
+        <FilterFacetSection
+          title="Sublisting Type"
+          options={sublistingCategoryOptions}
+          selected={selectedSublistings}
+          onChange={(vals) => table.set(TABLE_KEYS.SUBLISTING_CATEGORY, vals.join("|"))}
+          searchable={sublistingCategoryOptions.length > 4}
+          defaultCollapsed={false}
+        />
+      )}
+
+      {showBundleFilter && (
+        <SwitchFilter
+          title="Bundles"
+          label="Part of a bundle only"
+          checked={table.get(TABLE_KEYS.IS_PART_OF_BUNDLE) === "true"}
+          onChange={(v) => table.set(TABLE_KEYS.IS_PART_OF_BUNDLE, v ? "true" : "")}
+          defaultCollapsed={false}
+        />
+      )}
+
+      {featureOptions.length > 0 && (
+        <FilterFacetSection
+          title="Features"
+          options={featureOptions}
+          selected={selectedFeatures}
+          onChange={(vals) => table.set(TABLE_KEYS.FEATURES, vals.join("|"))}
+          searchable={featureOptions.length > 4}
+          defaultCollapsed={featureOptions.length > 4}
         />
       )}
     </Div>

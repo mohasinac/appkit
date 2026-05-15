@@ -155,4 +155,38 @@ export async function grantCheckoutConsentViaSms(
   );
 }
 
+/**
+ * Grants checkout consent for an admin test order, bypassing the normal OTP flow.
+ *
+ * The resulting Firestore doc is identical to a verified consent OTP so that
+ * `createCheckoutOrderAction` can proceed without modification.  The
+ * `verifiedVia: "admin_bypass"` marker prevents bypass-credit grants.
+ *
+ * Security: callers MUST verify the requesting user is an admin AND that
+ * `siteSettings.featureFlags.adminCheckoutBypass === true` before calling this.
+ */
+export async function grantAdminCheckoutBypass(
+  userId: string,
+  addressId: string,
+  bypassingAdminUid: string,
+): Promise<void> {
+  const address = await findUserAddress(userId, addressId);
+  if (!address) throw new ValidationError("Address not found.");
+
+  await saveConsentOtp(userId, addressId, {
+    codeHash: "",
+    expiresAt: new Date(Date.now() + CONSENT_OTP_EXPIRY_MS),
+    attempts: 0,
+    verified: true,
+    verifiedVia: "admin_bypass",
+    adminBypassBy: bypassingAdminUid,
+    addressId,
+    createdAt: new Date(),
+  });
+
+  serverLogger.info(
+    `Admin checkout bypass granted: uid=${userId} addressId=${addressId} bypassedBy=${bypassingAdminUid}`,
+  );
+}
+
 export { userRepository };

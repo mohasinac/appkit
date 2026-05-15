@@ -86,10 +86,15 @@ export function SellerCouponEditorView({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <Stack gap="none" className="max-w-lg mx-auto">
-        <Div className="border-b border-[var(--appkit-color-border,#e5e7eb)] dark:border-[var(--appkit-color-border-dark,#374151)] px-6 py-5">
+      <Stack gap="none" className="max-w-lg mx-auto rounded-xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] shadow-sm overflow-hidden">
+        <div
+          className="h-[3px] w-full"
+          style={{ background: "linear-gradient(to right,var(--appkit-color-primary-700,#1343de) 0%,var(--appkit-color-cobalt,#3570fc) 55%,var(--appkit-color-secondary-400,#84e122) 100%)" }}
+          aria-hidden="true"
+        />
+        <Div className="border-b border-[var(--appkit-color-border)] px-6 py-5">
           <Row className="items-center justify-between gap-3">
-            <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text-primary)]">
+            <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)]">
               {isEdit ? "Edit Coupon" : "Create Coupon"}
             </Heading>
             {isEdit && (
@@ -238,7 +243,7 @@ export function SellerCouponEditorView({
         </Stack>
 
         {/* Footer actions */}
-        <Div className="border-t border-[var(--appkit-color-border)] dark:border-[var(--appkit-color-border-dark)] px-6 py-4">
+        <Div className="border-t border-[var(--appkit-color-border)] px-6 py-4">
           <Row className="items-center justify-end gap-3">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>

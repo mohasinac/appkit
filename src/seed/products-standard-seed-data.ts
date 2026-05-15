@@ -18,6 +18,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-pokemon-sv-etb",
     slug: "product-pokemon-sv-etb",
+    partOfBundleIds: ["group-pokemon-starter-bundle"],
+    partOfBundleTitles: ["Pokémon TCG Starter Bundle — ETB + Deck Box + Sleeves"],
     title: "Pokémon TCG: Scarlet & Violet — Paldean Fates Elite Trainer Box",
     description:
       "The Paldean Fates Elite Trainer Box is packed with Pokémon from the Paldea region in their special Shiny forms. Includes 9 Scarlet & Violet—Paldean Fates booster packs, 65 Pokémon card sleeves featuring Shiny Tinkaton ex, 45 Pokémon TCG Energy cards, a player's guide to the set, 6 damage-counter dice, 1 competition-legal coin-flip die, 2 plastic condition markers, and a collector's box.",
@@ -137,6 +139,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-pokemon-pikachu-plush-8",
     slug: "product-pokemon-pikachu-plush-8",
+    partOfBundleIds: ["group-pokemon-starter-bundle", "group-pokemon-plush-pair"],
+    partOfBundleTitles: ["Pokémon TCG Starter Bundle — ETB + Deck Box + Sleeves", "Pokémon Plush Gift Pair — Pikachu + Gengar"],
     title: "Pokémon Center: Pikachu Sitting Cuties Plush — 8 Inch",
     description:
       "Official Pokémon Center Pikachu Sitting Cuties plush, 8 inches tall. Super-soft, detailed embroidery, and safe for all ages. Comes in original Pokémon Center hang-tag packaging. A must-have for every Pokémon fan — the iconic expression and bright yellow colouring make this Pikachu plush a display favourite.",
@@ -188,6 +192,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-pokemon-gengar-sitting-cuties",
     slug: "product-pokemon-gengar-sitting-cuties",
+    partOfBundleIds: ["group-pokemon-plush-pair"],
+    partOfBundleTitles: ["Pokémon Plush Gift Pair — Pikachu + Gengar"],
     title: "Pokémon Center: Gengar Sitting Cuties Plush — 12 Inch",
     description:
       "Official Pokémon Center Gengar Sitting Cuties plush in a 12-inch extra-large size. Everyone's favourite Ghost-type Pokémon rendered in super-soft plush with its iconic grin. Perfect display piece and gift. Comes with original Pokémon Center hang-tag. Limited availability — direct import from the official Pokémon Center Japan.",
@@ -314,6 +320,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-yugioh-25th-tin",
     slug: "product-yugioh-25th-tin",
+    partOfBundleIds: ["group-yugioh-tournament-pair"],
+    partOfBundleTitles: ["Yu-Gi-Oh! Tournament Ready — 25th Tin + Structure Deck"],
     title: "Yu-Gi-Oh! 25th Anniversary Tin: Dueling Mirrors",
     description:
       "Celebrate 25 years of the Yu-Gi-Oh! Trading Card Game with this premium anniversary tin. Contains 3 Mega-Packs of 16 cards each (48 cards total), including a guaranteed Ghost Rare and 3 Secret Rares per tin. Features reprint versions of popular tournament staples in ultra-rare foil treatments. The commemorative tin itself is a collector's piece with 25th anniversary embossing and gold foil detail.",
@@ -374,6 +382,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-yugioh-structure-albaz",
     slug: "product-yugioh-structure-albaz",
+    partOfBundleIds: ["group-yugioh-tournament-pair"],
+    partOfBundleTitles: ["Yu-Gi-Oh! Tournament Ready — 25th Tin + Structure Deck"],
     title: "Yu-Gi-Oh! Structure Deck: Alba Strike",
     description:
       "A ready-to-play 41-card Structure Deck featuring the Albaz-related cards and Fallen of Albaz strategies. Includes powerful 'Mirrorjade the Iceblade Dragon' and 'Despian Tragedy'. Ideal for beginner-to-intermediate players looking to build a competitive Dogmatika/Albaz fusion strategy. The deck features 2 Ultra Rare, 2 Super Rare, and 37 Common cards, along with a Deck Guide and game mat.",
@@ -436,6 +446,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hot-wheels-redline-1969-camaro",
     slug: "product-hot-wheels-redline-1969-camaro",
+    partOfBundleIds: ["group-hot-wheels-car-culture-3pack"],
+    partOfBundleTitles: ["Hot Wheels Car Culture Collector 3-Pack"],
     title:
       "Hot Wheels Redline 1969 Custom Camaro — Orange (Vintage, Near Mint)",
     description:
@@ -501,6 +513,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-hot-wheels-premium-5pack",
     slug: "product-hot-wheels-premium-5pack",
+    partOfBundleIds: ["group-hot-wheels-car-culture-3pack"],
+    partOfBundleTitles: ["Hot Wheels Car Culture Collector 3-Pack"],
     title: "Hot Wheels Car Culture: Modern Classics Premium 5-Pack",
     description:
       "Hot Wheels Car Culture Modern Classics 5-car premium set featuring iconic Japanese performance cars: Honda S2000, Mazda RX-7 (FD), Nissan Skyline GT-R (R34), Toyota Supra (A80), and Honda NSX (NA1). Premium rubber tyres, opening hoods on select vehicles, and individually numbered collector cards. Each car has authentic die-cast metal construction with premium paint finish.",
@@ -560,6 +574,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-tomica-limited-datsun",
     slug: "product-tomica-limited-datsun",
+    partOfBundleIds: ["group-hot-wheels-car-culture-3pack"],
+    partOfBundleTitles: ["Hot Wheels Car Culture Collector 3-Pack"],
     title: "Tomica Limited Vintage: Datsun Fairlady 240Z (Silver) — TLV-N43",
     description:
       "Tomica Limited Vintage precision diecast of the iconic Datsun Fairlady 240Z in silver. Part of the premium TLV-Vintage series — highly detailed 1:64 scale model with opening doors, rubber tyres, and photo-etched badges. The 240Z is widely regarded as one of the most beautiful Japanese sports cars ever made and TLV captures every curve faithfully. Comes in original Tomica Limited Vintage box with protective tray.",
@@ -753,6 +769,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-shf-goku-ultra-instinct",
     slug: "product-shf-goku-ultra-instinct",
+    partOfBundleIds: ["group-anime-figure-duo-rem-goku"],
+    partOfBundleTitles: ["Anime Figure Duo — Nendoroid Rem + S.H.Figuarts Goku"],
     title:
       "Bandai S.H.Figuarts Son Goku -Ultra Instinct- (Dragon Ball Super: Super Hero Ver.)",
     description:
@@ -815,6 +833,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-nendoroid-rem-rezero",
     slug: "product-nendoroid-rem-rezero",
+    partOfBundleIds: ["group-anime-figure-duo-rem-goku"],
+    partOfBundleTitles: ["Anime Figure Duo — Nendoroid Rem + S.H.Figuarts Goku"],
     title: "Good Smile Company Nendoroid Rem (Re:Zero) — #663",
     description:
       "Good Smile Company's iconic Nendoroid #663 — Rem from Re:Zero -Starting Life in Another World-. This is one of the best-selling Nendoroids of all time and a must-have for any Re:Zero fan. Stands approximately 10 cm tall in typical Nendoroid cute chibi style. Includes 3 expression faceplates (standard, smiling, and combat), 3 optional hand parts, her morning star weapon, and a Nendoroid stand. Re-release edition in standard packaging.",
@@ -876,6 +896,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-funko-pop-naruto-sage",
     slug: "product-funko-pop-naruto-sage",
+    partOfBundleIds: ["group-funko-pop-anime-trio"],
+    partOfBundleTitles: ["Funko Pop! Anime Collector Set — Naruto + Batman"],
     title: "Funko Pop! Animation: Naruto Shippuden — Naruto Sage Mode #932",
     description:
       "Funko Pop! Naruto Uzumaki in Sage Mode (#932) from Naruto Shippuden. Features Naruto in his iconic Sage Mode toad markings with orange and black design. Stands approximately 9.5 cm tall in the standard Funko Pop vinyl style with oversized head and solid black eyes. Comes in original window box. Perfect for display on any shelf — great gift for Naruto fans.",
@@ -935,6 +957,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-mcfarlane-batman-dark-knight",
     slug: "product-mcfarlane-batman-dark-knight",
+    partOfBundleIds: ["group-funko-pop-anime-trio"],
+    partOfBundleTitles: ["Funko Pop! Anime Collector Set — Naruto + Batman"],
     title:
       "McFarlane Toys DC Multiverse: Batman (The Dark Knight Returns) 7-Inch Figure",
     description:
@@ -997,6 +1021,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-gundam-rx78-mg",
     slug: "product-gundam-rx78-mg",
+    partOfBundleIds: ["group-gundam-builder-essentials"],
+    partOfBundleTitles: ["Gundam Builder Essentials — MG + RG Bundle"],
     title:
       "Bandai Gunpla MG 1/100 RX-78-2 Gundam Ver. 3.0 — Master Grade Model Kit",
     description:
@@ -1059,6 +1085,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-gundam-wing-zero-rg",
     slug: "product-gundam-wing-zero-rg",
+    partOfBundleIds: ["group-gundam-builder-essentials"],
+    partOfBundleTitles: ["Gundam Builder Essentials — MG + RG Bundle"],
     title:
       "Bandai Gunpla RG 1/144 Wing Gundam Zero EW (Endless Waltz) — Real Grade Kit",
     description:
@@ -1123,6 +1151,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-x-bx01-dran-sword",
     slug: "product-beyblade-x-bx01-dran-sword",
+    partOfBundleIds: ["group-beyblade-x-starter-kit"],
+    partOfBundleTitles: ["Beyblade X Complete Starter Kit — Top + Launcher + Stadium"],
     title:
       "Beyblade X BX-01 Starter Set: Dran Sword 3-60F — Official Takara Tomy",
     description:
@@ -1184,6 +1214,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-beyblade-burst-b200-valkyrie",
     slug: "product-beyblade-burst-b200-valkyrie",
+    partOfBundleIds: ["group-beyblade-x-starter-kit"],
+    partOfBundleTitles: ["Beyblade X Complete Starter Kit — Top + Launcher + Stadium"],
     title:
       "Beyblade Burst QuadStrike B-200 Starter: Infinite Valkyrie — Official Takara Tomy",
     description:
@@ -3642,6 +3674,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-figma-link-totk",
     slug: "product-figma-link-totk",
+    partOfBundleIds: ["group-letitrip-figure-display-set"],
+    partOfBundleTitles: ["LetItRip Curated: Premium Articulated Figure Display Set"],
     title: "figma: The Legend of Zelda: Tears of the Kingdom — Link (Non-Scale)",
     description: "Max Factory figma articulated figure of Link from The Legend of Zelda: Tears of the Kingdom. Features 30+ points of articulation, Ultrahand ability accessories, multiple interchangeable expression faceplates, and weapons including the Master Sword and Hylian Shield. Non-scale PVC/ABS.",
     category: "category-poseable-figures",
@@ -3676,6 +3710,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-funko-pop-gojo-satoru",
     slug: "product-funko-pop-gojo-satoru",
+    partOfBundleIds: ["group-letitrip-funko-anime-starter"],
+    partOfBundleTitles: ["LetItRip Curated: Anime Funko Pop Starter Collection"],
     title: "Funko Pop! Animation: Jujutsu Kaisen — Gojo Satoru (Blindfold) #1373",
     description: "Funko Pop! Animation figure of Gojo Satoru from Jujutsu Kaisen, depicting him with his iconic blindfold. Vinyl figure stands approx. 3.75 inches tall. Official licensed product. Comes in standard window-display box.",
     category: "category-poseable-figures",
@@ -3743,6 +3779,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-shf-ultra-instinct-goku",
     slug: "product-shf-ultra-instinct-goku",
+    partOfBundleIds: ["group-letitrip-figure-display-set"],
+    partOfBundleTitles: ["LetItRip Curated: Premium Articulated Figure Display Set"],
     title: "S.H.Figuarts: Dragon Ball Super — Ultra Instinct Goku (2nd Release)",
     description: "Bandai S.H.Figuarts Ultra Instinct Goku from Dragon Ball Super. 2nd release with improved articulation and silver aura effect parts. Features multiple hand sets, energy effect parts, and display stand. Approx. 140mm. Official Bandai Spirits product.",
     category: "category-poseable-figures",
@@ -3777,6 +3815,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-funko-pop-tanjiro-dlx",
     slug: "product-funko-pop-tanjiro-dlx",
+    partOfBundleIds: ["group-letitrip-funko-anime-starter"],
+    partOfBundleTitles: ["LetItRip Curated: Anime Funko Pop Starter Collection"],
     title: "Funko Pop! Deluxe: Demon Slayer — Tanjiro Kamado with Nezuko (Diorama)",
     description: "Funko Pop! Deluxe figure of Tanjiro Kamado with Nezuko from Demon Slayer: Kimetsu no Yaiba. Diorama set with Tanjiro in battle pose and Nezuko in bamboo-muzzle form. Larger format deluxe figure with detailed base. Official licensed product.",
     category: "category-poseable-figures",
@@ -3810,6 +3850,8 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
   {
     id: "product-mafex-miles-morales-spiderman",
     slug: "product-mafex-miles-morales-spiderman",
+    partOfBundleIds: ["group-letitrip-figure-display-set"],
+    partOfBundleTitles: ["LetItRip Curated: Premium Articulated Figure Display Set"],
     title: "MAFEX No.240: Miles Morales Spider-Man (Across the Spider-Verse)",
     description: "Medicom Toy MAFEX No.240 Miles Morales Spider-Man based on his appearance in Across the Spider-Verse. Highly articulated figure with fabric suit elements, web effect parts, and multiple expression faceplates. Approx. 155mm. One of the most detailed Miles Morales figures available.",
     category: "category-poseable-figures",

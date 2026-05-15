@@ -30,10 +30,14 @@ export const PRODUCT_FEATURE_CATEGORY_OPTIONS: SelectOption<ProductFeatureCatego
 
 export const PRODUCT_FEATURE_PRODUCT_TYPE_OPTIONS: SelectOption<ProductFeatureProductType>[] =
   [
-    { value: "all", label: "All product types" },
+    { value: "all", label: "All listing types" },
     { value: "product", label: "Standard product" },
     { value: "auction", label: "Auction" },
     { value: "preorder", label: "Pre-order" },
+    { value: "prize-draw", label: "Prize draw" },
+    { value: "classified", label: "Classified" },
+    { value: "digital-code", label: "Digital code" },
+    { value: "live", label: "Live item" },
   ];
 
 export const PRODUCT_FEATURE_SCOPE_OPTIONS: SelectOption<ProductFeatureScope>[] =

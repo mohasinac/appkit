@@ -25,6 +25,18 @@ export interface AuctionItem {
   /** Canonical listing-kind discriminator — always "auction" for AuctionItem. */
   listingType: "auction";
   video?: { url: string; thumbnailUrl?: string };
+  /** Reverse refs — bundle IDs that include this auction product. */
+  partOfBundleIds?: string[];
+  /** Parallel titles for partOfBundleIds. */
+  partOfBundleTitles?: string[];
+  /** Feature badge IDs opted into by this listing. */
+  featureIds?: string[];
+  /** Links to a sublisting category — signals "has variants". */
+  sublistingCategoryId?: string;
+  /** Curated set/group membership. */
+  groupId?: string;
+  isGroupParent?: boolean;
+  groupTitle?: string;
   createdAt: string;
   updatedAt: string;
 }
