@@ -1500,3 +1500,21 @@ export { getSiteSettingsGlobal } from "./features/admin/utils/getSiteSettingsGlo
 
 // -- Site-settings domain actions (updateActionConfig / updateNavConfig) --
 export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/server/features/site-settings/actions";
+
+// ── Classified listing — data + adapters + metadata + OG ─────────────────────
+export { getClassifiedForDetail, type ClassifiedDataOptions } from "./_internal/server/features/classified/data";
+export { toClientClassified, type ClassifiedClientShape } from "./_internal/server/features/classified/adapters";
+export { buildClassifiedMetadata, type ClassifiedMetadataOptions } from "./_internal/server/features/classified/metadata";
+export { renderClassifiedOg, renderClassifiedOgImage, renderClassifiedOgFromDoc, type ClassifiedOgData } from "./_internal/server/features/classified/og";
+
+// ── Digital-code listing — data + adapters + metadata + OG ───────────────────
+export { getDigitalCodeForDetail, type DigitalCodeDataOptions } from "./_internal/server/features/digital-code/data";
+export { toClientDigitalCode, type DigitalCodeClientShape } from "./_internal/server/features/digital-code/adapters";
+export { buildDigitalCodeMetadata, type DigitalCodeMetadataOptions } from "./_internal/server/features/digital-code/metadata";
+export { renderDigitalCodeOg, renderDigitalCodeOgImage, renderDigitalCodeOgFromDoc, type DigitalCodeOgData } from "./_internal/server/features/digital-code/og";
+
+// ── Live-item listing — data + adapters + metadata + OG ──────────────────────
+export { getLiveItemForDetail, type LiveDataOptions } from "./_internal/server/features/live/data";
+export { toClientLiveItem, type LiveItemClientShape } from "./_internal/server/features/live/adapters";
+export { buildLiveItemMetadata, type LiveItemMetadataOptions } from "./_internal/server/features/live/metadata";
+export { renderLiveItemOg, renderLiveItemOgImage, renderLiveItemOgFromDoc, type LiveItemOgData } from "./_internal/server/features/live/og";
