@@ -277,26 +277,35 @@ export function TitleBarLayout({
 
       <Div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-[1920px]">
         {/* TB1 — primary row, always visible */}
-        <Row justify="between" gap="none" className="h-14">
-          {/* Left: logo */}
+        <Row justify="between" gap="none" className="relative h-14">
+          {/* Left: #1 — wordmark, always shown */}
           <Row gap="3">
             <Link
               href={logoHref}
               aria-label={brandName}
               className="flex items-center transition-opacity hover:opacity-80"
             >
-              <SiteLogo
-                title={brandName}
-                src={siteLogoUrl}
-                className="h-7 md:h-9 lg:h-10"
-              />
+              <SiteLogo title={brandName} className="h-7 md:h-9 lg:h-10" />
             </Link>
           </Row>
 
-          {/* Centre: optional nav slot (desktop only) */}
-          {navSlot && <Div className="hidden md:flex">{navSlot}</Div>}
+          {/* Centre: #2 — admin logo image (absolutely centred when present),
+              or nav slot (desktop only) when no logo image is configured */}
+          {siteLogoUrl ? (
+            <Div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+              <Link
+                href={logoHref}
+                aria-label={brandName}
+                className="flex items-center transition-opacity hover:opacity-80"
+              >
+                <SiteLogo src={siteLogoUrl} title={brandName} className="h-7 md:h-9 lg:h-10" />
+              </Link>
+            </Div>
+          ) : (
+            navSlot && <Div className="hidden md:flex">{navSlot}</Div>
+          )}
 
-          {/* Right: all actions.
+          {/* Right: #3 — all action buttons.
               wishlist/cart/profile shown only on lg+ here — TB2 carries them on mobile. */}
           <Row gap="xs">
             {devSlot}

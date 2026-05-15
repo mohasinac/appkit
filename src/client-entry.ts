@@ -37,7 +37,19 @@ export type {
 export { toClient, clientInitial } from "./_internal/shared/serialization/index";
 
 // New shared tokens and config types
-export type { AppkitConfig } from "./_internal/shared/config/schema";
+export type {
+  AppkitConfig,
+  AppkitFirebaseConfig,
+  AppkitFirebaseExtensions,
+  AppkitVercelConfig,
+  AppkitBrandConfig,
+  AppkitSeoConfig,
+  AppkitI18nConfig,
+  AppkitImagePattern,
+  FirestoreIndex,
+  FirestoreIndexField,
+  FirestoreFieldOverride,
+} from "./_internal/shared/config/schema";
 export {
   SEMANTIC_COLORS,
   SEMANTIC_COLORS_DARK,

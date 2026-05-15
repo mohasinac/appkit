@@ -42,15 +42,107 @@ export interface AppkitAuthFixture {
   cookie: string;
 }
 
+export interface FirestoreIndexField {
+  fieldPath: string;
+  order?: "ASCENDING" | "DESCENDING";
+  arrayConfig?: "CONTAINS";
+}
+
+export interface FirestoreIndex {
+  collectionGroup: string;
+  queryScope: "COLLECTION" | "COLLECTION_GROUP";
+  fields: FirestoreIndexField[];
+}
+
+export interface FirestoreFieldOverride {
+  collectionGroup: string;
+  fieldPath: string;
+  indexes: Array<{
+    order?: "ASCENDING" | "DESCENDING";
+    arrayConfig?: "CONTAINS";
+    queryScope: "COLLECTION" | "COLLECTION_GROUP";
+  }>;
+}
+
+/** Consumer-specific Firebase extensions merged on top of the appkit base by firebase-merge.mjs. */
+export interface AppkitFirebaseExtensions {
+  /** Additional Firestore composite indexes merged on top of the appkit base (deduplicated). */
+  indexes?: FirestoreIndex[];
+  /** Additional Firestore field overrides appended to the base list. */
+  fieldOverrides?: FirestoreFieldOverride[];
+  /** Additional RTDB rule paths deep-merged into the base rules object. */
+  database?: Record<string, unknown>;
+  /** Raw Firestore security rules block injected inside the top-level match block. */
+  firestoreRules?: string;
+  /** Raw Storage security rules block injected inside the bucket match block. */
+  storageRules?: string;
+}
+
 export interface AppkitFirebaseConfig {
   /** Firebase project ID */
   projectId: string;
-  /** Path to firestore.indexes.json base file */
+  /** Path to firestore.indexes.json base file (default: appkit/firebase/base/firestore.indexes.json) */
   indexesPath?: string;
   /** Collections to include in reset (undefined = all) */
   resetCollections?: string[];
   /** Firebase Functions region */
   functionsRegion?: string;
+  /** Consumer-specific extensions merged on top of the appkit base by `npm run firebase:generate`. */
+  extensions?: AppkitFirebaseExtensions;
+}
+
+export interface AppkitBrandConfig {
+  /** Display name of the brand, e.g. "LetItRip" */
+  name: string;
+  /** Short / abbreviated name, e.g. "LT" */
+  shortName?: string;
+  /** One-line brand description used in meta tags and footers */
+  description?: string;
+  /** Tagline shown in footer / about sections */
+  madeInText?: string;
+  socialUrls?: {
+    instagram?: string;
+    twitter?: string;
+    whatsapp?: string;
+    youtube?: string;
+    facebook?: string;
+    linkedin?: string;
+  };
+}
+
+export interface AppkitSeoConfig {
+  /** Canonical site URL, e.g. "https://letitrip.in" */
+  siteUrl: string;
+  /** Default page <title> */
+  defaultTitle?: string;
+  /** Default meta description */
+  defaultDescription?: string;
+  /** Default OG image path (relative to public/) */
+  defaultImage?: string;
+  /** OG site name */
+  siteName?: string;
+  /** Twitter/X handle including @, e.g. "@letitrip" */
+  twitterHandle?: string;
+  /** BCP 47 locale tag for OG/schema.org, e.g. "en-IN" */
+  locale?: string;
+}
+
+export interface AppkitI18nConfig {
+  /** next-intl localePrefix strategy (default: "never") */
+  localePrefix?: "never" | "always" | "as-needed";
+  /**
+   * Set false to suppress the Set-Cookie: Next-Locale header, which forces
+   * cache-control: private and breaks Vercel ISR. Disable when running a single
+   * locale (default: false).
+   */
+  enableLocaleCookie?: boolean;
+}
+
+export interface AppkitImagePattern {
+  protocol?: "http" | "https";
+  hostname: string;
+  port?: string;
+  pathname?: string;
 }
 
 export interface AppkitVercelConfig {
@@ -60,6 +152,8 @@ export interface AppkitVercelConfig {
   team?: string;
   /** Path to .env file to sync */
   envFile?: string;
+  /** Deployment regions, e.g. ["bom1"] */
+  regions?: string[];
 }
 
 export interface AppkitConfig {
@@ -67,6 +161,14 @@ export interface AppkitConfig {
   baseUrl?: string;
   /** Supported locales (default: ["en"]) */
   locales?: string[];
+  /** Brand identity — name, social URLs, taglines */
+  brand?: AppkitBrandConfig;
+  /** SEO defaults — siteUrl, defaultTitle, OG image, Twitter handle */
+  seo?: AppkitSeoConfig;
+  /** i18n / next-intl routing options */
+  i18n?: AppkitI18nConfig;
+  /** next/image remotePatterns for external image hosts (demo / seed data) */
+  externalImagePatterns?: AppkitImagePattern[];
   /** Route configuration for smoke tests and theme probing */
   routes?: {
     /** Routes to SSR-verify: must return 200 + expected strings in initial HTML */

@@ -1,1 +1,16 @@
-export type { AppkitConfig, AppkitSmokeRoute, AppkitThemeProbeRoute, AppkitAuthFixture } from "./schema";
+export type {
+  AppkitConfig,
+  AppkitSmokeRoute,
+  AppkitThemeProbeRoute,
+  AppkitAuthFixture,
+  AppkitFirebaseConfig,
+  AppkitFirebaseExtensions,
+  AppkitVercelConfig,
+  AppkitBrandConfig,
+  AppkitSeoConfig,
+  AppkitI18nConfig,
+  AppkitImagePattern,
+  FirestoreIndex,
+  FirestoreIndexField,
+  FirestoreFieldOverride,
+} from "./schema";

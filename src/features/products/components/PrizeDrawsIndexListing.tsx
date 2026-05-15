@@ -129,7 +129,6 @@ export function PrizeDrawsIndexListing({
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     listingType: "prize-draw" as const,
-    status: showClosed ? undefined : ("published" as const),
   };
 
   const { products: draws, totalPages, page, isLoading } = useProducts(
@@ -141,7 +140,9 @@ export function PrizeDrawsIndexListing({
   const revealFilter = table.get("prizeRevealStatus");
   const filteredDraws = revealFilter
     ? (draws as any[]).filter((d) => d.prizeRevealStatus === revealFilter)
-    : (draws as any[]);
+    : !showClosed
+      ? (draws as any[]).filter((d) => d.prizeRevealStatus !== "closed")
+      : (draws as any[]);
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());

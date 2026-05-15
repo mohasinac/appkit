@@ -321,10 +321,26 @@ export async function ProductDetailPageView({
   const reviews: Review[] = (reviewDocs as Record<string, unknown>[]).map(
     toReview,
   );
+  const _now = new Date();
   const relatedItems: ProductItem[] = (
     relatedDocs as Record<string, unknown>[]
   )
-    .filter((r) => r.id !== product.id && r.status === "published")
+    .filter((r) => {
+      if (r.id === product.id) return false;
+      const s = r.status as string | undefined;
+      if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
+      if (r.isSold === true) return false;
+      if (r.availableQuantity === 0) return false;
+      if (r.listingType === "auction" && r.auctionEndDate) {
+        const end = r.auctionEndDate;
+        const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
+          ? (end as { toDate: () => Date }).toDate()
+          : end instanceof Date ? end : new Date(String(end));
+        if (endDate <= _now) return false;
+      }
+      if (r.listingType === "prize-draw" && r.prizeRevealStatus === "closed") return false;
+      return true;
+    })
     .slice(0, 8)
     .map(toProductItem);
 

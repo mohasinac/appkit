@@ -130,7 +130,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     listingType: "pre-order" as const,
-    status: showClosed ? undefined : ("published" as const),
+    // Hide out-of-stock pre-orders by default. Uses stockQuantity>0 (always-present field).
+    // Quota over-sign is intentional — never block pre-orders by availability.
+    inStock: showClosed ? undefined : true,
   };
 
   const { products: preOrders, totalPages, page, isLoading } = useProducts(

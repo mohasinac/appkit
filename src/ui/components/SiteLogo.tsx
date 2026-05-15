@@ -48,7 +48,7 @@ export function SiteLogo({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 226 56"
+      viewBox="0 0 214 56"
       role="img"
       aria-label={title}
       className={`block w-auto ${className}`}
@@ -84,9 +84,9 @@ export function SiteLogo({
         LetItRip
       </text>
       {/* .in TLD badge — pill background makes it read as a designed element, not a floating label */}
-      <rect x="181" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
+      <rect x="169" y="5" width="43" height="21" rx="10.5" fill={fill} opacity="0.12" />
       <text
-        x="186"
+        x="174"
         y="21"
         fontFamily="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
         fontWeight="700"

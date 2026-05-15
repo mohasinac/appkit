@@ -118,7 +118,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     page: table.getNumber("page", 1),
     perPage: table.getNumber("pageSize", 24),
     listingType: "standard" as const,
-    status: showSold ? undefined : ("published" as const),
+    // Hide sold-out items by default. Uses stockQuantity>0 (always-present field)
+    // instead of status=="published" because sellers don't actively transition status.
+    inStock: showSold ? undefined : true,
   };
 
   const { products, totalPages, page, isLoading } = useProducts(

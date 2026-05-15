@@ -13,34 +13,29 @@
  *   node ../appkit/scripts/firebase-merge.mjs --deploy --only storage
  *   node ../appkit/scripts/firebase-merge.mjs --deploy --only database
  *
- * ─── Consumer extension file ───────────────────────────────────────────────
- *   Create `firebase.extension.json` in the consumer project root:
+ * ─── Consumer extensions (appkit.config.js) ───────────────────────────────
+ *   Declare consumer-specific Firebase extensions inside `appkit.config.js`:
  *
- *   {
- *     // Additional Firestore indexes merged on top of the appkit base
- *     "indexes": [ { "collectionGroup": "...", "queryScope": "COLLECTION", "fields": [...] } ],
- *
- *     // Additional Firestore fieldOverrides
- *     "fieldOverrides": [],
- *
- *     // Additional RTDB rule paths — deep-merged into the base rules object
- *     "database": {
- *       "custom_path": { ".read": "...", ".write": "..." }
+ *   module.exports = {
+ *     firebase: {
+ *       projectId: "my-project",
+ *       extensions: {
+ *         indexes: [
+ *           { collectionGroup: "...", queryScope: "COLLECTION", fields: [...] }
+ *         ],
+ *         fieldOverrides: [],
+ *         database: { custom_path: { ".read": "...", ".write": "..." } },
+ *         firestoreRules: "    // custom rules\n",
+ *         storageRules: "    match /public/{file} { allow read: if true; }\n",
+ *       },
  *     },
- *
- *     // Raw Firestore rules block injected inside the top-level match block
- *     // (before the closing braces).  Use for consumer-specific collections
- *     // that need non-deny rules (rare — most projects stay backend-only).
- *     "firestoreRules": "    // custom rules\n",
- *
- *     // Raw Storage rules block injected inside the bucket match block
- *     "storageRules": "    match /public/{file} { allow read: if true; }\n"
- *   }
+ *   };
  */
 
 import { readFileSync, writeFileSync, existsSync } from "fs";
-import { resolve, dirname } from "path";
+import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
 import { execSync } from "child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -108,15 +103,32 @@ const GENERATED_HEADER = (source) =>
   `// Source: @mohasinac/appkit/firebase/base/${source}\n` +
   `// Regenerate: npm run firebase:generate\n\n`;
 
-// ─── Load consumer extension ──────────────────────────────────────────────
+// ─── Load consumer extensions from appkit.config.js ──────────────────────
 
-const extensionPath = resolve(CWD, "firebase.extension.json");
-const ext = existsSync(extensionPath) ? readJson(extensionPath) : {};
+function loadAppkitConfig(cwd) {
+  const candidates = ["appkit.config.js", "appkit.config.mjs", "appkit.config.cjs"];
+  for (const name of candidates) {
+    const p = join(cwd, name);
+    if (!existsSync(p)) continue;
+    try {
+      const require = createRequire(import.meta.url);
+      const mod = require(p);
+      return mod?.default ?? mod;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+const appkitConfig = loadAppkitConfig(CWD);
+const ext = appkitConfig?.firebase?.extensions ?? {};
+
 console.log(`\nappkit firebase-merge`);
-console.log(`  base   : ${BASE_DIR}`);
+console.log(`  base    : ${BASE_DIR}`);
 console.log(`  consumer: ${CWD}`);
 console.log(
-  `  extension: ${existsSync(extensionPath) ? "firebase.extension.json" : "(none)"}\n`,
+  `  extensions: ${Object.keys(ext).length ? "appkit.config.js → firebase.extensions" : "(none)"}\n`,
 );
 
 // ─── 1. Firestore indexes ──────────────────────────────────────────────────

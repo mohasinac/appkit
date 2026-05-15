@@ -513,7 +513,10 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
             const now = new Date();
             const related: MarketplaceAuctionCardData[] = relatedDocs
               .filter((r) => {
-                if (r.id === product.id || r.listingType !== "auction" || r.status !== "published") return false;
+                if (r.id === product.id || r.listingType !== "auction") return false;
+                const s = r.status as string | undefined;
+                if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
+                if (r.isSold === true) return false;
                 const end = r.auctionEndDate;
                 if (!end) return true;
                 const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
