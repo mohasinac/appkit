@@ -244,6 +244,8 @@ export const DEFAULT_ROUTE_MAP = {
     SUPPORT_TICKET_BY_ID: (id: string) => `/admin/support-tickets/${id}`,
     SCAMMERS: "/admin/scammers",
     SCAMMER_BY_ID: (id: string) => `/admin/scammers/${id}`,
+    SETTINGS_ACTIONS: "/admin/settings/actions",
+    SETTINGS_NAVIGATION: "/admin/settings/navigation",
   },
   DEMO: {
     SEED: "/demo/seed",

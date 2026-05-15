@@ -496,3 +496,8 @@ export type {
 
 export { ScamAwarenessModal } from "./features/scams/components/ScamAwarenessModal";
 export type { ScamAwarenessModalProps } from "./features/scams/components/ScamAwarenessModal";
+// [CLIENT-ONLY] — Admin panel components for action/nav permission management.
+export { ActionPermissionsManager } from "./features/site-settings/components/ActionPermissionsManager";
+export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";
+export { NavPermissionsManager } from "./features/site-settings/components/NavPermissionsManager";
+export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavItem as NavPermissionsItem } from "./features/site-settings/components/NavPermissionsManager";
