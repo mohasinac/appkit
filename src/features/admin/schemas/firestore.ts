@@ -503,6 +503,23 @@ export interface SiteSettingsDocument {
     accentDark?: string;
   };
   featuredResults?: FeaturedResult[];
+  /**
+   * Per-action runtime enable/disable overrides.
+   * Key = ActionId value string (e.g. "checkout", "add-to-wishlist").
+   * Absent key = action is enabled by default.
+   */
+  actionConfig?: Partial<Record<string, { enabled: boolean }>>;
+  /**
+   * Per-nav-item runtime enable/disable overrides.
+   * Key = NavItem.id (nav-* slug, e.g. "nav-products").
+   * Absent key = nav item is enabled by default.
+   */
+  navConfig?: Record<string, { enabled: boolean }>;
+  /**
+   * Derived hrefs of disabled nav items — written by updateNavConfigAction
+   * alongside navConfig. Read by RSC public layouts to block disabled routes.
+   */
+  disabledRoutes?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -590,6 +607,9 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     enabled: true,
     message: "🎉 Up to 15% Off on Pokémon TCG this week — Use code SAVE15",
   },
+  actionConfig: {},
+  navConfig: {},
+  disabledRoutes: [],
 };
 
 export const SITE_SETTINGS_PUBLIC_FIELDS = [

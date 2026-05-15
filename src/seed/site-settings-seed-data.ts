@@ -446,4 +446,7 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     deviantartClientId: "deviantart_client_id_PLACEHOLDER",
     deviantartClientSecret: "deviantart_client_secret_PLACEHOLDER",
   },
+  actionConfig: {},
+  navConfig: {},
+  disabledRoutes: [],
 };

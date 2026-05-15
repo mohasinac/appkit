@@ -1,17 +1,14 @@
 /**
  * action-defs.ts
  *
- * Single source of truth for ALL action IDs, labels, variants, and groupings
- * used across the platform:
+ * Universal CTA registry for the entire platform.
+ * Every action — public marketplace CTAs, dashboard row actions, quick actions — is
+ * registered here with auth requirements, RBAC permissions, and enable/disable defaults.
  *
- *   Product detail pages  — desktop action panel + mobile BuyBar
- *   Listing pages         — BulkActionsBar selections
- *   Table rows            — RowActionMenu items (admin / seller / user)
- *   Form shells           — submit / cancel / save-draft / publish / delete
- *   Dashboard quick bar   — top-level shortcut buttons per dashboard type
- *
- * Pure TypeScript — no React, no JSX, no callbacks.
- * Consuming components resolve iconName → Lucide component, and supply onClick.
+ * Three enforcement layers read from this registry:
+ *   Client  — useAuthGate() shows LoginRequiredModal for Tier 1 (public) actions
+ *   Server  — checkActionAllowed() enforces the same guards on every server action
+ *   Admin   — ActionPermissionsManager toggles defaultEnabled via siteSettings.actionConfig
  */
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -44,9 +41,34 @@ export const ACTION_ID = {
   PLACE_BID:            "place-bid",
   BUY_NOW_AUCTION:      "buy-now-auction",
   WATCH_AUCTION:        "watch-auction",
+  UNWATCH_AUCTION:      "unwatch-auction",
   // Pre-order
   RESERVE_NOW:          "reserve-now",
   CANCEL_RESERVATION:   "cancel-reservation",
+  // ── Checkout / navigation CTAs ───────────────────────────────────────────
+  CHECKOUT:             "checkout",
+  ENTER_PRIZE_DRAW:     "enter-prize-draw",
+  ENTER_RAFFLE:         "enter-raffle",
+  REPORT_LISTING:       "report-listing",
+  FOLLOW_STORE:         "follow-store",
+  // ── Reviews & social ─────────────────────────────────────────────────────
+  WRITE_REVIEW:         "write-review",
+  MESSAGE_SELLER:       "message-seller",
+  // ── Seller (public-facing CTAs on store/product pages) ───────────────────
+  BECOME_SELLER:        "become-seller",
+  REQUEST_PAYOUT:       "request-payout",
+  RESPOND_TO_REVIEW:    "respond-to-review",
+  // ── User account actions ─────────────────────────────────────────────────
+  CANCEL_ORDER:         "cancel-order",
+  REQUEST_RETURN:       "request-return",
+  REORDER:              "reorder",
+  TRACK_ORDER:          "track-order",
+  EDIT_PROFILE:         "edit-profile",
+  ADD_ADDRESS:          "add-address",
+  EDIT_ADDRESS:         "edit-address",
+  DELETE_ADDRESS:       "delete-address",
+  CHANGE_PASSWORD:      "change-password",
+  DELETE_ACCOUNT:       "delete-account",
 } as const;
 
 export type ActionId = (typeof ACTION_ID)[keyof typeof ACTION_ID];
@@ -59,23 +81,66 @@ export interface ActionMeta {
   variant: ActionVariant;
   /** Lucide icon name — consuming component resolves this to the React component */
   iconName?: string;
-  /** When true, the action is hidden if the user is not authenticated */
+  /**
+   * Tier 1: shows LoginRequiredModal on public pages if user is not signed in.
+   * Server action also enforces via checkActionAllowed().
+   */
   requiresAuth?: boolean;
+  /** Message shown in LoginRequiredModal. Required when requiresAuth=true. */
+  authMessage?: string;
+  /**
+   * RBAC permission key required to use this action.
+   * If set, user must have this permission in addition to being signed in.
+   * Uses the 85+ permission keys from the RBAC system.
+   * Example: "products.create", "orders.refund", "admin.users.suspend"
+   */
+  requiredPermission?: string;
+  /**
+   * Whether this action is enabled by default.
+   * Can be overridden at runtime via siteSettings.actionConfig[actionId].enabled.
+   * Defaults to true when omitted.
+   */
+  defaultEnabled?: boolean;
 }
 
 export const ACTION_META: Record<ActionId, ActionMeta> = {
-  [ACTION_ID.BUY_NOW]:              { id: ACTION_ID.BUY_NOW,              label: "Buy Now",              variant: "primary"                              },
-  [ACTION_ID.ADD_TO_CART]:          { id: ACTION_ID.ADD_TO_CART,          label: "Add to Cart",          variant: "secondary", iconName: "ShoppingCart"   },
-  [ACTION_ID.ADD_TO_WISHLIST]:      { id: ACTION_ID.ADD_TO_WISHLIST,      label: "Add to Wishlist",      variant: "ghost",     iconName: "Heart"          },
-  [ACTION_ID.REMOVE_FROM_WISHLIST]: { id: ACTION_ID.REMOVE_FROM_WISHLIST, label: "Remove from Wishlist", variant: "ghost",     iconName: "HeartOff"       },
-  [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: "Make an Offer",        variant: "outline",   iconName: "Tag",            requiresAuth: true },
-  [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: "Share",                variant: "ghost",     iconName: "Share2"         },
-  [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: "Compare",              variant: "secondary", iconName: "Columns"        },
-  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: "Place Bid",            variant: "primary",                               requiresAuth: true },
-  [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: "Buy Now",              variant: "secondary",                             requiresAuth: true },
-  [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: "Watch",                variant: "ghost",     iconName: "Eye"            },
-  [ACTION_ID.RESERVE_NOW]:          { id: ACTION_ID.RESERVE_NOW,          label: "Reserve Now",          variant: "primary",                               requiresAuth: true },
-  [ACTION_ID.CANCEL_RESERVATION]:   { id: ACTION_ID.CANCEL_RESERVATION,   label: "Cancel Reservation",   variant: "danger",    iconName: "X",              requiresAuth: true },
+  [ACTION_ID.BUY_NOW]:              { id: ACTION_ID.BUY_NOW,              label: "Buy Now",              variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
+  [ACTION_ID.ADD_TO_CART]:          { id: ACTION_ID.ADD_TO_CART,          label: "Add to Cart",          variant: "secondary", iconName: "ShoppingCart"                                                                          },
+  [ACTION_ID.ADD_TO_WISHLIST]:      { id: ACTION_ID.ADD_TO_WISHLIST,      label: "Add to Wishlist",      variant: "ghost",     iconName: "Heart",    requiresAuth: true,  authMessage: "You need to be signed in to save items to your wishlist." },
+  [ACTION_ID.REMOVE_FROM_WISHLIST]: { id: ACTION_ID.REMOVE_FROM_WISHLIST, label: "Remove from Wishlist", variant: "ghost",     iconName: "HeartOff", requiresAuth: true,  authMessage: "You need to be signed in to manage your wishlist."         },
+  [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: "Make an Offer",        variant: "outline",   iconName: "Tag",      requiresAuth: true,  authMessage: "You need to be signed in to make an offer."               },
+  [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: "Share",                variant: "ghost",     iconName: "Share2"                                                                                },
+  [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: "Compare",              variant: "secondary", iconName: "Columns"                                                                               },
+  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: "Place Bid",            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to place a bid."                      },
+  [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: "Buy Now",              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
+  [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: "Watch",                variant: "ghost",     iconName: "Eye",      requiresAuth: true,  authMessage: "You need to be signed in to watch auctions."              },
+  [ACTION_ID.UNWATCH_AUCTION]:      { id: ACTION_ID.UNWATCH_AUCTION,      label: "Unwatch",              variant: "ghost",     iconName: "EyeOff",   requiresAuth: true,  authMessage: "You need to be signed in to manage your watchlist."        },
+  [ACTION_ID.RESERVE_NOW]:          { id: ACTION_ID.RESERVE_NOW,          label: "Reserve Now",          variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to reserve a pre-order."              },
+  [ACTION_ID.CANCEL_RESERVATION]:   { id: ACTION_ID.CANCEL_RESERVATION,   label: "Cancel Reservation",   variant: "danger",    iconName: "X",        requiresAuth: true,  authMessage: "You need to be signed in to cancel a reservation."         },
+  // ── Checkout / navigation CTAs ────────────────────────────────────────────
+  [ACTION_ID.CHECKOUT]:             { id: ACTION_ID.CHECKOUT,             label: "Checkout",             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.ENTER_PRIZE_DRAW]:     { id: ACTION_ID.ENTER_PRIZE_DRAW,     label: "Enter Draw",           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a prize draw."               },
+  [ACTION_ID.ENTER_RAFFLE]:         { id: ACTION_ID.ENTER_RAFFLE,         label: "Enter Raffle",         variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a raffle."                   },
+  [ACTION_ID.REPORT_LISTING]:       { id: ACTION_ID.REPORT_LISTING,       label: "Report Listing",       variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to report a listing."                 },
+  [ACTION_ID.FOLLOW_STORE]:         { id: ACTION_ID.FOLLOW_STORE,         label: "Follow Store",         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to follow a store."                   },
+  // ── Reviews & social ──────────────────────────────────────────────────────
+  [ACTION_ID.WRITE_REVIEW]:         { id: ACTION_ID.WRITE_REVIEW,         label: "Write a Review",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to write a review."                   },
+  [ACTION_ID.MESSAGE_SELLER]:       { id: ACTION_ID.MESSAGE_SELLER,       label: "Message Seller",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to message a seller."                 },
+  // ── Seller CTAs ───────────────────────────────────────────────────────────
+  [ACTION_ID.BECOME_SELLER]:        { id: ACTION_ID.BECOME_SELLER,        label: "Apply as Seller",      variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to apply as a seller."                },
+  [ACTION_ID.REQUEST_PAYOUT]:       { id: ACTION_ID.REQUEST_PAYOUT,       label: "Request Payout",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a payout.",  requiredPermission: "seller.payouts.request"  },
+  [ACTION_ID.RESPOND_TO_REVIEW]:    { id: ACTION_ID.RESPOND_TO_REVIEW,    label: "Respond to Review",    variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to respond to a review.", requiredPermission: "seller.reviews.respond" },
+  // ── User account actions ──────────────────────────────────────────────────
+  [ACTION_ID.CANCEL_ORDER]:         { id: ACTION_ID.CANCEL_ORDER,         label: "Cancel Order",         variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to cancel an order."                  },
+  [ACTION_ID.REQUEST_RETURN]:       { id: ACTION_ID.REQUEST_RETURN,       label: "Request Return",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a return."                 },
+  [ACTION_ID.REORDER]:              { id: ACTION_ID.REORDER,              label: "Reorder",              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to reorder."                          },
+  [ACTION_ID.TRACK_ORDER]:          { id: ACTION_ID.TRACK_ORDER,          label: "Track Order",          variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to track your order."                 },
+  [ACTION_ID.EDIT_PROFILE]:         { id: ACTION_ID.EDIT_PROFILE,         label: "Edit Profile",         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to edit your profile."                },
+  [ACTION_ID.ADD_ADDRESS]:          { id: ACTION_ID.ADD_ADDRESS,          label: "Add Address",          variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to add an address."                   },
+  [ACTION_ID.EDIT_ADDRESS]:         { id: ACTION_ID.EDIT_ADDRESS,         label: "Edit Address",         variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to edit an address."                  },
+  [ACTION_ID.DELETE_ADDRESS]:       { id: ACTION_ID.DELETE_ADDRESS,       label: "Delete Address",       variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to delete an address."                },
+  [ACTION_ID.CHANGE_PASSWORD]:      { id: ACTION_ID.CHANGE_PASSWORD,      label: "Change Password",      variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to change your password."             },
+  [ACTION_ID.DELETE_ACCOUNT]:       { id: ACTION_ID.DELETE_ACCOUNT,       label: "Delete Account",       variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to delete your account.",  requiredPermission: "user.account.delete" },
 };
 
 // Detail page action groups — ordered top-to-bottom in the right-hand panel
@@ -98,7 +163,7 @@ export const MOBILE_PRIMARY_ACTIONS = {
 // Listing page bulk actions — shown in BulkActionsBar when items are selected
 export const LISTING_BULK_ACTIONS = {
   products:  [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
-  auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
+  auctions:  [ACTION_ID.WATCH_AUCTION, ACTION_ID.UNWATCH_AUCTION, ACTION_ID.COMPARE],
   preorders: [ACTION_ID.ADD_TO_CART, ACTION_ID.ADD_TO_WISHLIST, ACTION_ID.COMPARE],
   stores:    [ACTION_ID.COMPARE] as ActionId[],
 } as const satisfies Record<string, readonly ActionId[]>;
@@ -143,26 +208,34 @@ export interface RowActionMeta {
   destructive?: boolean;
   /** Adds a separator above this item in the dropdown */
   separator?: boolean;
+  /** Tier 2: all row actions require auth (role-gated at layout level) */
+  requiresAuth: true;
+  /** Minimum role required — enforced by RoleGate/ProtectedRoute at layout, NOT useAuthGate */
+  requiredRole?: "admin" | "moderator" | "seller" | "user";
+  /** RBAC permission key — shown in admin panel next to the toggle */
+  requiredPermission?: string;
+  /** Whether this row action is enabled by default (admin can toggle via actionConfig) */
+  defaultEnabled?: boolean;
 }
 
 export const ROW_ACTION_META: Record<RowActionId, RowActionMeta> = {
-  [ROW_ACTION_ID.EDIT]:      { id: ROW_ACTION_ID.EDIT,      label: "Edit",           iconName: "Pencil"      },
-  [ROW_ACTION_ID.VIEW]:      { id: ROW_ACTION_ID.VIEW,      label: "View",           iconName: "Eye"         },
-  [ROW_ACTION_ID.DELETE]:    { id: ROW_ACTION_ID.DELETE,    label: "Delete",         iconName: "Trash2",     destructive: true, separator: true },
-  [ROW_ACTION_ID.APPROVE]:   { id: ROW_ACTION_ID.APPROVE,   label: "Approve",        iconName: "Check"       },
-  [ROW_ACTION_ID.REJECT]:    { id: ROW_ACTION_ID.REJECT,    label: "Reject",         iconName: "X",          destructive: true  },
-  [ROW_ACTION_ID.SUSPEND]:   { id: ROW_ACTION_ID.SUSPEND,   label: "Suspend",        iconName: "Ban",        destructive: true, separator: true },
-  [ROW_ACTION_ID.RESTORE]:   { id: ROW_ACTION_ID.RESTORE,   label: "Restore",        iconName: "RotateCcw"  },
-  [ROW_ACTION_ID.MANAGE]:    { id: ROW_ACTION_ID.MANAGE,    label: "Manage",         iconName: "Settings"   },
-  [ROW_ACTION_ID.DUPLICATE]: { id: ROW_ACTION_ID.DUPLICATE, label: "Duplicate",      iconName: "Copy"       },
-  [ROW_ACTION_ID.EXPORT]:    { id: ROW_ACTION_ID.EXPORT,    label: "Export",         iconName: "Download"   },
-  [ROW_ACTION_ID.TRACK]:     { id: ROW_ACTION_ID.TRACK,     label: "Track Shipment", iconName: "Truck"      },
-  [ROW_ACTION_ID.CANCEL]:    { id: ROW_ACTION_ID.CANCEL,    label: "Cancel",         iconName: "X",          destructive: true  },
-  [ROW_ACTION_ID.REFUND]:    { id: ROW_ACTION_ID.REFUND,    label: "Refund",         iconName: "RefreshCw",  destructive: true, separator: true },
-  [ROW_ACTION_ID.RESEND]:    { id: ROW_ACTION_ID.RESEND,    label: "Resend",         iconName: "Send"       },
-  [ROW_ACTION_ID.REPLY]:     { id: ROW_ACTION_ID.REPLY,     label: "Reply",          iconName: "MessageSquare" },
-  [ROW_ACTION_ID.PUBLISH]:   { id: ROW_ACTION_ID.PUBLISH,   label: "Publish",        iconName: "Upload"     },
-  [ROW_ACTION_ID.ARCHIVE]:   { id: ROW_ACTION_ID.ARCHIVE,   label: "Archive",        iconName: "Archive",    separator: true    },
+  [ROW_ACTION_ID.EDIT]:      { id: ROW_ACTION_ID.EDIT,      label: "Edit",           iconName: "Pencil",       requiresAuth: true                                                    },
+  [ROW_ACTION_ID.VIEW]:      { id: ROW_ACTION_ID.VIEW,      label: "View",           iconName: "Eye",          requiresAuth: true                                                    },
+  [ROW_ACTION_ID.DELETE]:    { id: ROW_ACTION_ID.DELETE,    label: "Delete",         iconName: "Trash2",       requiresAuth: true, destructive: true, separator: true               },
+  [ROW_ACTION_ID.APPROVE]:   { id: ROW_ACTION_ID.APPROVE,   label: "Approve",        iconName: "Check",        requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.content.approve" },
+  [ROW_ACTION_ID.REJECT]:    { id: ROW_ACTION_ID.REJECT,    label: "Reject",         iconName: "X",            requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.content.approve", destructive: true },
+  [ROW_ACTION_ID.SUSPEND]:   { id: ROW_ACTION_ID.SUSPEND,   label: "Suspend",        iconName: "Ban",          requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.users.suspend", destructive: true, separator: true },
+  [ROW_ACTION_ID.RESTORE]:   { id: ROW_ACTION_ID.RESTORE,   label: "Restore",        iconName: "RotateCcw",    requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.users.suspend" },
+  [ROW_ACTION_ID.MANAGE]:    { id: ROW_ACTION_ID.MANAGE,    label: "Manage",         iconName: "Settings",     requiresAuth: true                                                    },
+  [ROW_ACTION_ID.DUPLICATE]: { id: ROW_ACTION_ID.DUPLICATE, label: "Duplicate",      iconName: "Copy",         requiresAuth: true                                                    },
+  [ROW_ACTION_ID.EXPORT]:    { id: ROW_ACTION_ID.EXPORT,    label: "Export",         iconName: "Download",     requiresAuth: true                                                    },
+  [ROW_ACTION_ID.TRACK]:     { id: ROW_ACTION_ID.TRACK,     label: "Track Shipment", iconName: "Truck",        requiresAuth: true                                                    },
+  [ROW_ACTION_ID.CANCEL]:    { id: ROW_ACTION_ID.CANCEL,    label: "Cancel",         iconName: "X",            requiresAuth: true, destructive: true                                 },
+  [ROW_ACTION_ID.REFUND]:    { id: ROW_ACTION_ID.REFUND,    label: "Refund",         iconName: "RefreshCw",    requiresAuth: true, requiredRole: "admin", requiredPermission: "admin.orders.refund", destructive: true, separator: true },
+  [ROW_ACTION_ID.RESEND]:    { id: ROW_ACTION_ID.RESEND,    label: "Resend",         iconName: "Send",         requiresAuth: true                                                    },
+  [ROW_ACTION_ID.REPLY]:     { id: ROW_ACTION_ID.REPLY,     label: "Reply",          iconName: "MessageSquare",requiresAuth: true                                                    },
+  [ROW_ACTION_ID.PUBLISH]:   { id: ROW_ACTION_ID.PUBLISH,   label: "Publish",        iconName: "Upload",       requiresAuth: true                                                    },
+  [ROW_ACTION_ID.ARCHIVE]:   { id: ROW_ACTION_ID.ARCHIVE,   label: "Archive",        iconName: "Archive",      requiresAuth: true, separator: true                                   },
 };
 
 // Admin dashboard row action groups per entity type
@@ -237,21 +310,11 @@ export const FORM_ACTION_META: Record<FormActionId, FormActionMeta> = {
   [FORM_ACTION_ID.DISCARD]:    { id: FORM_ACTION_ID.DISCARD,    label: "Discard",      variant: "ghost",    type: "button",                             destructive: true },
 };
 
-/**
- * Preset ordered action groups for common form footer layouts.
- * Consumed by FormShell and DrawerFormFooter to determine which buttons render,
- * in which order (left → right).
- */
 export const FORM_FOOTER_PRESET = {
-  /** Standard edit drawer: Cancel | Save Changes */
   drawerEdit:       [FORM_ACTION_ID.CANCEL, FORM_ACTION_ID.SUBMIT],
-  /** Edit drawer with delete: Delete | Cancel | Save Changes */
   drawerEditDelete: [FORM_ACTION_ID.DELETE, FORM_ACTION_ID.CANCEL, FORM_ACTION_ID.SUBMIT],
-  /** Content editor (blog / product): Discard | Save Draft | Publish */
   contentEditor:    [FORM_ACTION_ID.DISCARD, FORM_ACTION_ID.SAVE_DRAFT, FORM_ACTION_ID.PUBLISH],
-  /** Simple modal / dialog: Cancel | Submit */
   modalForm:        [FORM_ACTION_ID.CANCEL, FORM_ACTION_ID.SUBMIT],
-  /** Settings page: Reset | Save Changes */
   settingsForm:     [FORM_ACTION_ID.RESET, FORM_ACTION_ID.SUBMIT],
 } as const satisfies Record<string, readonly FormActionId[]>;
 
@@ -292,26 +355,34 @@ export interface DashboardQuickActionMeta {
   iconName?: string;
   /** ROUTES key path that the button navigates to — consuming component resolves */
   routeKey?: string;
+  /** All dashboard quick actions require auth (role-gated at layout level) */
+  requiresAuth: true;
+  /** Minimum role required — enforced by RoleGate/ProtectedRoute at layout */
+  requiredRole?: "admin" | "moderator" | "seller" | "user";
+  /** RBAC permission key — shown in admin panel next to the toggle */
+  requiredPermission?: string;
+  /** Whether this quick action is enabled by default */
+  defaultEnabled?: boolean;
 }
 
 export const DASHBOARD_QUICK_ACTION_META: Record<DashboardQuickActionId, DashboardQuickActionMeta> = {
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT]:  { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT,  label: "Add Product",    variant: "primary",   iconName: "Plus"          },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER,     label: "Add User",       variant: "outline",   iconName: "UserPlus"      },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE,    label: "Add Store",      variant: "outline",   iconName: "Store"         },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON,   label: "Add Coupon",     variant: "outline",   iconName: "Tag"           },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT,    label: "Add Event",      variant: "outline",   iconName: "Calendar"      },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG,     label: "New Post",       variant: "outline",   iconName: "FileText"      },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ]:      { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ,      label: "Add FAQ",        variant: "outline",   iconName: "HelpCircle"    },
-  [DASHBOARD_QUICK_ACTION_ID.ADMIN_SETTINGS]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_SETTINGS,     label: "Settings",       variant: "ghost",     iconName: "Settings"      },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_PRODUCT]: { id: DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_PRODUCT, label: "List a Product", variant: "primary",   iconName: "Plus"          },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_COUPON]:  { id: DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_COUPON,  label: "New Coupon",     variant: "outline",   iconName: "Tag"           },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS]: { id: DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS, label: "Orders",         variant: "outline",   iconName: "ShoppingBag"   },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ]:  { id: DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ,  label: "Request Payout", variant: "outline",   iconName: "Banknote"      },
-  [DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS,    label: "Store Settings", variant: "ghost",     iconName: "Settings"      },
-  [DASHBOARD_QUICK_ACTION_ID.USER_VIEW_ORDERS]:   { id: DASHBOARD_QUICK_ACTION_ID.USER_VIEW_ORDERS,   label: "My Orders",      variant: "outline",   iconName: "Package"       },
-  [DASHBOARD_QUICK_ACTION_ID.USER_VIEW_WISHLIST]: { id: DASHBOARD_QUICK_ACTION_ID.USER_VIEW_WISHLIST, label: "Wishlist",       variant: "outline",   iconName: "Heart"         },
-  [DASHBOARD_QUICK_ACTION_ID.USER_EDIT_PROFILE]:  { id: DASHBOARD_QUICK_ACTION_ID.USER_EDIT_PROFILE,  label: "Edit Profile",   variant: "outline",   iconName: "User"          },
-  [DASHBOARD_QUICK_ACTION_ID.USER_ADD_ADDRESS]:   { id: DASHBOARD_QUICK_ACTION_ID.USER_ADD_ADDRESS,   label: "Add Address",    variant: "outline",   iconName: "MapPin"        },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT]:  { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_PRODUCT,  label: "Add Product",    variant: "primary",  iconName: "Plus",         requiresAuth: true, requiredRole: "admin",  requiredPermission: "products.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_USER,     label: "Add User",       variant: "outline",  iconName: "UserPlus",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.users.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_STORE,    label: "Add Store",      variant: "outline",  iconName: "Store",        requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.stores.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON]:   { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_COUPON,   label: "Add Coupon",     variant: "outline",  iconName: "Tag",          requiresAuth: true, requiredRole: "admin",  requiredPermission: "coupons.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT]:    { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_EVENT,    label: "Add Event",      variant: "outline",  iconName: "Calendar",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "events.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_BLOG,     label: "New Post",       variant: "outline",  iconName: "FileText",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "blog.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ]:      { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_ADD_FAQ,      label: "Add FAQ",        variant: "outline",  iconName: "HelpCircle",   requiresAuth: true, requiredRole: "admin",  requiredPermission: "faqs.create" },
+  [DASHBOARD_QUICK_ACTION_ID.ADMIN_SETTINGS]:     { id: DASHBOARD_QUICK_ACTION_ID.ADMIN_SETTINGS,     label: "Settings",       variant: "ghost",    iconName: "Settings",     requiresAuth: true, requiredRole: "admin",  requiredPermission: "admin.settings.read" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_PRODUCT]: { id: DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_PRODUCT, label: "List a Product", variant: "primary",  iconName: "Plus",         requiresAuth: true, requiredRole: "seller", requiredPermission: "products.create" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_COUPON]:  { id: DASHBOARD_QUICK_ACTION_ID.SELLER_ADD_COUPON,  label: "New Coupon",     variant: "outline",  iconName: "Tag",          requiresAuth: true, requiredRole: "seller", requiredPermission: "coupons.create" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS]: { id: DASHBOARD_QUICK_ACTION_ID.SELLER_VIEW_ORDERS, label: "Orders",         variant: "outline",  iconName: "ShoppingBag",  requiresAuth: true, requiredRole: "seller" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ]:  { id: DASHBOARD_QUICK_ACTION_ID.SELLER_PAYOUT_REQ,  label: "Request Payout", variant: "outline",  iconName: "Banknote",     requiresAuth: true, requiredRole: "seller", requiredPermission: "seller.payouts.request" },
+  [DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS]:    { id: DASHBOARD_QUICK_ACTION_ID.SELLER_SETTINGS,    label: "Store Settings", variant: "ghost",    iconName: "Settings",     requiresAuth: true, requiredRole: "seller" },
+  [DASHBOARD_QUICK_ACTION_ID.USER_VIEW_ORDERS]:   { id: DASHBOARD_QUICK_ACTION_ID.USER_VIEW_ORDERS,   label: "My Orders",      variant: "outline",  iconName: "Package",      requiresAuth: true, requiredRole: "user" },
+  [DASHBOARD_QUICK_ACTION_ID.USER_VIEW_WISHLIST]: { id: DASHBOARD_QUICK_ACTION_ID.USER_VIEW_WISHLIST, label: "Wishlist",       variant: "outline",  iconName: "Heart",        requiresAuth: true, requiredRole: "user" },
+  [DASHBOARD_QUICK_ACTION_ID.USER_EDIT_PROFILE]:  { id: DASHBOARD_QUICK_ACTION_ID.USER_EDIT_PROFILE,  label: "Edit Profile",   variant: "outline",  iconName: "User",         requiresAuth: true, requiredRole: "user" },
+  [DASHBOARD_QUICK_ACTION_ID.USER_ADD_ADDRESS]:   { id: DASHBOARD_QUICK_ACTION_ID.USER_ADD_ADDRESS,   label: "Add Address",    variant: "outline",  iconName: "MapPin",       requiresAuth: true, requiredRole: "user" },
 };
 
 // Quick action groups — ordered left-to-right in the top shortcut bar
