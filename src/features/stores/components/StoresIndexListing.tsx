@@ -13,6 +13,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { STORE_FIELDS } from "../../../constants/field-names";
+import { ACTION_ID } from "../../products/constants/action-defs";
 
 const DEFAULT_SORT = sortBy(STORE_FIELDS.CREATED_AT);
 
@@ -168,7 +169,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         onClearSelection={selection.clearSelection}
         actions={[
           {
-            id: "compare",
+            id: ACTION_ID.COMPARE,
             label: "Compare",
             variant: "secondary",
             onClick: () => { selection.clearSelection(); },
