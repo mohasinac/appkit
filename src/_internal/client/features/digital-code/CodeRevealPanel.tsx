@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Div, Stack, Text } from "../../../../ui";
+import { Button, Div, Span, Stack, Text } from "../../../../ui";
 
 export interface RevealedCode {
   code: string;
@@ -54,26 +54,31 @@ export function CodeRevealPanel({
         {!revealed ? (
           <Stack gap="sm">
             {error && <Text className="text-sm text-destructive">{error}</Text>}
-            <button
+            <Button
               type="button"
+              variant="primary"
+              size="lg"
+              isLoading={pending}
               disabled={pending}
               onClick={handleReveal}
-              className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+              className="w-full"
             >
-              {pending ? "Loading…" : "Reveal Code"}
-            </button>
+              Reveal Code
+            </Button>
           </Stack>
         ) : (
           <Stack gap="sm">
             <Div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-lg">
-              <span className="flex-1 select-all">{revealed.code}</span>
-              <button
+              <Span className="flex-1 select-all">{revealed.code}</Span>
+              <Button
                 type="button"
+                variant="ghost"
+                size="sm"
                 onClick={handleCopy}
-                className="shrink-0 text-xs text-muted-foreground hover:text-foreground"
+                className="shrink-0"
               >
                 {copied ? "Copied!" : "Copy"}
-              </button>
+              </Button>
             </Div>
             {redemptionInstructions && (
               <Text className="text-sm text-muted-foreground">

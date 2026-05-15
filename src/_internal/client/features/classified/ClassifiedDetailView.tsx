@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   Badge,
+  Button,
   Container,
   Div,
   Heading,
@@ -114,14 +115,17 @@ export function ClassifiedDetailView({
               {error && (
                 <Text className="text-sm text-destructive">{error}</Text>
               )}
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="lg"
+                isLoading={pending}
                 disabled={pending}
                 onClick={handleContactSeller}
-                className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+                className="w-full"
               >
-                {pending ? "Opening chat…" : "Contact Seller"}
-              </button>
+                Contact Seller
+              </Button>
             </Stack>
           )}
         </Stack>
