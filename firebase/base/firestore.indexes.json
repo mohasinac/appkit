@@ -4347,6 +4347,20 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "preOrderDeliveryDate",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "products",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "listingType",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "prizeRevealStatus",
           "order": "ASCENDING"
         },
