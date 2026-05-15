@@ -8,23 +8,28 @@ import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hook
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
 import { ProductFilters } from "./ProductFilters";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 const PRIZE_DRAW_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "prizeRevealWindowStart", label: "Reveal: Soonest" },
-  { value: "-prizeRevealWindowStart", label: "Reveal: Furthest" },
-  { value: "pricePerEntry", label: "Entry: Low to High" },
-  { value: "-pricePerEntry", label: "Entry: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START, "ASC"), label: "Reveal: Soonest" },
+  { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START), label: "Reveal: Furthest" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Entry: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Entry: High to Low" },
 ] as const;
 
 const FILTER_KEYS = [
-  "category",
-  "brand",
-  "minPrice",
-  "maxPrice",
-  "storeId",
-  "prizeRevealStatus",
+  TABLE_KEYS.CATEGORY,
+  TABLE_KEYS.BRAND,
+  TABLE_KEYS.MIN_PRICE,
+  TABLE_KEYS.MAX_PRICE,
+  TABLE_KEYS.STORE_ID,
+  TABLE_KEYS.PRIZE_REVEAL_STATUS,
 ];
 
 export interface PrizeDrawsIndexListingProps {
@@ -41,12 +46,12 @@ export function PrizeDrawsIndexListing({
   brandName,
   storeId: forcedStoreId,
 }: PrizeDrawsIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const showClosed = table.get("showClosed") === "true";
+  const showClosed = table.get(TABLE_KEYS.SHOW_CLOSED) === "true";
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
   const { categories } = useCategoryTree();
   const categoryOptions = categoriesToFacetOptions(categories);
@@ -104,7 +109,7 @@ export function PrizeDrawsIndexListing({
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", showClosed: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -112,25 +117,25 @@ export function PrizeDrawsIndexListing({
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
+    !!table.get(TABLE_KEYS.QUERY) ||
     showClosed ||
-    table.get("sort") !== "-createdAt" ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
-  const revealFilter = (table.get("prizeRevealStatus") || undefined) as "pending" | "open" | "closed" | undefined;
+  const revealFilter = (table.get(TABLE_KEYS.PRIZE_REVEAL_STATUS) || undefined) as "pending" | "open" | "closed" | undefined;
 
   const params = {
-    q: table.get("q") || undefined,
-    category: table.get("category") || undefined,
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    category: table.get(TABLE_KEYS.CATEGORY) || undefined,
     categorySlug: categorySlug || undefined,
-    brand: brandName || table.get("brand") || undefined,
-    minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
-    maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
-    storeId: forcedStoreId || table.get("storeId") || undefined,
+    brand: brandName || table.get(TABLE_KEYS.BRAND) || undefined,
+    minPrice: table.get(TABLE_KEYS.MIN_PRICE) ? Number(table.get(TABLE_KEYS.MIN_PRICE)) : undefined,
+    maxPrice: table.get(TABLE_KEYS.MAX_PRICE) ? Number(table.get(TABLE_KEYS.MAX_PRICE)) : undefined,
+    storeId: forcedStoreId || table.get(TABLE_KEYS.STORE_ID) || undefined,
     prizeRevealStatus: revealFilter,
-    sort: table.get("sort") || "-createdAt",
-    page: table.getNumber("page", 1),
-    perPage: table.getNumber("pageSize", 24),
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "prize-draw" as const,
   };
 
@@ -142,11 +147,11 @@ export function PrizeDrawsIndexListing({
   // When no explicit reveal-status filter is set, hide closed draws client-side
   // as a UX default (showClosed toggle). Server handles explicit status filters.
   const filteredDraws = !revealFilter && !showClosed
-    ? (draws as any[]).filter((d) => d.prizeRevealStatus !== "closed")
+    ? (draws as any[]).filter((d) => d.prizeRevealStatus !== PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.CLOSED)
     : (draws as any[]);
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -165,16 +170,16 @@ export function PrizeDrawsIndexListing({
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
-        sortValue={table.get("sort") || "-createdAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={PRIZE_DRAW_SORT_OPTIONS}
         onSortChange={(v) => {
-          table.set("sort", v);
+          table.set(TABLE_KEYS.SORT, v);
         }}
         view={view}
         onViewChange={(v) => {
-          if (v === "table") return;
+          if (v === VIEW_MODE.TABLE) return;
           setView(v as "grid" | "list");
-          table.set("view", v as "grid" | "list");
+          table.set(TABLE_KEYS.VIEW, v as "grid" | "list");
         }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

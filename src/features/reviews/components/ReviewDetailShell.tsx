@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { StarRating } from "../../../ui";
-import { RichText } from "../../../ui";
+import { RichText, Span, StarRating } from "../../../ui";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -82,7 +81,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
     ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
     : null;
   const sellerHref = storeHref ?? null;
-  const reviewerHref = String(ROUTES.PUBLIC.PROFILE(review.userId));
+  const reviewerHref = !review.isAnonymous && review.userId
+    ? String(ROUTES.PUBLIC.PROFILE(review.userId))
+    : null;
 
   const currentImage = lightboxIdx !== null ? images[lightboxIdx] : null;
 
@@ -130,12 +131,18 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </div>
             )}
             <div className="min-w-0">
-              <Link
-                href={reviewerHref}
-                className="text-sm font-semibold text-neutral-900 dark:text-white hover:text-primary transition-colors"
-              >
-                {displayName}
-              </Link>
+              {reviewerHref ? (
+                <Link
+                  href={reviewerHref}
+                  className="text-sm font-semibold text-neutral-900 dark:text-white hover:text-primary transition-colors"
+                >
+                  {displayName}
+                </Link>
+              ) : (
+                <span className="text-sm font-semibold text-neutral-900 dark:text-white">
+                  {review.isAnonymous ? "Anonymous" : displayName}
+                </span>
+              )}
               {date && (
                 <p className="text-xs text-neutral-400 dark:text-zinc-500 mt-0.5">{date}</p>
               )}
@@ -265,20 +272,34 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             </Link>
           )}
 
-          <Link
-            href={reviewerHref}
-            className="group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all"
-          >
-            <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
-              👤
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Reviewer</p>
-              <p className="text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors">
-                {displayName}
-              </p>
+          {reviewerHref ? (
+            <Link
+              href={reviewerHref}
+              className="group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all"
+            >
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
+                👤
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Reviewer</p>
+                <p className="text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                  {displayName}
+                </p>
+              </div>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
+              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
+                👤
+              </span>
+              <div className="min-w-0">
+                <Span className="block text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Reviewer</Span>
+                <Span className="block text-sm font-medium text-neutral-900 dark:text-white truncate">
+                  Anonymous
+                </Span>
+              </div>
             </div>
-          </Link>
+          )}
         </section>
       </div>
 

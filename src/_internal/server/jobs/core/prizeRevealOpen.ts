@@ -1,17 +1,19 @@
 import { notificationRepository } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
+import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
 const PRODUCT_COLLECTION = "products";
 const ORDER_COLLECTION = "orders";
+const PRIZE_DRAW_LISTING_TYPE = "prize-draw";
 
 export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
   ctx.logger.info("Prize reveal open sweep starting");
 
   const snap = await ctx.db
     .collection(PRODUCT_COLLECTION)
-    .where("listingType", "==", "prize-draw")
-    .where("prizeRevealStatus", "==", "pending")
-    .where("prizeRevealWindowStart", "<=", ctx.now)
+    .where(PRODUCT_FIELDS.LISTING_TYPE, "==", PRIZE_DRAW_LISTING_TYPE)
+    .where(PRODUCT_FIELDS.PRIZE_REVEAL_STATUS, "==", PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.PENDING)
+    .where(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START, "<=", ctx.now)
     .limit(100)
     .get();
 
@@ -28,15 +30,19 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
     };
 
     await doc.ref.update({
-      prizeRevealStatus: "open",
-      updatedAt: ctx.now,
+      [PRODUCT_FIELDS.PRIZE_REVEAL_STATUS]: PRODUCT_FIELDS.PRIZE_REVEAL_STATUS_VALUES.OPEN,
+      [COMMON_FIELDS.UPDATED_AT]: ctx.now,
     });
 
     const orders = await ctx.db
       .collection(ORDER_COLLECTION)
       .where("prizeDrawProductId", "==", doc.id)
-      .where("paymentStatus", "==", "paid")
-      .where("status", "in", ["pending", "confirmed", "processing"])
+      .where(ORDER_FIELDS.PAYMENT_STATUS, "==", ORDER_FIELDS.PAYMENT_STATUS_VALUES.PAID)
+      .where(ORDER_FIELDS.STATUS, "in", [
+        ORDER_FIELDS.STATUS_VALUES.PENDING,
+        ORDER_FIELDS.STATUS_VALUES.CONFIRMED,
+        ORDER_FIELDS.STATUS_VALUES.PROCESSING,
+      ])
       .get();
 
     let notified = 0;

@@ -15,6 +15,7 @@
  */
 
 import type { ScammerDocument } from "../features/scams/schemas/firestore";
+import { SCAMMER_FIELDS } from "../constants/field-names";
 
 const NOW = new Date("2026-05-10T00:00:00.000Z");
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -41,7 +42,7 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     evidence: ["/media/scammer-evidence-rahul-chat-screenshot-20260402.jpg"],
     reportedBy: "user-rahul-sharma",
     reportedByAnon: false,
-    status: "verified",
+    status: SCAMMER_FIELDS.STATUS_VALUES.VERIFIED,
     verifiedBy: "user-admin-letitrip",
     verifiedAt: daysAgo(20),
     verificationNote: "Confirmed 3 separate victims with same UPI ID. Profile verified.",
@@ -109,7 +110,7 @@ export const scammersSeedData: Partial<ScammerDocument>[] = [
     evidence: [],
     reportedBy: "user-anjali-verma",
     reportedByAnon: false,
-    status: "rejected",
+    status: SCAMMER_FIELDS.STATUS_VALUES.REJECTED,
     verifiedBy: "user-admin-letitrip",
     verifiedAt: daysAgo(8),
     verificationNote:

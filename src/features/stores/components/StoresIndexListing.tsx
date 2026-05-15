@@ -10,32 +10,37 @@ import { InteractiveStoreCard } from "./InteractiveStoreCard";
 import { StoreFilters } from "./StoreFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { STORE_FIELDS } from "../../../constants/field-names";
+
+const DEFAULT_SORT = sortBy(STORE_FIELDS.CREATED_AT);
 
 const STORE_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "storeName", label: "Name A–Z" },
+  { value: sortBy(STORE_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(STORE_FIELDS.STORE_NAME, "ASC"), label: "Name A–Z" },
   { value: "-itemsSold", label: "Most Sales" },
   { value: "-averageRating", label: "Top Rated" },
 ] as const;
 
-const FILTER_KEYS = ["category", "rating", "minProductCount", "maxProductCount", "featured"];
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, "rating", "minProductCount", "maxProductCount", TABLE_KEYS.FEATURED];
 
 export interface StoresIndexListingProps {
   initialData?: any;
 }
 
 export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   // Pending filter state — buffered until "Apply Filters" clicked
@@ -87,7 +92,7 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -95,19 +100,19 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== "-createdAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   // Build sieve filters from applied URL params
-  const ratingRaw = table.get("rating");
+  const ratingRaw = table.get(TABLE_KEYS.RATING);
   const minProductCount = table.get("minProductCount");
   const maxProductCount = table.get("maxProductCount");
-  const featured = table.get("featured");
+  const featured = table.get(TABLE_KEYS.FEATURED);
 
   const filterParts: string[] = [];
   if (ratingRaw) {
@@ -120,11 +125,11 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
   const { stores, totalPages, isLoading } = useStores(
     {
-      q: table.get("q") || undefined,
-      page: table.getNumber("page", 1),
-      pageSize: table.getNumber("pageSize", 24),
-      sort: table.get("sort") || undefined,
-      category: table.get("category") || undefined,
+      q: table.get(TABLE_KEYS.QUERY) || undefined,
+      page: table.getNumber(TABLE_KEYS.PAGE, 1),
+      pageSize: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
+      sort: table.get(TABLE_KEYS.SORT) || undefined,
+      category: table.get(TABLE_KEYS.CATEGORY) || undefined,
       filters: filterParts.length > 0 ? filterParts.join(",") : undefined,
     },
     { initialData },
@@ -142,9 +147,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         searchPlaceholder="Search stores..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || "-createdAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={STORE_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

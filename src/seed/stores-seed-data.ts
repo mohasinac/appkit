@@ -5,6 +5,7 @@
  */
 
 import type { StoreDocument } from "../features/stores/schemas";
+import { STORE_FIELDS } from "../constants/field-names";
 import type { StoreCapability } from "../features/auth/permissions/constants";
 
 const NOW = new Date();
@@ -24,7 +25,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Curated by the LetItRip team. Every item is personally inspected and authenticated before listing. Fast dispatch, safe packaging.",
     location: "Mumbai, Maharashtra, India",
     website: "https://letitrip.in",
@@ -87,7 +88,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Pokémon TCG enthusiast since 2010 and PTCGO tournament player. All cards are inspected under bright light and sleeved before shipping. Sealed product is sourced directly from official distributors.",
     location: "Mumbai, Maharashtra, India",
     socialLinks: {
@@ -154,7 +155,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "WCS 2022 qualifier and competitive Yu-Gi-Oh! player. Tournament-tested cards, sleeve recommendations, and deck-building advice on request. Bulk orders welcome.",
     location: "Hyderabad, Telangana, India",
     socialLinks: {
@@ -190,7 +191,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Collector since 2005. STH hunter, Car Culture completionist, Tomica Limited Vintage dealer. All cars are fresh from retail, blister-checked, and never displayed. I source from Tokyo flea markets on my annual Japan trip.",
     location: "Delhi, NCR, India",
     socialLinks: {
@@ -227,7 +228,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Importing Beyblade X directly from Japan since 2023. All stock is Takara Tomy authentic — no knockoffs. Run weekly online tournaments with prizes. Discord community with 2,000+ members.",
     location: "Pune, Maharashtra, India",
     socialLinks: {
@@ -263,7 +264,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "I visit Akihabara twice a year and bring back genuine figures direct from Good Smile, Bandai Spirits, and Kotobukiya. All products have original Japanese box with serial number. No grey-market, no bootlegs. Specialising in Nendoroids and S.H.Figuarts with a growing Gunpla section.",
     location: "Chennai, Tamil Nadu, India",
     socialLinks: {
@@ -300,7 +301,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "Master Grade builder and competitive Gunpla modeller since 2016. All kits sourced from official Bandai distributors — no Malaysian bootlegs, no resealed boxes. YouTube channel with build tutorials for MG and RG kits. Discord server for India Gunpla community with 1,500+ members.",
     location: "Bengaluru, Karnataka, India",
     socialLinks: {
@@ -337,7 +338,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=400&h=400&fit=crop",
     storeBannerURL:
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=1600&h=400&fit=crop",
-    status: "active",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
     bio: "20+ years sourcing vintage collectibles from Japan, the UK, and the US. Every item in my store has a provenance story. I travel to Japan twice a year — Tokyo Toy Show and the Shinjuku/Shibuya flea market circuit. Specialist in Pokémon WOTC era (Base Set through Skyridge) and vintage Redline Hot Wheels.",
     location: "Kolkata, West Bengal, India",
     socialLinks: {

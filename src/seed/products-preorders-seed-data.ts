@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pre-Orders Seed Data — Collectibles Edition
  * 5 pre-orders in all states: active×3, upcoming×1, soldOut×1.
  * Stored as ProductDocument with listingType: "pre-order".
@@ -7,6 +7,7 @@
  */
 
 import type { ProductDocument } from "../features/products/schemas";
+import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
 
 const NOW = new Date();
 const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
@@ -33,7 +34,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: true,
     price: 499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 100,
     availableQuantity: 63,
     mainImage:
@@ -43,7 +44,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Beyblade Arena",
     storeId: "store-beyblade-arena",
     featured: false,
@@ -56,7 +57,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "takara-tomy",
       "booster",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Generation", value: "Beyblade X" },
       { name: "Product Code", value: "BX-10" },
@@ -101,7 +102,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: true,
     price: 999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 50,
     availableQuantity: 28,
     mainImage:
@@ -111,7 +112,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: true,
@@ -125,7 +126,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "pre-order",
       "scarlet-violet",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Set", value: "Scarlet & Violet — Shrouded Fable" },
       { name: "Packs per Box", value: "36" },
@@ -170,7 +171,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "ready_to_ship",
     preOrderCancellable: false,
     price: 699900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 30,
     availableQuantity: 12,
     mainImage:
@@ -180,7 +181,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "LetItRip Official",
     storeId: "store-letitrip-official",
     featured: false,
@@ -194,7 +195,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "tamashii",
       "pre-order",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Character", value: "Broly" },
       { name: "Series", value: "Dragon Ball Super: Super Hero" },
@@ -239,7 +240,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "upcoming",
     preOrderCancellable: true,
     price: 1499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 20,
     availableQuantity: 20,
     mainImage:
@@ -249,7 +250,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "LetItRip Official",
     storeId: "store-letitrip-official",
     featured: true,
@@ -263,7 +264,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "upcoming",
       "pre-order",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Grade", value: "Perfect Grade (PG)" },
       { name: "Scale", value: "1/60" },
@@ -308,7 +309,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: true,
     price: 449900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 40,
     availableQuantity: 26,
     mainImage:
@@ -317,13 +318,13 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: false,
     isPromoted: false,
     tags: ["pokemon", "stellar-crown", "etb", "scarlet-violet", "pre-order", "sealed"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Set", value: "Scarlet & Violet — Stellar Crown" },
       { name: "Contents", value: "9 packs, 65 sleeves, energy, accessories" },
@@ -365,7 +366,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: true,
     price: 599900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 80,
     availableQuantity: 49,
     mainImage:
@@ -374,13 +375,13 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Beyblade Arena",
     storeId: "store-beyblade-arena",
     featured: false,
     isPromoted: true,
     tags: ["beyblade-x", "bx-20", "phoenix-wing", "takara-tomy", "pre-order", "second-wave"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Generation", value: "Beyblade X" },
       { name: "Product Code", value: "BX-20" },
@@ -422,7 +423,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: true,
     price: 399900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 25,
     availableQuantity: 16,
     mainImage:
@@ -431,13 +432,13 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Gundam Galaxy",
     storeId: "store-gundam-galaxy",
     featured: false,
     isPromoted: false,
     tags: ["gunpla", "real-grade", "rg", "hi-nu-gundam", "ver-ka", "bandai", "katoki", "pre-order", "fin-funnel"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Grade", value: "Real Grade (RG)" },
       { name: "Scale", value: "1/144" },
@@ -479,7 +480,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
     preOrderProductionStatus: "in_production",
     preOrderCancellable: false,
     price: 649900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 15,
     availableQuantity: 0,
     mainImage:
@@ -489,7 +490,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
     ],
-    status: "out_of_stock",
+    status: PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
@@ -502,7 +503,7 @@ const _rawProductsPreOrdersSeedData: Partial<ProductDocument>[] = [
       "sold-out",
       "pre-order-closed",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Product", value: "RLC 2026 Annual Membership" },
       { name: "Status", value: "SOLD OUT — all 15 slots reserved" },

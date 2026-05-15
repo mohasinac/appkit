@@ -8,9 +8,13 @@ import { ReviewFilters, REVIEW_PUBLIC_SORT_OPTIONS } from "./ReviewFilters";
 import { useReviews } from "../hooks/useReviews";
 import type { ReviewListResponse } from "../types";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { REVIEW_FIELDS } from "../../../constants/field-names";
 
 const PAGE_SIZE = 12;
-const FILTER_KEYS = ["rating", "dateFrom", "dateTo", "minVotes", "maxVotes"];
+const DEFAULT_SORT = sortBy(REVIEW_FIELDS.CREATED_AT);
+const FILTER_KEYS = ["rating", TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, "minVotes", "maxVotes"];
 
 export interface ReviewsIndexListingProps {
   initialData?: ReviewListResponse;
@@ -21,21 +25,21 @@ export function ReviewsIndexListing({
   initialData,
   variant = "public",
 }: ReviewsIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "-createdAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
-  const sort = table.get("sort") || "-createdAt";
-  const currentPage = table.getNumber("page", 1);
+  const sort = table.get(TABLE_KEYS.SORT) || DEFAULT_SORT;
+  const currentPage = table.getNumber(TABLE_KEYS.PAGE, 1);
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -86,7 +90,7 @@ export function ReviewsIndexListing({
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -94,20 +98,20 @@ export function ReviewsIndexListing({
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== "-createdAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const { reviews, total, totalPages, isLoading } = useReviews(
     {
-      q: table.get("q") || undefined,
-      rating: table.get("rating") || undefined,
-      dateFrom: table.get("dateFrom") || undefined,
-      dateTo: table.get("dateTo") || undefined,
+      q: table.get(TABLE_KEYS.QUERY) || undefined,
+      rating: table.get(TABLE_KEYS.RATING) || undefined,
+      dateFrom: table.get(TABLE_KEYS.DATE_FROM) || undefined,
+      dateTo: table.get(TABLE_KEYS.DATE_TO) || undefined,
       minVotes: table.get("minVotes") ? Number(table.get("minVotes")) : undefined,
       maxVotes: table.get("maxVotes") ? Number(table.get("maxVotes")) : undefined,
       sort,
@@ -134,7 +138,7 @@ export function ReviewsIndexListing({
         onSearchCommit={commitSearch}
         sortValue={sort}
         sortOptions={sortOptions}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

@@ -9,26 +9,30 @@ import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
 import type { BlogPostCategory } from "../types";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { BLOG_FIELDS } from "../../../constants/field-names";
 
 const PAGE_SIZE = 24;
-const FILTER_KEYS = ["category", "dateFrom", "dateTo"];
+const DEFAULT_SORT = sortBy(BLOG_FIELDS.PUBLISHED_AT);
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 
 export interface BlogIndexListingProps {
   initialData?: any;
 }
 
 export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "-publishedAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   // Pending filter state — buffered until "Apply Filters" clicked
@@ -80,7 +84,7 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -88,23 +92,23 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== "-publishedAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const params = {
-    q: table.get("q") || undefined,
-    category: (table.get("category") || undefined) as BlogPostCategory | undefined,
-    sort: table.get("sort") || "-publishedAt",
-    page: table.getNumber("page", 1),
-    perPage: table.getNumber("pageSize", PAGE_SIZE),
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    category: (table.get(TABLE_KEYS.CATEGORY) || undefined) as BlogPostCategory | undefined,
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
   };
 
   const { posts, total, totalPages, isLoading } = useBlogPosts(params, { initialData });
   const currentPage = table.getNumber("page", 1);
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   return (
@@ -117,9 +121,9 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
         searchPlaceholder="Search posts..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || "-publishedAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={BLOG_PUBLIC_SORT_OPTIONS as any}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

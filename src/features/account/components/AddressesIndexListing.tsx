@@ -9,6 +9,7 @@ import type { BulkActionItem } from "../../../ui";
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 
 const FILTER_KEYS = ["addressType", "verified", "activeOnly"];
 
@@ -24,8 +25,8 @@ export function AddressesIndexListing({
   onDelete,
 }: AddressesIndexListingProps) {
   const table = useUrlTable({ defaults: {} });
-  const [view, setView] = useState<"grid" | "list">((table.get("view") as "grid" | "list") || "grid");
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [view, setView] = useState<"grid" | "list">((table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID);
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -76,22 +77,22 @@ export function AddressesIndexListing({
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
   }, [table]);
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || activeFilterCount > 0;
+  const hasActiveState = !!table.get(TABLE_KEYS.QUERY) || activeFilterCount > 0;
 
   const { data: addresses = [], isLoading } = useAddresses({
     filters: {
-      q: table.get("q") || undefined,
+      q: table.get(TABLE_KEYS.QUERY) || undefined,
       addressType: table.get("addressType") || undefined,
       verified: table.get("verified") === "true" || undefined,
       activeOnly: table.get("activeOnly") === "true" || undefined,
@@ -131,7 +132,7 @@ export function AddressesIndexListing({
           </div>
         ) : addresses.length === 0 ? (
           <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            {table.get("q") ? `No addresses matching "${table.get("q")}"` : "No saved addresses."}
+            {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}
           </p>
         ) : (
           <AddressBook

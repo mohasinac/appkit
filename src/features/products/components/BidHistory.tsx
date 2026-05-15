@@ -24,7 +24,6 @@ export interface BidHistoryProps {
   labels?: {
     title?: string;
     noHistory?: string;
-    bidder?: string;
     amount?: string;
     time?: string;
   };
@@ -95,9 +94,6 @@ export function BidHistory({
               key={bid.id}
               className="flex items-center justify-between rounded-lg border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-3 text-sm"
              data-section="bidhistory-div-422">
-              <Span className="font-medium text-zinc-700 dark:text-zinc-300 truncate max-w-[40%]">
-                {bid.bidderName ?? bid.bidderId}
-              </Span>
               <Span className="font-bold text-primary-600 dark:text-primary-400">
                 {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
               </Span>

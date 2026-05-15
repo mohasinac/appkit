@@ -28,13 +28,7 @@ import {
   decryptPiiFields,
   BID_PII_FIELDS,
 } from "../../../security";
-
-const BID_FIELDS = {
-  PRODUCT_ID: "productId",
-  USER_ID: "userId",
-  STATUS: "status",
-  IS_WINNING: "isWinning",
-} as const;
+import { BID_FIELDS } from "../../../constants/field-names";
 
 export class BidRepository extends BaseRepository<BidDocument> {
   constructor() {

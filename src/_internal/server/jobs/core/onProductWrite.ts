@@ -8,6 +8,7 @@ import {
   storeRepository,
 } from "../../../../repositories";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
+import { PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { JobContext } from "../runtime/types";
 
 export type ProductDoc = Record<string, unknown>;
@@ -45,8 +46,8 @@ export async function handleProductWrite(
     ((before?.storeId as string | undefined) || (before?.sellerId as string | undefined)) ?? null;
   const afterStoreId =
     ((after?.storeId as string | undefined) || (after?.sellerId as string | undefined)) ?? null;
-  const isAuction = (after?.listingType as string | undefined) === "auction";
-  const beforeIsAuction = (before?.listingType as string | undefined) === "auction";
+  const isAuction = (after?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
+  const beforeIsAuction = (before?.listingType as string | undefined) === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION;
 
   const wasPublished = beforeStatus === ProductStatusValues.PUBLISHED;
   const isPublished = afterStatus === ProductStatusValues.PUBLISHED;

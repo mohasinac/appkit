@@ -8,7 +8,6 @@ import { Pagination, useToast, BulkActionBar, ListingToolbar } from "../../../ui
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
-type ViewMode = "grid" | "list";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
@@ -16,8 +15,14 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
-const FILTER_KEYS = ["category", "condition", "minPrice", "maxPrice", "brand", "storeId", "freeShipping", "tags"];
+type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
+
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS];
 
 export interface ProductsIndexListingProps {
   initialData?: any;
@@ -25,14 +30,14 @@ export interface ProductsIndexListingProps {
 
 export function ProductsIndexListing({ initialData }: ProductsIndexListingProps) {
   const router = useRouter();
-  const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
+  const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const showSold = table.get("showSold") === "true";
+  const showSold = table.get(TABLE_KEYS.SHOW_SOLD) === "true";
   const [view, setView] = useState<ViewMode>(
-    (table.get("view") as ViewMode) || "grid",
+    (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
 
   // Pending filter state — buffered until "Apply Filters" clicked
@@ -85,7 +90,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", showSold: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_SOLD]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -93,9 +98,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("showSold") === "true" ||
-    table.get("sort") !== "-createdAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SHOW_SOLD) === "true" ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const localCart = useGuestCart();
@@ -107,17 +112,17 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const categoryOptions = categoriesToFacetOptions(categories);
 
   const params = {
-    q: table.get("q") || undefined,
-    category: table.get("category") || undefined,
-    minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
-    maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
-    condition: table.get("condition") || undefined,
-    brand: table.get("brand") || undefined,
-    storeId: table.get("storeId") || undefined,
-    freeShipping: table.get("freeShipping") === "true" ? true : undefined,
-    sort: table.get("sort") || "-createdAt",
-    page: table.getNumber("page", 1),
-    perPage: table.getNumber("pageSize", 24),
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    category: table.get(TABLE_KEYS.CATEGORY) || undefined,
+    minPrice: table.get(TABLE_KEYS.MIN_PRICE) ? Number(table.get(TABLE_KEYS.MIN_PRICE)) : undefined,
+    maxPrice: table.get(TABLE_KEYS.MAX_PRICE) ? Number(table.get(TABLE_KEYS.MAX_PRICE)) : undefined,
+    condition: table.get(TABLE_KEYS.CONDITION) || undefined,
+    brand: table.get(TABLE_KEYS.BRAND) || undefined,
+    storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
+    freeShipping: table.get(TABLE_KEYS.FREE_SHIPPING) === "true" ? true : undefined,
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "standard" as const,
     // Hide sold-out items by default. Uses stockQuantity>0 (always-present field)
     // instead of status=="published" because sellers don't actively transition status.
@@ -132,7 +137,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const selection = useBulkSelection({ items: products as any[], keyExtractor: (p: any) => p.id });
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -140,9 +145,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   };
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as ViewMode);
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   const handleWishlistToggle = useCallback((productId: string) => {
@@ -189,9 +194,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
-        sortValue={table.get("sort") || "-createdAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
@@ -210,7 +215,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
               type="button"
               role="switch"
               aria-checked={showSold}
-              onClick={() => table.set("showSold", showSold ? "" : "true")}
+              onClick={() => table.set(TABLE_KEYS.SHOW_SOLD, showSold ? "" : "true")}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
                 showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}

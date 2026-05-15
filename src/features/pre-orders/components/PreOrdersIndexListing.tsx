@@ -16,17 +16,22 @@ import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../../products/hooks/useBrands";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 const PREORDER_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "preOrderDeliveryDate", label: "Delivery: Soonest" },
-  { value: "-preOrderDeliveryDate", label: "Delivery: Furthest" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "-price", label: "Price: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"), label: "Delivery: Soonest" },
+  { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE), label: "Delivery: Furthest" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
 ] as const;
 
-const FILTER_KEYS = ["category", "brand", "minPrice", "maxPrice", "storeId", "preOrderProductionStatus", "dateFrom", "dateTo"];
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.STORE_ID, TABLE_KEYS.PREORDER_STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 
 export interface PreOrdersIndexListingProps {
   initialData?: any;
@@ -36,14 +41,14 @@ export interface PreOrdersIndexListingProps {
 }
 
 export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: PreOrdersIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
+  const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
-  const showClosed = table.get("showClosed") === "true";
+  const showClosed = table.get(TABLE_KEYS.SHOW_CLOSED) === "true";
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const localCart = useGuestCart();
@@ -104,7 +109,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", showClosed: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -112,25 +117,25 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("showClosed") === "true" ||
-    table.get("sort") !== "-createdAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SHOW_CLOSED) === "true" ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const params = {
-    q: table.get("q") || undefined,
-    category: table.get("category") || undefined,
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    category: table.get(TABLE_KEYS.CATEGORY) || undefined,
     categorySlug: categorySlug || undefined,
-    brand: brandName || table.get("brand") || undefined,
-    minPrice: table.get("minPrice") ? Number(table.get("minPrice")) : undefined,
-    maxPrice: table.get("maxPrice") ? Number(table.get("maxPrice")) : undefined,
-    storeId: table.get("storeId") || undefined,
-    preOrderProductionStatus: (table.get("preOrderProductionStatus") || undefined) as "upcoming" | "in_production" | "ready_to_ship" | undefined,
-    dateFrom: table.get("dateFrom") || undefined,
-    dateTo: table.get("dateTo") || undefined,
-    sort: table.get("sort") || "-createdAt",
-    page: table.getNumber("page", 1),
-    perPage: table.getNumber("pageSize", 24),
+    brand: brandName || table.get(TABLE_KEYS.BRAND) || undefined,
+    minPrice: table.get(TABLE_KEYS.MIN_PRICE) ? Number(table.get(TABLE_KEYS.MIN_PRICE)) : undefined,
+    maxPrice: table.get(TABLE_KEYS.MAX_PRICE) ? Number(table.get(TABLE_KEYS.MAX_PRICE)) : undefined,
+    storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
+    preOrderProductionStatus: (table.get(TABLE_KEYS.PREORDER_STATUS) || undefined) as "upcoming" | "in_production" | "ready_to_ship" | undefined,
+    dateFrom: table.get(TABLE_KEYS.DATE_FROM) || undefined,
+    dateTo: table.get(TABLE_KEYS.DATE_TO) || undefined,
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "pre-order" as const,
     // Hide out-of-stock pre-orders by default. Uses stockQuantity>0 (always-present field).
     // Quota over-sign is intentional — never block pre-orders by availability.
@@ -143,7 +148,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   );
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -151,9 +156,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   };
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   const wishlistActions = {
@@ -196,9 +201,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
-        sortValue={table.get("sort") || "-createdAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={PREORDER_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
@@ -217,7 +222,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
               type="button"
               role="switch"
               aria-checked={showClosed}
-              onClick={() => table.set("showClosed", showClosed ? "" : "true")}
+              onClick={() => table.set(TABLE_KEYS.SHOW_CLOSED, showClosed ? "" : "true")}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
                 showClosed ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}

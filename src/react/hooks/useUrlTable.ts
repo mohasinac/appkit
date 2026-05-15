@@ -35,6 +35,7 @@
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useRef } from "react";
+import { TABLE_KEYS } from "../../constants/table-keys";
 
 export interface UseUrlTableOptions {
   /** Default param values used when a param is absent from the URL */
@@ -53,7 +54,7 @@ export interface UseUrlTableOptions {
   searchParams?: URLSearchParams;
 }
 
-const NON_RESETTING_KEYS = ["page", "pageSize", "view"] as const;
+const NON_RESETTING_KEYS = [TABLE_KEYS.PAGE, TABLE_KEYS.PAGE_SIZE, TABLE_KEYS.VIEW] as const;
 
 export function useUrlTable(options?: UseUrlTableOptions) {
   // Always call native hooks unconditionally (React rules).

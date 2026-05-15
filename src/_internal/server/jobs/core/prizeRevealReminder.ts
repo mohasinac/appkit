@@ -1,5 +1,6 @@
 import { notificationRepository } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
+import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
 
 const ORDER_COLLECTION = "orders";
 const ONE_DAY_MS = 86_400_000;
@@ -11,10 +12,14 @@ export async function runPrizeRevealReminder(ctx: JobContext): Promise<void> {
 
   const snap = await ctx.db
     .collection(ORDER_COLLECTION)
-    .where("paymentStatus", "==", "paid")
-    .where("status", "in", ["pending", "confirmed", "processing"])
-    .where("prizeRevealDeadline", "<=", cutoff)
-    .where("prizeRevealDeadline", ">", ctx.now)
+    .where(ORDER_FIELDS.PAYMENT_STATUS, "==", ORDER_FIELDS.PAYMENT_STATUS_VALUES.PAID)
+    .where(ORDER_FIELDS.STATUS, "in", [
+      ORDER_FIELDS.STATUS_VALUES.PENDING,
+      ORDER_FIELDS.STATUS_VALUES.CONFIRMED,
+      ORDER_FIELDS.STATUS_VALUES.PROCESSING,
+    ])
+    .where(PRODUCT_FIELDS.PRIZE_REVEAL_DEADLINE, "<=", cutoff)
+    .where(PRODUCT_FIELDS.PRIZE_REVEAL_DEADLINE, ">", ctx.now)
     .limit(500)
     .get();
 

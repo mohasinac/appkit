@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Conversations Seed Data â€” Buyer â†” Seller messaging on products.
  * 8 conversations with realistic pre-purchase and post-purchase threads.
  * Covers: availability questions, grading enquiries, shipping queries, offer negotiation,

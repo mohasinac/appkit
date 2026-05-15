@@ -7,26 +7,30 @@ import { Pagination, ListingToolbar } from "../../../ui";
 import { EventCard } from "./EventCard";
 import { EventFilters, EVENT_PUBLIC_SORT_OPTIONS } from "./EventFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
+import { EVENT_FIELDS } from "../../../constants/field-names";
+import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
 
 const PAGE_SIZE = 24;
-const FILTER_KEYS = ["type", "status", "dateFrom", "dateTo", "showExpired"];
+const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, TABLE_KEYS.SHOW_EXPIRED];
 
 export interface EventsIndexListingProps {
   initialData?: any;
 }
 
 export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "startsAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: sortBy(EVENT_FIELDS.STARTS_AT, "ASC") } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
     if (next === "table") return;
     setView(next);
-    table.set("view", next);
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   // Pending filter state — buffered until "Apply Filters" clicked
@@ -78,7 +82,7 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -86,43 +90,44 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== "startsAt" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SORT) !== sortBy(EVENT_FIELDS.STARTS_AT, "ASC") ||
     activeFilterCount > 0;
 
   // Build client-side filter string from URL params
-  const typeRaw = table.get("type");
-  const statusRaw = table.get("status");
-  const dateFrom = table.get("dateFrom");
-  const dateTo = table.get("dateTo");
+  const typeRaw = table.get(TABLE_KEYS.TYPE);
+  const statusRaw = table.get(TABLE_KEYS.STATUS);
+  const dateFrom = table.get(TABLE_KEYS.DATE_FROM);
+  const dateTo = table.get(TABLE_KEYS.DATE_TO);
 
   const filterParts: string[] = [];
   if (typeRaw) {
     const types = typeRaw.split("|").filter(Boolean);
-    if (types.length === 1) filterParts.push(`type==${types[0]}`);
-    else if (types.length > 1) filterParts.push(`type==${types.join("|")}`);
+    if (types.length === 1) filterParts.push(sieveFilter(EVENT_FIELDS.TYPE, SIEVE_OP.EQ, types[0]));
+    // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
+    else if (types.length > 1) filterParts.push(sieveMultiEq(EVENT_FIELDS.TYPE, types));
   }
   if (statusRaw) {
     const statuses = statusRaw.split("|").filter(Boolean);
-    if (statuses.length === 1) filterParts.push(`status==${statuses[0]}`);
-    else if (statuses.length > 1) filterParts.push(`status==${statuses.join("|")}`);
+    if (statuses.length === 1) filterParts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, statuses[0]));
+    else if (statuses.length > 1) filterParts.push(sieveMultiEq(EVENT_FIELDS.STATUS, statuses));
   }
-  if (dateFrom) filterParts.push(`startsAt>=${dateFrom}`);
-  if (dateTo) filterParts.push(`endsAt<=${dateTo}`);
+  if (dateFrom) filterParts.push(sieveFilter(EVENT_FIELDS.STARTS_AT, SIEVE_OP.GTE, dateFrom));
+  if (dateTo) filterParts.push(sieveFilter(EVENT_FIELDS.ENDS_AT, SIEVE_OP.LTE, dateTo));
 
   const params = {
-    q: table.get("q") || undefined,
-    page: table.getNumber("page", 1),
-    pageSize: table.getNumber("pageSize", PAGE_SIZE),
-    sort: table.get("sort") || "startsAt",
-    filters: filterParts.length > 0 ? filterParts.join(",") : undefined,
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    pageSize: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),
+    sort: table.get(TABLE_KEYS.SORT) || sortBy(EVENT_FIELDS.STARTS_AT, "ASC"),
+    filters: filterParts.length > 0 ? sieveAnd(...filterParts) : undefined,
   };
 
   const { events, total, totalPages, isLoading } = useEvents(params as any, { initialData });
-  const currentPage = table.getNumber("page", 1);
+  const currentPage = table.getNumber(TABLE_KEYS.PAGE, 1);
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   return (
@@ -135,9 +140,9 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         searchPlaceholder="Search events..."
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || "startsAt"}
+        sortValue={table.get(TABLE_KEYS.SORT) || sortBy(EVENT_FIELDS.STARTS_AT, "ASC")}
         sortOptions={EVENT_PUBLIC_SORT_OPTIONS as any}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

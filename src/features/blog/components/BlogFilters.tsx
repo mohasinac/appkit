@@ -5,33 +5,36 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import { BLOG_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
 
 export type BlogFilterVariant = "admin" | "seller" | "public";
 
 export const BLOG_FILTER_KEYS = {
-  admin: ["status", "category", "isFeatured"],
-  seller: ["status", "category", "isFeatured"],
-  public: ["category"],
+  admin: [TABLE_KEYS.STATUS, TABLE_KEYS.CATEGORY, TABLE_KEYS.IS_FEATURED],
+  seller: [TABLE_KEYS.STATUS, TABLE_KEYS.CATEGORY, TABLE_KEYS.IS_FEATURED],
+  public: [TABLE_KEYS.CATEGORY],
 } as const;
 
 export const BLOG_ADMIN_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "title", label: "Title A–Z" },
-  { value: "-title", label: "Title Z–A" },
-  { value: "-views", label: "Most Viewed" },
-  { value: "-readTimeMinutes", label: "Longest Read" },
-  { value: "-publishedAt", label: "Published: Newest" },
-  { value: "publishedAt", label: "Published: Oldest" },
+  { value: sortBy(BLOG_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(BLOG_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(BLOG_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
+  { value: sortBy(BLOG_FIELDS.TITLE), label: "Title Z–A" },
+  { value: sortBy(BLOG_FIELDS.VIEWS), label: "Most Viewed" },
+  { value: sortBy(BLOG_FIELDS.READ_TIME_MINUTES), label: "Longest Read" },
+  { value: sortBy(BLOG_FIELDS.PUBLISHED_AT), label: "Published: Newest" },
+  { value: sortBy(BLOG_FIELDS.PUBLISHED_AT, "ASC"), label: "Published: Oldest" },
 ] as const;
 
 export const BLOG_SELLER_SORT_OPTIONS = BLOG_ADMIN_SORT_OPTIONS;
 
 export const BLOG_PUBLIC_SORT_OPTIONS = [
-  { value: "-publishedAt", label: "Published: Newest" },
-  { value: "publishedAt", label: "Published: Oldest" },
-  { value: "-views", label: "Most Viewed" },
-  { value: "title", label: "Title A–Z" },
+  { value: sortBy(BLOG_FIELDS.PUBLISHED_AT), label: "Published: Newest" },
+  { value: sortBy(BLOG_FIELDS.PUBLISHED_AT, "ASC"), label: "Published: Oldest" },
+  { value: sortBy(BLOG_FIELDS.VIEWS), label: "Most Viewed" },
+  { value: sortBy(BLOG_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
 ] as const;
 
 // Backward-compatible alias.

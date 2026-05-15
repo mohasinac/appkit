@@ -6,20 +6,23 @@ import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import { REVIEW_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
 
 export type ReviewFilterVariant = "admin" | "seller" | "public";
 
 export const REVIEW_FILTER_KEYS = {
-  admin: ["status", "rating", "brand", "verified", "featured", "dateFrom", "dateTo"],
-  seller: ["status", "rating", "brand", "dateFrom", "dateTo"],
-  public: ["rating", "brand", "dateFrom", "dateTo"],
+  admin: [TABLE_KEYS.STATUS, TABLE_KEYS.RATING, TABLE_KEYS.BRAND, "verified", TABLE_KEYS.FEATURED, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
+  seller: [TABLE_KEYS.STATUS, TABLE_KEYS.RATING, TABLE_KEYS.BRAND, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
+  public: [TABLE_KEYS.RATING, TABLE_KEYS.BRAND, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
 } as const;
 
 export const REVIEW_ADMIN_SORT_OPTIONS = [
-  { value: "-createdAt", key: "sortNewest" },
-  { value: "createdAt", key: "sortOldest" },
-  { value: "-rating", key: "sortHighestRated" },
-  { value: "rating", key: "sortLowestRated" },
+  { value: sortBy(REVIEW_FIELDS.CREATED_AT), key: "sortNewest" },
+  { value: sortBy(REVIEW_FIELDS.CREATED_AT, "ASC"), key: "sortOldest" },
+  { value: sortBy(REVIEW_FIELDS.RATING), key: "sortHighestRated" },
+  { value: sortBy(REVIEW_FIELDS.RATING, "ASC"), key: "sortLowestRated" },
 ] as const;
 
 export const REVIEW_SELLER_SORT_OPTIONS = REVIEW_ADMIN_SORT_OPTIONS;

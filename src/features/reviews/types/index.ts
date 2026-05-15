@@ -32,6 +32,7 @@ export interface Review {
   reportCount?: number;
   verified?: boolean;
   featured?: boolean;
+  isAnonymous?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

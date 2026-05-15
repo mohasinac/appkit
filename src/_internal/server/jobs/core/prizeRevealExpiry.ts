@@ -1,5 +1,6 @@
 import { notificationRepository } from "../../../../repositories";
 import type { JobContext } from "../runtime/types";
+import { ORDER_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
 const ORDER_COLLECTION = "orders";
 
@@ -8,9 +9,13 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
 
   const snap = await ctx.db
     .collection(ORDER_COLLECTION)
-    .where("paymentStatus", "==", "paid")
-    .where("status", "in", ["pending", "confirmed", "processing"])
-    .where("prizeRevealDeadline", "<", ctx.now)
+    .where(ORDER_FIELDS.PAYMENT_STATUS, "==", ORDER_FIELDS.PAYMENT_STATUS_VALUES.PAID)
+    .where(ORDER_FIELDS.STATUS, "in", [
+      ORDER_FIELDS.STATUS_VALUES.PENDING,
+      ORDER_FIELDS.STATUS_VALUES.CONFIRMED,
+      ORDER_FIELDS.STATUS_VALUES.PROCESSING,
+    ])
+    .where(PRODUCT_FIELDS.PRIZE_REVEAL_DEADLINE, "<", ctx.now)
     .limit(200)
     .get();
 
@@ -31,11 +36,11 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
     if (!order.prizeDrawProductId) continue;
 
     await doc.ref.update({
-      status: "refunded",
-      paymentStatus: "refunded",
+      [ORDER_FIELDS.STATUS]: ORDER_FIELDS.STATUS_VALUES.REFUNDED,
+      [ORDER_FIELDS.PAYMENT_STATUS]: ORDER_FIELDS.PAYMENT_STATUS_VALUES.REFUNDED,
       isNonRefundable: false,
       prizeRevealExpired: true,
-      updatedAt: ctx.now,
+      [COMMON_FIELDS.UPDATED_AT]: ctx.now,
     });
 
     if (order.userId) {

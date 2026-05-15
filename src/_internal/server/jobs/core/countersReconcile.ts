@@ -4,6 +4,7 @@ import {
   storeRepository,
 } from "../../../../repositories";
 import { ProductStatusValues, PRODUCT_COLLECTION } from "../../../../features/products/schemas/firestore";
+import { ORDER_FIELDS, PRODUCT_FIELDS } from "../../../../constants/field-names";
 import type { JobContext } from "../runtime/types";
 import { QUERY_LIMIT } from "../handlers/messages";
 
@@ -25,7 +26,7 @@ async function reconcileCategories(ctx: JobContext): Promise<void> {
     const catId = data.category;
     if (!catId) continue;
     if (!leafCounts[catId]) leafCounts[catId] = { productIds: [], auctionIds: [] };
-    if (data.listingType === "auction") leafCounts[catId].auctionIds.push(doc.id);
+    if (data.listingType === PRODUCT_FIELDS.LISTING_TYPE_VALUES.AUCTION) leafCounts[catId].auctionIds.push(doc.id);
     else leafCounts[catId].productIds.push(doc.id);
   }
 
@@ -85,7 +86,7 @@ async function reconcileStores(ctx: JobContext): Promise<void> {
         ctx.db
           .collection(ORDERS_COLLECTION)
           .where("sellerId", "==", sellerId)
-          .where("status", "==", "delivered")
+          .where(ORDER_FIELDS.STATUS, "==", ORDER_FIELDS.STATUS_VALUES.DELIVERED)
           .limit(QUERY_LIMIT)
           .get(),
         reviewRepository.getApprovedRatingAggregateByStore(storeId),

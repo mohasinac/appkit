@@ -1,4 +1,4 @@
-﻿// Single unified barrel
+// Single unified barrel
 // Runtime tags: [CLIENT-SSR] [CLIENT-ONLY] [SERVER-ONLY] [DB] [UTIL] [TYPE] [SCHEMA] [CONFIG]
 
 // ./tokens/index
@@ -1620,6 +1620,7 @@ export {
   ELIGIBLE_ORDER_STATUSES_FOR_TICKET,
   SUPPORT_TICKET_COLLECTION,
   ACTIVE_TICKET_STATUSES,
+  SUPPORT_TICKET_FIELDS,
   TicketCategoryValues,
   TicketStatusValues,
   TicketPriorityValues,
@@ -9241,3 +9242,48 @@ export type {
   AllowedDocMime,
   AllowedMime,
 } from "./_internal/shared/media/limits";
+
+// ── Field name constants — canonical source of truth for all Firestore field names ──
+// NOTE: STORE_FIELDS, CATEGORY_FIELDS, EVENT_FIELDS, EVENT_ENTRY_FIELDS, PAYOUT_FIELDS,
+// COUPON_FIELDS, CART_FIELDS, USER_FIELDS, ADDRESS_FIELDS, NOTIFICATION_FIELDS,
+// SESSION_FIELDS, SCAMMER_FIELDS are already exported from feature barrels above.
+export {
+  PRODUCT_FIELDS,
+  PRODUCT_STATUS_TRANSITIONS,
+  ORDER_FIELDS,
+  REVIEW_FIELDS,
+  BID_FIELDS,
+  AD_FIELDS,
+  BLOG_FIELDS,
+  BRAND_FIELDS,
+  WISHLIST_FIELDS,
+  HISTORY_FIELDS,
+  COUPON_USAGE_FIELDS,
+  CONVERSATION_FIELDS,
+  CAROUSEL_FIELDS,
+  FAQ_FIELDS,
+  HOMEPAGE_SECTION_FIELDS,
+  SITE_SETTINGS_FIELDS,
+  COMMON_FIELDS,
+  OAUTH_STATE_VALUES,
+  SCHEMA_DEFAULTS,
+} from "./constants/field-names";
+
+// ── Sort helpers ──────────────────────────────────────────────────────────────
+export { SORT_DIR, sortBy } from "./constants/sort";
+export type { SortDirection } from "./constants/sort";
+
+// ── URL table keys + view mode ────────────────────────────────────────────────
+export { TABLE_KEYS, VIEW_MODE } from "./constants/table-keys";
+export type { TableKey, ViewMode } from "./constants/table-keys";
+
+// ── Sieve query builder ───────────────────────────────────────────────────────
+export {
+  SIEVE_OP,
+  SIEVE_PIPE_OPS,
+  sieveFilter,
+  sieveMultiEq,
+  expandSieveParam,
+  sieveAnd,
+} from "./utils/sieve-builder";
+export type { SieveOp } from "./utils/sieve-builder";

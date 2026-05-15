@@ -797,6 +797,7 @@ export async function ProductDetailPageView({
               reviewsContent={
                 <ReviewsList
                   reviews={reviews}
+                  context="listing"
                   emptyLabel="No reviews yet — be the first to review this product."
                 />
               }

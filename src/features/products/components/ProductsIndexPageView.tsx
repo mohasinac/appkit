@@ -5,12 +5,15 @@ import { Container, Heading, Main, Section } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { parseListingSearchParams } from "../../../utils/listing-params";
 import { ProductsIndexListing } from "./ProductsIndexListing";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
+import { sortBy } from "../../../constants/sort";
 
 type SearchParams = Record<string, string | string[]>;
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 24;
-const DEFAULT_SORT = "-createdAt";
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
 function sp(params: SearchParams, key: string): string {
   const v = params[key];
@@ -18,22 +21,28 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildProductFilters(params: SearchParams): string {
-  const parts: string[] = ["status==published", "listingType==standard"];
+  const parts: string[] = [
+    sieveFilter(PRODUCT_FIELDS.STATUS, SIEVE_OP.EQ, PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED),
+    sieveFilter(PRODUCT_FIELDS.LISTING_TYPE, SIEVE_OP.EQ, "standard"),
+  ];
   const condition = sp(params, "condition");
   if (condition) {
     const values = condition.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`condition==${values[0]}`);
-    else if (values.length > 1) parts.push(`condition==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter(PRODUCT_FIELDS.CONDITION, SIEVE_OP.EQ, values[0]));
+    // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
+    else if (values.length > 1) parts.push(sieveMultiEq(PRODUCT_FIELDS.CONDITION, values));
   }
   const minPrice = sp(params, "minPrice");
   const maxPrice = sp(params, "maxPrice");
-  if (minPrice) parts.push(`price>=${minPrice}`);
-  if (maxPrice) parts.push(`price<=${maxPrice}`);
+  if (minPrice) parts.push(sieveFilter(PRODUCT_FIELDS.PRICE, SIEVE_OP.GTE, minPrice));
+  if (maxPrice) parts.push(sieveFilter(PRODUCT_FIELDS.PRICE, SIEVE_OP.LTE, maxPrice));
   const storeId = sp(params, "seller");
-  if (storeId) parts.push(`storeId==${storeId}`);
+  if (storeId) parts.push(sieveFilter(PRODUCT_FIELDS.STORE_ID, SIEVE_OP.EQ, storeId));
   const freeShipping = sp(params, "freeShipping");
-  if (freeShipping === "true") parts.push("freeShipping==true");
-  return parts.join(",");
+  if (freeShipping === "true") {
+    parts.push(sieveFilter(PRODUCT_FIELDS.SHIPPING_PAID_BY, SIEVE_OP.EQ, PRODUCT_FIELDS.SHIPPING_PAID_BY_VALUES.SELLER));
+  }
+  return sieveAnd(...parts);
 }
 
 export interface ProductsIndexPageViewProps {

@@ -22,35 +22,14 @@ import {
   type ProductUpdateInput,
 } from "../schemas";
 import type { ProductStatus } from "../types";
-
-const PRODUCT_FIELDS = {
-  STORE_ID: "storeId",
-  STATUS: "status",
-  FEATURED: "featured",
-  CATEGORY: "category",
-  SLUG: "slug",
-  // SB1-G (S3 2026-05-13) — canonical discriminator. Legacy `isAuction` /
-  // `isPreOrder` boolean fields were removed in this session.
-  LISTING_TYPE: "listingType",
-  PRE_ORDER_DELIVERY_DATE: "preOrderDeliveryDate",
-  IS_PROMOTED: "isPromoted",
-  AUCTION_END_DATE: "auctionEndDate",
-  AVAILABLE_QUANTITY: "availableQuantity",
-  VIEW_COUNT: "viewCount",
-} as const;
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
 /**
  * Canonical listing-kind tokens used in `listingType`. Note: the public Sieve
  * alias accepts the legacy "preorder" / "product" spelling; we normalise to
  * the Firestore-stored value here.
  */
-const LISTING_TYPE_VALUES = {
-  AUCTION: "auction",
-  PRE_ORDER: "pre-order",
-  STANDARD: "standard",
-  PRIZE_DRAW: "prize-draw",
-  BUNDLE: "bundle",
-} as const;
+const LISTING_TYPE_VALUES = PRODUCT_FIELDS.LISTING_TYPE_VALUES;
 
 // Reused Sieve clauses for FILTER_ALIASES. SB1-G replaced the boolean-combo
 // clauses with single-field `listingType==X` clauses now that every doc

@@ -24,7 +24,7 @@ export interface SpinPrize {
   weight: number;
   isActive: boolean;
 }
-export type EventStatus = "draft" | "active" | "paused" | "ended";
+export type EventStatus = "draft" | "active" | "paused" | "ended" | "cancelled";
 export type EntryReviewStatus = "pending" | "approved" | "flagged";
 export type PollResultsVisibility = "always" | "after_vote" | "after_end";
 

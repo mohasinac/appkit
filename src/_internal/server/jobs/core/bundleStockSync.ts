@@ -8,10 +8,15 @@
  */
 
 import type { JobContext } from "../runtime/types";
+import { CATEGORY_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
 const CATEGORIES_COLLECTION = "categories";
 const PRODUCT_COLLECTION = "products";
-const UNAVAILABLE = new Set(["sold", "out_of_stock", "discontinued"]);
+const UNAVAILABLE = new Set<string>([
+  PRODUCT_FIELDS.STATUS_VALUES.SOLD,
+  PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK,
+  PRODUCT_FIELDS.STATUS_VALUES.DISCONTINUED,
+]);
 const MIN_ACTIVE_DEFAULT = 1;
 
 type BundleCategoryDoc = {
@@ -50,8 +55,8 @@ export async function runBundleStockSync(ctx: JobContext): Promise<void> {
 
   const snap = await ctx.db
     .collection(CATEGORIES_COLLECTION)
-    .where("categoryType", "==", "bundle")
-    .where("isActive", "==", true)
+    .where(CATEGORY_FIELDS.CATEGORY_TYPE, "==", CATEGORY_FIELDS.CATEGORY_TYPE_VALUES.BUNDLE)
+    .where(CATEGORY_FIELDS.IS_ACTIVE, "==", true)
     .limit(500)
     .get();
 
@@ -70,9 +75,9 @@ export async function runBundleStockSync(ctx: JobContext): Promise<void> {
     const nextStatus = await computeBundleStockStatus(productIds, minActive, ctx);
     if (nextStatus !== data.bundleStockStatus) {
       await bundleDoc.ref.update({
-        bundleStockStatus: nextStatus,
-        bundleQueryResolvedAt: ctx.now,
-        updatedAt: ctx.now,
+        [CATEGORY_FIELDS.BUNDLE_STOCK_STATUS]: nextStatus,
+        [CATEGORY_FIELDS.BUNDLE_QUERY_RESOLVED_AT]: ctx.now,
+        [COMMON_FIELDS.UPDATED_AT]: ctx.now,
       });
       updated++;
     }

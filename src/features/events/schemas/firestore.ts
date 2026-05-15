@@ -126,6 +126,7 @@ export const EVENT_FIELDS = {
     ACTIVE: "active" as EventStatus,
     PAUSED: "paused" as EventStatus,
     ENDED: "ended" as EventStatus,
+    CANCELLED: "cancelled" as EventStatus,
   },
   TYPE_VALUES: {
     SALE: "sale" as EventType,

@@ -12,6 +12,7 @@ import type {
   ProductDocument,
   PrizeDrawItem,
 } from "../features/products/schemas";
+import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -30,7 +31,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
     price: 500, // ₹5 per entry (matches pricePerEntry; price is the unit cost for cart totals)
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 50,
     availableQuantity: 50,
     mainImage:
@@ -39,7 +40,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: true,
@@ -52,7 +53,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "charizard",
       "fair-rng",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw",
     pricePerEntry: 500,
     prizeMaxEntries: 50,
@@ -86,7 +87,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
     price: 29900, // ₹299 per entry
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 100,
     availableQuantity: 100,
     mainImage:
@@ -95,7 +96,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: true,
@@ -107,7 +108,7 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
       "diecast",
       "fair-rng",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     listingType: "prize-draw",
     pricePerEntry: 29900,
     prizeMaxEntries: 100,
@@ -139,7 +140,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 549900,
       isWon: false,
     },
@@ -159,7 +160,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 199900,
       isWon: false,
     },
@@ -169,7 +170,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1628968434441-d9c61d543a91?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 299900,
       isWon: false,
     },
@@ -179,7 +180,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1606503153255-59d8b8b82176?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 249900,
       isWon: false,
     },
@@ -189,7 +190,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1613771404721-1f92d799e49f?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 99900,
       isWon: false,
     },
@@ -199,7 +200,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 1999900,
       isWon: false,
     },
@@ -209,7 +210,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 79900,
       isWon: false,
     },
@@ -219,7 +220,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1542779283-5a86fe9aab09?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 449900,
       isWon: false,
     },
@@ -230,7 +231,7 @@ function _pokemonPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=600&h=600&fit=crop",
       ],
-      condition: "used",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
       estimatedValue: 149900,
       isWon: false,
     },
@@ -245,7 +246,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 899900,
       isWon: false,
     },
@@ -255,7 +256,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 499900,
       isWon: false,
     },
@@ -265,7 +266,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 599900,
       isWon: false,
     },
@@ -275,7 +276,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 449900,
       isWon: false,
     },
@@ -285,7 +286,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 699900,
       isWon: false,
     },
@@ -295,7 +296,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1611821064430-0d40291922d2?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 549900,
       isWon: false,
     },
@@ -305,7 +306,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 799900,
       isWon: false,
     },
@@ -315,7 +316,7 @@ function _hotWheelsPrizeItems(): PrizeDrawItem[] {
       images: [
         "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=600&fit=crop",
       ],
-      condition: "new",
+      condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
       estimatedValue: 649900,
       isWon: false,
     },

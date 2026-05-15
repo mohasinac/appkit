@@ -1,4 +1,4 @@
-﻿import type { LoyaltyConfig } from "./loyalty-config";
+import type { LoyaltyConfig } from "./loyalty-config";
 
 export type { LoyaltyConfig } from "./loyalty-config";
 

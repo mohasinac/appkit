@@ -23,22 +23,7 @@ import {
   type OrderRefundEvent,
 } from "../schemas";
 import type { OrderStatus, PaymentStatus } from "../types";
-
-const ORDER_FIELDS = {
-  USER_ID: "userId",
-  PRODUCT_ID: "productId",
-  BUNDLE_ID: "bundleId",
-  STATUS: "status",
-  STATUS_VALUES: {
-    PENDING: "pending",
-    CONFIRMED: "confirmed",
-    PROCESSING: "processing",
-    SHIPPED: "shipped",
-    DELIVERED: "delivered",
-    CANCELLED: "cancelled",
-    REFUNDED: "refunded",
-  },
-} as const;
+import { ORDER_FIELDS } from "../../../constants/field-names";
 
 /**
  * Statuses that count toward a user's per-product / per-bundle purchase

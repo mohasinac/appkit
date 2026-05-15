@@ -6,6 +6,9 @@ import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
 
 export type { FacetOption, UrlTable };
 
@@ -13,61 +16,61 @@ export type ProductFilterVariant = "admin" | "seller" | "public";
 
 export const PRODUCT_FILTER_KEYS = {
   admin: [
-    "category",
-    "condition",
-    "minPrice",
-    "maxPrice",
-    "brand",
-    "seller",
-    "tags",
-    "status",
+    TABLE_KEYS.CATEGORY,
+    TABLE_KEYS.CONDITION,
+    TABLE_KEYS.MIN_PRICE,
+    TABLE_KEYS.MAX_PRICE,
+    TABLE_KEYS.BRAND,
+    TABLE_KEYS.SELLER,
+    TABLE_KEYS.TAGS,
+    TABLE_KEYS.STATUS,
   ],
   seller: [
-    "category",
-    "condition",
-    "minPrice",
-    "maxPrice",
-    "brand",
-    "tags",
-    "status",
+    TABLE_KEYS.CATEGORY,
+    TABLE_KEYS.CONDITION,
+    TABLE_KEYS.MIN_PRICE,
+    TABLE_KEYS.MAX_PRICE,
+    TABLE_KEYS.BRAND,
+    TABLE_KEYS.TAGS,
+    TABLE_KEYS.STATUS,
   ],
   public: [
-    "category",
-    "condition",
-    "minPrice",
-    "maxPrice",
-    "brand",
-    "storeId",
-    "tags",
+    TABLE_KEYS.CATEGORY,
+    TABLE_KEYS.CONDITION,
+    TABLE_KEYS.MIN_PRICE,
+    TABLE_KEYS.MAX_PRICE,
+    TABLE_KEYS.BRAND,
+    TABLE_KEYS.STORE_ID,
+    TABLE_KEYS.TAGS,
   ],
 } as const;
 
 export const PRODUCT_ADMIN_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "-price", label: "Price: High to Low" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "title", label: "Title A-Z" },
-  { value: "-title", label: "Title Z-A" },
-  { value: "-viewCount", label: "Most Viewed" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
+  { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z-A" },
+  { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
 ] as const;
 
 export const PRODUCT_SELLER_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "-price", label: "Price: High to Low" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "title", label: "Title A-Z" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
 ] as const;
 
 export const PRODUCT_PUBLIC_SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
-  { value: "-price", label: "Price: High to Low" },
-  { value: "price", label: "Price: Low to High" },
-  { value: "title", label: "Title A–Z" },
-  { value: "-title", label: "Title Z–A" },
-  { value: "-viewCount", label: "Most Viewed" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
+  { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z–A" },
+  { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
 ] as const;
 
 export function getProductFilterKeys(
@@ -125,31 +128,31 @@ export function ProductFilters({
   const t = useTranslations("filters");
 
   const conditionOptions: FacetOption[] = [
-    { value: "new", label: t("conditionNew") },
-    { value: "used", label: t("conditionUsed") },
-    { value: "refurbished", label: t("conditionRefurbished") },
-    { value: "broken", label: t("conditionBroken") },
+    { value: PRODUCT_FIELDS.CONDITION_VALUES.NEW, label: t("conditionNew") },
+    { value: PRODUCT_FIELDS.CONDITION_VALUES.USED, label: t("conditionUsed") },
+    { value: PRODUCT_FIELDS.CONDITION_VALUES.REFURBISHED, label: t("conditionRefurbished") },
+    { value: PRODUCT_FIELDS.CONDITION_VALUES.BROKEN, label: t("conditionBroken") },
   ];
 
   const defaultStatusOptions: FacetOption[] = [
-    { value: "published", label: t("statusPublished") },
-    { value: "draft", label: t("statusDraft") },
-    { value: "archived", label: t("statusArchived") },
+    { value: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED, label: t("statusPublished") },
+    { value: PRODUCT_FIELDS.STATUS_VALUES.DRAFT, label: t("statusDraft") },
+    { value: PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK, label: t("statusOutOfStock") },
   ];
 
-  const selectedCategories = table.get("category")
-    ? table.get("category").split("|").filter(Boolean)
+  const selectedCategories = table.get(TABLE_KEYS.CATEGORY)
+    ? table.get(TABLE_KEYS.CATEGORY).split("|").filter(Boolean)
     : [];
-  const selectedBrands = table.get("brand") ? [table.get("brand")] : [];
-  const selectedSellers = table.get("storeId") ? [table.get("storeId")] : [];
-  const selectedConditions = table.get("condition")
-    ? table.get("condition").split("|").filter(Boolean)
+  const selectedBrands = table.get(TABLE_KEYS.BRAND) ? [table.get(TABLE_KEYS.BRAND)] : [];
+  const selectedSellers = table.get(TABLE_KEYS.STORE_ID) ? [table.get(TABLE_KEYS.STORE_ID)] : [];
+  const selectedConditions = table.get(TABLE_KEYS.CONDITION)
+    ? table.get(TABLE_KEYS.CONDITION).split("|").filter(Boolean)
     : [];
-  const selectedTags = table.get("tags")
-    ? table.get("tags").split("|").filter(Boolean)
+  const selectedTags = table.get(TABLE_KEYS.TAGS)
+    ? table.get(TABLE_KEYS.TAGS).split("|").filter(Boolean)
     : [];
-  const selectedStatuses = table.get("status")
-    ? table.get("status").split("|").filter(Boolean)
+  const selectedStatuses = table.get(TABLE_KEYS.STATUS)
+    ? table.get(TABLE_KEYS.STATUS).split("|").filter(Boolean)
     : [];
   const resolvedVariant: ProductFilterVariant =
     variant ?? (showStatus ? "admin" : "public");
@@ -162,7 +165,7 @@ export function ProductFilters({
           title={t("category")}
           options={categoryOptions}
           selected={selectedCategories}
-          onChange={(vals) => table.set("category", vals.join("|"))}
+          onChange={(vals) => table.set(TABLE_KEYS.CATEGORY, vals.join("|"))}
           searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
         />
@@ -172,17 +175,17 @@ export function ProductFilters({
         title={t("condition")}
         options={conditionOptions}
         selected={selectedConditions}
-        onChange={(vals) => table.set("condition", vals.join("|"))}
+        onChange={(vals) => table.set(TABLE_KEYS.CONDITION, vals.join("|"))}
         searchable={false}
         defaultCollapsed={false}
       />
 
       <RangeFilter
         title={t("priceRange")}
-        minValue={table.get("minPrice")}
-        maxValue={table.get("maxPrice")}
-        onMinChange={(v) => table.set("minPrice", v)}
-        onMaxChange={(v) => table.set("maxPrice", v)}
+        minValue={table.get(TABLE_KEYS.MIN_PRICE)}
+        maxValue={table.get(TABLE_KEYS.MAX_PRICE)}
+        onMinChange={(v) => table.set(TABLE_KEYS.MIN_PRICE, v)}
+        onMaxChange={(v) => table.set(TABLE_KEYS.MAX_PRICE, v)}
         prefix={currencyPrefix}
         showSlider
         minBound={0}
@@ -198,7 +201,7 @@ export function ProductFilters({
           title={t("brand")}
           options={brandOptions}
           selected={selectedBrands}
-          onChange={(vals) => table.set("brand", vals[0] ?? "")}
+          onChange={(vals) => table.set(TABLE_KEYS.BRAND, vals[0] ?? "")}
           searchable={brandOptions.length > 4}
           defaultCollapsed={brandOptions.length > 6}
         />
@@ -209,7 +212,7 @@ export function ProductFilters({
           title={t("store")}
           options={resolvedStoreOptions}
           selected={selectedSellers}
-          onChange={(vals) => table.set("storeId", vals[0] ?? "")}
+          onChange={(vals) => table.set(TABLE_KEYS.STORE_ID, vals[0] ?? "")}
           searchable={resolvedStoreOptions.length > 4}
           defaultCollapsed={resolvedStoreOptions.length > 6}
         />
@@ -219,8 +222,8 @@ export function ProductFilters({
         <SwitchFilter
           title={t("shipping")}
           label={t("freeShippingOnly")}
-          checked={table.get("freeShipping") === "true"}
-          onChange={(v) => table.set("freeShipping", v ? "true" : "")}
+          checked={table.get(TABLE_KEYS.FREE_SHIPPING) === "true"}
+          onChange={(v) => table.set(TABLE_KEYS.FREE_SHIPPING, v ? "true" : "")}
           defaultCollapsed={false}
         />
       )}
@@ -230,7 +233,7 @@ export function ProductFilters({
           title={t("tags")}
           options={tagOptions}
           selected={selectedTags}
-          onChange={(vals) => table.set("tags", vals.join("|"))}
+          onChange={(vals) => table.set(TABLE_KEYS.TAGS, vals.join("|"))}
           searchable={tagOptions.length > 4}
           defaultCollapsed={tagOptions.length > 6}
         />
@@ -241,7 +244,7 @@ export function ProductFilters({
           title={t("status")}
           options={statusOptions ?? defaultStatusOptions}
           selected={selectedStatuses}
-          onChange={(vals) => table.set("status", vals.join("|"))}
+          onChange={(vals) => table.set(TABLE_KEYS.STATUS, vals.join("|"))}
           searchable={false}
           defaultCollapsed={false}
         />

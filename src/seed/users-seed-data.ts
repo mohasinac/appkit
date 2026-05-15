@@ -6,6 +6,7 @@
 
 import { getDefaultPhonePrefix } from "./seed-market-config";
 import type { UserDocument } from "../features/auth/schemas";
+import { USER_FIELDS } from "../constants/field-names";
 
 const _ph = getDefaultPhonePrefix();
 const NOW = new Date();
@@ -21,7 +22,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "LetItRip Admin",
     photoURL: null,
     avatarMetadata: null,
-    role: "admin",
+    role: USER_FIELDS.ROLE_VALUES.ADMIN,
     emailVerified: true,
     disabled: false,
     storeId: "store-letitrip-official",
@@ -61,7 +62,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       position: { x: 50, y: 40 },
       zoom: 1.1,
     },
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-pokemon-palace",
@@ -99,7 +100,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-cardgame-hub",
@@ -137,7 +138,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-diecast-depot",
@@ -178,7 +179,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-beyblade-arena",
@@ -219,7 +220,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Rahul Sharma",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -255,7 +256,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       position: { x: 50, y: 35 },
       zoom: 1.15,
     },
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -286,7 +287,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Arjun Singh",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -318,7 +319,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -352,7 +353,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-tokyo-toys-india",
@@ -390,7 +391,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-gundam-galaxy",
@@ -431,7 +432,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "seller",
+    role: USER_FIELDS.ROLE_VALUES.SELLER,
     emailVerified: true,
     disabled: false,
     storeId: "store-vintage-vault",
@@ -471,7 +472,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -502,7 +503,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Kartik Nair",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -534,7 +535,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -565,7 +566,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Ankit Gupta",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -601,7 +602,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       position: { x: 50, y: 45 },
       zoom: 1.05,
     },
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -633,7 +634,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -665,7 +666,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -696,7 +697,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Rohit Verma",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -728,7 +729,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -759,7 +760,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Kiran Reddy",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -791,7 +792,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -823,7 +824,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     photoURL:
       "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face",
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -854,7 +855,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
     displayName: "Varun Bhat",
     photoURL: null,
     avatarMetadata: null,
-    role: "user",
+    role: USER_FIELDS.ROLE_VALUES.USER,
     emailVerified: false,
     disabled: false,
     publicProfile: {
@@ -890,7 +891,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       position: { x: 50, y: 35 },
       zoom: 1.1,
     },
-    role: "moderator",
+    role: USER_FIELDS.ROLE_VALUES.MODERATOR,
     emailVerified: true,
     disabled: false,
     publicProfile: {
@@ -925,7 +926,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       position: { x: 50, y: 30 },
       zoom: 1.2,
     },
-    role: "employee",
+    role: USER_FIELDS.ROLE_VALUES.EMPLOYEE,
     emailVerified: true,
     disabled: false,
     publicProfile: {

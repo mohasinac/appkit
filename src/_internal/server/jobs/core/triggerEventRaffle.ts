@@ -5,6 +5,7 @@
 
 import crypto from "node:crypto";
 import type { JobContext } from "../runtime/types";
+import { EVENT_ENTRY_FIELDS } from "../../../../constants/field-names";
 
 export interface TriggerEventRaffleInput {
   eventId: string;
@@ -57,8 +58,8 @@ export async function runTriggerEventRaffle(
 
   const entriesSnap = await ctx.db
     .collection(EVENT_ENTRIES_COLLECTION)
-    .where("eventId", "==", input.eventId)
-    .where("status", "==", "CONFIRMED")
+    .where(EVENT_ENTRY_FIELDS.EVENT_ID, "==", input.eventId)
+    .where(EVENT_ENTRY_FIELDS.STATUS, "==", EVENT_ENTRY_FIELDS.STATUS_VALUES.CONFIRMED)
     .get();
 
   type EntryDoc = {

@@ -3,6 +3,9 @@ import { eventRepository } from "../../../repositories";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { Container, Heading, Main, Section } from "../../../ui";
 import { EventsIndexListing } from "./EventsIndexListing";
+import { EVENT_FIELDS } from "../../../constants/field-names";
+import { sieveFilter, sieveMultiEq, sieveAnd, SIEVE_OP } from "../../../utils/sieve-builder";
+import { sortBy } from "../../../constants/sort";
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -12,31 +15,31 @@ function sp(params: SearchParams, key: string): string {
 }
 
 function buildEventFilters(params: SearchParams): string {
-  // Public page defaults to published status; allow overriding to active/ended
   const statusRaw = sp(params, "status");
   const parts: string[] = [];
 
   if (statusRaw) {
     const values = statusRaw.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`status==${values[0]}`);
-    else if (values.length > 1) parts.push(`status==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, values[0]));
+    // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
+    else if (values.length > 1) parts.push(sieveMultiEq(EVENT_FIELDS.STATUS, values));
   } else {
-    parts.push("status==active");
+    parts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, EVENT_FIELDS.STATUS_VALUES.ACTIVE));
   }
 
   const type = sp(params, "type");
   if (type) {
     const values = type.split("|").filter(Boolean);
-    if (values.length === 1) parts.push(`type==${values[0]}`);
-    else if (values.length > 1) parts.push(`type==${values.join("|")}`);
+    if (values.length === 1) parts.push(sieveFilter(EVENT_FIELDS.TYPE, SIEVE_OP.EQ, values[0]));
+    else if (values.length > 1) parts.push(sieveMultiEq(EVENT_FIELDS.TYPE, values));
   }
 
   const dateFrom = sp(params, "dateFrom");
   const dateTo = sp(params, "dateTo");
-  if (dateFrom) parts.push(`startsAt>=${dateFrom}`);
-  if (dateTo) parts.push(`endsAt<=${dateTo}`);
+  if (dateFrom) parts.push(sieveFilter(EVENT_FIELDS.STARTS_AT, SIEVE_OP.GTE, dateFrom));
+  if (dateTo) parts.push(sieveFilter(EVENT_FIELDS.ENDS_AT, SIEVE_OP.LTE, dateTo));
 
-  return parts.join(",");
+  return sieveAnd(...parts);
 }
 
 export interface EventsListPageViewProps {
@@ -44,7 +47,7 @@ export interface EventsListPageViewProps {
 }
 
 export async function EventsListPageView({ searchParams = {} }: EventsListPageViewProps) {
-  const sort = sp(searchParams, "sort") || "startsAt";
+  const sort = sp(searchParams, "sort") || sortBy(EVENT_FIELDS.STARTS_AT, "ASC");
   const page = Number(sp(searchParams, "page")) || 1;
   const pageSize = Number(sp(searchParams, "pageSize")) || 24;
   const filters = buildEventFilters(searchParams);

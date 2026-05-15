@@ -5,32 +5,35 @@ import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { Div } from "../../../ui";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import { EVENT_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
 
 export type EventFilterVariant = "admin" | "seller" | "public";
 
 export const EVENT_FILTER_KEYS = {
-  admin: ["type", "status", "dateFrom", "dateTo"],
-  seller: ["type", "status", "dateFrom", "dateTo"],
-  public: ["type", "status", "dateFrom", "dateTo"],
+  admin: ["type", TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
+  seller: ["type", TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
+  public: ["type", TABLE_KEYS.STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO],
 } as const;
 
 export const EVENT_ADMIN_SORT_OPTIONS = [
-  { value: "title", label: "Title A–Z" },
-  { value: "-title", label: "Title Z–A" },
-  { value: "-startsAt", label: "Starts Latest" },
-  { value: "startsAt", label: "Starts Soonest" },
-  { value: "-endsAt", label: "Ends Latest" },
-  { value: "endsAt", label: "Ends Soonest" },
+  { value: sortBy(EVENT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
+  { value: sortBy(EVENT_FIELDS.TITLE), label: "Title Z–A" },
+  { value: sortBy(EVENT_FIELDS.STARTS_AT), label: "Starts Latest" },
+  { value: sortBy(EVENT_FIELDS.STARTS_AT, "ASC"), label: "Starts Soonest" },
+  { value: sortBy(EVENT_FIELDS.ENDS_AT), label: "Ends Latest" },
+  { value: sortBy(EVENT_FIELDS.ENDS_AT, "ASC"), label: "Ends Soonest" },
   { value: "-stats.totalEntries", label: "Most Entries" },
-  { value: "-createdAt", label: "Newest First" },
+  { value: sortBy(EVENT_FIELDS.CREATED_AT), label: "Newest First" },
 ] as const;
 
 export const EVENT_SELLER_SORT_OPTIONS = EVENT_ADMIN_SORT_OPTIONS;
 
 export const EVENT_PUBLIC_SORT_OPTIONS = [
-  { value: "startsAt", label: "Starts Soonest" },
-  { value: "-startsAt", label: "Starts Latest" },
-  { value: "title", label: "Title A–Z" },
+  { value: sortBy(EVENT_FIELDS.STARTS_AT, "ASC"), label: "Starts Soonest" },
+  { value: sortBy(EVENT_FIELDS.STARTS_AT), label: "Starts Latest" },
+  { value: sortBy(EVENT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
   { value: "-stats.totalEntries", label: "Most Entries" },
 ] as const;
 

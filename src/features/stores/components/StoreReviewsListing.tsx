@@ -90,7 +90,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
           <>
             <Grid cols={3} gap="md">
               {paginated.map((review) => (
-                <ReviewCard key={review.id} review={review as any} />
+                <ReviewCard key={review.id} review={review as any} context="store" />
               ))}
             </Grid>
 

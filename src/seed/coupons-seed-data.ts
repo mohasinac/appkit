@@ -6,6 +6,7 @@
  */
 
 import type { CouponDocument } from "../features/promotions/schemas";
+import { COUPON_FIELDS } from "../constants/field-names";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -19,8 +20,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Welcome Discount — 10% Off Your First Order",
     description:
       "10% off your first order on LetItRip. Valid on all categories. Maximum discount ₹200. First-time buyers only.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: {
       value: 10,
       maxDiscount: 20000,
@@ -57,8 +58,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Pokémon Collector's Discount — ₹250 Off",
     description:
       "₹250 off on any Pokémon TCG category purchase. Minimum order ₹1,000. Valid on trading cards, sealed products, and vintage Pokémon. Can be combined with seller coupons.",
-    type: "fixed",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.FIXED,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: {
       value: 25000,
       maxDiscount: 25000,
@@ -96,8 +97,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Free Shipping on Orders ₹999+",
     description:
       "Free standard shipping on any order above ₹999. No category restriction. Note: free shipping is already automatic above ₹999 — this coupon extends the same benefit and can be applied to orders that were manually discounted below ₹999.",
-    type: "free_shipping",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.FREE_SHIPPING,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: {
       value: 100,
       minPurchase: 99900,
@@ -133,8 +134,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Blader's Discount — 20% Off All Beyblade Products",
     description:
       "20% off all Beyblade X and Burst products. Maximum discount ₹500 per order. Limited to 50 uses total — 30 used so far. Created for the India launch promotion.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: {
       value: 20,
       maxDiscount: 50000,
@@ -172,8 +173,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "VIP Collector's Exclusive — 25% Off (Limit Reached)",
     description:
       "25% off any order — exclusive to LetItRip VIP program members. Limited to 10 uses total. This coupon is now exhausted. Watch for VIP2026B in the next newsletter.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: {
       value: 25,
       maxDiscount: 250000,
@@ -210,8 +211,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Pokémon Palace — 15% Loyalty Discount",
     description:
       "15% off your next order at Pokémon Palace. Exclusively for repeat customers. Min order ₹1,500. Max discount ₹750.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-pokemon-palace",
     discount: {
       value: 15,
@@ -249,8 +250,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Diecast Depot — ₹100 Off Your Next Order",
     description:
       "₹100 flat off any order at Diecast Depot. Works on all Hot Wheels and Tomica cars. Min order ₹500.",
-    type: "fixed",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.FIXED,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-diecast-depot",
     discount: {
       value: 10000,
@@ -288,8 +289,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Beyblade Arena Launch Special — 20% Off",
     description:
       "20% off all Beyblade X products at Beyblade Arena. Limited launch promotion. Max discount ₹500. One use per customer.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-beyblade-arena",
     discount: {
       value: 20,
@@ -328,8 +329,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "CardGame Hub — Free Shipping",
     description:
       "Free shipping on any order from CardGame Hub. No minimum order. Available to all buyers.",
-    type: "free_shipping",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.FREE_SHIPPING,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-cardgame-hub",
     discount: {
       value: 100,
@@ -366,8 +367,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     name: "Tokyo Toys India — 10% New Customer Discount",
     description:
       "10% off your first order at Tokyo Toys India. Valid on all anime figures, Gundam kits, and Funko Pops. Min order ₹2,000. Max discount ₹500.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-tokyo-toys-india",
     discount: {
       value: 10,
@@ -406,8 +407,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "NEWUSER5",
     name: "₹50 Off First Order",
     description: "Flat ₹50 off your first order on LetItRip. No minimum purchase.",
-    type: "fixed",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.FIXED,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 5000, minPurchase: 0 },
     usage: { totalLimit: undefined, perUserLimit: 1, currentUsage: 312 },
     validity: { startDate: daysAgo(90), endDate: daysAhead(180), isActive: true },
@@ -424,8 +425,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "FLASH24",
     name: "24-Hour Flash Sale — 30% Off",
     description: "30% off everything for 24 hours only. Maximum discount ₹500.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 30, maxDiscount: 50000, minPurchase: 100000 },
     usage: { totalLimit: 200, perUserLimit: 1, currentUsage: 187 },
     validity: { startDate: daysAgo(40), endDate: daysAgo(39), isActive: false },
@@ -442,8 +443,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "REFERRAL200",
     name: "Referral Reward — ₹200 Off",
     description: "Refer a friend, both get ₹200 off the next order. Min ₹1,000.",
-    type: "fixed",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.FIXED,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 20000, minPurchase: 100000 },
     usage: { totalLimit: undefined, perUserLimit: 5, currentUsage: 89 },
     validity: { startDate: daysAgo(180), endDate: daysAhead(180), isActive: true },
@@ -460,8 +461,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "PREPAID5",
     name: "5% Off Prepaid Orders",
     description: "Pay online (UPI/card) and get an extra 5% off. Max ₹300 discount.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 5, maxDiscount: 30000, minPurchase: 50000 },
     usage: { totalLimit: undefined, perUserLimit: undefined, currentUsage: 1024 },
     validity: { startDate: daysAgo(150), endDate: daysAhead(150), isActive: true },
@@ -478,8 +479,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "GUNDAMGALAXY12",
     name: "Gundam Galaxy 12% Off",
     description: "12% off everything at Gundam Galaxy store. Max ₹400.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-gundam-galaxy",
     discount: { value: 12, maxDiscount: 40000, minPurchase: 250000 },
     usage: { totalLimit: 100, perUserLimit: 2, currentUsage: 24 },
@@ -497,8 +498,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "VINTAGEVAULT8",
     name: "Vintage Vault 8% Off — Diwali Special",
     description: "Diwali special — 8% off vintage collectibles. Expired Nov 2025.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-vintage-vault",
     discount: { value: 8, maxDiscount: 50000, minPurchase: 500000 },
     usage: { totalLimit: 50, perUserLimit: 1, currentUsage: 28 },
@@ -516,8 +517,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "AUCTION25",
     name: "25% Off Auction Wins (Shipping)",
     description: "Auction winners get 25% off shipping. Max ₹250 discount.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 25, maxDiscount: 25000, minPurchase: 0 },
     usage: { totalLimit: undefined, perUserLimit: undefined, currentUsage: 56 },
     validity: { startDate: daysAgo(60), endDate: daysAhead(120), isActive: true },
@@ -534,8 +535,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "SUMMER15",
     name: "Summer Sale 15% Off",
     description: "15% off summer 2026 collectibles. Max ₹600. Starts in 2 weeks.",
-    type: "percentage",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 15, maxDiscount: 60000, minPurchase: 200000 },
     usage: { totalLimit: 500, perUserLimit: 1, currentUsage: 0 },
     validity: { startDate: daysAhead(14), endDate: daysAhead(45), isActive: true },
@@ -552,8 +553,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "RETROVAULT10",
     name: "Retro Vault 10% Off",
     description: "10% off retro collectibles at Vintage Vault. Max ₹350.",
-    type: "percentage",
-    scope: "seller",
+    type: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE,
+    scope: COUPON_FIELDS.SCOPE_VALUES.SELLER,
     storeId: "store-vintage-vault",
     discount: { value: 10, maxDiscount: 35000, minPurchase: 200000 },
     usage: { totalLimit: 75, perUserLimit: 1, currentUsage: 19 },
@@ -571,8 +572,8 @@ export const couponsSeedData: Partial<CouponDocument>[] = [
     code: "BIGBANG2026",
     name: "₹1,000 Off Orders Above ₹10,000",
     description: "Flat ₹1,000 off orders ₹10,000+. Big-ticket promo. Once per user.",
-    type: "fixed",
-    scope: "admin",
+    type: COUPON_FIELDS.TYPE_VALUES.FIXED,
+    scope: COUPON_FIELDS.SCOPE_VALUES.ADMIN,
     discount: { value: 100000, minPurchase: 1000000 },
     usage: { totalLimit: 1000, perUserLimit: 1, currentUsage: 142 },
     validity: { startDate: daysAgo(75), endDate: daysAhead(90), isActive: true },

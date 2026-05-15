@@ -6,13 +6,18 @@ import { Pagination, SortDropdown, Div, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
+import { TABLE_KEYS } from "../../../constants/table-keys";
+import { COUPON_FIELDS } from "../../../constants/field-names";
+import { sortBy } from "../../../constants/sort";
+
+const DEFAULT_SORT = sortBy(COUPON_FIELDS.CREATED_AT);
 
 const COUPON_SORT_OPTIONS = [
-  { value: "name", label: "Name A–Z" },
-  { value: "-name", label: "Name Z–A" },
+  { value: sortBy(COUPON_FIELDS.NAME, "ASC"), label: "Name A–Z" },
+  { value: sortBy(COUPON_FIELDS.NAME), label: "Name Z–A" },
   { value: "-validity.endDate", label: "Expiring Soon" },
-  { value: "-createdAt", label: "Newest First" },
-  { value: "createdAt", label: "Oldest First" },
+  { value: sortBy(COUPON_FIELDS.CREATED_AT), label: "Newest First" },
+  { value: sortBy(COUPON_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
 ];
 
 const COUPON_TYPES: { value: CouponType; label: string }[] = [
@@ -36,8 +41,8 @@ export function CouponsIndexListing({
   storeSlug,
   storeId,
 }: CouponsIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: "12", sort: "-createdAt" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: "12", sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
   // Build Sieve filter string
@@ -45,18 +50,18 @@ export function CouponsIndexListing({
     const parts: string[] = ["validity.isActive==true"];
     const typeFilter = table.get("type");
     if (typeFilter) parts.push(`type==${typeFilter}`);
-    const dateFrom = table.get("dateFrom");
+    const dateFrom = table.get(TABLE_KEYS.DATE_FROM);
     if (dateFrom) parts.push(`validity.startDate>=${dateFrom}`);
-    const dateTo = table.get("dateTo");
+    const dateTo = table.get(TABLE_KEYS.DATE_TO);
     if (dateTo) parts.push(`validity.endDate<=${dateTo}`);
     if (storeId) parts.push(`storeId==${storeId}`);
     return parts.join(",");
   };
 
   const { promotions: coupons, total, totalPages, isLoading } = usePromotions({
-    page: table.getNumber("page", 1),
-    pageSize: table.getNumber("pageSize", 12),
-    sort: table.get("sort") || "-createdAt",
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    pageSize: table.getNumber(TABLE_KEYS.PAGE_SIZE, 12),
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     filters: buildFilters(),
   });
 
@@ -64,12 +69,12 @@ export function CouponsIndexListing({
   const displayCoupons =
     !isLoading && coupons.length > 0
       ? coupons
-      : !isLoading && initialCoupons && !table.get("q") && !table.get("type")
+      : !isLoading && initialCoupons && !table.get(TABLE_KEYS.QUERY) && !table.get("type")
         ? initialCoupons
         : coupons;
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -78,10 +83,10 @@ export function CouponsIndexListing({
 
 
   const activeType = table.get("type") as CouponType | "";
-  const hasActiveFilters = !!activeType || !!table.get("dateFrom") || !!table.get("dateTo");
+  const hasActiveFilters = !!activeType || !!table.get(TABLE_KEYS.DATE_FROM) || !!table.get(TABLE_KEYS.DATE_TO);
 
   const clearFilters = () => {
-    table.setMany({ type: "", dateFrom: "", dateTo: "" });
+    table.setMany({ type: "", [TABLE_KEYS.DATE_FROM]: "", [TABLE_KEYS.DATE_TO]: "" });
   };
 
   return (
@@ -116,7 +121,7 @@ export function CouponsIndexListing({
             {searchInput && (
               <button
                 type="button"
-                onClick={() => { setSearchInput(""); table.set("q", ""); }}
+                onClick={() => { setSearchInput(""); table.set(TABLE_KEYS.QUERY, ""); }}
                 className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
                 aria-label="Clear search"
               >
@@ -137,8 +142,8 @@ export function CouponsIndexListing({
           <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="hidden md:inline whitespace-nowrap">Sort by</span>
             <SortDropdown
-              value={table.get("sort") || "-createdAt"}
-              onChange={(v) => { table.set("sort", v); }}
+              value={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
+              onChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
               options={COUPON_SORT_OPTIONS as any}
             />
           </div>
@@ -155,18 +160,18 @@ export function CouponsIndexListing({
                 </button>
               </span>
             )}
-            {table.get("dateFrom") && (
+            {table.get(TABLE_KEYS.DATE_FROM) && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
-                From: {table.get("dateFrom")}
-                <button type="button" onClick={() => { table.set("dateFrom", ""); }} aria-label="Remove from-date filter">
+                From: {table.get(TABLE_KEYS.DATE_FROM)}
+                <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_FROM, ""); }} aria-label="Remove from-date filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
             )}
-            {table.get("dateTo") && (
+            {table.get(TABLE_KEYS.DATE_TO) && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
-                To: {table.get("dateTo")}
-                <button type="button" onClick={() => { table.set("dateTo", ""); }} aria-label="Remove to-date filter">
+                To: {table.get(TABLE_KEYS.DATE_TO)}
+                <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_TO, ""); }} aria-label="Remove to-date filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -305,8 +310,8 @@ export function CouponsIndexListing({
                     <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
                     <input
                       type="date"
-                      value={table.get("dateFrom") || ""}
-                      onChange={(e) => { table.set("dateFrom", e.target.value); }}
+                      value={table.get(TABLE_KEYS.DATE_FROM) || ""}
+                      onChange={(e) => { table.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
@@ -314,8 +319,8 @@ export function CouponsIndexListing({
                     <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</label>
                     <input
                       type="date"
-                      value={table.get("dateTo") || ""}
-                      onChange={(e) => { table.set("dateTo", e.target.value); }}
+                      value={table.get(TABLE_KEYS.DATE_TO) || ""}
+                      onChange={(e) => { table.set(TABLE_KEYS.DATE_TO, e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>

@@ -13,17 +13,22 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { PRODUCT_FIELDS } from "../../../constants/field-names";
+
+const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC");
 
 const AUCTION_SORT_OPTIONS = [
-  { value: "auctionEndDate", label: "Ending Soonest" },
-  { value: "-auctionEndDate", label: "Ending Latest" },
-  { value: "currentBid", label: "Bid: Low to High" },
-  { value: "-currentBid", label: "Bid: High to Low" },
-  { value: "-createdAt", label: "Newly Listed" },
-  { value: "createdAt", label: "Oldest Listed" },
+  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"), label: "Ending Soonest" },
+  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE), label: "Ending Latest" },
+  { value: sortBy(PRODUCT_FIELDS.CURRENT_BID, "ASC"), label: "Bid: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.CURRENT_BID), label: "Bid: High to Low" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newly Listed" },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest Listed" },
 ] as const;
 
-const FILTER_KEYS = ["category", "brand", "minBid", "maxBid", "storeId", "dateFrom", "dateTo"];
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_BID, TABLE_KEYS.MAX_BID, TABLE_KEYS.STORE_ID, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 
 export interface AuctionsIndexListingProps {
   initialData?: any;
@@ -33,13 +38,13 @@ export interface AuctionsIndexListingProps {
 }
 
 export function AuctionsIndexListing({ initialData, categorySlug, brandName }: AuctionsIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: "24", sort: "auctionEndDate" } });
+  const table = useUrlTable({ defaults: { pageSize: "24", sort: DEFAULT_SORT } });
   const { showToast } = useToast();
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const showEnded = table.get("showEnded") === "true";
+  const showEnded = table.get(TABLE_KEYS.SHOW_ENDED) === "true";
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
   const localWishlist = useGuestWishlist();
   const wishlistedIds = new Set(
@@ -98,7 +103,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", showEnded: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_ENDED]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -106,28 +111,28 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("showEnded") === "true" ||
-    table.get("sort") !== "auctionEndDate" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SHOW_ENDED) === "true" ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const params = {
-    q: table.get("q") || undefined,
-    category: table.get("category") || undefined,
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    category: table.get(TABLE_KEYS.CATEGORY) || undefined,
     categorySlug: categorySlug || undefined,
-    brand: brandName || table.get("brand") || undefined,
-    minBid: table.get("minBid") ? Number(table.get("minBid")) : undefined,
-    maxBid: table.get("maxBid") ? Number(table.get("maxBid")) : undefined,
-    storeId: table.get("storeId") || undefined,
+    brand: brandName || table.get(TABLE_KEYS.BRAND) || undefined,
+    minBid: table.get(TABLE_KEYS.MIN_BID) ? Number(table.get(TABLE_KEYS.MIN_BID)) : undefined,
+    maxBid: table.get(TABLE_KEYS.MAX_BID) ? Number(table.get(TABLE_KEYS.MAX_BID)) : undefined,
+    storeId: table.get(TABLE_KEYS.STORE_ID) || undefined,
     // When showEnded is false (default), force dateFrom=now so only live auctions appear.
     // When showEnded is true, respect the filter-drawer value (or show all if none set).
     dateFrom: showEnded
-      ? (table.get("dateFrom") || undefined)
+      ? (table.get(TABLE_KEYS.DATE_FROM) || undefined)
       : new Date().toISOString(),
-    dateTo: table.get("dateTo") || undefined,
-    sort: table.get("sort") || "auctionEndDate",
-    page: table.getNumber("page", 1),
-    perPage: table.getNumber("pageSize", 24),
+    dateTo: table.get(TABLE_KEYS.DATE_TO) || undefined,
+    sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
+    page: table.getNumber(TABLE_KEYS.PAGE, 1),
+    perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, 24),
     listingType: "auction" as const,
   };
 
@@ -139,7 +144,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   const selection = useBulkSelection({ items: auctions as any[], keyExtractor: (a: any) => a.id });
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -147,9 +152,9 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   };
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
   const wishlistActions = {
@@ -181,9 +186,9 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onSearchChange={setSearchInput}
         onSearchCommit={commitSearch}
         onSearchKeyDown={handleSearchKeyDown}
-        sortValue={table.get("sort") || "auctionEndDate"}
+        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
         sortOptions={AUCTION_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
@@ -202,7 +207,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
               type="button"
               role="switch"
               aria-checked={showEnded}
-              onClick={() => table.set("showEnded", showEnded ? "" : "true")}
+              onClick={() => table.set(TABLE_KEYS.SHOW_ENDED, showEnded ? "" : "true")}
               className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
                 showEnded ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
               }`}

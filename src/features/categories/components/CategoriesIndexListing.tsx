@@ -9,13 +9,17 @@ import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
+import { sortBy } from "../../../constants/sort";
+import { CATEGORY_FIELDS } from "../../../constants/field-names";
 
 const PAGE_SIZE = 24;
-const FILTER_KEYS = ["isFeatured", "isBrand", "rootOnly", "tier", "minItemCount", "maxItemCount"];
+const DEFAULT_SORT = sortBy(CATEGORY_FIELDS.NAME, "ASC");
+const FILTER_KEYS = [TABLE_KEYS.IS_FEATURED, "isBrand", "rootOnly", "tier", "minItemCount", "maxItemCount"];
 
 const SORT_OPTIONS = [
-  { value: "name", label: "Name A–Z" },
-  { value: "-name", label: "Name Z–A" },
+  { value: sortBy(CATEGORY_FIELDS.NAME, "ASC"), label: "Name A–Z" },
+  { value: sortBy(CATEGORY_FIELDS.NAME), label: "Name Z–A" },
   { value: "-productCount", label: "Most Products" },
 ];
 
@@ -26,21 +30,21 @@ export interface CategoriesIndexListingProps {
 }
 
 export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: CategoriesIndexListingProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "name" } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
+  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [view, setView] = useState<"grid" | "list">(
-    (table.get("view") as "grid" | "list") || "grid",
+    (table.get(TABLE_KEYS.VIEW) as "grid" | "list") || VIEW_MODE.GRID,
   );
 
   const handleViewToggle = (next: "grid" | "list" | "table") => {
-    if (next === "table") return;
-    setView(next);
-    table.set("view", next);
+    if (next === VIEW_MODE.TABLE) return;
+    setView(next as "grid" | "list");
+    table.set(TABLE_KEYS.VIEW, next);
   };
 
-  const sort = table.get("sort") || "name";
-  const page = table.getNumber("page", 1);
+  const sort = table.get(TABLE_KEYS.SORT) || DEFAULT_SORT;
+  const page = table.getNumber(TABLE_KEYS.PAGE, 1);
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -91,7 +95,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -99,21 +103,21 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== "name" ||
+    !!table.get(TABLE_KEYS.QUERY) ||
+    table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
+    table.set(TABLE_KEYS.QUERY, searchInput.trim());
   }, [searchInput, table]);
 
   const clearSearch = () => {
     setSearchInput("");
-    table.set("q", "");
+    table.set(TABLE_KEYS.QUERY, "");
   };
 
   // Tab state — "all" | "categories" | "brands" (not used when brandsOnly=true)
-  const activeTab = brandsOnly ? "brands" : (table.get("tab") || "all");
+  const activeTab = brandsOnly ? "brands" : (table.get(TABLE_KEYS.TAB) || "all");
 
   const isBrandParam: boolean | undefined =
     brandsOnly ? true :
@@ -122,12 +126,12 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     undefined;
 
   const switchTab = (key: string) => {
-    table.set("tab", key);
+    table.set(TABLE_KEYS.TAB, key);
   };
 
   const { categories, total, totalPages, isLoading } = useCategoriesFiltered({
-    q: table.get("q") || undefined,
-    isFeatured: table.get("isFeatured") === "true" || undefined,
+    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    isFeatured: table.get(TABLE_KEYS.IS_FEATURED) === "true" || undefined,
     isBrand: isBrandParam,
     rootOnly: table.get("rootOnly") === "true" || undefined,
     tier: table.get("tier") ? Number(table.get("tier")) : undefined,
@@ -138,7 +142,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     pageSize: PAGE_SIZE,
   });
 
-  const activeSearch = table.get("q") || "";
+  const activeSearch = table.get(TABLE_KEYS.QUERY) || "";
 
   const TABS = [
     { key: "all", label: "All" },
@@ -179,7 +183,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
         onSearchCommit={commitSearch}
         sortValue={sort}
         sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
         view={view}
         onViewChange={handleViewToggle}
         onResetAll={resetAll}

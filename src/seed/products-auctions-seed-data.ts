@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Auctions Seed Data — Collectibles Edition
  * 6 auctions in all lifecycle states: active-ending-soon, active×2,
  * upcoming, ended (winner), ended (settled).
@@ -8,6 +8,7 @@
  */
 
 import type { ProductDocument } from "../features/products/schemas";
+import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
 
 const NOW = new Date();
 const hoursAhead = (h: number) =>
@@ -40,7 +41,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 9999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -50,7 +51,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: true,
@@ -113,7 +114,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 1499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -123,7 +124,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "CardGame Hub",
     storeId: "store-cardgame-hub",
     featured: true,
@@ -186,7 +187,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -196,7 +197,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
@@ -212,7 +213,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "rare",
       "auction",
     ],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Year", value: "1967" },
       { name: "Scale", value: "1:64" },
@@ -260,7 +261,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 299900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -270,7 +271,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Beyblade Arena",
     storeId: "store-beyblade-arena",
     featured: false,
@@ -285,7 +286,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "vintage",
       "upcoming-auction",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Product", value: "BB-10 Storm Pegasus Starter Set" },
       { name: "Generation", value: "Metal Fusion (2008)" },
@@ -330,7 +331,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 0,
     availableQuantity: 0,
     mainImage:
@@ -340,7 +341,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1599420186946-7b6fb4e297f0?w=800&h=800&fit=crop",
     ],
-    status: "sold",
+    status: PRODUCT_FIELDS.STATUS_VALUES.SOLD,
     storeName: "LetItRip Official",
     storeId: "store-letitrip-official",
     featured: false,
@@ -354,7 +355,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "auction",
       "ended",
     ],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Grade", value: "Perfect Grade (PG)" },
       { name: "Scale", value: "1/60" },
@@ -398,7 +399,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 9999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -407,7 +408,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: false,
@@ -458,7 +459,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 2999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -467,7 +468,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "CardGame Hub",
     storeId: "store-cardgame-hub",
     featured: true,
@@ -518,7 +519,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 899900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -527,13 +528,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
     isPromoted: true,
     tags: ["hot-wheels", "redline", "1968", "deora", "copper", "spectraflame", "vintage", "rare", "auction"],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Year", value: "1968" },
       { name: "Scale", value: "1:64" },
@@ -579,7 +580,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -588,13 +589,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Gundam Galaxy",
     storeId: "store-gundam-galaxy",
     featured: false,
     isPromoted: false,
     tags: ["gunpla", "perfect-grade", "pg", "astray-red-frame", "bandai", "factory-sealed", "upcoming-auction"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Grade", value: "Perfect Grade (PG)" },
       { name: "Scale", value: "1/60" },
@@ -637,7 +638,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -646,13 +647,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Tokyo Toys India",
     storeId: "store-tokyo-toys-india",
     featured: false,
     isPromoted: true,
     tags: ["nendoroid", "hatsune-miku", "#100", "original-2009", "rare", "good-smile", "vocaloid", "auction"],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Nendoroid Number", value: "#100" },
       { name: "Character", value: "Hatsune Miku" },
@@ -696,7 +697,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 299900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 0,
     availableQuantity: 0,
     mainImage:
@@ -706,7 +707,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1560762484-813fc97650a0?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
     ],
-    status: "sold",
+    status: PRODUCT_FIELDS.STATUS_VALUES.SOLD,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
@@ -722,7 +723,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "auction",
       "ended",
     ],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Character", value: "Bulma" },
       { name: "Series", value: "Dragon Ball Z" },
@@ -766,7 +767,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 3499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -775,7 +776,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: false,
@@ -824,7 +825,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 599900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -832,13 +833,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Tokyo Toys India",
     storeId: "store-tokyo-toys-india",
     featured: false,
     isPromoted: false,
     tags: ["funko", "stan-lee", "glow-chase", "vaulted", "marvel", "auction"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Variant", value: "Glow-in-the-Dark Chase (1-in-6)" },
       { name: "Status", value: "Vaulted" },
@@ -881,7 +882,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 399900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -890,13 +891,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Beyblade Arena",
     storeId: "store-beyblade-arena",
     featured: true,
     isPromoted: false,
     tags: ["beyblade", "burst", "spriggan-requiem", "tournament", "limited", "auction"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Product", value: "B-100 Spriggan Requiem Tournament" },
       { name: "Edition", value: "Tournament Limited (<500 made)" },
@@ -939,7 +940,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 10,
     auctionShippingPaidBy: "winner",
     price: 49999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -947,13 +948,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: true,
     isPromoted: true,
     tags: ["pokemon", "trophy-pikachu", "worlds-2006", "promo", "ultra-rare", "upcoming-auction"],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Card", value: "Trophy Pikachu (Worlds 2006 Staff Promo)" },
       { name: "Provenance", value: "Ex-WCS judge" },
@@ -995,7 +996,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     auctionExtensionMinutes: 5,
     auctionShippingPaidBy: "winner",
     price: 1499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -1004,13 +1005,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
       "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=800&h=800&fit=crop",
       "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=800&h=800&fit=crop",
     ],
-    status: "published",
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
     isPromoted: false,
     tags: ["hot-wheels", "super-treasure-hunt", "2024", "full-set", "upcoming-auction"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Year", value: "2024" },
       { name: "Cars", value: "All 15 STH" },
@@ -1052,7 +1053,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 599900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 0,
     availableQuantity: 0,
     mainImage:
@@ -1060,13 +1061,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
     ],
-    status: "sold",
+    status: PRODUCT_FIELDS.STATUS_VALUES.SOLD,
     storeName: "Tokyo Toys India",
     storeId: "store-tokyo-toys-india",
     featured: false,
     isPromoted: false,
     tags: ["shfiguarts", "goku", "ultra-instinct", "dbz", "auction", "ended"],
-    condition: "new",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
     specifications: [
       { name: "Line", value: "S.H.Figuarts" },
       { name: "Character", value: "Goku Ultra Instinct" },
@@ -1105,7 +1106,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 1499900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 0,
     availableQuantity: 0,
     mainImage:
@@ -1113,7 +1114,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&h=800&fit=crop",
     ],
-    status: "sold",
+    status: PRODUCT_FIELDS.STATUS_VALUES.SOLD,
     storeName: "Pokémon Palace",
     storeId: "store-pokemon-palace",
     featured: false,
@@ -1158,7 +1159,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 199900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -1166,13 +1167,13 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=800&h=800&fit=crop",
     ],
-    status: "draft",
+    status: PRODUCT_FIELDS.STATUS_VALUES.DRAFT,
     storeName: "Diecast Depot",
     storeId: "store-diecast-depot",
     featured: false,
     isPromoted: false,
     tags: ["tomica", "skyline", "hakosuka", "vintage", "auction", "ended", "no-winner"],
-    condition: "used",
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.USED,
     specifications: [
       { name: "Year", value: "1973" },
       { name: "Reserve Price", value: "₹8,000 (NOT MET)" },
@@ -1211,7 +1212,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     autoExtendable: false,
     auctionShippingPaidBy: "winner",
     price: 999900,
-    currency: "INR",
+    currency: SCHEMA_DEFAULTS.CURRENCY,
     stockQuantity: 1,
     availableQuantity: 1,
     mainImage:
@@ -1219,7 +1220,7 @@ const _rawProductsAuctionsSeedData: Partial<ProductDocument>[] = [
     images: [
       "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=800&h=800&fit=crop",
     ],
-    status: "draft",
+    status: PRODUCT_FIELDS.STATUS_VALUES.DRAFT,
     storeName: "CardGame Hub",
     storeId: "store-cardgame-hub",
     featured: false,

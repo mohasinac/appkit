@@ -7,6 +7,7 @@
  */
 
 import type { SupportTicketDocument, TicketMessage } from "../features/support/schemas/firestore";
+import { SUPPORT_TICKET_FIELDS } from "../constants/field-names";
 
 function msg(
   id: string,
@@ -36,8 +37,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     description:
       "I received order #order-rahul-001-pokemon-etb but the ETB box arrived empty — only the outer packaging was present. Please help.",
     orderId: "order-rahul-001-pokemon-etb",
-    status: "in_progress",
-    priority: "high",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-simran-kaur",
     assignedToName: "Simran Kaur",
     messages: [
@@ -77,8 +78,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     subject: "Requesting refund for cancelled pre-order",
     description:
       "I placed a pre-order for the Nendoroid Rem figure 3 months ago. The store has now closed. I would like a full refund of ₹2,499.",
-    status: "open",
-    priority: "normal",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.OPEN,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     messages: [
       msg(
         "msg-priya-001-u1",
@@ -102,8 +103,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     subject: "Cannot log in — OTP not arriving on new phone number",
     description:
       "I changed my phone number and now OTP for login is going to the old number. I cannot access my account.",
-    status: "waiting_on_user",
-    priority: "normal",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.WAITING_ON_USER,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     assignedTo: "user-simran-kaur",
     assignedToName: "Simran Kaur",
     messages: [
@@ -136,8 +137,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     subject: "Product description says mint condition but item is heavily played",
     description:
       "The Beyblade BX-01 I received is scratched and worn. The listing said mint/unused. I want to return it.",
-    status: "resolved",
-    priority: "normal",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     assignedTo: "user-simran-kaur",
     assignedToName: "Simran Kaur",
     messages: [
@@ -178,8 +179,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     subject: "Winning bid was removed from auction",
     description:
       "I won the PSA 9 Charizard auction but my winning bid was removed without explanation.",
-    status: "closed",
-    priority: "low",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.CLOSED,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.LOW,
     messages: [
       msg(
         "msg-rahul-002-u1",
@@ -218,8 +219,8 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     subject: "How do I become a verified seller?",
     description:
       "I would like to start selling Pokémon cards on LetItRip. What are the steps to get verified and open a store?",
-    status: "open",
-    priority: "low",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.OPEN,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.LOW,
     messages: [
       msg(
         "msg-kavya-001-u1",

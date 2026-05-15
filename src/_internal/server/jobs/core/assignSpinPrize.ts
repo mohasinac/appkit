@@ -5,6 +5,7 @@
 
 import crypto from "node:crypto";
 import type { JobContext } from "../runtime/types";
+import { EVENT_ENTRY_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
 export interface AssignSpinPrizeInput {
   eventId: string;
@@ -51,8 +52,8 @@ export async function runAssignSpinPrize(
 
   const entriesSnap = await ctx.db
     .collection(EVENT_ENTRIES_COLLECTION)
-    .where("eventId", "==", eventId)
-    .where("userId", "==", userId)
+    .where(EVENT_ENTRY_FIELDS.EVENT_ID, "==", eventId)
+    .where(EVENT_ENTRY_FIELDS.USER_ID, "==", userId)
     .limit(1)
     .get();
 
@@ -94,11 +95,11 @@ export async function runAssignSpinPrize(
   }
 
   await entryDoc.ref.update({
-    spinUsed: true,
-    spinPrizeId: pick.id,
-    spinWonAt: ctx.now,
-    spinPrizeCouponCode: spinPrizeCouponCode ?? null,
-    updatedAt: ctx.now,
+    [EVENT_ENTRY_FIELDS.SPIN_USED]: true,
+    [EVENT_ENTRY_FIELDS.SPIN_PRIZE_ID]: pick.id,
+    [EVENT_ENTRY_FIELDS.SPIN_WON_AT]: ctx.now,
+    [EVENT_ENTRY_FIELDS.SPIN_PRIZE_COUPON_CODE]: spinPrizeCouponCode ?? null,
+    [COMMON_FIELDS.UPDATED_AT]: ctx.now,
   });
 
   ctx.logger.info("Spin prize assigned", {
