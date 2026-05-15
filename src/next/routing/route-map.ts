@@ -85,6 +85,12 @@ export const DEFAULT_ROUTE_MAP = {
     SCAM_REPORT: "/scams/report",
     SCAM_TYPES: "/scams/types",
     SCAM_FAQS: "/scams/faqs",
+    CLASSIFIED: "/classified",
+    CLASSIFIED_DETAIL: (slug: string) => `/classified/${slug}`,
+    DIGITAL_CODES: "/digital-codes",
+    DIGITAL_CODE_DETAIL: (slug: string) => `/digital-codes/${slug}`,
+    LIVE: "/live",
+    LIVE_DETAIL: (slug: string) => `/live/${slug}`,
   },
   ERRORS: {
     UNAUTHORIZED: "/unauthorized",
@@ -167,6 +173,7 @@ export const DEFAULT_ROUTE_MAP = {
     PRIZE_DRAWS: "/store/prize-draws",
     PRIZE_DRAWS_NEW: "/store/prize-draws/new",
     PRIZE_DRAWS_EDIT: (id: string) => `/store/prize-draws/${id}/edit`,
+    PRODUCT_CODES: (id: string) => `/store/products/${id}/codes`,
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

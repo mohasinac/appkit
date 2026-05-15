@@ -4399,9 +4399,182 @@ const _rawProductsStandardSeedData: Partial<ProductDocument>[] = [
  * SB1-G Phase 4 (S22 2026-05-12): every standard product is stamped with
  * `listingType: "standard"`. The legacy `isAuction` / `isPreOrder` booleans
  * are gone from `ProductDocument`; this map-wrapper is the canonical write site.
+ *
+ * SB-UNI-Phase2 (2026-05-15): 3 extra seed products appended after the map
+ * with explicit listingType — classified, digital-code, live.
  */
-export const productsStandardSeedData: Partial<ProductDocument>[] =
-  _rawProductsStandardSeedData.map((p) => ({
+export const productsStandardSeedData: Partial<ProductDocument>[] = [
+  ..._rawProductsStandardSeedData.map((p) => ({
     ...p,
     listingType: "standard" as const,
-  }));
+  })),
+
+  // ── SB-UNI-M classified seed (OLX-style meetup) ──────────────────────────
+  {
+    id: "classified-funko-pop-lot-bangalore",
+    slug: "classified-funko-pop-lot-bangalore",
+    listingType: "classified" as const,
+    title: "Funko Pop Lot — 12 Anime Figures (Bangalore Meetup / Pickup)",
+    description:
+      "Selling a bulk lot of 12 Funko Pop anime figures I've collected over 3 years — decluttering my shelf. Includes Naruto, Goku SSJ3, Tanjiro, Deku Full Cowl, Levi, Sasuke, Vegeta, Bakugo, Killua, Zero Two, Gojo, and Luffy Gear 5. All are in original window boxes — mint on card, never opened. I'm preferring local meetup in Bangalore (Koramangala / BTM Layout). Shipping possible at buyer's cost. Price is firm but includes all 12 figures. Not splitting — lot only.",
+    category: "category-poseable-figures",
+    categoryName: "Poseable Action Figures",
+    brand: "Funko",
+    brandSlug: "brand-funko",
+    price: 1499900,
+    currency: SCHEMA_DEFAULTS.CURRENCY,
+    stockQuantity: 1,
+    availableQuantity: 1,
+    mainImage:
+      "https://images.unsplash.com/photo-1578292992345-7ee038c5fb7c?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1578292992345-7ee038c5fb7c?w=800&h=800&fit=crop",
+      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&h=800&fit=crop",
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    storeName: "Vintage Vault",
+    storeId: "store-vintage-vault",
+    featured: false,
+    isPromoted: false,
+    tags: ["funko-pop", "anime", "lot", "bangalore", "meetup", "bulk", "classified"],
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    specifications: [
+      { name: "Quantity", value: "12 figures" },
+      { name: "Location", value: "Bangalore, Karnataka" },
+      { name: "Condition", value: "Mint On Card (all 12)" },
+    ],
+    features: [
+      "12 anime Funko Pops in original boxes",
+      "Mint On Card — never opened",
+      "Bangalore meetup preferred (Koramangala / BTM)",
+      "Shipping possible at buyer's cost",
+      "Lot only — not splitting",
+    ],
+    shippingInfo: "Bangalore meetup preferred. Shipping at buyer's cost in bubble-padded box.",
+    returnPolicy: "No returns on classified listings — inspect at meetup.",
+    allowOffers: false,
+    classified: {
+      meetupArea: { city: "Bangalore", locality: "Koramangala", pincode: "560034" },
+      contactMethod: "chat",
+      acceptsShipping: true,
+      negotiable: false,
+    },
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── SB-UNI-N digital-code seed (Steam-style instant delivery) ─────────────
+  {
+    id: "digitalcode-steam-cyberpunk-2077",
+    slug: "digitalcode-steam-cyberpunk-2077",
+    listingType: "digital-code" as const,
+    title: "Cyberpunk 2077 — Steam PC Key (Instant Delivery)",
+    description:
+      "Genuine Cyberpunk 2077 Steam PC key purchased directly from CD Projekt RED's authorised distributor. Activates on Steam — no region lock (global). Includes the base game and the free 2.0 update with the Phantom Liberty expansion sold separately. Code is delivered instantly to your order detail page after payment confirmation — no waiting, no emails. One code per order.",
+    category: "category-sealed-product",
+    categoryName: "Sealed Product",
+    price: 149900,
+    currency: SCHEMA_DEFAULTS.CURRENCY,
+    stockQuantity: 50,
+    availableQuantity: 50,
+    mainImage:
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?w=800&h=800&fit=crop",
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    storeName: "LetItRip Official",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: true,
+    tags: ["pc-game", "steam-key", "cyberpunk-2077", "cdpr", "digital", "instant-delivery"],
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    specifications: [
+      { name: "Platform", value: "Steam (PC)" },
+      { name: "Region", value: "Global (no region lock)" },
+      { name: "Delivery", value: "Instant — code on order page" },
+      { name: "Publisher", value: "CD Projekt RED" },
+    ],
+    features: [
+      "Instant code delivery — available immediately after payment",
+      "Global Steam key — no region restrictions",
+      "Includes base game + 2.0 update",
+      "Genuine key from authorised distributor",
+    ],
+    shippingInfo: "No shipping — digital key delivered instantly to your order page.",
+    returnPolicy: "No returns on activated digital keys. Unactivated keys: 48-hour return window.",
+    allowOffers: false,
+    digitalCode: {
+      codeDeliveryMethod: "auto-claim" as const,
+      codePoolSize: 50,
+      codesAvailable: 50,
+      redemptionInstructions:
+        "1. Open Steam → Games → Activate a Product on Steam. 2. Enter your code. 3. Follow the prompts. Your game will appear in your library within 5 minutes.",
+    },
+    createdAt: daysAgo(7),
+    updatedAt: daysAgo(1),
+  },
+
+  // ── SB-UNI-O live-item seed (exotic animal — jurisdiction gated) ──────────
+  {
+    id: "live-axolotl-leucistic-juvenile",
+    slug: "live-axolotl-leucistic-juvenile",
+    listingType: "live" as const,
+    title: "Leucistic Axolotl — Juvenile (6 cm), Live Animal",
+    description:
+      "Beautiful leucistic (white with black eyes) axolotl juvenile, approximately 6 cm at time of listing and growing fast. Hatched from a captive breeding programme in Pune. Currently eating frozen bloodworms and pellets — transitioned off live brine shrimp. Healthy, active, full limb set, no signs of stress. Axolotls are legal to own in Maharashtra, Karnataka, and Tamil Nadu; delivery is restricted to these states only (see jurisdiction note below). Packed by specialist courier with oxygen pouch, insulated box, and live arrival guarantee.",
+    category: "category-scale-figures",
+    categoryName: "Scale Figures",
+    price: 249900,
+    currency: SCHEMA_DEFAULTS.CURRENCY,
+    stockQuantity: 1,
+    availableQuantity: 1,
+    mainImage:
+      "https://images.unsplash.com/photo-1560762484-813fc97650a0?w=800&h=800&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1560762484-813fc97650a0?w=800&h=800&fit=crop",
+    ],
+    status: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED,
+    storeName: "LetItRip Official",
+    storeId: "store-letitrip-official",
+    featured: false,
+    isPromoted: false,
+    tags: ["axolotl", "live-animal", "leucistic", "exotic-pet", "amphibian", "aquatic"],
+    condition: PRODUCT_FIELDS.CONDITION_VALUES.NEW,
+    specifications: [
+      { name: "Species", value: "Ambystoma mexicanum (Axolotl)" },
+      { name: "Morph", value: "Leucistic (white body, black eyes)" },
+      { name: "Size", value: "~6 cm at listing" },
+      { name: "Age", value: "~3 months" },
+      { name: "Diet", value: "Frozen bloodworms + pellets" },
+    ],
+    features: [
+      "Captive-bred — not wild-caught",
+      "Full limb set — healthy and active",
+      "Eating well on frozen bloodworms + pellets",
+      "Live arrival guarantee",
+      "Specialist oxygen-pouched insulated shipping",
+    ],
+    shippingInfo:
+      "Specialist live animal courier — oxygen pouch + insulated box. Delivery only within Maharashtra, Karnataka, Tamil Nadu.",
+    returnPolicy:
+      "Live arrival guarantee — photo/video of DOA required within 1 hour. No returns on live animals.",
+    allowOffers: false,
+    liveItem: {
+      species: "Ambystoma mexicanum",
+      ageMonths: 3,
+      sex: "unknown" as const,
+      careInfo:
+        "Axolotls require cold water (16–18°C), a cycled tank of minimum 40L for one adult, and no substrate smaller than their head (swallowing risk). Feed frozen bloodworms or axolotl pellets every 2 days. Do not house with fish.",
+      transport: {
+        method: "specialist" as const,
+        handlingFeeInPaise: 49900,
+        insuranceIncluded: true,
+      },
+      jurisdictionAllowed: ["Maharashtra", "Karnataka", "Tamil Nadu"],
+      vendorVerified: true,
+    },
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+  },
+];

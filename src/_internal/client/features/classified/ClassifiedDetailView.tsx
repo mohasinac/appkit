@@ -1,0 +1,131 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  Badge,
+  Container,
+  Div,
+  Heading,
+  Row,
+  Section,
+  Stack,
+  Text,
+} from "../../../../ui";
+import { ROUTES } from "../../../../next/routing/route-map";
+import { formatCurrency } from "../../../../utils/number.formatter";
+import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import type { ConversationDocument } from "../../../../features/messages/schemas/firestore";
+import type { startClassifiedConversationAction } from "../../../server/features/classified/actions";
+
+export interface ClassifiedDetailViewProps {
+  product: ProductDocument | null;
+  isLoading?: boolean;
+  onContactSeller: typeof startClassifiedConversationAction;
+}
+
+export function ClassifiedDetailView({
+  product,
+  isLoading = false,
+  onContactSeller,
+}: ClassifiedDetailViewProps) {
+  const [pending, setPending] = useState(false);
+  const [conversation, setConversation] = useState<ConversationDocument | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  if (isLoading || !product) {
+    return (
+      <Container>
+        <Div className="py-16 text-center">
+          <Text className="text-muted-foreground">
+            {isLoading ? "Loading…" : "Classified listing not found."}
+          </Text>
+        </Div>
+      </Container>
+    );
+  }
+
+  const meta = product.classified;
+  const price = formatCurrency(product.price, product.currency ?? "INR");
+  const location = meta?.meetupArea
+    ? [meta.meetupArea.locality, meta.meetupArea.city].filter(Boolean).join(", ")
+    : null;
+
+  async function handleContactSeller() {
+    setPending(true);
+    setError(null);
+    try {
+      const conv = await onContactSeller({ productId: product!.id });
+      setConversation(conv);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <Container>
+      <Section className="py-8">
+        <Stack gap="lg">
+          {/* Gallery */}
+          {product.images.length > 0 && (
+            <Div className="overflow-hidden rounded-lg bg-muted">
+              <img
+                src={product.mainImage || product.images[0]}
+                alt={product.title}
+                className="h-80 w-full object-contain"
+              />
+            </Div>
+          )}
+
+          {/* Info */}
+          <Stack gap="sm">
+            <Row className="flex-wrap gap-2">
+              <Badge variant="secondary">Classified</Badge>
+              {meta?.negotiable && <Badge variant="secondary">Negotiable</Badge>}
+              {meta?.acceptsShipping && <Badge variant="secondary">Shipping available</Badge>}
+            </Row>
+            <Heading level={1} className="text-2xl font-bold">
+              {product.title}
+            </Heading>
+            <Text className="text-2xl font-semibold text-primary">
+              {price}
+            </Text>
+            {location && (
+              <Text className="text-sm text-muted-foreground">{location}</Text>
+            )}
+            <Text className="text-muted-foreground">{product.description}</Text>
+          </Stack>
+
+          {/* Contact Seller CTA */}
+          {conversation ? (
+            <Div className="rounded-lg border border-border bg-muted/40 p-4">
+              <Text className="mb-2 font-medium">Conversation started!</Text>
+              <Link
+                href={ROUTES.USER.MESSAGES}
+                className="text-primary underline underline-offset-2"
+              >
+                Go to your messages →
+              </Link>
+            </Div>
+          ) : (
+            <Stack gap="sm">
+              {error && (
+                <Text className="text-sm text-destructive">{error}</Text>
+              )}
+              <button
+                type="button"
+                disabled={pending}
+                onClick={handleContactSeller}
+                className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+              >
+                {pending ? "Opening chat…" : "Contact Seller"}
+              </button>
+            </Stack>
+          )}
+        </Stack>
+      </Section>
+    </Container>
+  );
+}

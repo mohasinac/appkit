@@ -10,7 +10,7 @@ import {
   type GenerateAuctionIdInput,
   type GeneratePreOrderIdInput,
 } from "../../../utils/id-generators";
-import type { ProductStatus } from "../types";
+import type { ProductStatus, ListingType } from "../types";
 
 export interface ProductVideoField {
   url: string;
@@ -238,8 +238,9 @@ export interface ProductDocument {
    * booleans. Every product document carries this; queries route through
    * `where("listingType", "==", X)` against the `listingType+...` composite
    * indexes in `appkit/firebase/base/firestore.indexes.json`.
+   * SB-UNI-F — extended with classified | digital-code | live.
    */
-  listingType: "standard" | "auction" | "pre-order" | "prize-draw";
+  listingType: ListingType;
   /** Hard cap on units a single user may purchase (SB1-B; bundle/prize-draw). */
   maxPerUser?: number;
   /** Reverse pointers — bundle ids that include this product. */
@@ -497,6 +498,26 @@ export type ProductUpdateInput = Partial<
 export type ProductAdminUpdateInput = Partial<
   Omit<ProductDocument, "id" | "createdAt">
 >;
+
+// ── SB-UNI-N 2026-05-15 — Digital-code pool subcollection ───────────────────
+// Codes live at `products/{productId}/codes/{codeId}` — seller-only write,
+// buyer reads exactly the one record assigned to their order via the reveal API.
+export const PRODUCT_CODES_SUBCOLLECTION = "codes" as const;
+
+export type ProductCodeStatus = "available" | "claimed" | "revoked";
+
+export interface ProductCodeDocument {
+  id: string;
+  productId: string;
+  code: string;
+  status: ProductCodeStatus;
+  orderId?: string;
+  claimedByUserId?: string;
+  claimedAt?: Date;
+  expiresAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export const productQueryHelpers = {
   byStore: (storeId: string) => ["storeId", "==", storeId] as const,

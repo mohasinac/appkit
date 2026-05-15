@@ -501,3 +501,11 @@ export { ActionPermissionsManager } from "./features/site-settings/components/Ac
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";
 export { NavPermissionsManager } from "./features/site-settings/components/NavPermissionsManager";
 export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavItem as NavPermissionsItem } from "./features/site-settings/components/NavPermissionsManager";
+
+// ── Classified + digital-code + live-item client views ────────────────────────
+export { ClassifiedDetailView } from "./_internal/client/features/classified/ClassifiedDetailView";
+export type { ClassifiedDetailViewProps } from "./_internal/client/features/classified/ClassifiedDetailView";
+export { DigitalCodeDetailView } from "./_internal/client/features/digital-code/DigitalCodeDetailView";
+export type { DigitalCodeDetailViewProps } from "./_internal/client/features/digital-code/DigitalCodeDetailView";
+export { LiveItemDetailView } from "./_internal/client/features/live/LiveItemDetailView";
+export type { LiveItemDetailViewProps } from "./_internal/client/features/live/LiveItemDetailView";

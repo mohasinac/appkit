@@ -9292,3 +9292,15 @@ export { ActionPermissionsManager } from "./features/site-settings/components/Ac
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";
 export { NavPermissionsManager } from "./features/site-settings/components/NavPermissionsManager";
 export type { NavPermissionsManagerProps, NavGroup as NavPermissionsGroup, NavItem as NavPermissionsItem } from "./features/site-settings/components/NavPermissionsManager";
+
+// ── Classified listing feature ─────────────────────────────────────────────────
+export { getClassifiedForDetail } from "./_internal/server/features/classified/data";
+export { startClassifiedConversationAction } from "./_internal/server/features/classified/actions";
+
+// ── Digital-code listing feature ──────────────────────────────────────────────
+export { getDigitalCodeForDetail } from "./_internal/server/features/digital-code/data";
+export { PRODUCT_CODES_SUBCOLLECTION } from "./features/products/schemas/firestore";
+export type { ProductCodeDocument } from "./features/products/schemas/firestore";
+
+// ── Live-item listing feature ─────────────────────────────────────────────────
+export { getLiveItemForDetail } from "./_internal/server/features/live/data";

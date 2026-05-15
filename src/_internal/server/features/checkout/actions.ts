@@ -67,6 +67,36 @@ import {
   getListingRule,
   runSyncPreflight,
 } from "../../../shared/checkout/rules";
+import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
+
+/**
+ * SB-UNI-O — Live-item jurisdiction guard.
+ * Throws ValidationError if any live cart item's allowed states don't include
+ * the buyer's delivery address state (case-insensitive substring match).
+ * No-ops when the cart has no live items or when jurisdictionAllowed is empty.
+ */
+function assertLiveJurisdiction(
+  cartItemsArg: CartItemDocument[],
+  productByIdArg: Map<string, ProductDocument>,
+  buyerState: string,
+): void {
+  const normalised = buyerState.trim().toLowerCase();
+  for (const item of cartItemsArg) {
+    if ((item.listingType ?? "standard") !== "live") continue;
+    const product = productByIdArg.get(item.productId);
+    if (!product?.liveItem?.jurisdictionAllowed?.length) continue;
+    const allowed = product.liveItem.jurisdictionAllowed;
+    const allowed_lower = allowed.map((s) => s.toLowerCase());
+    const ok = allowed_lower.some(
+      (a) => a === normalised || a.includes(normalised) || normalised.includes(a),
+    );
+    if (!ok) {
+      throw new ValidationError(
+        `Delivery to "${buyerState}" is not permitted for "${product.title}". Allowed regions: ${allowed.join(", ")}.`,
+      );
+    }
+  }
+}
 
 /**
  * Fire-and-forget in-app notifications when an order is created.
@@ -129,7 +159,8 @@ export interface CreateCheckoutOrderInput {
   userId: string;
   userName: string;
   userEmail: string;
-  addressId: string;
+  /** Required for physical carts; omitted for digital-code-only carts (no shipping). */
+  addressId?: string;
   paymentMethod: CheckoutPaymentMethod;
   notes?: string;
   excludedProductIds?: string[];
@@ -187,21 +218,33 @@ export async function createCheckoutOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
 
-  const addressDoc = await unitOfWork.addresses.findById(addressId);
-  const address =
-    addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
-      ? addressDoc
-      : null;
-  if (!address) {
-    failedCheckoutRepository
-      .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
-      .catch(() => {});
-    throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+  const isDigitalCart = cartIsDigitalOnly(cartItems);
+
+  let shippingAddress: string | undefined;
+  let resolvedAddress: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
+  if (!isDigitalCart) {
+    if (!addressId) {
+      failedCheckoutRepository
+        .logCheckout(uid, "address_not_found", "Address required for physical cart", { addressId: "", paymentMethod })
+        .catch(() => {});
+      throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+    }
+    const addressDoc = await unitOfWork.addresses.findById(addressId);
+    resolvedAddress =
+      addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
+        ? addressDoc
+        : null;
+    if (!resolvedAddress) {
+      failedCheckoutRepository
+        .logCheckout(uid, "address_not_found", "Address not found", { addressId, paymentMethod })
+        .catch(() => {});
+      throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+    }
+    shippingAddress = formatShippingAddress(resolvedAddress);
   }
-  const shippingAddress = formatShippingAddress(address);
 
   const db = getAdminDb();
-  const otpRef = consentOtpRef(db, uid, addressId);
+  const otpRef = isDigitalCart ? null : consentOtpRef(db, uid, addressId!);
 
   // SB6-C — pre-tx fetch products so we can run the maxPerUser cap check
   // (count queries can't run inside a Firestore transaction). The same
@@ -237,32 +280,40 @@ export async function createCheckoutOrderAction(
     .filter((pair): pair is { item: CartItemDocument; product: ProductDocument } => pair !== null);
   await enforceMaxPerUserForCart({ userId: uid, items: preTxPairs });
 
+  // SB-UNI-O 2026-05-15 — Live-item jurisdiction guard (pre-tx, uses pre-tx product map).
+  if (!isDigitalCart && resolvedAddress) {
+    assertLiveJurisdiction(cartItems, preTxProductById, resolvedAddress.state);
+  }
+
   let stockResult: StockResult;
   try {
     stockResult = await db.runTransaction(async (tx): Promise<StockResult> => {
-      const otpSnap = await tx.get(otpRef as FirebaseFirestore.DocumentReference);
-      const otpData = otpSnap.exists
-        ? (otpSnap.data() as {
-            verified?: boolean;
-            expiresAt?: FirebaseFirestore.Timestamp;
-            verifiedVia?: string;
-          })
-        : null;
-      const isConsentValid =
-        otpData?.verified === true &&
-        otpData.expiresAt &&
-        (resolveDate(otpData.expiresAt)?.getTime() ?? 0) > Date.now();
-      if (!isConsentValid) {
-        const reason = !otpData ? "otp_not_verified" : "consent_expired";
-        throw Object.assign(
-          new ApiError(
-            403,
-            "Order verification required. Please complete OTP verification before placing this order.",
-          ),
-          { _failReason: reason },
-        );
+      let emailOtpUsed = false;
+      if (!isDigitalCart && otpRef) {
+        const otpSnap = await tx.get(otpRef as FirebaseFirestore.DocumentReference);
+        const otpData = otpSnap.exists
+          ? (otpSnap.data() as {
+              verified?: boolean;
+              expiresAt?: FirebaseFirestore.Timestamp;
+              verifiedVia?: string;
+            })
+          : null;
+        const isConsentValid =
+          otpData?.verified === true &&
+          otpData.expiresAt &&
+          (resolveDate(otpData.expiresAt)?.getTime() ?? 0) > Date.now();
+        if (!isConsentValid) {
+          const reason = !otpData ? "otp_not_verified" : "consent_expired";
+          throw Object.assign(
+            new ApiError(
+              403,
+              "Order verification required. Please complete OTP verification before placing this order.",
+            ),
+            { _failReason: reason },
+          );
+        }
+        emailOtpUsed = otpData.verifiedVia !== "sms" && otpData.verifiedVia !== "admin_bypass";
       }
-      const emailOtpUsed = otpData.verifiedVia !== "sms" && otpData.verifiedVia !== "admin_bypass";
 
       // SB-UNI-5 2026-05-13 — bundle-aware stock fan-out. Build the unique
       // product-id set across the whole cart (regular items + each bundle's
@@ -357,7 +408,9 @@ export async function createCheckoutOrderAction(
           },
           { merge: true },
         );
-        tx.delete(otpRef as FirebaseFirestore.DocumentReference);
+        if (otpRef) {
+          tx.delete(otpRef as FirebaseFirestore.DocumentReference);
+        }
       }
 
       return { available: availableItems, unavailable: unavailableItems, emailOtpUsed };
@@ -696,7 +749,8 @@ export interface VerifyAndPlaceRazorpayOrderInput {
   razorpay_order_id: string;
   razorpay_payment_id: string;
   razorpay_signature: string;
-  addressId: string;
+  /** Required for physical carts; omitted for digital-code-only carts. */
+  addressId?: string;
   notes?: string;
 }
 
@@ -754,19 +808,28 @@ export async function verifyAndPlaceRazorpayOrderAction(
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);
   }
 
-  const addressDoc = await unitOfWork.addresses.findById(addressId);
-  const address =
-    addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
-      ? addressDoc
-      : null;
-  if (!address) {
-    throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+  const isDigitalCartRazorpay = cartIsDigitalOnly(cart.items);
+
+  let shippingAddress: string | undefined;
+  let resolvedAddressRzp: import("../../../../features/addresses/schemas/firestore").AddressDocument | null = null;
+  if (!isDigitalCartRazorpay) {
+    if (!addressId) {
+      throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+    }
+    const addressDoc = await unitOfWork.addresses.findById(addressId);
+    resolvedAddressRzp =
+      addressDoc && addressDoc.ownerType === "user" && addressDoc.ownerId === uid
+        ? addressDoc
+        : null;
+    if (!resolvedAddressRzp) {
+      throw new NotFoundError(ERROR_MESSAGES.CHECKOUT.ADDRESS_REQUIRED);
+    }
+    shippingAddress = formatShippingAddress(resolvedAddressRzp);
   }
-  const shippingAddress = formatShippingAddress(address);
 
   const db = getAdminDb();
-  const otpRef = consentOtpRef(db, uid, addressId);
-  {
+  if (!isDigitalCartRazorpay && addressId) {
+    const otpRef = consentOtpRef(db, uid, addressId);
     const otpSnap = await otpRef.get();
     const otpData = otpSnap.exists
       ? (otpSnap.data() as {
@@ -833,6 +896,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
       p.product !== null && p.product !== undefined && !p.item.bundleProductIds?.length,
   );
   runSyncPreflight(preflightPairs);
+
+  // SB-UNI-O 2026-05-15 — Live-item jurisdiction guard.
+  if (!isDigitalCartRazorpay && resolvedAddressRzp) {
+    assertLiveJurisdiction(cart.items, productByIdPaid, resolvedAddressRzp.state);
+  }
 
   // SB-UNI-5 — validate every required member product across the cart with
   // cumulative decrement awareness (two bundles sharing a member must NOT
@@ -1137,7 +1205,10 @@ export async function verifyAndPlaceRazorpayOrderAction(
       selectedItemIds: null,
     } as never);
   });
-  otpRef.delete().catch(() => {});
+  if (!isDigitalCartRazorpay && addressId) {
+    const otpRefForDelete = consentOtpRef(db, uid, addressId);
+    otpRefForDelete.delete().catch(() => {});
+  }
 
   if (emailsToSend.length > 0) {
     Promise.all(emailsToSend.map((e) => sendOrderConfirmationEmail(e))).catch(

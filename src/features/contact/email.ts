@@ -118,7 +118,7 @@ export interface OrderConfirmationEmailParams {
   quantity: number;
   totalPrice: number;
   currency: string;
-  shippingAddress: string;
+  shippingAddress?: string;
   paymentMethod: string;
   items?: Array<{
     productId: string;

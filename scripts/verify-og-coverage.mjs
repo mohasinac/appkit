@@ -65,6 +65,10 @@ const OG_KNOWN_GAPS = new Set([
   // Added S7-PrizeDraws-prep3 — page shim landed; OG renderer comes
   // with SB4-G in S7-PrizeDraws-2 alongside the real detail view.
   "prize-draws/[slug]",
+  // SB-UNI-F page shims landed; OG renderers deferred to per-feature sessions.
+  "classified/[slug]",
+  "digital-codes/[slug]",
+  "live/[slug]",
 ]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;

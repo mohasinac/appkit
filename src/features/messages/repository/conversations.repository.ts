@@ -71,6 +71,56 @@ export class ConversationsRepository {
     return getAdminDb().collection(CONVERSATIONS_COLLECTION);
   }
 
+  /**
+   * Find an existing buyer×store×product conversation or create a new one.
+   * Idempotent — safe to call on every "Contact Seller" click.
+   */
+  async findOrCreateByContext(params: {
+    buyerId: string;
+    buyerDisplayName: string;
+    storeId: string;
+    storeName: string;
+    sellerDisplayName: string;
+    productId?: string;
+    productTitle?: string;
+  }): Promise<ConversationDocument> {
+    const db = getAdminDb();
+    const coll = this.collection();
+    const { buyerId, storeId, productId } = params;
+
+    // Stable composite key: buyerId + storeId + (productId | "general")
+    const productKey = productId ?? "general";
+    const stableId = `conv-${buyerId}-${storeId}-${productKey}`;
+    const ref = coll.doc(stableId);
+
+    return db.runTransaction(async (tx) => {
+      const snap = await tx.get(ref);
+      if (snap.exists) {
+        return normaliseDoc(snap.id, snap.data() ?? {});
+      }
+      const now = new Date();
+      const newDoc: Omit<ConversationDocument, "id"> = {
+        buyerId: params.buyerId,
+        buyerDisplayName: params.buyerDisplayName,
+        storeId: params.storeId,
+        storeName: params.storeName,
+        sellerDisplayName: params.sellerDisplayName,
+        productId: params.productId,
+        productTitle: params.productTitle,
+        messages: [],
+        lastMessage: "",
+        lastMessageAt: now,
+        unreadBuyer: 0,
+        unreadSeller: 0,
+        status: "active",
+        createdAt: now,
+        updatedAt: now,
+      };
+      tx.set(ref, newDoc);
+      return normaliseDoc(stableId, newDoc as Record<string, unknown>);
+    });
+  }
+
   async findById(id: string): Promise<ConversationDocument | null> {
     const snap = await this.collection().doc(id).get();
     if (!snap.exists) return null;
