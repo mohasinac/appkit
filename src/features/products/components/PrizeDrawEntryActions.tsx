@@ -1,12 +1,14 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Stack, Text, useToast } from "../../../ui";
+import { Button, Stack, Text, useToast, LoginRequiredModal } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
 import { pushCartOp } from "../../cart/utils/pending-ops";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
+import { useAuthGate } from "../../../react/hooks/useAuthGate";
+import { ACTION_ID } from "../constants/action-defs";
 
 export interface PrizeDrawEntryActionsProps {
   productId: string;
@@ -41,14 +43,15 @@ export function PrizeDrawEntryActions({
   const router = useRouter();
   const cart = useGuestCart();
   const { showToast } = useToast();
+  const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [consentOpen, setConsentOpen] = useState(false);
 
   const closed = revealStatus === "closed" || remainingEntries === 0;
 
   const handleEnter = useCallback(() => {
     if (closed) return;
-    setConsentOpen(true);
-  }, [closed]);
+    requireAuth(ACTION_ID.ENTER_PRIZE_DRAW, () => setConsentOpen(true));
+  }, [closed, requireAuth]);
 
   const handleConfirm = useCallback(() => {
     cart.add(productId, 1, {
@@ -112,6 +115,7 @@ export function PrizeDrawEntryActions({
         onCancel={() => setConsentOpen(false)}
         onConfirm={handleConfirm}
       />
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </Stack>
   );
 }

@@ -227,6 +227,7 @@ export function CategoryProductsListing({
           </div>
         </>
       )}
+      <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );
 }
