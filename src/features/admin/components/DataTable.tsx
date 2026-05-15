@@ -87,6 +87,7 @@ function SelectableRow<T extends { id: string }>({
   const isInteractive = Boolean(onRowClick ?? rowHref);
   return (
     <tr
+      data-testid="data-table-row"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       role={isInteractive ? "link" : undefined}
@@ -105,6 +106,7 @@ function SelectableRow<T extends { id: string }>({
             onSelect={(e) => { e.preventDefault(); onToggle?.(row.id, !isSelected); }}
             label={isSelected ? "Deselect row" : "Select row"}
             position="top-1/2 left-2 -translate-y-1/2"
+            data-testid="row-checkbox"
           />
         </td>
       )}
@@ -152,7 +154,7 @@ export function DataTable<T extends { id: string }>({
   return (
     <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
       <Div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table data-testid="data-table" className="w-full text-sm">
           <thead>
             <tr className="border-b border-neutral-200 dark:border-slate-700 bg-neutral-50 dark:bg-slate-800">
               {selectionEnabled && (
@@ -160,6 +162,7 @@ export function DataTable<T extends { id: string }>({
                   {onToggleSelectAll && (
                     <input
                       type="checkbox"
+                      data-testid="select-all-checkbox"
                       aria-label={allRowsSelected ? "Deselect all" : "Select all"}
                       checked={allRowsSelected}
                       onChange={() => onToggleSelectAll(!allRowsSelected)}

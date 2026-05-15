@@ -139,6 +139,7 @@ export function ListingToolbar({
 
   return (
     <div
+      data-testid="listing-toolbar"
       className={`sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2 px-3 sm:py-2.5 sm:px-4 ${className}`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5">

@@ -96,6 +96,7 @@ export function ToastProvider({
       <div
         aria-live="polite"
         aria-atomic="true"
+        data-testid="toast-container"
         className={[UI_TOAST.container, UI_TOAST.positions[position]]
           .filter(Boolean)
           .join(" ")}
@@ -125,6 +126,7 @@ function ToastRow({
   return (
     <div
       role="alert"
+      data-testid="toast"
       className={[UI_TOAST.row, UI_TOAST.variants[toast.variant]].join(" ")}
      data-section="toast-div-624">
       <div className={UI_TOAST.icon} data-section="toast-div-625">{iconMap[toast.variant]}</div>

@@ -54,6 +54,7 @@ export function TablePagination({
       <Div
         role="navigation"
         aria-label={l.paginationLabel}
+        data-testid="pagination"
         className={[
           "appkit-table-pagination appkit-table-pagination--compact",
           className,
@@ -80,6 +81,7 @@ export function TablePagination({
     <Div
       role="navigation"
       aria-label={l.paginationLabel}
+      data-testid="pagination"
       className={["appkit-table-pagination", className]
         .filter(Boolean)
         .join(" ")}

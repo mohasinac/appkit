@@ -81,6 +81,7 @@ export function CountdownDisplay({
   return (
     <Span
       variant="inherit"
+      data-testid="countdown"
       className={classNames("appkit-countdown", className)}
     >
       {label}

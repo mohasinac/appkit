@@ -98,6 +98,7 @@ export function BulkActionBar({
   return (
     <div
       ref={containerRef}
+      data-testid="bulk-action-bar"
       className="appkit-bulk-bar"
       role="region"
       aria-live="polite"
@@ -114,7 +115,7 @@ export function BulkActionBar({
           aria-label={l.clearSelection}
         >
           <X className="appkit-bulk-bar__count-icon" aria-hidden="true" />
-          <Span className="appkit-bulk-bar__count-label">
+          <Span data-testid="bulk-selected-count" className="appkit-bulk-bar__count-label">
             {selectedCount} {l.selected}
           </Span>
         </Button>

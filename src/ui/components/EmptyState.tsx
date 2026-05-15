@@ -45,6 +45,7 @@ export function EmptyState({
   return (
     <Card
       variant="outlined"
+      data-testid="empty-state"
       className={[UI_EMPTY.base, className].filter(Boolean).join(" ")}
     >
       {icon ? <div className={UI_EMPTY.icon} data-section="emptystate-div-492">{icon}</div> : null}

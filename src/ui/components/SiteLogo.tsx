@@ -38,6 +38,7 @@ export function SiteLogo({
       <img
         src={src}
         alt={title}
+        data-testid="site-logo"
         className={`block w-auto object-contain ${className}`}
       />
     );
@@ -51,6 +52,7 @@ export function SiteLogo({
       viewBox="0 0 214 56"
       role="img"
       aria-label={title}
+      data-testid="site-logo"
       className={`block w-auto ${className}`}
     >
       <title>{title}</title>
