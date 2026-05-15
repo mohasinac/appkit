@@ -4,8 +4,9 @@ import React, { useState, useCallback } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Toggle, useToast } from "../../../ui";
-import type { ListingViewShellProps } from "../../../ui";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { Button, BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Toggle, useToast } from "../../../ui";
+import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   ADMIN_PRODUCT_STATUS_TABS,
@@ -19,6 +20,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
+import { AdminViewCards } from "./AdminViewCards";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { AdminProductEditorView } from "./AdminProductEditorView";
@@ -96,6 +98,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   const hasChildren = React.Children.count(children) > 0;
   const [overrides, setOverrides] = useState<Record<string, Partial<ProductRow>>>({});
   const { showToast } = useToast();
+  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
@@ -177,6 +180,8 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   const rows: ProductRow[] = fetchedRows.map((r) =>
     overrides[r.id] ? { ...r, ...overrides[r.id] } : r,
   );
+
+  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   const handleToggle = async (id: string, field: FlagField, value: boolean) => {
     const prev = fetchedRows.find((r) => r.id === id)?.[field];

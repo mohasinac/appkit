@@ -167,7 +167,7 @@ export function StoreAuctionsListing({ storeId, initialData }: StoreAuctionsList
         sortOptions={AUCTION_SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
         view={view}
-        onViewChange={(v) => { setView(v); table.set("view", v); }}
+        onViewChange={(v) => { if (v === "table") return; setView(v); table.set("view", v); }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

@@ -122,7 +122,7 @@ export function StorePreOrdersListing({ storeId, initialData }: StorePreOrdersLi
         sortOptions={PREORDER_SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
         view={view}
-        onViewChange={(v) => { setView(v); table.set("view", v); }}
+        onViewChange={(v) => { if (v === "table") return; setView(v); table.set("view", v); }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />

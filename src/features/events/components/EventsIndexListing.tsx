@@ -19,6 +19,15 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "startsAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [view, setView] = useState<"grid" | "list">(
+    (table.get("view") as "grid" | "list") || "grid",
+  );
+
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
+    setView(next);
+    table.set("view", next);
+  };
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -129,7 +138,8 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
         sortValue={table.get("sort") || "startsAt"}
         sortOptions={EVENT_PUBLIC_SORT_OPTIONS as any}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        view={view}
+        onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
@@ -165,6 +175,12 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
           <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No events found.
           </p>
+        ) : view === "list" ? (
+          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+            {events.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map((event) => (

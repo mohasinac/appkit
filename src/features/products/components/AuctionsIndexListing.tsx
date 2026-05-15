@@ -3,7 +3,9 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, useToast, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, ListingToolbar, BulkActionBar } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
+import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { MarketplaceAuctionGrid } from "../../auctions/components/MarketplaceAuctionGrid";
 import { AuctionFilters } from "../../auctions/components/AuctionFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -134,6 +136,8 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     { initialData },
   );
 
+  const selection = useBulkSelection({ items: auctions as any[], keyExtractor: (a: any) => a.id });
+
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
   }, [searchInput, table]);
@@ -142,7 +146,8 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
     if (e.key === "Enter") commitSearch();
   };
 
-  const handleViewToggle = (next: "grid" | "list") => {
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
     setView(next);
     table.set("view", next);
   };
@@ -183,6 +188,11 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        bulkMode={selection.isSelecting}
+        bulkSelectedCount={selection.selectedCount}
+        bulkTotalCount={auctions.length}
+        onBulkSelectAll={selection.toggleAll}
+        onBulkClear={selection.clearSelection}
         extra={
           <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
             <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
@@ -205,6 +215,38 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
             </button>
           </label>
         }
+      />
+
+      {/* ── Bulk action bar ───────────────────────────────────────────── */}
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            id: "watchlist",
+            label: "Add to Watchlist",
+            variant: "primary",
+            onClick: () => {
+              const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
+              selected.forEach((a) => {
+                wishlistActions.addToWishlist(a.id);
+              });
+              selection.clearSelection();
+            },
+          },
+          {
+            id: "remove-watchlist",
+            label: "Remove from Watchlist",
+            variant: "secondary",
+            onClick: () => {
+              const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
+              selected.forEach((a) => {
+                wishlistActions.removeFromWishlist(a.id);
+              });
+              selection.clearSelection();
+            },
+          },
+        ] satisfies BulkActionItem[]}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}

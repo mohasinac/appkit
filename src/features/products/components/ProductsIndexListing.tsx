@@ -4,10 +4,11 @@ import { X, ShoppingCart, Heart, SlidersHorizontal, Columns } from "lucide-react
 import { useRouter } from "next/navigation";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, BulkActionBar, ListingToolbar } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../constants/action-defs";
 import { CompareOverlay } from "./CompareOverlay";
-import type { ViewMode } from "../../../ui";
+type ViewMode = "grid" | "list";
 import { ROUTES } from "../../../next";
 import { ProductGrid, ProductFilters, PRODUCT_PUBLIC_SORT_OPTIONS } from ".";
 import { useGuestCart } from "../../cart/hooks/useGuestCart";
@@ -31,7 +32,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const showSold = table.get("showSold") === "true";
   const [view, setView] = useState<ViewMode>(
-    (table.get("view") as ViewMode) || "card",
+    (table.get("view") as ViewMode) || "grid",
   );
 
   // Pending filter state — buffered until "Apply Filters" clicked
@@ -138,7 +139,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     if (e.key === "Enter") commitSearch();
   };
 
-  const handleViewToggle = (next: ViewMode) => {
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
     setView(next);
     table.set("view", next);
   };
@@ -190,8 +192,8 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        view={view === "card" ? "grid" : "list"}
-        onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
+        view={view}
+        onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         bulkMode={selection.isSelecting}
@@ -221,6 +223,55 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             </button>
           </label>
         }
+      />
+
+      {/* ── Bulk action bar (inline, replaces fixed bottom bar) ────────── */}
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            id: ACTION_ID.ADD_TO_CART,
+            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
+            icon: <ShoppingCart className="h-3.5 w-3.5" />,
+            variant: "primary",
+            onClick: () => {
+              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
+              });
+              showToast(`${selected.length} items added to cart`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.ADD_TO_WISHLIST,
+            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
+            icon: <Heart className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            onClick: () => {
+              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localWishlist.add(p.id, "product");
+                pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+              });
+              showToast(`${selected.length} items added to wishlist`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.COMPARE,
+            label: ACTION_META[ACTION_ID.COMPARE].label,
+            icon: <Columns className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
+            onClick: () => {
+              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
+              setCompareIds(ids);
+            },
+          },
+        ] satisfies BulkActionItem[]}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
@@ -255,7 +306,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             getProductHref={(p) =>
               String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
             }
-            view={view}
+            view={view === "grid" ? "card" : "list"}
             onWishlistToggle={handleWishlistToggle}
             wishlistedIds={wishlistedIds}
             onAddToCart={handleAddToCart}
@@ -268,54 +319,6 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
       </div>
 
-      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
-      <BulkActionsBar
-        selectedCount={selection.selectedCount}
-        onClearSelection={selection.clearSelection}
-        actions={[
-          {
-            key: ACTION_ID.ADD_TO_CART,
-            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
-            icon: <ShoppingCart className="h-3.5 w-3.5" />,
-            variant: "primary",
-            onClick: () => {
-              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
-                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
-              });
-              showToast(`${selected.length} items added to cart`, "success");
-              selection.clearSelection();
-            },
-          },
-          {
-            key: ACTION_ID.ADD_TO_WISHLIST,
-            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
-            icon: <Heart className="h-3.5 w-3.5" />,
-            variant: "secondary",
-            onClick: () => {
-              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localWishlist.add(p.id, "product");
-                pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
-              });
-              showToast(`${selected.length} items added to wishlist`, "success");
-              selection.clearSelection();
-            },
-          },
-          {
-            key: ACTION_ID.COMPARE,
-            label: ACTION_META[ACTION_ID.COMPARE].label,
-            icon: <Columns className="h-3.5 w-3.5" />,
-            variant: "secondary",
-            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
-            onClick: () => {
-              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
-              setCompareIds(ids);
-            },
-          },
-        ]}
-      />
 
       <CompareOverlay
         isOpen={compareIds.length > 0}

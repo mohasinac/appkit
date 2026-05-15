@@ -82,6 +82,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     experimental: consumerExperimental = {},
     webpack: consumerWebpack,
     outputFileTracingIncludes: consumerOutputFileTracingIncludes = {},
+    turbopack: consumerTurbopack = {},
     ...rest
   } = override;
 
@@ -205,6 +206,8 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     // disagree on which apps exist, causing "No Firebase App '[DEFAULT]'" errors.
     // Pinning every firebase/* import to the root copy ensures the singleton
     // registry is shared regardless of which file imports firebase.
+    // NOTE: This fixes webpack (dev --webpack) only. Turbopack (next build) uses
+    // turbopack.resolveAlias in the returned config object — see below.
     const _firebaseRoot = path.resolve(process.cwd(), "node_modules", "firebase");
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
@@ -314,6 +317,20 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     ),
   ];
 
+  // Turbopack (used by `next build`) has its own alias system separate from
+  // webpack. Mirror the firebase deduplication alias so prod builds share the
+  // same Firebase app registry as dev builds.
+  const firebaseRoot = path.resolve(process.cwd(), "node_modules", "firebase");
+  const consumerTurbopackResolved = consumerTurbopack as Record<string, unknown>;
+  const consumerTurbopackAlias = (consumerTurbopackResolved.resolveAlias ?? {}) as Record<string, string>;
+  const mergedTurbopack = {
+    ...consumerTurbopackResolved,
+    resolveAlias: {
+      ...consumerTurbopackAlias,
+      firebase: firebaseRoot,
+    },
+  };
+
   return {
     images: {
       ...consumerImages,
@@ -324,5 +341,6 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     experimental: mergedExperimental,
     outputFileTracingIncludes: mergedOutputFileTracingIncludes,
     webpack: mergedWebpack,
+    turbopack: mergedTurbopack,
   };
 }

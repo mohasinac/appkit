@@ -3,7 +3,8 @@ import React, { useState, useCallback, useMemo } from "react";
 import { Columns, Heart, ShoppingCart, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, useToast, BulkActionsBar, ListingToolbar } from "../../../ui";
+import { Pagination, useToast, BulkActionBar, ListingToolbar } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ACTION_ID, ACTION_META, COMPARE_MAX_ITEMS } from "../../products/constants/action-defs";
 import { CompareOverlay } from "../../products/components/CompareOverlay";
 import { ROUTES } from "../../../next";
@@ -44,6 +45,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   const [view, setView] = useState<"grid" | "list">(
     (table.get("view") as "grid" | "list") || "grid",
   );
+
   const localCart = useGuestCart();
   const localWishlist = useGuestWishlist();
   const { categories } = useCategoryTree();
@@ -148,7 +150,8 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     if (e.key === "Enter") commitSearch();
   };
 
-  const handleViewToggle = (next: "grid" | "list") => {
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
     setView(next);
     table.set("view", next);
   };
@@ -229,6 +232,55 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
         }
       />
 
+      {/* ── Bulk action bar ───────────────────────────────────────────── */}
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            id: ACTION_ID.ADD_TO_CART,
+            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
+            icon: <ShoppingCart className="h-3.5 w-3.5" />,
+            variant: "primary",
+            onClick: () => {
+              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
+              });
+              showToast(`${selected.length} items added to cart`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.ADD_TO_WISHLIST,
+            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
+            icon: <Heart className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            onClick: () => {
+              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                localWishlist.add(p.id, "preorder");
+                pushWishlistOp({ op: "add", itemId: p.id, type: "preorder" });
+              });
+              showToast(`${selected.length} items added to wishlist`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.COMPARE,
+            label: ACTION_META[ACTION_ID.COMPARE].label,
+            icon: <Columns className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
+            onClick: () => {
+              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
+              setCompareIds(ids);
+            },
+          },
+        ] satisfies BulkActionItem[]}
+      />
+
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
@@ -296,54 +348,6 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
 
       </div>
 
-      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
-      <BulkActionsBar
-        selectedCount={selection.selectedCount}
-        onClearSelection={selection.clearSelection}
-        actions={[
-          {
-            key: ACTION_ID.ADD_TO_CART,
-            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
-            icon: <ShoppingCart className="h-3.5 w-3.5" />,
-            variant: "primary",
-            onClick: () => {
-              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
-                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
-              });
-              showToast(`${selected.length} items added to cart`, "success");
-              selection.clearSelection();
-            },
-          },
-          {
-            key: ACTION_ID.ADD_TO_WISHLIST,
-            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
-            icon: <Heart className="h-3.5 w-3.5" />,
-            variant: "secondary",
-            onClick: () => {
-              const selected = (preOrders as any[]).filter((p) => selection.selectedIdSet.has(p.id));
-              selected.forEach((p) => {
-                localWishlist.add(p.id, "preorder");
-                pushWishlistOp({ op: "add", itemId: p.id, type: "preorder" });
-              });
-              showToast(`${selected.length} items added to wishlist`, "success");
-              selection.clearSelection();
-            },
-          },
-          {
-            key: ACTION_ID.COMPARE,
-            label: ACTION_META[ACTION_ID.COMPARE].label,
-            icon: <Columns className="h-3.5 w-3.5" />,
-            variant: "secondary",
-            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
-            onClick: () => {
-              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
-              setCompareIds(ids);
-            },
-          },
-        ]}
-      />
 
       <CompareOverlay
         isOpen={compareIds.length > 0}

@@ -29,6 +29,15 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "name" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [view, setView] = useState<"grid" | "list">(
+    (table.get("view") as "grid" | "list") || "grid",
+  );
+
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
+    setView(next);
+    table.set("view", next);
+  };
 
   const sort = table.get("sort") || "name";
   const page = table.getNumber("page", 1);
@@ -171,7 +180,8 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
         sortValue={sort}
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        view={view}
+        onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
@@ -205,6 +215,12 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
                 ? "No brands found"
                 : "No categories found"}
           </p>
+        ) : view === "list" ? (
+          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+            {categories.map((category) => (
+              <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {categories.map((category) => (

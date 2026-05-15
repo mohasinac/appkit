@@ -171,8 +171,9 @@ export function PrizeDrawsIndexListing({
         }}
         view={view}
         onViewChange={(v) => {
-          setView(v);
-          table.set("view", v);
+          if (v === "table") return;
+          setView(v as "grid" | "list");
+          table.set("view", v as "grid" | "list");
         }}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}

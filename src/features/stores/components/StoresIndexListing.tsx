@@ -3,7 +3,8 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { BulkActionsBar, Pagination, ListingToolbar } from "../../../ui";
+import { BulkActionBar, Pagination, ListingToolbar } from "../../../ui";
+import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
 import { StoreFilters } from "./StoreFilters";
@@ -27,6 +28,15 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
   const table = useUrlTable({ defaults: { pageSize: "24", sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [view, setView] = useState<"grid" | "list">(
+    (table.get("view") as "grid" | "list") || "grid",
+  );
+
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
+    setView(next);
+    table.set("view", next);
+  };
 
   // Pending filter state — buffered until "Apply Filters" clicked
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -135,7 +145,8 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={STORE_SORT_OPTIONS}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        view={view}
+        onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         bulkMode={selection.isSelecting}
@@ -143,6 +154,27 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
         bulkTotalCount={stores.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
+      />
+
+      {/* ── Bulk action bar ───────────────────────────────────────────── */}
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={[
+          {
+            id: "compare",
+            label: "Compare",
+            variant: "secondary",
+            onClick: () => { selection.clearSelection(); },
+          },
+          {
+            id: "visit",
+            label: "Visit Store",
+            variant: "primary",
+            disabled: selection.selectedCount !== 1,
+            onClick: () => { selection.clearSelection(); },
+          },
+        ] satisfies BulkActionItem[]}
       />
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
@@ -178,6 +210,22 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
           <p className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No stores found.
           </p>
+        ) : view === "list" ? (
+          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+            {stores.map((store) => {
+              const storeKey = store.storeSlug ?? store.id;
+              return (
+                <InteractiveStoreCard
+                  key={storeKey}
+                  store={store}
+                  href={String(ROUTES.PUBLIC.STORE_DETAIL(storeKey))}
+                  selectable={selection.isSelecting}
+                  isSelected={selection.isSelected(store.id ?? store.storeSlug)}
+                  onSelect={(id, sel) => { void sel; selection.toggle(id); }}
+                />
+              );
+            })}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {stores.map((store) => {
@@ -198,22 +246,6 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
       </div>
 
-      {/* ── Bulk actions bar ──────────────────────────────────────────── */}
-      <BulkActionsBar
-        selectedCount={selection.selectedCount}
-        onClearSelection={selection.clearSelection}
-        actions={[
-          {
-            key: "compare",
-            label: "Compare",
-            variant: "secondary",
-            onClick: () => {
-              /* BK3 compare overlay — wired in a later session */
-              selection.clearSelection();
-            },
-          },
-        ]}
-      />
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {filterOpen && (

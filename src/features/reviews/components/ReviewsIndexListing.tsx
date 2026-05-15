@@ -24,6 +24,15 @@ export function ReviewsIndexListing({
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: "-createdAt" } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
+  const [view, setView] = useState<"grid" | "list">(
+    (table.get("view") as "grid" | "list") || "grid",
+  );
+
+  const handleViewToggle = (next: "grid" | "list" | "table") => {
+    if (next === "table") return;
+    setView(next);
+    table.set("view", next);
+  };
 
   const sort = table.get("sort") || "-createdAt";
   const currentPage = table.getNumber("page", 1);
@@ -126,7 +135,8 @@ export function ReviewsIndexListing({
         sortValue={sort}
         sortOptions={sortOptions}
         onSortChange={(v) => { table.set("sort", v); }}
-        hideViewToggle
+        view={view}
+        onViewChange={handleViewToggle}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
@@ -160,6 +170,12 @@ export function ReviewsIndexListing({
           <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No reviews found.
           </p>
+        ) : view === "list" ? (
+          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+            {reviews.map((review) => (
+              <ReviewCard key={review.id} review={review} />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {reviews.map((review) => (

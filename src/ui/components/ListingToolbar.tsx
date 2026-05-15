@@ -6,6 +6,7 @@ import {
   SlidersHorizontal,
   LayoutGrid,
   List,
+  Table2,
   RotateCcw,
   Square,
 } from "lucide-react";
@@ -22,6 +23,7 @@ export interface ListingToolbarLabels {
   sort?: string;
   gridView?: string;
   listView?: string;
+  tableView?: string;
   resetAll?: string;
   selectAll?: (total: number) => string;
   deselectAll?: string;
@@ -35,6 +37,7 @@ const DEFAULT_LABELS = {
   sort: "Sort",
   gridView: "Grid view",
   listView: "List view",
+  tableView: "Table view",
   resetAll: "Reset all",
   selectAll: (total: number) => `Select All (${total})`,
   deselectAll: "Deselect All",
@@ -59,10 +62,12 @@ export interface ListingToolbarProps {
   sortOptions?: readonly ListingToolbarSortOption[];
   onSortChange?: (value: string) => void;
 
-  /** Grid / list view toggle */
-  view?: "grid" | "list";
-  onViewChange?: (view: "grid" | "list") => void;
+  /** Grid / list / table view toggle */
+  view?: "grid" | "list" | "table";
+  onViewChange?: (view: "grid" | "list" | "table") => void;
   hideViewToggle?: boolean;
+  /** When true, adds a third Table button to the view toggle group (admin pages only). */
+  showTableView?: boolean;
 
   /** Reset all toolbar state to defaults */
   onResetAll?: () => void;
@@ -108,6 +113,7 @@ export function ListingToolbar({
   view = "grid",
   onViewChange,
   hideViewToggle = false,
+  showTableView = false,
   onResetAll,
   hasActiveState = false,
   bulkMode = false,
@@ -231,6 +237,16 @@ export function ListingToolbar({
               >
                 <List className="h-4 w-4" />
               </button>
+              {showTableView && (
+                <button
+                  type="button"
+                  onClick={() => onViewChange("table")}
+                  aria-label={l.tableView}
+                  className={`${VIEW_BTN_BASE} ${view === "table" ? VIEW_BTN_ACTIVE : VIEW_BTN_INACTIVE}`}
+                >
+                  <Table2 className="h-4 w-4" />
+                </button>
+              )}
             </div>
           )}
 
