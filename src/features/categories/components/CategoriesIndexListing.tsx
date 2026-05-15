@@ -96,13 +96,11 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const clearSearch = () => {
     setSearchInput("");
     table.set("q", "");
-    table.setPage(1);
   };
 
   // Tab state — "all" | "categories" | "brands" (not used when brandsOnly=true)
@@ -116,7 +114,6 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
   const switchTab = (key: string) => {
     table.set("tab", key);
-    table.setPage(1);
   };
 
   const { categories, total, totalPages, isLoading } = useCategoriesFiltered({

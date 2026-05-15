@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, Input, Spinner, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Spinner, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import type { OfferDocument } from "../schemas";
 
 export type SellerOfferAction =
@@ -66,9 +67,10 @@ interface OfferCardProps {
   offer: OfferRow;
   onRespond: SellerOffersPanelProps["onRespond"];
   onUpdate: (id: string, patch: Partial<OfferRow>) => void;
+  onNeedsLogin: () => void;
 }
 
-function OfferCard({ offer, onRespond, onUpdate }: OfferCardProps) {
+function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps) {
   const [uiState, setUiState] = useState<OfferState>("idle");
   const [counterInput, setCounterInput] = useState("");
   const [sellerNote, setSellerNote] = useState("");
@@ -92,7 +94,11 @@ function OfferCard({ offer, onRespond, onUpdate }: OfferCardProps) {
         });
         setUiState("idle");
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Something went wrong.");
+        if (isAuthError(err)) {
+          onNeedsLogin();
+        } else {
+          setError(err instanceof Error ? err.message : "Something went wrong.");
+        }
       }
     });
   }
@@ -243,6 +249,7 @@ export function SellerOffersPanel({
   const [offers, setOffers] = useState<OfferRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
   const loadOffers = useCallback(async () => {
@@ -253,7 +260,10 @@ export function SellerOffersPanel({
         ? fetchEndpoint
         : `${fetchEndpoint}?status=${statusFilter}`;
       const res = await fetch(url);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) { setShowLoginModal(true); return; }
+        throw new Error(`Error ${res.status}`);
+      }
       const json = (await res.json()) as { items?: OfferRow[]; offers?: OfferRow[] };
       setOffers(json.items ?? json.offers ?? []);
     } catch (err) {
@@ -282,6 +292,11 @@ export function SellerOffersPanel({
 
   return (
     <Div className={`space-y-4 ${className}`}>
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to manage offers. Please log in or create an account to continue."
+      />
       <Div className="flex items-center justify-between flex-wrap gap-2">
         <Div>
           <Heading level={2} className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
@@ -331,7 +346,7 @@ export function SellerOffersPanel({
       {!loading && offers.length > 0 && (
         <Div className="space-y-3">
           {offers.map((offer) => (
-            <OfferCard key={offer.id} offer={offer} onRespond={onRespond} onUpdate={handleUpdate} />
+            <OfferCard key={offer.id} offer={offer} onRespond={onRespond} onUpdate={handleUpdate} onNeedsLogin={() => setShowLoginModal(true)} />
           ))}
         </Div>
       )}

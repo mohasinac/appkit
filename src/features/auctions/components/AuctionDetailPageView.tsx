@@ -510,10 +510,17 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
             return <CollapsibleBidHistory bids={bids} currency={currency} />;
           }}
           renderRelated={() => {
+            const now = new Date();
             const related: MarketplaceAuctionCardData[] = relatedDocs
-              .filter(
-                (r) => r.id !== product.id && r.listingType === "auction",
-              )
+              .filter((r) => {
+                if (r.id === product.id || r.listingType !== "auction" || r.status !== "published") return false;
+                const end = r.auctionEndDate;
+                if (!end) return true;
+                const endDate = typeof (end as { toDate?: () => Date }).toDate === "function"
+                  ? (end as { toDate: () => Date }).toDate()
+                  : end instanceof Date ? end : new Date(String(end));
+                return endDate > now;
+              })
               .slice(0, 4)
               .map((r) => ({
                 id: String(r.id ?? ""),

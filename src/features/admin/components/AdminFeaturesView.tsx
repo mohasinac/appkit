@@ -170,7 +170,6 @@ export function AdminFeaturesView({
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => {
           table.set("sort", v);
-          table.setPage(1);
         }}
         hideViewToggle
         onResetAll={resetAll}
@@ -194,7 +193,6 @@ export function AdminFeaturesView({
             type="button"
             onClick={() => {
               table.set("scope", tab.value);
-              table.setPage(1);
             }}
             className={tabClass(tab.value)}
           >

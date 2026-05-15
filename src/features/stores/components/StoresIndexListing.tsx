@@ -91,7 +91,6 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   // Build sieve filters from applied URL params

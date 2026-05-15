@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, Stack, Text } from "../../../ui";
+import { Button, Div, LoginRequiredModal, Stack, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface PreOrderActionsClientProps {
@@ -28,6 +29,7 @@ export function PreOrderActionsClient({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   function handleReserve() {
     setError(null);
@@ -37,7 +39,11 @@ export function PreOrderActionsClient({
         await onReserveNow(productId);
         setSuccess(true);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Failed to reserve. Please try again.");
+        if (isAuthError(err)) {
+          setShowLoginModal(true);
+        } else {
+          setError(err instanceof Error ? err.message : "Failed to reserve. Please try again.");
+        }
       }
     });
   }
@@ -65,6 +71,12 @@ export function PreOrderActionsClient({
           ✓ Reserved! Redirecting to checkout…
         </Text>
       )}
+
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to reserve this pre-order. Please log in or create an account to continue."
+      />
 
       <Stack gap="sm">
         <Button

@@ -145,7 +145,6 @@ export function PrizeDrawsIndexListing({
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -168,7 +167,6 @@ export function PrizeDrawsIndexListing({
         sortOptions={PRIZE_DRAW_SORT_OPTIONS}
         onSortChange={(v) => {
           table.set("sort", v);
-          table.setPage(1);
         }}
         view={view}
         onViewChange={(v) => {

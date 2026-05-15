@@ -46,6 +46,12 @@ export { SideModal } from "./ui/components/SideModal";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // UnsavedChangesModal - Component for unsaved changes modal.
 export { UnsavedChangesModal } from "./ui/components/UnsavedChangesModal";
+// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs (window.location).
+// LoginRequiredModal - Modal prompting unauthenticated users to log in.
+export { LoginRequiredModal } from "./ui/components/LoginRequiredModal";
+export type { LoginRequiredModalProps } from "./ui/components/LoginRequiredModal";
+// isAuthError - Detects auth/authorization errors from server actions or fetch responses.
+export { isAuthError } from "./utils/auth-error";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // useToast - React hook for use toast.
 export { useToast } from "./ui/components/Toast";

@@ -70,7 +70,6 @@ export function CouponsIndexListing({
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -82,10 +81,7 @@ export function CouponsIndexListing({
   const hasActiveFilters = !!activeType || !!table.get("dateFrom") || !!table.get("dateTo");
 
   const clearFilters = () => {
-    table.set("type", "");
-    table.set("dateFrom", "");
-    table.set("dateTo", "");
-    table.setPage(1);
+    table.setMany({ type: "", dateFrom: "", dateTo: "" });
   };
 
   return (

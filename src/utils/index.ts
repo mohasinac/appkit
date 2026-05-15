@@ -1,3 +1,4 @@
+export * from "./auth-error";
 export * from "./date.formatter";
 export * from "./number.formatter";
 export * from "./string.formatter";

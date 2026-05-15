@@ -83,7 +83,6 @@ export function AdminSublistingCategoriesView() {
         sortOptions={SORT_OPTIONS}
         onSortChange={(v) => {
           table.set("sort", v);
-          table.setPage(1);
         }}
         hideViewToggle
         onResetAll={resetAll}

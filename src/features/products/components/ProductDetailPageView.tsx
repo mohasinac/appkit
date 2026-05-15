@@ -324,7 +324,7 @@ export async function ProductDetailPageView({
   const relatedItems: ProductItem[] = (
     relatedDocs as Record<string, unknown>[]
   )
-    .filter((r) => r.id !== product.id)
+    .filter((r) => r.id !== product.id && r.status === "published")
     .slice(0, 8)
     .map(toProductItem);
 

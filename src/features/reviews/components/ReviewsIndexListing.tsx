@@ -91,7 +91,6 @@ export function ReviewsIndexListing({
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const { reviews, total, totalPages, isLoading } = useReviews(

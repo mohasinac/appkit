@@ -130,7 +130,6 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

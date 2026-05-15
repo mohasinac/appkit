@@ -9,8 +9,9 @@
  */
 
 import React, { useState, useCallback } from "react";
-import { Button, Stack, Text } from "../../../ui";
+import { Button, LoginRequiredModal, Stack, Text } from "../../../ui";
 import { useToast } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
 export interface BundleBuyNowCtaProps {
@@ -27,6 +28,7 @@ export function BundleBuyNowCta({
   const { showToast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleClick = useCallback(async () => {
     setError(null);
@@ -34,10 +36,13 @@ export function BundleBuyNowCta({
     try {
       await onBuyNow({ bundleSlug });
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : BUNDLE_COPY.detail.ctaErrorFallback;
-      setError(message);
-      showToast(message, "error");
+      if (isAuthError(err)) {
+        setShowLoginModal(true);
+      } else {
+        const message = err instanceof Error ? err.message : BUNDLE_COPY.detail.ctaErrorFallback;
+        setError(message);
+        showToast(message, "error");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -55,18 +60,25 @@ export function BundleBuyNowCta({
   }
 
   return (
-    <Stack gap="sm">
-      <Button
-        variant="primary"
-        onClick={handleClick}
-        disabled={submitting}
-        aria-busy={submitting}
-      >
-        {submitting ? BUNDLE_COPY.detail.ctaAdding : BUNDLE_COPY.detail.ctaBuyNow}
-      </Button>
-      {error && (
-        <Text size="sm" color="danger" role="alert">{error}</Text>
-      )}
-    </Stack>
+    <>
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to purchase this bundle. Please log in or create an account to continue."
+      />
+      <Stack gap="sm">
+        <Button
+          variant="primary"
+          onClick={handleClick}
+          disabled={submitting}
+          aria-busy={submitting}
+        >
+          {submitting ? BUNDLE_COPY.detail.ctaAdding : BUNDLE_COPY.detail.ctaBuyNow}
+        </Button>
+        {error && (
+          <Text size="sm" color="danger" role="alert">{error}</Text>
+        )}
+      </Stack>
+    </>
   );
 }

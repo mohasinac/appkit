@@ -2,7 +2,8 @@
 
 import React, { useState, useTransition } from "react";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { Button, Div, Input, Row, Span, Stack, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
+import { Button, Div, Input, LoginRequiredModal, Row, Span, Stack, Text } from "../../../ui";
 
 export interface PlaceBidInput {
   productId: string;
@@ -40,6 +41,7 @@ export function PlaceBidFormClient({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,11 +68,11 @@ export function PlaceBidFormClient({
         setSuccess(true);
         setBidAmount(String(amount + minBidIncrement));
       } catch (err: unknown) {
-        setError(
-          err instanceof Error && err.message
-            ? err.message
-            : "Failed to place bid. Please try again.",
-        );
+        if (isAuthError(err)) {
+          setShowLoginModal(true);
+        } else {
+          setError(err instanceof Error ? err.message : "Failed to place bid. Please try again.");
+        }
       }
     });
   }
@@ -96,6 +98,12 @@ export function PlaceBidFormClient({
           {formatCurrency(minBidIncrement, currency)}
         </Text>
       </Div>
+
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to place a bid. Please log in or create an account to continue."
+      />
 
       {/* Bid form */}
       <form onSubmit={handleSubmit}>

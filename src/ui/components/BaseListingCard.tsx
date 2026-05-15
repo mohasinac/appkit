@@ -156,24 +156,45 @@ function BaseListingCardCheckbox({
   className = "",
 }: BaseListingCardCheckboxProps) {
   return (
-    <Button
+    <button
       type="button"
       aria-label={label ?? (selected ? "Deselect" : "Select")}
+      aria-checked={selected}
+      role="checkbox"
       onClick={(e) => {
         e.stopPropagation();
-        onSelect?.(e);
+        onSelect?.(e as unknown as MouseEvent<HTMLButtonElement>);
       }}
       className={[
-        "absolute z-10 h-5 w-5 rounded border-2 flex items-center justify-center bg-white/90",
-        selected ? "bg-primary border-primary" : "border-zinc-300",
+        "absolute z-10 h-4 w-4 rounded flex items-center justify-center",
+        "transition-all duration-150 cursor-pointer border focus-visible:outline-none",
+        "focus-visible:ring-2 focus-visible:ring-primary/50",
+        selected
+          ? "bg-primary border-primary shadow-sm"
+          : "bg-white/80 border-zinc-300/80 hover:border-primary/60 hover:bg-white dark:bg-zinc-800/80 dark:border-zinc-600",
         position,
         className,
       ]
         .filter(Boolean)
         .join(" ")}
     >
-      {selected && <Span className="text-white text-xs leading-none">✓</Span>}
-    </Button>
+      {selected && (
+        <svg
+          className="w-2.5 h-2.5 text-white"
+          viewBox="0 0 10 10"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M1.5 5L4 7.5L8.5 2.5"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      )}
+    </button>
   );
 }
 

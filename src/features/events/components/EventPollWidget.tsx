@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { PollConfig, EventStatus } from "../types";
 import { useAuth } from "../../../react/contexts/SessionContext";
 import { ROUTES } from "../../../next";
+import { LoginRequiredModal } from "../../../ui";
 
 interface EventPollWidgetProps {
   eventId: string;
@@ -33,6 +34,7 @@ export function EventPollWidget({
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const toggleVote = (id: string) => {
     if (isMulti) {
@@ -58,6 +60,10 @@ export function EventPollWidget({
         credentials: "include",
       });
       if (!res.ok) {
+        if (res.status === 401 || res.status === 403) {
+          setShowLoginModal(true);
+          return;
+        }
         const data = (await res.json().catch(() => ({}))) as { error?: string };
         throw new Error(data.error ?? "Failed to submit vote");
       }
@@ -113,6 +119,11 @@ export function EventPollWidget({
 
   return (
     <div className={`space-y-4 ${className}`} data-section="eventpollwidget-div-6">
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to vote in this poll. Please log in or create an account to continue."
+      />
       <p className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
         {isMulti ? "Select all that apply:" : "Choose one:"}
       </p>

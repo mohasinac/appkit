@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, Input, Span, Text } from "../../../ui";
+import { Button, Div, Input, LoginRequiredModal, Span, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface MakeOfferButtonProps {
@@ -26,6 +27,7 @@ export function MakeOfferButton({
 }: MakeOfferButtonProps) {
   const [state, setState] = useState<State>("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const minOffer = Math.round(listedPrice * (minOfferPercent / 100));
@@ -65,12 +67,17 @@ export function MakeOfferButton({
         await onMakeOffer(productId, offerAmount, buyerNote || undefined);
         setState("success");
       } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : String(err);
-        if (msg.includes("active offer") || msg.includes("ACTIVE_OFFER")) {
-          setState("pending");
+        if (isAuthError(err)) {
+          setState("idle");
+          setShowLoginModal(true);
         } else {
-          setErrorMsg(msg || "Could not send offer. Please try again.");
-          setState("error");
+          const msg = err instanceof Error ? err.message : String(err);
+          if (msg.includes("active offer") || msg.includes("ACTIVE_OFFER")) {
+            setState("pending");
+          } else {
+            setErrorMsg(msg || "Could not send offer. Please try again.");
+            setState("error");
+          }
         }
       }
     });
@@ -185,13 +192,20 @@ export function MakeOfferButton({
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="md"
-      className={`w-full border border-zinc-300 dark:border-zinc-600 ${className}`}
-      onClick={handleOpenConfirm}
-    >
-      Make Offer
-    </Button>
+    <>
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to make an offer. Please log in or create an account to continue."
+      />
+      <Button
+        variant="ghost"
+        size="md"
+        className={`w-full border border-zinc-300 dark:border-zinc-600 ${className}`}
+        onClick={handleOpenConfirm}
+      >
+        Make Offer
+      </Button>
+    </>
   );
 }

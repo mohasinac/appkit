@@ -8766,6 +8766,9 @@ export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/inde
 export { buildColumns, createColumnBuilder } from "./ui/index";
 export { renderBoolean, renderCurrency, renderCurrencyCompact, renderCount, renderNullable } from "./ui/index";
 export { Ol } from "./ui/index";
+export { LoginRequiredModal } from "./ui/components/LoginRequiredModal";
+export type { LoginRequiredModalProps } from "./ui/components/LoginRequiredModal";
+export { isAuthError } from "./utils/auth-error";
 
 // -- Missing constants ----------------------------------------------------------
 export {

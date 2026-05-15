@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState, useTransition } from "react";
-import { Alert, Badge, Button, Div, Heading, Spinner, Text } from "../../../ui";
+import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Spinner, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import type { OfferDocument } from "../../seller/schemas";
 
 export interface UserOffersPanelProps {
@@ -47,9 +48,10 @@ interface BuyerOfferCardProps {
   onWithdraw: UserOffersPanelProps["onWithdraw"];
   onCheckout?: UserOffersPanelProps["onCheckout"];
   onUpdate: (id: string, patch: Partial<OfferDocument>) => void;
+  onNeedsLogin: () => void;
 }
 
-function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpdate }: BuyerOfferCardProps) {
+function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpdate, onNeedsLogin }: BuyerOfferCardProps) {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
   const [confirming, setConfirming] = useState<"withdraw" | null>(null);
@@ -62,7 +64,11 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         onUpdate(offer.id, patch);
         setConfirming(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Something went wrong.");
+        if (isAuthError(err)) {
+          onNeedsLogin();
+        } else {
+          setError(err instanceof Error ? err.message : "Something went wrong.");
+        }
       }
     });
   }
@@ -181,13 +187,17 @@ export function UserOffersPanel({
   const [offers, setOffers] = useState<OfferDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const loadOffers = useCallback(async () => {
     setLoading(true);
     setFetchError("");
     try {
       const res = await fetch(fetchEndpoint);
-      if (!res.ok) throw new Error(`Error ${res.status}`);
+      if (!res.ok) {
+        if (res.status === 401 || res.status === 403) { setShowLoginModal(true); return; }
+        throw new Error(`Error ${res.status}`);
+      }
       const json = (await res.json()) as { items?: OfferDocument[] } | OfferDocument[];
       const items = Array.isArray(json) ? json : ((json as { items?: OfferDocument[] }).items ?? []);
       setOffers(items);
@@ -206,6 +216,11 @@ export function UserOffersPanel({
 
   return (
     <Div className={`space-y-4 ${className}`}>
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to manage your offers. Please log in or create an account to continue."
+      />
       <Div className="flex items-center justify-between">
         <Heading level={2} className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           My Offers
@@ -240,6 +255,7 @@ export function UserOffersPanel({
               onWithdraw={onWithdraw}
               onCheckout={onCheckout}
               onUpdate={handleUpdate}
+              onNeedsLogin={() => setShowLoginModal(true)}
             />
           ))}
         </Div>

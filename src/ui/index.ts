@@ -141,6 +141,8 @@ export type {
   UnsavedChangesLabels,
 } from "./components/UnsavedChangesModal";
 export { UnsavedChangesModal } from "./components/UnsavedChangesModal";
+export type { LoginRequiredModalProps } from "./components/LoginRequiredModal";
+export { LoginRequiredModal } from "./components/LoginRequiredModal";
 
 export type { DrawerProps } from "./components/Drawer";
 export { Drawer } from "./components/Drawer";

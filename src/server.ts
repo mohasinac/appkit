@@ -1,4 +1,6 @@
 // Server-only public exports
+// isAuthError - Pure util — detects auth errors from caught exceptions (usable in server actions).
+export { isAuthError } from "./utils/auth-error";
 
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // ADDRESS_FIXTURES - Constant used across modules.
@@ -1482,3 +1484,7 @@ export {
 export { isSoftBanned, getBanSummary } from "./features/auth/server/checkSoftBan";
 export type { UserSoftBan } from "./features/auth/schemas/firestore";
 export type { BannedAction } from "./features/auth/permissions/constants";
+
+// -- SEO builders (sitemap / robots / manifest / og-image) --
+export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE } from "./_internal/server/features/seo";
+export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions } from "./_internal/server/features/seo";

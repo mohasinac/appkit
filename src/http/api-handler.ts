@@ -6,6 +6,7 @@ import {
   ERROR_MESSAGES,
   handleApiError,
 } from "../errors";
+import type { AuthPayload } from "../contracts";
 import { errorResponse } from "../next";
 import { serverLogger } from "../monitoring";
 import { getProviders } from "../contracts";
@@ -73,7 +74,12 @@ async function getUserFromRequest(
   if (!sessionCookie) return null;
 
   const providers = getProviders();
-  const decoded = await providers.session.verifySession(sessionCookie);
+  let decoded: AuthPayload;
+  try {
+    decoded = await providers.session.verifySession(sessionCookie);
+  } catch {
+    throw new AuthenticationError(ERROR_MESSAGES.USER.NOT_AUTHENTICATED);
+  }
 
   const db = providers.db;
   if (!db) {

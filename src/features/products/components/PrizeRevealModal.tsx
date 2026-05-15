@@ -16,7 +16,8 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Div, Heading, Modal, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, LoginRequiredModal, Modal, Stack, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
@@ -75,6 +76,7 @@ export function PrizeRevealModal({
   const [effectiveRngUrl, setEffectiveRngUrl] = useState<string | undefined>(
     rngSourceUrl,
   );
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const endTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -137,10 +139,22 @@ export function PrizeRevealModal({
           body: JSON.stringify({ orderId }),
         });
         const json = (await res.json()) as { data?: PrizeRevealResponse };
-        if (!res.ok) throw new Error("Reveal request failed");
+        if (!res.ok) {
+          if (res.status === 401 || res.status === 403) {
+            setPhase("idle");
+            setShowLoginModal(true);
+            return;
+          }
+          throw new Error("Reveal request failed");
+        }
         response = json.data ?? {};
       }
     } catch (err) {
+      if (isAuthError(err)) {
+        setPhase("idle");
+        setShowLoginModal(true);
+        return;
+      }
       setPhase("error");
       setErrorMessage(
         err instanceof Error ? err.message : "Reveal request failed",
@@ -177,6 +191,11 @@ export function PrizeRevealModal({
 
   return (
     <Modal isOpen={open} onClose={onClose} title="Prize Reveal" size="lg">
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to reveal your prize. Please log in or create an account to continue."
+      />
       <Stack gap="md">
         {phase === "refunded" ? (
           <Div className="rounded border border-yellow-400/40 bg-yellow-50 px-4 py-3 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100">

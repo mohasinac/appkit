@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, Div, Heading, Span, Text } from "../../../ui";
+import { Button, Div, Heading, LoginRequiredModal, Span, Text } from "../../../ui";
+import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
 export interface SpinWheelViewProps {
@@ -68,6 +69,7 @@ export function SpinWheelView({
     initialCouponCode,
   );
   const [error, setError] = useState<string | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const now = Date.now();
   const startMs = windowStart ? new Date(windowStart).getTime() : null;
@@ -93,9 +95,13 @@ export function SpinWheelView({
           setError(l.errorFallback);
         }
       }, ANIMATION_MS);
-    } catch {
+    } catch (err) {
       setSpinning(false);
-      setError(l.errorFallback);
+      if (isAuthError(err)) {
+        setShowLoginModal(true);
+      } else {
+        setError(l.errorFallback);
+      }
     }
   }, [disabled, eventId, l.errorFallback, onSpin]);
 
@@ -105,6 +111,11 @@ export function SpinWheelView({
 
   return (
     <Div className="space-y-4">
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        message="You need to be signed in to spin the wheel. Please log in or create an account to continue."
+      />
       <Heading
         level={2}
         className="text-xl font-semibold text-zinc-900 dark:text-zinc-100"

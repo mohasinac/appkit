@@ -100,20 +100,23 @@
 }
 
 .appkit-button--secondary {
-  background: var(--appkit-color-primary-700);
-  color: var(--appkit-color-text-on-primary);
+  background: var(--appkit-color-surface);
+  border-color: var(--appkit-color-primary-700);
+  color: var(--appkit-color-primary-700);
 }
 
 .appkit-button--secondary:hover:not(:disabled) {
-  background: var(--appkit-color-primary-600);
+  background: color-mix(in srgb, var(--appkit-color-primary-700) 8%, transparent);
 }
 
 .dark .appkit-button--secondary {
-  background: var(--appkit-color-secondary-700);
+  background: transparent;
+  border-color: var(--appkit-color-secondary);
+  color: var(--appkit-color-secondary);
 }
 
 .dark .appkit-button--secondary:hover:not(:disabled) {
-  background: var(--appkit-color-secondary-600);
+  background: color-mix(in srgb, var(--appkit-color-secondary) 12%, transparent);
 }
 
 .appkit-button--outline {
