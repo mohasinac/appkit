@@ -43,7 +43,6 @@ const STOCK_LIST_LABEL: Record<
   string
 > = {
   in_stock: BUNDLE_COPY.stockBadge.listVariantInStock,
-  partial: BUNDLE_COPY.stockBadge.listVariantPartial,
   out_of_stock: BUNDLE_COPY.stockBadge.listVariantOutOfStock,
 };
 

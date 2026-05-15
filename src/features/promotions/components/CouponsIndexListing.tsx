@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { Pagination, SortDropdown, Div, Text, Heading } from "../../../ui";
@@ -15,16 +15,16 @@ const DEFAULT_SORT = sortBy(COUPON_FIELDS.CREATED_AT);
 const COUPON_SORT_OPTIONS = [
   { value: sortBy(COUPON_FIELDS.NAME, "ASC"), label: "Name A–Z" },
   { value: sortBy(COUPON_FIELDS.NAME), label: "Name Z–A" },
-  { value: "-validity.endDate", label: "Expiring Soon" },
+  { value: sortBy(COUPON_FIELDS.VALIDITY_FIELDS.END_DATE, "ASC"), label: "Expiring Soon" },
   { value: sortBy(COUPON_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(COUPON_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
 ];
 
 const COUPON_TYPES: { value: CouponType; label: string }[] = [
-  { value: "percentage", label: "% Off" },
-  { value: "fixed", label: "Fixed Amount" },
-  { value: "free_shipping", label: "Free Shipping" },
-  { value: "buy_x_get_y", label: "Buy X Get Y" },
+  { value: COUPON_FIELDS.TYPE_VALUES.PERCENTAGE, label: "% Off" },
+  { value: COUPON_FIELDS.TYPE_VALUES.FIXED, label: "Fixed Amount" },
+  { value: COUPON_FIELDS.TYPE_VALUES.FREE_SHIPPING, label: "Free Shipping" },
+  { value: COUPON_FIELDS.TYPE_VALUES.BUY_X_GET_Y, label: "Buy X Get Y" },
 ];
 
 export interface CouponsIndexListingProps {
@@ -36,6 +36,8 @@ export interface CouponsIndexListingProps {
   storeId?: string;
 }
 
+const FILTER_KEYS = [TABLE_KEYS.TYPE, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO] as const;
+
 export function CouponsIndexListing({
   initialCoupons,
   storeSlug,
@@ -45,16 +47,43 @@ export function CouponsIndexListing({
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [filterOpen, setFilterOpen] = useState(false);
 
-  // Build Sieve filter string
+  // Pending filter state — buffered until "Apply Filters" clicked
+  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
+    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
+  );
+
+  const pendingTable = useMemo(() => ({
+    get: (key: string) => pendingFilters[key] ?? "",
+    set: (key: string, value: string) =>
+      setPendingFilters((p) => ({ ...p, [key]: value })),
+  }), [pendingFilters]);
+
+  const openFilters = useCallback(() => {
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
+    setFilterOpen(true);
+  }, [table]);
+
+  const applyFilters = useCallback(() => {
+    const updates: Record<string, string> = { [TABLE_KEYS.PAGE]: "1" };
+    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
+    table.setMany(updates);
+    setFilterOpen(false);
+  }, [pendingFilters, table]);
+
+  const clearPending = useCallback(() => {
+    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
+  }, []);
+
+  // Build Sieve filter string from committed URL table values
   const buildFilters = () => {
-    const parts: string[] = ["validity.isActive==true"];
-    const typeFilter = table.get("type");
-    if (typeFilter) parts.push(`type==${typeFilter}`);
+    const parts: string[] = [`${COUPON_FIELDS.VALIDITY_FIELDS.IS_ACTIVE}==true`];
+    const typeFilter = table.get(TABLE_KEYS.TYPE);
+    if (typeFilter) parts.push(`${COUPON_FIELDS.TYPE}==${typeFilter}`);
     const dateFrom = table.get(TABLE_KEYS.DATE_FROM);
-    if (dateFrom) parts.push(`validity.startDate>=${dateFrom}`);
+    if (dateFrom) parts.push(`${COUPON_FIELDS.VALIDITY_FIELDS.START_DATE}>=${dateFrom}`);
     const dateTo = table.get(TABLE_KEYS.DATE_TO);
-    if (dateTo) parts.push(`validity.endDate<=${dateTo}`);
-    if (storeId) parts.push(`storeId==${storeId}`);
+    if (dateTo) parts.push(`${COUPON_FIELDS.VALIDITY_FIELDS.END_DATE}<=${dateTo}`);
+    if (storeId) parts.push(`${COUPON_FIELDS.STORE_ID}==${storeId}`);
     return parts.join(",");
   };
 
@@ -69,7 +98,7 @@ export function CouponsIndexListing({
   const displayCoupons =
     !isLoading && coupons.length > 0
       ? coupons
-      : !isLoading && initialCoupons && !table.get(TABLE_KEYS.QUERY) && !table.get("type")
+      : !isLoading && initialCoupons && !table.get(TABLE_KEYS.QUERY) && !table.get(TABLE_KEYS.TYPE)
         ? initialCoupons
         : coupons;
 
@@ -81,8 +110,7 @@ export function CouponsIndexListing({
     if (e.key === "Enter") commitSearch();
   };
 
-
-  const activeType = table.get("type") as CouponType | "";
+  const activeType = table.get(TABLE_KEYS.TYPE) as CouponType | "";
   const hasActiveFilters = !!activeType || !!table.get(TABLE_KEYS.DATE_FROM) || !!table.get(TABLE_KEYS.DATE_TO);
 
   const clearFilters = () => {
@@ -97,7 +125,7 @@ export function CouponsIndexListing({
           {/* Filters button */}
           <button
             type="button"
-            onClick={() => setFilterOpen(true)}
+            onClick={openFilters}
             className={`flex shrink-0 items-center gap-2 rounded-lg border px-3.5 py-2 text-sm font-medium transition-colors ${
               hasActiveFilters
                 ? "border-primary bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-300"
@@ -155,7 +183,7 @@ export function CouponsIndexListing({
             {activeType && (
               <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 {COUPON_TYPES.find((t) => t.value === activeType)?.label ?? activeType}
-                <button type="button" onClick={() => { table.set("type", ""); }} aria-label="Remove type filter">
+                <button type="button" onClick={() => { table.set(TABLE_KEYS.TYPE, ""); }} aria-label="Remove type filter">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -281,17 +309,17 @@ export function CouponsIndexListing({
                         type="radio"
                         name="coupon-type"
                         value={t.value}
-                        checked={table.get("type") === t.value}
-                        onChange={() => { table.set("type", t.value); }}
+                        checked={pendingTable.get(TABLE_KEYS.TYPE) === t.value}
+                        onChange={() => { pendingTable.set(TABLE_KEYS.TYPE, t.value); }}
                         className="accent-primary"
                       />
                       {t.label}
                     </label>
                   ))}
-                  {table.get("type") && (
+                  {pendingTable.get(TABLE_KEYS.TYPE) && (
                     <button
                       type="button"
-                      onClick={() => { table.set("type", ""); }}
+                      onClick={() => { pendingTable.set(TABLE_KEYS.TYPE, ""); }}
                       className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 underline"
                     >
                       Clear type
@@ -310,8 +338,8 @@ export function CouponsIndexListing({
                     <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
                     <input
                       type="date"
-                      value={table.get(TABLE_KEYS.DATE_FROM) || ""}
-                      onChange={(e) => { table.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
+                      value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
+                      onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
@@ -319,8 +347,8 @@ export function CouponsIndexListing({
                     <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</label>
                     <input
                       type="date"
-                      value={table.get(TABLE_KEYS.DATE_TO) || ""}
-                      onChange={(e) => { table.set(TABLE_KEYS.DATE_TO, e.target.value); }}
+                      value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
+                      onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_TO, e.target.value); }}
                       className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
@@ -332,17 +360,17 @@ export function CouponsIndexListing({
             <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5 flex gap-2">
               <button
                 type="button"
-                onClick={clearFilters}
+                onClick={clearPending}
                 className="flex-1 rounded-lg border border-zinc-300 dark:border-slate-600 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
               >
                 Clear all
               </button>
               <button
                 type="button"
-                onClick={() => setFilterOpen(false)}
+                onClick={applyFilters}
                 className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
               >
-                Apply
+                Apply Filters
               </button>
             </div>
           </div>

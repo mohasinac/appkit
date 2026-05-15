@@ -127,7 +127,7 @@ export interface CategoryDocument {
   /** Rule resolving the bundle's member products — static list or live query. */
   bundleQueryRule?: BundleQueryRule;
   /** Snapshot stock state — recomputed by onProductStockChange. */
-  bundleStockStatus?: "in_stock" | "partial" | "out_of_stock";
+  bundleStockStatus?: "in_stock" | "out_of_stock";
   /** Timestamp of the last dynamic-rule resolution. */
   bundleQueryResolvedAt?: Date;
   /** Hand-picked products list (mirror of bundleQueryRule for static rules); kept for index-friendly queries. */

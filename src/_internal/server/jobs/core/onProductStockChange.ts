@@ -31,27 +31,22 @@ export function isAvailable(status?: string | null): boolean {
 
 async function recomputeBundleStatus(
   productIds: string[],
-  minActive: number,
   ctx: JobContext,
-): Promise<"in_stock" | "partial" | "out_of_stock"> {
+): Promise<"in_stock" | "out_of_stock"> {
   if (productIds.length === 0) return "out_of_stock";
-  let unavailable = 0;
   for (let i = 0; i < productIds.length; i += 30) {
     const chunk = productIds.slice(i, i + 30);
     const snap = await ctx.db
       .collection(PRODUCT_COLLECTION)
       .where("__name__", "in", chunk)
       .get();
+    if (snap.size < chunk.length) return "out_of_stock";
     for (const doc of snap.docs) {
       const status = (doc.data() as { status?: string }).status;
-      if (!isAvailable(status)) unavailable++;
+      if (!isAvailable(status)) return "out_of_stock";
     }
-    if (snap.size < chunk.length) unavailable += chunk.length - snap.size;
   }
-  const active = productIds.length - unavailable;
-  if (unavailable === 0) return "in_stock";
-  if (active < minActive) return "out_of_stock";
-  return "partial";
+  return "in_stock";
 }
 
 export async function syncBundlesForProduct(
@@ -69,11 +64,9 @@ export async function syncBundlesForProduct(
     const data = bundleDoc.data() as {
       bundleProductIds?: string[];
       bundleStockStatus?: string;
-      minActiveMembers?: number;
     };
     const ids = data.bundleProductIds ?? [];
-    const minActive = data.minActiveMembers ?? 1;
-    const next = await recomputeBundleStatus(ids, minActive, ctx);
+    const next = await recomputeBundleStatus(ids, ctx);
     if (next !== data.bundleStockStatus) {
       await bundleDoc.ref.update({
         [CATEGORY_FIELDS.BUNDLE_STOCK_STATUS]: next,

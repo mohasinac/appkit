@@ -38,7 +38,6 @@ type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
 const STOCK_BADGE_TEXT: Record<StockKey, string> = {
   in_stock: BUNDLE_COPY.stockBadge.in_stock,
-  partial: BUNDLE_COPY.stockBadge.partial,
   out_of_stock: BUNDLE_COPY.stockBadge.out_of_stock,
 };
 

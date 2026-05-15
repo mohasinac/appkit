@@ -438,11 +438,14 @@ export const STORE_FIELDS = {
   OWNER_ID: "ownerId",
   STORE_NAME: "storeName",
   SLUG: "slug",
+  STORE_SLUG: "storeSlug",
+  STORE_CATEGORY: "storeCategory",
   DESCRIPTION: "storeDescription",
   LOGO_URL: "storeLogoURL",
   BANNER_URL: "storeBannerURL",
   STATUS: "status",
   IS_VERIFIED: "isVerified",
+  IS_PUBLIC: "isPublic",
   SHIPPING_CONFIG: "shippingConfig",
   PAYOUT_DETAILS: "payoutDetails",
   STATS: "stats",
@@ -454,6 +457,14 @@ export const STORE_FIELDS = {
     PENDING: "pending",
     SUSPENDED: "suspended",
     REJECTED: "rejected",
+  },
+
+  STATS_FIELDS: {
+    ITEMS_SOLD: "stats.itemsSold",
+    AVERAGE_RATING: "stats.averageRating",
+    TOTAL_REVIEWS: "stats.totalReviews",
+    TOTAL_ORDERS: "stats.totalOrders",
+    TOTAL_PRODUCTS: "stats.totalProducts",
   },
 } as const;
 
@@ -800,6 +811,7 @@ export const COUPON_FIELDS = {
   TYPE: "type",
   SCOPE: "scope",
   SELLER_ID: "sellerId",
+  STORE_ID: "storeId",
   STORE_SLUG: "storeSlug",
   APPLICABLE_TO_AUCTIONS: "applicableToAuctions",
   DISCOUNT: "discount",

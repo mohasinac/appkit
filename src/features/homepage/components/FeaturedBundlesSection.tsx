@@ -118,9 +118,7 @@ function FeaturedBundleCard({ bundle }: FeaturedBundleCardProps) {
         </Text>
         {stock !== "in_stock" && (
           <Badge variant={BUNDLE_STOCK_VARIANT[stock]}>
-            {stock === "partial"
-              ? BUNDLE_COPY.stockBadge.listVariantPartial
-              : BUNDLE_COPY.stockBadge.listVariantOutOfStock}
+            {BUNDLE_COPY.stockBadge.listVariantOutOfStock}
           </Badge>
         )}
       </Row>

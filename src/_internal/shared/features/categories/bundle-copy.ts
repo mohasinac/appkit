@@ -133,17 +133,14 @@ export const BUNDLE_COPY = {
   // Stock badges (shared between list + featured + detail)
   stockBadge: {
     in_stock: "In stock",
-    partial: "Some items unavailable",
-    out_of_stock: "Currently out of stock",
+    out_of_stock: "Not active",
     listVariantInStock: "In stock",
-    listVariantPartial: "Partial",
-    listVariantOutOfStock: "Out of stock",
+    listVariantOutOfStock: "Not active",
   },
 } as const;
 
 /** Stock-status variant mapping (kept here so consumers can drive Badge variant prop). */
 export const BUNDLE_STOCK_VARIANT = {
   in_stock: "success",
-  partial: "warning",
-  out_of_stock: "danger",
+  out_of_stock: "warning",
 } as const;

@@ -29,14 +29,12 @@ type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
 const STOCK_BADGE_TEXT: Record<StockKey, string> = {
   in_stock: "",
-  partial: "Partial",
-  out_of_stock: "Out of stock",
+  out_of_stock: "Not active",
 };
 
-const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning" | "danger"> = {
+const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning"> = {
   in_stock: "success",
-  partial: "warning",
-  out_of_stock: "danger",
+  out_of_stock: "warning",
 };
 
 const PLACEHOLDER_EMOJI = "📦" as const;
