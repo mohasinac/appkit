@@ -22,8 +22,7 @@ const ROLE_DOT_COLORS: Record<string, string> = {
 };
 import { useTheme } from "../../react";
 import { useAuth } from "../../react/contexts/SessionContext";
-import { useSiteSettings } from "../../core/hooks/useSiteSettings";
-import { filterNavItems } from "../../_internal/client/features/layout/filterNavItems";
+import { NavbarWithSettings } from "./NavbarWithSettings";
 import { useBottomActionsContext } from "./BottomActionsContext";
 import BottomActions from "./BottomActions";
 import { AutoBreadcrumbs } from "./AutoBreadcrumbs";
@@ -302,9 +301,6 @@ export function AppLayoutShell({
   const { closeNav: closeDashboardNav, hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } = useDashboardNav();
   const { state: bottomActionsState } = useBottomActionsContext();
   const { user: authUser } = useAuth();
-  const { data: siteSettingsData } = useSiteSettings<{ navConfig?: Record<string, { enabled: boolean }> }>();
-  const navConfig = (siteSettingsData as { navConfig?: Record<string, { enabled: boolean }> } | undefined)?.navConfig;
-  const visibleNavItems = filterNavItems(navItems, navConfig, authUser?.permissions);
 
   const headerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -615,7 +611,7 @@ export function AppLayoutShell({
             suppressDashboardNav={suppressDashboardNav}
             hideSidebarToggle={hideSidebarToggle}
           />
-          <MainNavbar navItems={visibleNavItems} hiddenNavItems={hiddenNavItems} />
+          <NavbarWithSettings navItems={navItems} hiddenNavItems={hiddenNavItems} permissions={authUser?.permissions} />
           {searchOpen && (searchSlotRenderer ? searchSlotRenderer(() => setSearchOpen(false)) : searchSlot)}
         </Div>
 
