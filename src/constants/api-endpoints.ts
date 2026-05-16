@@ -418,6 +418,8 @@ export const SELLER_ENDPOINTS = {
     `/api/store/analytics${period ? `?period=${period}` : ""}`,
   FEATURES: "/api/store/features",
   FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
+  PRODUCTS_BULK_LOCATION: "/api/store/products/bulk-location",
+  ORDERS_BULK_LOCATION: "/api/store/orders/bulk-location",
 } as const;
 
 // ---------------------------------------------------------------------------

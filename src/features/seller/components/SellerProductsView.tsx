@@ -2,7 +2,9 @@
 
 import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { X, Pencil, Trash2, Printer } from "lucide-react";
+import { X, Pencil, Trash2, Printer, MapPin } from "lucide-react";
+import { PhysicalLocationModal } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
+import type { PhysicalLocation } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";
@@ -45,6 +47,7 @@ interface ProductRow {
   imageUrl?: string;
   listingKind: ListingKind;
   price: string;
+  physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
 interface SellerProductsResponse {
@@ -167,6 +170,19 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
       <Span className="text-xs text-[var(--appkit-color-text-muted)]">{row.updatedAt}</Span>
     ),
   },
+  {
+    key: "physicalLocation",
+    header: "Location",
+    className: "w-28",
+    render: (row) =>
+      row.physicalLocation ? (
+        <Span className="text-xs font-mono text-[var(--appkit-color-text-muted)]">
+          {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
+        </Span>
+      ) : (
+        <Span className="text-xs text-[var(--appkit-color-text-faint)]">—</Span>
+      ),
+  },
 ];
 
 export function SellerProductsView({
@@ -183,6 +199,7 @@ export function SellerProductsView({
   const [filterOpen, setFilterOpen] = useState(false);
   const [listingKind, setListingKind] = useState<ListingKind>("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [setLocationOpen, setSetLocationOpen] = useState(false);
 
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
     () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
@@ -337,12 +354,27 @@ export function SellerProductsView({
     });
   }, [selection.selectedIds, dispatch]);
 
+  const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
+    await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_LOCATION, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productIds: selection.selectedIds, physicalLocation: loc }),
+    });
+    setSetLocationOpen(false);
+  }, [selection.selectedIds]);
+
   const bulkActions: BulkActionItem[] = [
     {
       id: ACTIONS.STORE["print-labels"].id,
       label: ACTIONS.STORE["print-labels"].label,
       icon: <Printer className="w-4 h-4" />,
       onClick: handleBulkPrintLabels,
+    },
+    {
+      id: ACTIONS.STORE["set-location"].id,
+      label: ACTIONS.STORE["set-location"].label,
+      icon: <MapPin className="w-4 h-4" />,
+      onClick: () => setSetLocationOpen(true),
     },
   ];
 
@@ -498,6 +530,14 @@ export function SellerProductsView({
           </>
         )}
       </Div>
+
+      {setLocationOpen && (
+        <PhysicalLocationModal
+          count={selection.selectedIds.length}
+          onSave={handleSetLocation}
+          onClose={() => setSetLocationOpen(false)}
+        />
+      )}
     </>
   );
 }

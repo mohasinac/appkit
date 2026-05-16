@@ -1,14 +1,19 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Eye } from "lucide-react";
+import { X, Eye, Printer, MapPin } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
 import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { PhysicalLocationModal } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
+import type { PhysicalLocation } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
+import { ROUTES } from "../../../constants";
 import {
   toRecordArray,
   toRelativeDate,
@@ -60,6 +65,7 @@ interface OrderRow {
   itemCount: number;
   totalAmount: number;
   buyerName: string;
+  physicalLocation?: { zone: string; shelf: string; bin: string };
 }
 
 interface OrderDetail {
@@ -266,6 +272,8 @@ export function SellerOrdersView({
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [setLocationOpen, setSetLocationOpen] = useState(false);
+  const dispatch = useActionDispatch();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -319,6 +327,7 @@ export function SellerOrdersView({
     mapRows: (response) =>
       toRecordArray(response.orders).map((item, index) => {
         const itemsArr = Array.isArray(item.items) ? (item.items as unknown[]) : [];
+        const loc = item.physicalLocation as { zone?: string; shelf?: string; bin?: string } | undefined;
         return {
           id: toStringValue(item.id, `order-${index}`),
           primary: toStringValue(item.id, "Order"),
@@ -328,6 +337,10 @@ export function SellerOrdersView({
           itemCount: itemsArr.length,
           totalAmount: Number(item.totalAmount ?? item.total ?? 0),
           buyerName: toStringValue(item.buyerName ?? item.buyerDisplayName, "Unknown buyer"),
+          physicalLocation:
+            loc && typeof loc.zone === "string"
+              ? { zone: loc.zone, shelf: loc.shelf ?? "", bin: loc.bin ?? "" }
+              : undefined,
         };
       }),
     getTotal: (response, mappedRows) =>
@@ -365,6 +378,19 @@ export function SellerOrdersView({
       ),
     },
     {
+      key: "physicalLocation",
+      header: "Staging",
+      className: "w-28",
+      render: (row) =>
+        row.physicalLocation ? (
+          <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+            {row.physicalLocation.zone}/{row.physicalLocation.shelf}/{row.physicalLocation.bin}
+          </span>
+        ) : (
+          <span className="text-xs text-zinc-400 dark:text-zinc-600">—</span>
+        ),
+    },
+    {
       key: "updatedAt",
       header: "Date",
       className: "w-28",
@@ -387,6 +413,38 @@ export function SellerOrdersView({
   );
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
+  const handlePrintPackingSlips = useCallback(() => {
+    const ids = selection.selectedIds.join(",");
+    void dispatch({
+      type: "NAVIGATE",
+      href: `${String(ROUTES.STORE.INVENTORY_PRINT)}?type=order&ids=${ids}&autoprint=1`,
+    });
+  }, [selection.selectedIds, dispatch]);
+
+  const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
+    await fetch(SELLER_ENDPOINTS.ORDERS_BULK_LOCATION, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderIds: selection.selectedIds, physicalLocation: loc }),
+    });
+    setSetLocationOpen(false);
+  }, [selection.selectedIds]);
+
+  const bulkActions: BulkActionItem[] = [
+    {
+      id: ACTIONS.STORE["print-packing-slips"].id,
+      label: ACTIONS.STORE["print-packing-slips"].label,
+      icon: <Printer className="w-4 h-4" />,
+      onClick: handlePrintPackingSlips,
+    },
+    {
+      id: ACTIONS.STORE["set-location"].id,
+      label: ACTIONS.STORE["set-location"].label,
+      icon: <MapPin className="w-4 h-4" />,
+      onClick: () => setSetLocationOpen(true),
+    },
+  ];
 
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
@@ -417,6 +475,16 @@ export function SellerOrdersView({
         </div>
       )}
 
+      {selection.selectedIds.length > 0 && (
+        <div className="sticky top-[calc(var(--header-height,0px)+88px)] z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700">
+          <BulkActionBar
+            selectedCount={selection.selectedIds.length}
+            onClearSelection={selection.clearSelection}
+            actions={bulkActions}
+          />
+        </div>
+      )}
+
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
@@ -428,6 +496,9 @@ export function SellerOrdersView({
           columns={columns}
           isLoading={isLoading}
           emptyLabel="No orders yet"
+          selectedIds={selection.selectedIdSet}
+          onToggleSelect={selection.toggle}
+          onToggleSelectAll={() => selection.toggleAll()}
           renderRowActions={renderRowActions}
         />
       </div>
@@ -471,6 +542,14 @@ export function SellerOrdersView({
           orderId={selectedOrderId}
           apiBase={orderDetailApiBase}
           onClose={() => setSelectedOrderId(null)}
+        />
+      )}
+
+      {setLocationOpen && (
+        <PhysicalLocationModal
+          count={selection.selectedIds.length}
+          onSave={handleSetLocation}
+          onClose={() => setSetLocationOpen(false)}
         />
       )}
     </div>
