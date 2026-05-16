@@ -52,7 +52,8 @@ export interface NotificationDocument {
     | "blog"
     | "user"
     | "offer"
-    | "support_ticket";
+    | "support_ticket"
+    | "scammer";
   createdAt: Date;
   updatedAt: Date;
 }

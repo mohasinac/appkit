@@ -2,13 +2,15 @@
 
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, useToast } from "../../../ui";
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_STORE_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -16,6 +18,7 @@ import {
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { apiClient } from "../../../http";
 import { DataTable } from "./DataTable";
 import { AdminStoreEditorView } from "./AdminStoreEditorView";
 
@@ -96,9 +99,31 @@ function StoresFilterDrawer({
 export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const { openEditPanel, closePanel, isEditOpen, editId } = usePanelUrlSync();
+
+  const verifyStore = useMutation({
+    mutationFn: (storeId: string) =>
+      apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { isVerified: true }),
+    onSuccess: () => {
+      toast.showToast("Store verified.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
+    },
+    onError: () => { toast.showToast("Failed to verify store.", "error"); },
+  });
+
+  const suspendStore = useMutation({
+    mutationFn: (storeId: string) =>
+      apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(storeId), { storeStatus: "suspended" }),
+    onSuccess: () => {
+      toast.showToast("Store suspended.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "stores", "listing"] });
+    },
+    onError: () => { toast.showToast("Failed to suspend store.", "error"); },
+  });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -219,12 +244,29 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
               selectedIds={selection.selectedIdSet}
               onToggleSelect={selection.toggle}
               onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
-              renderRowActions={(row) => (
-                <RowActionMenu actions={[{
-                  label: "Manage",
-                  onClick: () => openEditPanel(row.id),
-                }]} />
-              )}
+              renderRowActions={(row) => {
+                const sr = row as StoreRow;
+                const isSuspended = sr.status?.toLowerCase() === "suspended";
+                const isVerified = Boolean(sr._raw?.isVerified);
+                return (
+                  <RowActionMenu actions={[
+                    {
+                      label: "Manage",
+                      onClick: () => openEditPanel(sr.id),
+                    },
+                    {
+                      label: ACTIONS.ADMIN["verify-store"].label,
+                      onClick: () => verifyStore.mutate(sr.id),
+                      disabled: isVerified || verifyStore.isPending,
+                    },
+                    {
+                      label: ACTIONS.ADMIN["suspend-store"].label,
+                      onClick: () => suspendStore.mutate(sr.id),
+                      disabled: isSuspended || suspendStore.isPending,
+                    },
+                  ]} />
+                );
+              }}
             />
           ) : (
             <AdminViewCards

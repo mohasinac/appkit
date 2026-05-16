@@ -501,8 +501,17 @@ export async function createCheckoutOrderAction(
   let total = 0;
   const emailsToSend: Parameters<typeof sendOrderConfirmationEmail>[0][] = [];
 
+  // SB-UNI-5 2026-05-13 — bundle cart-lines use item.price (locked bundle
+  // price at add-time); regular lines use product.price (current Firestore).
+  // This prevents stale cart-cached prices from being charged on COD/UPI orders.
+  const unitPriceFor = (item: CartItemDocument, product: ProductDocument | null) =>
+    item.bundleCategorySlug && item.bundleProductIds?.length
+      ? item.price
+      : (product as ProductDocument).price;
+
   const cartSubtotal = orderGroups.reduce(
-    (s, { items: g }) => s + g.reduce((gs, { item }) => gs + item.price * item.quantity, 0),
+    (s, { items: g }) =>
+      s + g.reduce((gs, { item, product }) => gs + unitPriceFor(item, product) * item.quantity, 0),
     0,
   );
 
@@ -513,7 +522,11 @@ export async function createCheckoutOrderAction(
 
   for (const { items: group, orderType } of orderGroups) {
     const firstItem = group[0].item;
-    const groupTotal = group.reduce((sum, { item }) => sum + item.price * item.quantity, 0);
+    const firstProduct = group[0].product;
+    const groupTotal = group.reduce(
+      (sum, { item, product }) => sum + unitPriceFor(item, product) * item.quantity,
+      0,
+    );
     total += groupTotal;
 
     // S-SBUNI-RULES 2026-05-13 — order-item decoration via rule registry.
@@ -529,12 +542,13 @@ export async function createCheckoutOrderAction(
               bundleProductIds: item.bundleProductIds,
             }
           : {};
+      const unitPrice = unitPriceFor(item, product);
       const baseLine = {
         productId: item.productId,
         productTitle: item.productTitle,
         quantity: item.quantity,
-        unitPrice: item.price,
-        totalPrice: item.price * item.quantity,
+        unitPrice,
+        totalPrice: unitPrice * item.quantity,
         ...bundleFields,
       };
       return itemRule.decorateOrderItem(baseLine, product);
@@ -639,7 +653,7 @@ export async function createCheckoutOrderAction(
       userName,
       userEmail,
       quantity: totalQuantity,
-      unitPrice: firstItem.price,
+      unitPrice: unitPriceFor(firstItem, firstProduct),
       totalPrice: orderTotal,
       currency: firstItem.currency ?? getDefaultCurrency(),
       storeId: firstItem.storeId || undefined,

@@ -1,4 +1,5 @@
-import { notificationRepository, userRepository } from "../../../../repositories";
+import { userRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { SCAM_TYPE_LABELS } from "../../../../features/scams/constants/scam-types";
 import type { JobContext } from "../runtime/types";
 
@@ -22,19 +23,21 @@ export async function handleScamReportCreate(
 
   const name = displayNames?.[0] ?? "Unknown";
 
-  // 1. Notify the reporter
+  // 1. Notify the reporter (multi-channel: respects user notification prefs)
   if (reportedBy) {
     try {
-      await notificationRepository.create({
+      const reporter = await userRepository.findById(reportedBy);
+      await sendNotification({
         userId: reportedBy,
         type: "account_action",
+        priority: "normal",
         title: "Scam report submitted",
-        body: `Your report for "${name}" has been received. Our team will review it within 48 hours.`,
-        isRead: false,
-        entityId: scammerId,
-        entityType: "scammer",
-        createdAt: new Date(),
-      } as any);
+        message: `Your report for "${name}" has been received. Our team will review it within 48 hours.`,
+        relatedId: scammerId,
+        relatedType: "scammer",
+        userEmail: reporter?.email ?? undefined,
+        userPhone: reporter?.phoneNumber ?? undefined,
+      });
     } catch (err) {
       ctx.logger.error("Failed to notify reporter (non-fatal)", err, { scammerId, reportedBy });
     }
@@ -53,17 +56,18 @@ export async function handleScamReportCreate(
     const platformStr = scamPlatform ? ` via ${scamPlatform}` : "";
 
     await Promise.all(
-      result.items.map((employee) =>
-        notificationRepository.create({
-          userId: employee.id,
+      result.items.filter((e) => !!e.id).map((employee) =>
+        sendNotification({
+          userId: employee.id!,
           type: "account_action",
+          priority: "normal",
           title: "New scam report submitted",
-          body: `A report was submitted for "${name}" — ${scamTypeLabel}${platformStr}.${amountStr}`,
-          isRead: false,
-          entityId: scammerId,
-          entityType: "scammer",
-          createdAt: new Date(),
-        } as any).catch((err) =>
+          message: `A report was submitted for "${name}" — ${scamTypeLabel}${platformStr}.${amountStr}`,
+          relatedId: scammerId,
+          relatedType: "scammer",
+          userEmail: employee.email ?? undefined,
+          userPhone: employee.phoneNumber ?? undefined,
+        }).catch((err) =>
           ctx.logger.error("Failed to notify employee (non-fatal)", err, { scammerId, employeeId: employee.id }),
         ),
       ),

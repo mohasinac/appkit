@@ -2,12 +2,14 @@
 
 import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import { BulkActionBar, Button, FilterChipGroup, Form, FormActions, Input, ListingToolbar, Modal, Pagination, ListingViewShell, RowActionMenu, Text as AppText, useToast } from "../../../ui";
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_USER_STATUS_TABS, ADMIN_USER_ROLE_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -15,6 +17,7 @@ import {
   toStringValue,
   useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { apiClient } from "../../../http";
 import { DataTable } from "./DataTable";
 import { AdminUserEditorView } from "./AdminUserEditorView";
 
@@ -103,6 +106,8 @@ function UsersFilterDrawer({
 export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
+  const toast = useToast();
+  const queryClient = useQueryClient();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -112,6 +117,33 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   );
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<UserRow | null>(null);
+  const [banModalOpen, setBanModalOpen] = useState(false);
+  const [banTargetId, setBanTargetId] = useState<string | null>(null);
+  const [banReason, setBanReason] = useState("");
+
+  const banUser = useMutation({
+    mutationFn: () => {
+      if (!banTargetId) throw new Error("No user selected");
+      return apiClient.post(ADMIN_ENDPOINTS.USER_HARD_BAN(banTargetId), { reason: banReason.trim() });
+    },
+    onSuccess: () => {
+      toast.showToast("User has been banned.", "success");
+      setBanModalOpen(false);
+      setBanTargetId(null);
+      setBanReason("");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
+    },
+    onError: () => { toast.showToast("Failed to ban user.", "error"); },
+  });
+
+  const unbanUser = useMutation({
+    mutationFn: (uid: string) => apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(uid), {}),
+    onSuccess: () => {
+      toast.showToast("Ban lifted.", "success");
+      void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
+    },
+    onError: () => { toast.showToast("Failed to lift ban.", "error"); },
+  });
 
   const openFilters = useCallback(() => {
     setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
@@ -245,12 +277,28 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               selectedIds={selection.selectedIdSet}
               onToggleSelect={selection.toggle}
               onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
-              renderRowActions={(row) => (
-                <RowActionMenu actions={[{
-                  label: "Manage",
-                  onClick: () => { setSelectedRow(row as UserRow); setDrawerOpen(true); },
-                }]} />
-              )}
+              renderRowActions={(row) => {
+                const ur = row as UserRow;
+                const isBanned = ur.status === "Hard banned";
+                return (
+                  <RowActionMenu actions={[
+                    {
+                      label: "Manage",
+                      onClick: () => { setSelectedRow(ur); setDrawerOpen(true); },
+                    },
+                    {
+                      label: ACTIONS.ADMIN["ban-user"].label,
+                      onClick: () => { setBanTargetId(ur.id); setBanReason(""); setBanModalOpen(true); },
+                      disabled: isBanned,
+                    },
+                    {
+                      label: ACTIONS.ADMIN["unban-user"].label,
+                      onClick: () => unbanUser.mutate(ur.id),
+                      disabled: !isBanned || unbanUser.isPending,
+                    },
+                  ]} />
+                );
+              }}
             />
           ) : (
             <AdminViewCards
@@ -314,6 +362,38 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
             : undefined
         }
       />
+
+      <Modal
+        isOpen={banModalOpen}
+        onClose={() => { setBanModalOpen(false); setBanTargetId(null); setBanReason(""); }}
+        title={ACTIONS.ADMIN["ban-user"].confirmation!.title}
+      >
+        <AppText size="sm" color="muted" className="mb-4">
+          {ACTIONS.ADMIN["ban-user"].confirmation!.body}
+        </AppText>
+        <Form onSubmit={(e) => { e.preventDefault(); banUser.mutate(); }}>
+          <Input
+            label="Reason"
+            value={banReason}
+            onChange={(e) => setBanReason(e.target.value)}
+            placeholder="e.g. Repeated fraud, scam activity…"
+            required
+          />
+          <FormActions>
+            <Button type="button" variant="secondary" onClick={() => { setBanModalOpen(false); setBanTargetId(null); setBanReason(""); }}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              variant="danger"
+              isLoading={banUser.isPending}
+              disabled={!banReason.trim() || banUser.isPending}
+            >
+              {ACTIONS.ADMIN["ban-user"].confirmation!.confirmLabel}
+            </Button>
+          </FormActions>
+        </Form>
+      </Modal>
     </>
   );
 }

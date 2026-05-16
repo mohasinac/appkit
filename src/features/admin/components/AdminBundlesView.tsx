@@ -24,11 +24,13 @@ import {
   Section,
   Stack,
   Text,
+  useToast,
 } from "../../../ui";
 import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { CategoryDocument } from "../../categories/schemas";
 
 export interface AdminBundlesViewProps {
@@ -58,6 +60,21 @@ export function AdminBundlesView({
   const [bundles, setBundles] = useState<CategoryDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [rebuildingId, setRebuildingId] = useState<string | null>(null);
+  const toast = useToast();
+
+  const handleRebuild = useCallback(async (bundleId: string) => {
+    setRebuildingId(bundleId);
+    try {
+      const res = await fetch(`/api/admin/bundles/${encodeURIComponent(bundleId)}/rebuild`, { method: "POST" });
+      if (!res.ok) throw new Error("Rebuild failed");
+      toast.showToast("Bundle stock rebuilt.", "success");
+    } catch {
+      toast.showToast("Failed to rebuild bundle stock.", "error");
+    } finally {
+      setRebuildingId(null);
+    }
+  }, [toast]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -167,11 +184,22 @@ export function AdminBundlesView({
                           </Badge>
                         </td>
                         <td className="px-3 py-2 text-right">
-                          <Button asChild variant="ghost" size="sm">
-                            <Link href={getEditHref({ id: b.id })}>
-                              {BUNDLE_COPY.adminList.editLabel}
-                            </Link>
-                          </Button>
+                          <Row gap="xs" justify="end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              isLoading={rebuildingId === b.id}
+                              disabled={rebuildingId === b.id}
+                              onClick={() => handleRebuild(b.id)}
+                            >
+                              {ACTIONS.ADMIN["rebuild-bundle"].label}
+                            </Button>
+                            <Button asChild variant="ghost" size="sm">
+                              <Link href={getEditHref({ id: b.id })}>
+                                {BUNDLE_COPY.adminList.editLabel}
+                              </Link>
+                            </Button>
+                          </Row>
                         </td>
                       </tr>
                     );

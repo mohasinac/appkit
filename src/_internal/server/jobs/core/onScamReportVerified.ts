@@ -1,4 +1,5 @@
-import { notificationRepository } from "../../../../repositories";
+import { userRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
 export interface HandleScamReportVerifiedInput {
@@ -25,16 +26,18 @@ export async function handleScamReportVerified(
   const name = displayNames?.[0] ?? "Unknown";
 
   try {
-    await notificationRepository.create({
+    const reporter = await userRepository.findById(reportedBy);
+    await sendNotification({
       userId: reportedBy,
       type: "account_action",
+      priority: "normal",
       title: "Your scam report was verified",
-      body: `The report for "${name}" has been verified and published to the Scam Registry. Thank you for helping protect the community.`,
-      isRead: false,
-      entityId: scammerId,
-      entityType: "scammer",
-      createdAt: new Date(),
-    } as any);
+      message: `The report for "${name}" has been verified and published to the Scam Registry. Thank you for helping protect the community.`,
+      relatedId: scammerId,
+      relatedType: "scammer",
+      userEmail: reporter?.email ?? undefined,
+      userPhone: reporter?.phoneNumber ?? undefined,
+    });
   } catch (err) {
     ctx.logger.error("Failed to notify reporter of verification (non-fatal)", err, { scammerId, reportedBy });
   }
