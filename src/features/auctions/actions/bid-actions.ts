@@ -20,6 +20,8 @@ import {
   ValidationError,
   NotFoundError,
 } from "../../../errors";
+import { BID_ERROR_CODES } from "../../../errors/error-codes";
+import { increment } from "../../../contracts/field-ops";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { resolveDate } from "../../../utils";
 import type { BidDocument } from "../schemas";
@@ -52,7 +54,7 @@ export async function placeBid(
   if (product.auctionEndDate) {
     const endDate = resolveDate(product.auctionEndDate);
     if (endDate && endDate.getTime() < Date.now()) {
-      throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED);
+      throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED, { code: BID_ERROR_CODES.AUCTION_ENDED });
     }
   }
 
@@ -63,13 +65,18 @@ export async function placeBid(
     }
   }
 
-  const minimumBid =
+  const baseBid =
     (product.currentBid ?? 0) > 0
       ? product.currentBid!
       : (product.startingBid ?? product.price);
 
-  if (bidAmount <= minimumBid) {
-    throw new ValidationError(ERROR_MESSAGES.BID.BID_TOO_LOW);
+  if (bidAmount <= baseBid) {
+    throw new ValidationError(ERROR_MESSAGES.BID.BID_TOO_LOW, { code: BID_ERROR_CODES.TOO_LOW });
+  }
+
+  const minIncrement = product.minBidIncrement ?? 100;
+  if (bidAmount < baseBid + minIncrement) {
+    throw new ValidationError(ERROR_MESSAGES.BID.INCREMENT_TOO_LOW, { code: BID_ERROR_CODES.INCREMENT_VIOLATED });
   }
 
   const profile = await userRepository.findById(userId);
@@ -96,7 +103,9 @@ export async function placeBid(
     }
     unitOfWork.products.updateInBatch(batch, productId, {
       currentBid: bidAmount,
-      bidCount: (product.bidCount ?? 0) + 1,
+      bidCount: increment(1),
+      leadingBidderId: userId,
+      bidsHaveStarted: true,
     } as any);
   });
 

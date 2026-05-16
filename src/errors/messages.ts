@@ -414,6 +414,7 @@ export const ERROR_MESSAGES = {
     AUCTION_NOT_FOUND: "Auction product not found",
     NOT_AN_AUCTION: "This product is not an auction",
     BID_TOO_LOW: "Your bid must be higher than the current bid",
+    INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement",
     OWN_AUCTION: "You cannot bid on your own auction",
   },
 

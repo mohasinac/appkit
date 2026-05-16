@@ -1,7 +1,7 @@
 "use client";
 import React, { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { FormShell, StepForm, useFormShell } from "../../shell";
+import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
@@ -900,6 +900,7 @@ export function SellerProductShell({
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
   const [currentStep, setCurrentStep] = useState(0);
+  const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
 
@@ -1020,6 +1021,20 @@ export function SellerProductShell({
     },
   ];
 
+  const handleNext = useCallback(async () => {
+    const step = steps[currentStep];
+    if (step?.validate) {
+      const err = step.validate(draft);
+      if (err) { setStepError(err); return; }
+    }
+    setStepError(null);
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((c) => c + 1);
+    } else {
+      await handlePublish();
+    }
+  }, [currentStep, steps, draft, handlePublish]);
+
   const breadcrumb =
     mode === "create" ? `Store / ${listingTypeLabel}s / New` : `Store / ${listingTypeLabel}s / Edit`;
   const title =
@@ -1037,6 +1052,22 @@ export function SellerProductShell({
         isDirty={isDirty}
         isLoading={isLoading}
         previewSlot={previewSlot}
+        renderBottomBar={() => (
+          <div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+            <StepFormActions
+              currentStep={currentStep}
+              totalSteps={steps.length}
+              onNext={() => void handleNext()}
+              onPrev={currentStep > 0 ? () => setCurrentStep((c) => c - 1) : undefined}
+              completeLabel={`Publish ${listingTypeLabel}`}
+              isLoading={isLoading && currentStep === steps.length - 1}
+              disabled={isLoading}
+            />
+            {stepError && (
+              <p className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</p>
+            )}
+          </div>
+        )}
       >
         <StepForm<SellerProductDraft>
           steps={steps}
@@ -1047,6 +1078,7 @@ export function SellerProductShell({
           currentStep={currentStep}
           onStepChange={setCurrentStep}
           isLoading={isLoading}
+          hideActions
         />
       </FormShell>
     );

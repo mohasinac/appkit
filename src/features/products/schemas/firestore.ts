@@ -178,6 +178,7 @@ export interface ProductDocument {
   startingBid?: number;
   currentBid?: number;
   bidCount?: number;
+  leadingBidderId?: string;
   reservePrice?: number;
   buyNowPrice?: number;
   minBidIncrement?: number;
