@@ -3,7 +3,7 @@
 import { TrendingUp, ShoppingBag, Users, Package, Clock, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { DashboardStats } from "../types";
-import { Grid } from "../../../ui";
+import { Grid, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 
@@ -34,14 +34,14 @@ function StatCard({ label, value, sub, icon: Icon, gradient, iconColor }: StatCa
       <div className="px-5 pb-5 pt-6 flex items-start justify-between gap-3">
         {/* Text block */}
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
+          <Text className="text-[11px] font-semibold uppercase tracking-widest text-[var(--appkit-color-text-muted)]">
             {label}
-          </p>
-          <p className="mt-2 text-2xl font-bold text-[var(--appkit-color-text)] tabular-nums leading-none">
+          </Text>
+          <Text className="mt-2 text-2xl font-bold text-[var(--appkit-color-text)] tabular-nums leading-none">
             {value}
-          </p>
+          </Text>
           {sub && (
-            <p className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</p>
+            <Text className="mt-1.5 text-xs text-[var(--appkit-color-text-muted)]">{sub}</Text>
           )}
         </div>
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span } from "../../ui";
+import { Div, Span, Text } from "../../ui";
 import {
   cn,
   INPUT_BASE,
@@ -110,14 +110,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </Div>
 
         {error && (
-          <p id={`${props.id}-error`} className={ERROR_BASE} role="alert">
+          <Text id={`${props.id}-error`} className={ERROR_BASE} role="alert">
             {error}
-          </p>
+          </Text>
         )}
         {!error && helperText && (
-          <p id={`${props.id}-helper`} className={HELPER_BASE}>
+          <Text id={`${props.id}-helper`} className={HELPER_BASE}>
             {helperText}
-          </p>
+          </Text>
         )}
       </Div>
     );

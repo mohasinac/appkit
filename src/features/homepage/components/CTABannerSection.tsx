@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Section } from "../../../ui";
+import { Heading, Section, Text } from "../../../ui";
 
 export interface CTABannerSectionProps {
   title?: string;
@@ -27,11 +27,11 @@ export function CTABannerSection({
         <span className="mb-4 inline-block text-2xl" aria-hidden="true">
           ✨
         </span>
-        <h2 className="text-2xl font-bold text-white md:text-3xl lg:text-4xl">
+        <Heading level={2} className="text-2xl font-bold text-white md:text-3xl lg:text-4xl">
           {title}
-        </h2>
+        </Heading>
         {subtitle && (
-          <p className="mt-3 text-base text-white/80">{subtitle}</p>
+          <Text className="mt-3 text-base text-white/80">{subtitle}</Text>
         )}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-4" data-section="ctabannersection-div-314">
           <Link

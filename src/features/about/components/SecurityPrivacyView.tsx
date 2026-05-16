@@ -161,88 +161,59 @@ export async function SecurityPrivacyView({
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="securityprivacyview-div-198">
-      {/* Hero */}
-      <Section
-        className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
-      >
+      <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
         <div className={`${page.container.md} text-center`} data-section="securityprivacyview-div-199">
-          <Heading level={1} variant="none" className="mb-4 text-white">
-            {t("title")}
-          </Heading>
-          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">
-            {t("subtitle")}
-          </Text>
+          <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
+          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </div>
       </Section>
-
-      <div
-        className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}
-       data-section="securityprivacyview-div-200">
-        {/* Overview */}
+      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="securityprivacyview-div-200">
         <Section className="text-center">
-          <Heading level={2} className="mb-3">
-            {t("overviewTitle")}
-          </Heading>
-          <Text variant="secondary" className="max-w-2xl mx-auto">
-            {t("overviewText")}
-          </Text>
+          <Heading level={2} className="mb-3">{t("overviewTitle")}</Heading>
+          <Text variant="secondary" className="max-w-2xl mx-auto">{t("overviewText")}</Text>
         </Section>
-
-        {/* Security cards */}
+        {renderSecurityCardsSection(flex, SECTIONS)}
         <Section>
-          <div className="grid gap-5 md:grid-cols-2" data-section="securityprivacyview-div-201">
-            {SECTIONS.map(({ icon: Icon, title, text, color, iconColor }) => (
-              <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="securityprivacyview-div-202">
-                <div
-                  className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}
-                 data-section="securityprivacyview-div-203">
-                  <Icon className={`w-5 h-5 ${iconColor}`} />
-                </div>
-                <Text className="font-semibold mb-1">{title}</Text>
-                <Text variant="secondary" className="text-sm leading-relaxed">
-                  {text}
-                </Text>
-              </div>
-            ))}
-          </div>
+          <FlowDiagram title={`🛡️ ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-
-        {/* Flow diagram */}
-        <Section>
-          <FlowDiagram
-            title={`🛡️ ${t("diagramTitle")}`}
-            titleClass="text-primary"
-            connectorClass="bg-primary/20 dark:bg-primary/30"
-            steps={DIAGRAM_STEPS}
-            centered
-          />
-        </Section>
-
-        {/* Last updated */}
-        <Text variant="secondary" className="text-center text-sm">
-          {t("lastUpdated")}
-        </Text>
-
-        {/* CTA */}
-        <Section
-          className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}
-        >
-          <Heading level={2} className="mb-3">
-            {t("ctaTitle")}
-          </Heading>
-          <Text variant="secondary" className="mb-6 max-w-lg mx-auto">
-            {t("ctaText")}
-          </Text>
-          <div className={`${flex.center} gap-4 flex-wrap`} data-section="securityprivacyview-div-204">
-            <TextLink href={String(ROUTES.PUBLIC.PRIVACY)}>
-              {t("ctaPrivacy")}
-            </TextLink>
-            <TextLink href={String(ROUTES.PUBLIC.CONTACT)} variant="muted">
-              {t("ctaContact")}
-            </TextLink>
-          </div>
-        </Section>
+        <Text variant="secondary" className="text-center text-sm">{t("lastUpdated")}</Text>
+        {renderSecurityCtaSection(t, themed, flex)}
       </div>
     </div>
+  );
+}
+
+type SecurityT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SecurityCard = { icon: any; title: string; text: string; color: string; iconColor: string };
+
+function renderSecurityCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: SecurityCard[]) {
+  return (
+    <Section>
+      <div className="grid gap-5 md:grid-cols-2" data-section="securityprivacyview-div-201">
+        {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
+          <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="securityprivacyview-div-202">
+            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="securityprivacyview-div-203">
+              <Icon className={`w-5 h-5 ${iconColor}`} />
+            </div>
+            <Text className="font-semibold mb-1">{title}</Text>
+            <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderSecurityCtaSection(t: SecurityT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+  return (
+    <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
+      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
+      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
+      <div className={`${flex.center} gap-4 flex-wrap`} data-section="securityprivacyview-div-204">
+        <TextLink href={String(ROUTES.PUBLIC.PRIVACY)}>{t("ctaPrivacy")}</TextLink>
+        <TextLink href={String(ROUTES.PUBLIC.CONTACT)} variant="muted">{t("ctaContact")}</TextLink>
+      </div>
+    </Section>
   );
 }

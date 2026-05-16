@@ -2,17 +2,18 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, Div, SideDrawer, Text } from "../../../ui";
+import { Button, Div, Heading, SideDrawer, Text } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
+const CLS_GRID_2_COL = "grid grid-cols-2 gap-3";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div className="space-y-1">
       <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</label>
       {children}
-      {hint && <p className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</p>}
+      {hint && <Text className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</Text>}
     </div>
   );
 }
@@ -247,14 +248,17 @@ export function SellerAddressesView({
   const set = (key: keyof AddressDraft, value: string | boolean) =>
     setDraft((p) => ({ ...p, [key]: value }));
 
+  const handleTextField = (key: keyof AddressDraft) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => set(key, e.target.value);
+
   return (
     <div className="min-h-screen">
       {/* Header */}
       <div className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between" style={{ top: "var(--header-height, 0px)" }}>
-        <div>
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</h2>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Manage your store&apos;s pickup and return locations</p>
-        </div>
+        <>
+          <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</Heading>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Manage your store&apos;s pickup and return locations</Text>
+        </>
         <Button size="sm" onClick={openAdd} className="flex items-center gap-1.5">
           <Plus className="h-4 w-4" />
           <span>Add Address</span>
@@ -317,45 +321,45 @@ export function SellerAddressesView({
           )}
 
           <Field label="Label *" hint="e.g. Warehouse, Shop, Home">
-            <input type="text" value={draft.label} onChange={(e) => set("label", e.target.value)} placeholder="Warehouse" maxLength={60} className={INPUT_CLS} />
+            <input type="text" value={draft.label} onChange={handleTextField("label")} placeholder="Warehouse" maxLength={60} className={INPUT_CLS} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className={CLS_GRID_2_COL}>
             <Field label="Full Name *">
-              <input type="text" value={draft.fullName} onChange={(e) => set("fullName", e.target.value)} placeholder="Ravi Kumar" maxLength={100} className={INPUT_CLS} />
+              <input type="text" value={draft.fullName} onChange={handleTextField("fullName")} placeholder="Ravi Kumar" maxLength={100} className={INPUT_CLS} />
             </Field>
             <Field label="Phone *">
-              <input type="tel" value={draft.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+91 98765 43210" maxLength={20} className={INPUT_CLS} />
+              <input type="tel" value={draft.phone} onChange={handleTextField("phone")} placeholder="+91 98765 43210" maxLength={20} className={INPUT_CLS} />
             </Field>
           </div>
 
           <Field label="Address Line 1 *">
-            <input type="text" value={draft.addressLine1} onChange={(e) => set("addressLine1", e.target.value)} placeholder="Shop 12, Main Market" maxLength={200} className={INPUT_CLS} />
+            <input type="text" value={draft.addressLine1} onChange={handleTextField("addressLine1")} placeholder="Shop 12, Main Market" maxLength={200} className={INPUT_CLS} />
           </Field>
 
           <Field label="Address Line 2">
-            <input type="text" value={draft.addressLine2} onChange={(e) => set("addressLine2", e.target.value)} placeholder="Building / Floor (optional)" maxLength={200} className={INPUT_CLS} />
+            <input type="text" value={draft.addressLine2} onChange={handleTextField("addressLine2")} placeholder="Building / Floor (optional)" maxLength={200} className={INPUT_CLS} />
           </Field>
 
           <Field label="Landmark">
-            <input type="text" value={draft.landmark} onChange={(e) => set("landmark", e.target.value)} placeholder="Near metro station (optional)" maxLength={100} className={INPUT_CLS} />
+            <input type="text" value={draft.landmark} onChange={handleTextField("landmark")} placeholder="Near metro station (optional)" maxLength={100} className={INPUT_CLS} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className={CLS_GRID_2_COL}>
             <Field label="City *">
-              <input type="text" value={draft.city} onChange={(e) => set("city", e.target.value)} placeholder="Mumbai" maxLength={100} className={INPUT_CLS} />
+              <input type="text" value={draft.city} onChange={handleTextField("city")} placeholder="Mumbai" maxLength={100} className={INPUT_CLS} />
             </Field>
             <Field label="State *">
-              <input type="text" value={draft.state} onChange={(e) => set("state", e.target.value)} placeholder="Maharashtra" maxLength={100} className={INPUT_CLS} />
+              <input type="text" value={draft.state} onChange={handleTextField("state")} placeholder="Maharashtra" maxLength={100} className={INPUT_CLS} />
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className={CLS_GRID_2_COL}>
             <Field label="Postal Code *">
-              <input type="text" value={draft.postalCode} onChange={(e) => set("postalCode", e.target.value)} placeholder="400001" maxLength={10} className={INPUT_CLS} />
+              <input type="text" value={draft.postalCode} onChange={handleTextField("postalCode")} placeholder="400001" maxLength={10} className={INPUT_CLS} />
             </Field>
             <Field label="Country *">
-              <input type="text" value={draft.country} onChange={(e) => set("country", e.target.value)} placeholder="India" maxLength={60} className={INPUT_CLS} />
+              <input type="text" value={draft.country} onChange={handleTextField("country")} placeholder="India" maxLength={60} className={INPUT_CLS} />
             </Field>
           </div>
 

@@ -4,11 +4,7 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, FilterChipGroup,
-  ListingToolbar,
-  ListingViewShell,
-  Pagination,
-  RowActionMenu, } from "../../../ui";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -65,6 +61,102 @@ const STATUS_BADGE: Record<string, string> = {
   resolved: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
   closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
+
+interface SupportTicketsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function SupportTicketsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: SupportTicketsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={ADMIN_SUPPORT_TICKET_STATUS_TABS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+          <FilterChipGroup
+            label="Priority"
+            tabs={ADMIN_SUPPORT_TICKET_PRIORITY_TABS}
+            value={pendingFilters.priority ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, priority: id }))}
+          />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function buildTicketColumns(
+  setSelectedRow: (row: TicketRow) => void,
+  setDrawerOpen: (v: boolean) => void,
+) {
+  return [
+    {
+      key: "primary",
+      header: "Subject",
+      render: (row: TicketRow) => {
+        const priority = toStringValue(row._raw?.priority, "normal");
+        return (
+          <div className="space-y-1">
+            <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+            {row.secondary ? <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text> : null}
+            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal}`}>
+              {priority}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "w-36",
+      render: (row: TicketRow) => (
+        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}>
+          {row.status.replace(/_/g, " ")}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      header: "Updated",
+      className: "w-32",
+      render: (row: TicketRow) => (
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
+      ),
+    },
+  ] as const;
+}
 
 export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
@@ -209,129 +301,23 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
             renderRowActions={(row) => (
               <RowActionMenu
                 actions={[
-                  {
-                    label: "View",
-                    onClick: () => {
-                      setSelectedRow(row as TicketRow);
-                      setDrawerOpen(true);
-                    },
-                  },
+                  { label: "View", onClick: () => { setSelectedRow(row as TicketRow); setDrawerOpen(true); } },
                 ]}
               />
             )}
-            columns={[
-              {
-                key: "primary",
-                header: "Subject",
-                render: (row) => {
-                  const r = row as TicketRow;
-                  const priority = toStringValue(r._raw?.priority, "normal");
-                  return (
-                    <div className="space-y-1">
-                      <p className="font-medium text-zinc-900 dark:text-zinc-100">{r.primary}</p>
-                      {r.secondary ? (
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">{r.secondary}</p>
-                      ) : null}
-                      <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal
-                        }`}
-                      >
-                        {priority}
-                      </span>
-                    </div>
-                  );
-                },
-              },
-              {
-                key: "status",
-                header: "Status",
-                className: "w-36",
-                render: (row) => {
-                  const r = row as TicketRow;
-                  return (
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                        STATUS_BADGE[r.status] ?? STATUS_BADGE.open
-                      }`}
-                    >
-                      {r.status.replace(/_/g, " ")}
-                    </span>
-                  );
-                },
-              },
-              {
-                key: "updatedAt",
-                header: "Updated",
-                className: "w-32",
-                render: (row) => (
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {(row as TicketRow).updatedAt}
-                  </span>
-                ),
-              },
-            ]}
+            columns={buildTicketColumns(setSelectedRow, setDrawerOpen) as any}
           />
         </div>
 
-        {filterOpen && (
-          <>
-            <div
-              className="fixed inset-0 z-40 bg-black/40"
-              aria-hidden="true"
-              onClick={() => setFilterOpen(false)}
-            />
-            <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Filters
-                </span>
-                <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors"
-                    >
-                      Clear all
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setFilterOpen(false)}
-                    aria-label="Close"
-                    className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <FilterChipGroup
-                  label="Status"
-                  tabs={ADMIN_SUPPORT_TICKET_STATUS_TABS}
-                  value={pendingFilters.status ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-                />
-                <FilterChipGroup
-                  label="Priority"
-                  tabs={ADMIN_SUPPORT_TICKET_PRIORITY_TABS}
-                  value={pendingFilters.priority ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, priority: id }))}
-                />
-              </div>
-              <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <button
-                  type="button"
-                  onClick={applyFilters}
-                  className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
-                >
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <SupportTicketsFilterDrawer
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          activeFilterCount={activeFilterCount}
+          clearFilters={clearFilters}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          applyFilters={applyFilters}
+        />
       </div>
 
       <AdminSupportTicketDetailView

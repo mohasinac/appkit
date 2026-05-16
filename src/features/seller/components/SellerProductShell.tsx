@@ -3,17 +3,7 @@ import React, { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormShell, StepForm, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
-import {
-  Alert,
-  Button,
-  Div,
-  FormField,
-  FormGroup,
-  Heading,
-  Stack,
-  Text,
-  Toggle,
-} from "../../../ui";
+import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle } from "../../../ui";
 import { ImageUpload, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
@@ -169,10 +159,10 @@ function StepBasic({
       />
       <FormGroup columns={2}>
         {renderCategorySelector ? (
-          <div>
+          <>
             <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">Category</Text>
             {renderCategorySelector({ value: values.category ?? "", onChange: (v) => onChange({ category: v }) })}
-          </div>
+          </>
         ) : (
           <FormField
             name="category"
@@ -193,10 +183,10 @@ function StepBasic({
         />
       </FormGroup>
       {renderBrandSelector ? (
-        <div>
+        <>
           <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">Brand</Text>
           {renderBrandSelector({ value: values.brand ?? "", onChange: (v) => onChange({ brand: v }) })}
-        </div>
+        </>
       ) : (
         <FormField
           name="brand"
@@ -525,7 +515,7 @@ function StepShipping({
         ]}
       />
       {renderAddressSelector ? (
-        <div>
+        <>
           <Text className="text-sm font-medium text-[var(--appkit-color-text)] mb-1">
             Pickup Address (optional)
           </Text>
@@ -533,7 +523,7 @@ function StepShipping({
             value: values.pickupAddressId ?? "",
             onChange: (v) => onChange({ pickupAddressId: v }),
           })}
-        </div>
+        </>
       ) : (
         <StoreAddressSelectorCreate
           label="Pickup Address (optional)"
@@ -782,7 +772,7 @@ export function SellerProductShell({
       previewSlot={previewSlot}
     >
       <Stack gap="lg">
-        <section id="basic">
+        <Section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>
           <StepBasic
             values={draft}
@@ -791,32 +781,32 @@ export function SellerProductShell({
             renderBrandSelector={renderBrandSelector}
             renderTemplateSelector={renderTemplateSelector}
           />
-        </section>
-        <section id="media">
+        </Section>
+        <Section id="media">
           <Heading level={3} className="mb-4">Media</Heading>
           <StepMedia values={draft} onChange={update} storeSlug={storeSlug} />
-        </section>
+        </Section>
         {listingType === "auction" && (
-          <section id="auction">
+          <Section id="auction">
             <Heading level={3} className="mb-4">Auction Settings</Heading>
             <StepAuctionSettings values={draft} onChange={update} />
-          </section>
+          </Section>
         )}
         {listingType === "pre-order" && (
-          <section id="preorder">
+          <Section id="preorder">
             <Heading level={3} className="mb-4">Pre-Order Settings</Heading>
             <StepPreOrderSettings values={draft} onChange={update} />
-          </section>
+          </Section>
         )}
-        <section id="pricing">
+        <Section id="pricing">
           <Heading level={3} className="mb-4">Pricing</Heading>
           <StepPricing values={draft} onChange={update} listingType={listingType} />
-        </section>
-        <section id="shipping">
+        </Section>
+        <Section id="shipping">
           <Heading level={3} className="mb-4">Shipping</Heading>
           <StepShipping values={draft} onChange={update} renderAddressSelector={renderAddressSelector} />
-        </section>
-        <section id="publish">
+        </Section>
+        <Section id="publish">
           <Heading level={3} className="mb-4">Publish</Heading>
           <StepPublish values={draft} onChange={update} />
           {onSaveAsTemplate && (
@@ -834,7 +824,7 @@ export function SellerProductShell({
               </Text>
             </Div>
           )}
-        </section>
+        </Section>
       </Stack>
     </FormShell>
   );

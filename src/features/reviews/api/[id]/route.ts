@@ -15,6 +15,8 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { Review } from "../../types/index";
 
+const ERR_REVIEW_NOT_FOUND = "Review not found";
+
 // ---- GET /api/reviews/[id] ---------------------------------------------------
 
 export async function GET(
@@ -36,7 +38,7 @@ export async function GET(
     const review = await repo.findById(id);
     if (!review) {
       return NextResponse.json(
-        { success: false, error: "Review not found" },
+        { success: false, error: ERR_REVIEW_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -93,7 +95,7 @@ export const reviewItemPATCH = createRouteHandler({
     const review = await repo.findById(id);
     if (!review)
       return NextResponse.json(
-        { success: false, error: "Review not found" },
+        { success: false, error: ERR_REVIEW_NOT_FOUND },
         { status: 404 },
       );
 
@@ -142,7 +144,7 @@ export const reviewItemDELETE = createRouteHandler({
     const review = await repo.findById(id);
     if (!review)
       return NextResponse.json(
-        { success: false, error: "Review not found" },
+        { success: false, error: ERR_REVIEW_NOT_FOUND },
         { status: 404 },
       );
 

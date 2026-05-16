@@ -3829,11 +3829,6 @@ export type { CreateRoomResult } from "./features/admin/server";
 
 // ./features/auctions/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€” React component or hook that does not depend on browser-only APIs.
-// AuctionCard - Component for auction card.
-export { AuctionCard } from "./features/auctions/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€” React component or hook that does not depend on browser-only APIs.
-// AuctionCountdown - Shared export for auction countdown.
-export { AuctionCountdown } from "./features/auctions/index";
 // [SCHEMA]-Schema / data-shape constant â€” Zod validator, default-value object, or Firestore collection/field name constant.
 // BID_COLLECTION - Constant used across modules.
 export { BID_COLLECTION } from "./features/auctions/index";
@@ -6786,8 +6781,6 @@ export { MarketplacePreorderCard } from "./features/pre-orders/index";
 // PreorderBadge - Component for preorder badge.
 export { PreorderBadge } from "./features/pre-orders/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€” React component or hook that does not depend on browser-only APIs.
-// PreorderCard - Component for preorder card.
-export { PreorderCard } from "./features/pre-orders/index";
 // [SERVER-RSC]-Self-fetching index/detail page views for pre-orders.
 export { PreOrdersIndexListing } from "./features/pre-orders/index";
 export type { PreOrdersIndexListingProps } from "./features/pre-orders/index";
@@ -6854,6 +6847,8 @@ export type { BundlesListViewProps } from "./features/categories/components/Bund
 // S-SBUNI-3 2026-05-13 â€” public bundle detail view (rebuilt after SB-UNI-V deletion).
 export { BundleDetailView } from "./features/categories/components/BundleDetailView";
 export type { BundleDetailViewProps } from "./features/categories/components/BundleDetailView";
+export { BundleCollage } from "./features/categories/components/BundleCollage";
+export type { BundleCollageProps } from "./features/categories/components/BundleCollage";
 // S-SBUNI-5 2026-05-13 â€” functional Add-to-cart CTA client island.
 export { BundleBuyNowCta } from "./features/categories/components/BundleBuyNowCta";
 export type { BundleBuyNowCtaProps } from "./features/categories/components/BundleBuyNowCta";

@@ -19,6 +19,8 @@ import { getProviders } from "../../../contracts";
 import { createRouteHandler } from "../../../next";
 import type { CategoryItem } from "../types/index";
 
+const CACHE_CONTROL_PUBLIC = "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400";
+
 // --- Tree node (CategoryItem extended with nested children) -------------------
 interface CategoryTreeNode extends CategoryItem {
   children: CategoryTreeNode[];
@@ -163,7 +165,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       const res = NextResponse.json({ success: true, data: items });
       res.headers.set(
         "Cache-Control",
-        "public, max-age=300, s-maxage=600, stale-while-revalidate=120",
+        CACHE_CONTROL_PUBLIC,
       );
       return res;
     }
@@ -180,7 +182,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       const res = NextResponse.json({ success: true, data: treeNodes });
       res.headers.set(
         "Cache-Control",
-        "public, max-age=300, s-maxage=600, stale-while-revalidate=120",
+        CACHE_CONTROL_PUBLIC,
       );
       return res;
     }
@@ -193,7 +195,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     });
     res.headers.set(
       "Cache-Control",
-      "public, max-age=300, s-maxage=600, stale-while-revalidate=120",
+      CACHE_CONTROL_PUBLIC,
     );
     return res;
   } catch (error) {

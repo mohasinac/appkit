@@ -98,6 +98,31 @@ interface ProseMirrorNode {
   content?: ProseMirrorNode[];
 }
 
+const PROSEMIRROR_MARK_WRAP: Record<string, [string, string]> = {
+  bold: ["<strong>", "</strong>"],
+  italic: ["<em>", "</em>"],
+  underline: ["<u>", "</u>"],
+  strike: ["<s>", "</s>"],
+  code: ["<code>", "</code>"],
+};
+
+function applyMark(text: string, mark: ProseMirrorMark): string {
+  const wrap = PROSEMIRROR_MARK_WRAP[mark.type];
+  if (wrap) {
+    return `${wrap[0]}${text}${wrap[1]}`;
+  }
+  if (mark.type === "link") {
+    const rawHref = String(mark.attrs?.href ?? "#").trim();
+    const safe = /^(https?:\/\/|mailto:|\/|#)/i.test(rawHref) ? rawHref : "#";
+    const href = safe.replace(
+      /[&"<>]/g,
+      (c) => ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[c] ?? c,
+    );
+    return `<a href="${href}" rel="noopener noreferrer">${text}</a>`;
+  }
+  return text;
+}
+
 function renderProseMirrorNodes(nodes: ProseMirrorNode[]): string {
   return nodes.map(renderProseMirrorNode).join("");
 }
@@ -114,25 +139,7 @@ function renderProseMirrorNode(node: ProseMirrorNode): string {
       let text = escapeHtml(node.text ?? "");
       if (node.marks) {
         for (const mark of node.marks) {
-          if (mark.type === "bold") text = `<strong>${text}</strong>`;
-          else if (mark.type === "italic") text = `<em>${text}</em>`;
-          else if (mark.type === "underline") text = `<u>${text}</u>`;
-          else if (mark.type === "strike") text = `<s>${text}</s>`;
-          else if (mark.type === "code") text = `<code>${text}</code>`;
-          else if (mark.type === "link") {
-            const rawHref = String(mark.attrs?.href ?? "#").trim();
-            const safe = /^(https?:\/\/|mailto:|\/|#)/i.test(rawHref)
-              ? rawHref
-              : "#";
-            const href = safe.replace(
-              /[&"<>]/g,
-              (c) =>
-                ({ "&": "&amp;", '"': "&quot;", "<": "&lt;", ">": "&gt;" })[
-                  c
-                ] ?? c,
-            );
-            text = `<a href="${href}" rel="noopener noreferrer">${text}</a>`;
-          }
+          text = applyMark(text, mark);
         }
       }
       return text;

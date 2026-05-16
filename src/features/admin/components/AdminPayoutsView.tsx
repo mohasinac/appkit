@@ -42,6 +42,54 @@ const STATUS_OPTIONS = ADMIN_PAYOUT_STATUS_TABS;
 
 export interface AdminPayoutsViewProps extends ListingViewShellProps {}
 
+interface PayoutsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function PayoutsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: PayoutsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={STATUS_OPTIONS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 interface AdminPayoutsResponse {
   payouts?: unknown[];
   meta?: { total?: number };
@@ -204,6 +252,14 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           }
         />
 
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "mark-paid", label: "Mark Paid", variant: "primary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
+        />
+
         {totalPages > 1 && (
           <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
@@ -242,37 +298,15 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           />
         </div>
 
-        {filterOpen && (
-          <>
-            <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-            <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-                <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                  )}
-                  <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <FilterChipGroup
-                  label="Status"
-                  tabs={STATUS_OPTIONS}
-                  value={pendingFilters.status ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-                />
-              </div>
-              <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <PayoutsFilterDrawer
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          activeFilterCount={activeFilterCount}
+          clearFilters={clearFilters}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          applyFilters={applyFilters}
+        />
       </div>
 
       <Modal isOpen={markPaidOpen} onClose={closePaidModal} title="Mark payout as paid">

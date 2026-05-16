@@ -19,6 +19,7 @@ function FAQAccordionItem({
   return (
     <Div className="border-b border-neutral-200 dark:border-slate-700 last:border-0">
       <Button
+        variant="ghost"
         onClick={onToggle}
         aria-expanded={isOpen}
         className="flex w-full items-center justify-between gap-4 py-4 text-left text-sm font-medium text-neutral-900 dark:text-zinc-100 transition hover:text-primary"

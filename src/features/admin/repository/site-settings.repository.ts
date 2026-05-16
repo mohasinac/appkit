@@ -93,6 +93,23 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
     }
   }
 
+  private mergeEncryptedCredentials(
+    existing: SiteSettingsCredentials,
+    updates: Partial<SiteSettingsCredentials>,
+  ): SiteSettingsCredentials {
+    const encrypted: SiteSettingsCredentials = { ...existing };
+    for (const [key, value] of Object.entries(updates) as [
+      keyof SiteSettingsCredentials,
+      string | undefined,
+    ][]) {
+      if (value && value.trim()) {
+        encrypted[key] = encryptSecret(value.trim());
+      }
+      // Empty / undefined → keep whatever was already stored
+    }
+    return encrypted;
+  }
+
   /**
    * Update the global site settings
    *
@@ -112,21 +129,10 @@ export class SiteSettingsRepository extends BaseRepository<SiteSettingsDocument>
 
       if (updates.credentials) {
         const existing = await this.getSingleton();
-        const existingCreds: SiteSettingsCredentials =
-          existing.credentials ?? {};
-        const encryptedCreds: SiteSettingsCredentials = { ...existingCreds };
-
-        for (const [key, value] of Object.entries(updates.credentials) as [
-          keyof SiteSettingsCredentials,
-          string | undefined,
-        ][]) {
-          if (value && value.trim()) {
-            // Non-empty plaintext → encrypt and store
-            encryptedCreds[key] = encryptSecret(value.trim());
-          }
-          // Empty / undefined → keep whatever was already stored
-        }
-
+        const encryptedCreds = this.mergeEncryptedCredentials(
+          existing.credentials ?? {},
+          updates.credentials,
+        );
         finalUpdates = { ...updates, credentials: encryptedCreds };
       }
 

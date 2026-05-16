@@ -17,6 +17,10 @@ export interface MakeOfferButtonProps {
 
 type State = "idle" | "confirm" | "loading" | "success" | "pending" | "error";
 
+function isActiveOfferError(msg: string): boolean {
+  return msg.includes("active offer") || msg.includes("ACTIVE_OFFER");
+}
+
 export function MakeOfferButton({
   productId,
   listedPrice,
@@ -50,6 +54,21 @@ export function MakeOfferButton({
     if (!isNaN(parsed)) setOfferAmount(parsed);
   }
 
+  function handleOfferError(err: unknown) {
+    if (isAuthError(err)) {
+      setState("idle");
+      setShowLoginModal(true);
+    } else {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (isActiveOfferError(msg)) {
+        setState("pending");
+      } else {
+        setErrorMsg(msg || "Could not send offer. Please try again.");
+        setState("error");
+      }
+    }
+  }
+
   function handleSubmit() {
     if (offerAmount < minOffer) {
       setErrorMsg(`Minimum offer is ${fmt(minOffer)}`);
@@ -67,18 +86,7 @@ export function MakeOfferButton({
         await onMakeOffer(productId, offerAmount, buyerNote || undefined);
         setState("success");
       } catch (err: unknown) {
-        if (isAuthError(err)) {
-          setState("idle");
-          setShowLoginModal(true);
-        } else {
-          const msg = err instanceof Error ? err.message : String(err);
-          if (msg.includes("active offer") || msg.includes("ACTIVE_OFFER")) {
-            setState("pending");
-          } else {
-            setErrorMsg(msg || "Could not send offer. Please try again.");
-            setState("error");
-          }
-        }
+        handleOfferError(err);
       }
     });
   }

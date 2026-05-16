@@ -101,6 +101,18 @@ export function PrizeDrawItemsEditor({
     update(index, { images: nextImgs.filter(Boolean) });
   };
 
+  const handleVideoFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    itemNumber: number,
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file || !onUploadVideo) return;
+    void onUploadVideo(file, itemNumber).then((url) => {
+      update(index, { video: { url } });
+    });
+  };
+
   const removeImage = (index: number, slot: number) => {
     const cur = items[index];
     const nextImgs = (cur.images ?? []).filter((_, i) => i !== slot);
@@ -284,12 +296,7 @@ export function PrizeDrawItemsEditor({
                       type="file"
                       accept="video/mp4,video/webm"
                       disabled={locked}
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const url = await onUploadVideo(file, it.itemNumber);
-                        update(index, { video: { url } });
-                      }}
+                      onChange={(e) => handleVideoFileChange(e, index, it.itemNumber)}
                     />
                     {it.video?.url ? (
                       <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate">

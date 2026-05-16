@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
+import { Text } from "../../../ui";
 
 interface AdminViewCardsProps {
   rows: AdminListingScaffoldRow[];
@@ -96,8 +97,8 @@ function AdminCardItem({
           </div>
         )}
         <div className="flex-1 min-w-0 space-y-0.5">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</p>
+          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Text>
         </div>
         {flags.length > 0 && (
           <div className="hidden sm:flex items-center gap-1 shrink-0">
@@ -147,8 +148,8 @@ function AdminCardItem({
       )}
       <div className="p-3.5 space-y-2">
         <div className="space-y-0.5">
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</p>
+          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug">{row.primary}</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Text>
         </div>
         <div className="flex items-center justify-between gap-2">
           <StatusBadge status={row.status} />
@@ -186,7 +187,7 @@ export function AdminViewCards({
 
   if (rows.length === 0) {
     return (
-      <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">{emptyLabel}</p>
+      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">{emptyLabel}</Text>
     );
   }
 

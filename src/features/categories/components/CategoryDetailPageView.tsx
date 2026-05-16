@@ -5,7 +5,7 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Main, Section } from "../../../ui";
+import { Container, Heading, Main, Section, Text } from "../../../ui";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import type { CategoryItem } from "../types";
 
@@ -83,7 +83,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
   return (
     <Main>
       {/* ── Hero / Banner ───────────────────────────────────────────────── */}
-      <section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+      <Section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>
             <div
@@ -117,14 +117,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           </nav>
 
           {/* Title + metrics */}
-          <h1 className={`text-3xl md:text-4xl font-bold mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
+          <Heading level={1} className={`text-3xl md:text-4xl font-bold mb-2 ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
             {category?.name ?? slug}
-          </h1>
+          </Heading>
 
           {category?.description && typeof category.description === "string" && !category.description.startsWith("{") && (
-            <p className={`text-base max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
+            <Text className={`text-base max-w-2xl mb-4 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
               {category.description}
-            </p>
+            </Text>
           )}
 
           <div className="flex flex-wrap gap-2">
@@ -151,11 +151,11 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             )}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
-        <section className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        <Section className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (
@@ -177,7 +177,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               ))}
             </div>
           </div>
-        </section>
+        </Section>
       )}
 
       {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}

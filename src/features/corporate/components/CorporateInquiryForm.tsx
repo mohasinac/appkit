@@ -8,6 +8,8 @@ interface CorporateInquiryFormProps {
   isPending?: boolean;
 }
 
+const CLS_INPUT = "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm";
+
 export function CorporateInquiryForm({
   onSubmit,
   isPending,
@@ -57,7 +59,7 @@ export function CorporateInquiryForm({
           value={form.companyName}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="contactPerson"
@@ -66,7 +68,7 @@ export function CorporateInquiryForm({
           value={form.contactPerson}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="designation"
@@ -74,7 +76,7 @@ export function CorporateInquiryForm({
           placeholder="Designation (optional)"
           value={form.designation ?? ""}
           onChange={handleChange}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="email"
@@ -83,7 +85,7 @@ export function CorporateInquiryForm({
           value={form.email}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="phone"
@@ -92,7 +94,7 @@ export function CorporateInquiryForm({
           value={form.phone}
           onChange={handleChange}
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="units"
@@ -102,7 +104,7 @@ export function CorporateInquiryForm({
           onChange={handleChange}
           min={1}
           required
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="budgetPerUnit"
@@ -111,7 +113,7 @@ export function CorporateInquiryForm({
           value={form.budgetPerUnit ?? ""}
           onChange={handleChange}
           min={0}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
         <Input
           name="deliveryDateRequired"
@@ -119,7 +121,7 @@ export function CorporateInquiryForm({
           placeholder="Required by (optional)"
           value={form.deliveryDateRequired ?? ""}
           onChange={handleChange}
-          className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+          className={CLS_INPUT}
         />
       </Div>
       <Div className="flex items-center gap-2 text-sm text-neutral-700">
@@ -140,7 +142,7 @@ export function CorporateInquiryForm({
         value={form.message ?? ""}
         onChange={handleChange}
         rows={4}
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       <Button
         type="submit"

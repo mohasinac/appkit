@@ -5,7 +5,7 @@ import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Button, BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Toggle, useToast } from "../../../ui";
+import { BulkActionBar, Button, FilterChipGroup, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text, Toggle, useToast } from "../../../ui";
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -66,8 +66,8 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       sortable: true,
       render: (row) => (
         <div className="space-y-1">
-          <p className="font-semibold text-zinc-900 dark:text-zinc-100">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</p>
+          <Text className="font-semibold text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
         </div>
       ),
     },
@@ -92,6 +92,60 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
       ),
     },
   ];
+}
+
+interface ProductsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function ProductsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: ProductsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={STATUS_OPTIONS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+          <FilterChipGroup
+            label="Type"
+            tabs={TYPE_OPTIONS}
+            value={pendingFilters.type ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
+          />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export function AdminProductsView({ children, actionHref, getRowHref, ...props }: AdminProductsViewProps) {
@@ -143,10 +197,14 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   if (statusRaw && statusRaw !== "All") filterParts.push(`status==${statusRaw}`);
   const typeRaw = table.get("type");
   if (typeRaw && typeRaw !== "All") {
-    if (typeRaw === "Auctions") filterParts.push("listingType==auction");
-    else if (typeRaw === "Pre-orders") filterParts.push("listingType==pre-order");
-    else if (typeRaw === "Prize Draws") filterParts.push("listingType==prize-draw");
-    else if (typeRaw === "Products") filterParts.push("listingType==standard");
+    const TYPE_FILTER: Record<string, string> = {
+      Auctions: "listingType==auction",
+      "Pre-orders": "listingType==pre-order",
+      "Prize Draws": "listingType==prize-draw",
+      Products: "listingType==standard",
+    };
+    const typeFilter = TYPE_FILTER[typeRaw];
+    if (typeFilter) filterParts.push(typeFilter);
   }
   const filters = filterParts.join(",") || undefined;
 
@@ -240,6 +298,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
 
   return (
     <div className="min-h-screen">
+      <Heading level={1} className="sr-only">Products</Heading>
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -333,43 +392,15 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
         )}
       </div>
 
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
-                label="Status"
-                tabs={STATUS_OPTIONS}
-                value={pendingFilters.status ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-              />
-              <FilterChipGroup
-                label="Type"
-                tabs={TYPE_OPTIONS}
-                value={pendingFilters.type ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
-              />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <ProductsFilterDrawer
+        filterOpen={filterOpen}
+        setFilterOpen={setFilterOpen}
+        activeFilterCount={activeFilterCount}
+        clearFilters={clearFilters}
+        pendingFilters={pendingFilters}
+        setPendingFilters={setPendingFilters}
+        applyFilters={applyFilters}
+      />
 
       <SideDrawer
         isOpen={isCreateOpen || isEditOpen}

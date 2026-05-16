@@ -1,5 +1,5 @@
 import React from "react";
-import { Span, Text } from "../../../ui";
+import { Heading, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {
@@ -81,9 +81,9 @@ export function BidHistory({
   return (
     <div className={className} data-section="bidhistory-div-421">
       {labels.title && (
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <Heading level={3} className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           {labels.title}
-        </h3>
+        </Heading>
       )}
       <div className="space-y-2">
         {bids.map((bid, i) =>

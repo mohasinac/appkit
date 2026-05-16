@@ -65,6 +65,109 @@ function toDateInputValue(val: Date | string | undefined): string {
   }
 }
 
+// --- Sub-components ----------------------------------------------------------
+
+interface CouponDiscountFieldsProps {
+  type: CouponType;
+  discountValue: string;
+  setDiscountValue: (v: string) => void;
+  maxDiscount: string;
+  setMaxDiscount: (v: string) => void;
+  minPurchase: string;
+  setMinPurchase: (v: string) => void;
+  buyQty: string;
+  setBuyQty: (v: string) => void;
+  getQty: string;
+  setGetQty: (v: string) => void;
+  discountLabel: string;
+}
+
+function CouponDiscountFields({
+  type, discountValue, setDiscountValue, maxDiscount, setMaxDiscount,
+  minPurchase, setMinPurchase, buyQty, setBuyQty, getQty, setGetQty, discountLabel,
+}: CouponDiscountFieldsProps) {
+  return (
+    <>
+      {type !== "free_shipping" && type !== "buy_x_get_y" && (
+        <Input
+          label={discountLabel}
+          value={discountValue}
+          onChange={(e) => setDiscountValue(e.target.value)}
+          type="number"
+          min={0}
+          required
+          placeholder={type === "percentage" ? "e.g. 20" : "e.g. 5000"}
+        />
+      )}
+      {type === "percentage" && (
+        <Input
+          label="Max discount cap (paise, optional)"
+          value={maxDiscount}
+          onChange={(e) => setMaxDiscount(e.target.value)}
+          type="number"
+          min={0}
+          placeholder="e.g. 20000"
+          helperText="Leave blank for no cap."
+        />
+      )}
+      {(type === "percentage" || type === "fixed") && (
+        <Input
+          label="Min order value (paise, optional)"
+          value={minPurchase}
+          onChange={(e) => setMinPurchase(e.target.value)}
+          type="number"
+          min={0}
+          placeholder="e.g. 50000"
+          helperText="Leave blank for no minimum."
+        />
+      )}
+      {type === "buy_x_get_y" && (
+        <div className="grid grid-cols-2 gap-4">
+          <Input label="Buy quantity" value={buyQty} onChange={(e) => setBuyQty(e.target.value)} type="number" min={1} required />
+          <Input label="Get quantity" value={getQty} onChange={(e) => setGetQty(e.target.value)} type="number" min={1} required />
+        </div>
+      )}
+    </>
+  );
+}
+
+interface CouponValidityFieldsProps {
+  startDate: string;
+  setStartDate: (v: string) => void;
+  endDate: string;
+  setEndDate: (v: string) => void;
+  isActive: boolean;
+  setIsActive: (v: boolean) => void;
+  totalLimit: string;
+  setTotalLimit: (v: string) => void;
+  perUserLimit: string;
+  setPerUserLimit: (v: string) => void;
+  isEdit: boolean;
+  currentUsage: number;
+}
+
+function CouponValidityFields({
+  startDate, setStartDate, endDate, setEndDate, isActive, setIsActive,
+  totalLimit, setTotalLimit, perUserLimit, setPerUserLimit, isEdit, currentUsage,
+}: CouponValidityFieldsProps) {
+  return (
+    <>
+      <div className="grid grid-cols-2 gap-4">
+        <Input label="Total usage limit (optional)" value={totalLimit} onChange={(e) => setTotalLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
+        <Input label="Per-user limit (optional)" value={perUserLimit} onChange={(e) => setPerUserLimit(e.target.value)} type="number" min={0} placeholder="Unlimited" />
+      </div>
+      {isEdit && (
+        <Input label="Current usage" value={String(currentUsage)} disabled helperText="Read-only — updated by orders." />
+      )}
+      <div className="grid grid-cols-2 gap-4">
+        <Input label="Start date" value={startDate} onChange={(e) => setStartDate(e.target.value)} type="date" required />
+        <Input label="End date (optional)" value={endDate} onChange={(e) => setEndDate(e.target.value)} type="date" helperText="Leave blank for no expiry." />
+      </div>
+      <Toggle label="Active" checked={isActive} onChange={setIsActive} />
+    </>
+  );
+}
+
 // --- Component ---------------------------------------------------------------
 
 export function AdminCouponEditorView({
@@ -284,111 +387,36 @@ export function AdminCouponEditorView({
           />
 
           {/* Discount config — conditional on type */}
-          {type !== "free_shipping" && type !== "buy_x_get_y" && (
-            <Input
-              label={discountLabel}
-              value={discountValue}
-              onChange={(e) => setDiscountValue(e.target.value)}
-              type="number"
-              min={0}
-              required
-              placeholder={type === "percentage" ? "e.g. 20" : "e.g. 5000"}
-            />
-          )}
+          <CouponDiscountFields
+            type={type}
+            discountValue={discountValue}
+            setDiscountValue={setDiscountValue}
+            maxDiscount={maxDiscount}
+            setMaxDiscount={setMaxDiscount}
+            minPurchase={minPurchase}
+            setMinPurchase={setMinPurchase}
+            buyQty={buyQty}
+            setBuyQty={setBuyQty}
+            getQty={getQty}
+            setGetQty={setGetQty}
+            discountLabel={discountLabel}
+          />
 
-          {type === "percentage" && (
-            <Input
-              label="Max discount cap (paise, optional)"
-              value={maxDiscount}
-              onChange={(e) => setMaxDiscount(e.target.value)}
-              type="number"
-              min={0}
-              placeholder="e.g. 20000"
-              helperText="Leave blank for no cap."
-            />
-          )}
-
-          {(type === "percentage" || type === "fixed") && (
-            <Input
-              label="Min order value (paise, optional)"
-              value={minPurchase}
-              onChange={(e) => setMinPurchase(e.target.value)}
-              type="number"
-              min={0}
-              placeholder="e.g. 50000"
-              helperText="Leave blank for no minimum."
-            />
-          )}
-
-          {type === "buy_x_get_y" && (
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Buy quantity"
-                value={buyQty}
-                onChange={(e) => setBuyQty(e.target.value)}
-                type="number"
-                min={1}
-                required
-              />
-              <Input
-                label="Get quantity"
-                value={getQty}
-                onChange={(e) => setGetQty(e.target.value)}
-                type="number"
-                min={1}
-                required
-              />
-            </div>
-          )}
-
-          {/* Usage limits */}
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Total usage limit (optional)"
-              value={totalLimit}
-              onChange={(e) => setTotalLimit(e.target.value)}
-              type="number"
-              min={0}
-              placeholder="Unlimited"
-            />
-            <Input
-              label="Per-user limit (optional)"
-              value={perUserLimit}
-              onChange={(e) => setPerUserLimit(e.target.value)}
-              type="number"
-              min={0}
-              placeholder="Unlimited"
-            />
-          </div>
-
-          {isEdit && (
-            <Input
-              label="Current usage"
-              value={String(currentUsage)}
-              disabled
-              helperText="Read-only — updated by orders."
-            />
-          )}
-
-          {/* Validity */}
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Start date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              type="date"
-              required
-            />
-            <Input
-              label="End date (optional)"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              type="date"
-              helperText="Leave blank for no expiry."
-            />
-          </div>
-
-          <Toggle label="Active" checked={isActive} onChange={setIsActive} />
+          {/* Usage limits + Validity */}
+          <CouponValidityFields
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            isActive={isActive}
+            setIsActive={setIsActive}
+            totalLimit={totalLimit}
+            setTotalLimit={setTotalLimit}
+            perUserLimit={perUserLimit}
+            setPerUserLimit={setPerUserLimit}
+            isEdit={isEdit}
+            currentUsage={currentUsage}
+          />
 
           {/* Restrictions */}
           <Toggle

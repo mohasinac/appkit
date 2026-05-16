@@ -53,6 +53,60 @@ interface ReviewRow {
   _raw?: Record<string, unknown>;
 }
 
+interface ReviewsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function ReviewsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: ReviewsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={STATUS_OPTIONS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+          <FilterChipGroup
+            label="Rating"
+            tabs={RATING_OPTIONS}
+            value={pendingFilters.rating ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, rating: id }))}
+          />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export function AdminReviewsView({ renderDetailView, children, ...props }: AdminReviewsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
@@ -159,6 +213,28 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
     },
   });
 
+  const handleViewReview = useCallback((rr: ReviewRow) => {
+    const raw = rr._raw ?? {};
+    const rating = Math.min(5, Math.max(1, Number(raw.rating ?? 1))) as 1 | 2 | 3 | 4 | 5;
+    setViewReview({
+      id: rr.id,
+      productId: toStringValue(raw.productId, ""),
+      userId: toStringValue(raw.buyerId ?? raw.userId, ""),
+      status: (toStringValue(raw.status, "pending") as ReviewStatus),
+      rating,
+      title: toStringValue(raw.title, ""),
+      comment: toStringValue(raw.body ?? raw.comment, ""),
+      userName: toStringValue(raw.userName ?? raw.sellerName, "Unknown"),
+      userAvatar: toStringValue(raw.userAvatar, "") || undefined,
+      verified: Boolean(raw.isVerifiedPurchase),
+      images: Array.isArray(raw.images)
+        ? (raw.images as Array<{ url: string; thumbnailUrl?: string }>)
+        : [],
+      helpfulCount: Number(raw.helpfulCount ?? 0),
+      createdAt: toStringValue(raw.createdAt ?? raw.publishedAt, "") || undefined,
+    });
+  }, []);
+
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
@@ -190,6 +266,15 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
         onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+        />
+
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "approve", label: "Approve Selected", variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: "reject", label: "Reject Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
         />
 
         {totalPages > 1 && (
@@ -225,27 +310,7 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
                     },
                     {
                       label: "View",
-                      onClick: () => {
-                        const raw = rr._raw ?? {};
-                        const rating = Math.min(5, Math.max(1, Number(raw.rating ?? 1))) as 1 | 2 | 3 | 4 | 5;
-                        setViewReview({
-                          id: rr.id,
-                          productId: toStringValue(raw.productId, ""),
-                          userId: toStringValue(raw.buyerId ?? raw.userId, ""),
-                          status: (toStringValue(raw.status, "pending") as ReviewStatus),
-                          rating,
-                          title: toStringValue(raw.title, ""),
-                          comment: toStringValue(raw.body ?? raw.comment, ""),
-                          userName: toStringValue(raw.userName ?? raw.sellerName, "Unknown"),
-                          userAvatar: toStringValue(raw.userAvatar, "") || undefined,
-                          verified: Boolean(raw.isVerifiedPurchase),
-                          images: Array.isArray(raw.images)
-                            ? (raw.images as Array<{ url: string; thumbnailUrl?: string }>)
-                            : [],
-                          helpfulCount: Number(raw.helpfulCount ?? 0),
-                          createdAt: toStringValue(raw.createdAt ?? raw.publishedAt, "") || undefined,
-                        });
-                      },
+                      onClick: () => handleViewReview(rr),
                     },
                   ]}
                 />
@@ -254,43 +319,15 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
           />
         </div>
 
-        {filterOpen && (
-          <>
-            <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-            <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-                <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                  )}
-                  <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <FilterChipGroup
-                  label="Status"
-                  tabs={STATUS_OPTIONS}
-                  value={pendingFilters.status ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-                />
-                <FilterChipGroup
-                  label="Rating"
-                  tabs={RATING_OPTIONS}
-                  value={pendingFilters.rating ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, rating: id }))}
-                />
-              </div>
-              <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <ReviewsFilterDrawer
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          activeFilterCount={activeFilterCount}
+          clearFilters={clearFilters}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          applyFilters={applyFilters}
+        />
       </div>
 
       <ViewReviewModal

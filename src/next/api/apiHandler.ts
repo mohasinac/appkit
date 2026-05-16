@@ -41,6 +41,50 @@ export interface ApiHandlerOptions<
   }) => Promise<Response>;
 }
 
+async function validateSchema<TInput>(
+  request: Request,
+  schema: SafeParseSchema<TInput>,
+): Promise<{ validationError: false; data: TInput } | { validationError: true; issues: unknown[] | undefined }> {
+  if (typeof (schema as { safeParse?: unknown }).safeParse === "function") {
+    const body = await request.json();
+    const result = schema.safeParse(body);
+    if (!result.success) {
+      return { validationError: true, issues: result.error.issues };
+    }
+    return { validationError: false, data: result.data };
+  }
+  try {
+    const data = (await request.json()) as TInput;
+    return { validationError: false, data };
+  } catch {
+    return { validationError: false, data: undefined as unknown as TInput };
+  }
+}
+
+function buildRateLimitHeaders(result: ApiRateLimitResult): Record<string, string> {
+  return {
+    "RateLimit-Limit": String(result.limit),
+    "RateLimit-Remaining": String(result.remaining),
+    "RateLimit-Reset": String(result.reset),
+  };
+}
+
+function buildRateLimitExceededResponse(
+  message: string,
+  headers: Record<string, string>,
+): Response {
+  return new Response(
+    JSON.stringify({ success: false, error: message }),
+    { status: 429, headers: { "Content-Type": "application/json", ...headers } },
+  );
+}
+
+function applyRateLimitHeaders(response: Response, headers: Record<string, string>): void {
+  for (const [key, value] of Object.entries(headers)) {
+    response.headers.set(key, value);
+  }
+}
+
 function buildPublicCacheControl(policy?: {
   maxAge?: number;
   sMaxAge?: number;
@@ -78,6 +122,32 @@ export interface ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser> {
   }) => void;
 }
 
+async function applyRateLimitCheck<TRateLimitConfig>(
+  request: Request,
+  config: TRateLimitConfig,
+  applyRateLimit: (request: Request, config: TRateLimitConfig) => Promise<ApiRateLimitResult>,
+  getRateLimitExceededMessage: () => string,
+): Promise<{ blocked: true; response: Response } | { blocked: false; headers: Record<string, string> }> {
+  const result = await applyRateLimit(request, config);
+  const headers = buildRateLimitHeaders(result);
+  if (!result.success) {
+    return { blocked: true, response: buildRateLimitExceededResponse(getRateLimitExceededMessage(), headers) };
+  }
+  return { blocked: false, headers };
+}
+
+async function applySchemaValidation<TInput>(
+  request: Request,
+  schema: SafeParseSchema<TInput>,
+  errorResponse: (message: string, status: number, issues?: unknown) => Response,
+): Promise<{ invalid: true; response: Response } | { invalid: false; data: TInput }> {
+  const schemaResult = await validateSchema<TInput>(request, schema);
+  if (schemaResult.validationError) {
+    return { invalid: true, response: errorResponse("Validation failed", 400, schemaResult.issues) };
+  }
+  return { invalid: false, data: schemaResult.data };
+}
+
 export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
   deps: ApiHandlerFactoryDeps<TRole, TRateLimitConfig, TUser>,
 ) {
@@ -101,32 +171,14 @@ export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
       try {
         let rateLimitHeaders: Record<string, string> | undefined;
         if (options.rateLimit) {
-          const rateLimitResult = await deps.applyRateLimit(
+          const rlCheck = await applyRateLimitCheck(
             request,
             options.rateLimit,
+            deps.applyRateLimit,
+            deps.getRateLimitExceededMessage,
           );
-
-          rateLimitHeaders = {
-            "RateLimit-Limit": String(rateLimitResult.limit),
-            "RateLimit-Remaining": String(rateLimitResult.remaining),
-            "RateLimit-Reset": String(rateLimitResult.reset),
-          };
-
-          if (!rateLimitResult.success) {
-            return new Response(
-              JSON.stringify({
-                success: false,
-                error: deps.getRateLimitExceededMessage(),
-              }),
-              {
-                status: 429,
-                headers: {
-                  "Content-Type": "application/json",
-                  ...rateLimitHeaders,
-                },
-              },
-            );
-          }
+          if (rlCheck.blocked) return rlCheck.response;
+          rateLimitHeaders = rlCheck.headers;
         }
 
         let user: TUser | undefined;
@@ -138,24 +190,9 @@ export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
 
         let validatedBody: TInput | undefined;
         if (options.schema) {
-          if (typeof (options.schema as { safeParse?: unknown }).safeParse === "function") {
-            const body = await request.json();
-            const result = options.schema.safeParse(body);
-            if (!result.success) {
-              return deps.errorResponse(
-                "Validation failed",
-                400,
-                result.error.issues,
-              );
-            }
-            validatedBody = result.data;
-          } else {
-            try {
-              validatedBody = (await request.json()) as TInput;
-            } catch {
-              validatedBody = undefined;
-            }
-          }
+          const schemaCheck = await applySchemaValidation<TInput>(request, options.schema, deps.errorResponse);
+          if (schemaCheck.invalid) return schemaCheck.response;
+          validatedBody = schemaCheck.data;
         }
 
         const resolvedParams = (context as { params?: Promise<TParams> })?.params
@@ -172,9 +209,7 @@ export function createApiHandlerFactory<TRole, TRateLimitConfig, TUser>(
         response.headers.set("Access-Control-Max-Age", "86400");
 
         if (rateLimitHeaders) {
-          for (const [key, value] of Object.entries(rateLimitHeaders)) {
-            response.headers.set(key, value);
-          }
+          applyRateLimitHeaders(response, rateLimitHeaders);
         }
 
         const hasCredentialHeaders =

@@ -18,6 +18,21 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+function validateThirdPartyUrl(url: string, issues: string[]): void {
+  if (!url.trim()) {
+    issues.push("Third-party ads require a third-party URL");
+    return;
+  }
+  try {
+    const parsed = new URL(url.trim());
+    if (parsed.protocol !== "https:") {
+      issues.push("Third-party ad URL must be https");
+    }
+  } catch {
+    issues.push("Third-party ad URL must be a valid URL");
+  }
+}
+
 export interface AdminAdEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   adId?: string;
   endpointBase?: string;
@@ -67,6 +82,63 @@ interface AdsListResponse {
     hasThirdPartyScriptUrl: boolean;
     issues: string[];
   };
+}
+
+interface AdScheduleSectionProps {
+  startAt: string; setStartAt: (v: string) => void;
+  endAt: string; setEndAt: (v: string) => void;
+}
+
+function renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt }: AdScheduleSectionProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-238">
+      <Input
+        label="Start at (ISO)"
+        value={startAt}
+        onChange={(event) => setStartAt(event.target.value)}
+        placeholder="2026-05-01T00:00:00.000Z"
+      />
+      <Input
+        label="End at (ISO)"
+        value={endAt}
+        onChange={(event) => setEndAt(event.target.value)}
+        placeholder="2026-05-30T23:59:59.000Z"
+      />
+    </div>
+  );
+}
+
+interface AdCreativeSectionProps {
+  title: string; setTitle: (v: string) => void;
+  body: string; setBody: (v: string) => void;
+  imageUrl: string; setImageUrl: (v: string) => void;
+  ctaLabel: string; setCtaLabel: (v: string) => void;
+  ctaHref: string; setCtaHref: (v: string) => void;
+  adsenseSlot: string; setAdsenseSlot: (v: string) => void;
+  thirdPartyUrl: string; setThirdPartyUrl: (v: string) => void;
+  provider: "manual" | "adsense" | "thirdParty";
+}
+
+function renderAdCreativeSection({
+  title, setTitle, body, setBody, imageUrl, setImageUrl,
+  ctaLabel, setCtaLabel, ctaHref, setCtaHref,
+  adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
+}: AdCreativeSectionProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-239">
+      <Input label="Creative title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Catch the mega sale" />
+      <Input label="Creative body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Up to 40% off this weekend" />
+      <Input label="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://..." />
+      <Input label="CTA label" value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} placeholder="Shop now" />
+      <Input label="CTA URL" value={ctaHref} onChange={(e) => setCtaHref(e.target.value)} placeholder="/promotions/deals" />
+      {provider === "adsense" ? (
+        <Input label="AdSense slot" value={adsenseSlot} onChange={(e) => setAdsenseSlot(e.target.value)} placeholder="1234567890" />
+      ) : null}
+      {provider === "thirdParty" ? (
+        <Input label="Third-party URL" value={thirdPartyUrl} onChange={(e) => setThirdPartyUrl(e.target.value)} placeholder="https://adnetwork.example/slot" />
+      ) : null}
+    </div>
+  );
 }
 
 export function AdminAdEditorView({
@@ -248,18 +320,7 @@ export function AdminAdEditorView({
     }
 
     if (provider === "thirdParty") {
-      if (!thirdPartyUrl.trim()) {
-        issues.push("Third-party ads require a third-party URL");
-      } else {
-        try {
-          const parsed = new URL(thirdPartyUrl.trim());
-          if (parsed.protocol !== "https:") {
-            issues.push("Third-party ad URL must be https");
-          }
-        } catch {
-          issues.push("Third-party ad URL must be a valid URL");
-        }
-      }
+      validateThirdPartyUrl(thirdPartyUrl, issues);
       if (!providerCredentialStatus?.hasThirdPartyScriptUrl) {
         issues.push("Third-party provider script URL is missing in ad settings");
       }
@@ -294,6 +355,13 @@ export function AdminAdEditorView({
         : [...prev, placementId],
     );
   };
+
+  const scheduleSection = renderAdScheduleSection({ startAt, setStartAt, endAt, setEndAt });
+  const creativeSection = renderAdCreativeSection({
+    title, setTitle, body, setBody, imageUrl, setImageUrl,
+    ctaLabel, setCtaLabel, ctaHref, setCtaHref,
+    adsenseSlot, setAdsenseSlot, thirdPartyUrl, setThirdPartyUrl, provider,
+  });
 
   return (
     <StackedViewShell
@@ -383,69 +451,8 @@ export function AdminAdEditorView({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-238">
-            <Input
-              label="Start at (ISO)"
-              value={startAt}
-              onChange={(event) => setStartAt(event.target.value)}
-              placeholder="2026-05-01T00:00:00.000Z"
-            />
-            <Input
-              label="End at (ISO)"
-              value={endAt}
-              onChange={(event) => setEndAt(event.target.value)}
-              placeholder="2026-05-30T23:59:59.000Z"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadeditorview-div-239">
-            <Input
-              label="Creative title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              placeholder="Catch the mega sale"
-            />
-            <Input
-              label="Creative body"
-              value={body}
-              onChange={(event) => setBody(event.target.value)}
-              placeholder="Up to 40% off this weekend"
-            />
-            <Input
-              label="Image URL"
-              value={imageUrl}
-              onChange={(event) => setImageUrl(event.target.value)}
-              placeholder="https://..."
-            />
-            <Input
-              label="CTA label"
-              value={ctaLabel}
-              onChange={(event) => setCtaLabel(event.target.value)}
-              placeholder="Shop now"
-            />
-            <Input
-              label="CTA URL"
-              value={ctaHref}
-              onChange={(event) => setCtaHref(event.target.value)}
-              placeholder="/promotions/deals"
-            />
-            {provider === "adsense" ? (
-              <Input
-                label="AdSense slot"
-                value={adsenseSlot}
-                onChange={(event) => setAdsenseSlot(event.target.value)}
-                placeholder="1234567890"
-              />
-            ) : null}
-            {provider === "thirdParty" ? (
-              <Input
-                label="Third-party URL"
-                value={thirdPartyUrl}
-                onChange={(event) => setThirdPartyUrl(event.target.value)}
-                placeholder="https://adnetwork.example/slot"
-              />
-            ) : null}
-          </div>
+          {scheduleSection}
+          {creativeSection}
 
           <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3" data-section="adminadeditorview-div-240">
             <Text className="text-sm font-medium mb-1">Preview</Text>

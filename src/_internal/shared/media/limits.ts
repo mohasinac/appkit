@@ -104,6 +104,8 @@ export const PDF_MAGIC = "%PDF-";
 // Known-but-rejected video formats. Mapping returns a user-actionable
 // conversion hint so the upload error can say "convert your .avi to .mp4"
 // rather than the generic "invalid type" response.
+const HINT_HEVC = "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback";
+
 export const VIDEO_CONVERSION_HINTS: Record<string, string> = {
   "video/x-msvideo": "AVI is not supported — please convert to MP4 or WebM",
   "video/avi": "AVI is not supported — please convert to MP4 or WebM",
@@ -114,9 +116,9 @@ export const VIDEO_CONVERSION_HINTS: Record<string, string> = {
   // SB-UNI-Z4 2026-05-13 — HEVC / H.265 + HEIC/HEIF preview hint. The bytes
   // upload fine via the signed-URL flow; the issue is in-browser preview —
   // most browsers can't decode HEVC inline without an OS codec license.
-  "video/hevc": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
-  "video/x-hevc": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
-  "video/H265": "HEVC (H.265) video is accepted but doesn't preview in most browsers — please convert to MP4 (H.264) or WebM for in-browser playback",
+  "video/hevc": HINT_HEVC,
+  "video/x-hevc": HINT_HEVC,
+  "video/H265": HINT_HEVC,
   "image/heic": "HEIC image is accepted but doesn't preview in most browsers — please convert to JPEG or WebP for inline preview",
   "image/heif": "HEIF image is accepted but doesn't preview in most browsers — please convert to JPEG or WebP for inline preview",
 };

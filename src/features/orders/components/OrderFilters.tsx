@@ -36,12 +36,16 @@ export const ORDER_FILTER_KEYS = {
   ],
 } as const;
 
+const LABEL_AMOUNT_HIGH_TO_LOW = "Amount: High to Low";
+const LABEL_AMOUNT_LOW_TO_HIGH = "Amount: Low to High";
+const LABEL_ORDER_DATE_NEWEST = "Order Date: Newest";
+
 export const ORDER_ADMIN_SORT_OPTIONS = [
   { value: sortBy(ORDER_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(ORDER_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: "Amount: High to Low" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: "Amount: Low to High" },
-  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: "Order Date: Newest" },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: LABEL_AMOUNT_HIGH_TO_LOW },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: LABEL_AMOUNT_LOW_TO_HIGH },
+  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: LABEL_ORDER_DATE_NEWEST },
   { value: sortBy(ORDER_FIELDS.ORDER_DATE, "ASC"), label: "Order Date: Oldest" },
   { value: sortBy(ORDER_FIELDS.USER_NAME, "ASC"), label: "Customer A–Z" },
   { value: sortBy(ORDER_FIELDS.PRODUCT_TITLE, "ASC"), label: "Product A–Z" },
@@ -50,18 +54,18 @@ export const ORDER_ADMIN_SORT_OPTIONS = [
 export const ORDER_SELLER_SORT_OPTIONS = [
   { value: sortBy(ORDER_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(ORDER_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: "Amount: High to Low" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: "Amount: Low to High" },
-  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: "Order Date: Newest" },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: LABEL_AMOUNT_HIGH_TO_LOW },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: LABEL_AMOUNT_LOW_TO_HIGH },
+  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: LABEL_ORDER_DATE_NEWEST },
   { value: sortBy(ORDER_FIELDS.USER_NAME, "ASC"), label: "Customer A–Z" },
 ] as const;
 
 export const ORDER_USER_SORT_OPTIONS = [
   { value: sortBy(ORDER_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(ORDER_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: "Amount: High to Low" },
-  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: "Amount: Low to High" },
-  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: "Order Date: Newest" },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE), label: LABEL_AMOUNT_HIGH_TO_LOW },
+  { value: sortBy(ORDER_FIELDS.TOTAL_PRICE, "ASC"), label: LABEL_AMOUNT_LOW_TO_HIGH },
+  { value: sortBy(ORDER_FIELDS.ORDER_DATE), label: LABEL_ORDER_DATE_NEWEST },
   { value: sortBy(ORDER_FIELDS.ORDER_DATE, "ASC"), label: "Order Date: Oldest" },
 ] as const;
 

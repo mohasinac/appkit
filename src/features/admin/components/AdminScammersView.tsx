@@ -4,11 +4,7 @@ import React, { useState, useCallback } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, FilterChipGroup,
-  ListingToolbar,
-  ListingViewShell,
-  Pagination,
-  RowActionMenu, } from "../../../ui";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_SCAMMER_STATUS_TABS } from "../constants/filter-tabs";
@@ -48,6 +44,92 @@ interface ScammerRow {
 }
 
 export interface AdminScammersViewProps extends ListingViewShellProps {}
+
+interface ScammersFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function ScammersFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: ScammersFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={ADMIN_SCAMMER_STATUS_TABS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function buildScammerColumns(
+  setSelectedRow: (row: ScammerRow) => void,
+  setDrawerOpen: (v: boolean) => void,
+) {
+  return [
+    {
+      key: "primary",
+      header: "Name / Aliases",
+      render: (row: ScammerRow) => (
+        <div className="space-y-0.5">
+          <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          {row.secondary ? (
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
+          ) : null}
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      className: "w-36",
+      render: (row: ScammerRow) => (
+        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review}`}>
+          {row.status.replace(/_/g, " ")}
+        </span>
+      ),
+    },
+    {
+      key: "updatedAt",
+      header: "Updated",
+      className: "w-32",
+      render: (row: ScammerRow) => (
+        <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
+      ),
+    },
+  ] as const;
+}
 
 const STATUS_BADGE: Record<string, string> = {
   pending_review: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
@@ -209,105 +291,19 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
                 ]}
               />
             )}
-            columns={[
-              {
-                key: "primary",
-                header: "Name / Aliases",
-                render: (row) => {
-                  const r = row as ScammerRow;
-                  return (
-                    <div className="space-y-0.5">
-                      <p className="font-medium text-zinc-900 dark:text-zinc-100">{r.primary}</p>
-                      {r.secondary ? (
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">{r.secondary}</p>
-                      ) : null}
-                    </div>
-                  );
-                },
-              },
-              {
-                key: "status",
-                header: "Status",
-                className: "w-36",
-                render: (row) => {
-                  const r = row as ScammerRow;
-                  return (
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                        STATUS_BADGE[r.status] ?? STATUS_BADGE.pending_review
-                      }`}
-                    >
-                      {r.status.replace(/_/g, " ")}
-                    </span>
-                  );
-                },
-              },
-              {
-                key: "updatedAt",
-                header: "Updated",
-                className: "w-32",
-                render: (row) => (
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {(row as ScammerRow).updatedAt}
-                  </span>
-                ),
-              },
-            ]}
+            columns={buildScammerColumns(setSelectedRow, setDrawerOpen) as any}
           />
         </div>
 
-        {filterOpen && (
-          <>
-            <div
-              className="fixed inset-0 z-40 bg-black/40"
-              aria-hidden="true"
-              onClick={() => setFilterOpen(false)}
-            />
-            <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                  Filters
-                </span>
-                <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors"
-                    >
-                      Clear all
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setFilterOpen(false)}
-                    aria-label="Close"
-                    className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors"
-                  >
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <FilterChipGroup
-                  label="Status"
-                  tabs={ADMIN_SCAMMER_STATUS_TABS}
-                  value={pendingFilters.status ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-                />
-              </div>
-              <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <button
-                  type="button"
-                  onClick={applyFilters}
-                  className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
-                >
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <ScammersFilterDrawer
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          activeFilterCount={activeFilterCount}
+          clearFilters={clearFilters}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          applyFilters={applyFilters}
+        />
       </div>
 
       <AdminScammerEditorView

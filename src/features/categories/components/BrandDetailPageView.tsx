@@ -5,7 +5,7 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Main, Section } from "../../../ui";
+import { Container, Heading, Main, Section, Text } from "../../../ui";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
@@ -103,7 +103,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
   return (
     <Main>
       {/* ── Brand Hero ──────────────────────────────────────────────────── */}
-      <section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
+      <Section className={`relative overflow-hidden ${hasCover ? "min-h-[220px] md:min-h-[280px]" : "bg-zinc-50 dark:bg-zinc-900"}`}>
         {hasCover && (
           <>
             <div
@@ -149,16 +149,16 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 {brand.display.icon}
               </span>
             )}
-            <div>
-              <h1 className={`text-3xl md:text-4xl font-bold ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
+            <>
+              <Heading level={1} className={`text-3xl md:text-4xl font-bold ${hasCover ? "text-white" : "text-zinc-900 dark:text-zinc-50"}`}>
                 {brand?.name ?? slug}
-              </h1>
+              </Heading>
               {brand?.description && typeof brand.description === "string" && !brand.description.startsWith("{") && (
-                <p className={`text-base max-w-2xl mt-1 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
+                <Text className={`text-base max-w-2xl mt-1 ${hasCover ? "text-white/80" : "text-zinc-600 dark:text-zinc-400"}`}>
                   {brand.description}
-                </p>
+                </Text>
               )}
-            </div>
+            </>
           </div>
 
           {/* Item count chips */}
@@ -191,7 +191,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
             )}
           </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}
       <Section className="py-6">
@@ -204,9 +204,9 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               counts={counts}
             />
           ) : (
-            <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+            <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
               Brand not found.
-            </p>
+            </Text>
           )}
         </Container>
       </Section>

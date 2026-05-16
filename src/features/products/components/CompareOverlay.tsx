@@ -16,6 +16,8 @@
  * `GET /api/products?ids=<csv>` (BK3 listByIds endpoint).
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+const REL_NOOPENER = "noopener noreferrer";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Div, Heading, Row, Stack, Text } from "../../../ui";
@@ -162,7 +164,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
         <Link
           href={href}
           target="_blank"
-          rel="noopener noreferrer"
+          rel={REL_NOOPENER}
           className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 hover:underline line-clamp-2"
         >
           {item.title ?? item.id}
@@ -180,7 +182,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </Row>
 
       <FieldRow label={labels.field.image}>
-        <Link href={href} target="_blank" rel="noopener noreferrer">
+        <Link href={href} target="_blank" rel={REL_NOOPENER}>
           <Div className="relative aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
             {img ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -225,7 +227,7 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
       </FieldRow>
 
       <Button asChild variant="primary" size="sm" className="mt-auto">
-        <Link href={href} target="_blank" rel="noopener noreferrer" onClick={onClose}>
+        <Link href={href} target="_blank" rel={REL_NOOPENER} onClick={onClose}>
           {labels.view}
         </Link>
       </Button>

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Button, Div, Heading, Row, Span } from "../../../ui";
 import type { Banner } from "../types";
 
+const FONT_BANGERS = "var(--font-bangers, Bangers, cursive)";
+
 export interface HeroBannerProps {
   banners: Banner[];
   /** Milliseconds between automatic slide advances. Default: 5000. */
@@ -105,7 +107,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               style={{
                 background: "var(--color-red)",
                 color: "#FFFFFF",
-                fontFamily: "var(--font-bangers, Bangers, cursive)",
+                fontFamily: FONT_BANGERS,
                 letterSpacing: "0.16em",
               }}
             >
@@ -118,7 +120,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
           level={2}
           className="mb-5 max-w-xl leading-none"
           style={{
-            fontFamily: "var(--font-bangers, Bangers, cursive)",
+            fontFamily: FONT_BANGERS,
             fontSize: "clamp(3rem, 9vw, 6.5rem)",
             letterSpacing: "0.04em",
             color: banner.textColor ?? "#FFFFFF",
@@ -134,7 +136,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
               href={banner.ctaUrl}
               className="inline-flex items-center gap-2 sm:gap-3 px-5 py-3 sm:px-8 sm:py-3.5 font-black uppercase transition-all hover:-translate-y-0.5"
               style={{
-                fontFamily: "var(--font-bangers, Bangers, cursive)",
+                fontFamily: FONT_BANGERS,
                 letterSpacing: "0.1em",
                 fontSize: "clamp(0.85rem, 2.5vw, 1.1rem)",
                 background: "var(--color-yellow)",
@@ -232,7 +234,7 @@ export function HeroBanner({ banners, autoplayMs = 5000 }: HeroBannerProps) {
             className="text-xs font-black tabular-nums"
             style={{
               color: "rgba(255,255,255,0.6)",
-              fontFamily: "var(--font-bangers, Bangers, cursive)",
+              fontFamily: FONT_BANGERS,
               letterSpacing: "0.1em",
             }}
           >

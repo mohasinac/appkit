@@ -25,6 +25,20 @@ export interface HeroCarouselProps {
   push?: (href: string) => void;
 }
 
+function makeButtonClickHandler(
+  href: string,
+  openInNewTab: boolean | undefined,
+  push?: (href: string) => void,
+): () => void {
+  return () => {
+    if (openInNewTab) {
+      window.open(href, "_blank", "noopener,noreferrer");
+    } else {
+      navigate(href, push);
+    }
+  };
+}
+
 function navigate(href: string, push?: (href: string) => void) {
   if (push) {
     push(href);
@@ -222,13 +236,7 @@ function CarouselCardRenderer({
                     key={btn.id ?? i}
                     variant={variant}
                     size="sm"
-                    onClick={() => {
-                      if (btn.openInNewTab) {
-                        window.open(btn.href, "_blank", "noopener,noreferrer");
-                      } else {
-                        navigate(btn.href, push);
-                      }
-                    }}
+                    onClick={makeButtonClickHandler(btn.href, btn.openInNewTab, push)}
                   >
                     {btn.text}
                   </Button>
@@ -242,14 +250,7 @@ function CarouselCardRenderer({
         <Button
           variant="ghost"
           className={`${position.fill} ${flex.center} font-semibold text-white hover:bg-black/20 transition-colors rounded-none p-0`}
-          onClick={() => {
-            const btn = card.buttons![0]!;
-            if (btn.openInNewTab) {
-              window.open(btn.href, "_blank", "noopener,noreferrer");
-            } else {
-              navigate(btn.href, push);
-            }
-          }}
+          onClick={makeButtonClickHandler(card.buttons[0].href, card.buttons[0].openInNewTab, push)}
         >
           <Span className="text-lg md:text-2xl">{card.buttons[0].text}</Span>
         </Button>
@@ -409,14 +410,11 @@ export function HeroCarousel({ initialSlides, push }: HeroCarouselProps = {}) {
                         <Button
                           variant={slide.overlay.button.variant}
                           size="sm"
-                          onClick={() => {
-                            const btn = slide.overlay!.button!;
-                            if (btn.openInNewTab) {
-                              window.open(btn.link, "_blank", "noopener,noreferrer");
-                            } else {
-                              navigate(btn.link, push);
-                            }
-                          }}
+                          onClick={makeButtonClickHandler(
+                            slide.overlay.button.link,
+                            slide.overlay.button.openInNewTab,
+                            push,
+                          )}
                         >
                           {slide.overlay.button.text}
                         </Button>

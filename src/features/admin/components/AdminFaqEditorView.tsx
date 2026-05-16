@@ -2,17 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Form,
-  Input,
-  RichTextEditor,
-  Select,
-  StackedViewShell,
-  TagInput,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -179,9 +169,9 @@ export function AdminFaqEditorView({
           />
 
           <div className="space-y-1">
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Answer
-            </p>
+            </Text>
             <RichTextEditor
               value={answer}
               onChange={setAnswer}
@@ -224,7 +214,7 @@ export function AdminFaqEditorView({
           />
 
           <div className="space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Visibility</p>
+            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Visibility</Text>
             <Toggle label="Active (visible to users)" checked={isActive} onChange={setIsActive} />
             <Toggle label="Pinned (always shown at top)" checked={isPinned} onChange={setIsPinned} />
             <Toggle label="Show on homepage FAQ section" checked={showOnHomepage} onChange={setShowOnHomepage} />

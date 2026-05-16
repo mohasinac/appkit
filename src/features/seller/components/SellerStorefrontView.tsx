@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useState } from "react";
-import { StackedViewShell } from "../../../ui";
+import { Section, StackedViewShell } from "../../../ui";
 import {
   Alert,
   Button,
@@ -111,7 +111,7 @@ export function SellerStorefrontView({
           )}
 
           {/* ── Store Profile ─────────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Store Profile</Heading>
             <Stack gap="md">
               <FormField
@@ -159,10 +159,10 @@ export function SellerStorefrontView({
                 />
               </FormGroup>
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Store Details ─────────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Store Details</Heading>
             <Stack gap="md">
               <FormField
@@ -184,10 +184,10 @@ export function SellerStorefrontView({
                 disabled={busy}
               />
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Policies ─────────────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Policies</Heading>
             <Stack gap="md">
               <FormField
@@ -209,10 +209,10 @@ export function SellerStorefrontView({
                 disabled={busy}
               />
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Contact & Social ──────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Contact &amp; Social</Heading>
             <Stack gap="md">
               <FormGroup columns={2}>
@@ -276,10 +276,10 @@ export function SellerStorefrontView({
                 />
               </FormGroup>
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Vacation Mode ─────────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Vacation Mode</Heading>
             <Stack gap="md">
               <Toggle
@@ -300,10 +300,10 @@ export function SellerStorefrontView({
                 />
               )}
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Visibility ────────────────────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-4">Visibility</Heading>
             <Toggle
               checked={draft.isPublic !== false}
@@ -316,10 +316,10 @@ export function SellerStorefrontView({
                 Your store is hidden. Existing orders are unaffected.
               </Text>
             )}
-          </section>
+          </Section>
 
           {/* ── Google Business Reviews ───────────────────── */}
-          <section>
+          <Section>
             <Heading level={3} className="mb-1">Google Business Reviews</Heading>
             <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-4">
               Display real Google reviews on your store About page. Requires a Google Place ID.
@@ -364,7 +364,7 @@ export function SellerStorefrontView({
                 </>
               )}
             </Stack>
-          </section>
+          </Section>
 
           {/* ── Save Button ───────────────────────────────── */}
           <div className="flex items-center justify-end gap-3 pt-2 border-t border-[var(--appkit-color-border)]">

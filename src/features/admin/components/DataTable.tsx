@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AdminTableColumn } from "../types";
-import { BaseListingCard, Button, Div, Span } from "../../../ui";
+import { BaseListingCard, Button, Div, Span, Text } from "../../../ui";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
 const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
@@ -11,8 +11,8 @@ const DEFAULT_COLUMNS: AdminTableColumn<Record<string, unknown>>[] = [
     header: "Name",
     render: (row) => (
       <div className="space-y-0.5">
-        <p className="font-medium text-zinc-900 dark:text-zinc-100">{String(row.primary ?? "")}</p>
-        {row.secondary ? <p className="text-xs text-zinc-500 dark:text-zinc-400">{String(row.secondary)}</p> : null}
+        <Text className="font-medium text-zinc-900 dark:text-zinc-100">{String(row.primary ?? "")}</Text>
+        {row.secondary ? <Text className="text-xs text-zinc-500 dark:text-zinc-400">{String(row.secondary)}</Text> : null}
       </div>
     ),
   },

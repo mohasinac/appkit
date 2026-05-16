@@ -1,16 +1,10 @@
 "use client";
 
 import React from "react";
+
+const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Form,
-  FormActions,
-  Input,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Form, FormActions, Heading, Input, Section, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { buildPurchaseAnnouncementMessage } from "../helpers/whatsapp";
@@ -193,10 +187,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     return (
       <div className="max-w-xl mx-auto py-8 px-4">
         <Alert variant="warning">
-          <p className="font-medium">WhatsApp catalog sync is not enabled for your store.</p>
-          <p className="text-sm mt-1">
+          <Text className="font-medium">WhatsApp catalog sync is not enabled for your store.</Text>
+          <Text className="text-sm mt-1">
             Contact LetItRip support to request access to the WhatsApp Business integration.
-          </p>
+          </Text>
         </Alert>
       </div>
     );
@@ -206,10 +200,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     <div className="max-w-2xl mx-auto space-y-8 py-6 px-4">
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
-      <section>
-        <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+      <Section>
+        <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
           How to connect your WhatsApp Business account
-        </h2>
+        </Heading>
         <ol className="space-y-3">
           {STEPS.map((step) => {
             const done =
@@ -229,20 +223,20 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                 >
                   {done ? "✓" : step.n}
                 </span>
-                <div>
-                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{step.title}</p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{step.body}</p>
-                </div>
+                <>
+                  <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{step.title}</Text>
+                  <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{step.body}</Text>
+                </>
               </li>
             );
           })}
         </ol>
-      </section>
+      </Section>
 
       {/* ── Section 2: Connection form ──────────────────────────────────── */}
-      <section className="border border-zinc-200 dark:border-zinc-700 rounded-xl p-5">
+      <Section className={CLS_SECTION_CARD}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Connection</h2>
+          <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Connection</Heading>
           {isLoading ? null : cfg?.connected ? (
             <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
               Connected
@@ -295,19 +289,19 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             </Button>
           </FormActions>
         </Form>
-      </section>
+      </Section>
 
       {/* ── Section 3: Catalog sync ─────────────────────────────────────── */}
-      <section className="border border-zinc-200 dark:border-zinc-700 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Catalog Sync</h2>
+      <Section className={CLS_SECTION_CARD}>
+        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Catalog Sync</Heading>
 
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <p className="text-sm text-zinc-700 dark:text-zinc-300">Enable catalog sync</p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <>
+            <Text className="text-sm text-zinc-700 dark:text-zinc-300">Enable catalog sync</Text>
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               When enabled, your published standard products can be synced to WhatsApp.
-            </p>
-          </div>
+            </Text>
+          </>
           <Toggle
             checked={syncEnabled}
             onChange={setSyncEnabled}
@@ -327,10 +321,10 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           </div>
         )}
 
-        <p className="text-xs text-zinc-400 dark:text-zinc-500 mb-3">
+        <Text className="text-xs text-zinc-400 dark:text-zinc-500 mb-3">
           Only published standard products are synced. Auctions and pre-orders are excluded.
           Batches of up to 50 products per call.
-        </p>
+        </Text>
 
         <Button
           onClick={() => syncMutation.mutate()}
@@ -340,16 +334,16 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         >
           {syncMutation.isPending ? "Syncing…" : "Sync Now"}
         </Button>
-      </section>
+      </Section>
 
       {/* ── Section 4: Announcement preview ─────────────────────────────── */}
-      <section className="border border-zinc-200 dark:border-zinc-700 rounded-xl p-5">
-        <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+      <Section className={CLS_SECTION_CARD}>
+        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
           Purchase Announcement Preview
-        </h2>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+        </Heading>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
-        </p>
+        </Text>
         <div className="bg-zinc-50 dark:bg-zinc-800/60 rounded-lg px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
@@ -359,7 +353,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             orderId: "order-3-20260510-a1b2c3",
           })}
         </div>
-      </section>
+      </Section>
 
     </div>
   );

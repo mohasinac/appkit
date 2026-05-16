@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span } from "../../ui";
+import { Div, Span, Text } from "../../ui";
 import {
   cn,
   INPUT_BASE,
@@ -91,11 +91,11 @@ export function Select({
       </Div>
 
       {error && (
-        <p className={ERROR_BASE} role="alert">
+        <Text className={ERROR_BASE} role="alert">
           {error}
-        </p>
+        </Text>
       )}
-      {!error && helperText && <p className={HELPER_BASE}>{helperText}</p>}
+      {!error && helperText && <Text className={HELPER_BASE}>{helperText}</Text>}
     </Div>
   );
 }

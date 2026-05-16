@@ -6,7 +6,7 @@ import { X, Pencil, Trash2 } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Alert, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Badge, Button } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -121,7 +121,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
     header: "Product",
     render: (row) => (
       <div className="space-y-1">
-        <p className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</p>
+        <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
         <div className="flex items-center gap-2">
           <Badge variant={KIND_BADGE_VARIANT[row.listingKind] ?? "default"}>
             {row.listingKind}

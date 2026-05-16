@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useStores } from "../hooks/useStores";
-import { BulkActionBar, Pagination, ListingToolbar } from "../../../ui";
+import { BulkActionBar, ListingToolbar, Pagination, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { ROUTES } from "../../../next";
 import { InteractiveStoreCard } from "./InteractiveStoreCard";
@@ -214,9 +214,9 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
             ))}
           </div>
         ) : stores.length === 0 ? (
-          <p className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No stores found.
-          </p>
+          </Text>
         ) : view === "list" ? (
           <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {stores.map((store) => {

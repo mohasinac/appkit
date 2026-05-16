@@ -5,6 +5,7 @@ import { Button } from "./Button";
 import { Row } from "./Layout";
 import { Heading, Span } from "./Typography";
 import { useSwipe } from "../../react";
+import { Text } from "./Typography";
 
 export type DrawerMode = "create" | "edit" | "delete" | "view";
 
@@ -54,6 +55,24 @@ const FOCUSABLE_SELECTOR =
 function getFocusableElements(container: HTMLElement | null): Element[] {
   if (!container) return [];
   return Array.from(container.querySelectorAll(FOCUSABLE_SELECTOR));
+}
+
+function handleFocusTrap(
+  e: KeyboardEvent,
+  first: HTMLElement,
+  last: HTMLElement,
+): void {
+  if (e.shiftKey) {
+    if (document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    }
+  } else {
+    if (document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
 }
 
 /**
@@ -115,19 +134,7 @@ export function SideDrawer({
           e.preventDefault();
           return;
         }
-        const first = focusable[0] as HTMLElement;
-        const last = focusable[focusable.length - 1] as HTMLElement;
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
+        handleFocusTrap(e, focusable[0] as HTMLElement, focusable[focusable.length - 1] as HTMLElement);
       }
     };
 
@@ -264,9 +271,9 @@ export function SideDrawer({
                 <Heading level={4} className="mb-1">
                   {tConfirm("unsavedChangesTitle")}
                 </Heading>
-                <p className={UI_SIDE_DRAWER.warnText}>
+                <Text className={UI_SIDE_DRAWER.warnText}>
                   {tConfirm("unsavedChangesDescription")}
-                </p>
+                </Text>
               </div>
             </div>
             <div className={UI_SIDE_DRAWER.warnActions} data-section="sidedrawer-div-605">

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
+
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -58,6 +60,297 @@ const PRODUCTION_STATUS_LABELS: Record<string, string> = {
   in_production: "In Production",
   ready_to_ship: "Ready to Ship",
 };
+
+interface PreOrderInfoSectionProps {
+  title: string;
+  productionStatus: string | null;
+  maxPerUser: number | null;
+  deliveryDate: Date | null;
+  featured: boolean;
+  freeShipping: boolean;
+  condition: string | null;
+  isCancellable: boolean;
+  category: string | null;
+  categoryName: string | null;
+  brand: string | null;
+  brandSlug: string | null;
+  productFeatures?: import("../../products/schemas/product-features").ProductFeatureDocument[];
+  features: string[];
+  descriptionHtml: string;
+  safeSeller: string | null;
+  storeHref: string | null;
+}
+
+function PreOrderInfoSection({
+  title,
+  productionStatus,
+  maxPerUser,
+  deliveryDate,
+  featured,
+  freeShipping,
+  condition,
+  isCancellable,
+  category,
+  categoryName,
+  brand,
+  brandSlug,
+  productFeatures,
+  features,
+  descriptionHtml,
+  safeSeller,
+  storeHref,
+}: PreOrderInfoSectionProps) {
+  return (
+    <Stack gap="md">
+      {/* Pre-order badge + production status + title */}
+      <Div>
+        <Row gap="xs" className="mb-2 flex-wrap">
+          <Span className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+            Pre-Order
+          </Span>
+          {productionStatus && (
+            <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300">
+              {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
+            </Span>
+          )}
+          {maxPerUser !== null && (
+            <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-200">
+              Limit: {maxPerUser} per customer
+            </Span>
+          )}
+        </Row>
+        <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
+          {title}
+        </Heading>
+      </Div>
+
+      {deliveryDate && (
+        <Row align="center" gap="xs" className="text-sm text-zinc-600 dark:text-zinc-400">
+          <Span>📅</Span>
+          <Span>Estimated delivery:</Span>
+          <Span className="font-medium">
+            {deliveryDate.toLocaleDateString(undefined, { year: "numeric", month: "long" })}
+          </Span>
+        </Row>
+      )}
+
+      <ProductFeatureBadges
+        featured={featured}
+        freeShipping={freeShipping}
+        condition={condition ?? undefined}
+        returnable={isCancellable}
+        labels={{
+          featured: "Featured",
+          fasterDelivery: "Faster Delivery",
+          ratedSeller: "Rated Seller",
+          condition: "Condition",
+          conditionNew: "New",
+          conditionUsed: "Used",
+          conditionBroken: "For Parts",
+          conditionRefurbished: "Refurbished",
+          returnable: "Cancellable",
+          freeShipping: "Free Shipping",
+          codAvailable: "Cash on Delivery",
+          wishlistCount: (n) => `${n} wishlisted`,
+          categoryProductCount: (n, cat) => `${n} in ${cat}`,
+        }}
+      />
+
+      {(categoryName || category || brand) && (
+        <Row gap="sm" wrap>
+          {category && (
+            <Link
+              href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
+              className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+            >
+              {categoryName || category}
+            </Link>
+          )}
+          {!category && categoryName && (
+            <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              {categoryName}
+            </Span>
+          )}
+          {brand && brandSlug && (
+            <Link
+              href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
+              className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
+            >
+              {brand}
+            </Link>
+          )}
+          {brand && !brandSlug && (
+            <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              {brand}
+            </Span>
+          )}
+        </Row>
+      )}
+
+      {productFeatures && features.length > 0 && (
+        <FeatureBadgeList productFeatureIds={features} features={productFeatures} />
+      )}
+
+      {!productFeatures && features.length > 0 && (
+        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            About this product
+          </Text>
+          <ul className="space-y-1.5">
+            {features.map((f, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+                <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
+                {f}
+              </li>
+            ))}
+          </ul>
+        </Div>
+      )}
+
+      {descriptionHtml && (
+        <RichText
+          html={descriptionHtml}
+          proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
+          className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
+        />
+      )}
+
+      {safeSeller && (
+        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
+          <Row justify="between" align="center">
+            <Div>
+              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+                Sold by
+              </Text>
+              <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                {safeSeller}
+              </Text>
+            </Div>
+            {storeHref && (
+              <Link
+                href={storeHref}
+                className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
+              >
+                Visit Store →
+              </Link>
+            )}
+          </Row>
+        </Div>
+      )}
+    </Stack>
+  );
+}
+
+interface PreOrderBuyBarPanelProps {
+  reserveTarget: number;
+  reservedCount: number;
+  progressPct: number;
+  productId: string;
+  price: number | null;
+  currency: string;
+  depositAmount: number | null;
+  depositPercent: number | null;
+  isCancellable: boolean;
+  tags: string[];
+  onReserveNow?: (productId: string) => Promise<void>;
+}
+
+function PreOrderBuyBarPanel({
+  reserveTarget,
+  reservedCount,
+  progressPct,
+  productId,
+  price,
+  currency,
+  depositAmount,
+  depositPercent,
+  isCancellable,
+  tags,
+  onReserveNow,
+}: PreOrderBuyBarPanelProps) {
+  return (
+    <Div id="pre-order-buy-bar" className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
+      {reserveTarget > 0 && (
+        <Div className="space-y-2">
+          <Row justify="between" align="center">
+            <Text className="text-xs text-zinc-500">
+              {reservedCount} of {reserveTarget} reserved
+            </Text>
+            <Span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
+              {progressPct}%
+            </Span>
+          </Row>
+          <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+            <Div className="h-full rounded-full bg-primary transition-all" style={{ width: `${progressPct}%` }} />
+          </Div>
+        </Div>
+      )}
+
+      {onReserveNow ? (
+        <PreOrderActionsClient
+          productId={productId}
+          price={price}
+          currency={currency}
+          depositAmount={depositAmount}
+          depositPercent={depositPercent}
+          isCancellable={isCancellable}
+          tags={tags}
+          onReserveNow={onReserveNow}
+        />
+      ) : (
+        <>
+          {price !== null && (
+            <Div>
+              <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+                {formatCurrency(price, currency)}
+              </Text>
+              {depositAmount !== null && (
+                <Text className="mt-0.5 text-xs text-zinc-500">
+                  Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
+                </Text>
+              )}
+            </Div>
+          )}
+          <Stack gap="sm">
+            <Button variant="primary" size="md" className="w-full">
+              Reserve Now
+            </Button>
+            {isCancellable && (
+              <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+                ✓ Free cancellation before production
+              </Text>
+            )}
+          </Stack>
+          {tags.length > 0 && (
+            <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+              <Row wrap gap="xs">
+                {tags.map((tag) => (
+                  <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
+                    {tag}
+                  </Span>
+                ))}
+              </Row>
+            </Div>
+          )}
+          <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
+            <Row wrap gap="sm" className="justify-center text-center">
+              {[
+                { icon: "🔒", label: "Secure\nPayment" },
+                { icon: "📅", label: "Guaranteed\nDelivery" },
+                { icon: "↩", label: "Free\nCancellation" },
+              ].map(({ icon, label }) => (
+                <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
+                  <Span className="text-base">{icon}</Span>
+                  <Span className="whitespace-pre-line leading-tight">{label}</Span>
+                </Div>
+              ))}
+            </Row>
+          </Div>
+        </>
+      )}
+    </Div>
+  );
+}
 
 export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow, productFeatures }: PreOrderDetailPageViewProps) {
   const product = initialPreOrder !== undefined
@@ -189,13 +482,13 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
         {/* Breadcrumb + share */}
         <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
-            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">Home</Link>
+            <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
-            <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="hover:text-primary-600 transition-colors">Pre-Orders</Link>
+            <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className={CLS_BREADCRUMB_LINK}>Pre-Orders</Link>
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 transition-colors">
+                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
                   {categoryName || category}
                 </Link>
               </>
@@ -211,153 +504,25 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
             <ProductGalleryClient images={images} productName={title} />
           )}
           renderInfo={() => (
-            <Stack gap="md">
-              {/* Pre-order badge + production status + title */}
-              <Div>
-                <Row gap="xs" className="mb-2 flex-wrap">
-                  <Span className="inline-block rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
-                    Pre-Order
-                  </Span>
-                  {productionStatus && (
-                    <Span className="inline-block rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300">
-                      {PRODUCTION_STATUS_LABELS[productionStatus] ?? productionStatus}
-                    </Span>
-                  )}
-                  {maxPerUser !== null && (
-                    <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-200">
-                      Limit: {maxPerUser} per customer
-                    </Span>
-                  )}
-                </Row>
-                <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
-                  {title}
-                </Heading>
-              </Div>
-
-              {/* Delivery date — price lives in the buy-bar panel on the right */}
-              {deliveryDate && (
-                <Row align="center" gap="xs" className="text-sm text-zinc-600 dark:text-zinc-400">
-                  <Span>📅</Span>
-                  <Span>Estimated delivery:</Span>
-                  <Span className="font-medium">
-                    {deliveryDate.toLocaleDateString(undefined, { year: "numeric", month: "long" })}
-                  </Span>
-                </Row>
-              )}
-
-              {/* Feature badges */}
-              <ProductFeatureBadges
-                featured={featured}
-                freeShipping={freeShipping}
-                condition={condition ?? undefined}
-                returnable={isCancellable}
-                labels={{
-                  featured: "Featured",
-                  fasterDelivery: "Faster Delivery",
-                  ratedSeller: "Rated Seller",
-                  condition: "Condition",
-                  conditionNew: "New",
-                  conditionUsed: "Used",
-                  conditionBroken: "For Parts",
-                  conditionRefurbished: "Refurbished",
-                  returnable: "Cancellable",
-                  freeShipping: "Free Shipping",
-                  codAvailable: "Cash on Delivery",
-                  wishlistCount: (n) => `${n} wishlisted`,
-                  categoryProductCount: (n, cat) => `${n} in ${cat}`,
-                }}
-              />
-
-              {/* Category / brand pills */}
-              {(categoryName || category || brand) && (
-                <Row gap="sm" wrap>
-                  {category && (
-                    <Link
-                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
-                    >
-                      {categoryName || category}
-                    </Link>
-                  )}
-                  {!category && categoryName && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                      {categoryName}
-                    </Span>
-                  )}
-                  {brand && brandSlug && (
-                    <Link
-                      href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
-                    >
-                      {brand}
-                    </Link>
-                  )}
-                  {brand && !brandSlug && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                      {brand}
-                    </Span>
-                  )}
-                </Row>
-              )}
-
-              {/* Feature badges (FI6) — when productFeatures prop is passed */}
-              {productFeatures && features.length > 0 && (
-                <FeatureBadgeList
-                  productFeatureIds={features}
-                  features={productFeatures}
-                />
-              )}
-
-              {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
-              {!productFeatures && features.length > 0 && (
-                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
-                  <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    About this product
-                  </Text>
-                  <ul className="space-y-1.5">
-                    {features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </Div>
-              )}
-
-              {/* Description preview */}
-              {descriptionHtml && (
-                <RichText
-                  html={descriptionHtml}
-                  proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
-                />
-              )}
-
-              {/* Store card */}
-              {safeSeller && (
-                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
-                  <Row justify="between" align="center">
-                    <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
-                        Sold by
-                      </Text>
-                      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-                        {safeSeller}
-                      </Text>
-                    </Div>
-                    {storeHref && (
-                      <Link
-                        href={storeHref}
-                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
-                      >
-                        Visit Store →
-                      </Link>
-                    )}
-                  </Row>
-                </Div>
-              )}
-            </Stack>
+            <PreOrderInfoSection
+              title={title}
+              productionStatus={productionStatus}
+              maxPerUser={maxPerUser}
+              deliveryDate={deliveryDate}
+              featured={featured}
+              freeShipping={freeShipping}
+              condition={condition}
+              isCancellable={isCancellable}
+              category={category}
+              categoryName={categoryName}
+              brand={brand}
+              brandSlug={brandSlug}
+              productFeatures={productFeatures}
+              features={features}
+              descriptionHtml={descriptionHtml}
+              safeSeller={safeSeller}
+              storeHref={storeHref}
+            />
           )}
           renderSublistingSection={
             sublistingCategoryId
@@ -419,90 +584,19 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
             />
           )}
           renderBuyBar={() => (
-            <Div id="pre-order-buy-bar" className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-4">
-              {/* Progress bar */}
-              {reserveTarget > 0 && (
-                <Div className="space-y-2">
-                  <Row justify="between" align="center">
-                    <Text className="text-xs text-zinc-500">
-                      {reservedCount} of {reserveTarget} reserved
-                    </Text>
-                    <Span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
-                      {progressPct}%
-                    </Span>
-                  </Row>
-                  <Div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
-                    <Div
-                      className="h-full rounded-full bg-primary transition-all"
-                      style={{ width: `${progressPct}%` }}
-                    />
-                  </Div>
-                </Div>
-              )}
-
-              {onReserveNow ? (
-                <PreOrderActionsClient
-                  productId={String(product.id)}
-                  price={price}
-                  currency={currency}
-                  depositAmount={depositAmount}
-                  depositPercent={depositPercent}
-                  isCancellable={isCancellable}
-                  tags={tags}
-                  onReserveNow={onReserveNow}
-                />
-              ) : (
-                <>
-                  {price !== null && (
-                    <Div>
-                      <Text className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                        {formatCurrency(price, currency)}
-                      </Text>
-                      {depositAmount !== null && (
-                        <Text className="mt-0.5 text-xs text-zinc-500">
-                          Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
-                        </Text>
-                      )}
-                    </Div>
-                  )}
-                  <Stack gap="sm">
-                    <Button variant="primary" size="md" className="w-full">
-                      Reserve Now
-                    </Button>
-                    {isCancellable && (
-                      <Text className="text-center text-xs text-zinc-500 dark:text-zinc-400">
-                        ✓ Free cancellation before production
-                      </Text>
-                    )}
-                  </Stack>
-                  {tags.length > 0 && (
-                    <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                      <Row wrap gap="xs">
-                        {tags.map((tag) => (
-                          <Span key={tag} className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-2.5 py-1 text-xs text-zinc-600 dark:text-zinc-300">
-                            {tag}
-                          </Span>
-                        ))}
-                      </Row>
-                    </Div>
-                  )}
-                  <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                    <Row wrap gap="sm" className="justify-center text-center">
-                      {[
-                        { icon: "🔒", label: "Secure\nPayment" },
-                        { icon: "📅", label: "Guaranteed\nDelivery" },
-                        { icon: "↩", label: "Free\nCancellation" },
-                      ].map(({ icon, label }) => (
-                        <Div key={label} className="flex flex-col items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400 min-w-[60px]">
-                          <Span className="text-base">{icon}</Span>
-                          <Span className="whitespace-pre-line leading-tight">{label}</Span>
-                        </Div>
-                      ))}
-                    </Row>
-                  </Div>
-                </>
-              )}
-            </Div>
+            <PreOrderBuyBarPanel
+              reserveTarget={reserveTarget}
+              reservedCount={reservedCount}
+              progressPct={progressPct}
+              productId={String(product.id)}
+              price={price}
+              currency={currency}
+              depositAmount={depositAmount}
+              depositPercent={depositPercent}
+              isCancellable={isCancellable}
+              tags={tags}
+              onReserveNow={onReserveNow}
+            />
           )}
         />
 

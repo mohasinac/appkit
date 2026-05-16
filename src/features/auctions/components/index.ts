@@ -1,4 +1,3 @@
-export { AuctionCard, AuctionCountdown } from "./AuctionCard";
 export {
   MarketplaceAuctionCard,
   type MarketplaceAuctionCardData,

@@ -1,5 +1,5 @@
 import React from "react";
-import { Div, Span } from "../../ui";
+import { Div, Span, Text } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface RadioOption {
@@ -33,7 +33,7 @@ export function RadioGroup({
   if (variant === "classic") {
     return (
       <Div className="w-full">
-        {label && <p className={LABEL_BASE}>{label}</p>}
+        {label && <Text className={LABEL_BASE}>{label}</Text>}
         <Div
           className={cn(
             "flex gap-3",
@@ -67,9 +67,9 @@ export function RadioGroup({
           })}
         </Div>
         {error && (
-          <p className={ERROR_BASE} role="alert">
+          <Text className={ERROR_BASE} role="alert">
             {error}
-          </p>
+          </Text>
         )}
       </Div>
     );
@@ -78,7 +78,7 @@ export function RadioGroup({
   // Toggle variant — pill style
   return (
     <Div className="w-full">
-      {label && <p className={LABEL_BASE}>{label}</p>}
+      {label && <Text className={LABEL_BASE}>{label}</Text>}
       <Div
         className={cn(
           "flex gap-2",
@@ -115,9 +115,9 @@ export function RadioGroup({
         })}
       </Div>
       {error && (
-        <p className={ERROR_BASE} role="alert">
+        <Text className={ERROR_BASE} role="alert">
           {error}
-        </p>
+        </Text>
       )}
     </Div>
   );

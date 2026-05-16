@@ -1,4 +1,4 @@
-export { PreorderBadge, PreorderCard } from "./PreorderCard";
+export { PreorderBadge } from "./PreorderCard";
 export { PreOrderFilters } from "./PreOrderFilters";
 export type { PreOrderFiltersProps } from "./PreOrderFilters";
 export {

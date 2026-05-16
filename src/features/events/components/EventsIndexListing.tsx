@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useEvents } from "../hooks/useEvents";
-import { Pagination, ListingToolbar } from "../../../ui";
+import { ListingToolbar, Pagination, Text } from "../../../ui";
 import { EventCard } from "./EventCard";
 import { EventFilters, EVENT_PUBLIC_SORT_OPTIONS } from "./EventFilters";
 import type { UrlTable } from "../../filters/FilterPanel";
@@ -177,9 +177,9 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
             ))}
           </div>
         ) : events.length === 0 ? (
-          <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No events found.
-          </p>
+          </Text>
         ) : view === "list" ? (
           <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
             {events.map((event) => (

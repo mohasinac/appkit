@@ -514,23 +514,30 @@ export function parseUserAgent(
 ): SessionDocument["deviceInfo"] {
   const ua = userAgent.toLowerCase();
 
-  let browser = "Unknown";
-  if (ua.includes("chrome")) browser = "Chrome";
-  else if (ua.includes("firefox")) browser = "Firefox";
-  else if (ua.includes("safari")) browser = "Safari";
-  else if (ua.includes("edge")) browser = "Edge";
+  const BROWSER_TOKENS: [string, string][] = [
+    ["chrome", "Chrome"],
+    ["firefox", "Firefox"],
+    ["safari", "Safari"],
+    ["edge", "Edge"],
+  ];
+  const browser = BROWSER_TOKENS.find(([tok]) => ua.includes(tok))?.[1] ?? "Unknown";
 
-  let os = "Unknown";
-  if (ua.includes("windows")) os = "Windows";
-  else if (ua.includes("mac")) os = "macOS";
-  else if (ua.includes("linux")) os = "Linux";
-  else if (ua.includes("android")) os = "Android";
-  else if (ua.includes("ios") || ua.includes("iphone") || ua.includes("ipad"))
-    os = "iOS";
+  const OS_TOKENS: [string | string[], string][] = [
+    ["windows", "Windows"],
+    ["mac", "macOS"],
+    ["linux", "Linux"],
+    ["android", "Android"],
+    [["ios", "iphone", "ipad"], "iOS"],
+  ];
+  const os =
+    OS_TOKENS.find(([tok]) =>
+      Array.isArray(tok) ? tok.some((t) => ua.includes(t)) : ua.includes(tok),
+    )?.[1] ?? "Unknown";
 
-  let device = "Desktop";
-  if (ua.includes("mobile")) device = "Mobile";
-  else if (ua.includes("tablet") || ua.includes("ipad")) device = "Tablet";
+  const device =
+    ua.includes("mobile") ? "Mobile"
+    : ua.includes("tablet") || ua.includes("ipad") ? "Tablet"
+    : "Desktop";
 
   return { userAgent, browser, os, device };
 }

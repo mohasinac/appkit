@@ -22,6 +22,9 @@ import {
 } from "../../../errors";
 import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
+
+const ERR_OFFER_NOT_FOUND = "Offer not found";
+const ERR_NOT_AUTHORISED = "Not authorized";
 import type { CartDocument } from "../../cart/schemas/firestore";
 
 export interface MakeOfferInput {
@@ -134,7 +137,7 @@ export async function respondToOffer(
   const { offerId, action, counterAmount, sellerNote } = input;
 
   const offer = await offerRepository.findById(offerId);
-  if (!offer) throw new NotFoundError("Offer not found.");
+  if (!offer) throw new NotFoundError(ERR_OFFER_NOT_FOUND);
   const offerStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
   if (!offerStore || offerStore.ownerId !== userId)
     throw new AuthorizationError("Not authorised to respond to this offer.");
@@ -204,9 +207,9 @@ export async function acceptCounterOffer(
   offerId: string,
 ): Promise<OfferDocument> {
   const offer = await offerRepository.findById(offerId);
-  if (!offer) throw new NotFoundError("Offer not found.");
+  if (!offer) throw new NotFoundError(ERR_OFFER_NOT_FOUND);
   if (offer.buyerUid !== userId)
-    throw new AuthorizationError("Not authorised.");
+    throw new AuthorizationError(ERR_NOT_AUTHORISED);
   if (offer.status !== OfferStatusValues.COUNTERED)
     throw new ValidationError("No counter to accept.");
   if (new Date() > offer.expiresAt)
@@ -238,9 +241,9 @@ export async function counterOfferByBuyer(
   const { offerId, counterAmount, buyerNote } = input;
 
   const offer = await offerRepository.findById(offerId);
-  if (!offer) throw new NotFoundError("Offer not found.");
+  if (!offer) throw new NotFoundError(ERR_OFFER_NOT_FOUND);
   if (offer.buyerUid !== userId)
-    throw new AuthorizationError("Not authorised.");
+    throw new AuthorizationError(ERR_NOT_AUTHORISED);
   if (offer.status !== OfferStatusValues.COUNTERED)
     throw new ValidationError(ERROR_MESSAGES.OFFER.NOT_COUNTERED);
   if (new Date() > offer.expiresAt)
@@ -319,9 +322,9 @@ export async function withdrawOffer(
   offerId: string,
 ): Promise<void> {
   const offer = await offerRepository.findById(offerId);
-  if (!offer) throw new NotFoundError("Offer not found.");
+  if (!offer) throw new NotFoundError(ERR_OFFER_NOT_FOUND);
   if (offer.buyerUid !== userId)
-    throw new AuthorizationError("Not authorised.");
+    throw new AuthorizationError(ERR_NOT_AUTHORISED);
   if (offer.status === OfferStatusValues.EXPIRED)
     throw new ValidationError("This offer has already expired.");
   if (
@@ -360,9 +363,9 @@ export async function checkoutOffer(
   offerId: string,
 ): Promise<CartDocument> {
   const offer = await offerRepository.findById(offerId);
-  if (!offer) throw new NotFoundError("Offer not found.");
+  if (!offer) throw new NotFoundError(ERR_OFFER_NOT_FOUND);
   if (offer.buyerUid !== userId)
-    throw new AuthorizationError("Not authorised.");
+    throw new AuthorizationError(ERR_NOT_AUTHORISED);
   if (offer.status !== OfferStatusValues.ACCEPTED)
     throw new ValidationError("Only accepted offers can be checked out.");
   if (!offer.lockedPrice)

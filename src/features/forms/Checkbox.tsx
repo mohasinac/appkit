@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Div, Span } from "../../ui";
+import { Div, Span, Text } from "../../ui";
 import { cn, ERROR_BASE } from "./utils";
 
 export interface CheckboxProps extends Omit<
@@ -92,9 +92,9 @@ export function Checkbox({
       </label>
 
       {error && (
-        <p className={cn(ERROR_BASE, "mt-1.5")} role="alert">
+        <Text className={cn(ERROR_BASE, "mt-1.5")} role="alert">
           {error}
-        </p>
+        </Text>
       )}
     </Div>
   );

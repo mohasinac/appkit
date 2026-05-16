@@ -77,6 +77,49 @@ export interface BlogPostFormProps {
   renderContentReadonly?: (value: string) => React.ReactNode;
 }
 
+type BlogFormUpdate = (partial: Partial<BlogPostFormValue>) => void;
+
+function renderBlogPostMetaFields(props: {
+  value: BlogPostFormValue; update: BlogFormUpdate; isReadonly: boolean;
+  categoryOptions: BlogPostFormOption[]; statusOptions: BlogPostFormOption[]; labels: BlogPostFormLabels;
+}) {
+  const { value, update, isReadonly, categoryOptions, statusOptions, labels } = props;
+  return (
+    <>
+      <Div className="grid gap-4 md:grid-cols-2">
+        <Select label={labels.category} value={value.category} onValueChange={(category) => update({ category })} options={categoryOptions} disabled={isReadonly} />
+        <Select label={labels.status} value={value.status} onValueChange={(status) => update({ status })} options={statusOptions} disabled={isReadonly} />
+      </Div>
+      <Div className="grid gap-4 md:grid-cols-2">
+        <TagInput label={labels.tags} value={value.tags ?? []} onChange={(tags) => update({ tags })} disabled={isReadonly} />
+        <Stack gap="xs">
+          <Label htmlFor="blog-post-read-time">{labels.readTime}</Label>
+          <Input id="blog-post-read-time" type="number" value={String(value.readTimeMinutes ?? 5)} onChange={(event) => update({ readTimeMinutes: parseInt(event.target.value, 10) || 5 })} disabled={isReadonly} />
+        </Stack>
+      </Div>
+      <Checkbox label={labels.featured} checked={value.isFeatured || false} onChange={(event) => update({ isFeatured: event.target.checked })} disabled={isReadonly} />
+    </>
+  );
+}
+
+function renderBlogPostMediaFields(props: {
+  value: BlogPostFormValue; update: BlogFormUpdate; isReadonly: boolean; labels: BlogPostFormLabels;
+  onUploadCover: (file: File) => Promise<string>; onUploadContentImage: (file: File) => Promise<string>;
+  onUploadAdditionalImage: (file: File) => Promise<string>; onAbort?: (stagedUrls: string[]) => void;
+  coverImageUrl: string | null; contentImages: ReturnType<typeof coerceMediaFieldArray>;
+  additionalImages: ReturnType<typeof coerceMediaFieldArray>;
+}) {
+  const { value, update, isReadonly, labels, onUploadCover, onUploadContentImage, onUploadAdditionalImage, onAbort, coverImageUrl, contentImages, additionalImages } = props;
+  return (
+    <>
+      <MediaUploadField label={labels.coverImage} value={coverImageUrl || ""} onChange={(url) => update({ coverImage: url ? { url, type: "image" } : null })} onChangeField={(media) => update({ coverImage: media })} onUpload={onUploadCover} onAbort={onAbort} accept="image/*" maxSizeMB={10} disabled={isReadonly} helperText={labels.coverImageHelper} />
+      <MediaUploadList label={labels.contentImages} value={contentImages} onChange={(media) => update({ contentImages: media })} onUpload={onUploadContentImage} onAbort={onAbort} accept="image/*" maxItems={10} maxSizeMB={10} disabled={isReadonly} helperText={labels.contentImagesHelper} />
+      <MediaUploadList label={labels.additionalImages} value={additionalImages} onChange={(media) => update({ additionalImages: media })} onUpload={onUploadAdditionalImage} onAbort={onAbort} accept="image/*" maxItems={5} maxSizeMB={10} disabled={isReadonly} helperText={labels.additionalImagesHelper} />
+      {isReadonly && coverImageUrl && <Text size="xs" variant="secondary">{coverImageUrl}</Text>}
+    </>
+  );
+}
+
 export function BlogPostForm({
   value,
   onChange,
@@ -91,7 +134,7 @@ export function BlogPostForm({
   renderContentField,
   renderContentReadonly,
 }: BlogPostFormProps) {
-  const coverImageUrl = getMediaUrl(value.coverImage);
+  const coverImageUrl = getMediaUrl(value.coverImage) ?? null;
   const contentImages = coerceMediaFieldArray(value.contentImages);
   const additionalImages = coerceMediaFieldArray(value.additionalImages);
 
@@ -167,99 +210,8 @@ export function BlogPostForm({
         )}
       </Stack>
 
-      <MediaUploadField
-        label={labels.coverImage}
-        value={coverImageUrl || ""}
-        onChange={(url) =>
-          update({ coverImage: url ? { url, type: "image" } : null })
-        }
-        onChangeField={(media) => update({ coverImage: media })}
-        onUpload={onUploadCover}
-        onAbort={onAbort}
-        accept="image/*"
-        maxSizeMB={10}
-        disabled={isReadonly}
-        helperText={labels.coverImageHelper}
-      />
-
-      <MediaUploadList
-        label={labels.contentImages}
-        value={contentImages}
-        onChange={(media) => update({ contentImages: media })}
-        onUpload={onUploadContentImage}
-        onAbort={onAbort}
-        accept="image/*"
-        maxItems={10}
-        maxSizeMB={10}
-        disabled={isReadonly}
-        helperText={labels.contentImagesHelper}
-      />
-
-      <MediaUploadList
-        label={labels.additionalImages}
-        value={additionalImages}
-        onChange={(media) => update({ additionalImages: media })}
-        onUpload={onUploadAdditionalImage}
-        onAbort={onAbort}
-        accept="image/*"
-        maxItems={5}
-        maxSizeMB={10}
-        disabled={isReadonly}
-        helperText={labels.additionalImagesHelper}
-      />
-
-      <Div className="grid gap-4 md:grid-cols-2">
-        <Select
-          label={labels.category}
-          value={value.category}
-          onValueChange={(category) => update({ category })}
-          options={categoryOptions}
-          disabled={isReadonly}
-        />
-        <Select
-          label={labels.status}
-          value={value.status}
-          onValueChange={(status) => update({ status })}
-          options={statusOptions}
-          disabled={isReadonly}
-        />
-      </Div>
-
-      <Div className="grid gap-4 md:grid-cols-2">
-        <TagInput
-          label={labels.tags}
-          value={value.tags ?? []}
-          onChange={(tags) => update({ tags })}
-          disabled={isReadonly}
-        />
-        <Stack gap="xs">
-          <Label htmlFor="blog-post-read-time">{labels.readTime}</Label>
-          <Input
-            id="blog-post-read-time"
-            type="number"
-            value={String(value.readTimeMinutes ?? 5)}
-            onChange={(event) =>
-              update({
-                readTimeMinutes: parseInt(event.target.value, 10) || 5,
-              })
-            }
-            disabled={isReadonly}
-          />
-        </Stack>
-      </Div>
-
-      <Checkbox
-        label={labels.featured}
-        checked={value.isFeatured || false}
-        onChange={(event) => update({ isFeatured: event.target.checked })}
-        disabled={isReadonly}
-      />
-
-      {isReadonly && coverImageUrl && (
-        <Text size="xs" variant="secondary">
-          {coverImageUrl}
-        </Text>
-      )}
+      {renderBlogPostMediaFields({ value, update, isReadonly, labels, onUploadCover, onUploadContentImage, onUploadAdditionalImage, onAbort, coverImageUrl, contentImages, additionalImages })}
+      {renderBlogPostMetaFields({ value, update, isReadonly, categoryOptions, statusOptions, labels })}
     </Stack>
   );
 }

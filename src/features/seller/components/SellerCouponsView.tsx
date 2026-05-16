@@ -251,7 +251,7 @@ export function SellerCouponsView({
             </div>
             <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</p>
+                <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
                 <div className="flex flex-wrap gap-2">
                   {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
                     <button

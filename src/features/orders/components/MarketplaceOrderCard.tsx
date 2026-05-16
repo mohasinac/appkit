@@ -14,6 +14,8 @@ import { formatCurrency, formatDate } from "../../../utils";
 import { OrderStatusValues } from "../schemas";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
+const CLS_ACTION_BUTTON = "min-w-0 flex-1 px-2 text-xs";
+
 const STATUS_MAP: Record<
   string,
   "pending" | "info" | "active" | "success" | "danger"
@@ -187,7 +189,7 @@ export function MarketplaceOrderCard({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="min-w-0 flex-1 px-2 text-xs"
+                  className={CLS_ACTION_BUTTON}
                   onClick={() => navigate(trackHref)}
                 >
                   {mergedLabels.trackOrder}
@@ -197,7 +199,7 @@ export function MarketplaceOrderCard({
               <Button
                 variant="outline"
                 size="sm"
-                className="min-w-0 flex-1 px-2 text-xs"
+                className={CLS_ACTION_BUTTON}
                 onClick={() => navigate(reviewHref)}
               >
                 {mergedLabels.writeReview}
@@ -206,7 +208,7 @@ export function MarketplaceOrderCard({
             <Button
               variant="secondary"
               size="sm"
-              className="min-w-0 flex-1 px-2 text-xs"
+              className={CLS_ACTION_BUTTON}
               onClick={() => navigate(detailHref)}
             >
               {mergedLabels.viewOrder}

@@ -3,6 +3,7 @@
 import React from "react";
 import { Spinner } from "./Spinner";
 import { Button } from "./Button";
+import { Text } from "./Typography";
 
 export interface PageLoaderProps {
   /**
@@ -27,9 +28,9 @@ export function PageLoader({ children }: PageLoaderProps) {
     if (timedOut) {
       return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center">
-          <p className="text-base font-medium text-zinc-700 dark:text-zinc-300">
+          <Text className="text-base font-medium text-zinc-700 dark:text-zinc-300">
             Something went wrong. Please refresh the page.
-          </p>
+          </Text>
           <Button variant="secondary" onClick={() => window.location.reload()}>
             Refresh
           </Button>
@@ -39,7 +40,7 @@ export function PageLoader({ children }: PageLoaderProps) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3">
         <Spinner size="lg" />
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</p>
+        <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>
       </div>
     );
   }
@@ -54,9 +55,9 @@ export function PageLoader({ children }: PageLoaderProps) {
       <div className="pointer-events-none fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 bg-white/60 p-8 text-center backdrop-blur-sm dark:bg-zinc-900/60">
         {timedOut ? (
           <>
-            <p className="text-base font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-base font-medium text-zinc-700 dark:text-zinc-300">
               Something went wrong. Please refresh the page.
-            </p>
+            </Text>
             {/* pointer-events-auto so the button stays clickable */}
             <div className="pointer-events-auto">
               <Button variant="secondary" onClick={() => window.location.reload()}>
@@ -67,7 +68,7 @@ export function PageLoader({ children }: PageLoaderProps) {
         ) : (
           <>
             <Spinner size="lg" />
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</p>
+            <Text className="text-sm text-neutral-500 dark:text-neutral-400">Loading…</Text>
           </>
         )}
       </div>

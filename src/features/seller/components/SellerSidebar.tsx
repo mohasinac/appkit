@@ -5,6 +5,10 @@ import Link from "next/link";
 import { Div, Li, Nav, Row, Span, Text, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 
+const CLS_STORE_AVATAR = "h-8 w-8 rounded-md bg-cover bg-center flex-shrink-0";
+const CLS_STORE_FALLBACK = "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary/10 text-sm font-bold text-primary";
+const CLS_STORE_NAME = "text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate";
+
 export interface StoreNavItem {
   href: string;
   label: string;
@@ -31,6 +35,10 @@ interface StoreSidebarProps {
   /** Toggle callback for the desktop sidebar tab (open ↔ close). */
   onToggle?: () => void;
   className?: string;
+}
+
+function isNavItemActive(item: StoreNavItem, activeHref: string): boolean {
+  return activeHref === item.href;
 }
 
 function NavLink({ item, isActive, onClick }: { item: StoreNavItem; isActive: boolean; onClick?: () => void }) {
@@ -67,13 +75,13 @@ function FlatContent({
       {storeName && (
         <Row gap="3" className="px-4 py-3 border-b border-zinc-100 dark:border-slate-700">
           {storeLogoURL ? (
-            <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
+            <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
           ) : (
-            <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
+            <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
             </Div>
           )}
-          <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName}</Text>
+          <Text className={CLS_STORE_NAME}>{storeName}</Text>
         </Row>
       )}
       <Nav aria-label="Store navigation" className="py-3">
@@ -118,13 +126,13 @@ function GroupsContent({
       {storeName && (
         <Row gap="3" className="px-4 py-3 border-b border-zinc-100 dark:border-slate-700">
           {storeLogoURL ? (
-            <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
+            <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
           ) : (
-            <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
+            <Div className={CLS_STORE_FALLBACK}>
               {storeName[0]?.toUpperCase()}
             </Div>
           )}
-          <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName}</Text>
+          <Text className={CLS_STORE_NAME}>{storeName}</Text>
         </Row>
       )}
       <Nav aria-label="Store navigation" className="py-2">
@@ -152,14 +160,11 @@ function GroupsContent({
               </button>
               {isOpen && (
                 <Ul className="space-y-0.5 px-3 pb-1">
-                  {group.items.map((item) => {
-                    const isActive = activeHref === item.href;
-                    return (
-                      <Li key={item.href}>
-                        <NavLink item={item} isActive={isActive} onClick={onItemClick} />
-                      </Li>
-                    );
-                  })}
+                  {group.items.map((item) => (
+                    <Li key={item.href}>
+                      <NavLink item={item} isActive={isNavItemActive(item, activeHref)} onClick={onItemClick} />
+                    </Li>
+                  ))}
                 </Ul>
               )}
             </div>
@@ -257,13 +262,13 @@ export function StoreSidebar({
             <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <div className="flex items-center gap-3 min-w-0">
                 {storeLogoURL ? (
-                  <Div role="img" aria-label={storeName} className="h-7 w-7 rounded-full bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${storeLogoURL})` }} />
+                  <Div role="img" aria-label={storeName} className={CLS_STORE_AVATAR} style={{ backgroundImage: `url(${storeLogoURL})` }} />
                 ) : (
-                  <Div className="h-7 w-7 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-xs shrink-0">
+                  <Div className={CLS_STORE_FALLBACK}>
                     {storeName?.[0]?.toUpperCase()}
                   </Div>
                 )}
-                <Text className="font-semibold text-zinc-800 dark:text-zinc-100 text-sm truncate">{storeName || panelTitle}</Text>
+                <Text className={CLS_STORE_NAME}>{storeName || panelTitle}</Text>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto">{navContent}</div>

@@ -113,7 +113,7 @@ export function BrandsSection({
     <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex items-center justify-between">
-          <div>
+          <>
             <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
               {title}
             </Heading>
@@ -122,7 +122,7 @@ export function BrandsSection({
                 {subtitle}
               </Text>
             )}
-          </div>
+          </>
           {!cta && viewMoreHref && (
             <Link href={viewMoreHref} className="text-sm font-medium text-[var(--appkit-color-primary)] hover:underline">
               {viewMoreLabel}

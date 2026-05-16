@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useAddresses } from "../hooks/useAddresses";
-import { BulkActionBar, ListingToolbar } from "../../../ui";
+import { BulkActionBar, ListingToolbar, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
@@ -131,9 +131,9 @@ export function AddressesIndexListing({
             ))}
           </div>
         ) : addresses.length === 0 ? (
-          <p className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
+          <Text className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
             {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}
-          </p>
+          </Text>
         ) : (
           <AddressBook
             addresses={addresses as any}

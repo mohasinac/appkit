@@ -2,15 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  ConfirmDeleteModal,
-  RowActionMenu,
-  StackedViewShell,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, ConfirmDeleteModal, RowActionMenu, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -21,6 +13,48 @@ import { AdminNavEditorView, type NavItemData } from "./AdminNavEditorView";
 export interface AdminNavigationViewProps
   extends Omit<StackedViewShellProps, "sections"> {
   labels?: { title?: string };
+}
+
+// --- Helpers -----------------------------------------------------------------
+
+interface NavItemRowProps {
+  item: NavItemData;
+  idx: number;
+  total: number;
+  reorderPending: boolean;
+  onMoveUp: (idx: number) => void;
+  onMoveDown: (idx: number) => void;
+  onVisibilityChange: (id: string, isVisible: boolean) => void;
+  onEdit: (item: NavItemData) => void;
+  onDelete: (item: NavItemData) => void;
+}
+
+function NavItemRow({
+  item, idx, total, reorderPending,
+  onMoveUp, onMoveDown, onVisibilityChange, onEdit, onDelete,
+}: NavItemRowProps) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900">
+      <div className="flex flex-col gap-0.5 shrink-0">
+        <button type="button" onClick={() => onMoveUp(idx)} disabled={idx === 0 || reorderPending}
+          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move up">▲</button>
+        <button type="button" onClick={() => onMoveDown(idx)} disabled={idx >= total - 1 || reorderPending}
+          className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs" aria-label="Move down">▼</button>
+      </div>
+      <div className="flex-1 min-w-0">
+        <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">
+          {item.parentId ? <span className="text-zinc-400 mr-1">↳</span> : null}
+          {item.label}
+        </Text>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{item.href}</Text>
+      </div>
+      <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
+      <RowActionMenu actions={[
+        { label: "Edit", onClick: () => onEdit(item) },
+        { label: "Delete", destructive: true, onClick: () => onDelete(item) },
+      ]} />
+    </div>
+  );
 }
 
 // --- Component ---------------------------------------------------------------
@@ -115,9 +149,9 @@ export function AdminNavigationView({
             </Alert>
           ) : null,
           <div key="header" className="flex items-center justify-between mb-4">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <Text className="text-sm text-zinc-500 dark:text-zinc-400">
               {sorted.length} nav item{sorted.length !== 1 ? "s" : ""}
-            </p>
+            </Text>
             <Button
               onClick={() => {
                 setEditing(null);
@@ -128,76 +162,24 @@ export function AdminNavigationView({
             </Button>
           </div>,
           sorted.length === 0 && !isLoading ? (
-            <p key="empty" className="text-sm text-zinc-400 dark:text-zinc-500 py-8 text-center">
+            <Text key="empty" className="text-sm text-zinc-400 dark:text-zinc-500 py-8 text-center">
               No nav items yet. Click "New item" to add one.
-            </p>
+            </Text>
           ) : null,
           <div key="list" className="divide-y divide-zinc-200 dark:divide-zinc-700 rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
             {sorted.map((item, idx) => (
-              <div
+              <NavItemRow
                 key={item.id}
-                className="flex items-center gap-3 px-4 py-3 bg-white dark:bg-zinc-900"
-              >
-                {/* Order arrows */}
-                <div className="flex flex-col gap-0.5 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => handleMoveUp(idx)}
-                    disabled={idx === 0 || reorderMutation.isPending}
-                    className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs"
-                    aria-label="Move up"
-                  >
-                    ▲
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleMoveDown(idx)}
-                    disabled={idx >= sorted.length - 1 || reorderMutation.isPending}
-                    className="text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 disabled:opacity-30 leading-none text-xs"
-                    aria-label="Move down"
-                  >
-                    ▼
-                  </button>
-                </div>
-
-                {/* Label + href */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100 truncate">
-                    {item.parentId ? (
-                      <span className="text-zinc-400 mr-1">↳</span>
-                    ) : null}
-                    {item.label}
-                  </p>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{item.href}</p>
-                </div>
-
-                {/* Visibility toggle */}
-                <Toggle
-                  checked={item.isVisible ?? true}
-                  onChange={(val) =>
-                    visibilityMutation.mutate({ id: item.id!, isVisible: val })
-                  }
-                  label=""
-                />
-
-                {/* Row actions */}
-                <RowActionMenu
-                  actions={[
-                    {
-                      label: "Edit",
-                      onClick: () => {
-                        setEditing(item);
-                        setDrawerOpen(true);
-                      },
-                    },
-                    {
-                      label: "Delete",
-                      destructive: true,
-                      onClick: () => setDeleteTarget(item),
-                    },
-                  ]}
-                />
-              </div>
+                item={item}
+                idx={idx}
+                total={sorted.length}
+                reorderPending={reorderMutation.isPending}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onVisibilityChange={(id, isVisible) => visibilityMutation.mutate({ id, isVisible })}
+                onEdit={(i) => { setEditing(i); setDrawerOpen(true); }}
+                onDelete={setDeleteTarget}
+              />
             ))}
           </div>,
         ]}

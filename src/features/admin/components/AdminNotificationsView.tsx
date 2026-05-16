@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, ConfirmDeleteModal, useToast } from "../../../ui";
+import { BulkActionBar, ConfirmDeleteModal, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -31,6 +31,59 @@ const NOTIF_TYPES = [
 ];
 
 export interface AdminNotificationsViewProps extends ListingViewShellProps {}
+
+interface NotificationsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function NotificationsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: NotificationsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <div className="space-y-2">
+            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Type</Text>
+            <div className="flex flex-wrap gap-2">
+              {NOTIF_TYPES.map((opt) => (
+                <button key={opt} type="button"
+                  onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.type || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                >{opt}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
 
 interface AdminNotificationsResponse {
   items?: unknown[];
@@ -173,6 +226,15 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
           hasActiveState={hasActiveState}
         />
 
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          onClearSelection={selection.clearSelection}
+          actions={([
+            { id: "mark-read", label: "Mark Read", variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[])}
+        />
+
         {totalPages > 1 && (
           <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
             <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
@@ -203,42 +265,15 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
           />
         </div>
 
-        {filterOpen && (
-          <>
-            <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-            <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-                <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                  )}
-                  <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                    <X className="h-5 w-5" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <div className="space-y-2">
-                  <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Type</p>
-                  <div className="flex flex-wrap gap-2">
-                    {NOTIF_TYPES.map((opt) => (
-                      <button key={opt} type="button"
-                        onClick={() => setPendingFilters((p) => ({ ...p, type: opt === "All" ? "" : opt }))}
-                        className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.type || "All") === opt ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                      >{opt}</button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-                <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        <NotificationsFilterDrawer
+          filterOpen={filterOpen}
+          setFilterOpen={setFilterOpen}
+          activeFilterCount={activeFilterCount}
+          clearFilters={clearFilters}
+          pendingFilters={pendingFilters}
+          setPendingFilters={setPendingFilters}
+          applyFilters={applyFilters}
+        />
       </div>
 
       <ConfirmDeleteModal

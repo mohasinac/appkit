@@ -5,7 +5,7 @@ import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, Button, ListingToolbar, Pagination, ListingViewShell, SideDrawer } from "../../../ui";
+import { BulkActionBar, Button, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text } from "../../../ui";
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { AdminViewCards } from "./AdminViewCards";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -35,6 +35,70 @@ interface AdminCategoriesResponse {
 
 export interface AdminCategoriesViewProps extends ListingViewShellProps {
   getRowHref?: (row: { id: string }) => string;
+}
+
+interface CategoriesFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function CategoriesFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: CategoriesFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <div className="space-y-2">
+            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Active</Text>
+            <div className="flex flex-wrap gap-2">
+              {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
+                <button key={opt.label} type="button"
+                  onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.isActive || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                >{opt.label}</button>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Featured</Text>
+            <div className="flex flex-wrap gap-2">
+              {[{ label: "All", value: "" }, { label: "Featured only", value: "true" }].map((opt) => (
+                <button key={opt.label} type="button"
+                  onClick={() => setPendingFilters((p) => ({ ...p, isFeatured: opt.value }))}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.isFeatured || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
+                >{opt.label}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }
 
 export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCategoriesViewProps) {
@@ -121,6 +185,7 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
 
   return (
     <div className="min-h-screen">
+      <Heading level={1} className="sr-only">Categories</Heading>
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -187,53 +252,15 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
         )}
       </div>
 
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Active</p>
-                <div className="flex flex-wrap gap-2">
-                  {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
-                    <button key={opt.label} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.isActive || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt.label}</button>
-                  ))}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Featured</p>
-                <div className="flex flex-wrap gap-2">
-                  {[{ label: "All", value: "" }, { label: "Featured only", value: "true" }].map((opt) => (
-                    <button key={opt.label} type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, isFeatured: opt.value }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${(pendingFilters.isFeatured || "") === opt.value ? "bg-primary text-white border-primary" : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"}`}
-                    >{opt.label}</button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <CategoriesFilterDrawer
+        filterOpen={filterOpen}
+        setFilterOpen={setFilterOpen}
+        activeFilterCount={activeFilterCount}
+        clearFilters={clearFilters}
+        pendingFilters={pendingFilters}
+        setPendingFilters={setPendingFilters}
+        applyFilters={applyFilters}
+      />
 
       <SideDrawer
         isOpen={isCreateOpen || isEditOpen}

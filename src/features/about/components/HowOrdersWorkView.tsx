@@ -160,103 +160,75 @@ export async function HowOrdersWorkView({
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="howordersworkview-div-142">
-      {/* Hero */}
-      <Section
-        className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
-      >
+      <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
         <div className={`${page.container.md} text-center`} data-section="howordersworkview-div-143">
-          <Heading level={1} variant="none" className="mb-4 text-white">
-            {t("title")}
-          </Heading>
-          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">
-            {t("subtitle")}
-          </Text>
+          <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
+          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </div>
       </Section>
-
-      <div
-        className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}
-       data-section="howordersworkview-div-144">
-        {/* Order statuses */}
+      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="howordersworkview-div-144">
+        {renderOrderStatusesSection(t, themed, ORDER_STATUSES)}
         <Section>
-          <Heading level={2} className="mb-6">
-            {t("statusesTitle")}
-          </Heading>
-          <div className="space-y-3" data-section="howordersworkview-div-145">
-            {ORDER_STATUSES.map(({ status, icon, badge, desc }) => (
-              <div
-                key={status}
-                className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`}
-               data-section="howordersworkview-div-146">
-                <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
-                  <Span className="text-xl">{icon}</Span>
-                  <Span
-                    className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge}`}
-                  >
-                    {status}
-                  </Span>
-                </Row>
-                <Text variant="secondary" className="text-sm leading-relaxed">
-                  {desc}
-                </Text>
-              </div>
-            ))}
-          </div>
+          <FlowDiagram title={`📦 ${t("diagramTitle")}`} titleClass="text-primary" connectorClass="bg-primary/20 dark:bg-primary/30" steps={DIAGRAM_STEPS} centered />
         </Section>
-
-        {/* Flow diagram */}
-        <Section>
-          <FlowDiagram
-            title={`📦 ${t("diagramTitle")}`}
-            titleClass="text-primary"
-            connectorClass="bg-primary/20 dark:bg-primary/30"
-            steps={DIAGRAM_STEPS}
-            centered
-          />
-        </Section>
-
-        {/* Info cards */}
-        <Section>
-          <div className="grid gap-5 md:grid-cols-2" data-section="howordersworkview-div-147">
-            {INFO_CARDS.map(({ icon: Icon, title, text, color, iconColor }) => (
-              <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="howordersworkview-div-148">
-                <div
-                  className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}
-                 data-section="howordersworkview-div-149">
-                  <Icon className={`w-5 h-5 ${iconColor}`} />
-                </div>
-                <Text className="font-semibold mb-1">{title}</Text>
-                <Text variant="secondary" className="text-sm leading-relaxed">
-                  {text}
-                </Text>
-              </div>
-            ))}
-          </div>
-        </Section>
-
-        {/* CTA */}
-        <Section
-          className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}
-        >
-          <Heading level={2} className="mb-3">
-            {t("ctaTitle")}
-          </Heading>
-          <Text variant="secondary" className="mb-6 max-w-lg mx-auto">
-            {t("ctaText")}
-          </Text>
-          <div className={`${flex.center} gap-4 flex-wrap`} data-section="howordersworkview-div-150">
-            <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>
-              {t("ctaBrowse")}
-            </TextLink>
-            <TextLink
-              href={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)}
-              variant="muted"
-            >
-              {t("ctaCheckout")}
-            </TextLink>
-          </div>
-        </Section>
+        {renderOrderInfoCardsSection(flex, INFO_CARDS)}
+        {renderOrdersCtaSection(t, themed, flex)}
       </div>
     </div>
+  );
+}
+
+type OrdersT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type OrderInfoCard = { icon: any; title: string; text: string; color: string; iconColor: string };
+type OrderStatus = { status: string; icon: string; badge: string; desc: string };
+
+function renderOrderStatusesSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], statuses: OrderStatus[]) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-6">{t("statusesTitle")}</Heading>
+      <div className="space-y-3" data-section="howordersworkview-div-145">
+        {statuses.map(({ status, icon, badge, desc }) => (
+          <div key={status} className={`flex items-start gap-4 p-4 rounded-xl border ${themed.border} ${themed.bgPrimary}`} data-section="howordersworkview-div-146">
+            <Row align="center" gap="sm" className="flex-shrink-0 pt-0.5">
+              <Span className="text-xl">{icon}</Span>
+              <Span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badge}`}>{status}</Span>
+            </Row>
+            <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderOrderInfoCardsSection(flex: (typeof THEME_CONSTANTS)["flex"], cards: OrderInfoCard[]) {
+  return (
+    <Section>
+      <div className="grid gap-5 md:grid-cols-2" data-section="howordersworkview-div-147">
+        {cards.map(({ icon: Icon, title, text, color, iconColor }) => (
+          <div key={title} className={`rounded-xl border p-5 ${color}`} data-section="howordersworkview-div-148">
+            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="howordersworkview-div-149">
+              <Icon className={`w-5 h-5 ${iconColor}`} />
+            </div>
+            <Text className="font-semibold mb-1">{title}</Text>
+            <Text variant="secondary" className="text-sm leading-relaxed">{text}</Text>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderOrdersCtaSection(t: OrdersT, themed: (typeof THEME_CONSTANTS)["themed"], flex: (typeof THEME_CONSTANTS)["flex"]) {
+  return (
+    <Section className={`rounded-2xl p-8 text-center ${themed.bgSecondary} border ${themed.border}`}>
+      <Heading level={2} className="mb-3">{t("ctaTitle")}</Heading>
+      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("ctaText")}</Text>
+      <div className={`${flex.center} gap-4 flex-wrap`} data-section="howordersworkview-div-150">
+        <TextLink href={String(ROUTES.PUBLIC.PRODUCTS)}>{t("ctaBrowse")}</TextLink>
+        <TextLink href={String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS)} variant="muted">{t("ctaCheckout")}</TextLink>
+      </div>
+    </Section>
   );
 }

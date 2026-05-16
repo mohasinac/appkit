@@ -1,7 +1,11 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
+
+const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
+const CLS_RELATED_LABEL = "text-xs text-neutral-400 dark:text-zinc-500 mb-0.5";
+const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
 import Link from "next/link";
-import { RichText, Span, StarRating } from "../../../ui";
+import { Heading, RichText, Section, Span, StarRating, Text } from "../../../ui";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -111,9 +115,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </div>
 
           {review.title && (
-            <h1 className="text-2xl font-bold text-neutral-900 dark:text-white mb-4 leading-snug">
+            <Heading level={1} className="text-2xl font-bold text-neutral-900 dark:text-white mb-4 leading-snug">
               {review.title}
-            </h1>
+            </Heading>
           )}
 
           {/* Reviewer row */}
@@ -144,7 +148,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 </span>
               )}
               {date && (
-                <p className="text-xs text-neutral-400 dark:text-zinc-500 mt-0.5">{date}</p>
+                <Text className="text-xs text-neutral-400 dark:text-zinc-500 mt-0.5">{date}</Text>
               )}
             </div>
           </div>
@@ -156,21 +160,21 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
         {/* Rich text comment */}
         {review.comment && (
-          <section>
+          <Section>
             <RichText
               html={normalizeRichTextHtml(review.comment)}
               proseClass="prose prose-neutral dark:prose-invert max-w-none prose-p:leading-relaxed prose-headings:font-semibold prose-img:rounded-lg prose-a:text-primary"
               className="text-neutral-700 dark:text-zinc-300"
             />
-          </section>
+          </Section>
         )}
 
         {/* Image grid with lightbox trigger */}
         {images.length > 0 && (
-          <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
+          <Section>
+            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
               Photos ({images.length})
-            </h2>
+            </Heading>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {images.map((img, i) => (
                 <button
@@ -190,15 +194,15 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 </button>
               ))}
             </div>
-          </section>
+          </Section>
         )}
 
         {/* Video player */}
         {review.video && (
-          <section>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
+          <Section>
+            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
               Video
-            </h2>
+            </Heading>
             <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video">
               <video
                 src={review.video.url}
@@ -208,11 +212,11 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 preload="metadata"
               />
             </div>
-          </section>
+          </Section>
         )}
 
         {/* Helpful votes */}
-        <section className="flex items-center gap-4 py-4 border-t border-neutral-100 dark:border-zinc-800">
+        <Section className="flex items-center gap-4 py-4 border-t border-neutral-100 dark:border-zinc-800">
           <div className="text-sm text-neutral-500 dark:text-zinc-400">
             {helpfulCount > 0 && (
               <span>
@@ -234,23 +238,23 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <span aria-hidden="true">{voted ? "✓" : "👍"}</span>
             {voted ? "Marked helpful" : voting ? "Saving…" : "Helpful?"}
           </button>
-        </section>
+        </Section>
 
         {/* Links: Product / Seller / Reviewer */}
-        <section className="grid gap-3 sm:grid-cols-3">
+        <Section className="grid gap-3 sm:grid-cols-3">
           {productHref && (
             <Link
               href={productHref}
-              className="group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all"
+              className={CLS_RELATED_LINK}
             >
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-xl">
                 📦
               </span>
               <div className="min-w-0">
-                <p className="text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Product</p>
-                <p className="text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                <Text className={CLS_RELATED_LABEL}>Product</Text>
+                <Text className={CLS_RELATED_TITLE}>
                   {review.productTitle ?? "View Product"}
-                </p>
+                </Text>
               </div>
             </Link>
           )}
@@ -258,16 +262,16 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {sellerHref && (
             <Link
               href={sellerHref}
-              className="group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all"
+              className={CLS_RELATED_LINK}
             >
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xl">
                 🏪
               </span>
               <div className="min-w-0">
-                <p className="text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Seller</p>
-                <p className="text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                <Text className={CLS_RELATED_LABEL}>Seller</Text>
+                <Text className={CLS_RELATED_TITLE}>
                   View Seller
-                </p>
+                </Text>
               </div>
             </Link>
           )}
@@ -275,16 +279,16 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           {reviewerHref ? (
             <Link
               href={reviewerHref}
-              className="group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all"
+              className={CLS_RELATED_LINK}
             >
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
                 👤
               </span>
               <div className="min-w-0">
-                <p className="text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Reviewer</p>
-                <p className="text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                <Text className={CLS_RELATED_LABEL}>Reviewer</Text>
+                <Text className={CLS_RELATED_TITLE}>
                   {displayName}
-                </p>
+                </Text>
               </div>
             </Link>
           ) : (
@@ -300,7 +304,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               </div>
             </div>
           )}
-        </section>
+        </Section>
       </div>
 
       {/* ── Lightbox ────────────────────────────────────────────────────────── */}

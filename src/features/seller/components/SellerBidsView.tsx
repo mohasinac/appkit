@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Badge, Div, FilterChipGroup, ListingToolbar, Pagination } from "../../../ui";
+import { Badge, BulkActionBar, Div, FilterChipGroup, ListingToolbar, Pagination, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -153,8 +153,8 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
       header: "Auction",
       render: (row) => (
         <div className="space-y-0.5">
-          <p className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.productTitle}</p>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">{row.productId}</p>
+          <Text className="font-medium text-sm text-zinc-900 dark:text-zinc-100 line-clamp-1">{row.productTitle}</Text>
+          <Text className="text-xs text-zinc-400 dark:text-zinc-500 font-mono">{row.productId}</Text>
         </div>
       ),
     },

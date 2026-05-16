@@ -4,13 +4,7 @@ import React, { useState, useCallback } from "react";
 import { Pencil, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, Alert,
-  Badge,
-  Button,
-  FilterChipGroup,
-  ListingToolbar,
-  ListingViewShell,
-  Pagination, } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PRODUCT_STATUS_TABS } from "../constants/filter-tabs";
@@ -72,8 +66,8 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
     header: "Prize Draw",
     render: (row) => (
       <div className="space-y-1">
-        <p className="font-semibold text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</p>
-        <p className="text-xs text-[var(--appkit-color-text-muted)]">{row.storeName}</p>
+        <Text className="font-semibold text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
+        <Text className="text-xs text-[var(--appkit-color-text-muted)]">{row.storeName}</Text>
       </div>
     ),
   },
@@ -114,6 +108,54 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
 ];
 
 export interface AdminPrizeDrawsViewProps extends ListingViewShellProps {}
+
+interface PrizeDrawsFilterDrawerProps {
+  filterOpen: boolean;
+  setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number;
+  clearFilters: () => void;
+  pendingFilters: Record<string, string>;
+  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  applyFilters: () => void;
+}
+
+function PrizeDrawsFilterDrawer({
+  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
+  pendingFilters, setPendingFilters, applyFilters,
+}: PrizeDrawsFilterDrawerProps) {
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
+        <div className="flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5">
+          <span className="text-base font-semibold text-[var(--appkit-color-text)]">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && (
+              <button type="button" onClick={clearFilters} className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)] transition-colors">Clear all</button>
+            )}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+          <FilterChipGroup
+            label="Status"
+            tabs={STATUS_OPTIONS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+        </div>
+        <div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
 
 export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
@@ -228,6 +270,14 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
         hasActiveState={hasActiveState}
       />
 
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={([
+          { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[])}
+      />
+
       {totalPages > 1 && (
         <div
           className="sticky z-10 flex justify-center bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5"
@@ -263,58 +313,15 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
         />
       </div>
 
-      {filterOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/40"
-            aria-hidden="true"
-            onClick={() => setFilterOpen(false)}
-          />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5">
-              <span className="text-base font-semibold text-[var(--appkit-color-text)]">
-                Filters
-              </span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)] transition-colors"
-                  >
-                    Clear all
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setFilterOpen(false)}
-                  aria-label="Close"
-                  className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
-                label="Status"
-                tabs={STATUS_OPTIONS}
-                value={pendingFilters.status ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-              />
-            </div>
-            <div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
-              <button
-                type="button"
-                onClick={applyFilters}
-                className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity active:scale-[0.98]"
-              >
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <PrizeDrawsFilterDrawer
+        filterOpen={filterOpen}
+        setFilterOpen={setFilterOpen}
+        activeFilterCount={activeFilterCount}
+        clearFilters={clearFilters}
+        pendingFilters={pendingFilters}
+        setPendingFilters={setPendingFilters}
+        applyFilters={applyFilters}
+      />
     </div>
   );
 }

@@ -1,5 +1,10 @@
 "use client"
 import React, { useCallback, useEffect, useRef, useState } from "react";
+
+const SVG_PATH_SEARCH = "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z";
+const CLS_HOVER_ROW = "hover:bg-zinc-100 dark:hover:bg-slate-800";
+const CLS_ICON_ROW = "w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400";
+const CLS_TRUNCATE = "font-medium truncate";
 import type { LucideIcon } from "lucide-react";
 import { Button, Input, Li, Row, Span, Text, Ul } from "../../../ui";
 import { useNavSuggestions } from "../hooks/useNavSuggestions";
@@ -82,6 +87,52 @@ const DEFAULT_TYPE_BADGES: Record<NavSuggestionRecord["type"], string> = {
   blog: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
   event: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300",
 };
+
+function SuggestionItem({
+  suggestion,
+  itemIndex,
+  activeIndex,
+  onSelect,
+  onHover,
+  typeIcons,
+  typeBadges,
+}: {
+  suggestion: NavSuggestionRecord;
+  itemIndex: number;
+  activeIndex: number | null;
+  onSelect: (s: NavSuggestionRecord) => void;
+  onHover: (index: number) => void;
+  typeIcons: Record<NavSuggestionRecord["type"], string>;
+  typeBadges: Record<NavSuggestionRecord["type"], string>;
+}) {
+  const isActive = activeIndex === itemIndex;
+  return (
+    <Li>
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={() => onSelect(suggestion)}
+        onMouseEnter={() => onHover(itemIndex)}
+        className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+      >
+        <Span className="text-sm">{typeIcons[suggestion.type]}</Span>
+        <div className="flex-1 min-w-0" data-section="search-div-441">
+          <Text size="sm" className={CLS_TRUNCATE}>
+            {suggestion.title}
+          </Text>
+          {suggestion.subtitle && (
+            <Text variant="secondary" size="xs" className="truncate">
+              {suggestion.subtitle}
+            </Text>
+          )}
+        </div>
+        <Span className={`text-xs px-2 py-0.5 rounded-full ${typeBadges[suggestion.type]}`}>
+          {suggestion.type}
+        </Span>
+      </Button>
+    </Li>
+  );
+}
 
 export function Search({
   isOpen,
@@ -246,6 +297,68 @@ export function Search({
       setIsInlineOpen(false);
     };
 
+    const renderInlineQuickLink = (link: SearchQuickLink, index: number) => {
+      const Icon = link.icon;
+      const isActive = activeIndex === index;
+      return (
+        <Li key={`inline-link-${link.href}`}>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setIsInlineOpen(false);
+              router.push(link.href);
+            }}
+            onMouseEnter={() => setActiveIndex(index)}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
+          >
+            <Icon className={CLS_ICON_ROW} />
+            <Text size="sm" className={CLS_TRUNCATE}>
+              {link.label}
+            </Text>
+          </Button>
+        </Li>
+      );
+    };
+
+    const handleInlineKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "ArrowDown") {
+        if (inlineItems.length === 0) return;
+        event.preventDefault();
+        setIsInlineOpen(true);
+        setActiveIndex((current) =>
+          current < inlineItems.length - 1 ? current + 1 : 0,
+        );
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        if (inlineItems.length === 0) return;
+        event.preventDefault();
+        setIsInlineOpen(true);
+        setActiveIndex((current) =>
+          current <= 0 ? inlineItems.length - 1 : current - 1,
+        );
+        return;
+      }
+
+      if (event.key === "Enter") {
+        if (activeIndex >= 0) {
+          event.preventDefault();
+          handleInlineActiveItem(activeIndex);
+          return;
+        }
+        if (deferred) {
+          handleDeferredSubmit();
+        }
+        return;
+      }
+
+      if (event.key === "Escape") {
+        setIsInlineOpen(false);
+      }
+    };
+
     return (
       <Row className={`relative gap-2 ${className ?? ""}`}>
         <Row className="relative flex-1">
@@ -260,7 +373,7 @@ export function Search({
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              d={SVG_PATH_SEARCH}
             />
           </svg>
           <Input
@@ -269,43 +382,7 @@ export function Search({
             type="search"
             value={query}
             onChange={(event) => handleInlineChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === "ArrowDown") {
-                if (inlineItems.length === 0) return;
-                event.preventDefault();
-                setIsInlineOpen(true);
-                setActiveIndex((current) =>
-                  current < inlineItems.length - 1 ? current + 1 : 0,
-                );
-                return;
-              }
-
-              if (event.key === "ArrowUp") {
-                if (inlineItems.length === 0) return;
-                event.preventDefault();
-                setIsInlineOpen(true);
-                setActiveIndex((current) =>
-                  current <= 0 ? inlineItems.length - 1 : current - 1,
-                );
-                return;
-              }
-
-              if (event.key === "Enter") {
-                if (activeIndex >= 0) {
-                  event.preventDefault();
-                  handleInlineActiveItem(activeIndex);
-                  return;
-                }
-                if (deferred) {
-                  handleDeferredSubmit();
-                }
-                return;
-              }
-
-              if (event.key === "Escape") {
-                setIsInlineOpen(false);
-              }
-            }}
+            onKeyDown={handleInlineKeyDown}
             onFocus={() => {
               if (inlineBlurRef.current) clearTimeout(inlineBlurRef.current);
               setIsInlineOpen(true);
@@ -378,7 +455,7 @@ export function Search({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                d={SVG_PATH_SEARCH}
               />
             </svg>
           </Button>
@@ -392,30 +469,7 @@ export function Search({
           >
             {filteredQuickLinks.length > 0 && (
               <Ul>
-                {filteredQuickLinks.map((link, index) => {
-                  const Icon = link.icon;
-                  const isActive = activeIndex === index;
-
-                  return (
-                    <Li key={`inline-link-${link.href}`}>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => {
-                          setIsInlineOpen(false);
-                          router.push(link.href);
-                        }}
-                        onMouseEnter={() => setActiveIndex(index)}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}`}
-                      >
-                        <Icon className="w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
-                        <Text size="sm" className="font-medium truncate">
-                          {link.label}
-                        </Text>
-                      </Button>
-                    </Li>
-                  );
-                })}
+                {filteredQuickLinks.map((link, index) => renderInlineQuickLink(link, index))}
               </Ul>
             )}
 
@@ -439,13 +493,13 @@ export function Search({
                     variant="ghost"
                     onClick={() => handleSuggestionClick(suggestion)}
                     onMouseEnter={() => setActiveIndex(itemIndex)}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}`}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
                   >
                     <Span className="text-sm">
                       {typeIcons[suggestion.type]}
                     </Span>
                     <div className="flex-1 min-w-0" data-section="search-div-432">
-                      <Text size="sm" className="font-medium truncate">
+                      <Text size="sm" className={CLS_TRUNCATE}>
                         {suggestion.title}
                       </Text>
                       {suggestion.subtitle && (
@@ -471,10 +525,10 @@ export function Search({
                   setIsInlineOpen(false);
                 }}
                 onMouseEnter={() => setActiveIndex(inlineItems.length - 1)}
-                className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}`}
+                className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === inlineItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
               >
                 <svg
-                  className="w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400"
+                  className={CLS_ICON_ROW}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -483,10 +537,10 @@ export function Search({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                    d={SVG_PATH_SEARCH}
                   />
                 </svg>
-                <Text size="sm" className="font-medium truncate">
+                <Text size="sm" className={CLS_TRUNCATE}>
                   {labels.browseProducts(query)}
                 </Text>
               </Button>
@@ -520,6 +574,9 @@ export function Search({
     ...suggestionItems,
     ...(query.trim() ? ([{ kind: "search" as const }] as const) : []),
   ];
+
+  const getOverlaySuggestionIndex = (suggestionIndex: number): number =>
+    quickLinkItems.length + suggestionIndex;
 
   const handleActiveItem = (index: number) => {
     const item = overlayItems[index];
@@ -618,7 +675,7 @@ export function Search({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                d={SVG_PATH_SEARCH}
               />
             </svg>
             {labels.title}
@@ -676,9 +733,9 @@ export function Search({
                             router.push(link.href);
                           }}
                           onMouseEnter={() => setActiveIndex(itemIndex)}
-                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}`}
+                          className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}`}
                         >
-                          <Icon className="w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400" />
+                          <Icon className={CLS_ICON_ROW} />
                           <Text size="sm" className="font-medium">
                             {link.label}
                           </Text>
@@ -700,44 +757,18 @@ export function Search({
                   </div>
                 ) : suggestions.length > 0 ? (
                   <Ul>
-                    {suggestions.map((suggestion, suggestionIndex) => {
-                      const itemIndex = quickLinkItems.length + suggestionIndex;
-                      const isActive = activeIndex === itemIndex;
-                      return (
-                        <Li key={suggestion.objectID}>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            onMouseEnter={() => setActiveIndex(itemIndex)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors border-b border-zinc-200 dark:border-slate-700 last:border-b-0 ${isActive ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}`}
-                          >
-                            <Span className="text-sm">
-                              {typeIcons[suggestion.type]}
-                            </Span>
-                            <div className="flex-1 min-w-0" data-section="search-div-441">
-                              <Text size="sm" className="font-medium truncate">
-                                {suggestion.title}
-                              </Text>
-                              {suggestion.subtitle && (
-                                <Text
-                                  variant="secondary"
-                                  size="xs"
-                                  className="truncate"
-                                >
-                                  {suggestion.subtitle}
-                                </Text>
-                              )}
-                            </div>
-                            <Span
-                              className={`text-xs px-2 py-0.5 rounded-full ${typeBadges[suggestion.type]}`}
-                            >
-                              {suggestion.type}
-                            </Span>
-                          </Button>
-                        </Li>
-                      );
-                    })}
+                    {suggestions.map((suggestion, suggestionIndex) => (
+                      <SuggestionItem
+                        key={suggestion.objectID}
+                        suggestion={suggestion}
+                        itemIndex={getOverlaySuggestionIndex(suggestionIndex)}
+                        activeIndex={activeIndex}
+                        onSelect={handleSuggestionClick}
+                        onHover={setActiveIndex}
+                        typeIcons={typeIcons}
+                        typeBadges={typeBadges}
+                      />
+                    ))}
                   </Ul>
                 ) : null}
 
@@ -746,10 +777,10 @@ export function Search({
                   variant="ghost"
                   onClick={handleOverlaySearch}
                   onMouseEnter={() => setActiveIndex(overlayItems.length - 1)}
-                  className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : "hover:bg-zinc-50 dark:hover:bg-slate-800/70"}${suggestions.length > 0 ? " border-t border-zinc-200 dark:border-slate-700" : ""}`}
+                  className={`w-full flex items-center gap-2 px-4 py-3 text-left transition-colors ${activeIndex === overlayItems.length - 1 ? "bg-zinc-100 dark:bg-slate-800" : CLS_HOVER_ROW}${suggestions.length > 0 ? " border-t border-zinc-200 dark:border-slate-700" : ""}`}
                 >
                   <svg
-                    className="w-4 h-4 flex-shrink-0 text-zinc-500 dark:text-zinc-400"
+                    className={CLS_ICON_ROW}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -758,7 +789,7 @@ export function Search({
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      d={SVG_PATH_SEARCH}
                     />
                   </svg>
                   <Text size="sm" className="font-medium">

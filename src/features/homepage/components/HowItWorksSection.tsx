@@ -3,6 +3,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
 import { Button, Div, Grid, Heading, Section, Text } from "../../../ui";
 
+// --- Constants ---------------------------------------------------------------
+
+const CLS_VISIBLE = "opacity-100 translate-y-0";
+
 // --- Types -------------------------------------------------------------------
 
 export interface HowItWorksStep {
@@ -50,7 +54,7 @@ function StepCard({
         "bg-white dark:bg-slate-900",
         "shadow-md group hover:-translate-y-2 hover:shadow-xl",
         "transition-all duration-300",
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+        visible ? CLS_VISIBLE : "opacity-0 translate-y-8",
       ].join(" ")}
       style={{ transitionDelay: `${delay}ms` }}
      data-section="howitworkssection-div-340">
@@ -136,7 +140,7 @@ export function HowItWorksSection({
         {/* Header */}
         <div
           className={`text-center mb-12 transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
           }`}
          data-section="howitworkssection-div-344">
           {pillLabel && (
@@ -179,7 +183,7 @@ export function HowItWorksSection({
         {ctaLabel && onCtaClick && (
           <div
             className={`text-center transition-all duration-700 delay-500 ${
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              visible ? CLS_VISIBLE : "opacity-0 translate-y-4"
             }`}
            data-section="howitworkssection-div-346">
             <Button variant="primary" size="lg" onClick={onCtaClick}>

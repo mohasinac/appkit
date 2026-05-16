@@ -1,3 +1,5 @@
+const LABEL_VERIFIED_SELLERS = "Verified Sellers";
+
 export const SECTION_TYPE_OPTIONS = [
   "welcome",
   "stats",
@@ -415,7 +417,7 @@ export const DEFAULT_STATS_BUILDER: StatsBuilderState = {
   title: "Marketplace Stats",
   stats: [
     { ...DEFAULT_STAT_ROW, key: "products", label: "Products Listed",  value: "10,000+", source: "live-preset", metric: "total_listings", suffix: "+" },
-    { ...DEFAULT_STAT_ROW, key: "sellers",  label: "Verified Sellers", value: "2,000+",  source: "live-preset", metric: "verified_sellers", suffix: "+" },
+    { ...DEFAULT_STAT_ROW, key: "sellers",  label: LABEL_VERIFIED_SELLERS, value: "2,000+",  source: "live-preset", metric: "verified_sellers", suffix: "+" },
     { ...DEFAULT_STAT_ROW, key: "buyers",   label: "Happy Buyers",     value: "50,000+", source: "live-preset", metric: "total_buyers", suffix: "+" },
     { ...DEFAULT_STAT_ROW, key: "rating",   label: "Average Rating",   value: "4.8/5",   source: "live-preset", metric: "platform_rating" },
   ],
@@ -497,7 +499,7 @@ export const DEFAULT_TRUST_INDICATORS_BUILDER: TrustIndicatorsBuilderState = {
   indicators: [
     { id: "ti-1", icon: "🚚", title: "Free Shipping", description: "On orders above ₹999" },
     { id: "ti-2", icon: "🔒", title: "Secure Payment", description: "Razorpay protected checkout" },
-    { id: "ti-3", icon: "✅", title: "Verified Sellers", description: "Every store is manually verified" },
+    { id: "ti-3", icon: "✅", title: LABEL_VERIFIED_SELLERS, description: "Every store is manually verified" },
     { id: "ti-4", icon: "↩️", title: "Easy Returns", description: "7-day hassle-free returns" },
   ],
 };
@@ -533,7 +535,7 @@ export const DEFAULT_BANNER_BUILDER: BannerBuilderState = {
 
 export const DEFAULT_FEATURES_BUILDER: FeaturesBuilderState = {
   title: "Platform Features",
-  features: ["Free Shipping on ₹999+", "Secure Payments", "Easy Returns", "Verified Sellers"],
+  features: ["Free Shipping on ₹999+", "Secure Payments", "Easy Returns", LABEL_VERIFIED_SELLERS],
 };
 
 export const DEFAULT_REVIEWS_BUILDER: ReviewsBuilderState = {

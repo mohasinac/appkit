@@ -12,6 +12,7 @@
  */
 
 import { useEffect } from "react";
+import { Heading, Text } from "../../ui";
 import {
   trackError,
   ErrorCategory,
@@ -46,12 +47,12 @@ export function GlobalError({ error, reset }: GlobalErrorProps) {
           textAlign: "center",
         }}
       >
-        <h1 style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
+        <Heading level={1} style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>
           Something went wrong
-        </h1>
-        <p style={{ opacity: 0.7, marginBottom: "1.5rem" }}>
+        </Heading>
+        <Text style={{ opacity: 0.7, marginBottom: "1.5rem" }}>
           A critical error occurred. We&apos;re working on it.
-        </p>
+        </Text>
         {process.env.NODE_ENV === "development" && (
           <pre
             style={{

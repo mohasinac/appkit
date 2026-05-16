@@ -19,6 +19,10 @@ export interface AdvertisementBannerProps {
   className?: string;
 }
 
+// --- Constants ---------------------------------------------------------------
+
+const CLS_CONTAINER = "w-full max-w-7xl mx-auto";
+
 // --- Component ---------------------------------------------------------------
 
 export function AdvertisementBanner({
@@ -39,7 +43,7 @@ export function AdvertisementBanner({
   if (isLoading) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-297">
+        <div className={CLS_CONTAINER} data-section="advertisementbanner-div-297">
           <div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
         </div>
       </Section>
@@ -50,7 +54,7 @@ export function AdvertisementBanner({
   if (backgroundImage) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-298">
+        <div className={CLS_CONTAINER} data-section="advertisementbanner-div-298">
           <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl" data-section="advertisementbanner-div-299">
             <div className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-300">
               {/* Left: image */}
@@ -113,7 +117,7 @@ export function AdvertisementBanner({
   // -- Full-width gradient layout --
   return (
     <Section className={`p-8 ${wrapClass} ${className}`}>
-      <div className="w-full max-w-7xl mx-auto" data-section="advertisementbanner-div-304">
+      <div className={CLS_CONTAINER} data-section="advertisementbanner-div-304">
         <div
           className={[
             "relative overflow-hidden rounded-2xl flex items-center",

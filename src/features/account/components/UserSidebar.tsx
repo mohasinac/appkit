@@ -31,6 +31,10 @@ export interface UserSidebarProps {
   variant?: "sidebar" | "overlay";
 }
 
+function isNavItemActive(item: UserNavItem, activeHref: string): boolean {
+  return activeHref === item.href || activeHref.startsWith(item.href + "/");
+}
+
 function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {
   return (
     <Link
@@ -120,14 +124,11 @@ function DrawerContent({
             </button>
             {isOpen && (
               <Ul className="space-y-0.5 px-3 pb-1">
-                {group.items.map((item) => {
-                  const isActive = activeHref === item.href || activeHref.startsWith(item.href + "/");
-                  return (
-                    <Li key={item.href}>
-                      <NavLink item={item} isActive={isActive} onClick={onItemClick} />
-                    </Li>
-                  );
-                })}
+                {group.items.map((item) => (
+                  <Li key={item.href}>
+                    <NavLink item={item} isActive={isNavItemActive(item, activeHref)} onClick={onItemClick} />
+                  </Li>
+                ))}
               </Ul>
             )}
           </div>

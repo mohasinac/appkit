@@ -1,6 +1,7 @@
 "use client";
 
 import type { SocialPost, SocialPlatform } from "../schemas";
+import { Text } from "../../../ui";
 
 // --- Platform brand colours & icons ------------------------------------------
 
@@ -108,7 +109,7 @@ function YouTubeCard({ post, showCaption }: { post: SocialPost; showCaption: boo
       {/* Caption hover overlay */}
       {showCaption && post.caption && (
         <div className="absolute inset-0 flex flex-col justify-end bg-black/60 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <p className="line-clamp-2 text-xs text-white">{post.caption}</p>
+          <Text className="line-clamp-2 text-xs text-white">{post.caption}</Text>
         </div>
       )}
     </a>
@@ -184,7 +185,7 @@ export function SocialPostCard({ post, showCaption = true, showStats = true }: S
       {/* Hover overlay — caption + stats */}
       <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-black/70 p-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         {showCaption && post.caption && (
-          <p className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</p>
+          <Text className="mb-2 line-clamp-3 text-xs text-white">{post.caption}</Text>
         )}
         {showStats && (
           <div className="flex items-center gap-3 text-xs text-white/80">

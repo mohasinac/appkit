@@ -343,8 +343,8 @@ export function SellerOrdersView({
       header: "Order",
       render: (row) => (
         <div className="space-y-0.5 min-w-0">
-          <p className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</p>
+          <Text className="font-mono text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.buyerName} · {row.itemCount} item{row.itemCount !== 1 ? "s" : ""}</Text>
         </div>
       ),
     },

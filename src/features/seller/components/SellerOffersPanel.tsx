@@ -70,12 +70,19 @@ interface OfferCardProps {
   onNeedsLogin: () => void;
 }
 
+const PLACEHOLDER_SELLER_NOTE = "Optional note to buyer";
+
 function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps) {
   const [uiState, setUiState] = useState<OfferState>("idle");
   const [counterInput, setCounterInput] = useState("");
   const [sellerNote, setSellerNote] = useState("");
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  const toAccepting = useCallback(() => setUiState("accepting"), []);
+  const toCountering = useCallback(() => setUiState("countering"), []);
+  const toDeclining = useCallback(() => setUiState("declining"), []);
+  const toIdle = useCallback(() => setUiState("idle"), []);
 
   const isPendingOffer = offer.status === "pending";
 
@@ -163,10 +170,10 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Actions */}
       {isPendingOffer && uiState === "idle" && (
         <Div className="flex gap-2 flex-wrap">
-          <Button size="sm" variant="primary" onClick={() => setUiState("accepting")} disabled={isPending}>Accept</Button>
-          <Button size="sm" variant="ghost" onClick={() => setUiState("countering")} disabled={isPending}
+          <Button size="sm" variant="primary" onClick={toAccepting} disabled={isPending}>Accept</Button>
+          <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
             className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
-          <Button size="sm" variant="ghost" onClick={() => setUiState("declining")} disabled={isPending}
+          <Button size="sm" variant="ghost" onClick={toDeclining} disabled={isPending}
             className="text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">Decline</Button>
         </Div>
       )}
@@ -175,7 +182,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {uiState === "accepting" && (
         <Div className="space-y-2">
           <Input
-            placeholder="Optional note to buyer"
+            placeholder={PLACEHOLDER_SELLER_NOTE}
             value={sellerNote}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
@@ -184,7 +191,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             <Button size="sm" variant="primary" onClick={handleAccept} disabled={isPending}>
               {isPending ? "Accepting…" : "Confirm Accept"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setUiState("idle")} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
           </Div>
         </Div>
       )}
@@ -193,7 +200,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {uiState === "declining" && (
         <Div className="space-y-2">
           <Input
-            placeholder="Optional note to buyer"
+            placeholder={PLACEHOLDER_SELLER_NOTE}
             value={sellerNote}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
@@ -203,7 +210,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
               className="text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
               {isPending ? "Declining…" : "Confirm Decline"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setUiState("idle")} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
           </Div>
         </Div>
       )}
@@ -222,7 +229,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             disabled={isPending}
           />
           <Input
-            placeholder="Optional note to buyer"
+            placeholder={PLACEHOLDER_SELLER_NOTE}
             value={sellerNote}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellerNote(e.target.value)}
             disabled={isPending}
@@ -231,7 +238,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             <Button size="sm" variant="secondary" onClick={handleCounter} disabled={isPending}>
               {isPending ? "Sending…" : "Send Counter"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setUiState("idle")} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
           </Div>
         </Div>
       )}

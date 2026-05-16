@@ -4,6 +4,7 @@ import type { AdSlotId, AdProvider, AdSlotConfig } from "../ad-registry";
 import { getAdSlot, isAdSlotRenderable } from "../ad-registry";
 import { useActiveAd } from "../hooks/useActiveAd";
 import type { ActiveAdRecord } from "../hooks/useActiveAd";
+import { Text } from "../../../ui";
 
 // ---------------------------------------------------------------------------
 // Props
@@ -92,10 +93,10 @@ function ManualAdBanner({ ad }: { ad: ActiveAdRecord }) {
       ) : null}
       <div className="flex-1 min-w-0">
         {creative.title ? (
-          <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{creative.title}</p>
+          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{creative.title}</Text>
         ) : null}
         {creative.body ? (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{creative.body}</p>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{creative.body}</Text>
         ) : null}
       </div>
       {creative.ctaLabel ? (

@@ -10,6 +10,7 @@ import {
   NotFoundError,
   ValidationError,
 } from "../../../errors";
+
 import { serverLogger } from "../../../monitoring";
 import { maskPublicReview } from "../../../security";
 import {
@@ -25,6 +26,8 @@ import type {
   SieveModel,
 } from "../../../providers/db-firebase";
 import type { ReviewDocument } from "../schemas";
+
+const ERR_REVIEW_ID_REQUIRED = "Review ID is required";
 
 export interface CreateReviewActionInput {
   productId: string;
@@ -95,7 +98,7 @@ export async function updateReview(
   input: UpdateReviewActionInput,
 ): Promise<ReviewDocument | null> {
   if (!reviewId?.trim()) {
-    throw new ValidationError("reviewId is required");
+    throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
 
   const existing = await reviewRepository.findById(reviewId);
@@ -135,7 +138,7 @@ export async function deleteReview(
   reviewId: string,
 ): Promise<void> {
   if (!reviewId?.trim()) {
-    throw new ValidationError("reviewId is required");
+    throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
 
   const existing = await reviewRepository.findById(reviewId);
@@ -156,7 +159,7 @@ export async function adminUpdateReview(
   input: UpdateReviewActionInput,
 ): Promise<ReviewDocument | null> {
   if (!reviewId?.trim()) {
-    throw new ValidationError("reviewId is required");
+    throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
 
   const existing = await reviewRepository.findById(reviewId);
@@ -197,7 +200,7 @@ export async function adminDeleteReview(
   reviewId: string,
 ): Promise<void> {
   if (!reviewId?.trim()) {
-    throw new ValidationError("reviewId is required");
+    throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
 
   const existing = await reviewRepository.findById(reviewId);
@@ -218,7 +221,7 @@ export async function voteReviewHelpful(
   helpful: boolean,
 ): Promise<void> {
   if (!reviewId?.trim()) {
-    throw new ValidationError("reviewId is required");
+    throw new ValidationError(ERR_REVIEW_ID_REQUIRED);
   }
 
   if (helpful) {

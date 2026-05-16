@@ -4,6 +4,7 @@ import { X, AlertTriangle, Eye, ArrowLeft } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
+import { Text } from "../../ui";
 
 export interface FormShellSection {
   id: string;
@@ -181,11 +182,11 @@ export function FormShell({
 
           <div className="flex-1 min-w-0">
             {breadcrumb && (
-              <p className="text-xs text-[var(--appkit-color-text-muted)] truncate mb-0.5">{breadcrumb}</p>
+              <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate mb-0.5">{breadcrumb}</Text>
             )}
-            <p className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">
+            <Text className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">
               {previewMode ? `Preview — ${title}` : title}
-            </p>
+            </Text>
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
@@ -343,12 +344,12 @@ export function FormShell({
               <span className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--appkit-color-warning-surface)] flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-[var(--appkit-color-warning)]" />
               </span>
-              <div>
-                <p className="font-semibold text-[var(--appkit-color-text)]">Unsaved changes</p>
-                <p className="text-sm text-[var(--appkit-color-text-muted)] mt-1">
+              <>
+                <Text className="font-semibold text-[var(--appkit-color-text)]">Unsaved changes</Text>
+                <Text className="text-sm text-[var(--appkit-color-text-muted)] mt-1">
                   You have unsaved changes. Leave without saving?
-                </p>
-              </div>
+                </Text>
+              </>
             </div>
             <div className="flex gap-2 justify-end">
               <Button variant="outline" size="sm" onClick={() => setShowUnsaved(false)}>Stay</Button>

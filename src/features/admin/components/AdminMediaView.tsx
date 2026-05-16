@@ -175,6 +175,117 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
   );
 }
 
+interface MediaUploaderPanelProps {
+  onUpload: (file: File) => Promise<string>;
+  isUploadPending: boolean;
+  isCleanupPending: boolean;
+  heroAssetUrl: string;
+  setHeroAssetUrl: (v: string) => void;
+  galleryAssets: MediaField[];
+  setGalleryAssets: React.Dispatch<React.SetStateAction<MediaField[]>>;
+  stagedUrls: string[];
+  setStagedUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  handleAbort: (urls: string[]) => void;
+  copiedUrl: string | null;
+  onCopy: (url: string) => void;
+  onClearPreviews: () => void;
+  onDiscardStaged: () => void;
+}
+
+function MediaUploaderPanel({
+  onUpload, isUploadPending, isCleanupPending, heroAssetUrl, setHeroAssetUrl,
+  galleryAssets, setGalleryAssets, stagedUrls, setStagedUrls, handleAbort,
+  copiedUrl, onCopy, onClearPreviews, onDiscardStaged,
+}: MediaUploaderPanelProps) {
+  return (
+    <Div
+      className="space-y-5 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
+    >
+      <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        Upload & Copy URL
+      </Text>
+      <MediaUploadField
+        label="Primary media asset"
+        value={heroAssetUrl}
+        onChange={setHeroAssetUrl}
+        onUpload={onUpload}
+        helperText="Uploads via signed URL (sign → PUT → finalize) and previews the returned URL."
+        onAbort={handleAbort}
+        onStagedUrlsChange={setStagedUrls}
+      />
+      {heroAssetUrl && (
+        <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
+          <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+            {heroAssetUrl}
+          </Text>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onCopy(heroAssetUrl)}
+          >
+            {copiedUrl === heroAssetUrl ? "Copied!" : "Copy URL"}
+          </Button>
+        </Div>
+      )}
+      <MediaUploadList
+        label="Gallery assets"
+        value={galleryAssets}
+        onChange={setGalleryAssets}
+        onUpload={onUpload}
+        helperText="Attach multiple images or videos for batch checks."
+        onAbort={handleAbort}
+        onStagedUrlsChange={setStagedUrls}
+        maxItems={12}
+      />
+      {galleryAssets.length > 0 && (
+        <Div className="flex flex-col gap-1">
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+            Gallery URLs
+          </Text>
+          {galleryAssets.map((asset, i) => (
+            <Div
+              key={i}
+              className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1"
+            >
+              <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
+                {asset.url}
+              </Text>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => onCopy(asset.url)}
+              >
+                {copiedUrl === asset.url ? "Copied!" : "Copy"}
+              </Button>
+            </Div>
+          ))}
+        </Div>
+      )}
+      <Div className="flex flex-wrap items-center gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClearPreviews}
+          disabled={isUploadPending || isCleanupPending}
+        >
+          Clear previews
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onDiscardStaged}
+          disabled={isUploadPending || isCleanupPending || stagedUrls.length === 0}
+        >
+          {isCleanupPending ? "Discarding…" : "Discard staged uploads"}
+        </Button>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+          {stagedUrls.length} staged upload(s)
+        </Text>
+      </Div>
+    </Div>
+  );
+}
+
 export interface AdminMediaViewProps extends Omit<
   StackedViewShellProps,
   "sections"
@@ -270,97 +381,23 @@ export function AdminMediaView({
             {operationMessage}
           </Alert>
         ) : null,
-        <Div
+        <MediaUploaderPanel
           key="media-uploader"
-          className="space-y-5 rounded-xl border border-zinc-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-900"
-        >
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            Upload & Copy URL
-          </Text>
-          <MediaUploadField
-            label="Primary media asset"
-            value={heroAssetUrl}
-            onChange={setHeroAssetUrl}
-            onUpload={onUpload}
-            helperText="Uploads via signed URL (sign → PUT → finalize) and previews the returned URL."
-            onAbort={handleAbort}
-            onStagedUrlsChange={setStagedUrls}
-          />
-          {heroAssetUrl && (
-            <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
-              <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
-                {heroAssetUrl}
-              </Text>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => copyToClipboard(heroAssetUrl)}
-              >
-                {copiedUrl === heroAssetUrl ? "Copied!" : "Copy URL"}
-              </Button>
-            </Div>
-          )}
-          <MediaUploadList
-            label="Gallery assets"
-            value={galleryAssets}
-            onChange={setGalleryAssets}
-            onUpload={onUpload}
-            helperText="Attach multiple images or videos for batch checks."
-            onAbort={handleAbort}
-            onStagedUrlsChange={setStagedUrls}
-            maxItems={12}
-          />
-          {galleryAssets.length > 0 && (
-            <Div className="flex flex-col gap-1">
-              <Text className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
-                Gallery URLs
-              </Text>
-              {galleryAssets.map((asset, i) => (
-                <Div
-                  key={i}
-                  className="flex items-center gap-2 rounded bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-1"
-                >
-                  <Text className="flex-1 truncate text-xs text-zinc-600 dark:text-zinc-400 font-mono">
-                    {asset.url}
-                  </Text>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => copyToClipboard(asset.url)}
-                  >
-                    {copiedUrl === asset.url ? "Copied!" : "Copy"}
-                  </Button>
-                </Div>
-              ))}
-            </Div>
-          )}
-          <Div className="flex flex-wrap items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setHeroAssetUrl("");
-                setGalleryAssets([]);
-              }}
-              disabled={isUploadPending || isCleanupPending}
-            >
-              Clear previews
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                void clearStagedUploads();
-              }}
-              disabled={isUploadPending || isCleanupPending || stagedUrls.length === 0}
-            >
-              {isCleanupPending ? "Discarding…" : "Discard staged uploads"}
-            </Button>
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-              {stagedUrls.length} staged upload(s)
-            </Text>
-          </Div>
-        </Div>,
+          onUpload={onUpload}
+          isUploadPending={isUploadPending}
+          isCleanupPending={isCleanupPending}
+          heroAssetUrl={heroAssetUrl}
+          setHeroAssetUrl={setHeroAssetUrl}
+          galleryAssets={galleryAssets}
+          setGalleryAssets={setGalleryAssets}
+          stagedUrls={stagedUrls}
+          setStagedUrls={setStagedUrls}
+          handleAbort={handleAbort}
+          copiedUrl={copiedUrl}
+          onCopy={copyToClipboard}
+          onClearPreviews={() => { setHeroAssetUrl(""); setGalleryAssets([]); }}
+          onDiscardStaged={() => { void clearStagedUploads(); }}
+        />,
       ]}
     />
   );

@@ -116,7 +116,6 @@ export function AdminFeaturesView({
 
   const commitSearch = React.useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const resetAll = React.useCallback(() => {
@@ -205,6 +204,14 @@ export function AdminFeaturesView({
           </button>
         ))}
       </Row>
+
+      <BulkActionBar
+        selectedCount={selection.selectedCount}
+        onClearSelection={selection.clearSelection}
+        actions={([
+          { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[])}
+      />
 
       {totalPages > 1 && (
         <Div className={PAGINATION_BAR_CLASS}>

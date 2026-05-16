@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
+import { Text } from "../../../ui";
 
 export interface ProductGalleryClientProps {
   images: string[];
@@ -89,9 +90,9 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
 
       {/* Image counter */}
       {images.length > 1 && (
-        <p className="text-center text-xs text-zinc-400 dark:text-zinc-500">
+        <Text className="text-center text-xs text-zinc-400 dark:text-zinc-500">
           {activeIndex + 1} / {images.length}
-        </p>
+        </Text>
       )}
 
       <ImageLightbox

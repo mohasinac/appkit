@@ -2,17 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Form,
-  Input,
-  RichTextEditor,
-  Select,
-  StackedViewShell,
-  TagInput,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
@@ -252,9 +242,9 @@ export function AdminBlogEditorView({
 
           {/* Rich text content */}
           <div className="space-y-1">
-            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Content
-            </p>
+            </Text>
             <RichTextEditor
               value={content}
               onChange={setContent}

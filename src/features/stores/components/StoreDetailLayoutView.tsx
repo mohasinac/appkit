@@ -2,7 +2,7 @@ import React, { cache } from "react";
 import type { ReactNode } from "react";
 import { storeRepository, productRepository, categoriesRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Main, Section } from "../../../ui";
+import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
 import { StoreHeader } from "./StoreHeader";
 import { StoreNavTabs } from "./StoreNavTabs";
@@ -47,7 +47,7 @@ export async function StoreDetailLayoutView({
       <Main>
         <Section className="py-20">
           <Container size="md">
-            <p className="text-center text-zinc-500">Store not found.</p>
+            <Text className="text-center text-zinc-500">Store not found.</Text>
           </Container>
         </Section>
       </Main>

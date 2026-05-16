@@ -146,19 +146,18 @@ class ChatRepository extends BaseRepository<ChatRoomDocument> {
       const seen = new Set<string>();
       const rooms: ChatRoomDocument[] = [];
       [...asBuyer.docs, ...asSeller.docs].forEach((d) => {
-        if (!seen.has(d.id)) {
-          seen.add(d.id);
-          const data = d.data() as Omit<ChatRoomDocument, "id">;
-          const deletedBy: string[] = data.deletedBy ?? [];
-          // Only include rooms the user hasn't personally deleted
-          if (!deletedBy.includes(userId)) {
-            rooms.push(
-              decryptPiiFields(
-                { id: d.id, ...data } as unknown as Record<string, unknown>,
-                [...CHAT_PII_FIELDS],
-              ) as unknown as ChatRoomDocument,
-            );
-          }
+        if (seen.has(d.id)) return;
+        seen.add(d.id);
+        const data = d.data() as Omit<ChatRoomDocument, "id">;
+        const deletedBy: string[] = data.deletedBy ?? [];
+        // Only include rooms the user hasn't personally deleted
+        if (!deletedBy.includes(userId)) {
+          rooms.push(
+            decryptPiiFields(
+              { id: d.id, ...data } as unknown as Record<string, unknown>,
+              [...CHAT_PII_FIELDS],
+            ) as unknown as ChatRoomDocument,
+          );
         }
       });
 

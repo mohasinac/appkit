@@ -141,7 +141,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
     <Section className={`py-12 ${themed.bgPrimary}`}>
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
+          <>
             <Heading level={2} className="mb-1">
               {title || `${PLATFORM_LABELS[platform]} Feed`}
             </Heading>
@@ -150,7 +150,7 @@ export async function SocialFeedSection(config: SocialFeedSectionProps) {
                 {subtitle}
               </Text>
             )}
-          </div>
+          </>
           {profileUrl && (
             <a
               href={profileUrl}

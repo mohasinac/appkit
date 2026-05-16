@@ -5,6 +5,10 @@ import { SectionCarousel } from "./SectionCarousel";
 import { MediaImage } from "../../media/MediaImage";
 import type { CustomCardsCard, CustomCardsSectionConfig } from "../schemas";
 
+// --- Constants ---------------------------------------------------------------
+
+const CLS_CONTAINER = "w-full max-w-7xl mx-auto px-4";
+
 // --- Helpers -----------------------------------------------------------------
 
 const COLS_CLASS: Record<1 | 2 | 3 | 4, string> = {
@@ -68,15 +72,15 @@ function CardItem({ card }: { card: CustomCardsCard }) {
 
       <div className="flex flex-col gap-2 p-4 flex-1">
         {card.eyebrow && (
-          <p className="text-xs font-semibold uppercase tracking-widest opacity-70">
+          <Text className="text-xs font-semibold uppercase tracking-widest opacity-70">
             {card.eyebrow}
-          </p>
+          </Text>
         )}
         {card.title && (
-          <p className="text-base font-bold leading-snug">{card.title}</p>
+          <Text className="text-base font-bold leading-snug">{card.title}</Text>
         )}
         {card.body && (
-          <p className="text-sm opacity-80 leading-relaxed flex-1">{card.body}</p>
+          <Text className="text-sm opacity-80 leading-relaxed flex-1">{card.body}</Text>
         )}
 
         {card.buttons && card.buttons.length > 0 && (
@@ -138,7 +142,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   if (autoScroll) {
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className="w-full max-w-7xl mx-auto px-4">
+        <div className={CLS_CONTAINER}>
           <SectionCarousel
             title={title ?? ""}
             items={cards}
@@ -157,7 +161,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   if (layout === "row") {
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className="w-full max-w-7xl mx-auto px-4">
+        <div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
           <HorizontalScroller gap={16} showArrows snapToItems>
             {cards.map((card) => (
@@ -180,7 +184,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       .join(" ");
     return (
       <Section className={`py-12 ${themed.bgPrimary}`}>
-        <div className="w-full max-w-7xl mx-auto px-4">
+        <div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
           <div className={`${masonryClass} gap-4 space-y-4`}>
             {cards.map((card) => (
@@ -198,7 +202,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
   const colsClass = COLS_CLASS[columns as 1 | 2 | 3 | 4] ?? COLS_CLASS[3];
   return (
     <Section className={`py-12 ${themed.bgPrimary}`}>
-      <div className="w-full max-w-7xl mx-auto px-4">
+      <div className={CLS_CONTAINER}>
         <SectionHeader title={title} />
         <div className={`grid ${colsClass} gap-4`}>
           {cards.map((card) => (

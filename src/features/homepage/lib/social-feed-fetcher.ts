@@ -6,6 +6,10 @@ function clamp(n: number, min: number, max: number) {
   return Math.max(min, Math.min(max, n));
 }
 
+function isVideoOrReels(postType: SocialPostType): boolean {
+  return ["videos", "reels"].includes(postType);
+}
+
 // --- Instagram (Meta Graph API v19) ------------------------------------------
 
 export async function fetchInstagramPosts(
@@ -30,7 +34,7 @@ export async function fetchInstagramPosts(
     .filter((item) => {
       const m = item as Record<string, unknown>;
       if (postType === "images") return m.media_type === "IMAGE";
-      if (postType === "videos" || postType === "reels") return m.media_type === "VIDEO";
+      if (isVideoOrReels(postType)) return m.media_type === "VIDEO";
       return true;
     })
     .slice(0, count)
@@ -84,7 +88,7 @@ export async function fetchFacebookPosts(
         | string
         | undefined;
       if (postType === "images") return mtype !== "video";
-      if (postType === "videos" || postType === "reels") return mtype === "video";
+      if (isVideoOrReels(postType)) return mtype === "video";
       return true;
     })
     .slice(0, count)
@@ -187,7 +191,7 @@ export async function fetchDeviantArtPosts(
   clientId: string,
   clientSecret: string,
 ): Promise<SocialPost[]> {
-  if (postType === "videos" || postType === "reels") return [];
+  if (isVideoOrReels(postType)) return [];
   const token = await getDeviantArtToken(clientId, clientSecret);
   const url = new URL("https://www.deviantart.com/api/v1/oauth2/gallery/all");
   url.searchParams.set("username", handle);

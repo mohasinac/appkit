@@ -12,6 +12,10 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 
+const ERR_INQUIRY_ID_REQUIRED = "Inquiry ID is required";
+const ERR_DB_NOT_CONFIGURED = "Database provider not configured";
+const ERR_INTERNAL_SERVER_ERROR = "Internal server error";
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } },
@@ -20,7 +24,7 @@ export async function GET(
     const { id } = await params;
     if (!id) {
       return NextResponse.json(
-        { success: false, error: "Inquiry ID required" },
+        { success: false, error: ERR_INQUIRY_ID_REQUIRED },
         { status: 400 },
       );
     }
@@ -28,7 +32,7 @@ export async function GET(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -52,7 +56,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );
@@ -67,7 +71,7 @@ export async function PATCH(
     const { id } = await params;
     if (!id) {
       return NextResponse.json(
-        { success: false, error: "Inquiry ID required" },
+        { success: false, error: ERR_INQUIRY_ID_REQUIRED },
         { status: 400 },
       );
     }
@@ -77,7 +81,7 @@ export async function PATCH(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -101,7 +105,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );
@@ -116,7 +120,7 @@ export async function DELETE(
     const { id } = await params;
     if (!id) {
       return NextResponse.json(
-        { success: false, error: "Inquiry ID required" },
+        { success: false, error: ERR_INQUIRY_ID_REQUIRED },
         { status: 400 },
       );
     }
@@ -124,7 +128,7 @@ export async function DELETE(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -141,7 +145,7 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );

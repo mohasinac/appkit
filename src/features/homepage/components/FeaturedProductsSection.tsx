@@ -76,14 +76,14 @@ function ProductGrid({
     <Section className={`py-12 px-4 ${themed.bgPrimary}`}>
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex items-end justify-between gap-4">
-          <div>
+          <>
             <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>
               {title}
             </Heading>
             {description && (
               <Text variant="muted" className="mt-1 text-sm">{description}</Text>
             )}
-          </div>
+          </>
           {pagination === "arrows" && (
             <div className="flex shrink-0 gap-2">
               <button

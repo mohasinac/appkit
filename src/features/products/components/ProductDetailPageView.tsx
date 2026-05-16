@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { productRepository, reviewRepository } from "../../../repositories";
+
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -366,17 +368,17 @@ export async function ProductDetailPageView({
           renderBreadcrumb={() => (
             <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
-                <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">
+                <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
                   Home
                 </Link>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className="hover:text-primary-600 transition-colors">
+                <Link href={String(ROUTES.PUBLIC.PRODUCTS)} className={CLS_BREADCRUMB_LINK}>
                   Products
                 </Link>
                 {category && (
                   <>
                     <Span aria-hidden>/</Span>
-                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 transition-colors">
+                    <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
                       {categoryName || category}
                     </Link>
                   </>

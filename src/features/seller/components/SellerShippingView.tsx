@@ -1,15 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  FormField,
-  Heading,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Alert, Badge, Button, Div, FormField, Heading, Section, Stack, Text } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 
@@ -139,7 +130,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
         {success && <Alert variant="success">Shipping configuration saved.</Alert>}
 
         {/* Method selector */}
-        <section>
+        <Section>
           <Heading level={3} className="mb-3">Shipping Method</Heading>
           <Stack gap="sm">
             {(["custom", "shiprocket"] as const).map((m) => (
@@ -167,11 +158,11 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
               </label>
             ))}
           </Stack>
-        </section>
+        </Section>
 
         {/* Custom shipping fields */}
         {isCustom && (
-          <section>
+          <Section>
             <Heading level={3} className="mb-3">Custom Shipping Details</Heading>
             <Stack gap="md">
               <FormField
@@ -194,12 +185,12 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
                 disabled={busy}
               />
             </Stack>
-          </section>
+          </Section>
         )}
 
         {/* Shiprocket fields */}
         {!isCustom && (
-          <section>
+          <Section>
             <Heading level={3} className="mb-3">Shiprocket Account</Heading>
             <Stack gap="md">
               <FormField
@@ -241,7 +232,7 @@ export function SellerShippingView({ apiBase = "/api/store/shipping" }: SellerSh
                 </Alert>
               )}
             </Stack>
-          </section>
+          </Section>
         )}
 
         {/* Save */}

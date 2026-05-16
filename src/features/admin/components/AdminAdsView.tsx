@@ -65,6 +65,148 @@ export interface AdminAdsViewProps extends Omit<StackedViewShellProps, "sections
   renderEditLink?: (item: AdminAdItem) => React.ReactNode;
 }
 
+interface AdsSettingsPanelProps {
+  adsenseClientId: string;
+  setAdsenseClientId: (v: string) => void;
+  thirdPartyScriptUrl: string;
+  setThirdPartyScriptUrl: (v: string) => void;
+  consentRequired: boolean;
+  setConsentRequired: (v: boolean) => void;
+  serverCredentialIssues: string[];
+  localCredentialIssues: string[];
+  credentialStatus: { hasAdsenseClientId: boolean; hasThirdPartyScriptUrl: boolean; issues: string[] } | undefined;
+  providerCredentialsMasked: { adsenseClientId?: string; thirdPartyScriptUrl?: string } | undefined;
+  settingsMutation: { isPending: boolean };
+  hasPendingCredentialInput: boolean;
+  currentConsentRequired: boolean;
+  settingsMessage: string | null;
+  onSave: () => void;
+}
+
+function AdsSettingsPanel({
+  adsenseClientId, setAdsenseClientId, thirdPartyScriptUrl, setThirdPartyScriptUrl,
+  consentRequired, setConsentRequired, serverCredentialIssues, localCredentialIssues,
+  credentialStatus, providerCredentialsMasked, settingsMutation, hasPendingCredentialInput,
+  currentConsentRequired, settingsMessage, onSave,
+}: AdsSettingsPanelProps) {
+  return (
+    <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3" data-section="adminadsview-div-245">
+      <Text className="text-sm font-semibold">Provider and publish settings</Text>
+      <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+        Save provider credentials here before publishing AdSense or third-party inventory.
+      </Text>
+      {serverCredentialIssues.length > 0 ? (
+        <Alert variant="warning" title="Provider credentials need attention">
+          {serverCredentialIssues.join("; ")}
+        </Alert>
+      ) : null}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadsview-div-246">
+        <Input
+          label="AdSense client id"
+          value={adsenseClientId}
+          onChange={(event) => setAdsenseClientId(event.target.value)}
+          placeholder={providerCredentialsMasked?.adsenseClientId || "ca-pub-XXXXXXXXXX"}
+        />
+        <Input
+          label="Third-party script URL"
+          value={thirdPartyScriptUrl}
+          onChange={(event) => setThirdPartyScriptUrl(event.target.value)}
+          placeholder={providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
+        />
+      </div>
+      <Text className="text-xs text-neutral-500 dark:text-zinc-400">
+        Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
+      </Text>
+      <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-247">
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={consentRequired}
+            onChange={(event) => setConsentRequired(event.target.checked)}
+          />
+          Require consent globally for ad rendering
+        </label>
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={settingsMutation.isPending || localCredentialIssues.length > 0 || (!hasPendingCredentialInput && consentRequired === Boolean(currentConsentRequired))}
+          onClick={onSave}
+        >
+          {settingsMutation.isPending ? "Saving..." : "Save settings"}
+        </Button>
+      </div>
+      {localCredentialIssues.length > 0 ? (
+        <Alert variant="error" title="Fix settings before saving">
+          {localCredentialIssues.join("; ")}
+        </Alert>
+      ) : null}
+      {settingsMessage ? (
+        <Alert variant={settingsMessage.toLowerCase().includes("failed") ? "error" : "success"} title="Settings">
+          {settingsMessage}
+        </Alert>
+      ) : null}
+    </div>
+  );
+}
+
+interface AdsFilterRowProps {
+  q: string;
+  setQ: (v: string) => void;
+  status: string;
+  setStatus: (v: string) => void;
+  provider: string;
+  setProvider: (v: string) => void;
+  placement: string;
+  setPlacement: (v: string) => void;
+  placements: Array<{ id: string; label: string }>;
+  onPageReset: () => void;
+}
+
+function AdsFilterRow({ q, setQ, status, setStatus, provider, setProvider, placement, setPlacement, placements, onPageReset }: AdsFilterRowProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-3" data-section="adminadsview-div-248">
+      <Input
+        label="Search"
+        value={q}
+        onChange={(event) => { onPageReset(); setQ(event.target.value); }}
+        placeholder="Search ads"
+      />
+      <Select
+        label="Status"
+        value={status}
+        options={[
+          { label: "All", value: "all" },
+          { label: "Draft", value: "draft" },
+          { label: "Active", value: "active" },
+          { label: "Scheduled", value: "scheduled" },
+          { label: "Paused", value: "paused" },
+        ]}
+        onChange={(event) => { onPageReset(); setStatus(event.target.value); }}
+      />
+      <Select
+        label="Provider"
+        value={provider}
+        options={[
+          { label: "All", value: "all" },
+          { label: "Manual", value: "manual" },
+          { label: "AdSense", value: "adsense" },
+          { label: "Third Party", value: "thirdParty" },
+        ]}
+        onChange={(event) => { onPageReset(); setProvider(event.target.value); }}
+      />
+      <Select
+        label="Placement"
+        value={placement}
+        options={[
+          { label: "All", value: "all" },
+          ...placements.map((item) => ({ label: item.label, value: item.id })),
+        ]}
+        onChange={(event) => { onPageReset(); setPlacement(event.target.value); }}
+      />
+    </div>
+  );
+}
+
 export function AdminAdsView({
   endpoint = ADMIN_ENDPOINTS.ADS,
   labels = {},
@@ -252,114 +394,35 @@ export function AdminAdsView({
             {adsQuery.error instanceof Error ? adsQuery.error.message : "Unknown error"}
           </Alert>
         ) : null,
-        <div className="rounded-lg border border-neutral-200 dark:border-slate-700 p-3 space-y-3" data-section="adminadsview-div-245">
-          <Text className="text-sm font-semibold">Provider and publish settings</Text>
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
-            Save provider credentials here before publishing AdSense or third-party inventory.
-          </Text>
-          {serverCredentialIssues.length > 0 ? (
-            <Alert variant="warning" title="Provider credentials need attention">
-              {serverCredentialIssues.join("; ")}
-            </Alert>
-          ) : null}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-section="adminadsview-div-246">
-            <Input
-              label="AdSense client id"
-              value={adsenseClientId}
-              onChange={(event) => setAdsenseClientId(event.target.value)}
-              placeholder={adsQuery.data?.providerCredentialsMasked?.adsenseClientId || "ca-pub-XXXXXXXXXX"}
-            />
-            <Input
-              label="Third-party script URL"
-              value={thirdPartyScriptUrl}
-              onChange={(event) => setThirdPartyScriptUrl(event.target.value)}
-              placeholder={adsQuery.data?.providerCredentialsMasked?.thirdPartyScriptUrl || "https://..."}
-            />
-          </div>
-          <Text className="text-xs text-neutral-500 dark:text-zinc-400">
-            Stored credentials: AdSense {credentialStatus?.hasAdsenseClientId ? "configured" : "missing"} · Third-party {credentialStatus?.hasThirdPartyScriptUrl ? "configured" : "missing"}
-          </Text>
-          <div className="flex items-center justify-between gap-3" data-section="adminadsview-div-247">
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={consentRequired}
-                onChange={(event) => setConsentRequired(event.target.checked)}
-              />
-              Require consent globally for ad rendering
-            </label>
-            <Button
-              size="sm"
-              variant="outline"
-              disabled={settingsMutation.isPending || localCredentialIssues.length > 0 || (!hasPendingCredentialInput && consentRequired === Boolean(adsQuery.data?.consentRequired))}
-              onClick={saveSettings}
-            >
-              {settingsMutation.isPending ? "Saving..." : "Save settings"}
-            </Button>
-          </div>
-          {localCredentialIssues.length > 0 ? (
-            <Alert variant="error" title="Fix settings before saving">
-              {localCredentialIssues.join("; ")}
-            </Alert>
-          ) : null}
-          {settingsMessage ? (
-            <Alert variant={settingsMessage.toLowerCase().includes("failed") ? "error" : "success"} title="Settings">
-              {settingsMessage}
-            </Alert>
-          ) : null}
-        </div>,
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3" data-section="adminadsview-div-248">
-          <Input
-            label="Search"
-            value={q}
-            onChange={(event) => {
-              setPage(1);
-              setQ(event.target.value);
-            }}
-            placeholder="Search ads"
-          />
-          <Select
-            label="Status"
-            value={status}
-            options={[
-              { label: "All", value: "all" },
-              { label: "Draft", value: "draft" },
-              { label: "Active", value: "active" },
-              { label: "Scheduled", value: "scheduled" },
-              { label: "Paused", value: "paused" },
-            ]}
-            onChange={(event) => {
-              setPage(1);
-              setStatus(event.target.value);
-            }}
-          />
-          <Select
-            label="Provider"
-            value={provider}
-            options={[
-              { label: "All", value: "all" },
-              { label: "Manual", value: "manual" },
-              { label: "AdSense", value: "adsense" },
-              { label: "Third Party", value: "thirdParty" },
-            ]}
-            onChange={(event) => {
-              setPage(1);
-              setProvider(event.target.value);
-            }}
-          />
-          <Select
-            label="Placement"
-            value={placement}
-            options={[
-              { label: "All", value: "all" },
-              ...placements.map((item) => ({ label: item.label, value: item.id })),
-            ]}
-            onChange={(event) => {
-              setPage(1);
-              setPlacement(event.target.value);
-            }}
-          />
-        </div>,
+        <AdsSettingsPanel
+          adsenseClientId={adsenseClientId}
+          setAdsenseClientId={setAdsenseClientId}
+          thirdPartyScriptUrl={thirdPartyScriptUrl}
+          setThirdPartyScriptUrl={setThirdPartyScriptUrl}
+          consentRequired={consentRequired}
+          setConsentRequired={setConsentRequired}
+          serverCredentialIssues={serverCredentialIssues}
+          localCredentialIssues={localCredentialIssues}
+          credentialStatus={credentialStatus}
+          providerCredentialsMasked={adsQuery.data?.providerCredentialsMasked}
+          settingsMutation={settingsMutation}
+          hasPendingCredentialInput={hasPendingCredentialInput}
+          currentConsentRequired={Boolean(adsQuery.data?.consentRequired)}
+          settingsMessage={settingsMessage}
+          onSave={saveSettings}
+        />,
+        <AdsFilterRow
+          q={q}
+          setQ={setQ}
+          status={status}
+          setStatus={setStatus}
+          provider={provider}
+          setProvider={setProvider}
+          placement={placement}
+          setPlacement={setPlacement}
+          placements={placements}
+          onPageReset={() => setPage(1)}
+        />,
         <DataTable
           columns={columns}
           rows={rows}

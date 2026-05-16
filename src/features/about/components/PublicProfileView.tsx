@@ -97,202 +97,18 @@ export async function PublicProfileView({
   const storeName = store?.storeName ?? pub?.storeName ?? displayName;
   const storeDescription = store?.storeDescription ?? pub?.storeDescription;
 
+  const profileHeroCtx = { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass };
+  const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller });
+
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="publicprofileview-div-186">
-      {/* Profile hero banner */}
-      <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
-        <div className={`${page.container.md}`}>
-          <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5">
-            {/* Avatar */}
-            <div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}>
-              {photoURL ? (
-                <img src={photoURL} alt={displayName} className="w-full h-full object-cover" />
-              ) : (
-                <User className="w-10 h-10 text-white/60" />
-              )}
-            </div>
-            <div className="text-center sm:text-left">
-              <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-                <Heading level={1} variant="none" className="text-white mb-0">
-                  {displayName}
-                </Heading>
-                {isSeller && (
-                  <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white/90">
-                    {t("roleSeller")}
-                  </span>
-                )}
-              </div>
-              <Text variant="none" className="text-white/60 text-sm mt-1">
-                {memberSince}
-              </Text>
-            </div>
-
-            {/* Visit store button */}
-            {isSeller && storeSlug && (
-              <div className="sm:ml-auto">
-                <Link
-                  href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-4 py-2 text-sm font-medium text-white transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  {t("visitStore")}
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-      </Section>
-
+      {renderProfileHero(t, profileHeroCtx)}
       <div className={`${page.container.md} py-10 md:py-12 space-y-10`}>
-        {/* Stats row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { icon: ShoppingBag, label: t("statListings"), value: String(listingCount) },
-            { icon: Star, label: t("statReviews"), value: String(reviewCount) },
-            ...(isSeller
-              ? [
-                  { icon: Package, label: t("statSold"), value: String(itemsSold) },
-                  { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
-                ]
-              : [
-                  { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
-                  { icon: Package, label: t("statOrders"), value: String(totalOrders) },
-                ]),
-          ].map(({ icon: Icon, label, value }) => (
-            <div
-              key={label}
-              className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-4 text-center`}
-            >
-              <div className={`${flex.center} mb-1`}>
-                <Icon className="w-4 h-4 text-neutral-400" />
-              </div>
-              <Text className="text-lg font-bold">{value}</Text>
-              <Text variant="secondary" className="text-xs">
-                {label}
-              </Text>
-            </div>
-          ))}
-        </div>
-
-        {/* Bio & meta */}
-        {(pub?.bio || pub?.location || pub?.website) && (
-          <Section>
-            <div className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6 space-y-3`}>
-              {pub.bio && (
-                <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">
-                  {pub.bio}
-                </Text>
-              )}
-              <div className="flex flex-wrap gap-4">
-                {pub.location && (
-                  <span className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-zinc-400">
-                    <MapPin className="w-4 h-4" />
-                    {pub.location}
-                  </span>
-                )}
-                {pub.website && (
-                  <a
-                    href={pub.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-sm text-primary hover:underline"
-                  >
-                    <Globe className="w-4 h-4" />
-                    {pub.website.replace(/^https?:\/\//, "")}
-                  </a>
-                )}
-              </div>
-            </div>
-          </Section>
-        )}
-
-        {/* Store description — shown for sellers with a description */}
-        {isSeller && storeSlug && storeDescription && (
-          <Section>
-            <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-6`}>
-              <Heading level={3} className="mb-2">
-                {storeName}
-              </Heading>
-              <Text variant="secondary" className="text-sm leading-relaxed">
-                {storeDescription}
-              </Text>
-              <Link
-                href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))}
-                className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
-              >
-                {t("visitStore")} →
-              </Link>
-            </div>
-          </Section>
-        )}
-
-        {/* Listings */}
-        <Section>
-          <Heading level={2} className="mb-4">
-            {t("listingsTitle")}
-          </Heading>
-          {products.length === 0 ? (
-            <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
-              <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
-              <Text variant="secondary" className="text-sm">
-                {t("noListings")}
-              </Text>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {products.slice(0, 8).map((p) => (
-                <ProductCard
-                  key={p.id}
-                  product={toProductItem(p)}
-                  href={getProductHref(p)}
-                />
-              ))}
-            </div>
-          )}
-          {products.length > 8 && storeSlug && (
-            <div className="mt-4 text-center">
-              <Link
-                href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))}
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                {t("viewAllListings", { count: products.length })}
-              </Link>
-            </div>
-          )}
-        </Section>
-
-        {/* Reviews */}
-        <Section>
-          <Heading level={2} className="mb-4">
-            {t("reviewsTitle")}
-          </Heading>
-          {reviews.length === 0 ? (
-            <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
-              <Star className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
-              <Text variant="secondary" className="text-sm">
-                {t("noReviews")}
-              </Text>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {reviews.slice(0, 6).map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))}
-            </div>
-          )}
-          {reviews.length > 6 && storeSlug && (
-            <div className="mt-4 text-center">
-              <Link
-                href={String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug))}
-                className="text-sm font-medium text-primary hover:underline"
-              >
-                {t("viewAllReviews", { count: reviews.length })}
-              </Link>
-            </div>
-          )}
-        </Section>
-
-        {/* Back link */}
+        {renderProfileStatsRow(themed, flex, statItems)}
+        {renderProfileBioSection(themed, pub)}
+        {renderStoreDescriptionSection(themed, isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
+        {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
+        {renderProfileReviewsSection(t, themed, reviews, storeSlug ?? null)}
         <div className="flex justify-center pt-2">
           <Link href={String(ROUTES.HOME)} className="text-sm text-neutral-400 dark:text-zinc-500 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
@@ -300,5 +116,152 @@ export async function PublicProfileView({
         </div>
       </div>
     </div>
+  );
+}
+
+type ProfileT = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
+type ProfileThemed = (typeof THEME_CONSTANTS)["themed"];
+type ProfileFlex = (typeof THEME_CONSTANTS)["flex"];
+type ProfilePage = (typeof THEME_CONSTANTS)["page"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PubProfile = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ProfileProduct = any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ProfileReview = any;
+
+function buildProfileStatItems(t: ProfileT, ctx: { listingCount: number; reviewCount: number; itemsSold: number; auctionsWon: number; totalOrders: number; isSeller: boolean }) {
+  const { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller } = ctx;
+  return [
+    { icon: ShoppingBag, label: t("statListings"), value: String(listingCount) },
+    { icon: Star, label: t("statReviews"), value: String(reviewCount) },
+    ...(isSeller
+      ? [
+          { icon: Package, label: t("statSold"), value: String(itemsSold) },
+          { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
+        ]
+      : [
+          { icon: Trophy, label: t("statAuctions"), value: String(auctionsWon) },
+          { icon: Package, label: t("statOrders"), value: String(totalOrders) },
+        ]),
+  ];
+}
+
+function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: string | null; memberSince: string; isSeller: boolean; storeSlug: string | null | undefined; flex: ProfileFlex; page: ProfilePage; heroBannerClass: string }) {
+  const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass } = ctx;
+  return (
+    <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
+      <div className={`${page.container.md}`}>
+        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5">
+          <div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}>
+            {photoURL ? <img src={photoURL} alt={displayName} className="w-full h-full object-cover" /> : <User className="w-10 h-10 text-white/60" />}
+          </div>
+          <div className="text-center sm:text-left">
+            <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+              <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
+              {isSeller && <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white/90">{t("roleSeller")}</span>}
+            </div>
+            <Text variant="none" className="text-white/60 text-sm mt-1">{memberSince}</Text>
+          </div>
+          {isSeller && storeSlug && (
+            <div className="sm:ml-auto">
+              <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-4 py-2 text-sm font-medium text-white transition-colors">
+                <ExternalLink className="w-3.5 h-3.5" />
+                {t("visitStore")}
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {statItems.map(({ icon: Icon, label, value }) => (
+        <div key={label} className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-4 text-center`}>
+          <div className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></div>
+          <Text className="text-lg font-bold">{value}</Text>
+          <Text variant="secondary" className="text-xs">{label}</Text>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
+  if (!pub?.bio && !pub?.location && !pub?.website) return null;
+  return (
+    <Section>
+      <div className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6 space-y-3`}>
+        {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
+        <div className="flex flex-wrap gap-4">
+          {pub.location && <span className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</span>}
+          {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-primary hover:underline"><Globe className="w-4 h-4" />{pub.website.replace(/^https?:\/\//, "")}</a>}
+        </div>
+      </div>
+    </Section>
+  );
+}
+
+function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean, storeSlug: string | null, storeDescription: string | null, storeName: string, t: ProfileT) {
+  if (!isSeller || !storeSlug || !storeDescription) return null;
+  return (
+    <Section>
+      <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-6`}>
+        <Heading level={3} className="mb-2">{storeName}</Heading>
+        <Text variant="secondary" className="text-sm leading-relaxed">{storeDescription}</Text>
+        <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{t("visitStore")} →</Link>
+      </div>
+    </Section>
+  );
+}
+
+function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, products: ProfileProduct[], storeSlug: string | null) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
+      {products.length === 0 ? (
+        <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+          <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+          <Text variant="secondary" className="text-sm">{t("noListings")}</Text>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {products.slice(0, 8).map((p: ProfileProduct) => <ProductCard key={p.id} product={toProductItem(p)} href={getProductHref(p)} />)}
+        </div>
+      )}
+      {products.length > 8 && storeSlug && (
+        <div className="mt-4 text-center">
+          <Link href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllListings", { count: products.length })}</Link>
+        </div>
+      )}
+    </Section>
+  );
+}
+
+function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews: ProfileReview[], storeSlug: string | null) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-4">{t("reviewsTitle")}</Heading>
+      {reviews.length === 0 ? (
+        <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+          <Star className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+          <Text variant="secondary" className="text-sm">{t("noReviews")}</Text>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
+        </div>
+      )}
+      {reviews.length > 6 && storeSlug && (
+        <div className="mt-4 text-center">
+          <Link href={String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllReviews", { count: reviews.length })}</Link>
+        </div>
+      )}
+    </Section>
   );
 }

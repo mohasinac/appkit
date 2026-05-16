@@ -170,6 +170,57 @@ export interface CreateCheckoutOrderInput {
   adminBypassBy?: string;
 }
 
+function accumulateCouponUsage(
+  accumulator: Map<string, { couponId: string; code: string; orderIds: string[]; totalDiscount: number }>,
+  couponCode: string,
+  couponId: string,
+  discountAmount: number,
+): void {
+  const entry = accumulator.get(couponCode) ?? {
+    couponId,
+    code: couponCode,
+    orderIds: [],
+    totalDiscount: 0,
+  };
+  entry.totalDiscount += discountAmount;
+  accumulator.set(couponCode, entry);
+}
+
+async function resolveShippingCost(
+  storeId: string | undefined,
+  groupTotal: number,
+  commissions: { platformShippingPercent: number; platformShippingFixedMin: number },
+): Promise<{ shippingFee: number; storeOwnerId: string | undefined }> {
+  if (!storeId) return { shippingFee: 0, storeOwnerId: undefined };
+  const store = await storeRepository.findById(storeId);
+  const storeOwnerId = store?.ownerId;
+  if (!storeOwnerId) return { shippingFee: 0, storeOwnerId: undefined };
+  const sellerUser = await userRepository.findById(storeOwnerId);
+  const shippingConfig = sellerUser?.shippingConfig;
+  if (!shippingConfig?.isConfigured) return { shippingFee: 0, storeOwnerId };
+  if (shippingConfig.method === "custom") {
+    return { shippingFee: shippingConfig.customShippingPrice ?? 0, storeOwnerId };
+  }
+  if (shippingConfig.method === "shiprocket") {
+    const percentFee = groupTotal * (commissions.platformShippingPercent / 100);
+    return { shippingFee: Math.max(percentFee, commissions.platformShippingFixedMin), storeOwnerId };
+  }
+  return { shippingFee: 0, storeOwnerId };
+}
+
+function buildStockUpdatePayload(
+  product: ProductDocument,
+  qtyDelta: number,
+): Record<string, unknown> {
+  const lt = (product.listingType ?? "standard") as ListingType;
+  const rule = getListingRule(lt);
+  return {
+    availableQuantity: product.availableQuantity - qtyDelta,
+    updatedAt: new Date(),
+    ...rule.stockDecrementExtras(product, qtyDelta),
+  };
+}
+
 interface StockResult {
   available: { item: CartItemDocument; product: ProductDocument }[];
   unavailable: NonNullable<CheckoutOrderResult["unavailableItems"]>;
@@ -380,13 +431,7 @@ export async function createCheckoutOrderAction(
         for (const [pid, qtyDelta] of expansion.decrements) {
           const product = productById.get(pid);
           if (!product) continue;
-          const lt = (product.listingType ?? "standard") as ListingType;
-          const rule = getListingRule(lt);
-          const update: Record<string, unknown> = {
-            availableQuantity: product.availableQuantity - qtyDelta,
-            updatedAt: new Date(),
-            ...rule.stockDecrementExtras(product, qtyDelta),
-          };
+          const update = buildStockUpdatePayload(product, qtyDelta);
           tx.update(
             productRefById.get(pid) as FirebaseFirestore.DocumentReference,
             update,
@@ -496,25 +541,11 @@ export async function createCheckoutOrderAction(
     });
     const totalQuantity = group.reduce((sum, { item }) => sum + item.quantity, 0);
 
-    let shippingFee = 0;
-    let storeOwnerId: string | undefined;
-    const storeId = firstItem.storeId;
-    if (storeId) {
-      const store = await storeRepository.findById(storeId);
-      storeOwnerId = store?.ownerId;
-      if (storeOwnerId) {
-        const sellerUser = await userRepository.findById(storeOwnerId);
-        const shippingConfig = sellerUser?.shippingConfig;
-        if (shippingConfig?.isConfigured) {
-          if (shippingConfig.method === "custom") {
-            shippingFee = shippingConfig.customShippingPrice ?? 0;
-          } else if (shippingConfig.method === "shiprocket") {
-            const percentFee = groupTotal * (commissions.platformShippingPercent / 100);
-            shippingFee = Math.max(percentFee, commissions.platformShippingFixedMin);
-          }
-        }
-      }
-    }
+    const { shippingFee, storeOwnerId } = await resolveShippingCost(
+      firstItem.storeId,
+      groupTotal,
+      commissions,
+    );
 
     const isCodLike = paymentMethod === "cod" || paymentMethod === "upi_manual";
     const depositAmount = isCodLike
@@ -574,14 +605,7 @@ export async function createCheckoutOrderAction(
           storeId: coupon.storeId,
         });
         if (coupon.couponId) {
-          const entry = couponUsageAccumulator.get(coupon.code) ?? {
-            couponId: coupon.couponId,
-            code: coupon.code,
-            orderIds: [],
-            totalDiscount: 0,
-          };
-          entry.totalDiscount += couponGroupDiscount;
-          couponUsageAccumulator.set(coupon.code, entry);
+          accumulateCouponUsage(couponUsageAccumulator, coupon.code, coupon.couponId, couponGroupDiscount);
           groupCouponCodes.add(coupon.code);
         }
       }

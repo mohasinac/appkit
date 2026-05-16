@@ -1,5 +1,7 @@
 import React from "react";
 import { Div, Heading, RichText, Text } from "../../../ui";
+
+const CLS_LABEL = "font-medium text-neutral-700 min-w-[120px]";
 import type { StoreDetail } from "../types";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -56,7 +58,7 @@ export function StoreAboutView({
       <Div className="space-y-3 text-sm">
         {store.location && (
           <Div className="flex gap-2">
-            <Text className="font-medium text-neutral-700 min-w-[120px]">
+            <Text className={CLS_LABEL}>
               {labels.locationLabel ?? "Location"}
             </Text>
             <Text className="text-neutral-600">{store.location}</Text>
@@ -64,7 +66,7 @@ export function StoreAboutView({
         )}
         {joinDate && (
           <Div className="flex gap-2">
-            <Text className="font-medium text-neutral-700 min-w-[120px]">
+            <Text className={CLS_LABEL}>
               {labels.memberSinceLabel ?? "Member since"}
             </Text>
             <Text className="text-neutral-600">{joinDate}</Text>
@@ -72,7 +74,7 @@ export function StoreAboutView({
         )}
         {store.website && (
           <Div className="flex gap-2">
-            <Text className="font-medium text-neutral-700 min-w-[120px]">
+            <Text className={CLS_LABEL}>
               {labels.websiteLabel ?? "Website"}
             </Text>
             <a

@@ -145,6 +145,13 @@ import {
   parseCollectionCardsBuilder,
 } from "./sections/adminSectionsBuildParse";
 
+const CLS_SECTION_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
+const LBL_FILTER_BY_CATEGORY = "Filter by category";
+const LBL_MAX_ITEMS = "Max items";
+const LBL_AUTOMATIC = "Automatic";
+const LBL_MANUAL_IDS = "Manual IDs";
+const LBL_SCROLL_INTERVAL = "Scroll interval (ms)";
+
 export interface AdminSectionsViewProps {
   children?: React.ReactNode;
 }
@@ -545,6 +552,13 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     });
   }
 
+  function handleReorderDrop(targetIndex: number) {
+    if (dragIndex !== null) {
+      moveItemToIndex(dragIndex, targetIndex);
+    }
+    setDragIndex(null);
+  }
+
   function reindexDraft() {
     applyReorderChange((prev) => normalizeOrder(prev));
   }
@@ -563,9 +577,44 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     setReorderDraft(cloneReorderItems(latest));
   }
 
+  function renderProductsCategorySelectors(): React.ReactNode {
+    return (
+      <Div className="space-y-2">
+        <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          Category selectors
+        </Text>
+        {categoriesQuery.isLoading ? (
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">Loading categories...</Text>
+        ) : categoryOptions.length === 0 ? (
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">No categories available.</Text>
+        ) : (
+          <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {categoryOptions.map((category) => (
+              <Checkbox
+                key={category.id}
+                checked={productsBuilder.selectedCategoryIds.includes(category.id)}
+                label={category.name}
+                onChange={(event) =>
+                  setProductsBuilder((prev) => ({
+                    ...prev,
+                    selectedCategoryIds: toggleCategorySelection(
+                      prev.selectedCategoryIds,
+                      category.id,
+                      event.target.checked,
+                    ),
+                  }))
+                }
+              />
+            ))}
+          </Div>
+        )}
+      </Div>
+    );
+  }
+
   function renderProductsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Products Carousel Builder
         </Text>
@@ -624,14 +673,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={productsBuilder.filterByCategory}
           onChange={(e) => setProductsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
           placeholder="category-pokemon-cards"
         />
 
         <Select
-          label="Max items to show"
+          label={LBL_MAX_ITEMS}
           value={String(productsBuilder.maxCount)}
           onValueChange={(v) => setProductsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
@@ -649,41 +698,12 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
           options={[
-            { label: "Automatic by filters", value: "automatic" },
-            { label: "Manual resource IDs", value: "manual" },
+            { label: LBL_AUTOMATIC, value: "automatic" },
+            { label: LBL_MANUAL_IDS, value: "manual" },
           ]}
         />
 
-        <Div className="space-y-2">
-          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Category selectors
-          </Text>
-          {categoriesQuery.isLoading ? (
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Loading categories...</Text>
-          ) : categoryOptions.length === 0 ? (
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">No categories available.</Text>
-          ) : (
-            <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {categoryOptions.map((category) => (
-                <Checkbox
-                  key={category.id}
-                  checked={productsBuilder.selectedCategoryIds.includes(category.id)}
-                  label={category.name}
-                  onChange={(event) =>
-                    setProductsBuilder((prev) => ({
-                      ...prev,
-                      selectedCategoryIds: toggleCategorySelection(
-                        prev.selectedCategoryIds,
-                        category.id,
-                        event.target.checked,
-                      ),
-                    }))
-                  }
-                />
-              ))}
-            </Div>
-          )}
-        </Div>
+        {renderProductsCategorySelectors()}
 
         {productsBuilder.resourceMode === "manual" ? (
           <Textarea
@@ -733,7 +753,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -749,9 +769,44 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  function renderAuctionsCategorySelectors(): React.ReactNode {
+    return (
+      <Div className="space-y-2">
+        <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          Category selectors
+        </Text>
+        {categoriesQuery.isLoading ? (
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">Loading categories...</Text>
+        ) : categoryOptions.length === 0 ? (
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">No categories available.</Text>
+        ) : (
+          <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {categoryOptions.map((category) => (
+              <Checkbox
+                key={category.id}
+                checked={auctionsBuilder.selectedCategoryIds.includes(category.id)}
+                label={category.name}
+                onChange={(event) =>
+                  setAuctionsBuilder((prev) => ({
+                    ...prev,
+                    selectedCategoryIds: toggleCategorySelection(
+                      prev.selectedCategoryIds,
+                      category.id,
+                      event.target.checked,
+                    ),
+                  }))
+                }
+              />
+            ))}
+          </Div>
+        )}
+      </Div>
+    );
+  }
+
   function renderAuctionsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Auctions Carousel Builder
         </Text>
@@ -811,14 +866,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={auctionsBuilder.filterByCategory}
           onChange={(e) => setAuctionsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
           placeholder="category-pokemon-cards"
         />
 
         <Select
-          label="Max items to show"
+          label={LBL_MAX_ITEMS}
           value={String(auctionsBuilder.maxCount)}
           onValueChange={(v) => setAuctionsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
@@ -836,41 +891,12 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
           options={[
-            { label: "Automatic by filters", value: "automatic" },
-            { label: "Manual resource IDs", value: "manual" },
+            { label: LBL_AUTOMATIC, value: "automatic" },
+            { label: LBL_MANUAL_IDS, value: "manual" },
           ]}
         />
 
-        <Div className="space-y-2">
-          <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Category selectors
-          </Text>
-          {categoriesQuery.isLoading ? (
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">Loading categories...</Text>
-          ) : categoryOptions.length === 0 ? (
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">No categories available.</Text>
-          ) : (
-            <Div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {categoryOptions.map((category) => (
-                <Checkbox
-                  key={category.id}
-                  checked={auctionsBuilder.selectedCategoryIds.includes(category.id)}
-                  label={category.name}
-                  onChange={(event) =>
-                    setAuctionsBuilder((prev) => ({
-                      ...prev,
-                      selectedCategoryIds: toggleCategorySelection(
-                        prev.selectedCategoryIds,
-                        category.id,
-                        event.target.checked,
-                      ),
-                    }))
-                  }
-                />
-              ))}
-            </Div>
-          )}
-        </Div>
+        {renderAuctionsCategorySelectors()}
 
         {auctionsBuilder.resourceMode === "manual" ? (
           <Textarea
@@ -898,7 +924,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -916,7 +942,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderStatsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Stats Section Builder
         </Text>
@@ -1005,7 +1031,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderPreOrdersBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Pre-Orders Carousel Builder
         </Text>
@@ -1065,14 +1091,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={preOrdersBuilder.filterByCategory}
           onChange={(e) => setPreOrdersBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
           placeholder="category-beyblade-tops"
         />
 
         <Select
-          label="Max items to show"
+          label={LBL_MAX_ITEMS}
           value={String(preOrdersBuilder.maxCount)}
           onValueChange={(v) => setPreOrdersBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
@@ -1090,8 +1116,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
           options={[
-            { label: "Automatic by filters", value: "automatic" },
-            { label: "Manual resource IDs", value: "manual" },
+            { label: LBL_AUTOMATIC, value: "automatic" },
+            { label: LBL_MANUAL_IDS, value: "manual" },
           ]}
         />
 
@@ -1128,7 +1154,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -1146,7 +1172,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderStoresBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Stores Section Builder
         </Text>
@@ -1206,14 +1232,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={storesBuilder.filterByCategory}
           onChange={(e) => setStoresBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
           placeholder="category-pokemon-cards"
         />
 
         <Select
-          label="Max items to show"
+          label={LBL_MAX_ITEMS}
           value={String(storesBuilder.maxCount)}
           onValueChange={(v) => setStoresBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
@@ -1231,8 +1257,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
           options={[
-            { label: "Automatic by filters", value: "automatic" },
-            { label: "Manual resource IDs", value: "manual" },
+            { label: LBL_AUTOMATIC, value: "automatic" },
+            { label: LBL_MANUAL_IDS, value: "manual" },
           ]}
         />
 
@@ -1280,7 +1306,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -1298,7 +1324,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderEventsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Events Section Builder
         </Text>
@@ -1358,14 +1384,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={eventsBuilder.filterByCategory}
           onChange={(e) => setEventsBuilder((prev) => ({ ...prev, filterByCategory: e.target.value }))}
           placeholder="category-events"
         />
 
         <Select
-          label="Max items to show"
+          label={LBL_MAX_ITEMS}
           value={String(eventsBuilder.maxCount)}
           onValueChange={(v) => setEventsBuilder((prev) => ({ ...prev, maxCount: Number(v) as ResourceMaxCount }))}
           options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]}
@@ -1383,8 +1409,8 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             }))
           }
           options={[
-            { label: "Automatic by filters", value: "automatic" },
-            { label: "Manual resource IDs", value: "manual" },
+            { label: LBL_AUTOMATIC, value: "automatic" },
+            { label: LBL_MANUAL_IDS, value: "manual" },
           ]}
         />
 
@@ -1432,7 +1458,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -1450,7 +1476,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderFAQBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">FAQ Section Builder</Text>
         <Input label="Section title" value={faqBuilder.title} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Subtitle" value={faqBuilder.subtitle} onChange={(e) => setFaqBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
@@ -1482,7 +1508,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderBlogBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Blog Articles Builder</Text>
         <Input label="Section title" value={blogBuilder.title} onChange={(e) => setBlogBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Select label="Max articles" value={String(blogBuilder.maxArticles)} onValueChange={(v) => setBlogBuilder((prev) => ({ ...prev, maxArticles: Number(v) }))} options={[{ label: "3", value: "3" }, { label: "4", value: "4" }, { label: "6", value: "6" }]} />
@@ -1495,7 +1521,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderNewsletterBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Newsletter Section Builder</Text>
         <Input label="Title" value={newsletterBuilder.title} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Textarea label="Description" value={newsletterBuilder.description} onChange={(e) => setNewsletterBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
@@ -1509,7 +1535,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderBannerBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Banner Section Builder</Text>
         <Select label="Height" value={bannerBuilder.height} onValueChange={(v) => setBannerBuilder((prev) => ({ ...prev, height: v as BannerBuilderState["height"] }))} options={[{ label: "Small (200px)", value: "sm" }, { label: "Medium (300px)", value: "md" }, { label: "Large (400px)", value: "lg" }, { label: "Extra Large (500px)", value: "xl" }]} />
         <Input label="Background image URL" type="url" value={bannerBuilder.backgroundImage} onChange={(e) => setBannerBuilder((prev) => ({ ...prev, backgroundImage: e.target.value }))} placeholder="https://..." />
@@ -1543,7 +1569,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderFeaturesBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Features Section Builder</Text>
         <Input label="Section title" value={featuresBuilder.title} onChange={(e) => setFeaturesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Div className="space-y-2">
@@ -1562,7 +1588,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderReviewsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Reviews Section Builder</Text>
         <Input label="Section title" value={reviewsBuilder.title} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Select
@@ -1586,14 +1612,14 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         <Select label="Max reviews" value={String(reviewsBuilder.maxReviews)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, maxReviews: Number(v) }))} options={[{ label: "5", value: "5" }, { label: "10", value: "10" }, { label: "20", value: "20" }]} />
         <Select label="Items per view" value={String(reviewsBuilder.itemsPerView)} onValueChange={(v) => setReviewsBuilder((prev) => ({ ...prev, itemsPerView: Number(v) }))} options={[{ label: "1", value: "1" }, { label: "2", value: "2" }, { label: "3", value: "3" }]} />
         <Checkbox checked={reviewsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
-        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(reviewsBuilder.scrollInterval)} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(reviewsBuilder.scrollInterval)} onChange={(e) => setReviewsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
       </Div>
     );
   }
 
   function renderWhatsAppBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">WhatsApp Community Builder</Text>
         <Input label="Title" value={whatsappBuilder.title} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Textarea label="Description" value={whatsappBuilder.description} onChange={(e) => setWhatsappBuilder((prev) => ({ ...prev, description: e.target.value }))} rows={2} />
@@ -1617,7 +1643,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderWelcomeBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Welcome Section Builder</Text>
         <Input label="Headline (h1)" value={welcomeBuilder.h1} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, h1: e.target.value }))} />
         <Input label="Subtitle" value={welcomeBuilder.subtitle} onChange={(e) => setWelcomeBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
@@ -1635,7 +1661,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderTrustIndicatorsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Trust Indicators Builder</Text>
         <Input label="Section title" value={trustIndicatorsBuilder.title} onChange={(e) => setTrustIndicatorsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         {trustIndicatorsBuilder.indicators.map((ind, index) => (
@@ -1656,32 +1682,32 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderCategoriesBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Categories Section Builder</Text>
         <Input label="Section title" value={categoriesBuilder.title} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Max categories (4–12)" type="number" min={4} max={12} value={String(categoriesBuilder.maxCategories)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, maxCategories: Math.min(12, Math.max(4, Number(e.target.value) || 4)) }))} />
         <Checkbox checked={categoriesBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
-        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(categoriesBuilder.scrollInterval)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(categoriesBuilder.scrollInterval)} onChange={(e) => setCategoriesBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
       </Div>
     );
   }
 
   function renderBrandsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Brands Section Builder</Text>
         <Input label="Section title" value={brandsBuilder.title} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, title: e.target.value }))} />
         <Input label="Subtitle" value={brandsBuilder.subtitle} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, subtitle: e.target.value }))} />
         <Input label="Max brands" type="number" min={1} max={30} value={String(brandsBuilder.maxBrands)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, maxBrands: Math.max(1, Number(e.target.value) || 1) }))} />
         <Checkbox checked={brandsBuilder.autoScroll} label="Auto-scroll" onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, autoScroll: e.target.checked }))} />
-        <Input label="Scroll interval (ms)" type="number" min={1000} step={500} value={String(brandsBuilder.scrollInterval)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
+        <Input label={LBL_SCROLL_INTERVAL} type="number" min={1000} step={500} value={String(brandsBuilder.scrollInterval)} onChange={(e) => setBrandsBuilder((prev) => ({ ...prev, scrollInterval: Math.max(1000, Number(e.target.value) || 1000) }))} />
       </Div>
     );
   }
 
   function renderCarouselBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Carousel Section Builder
         </Text>
@@ -1779,8 +1805,53 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
       });
     }
 
+    function renderCardFields(card: CustomCardsCardBuilderEntry, index: number): React.ReactNode {
+      return (
+        <Div
+          key={`custom-card-${index}`}
+          className="space-y-3 rounded-md border border-zinc-200 p-3 dark:border-slate-700"
+        >
+          <Div className="flex items-center justify-between">
+            <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+              Card {index + 1}
+            </Text>
+            <Button type="button" variant="outline" size="sm" onClick={() => removeCard(index)}>
+              Remove
+            </Button>
+          </Div>
+          <Input label="ID / slug" value={card.id} onChange={(e) => updateCard(index, { id: e.target.value })} placeholder="card-1" />
+          <Input label="Image URL" value={card.image} onChange={(e) => updateCard(index, { image: e.target.value })} placeholder="https://..." />
+          <Input label="Image alt text" value={card.imageAlt} onChange={(e) => updateCard(index, { imageAlt: e.target.value })} />
+          <Input label="Eyebrow (small label above title)" value={card.eyebrow} onChange={(e) => updateCard(index, { eyebrow: e.target.value })} />
+          <Input label="Title" value={card.title} onChange={(e) => updateCard(index, { title: e.target.value })} />
+          <Input label="Body / description" value={card.body} onChange={(e) => updateCard(index, { body: e.target.value })} />
+          <Input label="Link (href)" value={card.link} onChange={(e) => updateCard(index, { link: e.target.value })} placeholder="/categories/..." />
+          <Input label="Background colour" value={card.backgroundColor} onChange={(e) => updateCard(index, { backgroundColor: e.target.value })} placeholder="#ffffff or var(--appkit-color-primary)" />
+          <Input label="Text colour" value={card.textColor} onChange={(e) => updateCard(index, { textColor: e.target.value })} placeholder="#000000" />
+          <Select
+            label="Border radius"
+            value={card.borderRadius}
+            onValueChange={(value) => updateCard(index, { borderRadius: value as CustomCardsCardBuilderEntry["borderRadius"] })}
+            options={[
+              { label: "None", value: "none" }, { label: "Small", value: "sm" }, { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" }, { label: "XL", value: "xl" }, { label: "Full (pill)", value: "full" },
+            ]}
+          />
+          <Select
+            label="Shadow level"
+            value={card.shadowLevel}
+            onValueChange={(value) => updateCard(index, { shadowLevel: value as CustomCardsCardBuilderEntry["shadowLevel"] })}
+            options={[
+              { label: "None", value: "none" }, { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" }, { label: "Large", value: "lg" },
+            ]}
+          />
+        </Div>
+      );
+    }
+
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Custom Cards Builder
         </Text>
@@ -1825,7 +1896,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
         />
 
         <Input
-          label="Scroll interval (ms)"
+          label={LBL_SCROLL_INTERVAL}
           type="number"
           min={1000}
           step={500}
@@ -1848,99 +1919,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
             </Button>
           </Div>
 
-          {customCardsBuilder.cards.map((card, index) => (
-            <Div
-              key={`custom-card-${index}`}
-              className="space-y-3 rounded-md border border-zinc-200 p-3 dark:border-slate-700"
-            >
-              <Div className="flex items-center justify-between">
-                <Text className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                  Card {index + 1}
-                </Text>
-                <Button type="button" variant="outline" size="sm" onClick={() => removeCard(index)}>
-                  Remove
-                </Button>
-              </Div>
-              <Input
-                label="ID / slug"
-                value={card.id}
-                onChange={(e) => updateCard(index, { id: e.target.value })}
-                placeholder="card-1"
-              />
-              <Input
-                label="Image URL"
-                value={card.image}
-                onChange={(e) => updateCard(index, { image: e.target.value })}
-                placeholder="https://..."
-              />
-              <Input
-                label="Image alt text"
-                value={card.imageAlt}
-                onChange={(e) => updateCard(index, { imageAlt: e.target.value })}
-              />
-              <Input
-                label="Eyebrow (small label above title)"
-                value={card.eyebrow}
-                onChange={(e) => updateCard(index, { eyebrow: e.target.value })}
-              />
-              <Input
-                label="Title"
-                value={card.title}
-                onChange={(e) => updateCard(index, { title: e.target.value })}
-              />
-              <Input
-                label="Body / description"
-                value={card.body}
-                onChange={(e) => updateCard(index, { body: e.target.value })}
-              />
-              <Input
-                label="Link (href)"
-                value={card.link}
-                onChange={(e) => updateCard(index, { link: e.target.value })}
-                placeholder="/categories/..."
-              />
-              <Input
-                label="Background colour"
-                value={card.backgroundColor}
-                onChange={(e) => updateCard(index, { backgroundColor: e.target.value })}
-                placeholder="#ffffff or var(--appkit-color-primary)"
-              />
-              <Input
-                label="Text colour"
-                value={card.textColor}
-                onChange={(e) => updateCard(index, { textColor: e.target.value })}
-                placeholder="#000000"
-              />
-              <Select
-                label="Border radius"
-                value={card.borderRadius}
-                onValueChange={(value) =>
-                  updateCard(index, { borderRadius: value as CustomCardsCardBuilderEntry["borderRadius"] })
-                }
-                options={[
-                  { label: "None", value: "none" },
-                  { label: "Small", value: "sm" },
-                  { label: "Medium", value: "md" },
-                  { label: "Large", value: "lg" },
-                  { label: "XL", value: "xl" },
-                  { label: "Full (pill)", value: "full" },
-                ]}
-              />
-              <Select
-                label="Shadow level"
-                value={card.shadowLevel}
-                onValueChange={(value) =>
-                  updateCard(index, { shadowLevel: value as CustomCardsCardBuilderEntry["shadowLevel"] })
-                }
-                options={[
-                  { label: "None", value: "none" },
-                  { label: "Small", value: "sm" },
-                  { label: "Medium", value: "md" },
-                  { label: "Large", value: "lg" },
-                ]}
-              />
-            </Div>
-          ))}
+          {customCardsBuilder.cards.map((card, index) => renderCardFields(card, index))}
 
           {customCardsBuilder.cards.length === 0 ? (
             <Text className="text-sm text-zinc-500 dark:text-zinc-400">No cards added yet. Click "Add card" to start.</Text>
@@ -1952,7 +1931,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderGoogleReviewsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Google Reviews Builder
         </Text>
@@ -2037,7 +2016,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderFeaturedBundlesBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Featured Bundles Builder
         </Text>
@@ -2074,7 +2053,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           helperText="Leave blank to show bundles from all stores."
         />
         <Input
-          label="Filter by category slug"
+          label={LBL_FILTER_BY_CATEGORY}
           value={featuredBundlesBuilder.categorySlug}
           onChange={(e) => setFeaturedBundlesBuilder((prev) => ({ ...prev, categorySlug: e.target.value }))}
           placeholder="category-trading-cards"
@@ -2106,7 +2085,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderPrizeDrawsBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Prize Draws Builder
         </Text>
@@ -2172,7 +2151,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderEventRafflesBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Event Raffles Builder
         </Text>
@@ -2230,22 +2209,84 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
     );
   }
 
+  const COLLECTION_CARD_TYPE_OPTIONS: { label: string; value: CollectionCardEntryType }[] = [
+    { label: "Products", value: "products" },
+    { label: "Auctions", value: "auctions" },
+    { label: "Pre-orders", value: "pre-orders" },
+    { label: "Stores", value: "stores" },
+    { label: "Events", value: "events" },
+    { label: "Blog posts", value: "blog-posts" },
+    { label: "Reviews", value: "reviews" },
+    { label: "Brands", value: "brands" },
+    { label: "Categories", value: "categories" },
+  ];
+
+  function renderCollectionEntry(entry: { type: CollectionCardEntryType; label: string; limit: number }, idx: number): React.ReactNode {
+    return (
+      <Div
+        key={`collection-${idx}`}
+        className="space-y-2 rounded-lg border border-zinc-200 p-3 dark:border-slate-700"
+      >
+        <Select
+          label={`Collection ${idx + 1} type`}
+          value={entry.type}
+          onValueChange={(value) =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              collections: prev.collections.map((c, i) =>
+                i === idx ? { ...c, type: value as CollectionCardEntryType } : c,
+              ),
+            }))
+          }
+          options={COLLECTION_CARD_TYPE_OPTIONS}
+        />
+        <Input
+          label="Display label (optional)"
+          value={entry.label}
+          onChange={(e) =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              collections: prev.collections.map((c, i) => (i === idx ? { ...c, label: e.target.value } : c)),
+            }))
+          }
+          placeholder="Leave blank to use the type name"
+        />
+        <Input
+          label="Items in this collection"
+          type="number"
+          min={1}
+          max={20}
+          value={String(entry.limit)}
+          onChange={(e) =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              collections: prev.collections.map((c, i) =>
+                i === idx ? { ...c, limit: Math.max(1, Math.min(20, Number(e.target.value) || 4)) } : c,
+              ),
+            }))
+          }
+        />
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() =>
+            setCollectionCardsBuilder((prev) => ({
+              ...prev,
+              collections: prev.collections.filter((_, i) => i !== idx),
+            }))
+          }
+        >
+          Remove
+        </Button>
+      </Div>
+    );
+  }
+
   function renderCollectionCardsBuilder(): React.ReactNode {
-    const COLLECTION_TYPE_OPTIONS: { label: string; value: CollectionCardEntryType }[] = [
-      { label: "Products", value: "products" },
-      { label: "Auctions", value: "auctions" },
-      { label: "Pre-orders", value: "pre-orders" },
-      { label: "Stores", value: "stores" },
-      { label: "Events", value: "events" },
-      { label: "Blog posts", value: "blog-posts" },
-      { label: "Reviews", value: "reviews" },
-      { label: "Brands", value: "brands" },
-      { label: "Categories", value: "categories" },
-    ];
     const entries = collectionCardsBuilder.collections;
     const canAdd = entries.length < 3;
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
           Collection Cards Builder
         </Text>
@@ -2311,64 +2352,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
           <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
             Collections ({entries.length}/3)
           </Text>
-          {entries.map((entry, idx) => (
-            <Div
-              key={`collection-${idx}`}
-              className="space-y-2 rounded-lg border border-zinc-200 p-3 dark:border-slate-700"
-            >
-              <Select
-                label={`Collection ${idx + 1} type`}
-                value={entry.type}
-                onValueChange={(value) =>
-                  setCollectionCardsBuilder((prev) => ({
-                    ...prev,
-                    collections: prev.collections.map((c, i) =>
-                      i === idx ? { ...c, type: value as CollectionCardEntryType } : c,
-                    ),
-                  }))
-                }
-                options={COLLECTION_TYPE_OPTIONS}
-              />
-              <Input
-                label="Display label (optional)"
-                value={entry.label}
-                onChange={(e) =>
-                  setCollectionCardsBuilder((prev) => ({
-                    ...prev,
-                    collections: prev.collections.map((c, i) => (i === idx ? { ...c, label: e.target.value } : c)),
-                  }))
-                }
-                placeholder="Leave blank to use the type name"
-              />
-              <Input
-                label="Items in this collection"
-                type="number"
-                min={1}
-                max={20}
-                value={String(entry.limit)}
-                onChange={(e) =>
-                  setCollectionCardsBuilder((prev) => ({
-                    ...prev,
-                    collections: prev.collections.map((c, i) =>
-                      i === idx ? { ...c, limit: Math.max(1, Math.min(20, Number(e.target.value) || 4)) } : c,
-                    ),
-                  }))
-                }
-              />
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() =>
-                  setCollectionCardsBuilder((prev) => ({
-                    ...prev,
-                    collections: prev.collections.filter((_, i) => i !== idx),
-                  }))
-                }
-              >
-                Remove
-              </Button>
-            </Div>
-          ))}
+          {entries.map((entry, idx) => renderCollectionEntry(entry, idx))}
           {canAdd ? (
             <Button
               type="button"
@@ -2402,7 +2386,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
 
   function renderSocialFeedBuilder(): React.ReactNode {
     return (
-      <Div className="space-y-4 rounded-lg border border-zinc-200 p-4 dark:border-slate-700">
+      <Div className={CLS_SECTION_PANEL}>
         <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">Social Feed Builder</Text>
         <Input
           label="Section title"
@@ -2614,12 +2598,7 @@ export function AdminSectionsView({ children }: AdminSectionsViewProps) {
                 draggable
                 onDragStart={() => setDragIndex(index)}
                 onDragOver={(event) => event.preventDefault()}
-                onDrop={() => {
-                  if (dragIndex !== null) {
-                    moveItemToIndex(dragIndex, index);
-                  }
-                  setDragIndex(null);
-                }}
+                onDrop={() => handleReorderDrop(index)}
                 onDragEnd={() => setDragIndex(null)}
               >
                 <Text className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">≡</Text>

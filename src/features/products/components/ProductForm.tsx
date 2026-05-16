@@ -113,6 +113,14 @@ export interface ProductFormProps {
   renderGroupSettings?: (product: ProductFormValue) => React.ReactNode;
 }
 
+function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result ?? ""));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function ProductForm({
   product,
   onChange,
@@ -798,16 +806,12 @@ export function ProductForm({
           <PrizeDrawItemsEditor
             items={(product.prizeDrawItems ?? []) as PrizeDrawItem[]}
             onChange={(items) => update({ prizeDrawItems: items })}
-            onUploadImage={async (file) => {
+            onUploadImage={(file) =>
               // Caller is expected to wire a real uploader by overriding
               // renderPrizeDrawImageUpload — fall back to data URL preview
               // so the editor still functions in unwired admin contexts.
-              return new Promise<string>((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(String(reader.result ?? ""));
-                reader.readAsDataURL(file);
-              });
-            }}
+              readFileAsDataUrl(file)
+            }
           />
         </>
         );

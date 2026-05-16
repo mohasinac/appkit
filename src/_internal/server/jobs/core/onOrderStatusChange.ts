@@ -114,6 +114,41 @@ export interface HandleOrderStatusChangeInput {
   after: OrderAfter | null;
 }
 
+async function sendStatusChangeEmail(
+  ctx: JobContext,
+  userEmail: string,
+  newStatus: OrderStatus,
+  orderId: string,
+  after: OrderAfter,
+  apiKey: string,
+): Promise<void> {
+  try {
+    const fromAddress =
+      ctx.env("ORDER_EMAIL_FROM") ?? ctx.env("RESEND_FROM_ADDRESS") ?? "";
+    const brandName = ctx.env("APPKIT_BRAND_NAME") ?? "";
+    if (!fromAddress || !brandName) {
+      ctx.logger.error(
+        "ORDER_EMAIL_FROM / APPKIT_BRAND_NAME not configured — skipping order status email",
+        null,
+        { orderId },
+      );
+    } else {
+      await sendResendEmail({
+        to: userEmail,
+        status: newStatus,
+        orderId,
+        productTitle: after.productTitle,
+        trackingNumber: after.trackingNumber,
+        apiKey,
+        fromAddress,
+        brandName,
+      });
+    }
+  } catch (emailError) {
+    ctx.logger.error("Email send failed (non-fatal)", emailError, { orderId });
+  }
+}
+
 export async function handleOrderStatusChange(
   input: HandleOrderStatusChangeInput,
   ctx: JobContext,
@@ -165,31 +200,7 @@ export async function handleOrderStatusChange(
       if (!apiKey) {
         ctx.logger.error(JOB_ERROR_MESSAGES.RESEND_KEY_MISSING, null);
       } else {
-        try {
-          const fromAddress =
-            ctx.env("ORDER_EMAIL_FROM") ?? ctx.env("RESEND_FROM_ADDRESS") ?? "";
-          const brandName = ctx.env("APPKIT_BRAND_NAME") ?? "";
-          if (!fromAddress || !brandName) {
-            ctx.logger.error(
-              "ORDER_EMAIL_FROM / APPKIT_BRAND_NAME not configured — skipping order status email",
-              null,
-              { orderId },
-            );
-          } else {
-            await sendResendEmail({
-              to: userEmail,
-              status: newStatus,
-              orderId,
-              productTitle: after.productTitle,
-              trackingNumber: after.trackingNumber,
-              apiKey,
-              fromAddress,
-              brandName,
-            });
-          }
-        } catch (emailError) {
-          ctx.logger.error("Email send failed (non-fatal)", emailError, { orderId });
-        }
+        await sendStatusChangeEmail(ctx, userEmail, newStatus, orderId, after, apiKey);
       }
     }
 

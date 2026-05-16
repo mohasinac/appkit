@@ -62,6 +62,9 @@ export type { BundleBuyNowCtaProps } from "./BundleBuyNowCta";
 export { BundleDynamicRuleEditor } from "./BundleDynamicRuleEditor";
 export type { BundleDynamicRuleEditorProps } from "./BundleDynamicRuleEditor";
 
+export { BundleCollage } from "./BundleCollage";
+export type { BundleCollageProps } from "./BundleCollage";
+
 // S-SBUNI-4 2026-05-13 — multi-select product picker for bundle editor.
 export {
   BundleItemsPicker,

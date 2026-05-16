@@ -1,16 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Button,
-  Div,
-  FormField,
-  FormGroup,
-  Heading,
-  Stack,
-  Text,
-} from "../../../ui";
+import { Alert, Badge, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 
 type PayoutMethod = "upi" | "bank_transfer";
@@ -150,7 +140,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
         )}
 
         {/* Method selector */}
-        <section>
+        <Section>
           <Heading level={3} className="mb-3">Payout Method</Heading>
           <Stack gap="sm">
             {([
@@ -177,11 +167,11 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
               </label>
             ))}
           </Stack>
-        </section>
+        </Section>
 
         {/* UPI fields */}
         {isUpi && (
-          <section>
+          <Section>
             <Heading level={3} className="mb-3">UPI Details</Heading>
             <FormField
               name="upiId"
@@ -193,12 +183,12 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
               helpText="Ensure this VPA is registered and active."
               disabled={busy}
             />
-          </section>
+          </Section>
         )}
 
         {/* Bank fields */}
         {!isUpi && (
-          <section>
+          <Section>
             <Heading level={3} className="mb-3">Bank Account Details</Heading>
             <Stack gap="md">
               <FormField
@@ -262,7 +252,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                 </Div>
               </FormGroup>
             </Stack>
-          </section>
+          </Section>
         )}
 
         {/* Save */}

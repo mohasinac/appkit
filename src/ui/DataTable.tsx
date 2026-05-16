@@ -203,6 +203,13 @@ export function DataTable<T extends object>({
     return sorted;
   }, [data, sortKey, sortDirection]);
 
+  const handleRowSelectionChange = (item: T, checked: boolean) => {
+    const id = keyExtractor(item);
+    onSelectionChange?.(
+      checked ? [...selectedIds, id] : selectedIds.filter((s) => s !== id),
+    );
+  };
+
   const paginatedData = useMemo(() => {
     if (externalPagination) return sortedData;
     const start = (currentPage - 1) * pageSize;
@@ -513,14 +520,7 @@ export function DataTable<T extends object>({
                           className="rounded border-zinc-300"
                           aria-label="Select row"
                           checked={selectedIds.includes(keyExtractor(item))}
-                          onChange={(e) => {
-                            const id = keyExtractor(item);
-                            onSelectionChange?.(
-                              e.target.checked
-                                ? [...selectedIds, id]
-                                : selectedIds.filter((s) => s !== id),
-                            );
-                          }}
+                          onChange={(e) => handleRowSelectionChange(item, e.target.checked)}
                         />
                       </td>
                     )}
@@ -563,6 +563,213 @@ export function DataTable<T extends object>({
           />
         </div>
       )}
+    </div>
+  );
+}
+
+// --- DataTableViewToggle (internal) ------------------------------------------
+
+interface DataTableViewToggleProps {
+  showViewToggle: boolean;
+  showTableView: boolean;
+  activeViewMode: ViewMode;
+  labels: { tableView: string; gridView: string; listView: string };
+  onViewModeChange: (mode: ViewMode) => void;
+}
+
+function DataTableViewToggle({
+  showViewToggle,
+  showTableView,
+  activeViewMode,
+  labels,
+  onViewModeChange,
+}: DataTableViewToggleProps) {
+  if (!showViewToggle) return null;
+  return (
+    <div
+      className="appkit-data-table__view-toggle"
+      role="toolbar"
+      aria-label="View mode"
+      data-section="datatable-div-635"
+    >
+      {showTableView && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => onViewModeChange("table")}
+          aria-label={labels.tableView}
+          aria-pressed={activeViewMode === "table"}
+          className={`appkit-data-table__view-btn ${activeViewMode === "table" ? "appkit-data-table__view-btn--active" : ""} hidden sm:flex`}
+        >
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M3 6h18M3 14h18M3 18h18" />
+          </svg>
+        </Button>
+      )}
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => onViewModeChange("grid")}
+        aria-label={labels.gridView}
+        aria-pressed={activeViewMode === "grid"}
+        className={`appkit-data-table__view-btn ${activeViewMode === "grid" ? "appkit-data-table__view-btn--active" : ""}`}
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+        </svg>
+      </Button>
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => onViewModeChange("list")}
+        aria-label={labels.listView}
+        aria-pressed={activeViewMode === "list"}
+        className={`appkit-data-table__view-btn ${activeViewMode === "list" ? "appkit-data-table__view-btn--active" : ""}`}
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+      </Button>
+    </div>
+  );
+}
+
+// --- DataTableTableView (internal) -------------------------------------------
+
+interface DataTableTableViewProps<T> {
+  columns: DataTableColumn<T>[];
+  paginatedData: T[];
+  keyExtractor: (item: T) => string;
+  selectable: boolean;
+  selectedIds: string[];
+  stickyHeader: boolean;
+  striped: boolean;
+  sortKey: string | null;
+  sortDirection: SortDirection;
+  actions?: (item: T) => ReactNode;
+  labelActions: string;
+  onRowClick?: (item: T) => void;
+  onSelectionChange?: (ids: string[]) => void;
+  onSort: (key: string) => void;
+  onRowSelectionChange: (item: T, checked: boolean) => void;
+}
+
+function DataTableTableView<T extends object>({
+  columns,
+  paginatedData,
+  keyExtractor,
+  selectable,
+  selectedIds,
+  stickyHeader,
+  striped,
+  sortKey,
+  sortDirection,
+  actions,
+  labelActions,
+  onRowClick,
+  onSelectionChange,
+  onSort,
+  onRowSelectionChange,
+}: DataTableTableViewProps<T>) {
+  return (
+    <div className="appkit-data-table__wrapper" data-section="datatable-div-639">
+      <div
+        className={`appkit-data-table__scroll ${stickyHeader ? "appkit-data-table__scroll--sticky" : ""}`}
+        data-section="datatable-div-640"
+      >
+        <table className="appkit-data-table__table">
+          <thead className={`appkit-data-table__thead ${stickyHeader ? "appkit-data-table__thead--sticky" : ""}`}>
+            <tr>
+              {selectable && (
+                <th scope="col" className="px-4 py-3 w-8">
+                  <input
+                    type="checkbox"
+                    className="rounded border-zinc-300"
+                    aria-label="Select all on page"
+                    checked={paginatedData.length > 0 && paginatedData.every((item) => selectedIds.includes(keyExtractor(item)))}
+                    onChange={(e) => {
+                      const pageIds = paginatedData.map(keyExtractor);
+                      onSelectionChange?.(
+                        e.target.checked
+                          ? [...new Set([...selectedIds, ...pageIds])]
+                          : selectedIds.filter((id) => !pageIds.includes(id)),
+                      );
+                    }}
+                  />
+                </th>
+              )}
+              {columns.map((col) => (
+                <th
+                  key={col.key}
+                  scope="col"
+                  aria-sort={
+                    col.sortable
+                      ? sortKey === col.key
+                        ? sortDirection === "asc" ? "ascending" : "descending"
+                        : "none"
+                      : undefined
+                  }
+                  className={`appkit-data-table__th ${col.sortable ? "appkit-data-table__th--sortable" : ""}`}
+                  style={{ width: col.width }}
+                  onClick={() => col.sortable && onSort(col.key)}
+                >
+                  <Row gap="sm">
+                    {col.header}
+                    {col.sortable && (
+                      <span className="text-zinc-400" aria-hidden="true">
+                        {sortKey === col.key ? (sortDirection === "asc" ? "↑" : "↓") : <span className="opacity-30">↕</span>}
+                      </span>
+                    )}
+                  </Row>
+                </th>
+              ))}
+              {actions && (
+                <th scope="col" className="appkit-data-table__th appkit-data-table__td--actions">
+                  {labelActions}
+                </th>
+              )}
+            </tr>
+          </thead>
+          <tbody className="appkit-data-table__tbody divide-y divide-zinc-200 dark:divide-slate-700">
+            {paginatedData.map((item, index) => (
+              <tr
+                key={keyExtractor(item)}
+                className={[
+                  "appkit-data-table__row",
+                  striped && index % 2 === 1 ? "appkit-data-table__row--striped" : "",
+                  onRowClick ? "appkit-data-table__row--clickable" : "",
+                ].join(" ")}
+                onClick={() => onRowClick?.(item)}
+              >
+                {selectable && (
+                  <td className="px-4 py-4 w-8" onClick={(e) => e.stopPropagation()}>
+                    <input
+                      type="checkbox"
+                      className="rounded border-zinc-300"
+                      aria-label="Select row"
+                      checked={selectedIds.includes(keyExtractor(item))}
+                      onChange={(e) => onRowSelectionChange(item, e.target.checked)}
+                    />
+                  </td>
+                )}
+                {columns.map((col) => (
+                  <td key={col.key} className="appkit-data-table__td">
+                    {col.render ? col.render(item) : (((item as Record<string, unknown>)[col.key] as string) ?? "-")}
+                  </td>
+                ))}
+                {actions && (
+                  <td className="appkit-data-table__td appkit-data-table__td--actions" onClick={(e) => e.stopPropagation()}>
+                    {actions(item)}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

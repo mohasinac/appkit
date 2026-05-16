@@ -92,9 +92,9 @@ function ReviewCard({
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-sm font-semibold truncate">{review.authorName}</p>
+          <Text className="text-sm font-semibold truncate">{review.authorName}</Text>
           {dateStr && (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">{dateStr}</p>
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">{dateStr}</Text>
           )}
         </div>
       </div>
@@ -102,9 +102,9 @@ function ReviewCard({
       {showRating && <StarRating rating={review.rating} />}
 
       {review.text && (
-        <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 line-clamp-4">
+        <Text className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 line-clamp-4">
           {review.text}
-        </p>
+        </Text>
       )}
 
       <GoogleBadge />
@@ -204,7 +204,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
     <Section className={`py-12 ${themed.bgPrimary}`}>
       <div className="w-full max-w-7xl mx-auto px-4">
         <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
+          <>
             <Heading level={2}>What Our Customers Say</Heading>
             {aggregateRating > 0 && (
               <div className="flex items-center gap-2 mt-1">
@@ -214,7 +214,7 @@ export async function GoogleReviewsSection(config: GoogleReviewsSectionProps) {
                 </Text>
               </div>
             )}
-          </div>
+          </>
           {linkToGoogleMaps && mapsHref && (
             <a
               href={mapsHref}

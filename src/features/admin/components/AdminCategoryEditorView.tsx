@@ -2,15 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {
-  Button,
-  Form,
-  Input,
-  InlineCreateSelect,
-  StackedViewShell,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, Form, InlineCreateSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -195,9 +187,9 @@ export function AdminCategoryEditorView({
                 />
               )}
             />
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+            <Text className="text-xs text-neutral-500 dark:text-neutral-400">
               Leave empty to create a root category.
-            </p>
+            </Text>
           </div>
 
           <Input

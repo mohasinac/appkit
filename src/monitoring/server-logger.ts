@@ -19,15 +19,11 @@ import { AppError } from "../errors";
 // Using require() calls inside functions keeps the imports out of the static
 // analysis graph and prevents Edge Runtime warnings.
 /* eslint-disable @typescript-eslint/no-require-imports */
-function nodeFsPromises() {
-  return require("fs/promises") as typeof import("fs/promises");
-}
-function nodeFs() {
-  return require("fs") as typeof import("fs");
-}
-function nodePath() {
-  return require("path") as typeof import("path");
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function nodeRequire(id: string): any { return require(id); }
+function nodeFsPromises(): typeof import("fs/promises") { return nodeRequire("fs/promises"); }
+function nodeFs(): typeof import("fs") { return nodeRequire("fs"); }
+function nodePath(): typeof import("path") { return nodeRequire("path"); }
 // process.cwd() is a Node.js-only API. Access it through module.require so
 // Next.js Edge static analysis does not flag this file.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

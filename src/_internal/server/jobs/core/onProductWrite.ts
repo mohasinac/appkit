@@ -26,6 +26,72 @@ async function getParentIds(categoryId: string): Promise<string[]> {
   return (await categoriesRepository.findById(categoryId))?.parentIds ?? [];
 }
 
+interface DispatchInput {
+  productId: string;
+  beforeCategory: string | null;
+  afterCategory: string | null;
+  beforeStoreId: string | null;
+  afterStoreId: string | null;
+  isAuction: boolean;
+  beforeIsAuction: boolean;
+  wasPublished: boolean;
+  isPublished: boolean;
+  isDelete: boolean;
+  ctx: JobContext;
+}
+
+async function dispatchProductWriteEvent(p: DispatchInput): Promise<void> {
+  const { productId, beforeCategory, afterCategory, beforeStoreId, afterStoreId,
+    isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx } = p;
+
+  if (isDelete && wasPublished && beforeCategory) {
+    const parentIds = await getParentIds(beforeCategory);
+    const batch = ctx.db.batch();
+    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, parentIds,
+      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
+    await batch.commit();
+    if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
+    ctx.logger.info("Decremented counters on hard-delete", { productId, category: beforeCategory, storeId: beforeStoreId });
+    return;
+  }
+
+  if (!wasPublished && isPublished && afterCategory) {
+    const parentIds = await getParentIds(afterCategory);
+    const batch = ctx.db.batch();
+    categoriesRepository.updateMetricsInBatch(batch, afterCategory, parentIds,
+      isAuction ? 0 : 1, isAuction ? 1 : 0, productId);
+    await batch.commit();
+    if (afterStoreId) await storeRepository.incrementTotalProducts(afterStoreId, 1);
+    ctx.logger.info("Incremented counters on publish", { productId, category: afterCategory, storeId: afterStoreId });
+    return;
+  }
+
+  if (wasPublished && !isPublished && beforeCategory) {
+    const parentIds = await getParentIds(beforeCategory);
+    const batch = ctx.db.batch();
+    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, parentIds,
+      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
+    await batch.commit();
+    if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
+    ctx.logger.info("Decremented counters on unpublish", { productId, category: beforeCategory, storeId: beforeStoreId });
+    return;
+  }
+
+  if (wasPublished && isPublished && beforeCategory && afterCategory && beforeCategory !== afterCategory) {
+    const [beforeParents, afterParents] = await Promise.all([
+      getParentIds(beforeCategory),
+      getParentIds(afterCategory),
+    ]);
+    const batch = ctx.db.batch();
+    categoriesRepository.updateMetricsInBatch(batch, beforeCategory, beforeParents,
+      beforeIsAuction ? 0 : -1, beforeIsAuction ? -1 : 0, productId);
+    categoriesRepository.updateMetricsInBatch(batch, afterCategory, afterParents,
+      isAuction ? 0 : 1, isAuction ? 1 : 0, productId);
+    await batch.commit();
+    ctx.logger.info("Moved product between categories", { productId, from: beforeCategory, to: afterCategory });
+  }
+}
+
 export interface HandleProductWriteInput {
   productId: string;
   before: ProductDoc | null;
@@ -54,95 +120,10 @@ export async function handleProductWrite(
   const isDelete = !after;
 
   try {
-    if (isDelete && wasPublished && beforeCategory) {
-      const parentIds = await getParentIds(beforeCategory);
-      const batch = ctx.db.batch();
-      categoriesRepository.updateMetricsInBatch(
-        batch,
-        beforeCategory,
-        parentIds,
-        beforeIsAuction ? 0 : -1,
-        beforeIsAuction ? -1 : 0,
-        productId,
-      );
-      await batch.commit();
-      if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
-      ctx.logger.info("Decremented counters on hard-delete", {
-        productId,
-        category: beforeCategory,
-        storeId: beforeStoreId,
-      });
-    } else if (!wasPublished && isPublished && afterCategory) {
-      const parentIds = await getParentIds(afterCategory);
-      const batch = ctx.db.batch();
-      categoriesRepository.updateMetricsInBatch(
-        batch,
-        afterCategory,
-        parentIds,
-        isAuction ? 0 : 1,
-        isAuction ? 1 : 0,
-        productId,
-      );
-      await batch.commit();
-      if (afterStoreId) await storeRepository.incrementTotalProducts(afterStoreId, 1);
-      ctx.logger.info("Incremented counters on publish", {
-        productId,
-        category: afterCategory,
-        storeId: afterStoreId,
-      });
-    } else if (wasPublished && !isPublished && beforeCategory) {
-      const parentIds = await getParentIds(beforeCategory);
-      const batch = ctx.db.batch();
-      categoriesRepository.updateMetricsInBatch(
-        batch,
-        beforeCategory,
-        parentIds,
-        beforeIsAuction ? 0 : -1,
-        beforeIsAuction ? -1 : 0,
-        productId,
-      );
-      await batch.commit();
-      if (beforeStoreId) await storeRepository.incrementTotalProducts(beforeStoreId, -1);
-      ctx.logger.info("Decremented counters on unpublish", {
-        productId,
-        category: beforeCategory,
-        storeId: beforeStoreId,
-      });
-    } else if (
-      wasPublished &&
-      isPublished &&
-      beforeCategory &&
-      afterCategory &&
-      beforeCategory !== afterCategory
-    ) {
-      const [beforeParents, afterParents] = await Promise.all([
-        getParentIds(beforeCategory),
-        getParentIds(afterCategory),
-      ]);
-      const batch = ctx.db.batch();
-      categoriesRepository.updateMetricsInBatch(
-        batch,
-        beforeCategory,
-        beforeParents,
-        beforeIsAuction ? 0 : -1,
-        beforeIsAuction ? -1 : 0,
-        productId,
-      );
-      categoriesRepository.updateMetricsInBatch(
-        batch,
-        afterCategory,
-        afterParents,
-        isAuction ? 0 : 1,
-        isAuction ? 1 : 0,
-        productId,
-      );
-      await batch.commit();
-      ctx.logger.info("Moved product between categories", {
-        productId,
-        from: beforeCategory,
-        to: afterCategory,
-      });
-    }
+    await dispatchProductWriteEvent({
+      productId, beforeCategory, afterCategory, beforeStoreId, afterStoreId,
+      isAuction, beforeIsAuction, wasPublished, isPublished, isDelete, ctx,
+    });
   } catch (err) {
     ctx.logger.error("Counter update failed (non-fatal)", err, { productId });
   }

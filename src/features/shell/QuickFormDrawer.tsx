@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { FormField } from "../../ui/components/FormField";
 import { Toggle } from "../../ui/components/Toggle";
+import { Text } from "../../ui";
 
 export type QuickFieldType = "text" | "number" | "select" | "toggle" | "date" | "textarea" | "email" | "url";
 
@@ -164,7 +165,7 @@ export function QuickFormDrawer({
       >
         {/* Header */}
         <div className="flex-shrink-0 flex items-center gap-3 px-4 py-4 border-b border-[var(--appkit-color-border)]">
-          <p className="flex-1 text-base font-semibold text-[var(--appkit-color-text)]">{title}</p>
+          <Text className="flex-1 text-base font-semibold text-[var(--appkit-color-text)]">{title}</Text>
           <button
             type="button"
             onClick={handleClose}
@@ -192,7 +193,7 @@ export function QuickFormDrawer({
                     label={field.label}
                   />
                   {field.helperText && (
-                    <p className="text-xs text-[var(--appkit-color-text-muted)]">{field.helperText}</p>
+                    <Text className="text-xs text-[var(--appkit-color-text-muted)]">{field.helperText}</Text>
                   )}
                 </div>
               );
@@ -219,9 +220,9 @@ export function QuickFormDrawer({
                   error={errors[field.name]}
                 />
                 {field.helperText && !errors[field.name] && (
-                  <p className="mt-1 text-xs text-[var(--appkit-color-text-muted)]">
+                  <Text className="mt-1 text-xs text-[var(--appkit-color-text-muted)]">
                     {field.helperText}
-                  </p>
+                  </Text>
                 )}
               </div>
             );

@@ -16,6 +16,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { Button, Div, Heading, LoginRequiredModal, Modal, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
@@ -54,6 +55,29 @@ export interface PrizeRevealModalProps {
 const REVEAL_DURATION_MS = 3200; // total animation length
 const CYCLE_INTERVAL_FAST = 80;
 const CYCLE_INTERVAL_SLOW = 360;
+
+function isUnauthenticatedResponse(status: number): boolean {
+  return status === 401 || status === 403;
+}
+
+async function fetchPrizeReveal(
+  productId: string,
+  orderId: string,
+): Promise<{ response: PrizeRevealResponse | null; unauthenticated: boolean }> {
+  const res = await fetch(`/api/prize-draws/${productId}/reveal`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ orderId }),
+  });
+  const json = (await res.json()) as { data?: PrizeRevealResponse };
+  if (!res.ok) {
+    if (isUnauthenticatedResponse(res.status)) {
+      return { response: null, unauthenticated: true };
+    }
+    throw new Error("Reveal request failed");
+  }
+  return { response: json.data ?? {}, unauthenticated: false };
+}
 
 export function PrizeRevealModal({
   open,
@@ -133,21 +157,13 @@ export function PrizeRevealModal({
       if (onReveal) {
         response = await onReveal({ orderId, productId });
       } else {
-        const res = await fetch(`/api/prize-draws/${productId}/reveal`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ orderId }),
-        });
-        const json = (await res.json()) as { data?: PrizeRevealResponse };
-        if (!res.ok) {
-          if (res.status === 401 || res.status === 403) {
-            setPhase("idle");
-            setShowLoginModal(true);
-            return;
-          }
-          throw new Error("Reveal request failed");
+        const result = await fetchPrizeReveal(productId, orderId);
+        if (result.unauthenticated) {
+          setPhase("idle");
+          setShowLoginModal(true);
+          return;
         }
-        response = json.data ?? {};
+        response = result.response ?? {};
       }
     } catch (err) {
       if (isAuthError(err)) {

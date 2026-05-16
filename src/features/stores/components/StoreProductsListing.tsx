@@ -1,9 +1,15 @@
 "use client";
-import React, { useState, useCallback, useMemo } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
+import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
-import { Pagination, useToast, ListingToolbar, LoginRequiredModal } from "../../../ui";
+import {
+  Pagination,
+  useToast,
+  ListingToolbar,
+  FilterDrawer,
+  LoginRequiredModal,
+} from "../../../ui";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import type { ViewMode } from "../../../ui";
@@ -35,66 +41,29 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
     localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
   );
 
-  // Pending filter state — buffered until "Apply Filters" clicked
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
-
-  const pendingTable = useMemo(() => ({
-    get: (key: string) => pendingFilters[key] ?? "",
-    getNumber: (key: string, fallback = 0) => {
-      const v = pendingFilters[key];
-      if (!v) return fallback;
-      const n = Number(v);
-      return isNaN(n) ? fallback : n;
-    },
-    set: (key: string, value: string) =>
-      setPendingFilters((p) => ({ ...p, [key]: value })),
-    setMany: (updates: Record<string, string>) =>
-      setPendingFilters((p) => ({ ...p, ...updates })),
-    clear: (keys?: string[]) => {
-      const ks = keys ?? FILTER_KEYS;
-      setPendingFilters((p) => ({
-        ...p,
-        ...Object.fromEntries(ks.map((k) => [k, ""])),
-      }));
-    },
-    setPage: (_: number) => {},
-    setPageSize: (_: number) => {},
-    setSort: (_: string) => {},
-    buildSieveParams: () => "",
-    buildSearchParams: () => "",
-    params: new URLSearchParams(),
-  }), [pendingFilters]) as any;
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+    usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
+    onFilterReset();
     setFilterOpen(true);
-  }, [table]);
+  }, [onFilterReset]);
 
   const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
+    onFilterApply();
     setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
+  }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
+    table.setMany({ q: "", sort: "" });
+    onFilterClear();
     setSearchInput("");
-  }, [table]);
+  }, [table, onFilterClear]);
 
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
     !!table.get("q") ||
     table.get("sort") !== "-createdAt" ||
-    activeFilterCount > 0;
+    filterActiveCount > 0;
 
   const params = {
     q: table.get("q") || undefined,
@@ -121,43 +90,51 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
     table.set("view", next);
   };
 
-  const handleWishlistToggle = useCallback((productId: string) => {
-    const isWishlisted = wishlistedIds.has(productId);
-    requireAuth(isWishlisted ? ACTION_ID.REMOVE_FROM_WISHLIST : ACTION_ID.ADD_TO_WISHLIST, () => {
-      if (isWishlisted) {
-        localWishlist.remove(productId, "product");
-        pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
-        showToast("Removed from wishlist", "info");
-      } else {
-        localWishlist.add(productId, "product");
-        pushWishlistOp({ op: "add", itemId: productId, type: "product" });
-        showToast("Added to wishlist", "success");
-      }
-    });
-  }, [wishlistedIds, localWishlist, showToast, requireAuth]);
+  const handleWishlistToggle = useCallback(
+    (productId: string) => {
+      const isWishlisted = wishlistedIds.has(productId);
+      requireAuth(
+        isWishlisted ? ACTION_ID.REMOVE_FROM_WISHLIST : ACTION_ID.ADD_TO_WISHLIST,
+        () => {
+          if (isWishlisted) {
+            localWishlist.remove(productId, "product");
+            pushWishlistOp({ op: "remove", itemId: productId, type: "product" });
+            showToast("Removed from wishlist", "info");
+          } else {
+            localWishlist.add(productId, "product");
+            pushWishlistOp({ op: "add", itemId: productId, type: "product" });
+            showToast("Added to wishlist", "success");
+          }
+        },
+      );
+    },
+    [wishlistedIds, localWishlist, showToast, requireAuth],
+  );
 
-  const handleAddToCart = useCallback((product: any) => {
-    localCart.add(product.id, 1, {
-      productTitle: product.title,
-      productImage: product.mainImage,
-      price: product.price,
-    });
-    pushCartOp({
-      op: "add",
-      productId: product.id,
-      quantity: 1,
-      productTitle: product.title,
-      productImage: product.mainImage,
-      price: product.price,
-    });
-    showToast("Added to cart", "success");
-  }, [localCart, showToast]);
+  const handleAddToCart = useCallback(
+    (product: any) => {
+      localCart.add(product.id, 1, {
+        productTitle: product.title,
+        productImage: product.mainImage,
+        price: product.price,
+      });
+      pushCartOp({
+        op: "add",
+        productId: product.id,
+        quantity: 1,
+        productTitle: product.title,
+        productImage: product.mainImage,
+        price: product.price,
+      });
+      showToast("Added to cart", "success");
+    },
+    [localCart, showToast],
+  );
 
   return (
     <div className="min-h-[200px]">
-      {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
-        filterCount={activeFilterCount}
+        filterCount={filterActiveCount}
         onFiltersClick={openFilters}
         searchValue={searchInput}
         searchPlaceholder="Search store products..."
@@ -165,14 +142,15 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
         onSearchCommit={commitSearch}
         sortValue={table.get("sort") || "-createdAt"}
         sortOptions={PRODUCT_PUBLIC_SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
+        onSortChange={(v) => {
+          table.set("sort", v);
+        }}
         view={view === "card" ? "grid" : "list"}
         onViewChange={(v) => handleViewToggle(v === "grid" ? "card" : "list")}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
 
-      {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
@@ -183,12 +161,14 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
         </div>
       )}
 
-      {/* ── Product grid ───────────────────────────────────────────────── */}
       <div className="py-6">
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+              <div
+                key={i}
+                className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
+              >
                 <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
                   <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
@@ -201,7 +181,9 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
         ) : (
           <ProductGrid
             products={products as any[]}
-            getProductHref={(p) => String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))}
+            getProductHref={(p) =>
+              String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id))
+            }
             view={view}
             emptyLabel="This store has no products yet."
             onWishlistToggle={handleWishlistToggle}
@@ -209,49 +191,20 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
             onAddToCart={handleAddToCart}
           />
         )}
-
       </div>
 
-      {/* ── Filter drawer ──────────────────────────────────────────────── */}
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
-              </span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={clearFilters}
-                    className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors"
-                  >
-                    Clear all
-                  </button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4">
-              <ProductFilters table={pendingTable} currencyPrefix="₹" />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button
-                type="button"
-                onClick={applyFilters}
-                className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
-              >
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <FilterDrawer
+        open={filterOpen}
+        onOpen={openFilters}
+        onClose={() => setFilterOpen(false)}
+        onApply={applyFilters}
+        onReset={onFilterClear}
+        activeCount={filterActiveCount}
+        hideTrigger
+      >
+        <ProductFilters table={pendingTable as any} currencyPrefix="₹" />
+      </FilterDrawer>
+
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>
   );

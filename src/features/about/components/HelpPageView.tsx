@@ -85,100 +85,73 @@ export async function HelpPageView({
 
   return (
     <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="helppageview-div-107">
-      {/* Hero */}
-      <Section
-        className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}
-      >
+      <Section className={`${heroBannerClass} text-white py-14 md:py-16 lg:py-20`}>
         <div className={`${page.container.md} text-center`} data-section="helppageview-div-108">
-          <Heading level={1} variant="none" className="mb-4 text-white">
-            {t("title")}
-          </Heading>
-          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">
-            {t("subtitle")}
-          </Text>
+          <Heading level={1} variant="none" className="mb-4 text-white">{t("title")}</Heading>
+          <Text variant="none" className="text-white/80 max-w-2xl mx-auto">{t("subtitle")}</Text>
         </div>
       </Section>
-
-      <div
-        className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`}
-       data-section="helppageview-div-109">
-        {/* Topic cards */}
-        <Section>
-          <Heading level={2} className="mb-6 text-center">
-            {t("browseTopics")}
-          </Heading>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-section="helppageview-div-110">
-            {TOPICS.map(
-              ({ icon: Icon, title, desc, href, color, iconColor }) => (
-                <TextLink
-                  key={href}
-                  href={href}
-                  className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}
-                >
-                  <div
-                    className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`}
-                   data-section="helppageview-div-111">
-                    <Icon className={`w-5 h-5 ${iconColor}`} />
-                  </div>
-                  <div className={`${flex.row} justify-between items-start`} data-section="helppageview-div-112">
-                    <div data-section="helppageview-div-113">
-                      <Text className="font-semibold mb-1">{title}</Text>
-                      <Text
-                        variant="secondary"
-                        className="text-sm leading-relaxed"
-                      >
-                        {desc}
-                      </Text>
-                    </div>
-                    <ChevronRight className="w-4 h-4 mt-1 flex-shrink-0 opacity-40 group-hover:opacity-80 transition-opacity" />
-                  </div>
-                </TextLink>
-              ),
-            )}
-          </div>
-        </Section>
-
-        {/* Track order */}
-        <Section
-          className={`rounded-2xl p-6 border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}
-        >
-          <div className="flex-1" data-section="helppageview-div-114">
-            <Heading level={3} className="mb-1 text-base">
-              {t("trackOrderTitle")}
-            </Heading>
-            <Text variant="secondary" className="text-sm">
-              {t("trackOrderText")}
-            </Text>
-          </div>
-          <TextLink
-            href={String(ROUTES.PUBLIC.TRACK_ORDER)}
-            className="flex-shrink-0"
-          >
-            {t("trackOrderCta")}
-          </TextLink>
-        </Section>
-
-        {/* Still need help */}
-        <Section
-          className={`rounded-2xl p-8 text-center border ${themed.border} ${themed.bgSecondary}`}
-        >
-          <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
-          <Heading level={2} className="mb-3">
-            {t("contactTitle")}
-          </Heading>
-          <Text variant="secondary" className="mb-6 max-w-lg mx-auto">
-            {t("contactText")}
-          </Text>
-          <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">
-            <TextLink href={String(ROUTES.PUBLIC.CONTACT)}>
-              {t("contactCta")}
-            </TextLink>
-            <TextLink href={String(ROUTES.PUBLIC.FAQS)} variant="muted">
-              {t("faqCta")}
-            </TextLink>
-          </Stack>
-        </Section>
+      <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="helppageview-div-109">
+        {renderTopicsGrid(t, flex, TOPICS)}
+        {renderTrackOrderSection(t, themed)}
+        {renderContactCtaSection(t, themed)}
       </div>
     </div>
+  );
+}
+
+type HelpTranslateFn = Awaited<ReturnType<typeof import("next-intl/server").getTranslations>>;
+type HelpThemedTokens = (typeof THEME_CONSTANTS)["themed"];
+type HelpFlexTokens = (typeof THEME_CONSTANTS)["flex"];
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type TopicItem = { icon: any; title: string; desc: string; href: string; color: string; iconColor: string };
+
+function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: TopicItem[]) {
+  return (
+    <Section>
+      <Heading level={2} className="mb-6 text-center">{t("browseTopics")}</Heading>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-section="helppageview-div-110">
+        {topics.map(({ icon: Icon, title, desc, href, color, iconColor }) => (
+          <TextLink key={href} href={href} className={`group rounded-xl border p-5 transition-shadow hover:shadow-md ${color} no-underline`}>
+            <div className={`w-10 h-10 rounded-lg bg-white/60 dark:bg-white/10 ${flex.center} mb-3`} data-section="helppageview-div-111">
+              <Icon className={`w-5 h-5 ${iconColor}`} />
+            </div>
+            <div className={`${flex.row} justify-between items-start`} data-section="helppageview-div-112">
+              <div data-section="helppageview-div-113">
+                <Text className="font-semibold mb-1">{title}</Text>
+                <Text variant="secondary" className="text-sm leading-relaxed">{desc}</Text>
+              </div>
+              <ChevronRight className="w-4 h-4 mt-1 flex-shrink-0 opacity-40 group-hover:opacity-80 transition-opacity" />
+            </div>
+          </TextLink>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderTrackOrderSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
+  return (
+    <Section className={`rounded-2xl p-6 border ${themed.border} ${themed.bgSecondary} flex flex-col sm:flex-row items-center gap-4`}>
+      <div className="flex-1" data-section="helppageview-div-114">
+        <Heading level={3} className="mb-1 text-base">{t("trackOrderTitle")}</Heading>
+        <Text variant="secondary" className="text-sm">{t("trackOrderText")}</Text>
+      </div>
+      <TextLink href={String(ROUTES.PUBLIC.TRACK_ORDER)} className="flex-shrink-0">{t("trackOrderCta")}</TextLink>
+    </Section>
+  );
+}
+
+function renderContactCtaSection(t: HelpTranslateFn, themed: HelpThemedTokens) {
+  return (
+    <Section className={`rounded-2xl p-8 text-center border ${themed.border} ${themed.bgSecondary}`}>
+      <MessageCircle className="w-10 h-10 mx-auto mb-3 text-primary/70" />
+      <Heading level={2} className="mb-3">{t("contactTitle")}</Heading>
+      <Text variant="secondary" className="mb-6 max-w-lg mx-auto">{t("contactText")}</Text>
+      <Stack gap="sm" className="flex-row flex-wrap justify-center gap-4">
+        <TextLink href={String(ROUTES.PUBLIC.CONTACT)}>{t("contactCta")}</TextLink>
+        <TextLink href={String(ROUTES.PUBLIC.FAQS)} variant="muted">{t("faqCta")}</TextLink>
+      </Stack>
+    </Section>
   );
 }

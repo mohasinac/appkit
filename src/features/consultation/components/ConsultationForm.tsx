@@ -9,6 +9,8 @@ interface ConsultationFormProps {
   concerns?: string[];
 }
 
+const CLS_INPUT = "w-full rounded-md border border-neutral-300 px-3 py-2 text-sm";
+
 const TIME_SLOTS = [
   "9:00 AM",
   "10:00 AM",
@@ -75,7 +77,7 @@ export function ConsultationForm({
         value={form.name}
         onChange={handleChange}
         required
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       <Input
         name="email"
@@ -84,7 +86,7 @@ export function ConsultationForm({
         value={form.email}
         onChange={handleChange}
         required
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       <Input
         name="phone"
@@ -93,7 +95,7 @@ export function ConsultationForm({
         value={form.phone}
         onChange={handleChange}
         required
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       {concerns.length > 0 && (
         <Row wrap gap="sm">
@@ -138,7 +140,7 @@ export function ConsultationForm({
           { value: "remote", label: "Remote (Video Call)" },
           { value: "in-person", label: "In-Person" },
         ]}
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       <Textarea
         name="message"
@@ -146,7 +148,7 @@ export function ConsultationForm({
         value={form.message}
         onChange={handleChange}
         rows={3}
-        className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+        className={CLS_INPUT}
       />
       <Button
         type="submit"

@@ -2,16 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Form,
-  FormActions,
-  Select,
-  SideDrawer,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Select, SideDrawer, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -70,6 +61,135 @@ function formatExpiry(expiresAt?: string | null): string {
   if (isNaN(d.getTime())) return "Permanent";
   if (d < new Date()) return `Expired ${d.toLocaleDateString()}`;
   return `Until ${d.toLocaleDateString()}`;
+}
+
+// --- Sub-components ----------------------------------------------------------
+
+interface HardBanPanelProps {
+  userId?: string;
+  isHardBanned: boolean;
+  currentHardBanReason?: string;
+  showHardBanForm: boolean;
+  setShowHardBanForm: (v: boolean) => void;
+  hardBanReasonInput: string;
+  setHardBanReasonInput: (v: string) => void;
+  hardBanPending: boolean;
+  unbanPending: boolean;
+  onHardBan: (reason: string) => void;
+  onUnban: () => void;
+}
+
+function HardBanPanel({
+  userId, isHardBanned, currentHardBanReason,
+  showHardBanForm, setShowHardBanForm, hardBanReasonInput, setHardBanReasonInput,
+  hardBanPending, unbanPending, onHardBan, onUnban,
+}: HardBanPanelProps) {
+  return (
+    <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Hard ban</span>
+        {isHardBanned ? (
+          <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">Banned</span>
+        ) : (
+          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">Active</span>
+        )}
+      </div>
+      {isHardBanned ? (
+        <div className="space-y-2">
+          {currentHardBanReason && <Text className="text-xs text-zinc-600 dark:text-zinc-400">Reason: {currentHardBanReason}</Text>}
+          <Button type="button" variant="secondary" size="sm" isLoading={unbanPending} disabled={unbanPending} onClick={onUnban}>Lift hard ban</Button>
+        </div>
+      ) : showHardBanForm ? (
+        <div className="space-y-2">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Ban reason (required)</label>
+            <textarea value={hardBanReasonInput} onChange={(e) => setHardBanReasonInput(e.target.value)} rows={2} placeholder="e.g. Repeated fraud, scam activity…"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500" />
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" variant="danger" size="sm" isLoading={hardBanPending} disabled={!hardBanReasonInput.trim() || hardBanPending} onClick={() => onHardBan(hardBanReasonInput.trim())}>Confirm hard ban</Button>
+            <Button type="button" variant="secondary" size="sm" onClick={() => { setShowHardBanForm(false); setHardBanReasonInput(""); }}>Cancel</Button>
+          </div>
+        </div>
+      ) : (
+        <Button type="button" variant="danger" size="sm" disabled={!userId} onClick={() => setShowHardBanForm(true)}>Impose hard ban</Button>
+      )}
+    </div>
+  );
+}
+
+interface SoftBanPanelProps {
+  userId?: string;
+  softBans: SoftBanEntry[];
+  showAddSoftBan: boolean;
+  setShowAddSoftBan: (v: boolean) => void;
+  softBanAction: string;
+  setSoftBanAction: (v: string) => void;
+  softBanReason: string;
+  setSoftBanReason: (v: string) => void;
+  softBanExpiry: string;
+  setSoftBanExpiry: (v: string) => void;
+  softBanPending: boolean;
+  liftPending: boolean;
+  onAddSoftBan: (payload: { action: string; reason: string; expiresAt?: string }) => void;
+  onLiftSoftBan: (action: string) => void;
+}
+
+function SoftBanPanel({
+  userId, softBans, showAddSoftBan, setShowAddSoftBan,
+  softBanAction, setSoftBanAction, softBanReason, setSoftBanReason,
+  softBanExpiry, setSoftBanExpiry, softBanPending, liftPending,
+  onAddSoftBan, onLiftSoftBan,
+}: SoftBanPanelProps) {
+  return (
+    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Soft bans{softBans.length > 0 ? ` (${softBans.length})` : ""}</span>
+        {!showAddSoftBan && (
+          <Button type="button" variant="secondary" size="sm" disabled={!userId} onClick={() => setShowAddSoftBan(true)}>Add soft ban</Button>
+        )}
+      </div>
+      {softBans.length > 0 && (
+        <ul className="mb-3 space-y-2">
+          {softBans.map((ban) => (
+            <li key={ban.action} className="flex items-start justify-between gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-800">
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-zinc-800 dark:text-zinc-200">{formatBanAction(ban.action)}</div>
+                <div className="text-zinc-500 dark:text-zinc-400">{ban.reason}</div>
+                <div className="text-zinc-400 dark:text-zinc-500">{formatExpiry(ban.expiresAt)}</div>
+              </div>
+              <Button type="button" variant="secondary" size="sm" isLoading={liftPending} disabled={liftPending} onClick={() => onLiftSoftBan(ban.action)}>Lift</Button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {showAddSoftBan && (
+        <div className="space-y-2">
+          <Select label="Action to restrict" options={BANNED_ACTION_OPTIONS} value={softBanAction} onValueChange={setSoftBanAction} />
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Reason (required)</label>
+            <textarea value={softBanReason} onChange={(e) => setSoftBanReason(e.target.value)} rows={2} placeholder="e.g. Suspicious bid activity…"
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Expires at (optional — leave blank for permanent)</label>
+            <input type="datetime-local" value={softBanExpiry} onChange={(e) => setSoftBanExpiry(e.target.value)}
+              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+          </div>
+          <div className="flex gap-2">
+            <Button type="button" variant="primary" size="sm" isLoading={softBanPending} disabled={!softBanReason.trim() || softBanPending}
+              onClick={() => onAddSoftBan({ action: softBanAction, reason: softBanReason.trim(), ...(softBanExpiry ? { expiresAt: new Date(softBanExpiry).toISOString() } : {}) })}>
+              Apply soft ban
+            </Button>
+            <Button type="button" variant="secondary" size="sm" onClick={() => { setShowAddSoftBan(false); setSoftBanReason(""); setSoftBanExpiry(""); }}>Cancel</Button>
+          </div>
+        </div>
+      )}
+      {softBans.length === 0 && !showAddSoftBan && (
+        <Text className="text-xs text-zinc-400 dark:text-zinc-500">No active soft bans.</Text>
+      )}
+    </div>
+  );
 }
 
 // --- Component ---------------------------------------------------------------
@@ -239,16 +359,16 @@ export function AdminUserEditorView({
           {userId && (
             <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900/40">
               <div className="flex flex-col gap-1 text-zinc-700 dark:text-zinc-300">
-                <div>
+                <>
                   <span className="font-semibold">Owner ID (Firebase UID):</span>{" "}
                   <code className="select-all font-mono">{userId}</code>
-                </div>
+                </>
                 {ownedStoreId && (
-                  <div>
+                  <>
                     <span className="font-semibold">Owns store:</span>{" "}
                     <code className="select-all font-mono">{ownedStoreId}</code>
                     {ownedStoreName ? ` — ${ownedStoreName}` : ""}
-                  </div>
+                  </>
                 )}
               </div>
             </div>
@@ -306,218 +426,39 @@ export function AdminUserEditorView({
 
           {/* ── Moderation section ── */}
           <div className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
-            <h3 className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+            <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
               Moderation
-            </h3>
+            </Heading>
 
-            {/* Hard ban */}
-            <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Hard ban
-                </span>
-                {isHardBanned ? (
-                  <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
-                    Banned
-                  </span>
-                ) : (
-                  <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">
-                    Active
-                  </span>
-                )}
-              </div>
-
-              {isHardBanned ? (
-                <div className="space-y-2">
-                  {currentHardBanReason && (
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
-                      Reason: {currentHardBanReason}
-                    </p>
-                  )}
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    isLoading={unbanMutation.isPending}
-                    disabled={unbanMutation.isPending}
-                    onClick={() => unbanMutation.mutate()}
-                  >
-                    Lift hard ban
-                  </Button>
-                </div>
-              ) : showHardBanForm ? (
-                <div className="space-y-2">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                      Ban reason (required)
-                    </label>
-                    <textarea
-                      value={hardBanReasonInput}
-                      onChange={(e) => setHardBanReasonInput(e.target.value)}
-                      rows={2}
-                      placeholder="e.g. Repeated fraud, scam activity…"
-                      className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="danger"
-                      size="sm"
-                      isLoading={hardBanMutation.isPending}
-                      disabled={!hardBanReasonInput.trim() || hardBanMutation.isPending}
-                      onClick={() => hardBanMutation.mutate(hardBanReasonInput.trim())}
-                    >
-                      Confirm hard ban
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setShowHardBanForm(false);
-                        setHardBanReasonInput("");
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <Button
-                  type="button"
-                  variant="danger"
-                  size="sm"
-                  disabled={!userId}
-                  onClick={() => setShowHardBanForm(true)}
-                >
-                  Impose hard ban
-                </Button>
-              )}
-            </div>
-
-            {/* Soft bans */}
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-              <div className="mb-2 flex items-center justify-between">
-                <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Soft bans{softBans.length > 0 ? ` (${softBans.length})` : ""}
-                </span>
-                {!showAddSoftBan && (
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    disabled={!userId}
-                    onClick={() => setShowAddSoftBan(true)}
-                  >
-                    Add soft ban
-                  </Button>
-                )}
-              </div>
-
-              {/* Active soft ban list */}
-              {softBans.length > 0 && (
-                <ul className="mb-3 space-y-2">
-                  {softBans.map((ban) => (
-                    <li
-                      key={ban.action}
-                      className="flex items-start justify-between gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-800"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <div className="font-semibold text-zinc-800 dark:text-zinc-200">
-                          {formatBanAction(ban.action)}
-                        </div>
-                        <div className="text-zinc-500 dark:text-zinc-400">{ban.reason}</div>
-                        <div className="text-zinc-400 dark:text-zinc-500">
-                          {formatExpiry(ban.expiresAt)}
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        isLoading={liftSoftBanMutation.isPending}
-                        disabled={liftSoftBanMutation.isPending}
-                        onClick={() => liftSoftBanMutation.mutate(ban.action)}
-                      >
-                        Lift
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {/* Add soft ban form */}
-              {showAddSoftBan && (
-                <div className="space-y-2">
-                  <Select
-                    label="Action to restrict"
-                    options={BANNED_ACTION_OPTIONS}
-                    value={softBanAction}
-                    onValueChange={setSoftBanAction}
-                  />
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                      Reason (required)
-                    </label>
-                    <textarea
-                      value={softBanReason}
-                      onChange={(e) => setSoftBanReason(e.target.value)}
-                      rows={2}
-                      placeholder="e.g. Suspicious bid activity…"
-                      className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                      Expires at (optional — leave blank for permanent)
-                    </label>
-                    <input
-                      type="datetime-local"
-                      value={softBanExpiry}
-                      onChange={(e) => setSoftBanExpiry(e.target.value)}
-                      className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant="primary"
-                      size="sm"
-                      isLoading={softBanMutation.isPending}
-                      disabled={!softBanReason.trim() || softBanMutation.isPending}
-                      onClick={() =>
-                        softBanMutation.mutate({
-                          action: softBanAction,
-                          reason: softBanReason.trim(),
-                          ...(softBanExpiry
-                            ? { expiresAt: new Date(softBanExpiry).toISOString() }
-                            : {}),
-                        })
-                      }
-                    >
-                      Apply soft ban
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => {
-                        setShowAddSoftBan(false);
-                        setSoftBanReason("");
-                        setSoftBanExpiry("");
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {softBans.length === 0 && !showAddSoftBan && (
-                <p className="text-xs text-zinc-400 dark:text-zinc-500">No active soft bans.</p>
-              )}
-            </div>
+            <HardBanPanel
+              userId={userId}
+              isHardBanned={isHardBanned}
+              currentHardBanReason={currentHardBanReason}
+              showHardBanForm={showHardBanForm}
+              setShowHardBanForm={setShowHardBanForm}
+              hardBanReasonInput={hardBanReasonInput}
+              setHardBanReasonInput={setHardBanReasonInput}
+              hardBanPending={hardBanMutation.isPending}
+              unbanPending={unbanMutation.isPending}
+              onHardBan={(reason) => hardBanMutation.mutate(reason)}
+              onUnban={() => unbanMutation.mutate()}
+            />
+            <SoftBanPanel
+              userId={userId}
+              softBans={softBans}
+              showAddSoftBan={showAddSoftBan}
+              setShowAddSoftBan={setShowAddSoftBan}
+              softBanAction={softBanAction}
+              setSoftBanAction={setSoftBanAction}
+              softBanReason={softBanReason}
+              setSoftBanReason={setSoftBanReason}
+              softBanExpiry={softBanExpiry}
+              setSoftBanExpiry={setSoftBanExpiry}
+              softBanPending={softBanMutation.isPending}
+              liftPending={liftSoftBanMutation.isPending}
+              onAddSoftBan={(payload) => softBanMutation.mutate(payload)}
+              onLiftSoftBan={(action) => liftSoftBanMutation.mutate(action)}
+            />
           </div>
         </Form>
       </SideDrawer>

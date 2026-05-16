@@ -2,15 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Button,
-  ConfirmDeleteModal,
-  Form,
-  FormActions,
-  Select,
-  SideDrawer,
-  useToast,
-} from "../../../ui";
+import { Button, ConfirmDeleteModal, Form, FormActions, Select, SideDrawer, Text, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -98,6 +90,57 @@ function formatPermLabel(perm: string): string {
   return parts[parts.length - 1]
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+interface PermissionDomainsPanelProps {
+  permissions: Set<string>;
+  togglePerm: (perm: string) => void;
+}
+
+function PermissionDomainsPanel({ permissions, togglePerm }: PermissionDomainsPanelProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        Permissions
+        <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
+          ({permissions.size} selected)
+        </span>
+      </span>
+      <div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
+        {PERMISSION_DOMAINS.map((domain) => {
+          const domainPerms = getPermissionsForDomain(domain.prefix);
+          if (domainPerms.length === 0) return null;
+          const checked = domainPerms.filter((p) => permissions.has(p)).length;
+          return (
+            <details key={domain.prefix} className="group">
+              <summary className="flex cursor-pointer items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
+                <span>{domain.label}</span>
+                <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-500">
+                  {checked}/{domainPerms.length}
+                </span>
+              </summary>
+              <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
+                {domainPerms.map((perm) => (
+                  <label
+                    key={perm}
+                    className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-zinc-300"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={permissions.has(perm)}
+                      onChange={() => togglePerm(perm)}
+                      className="h-3.5 w-3.5 rounded border-zinc-300 dark:border-slate-600 accent-primary"
+                    />
+                    {formatPermLabel(perm)}
+                  </label>
+                ))}
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 // --- Component ---------------------------------------------------------------
@@ -242,53 +285,13 @@ export function AdminEmployeeEditorView({
               onChange={(e) => applyGroupPreset(e.target.value)}
               options={GROUP_OPTIONS}
             />
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               Selecting a group auto-fills the permissions below. You can still
               customise individual permissions.
-            </p>
+            </Text>
           </div>
 
-          <div className="flex flex-col gap-2">
-            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Permissions
-              <span className="ml-2 text-xs font-normal text-zinc-500 dark:text-zinc-400">
-                ({permissions.size} selected)
-              </span>
-            </span>
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 divide-y divide-zinc-100 dark:divide-slate-700 max-h-[42vh] overflow-y-auto">
-              {PERMISSION_DOMAINS.map((domain) => {
-                const domainPerms = getPermissionsForDomain(domain.prefix);
-                if (domainPerms.length === 0) return null;
-                const checked = domainPerms.filter((p) => permissions.has(p)).length;
-                return (
-                  <details key={domain.prefix} className="group">
-                    <summary className="flex cursor-pointer items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
-                      <span>{domain.label}</span>
-                      <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-500">
-                        {checked}/{domainPerms.length}
-                      </span>
-                    </summary>
-                    <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 px-3 py-2.5 bg-zinc-50/60 dark:bg-slate-800/40">
-                      {domainPerms.map((perm) => (
-                        <label
-                          key={perm}
-                          className="flex items-center gap-2 cursor-pointer text-xs text-zinc-700 dark:text-zinc-300"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={permissions.has(perm)}
-                            onChange={() => togglePerm(perm)}
-                            className="h-3.5 w-3.5 rounded border-zinc-300 dark:border-slate-600 accent-primary"
-                          />
-                          {formatPermLabel(perm)}
-                        </label>
-                      ))}
-                    </div>
-                  </details>
-                );
-              })}
-            </div>
-          </div>
+          <PermissionDomainsPanel permissions={permissions} togglePerm={togglePerm} />
 
           <FormActions>
             <Button type="submit" variant="primary" disabled={isBusy} isLoading={isBusy}>

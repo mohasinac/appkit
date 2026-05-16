@@ -87,6 +87,193 @@ export interface MarketplaceAuctionCardProps {
   labels?: MarketplaceAuctionCardLabels;
 }
 
+interface AuctionCardHeroProps {
+  product: MarketplaceAuctionCardData;
+  auctionHref: string | undefined;
+  currentSrc: string | undefined;
+  hovered: boolean;
+  images: (string | undefined)[];
+  imageIndex: number;
+  hasVideo: boolean;
+  isEnded: boolean;
+  isEndingSoon: boolean;
+  isSelected: boolean;
+  selectable: boolean;
+  mergedLabels: Required<MarketplaceAuctionCardLabels>;
+  onSelect?: (id: string, selected: boolean) => void;
+  setHovered: (v: boolean) => void;
+  handleSelect: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+function renderAuctionCardHero(props: AuctionCardHeroProps) {
+  const { product, auctionHref, currentSrc, hovered, images, imageIndex, hasVideo, isEnded, isEndingSoon, isSelected, selectable, mergedLabels, onSelect, setHovered, handleSelect } = props;
+  return (
+    <BaseListingCard.Hero
+      aspect="square"
+      variant="grid"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <TextLink href={auctionHref ?? "#"} className="absolute inset-0 block">
+        <MediaImage
+          src={currentSrc}
+          alt={product.title}
+          size="card"
+          fallback="Auction image"
+          className={`transition-transform duration-500 ${hovered && images.length > 1 ? "scale-105" : "scale-100"}`}
+        />
+      </TextLink>
+      {hasVideo && imageIndex === 0 ? (
+        <Div className="absolute right-2 top-2">
+          <Span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white">
+            <Play className="h-4 w-4" aria-label={mergedLabels.videoLabel} />
+          </Span>
+        </Div>
+      ) : null}
+      {images.length > 1 ? (
+        <Div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
+          {images.map((_, index) => (
+            <Span
+              key={`${product.id}-image-${index}`}
+              className={`rounded-full transition-all duration-200 ${index === imageIndex ? "h-1.5 w-3 bg-white" : "h-1.5 w-1.5 bg-white/60"}`}
+            />
+          ))}
+        </Div>
+      ) : null}
+      {product.featured ? (
+        <Div className="pointer-events-none absolute left-2 top-2 z-10">
+          <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
+        </Div>
+      ) : null}
+      {onSelect && (
+        <BaseListingCard.Checkbox
+          selected={isSelected}
+          onSelect={handleSelect}
+          label={isSelected ? mergedLabels.deselectItem : mergedLabels.selectItem}
+          className={selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"}
+        />
+      )}
+      <Div className={`absolute left-2 z-10 flex flex-col gap-1 ${product.featured ? "top-8" : "top-2"}`}>
+        {!isEnded ? <Span className="rounded-full bg-rose-600/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.liveBadge}</Span> : null}
+        {isEndingSoon ? <Span className="rounded-full bg-amber-500/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.endingSoon}</Span> : null}
+        {isEnded ? <Span className="rounded-full bg-zinc-600/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.ended}</Span> : null}
+        {product.status === "sold" ? <Span className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-xs font-bold text-white">{mergedLabels.sold}</Span> : null}
+      </Div>
+      <Div className="pointer-events-none absolute bottom-2 right-2 z-10">
+        <Span className="inline-flex items-center gap-1 rounded-full bg-amber-600/90 px-2 py-0.5 text-xs font-semibold text-white">
+          <Gavel className="h-3 w-3" />
+          {mergedLabels.typeBadge}
+        </Span>
+      </Div>
+    </BaseListingCard.Hero>
+  );
+}
+
+interface AuctionCardInfoProps {
+  product: MarketplaceAuctionCardData;
+  auctionHref: string | undefined;
+  displayBid: number;
+  bidCount: number;
+  hasCurrentBid: boolean;
+  isEnded: boolean;
+  isEndingSoon: boolean;
+  remaining: import("../../../react").CountdownRemaining | null;
+  resolvedBuyoutPrice: number | undefined;
+  inWishlist: boolean;
+  wishlistLoading: boolean;
+  wishlistActions?: WishlistToggleActions;
+  countdownClass: string;
+  mergedLabels: Required<MarketplaceAuctionCardLabels>;
+  handleWishlist: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  handleNavigate: () => void;
+}
+
+function renderAuctionCardInfoList(props: AuctionCardInfoProps) {
+  const { product, auctionHref, displayBid, bidCount, isEnded, remaining, inWishlist, wishlistLoading, wishlistActions, countdownClass, mergedLabels, handleWishlist, handleNavigate } = props;
+  return (
+    <>
+      <Div className="flex items-start justify-between gap-2 min-w-0">
+        <TextLink href={auctionHref ?? "#"} className={`${THEME_CONSTANTS.utilities.textClamp2} flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`}>
+          {product.title}
+        </TextLink>
+        {wishlistActions ? (
+          <Button type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="shrink-0 rounded-full p-1">
+            <Heart className={`h-3.5 w-3.5 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
+          </Button>
+        ) : null}
+      </Div>
+      <Div className="flex items-center gap-2 flex-wrap">
+        <Text className="text-sm font-bold text-primary">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        <Div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`}>
+          <Clock className="h-2.5 w-2.5" />
+          <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
+        </Div>
+        {bidCount > 0 && <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>}
+      </Div>
+      {!isEnded && (
+        <Button type="button" variant="warning" size="sm" className="self-start gap-1 px-2.5 text-xs mt-0.5" onClick={handleNavigate}>
+          <Gavel className="h-3 w-3" />
+          <Span>{mergedLabels.placeBid}</Span>
+        </Button>
+      )}
+    </>
+  );
+}
+
+function renderAuctionCardInfoGrid(props: AuctionCardInfoProps) {
+  const { product, auctionHref, displayBid, bidCount, hasCurrentBid, isEnded, remaining, resolvedBuyoutPrice, inWishlist, wishlistLoading, wishlistActions, countdownClass, mergedLabels, handleWishlist, handleNavigate } = props;
+  return (
+    <>
+      <Div className="flex items-start gap-2">
+        <TextLink href={auctionHref ?? "#"} className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary">
+          {product.title}
+        </TextLink>
+        {wishlistActions ? (
+          <Button type="button" variant="ghost" onClick={handleWishlist} disabled={wishlistLoading} aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist} className="-mt-0.5 rounded-full p-1">
+            <Heart className={`h-4 w-4 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
+          </Button>
+        ) : null}
+      </Div>
+      <Div>
+        <Caption>
+          {isEnded && hasCurrentBid ? mergedLabels.winningBid : hasCurrentBid ? mergedLabels.currentBid : mergedLabels.startingBid}
+        </Caption>
+        <Text className="text-base font-bold leading-none text-primary">{formatCurrency(displayBid, getDefaultCurrency())}</Text>
+        {isEnded && product.winnerDisplayName && (
+          <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">{mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}</Caption>
+        )}
+      </Div>
+      <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
+        <Div className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${countdownClass}`}>
+          <Clock className="h-3 w-3" />
+          <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
+        </Div>
+        <Caption>{mergedLabels.totalBids(bidCount)}</Caption>
+      </Row>
+      <Row wrap gap="xs" className="mt-auto">
+        {isEnded ? (
+          <Button type="button" variant="ghost" size="sm" className="flex-1 cursor-not-allowed gap-1 px-2 text-xs opacity-60" disabled>
+            <Span>{mergedLabels.ended}</Span>
+          </Button>
+        ) : (
+          <>
+            <Button type="button" variant="warning" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+              <Gavel className="h-3 w-3" />
+              <Span>{mergedLabels.placeBid}</Span>
+            </Button>
+            {resolvedBuyoutPrice ? (
+              <Button type="button" variant="danger" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
+                <ShoppingBag className="h-3 w-3" />
+                <Span>{mergedLabels.buyout}</Span>
+              </Button>
+            ) : null}
+          </>
+        )}
+      </Row>
+    </>
+  );
+}
+
 const DEFAULT_LABELS: Required<MarketplaceAuctionCardLabels> = {
   selectItem: "Select item",
   deselectItem: "Deselect item",
@@ -246,6 +433,12 @@ export function MarketplaceAuctionCard({
       ? COUNTDOWN_STATUS_CLASS.endingSoon
       : COUNTDOWN_STATUS_CLASS.live;
 
+  const cardInfoProps: AuctionCardInfoProps = {
+    product, auctionHref, displayBid, bidCount, hasCurrentBid, isEnded, isEndingSoon,
+    remaining, resolvedBuyoutPrice, inWishlist, wishlistLoading, wishlistActions,
+    countdownClass, mergedLabels, handleWishlist, handleNavigate,
+  };
+
   return (
     <BaseListingCard
       isSelected={isSelected}
@@ -258,214 +451,9 @@ export function MarketplaceAuctionCard({
       onTouchStart={!isSelected ? longPress.onTouchStart : undefined}
       onTouchEnd={!isSelected ? longPress.onTouchEnd : undefined}
     >
-      <BaseListingCard.Hero
-        aspect="square"
-        variant={baseVariant}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <TextLink href={auctionHref ?? "#"} className="absolute inset-0 block">
-          <MediaImage
-            src={currentSrc}
-            alt={product.title}
-            size="card"
-            fallback="Auction image"
-            className={`transition-transform duration-500 ${hovered && images.length > 1 ? "scale-105" : "scale-100"}`}
-          />
-        </TextLink>
-
-        {hasVideo && imageIndex === 0 ? (
-          <Div className="absolute right-2 top-2">
-            <Span className="flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white">
-              <Play className="h-4 w-4" aria-label={mergedLabels.videoLabel} />
-            </Span>
-          </Div>
-        ) : null}
-
-        {images.length > 1 ? (
-          <Div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
-            {images.map((_, index) => (
-              <Span
-                key={`${product.id}-image-${index}`}
-                className={`rounded-full transition-all duration-200 ${index === imageIndex ? "h-1.5 w-3 bg-white" : "h-1.5 w-1.5 bg-white/60"}`}
-              />
-            ))}
-          </Div>
-        ) : null}
-
-        {product.featured ? (
-          <Div className="pointer-events-none absolute left-2 top-2 z-10">
-            <Star className="h-5 w-5 fill-amber-400 text-amber-400" />
-          </Div>
-        ) : null}
-
-        {onSelect && (
-          <BaseListingCard.Checkbox
-            selected={isSelected}
-            onSelect={handleSelect}
-            label={isSelected ? mergedLabels.deselectItem : mergedLabels.selectItem}
-            className={
-              selectable || isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100 transition-opacity"
-            }
-          />
-        )}
-
-        <Div
-          className={`absolute left-2 z-10 flex flex-col gap-1 ${product.featured ? "top-8" : "top-2"}`}
-        >
-          {!isEnded ? (
-            <Span className="rounded-full bg-rose-600/90 px-2 py-0.5 text-xs font-bold text-white">
-              {mergedLabels.liveBadge}
-            </Span>
-          ) : null}
-          {isEndingSoon ? (
-            <Span className="rounded-full bg-amber-500/90 px-2 py-0.5 text-xs font-bold text-white">
-              {mergedLabels.endingSoon}
-            </Span>
-          ) : null}
-          {isEnded ? (
-            <Span className="rounded-full bg-zinc-600/90 px-2 py-0.5 text-xs font-bold text-white">
-              {mergedLabels.ended}
-            </Span>
-          ) : null}
-          {product.status === "sold" ? (
-            <Span className="rounded-full bg-zinc-700/90 px-2 py-0.5 text-xs font-bold text-white">
-              {mergedLabels.sold}
-            </Span>
-          ) : null}
-        </Div>
-
-        <Div className="pointer-events-none absolute bottom-2 right-2 z-10">
-          <Span className="inline-flex items-center gap-1 rounded-full bg-amber-600/90 px-2 py-0.5 text-xs font-semibold text-white">
-            <Gavel className="h-3 w-3" />
-            {mergedLabels.typeBadge}
-          </Span>
-        </Div>
-      </BaseListingCard.Hero>
-
+      {renderAuctionCardHero({ product, auctionHref, currentSrc, hovered, images, imageIndex, hasVideo, isEnded, isEndingSoon, isSelected, selectable, mergedLabels, onSelect, setHovered, handleSelect })}
       <BaseListingCard.Info variant={baseVariant}>
-        {baseVariant === "list" ? (
-          /* ── Compact list layout ── */
-          <>
-            <Div className="flex items-start justify-between gap-2 min-w-0">
-              <TextLink
-                href={auctionHref ?? "#"}
-                className={`${THEME_CONSTANTS.utilities.textClamp2} flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary`}
-              >
-                {product.title}
-              </TextLink>
-              {wishlistActions ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleWishlist}
-                  disabled={wishlistLoading}
-                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
-                  className="shrink-0 rounded-full p-1"
-                >
-                  <Heart className={`h-3.5 w-3.5 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
-                </Button>
-              ) : null}
-            </Div>
-
-            <Div className="flex items-center gap-2 flex-wrap">
-              <Text className="text-sm font-bold text-primary">
-                {formatCurrency(displayBid, getDefaultCurrency())}
-              </Text>
-              <Div className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold ${countdownClass}`}>
-                <Clock className="h-2.5 w-2.5" />
-                <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
-              </Div>
-              {bidCount > 0 && (
-                <Caption className="text-[11px]">{mergedLabels.totalBids(bidCount)}</Caption>
-              )}
-            </Div>
-
-            {!isEnded && (
-              <Button
-                type="button"
-                variant="warning"
-                size="sm"
-                className="self-start gap-1 px-2.5 text-xs mt-0.5"
-                onClick={handleNavigate}
-              >
-                <Gavel className="h-3 w-3" />
-                <Span>{mergedLabels.placeBid}</Span>
-              </Button>
-            )}
-          </>
-        ) : (
-          /* ── Full grid layout ── */
-          <>
-            <Div className="flex items-start gap-2">
-              <TextLink
-                href={auctionHref ?? "#"}
-                className="min-w-0 flex-1 text-sm font-medium leading-snug text-zinc-900 dark:text-zinc-100 transition-colors hover:text-primary"
-              >
-                {product.title}
-              </TextLink>
-              {wishlistActions ? (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleWishlist}
-                  disabled={wishlistLoading}
-                  aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
-                  className="-mt-0.5 rounded-full p-1"
-                >
-                  <Heart className={`h-4 w-4 ${inWishlist ? "fill-rose-500 text-rose-500" : "text-zinc-400"}`} />
-                </Button>
-              ) : null}
-            </Div>
-
-            <Div>
-              <Caption>
-                {isEnded && hasCurrentBid
-                  ? mergedLabels.winningBid
-                  : hasCurrentBid
-                    ? mergedLabels.currentBid
-                    : mergedLabels.startingBid}
-              </Caption>
-              <Text className="text-base font-bold leading-none text-primary">
-                {formatCurrency(displayBid, getDefaultCurrency())}
-              </Text>
-              {isEnded && product.winnerDisplayName && (
-                <Caption className="mt-0.5 text-zinc-500 dark:text-zinc-400">
-                  {mergedLabels.wonBy}: {maskDisplayName(product.winnerDisplayName)}
-                </Caption>
-              )}
-            </Div>
-
-            <Row wrap justify="between" gap="sm" className="gap-x-2 gap-y-1">
-              <Div className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${countdownClass}`}>
-                <Clock className="h-3 w-3" />
-                <Span>{formatCountdownLabel(remaining, mergedLabels.ended)}</Span>
-              </Div>
-              <Caption>{mergedLabels.totalBids(bidCount)}</Caption>
-            </Row>
-
-            <Row wrap gap="xs" className="mt-auto">
-              {isEnded ? (
-                <Button type="button" variant="ghost" size="sm" className="flex-1 cursor-not-allowed gap-1 px-2 text-xs opacity-60" disabled>
-                  <Span>{mergedLabels.ended}</Span>
-                </Button>
-              ) : (
-                <>
-                  <Button type="button" variant="warning" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
-                    <Gavel className="h-3 w-3" />
-                    <Span>{mergedLabels.placeBid}</Span>
-                  </Button>
-                  {resolvedBuyoutPrice ? (
-                    <Button type="button" variant="danger" size="sm" className="flex-1 gap-1 px-2 text-xs" onClick={handleNavigate}>
-                      <ShoppingBag className="h-3 w-3" />
-                      <Span>{mergedLabels.buyout}</Span>
-                    </Button>
-                  ) : null}
-                </>
-              )}
-            </Row>
-          </>
-        )}
+        {baseVariant === "list" ? renderAuctionCardInfoList(cardInfoProps) : renderAuctionCardInfoGrid(cardInfoProps)}
       </BaseListingCard.Info>
     </BaseListingCard>
   );

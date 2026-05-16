@@ -25,6 +25,8 @@ import type {
   SpinPrize,
 } from "../types";
 
+const CLS_PANEL_SM = "rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 space-y-2";
+
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
   onSaved?: (id: string) => void;
@@ -377,7 +379,7 @@ export function AdminEventEditorView({
             placeholder="Charizard Flash Sale 2026"
             required
           />
-          <div>
+          <>
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
               Description
             </label>
@@ -387,7 +389,7 @@ export function AdminEventEditorView({
               minHeightClassName="min-h-[120px]"
               placeholder="Describe this event…"
             />
-          </div>
+          </>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Input
               label="Starts at"
@@ -421,7 +423,7 @@ export function AdminEventEditorView({
 
           {/* Sale config */}
           {type === "sale" && (
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-3">
+            <div className={CLS_PANEL_SM}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Sale configuration</Text>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <Input
@@ -443,7 +445,7 @@ export function AdminEventEditorView({
 
           {/* Offer config */}
           {type === "offer" && (
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-3">
+            <div className={CLS_PANEL_SM}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Offer configuration</Text>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <Input
@@ -516,7 +518,7 @@ export function AdminEventEditorView({
 
           {/* Survey config */}
           {type === "survey" && (
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-3">
+            <div className={CLS_PANEL_SM}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Survey configuration</Text>
               <Input
                 label="Max entries per user"
@@ -535,7 +537,7 @@ export function AdminEventEditorView({
 
           {/* Feedback config */}
           {type === "feedback" && (
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-3">
+            <div className={CLS_PANEL_SM}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Feedback configuration</Text>
               <Toggle checked={anonymous} onChange={setAnonymous} label="Allow anonymous submissions" />
               <Text className="text-xs text-zinc-500 dark:text-zinc-400">

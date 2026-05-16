@@ -393,24 +393,52 @@ export function SessionProvider({
     const adapter = getClientSessionAdapter();
     let authVersion = 0;
 
+    async function tryCreateSession(
+      authUser: { getIdToken: (force: boolean) => Promise<string> },
+      version: number,
+      getVersion: () => number,
+    ): Promise<void> {
+      try {
+        const idToken = await authUser.getIdToken(true);
+        if (version !== getVersion()) return;
+        const data = await apiClient.post<{ sessionId?: string }>(
+          ep.createSession,
+          { idToken },
+        );
+        if (version !== getVersion()) return;
+        if (data?.sessionId) setSessionId(data.sessionId);
+      } catch (error) {
+        logger.error("Session creation failed", { error });
+      }
+    }
+
+    async function handleNoAuthUser(
+      version: number,
+      getVersion: () => number,
+    ): Promise<boolean> {
+      if (!hasSessionCookie()) return false;
+      const serverUser = await fetchUserProfileFromServer();
+      if (version !== getVersion()) return true;
+      if (serverUser) {
+        setUser(serverUser);
+        const sid = getSessionIdFromCookie();
+        if (sid) setSessionId(sid);
+        setLoading(false);
+        return true;
+      }
+      deleteCookie(SESSION_COOKIE);
+      deleteCookie(SESSION_ID_COOKIE);
+      return false;
+    }
+
     const unsubscribe = adapter.onAuthStateChanged(async (authUser) => {
       const thisVersion = ++authVersion;
+      const getVersion = () => authVersion;
 
       if (authUser) {
         const hasSession = hasSessionCookie();
         if (!hasSession) {
-          try {
-            const idToken = await authUser.getIdToken(true);
-            if (thisVersion !== authVersion) return;
-            const data = await apiClient.post<{ sessionId?: string }>(
-              ep.createSession,
-              { idToken },
-            );
-            if (thisVersion !== authVersion) return;
-            if (data?.sessionId) setSessionId(data.sessionId);
-          } catch (error) {
-            logger.error("Session creation failed", { error });
-          }
+          await tryCreateSession(authUser, thisVersion, getVersion);
         }
 
         if (thisVersion !== authVersion) return;
@@ -442,19 +470,8 @@ export function SessionProvider({
         );
       } else {
         // No auth user — try server-session fallback (OAuth flows)
-        if (hasSessionCookie()) {
-          const serverUser = await fetchUserProfileFromServer();
-          if (thisVersion !== authVersion) return;
-          if (serverUser) {
-            setUser(serverUser);
-            const sid = getSessionIdFromCookie();
-            if (sid) setSessionId(sid);
-            setLoading(false);
-            return;
-          }
-          deleteCookie(SESSION_COOKIE);
-          deleteCookie(SESSION_ID_COOKIE);
-        }
+        const handled = await handleNoAuthUser(thisVersion, getVersion);
+        if (handled) return;
         setUser(null);
         setSessionId(null);
         if (activityUpdateRef.current) {

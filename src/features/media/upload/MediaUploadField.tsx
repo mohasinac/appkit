@@ -126,6 +126,140 @@ function extractYouTubeId(input: string): string | null {
   }
 }
 
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function YoutubeTabPanel({
+  ytInput,
+  setYtInput,
+  ytError,
+  setYtError,
+  onApply,
+  value,
+}: {
+  ytInput: string;
+  setYtInput: (v: string) => void;
+  ytError: string;
+  setYtError: (v: string) => void;
+  onApply: () => void;
+  value: string;
+}) {
+  return (
+    <Div className="space-y-2">
+      <Row gap="sm">
+        <input
+          type="text"
+          value={ytInput}
+          onChange={(e) => { setYtInput(e.target.value); setYtError(""); }}
+          placeholder="YouTube video ID or URL"
+          className="appkit-input flex-1"
+        />
+        <Button type="button" variant="primary" size="sm" onClick={onApply}>Apply</Button>
+      </Row>
+      {ytError && <Alert variant="error">{ytError}</Alert>}
+      {value?.includes("youtube.com") && (
+        <Text size="xs" variant="secondary">YouTube embed: {value}</Text>
+      )}
+    </Div>
+  );
+}
+
+function ExternalUrlTabPanel({
+  extInput,
+  setExtInput,
+  extError,
+  setExtError,
+  onApply,
+}: {
+  extInput: string;
+  setExtInput: (v: string) => void;
+  extError: string;
+  setExtError: (v: string) => void;
+  onApply: () => void;
+}) {
+  return (
+    <Div className="space-y-2">
+      <Row gap="sm">
+        <input
+          type="url"
+          value={extInput}
+          onChange={(e) => { setExtInput(e.target.value); setExtError(""); }}
+          placeholder="https://example.com/image.jpg"
+          className="appkit-input flex-1"
+        />
+        <Button type="button" variant="primary" size="sm" onClick={onApply}>Apply</Button>
+      </Row>
+      {extError && <Alert variant="error">{extError}</Alert>}
+      <Text size="xs" variant="secondary">
+        External URLs are stored as-is and are not watermarked.
+      </Text>
+    </Div>
+  );
+}
+
+function MediaPreviewPanel({
+  value,
+  label,
+  disabled,
+  enableTrim,
+  enableThumbnail,
+  onEditVideo,
+  onRemove,
+  tUpload,
+  tMediaEditor,
+}: {
+  value: string;
+  label: string;
+  disabled: boolean;
+  enableTrim: boolean;
+  enableThumbnail: boolean;
+  onEditVideo: (url: string) => void;
+  onRemove: () => void;
+  tUpload: (key: string) => string;
+  tMediaEditor: (key: string) => string;
+}) {
+  return (
+    <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
+      {isVideo(value) ? (
+        <Div className="relative aspect-video overflow-hidden rounded-lg">
+          <MediaVideo src={value} alt={label} controls objectFit="contain" />
+        </Div>
+      ) : isImage(value) ? (
+        <Div className="relative aspect-video overflow-hidden rounded-lg">
+          <MediaImage src={value} alt={label} size="card" objectFit="contain" />
+        </Div>
+      ) : isPdf(value) ? (
+        <Row gap="md" align="center">
+          <Div aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+            <span className="text-xs font-bold">PDF</span>
+          </Div>
+          <a href={value} target="_blank" rel="noopener noreferrer"
+            className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400">
+            {filenameFromUrl(value)}
+          </a>
+        </Row>
+      ) : (
+        <a href={value} target="_blank" rel="noopener noreferrer"
+          className="text-sm underline break-all text-blue-600 dark:text-blue-400">
+          {filenameFromUrl(value)}
+        </a>
+      )}
+
+      {!disabled && (
+        <Row wrap gap="sm" className="mt-2">
+          {isVideo(value) && (enableTrim || enableThumbnail) && (
+            <Button type="button" onClick={() => onEditVideo(value)} variant="secondary" size="sm">
+              {tMediaEditor("editVideo")}
+            </Button>
+          )}
+          <Button type="button" onClick={onRemove} variant="danger" size="sm">
+            {tUpload("remove")}
+          </Button>
+        </Row>
+      )}
+    </Div>
+  );
+}
+
 export function MediaUploadField({
   label,
   value,
@@ -345,6 +479,15 @@ export function MediaUploadField({
     }
   };
 
+  const handleEditVideo = (videoUrl: string) => {
+    setPendingVideoUrl(videoUrl);
+    if (enableTrim) {
+      setShowTrimModal(true);
+    } else {
+      setShowThumbnailModal(true);
+    }
+  };
+
   const handleRemove = () => {
     if (value && stagedUrlsRef.current.includes(value)) {
       onAbortRef.current?.([value]);
@@ -398,124 +541,40 @@ export function MediaUploadField({
 
       {/* YouTube input */}
       {hasAlternateSources && sourceTab === "youtube" && !disabled && (
-        <Div className="space-y-2">
-          <Row gap="sm">
-            <input
-              type="text"
-              value={ytInput}
-              onChange={(e) => { setYtInput(e.target.value); setYtError(""); }}
-              placeholder="YouTube video ID or URL"
-              className="appkit-input flex-1"
-            />
-            <Button type="button" variant="primary" size="sm" onClick={handleYtApply}>
-              Apply
-            </Button>
-          </Row>
-          {ytError && <Alert variant="error">{ytError}</Alert>}
-          {value?.includes("youtube.com") && (
-            <Text size="xs" variant="secondary">YouTube embed: {value}</Text>
-          )}
-        </Div>
+        <YoutubeTabPanel
+          ytInput={ytInput}
+          setYtInput={setYtInput}
+          ytError={ytError}
+          setYtError={setYtError}
+          onApply={handleYtApply}
+          value={value}
+        />
       )}
 
       {/* External URL input */}
       {hasAlternateSources && sourceTab === "external" && !disabled && (
-        <Div className="space-y-2">
-          <Row gap="sm">
-            <input
-              type="url"
-              value={extInput}
-              onChange={(e) => { setExtInput(e.target.value); setExtError(""); }}
-              placeholder="https://example.com/image.jpg"
-              className="appkit-input flex-1"
-            />
-            <Button type="button" variant="primary" size="sm" onClick={handleExtApply}>
-              Apply
-            </Button>
-          </Row>
-          {extError && <Alert variant="error">{extError}</Alert>}
-          <Text size="xs" variant="secondary">
-            External URLs are stored as-is and are not watermarked.
-          </Text>
-        </Div>
+        <ExternalUrlTabPanel
+          extInput={extInput}
+          setExtInput={setExtInput}
+          extError={extError}
+          setExtError={setExtError}
+          onApply={handleExtApply}
+        />
       )}
 
       {/* Standard upload UI — shown when source tab is "upload" (or no alternate sources) */}
       {(!hasAlternateSources || sourceTab === "upload") && value && !isLoading && (
-        <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
-          {isVideo(value) ? (
-            <Div className="relative aspect-video overflow-hidden rounded-lg">
-              <MediaVideo
-                src={value}
-                alt={label}
-                controls
-                objectFit="contain"
-              />
-            </Div>
-          ) : isImage(value) ? (
-            <Div className="relative aspect-video overflow-hidden rounded-lg">
-              <MediaImage
-                src={value}
-                alt={label}
-                size="card"
-                objectFit="contain"
-              />
-            </Div>
-          ) : isPdf(value) ? (
-            <Row gap="md" align="center">
-              <Div
-                aria-hidden
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300"
-              >
-                <span className="text-xs font-bold">PDF</span>
-              </Div>
-              <a
-                href={value}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400"
-              >
-                {filenameFromUrl(value)}
-              </a>
-            </Row>
-          ) : (
-            <a
-              href={value}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm underline break-all text-blue-600 dark:text-blue-400"
-            >
-              {filenameFromUrl(value)}
-            </a>
-          )}
-
-          {!disabled && (
-            <Row wrap gap="sm" className="mt-2">
-              {isVideo(value) && (enableTrim || enableThumbnail) && (
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setPendingVideoUrl(value);
-                    if (enableTrim) setShowTrimModal(true);
-                    else setShowThumbnailModal(true);
-                  }}
-                  variant="secondary"
-                  size="sm"
-                >
-                  {tMediaEditor("editVideo")}
-                </Button>
-              )}
-              <Button
-                type="button"
-                onClick={handleRemove}
-                variant="danger"
-                size="sm"
-              >
-                {tUpload("remove")}
-              </Button>
-            </Row>
-          )}
-        </Div>
+        <MediaPreviewPanel
+          value={value}
+          label={label}
+          disabled={disabled}
+          enableTrim={enableTrim}
+          enableThumbnail={enableThumbnail}
+          onEditVideo={handleEditVideo}
+          onRemove={handleRemove}
+          tUpload={tUpload}
+          tMediaEditor={tMediaEditor}
+        />
       )}
 
       {!disabled && !isLoading && (!hasAlternateSources || sourceTab === "upload") && (

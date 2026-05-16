@@ -165,6 +165,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
   const actions = (product: T) => (
     <Div className="flex gap-2">
       <Button
+        variant="ghost"
         type="button"
         onClick={(e) => {
           e.stopPropagation();
@@ -175,6 +176,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
         {labels.edit}
       </Button>
       <Button
+        variant="ghost"
         type="button"
         onClick={(e) => {
           e.stopPropagation();

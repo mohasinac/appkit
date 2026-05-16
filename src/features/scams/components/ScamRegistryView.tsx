@@ -1,5 +1,7 @@
 import React from "react";
 import Link from "next/link";
+
+const CLS_ICON_SM = "h-3 w-3 shrink-0";
 import { Shield, Phone, Wallet, Mail, ChevronRight, Search } from "lucide-react";
 import {
   Container,
@@ -68,17 +70,17 @@ function ScammerCard({ scammer }: { scammer: ScammerDocument }) {
           <Stack gap="xs">
             {scammer.phones.slice(0, 2).map((p) => (
               <Text key={p} variant="secondary" className="flex items-center gap-1 text-xs">
-                <Phone className="h-3 w-3 shrink-0" /> {p}
+                <Phone className={CLS_ICON_SM} /> {p}
               </Text>
             ))}
             {scammer.upiIds.slice(0, 1).map((u) => (
               <Text key={u} variant="secondary" className="flex items-center gap-1 text-xs">
-                <Wallet className="h-3 w-3 shrink-0" /> {u}
+                <Wallet className={CLS_ICON_SM} /> {u}
               </Text>
             ))}
             {scammer.emails.slice(0, 1).map((e) => (
               <Text key={e} variant="secondary" className="flex items-center gap-1 text-xs">
-                <Mail className="h-3 w-3 shrink-0" /> {e}
+                <Mail className={CLS_ICON_SM} /> {e}
               </Text>
             ))}
           </Stack>

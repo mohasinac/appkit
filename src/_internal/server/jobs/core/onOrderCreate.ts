@@ -53,6 +53,29 @@ async function sendAnnouncement(
   }
 }
 
+async function notifyStoreOwner(
+  ctx: JobContext,
+  storeId: string,
+  message: string,
+  phoneNumberId: string,
+  accessToken: string,
+  orderId: string,
+): Promise<void> {
+  try {
+    const store = await storeRepository.findBySlug(storeId);
+    if (!store?.ownerId) return;
+    const owner = await userRepository.findById(store.ownerId);
+    const encryptedPhone = owner?.phoneNumber as string | undefined;
+    if (!encryptedPhone) return;
+    const ownerPhone = decryptPii(encryptedPhone) as string | null;
+    if (ownerPhone) {
+      await sendAnnouncement(ctx, ownerPhone, message, phoneNumberId, accessToken, "store-owner", orderId);
+    }
+  } catch (err) {
+    ctx.logger.error("Store owner lookup failed (non-fatal)", err, { orderId, storeId });
+  }
+}
+
 export async function handleOrderCreate(
   input: HandleOrderCreateInput,
   ctx: JobContext,
@@ -92,29 +115,7 @@ export async function handleOrderCreate(
 
   const storeId = order.storeId;
   if (storeId) {
-    try {
-      const store = await storeRepository.findBySlug(storeId);
-      if (store?.ownerId) {
-        const owner = await userRepository.findById(store.ownerId);
-        const encryptedPhone = owner?.phoneNumber as string | undefined;
-        if (encryptedPhone) {
-          const ownerPhone = decryptPii(encryptedPhone) as string | null;
-          if (ownerPhone) {
-            await sendAnnouncement(
-              ctx,
-              ownerPhone,
-              message,
-              phoneNumberId,
-              accessToken,
-              "store-owner",
-              orderId,
-            );
-          }
-        }
-      }
-    } catch (err) {
-      ctx.logger.error("Store owner lookup failed (non-fatal)", err, { orderId, storeId });
-    }
+    await notifyStoreOwner(ctx, storeId, message, phoneNumberId, accessToken, orderId);
   }
 
   ctx.logger.info(`Order announcement complete`, {

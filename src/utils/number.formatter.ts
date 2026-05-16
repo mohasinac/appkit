@@ -82,27 +82,20 @@ export function parseFormattedNumber(str: string): number {
     }
   } else if (lastDotIndex > -1 && lastCommaIndex === -1) {
     const afterDot = cleaned.substring(lastDotIndex + 1);
-    if (dotCount > 1) {
-      cleaned = cleaned.replace(/\./g, "");
-    } else if (afterDot.length > 3) {
-      cleaned = cleaned.replace(/\./g, "");
-    }
+    const isThousands = dotCount > 1 || afterDot.length > 3;
+    if (isThousands) cleaned = cleaned.replace(/\./g, "");
     decimalSeparator = ".";
     thousandsSeparator = "";
   } else if (lastCommaIndex > -1 && lastDotIndex === -1) {
     const afterComma = cleaned.substring(lastCommaIndex + 1);
-    if (commaCount > 1) {
+    const commaIsThousands = commaCount > 1 || afterComma.length > 3;
+    if (commaIsThousands) {
       cleaned = cleaned.replace(/,/g, "");
       decimalSeparator = ".";
-      thousandsSeparator = "";
-    } else if (afterComma.length > 3) {
-      cleaned = cleaned.replace(/,/g, "");
-      decimalSeparator = ".";
-      thousandsSeparator = "";
     } else {
       decimalSeparator = ",";
-      thousandsSeparator = "";
     }
+    thousandsSeparator = "";
   }
 
   let result = cleaned;

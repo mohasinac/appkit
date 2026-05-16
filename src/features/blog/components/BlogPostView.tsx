@@ -49,6 +49,45 @@ export interface BlogPostViewProps {
   className?: string;
 }
 
+type BlogPostViewLabels = BlogPostViewProps["labels"] & object;
+
+function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostViewLabels) {
+  return (
+    <Div className="mb-8">
+      <Row className="gap-2 mb-4">
+        <Span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}>{post.category}</Span>
+        {post.isFeatured && <Span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-medium">{labels?.featured ?? "Featured"}</Span>}
+      </Row>
+      <Heading level={1} className="text-3xl font-bold mb-4">{post.title}</Heading>
+      {post.excerpt && <Text className="text-lg text-neutral-500 mb-6">{post.excerpt}</Text>}
+      <Row wrap gap="md" className="text-sm text-neutral-400">
+        {post.authorName && <Span>{labels?.author ?? "By"} <Span className="font-medium text-neutral-700">{post.authorName}</Span></Span>}
+        {post.readTimeMinutes != null && <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>}
+        {date && <Span>{labels?.publishedOn ?? "Published"} {date}</Span>}
+        {post.views != null && <Span>{post.views} {labels?.viewsLabel ?? "views"}</Span>}
+      </Row>
+    </Div>
+  );
+}
+
+function renderBlogPostRelated(related: BlogPost[], labels: BlogPostViewLabels, renderRelatedCard?: (post: BlogPost, index: number) => React.ReactNode) {
+  if (related.length === 0) return null;
+  return (
+    <Div>
+      <Heading level={2} className="text-xl font-semibold mb-6">{labels?.relatedTitle ?? "Related Posts"}</Heading>
+      <Div className="grid sm:grid-cols-3 gap-6">
+        {related.map((rel, i) =>
+          renderRelatedCard ? (
+            <React.Fragment key={rel.id}>{renderRelatedCard(rel, i)}</React.Fragment>
+          ) : (
+            <BlogCard key={rel.id} post={rel} href={String(ROUTES.BLOG.ARTICLE(rel.slug))} />
+          ),
+        )}
+      </Div>
+    </Div>
+  );
+}
+
 export function BlogPostView({
   slug,
   initialData,
@@ -119,115 +158,31 @@ export function BlogPostView({
       )}
 
       <Div className="max-w-3xl mx-auto px-4 py-12">
-        {/* Header */}
-        <Div className="mb-8">
-          <Row className="gap-2 mb-4">
-            <Span
-              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}
-            >
-              {post.category}
-            </Span>
-            {post.isFeatured && (
-              <Span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-medium">
-                {labels.featured ?? "Featured"}
-              </Span>
-            )}
-          </Row>
-          <Heading level={1} className="text-3xl font-bold mb-4">
-            {post.title}
-          </Heading>
-          {post.excerpt && (
-            <Text className="text-lg text-neutral-500 mb-6">
-              {post.excerpt}
-            </Text>
-          )}
-          <Row wrap gap="md" className="text-sm text-neutral-400">
-            {post.authorName && (
-              <Span>
-                {labels.author ?? "By"}{" "}
-                <Span className="font-medium text-neutral-700">
-                  {post.authorName}
-                </Span>
-              </Span>
-            )}
-            {post.readTimeMinutes != null && (
-              <Span>
-                {post.readTimeMinutes} {labels.readTime ?? "min read"}
-              </Span>
-            )}
-            {date && (
-              <Span>
-                {labels.publishedOn ?? "Published"} {date}
-              </Span>
-            )}
-            {post.views != null && (
-              <Span>
-                {post.views} {labels.viewsLabel ?? "views"}
-              </Span>
-            )}
-          </Row>
-        </Div>
+        {renderBlogPostHeader(post, date, labels)}
 
         {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <Row wrap gap="sm" className="mb-8">
             {post.tags.map((tag) => (
-              <Span
-                key={tag}
-                className="inline-block px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 text-xs font-medium"
-              >
-                #{tag}
-              </Span>
+              <Span key={tag} className="inline-block px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 text-xs font-medium">#{tag}</Span>
             ))}
           </Row>
         )}
 
         {/* TS12/VD10 — Author bio block (optional) */}
-        {renderAuthorBio && (
-          <Div className="mb-6">
-            {renderAuthorBio(post)}
-          </Div>
-        )}
+        {renderAuthorBio && <Div className="mb-6">{renderAuthorBio(post)}</Div>}
 
         {/* Content */}
         <Div className="bg-white dark:bg-slate-900 rounded-xl border border-neutral-200 dark:border-slate-700 p-8 mb-12">
-          {renderContent ? (
-            renderContent(post)
-          ) : (
-            <RichText
-              html={normalizeRichTextHtml(post.content ?? "")}
-              proseClass="prose max-w-none dark:prose-invert"
-              className="text-neutral-800 dark:text-neutral-100"
-            />
+          {renderContent ? renderContent(post) : (
+            <RichText html={normalizeRichTextHtml(post.content ?? "")} proseClass="prose max-w-none dark:prose-invert" className="text-neutral-800 dark:text-neutral-100" />
           )}
         </Div>
 
-        {/* Related posts */}
-        {related.length > 0 && (
-          <Div>
-            <Heading level={2} className="text-xl font-semibold mb-6">
-              {labels.relatedTitle ?? "Related Posts"}
-            </Heading>
-            <Div className="grid sm:grid-cols-3 gap-6">
-              {related.map((rel, i) =>
-                renderRelatedCard ? (
-                  <React.Fragment key={rel.id}>
-                    {renderRelatedCard(rel, i)}
-                  </React.Fragment>
-                ) : (
-                  <BlogCard key={rel.id} post={rel} href={String(ROUTES.BLOG.ARTICLE(rel.slug))} />
-                ),
-              )}
-            </Div>
-          </Div>
-        )}
+        {renderBlogPostRelated(related, labels, renderRelatedCard)}
 
         {/* Back button */}
-        {renderBackButton && (
-          <Div className="mt-10 pt-8 border-t border-neutral-200">
-            {renderBackButton()}
-          </Div>
-        )}
+        {renderBackButton && <Div className="mt-10 pt-8 border-t border-neutral-200">{renderBackButton()}</Div>}
       </Div>
     </Div>
   );

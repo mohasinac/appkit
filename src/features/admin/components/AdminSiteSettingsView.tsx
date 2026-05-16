@@ -2,22 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  Alert,
-  Button,
-  Form,
-  FormActions,
-  Input,
-  Select,
-  Slider,
-  StackedViewShell,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Toggle,
-  useToast,
-} from "../../../ui";
+import { Alert, Button, Form, FormActions, Input, Select, Slider, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
@@ -457,14 +442,14 @@ export function AdminSiteSettingsView({
           {/* ⓪ About Page */}
           <TabsContent value="about">
             <Form onSubmit={(e) => { e.preventDefault(); aboutMutation.mutate(); }} className="space-y-4 pt-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
                 Override the About page hero and mission text. Leave blank to use the platform defaults.
-              </p>
+              </Text>
               <Input label="Hero title" value={aboutTitle} onChange={(e) => setAboutTitle(e.target.value)} placeholder="About LetItRip" />
               <Input label="Hero subtitle" value={aboutSubtitle} onChange={(e) => setAboutSubtitle(e.target.value)} placeholder="Connecting buyers, sellers, and bidders in one vibrant marketplace" />
               <Input label="Mission section title" value={aboutMissionTitle} onChange={(e) => setAboutMissionTitle(e.target.value)} placeholder="Our Mission" />
-              <div>
-                <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mission text</p>
+              <>
+                <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Mission text</Text>
                 <textarea
                   value={aboutMissionText}
                   onChange={(e) => setAboutMissionText(e.target.value)}
@@ -472,7 +457,7 @@ export function AdminSiteSettingsView({
                   rows={4}
                   className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-3 text-sm text-zinc-800 dark:text-zinc-200 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-              </div>
+              </>
               <Input label="CTA banner title" value={aboutCtaTitle} onChange={(e) => setAboutCtaTitle(e.target.value)} placeholder="Ready to get started?" />
               <GroupSaveButton isPending={aboutMutation.isPending} />
             </Form>
@@ -497,18 +482,18 @@ export function AdminSiteSettingsView({
           <TabsContent value="appearance">
             <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="space-y-4 pt-4">
               <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Primary color</p>
+                <>
+                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Primary color</Text>
                   <input type="color" value={primaryColor || "#000000"} onChange={(e) => setPrimaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Secondary color</p>
+                </>
+                <>
+                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Secondary color</Text>
                   <input type="color" value={secondaryColor || "#000000"} onChange={(e) => setSecondaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Accent color</p>
+                </>
+                <>
+                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Accent color</Text>
                   <input type="color" value={accentColor || "#000000"} onChange={(e) => setAccentColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </div>
+                </>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Select label="Default theme" options={THEME_OPTIONS} value={defaultTheme} onValueChange={setDefaultTheme} />
@@ -524,10 +509,10 @@ export function AdminSiteSettingsView({
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder="/products" disabled={!announcementEnabled} />
-              <div>
-                <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Background color</p>
+              <>
+                <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Background color</Text>
                 <input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" disabled={!announcementEnabled} />
-              </div>
+              </>
               <GroupSaveButton isPending={announcementMutation.isPending} />
             </Form>
           </TabsContent>
@@ -553,7 +538,7 @@ export function AdminSiteSettingsView({
               </div>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
-              <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400 pt-2">Social links</p>
+              <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400 pt-2">Social links</Text>
               <div className="grid grid-cols-2 gap-4">
                 <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
                 <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/letitrip" />
@@ -584,7 +569,7 @@ export function AdminSiteSettingsView({
               <Slider label={`Size — ${watermarkSize}% of image width`} value={watermarkSize} onChange={setWatermarkSize} min={5} max={100} step={5} />
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
               <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800">
-                <p className="text-xs text-zinc-500 mb-2">Preview (text watermark only)</p>
+                <Text className="text-xs text-zinc-500 mb-2">Preview (text watermark only)</Text>
                 <div className="relative bg-white dark:bg-zinc-900 rounded h-32 flex items-end justify-end overflow-hidden">
                   <span
                     className="text-zinc-400 select-none p-2 font-medium"
@@ -620,20 +605,20 @@ export function AdminSiteSettingsView({
           {/* ⑧ Integrations & Keys */}
           <TabsContent value="integrations">
             <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="space-y-4 pt-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Keys are masked in transit and stored encrypted. Click Reveal to view.</p>
+              <Text className="text-xs text-zinc-500 dark:text-zinc-400">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Razorpay</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Razorpay</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_live_…" />
                   <MaskedInput label="Razorpay Secret" value={razorpaySecret} onChange={setRazorpaySecret} placeholder="••••••••" />
                 </div>
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Shiprocket</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Shiprocket</Text>
                 <MaskedInput label="Shiprocket API token" value={shiprocketToken} onChange={setShiprocketToken} placeholder="••••••••" />
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">SMTP / Email</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">SMTP / Email</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <Input label="SMTP host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.sendgrid.net" />
                   <Input label="SMTP port" value={smtpPort} onChange={(e) => setSmtpPort(e.target.value)} type="number" placeholder="587" />
@@ -643,7 +628,7 @@ export function AdminSiteSettingsView({
                 <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Analytics & Tracking</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Analytics & Tracking</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <Input label="Google Analytics ID" value={gaMeasurementId} onChange={(e) => setGaMeasurementId(e.target.value)} placeholder="G-XXXXXXXXXX" />
                   <Input label="Facebook Pixel ID" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} placeholder="XXXXXXXXXXXXXXXX" />
@@ -651,16 +636,16 @@ export function AdminSiteSettingsView({
                 </div>
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Meta (Instagram &amp; Facebook Social Feed)</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Meta (Instagram &amp; Facebook Social Feed)</Text>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInput label="Page Access Token" value={metaPageAccessToken} onChange={setMetaPageAccessToken} placeholder="EAAxxxxxxx…" />
                   <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="letitrip" />
                 </div>
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">TikTok for Developers (Social Feed)</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">TikTok for Developers (Social Feed)</Text>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInput label="Client Key" value={tiktokClientKey} onChange={setTiktokClientKey} placeholder="aw…" />
                   <MaskedInput label="Client Secret" value={tiktokClientSecret} onChange={setTiktokClientSecret} placeholder="••••••••" />
@@ -668,8 +653,8 @@ export function AdminSiteSettingsView({
                 </div>
               </div>
               <div className="space-y-3">
-                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">DeviantArt OAuth2 (Social Feed)</p>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</p>
+                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">DeviantArt OAuth2 (Social Feed)</Text>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</Text>
                 <div className="grid grid-cols-2 gap-4">
                   <MaskedInput label="Client ID" value={deviantartClientId} onChange={setDeviantartClientId} placeholder="1234" />
                   <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
@@ -718,11 +703,11 @@ export function AdminSiteSettingsView({
           {/* ⑬ WhatsApp Business Cloud API */}
           <TabsContent value="whatsapp">
             <Form onSubmit={(e) => { e.preventDefault(); whatsappMutation.mutate(); }} className="space-y-4 pt-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
                 Platform-level WhatsApp Business Cloud API credentials. Used for automated purchase
                 announcements to admin numbers when orders are placed. Store owners configure their
                 own credentials in Store → WhatsApp.
-              </p>
+              </Text>
               <Input
                 label="Phone Number ID"
                 value={waPhoneNumberId}
@@ -759,11 +744,11 @@ export function AdminSiteSettingsView({
                 ["Cookie Policy", cookieHtml, setCookieHtml],
               ].map(([label, value, setter]) => (
                 <div key={label as string} className="space-y-1">
-                  <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{label as string}</p>
+                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{label as string}</Text>
                   <textarea
                     value={value as string}
                     onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
-                    placeholder={`<p>Enter ${label} HTML here…</p>`}
+                    placeholder={`<Text>Enter ${label} HTML here…</Text>`}
                     rows={6}
                     className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-3 text-sm font-mono text-zinc-800 dark:text-zinc-200 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />

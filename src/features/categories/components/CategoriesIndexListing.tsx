@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { Pagination, ListingToolbar } from "../../../ui";
+import { ListingToolbar, Pagination, Text } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -14,6 +14,85 @@ import { sortBy } from "../../../constants/sort";
 import { CATEGORY_FIELDS } from "../../../constants/field-names";
 
 const PAGE_SIZE = 24;
+
+function renderCategoryGrid(props: {
+  isLoading: boolean; categories: CategoryItem[]; view: "grid" | "list";
+  activeSearch: string; activeTab: string; brandsOnly: boolean;
+}) {
+  const { isLoading, categories, view, activeSearch, activeTab, brandsOnly } = props;
+  const isBrandView = activeTab === "brands" || brandsOnly;
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
+            <div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
+            <div className="p-3.5 space-y-2">
+              <div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (categories.length === 0) {
+    return (
+      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
+        {activeSearch ? `No ${isBrandView ? "brands" : "categories"} matching "${activeSearch}"` : isBrandView ? "No brands found" : "No categories found"}
+      </Text>
+    );
+  }
+  if (view === "list") {
+    return (
+      <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+        {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
+      </div>
+    );
+  }
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
+    </div>
+  );
+}
+
+function renderCategoryFilterDrawer(props: {
+  filterOpen: boolean; setFilterOpen: (v: boolean) => void;
+  activeFilterCount: number; clearFilters: () => void;
+  applyFilters: () => void; pendingTable: UrlTable;
+}) {
+  const { filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable } = props;
+  if (!filterOpen) return null;
+  return (
+    <>
+      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
+      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
+          <div className="flex items-center gap-2">
+            {activeFilterCount > 0 && <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>}
+            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-4">
+          <CategoryFilters table={pendingTable} variant="public" />
+        </div>
+        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
+          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
+            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function getNumericParam(table: UrlTable, key: string): number | undefined {
+  return table.get(key) ? Number(table.get(key)) : undefined;
+}
 const DEFAULT_SORT = sortBy(CATEGORY_FIELDS.NAME, "ASC");
 const FILTER_KEYS = [TABLE_KEYS.IS_FEATURED, "isBrand", "rootOnly", "tier", "minItemCount", "maxItemCount"];
 
@@ -134,9 +213,9 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
     isFeatured: table.get(TABLE_KEYS.IS_FEATURED) === "true" || undefined,
     isBrand: isBrandParam,
     rootOnly: table.get("rootOnly") === "true" || undefined,
-    tier: table.get("tier") ? Number(table.get("tier")) : undefined,
-    minProductCount: table.get("minItemCount") ? Number(table.get("minItemCount")) : undefined,
-    maxProductCount: table.get("maxItemCount") ? Number(table.get("maxItemCount")) : undefined,
+    tier: getNumericParam(table, "tier"),
+    minProductCount: getNumericParam(table, "minItemCount"),
+    maxProductCount: getNumericParam(table, "maxItemCount"),
     sort,
     page,
     pageSize: PAGE_SIZE,
@@ -198,73 +277,10 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
       )}
 
       {/* ── Category / brand grid ──────────────────────────────────────── */}
-      <div className="py-6">
-        {isLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
-                <div className="p-3.5 space-y-2">
-                  <div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : categories.length === 0 ? (
-          <p className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
-            {activeSearch
-              ? `No ${activeTab === "brands" || brandsOnly ? "brands" : "categories"} matching "${activeSearch}"`
-              : activeTab === "brands" || brandsOnly
-                ? "No brands found"
-                : "No categories found"}
-          </p>
-        ) : view === "list" ? (
-          <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />
-            ))}
-          </div>
-        )}
-      </div>
+      <div className="py-6">{renderCategoryGrid({ isLoading, categories, view, activeSearch, activeTab, brandsOnly })}</div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                Filters
-              </span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">
-                    Clear all
-                  </button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4">
-              <CategoryFilters table={pendingTable} variant="public" />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      {renderCategoryFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}
     </div>
   );
 }

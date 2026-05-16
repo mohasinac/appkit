@@ -10,12 +10,14 @@ import {
   AuthorizationError,
   ValidationError,
 } from "../../../errors";
+
 import { serverLogger } from "../../../monitoring";
 import { getProviders } from "../../../contracts";
 import { orderRepository } from "../repository/orders.repository";
 import type { OrderDocument } from "../schemas";
 import type { TrackingInfo } from "../../../contracts/shipping";
 
+const ERR_ORDER_NOT_FOUND = "Order not found";
 const CANCELLABLE_STATUSES = ["pending", "confirmed"] as const;
 
 export async function cancelOrderForUser(
@@ -25,7 +27,7 @@ export async function cancelOrderForUser(
 ): Promise<void> {
   const order = await orderRepository.findById(orderId);
 
-  if (!order) throw new NotFoundError("Order not found");
+  if (!order) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
   if (order.userId !== userId)
     throw new AuthorizationError("You are not authorised to cancel this order");
 
@@ -55,8 +57,8 @@ export async function getOrderByIdForUser(
   orderId: string,
 ): Promise<OrderDocument> {
   const order = await orderRepository.findById(orderId);
-  if (!order) throw new NotFoundError("Order not found");
-  if (order.userId !== userId) throw new NotFoundError("Order not found");
+  if (!order) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
+  if (order.userId !== userId) throw new NotFoundError(ERR_ORDER_NOT_FOUND);
   return order;
 }
 

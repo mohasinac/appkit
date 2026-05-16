@@ -6,6 +6,8 @@
  */
 
 import { NotFoundError } from "../../../errors";
+
+const ERR_STORE_NOT_FOUND = "Store not found";
 import { maskPublicReview } from "../../../security";
 import { storeRepository } from "../repository/store.repository";
 import { STORE_FIELDS } from "../schemas";
@@ -75,7 +77,7 @@ export async function getStoreProducts(
     storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
     !storeDoc.isPublic
   ) {
-    throw new NotFoundError("Store not found");
+    throw new NotFoundError(ERR_STORE_NOT_FOUND);
   }
 
   const filtersArr = [
@@ -105,7 +107,7 @@ export async function getStoreAuctions(
     storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
     !storeDoc.isPublic
   ) {
-    throw new NotFoundError("Store not found");
+    throw new NotFoundError(ERR_STORE_NOT_FOUND);
   }
 
   const filtersArr = [
@@ -132,7 +134,7 @@ export async function getStoreReviews(
     storeDoc.status !== STORE_FIELDS.STATUS_VALUES.ACTIVE ||
     !storeDoc.isPublic
   ) {
-    throw new NotFoundError("Store not found");
+    throw new NotFoundError(ERR_STORE_NOT_FOUND);
   }
 
   const allProducts = await productRepository.findByStore(storeDoc.id);

@@ -84,6 +84,13 @@ const EMPTY_FORM: FormState = {
   coverImage: "",
 };
 
+async function parseResponseError(res: Response): Promise<string> {
+  const err = (await res.json().catch(() => null)) as {
+    error?: { message?: string };
+  } | null;
+  return err?.error?.message ?? `Create failed: ${res.status}`;
+}
+
 function bundleToForm(bundle: CategoryDocument | null): FormState {
   if (!bundle) return EMPTY_FORM;
   const rule = bundle.bundleQueryRule;
@@ -215,12 +222,7 @@ export function AdminBundleEditorView({
           body: JSON.stringify(body),
         });
         if (!res.ok) {
-          const err = (await res.json().catch(() => null)) as {
-            error?: { message?: string };
-          } | null;
-          throw new Error(
-            err?.error?.message ?? `Create failed: ${res.status}`,
-          );
+          throw new Error(await parseResponseError(res));
         }
         const json = (await res.json()) as { data?: CategoryDocument };
         const newId = json?.data?.id;

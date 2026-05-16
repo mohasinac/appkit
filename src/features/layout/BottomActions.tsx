@@ -31,6 +31,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, ChevronUp, ChevronDown, Check } from "lucide-react";
 import { useBottomActionsContext } from "./BottomActionsContext";
+import type { BottomAction } from "./BottomActionsContext";
 import { useClickOutside } from "../../react";
 import { Row, Span, Text, Button } from "../../ui";
 
@@ -40,6 +41,132 @@ const BOTTOM_NAV_BG =
 const Z_BOTTOM_ACTIONS = "z-40";
 const BOTTOM_NAV_HEIGHT = "h-14";
 const FLEX_CENTER = "flex items-center justify-center";
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function BulkPickerPanel({
+  bulkActions,
+  selectedActionId,
+  pickerOpen,
+  onSelect,
+}: {
+  bulkActions: BottomAction[];
+  selectedActionId: string | null;
+  pickerOpen: boolean;
+  onSelect: (id: string) => void;
+}) {
+  return (
+    <div
+      role="listbox"
+      aria-label="Bulk actions"
+      className={[
+        "absolute bottom-full left-0 right-0 overflow-hidden",
+        BOTTOM_NAV_BG,
+        "border-t border-zinc-200/80 dark:border-slate-700/80",
+        "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
+        "transition-[max-height,opacity] duration-200 ease-out",
+        pickerOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0 pointer-events-none",
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {bulkActions.map((action, i) => {
+        const isSelected = action.id === selectedActionId;
+        return (
+          <Button
+            key={action.id}
+            role="option"
+            aria-selected={isSelected}
+            type="button"
+            variant="ghost"
+            disabled={action.disabled || action.loading}
+            onClick={() => onSelect(action.id)}
+            className={[
+              "w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-medium transition-colors rounded-none",
+              i > 0 ? "border-t border-zinc-100/80 dark:border-slate-800/80" : "",
+              isSelected ? "bg-zinc-50 dark:bg-slate-800/60" : "",
+              action.variant === "danger"
+                ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+                : "text-zinc-800 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-slate-800/60",
+              action.disabled || action.loading ? "opacity-50 cursor-not-allowed" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {action.icon && (
+              <Span className={`flex-shrink-0 w-5 h-5 ${FLEX_CENTER}`} aria-hidden="true">
+                {action.icon}
+              </Span>
+            )}
+            <Span className="flex-1 truncate">{action.label}</Span>
+            {isSelected && (
+              <Check
+                className="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400"
+                aria-hidden="true"
+              />
+            )}
+          </Button>
+        );
+      })}
+    </div>
+  );
+}
+
+function PageActionsRow({
+  pageActions,
+  dispatchAction,
+}: {
+  pageActions: BottomAction[];
+  dispatchAction: (id: string) => void;
+}) {
+  return (
+    <>
+      {pageActions.map((action) => {
+        const isIconOnly = !action.label;
+        const growClass =
+          isIconOnly || action.grow === false
+            ? "flex-shrink-0 w-11"
+            : "flex-1 min-w-0";
+        return (
+          <Button
+            key={action.id}
+            type="button"
+            variant={action.variant ?? "primary"}
+            size="sm"
+            isLoading={action.loading}
+            disabled={action.disabled}
+            onClick={() => dispatchAction(action.id)}
+            className={[
+              "h-10 relative",
+              growClass,
+              isIconOnly ? "px-0 justify-center" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+          >
+            {action.icon && (
+              <Span
+                className={["flex-shrink-0", action.label ? "mr-1.5" : ""].join(" ")}
+                aria-hidden="true"
+              >
+                {action.icon}
+              </Span>
+            )}
+            {action.label && <Span className="truncate leading-none">{action.label}</Span>}
+            {action.badge !== undefined && (
+              <Span
+                className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full ${FLEX_CENTER} px-1 pointer-events-none select-none`}
+                aria-hidden="true"
+              >
+                {action.badge}
+              </Span>
+            )}
+          </Button>
+        );
+      })}
+    </>
+  );
+}
 
 export default function BottomActions() {
   const { state, actionCallbacksRef, bulkCallbacksRef, bulkClearRef } =
@@ -109,71 +236,12 @@ export default function BottomActions() {
      data-section="bottomactions-div-401">
       {/* -- Bulk action type-picker panel (opens upward) ---------------------- */}
       {isBulkMode && (
-        <div
-          role="listbox"
-          aria-label="Bulk actions"
-          className={[
-            "absolute bottom-full left-0 right-0 overflow-hidden",
-            BOTTOM_NAV_BG,
-            "border-t border-zinc-200/80 dark:border-slate-700/80",
-            "shadow-[0_-8px_24px_rgba(0,0,0,0.10)] dark:shadow-[0_-8px_24px_rgba(0,0,0,0.35)]",
-            "transition-[max-height,opacity] duration-200 ease-out",
-            pickerOpen
-              ? "max-h-64 opacity-100"
-              : "max-h-0 opacity-0 pointer-events-none",
-          ]
-            .filter(Boolean)
-            .join(" ")}
-         data-section="bottomactions-div-402">
-          {bulkActions.map((action, i) => {
-            const isSelected = action.id === selectedActionId;
-            return (
-              <Button
-                key={action.id}
-                role="option"
-                aria-selected={isSelected}
-                type="button"
-                variant="ghost"
-                disabled={action.disabled || action.loading}
-                onClick={() => {
-                  setSelectedActionId(action.id);
-                  setPickerOpen(false);
-                }}
-                className={[
-                  "w-full flex items-center gap-3 px-5 py-3.5 text-left text-sm font-medium transition-colors rounded-none",
-                  i > 0
-                    ? "border-t border-zinc-100/80 dark:border-slate-800/80"
-                    : "",
-                  isSelected ? "bg-zinc-50 dark:bg-slate-800/60" : "",
-                  action.variant === "danger"
-                    ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
-                    : "text-zinc-800 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-slate-800/60",
-                  action.disabled || action.loading
-                    ? "opacity-50 cursor-not-allowed"
-                    : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {action.icon && (
-                  <Span
-                    className={`flex-shrink-0 w-5 h-5 ${FLEX_CENTER}`}
-                    aria-hidden="true"
-                  >
-                    {action.icon}
-                  </Span>
-                )}
-                <Span className="flex-1 truncate">{action.label}</Span>
-                {isSelected && (
-                  <Check
-                    className="w-4 h-4 flex-shrink-0 text-primary-600 dark:text-primary-400"
-                    aria-hidden="true"
-                  />
-                )}
-              </Button>
-            );
-          })}
-        </div>
+        <BulkPickerPanel
+          bulkActions={bulkActions}
+          selectedActionId={selectedActionId}
+          pickerOpen={pickerOpen}
+          onSelect={(id) => { setSelectedActionId(id); setPickerOpen(false); }}
+        />
       )}
 
       {/* -- Bulk mode: 3 px accent stripe at top ---------------------------- */}
@@ -275,55 +343,7 @@ export default function BottomActions() {
           </>
         ) : (
           /* Page mode — action buttons inline ------------------------------ */
-          pageActions.map((action) => {
-            const isIconOnly = !action.label;
-            const growClass =
-              isIconOnly || action.grow === false
-                ? "flex-shrink-0 w-11"
-                : "flex-1 min-w-0";
-
-            return (
-              <Button
-                key={action.id}
-                type="button"
-                variant={action.variant ?? "primary"}
-                size="sm"
-                isLoading={action.loading}
-                disabled={action.disabled}
-                onClick={() => dispatchAction(action.id)}
-                className={[
-                  "h-10 relative",
-                  growClass,
-                  isIconOnly ? "px-0 justify-center" : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {action.icon && (
-                  <Span
-                    className={[
-                      "flex-shrink-0",
-                      action.label ? "mr-1.5" : "",
-                    ].join(" ")}
-                    aria-hidden="true"
-                  >
-                    {action.icon}
-                  </Span>
-                )}
-                {action.label && (
-                  <Span className="truncate leading-none">{action.label}</Span>
-                )}
-                {action.badge !== undefined && (
-                  <Span
-                    className={`absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full ${FLEX_CENTER} px-1 pointer-events-none select-none`}
-                    aria-hidden="true"
-                  >
-                    {action.badge}
-                  </Span>
-                )}
-              </Button>
-            );
-          })
+          <PageActionsRow pageActions={pageActions} dispatchAction={dispatchAction} />
         )}
       </Row>
     </div>

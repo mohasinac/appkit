@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { productRepository } from "../../../repositories";
 import { listBidsByProduct } from "../../auctions/actions/bid-actions";
+
+const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import { formatCurrency } from "../../../utils/number.formatter";
@@ -59,6 +61,112 @@ function toDescriptionHtml(raw: unknown): string {
   if (!raw) return "";
   const s = typeof raw === "string" ? raw : JSON.stringify(raw);
   return normalizeRichTextHtml(s);
+}
+
+interface AuctionInfoPanelProps {
+  title: string; currentBid: number; currency: string; bidCount: number;
+  isEnded: boolean; endDate: Date | null; buyNowPrice: number | null;
+  featured: boolean; freeShipping: boolean; condition: string | null;
+  category: string | null; categoryName: string | null;
+  brand: string | null; brandSlug: string | null;
+  productFeatures?: import("../../products/schemas/product-features").ProductFeatureDocument[];
+  features: string[]; descriptionHtml: string;
+  safeSeller: string | null; storeHref: string | null;
+}
+
+function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
+  const { title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref } = props;
+  return (
+    <Stack gap="md">
+      <Div>
+        <Row gap="xs" className="mb-2 flex-wrap">
+          <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">🏷️ Live Auction</Span>
+          {isEnded ? (
+            <Span className="inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Ended</Span>
+          ) : (
+            <Span className="inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</Span>
+          )}
+        </Row>
+        <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">{title}</Heading>
+      </Div>
+      <Div>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Current bid</Text>
+        <Row align="center" gap="sm" wrap>
+          <Span className="text-2xl font-bold text-primary-600 dark:text-primary-400">{formatCurrency(currentBid, currency)}</Span>
+          <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">{bidCount} {bidCount === 1 ? "bid" : "bids"}</Span>
+        </Row>
+        {endDate && <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">{isEnded ? "Ended" : "Ends"} <Span className="font-medium text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span></Text>}
+      </Div>
+      {buyNowPrice !== null && !isEnded && (
+        <Row align="center" gap="sm" className="rounded-lg border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2">
+          <Span className="text-xs text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
+          <Span className="text-base font-bold text-primary-700 dark:text-primary-300">{formatCurrency(buyNowPrice, currency)}</Span>
+        </Row>
+      )}
+      <ProductFeatureBadges featured={featured} freeShipping={freeShipping} condition={condition ?? undefined} labels={{ featured: "Featured", fasterDelivery: "Faster Delivery", ratedSeller: "Rated Seller", condition: "Condition", conditionNew: "New", conditionUsed: "Used", conditionBroken: "For Parts", conditionRefurbished: "Refurbished", returnable: "Returnable", freeShipping: "Free Shipping", codAvailable: "Cash on Delivery", wishlistCount: (n) => `${n} wishlisted`, categoryProductCount: (n, cat) => `${n} in ${cat}` }} />
+      {(categoryName || category || brand) && (
+        <Row gap="sm" wrap>
+          {category && <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{categoryName || category}</Link>}
+          {!category && categoryName && <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">{categoryName}</Span>}
+          {brand && brandSlug && <Link href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))} className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400">{brand}</Link>}
+          {brand && !brandSlug && <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">{brand}</Span>}
+        </Row>
+      )}
+      {productFeatures && features.length > 0 && <FeatureBadgeList productFeatureIds={features} features={productFeatures} />}
+      {!productFeatures && features.length > 0 && (
+        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
+          <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">About this item</Text>
+          <ul className="space-y-1.5">
+            {features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300"><Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>{f}</li>)}
+          </ul>
+        </Div>
+      )}
+      {descriptionHtml && <RichText html={descriptionHtml} proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0" className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4" />}
+      {safeSeller && (
+        <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
+          <Row justify="between" align="center">
+            <Div>
+              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">Listed by</Text>
+              <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{safeSeller}</Text>
+            </Div>
+            {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
+          </Row>
+        </Div>
+      )}
+    </Stack>
+  );
+}
+
+function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
+  if (storeReviews.length === 0) return null;
+  const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
+  return (
+    <Section className="mt-10">
+      <Heading level={2} className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">Store Reviews</Heading>
+      <Div className="mb-4 flex items-center gap-3">
+        <Span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">{avg.toFixed(1)}</Span>
+        <Div>
+          <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={star <= Math.round(avg) ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}>★</Span>)}</Row>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}</Text>
+        </Div>
+      </Div>
+      <Stack gap="sm">
+        {storeReviews.slice(0, 10).map((review) => (
+          <Div key={review.id} className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 p-4 space-y-1.5">
+            <Row justify="between" align="center">
+              <Row gap="xs" align="center">
+                <Span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{review.userName}</Span>
+                <Row gap="xs">{[1, 2, 3, 4, 5].map((star) => <Span key={star} className={`text-xs ${star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}`}>★</Span>)}</Row>
+              </Row>
+            </Row>
+            {review.title && <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{review.title}</Text>}
+            <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{review.comment}</Text>
+            <Text className="text-xs text-zinc-400 dark:text-zinc-500">{review.productTitle}</Text>
+          </Div>
+        ))}
+      </Stack>
+    </Section>
+  );
 }
 
 export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, productFeatures }: AuctionDetailPageViewProps) {
@@ -181,13 +289,13 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
         {/* Breadcrumb + share */}
         <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
-            <Link href={String(ROUTES.HOME)} className="hover:text-primary-600 transition-colors">Home</Link>
+            <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>Home</Link>
             <Span aria-hidden>/</Span>
-            <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="hover:text-primary-600 transition-colors">Auctions</Link>
+            <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className={CLS_BREADCRUMB_LINK}>Auctions</Link>
             {category && (
               <>
                 <Span aria-hidden>/</Span>
-                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className="hover:text-primary-600 transition-colors">
+                <Link href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))} className={CLS_BREADCRUMB_LINK}>
                   {categoryName || category}
                 </Link>
               </>
@@ -202,171 +310,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
           renderGallery={() => (
             <ProductGalleryClient images={images} productName={title} />
           )}
-          renderInfo={() => (
-            <Stack gap="md">
-              {/* Auction badge + title */}
-              <Div>
-                <Row gap="xs" className="mb-2 flex-wrap">
-                  <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">
-                    🏷️ Live Auction
-                  </Span>
-                  {isEnded ? (
-                    <Span className="inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                      Ended
-                    </Span>
-                  ) : (
-                    <Span className="inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
-                      Active
-                    </Span>
-                  )}
-                </Row>
-                <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">
-                  {title}
-                </Heading>
-              </Div>
-
-              {/* Current bid + bid count + timing */}
-              <Div>
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">Current bid</Text>
-                <Row align="center" gap="sm" wrap>
-                  <Span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                    {formatCurrency(currentBid, currency)}
-                  </Span>
-                  <Span className="rounded-full bg-zinc-100 dark:bg-zinc-800 px-3 py-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                    {bidCount} {bidCount === 1 ? "bid" : "bids"}
-                  </Span>
-                </Row>
-                {endDate && (
-                  <Text className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-                    {isEnded ? "Ended" : "Ends"}{" "}
-                    <Span className="font-medium text-zinc-700 dark:text-zinc-300">{endDate.toLocaleString()}</Span>
-                  </Text>
-                )}
-              </Div>
-
-              {/* Buy Now price */}
-              {buyNowPrice !== null && !isEnded && (
-                <Row align="center" gap="sm" className="rounded-lg border border-primary-200 dark:border-primary-800 bg-primary-50 dark:bg-primary-900/20 px-3 py-2">
-                  <Span className="text-xs text-zinc-600 dark:text-zinc-400">Buy Now:</Span>
-                  <Span className="text-base font-bold text-primary-700 dark:text-primary-300">
-                    {formatCurrency(buyNowPrice, currency)}
-                  </Span>
-                </Row>
-              )}
-
-              {/* Feature badges */}
-              <ProductFeatureBadges
-                featured={featured}
-                freeShipping={freeShipping}
-                condition={condition ?? undefined}
-                labels={{
-                  featured: "Featured",
-                  fasterDelivery: "Faster Delivery",
-                  ratedSeller: "Rated Seller",
-                  condition: "Condition",
-                  conditionNew: "New",
-                  conditionUsed: "Used",
-                  conditionBroken: "For Parts",
-                  conditionRefurbished: "Refurbished",
-                  returnable: "Returnable",
-                  freeShipping: "Free Shipping",
-                  codAvailable: "Cash on Delivery",
-                  wishlistCount: (n) => `${n} wishlisted`,
-                  categoryProductCount: (n, cat) => `${n} in ${cat}`,
-                }}
-              />
-
-              {/* Category / brand pills */}
-              {(categoryName || category || brand) && (
-                <Row gap="sm" wrap>
-                  {category && (
-                    <Link
-                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
-                    >
-                      {categoryName || category}
-                    </Link>
-                  )}
-                  {!category && categoryName && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                      {categoryName}
-                    </Span>
-                  )}
-                  {brand && brandSlug && (
-                    <Link
-                      href={String(ROUTES.PUBLIC.BRAND_DETAIL(brandSlug))}
-                      className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
-                    >
-                      {brand}
-                    </Link>
-                  )}
-                  {brand && !brandSlug && (
-                    <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                      {brand}
-                    </Span>
-                  )}
-                </Row>
-              )}
-
-              {/* Feature badges (FI6) — when productFeatures prop is passed */}
-              {productFeatures && features.length > 0 && (
-                <FeatureBadgeList
-                  productFeatureIds={features}
-                  features={productFeatures}
-                />
-              )}
-
-              {/* Highlights (legacy text fallback) — suppressed when productFeatures is provided */}
-              {!productFeatures && features.length > 0 && (
-                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 px-4 py-3">
-                  <Text className="mb-2 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    About this item
-                  </Text>
-                  <ul className="space-y-1.5">
-                    {features.map((f, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-                        <Span className="mt-0.5 flex-shrink-0 text-primary-500">•</Span>
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </Div>
-              )}
-
-              {/* Description preview */}
-              {descriptionHtml && (
-                <RichText
-                  html={descriptionHtml}
-                  proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                  className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400 line-clamp-4"
-                />
-              )}
-
-              {/* Store card */}
-              {safeSeller && (
-                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
-                  <Row justify="between" align="center">
-                    <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
-                        Listed by
-                      </Text>
-                      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
-                        {safeSeller}
-                      </Text>
-                    </Div>
-                    {storeHref && (
-                      <Link
-                        href={storeHref}
-                        className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors"
-                      >
-                        Visit Store →
-                      </Link>
-                    )}
-                  </Row>
-                </Div>
-              )}
-            </Stack>
-          )}
+          renderInfo={() => renderAuctionInfoPanel({ title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
               <Div id="auction-bid-form">
@@ -558,77 +502,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
         />
 
         {/* Store reviews section */}
-        {storeReviews.length > 0 && (
-          <Section className="mt-10">
-            <Heading level={2} className="mb-2 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
-              Store Reviews
-            </Heading>
-            {/* Rating summary */}
-            {(() => {
-              const avg = storeReviews.reduce((s, r) => s + r.rating, 0) / storeReviews.length;
-              return (
-                <Div className="mb-4 flex items-center gap-3">
-                  <Span className="text-3xl font-bold text-zinc-900 dark:text-zinc-50">
-                    {avg.toFixed(1)}
-                  </Span>
-                  <Div>
-                    <Row gap="xs">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Span
-                          key={star}
-                          className={star <= Math.round(avg) ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}
-                        >
-                          ★
-                        </Span>
-                      ))}
-                    </Row>
-                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-                      {storeReviews.length} review{storeReviews.length !== 1 ? "s" : ""}
-                    </Text>
-                  </Div>
-                </Div>
-              );
-            })()}
-            {/* Review list — up to 10 most recent */}
-            <Stack gap="sm">
-              {storeReviews.slice(0, 10).map((review) => (
-                <Div
-                  key={review.id}
-                  className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 p-4 space-y-1.5"
-                >
-                  <Row justify="between" align="center">
-                    <Row gap="xs" align="center">
-                      <Span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                        {review.userName}
-                      </Span>
-                      <Row gap="xs">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Span
-                            key={star}
-                            className={`text-xs ${star <= review.rating ? "text-amber-400" : "text-zinc-200 dark:text-zinc-700"}`}
-                          >
-                            ★
-                          </Span>
-                        ))}
-                      </Row>
-                    </Row>
-                  </Row>
-                  {review.title && (
-                    <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
-                      {review.title}
-                    </Text>
-                  )}
-                  <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                    {review.comment}
-                  </Text>
-                  <Text className="text-xs text-zinc-400 dark:text-zinc-500">
-                    {review.productTitle}
-                  </Text>
-                </Div>
-              ))}
-            </Stack>
-          </Section>
-        )}
+        {renderAuctionStoreReviews(storeReviews)}
 
         {/* Mobile sticky buy bar */}
         {!isEnded && (

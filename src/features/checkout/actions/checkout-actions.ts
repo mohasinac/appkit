@@ -24,6 +24,8 @@ import {
 } from "../../auth/consent-otp";
 import { addressesRepository } from "../../addresses/repository/addresses.repository";
 
+const ERR_ADDRESS_NOT_FOUND = "Address not found.";
+
 async function findUserAddress(userId: string, addressId: string) {
   const address = await addressesRepository.findById(addressId);
   if (!address || address.ownerType !== "user" || address.ownerId !== userId) {
@@ -41,7 +43,7 @@ export async function sendCheckoutConsentOtp(
   addressId: string,
 ): Promise<{ maskedEmail: string }> {
   const address = await findUserAddress(userId, addressId);
-  if (!address) throw new ValidationError("Address not found.");
+  if (!address) throw new ValidationError(ERR_ADDRESS_NOT_FOUND);
 
   await enforceConsentOtpRateLimit(userId);
 
@@ -131,7 +133,7 @@ export async function grantCheckoutConsentViaSms(
     throw new ValidationError("No phone number registered on your account.");
 
   const address = await findUserAddress(userId, addressId);
-  if (!address) throw new ValidationError("Address not found.");
+  if (!address) throw new ValidationError(ERR_ADDRESS_NOT_FOUND);
 
   const normalizePhone = (s: string) => s.replace(/[^0-9]/g, "").slice(-10);
   if (normalizePhone(address.phone) !== normalizePhone(userPhone)) {
@@ -171,7 +173,7 @@ export async function grantAdminCheckoutBypass(
   bypassingAdminUid: string,
 ): Promise<void> {
   const address = await findUserAddress(userId, addressId);
-  if (!address) throw new ValidationError("Address not found.");
+  if (!address) throw new ValidationError(ERR_ADDRESS_NOT_FOUND);
 
   await saveConsentOtp(userId, addressId, {
     codeHash: "",

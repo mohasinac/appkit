@@ -54,7 +54,7 @@ export function CategoryDetailTabs({
   };
 
   return (
-    <div>
+    <>
       <div className="flex border-b border-zinc-200 dark:border-slate-700 mb-6 overflow-x-auto">
         {CATEGORY_PAGE_TABS.map((t) => (
           <button
@@ -91,6 +91,6 @@ export function CategoryDetailTabs({
       {activeTab === "bundles" && (
         <CategoryBundlesListing initialBundles={initialBundles} />
       )}
-    </div>
+    </>
   );
 }

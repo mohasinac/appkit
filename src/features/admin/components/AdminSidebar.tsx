@@ -36,6 +36,10 @@ export interface AdminSidebarProps {
   className?: string;
 }
 
+function isNavItemActive(item: AdminNavItem, activePath: string): boolean {
+  return activePath === item.href || activePath.startsWith(item.href + "/");
+}
+
 function NavLink({ item, isActive, onClick }: { item: AdminNavItem; isActive: boolean; onClick?: () => void }) {
   return (
     <Link
@@ -96,14 +100,11 @@ function GroupsContent({
             </button>
             {isOpen && (
               <ul className="space-y-0.5 px-3 pb-1">
-                {group.items.map((item) => {
-                  const isActive = activePath === item.href || activePath.startsWith(item.href + "/");
-                  return (
-                    <li key={item.href}>
-                      <NavLink item={item} isActive={isActive} onClick={onItemClick} />
-                    </li>
-                  );
-                })}
+                {group.items.map((item) => (
+                  <li key={item.href}>
+                    <NavLink item={item} isActive={isNavItemActive(item, activePath)} onClick={onItemClick} />
+                  </li>
+                ))}
               </ul>
             )}
           </div>

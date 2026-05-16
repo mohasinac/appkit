@@ -140,6 +140,12 @@ export function Dropdown({
     }
   };
 
+  const handleMenuItemClick = (item: (typeof menuItems)[number], isDisabled: boolean) => {
+    if (isDisabled) return;
+    item.onSelect?.();
+    setIsOpen(false);
+  };
+
   return (
     <DropdownContext.Provider
       value={{ isOpen, setIsOpen, close: () => setIsOpen(false) }}
@@ -198,11 +204,7 @@ export function Dropdown({
                   ]
                     .filter(Boolean)
                     .join(" ")}
-                  onClick={() => {
-                    if (isDisabled) return;
-                    item.onSelect?.();
-                    setIsOpen(false);
-                  }}
+                  onClick={() => handleMenuItemClick(item, isDisabled)}
                   onMouseEnter={() => setActiveIndex(index)}
                 >
                   {item.label}

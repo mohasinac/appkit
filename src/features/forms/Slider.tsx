@@ -1,6 +1,6 @@
 "use client"
 import React from "react";
-import { Div, Row, Span } from "../../ui";
+import { Div, Row, Span, Text } from "../../ui";
 import { cn, LABEL_BASE, ERROR_BASE } from "./utils";
 
 export interface SliderProps {
@@ -112,9 +112,9 @@ export function Slider({
       </Row>
 
       {error && (
-        <p className={ERROR_BASE} role="alert">
+        <Text className={ERROR_BASE} role="alert">
           {error}
-        </p>
+        </Text>
       )}
     </Div>
   );

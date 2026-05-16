@@ -54,11 +54,14 @@ export const PRODUCT_FILTER_KEYS = {
   ],
 } as const;
 
+const LABEL_PRICE_HIGH_TO_LOW = "Price: High to Low";
+const LABEL_PRICE_LOW_TO_HIGH = "Price: Low to High";
+
 export const PRODUCT_ADMIN_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
   { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
   { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z-A" },
   { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
@@ -67,16 +70,16 @@ export const PRODUCT_ADMIN_SORT_OPTIONS = [
 export const PRODUCT_SELLER_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
   { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
 ] as const;
 
 export const PRODUCT_PUBLIC_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
   { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
   { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
   { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z–A" },
   { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },

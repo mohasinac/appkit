@@ -22,6 +22,8 @@ import type {
   ProductDocument,
 } from "../../products";
 
+const ERR_UID_REQUIRED = "uid is required";
+
 export interface AdminActor {
   uid: string;
   displayName?: string | null;
@@ -141,7 +143,7 @@ export async function adminUpdateUser(
   input: UserAdminUpdateInput,
 ): Promise<UserDocument> {
   if (!uid?.trim()) {
-    throw new ValidationError("uid is required");
+    throw new ValidationError(ERR_UID_REQUIRED);
   }
 
   const existing = await userRepository.findById(uid);
@@ -175,7 +177,7 @@ export async function adminDeleteUser(
   uid: string,
 ): Promise<void> {
   if (!uid?.trim()) {
-    throw new ValidationError("uid is required");
+    throw new ValidationError(ERR_UID_REQUIRED);
   }
 
   if (uid === adminId) {
@@ -201,7 +203,7 @@ export async function adminUpdateStoreStatus(
 ): Promise<void> {
   const { uid, action } = input;
   if (!uid?.trim()) {
-    throw new ValidationError("uid is required");
+    throw new ValidationError(ERR_UID_REQUIRED);
   }
 
   const user = await userRepository.findById(uid);

@@ -5,7 +5,7 @@ import { Pencil, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Alert, Badge, Button, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -82,7 +82,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
     header: "Prize Draw",
     render: (row) => (
       <div className="space-y-1">
-        <p className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</p>
+        <Text className="font-medium text-[var(--appkit-color-text)] line-clamp-1">{row.primary}</Text>
         <span className="text-xs text-[var(--appkit-color-text-muted)]">{row.secondary}</span>
       </div>
     ),

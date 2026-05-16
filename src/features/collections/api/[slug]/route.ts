@@ -12,6 +12,11 @@
 import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../../contracts";
 
+const ERR_COLLECTION_SLUG_REQUIRED = "Collection slug is required";
+const ERR_DB_NOT_CONFIGURED = "Database provider not configured";
+const ERR_COLLECTION_NOT_FOUND = "Collection not found";
+const ERR_INTERNAL_SERVER_ERROR = "Internal server error";
+
 interface CollectionEntity extends Record<string, unknown> {
   id: string;
 }
@@ -24,7 +29,7 @@ export async function GET(
     const { slug } = await params;
     if (!slug) {
       return NextResponse.json(
-        { success: false, error: "Collection slug required" },
+        { success: false, error: ERR_COLLECTION_SLUG_REQUIRED },
         { status: 400 },
       );
     }
@@ -32,7 +37,7 @@ export async function GET(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -44,7 +49,7 @@ export async function GET(
 
     if (!result.data[0]) {
       return NextResponse.json(
-        { success: false, error: "Collection not found" },
+        { success: false, error: ERR_COLLECTION_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -57,7 +62,7 @@ export async function GET(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );
@@ -72,7 +77,7 @@ export async function PATCH(
     const { slug } = await params;
     if (!slug) {
       return NextResponse.json(
-        { success: false, error: "Collection slug required" },
+        { success: false, error: ERR_COLLECTION_SLUG_REQUIRED },
         { status: 400 },
       );
     }
@@ -82,7 +87,7 @@ export async function PATCH(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -94,7 +99,7 @@ export async function PATCH(
 
     if (!result.data[0]) {
       return NextResponse.json(
-        { success: false, error: "Collection not found" },
+        { success: false, error: ERR_COLLECTION_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -109,7 +114,7 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );
@@ -124,7 +129,7 @@ export async function DELETE(
     const { slug } = await params;
     if (!slug) {
       return NextResponse.json(
-        { success: false, error: "Collection slug required" },
+        { success: false, error: ERR_COLLECTION_SLUG_REQUIRED },
         { status: 400 },
       );
     }
@@ -132,7 +137,7 @@ export async function DELETE(
     const { db } = getProviders();
     if (!db)
       return NextResponse.json(
-        { success: false, error: "DB not configured" },
+        { success: false, error: ERR_DB_NOT_CONFIGURED },
         { status: 503 },
       );
 
@@ -144,7 +149,7 @@ export async function DELETE(
 
     if (!result.data[0]) {
       return NextResponse.json(
-        { success: false, error: "Collection not found" },
+        { success: false, error: ERR_COLLECTION_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -159,7 +164,7 @@ export async function DELETE(
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Internal server error",
+        error: error instanceof Error ? error.message : ERR_INTERNAL_SERVER_ERROR,
       },
       { status: 500 },
     );

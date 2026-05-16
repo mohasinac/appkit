@@ -15,6 +15,8 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { HomepageSection } from "../../types/index";
 
+const ERR_SECTION_NOT_FOUND = "Section not found";
+
 // ---- GET /api/homepage-sections/[id] ----------------------------------------
 
 export async function GET(
@@ -36,7 +38,7 @@ export async function GET(
     const section = await repo.findById(id);
     if (!section) {
       return NextResponse.json(
-        { success: false, error: "Section not found" },
+        { success: false, error: ERR_SECTION_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -102,7 +104,7 @@ export const homepageSectionItemPATCH = createRouteHandler({
     const section = await repo.findById(id);
     if (!section)
       return NextResponse.json(
-        { success: false, error: "Section not found" },
+        { success: false, error: ERR_SECTION_NOT_FOUND },
         { status: 404 },
       );
 
@@ -135,7 +137,7 @@ export const homepageSectionItemDELETE = createRouteHandler({
     const section = await repo.findById(id);
     if (!section)
       return NextResponse.json(
-        { success: false, error: "Section not found" },
+        { success: false, error: ERR_SECTION_NOT_FOUND },
         { status: 404 },
       );
 

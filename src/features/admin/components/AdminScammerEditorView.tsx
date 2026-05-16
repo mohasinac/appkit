@@ -14,6 +14,8 @@ import {
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
+const CLS_SECTION_LABEL = "text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wide";
+
 export interface AdminScammerEditorViewProps {
   open: boolean;
   onClose: () => void;
@@ -148,7 +150,7 @@ export function AdminScammerEditorView({
           <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
             {phones.length > 0 && (
               <div className="mb-2">
-                <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+                <Text className={CLS_SECTION_LABEL}>
                   Phone numbers
                 </Text>
                 <div className="flex flex-wrap gap-1">
@@ -161,8 +163,8 @@ export function AdminScammerEditorView({
               </div>
             )}
             {upiIds.length > 0 && (
-              <div>
-                <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+              <>
+                <Text className={CLS_SECTION_LABEL}>
                   UPI IDs
                 </Text>
                 <div className="flex flex-wrap gap-1">
@@ -172,7 +174,7 @@ export function AdminScammerEditorView({
                     </code>
                   ))}
                 </div>
-              </div>
+              </>
             )}
           </Div>
         )}
@@ -180,7 +182,7 @@ export function AdminScammerEditorView({
         {/* Description */}
         {description && (
           <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-            <Text className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">
+            <Text className={CLS_SECTION_LABEL}>
               Description
             </Text>
             <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">

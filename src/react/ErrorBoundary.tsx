@@ -11,6 +11,7 @@
 
 import { Component, type ReactNode, type ErrorInfo } from "react";
 import { Logger } from "../core/Logger";
+import { Heading, Text } from "../ui";
 import {
   trackError,
   ErrorCategory,
@@ -52,12 +53,12 @@ function DefaultFallback({
         textAlign: "center",
       }}
      data-section="errorboundary-div-446">
-      <h1 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+      <Heading level={1} style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
         Something went wrong
-      </h1>
-      <p style={{ marginBottom: "1.5rem", opacity: 0.7 }}>
+      </Heading>
+      <Text style={{ marginBottom: "1.5rem", opacity: 0.7 }}>
         An unexpected error occurred. Please try again.
-      </p>
+      </Text>
       {process.env.NODE_ENV === "development" && error && (
         <pre
           style={{

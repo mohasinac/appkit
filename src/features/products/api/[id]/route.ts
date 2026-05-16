@@ -22,6 +22,9 @@ import { storeRepository } from "../../../stores/repository/store.repository";
 import { sanitizeProductForPublic } from "../../utils/sanitize";
 import { serverLogger } from "../../../../monitoring/server-logger";
 
+const ERR_DB_NOT_REGISTERED = "Database provider not registered";
+const ERR_PRODUCT_NOT_FOUND = "Product not found";
+
 const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
   "sold",
   "out_of_stock",
@@ -89,7 +92,7 @@ export async function GET(
     const repo = getRepo();
     if (!repo) {
       return NextResponse.json(
-        { success: false, error: "Database provider not registered" },
+        { success: false, error: ERR_DB_NOT_REGISTERED },
         { status: 503 },
       );
     }
@@ -106,7 +109,7 @@ export async function GET(
     }
     if (!item) {
       return NextResponse.json(
-        { success: false, error: "Product not found" },
+        { success: false, error: ERR_PRODUCT_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -138,7 +141,7 @@ export const PATCH = createRouteHandler<
     const repo = getRepo();
     if (!repo) {
       return NextResponse.json(
-        { success: false, error: "Database provider not registered" },
+        { success: false, error: ERR_DB_NOT_REGISTERED },
         { status: 503 },
       );
     }
@@ -146,7 +149,7 @@ export const PATCH = createRouteHandler<
     const product = await repo.findById(id);
     if (!product) {
       return NextResponse.json(
-        { success: false, error: "Product not found" },
+        { success: false, error: ERR_PRODUCT_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -218,7 +221,7 @@ export const DELETE = createRouteHandler<never, { id: string }>({
     const repo = getRepo();
     if (!repo) {
       return NextResponse.json(
-        { success: false, error: "Database provider not registered" },
+        { success: false, error: ERR_DB_NOT_REGISTERED },
         { status: 503 },
       );
     }
@@ -226,7 +229,7 @@ export const DELETE = createRouteHandler<never, { id: string }>({
     const product = await repo.findById(id);
     if (!product) {
       return NextResponse.json(
-        { success: false, error: "Product not found" },
+        { success: false, error: ERR_PRODUCT_NOT_FOUND },
         { status: 404 },
       );
     }

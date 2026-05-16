@@ -117,6 +117,39 @@ export interface UsePaymentCheckoutReturn {
   reset: () => void;
 }
 
+// --- Helpers ---------------------------------------------------------------
+
+async function openGatewayStep(
+  adapter: IClientPaymentGateway,
+  orderResponse: CreatePaymentOrderResponse,
+  params: {
+    prefill?: OpenGatewayOptions["prefill"];
+    merchantName?: string;
+    logoUrl?: string;
+    themeColor?: string;
+  },
+): Promise<{ response: GatewayPaymentResponse | null; cancelled: boolean; error: Error | null }> {
+  try {
+    await adapter.loadScript();
+    const response = await adapter.openPayment({
+      gatewayOrderId: orderResponse.gatewayOrderId,
+      publicKey: orderResponse.keyId,
+      amount: orderResponse.amount,
+      currency: orderResponse.currency,
+      merchantName: params.merchantName,
+      logoUrl: params.logoUrl,
+      prefill: params.prefill,
+      theme: params.themeColor ? { color: params.themeColor } : undefined,
+    });
+    return { response, cancelled: false, error: null };
+  } catch (err) {
+    if (err instanceof Error && err.message.toLowerCase().includes("cancel")) {
+      return { response: null, cancelled: true, error: null };
+    }
+    return { response: null, cancelled: false, error: err instanceof Error ? err : new Error("Payment gateway error") };
+  }
+}
+
 // --- Hook ------------------------------------------------------------------
 
 const INITIAL_STATE: PaymentCheckoutState = {
@@ -265,34 +298,17 @@ export function usePaymentCheckout(
 
       // Step 2: Open gateway modal
       setState((s) => ({ ...s, step: "awaiting_payment" }));
-      let gatewayResponse: GatewayPaymentResponse;
-      try {
-        const adapter = getAdapter();
-        await adapter.loadScript();
-        gatewayResponse = await adapter.openPayment({
-          gatewayOrderId: orderResponse.gatewayOrderId,
-          publicKey: orderResponse.keyId,
-          amount: orderResponse.amount,
-          currency: orderResponse.currency,
-          merchantName,
-          logoUrl,
-          prefill: params.prefill,
-          theme: themeColor ? { color: themeColor } : undefined,
-        });
-      } catch (err) {
-        if (
-          err instanceof Error &&
-          err.message.toLowerCase().includes("cancel")
-        ) {
-          setState((s) => ({ ...s, step: "cancelled", error: null }));
-          onCancel?.();
-          return null;
-        }
-        setError(
-          err instanceof Error ? err : new Error("Payment gateway error"),
-        );
+      const gatewayResult = await openGatewayStep(getAdapter(), orderResponse, { prefill: params.prefill, merchantName, logoUrl, themeColor });
+      if (gatewayResult.cancelled) {
+        setState((s) => ({ ...s, step: "cancelled", error: null }));
+        onCancel?.();
         return null;
       }
+      if (gatewayResult.error || !gatewayResult.response) {
+        setError(gatewayResult.error ?? new Error("Payment gateway error"));
+        return null;
+      }
+      const gatewayResponse: GatewayPaymentResponse = gatewayResult.response;
 
       if (abortRef.current) return null;
 

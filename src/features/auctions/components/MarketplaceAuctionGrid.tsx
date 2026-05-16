@@ -29,6 +29,8 @@ export interface MarketplaceAuctionGridProps {
   wishlistActions?: WishlistToggleActions;
 }
 
+const CLS_SKELETON_BTN = "h-8 w-20 rounded bg-zinc-300";
+
 const DEFAULT_GRID_LABELS: Required<MarketplaceAuctionGridLabels> = {
   emptyTitle: "No auctions found",
   emptyDescription: "Check back later for live listings.",
@@ -49,8 +51,8 @@ function AuctionCardSkeleton({
           <Div className="h-3 w-3/4 rounded bg-zinc-300" />
           <Div className="h-5 w-1/2 rounded bg-zinc-300" />
           <Row gap="sm">
-            <Div className="h-8 flex-1 rounded bg-zinc-300" />
-            <Div className="h-8 flex-1 rounded bg-zinc-300" />
+            <Div className={CLS_SKELETON_BTN} />
+            <Div className={CLS_SKELETON_BTN} />
           </Row>
         </Div>
       </Div>
@@ -69,7 +71,7 @@ function AuctionCardSkeleton({
           <Div className="h-3 w-1/3 rounded bg-zinc-300" />
         </Row>
         <Row gap="sm">
-          <Div className="h-8 flex-1 rounded bg-zinc-300" />
+          <Div className={CLS_SKELETON_BTN} />
         </Row>
       </Div>
     </Div>

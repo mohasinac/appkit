@@ -101,6 +101,113 @@ function IconBtn({
   );
 }
 
+// --- Controls bar sub-components ---------------------------------------------
+
+function LightboxControlsBar({
+  items,
+  index,
+  zoom,
+  isFullscreen,
+  L,
+  goPrev,
+  goNext,
+  zoomIn,
+  zoomOut,
+  resetZoom,
+  toggleFullscreen,
+  onClose,
+}: {
+  items: LightboxItem[];
+  index: number;
+  zoom: number;
+  isFullscreen: boolean;
+  L: Required<LightboxLabels>;
+  goPrev: () => void;
+  goNext: () => void;
+  zoomIn: () => void;
+  zoomOut: () => void;
+  resetZoom: () => void;
+  toggleFullscreen: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <Div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
+      {items.length > 1 && (
+        <IconBtn onClick={(e) => { e.stopPropagation(); goPrev(); }} ariaLabel={L.prevImage}>
+          <ChevronLeft className="w-7 h-7" />
+        </IconBtn>
+      )}
+      <IconBtn onClick={zoomOut} disabled={zoom <= MIN_ZOOM} ariaLabel={L.zoomOut}>
+        <ZoomOut className="w-7 h-7" />
+      </IconBtn>
+      <Span className="text-white/70 w-14 text-center tabular-nums text-xs">
+        {Math.round(zoom * 100)}%
+      </Span>
+      <IconBtn onClick={zoomIn} disabled={zoom >= MAX_ZOOM} ariaLabel={L.zoomIn}>
+        <ZoomIn className="w-7 h-7" />
+      </IconBtn>
+      {zoom > 1 && (
+        <IconBtn onClick={resetZoom} ariaLabel={L.resetZoom}>
+          <RotateCcw className="w-7 h-7" />
+        </IconBtn>
+      )}
+      <Span className="w-px h-6 bg-white/15 mx-1 shrink-0" aria-hidden="true" />
+      <Span className="text-white/60 w-12 text-center tabular-nums text-xs">
+        {index + 1} / {items.length}
+      </Span>
+      <Span className="w-px h-6 bg-white/15 mx-1 shrink-0" aria-hidden="true" />
+      <IconBtn onClick={toggleFullscreen} ariaLabel={isFullscreen ? L.exitFullscreen : L.enterFullscreen}>
+        {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
+      </IconBtn>
+      <IconBtn onClick={onClose} ariaLabel={L.close} className="hover:!bg-red-500/50">
+        <X className="w-7 h-7" />
+      </IconBtn>
+      {items.length > 1 && (
+        <IconBtn onClick={(e) => { e.stopPropagation(); goNext(); }} ariaLabel={L.nextImage}>
+          <ChevronRight className="w-7 h-7" />
+        </IconBtn>
+      )}
+    </Div>
+  );
+}
+
+function LightboxThumbnailStrip({
+  items,
+  index,
+  onSelect,
+  resetZoom,
+  L,
+}: {
+  items: LightboxItem[];
+  index: number;
+  onSelect: (i: number) => void;
+  resetZoom: () => void;
+  L: Required<LightboxLabels>;
+}) {
+  return (
+    <Div
+      className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"
+      style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))" }}
+    >
+      {items.map((item, i) => (
+        <Button
+          key={i}
+          type="button"
+          onClick={() => { onSelect(i); resetZoom(); }}
+          aria-label={L.imageThumbnail(i + 1)}
+          aria-current={i === index ? "true" : undefined}
+          className={cn(
+            "relative shrink-0 w-14 h-14 p-0 overflow-hidden rounded-lg border-2 transition-all active:scale-95",
+            i === index ? "border-white opacity-100" : "border-transparent opacity-40 hover:opacity-75",
+          )}
+        >
+          <MediaImage src={item.src} alt={item.alt} size="thumbnail" />
+        </Button>
+      ))}
+    </Div>
+  );
+}
+
 // --- MediaLightbox ------------------------------------------------------------
 
 export function MediaLightbox({
@@ -387,130 +494,30 @@ export function MediaLightbox({
       </Div>
 
       {/* -- Controls bar -- */}
-      <Div className="flex items-center justify-center gap-1.5 px-4 py-3 bg-black/85 backdrop-blur-sm shrink-0 border-t border-white/10 flex-wrap">
-        {/* Prev */}
-        {items.length > 1 && (
-          <IconBtn
-            onClick={(e) => {
-              e.stopPropagation();
-              goPrev();
-            }}
-            ariaLabel={L.prevImage}
-          >
-            <ChevronLeft className="w-7 h-7" />
-          </IconBtn>
-        )}
-
-        {/* Zoom out */}
-        <IconBtn
-          onClick={zoomOut}
-          disabled={zoom <= MIN_ZOOM}
-          ariaLabel={L.zoomOut}
-        >
-          <ZoomOut className="w-7 h-7" />
-        </IconBtn>
-
-        <Span className="text-white/70 w-14 text-center tabular-nums text-xs">
-          {Math.round(zoom * 100)}%
-        </Span>
-
-        {/* Zoom in */}
-        <IconBtn
-          onClick={zoomIn}
-          disabled={zoom >= MAX_ZOOM}
-          ariaLabel={L.zoomIn}
-        >
-          <ZoomIn className="w-7 h-7" />
-        </IconBtn>
-
-        {/* Reset zoom */}
-        {zoom > 1 && (
-          <IconBtn onClick={resetZoom} ariaLabel={L.resetZoom}>
-            <RotateCcw className="w-7 h-7" />
-          </IconBtn>
-        )}
-
-        {/* Divider */}
-        <Span
-          className="w-px h-6 bg-white/15 mx-1 shrink-0"
-          aria-hidden="true"
-        />
-
-        {/* Counter */}
-        <Span className="text-white/60 w-12 text-center tabular-nums text-xs">
-          {index + 1} / {items.length}
-        </Span>
-
-        {/* Divider */}
-        <Span
-          className="w-px h-6 bg-white/15 mx-1 shrink-0"
-          aria-hidden="true"
-        />
-
-        {/* Fullscreen */}
-        <IconBtn
-          onClick={toggleFullscreen}
-          ariaLabel={isFullscreen ? L.exitFullscreen : L.enterFullscreen}
-        >
-          {isFullscreen ? (
-            <Minimize className="w-6 h-6" />
-          ) : (
-            <Maximize className="w-6 h-6" />
-          )}
-        </IconBtn>
-
-        {/* Close */}
-        <IconBtn
-          onClick={onClose}
-          ariaLabel={L.close}
-          className="hover:!bg-red-500/50"
-        >
-          <X className="w-7 h-7" />
-        </IconBtn>
-
-        {/* Next */}
-        {items.length > 1 && (
-          <IconBtn
-            onClick={(e) => {
-              e.stopPropagation();
-              goNext();
-            }}
-            ariaLabel={L.nextImage}
-          >
-            <ChevronRight className="w-7 h-7" />
-          </IconBtn>
-        )}
-      </Div>
+      <LightboxControlsBar
+        items={items}
+        index={index}
+        zoom={zoom}
+        isFullscreen={isFullscreen}
+        L={L}
+        goPrev={goPrev}
+        goNext={goNext}
+        zoomIn={zoomIn}
+        zoomOut={zoomOut}
+        resetZoom={resetZoom}
+        toggleFullscreen={toggleFullscreen}
+        onClose={onClose}
+      />
 
       {/* -- Thumbnail strip -- */}
       {items.length > 1 && (
-        <Div
-          className="flex gap-2 px-4 py-3 bg-black/70 backdrop-blur-sm overflow-x-auto shrink-0 justify-center"
-          style={{
-            paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom, 0px))",
-          }}
-        >
-          {items.map((item, i) => (
-            <Button
-              key={i}
-              type="button"
-              onClick={() => {
-                setIndex(i);
-                resetZoom();
-              }}
-              aria-label={L.imageThumbnail(i + 1)}
-              aria-current={i === index ? "true" : undefined}
-              className={cn(
-                "relative shrink-0 w-14 h-14 p-0 overflow-hidden rounded-lg border-2 transition-all active:scale-95",
-                i === index
-                  ? "border-white opacity-100"
-                  : "border-transparent opacity-40 hover:opacity-75",
-              )}
-            >
-              <MediaImage src={item.src} alt={item.alt} size="thumbnail" />
-            </Button>
-          ))}
-        </Div>
+        <LightboxThumbnailStrip
+          items={items}
+          index={index}
+          onSelect={setIndex}
+          resetZoom={resetZoom}
+          L={L}
+        />
       )}
     </Div>
   );

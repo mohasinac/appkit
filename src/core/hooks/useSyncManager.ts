@@ -74,6 +74,18 @@ export function useSyncManager(userId: string | null | undefined): void {
   useEffect(() => {
     if (!userId) return; // Guest — keep ops in queue, don't sync
 
+    async function invalidateAfterSync(
+      hadCartOps: boolean,
+      hadWishlistOps: boolean,
+    ): Promise<void> {
+      if (hadCartOps) {
+        await queryClient.invalidateQueries({ queryKey: ["cart"] });
+      }
+      if (hadWishlistOps) {
+        await queryClient.invalidateQueries({ queryKey: ["wishlist", userId] });
+      }
+    }
+
     const sync = async () => {
       if (isSyncing.current) return;
       isSyncing.current = true;
@@ -81,14 +93,7 @@ export function useSyncManager(userId: string | null | undefined): void {
         const hadCartOps = getCartOps().length > 0;
         const hadWishlistOps = getWishlistOps().length > 0;
         await Promise.all([replayCartOps(), replayWishlistOps()]);
-        if (hadCartOps) {
-          await queryClient.invalidateQueries({ queryKey: ["cart"] });
-        }
-        if (hadWishlistOps) {
-          await queryClient.invalidateQueries({
-            queryKey: ["wishlist", userId],
-          });
-        }
+        await invalidateAfterSync(hadCartOps, hadWishlistOps);
       } finally {
         isSyncing.current = false;
       }

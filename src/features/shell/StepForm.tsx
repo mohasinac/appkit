@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
+import { Text } from "../../ui";
 
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -51,13 +52,13 @@ export function StepFormActions({
 
   return (
     <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
-      <div>
+      <>
         {!isFirst && onPrev && (
           <Button variant="outline" size="sm" onClick={onPrev} disabled={disabled || isLoading}>
             ← Back
           </Button>
         )}
-      </div>
+      </>
       <div className="flex items-center gap-3">
         <span className="text-xs text-[var(--appkit-color-text-muted)]">
           {currentStep + 1} / {totalSteps}
@@ -204,7 +205,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
       </div>
 
       {stepError && (
-        <p className="mt-3 text-sm text-[var(--appkit-color-error)]">{stepError}</p>
+        <Text className="mt-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
       )}
 
       <StepFormActions

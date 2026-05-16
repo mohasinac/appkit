@@ -2,6 +2,9 @@ import { randomUUID } from "crypto";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
 import { DatabaseError, NotFoundError } from "../../../errors";
+
+const ERR_CART_ITEM_NOT_FOUND = "Cart item not found";
+
 import {
   BaseRepository,
   prepareForFirestore,
@@ -155,7 +158,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       if (!cart) throw new NotFoundError("Cart not found");
 
       const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
-      if (itemIndex < 0) throw new NotFoundError("Cart item not found");
+      if (itemIndex < 0) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
 
       const items = [...cart.items];
       items[itemIndex] = {
@@ -194,7 +197,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       if (!cart) throw new NotFoundError("Cart not found");
 
       const itemExists = cart.items.some((item) => item.itemId === itemId);
-      if (!itemExists) throw new NotFoundError("Cart item not found");
+      if (!itemExists) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
 
       const items = cart.items.filter((item) => item.itemId !== itemId);
 
@@ -293,7 +296,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
       if (!cart) throw new NotFoundError("Cart not found");
 
       const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
-      if (itemIndex < 0) throw new NotFoundError("Cart item not found");
+      if (itemIndex < 0) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
 
       const items = [...cart.items];
       items[itemIndex] = {

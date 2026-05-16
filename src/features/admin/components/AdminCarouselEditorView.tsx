@@ -23,6 +23,11 @@ import {
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+
+const CLS_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
+const CLS_ROW_BETWEEN = "flex items-center justify-between";
+const CLS_SECTION_HEADING = "text-sm font-semibold text-zinc-900 dark:text-zinc-100";
+
 import type {
   CarouselBackground,
   CarouselCard,
@@ -263,8 +268,8 @@ function CardEditor({
   const buttons = card.buttons ?? [];
 
   return (
-    <Div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4">
-      <Row className="justify-between items-center">
+    <Div className={CLS_PANEL}>
+      <Row className={CLS_ROW_BETWEEN}>
         <Heading level={4} className="text-sm font-semibold">Card {index + 1}</Heading>
         <Button type="button" variant="ghost" size="sm" onClick={onRemove}>Remove</Button>
       </Row>
@@ -306,7 +311,7 @@ function CardEditor({
       </Div>
 
       <Div className="space-y-2">
-        <Row className="justify-between items-center">
+        <Row className={CLS_ROW_BETWEEN}>
           <Text className="text-sm font-medium">Buttons (max 3)</Text>
           {buttons.length < 3 && (
             <Button type="button" variant="outline" size="sm" onClick={() => set({ buttons: [...buttons, makeButton()] })}>
@@ -316,7 +321,7 @@ function CardEditor({
         </Row>
         {buttons.map((btn, bi) => (
           <Div key={btn.id ?? bi} className="rounded-lg border border-zinc-200 dark:border-zinc-800 p-3 space-y-2">
-            <Row className="justify-between items-center">
+            <Row className={CLS_ROW_BETWEEN}>
               <Text className="text-xs font-medium text-zinc-500">Button {bi + 1}</Text>
               <Button type="button" variant="ghost" size="sm" onClick={() => set({ buttons: buttons.filter((_, i) => i !== bi) })}>✕</Button>
             </Row>
@@ -485,8 +490,8 @@ export function AdminCarouselEditorView({
           className="space-y-6"
         >
           {/* ── 1. Slide Info ───────────────────────────────────────────── */}
-          <Div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4">
-            <Heading level={3} className="text-base font-semibold">Slide info</Heading>
+          <Div className={CLS_PANEL}>
+            <Heading level={3} className={CLS_SECTION_HEADING}>Slide info</Heading>
             <Input label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
             <Toggle label="Active (visible on homepage)" checked={active} onChange={setActive} />
             <Input label="Display order" type="number" value={order} onChange={(e) => setOrder(e.target.value)} min={0} placeholder="1" />
@@ -509,14 +514,14 @@ export function AdminCarouselEditorView({
           </Div>
 
           {/* ── 2. Background ────────────────────────────────────────────── */}
-          <Div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4">
-            <Heading level={3} className="text-base font-semibold">Background</Heading>
+          <Div className={CLS_PANEL}>
+            <Heading level={3} className={CLS_SECTION_HEADING}>Background</Heading>
             <BackgroundEditor value={background} onChange={setBackground} prefix="slide" />
           </Div>
 
           {/* ── 3. Overlay text (optional) ───────────────────────────────── */}
-          <Div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4">
-            <Heading level={3} className="text-base font-semibold">Overlay text (optional)</Heading>
+          <Div className={CLS_PANEL}>
+            <Heading level={3} className={CLS_SECTION_HEADING}>Overlay text (optional)</Heading>
             <Text className="text-sm text-zinc-500">Centred text layered over the background. Leave blank to use cards only.</Text>
             <Input label="Heading" value={overlayTitle} onChange={(e) => setOverlayTitle(e.target.value)} placeholder="India's #1 Collectibles Marketplace" />
             <Input label="Subtitle" value={overlaySubtitle} onChange={(e) => setOverlaySubtitle(e.target.value)} placeholder="Pokémon TCG · Hot Wheels · Beyblade X" />
@@ -536,9 +541,9 @@ export function AdminCarouselEditorView({
           </Div>
 
           {/* ── 4. Cards ─────────────────────────────────────────────────── */}
-          <Div className="rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-4">
-            <Row className="justify-between items-center">
-              <Heading level={3} className="text-base font-semibold">Cards (0–2)</Heading>
+          <Div className={CLS_PANEL}>
+            <Row className={CLS_ROW_BETWEEN}>
+              <Heading level={3} className={CLS_SECTION_HEADING}>Cards (0–2)</Heading>
               {cards.length < 2 && (
                 <Button
                   type="button"

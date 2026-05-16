@@ -42,6 +42,9 @@ interface UserSupportResponse {
 
 // --- Constants ---------------------------------------------------------------
 
+const CLS_INPUT =
+  "w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
+
 const CATEGORY_OPTIONS = [
   { label: "Order Issue", value: "order_issue" },
   { label: "Billing / Payment", value: "billing_payment" },
@@ -141,250 +144,131 @@ export function UserSupportView(_props: UserSupportViewProps) {
     <>
       <Div className="mx-auto max-w-2xl px-4 py-6">
         <Div className="mb-4 flex items-center justify-between">
-          <Text className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
-            Support Tickets
-          </Text>
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            onClick={() => setNewTicketOpen(true)}
-          >
-            New ticket
-          </Button>
+          <Text className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Support Tickets</Text>
+          <Button type="button" variant="primary" size="sm" onClick={() => setNewTicketOpen(true)}>New ticket</Button>
         </Div>
-
-        {isLoading && (
-          <Div className="space-y-3">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800"
-              />
-            ))}
-          </Div>
-        )}
-
-        {error && (
-          <Div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
-            Failed to load support tickets.
-          </Div>
-        )}
-
-        {!isLoading && tickets.length === 0 && (
-          <Div className="rounded-xl border border-zinc-200 bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40">
-            <Text className="text-sm text-zinc-500 dark:text-zinc-400">
-              You haven&apos;t opened any support tickets yet.
-            </Text>
-          </Div>
-        )}
-
-        <ul className="space-y-3">
-          {tickets.map((ticket) => (
-            <li key={ticket.id}>
-              <button
-                type="button"
-                className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900"
-                onClick={() => {
-                  setSelectedTicket(ticket);
-                  setDetailOpen(true);
-                }}
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-zinc-900 dark:text-zinc-100 truncate">
-                      {ticket.subject}
-                    </p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                      {ticket.category.replace(/_/g, " ")}
-                      {ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}
-                    </p>
-                  </div>
-                  <span
-                    className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open
-                    }`}
-                  >
-                    {ticket.status.replace(/_/g, " ")}
-                  </span>
-                </div>
-              </button>
-            </li>
-          ))}
-        </ul>
+        {renderTicketListArea({ isLoading, error, tickets, setSelectedTicket, setDetailOpen })}
       </Div>
+      {renderNewTicketDrawer({ newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation })}
+      {renderTicketDetailDrawer({ detailOpen, setDetailOpen, selectedTicket, replyBody, setReplyBody, replyMutation })}
+    </>
+  );
+}
 
-      {/* New ticket drawer */}
-      <SideDrawer
-        isOpen={newTicketOpen}
-        onClose={() => setNewTicketOpen(false)}
-        title="Open a support ticket"
-      >
-        <Div className="flex flex-col gap-4 p-4">
-          <Select
-            label="Category"
-            options={CATEGORY_OPTIONS}
-            value={newCategory}
-            onValueChange={setNewCategory}
-          />
+function renderTicketListArea(props: {
+  isLoading: boolean; error: unknown; tickets: SupportTicket[];
+  setSelectedTicket: (t: SupportTicket) => void; setDetailOpen: (v: boolean) => void;
+}) {
+  const { isLoading, error, tickets, setSelectedTicket, setDetailOpen } = props;
+  return (
+    <>
+      {isLoading && (
+        <Div className="space-y-3">
+          {[1, 2, 3].map((i) => <div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />)}
+        </Div>
+      )}
+      {error && (
+        <Div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+          Failed to load support tickets.
+        </Div>
+      )}
+      {!isLoading && tickets.length === 0 && (
+        <Div className="rounded-xl border border-zinc-200 bg-zinc-50 px-6 py-10 text-center dark:border-zinc-700 dark:bg-zinc-900/40">
+          <Text className="text-sm text-zinc-500 dark:text-zinc-400">You haven&apos;t opened any support tickets yet.</Text>
+        </Div>
+      )}
+      <ul className="space-y-3">
+        {tickets.map((ticket) => (
+          <li key={ticket.id}>
+            <button type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <Text className="font-medium text-zinc-900 dark:text-zinc-100 truncate">{ticket.subject}</Text>
+                  <Text className="text-xs text-zinc-500 dark:text-zinc-400">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
+                </div>
+                <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</span>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+}
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderNewTicketDrawer(props: { newTicketOpen: boolean; setNewTicketOpen: (v: boolean) => void; newCategory: string; setNewCategory: (v: string) => void; newSubject: string; setNewSubject: (v: string) => void; newOrderId: string; setNewOrderId: (v: string) => void; newDescription: string; setNewDescription: (v: string) => void; createMutation: any }) {
+  const { newTicketOpen, setNewTicketOpen, newCategory, setNewCategory, newSubject, setNewSubject, newOrderId, setNewOrderId, newDescription, setNewDescription, createMutation } = props;
+  return (
+    <SideDrawer isOpen={newTicketOpen} onClose={() => setNewTicketOpen(false)} title="Open a support ticket">
+      <Div className="flex flex-col gap-4 p-4">
+        <Select label="Category" options={CATEGORY_OPTIONS} value={newCategory} onValueChange={setNewCategory} />
+        <Div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Subject</label>
+          <input type="text" value={newSubject} onChange={(e) => setNewSubject(e.target.value)} placeholder="Brief description of the issue" className={CLS_INPUT} />
+        </Div>
+        {newCategory === "order_issue" && (
           <Div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Subject
-            </label>
-            <input
-              type="text"
-              value={newSubject}
-              onChange={(e) => setNewSubject(e.target.value)}
-              placeholder="Brief description of the issue"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
+            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Order ID</label>
+            <input type="text" value={newOrderId} onChange={(e) => setNewOrderId(e.target.value)} placeholder="e.g. order-3-20260508-a1b2c3" className={CLS_INPUT} />
           </Div>
+        )}
+        <Div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Description</label>
+          <textarea value={newDescription} onChange={(e) => setNewDescription(e.target.value)} rows={4} placeholder="Describe the issue in detail…" className={CLS_INPUT} />
+        </Div>
+        <FormActions align="right">
+          <Button type="button" variant="secondary" onClick={() => setNewTicketOpen(false)}>Cancel</Button>
+          <Button type="button" isLoading={createMutation.isPending} disabled={!newSubject.trim() || !newDescription.trim() || createMutation.isPending} onClick={() => createMutation.mutate()}>Submit ticket</Button>
+        </FormActions>
+      </Div>
+    </SideDrawer>
+  );
+}
 
-          {newCategory === "order_issue" && (
-            <Div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Order ID
-              </label>
-              <input
-                type="text"
-                value={newOrderId}
-                onChange={(e) => setNewOrderId(e.target.value)}
-                placeholder="e.g. order-3-20260508-a1b2c3"
-                className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (v: boolean) => void; selectedTicket: SupportTicket | null; replyBody: string; setReplyBody: (v: string) => void; replyMutation: any }) {
+  const { detailOpen, setDetailOpen, selectedTicket, replyBody, setReplyBody, replyMutation } = props;
+  return (
+    <SideDrawer isOpen={detailOpen} onClose={() => setDetailOpen(false)} title={selectedTicket?.subject ?? "Ticket"}>
+      {selectedTicket && (
+        <Div className="flex flex-col gap-4 p-4">
+          <Div className="flex flex-wrap gap-2">
+            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open}`}>{selectedTicket.status.replace(/_/g, " ")}</span>
+            <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">{selectedTicket.category.replace(/_/g, " ")}</span>
+            {selectedTicket.orderId && <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">Order: {selectedTicket.orderId}</span>}
+          </Div>
+          {selectedTicket.description && (
+            <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
+              <Text className="mb-1 text-xs font-semibold text-zinc-500 uppercase tracking-wide">Your description</Text>
+              <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">{selectedTicket.description}</Text>
             </Div>
           )}
-
-          <Div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Description
-            </label>
-            <textarea
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-              rows={4}
-              placeholder="Describe the issue in detail…"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-            />
-          </Div>
-
-          <FormActions align="right">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setNewTicketOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              isLoading={createMutation.isPending}
-              disabled={!newSubject.trim() || !newDescription.trim() || createMutation.isPending}
-              onClick={() => createMutation.mutate()}
-            >
-              Submit ticket
-            </Button>
-          </FormActions>
-        </Div>
-      </SideDrawer>
-
-      {/* Ticket detail drawer */}
-      <SideDrawer
-        isOpen={detailOpen}
-        onClose={() => setDetailOpen(false)}
-        title={selectedTicket?.subject ?? "Ticket"}
-      >
-        {selectedTicket && (
-          <Div className="flex flex-col gap-4 p-4">
-            <Div className="flex flex-wrap gap-2">
-              <span
-                className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
-                  STATUS_BADGE[selectedTicket.status] ?? STATUS_BADGE.open
-                }`}
-              >
-                {selectedTicket.status.replace(/_/g, " ")}
-              </span>
-              <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                {selectedTicket.category.replace(/_/g, " ")}
-              </span>
-              {selectedTicket.orderId && (
-                <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                  Order: {selectedTicket.orderId}
-                </span>
-              )}
-            </Div>
-
-            {selectedTicket.description && (
-              <Div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-                <Text className="mb-1 text-xs font-semibold text-zinc-500 uppercase tracking-wide">
-                  Your description
-                </Text>
-                <Text className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
-                  {selectedTicket.description}
-                </Text>
-              </Div>
-            )}
-
-            {(selectedTicket.messages ?? []).length > 0 && (
-              <Div className="space-y-2">
-                <Text className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
-                  Messages
-                </Text>
-                <div className="space-y-2 max-h-72 overflow-y-auto">
-                  {(selectedTicket.messages ?? []).map((msg, i) => (
-                    <div
-                      key={msg.id ?? i}
-                      className={`rounded-lg p-3 text-sm ${
-                        msg.authorRole === "user"
-                          ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700"
-                          : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
-                      }`}
-                    >
-                      <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">
-                        <span className="font-medium text-zinc-600 dark:text-zinc-300">
-                          {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
-                        </span>
-                        {msg.createdAt && (
-                          <span>{new Date(msg.createdAt).toLocaleString()}</span>
-                        )}
-                      </div>
-                      <p className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">
-                        {msg.body}
-                      </p>
+          {(selectedTicket.messages ?? []).length > 0 && (
+            <Div className="space-y-2">
+              <Text className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Messages</Text>
+              <div className="space-y-2 max-h-72 overflow-y-auto">
+                {(selectedTicket.messages ?? []).map((msg, i) => (
+                  <div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"}`}>
+                    <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">
+                      <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
+                      {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}
                     </div>
-                  ))}
-                </div>
-              </Div>
-            )}
-
-            {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
-              <Div className="flex flex-col gap-1">
-                <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                  Reply
-                </label>
-                <textarea
-                  value={replyBody}
-                  onChange={(e) => setReplyBody(e.target.value)}
-                  rows={3}
-                  placeholder="Add a message to your ticket…"
-                  className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  isLoading={replyMutation.isPending}
-                  disabled={!replyBody.trim() || replyMutation.isPending}
-                  onClick={() => replyMutation.mutate()}
-                >
-                  Send reply
-                </Button>
-              </Div>
-            )}
-          </Div>
-        )}
-      </SideDrawer>
-    </>
+                    <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
+                  </div>
+                ))}
+              </div>
+            </Div>
+          )}
+          {selectedTicket.status !== "closed" && selectedTicket.status !== "resolved" && (
+            <Div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Reply</label>
+              <textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={3} placeholder="Add a message to your ticket…" className={CLS_INPUT} />
+              <Button type="button" variant="primary" size="sm" isLoading={replyMutation.isPending} disabled={!replyBody.trim() || replyMutation.isPending} onClick={() => replyMutation.mutate()}>Send reply</Button>
+            </Div>
+          )}
+        </Div>
+      )}
+    </SideDrawer>
   );
 }

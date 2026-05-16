@@ -44,7 +44,7 @@ export interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
   ({ className = "", children, ...props }, ref) => (
-    <section className={className} ref={ref} {...props} data-section="semantic-section-597">
+    <section className={className} ref={ref as React.Ref<HTMLElement>} {...props}>
       {children}
     </section>
   ),

@@ -618,6 +618,16 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       ? (slots.renderEmptyState() as React.ReactNode)
       : null);
 
+  function buildProductCardContext(p: T): ProductCardContext<T> {
+    return {
+      onClick: onProductClick,
+      onWishlistToggle,
+      onAddToCart,
+      onBuyNow,
+      isWishlisted: wishlistedIds?.has(p.id) ?? false,
+    };
+  }
+
   const renderItems = () => {
     if (view === "list") {
       return (
@@ -641,13 +651,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
       return (
         <Grid cols="productCardsCompact" className={className}>
           {products.map((p, i) => {
-            const ctx: ProductCardContext<T> = {
-              onClick: onProductClick,
-              onWishlistToggle,
-              onAddToCart,
-              onBuyNow,
-              isWishlisted: wishlistedIds?.has(p.id) ?? false,
-            };
+            const ctx = buildProductCardContext(p);
             const cardRenderer = renderCard ?? slots?.renderCard;
             return cardRenderer ? (
               <React.Fragment key={p.id}>
@@ -679,13 +683,7 @@ export function ProductGrid<T extends ProductItem = ProductItem>({
     return (
       <Div className={`${gridClass} ${className}`}>
         {products.map((p, i) => {
-          const ctx: ProductCardContext<T> = {
-            onClick: onProductClick,
-            onWishlistToggle,
-            onAddToCart,
-            onBuyNow,
-            isWishlisted: wishlistedIds?.has(p.id) ?? false,
-          };
+          const ctx = buildProductCardContext(p);
           const cardRenderer = renderCard ?? slots?.renderCard;
           return cardRenderer ? (
             <React.Fragment key={p.id}>

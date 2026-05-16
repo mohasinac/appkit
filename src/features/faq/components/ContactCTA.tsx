@@ -1,5 +1,8 @@
 import { Card, Div, Heading, Span, Text, TextLink } from "../../../ui";
 
+const CLS_CONTACT_CARD = "flex items-center gap-3 rounded-lg border border-zinc-100 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 px-4 py-3 hover:border-primary/40 transition-colors";
+const CLS_CONTACT_LABEL = "text-xs text-zinc-500 dark:text-zinc-400";
+
 interface ContactCTAProps {
   email: string;
   phone: string;
@@ -57,9 +60,9 @@ export function ContactCTA({
         <TextLink
           href={`mailto:${email}`}
           variant="none"
-          className="group rounded-xl bg-zinc-100 p-6 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+          className={CLS_CONTACT_CARD}
         >
-          <Text className="mb-1 text-sm font-medium">
+          <Text className={CLS_CONTACT_LABEL}>
             {labels?.emailUs ?? "Email Us"}
           </Text>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -70,9 +73,9 @@ export function ContactCTA({
         <TextLink
           href={`tel:${phone}`}
           variant="none"
-          className="group rounded-xl bg-zinc-100 p-6 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+          className={CLS_CONTACT_CARD}
         >
-          <Text className="mb-1 text-sm font-medium">
+          <Text className={CLS_CONTACT_LABEL}>
             {labels?.callUs ?? "Call Us"}
           </Text>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -82,9 +85,9 @@ export function ContactCTA({
 
         <TextLink
           href={contactHref}
-          className="group rounded-xl bg-zinc-100 p-6 transition-colors hover:bg-zinc-200 dark:bg-slate-700 dark:hover:bg-slate-600"
+          className={CLS_CONTACT_CARD}
         >
-          <Text className="mb-1 text-sm font-medium">
+          <Text className={CLS_CONTACT_LABEL}>
             {labels?.contactForm ?? "Contact Form"}
           </Text>
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">

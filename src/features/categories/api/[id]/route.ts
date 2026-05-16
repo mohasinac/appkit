@@ -15,6 +15,8 @@ import { getProviders } from "../../../../contracts";
 import { createRouteHandler } from "../../../../next";
 import type { CategoryItem } from "../../types/index";
 
+const ERR_CATEGORY_NOT_FOUND = "Category not found";
+
 // ---- GET /api/categories/[id] ------------------------------------------------
 
 export async function GET(
@@ -36,7 +38,7 @@ export async function GET(
     const category = await repo.findById(id);
     if (!category) {
       return NextResponse.json(
-        { success: false, error: "Category not found" },
+        { success: false, error: ERR_CATEGORY_NOT_FOUND },
         { status: 404 },
       );
     }
@@ -93,7 +95,7 @@ export const categoryItemPATCH = createRouteHandler({
     const category = await repo.findById(id);
     if (!category)
       return NextResponse.json(
-        { success: false, error: "Category not found" },
+        { success: false, error: ERR_CATEGORY_NOT_FOUND },
         { status: 404 },
       );
 
@@ -126,7 +128,7 @@ export const categoryItemDELETE = createRouteHandler({
     const category = await repo.findById(id);
     if (!category)
       return NextResponse.json(
-        { success: false, error: "Category not found" },
+        { success: false, error: ERR_CATEGORY_NOT_FOUND },
         { status: 404 },
       );
 

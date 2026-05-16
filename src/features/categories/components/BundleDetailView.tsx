@@ -11,7 +11,6 @@
  */
 
 import React from "react";
-import Link from "next/link";
 import {
   Badge,
   Container,
@@ -23,7 +22,6 @@ import {
   Stack,
   Text,
 } from "../../../ui";
-import { ROUTES } from "../../../next/routing/route-map";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas/firestore";
@@ -33,6 +31,7 @@ import {
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { BundleBuyNowCta } from "./BundleBuyNowCta";
+import { BundleCollage } from "./BundleCollage";
 
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
@@ -147,11 +146,7 @@ export function BundleDetailView({
               {members.length === 0 ? (
                 <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
-                <Div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-                  {members.map((p) => (
-                    <BundleMemberCard key={p.id} product={p} />
-                  ))}
-                </Div>
+                <BundleCollage members={members} />
               )}
             </Stack>
           </Stack>
@@ -161,39 +156,3 @@ export function BundleDetailView({
   );
 }
 
-interface BundleMemberCardProps {
-  product: ProductDocument;
-}
-
-function BundleMemberCard({ product }: BundleMemberCardProps) {
-  const href = String(
-    ROUTES.PUBLIC.PRODUCT_DETAIL?.(product.slug ?? product.id) ?? "#",
-  );
-  const cover = product.mainImage ?? product.images?.[0];
-  return (
-    <Link
-      href={href}
-      className="group rounded-xl border border-zinc-200 bg-white p-2 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
-    >
-      <Div className="mb-2 aspect-square overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-        {cover ? (
-          // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
-          <img
-            src={cover}
-            alt={product.title}
-            className="h-full w-full object-cover transition-transform group-hover:scale-105"
-            loading="lazy"
-          />
-        ) : (
-          <Div className="flex h-full w-full items-center justify-center text-3xl">
-            {PLACEHOLDER_EMOJI}
-          </Div>
-        )}
-      </Div>
-      <Text className="line-clamp-2 text-sm font-medium">{product.title}</Text>
-      <Text size="xs" color="muted" className="mt-1">
-        {formatCurrency((product.price ?? 0) / 100, product.currency ?? "INR")}
-      </Text>
-    </Link>
-  );
-}

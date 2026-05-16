@@ -9,6 +9,10 @@ export interface LightboxImage {
   src: string;
   alt?: string;
   caption?: string;
+  /** Secondary line below caption (e.g. price or estimated value). */
+  sub?: string;
+  /** Badge rendered top-left on the enlarged image (e.g. "#1"). */
+  badge?: string;
 }
 
 export interface ImageLightboxProps {
@@ -17,6 +21,8 @@ export interface ImageLightboxProps {
   activeIndex: number | null;
   onClose: () => void;
   onNavigate?: (index: number) => void;
+  /** Show clickable thumbnail strip below the main image. */
+  showThumbnails?: boolean;
 }
 
 const MIN_ZOOM = 10;
@@ -28,6 +34,7 @@ export function ImageLightbox({
   activeIndex,
   onClose,
   onNavigate,
+  showThumbnails = false,
 }: ImageLightboxProps) {
   const [currentIndex, setCurrentIndex] = useState(activeIndex ?? 0);
   const [zoom, setZoom] = useState(100);
@@ -198,17 +205,62 @@ export function ImageLightbox({
             transition: "transform 0.2s ease",
           }}
         />
+        {image.badge && (
+          <div className="absolute left-3 top-3 rounded bg-black/70 px-2 py-1 text-xs font-semibold text-white pointer-events-none">
+            {image.badge}
+          </div>
+        )}
       </div>
 
       {/* Caption */}
-      {image.caption && (
-        <Text
-          size="sm"
-          variant="secondary"
-          className="flex-shrink-0 !text-white/70 text-center px-8 pb-4"
-        >
-          {image.caption}
-        </Text>
+      {(image.caption || image.sub) && (
+        <div className="flex-shrink-0 text-center px-8 pb-2">
+          {image.caption && (
+            <Text
+              size="sm"
+              variant="secondary"
+              className="!text-white/80"
+            >
+              {image.caption}
+            </Text>
+          )}
+          {image.sub && (
+            <Text size="sm" variant="secondary" className="!text-white/50">
+              {image.sub}
+            </Text>
+          )}
+        </div>
+      )}
+
+      {/* Thumbnail strip */}
+      {showThumbnails && images.length > 1 && (
+        <div className="flex-shrink-0 flex gap-2 overflow-x-auto px-4 pb-3 justify-center">
+          {images.map((thumb, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                setCurrentIndex(i);
+                setZoom(100);
+                setRotation(0);
+                onNavigate?.(i);
+              }}
+              className={[
+                "h-14 w-14 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
+                i === currentIndex
+                  ? "scale-110 border-white"
+                  : "border-transparent opacity-50 hover:opacity-90",
+              ].join(" ")}
+              aria-label={`Go to image ${i + 1}`}
+            >
+              <img
+                src={thumb.src}
+                alt={thumb.alt ?? `Image ${i + 1}`}
+                className="h-full w-full object-cover"
+              />
+            </button>
+          ))}
+        </div>
       )}
 
       {/* Next button */}

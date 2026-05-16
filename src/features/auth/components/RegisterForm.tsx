@@ -38,6 +38,45 @@ export interface RegisterFormProps {
   className?: string;
 }
 
+type RegisterLabels = RegisterFormProps["labels"] & object;
+
+function renderRegisterFormFields(props: {
+  values: RegisterFormValues;
+  setValues: (v: RegisterFormValues) => void;
+  labels: RegisterLabels;
+  renderTermsLink?: () => React.ReactNode;
+  renderPasswordStrength?: (password: string) => React.ReactNode;
+}) {
+  const { values, setValues, labels, renderTermsLink, renderPasswordStrength } = props;
+  const CLS_INPUT = "w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary";
+  const CLS_LABEL = "block text-sm font-medium mb-1";
+  return (
+    <>
+      <Div>
+        <Label htmlFor="reg-name" className={CLS_LABEL}>{labels?.displayNameLabel ?? "Full name"}</Label>
+        <input id="reg-name" name="displayName" type="text" autoComplete="name" required placeholder={labels?.displayNamePlaceholder ?? "Your name"} value={values.displayName} onChange={(e) => setValues({ ...values, displayName: e.target.value })} className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+      </Div>
+      <Div>
+        <Label htmlFor="reg-email" className={CLS_LABEL}>{labels?.emailLabel ?? "Email address"}</Label>
+        <input id="reg-email" name="email" type="email" autoComplete="username" required placeholder={labels?.emailPlaceholder ?? "you@example.com"} value={values.email} onChange={(e) => setValues({ ...values, email: e.target.value })} className={CLS_INPUT} />
+      </Div>
+      <Div>
+        <Label htmlFor="reg-password" className={CLS_LABEL}>{labels?.passwordLabel ?? "Password"}</Label>
+        <input id="reg-password" name="password" type="password" autoComplete="new-password" required placeholder={labels?.passwordPlaceholder ?? "••••••••"} value={values.password} onChange={(e) => setValues({ ...values, password: e.target.value })} className={CLS_INPUT} />
+        {renderPasswordStrength?.(values.password)}
+      </Div>
+      <Div>
+        <Label htmlFor="reg-confirm" className={CLS_LABEL}>{labels?.confirmPasswordLabel ?? "Confirm password"}</Label>
+        <input id="reg-confirm" name="confirmPassword" type="password" autoComplete="new-password" required placeholder={labels?.confirmPasswordPlaceholder ?? "••••••••"} value={values.confirmPassword} onChange={(e) => setValues({ ...values, confirmPassword: e.target.value })} className={CLS_INPUT} />
+      </Div>
+      <Div className="flex items-start gap-2">
+        <input id="reg-terms" type="checkbox" required checked={values.acceptTerms} onChange={(e) => setValues({ ...values, acceptTerms: e.target.checked })} className="mt-0.5 h-4 w-4 rounded border-neutral-300 dark:border-slate-600 accent-primary" />
+        <Label htmlFor="reg-terms" className="text-sm leading-snug">{labels?.acceptTermsLabel ?? "I accept the"} {renderTermsLink?.()}</Label>
+      </Div>
+    </>
+  );
+}
+
 export function RegisterForm({
   onSubmit,
   isLoading = false,
@@ -104,117 +143,9 @@ export function RegisterForm({
         )}
 
         <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-          <Div>
-            <Label
-              htmlFor="reg-name"
-              className="block text-sm font-medium mb-1"
-            >
-              {labels.displayNameLabel ?? "Full name"}
-            </Label>
-            <input
-              id="reg-name"
-              name="displayName"
-              type="text"
-              autoComplete="name"
-              required
-              placeholder={labels.displayNamePlaceholder ?? "Your name"}
-              value={values.displayName}
-              onChange={(e) =>
-                setValues({ ...values, displayName: e.target.value })
-              }
-              className="w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </Div>
-
-          <Div>
-            <Label
-              htmlFor="reg-email"
-              className="block text-sm font-medium mb-1"
-            >
-              {labels.emailLabel ?? "Email address"}
-            </Label>
-            <input
-              id="reg-email"
-              name="email"
-              type="email"
-              autoComplete="username"
-              required
-              placeholder={labels.emailPlaceholder ?? "you@example.com"}
-              value={values.email}
-              onChange={(e) => setValues({ ...values, email: e.target.value })}
-              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </Div>
-
-          <Div>
-            <Label
-              htmlFor="reg-password"
-              className="block text-sm font-medium mb-1"
-            >
-              {labels.passwordLabel ?? "Password"}
-            </Label>
-            <input
-              id="reg-password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              placeholder={labels.passwordPlaceholder ?? "••••••••"}
-              value={values.password}
-              onChange={(e) =>
-                setValues({ ...values, password: e.target.value })
-              }
-              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            {renderPasswordStrength?.(values.password)}
-          </Div>
-
-          <Div>
-            <Label
-              htmlFor="reg-confirm"
-              className="block text-sm font-medium mb-1"
-            >
-              {labels.confirmPasswordLabel ?? "Confirm password"}
-            </Label>
-            <input
-              id="reg-confirm"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              placeholder={labels.confirmPasswordPlaceholder ?? "••••••••"}
-              value={values.confirmPassword}
-              onChange={(e) =>
-                setValues({ ...values, confirmPassword: e.target.value })
-              }
-              className="w-full rounded-lg border border-neutral-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-zinc-900 dark:text-zinc-100 placeholder:text-neutral-400 dark:placeholder:text-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </Div>
-
-          <Div className="flex items-start gap-2">
-            <input
-              id="reg-terms"
-              type="checkbox"
-              required
-              checked={values.acceptTerms}
-              onChange={(e) =>
-                setValues({ ...values, acceptTerms: e.target.checked })
-              }
-              className="mt-0.5 h-4 w-4 rounded border-neutral-300 dark:border-slate-600 accent-primary"
-            />
-            <Label htmlFor="reg-terms" className="text-sm leading-snug">
-              {labels.acceptTermsLabel ?? "I accept the"} {renderTermsLink?.()}
-            </Label>
-          </Div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors"
-          >
-            {isLoading
-              ? (labels.submittingLabel ?? "Creating account…")
-              : (labels.submitLabel ?? "Create account")}
+          {renderRegisterFormFields({ values, setValues, labels, renderTermsLink, renderPasswordStrength })}
+          <button type="submit" disabled={isLoading} className="w-full rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-60 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 transition-colors">
+            {isLoading ? (labels.submittingLabel ?? "Creating account…") : (labels.submitLabel ?? "Create account")}
           </button>
         </form>
 

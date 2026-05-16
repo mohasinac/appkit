@@ -16,6 +16,9 @@ import {
   NotFoundError,
 } from "../../../errors";
 import { resolveDate } from "../../../utils";
+
+const ERR_EVENT_NOT_FOUND = "Event not found";
+
 import { coerceMediaField, getMediaUrl, type MediaField } from "../../../utils";
 import {
   finalizeStagedMediaField,
@@ -135,7 +138,7 @@ export async function updateEvent(
   input: UpdateEventInput,
 ): Promise<EventDocument> {
   const existing = await eventRepository.findById(id);
-  if (!existing) throw new NotFoundError("Event not found");
+  if (!existing) throw new NotFoundError(ERR_EVENT_NOT_FOUND);
 
   const finalizedCoverUrl = await finalizeStagedMediaField(
     getMediaUrl(input.coverImage as MediaField | string | null | undefined) ??
@@ -184,7 +187,7 @@ export async function updateEvent(
 
 export async function deleteEvent(adminId: string, id: string): Promise<void> {
   const existing = await eventRepository.findById(id);
-  if (!existing) throw new NotFoundError("Event not found");
+  if (!existing) throw new NotFoundError(ERR_EVENT_NOT_FOUND);
   await eventRepository.delete(id);
   serverLogger.info("deleteEvent", { adminId, eventId: id });
 }
@@ -197,7 +200,7 @@ export async function changeEventStatus(
   status: EventStatus,
 ): Promise<EventDocument> {
   const existing = await eventRepository.findById(id);
-  if (!existing) throw new NotFoundError("Event not found");
+  if (!existing) throw new NotFoundError(ERR_EVENT_NOT_FOUND);
   const updated = await eventRepository.changeStatus(id, status);
   serverLogger.info("changeEventStatus", { adminId, eventId: id, status });
   return updated;

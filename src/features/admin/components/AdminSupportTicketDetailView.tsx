@@ -202,7 +202,7 @@ export function AdminSupportTicketDetailView({
                       <span>{new Date(msg.createdAt).toLocaleString()}</span>
                     )}
                   </div>
-                  <p className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</p>
+                  <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                 </div>
               ))}
             </div>
