@@ -1064,7 +1064,7 @@ export function SellerProductShell({
               disabled={isLoading}
             />
             {stepError && (
-              <p className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</p>
+              <Text className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
             )}
           </div>
         )}
