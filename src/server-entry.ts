@@ -180,11 +180,29 @@ export {
   getReviewsForProduct,
   getReviewsForStore,
   hasUserPurchasedProduct,
+  getReviewById,
+  renderReviewOg,
+  renderReviewOgImage,
+  type ReviewOgData,
   createReviewAction,
   replyToReviewAction,
   deleteReviewAction,
   markReviewHelpfulAction,
 } from "./_internal/server/features/reviews/index";
+
+export {
+  renderFaqOg,
+  renderFaqOgImage,
+  type FaqOgData,
+} from "./_internal/server/features/faqs/index";
+
+export {
+  renderScamOg,
+  renderScamOgImage,
+  type ScamOgData,
+  getScammerForDetail,
+  getScammerProfilePageData as getScammerProfilePageDataCached,
+} from "./_internal/server/features/scams/index";
 
 // S5: search data layer + action
 export {

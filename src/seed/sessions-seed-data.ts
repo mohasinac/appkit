@@ -33,7 +33,7 @@ export const sessionsSeedData: SessionDocument[] = [
   // -- Active: Admin — Chrome Desktop (Windows) ----------------------------
   {
     id: "session-admin-chrome-desktop-001",
-    userId: "user-admin-user-admin",
+    userId: "user-admin-letitrip",
     deviceInfo: {
       userAgent:
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -395,6 +395,44 @@ export const sessionsSeedData: SessionDocument[] = [
     createdAt: daysAgo(9),
     lastActivity: daysAgo(4),
     expiresAt: daysAhead(19),
+    isActive: true,
+  },
+
+  // -- Active: Admin — Chrome Android (admin monitors on mobile) -----------
+  {
+    id: "session-admin-chrome-android-001",
+    userId: "user-admin-letitrip",
+    deviceInfo: {
+      userAgent:
+        "Mozilla/5.0 (Linux; Android 14; Samsung Galaxy S24 Ultra) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36",
+      browser: "Chrome 122",
+      os: "Android 14",
+      device: "Mobile",
+      ip: "203.0.113.2",
+    },
+    location: { country: _locale.countryName, city: "Mumbai" },
+    createdAt: daysAgo(3),
+    lastActivity: daysAgo(1),
+    expiresAt: daysAhead(26),
+    isActive: true,
+  },
+
+  // -- Active: Admin — Safari macOS (secondary workstation) ----------------
+  {
+    id: "session-admin-safari-macos-001",
+    userId: "user-admin-letitrip",
+    deviceInfo: {
+      userAgent:
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Safari/605.1.15",
+      browser: "Safari 17",
+      os: "macOS 14",
+      device: "Desktop",
+      ip: "203.0.113.3",
+    },
+    location: { country: _locale.countryName, city: "Mumbai" },
+    createdAt: daysAgo(1),
+    lastActivity: daysAgo(0),
+    expiresAt: daysAhead(29),
     isActive: true,
   },
 ];

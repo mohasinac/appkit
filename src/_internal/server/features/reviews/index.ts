@@ -1,4 +1,6 @@
 export { getReviewsForProduct, getReviewsForStore, hasUserPurchasedProduct } from "./data";
+export { getReviewById } from "./og-data";
+export { renderReviewOg, renderReviewOgImage, type ReviewOgData } from "./og";
 export {
   createReviewAction,
   replyToReviewAction,

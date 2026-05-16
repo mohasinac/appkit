@@ -76,11 +76,15 @@ export const wishlistsSeedData: WishlistSeedDocument[] = [
     { productId: "preorder-shf-broly-super-hero", productType: "preorder", addedAt: daysAgo(1) },
   ]),
 
-  // Admin's personal wishlist — rare high-value collectibles
+  // Admin's personal wishlist — mix of listing types to test all flows
   makeDoc("user-admin-letitrip", [
     { productId: "product-mafex-miles-morales-spiderman", productType: "product", addedAt: daysAgo(60) },
     { productId: "product-figma-link-totk", productType: "product", addedAt: daysAgo(45) },
     { productId: "auction-pokemon-mew-1st-edition-psa10", productType: "auction", addedAt: daysAgo(20) },
     { productId: "product-alter-rem-wedding-scale", productType: "product", addedAt: daysAgo(8) },
+    { productId: "prize-pokemon-mystery-box-june", productType: "product", addedAt: daysAgo(5) },
+    { productId: "prize-hot-wheels-treasure-hunt", productType: "product", addedAt: daysAgo(4) },
+    { productId: "preorder-gundam-pg-unicorn-ver15", productType: "preorder", addedAt: daysAgo(3) },
+    { productId: "auction-pokemon-charizard-base1-psa9", productType: "auction", addedAt: daysAgo(2) },
   ]),
 ];

@@ -36,7 +36,7 @@ export const usersSeedData: Partial<UserDocument>[] = [
       showWishlist: false,
       bio: "LetItRip platform administrator.",
     },
-    stats: { totalOrders: 4, auctionsWon: 1, itemsSold: 142, reviewsCount: 0 },
+    stats: { totalOrders: 7, auctionsWon: 1, itemsSold: 142, reviewsCount: 0 },
     metadata: {
       lastSignInTime: daysAgo(1),
       creationTime: daysAgo(400).toISOString(),
