@@ -6,6 +6,7 @@ export interface PromotionsCallableResult {
   promotedProducts: unknown[];
   featuredProducts: unknown[];
   activeCoupons: unknown[];
+  partial?: boolean;
 }
 
 /**
@@ -21,7 +22,7 @@ export async function runPromotions(
   const now = new Date();
   const nowIso = now.toISOString();
 
-  const [promotedResult, featuredResult, activeCouponsResult] = await Promise.all([
+  const [promotedSettled, featuredSettled, couponsSettled] = await Promise.allSettled([
     productRepository.list(
       {
         filters: `status==${ProductStatusValues.PUBLISHED},isPromoted==true`,
@@ -48,19 +49,38 @@ export async function runPromotions(
     }),
   ]);
 
-  const activeCoupons = activeCouponsResult.items.filter(
+  const partial =
+    promotedSettled.status === "rejected" ||
+    featuredSettled.status === "rejected" ||
+    couponsSettled.status === "rejected";
+
+  if (partial) {
+    ctx.logger.warn("Promotions partial load — some queries failed", {
+      promoted: promotedSettled.status,
+      featured: featuredSettled.status,
+      coupons: couponsSettled.status,
+    });
+  }
+
+  const promotedItems = promotedSettled.status === "fulfilled" ? promotedSettled.value.items : [];
+  const featuredItems = featuredSettled.status === "fulfilled" ? featuredSettled.value.items : [];
+  const couponsItems = couponsSettled.status === "fulfilled" ? couponsSettled.value.items : [];
+
+  const activeCoupons = couponsItems.filter(
     (c) => !c.validity?.startDate || new Date(c.validity.startDate) <= now,
   );
 
   ctx.logger.info("Promotions loaded", {
-    promoted: promotedResult.items.length,
-    featured: featuredResult.items.length,
+    promoted: promotedItems.length,
+    featured: featuredItems.length,
     coupons: activeCoupons.length,
+    partial,
   });
 
   return {
-    promotedProducts: promotedResult.items,
-    featuredProducts: featuredResult.items,
+    promotedProducts: promotedItems,
+    featuredProducts: featuredItems,
     activeCoupons,
+    ...(partial && { partial: true }),
   };
 }

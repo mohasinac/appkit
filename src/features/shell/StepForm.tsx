@@ -24,6 +24,8 @@ export interface StepFormProps<T extends object = Record<string, unknown>> {
   /** Current step index (0-based). Controlled from outside. */
   currentStep: number;
   onStepChange: (step: number) => void;
+  /** Suppress the built-in action bar. Use FormShell's renderBottomBar instead. */
+  hideActions?: boolean;
 }
 
 export interface StepFormActionsProps {
@@ -51,7 +53,7 @@ export function StepFormActions({
   const nextStepLabel = `Next →`;
 
   return (
-    <div className="flex items-center justify-between gap-2 px-4 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
+    <div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
       <>
         {!isFirst && onPrev && (
           <Button variant="outline" size="sm" onClick={onPrev} disabled={disabled || isLoading}>
@@ -148,6 +150,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
   formId,
   currentStep,
   onStepChange,
+  hideActions = false,
 }: StepFormProps<T>) {
   const [stepErrors, setStepErrors] = useState<Record<string, string>>({});
   const [stepError, setStepError] = useState<string | null>(null);
@@ -204,19 +207,21 @@ export function StepForm<T extends object = Record<string, unknown>>({
         {currentStepDef?.render({ values, onChange, errors: stepErrors })}
       </div>
 
-      {stepError && (
+      {!hideActions && stepError && (
         <Text className="mt-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
       )}
 
-      <StepFormActions
-        currentStep={currentStep}
-        totalSteps={steps.length}
-        onNext={() => void goNext()}
-        onPrev={currentStep > 0 ? goPrev : undefined}
-        completeLabel={completeLabel}
-        isLoading={isLoading && isLast}
-        disabled={isLoading}
-      />
+      {!hideActions && (
+        <StepFormActions
+          currentStep={currentStep}
+          totalSteps={steps.length}
+          onNext={() => void goNext()}
+          onPrev={currentStep > 0 ? goPrev : undefined}
+          completeLabel={completeLabel}
+          isLoading={isLoading && isLast}
+          disabled={isLoading}
+        />
+      )}
     </div>
   );
 }
