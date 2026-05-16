@@ -9,22 +9,49 @@
   line-height: var(--appkit-leading-normal);
   min-height: 5rem;
   resize: vertical;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.appkit-textarea::placeholder {
+  color: var(--appkit-color-text-faint);
+}
+
+.appkit-textarea:hover:not(:disabled):not(:focus-visible) {
+  border-color: var(--appkit-color-zinc-400);
 }
 
 .appkit-textarea:focus-visible {
   outline: none;
   border-color: var(--appkit-color-secondary);
-  box-shadow: 0 0 0 2px rgba(101, 196, 8, 0.2);
+  box-shadow: 0 0 0 3px rgba(101, 196, 8, 0.25), inset 0 0 0 1px rgba(101, 196, 8, 0.15);
+}
+
+.appkit-textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: var(--appkit-color-bg);
+  resize: none;
 }
 
 .dark .appkit-textarea {
   border-color: var(--appkit-color-border);
-  background: rgba(30, 41, 59, 0.6);
+  background: rgba(30, 41, 59, 0.7);
   color: var(--appkit-color-text);
+}
+
+.dark .appkit-textarea::placeholder {
+  color: var(--appkit-color-text-muted);
+}
+
+.dark .appkit-textarea:hover:not(:disabled):not(:focus-visible) {
+  border-color: var(--appkit-color-slate-500);
 }
 
 .dark .appkit-textarea:focus-visible {
   border-color: var(--appkit-color-primary);
-  box-shadow: 0 0 0 2px rgba(233, 30, 140, 0.2);
+  box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.25), inset 0 0 0 1px rgba(233, 30, 140, 0.15);
+}
+
+.dark .appkit-textarea:disabled {
+  background: rgba(30, 41, 59, 0.4);
 }

@@ -720,6 +720,54 @@ export const ACTIONS: ActionTree = {
       description: "Submit the order with the chosen payment method.",
       kind: "primary",
     },
+    "continue-to-verification": {
+      id: "checkout.continue-to-verification",
+      label: "Continue to Verification",
+      description: "Advance from address selection to identity verification step.",
+      kind: "primary",
+    },
+    "send-otp": {
+      id: "checkout.send-otp",
+      label: "Send verification code",
+      description: "Send a one-time code to the buyer's registered email to verify identity before checkout.",
+      kind: "primary",
+    },
+    "verify-otp": {
+      id: "checkout.verify-otp",
+      label: "Verify & Continue",
+      description: "Submit the one-time code and proceed to payment selection.",
+      kind: "primary",
+    },
+    "resend-otp": {
+      id: "checkout.resend-otp",
+      label: "Resend code",
+      description: "Re-send the verification code to the buyer's registered email.",
+      kind: "ghost",
+    },
+    "pay-online": {
+      id: "checkout.pay-online",
+      label: "Pay Online (Razorpay)",
+      description: "Initiate an online payment via Razorpay UPI/Card/NetBanking.",
+      kind: "primary",
+    },
+    "pay-cod": {
+      id: "checkout.pay-cod",
+      label: "Cash on Delivery",
+      description: "Place the order for cash-on-delivery payment.",
+      kind: "secondary",
+    },
+    "admin-bypass": {
+      id: "checkout.admin-bypass",
+      label: "Skip Verification — Admin Bypass",
+      description: "Admin test mode: skip identity verification and place a test order without payment.",
+      kind: "secondary",
+    },
+    "admin-bypass-payment": {
+      id: "checkout.admin-bypass-payment",
+      label: "No Payment — Admin Bypass Order",
+      description: "Admin test mode: place a real order record without charging any payment.",
+      kind: "secondary",
+    },
   },
   NAV: {
     "sign-in": {

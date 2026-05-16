@@ -8,6 +8,7 @@ import { ImageUpload, MediaUploadField } from "../../features/media";
 export interface FormFieldProps {
   label?: string;
   name: string;
+  card?: boolean;
   type?:
     | "text"
     | "email"
@@ -39,9 +40,13 @@ export interface FormFieldProps {
   maxSizeMB?: number;
 }
 
+const CARD_CLASS = "appkit-form-field appkit-form-field--card";
+const BASE_CLASS = "appkit-form-field";
+
 export function FormField({
   label,
   name,
+  card = false,
   type = "text",
   value = "",
   onChange,
@@ -73,7 +78,7 @@ export function FormField({
 
   if (type === "image" && onUpload) {
     return (
-      <div className="appkit-form-field" data-section="formfield-div-505">
+      <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-505">
         <ImageUpload
           currentImage={value || undefined}
           onUpload={onUpload}
@@ -101,7 +106,7 @@ export function FormField({
 
   if (type === "media" && onUpload) {
     return (
-      <div className="appkit-form-field" data-section="formfield-div-506">
+      <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-506">
         <MediaUploadField
           label={`${label || name}${required ? " *" : ""}`}
           value={value}
@@ -130,7 +135,7 @@ export function FormField({
   }
 
   return (
-    <div className="appkit-form-field" data-section="formfield-div-507">
+    <div className={card ? CARD_CLASS : BASE_CLASS} data-section="formfield-div-507">
       {label ? (
         <Label htmlFor={inputId} className="appkit-form-field__label">
           {label}

@@ -191,7 +191,8 @@ function renderSectionElement(
           initialItems={sectionData.products}
           rows={cfg?.rows}
           maxItems={cfg?.maxItems}
-          pagination={cfg?.pagination}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
         />
       );
     }
@@ -205,6 +206,9 @@ function renderSectionElement(
           viewMoreLabel="View all auctions →"
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.auctions}
+          rows={cfg?.rows}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
         />
       );
     }
@@ -218,6 +222,9 @@ function renderSectionElement(
           viewMoreLabel="View all pre-orders →"
           filterByBrand={cfg?.filterByBrand}
           initialItems={sectionData.preOrders}
+          rows={cfg?.rows}
+          autoScroll={cfg?.autoScroll}
+          scrollInterval={cfg?.scrollInterval}
         />
       );
     }

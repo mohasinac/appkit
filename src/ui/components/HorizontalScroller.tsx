@@ -4,11 +4,9 @@ import {
   useState,
   useEffect,
   useCallback,
-  type ReactElement,
   type ReactNode,
   type RefObject,
   type KeyboardEvent,
-  cloneElement,
 } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -94,6 +92,7 @@ export function HorizontalScroller<T = unknown>({
   loop = false,
 }: HorizontalScrollerProps<T>) {
   const [itemWidth, setItemWidth] = useState<number | undefined>(undefined);
+  const [colCount, setColCount] = useState<number>(typeof perView === "number" ? perView : 3);
   const [isPaused, setIsPaused] = useState(false);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(true);
@@ -223,6 +222,7 @@ export function HorizontalScroller<T = unknown>({
       const w = entry.contentRect.width;
       const count = resolvePerView(perView, w);
       if (count > 0) {
+        setColCount(count);
         setItemWidth((w - (count - 1) * gap) / count);
       }
       updateExtents();
@@ -238,62 +238,47 @@ export function HorizontalScroller<T = unknown>({
 
   const content = itemsMode ? (
     rows > 1 ? (
-      // Grid mode: group items into slides with rows x cols
-      normalizedItems.reduce<ReactNode[]>((slides, item, i) => {
-        const cardsPerSlide = 6;
-        const slideIndex = Math.floor(i / cardsPerSlide);
-        const itemInSlide = i % cardsPerSlide;
-        const rowIndex = Math.floor(itemInSlide / 3);
-        const colIndex = itemInSlide % 3;
-
-        if (!slides[slideIndex]) {
-          slides[slideIndex] = (
+      // Grid mode: group items into slides of (rows × colCount) cards
+      (() => {
+        const cols = colCount > 0 ? colCount : 3;
+        const cardsPerSlide = rows * cols;
+        const slideCount = Math.ceil(normalizedItems.length / cardsPerSlide);
+        return Array.from({ length: slideCount }, (_, slideIndex) => {
+          const slideItems = normalizedItems.slice(
+            slideIndex * cardsPerSlide,
+            (slideIndex + 1) * cardsPerSlide,
+          );
+          return (
             <div
               key={`slide-${slideIndex}`}
-              className="appkit-hscroller__slide grid grid-cols-1 sm:grid-cols-3 gap-4 place-items-center sm:place-items-start"
-              style={{ gap: `${gap}px`, width: "100%", flexShrink: 0 }}
+              className="appkit-hscroller__slide"
+              style={{
+                display: "grid",
+                gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                gap: `${gap}px`,
+                width: "100%",
+                flexShrink: 0,
+              }}
             >
-              {Array.from({ length: 6 }, (_, idx) => (
+              {slideItems.map((item, idx) => (
                 <div
-                  key={`placeholder-${idx}`}
-                  className="appkit-hscroller__item-placeholder w-full sm:w-auto"
-                />
+                  key={keyExtractor ? keyExtractor(item, slideIndex * cardsPerSlide + idx) : slideIndex * cardsPerSlide + idx}
+                  className={[
+                    "appkit-hscroller__item",
+                    snapToItems ? "appkit-hscroller__item--snap" : "",
+                    itemClassName,
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  style={minItemWidth ? { minWidth: minItemWidth } : undefined}
+                >
+                  {renderItem(item, slideIndex * cardsPerSlide + idx)}
+                </div>
               ))}
             </div>
           );
-        }
-
-        const slideElement = slides[slideIndex] as ReactElement<{
-          children?: ReactNode[];
-        }>;
-        const gridIndex = rowIndex * 3 + colIndex;
-        const childrenArr =
-          (slideElement.props as { children?: ReactNode[] }).children ?? [];
-        if (childrenArr[gridIndex]) {
-          const newChildren = [...childrenArr];
-          newChildren[gridIndex] = (
-            <div
-              key={keyExtractor ? keyExtractor(item, i) : i}
-              className={[
-                "appkit-hscroller__item",
-                snapToItems ? "appkit-hscroller__item--snap" : "",
-                itemClassName,
-                "w-full sm:w-auto",
-              ]
-                .filter(Boolean)
-                .join(" ")}
-              style={minItemWidth ? { minWidth: minItemWidth } : undefined}
-            >
-              {renderItem(item, i)}
-            </div>
-          );
-          slides[slideIndex] = cloneElement(slideElement as any, {
-            children: newChildren,
-          }) as ReactElement;
-        }
-
-        return slides;
-      }, [])
+        });
+      })()
     ) : loop && itemCount > 0 ? (
       // Circular loop: fixed (itemCount + 2×loopCloneCount) DOM slots.
       // Each slot maps to a real item via modulo — no array cloning, no list growth.

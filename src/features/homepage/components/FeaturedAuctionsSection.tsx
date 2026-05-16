@@ -14,6 +14,9 @@ export interface FeaturedAuctionsSectionProps {
   className?: string;
   filterByBrand?: string;
   initialItems?: ProductItem[];
+  rows?: number;
+  autoScroll?: boolean;
+  scrollInterval?: number;
 }
 
 export function FeaturedAuctionsSection({
@@ -24,6 +27,9 @@ export function FeaturedAuctionsSection({
   className = "",
   filterByBrand,
   initialItems,
+  rows = 1,
+  autoScroll = false,
+  scrollInterval = 5000,
 }: FeaturedAuctionsSectionProps) {
   const { data: items = [], isLoading } = useFeaturedAuctions({ filterByBrand, initialData: initialItems });
 
@@ -40,6 +46,9 @@ export function FeaturedAuctionsSection({
       skeletonCount={4}
       perView={THEME_CONSTANTS.carousel.perView.standard}
       gap={16}
+      rows={Math.min(Math.max(rows, 1), 4)}
+      autoScroll={autoScroll}
+      autoScrollInterval={scrollInterval}
       keyExtractor={(product: ProductItem) => product.id}
       renderItem={(product: ProductItem) => (
         <MarketplaceAuctionCard product={product} />

@@ -162,6 +162,12 @@ export { Select } from "./components/Select";
 export type { InputProps } from "./components/Input";
 export { Input } from "./components/Input";
 
+export type { OtpInputProps } from "./components/OtpInput";
+export { OtpInput } from "./components/OtpInput";
+
+export type { DateInputProps, DateRangeInputProps } from "./components/DateInput";
+export { DateInput, DateRangeInput } from "./components/DateInput";
+
 export type { TextareaProps } from "./components/Textarea";
 export { Textarea } from "./components/Textarea";
 
