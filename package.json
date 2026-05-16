@@ -147,7 +147,7 @@
     "watch:css": "tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --watch",
     "audit": "node scripts/audit-violations.mjs",
     "check:types": "tsc --noEmit",
-    "check:audits": "node scripts/audit-violations.mjs && node scripts/verify-entries.mjs && node scripts/verify-css-build.mjs && node scripts/audit-use-client.mjs && node scripts/audit-double-navigation.mjs && node scripts/audit-repository-fields.mjs && node scripts/audit-query-provider.mjs",
+    "check:audits": "node scripts/audit-violations.mjs && node scripts/verify-entries.mjs && node scripts/verify-css-build.mjs && node scripts/audit-use-client.mjs && node scripts/audit-double-navigation.mjs && node scripts/audit-repository-fields.mjs && node scripts/audit-query-provider.mjs && node scripts/audit-export-paths.mjs",
     "check": "npm run check:types && npm run check:audits"
   },
   "dependencies": {
