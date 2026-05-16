@@ -1,5 +1,7 @@
 "use client"
 import { ReactNode, useState, useMemo } from "react";
+
+const CLS_CHECKBOX = "rounded border-zinc-300";
 import { Button } from "./components/Button";
 import { Spinner } from "./components/Spinner";
 import { Pagination } from "./components/Pagination";
@@ -431,7 +433,7 @@ export function DataTable<T extends object>({
                     <th scope="col" className="px-4 py-3 w-8">
                       <input
                         type="checkbox"
-                        className="rounded border-zinc-300"
+                        className={CLS_CHECKBOX}
                         aria-label="Select all on page"
                         checked={
                           paginatedData.length > 0 &&
@@ -517,7 +519,7 @@ export function DataTable<T extends object>({
                       >
                         <input
                           type="checkbox"
-                          className="rounded border-zinc-300"
+                          className={CLS_CHECKBOX}
                           aria-label="Select row"
                           checked={selectedIds.includes(keyExtractor(item))}
                           onChange={(e) => handleRowSelectionChange(item, e.target.checked)}
@@ -687,7 +689,7 @@ function DataTableTableView<T extends object>({
                 <th scope="col" className="px-4 py-3 w-8">
                   <input
                     type="checkbox"
-                    className="rounded border-zinc-300"
+                    className={CLS_CHECKBOX}
                     aria-label="Select all on page"
                     checked={paginatedData.length > 0 && paginatedData.every((item) => selectedIds.includes(keyExtractor(item)))}
                     onChange={(e) => {
@@ -748,7 +750,7 @@ function DataTableTableView<T extends object>({
                   <td className="px-4 py-4 w-8" onClick={(e) => e.stopPropagation()}>
                     <input
                       type="checkbox"
-                      className="rounded border-zinc-300"
+                      className={CLS_CHECKBOX}
                       aria-label="Select row"
                       checked={selectedIds.includes(keyExtractor(item))}
                       onChange={(e) => onRowSelectionChange(item, e.target.checked)}

@@ -37,6 +37,8 @@ export interface AdminCopilotViewProps {
   className?: string;
 }
 
+const LBL_CONVERSATION_ID = "Conversation ID";
+
 function MessageBubble({ msg }: { msg: CopilotMessage }) {
   const isUser = msg.role === "user";
   return (
@@ -69,7 +71,7 @@ function renderCopilotChatPanel(props: {
     <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
       <Div className="border-b border-neutral-200 dark:border-slate-700 p-3">
         <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
-          {labels?.conversationId ?? "Conversation ID"}: {conversationId}
+          {labels?.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
         </Text>
       </Div>
       <Div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -112,7 +114,7 @@ function renderCopilotHistoryPanel(props: {
     <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 space-y-3">
       <Heading level={3} className="text-sm font-semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
-        <Input label={labels?.conversationId ?? "Conversation ID"} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
+        <Input label={labels?.conversationId ?? LBL_CONVERSATION_ID} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
         <Button type="submit" variant="secondary" size="sm" className="w-full">{labels?.loadConversation ?? "Load conversation"}</Button>
       </form>
       {historyQuery.error ? (
@@ -196,7 +198,7 @@ export function AdminCopilotView({
           <Div className="flex flex-col rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-800/60 h-[calc(100vh-300px)]">
             <Div className="border-b border-neutral-200 dark:border-slate-700 p-3">
               <Text className="text-xs font-medium text-neutral-500 dark:text-zinc-400">
-                {labels.conversationId ?? "Conversation ID"}: {conversationId}
+                {labels.conversationId ?? LBL_CONVERSATION_ID}: {conversationId}
               </Text>
             </Div>
 
@@ -262,7 +264,7 @@ export function AdminCopilotView({
               }}
             >
               <Input
-                label={labels.conversationId ?? "Conversation ID"}
+                label={labels.conversationId ?? LBL_CONVERSATION_ID}
                 value={conversationInput}
                 onChange={(event) => setConversationInput(event.target.value)}
                 placeholder="conv_..."

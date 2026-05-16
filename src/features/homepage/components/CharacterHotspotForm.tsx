@@ -28,6 +28,12 @@ function randomId() {
   return Math.random().toString(36).slice(2, 9);
 }
 
+const CLS_STEP = "space-y-4 rounded-lg border-2 p-6";
+const CLS_IMG_WRAP = "relative w-full overflow-hidden rounded-lg";
+const CLS_INPUT = "rounded border-2 px-3 py-2 text-sm outline-none";
+const STY_BORDER_INK = "2px solid var(--border-ink)";
+const STY_CENTERED = "translate(-50%, -50%)";
+
 export interface CharacterHotspotFormProps {
   initial?: CharacterHotspotConfig | null;
   /**
@@ -220,7 +226,7 @@ export function CharacterHotspotForm({
                   border:
                     i <= stepIndex
                       ? "2px solid var(--color-black)"
-                      : "2px solid var(--border-ink)",
+                      : {STY_BORDER_INK},
                 }}
               >
                 {i < stepIndex ? "✓" : i + 1}
@@ -250,7 +256,7 @@ export function CharacterHotspotForm({
       {/* -- Step 1: Upload Image -- */}
       {step === "image" && (
         <Div
-          className="space-y-4 rounded-lg border-2 p-6"
+          className={CLS_STEP}
           style={{
             borderColor: "var(--border-ink)",
             background: "var(--surface-elevated)",
@@ -287,7 +293,7 @@ export function CharacterHotspotForm({
           {imageUrl && (
             <Div className="space-y-1">
               <Div
-                className="relative w-full overflow-hidden rounded-lg"
+                className={CLS_IMG_WRAP}
                 style={{ paddingTop: "37.5%" }}
               >
                 <Image
@@ -311,7 +317,7 @@ export function CharacterHotspotForm({
               value={imageAlt}
               onChange={(e) => setImageAlt(e.target.value)}
               placeholder="DC, Marvel and Anime characters"
-              className="rounded border-2 px-3 py-2 text-sm outline-none"
+              className={CLS_INPUT}
               style={{
                 borderColor: "var(--border-ink)",
                 background: "var(--surface-elevated)",
@@ -370,7 +376,7 @@ export function CharacterHotspotForm({
       {/* -- Step 2: Place Pin -- */}
       {step === "place" && (
         <Div
-          className="space-y-4 rounded-lg border-2 p-6"
+          className={CLS_STEP}
           style={{
             borderColor: "var(--border-ink)",
             background: "var(--surface-elevated)",
@@ -386,7 +392,7 @@ export function CharacterHotspotForm({
 
           <Div
             ref={containerRef}
-            className="relative w-full overflow-hidden rounded-lg"
+            className={CLS_IMG_WRAP}
             style={{
               paddingTop: "56.25%",
               cursor: "crosshair",
@@ -409,7 +415,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${pin.xPct}%`,
                   top: `${pin.yPct}%`,
-                  transform: "translate(-50%, -50%)",
+                  transform: {STY_CENTERED},
                   zIndex: 10,
                 }}
               >
@@ -442,7 +448,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${draftPos.xPct}%`,
                   top: `${draftPos.yPct}%`,
-                  transform: "translate(-50%, -50%)",
+                  transform: {STY_CENTERED},
                   zIndex: 20,
                 }}
               >
@@ -521,7 +527,7 @@ export function CharacterHotspotForm({
                     const v = parseFloat(e.target.value);
                     if (!isNaN(v)) onChange(v);
                   }}
-                  className="rounded border-2 px-3 py-2 text-sm outline-none"
+                  className={CLS_INPUT}
                   style={{
                     borderColor: "var(--border-ink)",
                     background: "var(--surface-elevated)",
@@ -563,7 +569,7 @@ export function CharacterHotspotForm({
                   style={{
                     background: "var(--surface-warm)",
                     color: "var(--color-black)",
-                    border: "2px solid var(--border-ink)",
+                    border: {STY_BORDER_INK},
                   }}
                 >
                   Done Adding Pins
@@ -590,7 +596,7 @@ export function CharacterHotspotForm({
       {/* -- Step 3: Pin Details -- */}
       {step === "details" && (
         <Div
-          className="space-y-4 rounded-lg border-2 p-6"
+          className={CLS_STEP}
           style={{
             borderColor: "var(--border-ink)",
             background: "var(--surface-elevated)",
@@ -633,7 +639,7 @@ export function CharacterHotspotForm({
                     (onChange as (v: string) => void)(e.target.value)
                   }
                   placeholder={placeholder}
-                  className="rounded border-2 px-3 py-2 text-sm outline-none"
+                  className={CLS_INPUT}
                   style={{
                     borderColor: "var(--border-ink)",
                     background: "var(--surface-elevated)",
@@ -667,7 +673,7 @@ export function CharacterHotspotForm({
               value={draftHref}
               onChange={(e) => setDraftHref(e.target.value)}
               placeholder="/franchise/marvel"
-              className="rounded border-2 px-3 py-2 text-sm outline-none"
+              className={CLS_INPUT}
               style={{
                 borderColor: "var(--border-ink)",
                 background: "var(--surface-elevated)",
@@ -702,7 +708,7 @@ export function CharacterHotspotForm({
                     (onChange as (v: string) => void)(e.target.value)
                   }
                   placeholder={placeholder}
-                  className="rounded border-2 px-3 py-2 text-sm outline-none"
+                  className={CLS_INPUT}
                   style={{
                     borderColor: "var(--border-ink)",
                     background: "var(--surface-elevated)",
@@ -721,7 +727,7 @@ export function CharacterHotspotForm({
                 value={draftAccent}
                 onChange={(e) => setDraftAccent(e.target.value)}
                 placeholder="#E8001C"
-                className="rounded border-2 px-3 py-2 text-sm outline-none"
+                className={CLS_INPUT}
                 style={{
                   borderColor: "var(--border-ink)",
                   background: "var(--surface-elevated)",
@@ -766,7 +772,7 @@ export function CharacterHotspotForm({
                 style={{
                   background: "var(--surface-warm)",
                   color: "var(--color-black)",
-                  border: "2px solid var(--border-ink)",
+                  border: {STY_BORDER_INK},
                 }}
               >
                 Save Pin &amp; Finish
@@ -795,7 +801,7 @@ export function CharacterHotspotForm({
       {/* -- Step 4: Review & Save -- */}
       {step === "review" && (
         <Div
-          className="space-y-4 rounded-lg border-2 p-6"
+          className={CLS_STEP}
           style={{
             borderColor: "var(--border-ink)",
             background: "var(--surface-elevated)",
@@ -815,7 +821,7 @@ export function CharacterHotspotForm({
 
           {/* Preview image */}
           <Div
-            className="relative w-full overflow-hidden rounded-lg"
+            className={CLS_IMG_WRAP}
             style={{ paddingTop: "56.25%", background: "#111" }}
           >
             <Image
@@ -832,7 +838,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${pin.xPct}%`,
                   top: `${pin.yPct}%`,
-                  transform: "translate(-50%, -50%)",
+                  transform: {STY_CENTERED},
                   zIndex: 10,
                 }}
               >
@@ -947,7 +953,7 @@ export function CharacterHotspotForm({
                   type="text"
                   value={imageAlt}
                   onChange={(e) => setImageAlt(e.target.value)}
-                  className="rounded border-2 px-3 py-2 text-sm outline-none"
+                  className={CLS_INPUT}
                   style={{
                     borderColor: "var(--border-ink)",
                     background: "var(--surface-elevated)",
@@ -983,7 +989,7 @@ export function CharacterHotspotForm({
               style={{
                 background: "var(--surface-warm)",
                 color: "var(--color-black)",
-                border: "2px solid var(--border-ink)",
+                border: {STY_BORDER_INK},
               }}
             >
               + Add Another Pin
