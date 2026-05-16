@@ -10,6 +10,7 @@ import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -263,7 +264,7 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
                 e.stopPropagation();
                 void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)) });
               }}
-              aria-label="Edit"
+              aria-label={ACTIONS.SELLER["edit-listing"].ariaLabel}
             >
               <Pencil className="w-4 h-4" />
             </Button>

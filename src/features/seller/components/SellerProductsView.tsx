@@ -20,6 +20,7 @@ import {
 } from "../hooks/useSellerListingData";
 import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -390,7 +391,7 @@ export function SellerProductsView({
                         variant="ghost"
                         size="sm"
                         onClick={(e) => { e.stopPropagation(); handleEdit(row); }}
-                        aria-label="Edit"
+                        aria-label={ACTIONS.SELLER["edit-listing"].ariaLabel}
                       >
                         <Pencil className="w-4 h-4" />
                       </Button>
@@ -399,7 +400,7 @@ export function SellerProductsView({
                         size="sm"
                         onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
                         disabled={deletingId === row.id}
-                        aria-label="Delete"
+                        aria-label={ACTIONS.SELLER["delete-listing"].ariaLabel}
                         className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
                       >
                         <Trash2 className="w-4 h-4" />

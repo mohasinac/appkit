@@ -10,6 +10,7 @@ import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRE_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -264,7 +265,7 @@ export function SellerPreOrdersView({ children, ...props }: SellerPreOrdersViewP
                 e.stopPropagation();
                 void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)) });
               }}
-              aria-label="Edit"
+              aria-label={ACTIONS.SELLER["edit-listing"].ariaLabel}
             >
               <Pencil className="w-4 h-4" />
             </Button>
