@@ -306,6 +306,7 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
   const defaultRemotePatterns = [
     { protocol: "https", hostname: "firebasestorage.googleapis.com" },
     { protocol: "https", hostname: "*.firebasestorage.googleapis.com" },
+    { protocol: "https", hostname: "storage.googleapis.com" },
     { protocol: "http", hostname: "localhost" },
     { protocol: "http", hostname: "127.0.0.1" },
   ];

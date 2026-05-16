@@ -11,8 +11,8 @@ import type { BulkActionItem, ListingViewShellProps, SelectOption } from "../../
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
-import { PhysicalLocationModal } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
-import type { PhysicalLocation } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
+import { PhysicalLocationModal } from "./PhysicalLocationModal";
+import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
 import {
   toRecordArray,

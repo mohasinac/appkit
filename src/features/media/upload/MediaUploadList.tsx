@@ -44,7 +44,7 @@ export function MediaUploadList({
   value,
   onChange,
   onUpload,
-  accept = "image/*,video/*",
+  accept = "image/*,video/*,application/pdf",
   maxSizeMB = 50,
   maxItems = 12,
   disabled = false,
@@ -167,7 +167,7 @@ export function MediaUploadList({
               className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3"
             >
               {item.type === "video" ? (
-                <Div className="relative aspect-video overflow-hidden rounded-lg">
+                <Div className="relative aspect-square max-h-24 overflow-hidden rounded-lg">
                   <MediaVideo
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}
@@ -175,7 +175,7 @@ export function MediaUploadList({
                   />
                 </Div>
               ) : item.type === "image" ? (
-                <Div className="relative aspect-video overflow-hidden rounded-lg">
+                <Div className="relative aspect-square max-h-24 overflow-hidden rounded-lg">
                   <MediaImage
                     src={item.url}
                     alt={item.alt || `Media ${index + 1}`}
@@ -214,12 +214,12 @@ export function MediaUploadList({
       {!disabled && value.length < maxItems && (
         <Button
           type="button"
-          variant="ghost"
-          className="w-full py-3 border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl text-sm text-zinc-500 dark:text-zinc-400"
+          variant="outline"
+          size="sm"
           onClick={() => inputRef.current?.click()}
           disabled={isLoading}
         >
-          {isLoading ? "Uploading..." : "Add media"}
+          {isLoading ? "Uploading..." : `+ Add Files (${value.length}/${maxItems})`}
         </Button>
       )}
 

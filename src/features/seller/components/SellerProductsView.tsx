@@ -3,8 +3,8 @@
 import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { X, Pencil, Trash2, Printer, MapPin } from "lucide-react";
-import { PhysicalLocationModal } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
-import type { PhysicalLocation } from "../../../_internal/client/features/seller/print-center/PhysicalLocationModal";
+import { PhysicalLocationModal } from "./PhysicalLocationModal";
+import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";

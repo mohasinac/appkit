@@ -243,7 +243,7 @@ export function AvatarUpload({
               ref={fileInputRef}
               bare
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/*"
               onChange={handleFileSelect}
               className="hidden"
               aria-label={t.changePhoto}

@@ -387,7 +387,7 @@ export function ProductForm({
           value={galleryImages}
           onChange={(fields) => update({ images: fields.map((f) => f.url) })}
           onUpload={handleGalleryUpload}
-          accept="image/*"
+          accept="image/*,video/*"
           maxItems={5}
           maxSizeMB={10}
           helperText={t("formGalleryImagesHelper")}

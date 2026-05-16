@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormShell, StepForm, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle } from "../../../ui";
-import { ImageUpload, MediaUploadList, useMediaUpload } from "../../media";
+import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
 
@@ -28,6 +28,7 @@ export interface SellerProductDraft {
   // Media
   mainImage?: string;
   images?: string[];
+  video?: string;
   youtubeId?: string;
   // Pricing
   price?: number;
@@ -285,10 +286,24 @@ function StepMedia({
             category: values.category ?? "uncategorized",
           });
         }}
-        accept="image/*"
+        accept="image/*,video/*"
         maxItems={10}
         maxSizeMB={10}
         helperText="Show multiple angles, grading details, or box contents."
+      />
+      <MediaUploadField
+        label="Product Video (optional)"
+        value={values.video ?? ""}
+        onChange={(url) => onChange({ video: url })}
+        onUpload={(file) =>
+          upload(file, "products", true, {
+            type: "product-video",
+            name: values.title ?? "product",
+            store: storeSlug,
+          })
+        }
+        kind="video"
+        helperText="MP4, WebM or QuickTime — max 50 MB"
       />
       <FormField
         name="youtubeId"

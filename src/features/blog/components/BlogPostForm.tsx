@@ -114,8 +114,8 @@ function renderBlogPostMediaFields(props: {
   return (
     <>
       <MediaUploadField label={labels.coverImage} value={coverImageUrl || ""} onChange={(url) => update({ coverImage: url ? { url, type: "image" } : null })} onChangeField={(media) => update({ coverImage: media })} onUpload={onUploadCover} onAbort={onAbort} accept="image/*" maxSizeMB={10} disabled={isReadonly} helperText={labels.coverImageHelper} />
-      <MediaUploadList label={labels.contentImages} value={contentImages} onChange={(media) => update({ contentImages: media })} onUpload={onUploadContentImage} onAbort={onAbort} accept="image/*" maxItems={10} maxSizeMB={10} disabled={isReadonly} helperText={labels.contentImagesHelper} />
-      <MediaUploadList label={labels.additionalImages} value={additionalImages} onChange={(media) => update({ additionalImages: media })} onUpload={onUploadAdditionalImage} onAbort={onAbort} accept="image/*" maxItems={5} maxSizeMB={10} disabled={isReadonly} helperText={labels.additionalImagesHelper} />
+      <MediaUploadList label={labels.contentImages} value={contentImages} onChange={(media) => update({ contentImages: media })} onUpload={onUploadContentImage} onAbort={onAbort} accept="image/*,video/*" maxItems={10} maxSizeMB={10} disabled={isReadonly} helperText={labels.contentImagesHelper} />
+      <MediaUploadList label={labels.additionalImages} value={additionalImages} onChange={(media) => update({ additionalImages: media })} onUpload={onUploadAdditionalImage} onAbort={onAbort} accept="image/*,video/*" maxItems={5} maxSizeMB={10} disabled={isReadonly} helperText={labels.additionalImagesHelper} />
       {isReadonly && coverImageUrl && <Text size="xs" variant="secondary">{coverImageUrl}</Text>}
     </>
   );

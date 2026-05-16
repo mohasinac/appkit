@@ -294,7 +294,7 @@ export function PrizeDrawItemsEditor({
                     <Text className="text-sm font-medium">Video (optional)</Text>
                     <input
                       type="file"
-                      accept="video/mp4,video/webm"
+                      accept="video/*"
                       disabled={locked}
                       onChange={(e) => handleVideoFileChange(e, index, it.itemNumber)}
                     />

@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { Modal } from "../../../../../ui/components/Modal";
-import { Input } from "../../../../../ui/components/Input";
-import { Button } from "../../../../../ui/components/Button";
-import { Row } from "../../../../../ui/components/Layout";
-import { Text } from "../../../../../ui/components/Typography";
+import { Modal } from "../../../ui/components/Modal";
+import { Input } from "../../../ui/components/Input";
+import { Button } from "../../../ui/components/Button";
+import { Row } from "../../../ui/components/Layout";
+import { Text } from "../../../ui/components/Typography";
 
 export interface PhysicalLocation {
   zone: string;

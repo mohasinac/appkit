@@ -44,11 +44,21 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(2)}MB`;
 }
 
+function matchesMimeAccept(fileType: string, accept: string): boolean {
+  return accept.split(",").map((a) => a.trim()).some((pattern) => {
+    if (pattern === "*" || pattern === "*/*") return true;
+    const [pType, pSub] = pattern.split("/");
+    const [fType, fSub] = fileType.split("/");
+    if (pType !== fType) return false;
+    return pSub === "*" || pSub === fSub;
+  });
+}
+
 export function ImageUpload({
   currentImage,
   onUpload,
   onChange,
-  accept = "image/jpeg,image/png,image/gif,image/webp",
+  accept = "image/*",
   maxSizeMB = 10,
   label = "Upload Image",
   helperText,
@@ -155,8 +165,7 @@ export function ImageUpload({
       );
       return;
     }
-    const acceptedTypes = accept.split(",").map((t) => t.trim());
-    if (!acceptedTypes.includes(file.type)) {
+    if (!matchesMimeAccept(file.type, accept)) {
       setError(`Invalid file type. Accepted: ${accept}`);
       return;
     }
@@ -181,7 +190,7 @@ export function ImageUpload({
       <Div className="relative">
         {preview ? (
           <Div className="space-y-2">
-            <Div className="relative aspect-[16/9] overflow-hidden rounded-xl border-2 border-zinc-200 dark:border-zinc-700">
+            <Div className="relative h-32 max-w-xs mx-auto overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
               <MediaImage src={preview} alt="Preview" size="card" />
               {uploading && progress > 0 && (
                 <Div className="absolute inset-x-0 bottom-0">
@@ -226,27 +235,6 @@ export function ImageUpload({
           </Div>
         ) : (
           <>
-            {captureSource === "both" && isCameraSupported && (
-              <Row justify="center" className="gap-2 mb-3">
-                <Button
-                  type="button"
-                  variant={captureMode === "file" ? "primary" : "outline"}
-                  size="sm"
-                  onClick={() => setCaptureMode("file")}
-                >
-                  {t("switchToUpload")}
-                </Button>
-                <Button
-                  type="button"
-                  variant={captureMode === "camera" ? "primary" : "outline"}
-                  size="sm"
-                  onClick={() => setCaptureMode("camera")}
-                >
-                  {t("switchToCamera")}
-                </Button>
-              </Row>
-            )}
-
             {showCamera && isCameraSupported && (
               <CameraCapture
                 mode="photo"
@@ -256,53 +244,50 @@ export function ImageUpload({
               />
             )}
 
-            {showCamera && !isCameraSupported && (
-              <Button
-                type="button"
-                onClick={() => mobileCaptureRef.current?.click()}
-                disabled={uploading}
-                variant="ghost"
-                className="w-full aspect-[16/9] border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-center flex-col text-zinc-500 dark:text-zinc-400"
-              >
-                <Span className="text-sm font-medium">
-                  {t("switchToCamera")}
-                </Span>
-              </Button>
-            )}
-
-            {showFileInput && (
-              <Button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                variant="ghost"
-                className="w-full aspect-[16/9] border-2 border-dashed border-zinc-200 dark:border-zinc-700 rounded-xl flex items-center justify-center flex-col text-zinc-500 dark:text-zinc-400"
-              >
-                <svg
-                  className="w-12 h-12 mb-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <Span className="text-sm font-medium">
-                  {uploading ? tUpload("uploading") : tUpload("clickToUpload")}
-                </Span>
-                <Span className="text-xs mt-1">
-                  {accept
-                    .split(",")
-                    .map((t) => t.split("/")[1]?.toUpperCase() ?? t)
-                    .join(", ")}{" "}
-                  (max {maxSizeMB}MB)
-                </Span>
-              </Button>
+            {!showCamera && (
+              <Div className="space-y-2">
+                <Row gap="sm" className="flex-wrap">
+                  {showFileInput && (
+                    <Button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      variant="outline"
+                      size="sm"
+                    >
+                      {uploading ? tUpload("uploading") : tUpload("clickToUpload")}
+                    </Button>
+                  )}
+                  {captureSource !== "file-only" && isCameraSupported && (
+                    <Button
+                      type="button"
+                      onClick={() => setCaptureMode("camera")}
+                      disabled={uploading}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      {t("switchToCamera")}
+                    </Button>
+                  )}
+                  {captureSource !== "file-only" && !isCameraSupported && (
+                    <Button
+                      type="button"
+                      onClick={() => mobileCaptureRef.current?.click()}
+                      disabled={uploading}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      {t("switchToCamera")}
+                    </Button>
+                  )}
+                </Row>
+                <Text size="xs" variant="secondary">
+                  {accept === "image/*"
+                    ? `JPG PNG GIF WebP`
+                    : accept.split(",").map((a) => a.split("/")[1]?.toUpperCase() ?? a).join(" ")}{" "}
+                  — max {maxSizeMB}MB
+                </Text>
+              </Div>
             )}
           </>
         )}
