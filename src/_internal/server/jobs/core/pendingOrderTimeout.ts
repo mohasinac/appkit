@@ -1,4 +1,5 @@
-import { notificationRepository, orderRepository } from "../../../../repositories";
+import { orderRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { ORDER_MESSAGES } from "../handlers/messages";
 import type { JobContext } from "../runtime/types";
 
@@ -17,17 +18,22 @@ export async function runPendingOrderTimeout(ctx: JobContext): Promise<void> {
   const batch = ctx.db.batch();
   for (const entry of timedOut) {
     orderRepository.cancelInBatch(batch, entry.ref);
-    notificationRepository.createInBatch(batch, {
-      userId: entry.data.userId,
-      type: "order_cancelled",
-      priority: "normal",
-      title: ORDER_MESSAGES.CANCELLED_TITLE,
-      message: ORDER_MESSAGES.CANCELLED_TIMEOUT_MESSAGE(entry.data.productTitle, timeoutHours),
-      relatedId: entry.data.id,
-      relatedType: "order",
-    });
   }
   await batch.commit();
+
+  await Promise.allSettled(
+    timedOut.map((entry) =>
+      sendNotification({
+        userId: entry.data.userId,
+        type: "order_cancelled",
+        priority: "normal",
+        title: ORDER_MESSAGES.CANCELLED_TITLE,
+        message: ORDER_MESSAGES.CANCELLED_TIMEOUT_MESSAGE(entry.data.productTitle, timeoutHours),
+        relatedId: entry.data.id,
+        relatedType: "order",
+      }),
+    ),
+  );
 
   ctx.logger.info("Pending order timeout complete", { cancelled: timedOut.length });
 }

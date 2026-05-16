@@ -1,4 +1,5 @@
-import { offerRepository, notificationRepository } from "../../../../repositories";
+import { offerRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
 export async function runOfferExpiry(ctx: JobContext): Promise<void> {
@@ -23,7 +24,7 @@ export async function runOfferExpiry(ctx: JobContext): Promise<void> {
   for (const offer of expiredOffers) {
     try {
       expiredIds.push(offer.id);
-      await notificationRepository.create({
+      await sendNotification({
         userId: offer.buyerUid,
         type: "offer_expired",
         priority: "normal",

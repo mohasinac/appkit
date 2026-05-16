@@ -228,6 +228,17 @@ export const notificationsSeedData: Partial<NotificationDocument>[] = [
     { user: "user-anjali-verma", type: "WELCOME", title: "Welcome, Anjali!", message: "Use NEWUSER5 for ₹50 off your first order.", read: false, hours: 4 },
     { user: "user-pooja-sharma", type: "PROMOTION", title: "Wishlist sale — items in your wishlist are 15% off", message: "3 items in your wishlist are now on sale. Tap to view.", read: false, hours: 9 },
   ]),
+
+  // ── Admin role — system + operational notifications ─────────────────────
+  ...buildNotificationBatch([
+    { user: "user-admin-letitrip", type: "SYSTEM",     title: "New seller registration: Gunpla Hub India",       message: "Arjun Mehta has applied to open store Gunpla Hub India. Review their profile and approve or reject via the admin panel.", read: false, hours: 2 },
+    { user: "user-admin-letitrip", type: "SYSTEM",     title: "Flagged listing: possible counterfeit Funko Pop",  message: "Listing product-funko-pop-gojo-satoru was reported by 3 users for suspected counterfeit. Please review before the next buy cycle.", read: false, hours: 6 },
+    { user: "user-admin-letitrip", type: "SYSTEM",     title: "Payout batch #12 processed — 6 stores, Rs 1.24L", message: "Payout batch for May Week 2 completed. 6 stores paid, 1 failed (IFSC mismatch — store-vintage-vault). Manual retry required.", read: true, hours: 24 },
+    { user: "user-admin-letitrip", type: "SYSTEM",     title: "Support ticket escalated: order missing (high)",   message: "Ticket ticket-rahul-order-001 was escalated from Simran Kaur. Buyer Rahul Sharma claims delivery was empty — courier claim filed. Needs admin review.", read: true, hours: 48 },
+    { user: "user-admin-letitrip", type: "SYSTEM",     title: "Platform summary: week of May 12",                 message: "Week of May 12: 47 new orders (Rs 3.8L GMV), 12 new users, 2 new seller registrations, 0 chargebacks, 99.8% uptime. Full report in admin dashboard.", read: true, hours: 96 },
+    { user: "user-admin-letitrip", type: "REVIEW_APPROVED", title: "New 5-star review on LetItRip Official",     message: "Naman Gupta left a 5-star review on figma Link (TotK): Best figma I own. Perfect packaging, zero damage.", read: true, hours: 36 },
+    { user: "user-admin-letitrip", type: "ORDER_SHIPPED",  title: "Your Mew PSA 10 order has shipped",            message: "Vintage Vault has dispatched your Mew 1st Edition PSA 10. Tracking: DTDC112233445. Estimated delivery in 3 business days.", read: true, hours: 240 },
+  ]),
 ];
 
 interface NotifSpec {

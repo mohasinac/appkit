@@ -19,11 +19,15 @@ export type NotificationType =
   | "promotion"
   | "system"
   | "welcome"
+  | "account_action"
   | "offer_received"
   | "offer_responded"
   | "offer_expired"
   | "offer_counter_accepted"
-  | "refund_initiated";
+  | "refund_initiated"
+  | "prize_reveal_ready"
+  | "prize_reveal_expired"
+  | "prize_reveal_reminder";
 
 export type NotificationPriority = "low" | "normal" | "high";
 
@@ -47,7 +51,8 @@ export interface NotificationDocument {
     | "review"
     | "blog"
     | "user"
-    | "offer";
+    | "offer"
+    | "support_ticket";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -98,6 +103,10 @@ export const NOTIFICATION_FIELDS = {
     OFFER_EXPIRED: "offer_expired" as NotificationType,
     OFFER_COUNTER_ACCEPTED: "offer_counter_accepted" as NotificationType,
     REFUND_INITIATED: "refund_initiated" as NotificationType,
+    ACCOUNT_ACTION: "account_action" as NotificationType,
+    PRIZE_REVEAL_READY: "prize_reveal_ready" as NotificationType,
+    PRIZE_REVEAL_EXPIRED: "prize_reveal_expired" as NotificationType,
+    PRIZE_REVEAL_REMINDER: "prize_reveal_reminder" as NotificationType,
   },
   PRIORITY_VALUES: {
     LOW: "low" as NotificationPriority,

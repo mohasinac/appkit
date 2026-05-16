@@ -1,4 +1,4 @@
-import { notificationRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { ORDER_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
@@ -45,7 +45,7 @@ export async function runPrizeRevealExpiry(ctx: JobContext): Promise<void> {
 
     if (order.userId) {
       try {
-        await notificationRepository.create({
+        await sendNotification({
           userId: order.userId,
           type: "prize_reveal_expired",
           priority: "high",

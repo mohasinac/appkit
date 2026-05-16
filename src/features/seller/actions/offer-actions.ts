@@ -9,7 +9,7 @@ import { serverLogger } from "../../../monitoring";
 import { offerRepository } from "../repository/offer.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { ProductStatusValues } from "../../products/schemas";
-import { notificationRepository } from "../../admin/repository/notification.repository";
+import { sendNotification } from "../../admin/actions/notification-actions";
 import { userRepository } from "../../auth/repository/user.repository";
 import { storeRepository } from "../../stores/repository/store.repository";
 import { cartRepository } from "../../cart/repository/cart.repository";
@@ -108,7 +108,7 @@ export async function makeOffer(
 
   const sellerStore = product.storeId ? await storeRepository.findById(product.storeId) : null;
   if (sellerStore?.ownerId) {
-    await notificationRepository.create({
+    await sendNotification({
       userId: sellerStore.ownerId,
       type: "offer_received",
       priority: "normal",
@@ -177,7 +177,7 @@ export async function respondToOffer(
         ? `Your offer on "${offer.productTitle}" was declined.`
         : `${offer.storeName} countered with ₹${counterAmount} on "${offer.productTitle}".`;
 
-  await notificationRepository.create({
+  await sendNotification({
     userId: offer.buyerUid,
     type: "offer_responded",
     priority: action === "accept" ? "high" : "normal",
@@ -218,7 +218,7 @@ export async function acceptCounterOffer(
   const updated = await offerRepository.acceptCounter(offerId);
 
   const counterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
-  if (counterStore?.ownerId) await notificationRepository.create({
+  if (counterStore?.ownerId) await sendNotification({
     userId: counterStore.ownerId,
     type: "offer_counter_accepted",
     priority: "high",
@@ -294,7 +294,7 @@ export async function counterOfferByBuyer(
   });
 
   const buyerCounterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
-  if (buyerCounterStore?.ownerId) await notificationRepository.create({
+  if (buyerCounterStore?.ownerId) await sendNotification({
     userId: buyerCounterStore.ownerId,
     type: "offer_received",
     priority: "normal",

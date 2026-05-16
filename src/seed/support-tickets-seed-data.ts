@@ -233,4 +233,63 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     createdAt: daysBack(1),
     updatedAt: daysBack(1),
   },
+
+  // ── 7. Resolved — escalated fraud report (admin handled) ──────────────────
+  {
+    id: "ticket-meera-fraud-002",
+    userId: "user-meera-nair",
+    userEmail: "meera.nair@example.com",
+    userDisplayName: "Meera Nair",
+    category: "scam_report",
+    subject: "Seller sent empty box and is now unreachable",
+    description:
+      "I paid Rs 8,499 for a S.H.Figuarts Broly via Razorpay. The seller (store-beyblade-arena) has not responded in 7 days and the tracking shows the box was 200g — way too light for the figure.",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
+    assignedTo: "user-admin-letitrip",
+    assignedToName: "LetItRip Admin",
+    messages: [
+      msg("msg-meera-002-u1", "user-meera-nair", "user",
+        "I have the weight receipt from Delhivery. 200g is impossible for this figure. The seller is not replying on messages or phone.",
+        10),
+      msg("msg-meera-002-s1", "user-simran-kaur", "support",
+        "Hi Meera, I have escalated this to our admin team for review as it qualifies as a potential fraud case. You will hear back within 24 hours.",
+        9),
+      msg("msg-meera-002-a1", "user-admin-letitrip", "support",
+        "Hi Meera, this is the LetItRip admin. I have reviewed the shipment weight log and the seller communication history. We are initiating a full refund of Rs 8,499 under our buyer protection policy. The seller account has been suspended pending investigation.",
+        8),
+      msg("msg-meera-002-u2", "user-meera-nair", "user",
+        "Thank you so much. I really appreciate the quick escalation.",
+        7),
+    ],
+    resolvedAt: daysBack(7),
+    createdAt: daysBack(10),
+    updatedAt: daysBack(7),
+  },
+
+  // ── 8. In-progress — seller account ban appeal (admin handling) ────────────
+  {
+    id: "ticket-rohit-ban-appeal-001",
+    userId: "user-rohit-joshi",
+    userEmail: "rohit.joshi@example.com",
+    userDisplayName: "Rohit Joshi",
+    category: "account",
+    subject: "My store was suspended — I believe it was a mistake",
+    description:
+      "My store Beyblade Arena was suspended 2 days ago. I received no email explanation. I have 100% positive reviews and have never violated any policy. Please review.",
+    status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
+    priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
+    assignedTo: "user-admin-letitrip",
+    assignedToName: "LetItRip Admin",
+    messages: [
+      msg("msg-rohit-001-u1", "user-rohit-joshi", "user",
+        "I run a legitimate business. I have 47 verified reviews and never had a single complaint. Please explain the suspension.",
+        2),
+      msg("msg-rohit-001-a1", "user-admin-letitrip", "support",
+        "Hi Rohit, your store was suspended as part of an automatic fraud flag triggered by a buyer report. I am manually reviewing your transaction history and the specific report. Please share your business GST number and a copy of your most recent bank statement showing the Razorpay settlements for verification.",
+        1),
+    ],
+    createdAt: daysBack(2),
+    updatedAt: daysBack(1),
+  },
 ];

@@ -1,4 +1,4 @@
-import { notificationRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 import { PRODUCT_FIELDS, ORDER_FIELDS, COMMON_FIELDS } from "../../../../constants/field-names";
 
@@ -53,7 +53,7 @@ export async function runPrizeRevealOpen(ctx: JobContext): Promise<void> {
       };
       if (!order.userId || order.prizeWon) continue;
       try {
-        await notificationRepository.create({
+        await sendNotification({
           userId: order.userId,
           type: "prize_reveal_ready",
           priority: "high",

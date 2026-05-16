@@ -1,4 +1,4 @@
-import { notificationRepository, supportRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
 export interface HandleSupportTicketCreateInput {
@@ -22,18 +22,16 @@ export async function handleSupportTicketCreate(
     return;
   }
 
-  // Confirm to the user their ticket was received
   try {
-    await notificationRepository.create({
+    await sendNotification({
       userId,
       type: "account_action",
+      priority: "normal",
       title: "Support ticket received",
-      body: `We received your support request: "${ticket.subject ?? "your ticket"}". We'll get back to you soon.`,
-      isRead: false,
-      entityId: ticketId,
-      entityType: "support_ticket",
-      createdAt: new Date(),
-    } as any);
+      message: `We received your support request: "${ticket.subject ?? "your ticket"}". We'll get back to you soon.`,
+      relatedId: ticketId,
+      relatedType: "support_ticket",
+    });
   } catch (err) {
     ctx.logger.error("Failed to send ticket confirmation notification (non-fatal)", err, { ticketId, userId });
   }

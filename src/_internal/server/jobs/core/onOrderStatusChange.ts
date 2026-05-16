@@ -1,8 +1,8 @@
-import { notificationRepository } from "../../../../repositories";
-import { decryptPii } from "../../../../security/index";
 import { getAdminRealtimeDb } from "../../../../providers/db-firebase";
+import { decryptPii } from "../../../../security/index";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
-import { ORDER_MESSAGES, EMAIL_SUBJECTS, JOB_ERROR_MESSAGES } from "../handlers/messages";
+import { ORDER_MESSAGES } from "../handlers/messages";
 
 type OrderStatus =
   | "pending"
@@ -24,7 +24,6 @@ interface StatusConfig {
   title: string;
   message: (order: { productTitle: string; trackingNumber?: string }) => string;
   priority: "low" | "normal" | "high";
-  sendEmail: boolean;
 }
 
 const STATUS_CONFIG: Partial<Record<OrderStatus, StatusConfig>> = {
@@ -33,71 +32,26 @@ const STATUS_CONFIG: Partial<Record<OrderStatus, StatusConfig>> = {
     title: ORDER_MESSAGES.CONFIRMED_TITLE,
     message: (o) => ORDER_MESSAGES.CONFIRMED_MESSAGE(o.productTitle),
     priority: "normal",
-    sendEmail: true,
   },
   shipped: {
     type: "order_shipped",
     title: ORDER_MESSAGES.SHIPPED_TITLE,
     message: (o) => ORDER_MESSAGES.SHIPPED_MESSAGE(o.productTitle, o.trackingNumber),
     priority: "high",
-    sendEmail: true,
   },
   delivered: {
     type: "order_delivered",
     title: ORDER_MESSAGES.DELIVERED_TITLE,
     message: (o) => ORDER_MESSAGES.DELIVERED_MESSAGE(o.productTitle),
     priority: "normal",
-    sendEmail: true,
   },
   cancelled: {
     type: "order_cancelled",
     title: ORDER_MESSAGES.CANCELLED_TITLE,
     message: (o) => `Your order for "${o.productTitle}" has been cancelled.`,
     priority: "normal",
-    sendEmail: false,
   },
 };
-
-async function sendResendEmail(params: {
-  to: string;
-  status: OrderStatus;
-  orderId: string;
-  productTitle: string;
-  trackingNumber?: string;
-  apiKey: string;
-  fromAddress: string;
-  brandName: string;
-}): Promise<void> {
-  const subject =
-    params.status === "confirmed"
-      ? EMAIL_SUBJECTS.ORDER_CONFIRMED(params.productTitle)
-      : params.status === "shipped"
-        ? EMAIL_SUBJECTS.ORDER_SHIPPED(params.productTitle)
-        : params.status === "delivered"
-          ? EMAIL_SUBJECTS.ORDER_DELIVERED(params.productTitle)
-          : EMAIL_SUBJECTS.ORDER_UPDATE_FALLBACK(params.productTitle);
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${params.apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: params.fromAddress,
-      to: [params.to],
-      subject,
-      html: `<p>Hi,</p><p>Your order for <strong>${params.productTitle}</strong> is now <strong>${params.status}</strong>.</p>${
-        params.trackingNumber ? `<p>Tracking number: ${params.trackingNumber}</p>` : ""
-      }<p>Thanks,<br/>${params.brandName} Team</p>`,
-    }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(JOB_ERROR_MESSAGES.RESEND_API_ERROR(response.status, body));
-  }
-}
 
 export type OrderAfter = {
   status: OrderStatus;
@@ -112,41 +66,6 @@ export interface HandleOrderStatusChangeInput {
   orderId: string;
   before: OrderBefore | null;
   after: OrderAfter | null;
-}
-
-async function sendStatusChangeEmail(
-  ctx: JobContext,
-  userEmail: string,
-  newStatus: OrderStatus,
-  orderId: string,
-  after: OrderAfter,
-  apiKey: string,
-): Promise<void> {
-  try {
-    const fromAddress =
-      ctx.env("ORDER_EMAIL_FROM") ?? ctx.env("RESEND_FROM_ADDRESS") ?? "";
-    const brandName = ctx.env("APPKIT_BRAND_NAME") ?? "";
-    if (!fromAddress || !brandName) {
-      ctx.logger.error(
-        "ORDER_EMAIL_FROM / APPKIT_BRAND_NAME not configured — skipping order status email",
-        null,
-        { orderId },
-      );
-    } else {
-      await sendResendEmail({
-        to: userEmail,
-        status: newStatus,
-        orderId,
-        productTitle: after.productTitle,
-        trackingNumber: after.trackingNumber,
-        apiKey,
-        fromAddress,
-        brandName,
-      });
-    }
-  } catch (emailError) {
-    ctx.logger.error("Email send failed (non-fatal)", emailError, { orderId });
-  }
 }
 
 export async function handleOrderStatusChange(
@@ -173,7 +92,7 @@ export async function handleOrderStatusChange(
       trackingNumber: after.trackingNumber,
     });
 
-    await notificationRepository.create({
+    await sendNotification({
       userId: after.userId,
       type: config.type,
       priority: config.priority,
@@ -181,6 +100,7 @@ export async function handleOrderStatusChange(
       message: messageText,
       relatedId: orderId,
       relatedType: "order",
+      userEmail,
     });
 
     try {
@@ -195,19 +115,7 @@ export async function handleOrderStatusChange(
       ctx.logger.error("Realtime DB push failed (non-fatal)", rtdbError);
     }
 
-    if (config.sendEmail) {
-      const apiKey = ctx.env("RESEND_API_KEY") ?? "";
-      if (!apiKey) {
-        ctx.logger.error(JOB_ERROR_MESSAGES.RESEND_KEY_MISSING, null);
-      } else {
-        await sendStatusChangeEmail(ctx, userEmail, newStatus, orderId, after, apiKey);
-      }
-    }
-
-    ctx.logger.info(`Order ${orderId} status → ${newStatus}`, {
-      userId: after.userId,
-      emailSent: config.sendEmail,
-    });
+    ctx.logger.info(`Order ${orderId} status → ${newStatus}`, { userId: after.userId });
   } catch (error) {
     ctx.logger.error("Error handling order status change", error, { orderId });
     throw error;

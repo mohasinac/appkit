@@ -150,6 +150,7 @@ export { makeHomepageSection } from "./seed/index";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeNotification - Shared export for make notification.
 export { makeNotification } from "./seed/index";
+export { sendNotification } from "./features/admin/actions/notification-actions";
 // [SERVER-ONLY]-Server-only — uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // makeOrder - Shared export for make order.
 export { makeOrder } from "./seed/index";

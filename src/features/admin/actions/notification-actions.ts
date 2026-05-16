@@ -4,6 +4,7 @@ import { userRepository } from "../../auth/repository/user.repository";
 import { createResendProvider } from "../../../providers/email-resend/provider";
 import { sendWhatsAppBusinessMessage } from "../../whatsapp-bot/helpers/whatsapp";
 import { serverLogger } from "../../../monitoring";
+import { decryptPii } from "../../../security/index";
 import type { NotificationDocument, NotificationCreateInput } from "../schemas";
 import type { NotificationTypePrefs } from "../../account/types";
 import {
@@ -91,13 +92,22 @@ export async function sendNotification(
   // Load user notification preferences (best-effort — if missing, all channels allowed).
   let userChannelPrefs: { email?: boolean; whatsapp?: boolean; sms?: boolean } = {};
   let userTypePrefs: NotificationTypePrefs = {};
+  let fetchedUserDoc: Awaited<ReturnType<typeof userRepository.findById>> | undefined;
   try {
-    const userDoc = await userRepository.findById(input.userId);
-    userChannelPrefs = userDoc?.notificationPreferences?.channels ?? {};
-    userTypePrefs = userDoc?.notificationPreferences?.types ?? {};
+    fetchedUserDoc = await userRepository.findById(input.userId);
+    userChannelPrefs = fetchedUserDoc?.notificationPreferences?.channels ?? {};
+    userTypePrefs = fetchedUserDoc?.notificationPreferences?.types ?? {};
   } catch {
     // non-fatal: fall through with empty prefs (all enabled)
   }
+
+  // If caller didn't supply userEmail, try to decrypt it from the already-fetched user doc.
+  const resolvedEmail =
+    userEmail ??
+    (fetchedUserDoc?.email ? (decryptPii(fetchedUserDoc.email) as string | undefined) : undefined);
+  const resolvedPhone =
+    userPhone ??
+    (fetchedUserDoc?.phoneNumber ? (decryptPii(fetchedUserDoc.phoneNumber) as string | undefined) : undefined);
 
   // Map NotificationType to a NotificationTypePrefs key.
   const typeToPrefsKey: Partial<Record<string, keyof NotificationTypePrefs>> = {
@@ -107,11 +117,14 @@ export async function sendNotification(
     bid_placed: "bids", bid_outbid: "bids", bid_won: "bids", bid_lost: "bids",
     review_approved: "reviews", review_replied: "reviews",
     promotion: "promotions",
-    system: "system", welcome: "system",
+    system: "system", welcome: "system", account_action: "system",
     offer_received: "offers", offer_responded: "offers",
     offer_expired: "offers", offer_counter_accepted: "offers",
     refund_initiated: "orderUpdates",
     product_available: "system",
+    prize_reveal_ready: "orderUpdates",
+    prize_reveal_expired: "orderUpdates",
+    prize_reveal_reminder: "orderUpdates",
   };
   const typeKey = typeToPrefsKey[type];
   // If the user has explicitly disabled this notification type, skip all external channels.
@@ -124,7 +137,7 @@ export async function sendNotification(
   if (
     channels.email.enabled &&
     userChannelPrefs.email !== false &&
-    userEmail &&
+    resolvedEmail &&
     meetsMinPriority(priority, channels.email.minPriority) &&
     (!channels.email.types?.length || channels.email.types.includes(type))
   ) {
@@ -135,7 +148,7 @@ export async function sendNotification(
       try {
         const emailProvider = createResendProvider({ apiKey, fromEmail, fromName });
         await emailProvider.send({
-          to: userEmail,
+          to: resolvedEmail,
           subject: title,
           html: emailHtml ?? `<p>${message}</p>`,
           text: message,
@@ -153,7 +166,7 @@ export async function sendNotification(
   if (
     channels.whatsapp.enabled &&
     userChannelPrefs.whatsapp !== false &&
-    userPhone &&
+    resolvedPhone &&
     meetsMinPriority(priority, channels.whatsapp.minPriority) &&
     (!channels.whatsapp.types?.length || channels.whatsapp.types.includes(type))
   ) {
@@ -162,7 +175,7 @@ export async function sendNotification(
     if (phoneNumberId && accessToken) {
       try {
         const ok = await sendWhatsAppBusinessMessage({
-          toPhone: userPhone,
+          toPhone: resolvedPhone,
           message: `*${title}*\n${message}`,
           phoneNumberId,
           accessToken,

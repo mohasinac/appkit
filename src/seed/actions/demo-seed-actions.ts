@@ -38,7 +38,8 @@ export type SeedCollectionName =
   | "groupedListings"
   | "scammerProfiles"
   | "supportTickets"
-  | "productFeatures";
+  | "productFeatures"
+  | "offers";
 
 export interface SeedOperationResult {
   success?: boolean;

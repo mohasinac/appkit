@@ -41,6 +41,7 @@ import { groupedListingsSeedData } from "./grouped-listings-seed-data";
 import { scammersSeedData } from "./scammers-seed-data";
 import { supportTicketsSeedData } from "./support-tickets-seed-data";
 import { productFeaturesSeedData } from "./product-features-seed-data";
+import { offersSeedData } from "./offers-seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -223,6 +224,12 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(productFeaturesSeedData).map((f) => ({
       ...f,
       name: f.label ?? f.id,
+    })),
+  ),
+  offers: pick(
+    asArr(offersSeedData).map((o) => ({
+      ...o,
+      name: o.productTitle ?? o.id,
     })),
   ),
 };

@@ -1,9 +1,9 @@
 import {
   bidRepository,
-  notificationRepository,
   orderRepository,
   productRepository,
 } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import { AUCTION_MESSAGES } from "../handlers/messages";
@@ -40,7 +40,10 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
   });
 
   productRepository.updateStatusInBatch(batch, product.id, ProductStatusValues.SOLD);
-  notificationRepository.createInBatch(batch, {
+  await batch.commit();
+
+  // Fan-out notifications after batch commits.
+  await sendNotification({
     userId: winnerEntry.data.userId,
     type: "bid_won",
     priority: "high",
@@ -54,19 +57,19 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
     relatedType: "product",
   });
 
-  loserEntries.slice(0, 50).forEach(({ data: bid }) => {
-    notificationRepository.createInBatch(batch, {
-      userId: bid.userId,
-      type: "bid_lost",
-      priority: "normal",
-      title: AUCTION_MESSAGES.LOST_TITLE,
-      message: AUCTION_MESSAGES.LOST_MESSAGE(product.title),
-      relatedId: product.id,
-      relatedType: "product",
-    });
-  });
-
-  await batch.commit();
+  await Promise.allSettled(
+    loserEntries.slice(0, 50).map(({ data: bid }) =>
+      sendNotification({
+        userId: bid.userId,
+        type: "bid_lost",
+        priority: "normal",
+        title: AUCTION_MESSAGES.LOST_TITLE,
+        message: AUCTION_MESSAGES.LOST_MESSAGE(product.title),
+        relatedId: product.id,
+        relatedType: "product",
+      }),
+    ),
+  );
 
   ctx.logger.info(`Settled auction ${product.id}`, {
     winner: winnerEntry.data.userId,

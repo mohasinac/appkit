@@ -186,6 +186,7 @@ export { groupedListingsSeedData } from "./grouped-listings-seed-data";
 export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
+export { offersSeedData } from "./offers-seed-data";
 
 // Seed manifest — lightweight index for SeedPanel previews
 export type { SeedManifest, SeedManifestEntry } from "./manifest";

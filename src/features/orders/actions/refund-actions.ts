@@ -15,7 +15,7 @@ import { serverLogger } from "../../../monitoring";
 import { orderRepository } from "../../orders/repository/orders.repository";
 import { RefundStatusValues } from "../../orders/schemas";
 import { siteSettingsRepository } from "../../admin/repository/site-settings.repository";
-import { notificationRepository } from "../../admin/repository/notification.repository";
+import { sendNotification } from "../../admin/actions/notification-actions";
 
 const DEFAULT_PLATFORM_FEE_PERCENT = 5;
 const DEFAULT_GST_PERCENT = 18;
@@ -62,7 +62,7 @@ export async function issuePartialRefund(
     updatedAt: new Date(),
   });
 
-  await notificationRepository.create({
+  await sendNotification({
     userId: order.userId,
     type: "refund_initiated",
     priority: "high",

@@ -1,4 +1,4 @@
-import { notificationRepository } from "../../../../repositories";
+import { sendNotification } from "../../../../features/admin/actions/notification-actions";
 import type { JobContext } from "../runtime/types";
 
 export interface HandleSupportTicketUpdateInput {
@@ -46,16 +46,15 @@ export async function handleSupportTicketUpdate(
   if (!msg) return;
 
   try {
-    await notificationRepository.create({
+    await sendNotification({
       userId,
       type: "account_action",
+      priority: "normal",
       title: msg.title,
-      body: msg.body(subject),
-      isRead: false,
-      entityId: ticketId,
-      entityType: "support_ticket",
-      createdAt: new Date(),
-    } as any);
+      message: msg.body(subject),
+      relatedId: ticketId,
+      relatedType: "support_ticket",
+    });
   } catch (err) {
     ctx.logger.error("Failed to notify user of ticket status change (non-fatal)", err, { ticketId, userId, nextStatus });
   }

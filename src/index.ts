@@ -1630,6 +1630,7 @@ export {
 } from "./features/support/schemas/firestore";
 // Support tickets â€" seed data
 export { supportTicketsSeedData } from "./seed/index";
+export { offersSeedData } from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer â€" uses firebase-admin; server-only.
