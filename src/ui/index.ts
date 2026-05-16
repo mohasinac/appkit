@@ -1,4 +1,19 @@
 import "./components/index.style.css";
+import "./forms/FormShell.style.css";
+
+// --- FormShell (SB-UNI-Y-1) --------------------------------------------------
+export type {
+  FormShellProps,
+  FormShellStep,
+  FormShellContextValue,
+} from "./forms";
+export { FormShell, useFormShell } from "./forms";
+export type { FieldInputProps } from "./forms";
+export { FieldInput } from "./forms";
+export type { FieldSelectProps } from "./forms";
+export { FieldSelect } from "./forms";
+export type { FieldCheckboxProps } from "./forms";
+export { FieldCheckbox } from "./forms";
 
 // --- Column utilities ---------------------------------------------------------
 export {

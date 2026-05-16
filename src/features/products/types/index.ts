@@ -178,6 +178,13 @@ export interface ProductItem {
   // Custom fields & sections (L1–L3)
   customFields?: CustomField[];
   customSections?: CustomSection[];
+
+  /** Physical storage location set in the Print & Label Center. */
+  physicalLocation?: {
+    zone: string;
+    shelf: string;
+    bin: string;
+  };
 }
 
 export interface ProductListResponse {

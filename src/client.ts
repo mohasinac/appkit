@@ -155,6 +155,15 @@ export { OtpInput } from "./ui/components/OtpInput";
 export type { OtpInputProps } from "./ui/components/OtpInput";
 export { DateInput, DateRangeInput } from "./ui/components/DateInput";
 export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateInput";
+// FormShell + context-aware fields (SB-UNI-Y-1)
+export type { FormShellProps, FormShellStep, FormShellContextValue } from "./ui/forms";
+export { FormShell, useFormShell } from "./ui/forms";
+export type { FieldInputProps } from "./ui/forms";
+export { FieldInput } from "./ui/forms";
+export type { FieldSelectProps } from "./ui/forms";
+export { FieldSelect } from "./ui/forms";
+export type { FieldCheckboxProps } from "./ui/forms";
+export { FieldCheckbox } from "./ui/forms";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
 export { Heading } from "./ui/components/Typography";
@@ -519,3 +528,4 @@ export { DigitalCodeDetailView } from "./_internal/client/features/digital-code/
 export type { DigitalCodeDetailViewProps } from "./_internal/client/features/digital-code/DigitalCodeDetailView";
 export { LiveItemDetailView } from "./_internal/client/features/live/LiveItemDetailView";
 export type { LiveItemDetailViewProps } from "./_internal/client/features/live/LiveItemDetailView";
+

@@ -219,6 +219,13 @@ export interface OrderDocument {
   shippingProofUploadedAt?: Date;
   shippingProofUploadedBy?: string;
 
+  /** Physical staging location for fulfilment management (Print & Label Center). */
+  physicalLocation?: {
+    zone: string;
+    shelf: string;
+    bin: string;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }

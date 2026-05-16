@@ -1,0 +1,287 @@
+/* ─── FormShell ─────────────────────────────────────────────────────────────── */
+
+.appkit-formshell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-spacing-6, 1.5rem);
+}
+
+/* Header */
+.appkit-formshell__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-spacing-4, 1rem);
+}
+
+.appkit-formshell__title {
+  font-size: var(--appkit-font-size-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--appkit-color-text-primary);
+}
+
+/* ─── Step Indicator ──────────────────────────────────────────────────────── */
+
+.appkit-formshell__step-indicator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--appkit-spacing-1, 0.25rem);
+  border-bottom: 1px solid var(--appkit-color-border);
+  padding-bottom: var(--appkit-spacing-3, 0.75rem);
+}
+
+.appkit-formshell__step-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--appkit-spacing-2, 0.5rem);
+  padding: var(--appkit-spacing-1-5, 0.375rem) var(--appkit-spacing-3, 0.75rem);
+  border-radius: var(--appkit-radius-md, 0.375rem);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--appkit-color-text-secondary);
+  cursor: pointer;
+  font-size: var(--appkit-font-size-sm, 0.875rem);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.appkit-formshell__step-btn:hover {
+  background: var(--appkit-color-surface-hover);
+  border-color: var(--appkit-color-border);
+}
+
+.appkit-formshell__step-btn--active {
+  background: var(--appkit-color-primary-subtle, rgb(from var(--appkit-color-primary) r g b / 0.1));
+  border-color: var(--appkit-color-primary);
+  color: var(--appkit-color-primary);
+  font-weight: 500;
+}
+
+.appkit-formshell__step-btn--error {
+  color: var(--appkit-color-error, #dc2626);
+  border-color: var(--appkit-color-error, #dc2626);
+}
+
+.appkit-formshell__step-dot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: var(--appkit-color-surface-secondary);
+  font-size: var(--appkit-font-size-xs, 0.75rem);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.appkit-formshell__step-btn--active .appkit-formshell__step-dot {
+  background: var(--appkit-color-primary);
+  color: #fff;
+}
+
+.appkit-formshell__step-btn--error .appkit-formshell__step-dot {
+  background: var(--appkit-color-error, #dc2626);
+  color: #fff;
+}
+
+/* Red dot badge on step dot */
+.appkit-formshell__step-error-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: var(--appkit-color-error, #dc2626);
+  border: 2px solid var(--appkit-color-surface);
+}
+
+/* Inline error count badge (accordion header) */
+.appkit-formshell__step-error-badge--inline {
+  position: static;
+  width: auto;
+  height: auto;
+  border-radius: var(--appkit-radius-full, 9999px);
+  padding: 0 0.375rem;
+  font-size: var(--appkit-font-size-xs, 0.75rem);
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.4;
+  border: none;
+}
+
+.appkit-formshell__step-label {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .appkit-formshell__step-label {
+    display: inline;
+  }
+}
+
+/* ─── Error Summary ───────────────────────────────────────────────────────── */
+
+.appkit-formshell__error-summary {
+  border: 1px solid var(--appkit-color-error, #dc2626);
+  border-radius: var(--appkit-radius-md, 0.375rem);
+  padding: var(--appkit-spacing-3, 0.75rem);
+  background: rgb(from var(--appkit-color-error, #dc2626) r g b / 0.05);
+}
+
+.appkit-formshell__error-summary__title {
+  font-weight: 600;
+  margin-bottom: var(--appkit-spacing-2, 0.5rem);
+}
+
+.appkit-formshell__error-summary__list {
+  list-style: disc;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-spacing-1, 0.25rem);
+}
+
+/* ─── Body + Steps ───────────────────────────────────────────────────────── */
+
+.appkit-formshell__body {
+  flex: 1;
+  /* Ensure body content is not hidden under the sticky footer. The footer is
+     ~56px tall; add generous padding so the last field is always reachable. */
+  padding-bottom: 5rem;
+}
+
+.appkit-formshell__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--appkit-spacing-1, 0.25rem);
+}
+
+.appkit-formshell__step {
+  border: 1px solid var(--appkit-color-border);
+  border-radius: var(--appkit-radius-md, 0.375rem);
+  overflow: hidden;
+}
+
+.appkit-formshell__step--active {
+  border-color: var(--appkit-color-primary);
+}
+
+.appkit-formshell__step--error {
+  border-color: var(--appkit-color-error, #dc2626);
+}
+
+/* Mobile accordion button — hidden on lg+ (step indicator handles navigation) */
+.appkit-formshell__step-accordion-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--appkit-spacing-3, 0.75rem) var(--appkit-spacing-4, 1rem);
+  background: var(--appkit-color-surface-secondary);
+  border: none;
+  cursor: pointer;
+  font-size: var(--appkit-font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--appkit-color-text-primary);
+  text-align: left;
+}
+
+.appkit-formshell__step-accordion-label {
+  flex: 1;
+}
+
+/* On lg+ the accordion controls are purely decorative; the step indicator drives navigation */
+@media (min-width: 1024px) {
+  .appkit-formshell--accordion-mobile .appkit-formshell__step-accordion-btn {
+    display: none;
+  }
+
+  .appkit-formshell--accordion-mobile .appkit-formshell__step [hidden] {
+    display: block !important;
+  }
+
+  .appkit-formshell--accordion-mobile .appkit-formshell__step-content {
+    display: block !important;
+  }
+}
+
+.appkit-formshell__step-content {
+  padding: var(--appkit-spacing-4, 1rem);
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
+
+/*
+ * Sticky footer — always visible regardless of scroll position.
+ * Uses var(--appkit-z-dropdown, 30) so it stays above card content but below
+ * the site header (which uses var(--appkit-z-modal, 50)).
+ *
+ * Bottom offset accounts for:
+ *   - Mobile: bottom nav (--bottom-nav-height, 56px fallback) + iOS safe area
+ *   - Desktop (lg+): no bottom nav, just standard padding
+ */
+.appkit-formshell__footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--appkit-z-dropdown, 30);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--appkit-spacing-3, 0.75rem);
+  padding: var(--appkit-spacing-3, 0.75rem) var(--appkit-spacing-4, 1rem);
+  padding-bottom: calc(var(--appkit-spacing-3, 0.75rem) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--appkit-color-border);
+  background: var(--appkit-color-surface);
+  flex-wrap: wrap;
+  /* Offset for mobile bottom nav (--bottom-nav-height set by AppLayoutShell) */
+  margin-bottom: 0;
+}
+
+/* On mobile, lift the footer above the bottom nav bar */
+@media (max-width: 1023px) {
+  .appkit-formshell__footer {
+    bottom: var(--bottom-nav-height, 56px);
+    box-shadow: 0 -2px 8px 0 rgb(0 0 0 / 0.08);
+  }
+}
+
+/* On desktop the bottom nav is gone — reset to viewport bottom */
+@media (min-width: 1024px) {
+  .appkit-formshell__footer {
+    bottom: 0;
+    box-shadow: 0 -1px 0 0 var(--appkit-color-border);
+  }
+}
+
+.appkit-formshell__step-nav {
+  display: flex;
+  gap: var(--appkit-spacing-2, 0.5rem);
+}
+
+.appkit-formshell__actions {
+  display: flex;
+  gap: var(--appkit-spacing-2, 0.5rem);
+  margin-left: auto;
+}
+
+/* ─── Dark mode ──────────────────────────────────────────────────────────── */
+
+.dark .appkit-formshell__footer {
+  background: var(--appkit-color-surface-dark, var(--appkit-color-surface));
+}
+
+.dark .appkit-formshell__title {
+  color: var(--appkit-color-text-primary-dark, inherit);
+}
+
+.dark .appkit-formshell__step-accordion-btn {
+  background: var(--appkit-color-surface-secondary-dark, var(--appkit-color-surface-secondary));
+  color: var(--appkit-color-text-primary-dark, inherit);
+}
+
+.dark .appkit-formshell__error-summary {
+  background: rgb(from var(--appkit-color-error, #dc2626) r g b / 0.1);
+}

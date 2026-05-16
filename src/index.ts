@@ -136,6 +136,16 @@ export { FormGrid } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // FormGroup - Shared export for form group.
 export { FormGroup } from "./ui/index";
+// FormShell wizard + context-aware fields (SB-UNI-Y-1)
+// Note: FormShell and useFormShell are the old overlay shell from features/shell — exported below.
+// The step-wizard variant (FormShellStep/FormShellContextValue) is unique to ui/forms.
+export type { FormShellStep, FormShellContextValue } from "./ui/index";
+export type { FieldInputProps } from "./ui/index";
+export { FieldInput } from "./ui/index";
+export type { FieldSelectProps } from "./ui/index";
+export { FieldSelect } from "./ui/index";
+export type { FieldCheckboxProps } from "./ui/index";
+export { FieldCheckbox } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // GRID_MAP - Constant used across modules.
 export { GRID_MAP } from "./ui/index";
@@ -9343,3 +9353,4 @@ export type { ProductCodeDocument } from "./features/products/schemas/firestore"
 
 // ── Live-item listing feature ─────────────────────────────────────────────────
 export { getLiveItemForDetail } from "./_internal/server/features/live/data";
+

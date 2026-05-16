@@ -979,6 +979,69 @@ export function ProductForm({
         placeholder="Return policy details..."
       />
 
+      {/* ── Physical Inventory Location ── */}
+      <Div>
+        <Heading level={3} className="mb-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+          Physical Inventory
+        </Heading>
+        <Text className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">
+          Assign a storage location for warehouse or shelf organisation. Used by the Print & Label Center.
+        </Text>
+        <FormGroup columns={3}>
+          <FormField
+            name="physicalLocation.zone"
+            label="Zone"
+            type="text"
+            placeholder="e.g. A"
+            value={(product.physicalLocation as { zone?: string } | undefined)?.zone ?? ""}
+            onChange={(v) =>
+              update({
+                physicalLocation: {
+                  zone: v,
+                  shelf: (product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? "",
+                  bin: (product.physicalLocation as { bin?: string } | undefined)?.bin ?? "",
+                },
+              })
+            }
+            disabled={isReadonly}
+          />
+          <FormField
+            name="physicalLocation.shelf"
+            label="Shelf"
+            type="text"
+            placeholder="e.g. 3"
+            value={(product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? ""}
+            onChange={(v) =>
+              update({
+                physicalLocation: {
+                  zone: (product.physicalLocation as { zone?: string } | undefined)?.zone ?? "",
+                  shelf: v,
+                  bin: (product.physicalLocation as { bin?: string } | undefined)?.bin ?? "",
+                },
+              })
+            }
+            disabled={isReadonly}
+          />
+          <FormField
+            name="physicalLocation.bin"
+            label="Bin"
+            type="text"
+            placeholder="e.g. Blue"
+            value={(product.physicalLocation as { bin?: string } | undefined)?.bin ?? ""}
+            onChange={(v) =>
+              update({
+                physicalLocation: {
+                  zone: (product.physicalLocation as { zone?: string } | undefined)?.zone ?? "",
+                  shelf: (product.physicalLocation as { shelf?: string } | undefined)?.shelf ?? "",
+                  bin: v,
+                },
+              })
+            }
+            disabled={isReadonly}
+          />
+        </FormGroup>
+      </Div>
+
       {product.storeName && (
         <FormField
           name="storeName"

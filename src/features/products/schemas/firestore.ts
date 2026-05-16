@@ -289,6 +289,13 @@ export interface ProductDocument {
     }>;
   };
 
+  /** Physical storage location for inventory management (Print & Label Center). */
+  physicalLocation?: {
+    zone: string;
+    shelf: string;
+    bin: string;
+  };
+
   createdAt: Date;
   updatedAt: Date;
 }

@@ -102,6 +102,7 @@ export interface Order {
   shippingCarrier?: string;
   notes?: string;
   timeline?: OrderTimeline[];
+  physicalLocation?: { zone: string; shelf: string; bin: string };
   createdAt?: string;
   updatedAt?: string;
 }

@@ -698,6 +698,17 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   productRef(productId: string): DocumentReference {
     return this.db.collection(this.collection).doc(productId) as DocumentReference;
   }
+
+  /** Cloud Functions: returns refs for draft products older than `cutoff` (for 30-day prune). */
+  async getStaleDraftRefs(cutoff: Date): Promise<DocumentReference[]> {
+    const snap = await this.db
+      .collection(this.collection)
+      .where("status", "==", "draft")
+      .where("updatedAt", "<", cutoff)
+      .limit(200)
+      .get();
+    return snap.docs.map((d) => d.ref as DocumentReference);
+  }
 }
 
 export class ProductsRepository extends ProductRepository {}

@@ -2,10 +2,9 @@
 
 import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { X, Pencil, Trash2 } from "lucide-react";
+import { X, Pencil, Trash2, Printer } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { AdminViewCards } from "../../admin/components/AdminViewCards";
 import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -284,6 +283,11 @@ export function SellerProductsView({
           imageUrl: toStringValue(item.mainImage ?? (item.images as string[])?.[0], undefined),
           listingKind: kind,
           price: priceRaw ? `₹${(priceRaw / 100).toLocaleString("en-IN")}` : "—",
+          physicalLocation:
+            item.physicalLocation &&
+            typeof (item.physicalLocation as Record<string, unknown>).zone === "string"
+              ? (item.physicalLocation as { zone: string; shelf: string; bin: string })
+              : undefined,
         };
       }),
     getTotal: (response, mappedRows) =>
@@ -293,7 +297,7 @@ export function SellerProductsView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+  const selection = useBulkSelection<ProductRow>({ items: rows, keyExtractor: (r) => r.id });
 
   if (hasChildren) {
     return (
@@ -324,6 +328,23 @@ export function SellerProductsView({
       setDeletingId(null);
     }
   };
+
+  const handleBulkPrintLabels = useCallback(() => {
+    const ids = selection.selectedIds.join(",");
+    void dispatch({
+      type: "NAVIGATE",
+      href: `${String(ROUTES.STORE.INVENTORY_PRINT)}?type=product&ids=${ids}&autoprint=1`,
+    });
+  }, [selection.selectedIds, dispatch]);
+
+  const bulkActions: BulkActionItem[] = [
+    {
+      id: ACTIONS.STORE["print-labels"].id,
+      label: ACTIONS.STORE["print-labels"].label,
+      icon: <Printer className="w-4 h-4" />,
+      onClick: handleBulkPrintLabels,
+    },
+  ];
 
   return (
     <>
@@ -360,6 +381,17 @@ export function SellerProductsView({
           </Div>
         )}
 
+        {selection.selectedIds.length > 0 && (
+          <Div className="sticky z-20 px-3 lg:px-4 py-2 bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)]"
+            style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
+            <BulkActionBar
+              selectedCount={selection.selectedIds.length}
+              onClearSelection={selection.clearSelection}
+              actions={bulkActions}
+            />
+          </Div>
+        )}
+
         <Div className="py-4 px-3 lg:px-4">
           {errorMessage && (
             <Alert variant="error" className="mb-4">{errorMessage}</Alert>
@@ -373,6 +405,9 @@ export function SellerProductsView({
                 ? `No ${listingKind} listings found`
                 : "No products listed yet"
             }
+            selectedIds={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+            onToggleSelectAll={(next) => selection.toggleAll()}
             getRowHref={(row) =>
               row.listingKind === "auction"
                 ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))

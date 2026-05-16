@@ -188,6 +188,8 @@ export const DEFAULT_ROUTE_MAP = {
     LIVE_ITEMS: "/store/live",
     LIVE_ITEMS_NEW: "/store/live/new",
     LIVE_ITEMS_EDIT: (id: string) => `/store/live/${id}/edit`,
+    PRINT_CENTER: "/store/print-center",
+    INVENTORY_PRINT: "/store/inventory/print",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
@@ -270,6 +272,7 @@ export const DEFAULT_ROUTE_MAP = {
     SCAMMER_BY_ID: (id: string) => `/admin/scammers/${id}`,
     SETTINGS_ACTIONS: "/admin/settings/actions",
     SETTINGS_NAVIGATION: "/admin/settings/navigation",
+    PRINT_CENTER: "/admin/print-center",
   },
   DEMO: {
     SEED: "/demo/seed",
