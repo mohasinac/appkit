@@ -40,6 +40,20 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
     super(REVIEW_COLLECTION);
   }
 
+  private decryptSieveResult(
+    result: FirebaseSieveResult<ReviewDocument>,
+  ): FirebaseSieveResult<ReviewDocument> {
+    return {
+      ...result,
+      items: result.items.map(
+        (item) =>
+          decryptPiiFields(item as unknown as Record<string, unknown>, [
+            ...REVIEW_PII_FIELDS,
+          ]) as unknown as ReviewDocument,
+      ),
+    };
+  }
+
   private encryptReviewData<T extends Record<string, unknown>>(data: T): T {
     let encrypted = encryptPiiFields(data, [...REVIEW_PII_FIELDS]);
     encrypted = addPiiIndices(data, REVIEW_PII_INDEX_MAP) as unknown as T;
@@ -291,7 +305,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       "==",
       productId,
     );
-    return this.sieveQuery<ReviewDocument>(
+    const result = await this.sieveQuery<ReviewDocument>(
       model,
       ReviewRepository.SIEVE_FIELDS,
       {
@@ -300,6 +314,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         maxPageSize: 50,
       },
     );
+    return this.decryptSieveResult(result);
   }
 
   async listForStore(
@@ -311,7 +326,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
       "==",
       storeId,
     );
-    return this.sieveQuery<ReviewDocument>(
+    const result = await this.sieveQuery<ReviewDocument>(
       model,
       ReviewRepository.SIEVE_FIELDS,
       {
@@ -320,12 +335,13 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         maxPageSize: 100,
       },
     );
+    return this.decryptSieveResult(result);
   }
 
   async listAll(
     model: SieveModel,
   ): Promise<FirebaseSieveResult<ReviewDocument>> {
-    return this.sieveQuery<ReviewDocument>(
+    const result = await this.sieveQuery<ReviewDocument>(
       model,
       ReviewRepository.SIEVE_FIELDS,
       {
@@ -333,6 +349,7 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
         maxPageSize: 200,
       },
     );
+    return this.decryptSieveResult(result);
   }
 }
 

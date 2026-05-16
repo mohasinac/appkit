@@ -87,7 +87,7 @@ export function StoreHeader({
               <RichText
                 html={normalizeRichTextHtml(store.storeDescription)}
                 copyableCode
-                className="text-sm text-gray-500 dark:text-zinc-400 mt-0.5"
+                className="mt-0.5"
               />
             )}
           </Div>

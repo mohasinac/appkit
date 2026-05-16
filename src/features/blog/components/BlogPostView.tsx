@@ -175,7 +175,7 @@ export function BlogPostView({
         {/* Content */}
         <Div className="bg-white dark:bg-slate-900 rounded-xl border border-neutral-200 dark:border-slate-700 p-8 mb-12">
           {renderContent ? renderContent(post) : (
-            <RichText html={normalizeRichTextHtml(post.content ?? "")} proseClass="prose max-w-none dark:prose-invert" className="text-neutral-800 dark:text-neutral-100" />
+            <RichText html={normalizeRichTextHtml(post.content ?? "")} proseClass="prose max-w-none dark:prose-invert" />
           )}
         </Div>
 

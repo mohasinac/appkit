@@ -62,9 +62,27 @@ function getHoverClass(effect?: CarouselHoverEffect): string {
 }
 
 function getSlideHeightClass(height?: "viewport" | "tall" | "medium"): string {
-  if (height === "viewport") return "min-h-screen";
-  if (height === "tall") return "min-h-[80vh]";
-  return "min-h-[60vh] md:min-h-[clamp(420px,72vh,680px)]";
+  // BN-1 (fixed bottom nav) = h-16 = 4rem, shown only below lg — must be subtracted on mobile.
+  // --header-height is the measured sticky header height set by AppLayoutShell.
+  if (height === "viewport") {
+    return [
+      // mobile: full dvh minus header minus BN-1
+      "min-h-[calc(100dvh-var(--header-height,3.5rem)-4rem)]",
+      // desktop: full dvh minus header only (no BN-1)
+      "lg:min-h-[calc(100dvh-var(--header-height,3.5rem))]",
+    ].join(" ");
+  }
+  if (height === "tall") {
+    return [
+      "min-h-[calc(72dvh-var(--header-height,3.5rem)-4rem)]",
+      "lg:min-h-[clamp(480px,76dvh,840px)]",
+    ].join(" ");
+  }
+  // medium (default) — comfortable hero without forcing full-screen
+  return [
+    "min-h-[calc(52dvh-var(--header-height,3.5rem)-4rem)]",
+    "lg:min-h-[clamp(420px,65dvh,680px)]",
+  ].join(" ");
 }
 
 /** Renders the slide background — image, video, solid colour, or gradient. */

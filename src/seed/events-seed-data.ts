@@ -478,4 +478,29 @@ export const eventEntriesSeedData: EventEntryDocument[] = [
     reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.PENDING,
     submittedAt: daysAgo(1),
   },
+
+  // ── Admin raffle entry ───────────────────────────────────────────────────
+  {
+    id: "entry-mega-raffle-admin",
+    eventId: "event-collectibles-mega-raffle-2026",
+    userId: "user-admin-letitrip",
+    userDisplayName: "LetItRip Admin",
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    raffleEligible: true,
+    submittedAt: daysAgo(1),
+  },
+
+  // ── Admin spin-wheel entry (won ₹100 off coupon) ─────────────────────────
+  {
+    id: "entry-spin-wheel-admin",
+    eventId: "event-spin-the-wheel-2026",
+    userId: "user-admin-letitrip",
+    userDisplayName: "LetItRip Admin",
+    reviewStatus: EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
+    spinUsed: true,
+    spinPrizeId: "prize-100-off",
+    spinPrizeCouponCode: "SPIN100OFF-ADM",
+    spinWonAt: daysAgo(2),
+    submittedAt: daysAgo(2),
+  },
 ];

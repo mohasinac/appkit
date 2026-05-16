@@ -134,7 +134,6 @@ export async function FAQPageView({
                       <RichTextRenderer
                         html={item.answer}
                         proseClass="prose prose-sm max-w-none dark:prose-invert"
-                        className="text-neutral-600 dark:text-neutral-300"
                       />
                     </div>
                   </details>

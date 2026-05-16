@@ -175,7 +175,9 @@ export function SectionCarousel<T = unknown>({
       className={[
         "relative overflow-hidden w-full",
         hasBg ? "" : themed.bgSecondary,
-        "p-8",
+        // Vertical padding: 5rem on desktop, 3rem on mobile to leave room for adjacent sections.
+        // Horizontal: 1rem mobile → 2rem desktop; handled via inner max-w container.
+        "py-10 px-4 md:py-12 md:px-8",
         className,
       ]
         .filter(Boolean)

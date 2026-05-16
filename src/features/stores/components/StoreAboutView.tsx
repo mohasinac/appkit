@@ -47,7 +47,7 @@ export function StoreAboutView({
           <Heading level={2} className="text-lg font-semibold mb-2">
             {labels.aboutTitle ?? "About"}
           </Heading>
-          <RichText html={normalizeRichTextHtml(store.bio)} className="text-neutral-600" />
+          <RichText html={normalizeRichTextHtml(store.bio)} />
         </Div>
       )}
 
@@ -61,7 +61,7 @@ export function StoreAboutView({
             <Text className={CLS_LABEL}>
               {labels.locationLabel ?? "Location"}
             </Text>
-            <Text className="text-neutral-600">{store.location}</Text>
+            <Text className="">{store.location}</Text>
           </Div>
         )}
         {joinDate && (
@@ -69,7 +69,7 @@ export function StoreAboutView({
             <Text className={CLS_LABEL}>
               {labels.memberSinceLabel ?? "Member since"}
             </Text>
-            <Text className="text-neutral-600">{joinDate}</Text>
+            <Text className="">{joinDate}</Text>
           </Div>
         )}
         {store.website && (
@@ -98,7 +98,7 @@ export function StoreAboutView({
           <Heading level={3} className="text-base font-semibold mb-2">
             {labels.returnPolicyLabel ?? "Return Policy"}
           </Heading>
-          <RichText html={normalizeRichTextHtml(store.returnPolicy)} className="text-neutral-600" />
+          <RichText html={normalizeRichTextHtml(store.returnPolicy)} />
         </Div>
       )}
 
@@ -108,7 +108,7 @@ export function StoreAboutView({
           <Heading level={3} className="text-base font-semibold mb-2">
             {labels.shippingPolicyLabel ?? "Shipping Policy"}
           </Heading>
-          <RichText html={normalizeRichTextHtml(store.shippingPolicy)} className="text-neutral-600" />
+          <RichText html={normalizeRichTextHtml(store.shippingPolicy)} />
         </Div>
       )}
 

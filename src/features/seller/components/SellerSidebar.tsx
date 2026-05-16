@@ -279,7 +279,8 @@ export function StoreSidebar({
             type="button"
             onClick={handleToggle}
             aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="w-5 shrink-0 bg-primary dark:bg-secondary hover:bg-primary-600 dark:hover:bg-secondary-600 flex items-center justify-center transition-colors rounded-r-md shadow-md"
+            className="w-5 shrink-0 flex items-center justify-center transition-opacity rounded-r-md shadow-md hover:opacity-85"
+            style={{ background: "linear-gradient(to bottom, var(--appkit-color-cobalt-700), var(--appkit-color-cobalt))" }}
           >
             <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               {desktopOpen ? (

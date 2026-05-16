@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { SectionCarousel } from "./SectionCarousel";
 import { useFeaturedProducts } from "../hooks/useFeaturedProducts";
+import { useMediaQuery } from "../../../react";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { ROUTES } from "../../../next";
 import { Section, Heading, Text } from "../../../ui";
@@ -48,7 +49,11 @@ function ProductGrid({
   description?: string;
 }) {
   const { themed } = THEME_CONSTANTS;
-  const pageSize = Math.min(rows * 5, maxItems);
+  // On mobile (<sm, 2-col grid) a second row doubles the section height to ~2 screens.
+  // Collapse to 1 row automatically so the section fits within one viewport.
+  const isMobile = useMediaQuery("(max-width: 639px)");
+  const effectiveRows = isMobile ? 1 : rows;
+  const pageSize = Math.min(effectiveRows * 5, maxItems);
   const [offset, setOffset] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 

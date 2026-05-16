@@ -221,7 +221,6 @@ export function FAQSection({
                         <RichText
                           html={faq.answer}
                           proseClass="prose prose-sm max-w-none dark:prose-invert"
-                          className={themed.textSecondary}
                         />
                       ) : (
                         <Text className={`text-sm leading-relaxed ${themed.textSecondary}`}>

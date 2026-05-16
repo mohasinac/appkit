@@ -37,7 +37,7 @@ function CategoryChip({ category }: { category: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug)}
-      className="group flex w-full min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
+      className="group flex w-full min-h-[180px] sm:min-h-[220px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 dark:hover:border-primary-600"
     >
       {coverImage && isImageUrl(coverImage) ? (
         <div className="aspect-video w-full overflow-hidden bg-zinc-100 dark:bg-slate-800">
@@ -156,7 +156,7 @@ export function ShopByCategorySection({
   if (!isLoading && allCategories.length === 0) return null;
 
   return (
-    <Section className={`py-12 px-4 ${themed.bgSecondary} ${className}`}>
+    <Section className={`py-10 px-4 md:py-12 ${themed.bgSecondary} ${className}`}>
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 text-center">
           <Heading level={2} className={`text-2xl font-bold md:text-3xl ${themed.textPrimary}`}>

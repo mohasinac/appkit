@@ -77,4 +77,17 @@ export const historySeedData: HistorySeedDocument[] = [
     { productId: "preorder-beyblade-x-bx10-booster", productType: "preorder", viewedAt: hoursAgo(3) },
     { productId: "preorder-shf-broly-super-hero", productType: "preorder", viewedAt: hoursAgo(20) },
   ]),
+  // Admin browses across all stores to review inventory + check recent purchases
+  makeDoc("user-admin-letitrip", [
+    { productId: "product-gsc-aqua-konosuba-scale",       productType: "product",  viewedAt: hoursAgo(1) },
+    { productId: "auction-pokemon-mew-1st-edition-psa10", productType: "auction",  viewedAt: hoursAgo(4) },
+    { productId: "product-mafex-miles-morales-spiderman", productType: "product",  viewedAt: hoursAgo(10) },
+    { productId: "product-figma-link-totk",               productType: "product",  viewedAt: hoursAgo(18) },
+    { productId: "product-pokemon-151-booster-box",       productType: "product",  viewedAt: daysAgo(1) },
+    { productId: "product-yugioh-25th-tin",               productType: "product",  viewedAt: daysAgo(2) },
+    { productId: "product-beyblade-x-bx04-knight-shield", productType: "product",  viewedAt: daysAgo(3) },
+    { productId: "product-hot-wheels-rlc-bone-shaker",    productType: "product",  viewedAt: daysAgo(4) },
+    { productId: "product-gundam-rx78-mg",                productType: "product",  viewedAt: daysAgo(5) },
+    { productId: "preorder-pokemon-prismatic-evolutions", productType: "preorder", viewedAt: daysAgo(6) },
+  ]),
 ];

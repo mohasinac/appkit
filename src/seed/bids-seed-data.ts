@@ -628,20 +628,23 @@ export const bidsSeedData: Partial<BidDocument>[] = [
   }),
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // auction-pokemon-mew-1st-edition-psa10 — ACTIVE, ends in 24h, 3 bids → current ₹1,49,999
+  // auction-pokemon-mew-1st-edition-psa10 — ENDED (10d ago), 4 bids → admin WON ₹1,49,999
   // ═══════════════════════════════════════════════════════════════════════════
   ...buildBidLadder({
     productId: "auction-pokemon-mew-1st-edition-psa10",
     productTitle:
       "Pokémon Mew #151 1st Edition — PSA 10 GEM MINT (AUCTION)",
-    amounts: [9999900, 12499900, 14999900],
+    amounts: [9999900, 11499900, 12999900, 14999900],
     bidders: [
-      { id: "user-arjun-singh", name: "Arjun Singh", email: "arjun.singh@gmail.com" },
-      { id: "user-rahul-sharma", name: "Rahul Sharma", email: "rahul.sharma@gmail.com" },
-      { id: "user-siddharth-rao", name: "Siddharth Rao", email: "siddharth.rao@gmail.com" },
+      { id: "user-arjun-singh",    name: "Arjun Singh",    email: "arjun.singh@gmail.com" },
+      { id: "user-rahul-sharma",   name: "Rahul Sharma",   email: "rahul.sharma@gmail.com" },
+      { id: "user-siddharth-rao",  name: "Siddharth Rao",  email: "siddharth.rao@gmail.com" },
+      { id: "user-admin-letitrip", name: "LetItRip Admin", email: "admin@letitrip.in" },
     ],
-    daysAgoForFirst: 5,
-    endsActive: true,
+    daysAgoForFirst: 15,
+    endsActive: false,
+    closedDaysAgo: 10,
+    winningIndex: 3,
     slugPrefix: "bid-mew-1ed",
   }),
 
