@@ -265,7 +265,7 @@ export function SellerPreOrdersView({ children, ...props }: SellerPreOrdersViewP
                 e.stopPropagation();
                 void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)) });
               }}
-              aria-label={ACTIONS.SELLER["edit-listing"].ariaLabel}
+              aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
             >
               <Pencil className="w-4 h-4" />
             </Button>

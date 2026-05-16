@@ -264,7 +264,7 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
                 e.stopPropagation();
                 void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)) });
               }}
-              aria-label={ACTIONS.SELLER["edit-listing"].ariaLabel}
+              aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
             >
               <Pencil className="w-4 h-4" />
             </Button>
