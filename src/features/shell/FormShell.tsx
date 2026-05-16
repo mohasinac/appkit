@@ -158,7 +158,7 @@ export function FormShell({
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
-        <div className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3 flex items-center gap-3">
+        <div className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3 flex items-center gap-3">
           {previewMode ? (
             <button
               type="button"
@@ -252,7 +252,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <div className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 flex overflow-x-auto gap-1 px-4 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
+            <div className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 flex overflow-x-auto gap-1 px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
               {sections.map((sec) => (
                 <button
                   key={sec.id}
@@ -285,7 +285,7 @@ export function FormShell({
                 </div>
               </>
             ) : (
-              <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6">
+              <div className="max-w-3xl mx-auto px-5 py-6 sm:px-6">
                 {children}
               </div>
             )}
@@ -296,7 +296,7 @@ export function FormShell({
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <div className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-4 py-3 flex items-center justify-between">
+          <div className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3 flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>
