@@ -108,7 +108,7 @@ export function AutoBreadcrumbs({
 
   return (
     <Div className="border-y border-zinc-200/80 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:border-slate-800 dark:bg-slate-950/95 dark:supports-[backdrop-filter]:bg-slate-950/85">
-      <Div className="container mx-auto max-w-[1920px] px-4 py-2 sm:px-6 lg:px-8">
+      <Div className="container mx-auto max-w-[1920px] px-5 py-2 sm:px-6 lg:px-8">
         <Nav aria-label="Breadcrumb" className={className}>
           <Ol className="flex items-center gap-2 text-sm flex-wrap">
             {allCrumbs.map((crumb, index) => {

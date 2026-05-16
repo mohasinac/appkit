@@ -207,7 +207,7 @@
 }
 
 .appkit-formshell__step-content {
-  padding: var(--appkit-spacing-4, 1rem);
+  padding: 0.75rem 1.25rem;
 }
 
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
@@ -231,8 +231,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--appkit-spacing-3, 0.75rem);
-  padding: var(--appkit-spacing-3, 0.75rem) var(--appkit-spacing-4, 1rem);
-  padding-bottom: calc(var(--appkit-spacing-3, 0.75rem) + env(safe-area-inset-bottom, 0px));
+  padding: 0.75rem 1.25rem;
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--appkit-color-border);
   background: var(--appkit-color-surface);
   flex-wrap: wrap;
@@ -243,7 +243,7 @@
 /* On mobile, lift the footer above the bottom nav bar */
 @media (max-width: 1023px) {
   .appkit-formshell__footer {
-    bottom: var(--bottom-nav-height, 56px);
+    bottom: var(--bottom-nav-height, 64px);
     box-shadow: 0 -2px 8px 0 rgb(0 0 0 / 0.08);
   }
 }

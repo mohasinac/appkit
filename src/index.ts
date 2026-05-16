@@ -881,7 +881,7 @@ export { AuthorizationError } from "./errors/index";
 export { DatabaseError } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // ERROR_CODES - Constant used across modules.
-export { ERROR_CODES } from "./errors/index";
+export { ERROR_CODES, BID_ERROR_CODES, OFFER_ERROR_CODES } from "./errors/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // ERROR_MESSAGES - Constant used across modules.
 export { ERROR_MESSAGES } from "./errors/index";

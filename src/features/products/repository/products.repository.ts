@@ -666,10 +666,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     batch: WriteBatch,
     productId: string,
     currentBid: number,
+    leadingBidderId?: string,
   ): void {
     batch.update(this.db.collection(this.collection).doc(productId), {
       currentBid,
       bidCount: increment(1),
+      ...(leadingBidderId && { leadingBidderId }),
       // SB-UNI-H 2026-05-13 — flip `bidsHaveStarted` when any bid lands.
       // Idempotent on subsequent bids; the BIN button is hidden by the PDP
       // as soon as this is true (eBay-style hybrid auction rule).

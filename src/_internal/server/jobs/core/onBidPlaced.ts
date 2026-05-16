@@ -44,7 +44,7 @@ export async function handleBidPlaced(
       bidRepository.markOutbid(batch, prevWinning.ref);
     }
 
-    productRepository.incrementBidCountInBatch(batch, newBid.productId, newBid.bidAmount);
+    productRepository.incrementBidCountInBatch(batch, newBid.productId, newBid.bidAmount, newBid.userId);
     await batch.commit();
 
     if (outbidUserId) {

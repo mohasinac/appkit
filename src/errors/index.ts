@@ -1,5 +1,5 @@
 export { AppError } from "./base-error";
-export { ERROR_CODES } from "./error-codes";
+export { ERROR_CODES, BID_ERROR_CODES, OFFER_ERROR_CODES } from "./error-codes";
 export type { ErrorCode } from "./error-codes";
 export { ERROR_MESSAGES } from "./messages";
 // Note: appkit/src/errors has two ERROR_MESSAGE patterns:
