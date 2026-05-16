@@ -174,6 +174,16 @@ export const DEFAULT_ROUTE_MAP = {
     PRIZE_DRAWS_NEW: "/store/prize-draws/new",
     PRIZE_DRAWS_EDIT: (id: string) => `/store/prize-draws/${id}/edit`,
     PRODUCT_CODES: (id: string) => `/store/products/${id}/codes`,
+    // SB-UNI-R — classified / digital-code / live
+    CLASSIFIED: "/store/classified",
+    CLASSIFIED_NEW: "/store/classified/new",
+    CLASSIFIED_EDIT: (id: string) => `/store/classified/${id}/edit`,
+    DIGITAL_CODES: "/store/digital-codes",
+    DIGITAL_CODES_NEW: "/store/digital-codes/new",
+    DIGITAL_CODES_EDIT: (id: string) => `/store/digital-codes/${id}/edit`,
+    LIVE_ITEMS: "/store/live",
+    LIVE_ITEMS_NEW: "/store/live/new",
+    LIVE_ITEMS_EDIT: (id: string) => `/store/live/${id}/edit`,
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",

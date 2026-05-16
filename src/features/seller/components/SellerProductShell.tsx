@@ -12,7 +12,10 @@ export type ProductListingMode =
   | "standard"
   | "auction"
   | "pre-order"
-  | "prize-draw";
+  | "prize-draw"
+  | "classified"
+  | "digital-code"
+  | "live";
 
 export interface SellerProductDraft {
   title?: string;
@@ -58,6 +61,27 @@ export interface SellerProductDraft {
   preOrderMaxQuantity?: number;
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   preOrderCancellable?: boolean;
+  // Classified
+  classifiedCity?: string;
+  classifiedLocality?: string;
+  classifiedPincode?: string;
+  classifiedContactMethod?: "chat" | "phone" | "both";
+  classifiedAcceptsShipping?: boolean;
+  classifiedNegotiable?: boolean;
+  // Digital code
+  digitalCodeDelivery?: "auto-claim" | "manual-email";
+  digitalCodePoolSize?: number;
+  digitalCodeRedemptionInstructions?: string;
+  digitalCodeExpiresAt?: string;
+  // Live item
+  liveSpecies?: string;
+  liveAgeMonths?: number;
+  liveSex?: "male" | "female" | "unknown" | "n/a";
+  liveCareInfo?: string;
+  liveTransportMethod?: "courier" | "in-person" | "specialist";
+  liveHandlingFee?: number;
+  liveJurisdictions?: string[];
+  liveCites?: boolean;
 }
 
 export interface SellerProductShellProps {
@@ -424,6 +448,233 @@ function StepPreOrderSettings({
   );
 }
 
+// ── Step 3: Classified Settings ───────────────────────────────────────────
+
+const CLASSIFIED_CONTACT_OPTIONS = [
+  { value: "chat", label: "In-app Chat only" },
+  { value: "phone", label: "Phone / WhatsApp only" },
+  { value: "both", label: "Chat or Phone" },
+];
+
+function StepClassifiedSettings({
+  values,
+  onChange,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+}) {
+  return (
+    <Stack gap="md">
+      <Alert variant="info">
+        Classified listings are local meetup / C2C sales. Add your meetup area so buyers know where you are.
+      </Alert>
+      <FormGroup columns={2}>
+        <FormField
+          name="classifiedCity"
+          label="City"
+          type="text"
+          value={values.classifiedCity ?? ""}
+          onChange={(v) => onChange({ classifiedCity: v })}
+          placeholder="e.g. Mumbai"
+        />
+        <FormField
+          name="classifiedLocality"
+          label="Locality / Area (optional)"
+          type="text"
+          value={values.classifiedLocality ?? ""}
+          onChange={(v) => onChange({ classifiedLocality: v })}
+          placeholder="e.g. Andheri West"
+        />
+      </FormGroup>
+      <FormField
+        name="classifiedPincode"
+        label="PIN Code (optional)"
+        type="text"
+        value={values.classifiedPincode ?? ""}
+        onChange={(v) => onChange({ classifiedPincode: v })}
+        placeholder="400053"
+      />
+      <FormField
+        name="classifiedContactMethod"
+        label="Preferred Contact Method"
+        type="select"
+        value={values.classifiedContactMethod ?? "chat"}
+        onChange={(v) => onChange({ classifiedContactMethod: v as SellerProductDraft["classifiedContactMethod"] })}
+        options={CLASSIFIED_CONTACT_OPTIONS}
+      />
+      <Toggle
+        checked={!!values.classifiedAcceptsShipping}
+        onChange={(checked) => onChange({ classifiedAcceptsShipping: checked })}
+        label="Also open to shipping (in addition to meetup)"
+      />
+      <Toggle
+        checked={!!values.classifiedNegotiable}
+        onChange={(checked) => onChange({ classifiedNegotiable: checked })}
+        label="Price is negotiable"
+      />
+    </Stack>
+  );
+}
+
+// ── Step 3: Digital Code Settings ─────────────────────────────────────────
+
+const DIGITAL_DELIVERY_OPTIONS = [
+  { value: "auto-claim", label: "Auto-Claim — code revealed instantly after payment" },
+  { value: "manual-email", label: "Manual Email — you send the code within 24 h" },
+];
+
+function StepDigitalCodeSettings({
+  values,
+  onChange,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+}) {
+  return (
+    <Stack gap="md">
+      <Alert variant="info">
+        Digital code listings sell game keys, gift cards, or activation codes. Codes are never shown publicly.
+      </Alert>
+      <FormField
+        name="digitalCodeDelivery"
+        label="Delivery Method"
+        type="select"
+        value={values.digitalCodeDelivery ?? "auto-claim"}
+        onChange={(v) => onChange({ digitalCodeDelivery: v as SellerProductDraft["digitalCodeDelivery"] })}
+        options={DIGITAL_DELIVERY_OPTIONS}
+      />
+      <FormGroup columns={2}>
+        <FormField
+          name="digitalCodePoolSize"
+          label="Code Pool Size (optional)"
+          type="number"
+          value={String(values.digitalCodePoolSize ?? "")}
+          onChange={(v) => onChange({ digitalCodePoolSize: v ? Number(v) : undefined })}
+          placeholder="e.g. 50"
+          helpText="Total number of codes you have available"
+        />
+        <FormField
+          name="digitalCodeExpiresAt"
+          label="Code Expiry Date (optional)"
+          type="text"
+          value={values.digitalCodeExpiresAt ?? ""}
+          onChange={(v) => onChange({ digitalCodeExpiresAt: v })}
+          placeholder="YYYY-MM-DD"
+          helpText="When the codes expire (if applicable)"
+        />
+      </FormGroup>
+      <FormField
+        name="digitalCodeRedemptionInstructions"
+        label="Redemption Instructions (optional)"
+        type="textarea"
+        value={values.digitalCodeRedemptionInstructions ?? ""}
+        onChange={(v) => onChange({ digitalCodeRedemptionInstructions: v })}
+        placeholder="Step-by-step instructions for redeeming the code…"
+        helpText="Shown to the buyer after purchase"
+      />
+    </Stack>
+  );
+}
+
+// ── Step 3: Live Item Settings ─────────────────────────────────────────────
+
+const LIVE_SEX_OPTIONS = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "unknown", label: "Unknown" },
+  { value: "n/a", label: "N/A" },
+];
+
+const LIVE_TRANSPORT_OPTIONS = [
+  { value: "in-person", label: "In-Person handover only" },
+  { value: "courier", label: "Specialist live-animal courier" },
+  { value: "specialist", label: "Third-party specialist transport" },
+];
+
+function StepLiveItemSettings({
+  values,
+  onChange,
+}: {
+  values: SellerProductDraft;
+  onChange: (p: Partial<SellerProductDraft>) => void;
+}) {
+  return (
+    <Stack gap="md">
+      <Alert variant="warning">
+        Live animal / plant listings must comply with all applicable laws, CITES regulations, and local jurisdiction rules. LetItRip is not responsible for legal compliance — this is solely the seller's responsibility.
+      </Alert>
+      <FormGroup columns={2}>
+        <FormField
+          name="liveSpecies"
+          label="Species / Common Name"
+          type="text"
+          value={values.liveSpecies ?? ""}
+          onChange={(v) => onChange({ liveSpecies: v })}
+          placeholder="e.g. Axolotl (Ambystoma mexicanum)"
+        />
+        <FormField
+          name="liveAgeMonths"
+          label="Age (months, optional)"
+          type="number"
+          value={String(values.liveAgeMonths ?? "")}
+          onChange={(v) => onChange({ liveAgeMonths: v ? Number(v) : undefined })}
+          placeholder="e.g. 6"
+        />
+      </FormGroup>
+      <FormField
+        name="liveSex"
+        label="Sex"
+        type="select"
+        value={values.liveSex ?? "unknown"}
+        onChange={(v) => onChange({ liveSex: v as SellerProductDraft["liveSex"] })}
+        options={LIVE_SEX_OPTIONS}
+      />
+      <FormField
+        name="liveCareInfo"
+        label="Care Instructions (optional)"
+        type="textarea"
+        value={values.liveCareInfo ?? ""}
+        onChange={(v) => onChange({ liveCareInfo: v })}
+        placeholder="Diet, temperature, habitat requirements…"
+      />
+      <FormField
+        name="liveTransportMethod"
+        label="Transport Method"
+        type="select"
+        value={values.liveTransportMethod ?? "in-person"}
+        onChange={(v) => onChange({ liveTransportMethod: v as SellerProductDraft["liveTransportMethod"] })}
+        options={LIVE_TRANSPORT_OPTIONS}
+      />
+      {values.liveTransportMethod !== "in-person" && (
+        <FormField
+          name="liveHandlingFee"
+          label="Handling / Transport Fee (₹, optional)"
+          type="number"
+          value={toRupees(values.liveHandlingFee)}
+          onChange={(v) => onChange({ liveHandlingFee: v ? toPaise(v) : undefined })}
+          placeholder="0"
+        />
+      )}
+      <FormField
+        name="liveJurisdictions"
+        label="Jurisdictions where sale is permitted (comma-separated)"
+        type="text"
+        value={(values.liveJurisdictions ?? []).join(", ")}
+        onChange={(v) =>
+          onChange({ liveJurisdictions: v.split(",").map((s) => s.trim()).filter(Boolean) })
+        }
+        placeholder="e.g. Maharashtra, Karnataka"
+        helpText="List all Indian states / UTs where you can legally sell"
+      />
+      <Toggle
+        checked={!!values.liveCites}
+        onChange={(checked) => onChange({ liveCites: checked })}
+        label="This species requires CITES documentation"
+      />
+    </Stack>
+  );
+}
+
 // ── Step: Pricing ─────────────────────────────────────────────────────────
 
 function StepPricing({
@@ -440,7 +691,11 @@ function StepPricing({
       ? "Suggested Retail Price (₹)"
       : listingType === "pre-order"
         ? "Pre-Order Price (₹)"
-        : "Price (₹)";
+        : listingType === "classified"
+          ? "Asking Price (₹)"
+          : listingType === "digital-code"
+            ? "Price per Code (₹)"
+            : "Price (₹)";
 
   return (
     <Stack gap="md">
@@ -464,7 +719,7 @@ function StepPricing({
           helpText="Original price shown as strikethrough"
         />
       </FormGroup>
-      {listingType === "standard" && (
+      {(listingType === "standard" || listingType === "classified" || listingType === "live") && (
         <FormField
           name="stockQuantity"
           label="Stock Quantity"
@@ -654,7 +909,17 @@ export function SellerProductShell({
   }, [draft, onPublish, markClean]);
 
   const listingTypeLabel =
-    listingType === "auction" ? "Auction" : listingType === "pre-order" ? "Pre-Order" : "Product";
+    listingType === "auction"
+      ? "Auction"
+      : listingType === "pre-order"
+        ? "Pre-Order"
+        : listingType === "classified"
+          ? "Classified"
+          : listingType === "digital-code"
+            ? "Digital Code"
+            : listingType === "live"
+              ? "Live Item"
+              : "Product";
 
   const typeSpecificStep: StepDef<SellerProductDraft> | null =
     listingType === "auction"
@@ -673,7 +938,30 @@ export function SellerProductShell({
             ),
             validate: (v) => (!v.preOrderDeliveryDate ? "Estimated delivery date is required" : null),
           }
-        : null;
+        : listingType === "classified"
+          ? {
+              label: "Meetup Details",
+              render: ({ values, onChange }) => (
+                <StepClassifiedSettings values={values} onChange={onChange} />
+              ),
+              validate: (v) => (!v.classifiedCity?.trim() ? "City is required for classified listings" : null),
+            }
+          : listingType === "digital-code"
+            ? {
+                label: "Code Details",
+                render: ({ values, onChange }) => (
+                  <StepDigitalCodeSettings values={values} onChange={onChange} />
+                ),
+              }
+            : listingType === "live"
+              ? {
+                  label: "Live Item Details",
+                  render: ({ values, onChange }) => (
+                    <StepLiveItemSettings values={values} onChange={onChange} />
+                  ),
+                  validate: (v) => (!v.liveSpecies?.trim() ? "Species name is required" : null),
+                }
+              : null;
 
   const steps: StepDef<SellerProductDraft>[] = [
     {
@@ -754,6 +1042,9 @@ export function SellerProductShell({
     ...EDIT_SECTIONS,
     ...(listingType === "auction" ? [{ id: "auction", label: "Auction" }] : []),
     ...(listingType === "pre-order" ? [{ id: "preorder", label: "Pre-Order" }] : []),
+    ...(listingType === "classified" ? [{ id: "classified", label: "Meetup Details" }] : []),
+    ...(listingType === "digital-code" ? [{ id: "digitalcode", label: "Code Details" }] : []),
+    ...(listingType === "live" ? [{ id: "live", label: "Live Item" }] : []),
   ];
 
   return (
@@ -796,6 +1087,24 @@ export function SellerProductShell({
           <Section id="preorder">
             <Heading level={3} className="mb-4">Pre-Order Settings</Heading>
             <StepPreOrderSettings values={draft} onChange={update} />
+          </Section>
+        )}
+        {listingType === "classified" && (
+          <Section id="classified">
+            <Heading level={3} className="mb-4">Meetup Details</Heading>
+            <StepClassifiedSettings values={draft} onChange={update} />
+          </Section>
+        )}
+        {listingType === "digital-code" && (
+          <Section id="digitalcode">
+            <Heading level={3} className="mb-4">Code Details</Heading>
+            <StepDigitalCodeSettings values={draft} onChange={update} />
+          </Section>
+        )}
+        {listingType === "live" && (
+          <Section id="live">
+            <Heading level={3} className="mb-4">Live Item Details</Heading>
+            <StepLiveItemSettings values={draft} onChange={update} />
           </Section>
         )}
         <Section id="pricing">

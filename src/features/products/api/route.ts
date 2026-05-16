@@ -57,7 +57,7 @@ const productMutateSchema = z
     sellerEmail: z.string().email().optional(),
     slug: z.string().optional(),
     listingType: z
-      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle"])
+      .enum(["standard", "auction", "pre-order", "prize-draw", "bundle", "classified", "digital-code", "live"])
       .optional(),
     media: z.array(mediaFieldSchema).optional(),
   })
