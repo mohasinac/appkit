@@ -19,7 +19,7 @@ import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { apiClient } from "../../../http";
 
 interface FlagData {
-  flags: Record<string, boolean>;
+  flags: Record<string, unknown>;
   rollouts: Record<string, number>;
 }
 
@@ -29,6 +29,112 @@ export interface AdminFeatureFlagsViewProps extends Omit<
 > {
   labels?: { title?: string };
   renderFlags?: () => React.ReactNode;
+}
+
+// Platform feature keys (flat booleans with rollout % support)
+const PLATFORM_FLAGS = [
+  { key: "blog",               label: "Blog Posts",         desc: "Publish articles for admins / sellers" },
+  { key: "events",             label: "Events",             desc: "Raffles, spin wheels, polls" },
+  { key: "reviews",            label: "Reviews",            desc: "Product review system" },
+  { key: "wishlists",          label: "Wishlists",          desc: "Per-user saved lists" },
+  { key: "coupons",            label: "Coupons",            desc: "Discount code system" },
+  { key: "notifications",      label: "Notifications",      desc: "In-app notification feed" },
+  { key: "chats",              label: "Live Chat",          desc: "Buyer-seller messaging" },
+  { key: "sellerRegistration", label: "Seller Reg.",        desc: "New vendor registration" },
+  { key: "smsVerification",    label: "SMS Verify",         desc: "SMS OTP verification" },
+  { key: "translations",       label: "Translations",       desc: "Multi-language support" },
+  { key: "seedPanel",          label: "Seed Panel",         desc: "Dev seed data panel" },
+] as const;
+
+// Listing type keys (nested under featureFlags.listingTypes — no rollout %)
+const LISTING_TYPE_FLAGS = [
+  { key: "standard",     label: "Standard",     desc: "Fixed-price products (Phase 1)" },
+  { key: "auction",      label: "Auction",       desc: "eBay-style bidding (Phase 1)" },
+  { key: "pre-order",    label: "Pre-order",     desc: "Future delivery + deposit (Phase 1)" },
+  { key: "prize-draw",   label: "Prize Draw",    desc: "Raffle reveal window (Phase 1)" },
+  { key: "classified",   label: "Classified",    desc: "Chat-only / no cart (Phase 2)" },
+  { key: "digital-code", label: "Digital Code",  desc: "Steam-key instant delivery (Phase 2)" },
+  { key: "live",         label: "Live Items",    desc: "Animals / plants + verification (Phase 2)" },
+] as const;
+
+// Category type keys (nested under featureFlags.categoryTypes — no rollout %)
+const CATEGORY_TYPE_FLAGS = [
+  { key: "category",   label: "Categories",  desc: "Standard hierarchy tier 1–3" },
+  { key: "sublisting", label: "Sublistings", desc: "Grading / card-number sub-tiers" },
+  { key: "brand",      label: "Brands",      desc: "Brand storefront pages" },
+  { key: "bundle",     label: "Bundles",     desc: "Curated product collections" },
+] as const;
+
+interface AccordionSectionProps {
+  title: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}
+
+function AccordionSection({ title, defaultOpen = true, children }: AccordionSectionProps) {
+  const [open, setOpen] = React.useState(defaultOpen);
+  return (
+    <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 bg-zinc-50 dark:bg-zinc-800/60 text-left"
+        aria-expanded={open}
+      >
+        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+          {title}
+        </Text>
+        <svg
+          className={`h-4 w-4 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {open && (
+        <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+          {children}
+        </Div>
+      )}
+    </Div>
+  );
+}
+
+interface FlagRowProps {
+  label: string;
+  desc: string;
+  checked: boolean;
+  onChange: (val: boolean) => void;
+  rollout?: number;
+  onRolloutChange?: (val: number) => void;
+  showRollout?: boolean;
+}
+
+function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, showRollout }: FlagRowProps) {
+  return (
+    <Div className="flex items-center justify-between gap-4 px-4 py-3 bg-white dark:bg-zinc-900">
+      <Div className="flex-1 min-w-0">
+        <Toggle checked={checked} onChange={onChange} label={label} />
+        <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-500 truncate">{desc}</Text>
+      </Div>
+      {showRollout && (
+        <Div className="flex flex-col gap-1 w-28 shrink-0">
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Rollout %</Text>
+          <Input
+            type="number"
+            min={0}
+            max={100}
+            value={rollout ?? 100}
+            onChange={(e) =>
+              onRolloutChange?.(Math.min(100, Math.max(0, Number(e.target.value))))
+            }
+            disabled={!checked}
+            className="w-full"
+          />
+        </Div>
+      )}
+    </Div>
+  );
 }
 
 export function AdminFeatureFlagsView({
@@ -47,7 +153,7 @@ export function AdminFeatureFlagsView({
     },
   });
 
-  const [flags, setFlags] = React.useState<Record<string, boolean>>({});
+  const [flags, setFlags] = React.useState<Record<string, unknown>>({});
   const [rollouts, setRollouts] = React.useState<Record<string, number>>({});
 
   React.useEffect(() => {
@@ -55,6 +161,30 @@ export function AdminFeatureFlagsView({
     setFlags(data.flags ?? {});
     setRollouts(data.rollouts ?? {});
   }, [data]);
+
+  const getPlatformFlag = (key: string) => Boolean(flags[key]);
+  const setPlatformFlag = (key: string, val: boolean) =>
+    setFlags((prev) => ({ ...prev, [key]: val }));
+
+  const getListingTypeFlag = (key: string) => {
+    const lt = flags.listingTypes as Record<string, boolean> | undefined;
+    return lt?.[key] ?? false;
+  };
+  const setListingTypeFlag = (key: string, val: boolean) =>
+    setFlags((prev) => ({
+      ...prev,
+      listingTypes: { ...(prev.listingTypes as Record<string, boolean> ?? {}), [key]: val },
+    }));
+
+  const getCategoryTypeFlag = (key: string) => {
+    const ct = flags.categoryTypes as Record<string, boolean> | undefined;
+    return ct?.[key] ?? false;
+  };
+  const setCategoryTypeFlag = (key: string, val: boolean) =>
+    setFlags((prev) => ({
+      ...prev,
+      categoryTypes: { ...(prev.categoryTypes as Record<string, boolean> ?? {}), [key]: val },
+    }));
 
   const saveFlags = useMutation({
     mutationFn: async () => {
@@ -69,15 +199,6 @@ export function AdminFeatureFlagsView({
     },
   });
 
-  const featureKeys = React.useMemo(() => Object.keys(flags), [flags]);
-
-  const formatLabel = (value: string) =>
-    value
-      .replace(/([A-Z])/g, " $1")
-      .replace(/_/g, " ")
-      .replace(/^./, (char) => char.toUpperCase())
-      .trim();
-
   const defaultFlags = () => (
     <Form
       onSubmit={(event) => {
@@ -86,49 +207,47 @@ export function AdminFeatureFlagsView({
       }}
       className="space-y-4"
     >
-      {featureKeys.length === 0 && !isLoading && (
-        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
-          No feature flags configured. Add flags to siteSettings.featureFlags to manage them here.
-        </Text>
-      )}
-      {featureKeys.map((key) => (
-        <Div
-          key={key}
-          className="flex items-start justify-between gap-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-3"
-        >
-          <Div className="flex-1">
-            <Toggle
-              checked={Boolean(flags[key])}
-              onChange={(value) => {
-                setFlags((prev) => ({ ...prev, [key]: value }));
-              }}
-              label={formatLabel(key)}
-            />
-            <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-500 font-mono">
-              {key}
-            </Text>
-          </Div>
-          <Div className="flex flex-col gap-1 w-32 shrink-0">
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-              Rollout %
-            </Text>
-            <Input
-              type="number"
-              min={0}
-              max={100}
-              value={rollouts[key] ?? 100}
-              onChange={(e) =>
-                setRollouts((prev) => ({
-                  ...prev,
-                  [key]: Math.min(100, Math.max(0, Number(e.target.value))),
-                }))
-              }
-              disabled={!flags[key]}
-              className="w-full"
-            />
-          </Div>
-        </Div>
-      ))}
+      <AccordionSection title="Platform Features">
+        {PLATFORM_FLAGS.map(({ key, label, desc }) => (
+          <FlagRow
+            key={key}
+            label={label}
+            desc={desc}
+            checked={getPlatformFlag(key)}
+            onChange={(val) => setPlatformFlag(key, val)}
+            rollout={rollouts[key]}
+            onRolloutChange={(val) => setRollouts((prev) => ({ ...prev, [key]: val }))}
+            showRollout
+          />
+        ))}
+      </AccordionSection>
+
+      <AccordionSection title="Listing Types">
+        {LISTING_TYPE_FLAGS.map(({ key, label, desc }) => (
+          <FlagRow
+            key={key}
+            label={label}
+            desc={desc}
+            checked={getListingTypeFlag(key)}
+            onChange={(val) => setListingTypeFlag(key, val)}
+            showRollout={false}
+          />
+        ))}
+      </AccordionSection>
+
+      <AccordionSection title="Category Types">
+        {CATEGORY_TYPE_FLAGS.map(({ key, label, desc }) => (
+          <FlagRow
+            key={key}
+            label={label}
+            desc={desc}
+            checked={getCategoryTypeFlag(key)}
+            onChange={(val) => setCategoryTypeFlag(key, val)}
+            showRollout={false}
+          />
+        ))}
+      </AccordionSection>
+
       <FormActions align="right">
         <Button
           type="button"
@@ -144,9 +263,9 @@ export function AdminFeatureFlagsView({
         <Button
           type="submit"
           isLoading={saveFlags.isPending}
-          disabled={saveFlags.isPending || featureKeys.length === 0}
+          disabled={saveFlags.isPending}
         >
-          Save feature flags
+          Save All Flags
         </Button>
       </FormActions>
     </Form>

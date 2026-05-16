@@ -143,7 +143,13 @@ export interface ProductDocument {
   seoTitle?: string;
   seoDescription?: string;
   seoKeywords?: string[];
-  category: string;
+  /** Primary category FK slugs (1-to-many). Use categorySlugs[0] for display. */
+  categorySlugs: string[];
+  /** Display-name cache parallel to categorySlugs[]. */
+  categoryNames?: string[];
+  /** @deprecated Read-only alias — normalised from legacy docs on load. */
+  category?: string;
+  /** @deprecated Read-only alias. */
   categoryName?: string;
   subcategory?: string;
   brand?: string;

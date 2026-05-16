@@ -311,6 +311,57 @@ export interface SiteSettingsCredentialsMasked {
   whatsappAdminNotifyNumbers?: string;
 }
 
+export interface NotificationChannelConfig {
+  inApp: {
+    /** Always true — in-app is the mandatory primary channel. */
+    enabled: true;
+    /** Signals to UI that this toggle is non-editable. */
+    readOnly: true;
+  };
+  email: {
+    enabled: boolean;
+    /** Minimum priority that triggers an email (default: "normal"). */
+    minPriority?: NotificationPriority;
+    /** Subset of NotificationTypes to email — absent means all types. */
+    types?: NotificationType[];
+  };
+  whatsapp: {
+    enabled: boolean;
+    /** Minimum priority that triggers a WhatsApp message (default: "high"). */
+    minPriority?: NotificationPriority;
+    /** Subset of NotificationTypes to WhatsApp — absent means all types. */
+    types?: NotificationType[];
+    /** When true, WhatsApp OTP is offered as an alternative to email OTP at checkout. */
+    otpEnabled?: boolean;
+  };
+  sms: {
+    enabled: boolean;
+    /** Minimum priority that triggers an SMS (default: "high"). */
+    minPriority?: NotificationPriority;
+  };
+}
+
+export const DEFAULT_NOTIFICATION_CHANNELS: NotificationChannelConfig = {
+  inApp: { enabled: true, readOnly: true },
+  email: { enabled: false, minPriority: "normal" },
+  whatsapp: { enabled: false, minPriority: "high", otpEnabled: false },
+  sms: { enabled: false, minPriority: "high" },
+};
+
+const PRIORITY_ORDER: Record<NotificationPriority, number> = {
+  low: 0,
+  normal: 1,
+  high: 2,
+};
+
+/** Returns true when `priority` meets or exceeds `minPriority`. */
+export function meetsMinPriority(
+  priority: NotificationPriority,
+  minPriority: NotificationPriority = "normal",
+): boolean {
+  return PRIORITY_ORDER[priority] >= PRIORITY_ORDER[minPriority];
+}
+
 export interface SiteSettingsDocument {
   id: "global";
   siteName: string;
@@ -520,6 +571,12 @@ export interface SiteSettingsDocument {
    * alongside navConfig. Read by RSC public layouts to block disabled routes.
    */
   disabledRoutes?: string[];
+  /**
+   * Notification channel configuration — controls which delivery channels are
+   * active. In-app is always enabled and cannot be disabled; all others are
+   * opt-in and require the corresponding credentials to be set.
+   */
+  notificationChannels?: NotificationChannelConfig;
   createdAt: Date;
   updatedAt: Date;
 }

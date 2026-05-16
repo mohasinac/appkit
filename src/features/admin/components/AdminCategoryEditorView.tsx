@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, InlineCreateSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Form, InlineCreateSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -56,6 +56,7 @@ export function AdminCategoryEditorView({
   ...rest
 }: AdminCategoryEditorViewProps) {
   const isEdit = Boolean(categoryId);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
 
   const [name, setName] = React.useState("");
   const [slug, setSlug] = React.useState("");
@@ -132,15 +133,53 @@ export function AdminCategoryEditorView({
 
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
 
-  const formSection = (
-    <Form
-      key="cat-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }}
-          className="space-y-4"
+  const actionSidebar = (
+    <Card variant="outlined" padding="md" className="space-y-3">
+      <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+        Status
+      </Text>
+      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+        {isEdit ? (isActive ? "Active" : "Inactive") : "New"}
+      </Text>
+      <Button
+        type="submit"
+        form="category-editor-form"
+        className="w-full"
+        isLoading={isSubmitting}
+        disabled={!name || isSubmitting}
+      >
+        {isEdit ? "Save changes" : "Create category"}
+      </Button>
+      {isEdit && (
+        <Button
+          type="button"
+          variant="danger"
+          className="w-full"
+          isLoading={deleteMutation.isPending}
+          onClick={() => setDeleteOpen(true)}
         >
+          Delete category
+        </Button>
+      )}
+    </Card>
+  );
+
+  const formContent = (
+    <Form
+      id="category-editor-form"
+      key="cat-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        saveMutation.mutate();
+      }}
+      className="space-y-6"
+    >
+      {/* ── Identity ── */}
+      <Card variant="outlined" padding="lg">
+        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+          Identity
+        </Text>
+        <div className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">
             <Input
               label="Category name"
@@ -149,7 +188,6 @@ export function AdminCategoryEditorView({
               required
               placeholder="e.g. Toys & Games"
             />
-
             <Input
               label="Slug"
               value={slug}
@@ -161,16 +199,16 @@ export function AdminCategoryEditorView({
               helperText="Auto-generated from name. Used in URLs."
             />
           </div>
-
           <Input
             label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Brief description of the category"
           />
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Parent category</label>
+            <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Parent category
+            </Text>
             <InlineCreateSelect
               value={parentId || null}
               onChange={(v) => setParentId(v ?? "")}
@@ -182,7 +220,7 @@ export function AdminCategoryEditorView({
               createLabel="Category"
               renderCreateForm={({ onCreated, onCancel }) => (
                 <CategoryQuickCreateForm
-                  onSaved={(id, name) => { setParentId(id); onCreated({ value: id, label: name }); }}
+                  onSaved={(id, n) => { setParentId(id); onCreated({ value: id, label: n }); }}
                   onCancel={onCancel}
                 />
               )}
@@ -191,7 +229,15 @@ export function AdminCategoryEditorView({
               Leave empty to create a root category.
             </Text>
           </div>
+        </div>
+      </Card>
 
+      {/* ── Display ── */}
+      <Card variant="outlined" padding="lg">
+        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+          Display
+        </Text>
+        <div className="space-y-4">
           <Input
             label="Display order"
             value={order}
@@ -200,55 +246,65 @@ export function AdminCategoryEditorView({
             min={0}
             placeholder="0"
           />
-
           <Toggle label="Active" checked={isActive} onChange={setIsActive} />
+          <Toggle label="Show in menu" checked={showInMenu} onChange={setShowInMenu} />
+        </div>
+      </Card>
 
-          <Toggle
-            label="Show in menu"
-            checked={showInMenu}
-            onChange={setShowInMenu}
-          />
-
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={!name || isSubmitting}
-            >
-              {isEdit ? "Save changes" : "Create category"}
-            </Button>
-            {isEdit && (
-              <Button
-                type="button"
-                variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Delete this category? Products in this category will become uncategorized.",
-                    )
-                  ) {
-                    deleteMutation.mutate();
-                  }
-                }}
-              >
-                Delete category
-              </Button>
-            )}
-          </div>
+      {/* Mobile-only action buttons */}
+      <div className="flex gap-3 lg:hidden">
+        <Button type="submit" isLoading={isSubmitting} disabled={!name || isSubmitting}>
+          {isEdit ? "Save changes" : "Create category"}
+        </Button>
+        {isEdit && (
+          <Button
+            type="button"
+            variant="danger"
+            isLoading={deleteMutation.isPending}
+            onClick={() => {
+              if (confirm("Delete this category? Products in this category will become uncategorized.")) {
+                deleteMutation.mutate();
+              }
+            }}
+          >
+            Delete category
+          </Button>
+        )}
+      </div>
     </Form>
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <div className="overflow-y-auto p-4">{formContent}</div>;
   }
 
+  const twoPanel = (
+    <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+      <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
+      <div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
+        {actionSidebar}
+      </div>
+    </div>
+  );
+
   return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Category" : "Create Category"}
-      sections={[formSection]}
-    />
+    <>
+      <StackedViewShell
+        portal="admin"
+        {...rest}
+        title={isEdit ? "Edit Category" : "Create Category"}
+        sections={[twoPanel]}
+      />
+      <ConfirmDeleteModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => deleteMutation.mutate()}
+        isDeleting={deleteMutation.isPending}
+        title="Delete this category?"
+        message="Products in this category will become uncategorized. This action cannot be undone."
+        confirmText="Delete category"
+        variant="danger"
+      />
+    </>
   );
 }

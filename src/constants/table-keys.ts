@@ -41,6 +41,15 @@ export const TABLE_KEYS = {
   IS_PART_OF_BUNDLE: "isPartOfBundle",
   SUBLISTING_CATEGORY: "sublistingCategory",
   FEATURES: "features",
+  // Classified-specific
+  CITY: "city",
+  ACCEPTS_SHIPPING: "acceptsShipping",
+  NEGOTIABLE: "negotiable",
+  // Digital-code-specific
+  DELIVERY_METHOD: "deliveryMethod",
+  // Live-item-specific
+  SPECIES: "species",
+  JURISDICTION: "jurisdiction",
 } as const;
 
 export type TableKey = (typeof TABLE_KEYS)[keyof typeof TABLE_KEYS];

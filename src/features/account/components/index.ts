@@ -77,3 +77,5 @@ export type {
 } from "./UserReturnsView";
 export { UserSupportView } from "./UserSupportView";
 export type { UserSupportViewProps } from "./UserSupportView";
+export { NotificationPreferencesPanel } from "./NotificationPreferencesPanel";
+export type { NotificationPreferencesPanelProps } from "./NotificationPreferencesPanel";

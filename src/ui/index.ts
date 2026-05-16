@@ -285,6 +285,8 @@ export type {
 export { DynamicSelect } from "./components/DynamicSelect";
 export type { InlineCreateSelectProps } from "./components/InlineCreateSelect";
 export { InlineCreateSelect } from "./components/InlineCreateSelect";
+export type { PaginatedMultiSelectProps } from "./components/PaginatedMultiSelect";
+export { PaginatedMultiSelect } from "./components/PaginatedMultiSelect";
 
 export type { RoleBadgeProps } from "./components/RoleBadge";
 export { RoleBadge } from "./components/RoleBadge";

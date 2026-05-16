@@ -96,11 +96,47 @@ export interface UserAddress {
   phone?: string;
 }
 
-export interface NotificationPreferences {
-  orderUpdates?: boolean;
-  promotions?: boolean;
-  newsletter?: boolean;
+/**
+ * Per-channel on/off toggles at the user level.
+ * Channels are only surfaced in the UI when the admin has enabled them in
+ * siteSettings.notificationChannels — this is enforced on the server side.
+ */
+export interface NotificationChannelPrefs {
+  /** Disable all email notifications for this user (default: true = enabled). */
+  email?: boolean;
+  /** Disable all WhatsApp notifications for this user. */
+  whatsapp?: boolean;
+  /** Disable all SMS notifications for this user. */
   sms?: boolean;
+}
+
+/**
+ * Per notification-type on/off controls.  `true` = enabled (default when absent).
+ */
+export interface NotificationTypePrefs {
+  orderUpdates?: boolean;
+  bids?: boolean;
+  promotions?: boolean;
+  system?: boolean;
+  reviews?: boolean;
+  messages?: boolean;
+  offers?: boolean;
+}
+
+export interface NotificationPreferences {
+  /** Per-channel global toggles (user can silence a whole channel). */
+  channels?: NotificationChannelPrefs;
+  /** Per notification-type toggles (user can silence specific event classes). */
+  types?: NotificationTypePrefs;
+  /** @deprecated Use types.orderUpdates */
+  orderUpdates?: boolean;
+  /** @deprecated Use types.promotions */
+  promotions?: boolean;
+  /** @deprecated Use channels.sms */
+  newsletter?: boolean;
+  /** @deprecated Use channels.sms */
+  sms?: boolean;
+  /** Push notifications reserved for future use. */
   push?: boolean;
 }
 

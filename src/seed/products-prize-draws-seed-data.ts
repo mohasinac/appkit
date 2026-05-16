@@ -26,8 +26,8 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     title: "Pokémon Mystery Box — June Mega Draw",
     description:
       "10 sealed Pokémon TCG mystery prizes. Each entry gives you a fair shot at one of the 10 prizes — from a Charizard-themed ETB to a genuine PSA 9 Base Set holo. Reveal opens June 25, 10:00 IST. Non-refundable digital entry.",
-    category: "category-pokemon-tcg",
-    categoryName: "Pokémon TCG",
+    categorySlugs: ["category-pokemon-tcg"],
+    categoryNames: ["Pokémon TCG"],
     brand: "The Pokémon Company",
     brandSlug: "brand-pokemon-company",
     price: 500, // ₹5 per entry (matches pricePerEntry; price is the unit cost for cart totals)
@@ -82,8 +82,8 @@ const _rawProductsPrizeDrawsSeedData: Partial<ProductDocument>[] = [
     title: "Hot Wheels Super Treasure Hunt Draw",
     description:
       "8 confirmed Super Treasure Hunt Hot Wheels — including a 1969 Volkswagen Squareback, Datsun 510, and Custom Mustang. Single entry, single reveal, single prize. RNG verified post-reveal on GitHub.",
-    category: "category-diecast-vehicles",
-    categoryName: "Diecast Vehicles",
+    categorySlugs: ["category-diecast-vehicles"],
+    categoryNames: ["Diecast Vehicles"],
     brand: "Hot Wheels",
     brandSlug: "brand-hot-wheels",
     price: 29900, // ₹299 per entry

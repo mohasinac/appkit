@@ -18,6 +18,7 @@ export const PRODUCT_FIELDS = {
   DESCRIPTION: "description",
   SLUG: "slug",
   CATEGORY: "category",
+  CATEGORY_SLUGS: "categorySlugs",
   CATEGORY_SLUG: "categorySlug",
   SUBCATEGORY: "subcategory",
   BRAND: "brand",

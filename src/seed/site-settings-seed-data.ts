@@ -446,6 +446,12 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
     deviantartClientId: "deviantart_client_id_PLACEHOLDER",
     deviantartClientSecret: "deviantart_client_secret_PLACEHOLDER",
   },
+  notificationChannels: {
+    inApp: { enabled: true, readOnly: true },
+    email: { enabled: false, minPriority: "normal" },
+    whatsapp: { enabled: false, minPriority: "high", otpEnabled: false },
+    sms: { enabled: false, minPriority: "high" },
+  },
   actionConfig: {},
   navConfig: {},
   disabledRoutes: [],

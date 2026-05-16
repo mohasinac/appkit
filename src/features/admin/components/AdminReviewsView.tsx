@@ -8,6 +8,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, Modal, RowActionMenu, Button, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_REVIEW_STATUS_TABS, ADMIN_REVIEW_RATING_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -272,8 +273,8 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "approve", label: "Approve Selected", variant: "primary", onClick: () => { selection.clearSelection(); } },
-            { id: "reject", label: "Reject Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+            { id: "approve", label: `${ACTIONS.ADMIN["approve-review"].label} Selected`, variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: "reject", label: `${ACTIONS.ADMIN["reject-review"].label} Selected`, variant: "secondary", onClick: () => { selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -298,8 +299,8 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
               return (
                 <RowActionMenu
                   actions={[
-                    { label: "Approve", onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "approved" } }) },
-                    { label: "Reject", onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "rejected" } }) },
+                    { label: ACTIONS.ADMIN["approve-review"].label, onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "approved" } }) },
+                    { label: ACTIONS.ADMIN["reject-review"].label, destructive: true, onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "rejected" } }) },
                     {
                       label: rr.isFeatured ? "Unfeature" : "Feature",
                       onClick: () => patchMutation.mutate({ id: rr.id, payload: { featured: !rr.isFeatured } }),

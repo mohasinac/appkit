@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 import type { ProductItem } from "../types";
 import { ROUTES } from "../../../next";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -49,7 +50,7 @@ const DEFAULT_LABELS: Required<MarketplacePrizeDrawCardLabels> = {
   closedBadge: "Draw closed",
   entriesRemainingLabel: (remaining, max) => `${remaining}/${max} entries left`,
   pricePerEntryLabel: "per entry",
-  enterDraw: "Enter draw",
+  enterDraw: ACTIONS.PRIZE_DRAW["enter-draw"].label,
 };
 
 function statusVariant(status?: "pending" | "open" | "closed") {

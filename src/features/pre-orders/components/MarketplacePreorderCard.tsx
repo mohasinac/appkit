@@ -6,6 +6,7 @@ import type { ProductItem } from "../../products";
 import { MediaImage } from "../../media";
 import { useWishlistToggle, type WishlistToggleActions } from "../../wishlist";
 import { ROUTES } from "../../../next";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { formatCurrency } from "../../../utils";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -52,10 +53,10 @@ export interface MarketplacePreorderCardProps {
 const DEFAULT_LABELS: Required<MarketplacePreorderCardLabels> = {
   preOrderBadge: "Pre-order",
   featuredBadge: "Featured",
-  reserveNow: "Reserve now",
-  addToCart: "Add to Cart",
-  addToWishlist: "Add to wishlist",
-  removeFromWishlist: "Remove from wishlist",
+  reserveNow: ACTIONS.PRE_ORDER["reserve-now"].label,
+  addToCart: ACTIONS.PRODUCT["add-to-cart"].label,
+  addToWishlist: ACTIONS.PRODUCT["add-to-wishlist"].label,
+  removeFromWishlist: ACTIONS.PRODUCT["remove-from-wishlist"].label,
 };
 
 function resolveHref(

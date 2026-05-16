@@ -181,6 +181,10 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
       "./node_modules/string_decoder/**",
       // Crypto / TLS utilities (used by firebase-admin token verification):
       "./node_modules/node-forge/**",
+      // html-entities: required by @google-cloud/storage/nodejs-common/util.js
+      // at cold start; not statically traced by Vercel. Missing this causes
+      // /api/media/sign (and any route using getAdminStorage()) to 500.
+      "./node_modules/html-entities/**",
     ],
   };
   const mergedOutputFileTracingIncludes: Record<string, string[]> = {

@@ -1,5 +1,6 @@
 import React from "react";
 import { Div, Heading } from "../../../ui";
+import { AdSlot } from "../../homepage/components/AdSlot";
 
 /** Minimal shape of a per-store/per-type order group surfaced to the slot. */
 export interface CartOrderGroup {
@@ -56,6 +57,7 @@ export function CartView({
           {renderGroups ? renderGroups(groups, isLoading) : renderItems(isLoading)}
           {!renderGroups && renderPromoCode?.()}
           {renderGroups && renderPromoCode?.()}
+          <AdSlot id="cart-upsell" className="mt-6" />
         </Div>
         <Div className="w-full lg:w-80">
           {renderSummary?.()}

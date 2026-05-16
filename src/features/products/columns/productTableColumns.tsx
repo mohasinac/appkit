@@ -82,7 +82,7 @@ export function getProductTableColumns<T extends ProductItem = ProductItem>({
       header: labels.category,
       sortable: true,
       width: "12%",
-      render: (product: T) => <Span>{product.category ?? "-"}</Span>,
+      render: (product: T) => <Span>{(Array.isArray(product.categorySlugs) ? product.categorySlugs[0] : product.category) ?? "-"}</Span>,
     },
     {
       key: "price",

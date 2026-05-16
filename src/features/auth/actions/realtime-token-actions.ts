@@ -7,6 +7,8 @@
 
 import { getAdminAuth } from "../../../providers/db-firebase/index";
 import { chatRepository } from "../../admin/repository/chat.repository";
+import { conversationsRepository } from "../../messages/repository/conversations.repository";
+import { storeRepository } from "../../stores/repository/store.repository";
 import { serverLogger } from "../../../monitoring/index";
 
 export interface RealtimeTokenResult {
@@ -23,15 +25,29 @@ export async function issueRealtimeToken(
     const userChatIds = await chatRepository.getChatIdsForUser(userId);
     chatIds = Object.fromEntries(userChatIds.map((id) => [id, true]));
   } catch (err) {
-    serverLogger.warn("Could not resolve chatIds for realtime token", {
-      userId,
-      err,
-    });
+    serverLogger.warn("Could not resolve chatIds for realtime token", { userId, err });
+  }
+
+  let conversationIds: Record<string, boolean> = {};
+  try {
+    const buyerConvs = await conversationsRepository.listByBuyer(userId);
+    buyerConvs.forEach((c) => { conversationIds[c.id] = true; });
+
+    if (userRole === "seller") {
+      const store = await storeRepository.findByOwnerId(userId);
+      if (store?.id) {
+        const sellerConvs = await conversationsRepository.listByStore(store.id);
+        sellerConvs.forEach((c) => { conversationIds[c.id] = true; });
+      }
+    }
+  } catch (err) {
+    serverLogger.warn("Could not resolve conversationIds for realtime token", { userId, err });
   }
 
   const customToken = await getAdminAuth().createCustomToken(userId, {
     role: userRole,
     chatIds,
+    conversationIds,
   });
 
   serverLogger.info("issueRealtimeToken: token issued", {

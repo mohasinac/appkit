@@ -1,14 +1,18 @@
 "use client"
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
+import { AsyncFacetSection } from "../../filters/AsyncFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import { SwitchFilter } from "../../filters/SwitchFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
+import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
 import { Div } from "../../../ui";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { sortBy } from "../../../constants/sort";
+
+type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
 export type { FacetOption, UrlTable };
 
@@ -115,6 +119,10 @@ export interface ProductFiltersProps {
   /** @deprecated use storeOptions */
   sellerOptions?: FacetOption[];
   tagOptions?: FacetOption[];
+  /** Async load functions — when provided, use AsyncFacetSection instead of static FilterFacetSection */
+  loadCategoryOptions?: LoadOptionsFn;
+  loadBrandOptions?: LoadOptionsFn;
+  loadStoreOptions?: LoadOptionsFn;
   /** Sublisting category options — separate from main category filter */
   sublistingCategoryOptions?: FacetOption[];
   /** Feature badge options for filtering by product features */
@@ -144,6 +152,9 @@ export function ProductFilters({
   currencyPrefix = "",
   showShipping = true,
   showBundleFilter = true,
+  loadCategoryOptions,
+  loadBrandOptions,
+  loadStoreOptions,
 }: ProductFiltersProps) {
   const resolvedStoreOptions = storeOptions.length > 0 ? storeOptions : (sellerOptions ?? []);
   const t = useTranslations("filters");
@@ -179,7 +190,15 @@ export function ProductFilters({
 
   return (
     <Div>
-      {categoryOptions.length > 0 && (
+      {loadCategoryOptions ? (
+        <AsyncFacetSection
+          title={t("category")}
+          loadOptions={loadCategoryOptions}
+          selected={selectedCategories}
+          onChange={(vals) => table.set(TABLE_KEYS.CATEGORY, vals.join("|"))}
+          defaultCollapsed={false}
+        />
+      ) : categoryOptions.length > 0 ? (
         <FilterFacetSection
           title={t("category")}
           options={categoryOptions}
@@ -188,7 +207,7 @@ export function ProductFilters({
           searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
         />
-      )}
+      ) : null}
 
       <FilterFacetSection
         title={t("condition")}
@@ -215,7 +234,15 @@ export function ProductFilters({
         defaultCollapsed={false}
       />
 
-      {brandOptions.length > 0 && (
+      {loadBrandOptions ? (
+        <AsyncFacetSection
+          title={t("brand")}
+          loadOptions={loadBrandOptions}
+          selected={selectedBrands}
+          onChange={(vals) => table.set(TABLE_KEYS.BRAND, vals.join("|"))}
+          defaultCollapsed={false}
+        />
+      ) : brandOptions.length > 0 ? (
         <FilterFacetSection
           title={t("brand")}
           options={brandOptions}
@@ -224,9 +251,17 @@ export function ProductFilters({
           searchable={brandOptions.length > 4}
           defaultCollapsed={brandOptions.length > 6}
         />
-      )}
+      ) : null}
 
-      {resolvedStoreOptions.length > 0 && (
+      {loadStoreOptions ? (
+        <AsyncFacetSection
+          title={t("store")}
+          loadOptions={loadStoreOptions}
+          selected={selectedSellers}
+          onChange={(vals) => table.set(TABLE_KEYS.STORE_ID, vals.join("|"))}
+          defaultCollapsed={false}
+        />
+      ) : resolvedStoreOptions.length > 0 ? (
         <FilterFacetSection
           title={t("store")}
           options={resolvedStoreOptions}
@@ -235,7 +270,7 @@ export function ProductFilters({
           searchable={resolvedStoreOptions.length > 4}
           defaultCollapsed={resolvedStoreOptions.length > 6}
         />
-      )}
+      ) : null}
 
       {showShipping && (
         <SwitchFilter

@@ -1,7 +1,9 @@
 "use client";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { createPortal } from "react-dom";
 import { twMerge } from "tailwind-merge";
 import { Loader2 } from "lucide-react";
+import type { ActionDef } from "../../_internal/shared/actions/action-registry";
 
 function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
   const rect = host.getBoundingClientRect();
@@ -47,21 +49,45 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   children?: React.ReactNode;
   /** Render as the child element (e.g. next/link) with button styling applied */
   asChild?: boolean;
+  /**
+   * CTA registry action — auto-fills children (label), aria-label, variant, and
+   * shows a confirmation dialog before firing onClick when action.confirmation is set.
+   * Children and aria-label props override the action defaults when explicitly provided.
+   */
+  action?: ActionDef;
 }
 
+// Map ActionKind → Button variant (caller can override via explicit variant prop)
+const ACTION_KIND_VARIANT: Record<string, keyof typeof UI_BUTTON.variants> = {
+  primary: "primary",
+  secondary: "secondary",
+  danger: "danger",
+  ghost: "ghost",
+  link: "ghost",
+  chip: "outline",
+};
+
 export function Button({
-  variant = "primary",
+  variant,
   size = "md",
   className = "",
   isLoading = false,
   disabled,
   children,
   asChild = false,
+  action,
   ...props
 }: ButtonProps) {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  // Resolve defaults from action registry
+  const resolvedVariant = variant ?? (action ? (ACTION_KIND_VARIANT[action.kind] ?? "primary") : "primary");
+  const resolvedChildren = children ?? (action ? action.label : undefined);
+  const resolvedAriaLabel = props["aria-label"] ?? (action ? (action.ariaLabel ?? action.label) : undefined);
+
   const classes = twMerge(
     UI_BUTTON.base,
-    UI_BUTTON.variants[variant],
+    UI_BUTTON.variants[resolvedVariant],
     UI_BUTTON.sizes[size],
     className,
   );
@@ -72,13 +98,26 @@ export function Button({
       if (!disabled && !isLoading) {
         spawnRipple(event.currentTarget, event.clientX, event.clientY);
       }
+      if (action?.confirmation) {
+        event.preventDefault();
+        setConfirmOpen(true);
+        return;
+      }
       userOnClick?.(event);
     },
-    [disabled, isLoading, userOnClick],
+    [disabled, isLoading, action, userOnClick],
   );
 
-  if (asChild && React.isValidElement(children)) {
-    const child = children as React.ReactElement<Record<string, unknown>>;
+  const handleConfirm = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setConfirmOpen(false);
+      userOnClick?.(event);
+    },
+    [userOnClick],
+  );
+
+  if (asChild && React.isValidElement(resolvedChildren)) {
+    const child = resolvedChildren as React.ReactElement<Record<string, unknown>>;
     return React.cloneElement(child, {
       ...props,
       className: twMerge(String(child.props.className ?? ""), classes),
@@ -86,24 +125,75 @@ export function Button({
     });
   }
 
+  const confirmDef = action?.confirmation;
+  const confirmVariant = confirmDef?.confirmKind
+    ? (ACTION_KIND_VARIANT[confirmDef.confirmKind] ?? "primary")
+    : "primary";
+
   return (
-    <button
-      className={classes}
-      disabled={disabled || isLoading}
-      aria-busy={isLoading || undefined}
-      {...props}
-      onClick={handleClick}
-    >
-      {isLoading && (
-        <Loader2 className="appkit-button__spinner" aria-hidden="true" />
+    <>
+      <button
+        className={classes}
+        disabled={disabled || isLoading}
+        aria-busy={isLoading || undefined}
+        {...props}
+        aria-label={resolvedAriaLabel}
+        onClick={handleClick}
+      >
+        {isLoading && (
+          <Loader2 className="appkit-button__spinner" aria-hidden="true" />
+        )}
+        {isLoading ? (
+          <span className="appkit-button__content appkit-button__content--loading">
+            {resolvedChildren}
+          </span>
+        ) : (
+          <span className="appkit-button__content">{resolvedChildren}</span>
+        )}
+      </button>
+
+      {confirmOpen && confirmDef && typeof document !== "undefined" && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="appkit-action-confirm-title"
+          style={{
+            position: "fixed", inset: 0, zIndex: "var(--appkit-z-modal, 1000)" as string,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "rgba(0,0,0,0.45)", backdropFilter: "blur(2px)",
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget) setConfirmOpen(false); }}
+        >
+          <div
+            style={{
+              background: "var(--appkit-surface, #fff)",
+              borderRadius: "var(--appkit-radius-lg, 12px)",
+              padding: "1.5rem",
+              maxWidth: "380px", width: "calc(100% - 2rem)",
+              boxShadow: "var(--appkit-shadow-lg, 0 20px 60px rgba(0,0,0,0.2))",
+            }}
+          >
+            <p
+              id="appkit-action-confirm-title"
+              style={{ fontWeight: 600, marginBottom: "0.5rem", fontSize: "1rem" }}
+            >
+              {confirmDef.title}
+            </p>
+            <p style={{ fontSize: "0.875rem", color: "var(--appkit-color-muted, #6b7280)", marginBottom: "1.25rem" }}>
+              {confirmDef.body}
+            </p>
+            <div style={{ display: "flex", gap: "0.5rem", justifyContent: "flex-end" }}>
+              <Button variant="ghost" size="sm" onClick={() => setConfirmOpen(false)}>
+                {confirmDef.cancelLabel ?? "Cancel"}
+              </Button>
+              <Button variant={confirmVariant} size="sm" onClick={handleConfirm}>
+                {confirmDef.confirmLabel}
+              </Button>
+            </div>
+          </div>
+        </div>,
+        document.body,
       )}
-      {isLoading ? (
-        <span className="appkit-button__content appkit-button__content--loading">
-          {children}
-        </span>
-      ) : (
-        <span className="appkit-button__content">{children}</span>
-      )}
-    </button>
+    </>
   );
 }

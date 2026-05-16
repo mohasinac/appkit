@@ -12,3 +12,5 @@ export {
 export { AuctionsListView } from "./AuctionsListView";
 export { AuctionDetailPageView } from "./AuctionDetailPageView";
 export type { AuctionDetailPageViewProps } from "./AuctionDetailPageView";
+export { AuctionBidsTable } from "./AuctionBidsTable";
+export type { AuctionBidsTableProps, AuctionWithBids } from "./AuctionBidsTable";

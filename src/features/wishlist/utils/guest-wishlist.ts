@@ -4,7 +4,7 @@ const DEFAULT_GUEST_WISHLIST_KEY = process.env.NEXT_PUBLIC_APP_ID
 
 export interface GuestWishlistItem {
   itemId: string;
-  type: "product" | "auction" | "preorder" | "category" | "store";
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live";
   title?: string;
   image?: string;
   addedAt?: string;
@@ -54,7 +54,7 @@ export function getGuestWishlistItems(
 
 export function addToGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store",
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
   snapshot?: { title?: string; image?: string },
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
@@ -84,7 +84,7 @@ export function addToGuestWishlist(
 
 export function removeFromGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store",
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {
@@ -97,7 +97,7 @@ export function removeFromGuestWishlist(
 
 export function isInGuestWishlist(
   itemId: string,
-  type: "product" | "auction" | "preorder" | "category" | "store",
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): boolean {
@@ -121,7 +121,7 @@ export function getGuestWishlistCount(
 }
 
 export function getGuestWishlistByType(
-  type: "product" | "auction" | "preorder" | "category" | "store",
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live",
   storage: GuestWishlistStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_WISHLIST_KEY,
 ): GuestWishlistItem[] {

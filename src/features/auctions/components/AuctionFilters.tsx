@@ -1,16 +1,23 @@
 "use client"
 import { useTranslations } from "next-intl";
 import { FilterFacetSection } from "../../filters/FilterFacetSection";
+import { AsyncFacetSection } from "../../filters/AsyncFacetSection";
 import { RangeFilter } from "../../filters/RangeFilter";
 import type { FacetOption } from "../../filters/FilterFacetSection";
 import type { UrlTable } from "../../filters/FilterPanel";
+import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
 import { Div } from "../../../ui";
+
+type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
 export interface AuctionFiltersProps {
   table: UrlTable;
   categoryOptions?: FacetOption[];
   brandOptions?: FacetOption[];
   storeOptions?: FacetOption[];
+  loadCategoryOptions?: LoadOptionsFn;
+  loadBrandOptions?: LoadOptionsFn;
+  loadStoreOptions?: LoadOptionsFn;
   currencyPrefix?: string;
 }
 
@@ -19,6 +26,9 @@ export function AuctionFilters({
   categoryOptions = [],
   brandOptions = [],
   storeOptions = [],
+  loadCategoryOptions,
+  loadBrandOptions,
+  loadStoreOptions,
   currencyPrefix = "",
 }: AuctionFiltersProps) {
   const t = useTranslations("filters");
@@ -33,7 +43,15 @@ export function AuctionFilters({
 
   return (
     <Div>
-      {categoryOptions.length > 0 && (
+      {loadCategoryOptions ? (
+        <AsyncFacetSection
+          title={t("category")}
+          loadOptions={loadCategoryOptions}
+          selected={selectedCategories}
+          onChange={(vals) => table.set("category", vals.join("|"))}
+          defaultCollapsed={false}
+        />
+      ) : categoryOptions.length > 0 ? (
         <FilterFacetSection
           title={t("category")}
           options={categoryOptions}
@@ -42,9 +60,17 @@ export function AuctionFilters({
           searchable={true}
           defaultCollapsed={categoryOptions.length > 6}
         />
-      )}
+      ) : null}
 
-      {brandOptions.length > 0 && (
+      {loadBrandOptions ? (
+        <AsyncFacetSection
+          title={t("brand")}
+          loadOptions={loadBrandOptions}
+          selected={selectedBrands}
+          onChange={(vals) => table.set("brand", vals[0] ?? "")}
+          defaultCollapsed={false}
+        />
+      ) : brandOptions.length > 0 ? (
         <FilterFacetSection
           title={t("brand")}
           options={brandOptions}
@@ -53,7 +79,7 @@ export function AuctionFilters({
           searchable={brandOptions.length > 4}
           defaultCollapsed={brandOptions.length > 6}
         />
-      )}
+      ) : null}
 
       <RangeFilter
         title={t("bidPriceRange")}
@@ -71,7 +97,15 @@ export function AuctionFilters({
         defaultCollapsed={false}
       />
 
-      {storeOptions.length > 0 && (
+      {loadStoreOptions ? (
+        <AsyncFacetSection
+          title={t("store")}
+          loadOptions={loadStoreOptions}
+          selected={selectedStores}
+          onChange={(vals) => table.set("storeId", vals[0] ?? "")}
+          defaultCollapsed={false}
+        />
+      ) : storeOptions.length > 0 ? (
         <FilterFacetSection
           title={t("store")}
           options={storeOptions}
@@ -80,7 +114,7 @@ export function AuctionFilters({
           searchable={storeOptions.length > 4}
           defaultCollapsed={storeOptions.length > 6}
         />
-      )}
+      ) : null}
 
       <RangeFilter
         title={t("dateRange")}

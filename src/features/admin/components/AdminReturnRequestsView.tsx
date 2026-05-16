@@ -7,6 +7,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -166,11 +167,11 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
                 <RowActionMenu
                   actions={[
                     {
-                      label: "Approve return",
+                      label: ACTIONS.ADMIN["approve-return"].label,
                       onClick: () => { setSelectedRow(rr); setApproveOpen(true); },
                     },
                     {
-                      label: "Reject return",
+                      label: ACTIONS.ADMIN["reject-return"].label,
                       destructive: true,
                       onClick: () => { setSelectedRow(rr); setRejectOpen(true); },
                     },
@@ -187,9 +188,9 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
         onClose={() => { setApproveOpen(false); setSelectedRow(null); }}
         onConfirm={() => { if (selectedRow) approveMutation.mutate(selectedRow.id); }}
         isDeleting={approveMutation.isPending}
-        title="Approve return request?"
+        title={ACTIONS.ADMIN["approve-return"].confirmation!.title}
         message="The order status will be updated to Refunded. The buyer will be notified and the refund process will begin."
-        confirmText="Approve return"
+        confirmText={ACTIONS.ADMIN["approve-return"].confirmation!.confirmLabel}
         variant="primary"
       />
 
@@ -198,9 +199,9 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
         onClose={() => { setRejectOpen(false); setSelectedRow(null); }}
         onConfirm={() => { if (selectedRow) rejectMutation.mutate(selectedRow.id); }}
         isDeleting={rejectMutation.isPending}
-        title="Reject return request?"
+        title={ACTIONS.ADMIN["reject-return"].confirmation!.title}
         message="The order status will be reverted to Delivered. The buyer's return request will be declined."
-        confirmText="Reject return"
+        confirmText={ACTIONS.ADMIN["reject-return"].confirmation!.confirmLabel}
         variant="danger"
       />
     </>

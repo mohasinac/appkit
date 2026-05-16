@@ -6,6 +6,9 @@ export type {
   FacetOption,
 } from "./FilterFacetSection";
 
+export { AsyncFacetSection } from "./AsyncFacetSection";
+export type { AsyncFacetSectionProps } from "./AsyncFacetSection";
+
 export { RangeFilter } from "./RangeFilter";
 export type { RangeFilterProps } from "./RangeFilter";
 

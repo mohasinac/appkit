@@ -28,6 +28,7 @@ import type {
 } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
 import { formatCurrency } from "../../../utils/number.formatter";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 export interface PrizeDrawDetailPageViewProps {
   id: string;
@@ -364,7 +365,7 @@ export async function PrizeDrawDetailPageView({
             href="#prize-draw-buy-bar"
             className="appkit-button appkit-button--primary appkit-button--sm flex-1"
           >
-            <span className="appkit-button__content">Enter draw</span>
+            <span className="appkit-button__content">{ACTIONS.PRIZE_DRAW["enter-draw"].label}</span>
           </a>
         </BuyBar>
       </Container>

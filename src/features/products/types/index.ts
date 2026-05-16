@@ -70,8 +70,12 @@ export interface ProductItem {
   isPromoted?: boolean;
   currentBid?: number;
   availableQuantity?: number;
+  /** @deprecated Use categorySlugs[0] */
   category?: string;
+  /** @deprecated Use categoryNames[0] */
   categoryName?: string;
+  categorySlugs?: string[];
+  categoryNames?: string[];
   categorySlug?: string;
   sellerAvatar?: string;
   status: ProductStatus;

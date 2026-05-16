@@ -152,7 +152,7 @@ export function ProductForm({
       type: "product-image",
       index: galleryIndexRef.current,
       name: product.title || "product",
-      category: product.category || "uncategorized",
+      category: (product.categorySlugs?.[0] ?? product.category) || "uncategorized",
       store: product.storeName || "store",
     });
   };
@@ -162,7 +162,7 @@ export function ProductForm({
       type: "product-video",
       index: 1,
       name: product.title || "product",
-      category: product.category || "uncategorized",
+      category: (product.categorySlugs?.[0] ?? product.category) || "uncategorized",
       store: product.storeName || "store",
     });
   };
@@ -210,8 +210,8 @@ export function ProductForm({
           <>{
             renderCategorySelector({
               label: t("formCategory"),
-              value: product.category || "",
-              onChange: (value) => update({ category: value }),
+              value: (product.categorySlugs?.[0] ?? product.category) || "",
+              onChange: (value) => update({ categorySlugs: value ? [value] : [] }),
               disabled: isReadonly,
             })
           }</>
@@ -220,8 +220,8 @@ export function ProductForm({
             name="category"
             label={t("formCategory")}
             type="text"
-            value={product.category || ""}
-            onChange={(value) => update({ category: value })}
+            value={(product.categorySlugs?.[0] ?? product.category) || ""}
+            onChange={(value) => update({ categorySlugs: value ? [value] : [] })}
             disabled={isReadonly}
           />
         )}
@@ -360,7 +360,7 @@ export function ProductForm({
               type: "product-image",
               index: 1,
               name: product.title || "product",
-              category: product.category || "uncategorized",
+              category: (product.categorySlugs?.[0] ?? product.category) || "uncategorized",
               store: product.storeName || "store",
             })
           }

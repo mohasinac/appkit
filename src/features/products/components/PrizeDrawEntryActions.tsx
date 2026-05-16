@@ -9,6 +9,7 @@ import { pushCartOp } from "../../cart/utils/pending-ops";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 export interface PrizeDrawEntryActionsProps {
   productId: string;
@@ -82,13 +83,14 @@ export function PrizeDrawEntryActions({
       </Text>
 
       <Button
+        action={closed ? undefined : ACTIONS.PRIZE_DRAW["enter-draw"]}
         variant="primary"
         size="md"
         className="w-full"
         disabled={closed}
         onClick={handleEnter}
       >
-        {closed ? "Draw closed" : "Enter draw"}
+        {closed ? "Draw closed" : undefined}
       </Button>
 
       {prizeGithubFileUrl ? (

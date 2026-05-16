@@ -33,7 +33,7 @@ export function toClientClassified(doc: ProductDocument): ClassifiedClientShape 
     images: doc.images ?? [],
     storeId: doc.storeId,
     storeName: doc.storeName ?? null,
-    category: doc.category,
+    category: doc.categorySlugs?.[0] ?? doc.category ?? "",
     condition: doc.condition ?? null,
     tags: doc.tags ?? [],
     classified: doc.classified ?? null,

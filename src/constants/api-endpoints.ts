@@ -166,6 +166,8 @@ export const ADMIN_ENDPOINTS = {
   SUPPORT_TICKET_BY_ID: (id: string) => `/api/admin/support-tickets/${id}`,
   SCAMMERS: "/api/admin/scammers",
   SCAMMER_BY_ID: (id: string) => `/api/admin/scammers/${id}`,
+  ADDRESSES: "/api/admin/addresses",
+  ADDRESS_BY_ID: (id: string) => `/api/admin/addresses/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------

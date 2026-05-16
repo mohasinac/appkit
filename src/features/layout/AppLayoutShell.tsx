@@ -123,6 +123,12 @@ export interface AppLayoutShellProps {
     logout?: string;
   };
   eventBannerSlot?: React.ReactNode;
+  /**
+   * Override className for the main content wrapper div.
+   * When set, replaces the default `w-full px-4 py-6 …`
+   * Use `"w-full"` for dashboard layouts that provide their own padding via DashboardLayoutClient.
+   */
+  contentClassName?: string;
   lightBackground?: {
     type: "color" | "image" | "gradient" | "video";
     value: string;
@@ -578,6 +584,7 @@ export function AppLayoutShell({
   showThemeToggleInSidebar = false,
   sidebarProfileLabels,
   eventBannerSlot,
+  contentClassName,
   lightBackground = DEFAULT_LIGHT_BG,
   darkBackground = DEFAULT_DARK_BG,
 }: AppLayoutShellProps) {
@@ -726,7 +733,7 @@ export function AppLayoutShell({
             id="main-content"
             className={`w-full flex-1 ${hasBottomActions ? "mb-28" : "mb-16"} md:mb-0`}
           >
-            <Div className="container mx-auto w-full max-w-screen-2xl px-4 py-6 md:px-6 lg:px-8">
+            <Div className={contentClassName ?? "w-full px-4 py-6 md:px-6 lg:px-8"}>
               {children}
             </Div>
           </Main>

@@ -175,7 +175,12 @@ export function DashboardLayoutClient({
           className={className}
         />
       )}
-      {children}
+      {/* Content area — full width on both mobile and desktop.
+          pl-5 on md+ clears the sidebar toggle tab (w-5 = 1.25 rem).
+          pr-4/6/8 + py-6 mirror the padding AppLayoutShell removed for dashboard routes. */}
+      <div className="w-full px-4 py-6 md:pl-5 md:pr-6 lg:pr-8 min-h-[calc(100dvh-var(--header-height,3.5rem))]">
+        {children}
+      </div>
     </>
   );
 }

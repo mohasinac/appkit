@@ -224,14 +224,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         </Text>
 
         {/* Category + brand chips */}
-        {(product.categoryName || product.brand) && (
+        {((Array.isArray(product.categoryNames) ? product.categoryNames[0] : product.categoryName) || product.brand) && (
           <Row className="mt-1 gap-1 flex-wrap">
-            {product.categoryName && (
+            {(Array.isArray(product.categoryNames) ? product.categoryNames[0] : product.categoryName) && (
               <Span className="inline-flex items-center gap-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 text-[10px] text-zinc-500 dark:text-zinc-400 truncate max-w-[100px]">
                 <svg className="h-2.5 w-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" />
                 </svg>
-                {product.categoryName}
+                {(Array.isArray(product.categoryNames) ? product.categoryNames[0] : product.categoryName)}
               </Span>
             )}
             {product.brand && (

@@ -31,7 +31,7 @@ export interface CartOp {
 export interface WishlistOp {
   op: WishlistOpKind;
   itemId: string;
-  type: "product" | "auction" | "preorder" | "category" | "store";
+  type: "product" | "auction" | "preorder" | "category" | "store" | "classified" | "digital-code" | "live";
   title?: string;
   image?: string;
   ts: number;

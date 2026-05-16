@@ -2,6 +2,7 @@ import type { CartItem } from "../types";
 import { Aside, Button, Div, Heading, Row, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { THEME_CONSTANTS } from "../../../tokens";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 interface CartItemRowProps {
   item: CartItem;
@@ -97,7 +98,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           onClick={() => onRemove(item.id)}
           variant="ghost"
           size="sm"
-          aria-label="Remove from cart"
+          aria-label={ACTIONS.CART["remove-item"].ariaLabel}
           className="self-start text-neutral-400 dark:text-zinc-500 transition hover:text-red-500"
         >
           ✕
@@ -198,7 +199,7 @@ export function CartDrawer({
                 variant="primary"
                 className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-semibold text-white transition hover:bg-neutral-800"
               >
-                {labels.checkout ?? "Proceed to Checkout"}
+                {labels.checkout ?? ACTIONS.CART["checkout"].label}
               </Button>
             )}
           </Div>

@@ -41,6 +41,8 @@ export interface CompareProductLike {
   brand?: string;
   category?: string;
   categoryName?: string;
+  categorySlugs?: string[];
+  categoryNames?: string[];
   storeName?: string;
   storeSlug?: string;
   /** Canonical discriminator (SB1-G Phase 4). */
@@ -212,8 +214,8 @@ function CompareColumn({ item, productType, labels, onRemove, onClose }: ColumnP
 
       <FieldRow label={labels.field.category}>
         <Text>
-          {item.categoryName || item.category ? (
-            <span className={CHIP_CLASS}>{item.categoryName ?? item.category}</span>
+          {(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) || (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category) ? (
+            <span className={CHIP_CLASS}>{(Array.isArray(item.categoryNames) ? item.categoryNames[0] : item.categoryName) ?? (Array.isArray(item.categorySlugs) ? item.categorySlugs[0] : item.category)}</span>
           ) : (
             "â€”"
           )}

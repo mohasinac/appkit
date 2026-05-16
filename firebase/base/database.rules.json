@@ -142,6 +142,34 @@
     },
 
     // ============================================================
+    // Buyer↔Seller Conversation Ping Channel (D5 + VC7)
+    // ============================================================
+    // The server writes Date.now() to these paths on every message send /
+    // mark-read mutation. Clients subscribe and refetch from Firestore on each
+    // tick. Zero RTDB schema duplication — Firestore is the canonical store.
+    //
+    // Paths:
+    //   chats/{conversationId}/lastUpdate — per-conversation ping
+    //   chats/user/{userId}/lastUpdate    — per-user fan-out ping
+    //
+    // Token claims required:
+    //   conversationIds: { [conversationId]: true }  (issued by /api/realtime/token)
+    //   uid                                          (matches $userId)
+    // ============================================================
+    "chats": {
+      "$conversationId": {
+        ".read": "auth != null && auth.token.conversationIds != null && auth.token.conversationIds[$conversationId] == true",
+        ".write": false
+      },
+      "user": {
+        "$userId": {
+          ".read": "auth != null && auth.uid == $userId",
+          ".write": false
+        }
+      }
+    },
+
+    // ============================================================
     // Auth Event Bridge — pre-session OAuth & login signal channel
     // ============================================================
     // Used by Google/Apple OAuth popup flow and payment webhooks.

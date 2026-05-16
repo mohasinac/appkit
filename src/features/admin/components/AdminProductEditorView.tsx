@@ -4,6 +4,9 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  Card,
+  CardBody,
+  ConfirmDeleteModal,
   DynamicSelect,
   InlineCreateSelect,
   Form,
@@ -32,6 +35,8 @@ export interface AdminProductEditorViewProps
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
+  /** Listing types that are enabled. When provided, restricts the mode tabs. */
+  enabledListingTypes?: string[];
 }
 
 type ProductMode = "standard" | "auction" | "preorder";
@@ -123,11 +128,13 @@ export function AdminProductEditorView({
   onSaved,
   onDeleted,
   embedded,
+  enabledListingTypes,
   ...rest
 }: AdminProductEditorViewProps) {
   const isEdit = Boolean(productId);
   const [product, setProduct] = React.useState<ProductFormValue>(EMPTY_PRODUCT);
   const [mode, setMode] = React.useState<ProductMode>("standard");
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
   const { showToast } = useToast();
 
   const productQuery = useQuery({
@@ -197,33 +204,76 @@ export function AdminProductEditorView({
 
   const isSubmitting = saveMutation.isPending || productQuery.isLoading;
 
-  const formSection = (
-    <Form
-      key="product-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveMutation.mutate();
-          }}
-          className="space-y-6"
+  const actionSidebar = (
+    <Card variant="outlined" padding="md" className="space-y-3">
+      <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+        Status
+      </Text>
+      <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+        {isEdit ? product.status ?? "—" : "New"}
+      </Text>
+      <Button
+        type="submit"
+        form="product-editor-form"
+        className="w-full"
+        isLoading={isSubmitting}
+        disabled={!product.title || isSubmitting}
+      >
+        {isEdit ? "Save changes" : "Create product"}
+      </Button>
+      {isEdit && (
+        <Button
+          type="button"
+          variant="danger"
+          className="w-full"
+          isLoading={deleteMutation.isPending}
+          onClick={() => setDeleteOpen(true)}
         >
-          {/* ── Mode selector ── */}
-          <Stack gap="xs">
-            <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-              Listing type
-            </Text>
-            <Tabs value={mode} onChange={handleModeChange}>
-              <TabsList>
-                <TabsTrigger value="standard">Standard</TabsTrigger>
-                <TabsTrigger value="auction">Auction</TabsTrigger>
-                <TabsTrigger value="preorder">Pre-order</TabsTrigger>
-              </TabsList>
-              <TabsContent value="standard" />
-              <TabsContent value="auction" />
-              <TabsContent value="preorder" />
-            </Tabs>
-          </Stack>
+          Delete product
+        </Button>
+      )}
+    </Card>
+  );
 
-          {/* ── Store selector (admin-only) ── */}
+  const formContent = (
+    <Form
+      id="product-editor-form"
+      key="product-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        saveMutation.mutate();
+      }}
+      className="space-y-6"
+    >
+      {/* ── Listing type ── */}
+      <Card variant="outlined" padding="lg">
+        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+          Listing Type
+        </Text>
+        <Tabs value={mode} onChange={handleModeChange}>
+          <TabsList>
+            {(!enabledListingTypes || enabledListingTypes.includes("standard")) && (
+              <TabsTrigger value="standard">Standard</TabsTrigger>
+            )}
+            {(!enabledListingTypes || enabledListingTypes.includes("auction")) && (
+              <TabsTrigger value="auction">Auction</TabsTrigger>
+            )}
+            {(!enabledListingTypes || enabledListingTypes.includes("pre-order")) && (
+              <TabsTrigger value="preorder">Pre-order</TabsTrigger>
+            )}
+          </TabsList>
+          <TabsContent value="standard" />
+          <TabsContent value="auction" />
+          <TabsContent value="preorder" />
+        </Tabs>
+      </Card>
+
+      {/* ── Classification (store + category + brand) ── */}
+      <Card variant="outlined" padding="lg">
+        <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 mb-4">
+          Classification
+        </Text>
+        <div className="space-y-4">
           <Stack gap="xs">
             <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               Store
@@ -238,8 +288,6 @@ export function AdminProductEditorView({
               ariaLabel="Store"
             />
           </Stack>
-
-          {/* ── Shared product fields ── */}
           <ProductForm
             product={product}
             onChange={setProduct}
@@ -310,43 +358,67 @@ export function AdminProductEditorView({
               </Stack>
             )}
           />
+        </div>
+      </Card>
 
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={!product.title || isSubmitting}
-            >
-              {isEdit ? "Save changes" : "Create product"}
-            </Button>
-            {isEdit && (
-              <Button
-                type="button"
-                variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (confirm("Delete this product? This cannot be undone.")) {
-                    deleteMutation.mutate();
-                  }
-                }}
-              >
-                Delete product
-              </Button>
-            )}
-          </div>
+      {/* Mobile-only action buttons */}
+      <div className="flex gap-3 lg:hidden">
+        <Button
+          type="submit"
+          isLoading={isSubmitting}
+          disabled={!product.title || isSubmitting}
+        >
+          {isEdit ? "Save changes" : "Create product"}
+        </Button>
+        {isEdit && (
+          <Button
+            type="button"
+            variant="danger"
+            isLoading={deleteMutation.isPending}
+            onClick={() => {
+              if (confirm("Delete this product? This cannot be undone.")) {
+                deleteMutation.mutate();
+              }
+            }}
+          >
+            Delete product
+          </Button>
+        )}
+      </div>
     </Form>
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <div className="overflow-y-auto p-4">{formContent}</div>;
   }
 
+  const twoPanel = (
+    <div className="grid gap-6 lg:grid-cols-[1fr_280px] lg:items-start">
+      <CardBody className="min-w-0 space-y-6 p-0">{formContent}</CardBody>
+      <div className="hidden lg:block lg:sticky lg:top-[var(--header-height,0px)]">
+        {actionSidebar}
+      </div>
+    </div>
+  );
+
   return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Product" : "Create Product"}
-      sections={[formSection]}
-    />
+    <>
+      <StackedViewShell
+        portal="admin"
+        {...rest}
+        title={isEdit ? "Edit Product" : "Create Product"}
+        sections={[twoPanel]}
+      />
+      <ConfirmDeleteModal
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={() => deleteMutation.mutate()}
+        isDeleting={deleteMutation.isPending}
+        title="Delete this product?"
+        message="This product will be permanently removed. This action cannot be undone."
+        confirmText="Delete product"
+        variant="danger"
+      />
+    </>
   );
 }

@@ -175,6 +175,10 @@ export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/acc
 export { CouponsIndexListing } from "./features/promotions/components/CouponsIndexListing";
 export type { CouponsIndexListingProps } from "./features/promotions/components/CouponsIndexListing";
 export { NotificationBell } from "./features/account/components/NotificationBell";
+export { NotificationPreferencesPanel } from "./features/account/components/NotificationPreferencesPanel";
+export type { NotificationPreferencesPanelProps } from "./features/account/components/NotificationPreferencesPanel";
+export { AuctionBidsTable } from "./features/auctions/components/AuctionBidsTable";
+export type { AuctionBidsTableProps, AuctionWithBids } from "./features/auctions/components/AuctionBidsTable";
 export { ProtectedRoute, AuthStatusPanel, ForgotPasswordView, LoginForm, RegisterForm, ResetPasswordView, VerifyEmailView } from "./features/auth/index";
 export type {
 	AuthGuardUser,

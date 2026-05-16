@@ -150,6 +150,21 @@ export async function patchConsentOtp(
   await consentOtpRef(db, uid, addressId).update(data);
 }
 
+/** Build the consent OTP WhatsApp message body. */
+export function buildConsentOtpWhatsApp(
+  recipientName: string,
+  code: string,
+  siteName: string,
+): string {
+  return (
+    `*${siteName} — Consent OTP*\n\n` +
+    `You are shipping to *${recipientName}*.\n\n` +
+    `Your verification code is: *${code}*\n\n` +
+    `This code expires in ${CONSENT_OTP_EXPIRY_MINUTES} minutes. ` +
+    `If you did not request this, please ignore this message.`
+  );
+}
+
 /** Build the consent OTP email subject and HTML body. */
 export function buildConsentOtpEmail(
   recipientName: string,

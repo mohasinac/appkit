@@ -133,6 +133,10 @@ export interface UserDocument {
   // ── Scam awareness acknowledgement ──────────────────────────────────────────
   /** Timestamp when user confirmed they read the scam awareness guide. Required before full platform access. */
   scamAwarenessAcknowledgedAt?: Date;
+
+  // ── Notification preferences ─────────────────────────────────────────────────
+  /** User-controlled notification channel and type preferences. */
+  notificationPreferences?: import("../../account/types").NotificationPreferences;
 }
 
 // ── Soft ban entry ─────────────────────────────────────────────────────────────

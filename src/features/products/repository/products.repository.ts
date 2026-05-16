@@ -121,7 +121,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   protected override mapDoc<D = ProductDocument>(snap: DocumentSnapshot): D {
-    return super.mapDoc<D>(snap);
+    const doc = super.mapDoc<ProductDocument>(snap);
+    // Backward compat: normalise legacy `category` string into `categorySlugs[]`.
+    if (!doc.categorySlugs || doc.categorySlugs.length === 0) {
+      doc.categorySlugs = doc.category ? [doc.category] : [];
+    }
+    return doc as unknown as D;
   }
 
   override async update(
@@ -181,7 +186,10 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 
   async findByCategory(category: string): Promise<ProductDocument[]> {
-    return this.findBy(PRODUCT_FIELDS.CATEGORY, category);
+    const snap = await this.getCollection()
+      .where(PRODUCT_FIELDS.CATEGORY_SLUGS, "array-contains", category)
+      .get();
+    return snap.docs.map((d) => this.mapDoc<ProductDocument>(d));
   }
 
   async findBySlug(slug: string): Promise<ProductDocument | undefined> {
@@ -421,6 +429,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     title: { canFilter: true, canSort: true },
     slug: { canFilter: true, canSort: false },
     category: { canFilter: true, canSort: true },
+    categorySlugs: { canFilter: true, canSort: false },
     subcategory: { canFilter: true, canSort: true },
     brand: { canFilter: true, canSort: true },
     condition: { canFilter: true, canSort: false },
@@ -518,6 +527,16 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       }
     },
 
+    /**
+     * Backward-compat: `category==slug` → `categorySlugs @= slug`
+     * Allows existing consumers using the old single-value filter to keep
+     * working after the category → categorySlugs[] migration (Track C).
+     */
+    category: (value, operator) => {
+      if (operator !== "==") return "";
+      return `${PRODUCT_FIELDS.CATEGORY_SLUGS}@=${value}`;
+    },
+
     /** Shorthand for the homepage promoted strip. `promoted==true` only. */
     promoted: (value, operator) => {
       if (operator !== "==" || value !== "true") return "";
@@ -561,8 +580,8 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
     if (opts?.categoriesIn && opts.categoriesIn.length > 0) {
       baseQuery = baseQuery.where(
-        PRODUCT_FIELDS.CATEGORY,
-        "in",
+        PRODUCT_FIELDS.CATEGORY_SLUGS,
+        "array-contains-any",
         opts.categoriesIn,
       ) as typeof baseQuery;
     }

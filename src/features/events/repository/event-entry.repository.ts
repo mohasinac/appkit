@@ -61,6 +61,23 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     );
   }
 
+  async listForUser(
+    userId: string,
+    model: SieveModel,
+  ): Promise<FirebaseSieveResult<EventEntryDocument>> {
+    return this.sieveQuery<EventEntryDocument>(
+      model,
+      EventEntryRepository.SIEVE_FIELDS,
+      {
+        baseQuery: this.getCollection().where(
+          EVENT_ENTRY_FIELDS.USER_ID,
+          "==",
+          userId,
+        ),
+      },
+    );
+  }
+
   async hasUserEntered(eventId: string, userId: string): Promise<boolean> {
     try {
       const snapshot = await this.getCollection()

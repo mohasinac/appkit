@@ -240,6 +240,7 @@ export function MediaUploadList({
         onChange={handleFileChange}
         className="hidden"
         aria-hidden="true"
+        data-testid="media-upload-list-input"
       />
 
       {helperText && !error && (

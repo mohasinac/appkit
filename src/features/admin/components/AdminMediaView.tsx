@@ -184,7 +184,8 @@ interface MediaUploaderPanelProps {
   galleryAssets: MediaField[];
   setGalleryAssets: React.Dispatch<React.SetStateAction<MediaField[]>>;
   stagedUrls: string[];
-  setStagedUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  setHeroStagedUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  setGalleryStagedUrls: React.Dispatch<React.SetStateAction<string[]>>;
   handleAbort: (urls: string[]) => void;
   copiedUrl: string | null;
   onCopy: (url: string) => void;
@@ -194,8 +195,8 @@ interface MediaUploaderPanelProps {
 
 function MediaUploaderPanel({
   onUpload, isUploadPending, isCleanupPending, heroAssetUrl, setHeroAssetUrl,
-  galleryAssets, setGalleryAssets, stagedUrls, setStagedUrls, handleAbort,
-  copiedUrl, onCopy, onClearPreviews, onDiscardStaged,
+  galleryAssets, setGalleryAssets, stagedUrls, setHeroStagedUrls,
+  setGalleryStagedUrls, handleAbort, copiedUrl, onCopy, onClearPreviews, onDiscardStaged,
 }: MediaUploaderPanelProps) {
   return (
     <Div
@@ -211,7 +212,7 @@ function MediaUploaderPanel({
         onUpload={onUpload}
         helperText="Uploads via signed URL (sign → PUT → finalize) and previews the returned URL."
         onAbort={handleAbort}
-        onStagedUrlsChange={setStagedUrls}
+        onStagedUrlsChange={setHeroStagedUrls}
       />
       {heroAssetUrl && (
         <Div className="flex items-center gap-2 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-3 py-2">
@@ -234,7 +235,7 @@ function MediaUploaderPanel({
         onUpload={onUpload}
         helperText="Attach multiple images or videos for batch checks."
         onAbort={handleAbort}
-        onStagedUrlsChange={setStagedUrls}
+        onStagedUrlsChange={setGalleryStagedUrls}
         maxItems={12}
       />
       {galleryAssets.length > 0 && (
@@ -307,7 +308,12 @@ export function AdminMediaView({
 
   const [heroAssetUrl, setHeroAssetUrl] = React.useState("");
   const [galleryAssets, setGalleryAssets] = React.useState<MediaField[]>([]);
-  const [stagedUrls, setStagedUrls] = React.useState<string[]>([]);
+  const [heroStagedUrls, setHeroStagedUrls] = React.useState<string[]>([]);
+  const [galleryStagedUrls, setGalleryStagedUrls] = React.useState<string[]>([]);
+  const stagedUrls = React.useMemo(
+    () => Array.from(new Set([...heroStagedUrls, ...galleryStagedUrls])),
+    [heroStagedUrls, galleryStagedUrls],
+  );
   const [operationMessage, setOperationMessage] = React.useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = React.useState<string | null>(null);
 
@@ -334,7 +340,8 @@ export function AdminMediaView({
       await cleanup(stagedUrls);
       setHeroAssetUrl("");
       setGalleryAssets([]);
-      setStagedUrls([]);
+      setHeroStagedUrls([]);
+      setGalleryStagedUrls([]);
       setOperationMessage("Discarded staged media uploads.");
     } catch {
       setOperationMessage("Failed to discard staged media uploads.");
@@ -391,7 +398,8 @@ export function AdminMediaView({
           galleryAssets={galleryAssets}
           setGalleryAssets={setGalleryAssets}
           stagedUrls={stagedUrls}
-          setStagedUrls={setStagedUrls}
+          setHeroStagedUrls={setHeroStagedUrls}
+          setGalleryStagedUrls={setGalleryStagedUrls}
           handleAbort={handleAbort}
           copiedUrl={copiedUrl}
           onCopy={copyToClipboard}

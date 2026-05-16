@@ -442,8 +442,8 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
   const storeHref = storeSlug
     ? String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))
     : null;
-  const category = typeof p.category === "string" ? (p.category as string) : null;
-  const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
+  const category = Array.isArray(p.categorySlugs) && p.categorySlugs.length > 0 ? p.categorySlugs[0] : (typeof p.category === "string" ? (p.category as string) : null);
+  const categoryName = Array.isArray(p.categoryNames) && p.categoryNames.length > 0 ? p.categoryNames[0] : (typeof p.categoryName === "string" ? (p.categoryName as string) : null);
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;
   const brandSlug = typeof p.brandSlug === "string" ? (p.brandSlug as string) : null;
   const features: string[] = Array.isArray(p.features) ? (p.features as string[]) : [];

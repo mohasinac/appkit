@@ -34,7 +34,7 @@ export function toClientLiveItem(doc: ProductDocument): LiveItemClientShape {
     images: doc.images ?? [],
     storeId: doc.storeId,
     storeName: doc.storeName ?? null,
-    category: doc.category,
+    category: doc.categorySlugs?.[0] ?? doc.category ?? "",
     tags: doc.tags ?? [],
     liveItem: li
       ? {
