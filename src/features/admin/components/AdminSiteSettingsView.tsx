@@ -3,6 +3,7 @@
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert, Button, Form, FormActions, Input, Select, Slider, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Toggle, useToast } from "../../../ui";
+import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
@@ -52,6 +53,15 @@ function MaskedInput({
     </div>
   );
 }
+
+const NOTIF_CHANNEL_BOX = "rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 space-y-4";
+const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-zinc-200 dark:border-zinc-700";
+const PRIORITY_OPTIONS: SelectOption[] = [
+  { label: "Low (send all)", value: "low" },
+  { label: "Normal", value: "normal" },
+  { label: "High", value: "high" },
+  { label: "Critical only", value: "critical" },
+];
 
 function GroupSaveButton({ isPending }: { isPending: boolean }) {
   return (
@@ -202,6 +212,19 @@ export function AdminSiteSettingsView({
   const [aboutMissionText, setAboutMissionText] = React.useState("");
   const [aboutCtaTitle, setAboutCtaTitle] = React.useState("");
 
+  // ⑭ Notification channels
+  const [notifEmailEnabled, setNotifEmailEnabled] = React.useState(false);
+  const [notifEmailMinPriority, setNotifEmailMinPriority] = React.useState("normal");
+  const [notifWhatsappEnabled, setNotifWhatsappEnabled] = React.useState(false);
+  const [notifWhatsappMinPriority, setNotifWhatsappMinPriority] = React.useState("high");
+  const [notifWhatsappOtpEnabled, setNotifWhatsappOtpEnabled] = React.useState(false);
+  const [notifSmsEnabled, setNotifSmsEnabled] = React.useState(false);
+  const [notifSmsMinPriority, setNotifSmsMinPriority] = React.useState("high");
+  // Resend API key + sender identity (used by the email channel)
+  const [resendApiKey, setResendApiKey] = React.useState("");
+  const [notifFromEmail, setNotifFromEmail] = React.useState("");
+  const [notifFromName, setNotifFromName] = React.useState("");
+
   // Populate from query data
   React.useEffect(() => {
     if (!s || !Object.keys(s).length) return;
@@ -308,6 +331,17 @@ export function AdminSiteSettingsView({
     setWaPhoneNumberId(s.credentialsMasked?.whatsappPhoneNumberId ?? "");
     setWaCloudApiToken(s.credentialsMasked?.whatsappCloudApiToken ?? "");
     setWaAdminNotifyNumbers(s.credentialsMasked?.whatsappAdminNotifyNumbers ?? "");
+
+    setNotifEmailEnabled(s.notificationChannels?.email?.enabled ?? false);
+    setNotifEmailMinPriority(s.notificationChannels?.email?.minPriority ?? "normal");
+    setNotifWhatsappEnabled(s.notificationChannels?.whatsapp?.enabled ?? false);
+    setNotifWhatsappMinPriority(s.notificationChannels?.whatsapp?.minPriority ?? "high");
+    setNotifWhatsappOtpEnabled(s.notificationChannels?.whatsapp?.otpEnabled ?? false);
+    setNotifSmsEnabled(s.notificationChannels?.sms?.enabled ?? false);
+    setNotifSmsMinPriority(s.notificationChannels?.sms?.minPriority ?? "high");
+    setResendApiKey(s.credentialsMasked?.resendApiKey ?? "");
+    setNotifFromEmail(s.emailSettings?.fromEmail ?? "");
+    setNotifFromName(s.emailSettings?.fromName ?? "");
   }, [data]);
 
   function useSave(group: string, payload: () => Record<string, unknown>) {
@@ -380,6 +414,16 @@ export function AdminSiteSettingsView({
   const aboutMutation = useSave("About Page", () => ({
     aboutContent: { title: aboutTitle, subtitle: aboutSubtitle, missionTitle: aboutMissionTitle, missionText: aboutMissionText, ctaTitle: aboutCtaTitle },
   }));
+  const notifChannelsMutation = useSave("Notification Channels", () => ({
+    notificationChannels: {
+      inApp: { enabled: true, readOnly: true },
+      email: { enabled: notifEmailEnabled, minPriority: notifEmailMinPriority },
+      whatsapp: { enabled: notifWhatsappEnabled, minPriority: notifWhatsappMinPriority, otpEnabled: notifWhatsappOtpEnabled },
+      sms: { enabled: notifSmsEnabled, minPriority: notifSmsMinPriority },
+    },
+    credentials: { resendApiKey },
+    emailSettings: { fromEmail: notifFromEmail, fromName: notifFromName },
+  }));
 
   const FONT_OPTIONS = [
     { label: "Inter", value: "inter" },
@@ -432,6 +476,7 @@ export function AdminSiteSettingsView({
               ["limits", "⑪ Limits"],
               ["legal", "⑫ Legal"],
               ["whatsapp", "⑬ WhatsApp"],
+              ["notifications", "⑭ Notifications"],
             ].map(([value, label]) => (
               <TabsTrigger key={value} value={value}>
                 {label}
@@ -730,6 +775,89 @@ export function AdminSiteSettingsView({
                 helperText="Comma-separated, digits-only, include country code. These receive a WhatsApp message when any order is placed."
               />
               <GroupSaveButton isPending={whatsappMutation.isPending} />
+            </Form>
+          </TabsContent>
+
+          {/* ⑭ Notification Channels */}
+          <TabsContent value="notifications">
+            <Form onSubmit={(e) => { e.preventDefault(); notifChannelsMutation.mutate(); }} className="space-y-6 pt-4">
+              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                In-app notifications are always on. Enable external channels below to let the platform
+                fan out to email, WhatsApp, or SMS. Users can further restrict which types they receive.
+              </Text>
+
+              {/* In-app — read-only */}
+              <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800/50 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">In-app (notification bell)</Text>
+                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">Always on</span>
+                </div>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
+              </div>
+
+              {/* Email channel */}
+              <div className={NOTIF_CHANNEL_BOX}>
+                <Toggle label="Email notifications" checked={notifEmailEnabled} onChange={setNotifEmailEnabled} />
+                {notifEmailEnabled && (
+                  <div className={NOTIF_CHANNEL_INDENT}>
+                    <Select
+                      label="Minimum priority to send email"
+                      options={PRIORITY_OPTIONS}
+                      value={notifEmailMinPriority}
+                      onValueChange={setNotifEmailMinPriority}
+                    />
+                    <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400 pt-1">Resend API (for transactional email)</Text>
+                    <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
+                      <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder="LetItRip" />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* WhatsApp channel */}
+              <div className={NOTIF_CHANNEL_BOX}>
+                <Toggle label="WhatsApp notifications" checked={notifWhatsappEnabled} onChange={setNotifWhatsappEnabled} />
+                {notifWhatsappEnabled && (
+                  <div className={NOTIF_CHANNEL_INDENT}>
+                    <Select
+                      label="Minimum priority to send WhatsApp"
+                      options={PRIORITY_OPTIONS}
+                      value={notifWhatsappMinPriority}
+                      onValueChange={setNotifWhatsappMinPriority}
+                    />
+                    <Toggle
+                      label="Enable WhatsApp OTP (for login and verification)"
+                      checked={notifWhatsappOtpEnabled}
+                      onChange={setNotifWhatsappOtpEnabled}
+                    />
+                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                      WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.
+                    </Text>
+                  </div>
+                )}
+              </div>
+
+              {/* SMS channel */}
+              <div className={NOTIF_CHANNEL_BOX}>
+                <Toggle label="SMS notifications" checked={notifSmsEnabled} onChange={setNotifSmsEnabled} />
+                {notifSmsEnabled && (
+                  <div className={NOTIF_CHANNEL_INDENT}>
+                    <Select
+                      label="Minimum priority to send SMS"
+                      options={PRIORITY_OPTIONS}
+                      value={notifSmsMinPriority}
+                      onValueChange={setNotifSmsMinPriority}
+                    />
+                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                      SMS gateway credentials (e.g. Twilio, MSG91) can be configured in the Integrations tab once an SMS provider is connected.
+                    </Text>
+                  </div>
+                )}
+              </div>
+
+              <GroupSaveButton isPending={notifChannelsMutation.isPending} />
             </Form>
           </TabsContent>
 

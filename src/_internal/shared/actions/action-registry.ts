@@ -433,7 +433,6 @@ export const ACTIONS: ActionTree = {
       label: "Cancel Order",
       description: "Cancel a pending or confirmed order.",
       kind: "danger",
-      listingTypeScope: undefined,
       confirmation: {
         title: "Cancel this order?",
         body: "Your order will be cancelled. Refunds are processed within 5–7 business days.",

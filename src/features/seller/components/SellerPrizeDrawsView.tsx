@@ -5,7 +5,7 @@ import { Pencil, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Alert, Badge, BulkActionBar, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -215,7 +215,7 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
   }
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={activeFilterCount}
         onFiltersClick={openFilters}
@@ -274,54 +274,55 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
 
       {filterOpen && (
         <>
-          <div
+          <Div
+            role="presentation"
             className="fixed inset-0 z-40 bg-black/40"
-            aria-hidden="true"
             onClick={() => setFilterOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[var(--appkit-color-border)] px-4 py-3.5">
-              <span className="text-base font-semibold text-[var(--appkit-color-text)]">Filters</span>
-              <div className="flex items-center gap-2">
+          <Div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
+            <Row justify="between" className="border-b border-[var(--appkit-color-border)] px-4 py-3.5">
+              <Text className="text-base font-semibold text-[var(--appkit-color-text)]">Filters</Text>
+              <Row className="gap-2">
                 {activeFilterCount > 0 && (
-                  <button
-                    type="button"
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={clearFilters}
-                    className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)] transition-colors"
+                    className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)]"
                   >
                     Clear all
-                  </button>
+                  </Button>
                 )}
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setFilterOpen(false)}
-                  aria-label="Close"
-                  className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors"
+                  aria-label="Close filters"
                 >
                   <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+                </Button>
+              </Row>
+            </Row>
+            <Div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
               <FilterChipGroup
                 label="Status"
                 tabs={STATUS_OPTIONS}
                 value={pendingFilters.status ?? ""}
                 onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
               />
-            </div>
-            <div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
-              <button
-                type="button"
+            </Div>
+            <Div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
+              <Button
+                variant="primary"
                 onClick={applyFilters}
-                className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity active:scale-[0.98]"
+                className="w-full rounded-lg py-2.5 active:scale-[0.98]"
               >
                 Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
+              </Button>
+            </Div>
+          </Div>
         </>
       )}
-    </div>
+    </Div>
   );
 }
