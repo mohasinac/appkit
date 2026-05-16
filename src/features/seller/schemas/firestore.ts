@@ -48,6 +48,7 @@ export interface OfferDocument {
   sellerNote?: string;
   expiresAt: Date;
   acceptedAt?: Date;
+  checkoutDeadline?: Date;
   respondedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -83,6 +84,7 @@ export const OFFER_FIELDS = {
   SELLER_NOTE: "sellerNote",
   EXPIRES_AT: "expiresAt",
   ACCEPTED_AT: "acceptedAt",
+  CHECKOUT_DEADLINE: "checkoutDeadline",
   RESPONDED_AT: "respondedAt",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",

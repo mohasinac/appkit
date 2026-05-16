@@ -325,7 +325,7 @@ export { UserOffersPanel } from "./features/account/components/UserOffersPanel";
 export type { UserOffersPanelProps } from "./features/account/components/UserOffersPanel";
 export { SellerDashboardView as StoreDashboardView, SellerDashboardView, useSellerDashboard as useStoreDashboard, useSellerDashboard } from "./features/seller/index";
 export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboardViewProps } from "./features/seller/index";
-export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, SellerPreOrdersView, SellerPrizeDrawsView } from "./features/seller/components/index";
+export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, SellerPreOrdersView, SellerPrizeDrawsView, PrintCenterView } from "./features/seller/components/index";
 export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerReviewsViewProps, SellerPayoutRequestViewProps, SellerAnalyticsViewProps, SellerPayoutsViewProps, SellerCouponEditorViewProps, CouponEditorDraft, SellerBidsViewProps, SellerAddressesViewProps, SellerPreOrdersViewProps, SellerPrizeDrawsViewProps } from "./features/seller/components/index";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
 export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView } from "./features/account/index";

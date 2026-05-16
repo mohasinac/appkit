@@ -1143,6 +1143,8 @@ export type { ActionMiddlewareContext } from "./core/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ActionResult - Type contract for action result.
 export type { ActionResult } from "./core/index";
+// handleActionError - Maps domain errors to structured { ok: false, error, code } responses.
+export { handleActionError } from "./utils/action-response";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CacheEntry - Type contract for cache entry.
 export type { CacheEntry } from "./core/index";

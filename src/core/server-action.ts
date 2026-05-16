@@ -44,7 +44,7 @@ const logger = Logger.getInstance();
 
 export type ActionResult<TOutput> =
   | { ok: true; data: TOutput }
-  | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
+  | { ok: false; error: string; code?: string; fieldErrors?: Record<string, string[]>; debug?: { stack?: string } };
 
 // --- Middleware ---------------------------------------------------------------
 

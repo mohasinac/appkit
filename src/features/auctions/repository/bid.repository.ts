@@ -94,6 +94,26 @@ export class BidRepository extends BaseRepository<BidDocument> {
   }
 
   /**
+   * Paginated bids by user — returns at most pageSize bids, sorted by createdAt desc.
+   */
+  async findByUserPaginated(
+    userId: string,
+    pageSize = 25,
+    startAfterDoc?: import("firebase-admin/firestore").QueryDocumentSnapshot,
+  ): Promise<{ items: BidDocument[]; hasMore: boolean }> {
+    let query = this.db
+      .collection(this.collection)
+      .where(BID_FIELDS.USER_ID, "==", userId)
+      .orderBy("createdAt", "desc")
+      .limit(pageSize + 1);
+    if (startAfterDoc) query = query.startAfter(startAfterDoc);
+    const snap = await query.get();
+    const hasMore = snap.docs.length > pageSize;
+    const docs = hasMore ? snap.docs.slice(0, pageSize) : snap.docs;
+    return { items: docs.map((d) => this.mapDoc<BidDocument>(d)), hasMore };
+  }
+
+  /**
    * Find bids by status
    */
   async findByStatus(status: BidStatus): Promise<BidDocument[]> {

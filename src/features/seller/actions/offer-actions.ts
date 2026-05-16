@@ -19,6 +19,7 @@ import {
   AuthorizationError,
   ValidationError,
   NotFoundError,
+  OFFER_ERROR_CODES,
 } from "../../../errors";
 import { OfferStatusValues } from "../schemas";
 import type { OfferDocument } from "../schemas";
@@ -150,12 +151,17 @@ export async function respondToOffer(
 
   let updated: OfferDocument;
 
+  const CHECKOUT_WINDOW_MS = 48 * 60 * 60 * 1000;
+
   if (action === "accept") {
     updated = await offerRepository.accept(
       offerId,
       offer.offerAmount,
       sellerNote,
     );
+    await offerRepository.update(offerId, {
+      checkoutDeadline: new Date(Date.now() + CHECKOUT_WINDOW_MS),
+    });
   } else if (action === "decline") {
     updated = await offerRepository.decline(offerId, sellerNote);
   } else {
@@ -216,6 +222,9 @@ export async function acceptCounterOffer(
     throw new ValidationError(ERROR_MESSAGES.OFFER.EXPIRED);
 
   const updated = await offerRepository.acceptCounter(offerId);
+  await offerRepository.update(offerId, {
+    checkoutDeadline: new Date(Date.now() + 48 * 60 * 60 * 1000),
+  });
 
   const counterStore = offer.storeId ? await storeRepository.findById(offer.storeId) : null;
   if (counterStore?.ownerId) await sendNotification({
@@ -370,6 +379,11 @@ export async function checkoutOffer(
     throw new ValidationError("Only accepted offers can be checked out.");
   if (!offer.lockedPrice)
     throw new ValidationError("Offer price not confirmed. Contact support.");
+  if (offer.checkoutDeadline && new Date() > offer.checkoutDeadline)
+    throw new ValidationError(
+      "This accepted offer has expired. Please make a new offer.",
+      { code: OFFER_ERROR_CODES.CHECKOUT_EXPIRED },
+    );
 
   const product = await productRepository.findById(offer.productId);
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);

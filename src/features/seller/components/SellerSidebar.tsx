@@ -274,20 +274,22 @@ export function StoreSidebar({
             <div className="flex-1 overflow-y-auto">{navContent}</div>
           </div>
 
-          {/* Toggle tab — primary-colored vertical bar, always visible */}
+          {/* Toggle tab — pill-shaped handle, always visible */}
           <button
             type="button"
             onClick={handleToggle}
             aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="w-5 shrink-0 flex items-center justify-center transition-opacity rounded-r-md shadow-md hover:opacity-85"
-            style={{ background: "linear-gradient(to bottom, var(--appkit-color-cobalt-700), var(--appkit-color-cobalt))" }}
+            className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
+            style={{ background: "linear-gradient(to bottom, #c2410c, #ea580c)" }}
           >
-            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              {desktopOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-              )}
+            <svg
+              className={`w-4 h-4 text-white drop-shadow-sm transition-transform duration-300 ${desktopOpen ? "" : "rotate-180"}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
         </div>

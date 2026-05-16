@@ -11,6 +11,7 @@ export { SellerPreOrdersView } from "./SellerPreOrdersView";
 export type { SellerPreOrdersViewProps } from "./SellerPreOrdersView";
 export { SellerPrizeDrawsView } from "./SellerPrizeDrawsView";
 export type { SellerPrizeDrawsViewProps } from "./SellerPrizeDrawsView";
+export { PrintCenterView } from "./PrintCenterView";
 export { SellerOrdersView } from "./SellerOrdersView";
 export type { SellerOrdersViewProps } from "./SellerOrdersView";
 export { SellerOffersView } from "./SellerOffersView";

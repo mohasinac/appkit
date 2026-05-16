@@ -5,6 +5,14 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
 import { Button, Div, Input, LoginRequiredModal, Row, Span, Stack, Text } from "../../../ui";
 
+const BID_ERROR_DISPLAY: Record<string, string> = {
+  BID_AUCTION_ENDED: "This auction has closed. No more bids are accepted.",
+  BID_AMOUNT_TOO_LOW: "Your bid must exceed the current winning bid.",
+  BID_INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement.",
+  BID_SELF_BID: "You cannot bid on your own listing.",
+  BID_USER_BANNED: "Your account is currently restricted from bidding. Contact support.",
+};
+
 export interface PlaceBidInput {
   productId: string;
   bidAmount: number;
@@ -61,8 +69,9 @@ export function PlaceBidFormClient({
           "ok" in result &&
           (result as { ok: boolean }).ok === false
         ) {
-          const msg = (result as { error?: string }).error;
-          setError(msg || "Failed to place bid. Please try again.");
+          const r = result as { error?: string; code?: string };
+          const display = (r.code && BID_ERROR_DISPLAY[r.code]) ?? r.error ?? "Failed to place bid. Please try again.";
+          setError(display);
           return;
         }
         setSuccess(true);
