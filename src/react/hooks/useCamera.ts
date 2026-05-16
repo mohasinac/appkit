@@ -16,7 +16,7 @@ export interface UseCameraReturn {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   startCamera: (options?: UseCameraOptions) => Promise<void>;
   stopCamera: () => void;
-  takePhoto: () => Blob | null;
+  takePhoto: () => Promise<Blob | null>;
   startRecording: () => void;
   stopRecording: () => Promise<Blob>;
   switchCamera: () => Promise<void>;
@@ -109,26 +109,23 @@ export function useCamera(): UseCameraReturn {
     [isSupported, stopCamera],
   );
 
-  const takePhoto = useCallback((): Blob | null => {
+  // canvas.toBlob() is async — must return a Promise so the blob is available
+  // to the caller after the encoding completes (a synchronous return always
+  // gives null because the callback hasn't fired yet).
+  const takePhoto = useCallback((): Promise<Blob | null> => {
     const video = videoRef.current;
-    if (!video || !isActive) return null;
+    if (!video || !isActive) return Promise.resolve(null);
 
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
+    if (!ctx) return Promise.resolve(null);
     ctx.drawImage(video, 0, 0);
 
-    let result: Blob | null = null;
-    canvas.toBlob(
-      (blob) => {
-        result = blob;
-      },
-      "image/webp",
-      0.92,
-    );
-    return result;
+    return new Promise<Blob | null>((resolve) => {
+      canvas.toBlob((blob) => resolve(blob), "image/webp", 0.92);
+    });
   }, [isActive]);
 
   const startRecording = useCallback(() => {

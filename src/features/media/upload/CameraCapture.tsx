@@ -63,8 +63,8 @@ export default function CameraCapture({
     if (camera.error && onError) onError(camera.error);
   }, [camera.error, onError]);
 
-  const handleTakePhoto = () => {
-    const blob = camera.takePhoto();
+  const handleTakePhoto = async () => {
+    const blob = await camera.takePhoto();
     if (blob) onCapture(blob, "photo");
   };
 

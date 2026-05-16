@@ -132,8 +132,10 @@ export function ImageUpload({
   };
 
   const handleCameraCapture = (blob: Blob) => {
+    // blob.type can be empty from some camera implementations; hard-coded
+    // image/webp is always correct here since ImageUpload is photo-only.
     const file = new File([blob], "camera-capture.webp", {
-      type: "image/webp",
+      type: blob.type || "image/webp",
     });
     setError("");
     setProgress(0);
@@ -313,6 +315,7 @@ export function ImageUpload({
         onChange={handleFileChange}
         className="hidden"
         aria-hidden="true"
+        data-testid="media-upload-input"
       />
 
       {showCamera && !isCameraSupported && (
@@ -324,6 +327,7 @@ export function ImageUpload({
           onChange={handleFileChange}
           className="hidden"
           aria-hidden="true"
+          data-testid="media-upload-capture-input"
         />
       )}
 

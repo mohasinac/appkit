@@ -226,7 +226,7 @@ export function CharacterHotspotForm({
                   border:
                     i <= stepIndex
                       ? "2px solid var(--color-black)"
-                      : {STY_BORDER_INK},
+                      : STY_BORDER_INK,
                 }}
               >
                 {i < stepIndex ? "✓" : i + 1}
@@ -415,7 +415,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${pin.xPct}%`,
                   top: `${pin.yPct}%`,
-                  transform: {STY_CENTERED},
+                  transform: STY_CENTERED,
                   zIndex: 10,
                 }}
               >
@@ -448,7 +448,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${draftPos.xPct}%`,
                   top: `${draftPos.yPct}%`,
-                  transform: {STY_CENTERED},
+                  transform: STY_CENTERED,
                   zIndex: 20,
                 }}
               >
@@ -569,7 +569,7 @@ export function CharacterHotspotForm({
                   style={{
                     background: "var(--surface-warm)",
                     color: "var(--color-black)",
-                    border: {STY_BORDER_INK},
+                    border: STY_BORDER_INK,
                   }}
                 >
                   Done Adding Pins
@@ -772,7 +772,7 @@ export function CharacterHotspotForm({
                 style={{
                   background: "var(--surface-warm)",
                   color: "var(--color-black)",
-                  border: {STY_BORDER_INK},
+                  border: STY_BORDER_INK,
                 }}
               >
                 Save Pin &amp; Finish
@@ -838,7 +838,7 @@ export function CharacterHotspotForm({
                 style={{
                   left: `${pin.xPct}%`,
                   top: `${pin.yPct}%`,
-                  transform: {STY_CENTERED},
+                  transform: STY_CENTERED,
                   zIndex: 10,
                 }}
               >
@@ -989,7 +989,7 @@ export function CharacterHotspotForm({
               style={{
                 background: "var(--surface-warm)",
                 color: "var(--color-black)",
-                border: {STY_BORDER_INK},
+                border: STY_BORDER_INK,
               }}
             >
               + Add Another Pin

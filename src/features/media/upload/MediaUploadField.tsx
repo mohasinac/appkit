@@ -500,7 +500,10 @@ export function MediaUploadField({
 
   const handleCameraCapture = async (blob: Blob, type: "photo" | "video") => {
     const ext = type === "video" ? "webm" : "webp";
-    const file = new File([blob], `camera-capture.${ext}`, { type: blob.type });
+    // blob.type can be empty with some MediaRecorder implementations; fall back
+    // to the canonical MIME for the capture type so the server MIME check passes.
+    const mimeType = blob.type || (type === "video" ? "video/webm" : "image/webp");
+    const file = new File([blob], `camera-capture.${ext}`, { type: mimeType });
     setError(null);
     setIsLoading(true);
     try {
@@ -649,6 +652,7 @@ export function MediaUploadField({
         onChange={handleFileChange}
         className="hidden"
         aria-hidden="true"
+        data-testid="media-upload-input"
       />
 
       {showCamera && !isCameraSupported && (
@@ -660,6 +664,7 @@ export function MediaUploadField({
           onChange={handleFileChange}
           className="hidden"
           aria-hidden="true"
+          data-testid="media-upload-capture-input"
         />
       )}
 
