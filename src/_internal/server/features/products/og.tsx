@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface ProductOgData {
   title: string;
@@ -18,12 +19,12 @@ interface ProductDocLike {
 }
 
 /** High-level OG renderer — accepts the raw product document from `getProductForDetail`. */
-export function renderProductOg(doc: ProductDocLike | null | undefined, opts: OgOptions): ReactElement {
+export function renderProductOg(doc: ProductDocLike | null | undefined, opts: OgOptions & { baseUrl?: string }): ReactElement {
   return renderProductOgImage(
     {
       title: doc?.title ?? "Product",
       price: doc?.price ?? null,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );

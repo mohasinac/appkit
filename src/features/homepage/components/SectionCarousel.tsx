@@ -259,15 +259,10 @@ export function SectionCarousel<T = unknown>({
             gap={gap}
             autoScroll={autoScroll}
             autoScrollInterval={autoScrollInterval}
+            loop={autoScroll && rows === 1}
             keyExtractor={keyExtractor}
             rows={rows}
             minItemWidth={minItemWidth}
-            /* Default behaviour for homepage sections using cards:
-               - show arrows for easier navigation
-               - snap to items for a tidy carousel feel
-               - show fade edges for visual affordance
-               - hide native scrollbar for cleaner appearance
-            */
             showArrows
             snapToItems
             showFadeEdges

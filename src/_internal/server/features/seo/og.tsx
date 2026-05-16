@@ -2,13 +2,35 @@ import { ImageResponse } from "next/og";
 
 export const DEFAULT_OG_SIZE = { width: 1200, height: 630 };
 
+/**
+ * Resolves a potentially relative image URL to an absolute URL for use in
+ * next/og (Satori). Satori cannot resolve relative paths; all <img src> values
+ * must be absolute URLs or data URIs.
+ */
+export function resolveOgImageUrl(
+  url: string | null | undefined,
+  baseUrl?: string,
+): string | null {
+  if (!url) return null;
+  if (!baseUrl) return url;
+  if (
+    url.startsWith("http://") ||
+    url.startsWith("https://") ||
+    url.startsWith("data:")
+  ) {
+    return url;
+  }
+  return `${baseUrl.replace(/\/$/, "")}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 export interface DefaultOgOptions {
   siteName: string;
   tagline?: string;
   domain?: string;
+  logoUrl?: string;
 }
 
-export function buildDefaultOgImage({ siteName, tagline, domain }: DefaultOgOptions): ImageResponse {
+export function buildDefaultOgImage({ siteName, tagline, domain, logoUrl }: DefaultOgOptions): ImageResponse {
   const subtitle = tagline ?? "Shop, Bid & Sell — India's Multi-Seller Marketplace";
   return new ImageResponse(
     <div
@@ -40,15 +62,19 @@ export function buildDefaultOgImage({ siteName, tagline, domain }: DefaultOgOpti
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: 120,
-          height: 120,
-          borderRadius: 24,
-          background: "rgba(255,255,255,0.15)",
-          marginBottom: 32,
-          fontSize: 64,
+          width: 140,
+          height: 140,
+          borderRadius: 28,
+          background: "rgba(255,255,255,0.18)",
+          marginBottom: 36,
+          overflow: "hidden",
         }}
       >
-        🛍️
+        {logoUrl ? (
+          <img src={logoUrl} alt={siteName} style={{ width: 100, height: 100, objectFit: "contain" }} />
+        ) : (
+          <div style={{ fontSize: 64, display: "flex" }}>🛍️</div>
+        )}
       </div>
       <div
         style={{
@@ -58,6 +84,7 @@ export function buildDefaultOgImage({ siteName, tagline, domain }: DefaultOgOpti
           letterSpacing: "-2px",
           marginBottom: 16,
           textShadow: "0 4px 24px rgba(0,0,0,0.3)",
+          display: "flex",
         }}
       >
         {siteName}
@@ -68,6 +95,7 @@ export function buildDefaultOgImage({ siteName, tagline, domain }: DefaultOgOpti
           color: "rgba(255,255,255,0.85)",
           fontWeight: 400,
           letterSpacing: "0.5px",
+          display: "flex",
         }}
       >
         {subtitle}
@@ -80,6 +108,7 @@ export function buildDefaultOgImage({ siteName, tagline, domain }: DefaultOgOpti
             fontSize: 22,
             color: "rgba(255,255,255,0.6)",
             letterSpacing: "1px",
+            display: "flex",
           }}
         >
           {domain}

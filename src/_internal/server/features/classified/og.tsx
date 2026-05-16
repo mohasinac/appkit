@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface ClassifiedOgData {
   title: string;
@@ -19,7 +20,7 @@ interface ClassifiedDocLike {
 
 export function renderClassifiedOg(
   doc: ClassifiedDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const meta = doc?.classified;
   const location = meta?.meetupArea
@@ -40,7 +41,7 @@ export function renderClassifiedOg(
       title: doc?.title ?? "Classified Listing",
       priceLabel,
       location,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );
@@ -150,7 +151,7 @@ export function renderClassifiedOgImage(data: ClassifiedOgData, siteName: string
 /** Type-safe overload that accepts the full ProductDocument. */
 export function renderClassifiedOgFromDoc(
   doc: ProductDocument | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   return renderClassifiedOg(doc, opts);
 }

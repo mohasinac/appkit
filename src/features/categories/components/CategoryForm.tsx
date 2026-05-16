@@ -1,3 +1,4 @@
+"use client";
 import { FormGroup } from "../../../ui";
 import { Label, Span, Checkbox, RichTextEditor, Text } from "../../../ui";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";

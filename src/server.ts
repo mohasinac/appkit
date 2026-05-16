@@ -1494,7 +1494,7 @@ export type { UserSoftBan } from "./features/auth/schemas/firestore";
 export type { BannedAction } from "./features/auth/permissions/constants";
 
 // -- SEO builders (sitemap / robots / manifest / og-image) --
-export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE } from "./_internal/server/features/seo";
+export { buildSitemap, buildRobots, buildManifest, buildDefaultOgImage, DEFAULT_OG_SIZE, resolveOgImageUrl } from "./_internal/server/features/seo";
 export type { SitemapOptions, RobotsOptions, ManifestOptions, DefaultOgOptions } from "./_internal/server/features/seo";
 
 

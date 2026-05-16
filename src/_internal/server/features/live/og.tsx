@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface LiveItemOgData {
   title: string;
@@ -19,7 +20,7 @@ interface LiveItemDocLike {
 
 export function renderLiveItemOg(
   doc: LiveItemDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const priceLabel =
     doc?.price != null
@@ -35,7 +36,7 @@ export function renderLiveItemOg(
       title: doc?.title ?? "Live Listing",
       species: doc?.liveItem?.species ?? null,
       priceLabel,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );
@@ -147,7 +148,7 @@ export function renderLiveItemOgImage(data: LiveItemOgData, siteName: string): R
 /** Type-safe overload that accepts the full ProductDocument. */
 export function renderLiveItemOgFromDoc(
   doc: ProductDocument | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   return renderLiveItemOg(doc, opts);
 }

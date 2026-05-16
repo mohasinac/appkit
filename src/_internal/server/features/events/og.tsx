@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface EventOgData {
   title: string;
@@ -32,17 +33,18 @@ interface EventDocLike {
 /** High-level OG renderer — accepts the raw event document from `getEventForDetail`. */
 export function renderEventOg(
   doc: EventDocLike | null | undefined,
-  opts: { siteName: string; locale?: string; typeLabels?: Record<string, string> },
+  opts: { siteName: string; locale?: string; typeLabels?: Record<string, string>; baseUrl?: string },
 ): ReactElement {
   const locale = opts.locale ?? "en-IN";
   const labels = { ...EVENT_TYPE_LABEL, ...(opts.typeLabels ?? {}) };
   const eventType = doc?.type ?? null;
-  const coverImageUrl =
+  const rawCoverImageUrl =
     doc?.coverImageUrl ??
     (typeof doc?.coverImage === "string"
       ? doc.coverImage
       : (doc?.coverImage as { url?: string } | null | undefined)?.url) ??
     null;
+  const coverImageUrl = resolveOgImageUrl(rawCoverImageUrl, opts.baseUrl);
   const startsAt = doc?.startsAt
     ? new Date(doc.startsAt as unknown as string).toLocaleDateString(locale, {
         day: "numeric",

@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface BlogOgData {
   title: string;
@@ -19,9 +20,9 @@ interface BlogDocLike {
 /** High-level OG renderer — accepts the raw blog post document from `getBlogPostForDetail`. */
 export function renderBlogOg(
   doc: BlogDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
-  const coverImage =
+  const rawCoverImage =
     typeof doc?.coverImage === "string"
       ? doc.coverImage
       : (doc?.coverImage as { url?: string } | null | undefined)?.url ?? null;
@@ -31,7 +32,7 @@ export function renderBlogOg(
       excerpt: doc?.excerpt?.slice(0, 120) ?? null,
       authorName: doc?.authorName ?? null,
       category: doc?.category ?? null,
-      coverImage,
+      coverImage: resolveOgImageUrl(rawCoverImage, opts.baseUrl),
     },
     opts.siteName,
   );

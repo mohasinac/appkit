@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface SublistingCategoryOgData {
   name: string;
@@ -18,7 +19,7 @@ interface SublistingCategoryDocLike {
 /** High-level OG renderer — accepts the raw sublisting-category doc from the repository. */
 export function renderSublistingCategoryOg(
   doc: SublistingCategoryDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const baseName = doc?.name ?? "Sub-listing";
   const name = doc?.itemCode ? `${baseName} (${doc.itemCode})` : baseName;
@@ -27,7 +28,7 @@ export function renderSublistingCategoryOg(
       name,
       description: doc?.description?.slice(0, 120) ?? null,
       productCount: doc?.productCount ?? null,
-      coverImage: doc?.coverImage ?? null,
+      coverImage: resolveOgImageUrl(doc?.coverImage ?? null, opts.baseUrl),
     },
     opts.siteName,
   );

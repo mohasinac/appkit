@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface BrandOgData {
   name: string;
@@ -15,7 +16,7 @@ interface BrandDocLike {
 /** High-level OG renderer — accepts the raw brand document from `getBrandForDetail`. */
 export function renderBrandOg(
   doc: BrandDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const name = doc?.name ?? "Brand";
   return renderBrandOgImage(
@@ -24,7 +25,7 @@ export function renderBrandOg(
       description:
         doc?.description?.slice(0, 120) ??
         `Shop authentic ${name} collectibles on ${opts.siteName}.`,
-      logoUrl: doc?.logoURL ?? null,
+      logoUrl: resolveOgImageUrl(doc?.logoURL ?? null, opts.baseUrl),
     },
     opts.siteName,
   );

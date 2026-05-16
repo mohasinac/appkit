@@ -14,6 +14,7 @@
  */
 
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface BundleOgData {
   name: string;
@@ -40,7 +41,7 @@ function formatPriceInr(paise: number): string {
 
 export function renderBundleOg(
   doc: BundleDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const name = doc?.name ?? "Bundle";
   const priceLabel =
@@ -53,7 +54,7 @@ export function renderBundleOg(
       description:
         doc?.description?.slice(0, 140) ??
         `Curated multi-product bundle on ${opts.siteName}.`,
-      coverImageUrl: doc?.display?.coverImage ?? null,
+      coverImageUrl: resolveOgImageUrl(doc?.display?.coverImage ?? null, opts.baseUrl),
       priceLabel,
       itemCount: doc?.bundleProductIds?.length ?? null,
       stockStatus: doc?.bundleStockStatus ?? null,

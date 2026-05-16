@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface StoreOgData {
   name: string;
@@ -17,14 +18,14 @@ interface StoreDocLike {
 /** High-level OG renderer — accepts the raw store document from `getStoreForDetail`. */
 export function renderStoreOg(
   doc: StoreDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   return renderStoreOgImage(
     {
       name: doc?.storeName ?? `${opts.siteName} Store`,
       description: doc?.storeDescription?.slice(0, 120) ?? null,
-      logoUrl: doc?.storeLogoURL ?? null,
-      bannerUrl: doc?.storeBannerURL ?? null,
+      logoUrl: resolveOgImageUrl(doc?.storeLogoURL ?? null, opts.baseUrl),
+      bannerUrl: resolveOgImageUrl(doc?.storeBannerURL ?? null, opts.baseUrl),
     },
     opts.siteName,
   );

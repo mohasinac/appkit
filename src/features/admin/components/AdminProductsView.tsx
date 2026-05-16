@@ -23,6 +23,7 @@ import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import { AdminViewCards } from "./AdminViewCards";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 
@@ -358,7 +359,19 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
               <QuickEditMenu
                 actions={[
                   {
+                    label: ACTIONS.ADMIN["approve-product"].label,
+                    onClick: () => handleQuickEdit(row.id, { status: "published" }),
+                    disabled: row.status === "published",
+                  },
+                  {
+                    label: ACTIONS.ADMIN["reject-product"].label,
+                    destructive: true,
+                    onClick: () => handleQuickEdit(row.id, { status: "rejected" }),
+                    disabled: row.status === "rejected",
+                  },
+                  {
                     label: "Quick edit",
+                    separator: true,
                     formTitle: "Quick Edit Product",
                     fields: [
                       { name: "status", label: "Status", type: "select", required: true,

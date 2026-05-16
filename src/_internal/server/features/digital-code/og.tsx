@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface DigitalCodeOgData {
   title: string;
@@ -19,7 +20,7 @@ interface DigitalCodeDocLike {
 
 export function renderDigitalCodeOg(
   doc: DigitalCodeDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const priceLabel =
     doc?.price != null
@@ -42,7 +43,7 @@ export function renderDigitalCodeOg(
       title: doc?.title ?? "Digital Code",
       priceLabel,
       deliveryMethod,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );
@@ -155,7 +156,7 @@ export function renderDigitalCodeOgImage(
 /** Type-safe overload that accepts the full ProductDocument. */
 export function renderDigitalCodeOgFromDoc(
   doc: ProductDocument | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   return renderDigitalCodeOg(doc, opts);
 }

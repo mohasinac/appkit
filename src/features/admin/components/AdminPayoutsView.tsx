@@ -19,6 +19,7 @@ import { BulkActionBar, Button,
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -282,7 +283,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
                 <RowActionMenu
                   actions={[
                     {
-                      label: "Mark paid",
+                      label: ACTIONS.ADMIN["grant-payout"].label,
                       onClick: () => {
                         setSelectedPayoutId(pr.id);
                         setMarkPaidOpen(true);

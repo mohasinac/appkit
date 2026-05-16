@@ -1,3 +1,5 @@
+import { resolveOgImageUrl } from "../seo/og";
+
 /**
  * Category OG image renderer — S6 OG1.
  *
@@ -28,7 +30,7 @@ interface CategoryDocLike {
 
 export function renderCategoryOg(
   doc: CategoryDocLike | null | undefined,
-  opts: { siteName: string },
+  opts: { siteName: string; baseUrl?: string },
 ): ReactElement {
   const name = doc?.name ?? "Category";
   return renderCategoryOgImage(
@@ -37,7 +39,7 @@ export function renderCategoryOg(
       description:
         doc?.description?.slice(0, 140) ??
         `Browse ${name} on ${opts.siteName}.`,
-      coverImageUrl: doc?.display?.coverImage ?? null,
+      coverImageUrl: resolveOgImageUrl(doc?.display?.coverImage ?? null, opts.baseUrl),
       productCount: doc?.metrics?.totalItemCount ?? null,
     },
     opts.siteName,

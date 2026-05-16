@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface AuctionOgData {
   title: string;
@@ -16,7 +17,7 @@ interface AuctionDocLike {
 /** High-level OG renderer — accepts the raw auction document from `getAuctionForDetail`. */
 export function renderAuctionOg(
   doc: AuctionDocLike | null | undefined,
-  opts: { siteName: string; locale?: string },
+  opts: { siteName: string; locale?: string; baseUrl?: string },
 ): ReactElement {
   const locale = opts.locale ?? "en-IN";
   const endDate = doc?.auctionEndDate
@@ -31,7 +32,7 @@ export function renderAuctionOg(
     {
       title: doc?.title ?? "Live Auction",
       endsLabel,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );

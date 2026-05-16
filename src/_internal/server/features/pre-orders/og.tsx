@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { resolveOgImageUrl } from "../seo/og";
 
 export interface PreOrderOgData {
   title: string;
@@ -16,7 +17,7 @@ interface PreOrderDocLike {
 /** High-level OG renderer — accepts the raw pre-order document from `getPreOrderForDetail`. */
 export function renderPreOrderOg(
   doc: PreOrderDocLike | null | undefined,
-  opts: { siteName: string; locale?: string },
+  opts: { siteName: string; locale?: string; baseUrl?: string },
 ): ReactElement {
   const locale = opts.locale ?? "en-IN";
   const release = doc?.preOrderReleaseDate
@@ -29,7 +30,7 @@ export function renderPreOrderOg(
     {
       title: doc?.title ?? "Pre-Order",
       releaseDateLabel,
-      imageUrl: doc?.mainImage || doc?.images?.[0] || null,
+      imageUrl: resolveOgImageUrl(doc?.mainImage || doc?.images?.[0] || null, opts.baseUrl),
     },
     opts.siteName,
   );
