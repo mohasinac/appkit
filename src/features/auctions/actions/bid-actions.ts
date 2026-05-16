@@ -113,7 +113,6 @@ export async function placeBid(
     const rtdb = getAdminRealtimeDb();
     await rtdb.ref(`/auction-bids/${productId}`).set({
       currentBid: bidAmount,
-      bidCount: (product.bidCount ?? 0) + 1,
       lastBid: {
         amount: bidAmount,
         bidderName: "Bidder",
