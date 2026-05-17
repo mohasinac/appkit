@@ -38,7 +38,7 @@ import { MarketplaceAuctionGrid } from "./MarketplaceAuctionGrid";
 import type { MarketplaceAuctionCardData } from "./MarketplaceAuctionCard";
 import { listReviewsBySeller } from "../../reviews/actions/review-actions";
 import type { ReviewDocument } from "../../reviews/schemas/firestore";
-import { PlaceBidFormClient } from "./PlaceBidFormClient";
+import { PlaceBidModalButton } from "./PlaceBidFormClient";
 import type { PlaceBidInput } from "./PlaceBidFormClient";
 import { CollapsibleBidHistory } from "./CollapsibleBidHistory";
 import { SublistingCarouselSection } from "../../products/components/SublistingCarouselSection";
@@ -313,19 +313,31 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
           renderInfo={() => renderAuctionInfoPanel({ title, currentBid, currency, bidCount, isEnded, endDate, buyNowPrice, featured, freeShipping, condition, category, categoryName, brand, brandSlug, productFeatures, features, descriptionHtml, safeSeller, storeHref })}
           renderBidForm={() =>
             onPlaceBid ? (
-              <Div id="auction-bid-form">
-                <PlaceBidFormClient
-                  productId={String(product.id)}
-                  currentBid={currentBid}
-                  startingBid={startingBid}
-                  minBidIncrement={minBidIncrement}
-                  currency={currency}
-                  isEnded={isEnded}
-                  buyNowPrice={buyNowPrice}
-                  bidCount={bidCount}
-                  tags={tags}
-                  onPlaceBid={onPlaceBid}
-                />
+              <Div id="auction-bid-form" className="space-y-3">
+                {/* Compact summary card — modal owns the form */}
+                <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-5 space-y-3">
+                  <Row justify="between" align="baseline">
+                    <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
+                      {formatCurrency(currentBid, currency)}
+                    </Span>
+                    <Span className="text-xs text-zinc-500">
+                      {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
+                    </Span>
+                  </Row>
+                  <PlaceBidModalButton
+                    productId={String(product.id)}
+                    currentBid={currentBid}
+                    startingBid={startingBid}
+                    minBidIncrement={minBidIncrement}
+                    currency={currency}
+                    isEnded={isEnded}
+                    buyNowPrice={buyNowPrice}
+                    bidCount={bidCount}
+                    tags={tags}
+                    onPlaceBid={onPlaceBid}
+                    triggerClassName="w-full"
+                  />
+                </Div>
               </Div>
             ) : (
               /* Read-only bid panel — shown when no bid action is wired (preview/demo) */
@@ -368,8 +380,14 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
           }
           renderMobileBidForm={() =>
             !isEnded && onPlaceBid ? (
-              <Div className="lg:hidden">
-                <PlaceBidFormClient
+              <Div className="lg:hidden rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-4 space-y-3">
+                <Row align="center" gap="sm">
+                  <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
+                    {formatCurrency(currentBid, currency)}
+                  </Span>
+                  <Span className="text-xs text-zinc-500">{bidCount} bids</Span>
+                </Row>
+                <PlaceBidModalButton
                   productId={String(product.id)}
                   currentBid={currentBid}
                   startingBid={startingBid}
@@ -380,6 +398,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
                   bidCount={bidCount}
                   tags={tags}
                   onPlaceBid={onPlaceBid}
+                  triggerClassName="w-full"
                 />
               </Div>
             ) : !isEnded ? (
