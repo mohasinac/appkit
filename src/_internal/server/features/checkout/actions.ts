@@ -30,7 +30,7 @@ import {
   getAdminRealtimeDb,
   RTDB_PATHS,
 } from "../../../../providers/db-firebase";
-import { PRODUCT_COLLECTION, ProductStatusValues } from "../../../../features/products/schemas/firestore";
+import { PRODUCT_COLLECTION, PRODUCT_CODES_SUBCOLLECTION, ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import type { ProductDocument } from "../../../../features/products/schemas/firestore";
 import { CART_COLLECTION } from "../../../../features/cart/schemas/index";
 import type { CartItemDocument } from "../../../../features/cart/schemas/firestore";
@@ -68,6 +68,41 @@ import {
   runSyncPreflight,
 } from "../../../shared/checkout/rules";
 import { cartIsDigitalOnly } from "../../../shared/listing-types/cart-shipping";
+
+/**
+ * SB-UNI-N — Atomically claim the next available digital code for a confirmed
+ * order. Pre-fetches a candidate code outside the transaction then locks and
+ * verifies in a micro-transaction. Fire-and-forget safe (logs on exhaustion
+ * but never fails the already-created order).
+ */
+async function claimDigitalCodeForOrder(
+  db: ReturnType<typeof getAdminDb>,
+  productId: string,
+  orderId: string,
+  userId: string,
+): Promise<void> {
+  const codesRef = db
+    .collection(PRODUCT_COLLECTION)
+    .doc(productId)
+    .collection(PRODUCT_CODES_SUBCOLLECTION);
+  const snap = await codesRef.where("status", "==", "available").limit(1).get();
+  if (snap.empty) {
+    serverLogger.warn("claimDigitalCode: code pool exhausted", { productId, orderId });
+    return;
+  }
+  const codeRef = snap.docs[0].ref;
+  await db.runTransaction(async (tx) => {
+    const latest = await tx.get(codeRef);
+    if (!latest.exists || latest.data()?.status !== "available") return;
+    tx.update(codeRef, {
+      status: "claimed",
+      orderId,
+      claimedByUserId: userId,
+      claimedAt: new Date(),
+      updatedAt: new Date(),
+    });
+  });
+}
 
 /**
  * SB-UNI-O — Live-item jurisdiction guard.
@@ -680,6 +715,14 @@ export async function createCheckoutOrderAction(
 
     orderIds.push(order.id);
 
+    // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
+    // order is already persisted so a claim failure is logged, not thrown).
+    if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid).catch(
+        (e) => serverLogger.error("claimDigitalCode", e),
+      );
+    }
+
     for (const code of groupCouponCodes) {
       const entry = couponUsageAccumulator.get(code);
       if (entry) entry.orderIds.push(order.id);
@@ -1194,6 +1237,14 @@ export async function verifyAndPlaceRazorpayOrderAction(
     } as never);
 
     orderIds.push(order.id);
+
+    // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
+    // order is already persisted so a claim failure is logged, not thrown).
+    if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
+      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid).catch(
+        (e) => serverLogger.error("claimDigitalCode", e),
+      );
+    }
 
     if (userEmail) {
       emailsToSend.push({
