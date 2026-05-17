@@ -1,5 +1,6 @@
 import { useCartCount } from "../cart/hooks/useCartCount";
 import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
+import { useNotifications } from "../account/hooks/useNotifications";
 import { useDashboardNav } from "./DashboardNavContext";
 import { TitleBarLayout } from "./TitleBarLayout";
 import type { TitleBarLayoutProps } from "./TitleBarLayout";
@@ -9,6 +10,7 @@ export interface TitleBarProps
     TitleBarLayoutProps,
     | "cartCount"
     | "wishlistCount"
+    | "unreadNotificationCount"
     | "hasDashboardNav"
     | "onToggleDashboardNav"
   > {
@@ -40,6 +42,7 @@ export function TitleBar({
 }: TitleBarProps) {
   const cartCount = useCartCount(!!rest.user);
   const wishlistCount = useWishlistCount(userId);
+  const { unreadCount } = useNotifications(1);
   const { hasNav: hasDashboardNav, toggleNav: toggleDashboardNav } =
     useDashboardNav();
 
@@ -48,6 +51,7 @@ export function TitleBar({
       {...rest}
       cartCount={cartCount}
       wishlistCount={wishlistCount}
+      unreadNotificationCount={rest.user ? unreadCount : 0}
       hasDashboardNav={suppressDashboardNav ? false : hasDashboardNav}
       onToggleDashboardNav={
         suppressDashboardNav

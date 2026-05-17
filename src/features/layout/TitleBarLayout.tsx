@@ -29,6 +29,8 @@ export interface TitleBarLayoutProps {
   cartHref?: string;
   cartCount?: number;
   profileHref?: string;
+  /** Unread notification count to show as a badge on the profile icon. */
+  unreadNotificationCount?: number;
   loginHref?: string;
   registerHref?: string;
   user?: TitleBarUser | null;
@@ -85,6 +87,7 @@ export function TitleBarLayout({
   cartHref,
   cartCount = 0,
   profileHref,
+  unreadNotificationCount = 0,
   loginHref,
   registerHref,
   user,
@@ -218,8 +221,8 @@ export function TitleBarLayout({
   const profileEl = profileHref ? (
     <Link
       href={profileHref}
-      aria-label={user ? `Profile — ${user.displayName ?? user.email}` : "Sign in"}
-      className={iconBtn}
+      aria-label={user ? `Profile — ${user.displayName ?? user.email}${unreadNotificationCount > 0 ? `, ${unreadNotificationCount} unread alerts` : ""}` : "Sign in"}
+      className={`relative ${iconBtn}`}
     >
       {user?.photoURL ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -228,12 +231,16 @@ export function TitleBarLayout({
           alt={user.displayName ?? "Profile"}
           width={28}
           height={28}
+          loading="lazy"
           className="w-7 h-7 rounded-full object-cover"
         />
       ) : (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0zM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
         </svg>
+      )}
+      {unreadNotificationCount > 0 && (
+        <Span className={countBadge}>{unreadNotificationCount > 99 ? "99+" : unreadNotificationCount}</Span>
       )}
     </Link>
   ) : null;

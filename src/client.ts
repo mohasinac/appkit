@@ -308,6 +308,8 @@ export { usePanelUrlSync } from "./react/hooks/use-panel-url-sync";
 export type { PanelUrlSync } from "./react/hooks/use-panel-url-sync";
 export { MakeOfferButton } from "./features/products/components/MakeOfferButton";
 export type { MakeOfferButtonProps } from "./features/products/components/MakeOfferButton";
+export { ProductDetailActions } from "./features/products/components/ProductDetailActions";
+export type { ProductDetailActionsProps } from "./features/products/components/ProductDetailActions";
 // productFeatures (FI6) — client-safe components + context
 export {
   ProductFeaturesProvider,
@@ -328,7 +330,7 @@ export type { SellerDashboardViewProps as StoreDashboardViewProps, SellerDashboa
 export { SellerPayoutSettingsView, SellerShippingView, SellerReviewsView, SellerPayoutRequestView, SellerAnalyticsStats, SellerTopProducts, SellerAnalyticsView, SellerPayoutsView, SellerCouponEditorView, SellerBidsView, SellerAddressesView, SellerPreOrdersView, SellerPrizeDrawsView, PrintCenterView } from "./features/seller/components/index";
 export type { SellerPayoutSettingsViewProps, SellerShippingViewProps, SellerReviewsViewProps, SellerPayoutRequestViewProps, SellerAnalyticsViewProps, SellerPayoutsViewProps, SellerCouponEditorViewProps, CouponEditorDraft, SellerBidsViewProps, SellerAddressesViewProps, SellerPreOrdersViewProps, SellerPrizeDrawsViewProps } from "./features/seller/components/index";
 export type { SellerAnalyticsSummary, SellerAnalyticsTopProduct } from "./features/seller/types/index";
-export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView } from "./features/account/index";
+export { UserAccountHubView, UserOrdersView, OrderDetailView, UserNotificationsView, UserReturnsView, UserSupportView, useNotifications } from "./features/account/index";
 export type { UserAccountHubViewProps, UserAccountHubViewLabels, UserOrdersViewProps, UserOrdersViewLabels, OrderDetailViewProps, OrderDetailViewLabels, UserNotificationsViewProps, UserNotificationsViewLabels, UserReturnsViewProps, UserReturnsViewLabels, UserSupportViewProps } from "./features/account/index";
 export { useOrders, useOrder, OrdersList } from "./features/orders/index";
 export { useCouponValidate } from "./features/promotions/hooks/useCouponValidate";

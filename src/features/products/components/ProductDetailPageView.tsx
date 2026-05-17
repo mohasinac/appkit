@@ -2,6 +2,7 @@ import Link from "next/link";
 import { productRepository, reviewRepository } from "../../../repositories";
 
 const CLS_BREADCRUMB_LINK = "hover:text-primary-600 transition-colors";
+const ACTION_NOT_WIRED = "Action not wired";
 import { ROUTES } from "../../../next";
 import { getDefaultCurrency } from "../../../core/baseline-resolver";
 import {
@@ -56,6 +57,21 @@ export interface ProductDetailPageViewProps {
     price: number;
     currency: string;
     minOfferPercent: number;
+  }) => React.ReactNode;
+  /**
+   * Renders the primary action buttons (Buy Now / Add to Cart / Wishlist).
+   * Receives variant so a single consumer can render desktop + mobile differently.
+   * When omitted, disabled placeholder buttons render — a loud signal of drift.
+   */
+  renderPrimaryActions?: (opts: {
+    productId: string;
+    productSlug: string;
+    productTitle: string;
+    productImage?: string;
+    price: number | null;
+    currency: string;
+    inStock: boolean;
+    variant: "desktop" | "mobile";
   }) => React.ReactNode;
   /**
    * SSR-loaded productFeatures (platform + store-scope). When present, the
@@ -167,6 +183,7 @@ export async function ProductDetailPageView({
   slug,
   initialProduct,
   renderOfferAction,
+  renderPrimaryActions,
   productFeatures,
 }: ProductDetailPageViewProps) {
   // Use pre-fetched data when available to avoid a redundant repository call.
@@ -619,25 +636,48 @@ export async function ProductDetailPageView({
 
               {/* Actions */}
               <Stack gap="sm">
-                <Button
-                  variant="primary"
-                  size="md"
-                  className="w-full"
-                  disabled={!inStock}
-                >
-                  {inStock ? "Buy Now" : "Out of Stock"}
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="md"
-                  className="w-full"
-                  disabled={!inStock}
-                >
-                  {inStock ? "Add to Cart" : "Out of Stock"}
-                </Button>
-                <Button variant="ghost" size="md" className="w-full">
-                  ♡ Add to Wishlist
-                </Button>
+                {renderPrimaryActions ? (
+                  renderPrimaryActions({
+                    productId: product.id,
+                    productSlug: product.slug ?? slug,
+                    productTitle: product.title,
+                    productImage: product.mainImage,
+                    price,
+                    currency,
+                    inStock,
+                    variant: "desktop",
+                  })
+                ) : (
+                  <>
+                    <Button
+                      variant="primary"
+                      size="md"
+                      className="w-full"
+                      disabled
+                      title={ACTION_NOT_WIRED}
+                    >
+                      {inStock ? "Buy Now" : "Out of Stock"}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="md"
+                      className="w-full"
+                      disabled
+                      title={ACTION_NOT_WIRED}
+                    >
+                      {inStock ? "Add to Cart" : "Out of Stock"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="md"
+                      className="w-full"
+                      disabled
+                      title={ACTION_NOT_WIRED}
+                    >
+                      ♡ Add to Wishlist
+                    </Button>
+                  </>
+                )}
                 {allowOffers && productType === "simple" && price !== null && renderOfferAction?.({
                   productId: product.id,
                   price,
@@ -858,22 +898,39 @@ export async function ProductDetailPageView({
               {formattedPrice}
             </Span>
           )}
-          <Button
-            variant="secondary"
-            size="sm"
-            className="shrink-0"
-            disabled={!inStock}
-          >
-            Add to Cart
-          </Button>
-          <Button
-            variant="primary"
-            size="sm"
-            className="flex-1"
-            disabled={!inStock}
-          >
-            {inStock ? "Buy Now" : "Out of Stock"}
-          </Button>
+          {renderPrimaryActions ? (
+            renderPrimaryActions({
+              productId: product.id,
+              productSlug: product.slug ?? slug,
+              productTitle: product.title,
+              productImage: product.mainImage,
+              price,
+              currency,
+              inStock,
+              variant: "mobile",
+            })
+          ) : (
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="shrink-0"
+                disabled
+                title={ACTION_NOT_WIRED}
+              >
+                Add to Cart
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="flex-1"
+                disabled
+                title={ACTION_NOT_WIRED}
+              >
+                {inStock ? "Buy Now" : "Out of Stock"}
+              </Button>
+            </>
+          )}
         </BuyBar>
       </Container>
     </Main>

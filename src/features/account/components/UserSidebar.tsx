@@ -10,6 +10,8 @@ export interface UserNavItem {
   href: string;
   label: string;
   icon?: React.ReactNode;
+  /** When set, intercepts navigation with a confirmation prompt. */
+  confirm?: { title?: string; message: string };
 }
 
 export interface UserNavGroup {
@@ -36,10 +38,20 @@ function isNavItemActive(item: UserNavItem, activeHref: string): boolean {
 }
 
 function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (item.confirm && typeof window !== "undefined") {
+      const ok = window.confirm(item.confirm.message);
+      if (!ok) {
+        e.preventDefault();
+        return;
+      }
+    }
+    onClick?.();
+  };
   return (
     <Link
       href={item.href}
-      onClick={onClick}
+      onClick={handleClick}
       className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
         isActive
           ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
@@ -231,7 +243,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
             onClick={handleToggle}
             aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
             className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
-            style={{ background: "linear-gradient(to bottom, #3e7708, #65c408)" }}
+            style={{ background: "linear-gradient(to bottom, var(--appkit-color-primary-700, var(--appkit-color-primary)), var(--appkit-color-secondary-500, var(--appkit-color-secondary)))" }}  // eslint-disable-line lir/no-inline-static-style
           >
             <svg
               className={`w-4 h-4 text-white drop-shadow-sm transition-transform duration-300 ${desktopOpen ? "" : "rotate-180"}`}

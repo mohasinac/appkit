@@ -70,13 +70,53 @@ export async function placeBid(
       ? product.currentBid!
       : (product.startingBid ?? product.price);
 
-  if (bidAmount <= baseBid) {
+  const minIncrement = product.minBidIncrement ?? 100;
+
+  // Proxy-bid semantics (eBay style): the buyer's `bidAmount` is treated as
+  // their **maximum** they're willing to pay; the visible price only steps up
+  // in `minIncrement` units as needed to stay ahead of the previous high bid.
+  // If `autoMaxBid` is supplied explicitly it takes precedence over bidAmount
+  // as the cap (lets clients separate desired-step from secret-cap).
+  const newCap = Math.max(bidAmount, autoMaxBid ?? bidAmount);
+
+  if (newCap <= baseBid) {
     throw new ValidationError(ERROR_MESSAGES.BID.BID_TOO_LOW, { code: BID_ERROR_CODES.TOO_LOW });
   }
-
-  const minIncrement = product.minBidIncrement ?? 100;
-  if (bidAmount < baseBid + minIncrement) {
+  if (newCap < baseBid + minIncrement) {
     throw new ValidationError(ERROR_MESSAGES.BID.INCREMENT_TOO_LOW, { code: BID_ERROR_CODES.INCREMENT_VIOLATED });
+  }
+
+  const previousWinner = await bidRepository
+    .getWinningBid(productId)
+    .catch(() => null);
+
+  const prevCap = previousWinner?.data
+    ? ((previousWinner.data as any).autoMaxBid ?? previousWinner.data.bidAmount ?? baseBid)
+    : baseBid;
+  const prevVisible = previousWinner?.data?.bidAmount ?? baseBid;
+  const sameBidder = previousWinner?.data?.userId === userId;
+
+  // Decide who wins after this submission and what the visible price becomes.
+  // Tie goes to the existing leader (first-bidder advantage), matching eBay.
+  let newBidWins: boolean;
+  let visibleBid: number;
+  let bumpedPreviousVisible: number | null = null;
+
+  if (sameBidder) {
+    // Raising your own cap. You stay winning; visible stays put.
+    newBidWins = true;
+    visibleBid = prevVisible;
+  } else if (!previousWinner || newCap > prevCap) {
+    newBidWins = true;
+    const target = Math.max(prevCap + minIncrement, baseBid + minIncrement);
+    visibleBid = Math.min(newCap, target);
+  } else {
+    // newCap <= prevCap → previous winner keeps it. Bump their visible up to
+    // outpace the new bid (capped at their own max).
+    newBidWins = false;
+    const target = newCap + minIncrement;
+    visibleBid = newCap;
+    bumpedPreviousVisible = Math.min(prevCap, target);
   }
 
   const profile = await userRepository.findById(userId);
@@ -87,34 +127,46 @@ export async function placeBid(
     userId,
     userName: profile?.displayName ?? userEmail ?? "Anonymous",
     userEmail: profile?.email ?? userEmail ?? "",
-    bidAmount,
+    bidAmount: visibleBid,
     currency: product.currency || getDefaultCurrency(),
     bidDate: new Date(),
-    ...(autoMaxBid ? { autoMaxBid } : {}),
+    autoMaxBid: newCap,
   } as Parameters<typeof bidRepository.create>[0]);
 
-  const allBids = await bidRepository.findBy("productId", productId);
   await unitOfWork.runBatch((batch) => {
-    for (const b of allBids) {
-      unitOfWork.bids.updateInBatch(batch, b.id, {
-        isWinning: b.id === bid.id,
-        status: b.id === bid.id ? "active" : "outbid",
-      } as any);
+    if (previousWinner && previousWinner.data.id !== bid.id) {
+      if (newBidWins) {
+        unitOfWork.bids.updateInBatch(batch, previousWinner.data.id, {
+          isWinning: false,
+          status: "outbid",
+        } as any);
+      } else if (bumpedPreviousVisible !== null && bumpedPreviousVisible !== prevVisible) {
+        unitOfWork.bids.updateInBatch(batch, previousWinner.data.id, {
+          bidAmount: bumpedPreviousVisible,
+        } as any);
+      }
     }
+    unitOfWork.bids.updateInBatch(batch, bid.id, {
+      isWinning: newBidWins,
+      status: newBidWins ? "active" : "outbid",
+    } as any);
+    const finalCurrentBid = newBidWins ? visibleBid : (bumpedPreviousVisible ?? prevVisible);
     unitOfWork.products.updateInBatch(batch, productId, {
-      currentBid: bidAmount,
+      currentBid: finalCurrentBid,
       bidCount: increment(1),
-      leadingBidderId: userId,
+      leadingBidderId: newBidWins ? userId : (previousWinner?.data?.userId ?? userId),
       bidsHaveStarted: true,
     } as any);
   });
 
+  const finalVisibleForRtdb = newBidWins ? visibleBid : (bumpedPreviousVisible ?? prevVisible);
+
   try {
     const rtdb = getAdminRealtimeDb();
     await rtdb.ref(`/auction-bids/${productId}`).set({
-      currentBid: bidAmount,
+      currentBid: finalVisibleForRtdb,
       lastBid: {
-        amount: bidAmount,
+        amount: finalVisibleForRtdb,
         bidderName: "Bidder",
         timestamp: Date.now(),
       },
@@ -131,7 +183,9 @@ export async function placeBid(
     bidId: bid.id,
     productId,
     userId,
-    bidAmount,
+    bidAmount: visibleBid,
+    maxProxyBid: newCap,
+    winning: newBidWins,
   });
   return { bid };
 }

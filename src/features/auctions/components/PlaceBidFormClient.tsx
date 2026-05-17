@@ -3,7 +3,7 @@
 import React, { useState, useTransition } from "react";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuthError } from "../../../utils/auth-error";
-import { Button, Div, Input, LoginRequiredModal, Row, Span, Stack, Text } from "../../../ui";
+import { Button, Div, Input, LoginRequiredModal, Modal, Row, Span, Stack, Text } from "../../../ui";
 
 const BID_ERROR_DISPLAY: Record<string, string> = {
   BID_AUCTION_ENDED: "This auction has closed. No more bids are accepted.",
@@ -173,5 +173,32 @@ export function PlaceBidFormClient({
         </Div>
       )}
     </Div>
+  );
+}
+
+/**
+ * `PlaceBidModalButton` — opens a modal that hosts the same PlaceBidFormClient.
+ *
+ * Use this on listing-detail pages so buyers explicitly opt-in to the bid
+ * surface instead of always seeing the card inline.
+ */
+export function PlaceBidModalButton(props: PlaceBidFormClientProps & { triggerLabel?: string; triggerClassName?: string }) {
+  const { triggerLabel = "Place a bid", triggerClassName = "", ...formProps } = props;
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="primary"
+        size="md"
+        className={triggerClassName}
+        disabled={props.isEnded}
+        onClick={() => setOpen(true)}
+      >
+        {props.isEnded ? "Auction Ended" : triggerLabel}
+      </Button>
+      <Modal isOpen={open} onClose={() => setOpen(false)} size="md" title="Place your bid">
+        <PlaceBidFormClient {...formProps} />
+      </Modal>
+    </>
   );
 }

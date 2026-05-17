@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { Button, Div, Input, LoginRequiredModal, Span, Text } from "../../../ui";
+import { Button, Div, Input, LoginRequiredModal, Modal, Span, Stack, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { formatCurrency } from "../../../utils/number.formatter";
 
@@ -119,85 +119,7 @@ export function MakeOfferButton({
     );
   }
 
-  if (state === "confirm") {
-    return (
-      <Div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/60 p-4 space-y-3 ${className}`}>
-        <Div>
-          <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
-            Make an Offer
-          </Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
-            Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
-          </Text>
-        </Div>
-        <Div className="space-y-1">
-          <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Your offer amount</Text>
-          <Input
-            type="number"
-            value={String(offerAmount)}
-            onChange={(e) => handleAmountChange(e.target.value)}
-            min={minOffer}
-            max={listedPrice - 1}
-            step={1}
-            aria-label="Offer amount"
-          />
-          <Text className="text-xs text-zinc-400 dark:text-zinc-500">
-            Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
-          </Text>
-        </Div>
-        <Div className="space-y-1">
-          <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Note to seller (optional)</Text>
-          <Input
-            type="text"
-            value={buyerNote}
-            onChange={(e) => setBuyerNote(e.target.value)}
-            placeholder="E.g. Bundle deal, long-time fan..."
-            maxLength={300}
-            aria-label="Note to seller"
-          />
-        </Div>
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-          The seller will accept, decline, or suggest a counter price.
-        </Text>
-        <Div className="flex gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="flex-1"
-            onClick={handleCancel}
-            disabled={isPending}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="flex-1"
-            onClick={handleSubmit}
-            disabled={isPending || offerAmount < minOffer}
-          >
-            {isPending ? "Sending…" : `Send ${fmt(offerAmount)}`}
-          </Button>
-        </Div>
-      </Div>
-    );
-  }
-
-  if (state === "error") {
-    return (
-      <Div className={`rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-4 space-y-2 ${className}`}>
-        <Text className="text-xs text-red-600 dark:text-red-400 text-center">{errorMsg}</Text>
-        <Div className="flex gap-2">
-          <Button variant="ghost" size="sm" className="flex-1" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button variant="secondary" size="sm" className="flex-1" onClick={() => setState("confirm")}>
-            Try Again
-          </Button>
-        </Div>
-      </Div>
-    );
-  }
+  const modalOpen = state === "confirm" || state === "loading" || state === "error";
 
   return (
     <>
@@ -214,6 +136,65 @@ export function MakeOfferButton({
       >
         Make Offer
       </Button>
+      <Modal
+        isOpen={modalOpen}
+        onClose={handleCancel}
+        size="md"
+        title="Make an offer"
+        actions={
+          <>
+            <Button variant="ghost" size="sm" onClick={handleCancel} disabled={isPending}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleSubmit}
+              disabled={isPending || offerAmount < minOffer}
+            >
+              {isPending ? "Sending…" : `Send offer of ${fmt(offerAmount)}`}
+            </Button>
+          </>
+        }
+      >
+        <Stack gap="md">
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            Listed at {fmt(listedPrice)} · Minimum offer: {fmt(minOffer)}
+          </Text>
+          <Div className="space-y-1">
+            <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Your offer amount</Text>
+            <Input
+              type="number"
+              value={String(offerAmount)}
+              onChange={(e) => handleAmountChange(e.target.value)}
+              min={minOffer}
+              max={listedPrice - 1}
+              step={1}
+              aria-label="Offer amount"
+            />
+            <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+              Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
+            </Text>
+          </Div>
+          <Div className="space-y-1">
+            <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Note to seller (optional)</Text>
+            <Input
+              type="text"
+              value={buyerNote}
+              onChange={(e) => setBuyerNote(e.target.value)}
+              placeholder="E.g. Bundle deal, long-time fan…"
+              maxLength={300}
+              aria-label="Note to seller"
+            />
+          </Div>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            The seller will accept, decline, or suggest a counter price.
+          </Text>
+          {state === "error" && (
+            <Text className="text-xs text-red-600 dark:text-red-400">{errorMsg}</Text>
+          )}
+        </Stack>
+      </Modal>
     </>
   );
 }
