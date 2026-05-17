@@ -311,6 +311,73 @@ export async function sendContactEmail(params: {
   }
 }
 
+export async function sendDigitalCodeClaimedEmail(params: {
+  to: string;
+  userName: string;
+  productTitle: string;
+  orderId: string;
+}): Promise<{ success: boolean }> {
+  const siteName = getSiteName();
+  const siteUrl = getSiteUrl();
+  const { to, userName, productTitle, orderId } = params;
+  const orderUrl = `${siteUrl}/user/orders/view/${orderId}`;
+
+  try {
+    const { error } = await sendConfiguredEmail({
+      to,
+      subject: `Your digital code for "${productTitle}" is ready`,
+      html: `
+        <!DOCTYPE html><html>
+        <head><meta charset="utf-8"><title>Digital Code Ready</title></head>
+        <body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background-color:#f5f5f5;">
+          <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f5f5f5;padding:40px 0;">
+            <tr><td align="center">
+              <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+                <tr><td style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 100%);padding:40px;text-align:center;">
+                  <p style="font-size:48px;margin:0 0 12px;">&#x1F511;</p>
+                  <h1 style="color:#ffffff;margin:0;font-size:26px;font-weight:600;">Your Digital Code Is Ready</h1>
+                </td></tr>
+                <tr><td style="padding:40px;">
+                  <p style="color:#333;font-size:16px;line-height:1.6;margin:0 0 16px;">Hi ${userName},</p>
+                  <p style="color:#333;font-size:16px;line-height:1.6;margin:0 0 24px;">
+                    Your digital code for <strong>${productTitle}</strong> has been assigned to your order and is ready to reveal.
+                  </p>
+                  <table width="100%" cellpadding="12" cellspacing="0" border="0" style="background:#f8f9fa;border-radius:8px;margin-bottom:24px;">
+                    <tr><td style="color:#666;font-size:14px;width:40%;">Order ID</td>
+                        <td style="color:#333;font-size:14px;font-weight:600;">${orderId}</td></tr>
+                    <tr><td style="color:#666;font-size:14px;">Product</td>
+                        <td style="color:#333;font-size:14px;">${productTitle}</td></tr>
+                  </table>
+                  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
+                    <tr><td align="center">
+                      <a href="${orderUrl}" style="display:inline-block;padding:14px 40px;background:linear-gradient(135deg,#6366f1 0%,#4f46e5 100%);color:#ffffff;text-decoration:none;border-radius:6px;font-size:15px;font-weight:600;">
+                        Reveal Your Code
+                      </a>
+                    </td></tr>
+                  </table>
+                  <p style="color:#999;font-size:13px;line-height:1.6;margin:0;">For security, the code is only shown inside your ${siteName} account.</p>
+                </td></tr>
+                <tr><td style="background-color:#f8f9fa;padding:24px;text-align:center;border-top:1px solid #eee;">
+                  <p style="color:#9ca3af;font-size:12px;margin:0;">&#169; ${currentYear()} ${siteName}. All rights reserved.</p>
+                </td></tr>
+              </table>
+            </td></tr>
+          </table>
+        </body></html>`,
+      text: `Hi ${userName},\n\nYour digital code for "${productTitle}" (Order: ${orderId}) is ready to reveal.\n\nVisit your order: ${orderUrl}\n\nFor security, the code is only shown inside your ${siteName} account.\n\n© ${currentYear()} ${siteName}`,
+    });
+
+    if (error) {
+      serverLogger.error("Failed to send digital code claimed email", { error });
+      return { success: false };
+    }
+    return { success: true };
+  } catch (error) {
+    serverLogger.error("Error sending digital code claimed email", { error });
+    return { success: false };
+  }
+}
+
 export async function sendSiteSettingsChangedEmail(params: {
   adminEmails: string[];
   changedByEmail: string;

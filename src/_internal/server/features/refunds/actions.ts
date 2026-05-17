@@ -19,8 +19,14 @@ import { randomUUID } from "crypto";
 import { getProviders } from "../../../../contracts/registry";
 import { orderRepository } from "../../../..";
 import { NotFoundError, ValidationError } from "../../../../errors";
+import { serverLogger } from "../../../../monitoring";
 import type { OrderRefundEvent, RefundType } from "../../../../features/orders/schemas";
 import { applyRefundDeductionAction } from "../payouts/actions";
+import { getAdminDb } from "../../../../providers/db-firebase";
+import {
+  PRODUCT_COLLECTION,
+  PRODUCT_CODES_SUBCOLLECTION,
+} from "../../../../features/products/schemas/firestore";
 
 export type ProcessRefundInput = {
   orderId: string;
@@ -68,6 +74,31 @@ export async function processRefundAction(
     throw new ValidationError("This order is marked non-refundable and cannot be refunded.");
   }
 
+  // SB-UNI-N — digital-code refund gate: block if code is already claimed (revealed).
+  const digitalCodeItems = (order.items ?? []).filter(
+    (i) => (i.listingType ?? "standard") === "digital-code",
+  );
+  if (digitalCodeItems.length > 0) {
+    const db = getAdminDb();
+    for (const item of digitalCodeItems) {
+      const codesSnap = await db
+        .collection(PRODUCT_COLLECTION)
+        .doc(item.productId)
+        .collection(PRODUCT_CODES_SUBCOLLECTION)
+        .where("orderId", "==", input.orderId)
+        .limit(1)
+        .get();
+      if (!codesSnap.empty) {
+        const codeStatus = codesSnap.docs[0].data()?.status as string | undefined;
+        if (codeStatus === "claimed") {
+          throw new ValidationError(
+            "The digital code for this order has already been revealed and cannot be refunded automatically. Please contact support.",
+          );
+        }
+      }
+    }
+  }
+
   const refundId = randomUUID();
   const now = new Date();
   let razorpayRefundId: string | undefined;
@@ -102,6 +133,28 @@ export async function processRefundAction(
   };
 
   await orderRepository.postRefundEvent(input.orderId, event, isFull);
+
+  // SB-UNI-N — revoke any available (unclaimed) digital codes linked to this order.
+  if (digitalCodeItems.length > 0) {
+    const db = getAdminDb();
+    for (const item of digitalCodeItems) {
+      db.collection(PRODUCT_COLLECTION)
+        .doc(item.productId)
+        .collection(PRODUCT_CODES_SUBCOLLECTION)
+        .where("orderId", "==", input.orderId)
+        .where("status", "==", "available")
+        .limit(1)
+        .get()
+        .then((snap) => {
+          if (!snap.empty) {
+            snap.docs[0].ref
+              .update({ status: "revoked", updatedAt: new Date() })
+              .catch((e) => serverLogger.error("refund: code revoke failed", e));
+          }
+        })
+        .catch((e) => serverLogger.error("refund: code query failed", e));
+    }
+  }
 
   // Fire-and-forget: deduct from the store's pending payout if one exists.
   // Failure here must not roll back the already-posted refund event.

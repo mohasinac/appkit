@@ -76,6 +76,19 @@ export async function setProductStatusAction(input: unknown) {
   if (!parsed.success) throw new ValidationError(parsed.error.issues[0]?.message ?? "Invalid input");
   const product = await assertProductOwnership(parsed.data.productId, user.uid);
   assertStatusTransition(product.status, parsed.data.status);
+
+  // SB-UNI-O — live listings must be admin-verified before a seller can publish them.
+  if (
+    parsed.data.status === "published" &&
+    (product.listingType ?? "standard") === "live" &&
+    !product.liveItem?.vendorVerified &&
+    user.role !== "admin"
+  ) {
+    throw new ValidationError(
+      "Live listings require admin verification before publishing. Contact support to request verification.",
+    );
+  }
+
   return productRepository.update(parsed.data.productId, { status: parsed.data.status });
 }
 

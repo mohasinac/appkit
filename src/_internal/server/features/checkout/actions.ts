@@ -80,6 +80,7 @@ async function claimDigitalCodeForOrder(
   productId: string,
   orderId: string,
   userId: string,
+  opts?: { userEmail?: string; userName?: string; productTitle?: string },
 ): Promise<void> {
   const codesRef = db
     .collection(PRODUCT_COLLECTION)
@@ -91,6 +92,7 @@ async function claimDigitalCodeForOrder(
     return;
   }
   const codeRef = snap.docs[0].ref;
+  let claimed = false;
   await db.runTransaction(async (tx) => {
     const latest = await tx.get(codeRef);
     if (!latest.exists || latest.data()?.status !== "available") return;
@@ -101,7 +103,17 @@ async function claimDigitalCodeForOrder(
       claimedAt: new Date(),
       updatedAt: new Date(),
     });
+    claimed = true;
   });
+  if (claimed && opts?.userEmail) {
+    const { sendDigitalCodeClaimedEmail } = await import("../../../../features/contact/server");
+    sendDigitalCodeClaimedEmail({
+      to: opts.userEmail,
+      userName: opts.userName ?? "there",
+      productTitle: opts.productTitle ?? "your product",
+      orderId,
+    }).catch((e) => serverLogger.error("claimDigitalCode: email failed", e));
+  }
 }
 
 /**
@@ -718,9 +730,11 @@ export async function createCheckoutOrderAction(
     // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
     // order is already persisted so a claim failure is logged, not thrown).
     if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid).catch(
-        (e) => serverLogger.error("claimDigitalCode", e),
-      );
+      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
+        userEmail: userEmail || undefined,
+        userName,
+        productTitle: firstItem.productTitle,
+      }).catch((e) => serverLogger.error("claimDigitalCode", e));
     }
 
     for (const code of groupCouponCodes) {
@@ -1241,9 +1255,11 @@ export async function verifyAndPlaceRazorpayOrderAction(
     // SB-UNI-N — claim a digital code for digital-code orders (fire-and-forget,
     // order is already persisted so a claim failure is logged, not thrown).
     if ((group[0]?.product?.listingType ?? "standard") === "digital-code") {
-      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid).catch(
-        (e) => serverLogger.error("claimDigitalCode", e),
-      );
+      claimDigitalCodeForOrder(getAdminDb(), firstItem.productId, order.id, uid, {
+        userEmail: userEmail || undefined,
+        userName,
+        productTitle: firstItem.productTitle,
+      }).catch((e) => serverLogger.error("claimDigitalCode", e));
     }
 
     if (userEmail) {
