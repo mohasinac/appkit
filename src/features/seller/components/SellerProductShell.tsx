@@ -1,8 +1,9 @@
 "use client";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
+import { FormShellProvider } from "../../../ui/forms";
 import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
@@ -904,6 +905,23 @@ export function SellerProductShell({
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
 
+  // Auto-save in create mode — debounce 2s on any draft change
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draftRef = useRef(draft);
+  draftRef.current = draft;
+  const onSaveRef = useRef(onSave);
+  onSaveRef.current = onSave;
+
+  useEffect(() => {
+    if (mode !== "create" || !isDirty) return;
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      const result = onSaveRef.current(draftRef.current);
+      if (result && typeof (result as Promise<void>).catch === "function") (result as Promise<void>).catch(() => {});
+    }, 2000);
+    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
+  }, [draft, isDirty, mode]);
+
   const update = useCallback((partial: Partial<SellerProductDraft>) => {
     setDraft((prev) => ({ ...prev, ...partial }));
     markDirty();
@@ -1035,6 +1053,13 @@ export function SellerProductShell({
     }
   }, [currentStep, steps, draft, handlePublish]);
 
+  // Step error badges — run each step's validate against current draft
+  const stepValidationErrors = useMemo(
+    () => steps.map((s) => (s.validate ? Boolean(s.validate(draft)) : false)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [draft],
+  );
+
   const breadcrumb =
     mode === "create" ? `Store / ${listingTypeLabel}s / New` : `Store / ${listingTypeLabel}s / Edit`;
   const title =
@@ -1069,17 +1094,20 @@ export function SellerProductShell({
           </div>
         )}
       >
-        <StepForm<SellerProductDraft>
-          steps={steps}
-          values={draft}
-          onChange={update}
-          onComplete={handlePublish}
-          completeLabel={`Publish ${listingTypeLabel}`}
-          currentStep={currentStep}
-          onStepChange={setCurrentStep}
-          isLoading={isLoading}
-          hideActions
-        />
+        <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
+          <StepForm<SellerProductDraft>
+            steps={steps}
+            values={draft}
+            onChange={update}
+            onComplete={handlePublish}
+            completeLabel={`Publish ${listingTypeLabel}`}
+            currentStep={currentStep}
+            onStepChange={setCurrentStep}
+            isLoading={isLoading}
+            hideActions
+            stepErrors={stepValidationErrors}
+          />
+        </FormShellProvider>
       </FormShell>
     );
   }
@@ -1109,6 +1137,7 @@ export function SellerProductShell({
       publishLabel="Update"
       previewSlot={previewSlot}
     >
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
       <Stack gap="lg">
         <Section id="basic">
           <Heading level={3} className="mb-4">Basic Info</Heading>
@@ -1182,6 +1211,7 @@ export function SellerProductShell({
           )}
         </Section>
       </Stack>
+      </FormShellProvider>
     </FormShell>
   );
 }

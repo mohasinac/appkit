@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import { Button } from "../components/Button";
 import { Heading, Text } from "../components/Typography";
@@ -68,6 +69,56 @@ export function useFormShell(): FormShellContextValue {
   const ctx = useContext(FormShellContext);
   if (!ctx) throw new Error("useFormShell must be used inside <FormShell>");
   return ctx;
+}
+
+// ─── useFormShellState ────────────────────────────────────────────────────────
+// Lightweight hook for forms that manage their own layout (admin editors, user
+// settings, address book).  Returns the context value + imperative helpers so
+// the component can validate required fields before calling the API.
+//
+// Usage:
+//   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+//   // wrap JSX in <FormShellContext.Provider value={shellCtx}>
+//   // call setFieldError("name", "Required") in submit handler to show inline err
+
+export interface UseFormShellStateResult {
+  shellCtx: FormShellContextValue;
+  setFieldError: (name: string, error: string | null) => void;
+  clearErrors: () => void;
+  hasErrors: boolean;
+}
+
+export function useFormShellState(): UseFormShellStateResult {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const setFieldError = useCallback((name: string, error: string | null) => {
+    setErrors((prev) => {
+      if (!error) { const n = { ...prev }; delete n[name]; return n; }
+      if (prev[name] === error) return prev;
+      return { ...prev, [name]: error };
+    });
+  }, []);
+
+  const clearErrors = useCallback(() => setErrors({}), []);
+
+  const shellCtx = useMemo<FormShellContextValue>(() => ({
+    errors,
+    touched: Object.fromEntries(Object.keys(errors).map((k) => [k, true])),
+    setFieldError,
+    setFieldTouched: () => {},
+    clearFieldError: (name) => setFieldError(name, null),
+    steps: [],
+    currentStep: 0,
+    goToStep: () => {},
+    nextStep: () => {},
+    prevStep: () => {},
+    isPublishReady: Object.keys(errors).length === 0,
+    isDirty: false,
+    isSubmitting: false,
+    stepErrorCounts: [],
+  }), [errors, setFieldError]);
+
+  return { shellCtx, setFieldError, clearErrors, hasErrors: Object.keys(errors).length > 0 };
 }
 
 // ─── StepIndicator ───────────────────────────────────────────────────────────
@@ -155,6 +206,84 @@ function ErrorSummary({ errors, visible }: ErrorSummaryProps) {
       </ul>
     </div>
   );
+}
+
+// ─── FormShellProvider ────────────────────────────────────────────────────────
+// Headless context provider — supplies FormShellContext to forms that have
+// their own layout (seller multi-step shells, admin card editors, user settings).
+// Use <FormShell> for forms that also want the built-in header/body/footer UI.
+
+export interface FormShellProviderProps {
+  children: ReactNode;
+  /** Called on debounced auto-save when isDirty changes */
+  onSaveDraft?: (values: Record<string, unknown>) => Promise<void>;
+  /** Whether any values differ from the persisted state — triggers auto-save */
+  isDirty?: boolean;
+  autoSaveDelayMs?: number;
+  /** Current form values — passed into onSaveDraft on auto-save */
+  values?: Record<string, unknown>;
+}
+
+export function FormShellProvider({
+  children,
+  onSaveDraft,
+  isDirty = false,
+  autoSaveDelayMs = 2000,
+  values = {},
+}: FormShellProviderProps) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const valuesRef = useRef(values);
+  valuesRef.current = values;
+
+  useEffect(() => {
+    if (!onSaveDraft || !isDirty) return;
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      onSaveDraft(valuesRef.current).catch(() => {/* silent auto-save */});
+    }, autoSaveDelayMs);
+    return () => { if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current); };
+  }, [values, isDirty, onSaveDraft, autoSaveDelayMs]);
+
+  const setFieldError = useCallback((name: string, error: string | null) => {
+    setErrors((prev) => {
+      if (!error) { const next = { ...prev }; delete next[name]; return next; }
+      if (prev[name] === error) return prev;
+      return { ...prev, [name]: error };
+    });
+  }, []);
+
+  const clearFieldError = useCallback((name: string) => {
+    setErrors((prev) => {
+      if (!prev[name]) return prev;
+      const next = { ...prev }; delete next[name]; return next;
+    });
+  }, []);
+
+  const setFieldTouched = useCallback((name: string) => {
+    setTouched((prev) => (prev[name] ? prev : { ...prev, [name]: true }));
+  }, []);
+
+  const ctx = useMemo<FormShellContextValue>(() => ({
+    errors,
+    touched,
+    setFieldError,
+    setFieldTouched,
+    clearFieldError,
+    steps: [],
+    currentStep: 0,
+    goToStep: () => {},
+    nextStep: () => {},
+    prevStep: () => {},
+    isPublishReady: true,
+    isDirty,
+    isSubmitting: false,
+    stepErrorCounts: [],
+  }), [errors, touched, setFieldError, setFieldTouched, clearFieldError, isDirty]);
+
+  return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;
 }
 
 // ─── FormShell ────────────────────────────────────────────────────────────────

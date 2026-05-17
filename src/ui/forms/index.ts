@@ -1,9 +1,11 @@
 export type {
   FormShellProps,
+  FormShellProviderProps,
   FormShellStep,
   FormShellContextValue,
+  UseFormShellStateResult,
 } from "./FormShell";
-export { FormShell, useFormShell } from "./FormShell";
+export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./FormShell";
 
 export type { FieldInputProps } from "./FieldInput";
 export { FieldInput } from "./FieldInput";

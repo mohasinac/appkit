@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -62,6 +63,7 @@ export function AdminFaqEditorView({
   const [showInFooter, setShowInFooter] = React.useState(false);
 
   const { showToast } = useToast();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   // --- load existing FAQ (edit mode) ---
   const faqQuery = useQuery({
@@ -141,18 +143,22 @@ export function AdminFaqEditorView({
   const canSave = Boolean(question.trim()) && Boolean(answer.trim());
 
   const formSection = (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       key="faq-form"
           onSubmit={(e) => {
             e.preventDefault();
+            clearErrors();
+            if (!question.trim()) { setFieldError("question", "Question is required"); return; }
             saveMutation.mutate();
           }}
           className="space-y-5"
         >
-          <Input
+          <FieldInput
+            name="question"
             label="Question"
             value={question}
-            onChange={(e) => handleQuestionChange(e.target.value)}
+            onChange={(v) => handleQuestionChange(v)}
             required
             placeholder="e.g. How does bidding work on LetItRip?"
           />
@@ -245,6 +251,7 @@ export function AdminFaqEditorView({
             )}
           </div>
     </Form>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {

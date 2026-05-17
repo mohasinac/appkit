@@ -26,6 +26,8 @@ export interface StepFormProps<T extends object = Record<string, unknown>> {
   onStepChange: (step: number) => void;
   /** Suppress the built-in action bar. Use FormShell's renderBottomBar instead. */
   hideActions?: boolean;
+  /** Per-step error flags — when true, step button shows a red error badge */
+  stepErrors?: boolean[];
 }
 
 export interface StepFormActionsProps {
@@ -84,16 +86,20 @@ export function StepIndicator({
   steps,
   currentStep,
   onStepClick,
+  stepErrors,
 }: {
   steps: { label: string }[];
   currentStep: number;
   onStepClick?: (index: number) => void;
+  /** True for each step that has a validation error — renders a red dot badge */
+  stepErrors?: boolean[];
 }) {
   return (
     <nav aria-label="Form steps" className="flex items-center gap-0 mb-6 overflow-x-auto">
       {steps.map((step, i) => {
         const isDone = i < currentStep;
         const isActive = i === currentStep;
+        const hasError = stepErrors?.[i] === true;
         return (
           <div key={i} className="flex items-center gap-0 flex-shrink-0">
             <button
@@ -109,17 +115,27 @@ export function StepIndicator({
                     : "text-[var(--appkit-color-text-faint)] cursor-default",
               )}
             >
+              <span className="relative flex-shrink-0">
+                {hasError && (
+                  <span
+                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[var(--appkit-color-error)] z-10"
+                    aria-label="This step has errors"
+                  />
+                )}
               <span
                 className={classNames(
                   "flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2",
-                  isActive
-                    ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
-                    : isDone
+                  hasError
+                    ? "border-[var(--appkit-color-error)] bg-[var(--appkit-color-error)] text-white"
+                    : isActive
                       ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
-                      : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-faint)]",
+                      : isDone
+                        ? "border-[var(--appkit-color-primary)] bg-[var(--appkit-color-primary)] text-white"
+                        : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-faint)]",
                 )}
               >
-                {isDone ? <Check className="w-3 h-3" /> : i + 1}
+                {isDone && !hasError ? <Check className="w-3 h-3" /> : hasError ? "!" : i + 1}
+              </span>
               </span>
               <span className="hidden sm:inline">{step.label}</span>
             </button>
@@ -151,8 +167,9 @@ export function StepForm<T extends object = Record<string, unknown>>({
   currentStep,
   onStepChange,
   hideActions = false,
+  stepErrors,
 }: StepFormProps<T>) {
-  const [stepErrors, setStepErrors] = useState<Record<string, string>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [stepError, setStepError] = useState<string | null>(null);
 
   // Persist step to localStorage if formId provided
@@ -200,11 +217,12 @@ export function StepForm<T extends object = Record<string, unknown>>({
       <StepIndicator
         steps={steps}
         currentStep={currentStep}
+        stepErrors={stepErrors}
         onStepClick={(i) => { if (i < currentStep) { setStepError(null); onStepChange(i); } }}
       />
 
       <div className="flex-1">
-        {currentStepDef?.render({ values, onChange, errors: stepErrors })}
+        {currentStepDef?.render({ values, onChange, errors: fieldErrors })}
       </div>
 
       {!hideActions && stepError && (

@@ -12,6 +12,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { CouponType } from "../../promotions/types";
@@ -213,6 +214,7 @@ export function AdminCouponEditorView({
   const [appliesToAuctions, setAppliesToAuctions] = React.useState(false);
 
   const { showToast } = useToast();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   // --- load existing data (edit mode) ---
   const couponQuery = useQuery({
@@ -332,10 +334,13 @@ export function AdminCouponEditorView({
         : "Discount value";
 
   const formSection = (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       key="coupon-form"
           onSubmit={(e) => {
             e.preventDefault();
+            clearErrors();
+            if (!name.trim()) { setFieldError("name", "Campaign name is required"); return; }
             saveMutation.mutate();
           }}
           className="space-y-5"
@@ -349,10 +354,11 @@ export function AdminCouponEditorView({
             required
           />
 
-          <Input
+          <FieldInput
+            name="name"
             label="Campaign name"
             value={name}
-            onChange={(e) => handleNameChange(e.target.value)}
+            onChange={(v) => handleNameChange(v)}
             required
             placeholder="e.g. Summer Sale 20%"
           />
@@ -464,6 +470,7 @@ export function AdminCouponEditorView({
             )}
           </div>
     </Form>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {

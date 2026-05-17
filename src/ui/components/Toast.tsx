@@ -17,6 +17,7 @@ interface ToastItem {
   message: string;
   variant: ToastVariant;
   duration: number;
+  action?: { label: string; onClick: () => void };
 }
 
 interface ToastContextValue {
@@ -24,6 +25,7 @@ interface ToastContextValue {
     message: string,
     variant?: ToastVariant,
     duration?: number,
+    action?: { label: string; onClick: () => void },
   ) => void;
   hideToast: (id: string) => void;
 }
@@ -80,9 +82,9 @@ export function ToastProvider({
   }, []);
 
   const showToast = React.useCallback(
-    (message: string, variant: ToastVariant = "info", duration = 5000) => {
+    (message: string, variant: ToastVariant = "info", duration = 5000, action?: { label: string; onClick: () => void }) => {
       const id = buildToastId();
-      setToasts((current) => [...current, { id, message, variant, duration }]);
+      setToasts((current) => [...current, { id, message, variant, duration, action }]);
       if (duration > 0) {
         window.setTimeout(() => hideToast(id), duration);
       }
@@ -133,6 +135,17 @@ function ToastRow({
       <Text as="div" size="sm" weight="medium" className="flex-1 pr-1">
         {toast.message}
       </Text>
+      {toast.action && (
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={() => { toast.action!.onClick(); onClose(toast.id); }}
+          className="min-h-0 shrink-0 px-2 py-1 font-semibold underline"
+        >
+          {toast.action.label}
+        </Button>
+      )}
       <Button
         type="button"
         variant="ghost"

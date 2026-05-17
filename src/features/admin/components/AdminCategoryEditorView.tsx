@@ -7,6 +7,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { CategoryQuickCreateForm } from "./CategoryQuickCreateForm";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 
 export interface AdminCategoryEditorViewProps
   extends Omit<StackedViewShellProps, "sections"> {
@@ -67,6 +68,7 @@ export function AdminCategoryEditorView({
   const [isActive, setIsActive] = React.useState(true);
   const [showInMenu, setShowInMenu] = React.useState(true);
   const { showToast } = useToast();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   const categoryQuery = useQuery({
     queryKey: ["admin", "category", categoryId],
@@ -165,11 +167,14 @@ export function AdminCategoryEditorView({
   );
 
   const formContent = (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       id="category-editor-form"
       key="cat-form"
       onSubmit={(e) => {
         e.preventDefault();
+        clearErrors();
+        if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
         saveMutation.mutate();
       }}
       className="space-y-6"
@@ -181,10 +186,11 @@ export function AdminCategoryEditorView({
         </Text>
         <div className="space-y-4">
           <div className="grid sm:grid-cols-2 gap-4">
-            <Input
+            <FieldInput
+              name="name"
               label="Category name"
               value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
+              onChange={(v) => handleNameChange(v)}
               required
               placeholder="e.g. Toys & Games"
             />
@@ -272,6 +278,7 @@ export function AdminCategoryEditorView({
         )}
       </div>
     </Form>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {

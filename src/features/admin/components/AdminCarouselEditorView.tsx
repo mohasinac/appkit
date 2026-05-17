@@ -21,6 +21,7 @@ import {
   Row,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -383,6 +384,7 @@ export function AdminCarouselEditorView({
 
   const [errorMsg, setErrorMsg] = React.useState("");
   const [successMsg, setSuccessMsg] = React.useState("");
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   const slideQuery = useQuery({
     queryKey: ["admin", "carousel", slideId],
@@ -484,15 +486,21 @@ export function AdminCarouselEditorView({
         errorMsg ? <Alert key="err" variant="error">{errorMsg}</Alert> : null,
         successMsg ? <Alert key="ok" variant="success">{successMsg}</Alert> : null,
 
+        <FormShellContext.Provider value={shellCtx}>
         <Form
           key="slide-form"
-          onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            clearErrors();
+            if (!title.trim()) { setFieldError("title", "Title is required"); return; }
+            saveMutation.mutate();
+          }}
           className="space-y-6"
         >
           {/* ── 1. Slide Info ───────────────────────────────────────────── */}
           <Div className={CLS_PANEL}>
             <Heading level={3} className={CLS_SECTION_HEADING}>Slide info</Heading>
-            <Input label="Title" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
+            <FieldInput name="title" label="Title" value={title} onChange={(v) => setTitle(v)} required placeholder="e.g. Hot Wheels RLC Exclusives" />
             <Toggle label="Active (visible on homepage)" checked={active} onChange={setActive} />
             <Input label="Display order" type="number" value={order} onChange={(e) => setOrder(e.target.value)} min={0} placeholder="1" />
             <Select
@@ -595,7 +603,8 @@ export function AdminCarouselEditorView({
               </Button>
             )}
           </FormActions>
-        </Form>,
+        </Form>
+        </FormShellContext.Provider>,
       ]}
     />
   );

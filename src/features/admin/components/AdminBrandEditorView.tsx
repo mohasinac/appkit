@@ -11,6 +11,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -61,6 +62,7 @@ export function AdminBrandEditorView({
   const [isActive, setIsActive] = React.useState(true);
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
   const { showToast } = useToast();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   const brandQuery = useQuery({
     queryKey: ["admin", "brand", brandId],
@@ -131,19 +133,23 @@ export function AdminBrandEditorView({
   const isSubmitting = saveMutation.isPending || brandQuery.isLoading;
 
   const formSection = (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       key="brand-form"
       onSubmit={(e) => {
         e.preventDefault();
+        clearErrors();
+        if (!name.trim()) { setFieldError("name", "Brand name is required"); return; }
         saveMutation.mutate();
       }}
       className="space-y-4"
     >
           <div className="grid sm:grid-cols-2 gap-4">
-            <Input
+            <FieldInput
+              name="name"
               label="Brand name"
               value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
+              onChange={(v) => handleNameChange(v)}
               required
               placeholder="e.g. Hot Wheels"
             />
@@ -232,6 +238,7 @@ export function AdminBrandEditorView({
             )}
           </div>
     </Form>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {

@@ -10,6 +10,7 @@ import {
   useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -98,6 +99,7 @@ export function AdminSublistingCategoryEditorView({
 
   const { upload } = useMediaUpload();
   const isSubmitting = saveMutation.isPending || categoryQuery.isLoading;
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   return (
     <StackedViewShell
@@ -105,19 +107,23 @@ export function AdminSublistingCategoryEditorView({
       {...rest}
       title={isEdit ? "Edit Sub-listing Category" : "New Sub-listing Category"}
       sections={[
+        <FormShellContext.Provider key="sc-ctx" value={shellCtx}>
         <Form
           key="sc-editor-form"
           onSubmit={(e) => {
             e.preventDefault();
+            clearErrors();
+            if (!name.trim()) { setFieldError("name", "Category name is required"); return; }
             saveMutation.mutate();
           }}
           className="space-y-4"
         >
           <div className="grid sm:grid-cols-2 gap-4">
-            <Input
+            <FieldInput
+              name="name"
               label="Category name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(v) => setName(v)}
               required
               placeholder="e.g. Base Set Charizard 108/120"
             />
@@ -176,7 +182,8 @@ export function AdminSublistingCategoryEditorView({
               </Button>
             )}
           </div>
-        </Form>,
+        </Form>
+        </FormShellContext.Provider>,
       ]}
     />
   );

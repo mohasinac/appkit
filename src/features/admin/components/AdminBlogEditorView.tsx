@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
 import { useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
@@ -82,6 +83,7 @@ export function AdminBlogEditorView({
 
   const { showToast } = useToast();
   const { upload } = useMediaUpload();
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   // --- load existing post (edit mode) ---
   const postQuery = useQuery({
@@ -182,19 +184,23 @@ export function AdminBlogEditorView({
   const canSave = Boolean(title);
 
   const formSection = (
+    <FormShellContext.Provider value={shellCtx}>
     <Form
       key="blog-form"
           onSubmit={(e) => {
             e.preventDefault();
+            clearErrors();
+            if (!title.trim()) { setFieldError("title", "Title is required"); return; }
             saveMutation.mutate();
           }}
           className="space-y-5"
         >
           {/* Core fields */}
-          <Input
+          <FieldInput
+            name="title"
             label="Title"
             value={title}
-            onChange={(e) => handleTitleChange(e.target.value)}
+            onChange={(v) => handleTitleChange(v)}
             required
             placeholder="e.g. How to Grade Pokémon Cards"
           />
@@ -324,6 +330,7 @@ export function AdminBlogEditorView({
             )}
           </div>
     </Form>
+    </FormShellContext.Provider>
   );
 
   if (embedded) {

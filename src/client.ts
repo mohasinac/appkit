@@ -156,8 +156,8 @@ export type { OtpInputProps } from "./ui/components/OtpInput";
 export { DateInput, DateRangeInput } from "./ui/components/DateInput";
 export type { DateInputProps, DateRangeInputProps } from "./ui/components/DateInput";
 // FormShell + context-aware fields (SB-UNI-Y-1)
-export type { FormShellProps, FormShellStep, FormShellContextValue } from "./ui/forms";
-export { FormShell, useFormShell } from "./ui/forms";
+export type { FormShellProps, FormShellProviderProps, FormShellStep, FormShellContextValue, UseFormShellStateResult } from "./ui/forms";
+export { FormShell, FormShellProvider, FormShellContext, useFormShell, useFormShellState } from "./ui/forms";
 export type { FieldInputProps } from "./ui/forms";
 export { FieldInput } from "./ui/forms";
 export type { FieldSelectProps } from "./ui/forms";
