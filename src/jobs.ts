@@ -60,6 +60,8 @@ export {
   onProductStockChangeHandler,
   triggerEventRaffleHandler,
   assignSpinPrizeHandler,
+  // SB-UNI-Y-1 — daily draft prune for store form drafts
+  draftPruneHandler,
   // BAN9 — support ticket lifecycle + ban audit trail
   onSupportTicketCreateHandler,
   onSupportTicketUpdateHandler,
