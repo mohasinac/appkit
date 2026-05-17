@@ -528,6 +528,8 @@ export { ClassifiedDetailView } from "./_internal/client/features/classified/Cla
 export type { ClassifiedDetailViewProps } from "./_internal/client/features/classified/ClassifiedDetailView";
 export { DigitalCodeDetailView } from "./_internal/client/features/digital-code/DigitalCodeDetailView";
 export type { DigitalCodeDetailViewProps } from "./_internal/client/features/digital-code/DigitalCodeDetailView";
+export { CodeRevealPanel } from "./_internal/client/features/digital-code/CodeRevealPanel";
+export type { CodeRevealPanelProps, RevealedCode } from "./_internal/client/features/digital-code/CodeRevealPanel";
 export { LiveItemDetailView } from "./_internal/client/features/live/LiveItemDetailView";
 export type { LiveItemDetailViewProps } from "./_internal/client/features/live/LiveItemDetailView";
 
