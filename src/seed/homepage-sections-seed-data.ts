@@ -351,9 +351,9 @@ export const homepageSectionsSeedData: Partial<HomepageSectionDocument>[] = [
       /** Which tabs to surface in display order (leave empty [] to auto-derive from categories) */
       visibleTabs: ["general", "orders_payment", "shipping_delivery", "returns_refunds"],
       /** Allow multiple accordion panels open at once */
-      allowMultipleOpen: false,
+      allowMultipleOpen: true,
       /** Number of items expanded on first render (0 = all closed) */
-      defaultOpenCount: 1,
+      defaultOpenCount: 100,
       categories: ["general", "orders_payment", "shipping_delivery", "returns_refunds", "product_information"],
     },
     createdAt: daysAgo(90),

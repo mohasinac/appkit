@@ -118,25 +118,44 @@ export function AdminEventEntriesView({
     staleTime: 15_000,
   });
 
+  const [expandedEntryId, setExpandedEntryId] = React.useState<string | null>(null);
+  const [pointsInputs, setPointsInputs] = React.useState<Record<string, string>>({});
+
   const reviewMutation = useMutation({
     mutationFn: async ({
       entryId,
       status,
+      points,
     }: {
       entryId: string;
       status: "approved" | "flagged";
+      points?: number;
     }) => {
       if (!eventId) throw new Error("eventId is required");
       const endpoint =
         entryReviewEndpoint?.(eventId, entryId) ??
         ADMIN_ENDPOINTS.EVENT_ENTRY_BY_ID(eventId, entryId);
-      await apiClient.patch(endpoint, { status });
+      await apiClient.patch(endpoint, { status, ...(points !== undefined ? { points } : {}) });
     },
     onSuccess: async () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["admin-event-entries", eventId] }),
         queryClient.invalidateQueries({ queryKey: ["admin-event-stats", eventId] }),
       ]);
+    },
+  });
+
+  const pointsMutation = useMutation({
+    mutationFn: async ({ entryId, points, currentStatus }: { entryId: string; points: number; currentStatus: string }) => {
+      if (!eventId) throw new Error("eventId is required");
+      const endpoint =
+        entryReviewEndpoint?.(eventId, entryId) ??
+        ADMIN_ENDPOINTS.EVENT_ENTRY_BY_ID(eventId, entryId);
+      const status = currentStatus === "flagged" ? "flagged" : "approved";
+      await apiClient.patch(endpoint, { status, points });
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["admin-event-entries", eventId] });
     },
   });
 
@@ -160,10 +179,42 @@ export function AdminEventEntriesView({
       ),
     },
     {
+      key: "points",
+      header: "Points",
+      render: (row) => (
+        <div className="flex items-center gap-1.5" data-section="adminevententriesview-points">
+          <input
+            type="number"
+            min={0}
+            className="w-20 rounded border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm px-2 py-1 text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="0"
+            value={pointsInputs[row.id] ?? (row.points !== undefined ? String(row.points) : "")}
+            onChange={(e) =>
+              setPointsInputs((prev) => ({ ...prev, [row.id]: e.target.value }))
+            }
+          />
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={pointsMutation.isPending || !(row.id in pointsInputs)}
+            onClick={() => {
+              const val = Number(pointsInputs[row.id]);
+              if (!isNaN(val)) {
+                pointsMutation.mutate({ entryId: row.id, points: val, currentStatus: row.reviewStatus });
+                setPointsInputs((prev) => { const next = { ...prev }; delete next[row.id]; return next; });
+              }
+            }}
+          >
+            Save
+          </Button>
+        </div>
+      ),
+    },
+    {
       key: "actions",
       header: "Actions",
       render: (row) => (
-        <div className="flex items-center gap-2" data-section="adminevententriesview-div-274">
+        <div className="flex items-center gap-2 flex-wrap" data-section="adminevententriesview-div-274">
           <Button
             size="sm"
             variant="secondary"
@@ -180,10 +231,19 @@ export function AdminEventEntriesView({
           >
             Flag
           </Button>
+          {row.formResponses && Object.keys(row.formResponses).length > 0 && (
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setExpandedEntryId((prev) => (prev === row.id ? null : row.id))}
+            >
+              {expandedEntryId === row.id ? "Hide" : "Responses"}
+            </Button>
+          )}
         </div>
       ),
     },
-  ], [reviewMutation]);
+  ], [reviewMutation, pointsMutation, pointsInputs, expandedEntryId]);
 
   const statsSection = (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" data-section="adminevententriesview-div-275">
@@ -221,6 +281,26 @@ export function AdminEventEntriesView({
       />
     </div>
   );
+
+  const expandedEntry = expandedEntryId ? rows.find((r) => r.id === expandedEntryId) : null;
+
+  const responsesPanelSection = expandedEntry?.formResponses && Object.keys(expandedEntry.formResponses).length > 0 ? (
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4 space-y-3">
+      <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+        Responses — {expandedEntry.userDisplayName || expandedEntry.userId || "Anonymous"}
+      </Text>
+      <div className="space-y-2">
+        {Object.entries(expandedEntry.formResponses).map(([key, value]) => (
+          <div key={key} className="space-y-0.5">
+            <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">{key}</Text>
+            <Text className="text-sm text-zinc-800 dark:text-zinc-200 whitespace-pre-wrap break-words">
+              {Array.isArray(value) ? (value as unknown[]).join(", ") : String(value ?? "—")}
+            </Text>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : null;
 
   const tableSection = (
     <DataTable
@@ -261,6 +341,7 @@ export function AdminEventEntriesView({
         renderStats?.() ?? statsSection,
         renderFilters?.() ?? filtersSection,
         renderTable?.() ?? tableSection,
+        responsesPanelSection,
         renderPagination?.(),
       ]}
       overlays={renderReviewDrawer?.()}

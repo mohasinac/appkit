@@ -66,7 +66,7 @@ export function EventLeaderboard({
               #{entry.rank} {entry.userDisplayName}
             </Span>
             <Span>
-              {entry.points} {labels.points ?? "pts"}
+              {entry.totalPoints} {labels.points ?? "pts"}
             </Span>
           </div>
         ),

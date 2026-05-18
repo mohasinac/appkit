@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import { Div, Heading, RichText, Row, Span, Text } from "../../../ui";
 import { useBlogPost } from "../hooks/useBlog";
 import { BlogCard } from "./BlogListView";
@@ -160,11 +161,17 @@ export function BlogPostView({
       <Div className="max-w-3xl mx-auto px-4 py-12">
         {renderBlogPostHeader(post, date, labels)}
 
-        {/* Tags */}
+        {/* Tags — each tag links to /blog?tags=<tag> for filtered listing */}
         {post.tags && post.tags.length > 0 && (
           <Row wrap gap="sm" className="mb-8">
             {post.tags.map((tag) => (
-              <Span key={tag} className="inline-block px-3 py-1 rounded-full bg-neutral-100 text-neutral-600 text-xs font-medium">#{tag}</Span>
+              <Link
+                key={tag}
+                href={`${String(ROUTES.PUBLIC.BLOG)}?tags=${encodeURIComponent(tag)}`}
+                className="inline-block px-3 py-1 rounded-full bg-neutral-100 hover:bg-primary/10 text-neutral-600 hover:text-primary text-xs font-medium transition-colors"
+              >
+                #{tag}
+              </Link>
             ))}
           </Row>
         )}

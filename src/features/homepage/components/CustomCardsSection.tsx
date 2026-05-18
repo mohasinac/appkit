@@ -163,7 +163,7 @@ export function CustomCardsSection(config: CustomCardsSectionProps) {
       <Section className={`py-12 ${themed.bgPrimary}`}>
         <div className={CLS_CONTAINER}>
           <SectionHeader title={title} />
-          <HorizontalScroller gap={16} showArrows snapToItems>
+          <HorizontalScroller gap={16} showArrows snapToItems loop>
             {cards.map((card) => (
               <div key={card.id} className="w-72 flex-shrink-0">
                 <CardItem card={card} />

@@ -166,7 +166,9 @@ export interface LeaderboardEntry {
   rank: number;
   userId: string;
   userDisplayName: string;
-  points: number;
+  /** Sum of all approved entry points for this user in the event */
+  totalPoints: number;
+  entryCount: number;
 }
 
 // --- List response ------------------------------------------------------------

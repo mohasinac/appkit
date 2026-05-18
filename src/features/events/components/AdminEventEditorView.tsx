@@ -21,11 +21,14 @@ import type {
   EventItem,
   EventType,
   EventStatus,
+  FormFieldType,
   RaffleType,
   SpinPrize,
+  SurveyFormField,
 } from "../types";
 
 const CLS_PANEL_SM = "rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 space-y-2";
+const CLS_PANEL_LG = "rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-4";
 
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
@@ -78,6 +81,23 @@ const EVENT_STATUS_OPTIONS = [
   { label: "Ended", value: "ended" },
 ];
 
+const FORM_FIELD_TYPE_OPTIONS = [
+  { label: "Short text", value: "text" },
+  { label: "Long text", value: "textarea" },
+  { label: "Email", value: "email" },
+  { label: "Phone", value: "phone" },
+  { label: "Number", value: "number" },
+  { label: "Dropdown (select)", value: "select" },
+  { label: "Multi-select", value: "multiselect" },
+  { label: "Checkbox", value: "checkbox" },
+  { label: "Radio", value: "radio" },
+  { label: "Date", value: "date" },
+  { label: "Rating (1–5)", value: "rating" },
+  { label: "File upload", value: "file" },
+];
+
+const FIELD_TYPES_WITH_OPTIONS: FormFieldType[] = ["select", "multiselect", "radio", "checkbox"];
+
 const POLL_VISIBILITY_OPTIONS = [
   { label: "Always visible", value: "always" },
   { label: "After voting", value: "after_vote" },
@@ -120,8 +140,13 @@ export function AdminEventEditorView({
   const [requireLogin, setRequireLogin] = React.useState(true);
   const [maxEntriesPerUser, setMaxEntriesPerUser] = React.useState("1");
   const [hasLeaderboard, setHasLeaderboard] = React.useState(false);
+  const [hasPointSystem, setHasPointSystem] = React.useState(false);
+  const [pointsLabel, setPointsLabel] = React.useState("Points");
+  const [entryReviewRequired, setEntryReviewRequired] = React.useState(false);
+  const [surveyFields, setSurveyFields] = React.useState<SurveyFormField[]>([]);
 
   const [anonymous, setAnonymous] = React.useState(false);
+  const [feedbackFields, setFeedbackFields] = React.useState<SurveyFormField[]>([]);
 
   const [hasRaffle, setHasRaffle] = React.useState(false);
   const [raffleType, setRaffleType] = React.useState<RaffleType>("open_raffle");
@@ -177,9 +202,14 @@ export function AdminEventEditorView({
       setRequireLogin(event.surveyConfig.requireLogin !== false);
       setMaxEntriesPerUser(String(event.surveyConfig.maxEntriesPerUser ?? 1));
       setHasLeaderboard(Boolean(event.surveyConfig.hasLeaderboard));
+      setHasPointSystem(Boolean(event.surveyConfig.hasPointSystem));
+      setPointsLabel(event.surveyConfig.pointsLabel ?? "Points");
+      setEntryReviewRequired(Boolean(event.surveyConfig.entryReviewRequired));
+      setSurveyFields(Array.isArray(event.surveyConfig.formFields) ? event.surveyConfig.formFields : []);
     }
     if (event.feedbackConfig) {
       setAnonymous(Boolean(event.feedbackConfig.anonymous));
+      setFeedbackFields(Array.isArray(event.feedbackConfig.formFields) ? event.feedbackConfig.formFields : []);
     }
     setHasRaffle(Boolean(event.hasRaffle));
     setRaffleType((event.raffleType as RaffleType) || "open_raffle");
@@ -222,13 +252,17 @@ export function AdminEventEditorView({
             requireLogin,
             maxEntriesPerUser: Number(maxEntriesPerUser) || 1,
             hasLeaderboard,
-            hasPointSystem: false,
-            entryReviewRequired: false,
-            formFields: [],
+            hasPointSystem,
+            pointsLabel: hasPointSystem ? (pointsLabel.trim() || "Points") : undefined,
+            entryReviewRequired,
+            formFields: surveyFields.map((f, i) => ({ ...f, order: i })),
           },
         };
         if (type === "feedback") return {
-          feedbackConfig: { anonymous, formFields: [] },
+          feedbackConfig: {
+            anonymous,
+            formFields: feedbackFields.map((f, i) => ({ ...f, order: i })),
+          },
         };
         return {};
       };
@@ -285,6 +319,208 @@ export function AdminEventEditorView({
       setSaveMessage(error instanceof Error ? error.message : "Save failed");
     },
   });
+
+  const makeAddField =
+    (setter: React.Dispatch<React.SetStateAction<SurveyFormField[]>>) => () =>
+      setter((prev) => [
+        ...prev,
+        { id: `field-${Date.now()}`, type: "text" as FormFieldType, label: "", required: false, order: prev.length },
+      ]);
+
+  const makeRemoveField =
+    (setter: React.Dispatch<React.SetStateAction<SurveyFormField[]>>) =>
+    (id: string) =>
+      setter((prev) => prev.filter((f) => f.id !== id));
+
+  const makeUpdateField =
+    (setter: React.Dispatch<React.SetStateAction<SurveyFormField[]>>) =>
+    (id: string, patch: Partial<SurveyFormField>) =>
+      setter((prev) => prev.map((f) => (f.id === id ? { ...f, ...patch } : f)));
+
+  const renderFormFieldBuilder = (
+    fields: SurveyFormField[],
+    setter: React.Dispatch<React.SetStateAction<SurveyFormField[]>>,
+  ) => {
+    const addField = makeAddField(setter);
+    const removeField = makeRemoveField(setter);
+    const updateField = makeUpdateField(setter);
+    return (
+      <div className="space-y-3">
+        <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wide">
+          Form fields
+        </Text>
+        {fields.length === 0 && (
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            No fields yet. Add fields to collect responses from participants.
+          </Text>
+        )}
+        {fields.map((field, idx) => {
+          const hasOptions = FIELD_TYPES_WITH_OPTIONS.includes(field.type);
+          const isNumeric = field.type === "number" || field.type === "rating";
+          const isText = field.type === "text" || field.type === "textarea" || field.type === "email";
+          return (
+            <div
+              key={field.id}
+              className="rounded-lg border border-zinc-200 dark:border-zinc-600 p-3 space-y-2 bg-white dark:bg-zinc-900"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                  Field {idx + 1}
+                </Text>
+                <button
+                  type="button"
+                  onClick={() => removeField(field.id)}
+                  className="text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1"
+                  aria-label="Remove field"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <Select
+                  label="Type"
+                  value={field.type}
+                  options={FORM_FIELD_TYPE_OPTIONS}
+                  onChange={(e) =>
+                    updateField(field.id, { type: e.target.value as FormFieldType, options: undefined })
+                  }
+                />
+                <Input
+                  label="Label"
+                  value={field.label}
+                  onChange={(e) => updateField(field.id, { label: e.target.value })}
+                  placeholder="e.g. Describe your entry"
+                  required
+                />
+              </div>
+              {!hasOptions && field.type !== "date" && field.type !== "file" && field.type !== "rating" && (
+                <Input
+                  label="Placeholder (optional)"
+                  value={field.placeholder ?? ""}
+                  onChange={(e) =>
+                    updateField(field.id, { placeholder: e.target.value || undefined })
+                  }
+                  placeholder="Hint shown inside the field"
+                />
+              )}
+              {hasOptions && (
+                <div className="space-y-1">
+                  <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                    Options — one per line
+                  </Text>
+                  <textarea
+                    className="w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-200 px-3 py-2 resize-y min-h-[72px] focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    value={(field.options ?? []).join("\n")}
+                    onChange={(e) =>
+                      updateField(field.id, {
+                        options: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    placeholder={"Option A\nOption B\nOption C"}
+                  />
+                </div>
+              )}
+              {/* Validation sub-section */}
+              {(isText || isNumeric) && (
+                <div className="rounded bg-zinc-50 dark:bg-zinc-800 p-2 space-y-2">
+                  <Text className="text-xs text-zinc-500 dark:text-zinc-400">Validation (optional)</Text>
+                  <div className="grid grid-cols-2 gap-2">
+                    {isText && (
+                      <>
+                        <Input
+                          label="Min length"
+                          type="number"
+                          value={String(field.validation?.minLength ?? "")}
+                          onChange={(e) =>
+                            updateField(field.id, {
+                              validation: {
+                                ...field.validation,
+                                minLength: e.target.value ? Number(e.target.value) : undefined,
+                              },
+                            })
+                          }
+                          placeholder="0"
+                        />
+                        <Input
+                          label="Max length"
+                          type="number"
+                          value={String(field.validation?.maxLength ?? "")}
+                          onChange={(e) =>
+                            updateField(field.id, {
+                              validation: {
+                                ...field.validation,
+                                maxLength: e.target.value ? Number(e.target.value) : undefined,
+                              },
+                            })
+                          }
+                          placeholder="500"
+                        />
+                      </>
+                    )}
+                    {isNumeric && (
+                      <>
+                        <Input
+                          label="Min value"
+                          type="number"
+                          value={String(field.validation?.min ?? "")}
+                          onChange={(e) =>
+                            updateField(field.id, {
+                              validation: {
+                                ...field.validation,
+                                min: e.target.value ? Number(e.target.value) : undefined,
+                              },
+                            })
+                          }
+                          placeholder="0"
+                        />
+                        <Input
+                          label="Max value"
+                          type="number"
+                          value={String(field.validation?.max ?? "")}
+                          onChange={(e) =>
+                            updateField(field.id, {
+                              validation: {
+                                ...field.validation,
+                                max: e.target.value ? Number(e.target.value) : undefined,
+                              },
+                            })
+                          }
+                          placeholder="100"
+                        />
+                      </>
+                    )}
+                  </div>
+                  {field.type === "text" && (
+                    <Input
+                      label="Pattern (regex, optional)"
+                      value={field.validation?.pattern ?? ""}
+                      onChange={(e) =>
+                        updateField(field.id, {
+                          validation: {
+                            ...field.validation,
+                            pattern: e.target.value || undefined,
+                          },
+                        })
+                      }
+                      placeholder="^[A-Z].*"
+                    />
+                  )}
+                </div>
+              )}
+              <Toggle
+                checked={field.required}
+                onChange={(v) => updateField(field.id, { required: v })}
+                label="Required"
+              />
+            </div>
+          );
+        })}
+        <Button type="button" variant="outline" size="sm" onClick={addField}>
+          + Add field
+        </Button>
+      </div>
+    );
+  };
 
   const addSpinPrize = () => {
     setSpinPrizes((prev) => [
@@ -474,7 +710,7 @@ export function AdminEventEditorView({
 
           {/* Poll config */}
           {type === "poll" && (
-            <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-4">
+            <div className={CLS_PANEL_LG}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Poll configuration</Text>
               <div className="space-y-2">
                 <Text className="text-xs text-zinc-500 dark:text-zinc-400">Options (minimum 2)</Text>
@@ -518,36 +754,46 @@ export function AdminEventEditorView({
 
           {/* Survey config */}
           {type === "survey" && (
-            <div className={CLS_PANEL_SM}>
+            <div className={CLS_PANEL_LG}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Survey configuration</Text>
-              <Input
-                label="Max entries per user"
-                type="number"
-                value={maxEntriesPerUser}
-                onChange={(e) => setMaxEntriesPerUser(e.target.value)}
-                placeholder="1"
-              />
-              <Toggle checked={requireLogin} onChange={setRequireLogin} label="Require login to participate" />
-              <Toggle checked={hasLeaderboard} onChange={setHasLeaderboard} label="Show leaderboard" />
-              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-                Form fields can be configured from the event detail page after saving.
-              </Text>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Input
+                  label="Max entries per user"
+                  type="number"
+                  value={maxEntriesPerUser}
+                  onChange={(e) => setMaxEntriesPerUser(e.target.value)}
+                  placeholder="1"
+                />
+                {hasPointSystem && (
+                  <Input
+                    label="Points label"
+                    value={pointsLabel}
+                    onChange={(e) => setPointsLabel(e.target.value)}
+                    placeholder="Points"
+                  />
+                )}
+              </div>
+              <div className="space-y-2">
+                <Toggle checked={requireLogin} onChange={setRequireLogin} label="Require login to participate" />
+                <Toggle checked={hasLeaderboard} onChange={setHasLeaderboard} label="Show leaderboard" />
+                <Toggle checked={hasPointSystem} onChange={setHasPointSystem} label="Enable point system (employees assign points per entry)" />
+                <Toggle checked={entryReviewRequired} onChange={setEntryReviewRequired} label="Require employee review before entry is approved" />
+              </div>
+              {renderFormFieldBuilder(surveyFields, setSurveyFields)}
             </div>
           )}
 
           {/* Feedback config */}
           {type === "feedback" && (
-            <div className={CLS_PANEL_SM}>
+            <div className={CLS_PANEL_LG}>
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Feedback configuration</Text>
               <Toggle checked={anonymous} onChange={setAnonymous} label="Allow anonymous submissions" />
-              <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-                Form fields can be configured from the event detail page after saving.
-              </Text>
+              {renderFormFieldBuilder(feedbackFields, setFeedbackFields)}
             </div>
           )}
 
           {/* Raffle config — available for any type, mandatory for raffle/spin_wheel */}
-          <div className="rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-4">
+          <div className={CLS_PANEL_LG}>
             <div className="flex items-center justify-between gap-3">
               <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">
                 Raffle &amp; spin wheel

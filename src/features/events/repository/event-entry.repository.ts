@@ -114,7 +114,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
   async getLeaderboard(
     eventId: string,
     limit = 50,
-  ): Promise<EventEntryDocument[]> {
+  ): Promise<import("../types").LeaderboardEntry[]> {
     try {
       const snapshot = await this.getCollection()
         .where(EVENT_ENTRY_FIELDS.EVENT_ID, "==", eventId)
@@ -123,19 +123,40 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
           "==",
           EVENT_ENTRY_FIELDS.REVIEW_STATUS_VALUES.APPROVED,
         )
-        .orderBy(EVENT_ENTRY_FIELDS.POINTS, "desc")
-        .limit(limit)
         .get();
 
-      return snapshot.docs.map((doc) =>
-        decryptPiiFields(
-          {
-            id: doc.id,
-            ...doc.data(),
-          } as Record<string, unknown>,
+      // Aggregate per user: sum all approved entry points
+      const byUser = new Map<string, { displayName: string; totalPoints: number; entryCount: number }>();
+      for (const doc of snapshot.docs) {
+        const raw = decryptPiiFields(
+          { id: doc.id, ...doc.data() } as Record<string, unknown>,
           [...EVENT_ENTRY_PII_FIELDS],
-        ),
-      ) as unknown as EventEntryDocument[];
+        ) as unknown as EventEntryDocument;
+        if (!raw.userId) continue;
+        const existing = byUser.get(raw.userId);
+        const pts = typeof raw.points === "number" ? raw.points : 0;
+        if (existing) {
+          existing.totalPoints += pts;
+          existing.entryCount += 1;
+        } else {
+          byUser.set(raw.userId, {
+            displayName: raw.userDisplayName ?? raw.userId,
+            totalPoints: pts,
+            entryCount: 1,
+          });
+        }
+      }
+
+      return Array.from(byUser.entries())
+        .sort((a, b) => b[1].totalPoints - a[1].totalPoints)
+        .slice(0, limit)
+        .map(([userId, data], idx) => ({
+          rank: idx + 1,
+          userId,
+          userDisplayName: data.displayName,
+          totalPoints: data.totalPoints,
+          entryCount: data.entryCount,
+        }));
     } catch (error) {
       throw new DatabaseError(
         `Failed to get leaderboard for event ${eventId}`,
@@ -175,6 +196,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     reviewStatus: EventEntryDocument["reviewStatus"],
     reviewedBy: string,
     reviewNote?: string,
+    points?: number,
   ): Promise<EventEntryDocument> {
     try {
       const now = new Date();
@@ -186,6 +208,7 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
             [EVENT_ENTRY_FIELDS.REVIEWED_BY]: reviewedBy,
             [EVENT_ENTRY_FIELDS.REVIEWED_AT]: now,
             ...(reviewNote !== undefined ? { reviewNote } : {}),
+            ...(points !== undefined ? { points } : {}),
           }),
         );
 

@@ -72,7 +72,7 @@ export function InteractiveStoreCard({
               src={store.storeBannerURL!}
               alt={`${store.storeName} banner`}
               size="banner"
-              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
             <Div className="absolute inset-0 flex items-center justify-center">

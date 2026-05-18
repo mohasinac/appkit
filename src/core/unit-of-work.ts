@@ -125,10 +125,9 @@ export class UnitOfWork {
       await batch.commit();
       serverLogger.debug("[UnitOfWork] Batch write committed successfully");
     } catch (error) {
-      serverLogger.error("[UnitOfWork] Batch write failed", {
-        error: error instanceof Error ? error.message : String(error),
-      });
-      throw new DatabaseError("Batch write failed", error);
+      const detail = error instanceof Error ? error.message : String(error);
+      serverLogger.error("[UnitOfWork] Batch write failed", { error: detail });
+      throw new DatabaseError(`Batch write failed: ${detail}`, error);
     }
   }
 }

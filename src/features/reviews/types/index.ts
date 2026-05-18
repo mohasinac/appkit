@@ -20,6 +20,8 @@ export interface Review {
   storeSlug?: string;
   storeName?: string;
   userId: string;
+  /** Firestore document slug for the reviewer — use for profile links instead of userId (Auth UID). */
+  userSlug?: string;
   userName: string;
   userAvatar?: string;
   rating: 1 | 2 | 3 | 4 | 5;
@@ -63,6 +65,7 @@ export interface ReviewListParams {
   dateTo?: string;
   minVotes?: number;
   maxVotes?: number;
+  hasImages?: boolean;
 }
 
 export interface CreateReviewInput {

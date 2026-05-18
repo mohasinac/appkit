@@ -62,18 +62,18 @@ function BrandLogo({ brand }: { brand: CategoryItem }) {
   return (
     <Link
       href={ROUTES.PUBLIC.CATEGORY_DETAIL(brand.slug)}
-      className="flex h-24 w-28 flex-col items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900"
+      className="flex h-32 w-36 flex-col items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-white p-3 shadow-sm transition-all hover:border-primary-300 hover:shadow-md dark:border-slate-700 dark:bg-slate-900 md:h-40"
     >
       {iconSrc || coverImage ? (
         <Image
           src={iconSrc ?? coverImage!}
           alt={brand.name}
-          width={40}
-          height={40}
-          className="h-10 w-10 rounded object-contain"
+          width={64}
+          height={64}
+          className="h-16 w-16 rounded object-contain"
         />
       ) : (
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
+        <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-primary-100 text-sm font-bold text-primary-700 dark:bg-primary-900 dark:text-primary-300">
           {initial}
         </div>
       )}
@@ -141,7 +141,7 @@ export function BrandsSection({
         {isLoading ? (
           <div className="flex gap-3 overflow-hidden">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-24 w-28 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700" />
+              <div key={i} className="h-32 w-36 flex-none animate-pulse rounded-xl bg-zinc-200 dark:bg-slate-700 md:h-40" />
             ))}
           </div>
         ) : (
@@ -152,6 +152,7 @@ export function BrandsSection({
             gap={12}
             showArrows
             showScrollbar={false}
+            loop
           />
         )}
 

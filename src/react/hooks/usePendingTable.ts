@@ -24,6 +24,11 @@ export interface UsePendingTableReturn {
   /** Clear all filter keys from pending state and URL */
   onFilterClear: () => void;
   /**
+   * Clear filter keys + extra URL keys in a SINGLE router.replace.
+   * Use this in resetAll handlers to avoid the double-replace race condition.
+   */
+  onResetAll: (extras?: Record<string, string>) => void;
+  /**
    * Revert pending state to the current URL values without clearing them.
    * Call this when opening a filter drawer to ensure it shows the last
    * committed state, even if the URL changed externally (e.g. a status tab).
@@ -78,6 +83,7 @@ export function usePendingTable(
     filterActiveCount: filters.appliedCount,
     onFilterApply: filters.apply,
     onFilterClear: filters.clear,
+    onResetAll: filters.clearAll,
     onFilterReset: filters.reset,
   };
 }

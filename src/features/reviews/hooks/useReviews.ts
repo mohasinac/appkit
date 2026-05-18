@@ -29,6 +29,7 @@ export function useReviews(
   if (params.dateTo) sp.set("dateTo", params.dateTo);
   if (params.minVotes !== undefined) sp.set("minVotes", String(params.minVotes));
   if (params.maxVotes !== undefined) sp.set("maxVotes", String(params.maxVotes));
+  if (params.hasImages) sp.set("hasImages", "true");
   // General listing mode (no productId)
   if (!params.productId && !params.userId && !params.storeId) {
     sp.set("latest", "true");

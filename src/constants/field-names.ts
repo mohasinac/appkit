@@ -77,6 +77,7 @@ export const PRODUCT_FIELDS = {
   PRIZE_REVEAL_WINDOW_START: "prizeRevealWindowStart",
   PRIZE_REVEAL_WINDOW_END: "prizeRevealWindowEnd",
   PRIZE_REVEAL_DEADLINE: "prizeRevealDeadline",
+  IS_PART_OF_BUNDLE: "isPartOfBundle",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 

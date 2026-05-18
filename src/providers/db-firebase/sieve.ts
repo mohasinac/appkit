@@ -27,6 +27,53 @@ import type {
 import { SieveProcessorBase } from "@mohasinac/sievejs/services";
 import { createFirebaseAdapter } from "@mohasinac/sievejs/adapters/firebase";
 
+interface AdapterCondition {
+  field: string;
+  value: unknown;
+  parsedOperator: string;
+  operatorIsNegated: boolean;
+  operatorIsCaseInsensitive: boolean;
+  ignoreNullsOnNotEqual?: boolean;
+}
+
+/**
+ * Wraps the stock Firebase adapter and upgrades OR groups where all conditions
+ * are equality checks on the same field into a Firestore `in` query.
+ *
+ * Background: Sieve parses `field==v1|v2` as a single term with two values
+ * (OR semantics). The stock adapter tries `whereOr` which Firestore Admin SDK
+ * doesn't support. Firestore's `.where(field, "in", [v1, v2])` is the correct
+ * equivalent and supports up to 30 values.
+ */
+function createEnhancedFirebaseAdapter() {
+  const base = createFirebaseAdapter();
+  return {
+    ...base,
+    applyFilterGroup(
+      query: CollectionReference | Query,
+      group: AdapterCondition[],
+    ): CollectionReference | Query {
+      if (
+        group.length > 1 &&
+        group.every(
+          (c) =>
+            c.parsedOperator === "equals" &&
+            !c.operatorIsNegated &&
+            !c.operatorIsCaseInsensitive &&
+            c.field === group[0].field,
+        )
+      ) {
+        return (query as Query).where(
+          group[0].field,
+          "in",
+          group.map((c) => c.value),
+        );
+      }
+      return base.applyFilterGroup(query, group as never) as CollectionReference | Query;
+    },
+  };
+}
+
 import { FirebaseRepository } from "./base";
 import { deserializeTimestamps, getFirestoreCount } from "./helpers";
 import {
@@ -185,7 +232,7 @@ export abstract class FirebaseSieveRepository<
     const effective = withAliasesExpanded(model, aliases);
 
     const processor = new SieveProcessorBase({
-      adapter: createFirebaseAdapter() as never,
+      adapter: createEnhancedFirebaseAdapter() as never,
       autoLoadConfig: false,
       options: merged,
       fields,

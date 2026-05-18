@@ -18,41 +18,45 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
     .getCategoryBySlug(slug)
     .catch(() => undefined) as CategoryItem | undefined;
 
+  // Use categorySlugs@=<id> (array-contains) — products store category FK in
+  // the categorySlugs[] array, not the legacy `category` string field.
+  const catFilter = category?.id ? `categorySlugs@=${category.id}` : null;
+
   const [productsResult, auctionsCountResult, preOrdersCountResult, prizeDrawsCountResult, bundlesResult, childCategories] = await Promise.all([
-    category?.id
+    catFilter
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},listingType==standard`,
+            filters: `status==published,${catFilter},listingType==standard`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 24,
           })
           .catch(() => null)
       : Promise.resolve(null),
-    category?.id
+    catFilter
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},listingType==auction`,
+            filters: `status==published,${catFilter},listingType==auction`,
             sorts: "auctionEndDate",
             page: 1,
             pageSize: 1,
           })
           .catch(() => null)
       : Promise.resolve(null),
-    category?.id
+    catFilter
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},listingType==pre-order`,
+            filters: `status==published,${catFilter},listingType==pre-order`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 1,
           })
           .catch(() => null)
       : Promise.resolve(null),
-    category?.id
+    catFilter
       ? productRepository
           .list({
-            filters: `status==published,category==${category.id},listingType==prize-draw`,
+            filters: `status==published,${catFilter},listingType==prize-draw`,
             sorts: "-createdAt",
             page: 1,
             pageSize: 1,
@@ -61,7 +65,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       : Promise.resolve(null),
     // SB-UNI-D — bundles fetched from the categories collection. We pull
     // all active bundle rows; the carousel filters by category affinity.
-    category?.id
+    catFilter
       ? categoriesRepository
           .listByType("bundle", { activeOnly: true, limit: 50 })
           .catch(() => [])

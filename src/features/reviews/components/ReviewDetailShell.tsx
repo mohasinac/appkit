@@ -85,8 +85,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
     ? String(ROUTES.PUBLIC.PRODUCT_DETAIL(review.productId))
     : null;
   const sellerHref = storeHref ?? null;
-  const reviewerHref = !review.isAnonymous && review.userId
-    ? String(ROUTES.PUBLIC.PROFILE(review.userId))
+  const reviewerProfileId = review.userSlug ?? review.userId;
+  const reviewerHref = !review.isAnonymous && reviewerProfileId
+    ? String(ROUTES.PUBLIC.PROFILE(reviewerProfileId))
     : null;
 
   const currentImage = lightboxIdx !== null ? images[lightboxIdx] : null;

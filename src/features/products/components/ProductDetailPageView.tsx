@@ -261,6 +261,13 @@ export async function ProductDetailPageView({
   const category =
     typeof p.category === "string" ? (p.category as string) : null;
   const categoryName = typeof p.categoryName === "string" ? (p.categoryName as string) : null;
+  // categorySlugs/categoryNames: multi-category support (S-uni-formshell-prep)
+  const categorySlugs: string[] = Array.isArray(p.categorySlugs)
+    ? (p.categorySlugs as string[])
+    : category ? [category] : [];
+  const categoryNames: string[] = Array.isArray(p.categoryNames)
+    ? (p.categoryNames as string[])
+    : categoryName ? [categoryName] : [];
   const subcategory =
     typeof p.subcategory === "string" ? (p.subcategory as string) : null;
   const brand = typeof p.brand === "string" ? (p.brand as string) : null;
@@ -296,6 +303,17 @@ export async function ProductDetailPageView({
     Array.isArray(p.specifications)
       ? (p.specifications as { name: string; value: string; unit?: string }[])
       : [];
+
+  const customFields: { name: string; value: string; unit?: string }[] =
+    Array.isArray(p.customFields)
+      ? (p.customFields as import("../schemas/firestore").CustomField[]).map((f) => ({
+          name: f.key,
+          value: String(f.value),
+          unit: f.unit,
+        }))
+      : [];
+
+  const allSpecs = [...specs, ...customFields];
 
   const customSections: CustomSection[] = Array.isArray(p.customSections)
     ? (p.customSections as CustomSection[])
@@ -475,16 +493,17 @@ export async function ProductDetailPageView({
               )}
 
               {/* Category / subcategory / brand pills */}
-              {(categoryName || category || subcategory || brand) && (
+              {(categorySlugs.length > 0 || subcategory || brand) && (
                 <Row gap="sm" wrap>
-                  {category && (
+                  {categorySlugs.map((slug, i) => (
                     <Link
-                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category))}
+                      key={slug}
+                      href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(slug))}
                       className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-600 dark:text-zinc-300 transition-colors hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:hover:border-primary-700/60 dark:hover:bg-primary-900/20 dark:hover:text-primary-400"
                     >
-                      {categoryName || category}
+                      {categoryNames[i] ?? slug}
                     </Link>
-                  )}
+                  ))}
                   {subcategory && (
                     <Span className="inline-flex items-center rounded-full border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50 px-2.5 py-1 text-xs font-medium text-zinc-500 dark:text-zinc-400 capitalize">
                       {subcategory}
@@ -791,9 +810,9 @@ export async function ProductDetailPageView({
                 ) : undefined
               }
               specsContent={
-                specs.length > 0 ? (
+                allSpecs.length > 0 ? (
                   <dl className="divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800 overflow-hidden text-sm">
-                    {specs.map((s, i) => (
+                    {allSpecs.map((s, i) => (
                       <div
                         key={i}
                         className="flex gap-4 px-4 py-3 bg-white dark:bg-zinc-900 even:bg-zinc-50 dark:even:bg-zinc-800/50"

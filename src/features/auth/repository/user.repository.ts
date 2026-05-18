@@ -130,6 +130,10 @@ export class UserRepository extends BaseRepository<UserDocument> {
     return { id, ...userData };
   }
 
+  async findByUid(uid: string): Promise<UserDocument | null> {
+    return this.findOneBy(USER_FIELDS.UID, uid);
+  }
+
   async findByEmail(email: string): Promise<UserDocument | null> {
     return this.findOneBy(USER_FIELDS.EMAIL_INDEX, piiBlindIndex(email));
   }

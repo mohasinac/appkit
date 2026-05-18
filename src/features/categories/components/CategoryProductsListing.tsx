@@ -82,7 +82,7 @@ export function CategoryProductsListing({
     localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
   );
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const params = {
@@ -105,7 +105,6 @@ export function CategoryProductsListing({
 
   const commitSearch = useCallback(() => {
     table.set("q", searchInput.trim());
-    table.setPage(1);
   }, [searchInput, table]);
 
   const openFilters = useCallback(() => {
@@ -124,10 +123,9 @@ export function CategoryProductsListing({
   };
 
   const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    onFilterClear();
+    onResetAll({ q: "", sort: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
 
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =

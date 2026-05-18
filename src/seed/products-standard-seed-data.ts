@@ -4407,6 +4407,7 @@ export const productsStandardSeedData: Partial<ProductDocument>[] = [
   ..._rawProductsStandardSeedData.map((p) => ({
     ...p,
     listingType: "standard" as const,
+    isPartOfBundle: Array.isArray(p.partOfBundleIds) && p.partOfBundleIds.length > 0,
   })),
 
   // ── SB-UNI-M classified seed (OLX-style meetup) ──────────────────────────

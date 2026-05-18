@@ -34,6 +34,7 @@ export const EVENT_PUBLIC_SORT_OPTIONS = [
   { value: sortBy(EVENT_FIELDS.STARTS_AT, "ASC"), label: "Starts Soonest" },
   { value: sortBy(EVENT_FIELDS.STARTS_AT), label: "Starts Latest" },
   { value: sortBy(EVENT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
+  { value: sortBy(EVENT_FIELDS.TITLE), label: "Title Z–A" },
   { value: "-stats.totalEntries", label: "Most Entries" },
 ] as const;
 

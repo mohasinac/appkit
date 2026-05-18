@@ -132,7 +132,7 @@ export async function GET(request: Request): Promise<NextResponse> {
     if (type) parts.push(`type==${type}`);
     if (parentId) parts.push(`parentIds@=${parentId}`);
     if (featured === "true") parts.push("isFeatured==true");
-    if (isBrand === "true") parts.push("type==brand");
+    if (isBrand === "true") parts.push("categoryType==brand");
     if (showOnHomepage === "true") parts.push("showOnHomepage==true");
     if (tier !== null) parts.push(`tier==${tier}`);
     if (rawFilters) {

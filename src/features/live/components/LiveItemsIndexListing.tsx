@@ -55,7 +55,7 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
     localWishlist.items.filter((i) => i.type === "live").map((i) => i.itemId),
   );
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -69,10 +69,9 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" });
-    onFilterClear();
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
 
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||

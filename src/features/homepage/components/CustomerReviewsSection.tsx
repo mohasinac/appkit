@@ -87,6 +87,7 @@ export function CustomerReviewsSection<T = unknown>({
           snapToItems
           showArrows
           keyExtractor={keyExtractor}
+          loop
         />
 
         {/* See all link */}

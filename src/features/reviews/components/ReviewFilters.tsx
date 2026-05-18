@@ -168,6 +168,13 @@ export function ReviewFilters({
         maxPlaceholder={t("maxVotes")}
         defaultCollapsed={true}
       />
+
+      <SwitchFilter
+        title="Media"
+        label="Show reviews with photos only"
+        checked={table.get("hasImages") === "true"}
+        onChange={(v: boolean) => table.set("hasImages", v ? "true" : "")}
+      />
     </Div>
   );
 }

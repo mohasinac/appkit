@@ -166,12 +166,14 @@ export function BlogIndexListing({ initialData }: BlogIndexListingProps) {
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
+    !!table.get(TABLE_KEYS.TAGS) ||
     table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT ||
     activeFilterCount > 0;
 
   const params = {
     q: table.get(TABLE_KEYS.QUERY) || undefined,
     category: (table.get(TABLE_KEYS.CATEGORY) || undefined) as BlogPostCategory | undefined,
+    tags: table.get(TABLE_KEYS.TAGS) || undefined,
     sort: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
     page: table.getNumber(TABLE_KEYS.PAGE, 1),
     perPage: table.getNumber(TABLE_KEYS.PAGE_SIZE, PAGE_SIZE),

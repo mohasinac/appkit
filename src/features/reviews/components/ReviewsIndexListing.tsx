@@ -14,7 +14,14 @@ import { REVIEW_FIELDS } from "../../../constants/field-names";
 
 const PAGE_SIZE = 12;
 const DEFAULT_SORT = sortBy(REVIEW_FIELDS.CREATED_AT);
-const FILTER_KEYS = ["rating", TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, "minVotes", "maxVotes"];
+const FILTER_KEYS = ["rating", TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO, "minVotes", "maxVotes", "hasImages"];
+
+const SORT_OPTION_LABELS: Record<string, string> = {
+  sortNewest: "Newest First",
+  sortOldest: "Oldest First",
+  sortHighestRated: "Highest Rated",
+  sortLowestRated: "Lowest Rated",
+};
 
 export interface ReviewsIndexListingProps {
   initialData?: ReviewListResponse;
@@ -114,6 +121,7 @@ export function ReviewsIndexListing({
       dateTo: table.get(TABLE_KEYS.DATE_TO) || undefined,
       minVotes: table.get("minVotes") ? Number(table.get("minVotes")) : undefined,
       maxVotes: table.get("maxVotes") ? Number(table.get("maxVotes")) : undefined,
+      hasImages: table.get("hasImages") === "true" ? true : undefined,
       sort,
       page: currentPage,
       perPage: PAGE_SIZE,
@@ -123,7 +131,7 @@ export function ReviewsIndexListing({
 
   const sortOptions = REVIEW_PUBLIC_SORT_OPTIONS.map((opt) => ({
     value: opt.value,
-    label: opt.key,
+    label: SORT_OPTION_LABELS[opt.key] ?? opt.key,
   }));
 
   return (

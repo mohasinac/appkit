@@ -56,7 +56,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   const categoryOptions = categoriesToFacetOptions(categories);
   const { brandOptions } = useBrands();
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -70,10 +70,9 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_ENDED]: "" });
-    onFilterClear();
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_ENDED]: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     table.get(TABLE_KEYS.SHOW_ENDED) === "true" ||

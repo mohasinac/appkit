@@ -100,6 +100,8 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
   const dateFrom = table.get(TABLE_KEYS.DATE_FROM);
   const dateTo = table.get(TABLE_KEYS.DATE_TO);
 
+  const showExpired = table.get(TABLE_KEYS.SHOW_EXPIRED) === "true";
+
   const filterParts: string[] = [];
   if (typeRaw) {
     const types = typeRaw.split("|").filter(Boolean);
@@ -107,11 +109,13 @@ export function EventsIndexListing({ initialData }: EventsIndexListingProps) {
     // BUG FIX: pipe is invalid for ==; expand to multiple AND clauses
     else if (types.length > 1) filterParts.push(sieveMultiEq(EVENT_FIELDS.TYPE, types));
   }
-  if (statusRaw) {
-    const statuses = statusRaw.split("|").filter(Boolean);
-    if (statuses.length === 1) filterParts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, statuses[0]));
-    else if (statuses.length > 1) filterParts.push(sieveMultiEq(EVENT_FIELDS.STATUS, statuses));
-  }
+  const statusValues = statusRaw
+    ? statusRaw.split("|").filter(Boolean)
+    : showExpired
+      ? ["active", "ended", "paused"]
+      : [];
+  if (statusValues.length === 1) filterParts.push(sieveFilter(EVENT_FIELDS.STATUS, SIEVE_OP.EQ, statusValues[0]));
+  else if (statusValues.length > 1) filterParts.push(sieveMultiEq(EVENT_FIELDS.STATUS, statusValues));
   if (dateFrom) filterParts.push(sieveFilter(EVENT_FIELDS.STARTS_AT, SIEVE_OP.GTE, dateFrom));
   if (dateTo) filterParts.push(sieveFilter(EVENT_FIELDS.ENDS_AT, SIEVE_OP.LTE, dateTo));
 

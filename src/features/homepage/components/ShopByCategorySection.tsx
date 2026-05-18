@@ -207,6 +207,7 @@ export function ShopByCategorySection({
             snapToItems
             showFadeEdges
             showScrollbar={false}
+            loop
             pauseOnHover
           />
         )}

@@ -27,12 +27,16 @@ export interface ReviewDocument {
   storeId?: string;
   storeName?: string;
   userId: string;
+  /** Firestore document ID of the reviewer (slug like `user-mohsin-c`). Populated on create; used to build profile links. */
+  userSlug?: string;
   userName: string;
   userAvatar?: string;
   rating: number;
   title: string;
   comment: string;
   images?: string[];
+  /** Denormalized flag — true when images array is non-empty. Enables hasImages==true Firestore query. */
+  hasImages?: boolean;
   video?: ReviewVideoField;
   status: ReviewStatus;
   moderatorId?: string;

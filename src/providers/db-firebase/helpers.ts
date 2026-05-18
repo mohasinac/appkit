@@ -14,8 +14,25 @@ import type {
 // --- Undefined removal --------------------------------------------------------
 
 /**
+ * Returns true only for plain objects ({}) — NOT class instances, Dates,
+ * Arrays, FieldValue sentinels, or Timestamps. Only plain objects are safe
+ * to recurse into; everything else must pass through unchanged so Firestore
+ * FieldValue sentinels (increment, arrayUnion, deleteField, etc.) are not
+ * stripped.
+ */
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  if (v === null || typeof v !== "object" || Array.isArray(v)) return false;
+  const proto = Object.getPrototypeOf(v) as unknown;
+  return proto === Object.prototype || proto === null;
+}
+
+/**
  * Recursively remove `undefined` values from an object.
  * Firestore rejects writes that contain `undefined` fields.
+ *
+ * Non-plain values (Date, FieldValue sentinels, class instances, Arrays)
+ * are passed through as-is so that Firestore transform operations
+ * (increment, arrayUnion, deleteField, serverTimestamp) survive the strip.
  */
 export function removeUndefined<T extends Record<string, unknown>>(
   obj: T,
@@ -26,16 +43,8 @@ export function removeUndefined<T extends Record<string, unknown>>(
     const value = obj[key];
     if (value === undefined) continue;
 
-    if (
-      value !== null &&
-      typeof value === "object" &&
-      !Array.isArray(value) &&
-      !(value instanceof Date) &&
-      !(
-        value as { constructor?: { name?: string } }
-      ).constructor?.name?.includes("Timestamp")
-    ) {
-      const cleaned = removeUndefined(value as Record<string, unknown>);
+    if (isPlainObject(value)) {
+      const cleaned = removeUndefined(value);
       if (Object.keys(cleaned).length > 0) {
         result[key] = cleaned;
       }

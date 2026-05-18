@@ -259,7 +259,7 @@ export function SectionCarousel<T = unknown>({
             gap={gap}
             autoScroll={autoScroll}
             autoScrollInterval={autoScrollInterval}
-            loop={autoScroll && rows === 1}
+            loop={rows === 1}
             keyExtractor={keyExtractor}
             rows={rows}
             minItemWidth={minItemWidth}

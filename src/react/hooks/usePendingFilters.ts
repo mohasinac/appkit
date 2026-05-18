@@ -30,6 +30,8 @@ export interface UsePendingFiltersReturn {
   reset: () => void;
   /** Clear all keys in both pending state and the URL */
   clear: () => void;
+  /** Clear filter keys + extra URL keys in a single router.replace — avoids the double-replace race */
+  clearAll: (extras?: Record<string, string>) => void;
 }
 
 /**
@@ -123,6 +125,14 @@ export function usePendingFilters({
     table.setMany(updates);
   }, [keys, table]);
 
+  const clearAll = useCallback((extras?: Record<string, string>) => {
+    const empty = Object.fromEntries(keys.map((k) => [k, [] as string[]]));
+    setPending(empty);
+    const updates: Record<string, string> = { page: "1", ...extras };
+    for (const k of keys) updates[k] = "";
+    table.setMany(updates);
+  }, [keys, table]);
+
   return {
     pending,
     applied,
@@ -133,5 +143,6 @@ export function usePendingFilters({
     apply,
     reset,
     clear,
+    clearAll,
   };
 }

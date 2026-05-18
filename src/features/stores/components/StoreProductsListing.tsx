@@ -41,7 +41,7 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
     localWishlist.items.filter((i) => i.type === "product").map((i) => i.itemId),
   );
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -55,10 +55,9 @@ export function StoreProductsListing({ storeId, initialData }: StoreProductsList
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    onFilterClear();
+    onResetAll({ q: "", sort: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
 
   const hasActiveState =
     !!table.get("q") ||

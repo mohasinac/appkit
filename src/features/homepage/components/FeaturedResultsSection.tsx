@@ -99,6 +99,7 @@ export function FeaturedResultsSection({
           snapToItems
           showArrows
           showFadeEdges
+          loop
         />
       </div>
     </Section>

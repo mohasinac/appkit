@@ -8,7 +8,6 @@
 import { serverLogger } from "../../../monitoring";
 import { eventRepository } from "../repository/events.repository";
 import { eventEntryRepository } from "../repository/event-entry.repository";
-import { maskPublicEventEntry } from "../../../security";
 import {
   ERROR_MESSAGES,
   AuthorizationError,
@@ -214,12 +213,14 @@ export async function adminUpdateEventEntry(
   entryId: string,
   reviewStatus: "approved" | "flagged",
   reviewNote?: string,
+  points?: number,
 ): Promise<void> {
   await eventEntryRepository.reviewEntry(
     entryId,
     reviewStatus as EventEntryDocument["reviewStatus"],
     adminId,
     reviewNote,
+    points,
   );
   serverLogger.info("adminUpdateEventEntry", {
     adminId,
@@ -283,9 +284,8 @@ export async function getPublicEventById(
 
 export async function getEventLeaderboard(
   eventId: string,
-): Promise<ReturnType<typeof maskPublicEventEntry<EventEntryDocument>>[]> {
-  const entries = await eventEntryRepository.getLeaderboard(eventId);
-  return entries.map(maskPublicEventEntry);
+): Promise<import("../types").LeaderboardEntry[]> {
+  return eventEntryRepository.getLeaderboard(eventId);
 }
 
 export async function adminListEvents(params?: {

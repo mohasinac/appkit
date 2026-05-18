@@ -17,6 +17,8 @@ import { useGuestWishlist } from "../../wishlist/hooks/useGuestWishlist";
 import { pushCartOp, pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
+import { useBrands } from "../hooks/useBrands";
+import { useProductFeatures } from "./ProductFeaturesContext";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
@@ -24,7 +26,7 @@ import { PRODUCT_FIELDS } from "../../../constants/field-names";
 type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS];
+const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.CONDITION, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.BRAND, TABLE_KEYS.STORE_ID, TABLE_KEYS.FREE_SHIPPING, TABLE_KEYS.TAGS, TABLE_KEYS.FEATURES, TABLE_KEYS.IS_PART_OF_BUNDLE];
 
 export interface ProductsIndexListingProps {
   initialData?: any;
@@ -43,7 +45,7 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
     (table.get(TABLE_KEYS.VIEW) as ViewMode) || VIEW_MODE.GRID,
   );
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -57,10 +59,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_SOLD]: "" });
-    onFilterClear();
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_SOLD]: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     table.get(TABLE_KEYS.SHOW_SOLD) === "true" ||
@@ -74,6 +75,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   );
   const { categories } = useCategoryTree();
   const categoryOptions = categoriesToFacetOptions(categories);
+  const { brandOptions } = useBrands();
+  const features = useProductFeatures() ?? [];
+  const featureOptions = features.map((f) => ({ value: f.id, label: f.label }));
 
   const params = {
     q: table.get(TABLE_KEYS.QUERY) || undefined,
@@ -317,7 +321,13 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <ProductFilters table={pendingTable as any} currencyPrefix="₹" categoryOptions={categoryOptions} />
+        <ProductFilters
+          table={pendingTable as any}
+          currencyPrefix="₹"
+          categoryOptions={categoryOptions}
+          brandOptions={brandOptions}
+          featureOptions={featureOptions}
+        />
       </FilterDrawer>
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
     </div>

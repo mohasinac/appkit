@@ -57,7 +57,7 @@ export function PrizeDrawsIndexListing({
   const categoryOptions = categoriesToFacetOptions(categories);
   const { brandOptions } = useBrands();
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -71,14 +71,9 @@ export function PrizeDrawsIndexListing({
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({
-      [TABLE_KEYS.QUERY]: "",
-      [TABLE_KEYS.SORT]: "",
-      [TABLE_KEYS.SHOW_CLOSED]: "",
-    });
-    onFilterClear();
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
 
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||

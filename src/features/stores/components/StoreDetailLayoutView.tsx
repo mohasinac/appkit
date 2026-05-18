@@ -1,6 +1,6 @@
 import React, { cache } from "react";
 import type { ReactNode } from "react";
-import { storeRepository, productRepository, categoriesRepository, siteSettingsRepository } from "../../../repositories";
+import { storeRepository, productRepository, categoriesRepository, siteSettingsRepository, reviewRepository, couponsRepository } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Main, Section, Text } from "../../../ui";
 import { STORE_PAGE_TABS } from "../../products/constants/listing-tabs";
@@ -59,7 +59,7 @@ export async function StoreDetailLayoutView({
 
   const settings = await siteSettingsRepository.findById("global").catch(() => null);
 
-  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount] = storeId
+  const [productsCount, auctionsCount, preOrdersCount, prizeDrawsCount, bundlesCount, couponsCount, reviewsCount] = storeId
     ? await Promise.all([
         productRepository
           .list({ filters: `storeId==${storeId},status==published,listingType==standard`, page: 1, pageSize: 1 })
@@ -83,8 +83,16 @@ export async function StoreDetailLayoutView({
           .listByType("bundle", { activeOnly: true, limit: 100 })
           .then((rows) => rows.filter((c) => c.createdByStoreId === storeId).length)
           .catch(() => 0),
+        couponsRepository
+          .list({ filters: `sellerId==${storeId},validity.isActive==true`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
+        reviewRepository
+          .listAll({ filters: `storeId==${storeId},status==approved`, page: 1, pageSize: 1 })
+          .then((r) => r.total)
+          .catch(() => 0),
       ])
-    : [0, 0, 0, 0, 0];
+    : [0, 0, 0, 0, 0, 0, 0];
 
   const listingCounts: Record<(typeof STORE_PAGE_TABS)[number]["id"], number> = {
     products: productsCount,
@@ -113,8 +121,8 @@ export async function StoreDetailLayoutView({
       label: tabLabel(tab.label, listingCounts[tab.id]),
       href: STORE_LISTING_HREF[tab.id](storeSlug),
     })),
-    { value: "coupons", label: "Coupons", href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
-    { value: "reviews", label: "Reviews", href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
+    { value: "coupons", label: tabLabel("Coupons", couponsCount), href: String(ROUTES.PUBLIC.STORE_COUPONS(storeSlug)) },
+    { value: "reviews", label: tabLabel("Reviews", reviewsCount), href: String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug)) },
     { value: "about", label: "About", href: String(ROUTES.PUBLIC.STORE_ABOUT(storeSlug)) },
   ];
 

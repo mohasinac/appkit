@@ -61,7 +61,9 @@ export async function getPublicUserProfile(
   | "publicProfile"
   | "stats"
 > | null> {
-  const user = await userRepository.findById(userId);
+  let user = await userRepository.findById(userId);
+  // Fallback: userId may be a Firebase Auth UID rather than the document slug
+  if (!user) user = await userRepository.findByUid(userId);
   if (!user) return null;
   return {
     id: user.id,

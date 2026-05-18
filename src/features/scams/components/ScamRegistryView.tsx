@@ -21,8 +21,15 @@ import {
 import { listVerifiedScammers } from "../actions/scam-actions";
 import type { ScammerDocument } from "../schemas/firestore";
 import { SCAM_PLATFORM_LABELS } from "../schemas/firestore";
-import { SCAM_TYPE_LABELS } from "../constants/scam-types";
+import { SCAM_TYPES, SCAM_TYPE_LABELS } from "../constants/scam-types";
 import { ROUTES } from "../../../next/routing/route-map";
+
+const SORT_OPTIONS = [
+  { value: "-createdAt", label: "Newest Reports" },
+  { value: "createdAt", label: "Oldest Reports" },
+  { value: "-incidentCount", label: "Most Victims" },
+  { value: "-amountLost", label: "Highest Loss" },
+] as const;
 
 type SearchParams = Record<string, string | string[]>;
 
@@ -106,16 +113,33 @@ export interface ScamRegistryViewProps {
 
 export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewProps) {
   const query = sp(searchParams, "q");
+  const sort = sp(searchParams, "sort") || "-createdAt";
+  const scamType = sp(searchParams, "scamType");
+  const pageSize = 20;
 
-  const result = await listVerifiedScammers(searchParams).catch(() => ({
+  const result = await listVerifiedScammers({ ...searchParams, sort, pageSize: String(pageSize) }).catch(() => ({
     items: [] as ScammerDocument[],
     total: 0,
     page: 1,
-    pageSize: 20,
+    pageSize,
     hasMore: false,
   }));
 
+  const totalPages = Math.max(1, Math.ceil(result.total / pageSize));
   const reportHref = String(ROUTES.PUBLIC.SCAM_REPORT);
+
+  function buildHref(overrides: Record<string, string>) {
+    const p = new URLSearchParams();
+    if (query) p.set("q", query);
+    if (sort !== "-createdAt") p.set("sort", sort);
+    if (scamType) p.set("scamType", scamType);
+    p.set("page", String(result.page));
+    for (const [k, v] of Object.entries(overrides)) {
+      if (v) p.set(k, v); else p.delete(k);
+    }
+    const qs = p.toString();
+    return `/scams${qs ? `?${qs}` : ""}`;
+  }
 
   return (
     <Main>
@@ -156,39 +180,89 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
               </Link>
             </Row>
 
-            {/* Search form */}
-            <form method="GET" className="max-w-xl">
-              <Input
-                type="search"
-                name="q"
-                defaultValue={query}
-                placeholder="Search name, phone number, UPI ID, or email…"
-                icon={<Search className="h-4 w-4" />}
-              />
+            {/* Search + sort + type filter form (GET — SSR-friendly) */}
+            <form method="GET" className="flex flex-wrap gap-3">
+              <div className="flex-1 min-w-48">
+                <Input
+                  type="search"
+                  name="q"
+                  defaultValue={query}
+                  placeholder="Search name, phone, UPI ID, or email…"
+                  icon={<Search className="h-4 w-4" />}
+                />
+              </div>
+              <select
+                name="scamType"
+                defaultValue={scamType}
+                className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                <option value="">All scam types</option>
+                {SCAM_TYPES.map((t) => (
+                  <option key={t.id} value={t.id}>{t.label}</option>
+                ))}
+              </select>
+              <select
+                name="sort"
+                defaultValue={sort}
+                className="rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 focus:outline-none focus:ring-2 focus:ring-primary"
+              >
+                {SORT_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+              <button
+                type="submit"
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
+              >
+                Search
+              </button>
+              {(query || scamType || sort !== "-createdAt") && (
+                <Link
+                  href="/scams"
+                  className="rounded-lg border border-zinc-300 dark:border-slate-600 px-4 py-2 text-sm text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
+                >
+                  Clear
+                </Link>
+              )}
             </form>
+
+            {/* Active filter chip */}
+            {scamType && SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS] && (
+              <Row gap="sm" align="center">
+                <Text variant="secondary" className="text-xs">Filtering by:</Text>
+                <Link
+                  href={buildHref({ scamType: "" })}
+                  className="inline-flex items-center gap-1 rounded-full bg-rose-100 dark:bg-rose-900/30 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:text-rose-300 hover:bg-rose-200 transition-colors"
+                >
+                  {SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]}
+                  <span aria-hidden="true">×</span>
+                </Link>
+              </Row>
+            )}
 
             {/* Results */}
             {result.items.length === 0 ? (
               <EmptyState
                 icon={<Shield className="h-12 w-12" />}
                 title={
-                  query
-                    ? "No verified scammers matched your search"
+                  query || scamType
+                    ? "No verified scammers matched your filters"
                     : "No verified scammers in the registry yet"
                 }
                 description={
-                  query
-                    ? "Try a different name, phone number, or UPI ID."
+                  query || scamType
+                    ? "Try a different search or clear your filters."
                     : "Verified reports will appear here once reviewed by our moderation team."
                 }
               />
             ) : (
               <Stack gap="md">
-                {result.total > 0 && (
-                  <Text variant="secondary" className="text-sm">
-                    {result.total} verified profile{result.total !== 1 ? "s" : ""}
-                  </Text>
-                )}
+                <Text variant="secondary" className="text-sm">
+                  {result.total} verified profile{result.total !== 1 ? "s" : ""}
+                  {scamType && SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]
+                    ? ` · ${SCAM_TYPE_LABELS[scamType as keyof typeof SCAM_TYPE_LABELS]}`
+                    : ""}
+                </Text>
                 <Grid cols={3} gap="md">
                   {result.items.map((scammer) => (
                     <ScammerCard key={scammer.id} scammer={scammer} />
@@ -198,14 +272,26 @@ export async function ScamRegistryView({ searchParams = {} }: ScamRegistryViewPr
             )}
 
             {/* Pagination */}
-            {result.hasMore && (
-              <Row justify="center">
-                <Link
-                  href={`/scams?page=${result.page + 1}${query ? `&q=${encodeURIComponent(query)}` : ""}`}
-                  className="appkit-button appkit-button--outline appkit-button--md"
-                >
-                  Load more
-                </Link>
+            {totalPages > 1 && (
+              <Row justify="center" gap="sm" className="flex-wrap">
+                {result.page > 1 && (
+                  <Link href={buildHref({ page: String(result.page - 1) })} className="appkit-button appkit-button--outline appkit-button--sm">← Prev</Link>
+                )}
+                {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                  const p = i + 1;
+                  return (
+                    <Link
+                      key={p}
+                      href={buildHref({ page: String(p) })}
+                      className={`appkit-button appkit-button--sm ${p === result.page ? "appkit-button--primary" : "appkit-button--outline"}`}
+                    >
+                      {p}
+                    </Link>
+                  );
+                })}
+                {result.page < totalPages && (
+                  <Link href={buildHref({ page: String(result.page + 1) })} className="appkit-button appkit-button--outline appkit-button--sm">Next →</Link>
+                )}
               </Row>
             )}
           </Stack>

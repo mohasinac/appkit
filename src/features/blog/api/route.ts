@@ -39,6 +39,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     const parts: string[] = [];
     const category = param(url, "category");
     if (category) parts.push(`category==${category}`);
+    const tags = param(url, "tags");
+    if (tags) parts.push(`tags@=${tags}`);
     const q = param(url, "q");
     if (q) parts.push(`title@=*${q}`);
     const featured = param(url, "featured");

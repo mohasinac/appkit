@@ -63,7 +63,7 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
     localWishlist.items.filter((i) => i.type === "preorder").map((i) => i.itemId),
   );
 
-  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onFilterReset } =
+  const { pendingTable, filterActiveCount, onFilterApply, onFilterClear, onResetAll, onFilterReset } =
     usePendingTable(table, FILTER_KEYS);
 
   const openFilters = useCallback(() => {
@@ -77,10 +77,9 @@ export function PreOrdersIndexListing({ initialData, categorySlug, brandName }: 
   }, [onFilterApply]);
 
   const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" });
-    onFilterClear();
+    onResetAll({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "", [TABLE_KEYS.SHOW_CLOSED]: "" });
     setSearchInput("");
-  }, [table, onFilterClear]);
+  }, [onResetAll]);
   const hasActiveState =
     !!table.get(TABLE_KEYS.QUERY) ||
     table.get(TABLE_KEYS.SHOW_CLOSED) === "true" ||

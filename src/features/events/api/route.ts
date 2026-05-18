@@ -54,14 +54,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     const pageSize = numParam(url, "pageSize", 24);
     const sort = param(url, "sorts") ?? param(url, "sort") ?? "-startsAt";
 
-    const parts: string[] = ["status==active"];
     const q = param(url, "q");
-    if (q) parts.push(`title@=*${q}`);
     const raw = param(url, "filters");
-    if (raw) {
-      const safe = validateSieveFilters(raw, SAFE_EVENT_FILTER_FIELDS);
-      if (safe) parts.push(safe);
-    }
+    const safe = raw ? validateSieveFilters(raw, SAFE_EVENT_FILTER_FIELDS) : "";
+    // Only default to active events when no explicit status filter is provided.
+    const hasStatusFilter = safe.includes("status==");
+    const parts: string[] = hasStatusFilter ? [] : ["status==active"];
+    if (q) parts.push(`title@=*${q}`);
+    if (safe) parts.push(safe);
     const filters = parts.join(",");
 
     const { db } = getProviders();

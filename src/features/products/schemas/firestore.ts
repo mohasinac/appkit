@@ -253,6 +253,8 @@ export interface ProductDocument {
   /** Reverse pointers — bundle ids that include this product. */
   partOfBundleIds?: string[];
   partOfBundleTitles?: string[];
+  /** Denormalised flag — true when partOfBundleIds has at least one entry. Enables Firestore isPartOfBundle==true query. */
+  isPartOfBundle?: boolean;
 
   // ── Prize-draw fields (SB1-B). Only populated when listingType === "prize-draw".
   prizeDrawItems?: PrizeDrawItem[];

@@ -68,6 +68,19 @@
   .appkit-drawer__panel--md { width: 24rem; }
 }
 
+/* FilterDrawer responsive size: full-width (lg) on mobile, fixed md-width on desktop */
+.appkit-drawer__panel--filter {
+  width: 100%;
+  max-width: 30rem;
+}
+
+@media (min-width: 1024px) {
+  .appkit-drawer__panel--filter {
+    width: 24rem;
+    max-width: none;
+  }
+}
+
 .appkit-drawer__drag-wrap {
   display: flex;
   justify-content: center;

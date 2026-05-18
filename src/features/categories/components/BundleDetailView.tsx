@@ -26,12 +26,14 @@ import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
 import type { ProductDocument } from "../../products/schemas/firestore";
 
+import Link from "next/link";
 import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { BundleBuyNowCta } from "./BundleBuyNowCta";
 import { BundleCollage } from "./BundleCollage";
+import { ROUTES } from "../../../next/routing/route-map";
 
 type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
 
@@ -67,17 +69,23 @@ export function BundleDetailView({
         <Container size="xl">
           <Stack gap="lg">
             <Row gap="lg" align="start" className="flex-col md:flex-row">
-              <Div className="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-100 md:w-1/2 dark:bg-zinc-800">
-                {cover ? (
-                  // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
-                  <img
-                    src={cover}
-                    alt={bundle.name}
-                    className="h-full w-full object-cover"
-                  />
+              <Div className="w-full md:w-2/5">
+                {members.length > 0 ? (
+                  <BundleCollage members={members} />
                 ) : (
-                  <Div className="flex h-full w-full items-center justify-center text-6xl">
-                    {PLACEHOLDER_EMOJI}
+                  <Div className="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-800">
+                    {cover ? (
+                      // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
+                      <img
+                        src={cover}
+                        alt={bundle.name}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Div className="flex h-full w-full items-center justify-center text-6xl">
+                        {PLACEHOLDER_EMOJI}
+                      </Div>
+                    )}
                   </Div>
                 )}
               </Div>
@@ -146,7 +154,19 @@ export function BundleDetailView({
               {members.length === 0 ? (
                 <Text color="muted">{BUNDLE_COPY.detail.emptyMembers}</Text>
               ) : (
-                <BundleCollage members={members} />
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {members.map((p, i) => (
+                    <li key={p.id} className="flex items-center gap-2 rounded-lg border border-zinc-100 dark:border-zinc-800 px-3 py-2 text-sm">
+                      <span className="text-xs font-semibold text-zinc-400 w-5">#{i + 1}</span>
+                      <Link
+                        href={String(ROUTES.PUBLIC.PRODUCT_DETAIL?.(p.slug ?? p.id) ?? "#")}
+                        className="flex-1 truncate font-medium hover:underline hover:text-primary"
+                      >
+                        {p.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               )}
             </Stack>
           </Stack>

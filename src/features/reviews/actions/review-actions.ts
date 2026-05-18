@@ -74,12 +74,14 @@ export async function createReview(
     storeId: product.storeId,
     storeName: product.storeName,
     userId,
+    userSlug: profile?.id,
     userName: profile?.displayName ?? "Anonymous",
     userAvatar: profile?.photoURL ?? "",
     rating: input.rating,
     title: input.title,
     comment: input.comment,
     images,
+    hasImages: images.length > 0,
     video: finalVideoUrl
       ? {
           url: finalVideoUrl,
