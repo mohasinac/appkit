@@ -535,3 +535,7 @@ export type { LiveItemDetailViewProps } from "./_internal/client/features/live/L
 
 export { PhysicalLocationModal } from "./features/seller/components/PhysicalLocationModal";
 export type { PhysicalLocation } from "./features/seller/components/PhysicalLocationModal";
+
+// [CLIENT-ONLY] — Toggle switch primitive.
+export { Toggle } from "./ui/components/Toggle";
+export type { ToggleProps } from "./ui/components/Toggle";
