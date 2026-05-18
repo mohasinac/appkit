@@ -82,6 +82,65 @@ export interface CouponUsageDocument {
   orders: string[];
 }
 
+// ─── Claimed Coupons (user wallet) ──────────────────────────────────────────
+// Plan §10 — one row per (userId, couponCode). Top-level collection so the
+// wallet page is a single indexed query; soft-delete preserves history.
+
+export type ClaimedCouponStatus = "active" | "expired" | "used";
+export type ClaimedCouponSource =
+  | "manual"
+  | "promo"
+  | "spin"
+  | "raffle"
+  | "prize-draw";
+
+export interface ClaimedCouponSnapshot {
+  name: string;
+  description?: string;
+  type: CouponType;
+  scope: "admin" | "seller";
+  storeId?: string;
+  discount: DiscountConfig;
+  restrictions: RestrictionsConfig;
+}
+
+export interface ClaimedCouponDocument {
+  id: string;
+  userId: string;
+  couponId: string;
+  couponCode: string;
+  /** Source surface that initiated the claim — useful for analytics + UX. */
+  source: ClaimedCouponSource;
+  /** Denormalised snapshot so the wallet list renders without joins. */
+  couponSnapshot: ClaimedCouponSnapshot;
+  /** Lifecycle: active → used after redemption, → expired when validity.endDate passes. */
+  status: ClaimedCouponStatus;
+  /** Mirrors coupon.validity.endDate; null when the coupon is open-ended. */
+  expiresAt?: Date | null;
+  /** Set when status transitions to "used". */
+  usedAt?: Date;
+  /** Set when status transitions to "used". */
+  usedOrderId?: string;
+  claimedAt: Date;
+  updatedAt: Date;
+}
+
+export const CLAIMED_COUPONS_COLLECTION = "claimedCoupons" as const;
+
+export const CLAIMED_COUPONS_INDEXED_FIELDS = [
+  "userId",
+  "couponCode",
+  "status",
+  "expiresAt",
+] as const;
+
+export function createClaimedCouponId(userId: string, couponCode: string): string {
+  // Mirrors the wishlist/history "claimed-{userSlug}-{code}" prefix convention.
+  const userSlug = userId.replace(/^user-/, "").toLowerCase();
+  const code = couponCode.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return `claimed-${userSlug}-${code}`;
+}
+
 export const COUPONS_COLLECTION = "coupons" as const;
 export const COUPON_USAGE_SUBCOLLECTION = "couponUsage" as const;
 

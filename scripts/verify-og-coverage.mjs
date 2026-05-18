@@ -69,6 +69,9 @@ const OG_KNOWN_GAPS = new Set([
   "classified/[slug]",
   "digital-codes/[slug]",
   "live/[slug]",
+  // S-STORE-12-B 2026-05-18 — item-requests/[id] page shim shipped; OG renderer
+  // deferred to OG-coverage-followup tier with the rest of the per-feature OG pass.
+  "item-requests/[id]",
 ]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;

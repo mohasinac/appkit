@@ -134,23 +134,29 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
   }, [wishlistedIds, localWishlist, showToast, requireAuth]);
 
   const handleAddToCart = useCallback((product: any) => {
-    localCart.add(product.id, 1, {
+    const snapshot = {
       productTitle: product.title,
       productImage: product.mainImage,
       price: product.price,
-    });
-    pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+      storeId: product.storeId,
+      storeName: product.storeName,
+    };
+    localCart.add(product.id, 1, snapshot);
+    pushCartOp({ op: "add", productId: product.id, quantity: 1, ...snapshot });
     showToast("Added to cart", "success");
   }, [localCart, showToast]);
 
   const handleBuyNow = useCallback((product: any) => {
     requireAuth(ACTION_ID.BUY_NOW, () => {
-      localCart.add(product.id, 1, {
+      const snapshot = {
         productTitle: product.title,
         productImage: product.mainImage,
         price: product.price,
-      });
-      pushCartOp({ op: "add", productId: product.id, quantity: 1, productTitle: product.title, productImage: product.mainImage, price: product.price });
+        storeId: product.storeId,
+        storeName: product.storeName,
+      };
+      localCart.add(product.id, 1, snapshot);
+      pushCartOp({ op: "add", productId: product.id, quantity: 1, ...snapshot });
       router.push(String(ROUTES.USER.CART));
     });
   }, [localCart, router, requireAuth]);
@@ -215,8 +221,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
             onClick: () => {
               const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
               selected.forEach((p) => {
-                localCart.add(p.id, 1, { productTitle: p.title, productImage: p.mainImage, price: p.price });
-                pushCartOp({ op: "add", productId: p.id, quantity: 1, productTitle: p.title, productImage: p.mainImage, price: p.price });
+                const snapshot = { productTitle: p.title, productImage: p.mainImage, price: p.price, storeId: p.storeId, storeName: p.storeName };
+                localCart.add(p.id, 1, snapshot);
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, ...snapshot });
               });
               showToast(`${selected.length} items added to cart`, "success");
               selection.clearSelection();

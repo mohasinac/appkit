@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { Nav, Ul } from "../../ui";
 
 export interface BottomNavLayoutProps {
@@ -13,6 +14,11 @@ export interface BottomNavLayoutProps {
  *
  * Provides the `nav + ul` container with correct z-index, background, height,
  * and safe-area inset. Pass `li`-wrapped items as children.
+ *
+ * Mirrors `AppLayoutShell`'s `--header-height` contract: while mounted, writes
+ * `--bottom-nav-height: 4rem` to `:root` (sub-`lg` only — the nav itself is
+ * `lg:hidden`). Sticky CTAs read `var(--bottom-nav-height, 0px)` to position
+ * themselves above the navbar so they don't get clipped.
  */
 export function BottomNavLayout({
   ariaLabel,
@@ -20,6 +26,21 @@ export function BottomNavLayout({
   id = "bottom-navbar",
   className,
 }: BottomNavLayoutProps) {
+  useEffect(() => {
+    const root = document.documentElement;
+    const mql = typeof window !== "undefined" ? window.matchMedia("(max-width: 1023.98px)") : null;
+    const sync = () => {
+      // Only expose the var when the navbar is actually rendered (below lg).
+      root.style.setProperty("--bottom-nav-height", mql && mql.matches ? "4rem" : "0px");
+    };
+    sync();
+    mql?.addEventListener("change", sync);
+    return () => {
+      mql?.removeEventListener("change", sync);
+      root.style.setProperty("--bottom-nav-height", "0px");
+    };
+  }, []);
+
   return (
     <Nav
       id={id}

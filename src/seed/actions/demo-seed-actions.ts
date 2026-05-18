@@ -39,7 +39,22 @@ export type SeedCollectionName =
   | "scammerProfiles"
   | "supportTickets"
   | "productFeatures"
-  | "offers";
+  | "offers"
+  // S-STORE collections (Tier S-STORE) — added 2026-05-18
+  | "payoutMethods"
+  | "shippingConfigs"
+  | "analyticsCards"
+  | "analyticsAlerts"
+  | "storeCategories"
+  | "listingTemplates"
+  | "moderationQueue"
+  | "reports"
+  | "itemRequests"
+  | "storeWhatsAppConfig"
+  | "storeGoogleConfig"
+  | "roleOverrides"
+  | "customRoles"
+  | "adminNotifications";
 
 export interface SeedOperationResult {
   success?: boolean;

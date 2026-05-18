@@ -18,6 +18,10 @@ export interface ProductDetailActionsProps {
   productImage?: string;
   price?: number;
   currency?: string;
+  /** Store identifier (storeSlug) — propagated so guest cart lines carry it. */
+  storeId?: string;
+  /** Denormalised store display name — used by the cart group header. */
+  storeName?: string;
   inStock: boolean;
   variant?: "desktop" | "mobile";
 }
@@ -33,6 +37,8 @@ export function ProductDetailActions({
   productTitle,
   productImage,
   price,
+  storeId,
+  storeName,
   inStock,
   variant = "desktop",
 }: ProductDetailActionsProps) {
@@ -57,6 +63,8 @@ export function ProductDetailActions({
         productTitle,
         productImage,
         price,
+        storeId,
+        storeName,
       });
       then?.();
     } finally {

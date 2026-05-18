@@ -1,4 +1,4 @@
-import { Article, Div, Heading, Span, Text, TextLink } from "../../../ui";
+import { Article, ClaimCouponButton, Div, Heading, Span, Text, TextLink } from "../../../ui";
 
 export interface RaffleWinnerEvent {
   rafflePrize?: string;
@@ -7,10 +7,18 @@ export interface RaffleWinnerEvent {
   raffleEntryCount?: number;
   raffleTriggeredAt?: string | Date;
   raffleGithubFunctionUrl?: string;
+  /**
+   * Plan §10 — when the prize is a coupon, the issuing code so the winner
+   * can claim it directly via the ClaimCouponButton. Pair with
+   * `currentUserIsWinner` so the CTA only renders for the actual winner.
+   */
+  rafflePrizeCouponCode?: string;
 }
 
 export interface EventRaffleWinnerViewProps {
   event: RaffleWinnerEvent;
+  /** When true (= page resolver matched the viewer to raffleWinnerUserId), show the Claim CTA. */
+  currentUserIsWinner?: boolean;
   labels?: {
     heading?: string;
     winnerLabel?: string;
@@ -32,7 +40,7 @@ const DEFAULT_LABELS: Required<NonNullable<EventRaffleWinnerViewProps["labels"]>
   anonymous: "Anonymous participant",
 };
 
-export function EventRaffleWinnerView({ event, labels }: EventRaffleWinnerViewProps) {
+export function EventRaffleWinnerView({ event, currentUserIsWinner, labels }: EventRaffleWinnerViewProps) {
   const l = { ...DEFAULT_LABELS, ...(labels ?? {}) };
 
   if (!event.raffleWinnerUserId) {
@@ -70,6 +78,19 @@ export function EventRaffleWinnerView({ event, labels }: EventRaffleWinnerViewPr
             <Text className="mt-1 text-base text-zinc-800 dark:text-zinc-100">
               {event.rafflePrize}
             </Text>
+          </Div>
+        ) : null}
+
+        {/* Plan §10 — when the prize is a coupon code AND the viewer is the
+            winner, surface a one-click Claim button that auto-claims into the
+            wallet + deep-links to the cart. */}
+        {currentUserIsWinner && event.rafflePrizeCouponCode ? (
+          <Div className="pt-2">
+            <ClaimCouponButton
+              couponCode={event.rafflePrizeCouponCode}
+              source="raffle"
+              size="sm"
+            />
           </Div>
         ) : null}
 

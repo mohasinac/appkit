@@ -151,6 +151,12 @@ export { StatusBadge } from "./components/StatusBadge";
 export type { ModalProps } from "./components/Modal";
 export { Modal, ModalFooter } from "./components/Modal";
 
+export type { QuickCreateModalProps } from "./components/QuickCreateModal";
+export { QuickCreateModal } from "./components/QuickCreateModal";
+
+export type { VacationBannerProps } from "./components/VacationBanner";
+export { VacationBanner } from "./components/VacationBanner";
+
 export type {
   UnsavedChangesModalProps,
   UnsavedChangesLabels,
@@ -442,6 +448,12 @@ export { BulkActionBar } from "./components/BulkActionBar";
 
 export type { BulkActionsBarProps, BulkAction } from "./components/BulkActionsBar";
 export { BulkActionsBar } from "./components/BulkActionsBar";
+
+export type { StickyBottomBarProps } from "./components/StickyBottomBar";
+export { StickyBottomBar } from "./components/StickyBottomBar";
+
+export type { ClaimCouponButtonProps } from "./components/ClaimCouponButton";
+export { ClaimCouponButton } from "./components/ClaimCouponButton";
 
 export type { FlowStep, FlowDiagramProps } from "./components/FlowDiagram";
 export { FlowDiagram } from "./components/FlowDiagram";

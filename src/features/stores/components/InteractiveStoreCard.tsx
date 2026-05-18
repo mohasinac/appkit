@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import Link from "next/link";
 import type { StoreListItem } from "../types";
 import { BaseListingCard, Heading, Span, Row, RichText, Div } from "../../../ui";
@@ -31,8 +33,10 @@ export function InteractiveStoreCard({
   className = "",
 }: InteractiveStoreCardProps) {
   const initial = store.storeName[0]?.toUpperCase() ?? "S";
-  const hasLogo = Boolean(store.storeLogoURL);
-  const hasBanner = Boolean(store.storeBannerURL);
+  const [logoBroken, setLogoBroken] = useState(false);
+  const [bannerBroken, setBannerBroken] = useState(false);
+  const hasLogo = Boolean(store.storeLogoURL) && !logoBroken;
+  const hasBanner = Boolean(store.storeBannerURL) && !bannerBroken;
   const longPress = useLongPress(() => onSelect?.(store.id, !isSelected));
 
   return (
@@ -92,15 +96,20 @@ export function InteractiveStoreCard({
 
         {/* ── Info section ────────────────────────────────────────────── */}
         <Div className="flex flex-col flex-1 px-4 pb-4">
-          {/* Logo — overlaps banner bottom edge */}
+          {/* Logo — overlaps banner bottom edge.
+              Uses a native <img> with onError → state flip so a missing or
+              broken storeLogoURL falls back to the initials circle below
+              (matches the §5 plan fix: prevent the "tiny dot" artifact when
+              MediaImage's generic emoji fallback gets clipped in a 40×40 box). */}
           <Div className="-mt-5 mb-2 flex items-end justify-between">
             <Div className="flex-shrink-0">
               {hasLogo ? (
-                <MediaImage
+                <img
                   src={store.storeLogoURL!}
                   alt={store.storeName}
-                  size="avatar"
-                  className="h-10 w-10 rounded-lg border-2 border-white dark:border-zinc-800 shadow-md object-cover"
+                  className="h-10 w-10 rounded-lg border-2 border-white dark:border-zinc-800 shadow-md object-cover bg-white dark:bg-zinc-800"
+                  onError={() => setLogoBroken(true)}
+                  loading="lazy"
                 />
               ) : (
                 <Div className="flex h-10 w-10 items-center justify-center rounded-lg border-2 border-white dark:border-zinc-800 bg-primary/10 dark:bg-primary/20 text-base font-bold text-primary shadow-md">

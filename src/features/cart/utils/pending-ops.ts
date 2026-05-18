@@ -25,6 +25,12 @@ export interface CartOp {
   productTitle?: string;
   productImage?: string;
   price?: number;
+  /** Store identifier (storeSlug) — carried into the server cart on sync so
+   *  cart lines group by seller correctly for both guest + signed-in flows. */
+  storeId?: string;
+  /** Denormalised store display name — keeps the group header readable when
+   *  the server-side hydration has not yet run. */
+  storeName?: string;
   ts: number;
 }
 

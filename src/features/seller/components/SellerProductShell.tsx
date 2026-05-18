@@ -48,6 +48,8 @@ export interface SellerProductDraft {
   status?: "draft" | "published";
   seoTitle?: string;
   seoDescription?: string;
+  /** S-STORE-3-B — 3rd-party hosted video URL. Queues moderation on save. */
+  externalVideoUrl?: string;
   // Auction
   startingBid?: number;
   reservePrice?: number;
@@ -305,6 +307,20 @@ function StepMedia({
         }
         kind="video"
         helperText="MP4, WebM or QuickTime — max 50 MB"
+      />
+
+      {/* S-STORE-3-B — 3rd-party video URL (YouTube/Vimeo). Queues moderation
+          on submit; visible to buyers only after admin approval. */}
+      <FormField
+        name="externalVideoUrl"
+        label="3rd-party video URL (YouTube / Vimeo)"
+        type="text"
+        value={(values as { externalVideoUrl?: string }).externalVideoUrl ?? ""}
+        onChange={(v) =>
+          onChange({ externalVideoUrl: v } as Partial<SellerProductDraft>)
+        }
+        placeholder="https://www.youtube.com/watch?v=…"
+        hint="External video links are queued for moderation and become visible to buyers after admin approval."
       />
       <FormField
         name="youtubeId"
@@ -923,9 +939,29 @@ export function SellerProductShell({
   }, [draft, isDirty, mode]);
 
   const update = useCallback((partial: Partial<SellerProductDraft>) => {
-    setDraft((prev) => ({ ...prev, ...partial }));
+    setDraft((prev) => {
+      const next = { ...prev, ...partial };
+      // S-STORE-3-C — auto-fill slug + SEO from title on create when not manually set.
+      if (mode === "create" && partial.title) {
+        const autoSlug = partial.title
+          .toLowerCase()
+          .trim()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-|-$/g, "")
+          .slice(0, 80);
+        if (!prev.slug || prev.slug === "") next.slug = autoSlug;
+        if (!prev.seoTitle || prev.seoTitle === "") next.seoTitle = partial.title.slice(0, 60);
+      }
+      if (mode === "create" && partial.description) {
+        const text = String(partial.description).replace(/<[^>]+>/g, "").trim();
+        if (!prev.seoDescription || prev.seoDescription === "") {
+          next.seoDescription = text.slice(0, 160);
+        }
+      }
+      return next;
+    });
     markDirty();
-  }, [markDirty]);
+  }, [markDirty, mode]);
 
   const handleDiscard = useCallback(() => {
     if (onDiscard) onDiscard();
@@ -1077,6 +1113,7 @@ export function SellerProductShell({
         isDirty={isDirty}
         isLoading={isLoading}
         previewSlot={previewSlot}
+        splitPreview={!!previewSlot}
         renderBottomBar={() => (
           <div className="flex-shrink-0 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]">
             <StepFormActions
@@ -1088,6 +1125,21 @@ export function SellerProductShell({
               isLoading={isLoading && currentStep === steps.length - 1}
               disabled={isLoading}
             />
+            {/* S-STORE-3-A — "Save as draft" exits the wizard early after step 1
+                mandatory fields. The product persists with status:"draft" and
+                can be resumed later from /store/products. */}
+            {currentStep === 0 && (
+              <div className="px-5 pb-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => void handleSave()}
+                  disabled={isLoading || !draft.title?.trim()}
+                >
+                  Save as draft &amp; finish later
+                </Button>
+              </div>
+            )}
             {stepError && (
               <Text className="px-5 pb-3 text-sm text-[var(--appkit-color-error)]">{stepError}</Text>
             )}

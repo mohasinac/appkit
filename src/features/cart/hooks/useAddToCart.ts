@@ -11,6 +11,8 @@ interface AddToCartPayload {
   productTitle?: string;
   productImage?: string;
   price?: number;
+  storeId?: string;
+  storeName?: string;
   [key: string]: unknown;
 }
 
@@ -56,6 +58,8 @@ export function useAddToCart(options?: UseAddToCartOptions) {
             productTitle: data.productTitle,
             productImage: data.productImage,
             price: data.price,
+            storeId: data.storeId,
+            storeName: data.storeName,
           });
           optionsRef.current?.onSuccess?.();
           return undefined;

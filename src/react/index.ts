@@ -66,6 +66,21 @@ export { useSyncManager } from "../core/hooks/useSyncManager";
 export { useUrlTable } from "./hooks/useUrlTable";
 export type { UseUrlTableOptions } from "./hooks/useUrlTable";
 
+// Inline row editing (S-STORE-CROSS-B)
+export {
+  useInlineToggle,
+  useInlineTextEdit,
+} from "./hooks/useInlineRowEdit";
+export type {
+  InlineEditOptions,
+  InlineToggleResult,
+  InlineTextResult,
+} from "./hooks/useInlineRowEdit";
+
+// Form state preservation in URL (S-STORE-CROSS-C)
+export { useFormStatePreservation } from "./hooks/useFormStatePreservation";
+export type { FormStatePreservationOptions } from "./hooks/useFormStatePreservation";
+
 // Staged (pending) filter management
 export { usePendingFilters } from "./hooks/usePendingFilters";
 export type {

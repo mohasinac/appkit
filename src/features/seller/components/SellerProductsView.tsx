@@ -23,8 +23,26 @@ import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
+import { SellerProductsCards } from "./SellerProductsCards";
+import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
+import {
+  INPUT_CLS,
+  FILTER_LABEL_CLS,
+  KIND_BADGE_VARIANT,
+} from "./seller-products-styles";
+
 const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status"];
+
+const FILTER_KEYS = [
+  "status",
+  "category",
+  "brand",
+  "condition",
+  "minPrice",
+  "maxPrice",
+  "tags",
+  "badges",
+];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest" },
@@ -36,7 +54,7 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = SELLER_PRODUCT_STATUS_TABS;
 
-type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw";
+type ListingKind = "all" | "standard" | "auction" | "pre-order" | "prize-draw" | "bundle" | "classified" | "digital-code" | "live";
 
 interface ProductRow {
   id: string;
@@ -57,8 +75,52 @@ interface SellerProductsResponse {
 
 export interface SellerProductsViewProps extends ListingViewShellProps {
   onDeleteProduct?: (id: string) => Promise<void>;
+  /** S-STORE-2-E — "New Listing" toolbar button. */
+  onCreateClick?: () => void;
 }
 
+// S-STORE-2-A — `<TypeDropdown>` replaces the legacy chip strip. Same width on
+// mobile, narrower on desktop. Drives the `?listingType=` query param.
+function TypeDropdown({
+  active,
+  onChange,
+}: {
+  active: ListingKind;
+  onChange: (kind: ListingKind) => void;
+}) {
+  const options: { value: ListingKind; label: string }[] = [
+    { value: "all", label: "All listings" },
+    { value: "standard", label: "Standard" },
+    { value: "auction", label: "Auction" },
+    { value: "pre-order", label: "Pre-order" },
+    { value: "prize-draw", label: "Prize Draw" },
+    { value: "bundle", label: "Bundle" },
+    { value: "classified", label: "Classified" },
+    { value: "digital-code", label: "Digital Code" },
+    { value: "live", label: "Live" },
+  ];
+  return (
+    <Row className="gap-2 px-3 lg:px-4 py-2 items-center border-b border-[var(--appkit-color-border)]">
+      <Text className="text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+        Listing type
+      </Text>
+      <select
+        value={active}
+        onChange={(e) => onChange(e.target.value as ListingKind)}
+        className="rounded border border-[var(--appkit-color-border)] bg-transparent px-2 py-1 text-sm sm:max-w-xs"
+        aria-label="Filter by listing type"
+      >
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    </Row>
+  );
+}
+
+// Kept for backward-compat callers; thin wrapper around TypeDropdown.
 function TypeChips({
   active,
   onChange,
@@ -72,6 +134,10 @@ function TypeChips({
     { kind: "auction", label: "Auction" },
     { kind: "pre-order", label: "Pre-order" },
     { kind: "prize-draw", label: "Prize Draw" },
+    { kind: "bundle", label: "Bundle" },
+    { kind: "classified", label: "Classified" },
+    { kind: "digital-code", label: "Digital Code" },
+    { kind: "live", label: "Live" },
   ];
   return (
     <Row className="gap-2 px-3 lg:px-4 py-2 overflow-x-auto border-b border-[var(--appkit-color-border)]">
@@ -93,13 +159,6 @@ function TypeChips({
     </Row>
   );
 }
-
-const KIND_BADGE_VARIANT: Record<string, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
-  auction: "warning",
-  "pre-order": "secondary",
-  "prize-draw": "primary",
-  standard: "default",
-};
 
 const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
   {
@@ -187,6 +246,7 @@ const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
 
 export function SellerProductsView({
   onDeleteProduct,
+  onCreateClick,
   children,
   ...props
 }: SellerProductsViewProps) {
@@ -336,6 +396,18 @@ export function SellerProductsView({
     void dispatch({ type: "NAVIGATE", href });
   };
 
+  // S-STORE-2-D — row click navigates to public detail/preview, NOT edit.
+  // Edit is only available via the per-row "..." action menu.
+  const handleRowClick = (row: ProductRow) => {
+    const href =
+      row.listingKind === "auction"
+        ? `/auctions/${row.id}`
+        : row.listingKind === "pre-order"
+          ? `/pre-orders/${row.id}`
+          : `/products/${row.id}`;
+    void dispatch({ type: "NAVIGATE", href });
+  };
+
   const handleDelete = async (row: ProductRow) => {
     if (!onDeleteProduct) return;
     setDeletingId(row.id);
@@ -343,6 +415,18 @@ export function SellerProductsView({
       await onDeleteProduct(row.id);
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  // S-STORE-2-C — Duplicate verb. Server-side endpoint is /api/store/products/[id]/duplicate.
+  const handleDuplicate = async (row: ProductRow) => {
+    const res = await fetch(`/api/store/products/${row.id}/duplicate`, {
+      method: "POST",
+    }).catch(() => null);
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      const newId: string | undefined = json?.data?.id;
+      if (newId) handleEdit({ ...row, id: newId });
     }
   };
 
@@ -396,9 +480,16 @@ export function SellerProductsView({
         onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+          extra={
+            onCreateClick ? (
+              <Button variant="primary" size="sm" onClick={onCreateClick}>
+                + New Listing
+              </Button>
+            ) : null
+          }
         />
 
-        <TypeChips active={listingKind} onChange={handleKindChange} />
+        <TypeDropdown active={listingKind} onChange={handleKindChange} />
 
         {totalPages > 1 && (
           <Div
@@ -428,6 +519,21 @@ export function SellerProductsView({
           {errorMessage && (
             <Alert variant="error" className="mb-4">{errorMessage}</Alert>
           )}
+          {/* S-STORE — grid + list card views (table is the default). */}
+          {view !== "table" && (
+            <SellerProductsCards
+              view={view}
+              rows={rows}
+              isLoading={isLoading}
+              listingKind={listingKind}
+              selectedIds={selection.selectedIdSet}
+              toggle={selection.toggle}
+              onEdit={handleEdit}
+              onDuplicate={(row) => void handleDuplicate(row)}
+              onDelete={onDeleteProduct ? (row) => void handleDelete(row) : undefined}
+            />
+          )}
+          {view === "table" && (
           <DataTable
             columns={PRODUCT_COLUMNS}
             rows={rows}
@@ -441,13 +547,12 @@ export function SellerProductsView({
             onToggleSelect={selection.toggle}
             onToggleSelectAll={(next) => selection.toggleAll()}
             getRowHref={(row) =>
+              // S-STORE-2-D — row click → public detail/preview, not edit.
               row.listingKind === "auction"
-                ? String(ROUTES.STORE.AUCTIONS_EDIT(row.id))
+                ? `/auctions/${row.id}`
                 : row.listingKind === "pre-order"
-                  ? String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))
-                  : row.listingKind === "prize-draw"
-                    ? String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))
-                    : String(ROUTES.STORE.PRODUCTS_EDIT(row.id))
+                  ? `/pre-orders/${row.id}`
+                  : `/products/${row.id}`
             }
             renderRowActions={
               onDeleteProduct
@@ -464,6 +569,15 @@ export function SellerProductsView({
                       <Button
                         variant="ghost"
                         size="sm"
+                        onClick={(e) => { e.stopPropagation(); void handleDuplicate(row); }}
+                        aria-label="Duplicate listing"
+                        title="Duplicate"
+                      >
+                        ⧉
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         action={ACTIONS.STORE["delete-listing"]}
                         onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
                         disabled={deletingId === row.id}
@@ -476,59 +590,19 @@ export function SellerProductsView({
                 : undefined
             }
           />
+          )}
         </Div>
 
-        {filterOpen && (
-          <>
-            <Div
-              role="presentation"
-              className="fixed inset-0 z-40 bg-black/40"
-              onClick={() => setFilterOpen(false)}
-            />
-            <Div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
-              <Row justify="between" className="border-b border-[var(--appkit-color-border)] px-4 py-3.5">
-                <Text className="text-base font-semibold text-[var(--appkit-color-text)]">Filters</Text>
-                <Row className="gap-2">
-                  {activeFilterCount > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={clearFilters}
-                      className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)]"
-                    >
-                      Clear all
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setFilterOpen(false)}
-                    aria-label="Close filters"
-                  >
-                    <X className="h-5 w-5" />
-                  </Button>
-                </Row>
-              </Row>
-              <Div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-                <FilterChipGroup
-                  label="Status"
-                  tabs={STATUS_OPTIONS}
-                  value={pendingFilters.status ?? ""}
-                  onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-                />
-              </Div>
-              <Div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
-                <Button
-                  variant="primary"
-                  onClick={applyFilters}
-                  className="w-full rounded-lg py-2.5 active:scale-[0.98]"
-                >
-                  Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-                </Button>
-              </Div>
-            </Div>
-          </>
-        )}
+        <SellerProductsFilterDrawer
+          isOpen={filterOpen}
+          pendingFilters={pendingFilters}
+          statusOptions={STATUS_OPTIONS}
+          activeFilterCount={activeFilterCount}
+          onChange={setPendingFilters}
+          onClear={clearFilters}
+          onApply={applyFilters}
+          onClose={() => setFilterOpen(false)}
+        />
       </Div>
 
       {setLocationOpen && (

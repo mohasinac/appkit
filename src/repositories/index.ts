@@ -73,6 +73,11 @@ export {
 } from "../features/categories/repository/categories.repository";
 export { couponsRepository } from "../features/promotions/repository/coupons.repository";
 export {
+  ClaimedCouponsRepository,
+  claimedCouponsRepository,
+} from "../features/promotions/repository/claimed-coupons.repository";
+export type { ClaimedCouponCreateInput } from "../features/promotions/repository/claimed-coupons.repository";
+export {
   FAQsRepository,
   FirebaseFAQsRepository,
   faqsRepository,
@@ -82,6 +87,42 @@ export {
   blogRepository,
 } from "../features/blog/repository/blog.repository";
 export { payoutRepository } from "../features/payments/repository/payout.repository";
+
+// S-STORE-CROSS — 11 new collection repositories
+export {
+  payoutMethodsRepository,
+  shippingConfigsRepository,
+  analyticsCardsRepository,
+  analyticsAlertsRepository,
+  storeCategoriesRepository,
+  listingTemplatesRepository,
+  moderationQueueRepository,
+  reportsRepository,
+  itemRequestsRepository,
+  storeWhatsAppConfigRepository,
+  storeGoogleConfigRepository,
+  PayoutMethodsRepository,
+  ShippingConfigsRepository,
+  AnalyticsCardsRepository,
+  AnalyticsAlertsRepository,
+  StoreCategoriesRepository,
+  ListingTemplatesRepository,
+  ModerationQueueRepository,
+  ReportsRepository,
+  ItemRequestsRepository,
+  StoreWhatsAppConfigRepository,
+  StoreGoogleConfigRepository,
+} from "../features/store-extensions/repository/store-extensions.repositories";
+
+// S-STORE RBAC + admin notifications
+export {
+  roleOverridesRepository,
+  customRolesRepository,
+  adminNotificationsRepository,
+  RoleOverridesRepository,
+  CustomRolesRepository,
+  AdminNotificationsRepository,
+} from "../features/store-extensions/repository/rbac.repositories";
 export {
   OfferRepository,
   offerRepository,

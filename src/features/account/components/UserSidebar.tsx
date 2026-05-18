@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Li, Nav, Span, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
+import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
 export interface UserNavItem {
   href: string;
@@ -237,24 +238,7 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
             </div>
           </div>
 
-          {/* Toggle tab — pill-shaped handle, always visible */}
-          <button
-            type="button"
-            onClick={handleToggle}
-            aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
-            style={{ background: "linear-gradient(to bottom, var(--appkit-color-primary-700, var(--appkit-color-primary)), var(--appkit-color-secondary-500, var(--appkit-color-secondary)))" }}  // eslint-disable-line lir/no-inline-static-style
-          >
-            <svg
-              className={`w-4 h-4 text-white drop-shadow-sm transition-transform duration-300 ${desktopOpen ? "" : "rotate-180"}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+          <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </div>
 
         {/* Mobile: bottom sheet */}

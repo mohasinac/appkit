@@ -194,6 +194,40 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
 
   const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
 
+  // S-STORE-4-B — group bids by productId (auction) with collapsible sections.
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const groupedRows = React.useMemo(() => {
+    const groups = new Map<string, { title: string; bids: BidRow[] }>();
+    for (const row of rows ?? []) {
+      const key = row.productId || row.productTitle;
+      const g = groups.get(key) ?? { title: row.productTitle, bids: [] };
+      g.bids.push(row);
+      groups.set(key, g);
+    }
+    return Array.from(groups.entries()).map(([id, g]) => ({ id, ...g }));
+  }, [rows]);
+  const toggleGroup = (id: string) =>
+    setCollapsedGroups((s) => {
+      const next = new Set(s);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+
+  // S-STORE-4-B — bulk actions: cancel / retract.
+  const bulkCancel = useCallback(async () => {
+    if (!selection.selectedIds.length) return;
+    await Promise.all(
+      selection.selectedIds.map((id) =>
+        fetch(`/api/store/bids/${id}`, { method: "DELETE" }).catch(() => null),
+      ),
+    );
+    selection.clearSelection();
+  }, [selection]);
+
+  const bulkActions: BulkActionItem[] = [
+    { id: "cancel", label: "Cancel selected", onClick: () => void bulkCancel(), variant: "danger" },
+  ];
+
   return (
     <div className="min-h-screen">
       <ListingToolbar
@@ -219,18 +253,78 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         </div>
       )}
 
+      {selection.selectedIds.length > 0 && (
+        <div className="sticky z-20 px-3 sm:px-4 py-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700"
+          style={{ top: "calc(var(--header-height, 0px) + 88px)" }}>
+          <BulkActionBar
+            selectedCount={selection.selectedIds.length}
+            onClearSelection={selection.clearSelection}
+            actions={bulkActions}
+          />
+        </div>
+      )}
+
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
             {errorMessage}
           </Div>
         )}
-        <DataTable
-          rows={rows}
-          columns={columns}
-          isLoading={isLoading}
-          emptyLabel="No bids found for your auctions"
-        />
+        {/* S-STORE-4-B — grouped-by-auction view; toggle off by passing ?grouped=0 */}
+        {table.get("grouped") === "0" ? (
+          <DataTable
+            rows={rows}
+            columns={columns}
+            isLoading={isLoading}
+            emptyLabel="No bids found for your auctions"
+            selectedIds={selection.selectedIdSet}
+            onToggleSelect={selection.toggle}
+            onToggleSelectAll={() => selection.toggleAll()}
+          />
+        ) : (
+          <div className="space-y-3">
+            {groupedRows.length === 0 && !isLoading && (
+              <Text className="text-sm text-zinc-500">No bids found for your auctions.</Text>
+            )}
+            {groupedRows.map((group) => {
+              const collapsed = collapsedGroups.has(group.id);
+              return (
+                <Div
+                  key={group.id}
+                  className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleGroup(group.id)}
+                    className="w-full flex items-center justify-between px-4 py-2.5 text-sm font-semibold text-[var(--appkit-color-text)] hover:bg-[var(--appkit-color-surface-raised)]"
+                  >
+                    <span className="truncate">
+                      {group.title}{" "}
+                      <span className="text-xs text-[var(--appkit-color-text-muted)] font-normal">
+                        · {group.bids.length} bid{group.bids.length === 1 ? "" : "s"}
+                      </span>
+                    </span>
+                    <span aria-hidden className="text-[var(--appkit-color-text-muted)]">
+                      {collapsed ? "▸" : "▾"}
+                    </span>
+                  </button>
+                  {!collapsed && (
+                    <div className="border-t border-[var(--appkit-color-border)]">
+                      <DataTable
+                        rows={group.bids}
+                        columns={columns}
+                        isLoading={false}
+                        emptyLabel=""
+                        selectedIds={selection.selectedIdSet}
+                        onToggleSelect={selection.toggle}
+                      />
+                    </div>
+                  )}
+                </Div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {filterOpen && (

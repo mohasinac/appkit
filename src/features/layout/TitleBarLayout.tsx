@@ -29,8 +29,14 @@ export interface TitleBarLayoutProps {
   cartHref?: string;
   cartCount?: number;
   profileHref?: string;
-  /** Unread notification count to show as a badge on the profile icon. */
+  /** Unread notification count — shown on the dedicated bell icon only. */
   unreadNotificationCount?: number;
+  /**
+   * Href for the dedicated notification bell icon rendered to the LEFT of the
+   * wishlist icon. When provided, the bell is rendered (with count badge) and
+   * navigates to the user notifications page by default.
+   */
+  notificationsHref?: string;
   loginHref?: string;
   registerHref?: string;
   user?: TitleBarUser | null;
@@ -88,6 +94,7 @@ export function TitleBarLayout({
   cartCount = 0,
   profileHref,
   unreadNotificationCount = 0,
+  notificationsHref,
   loginHref,
   registerHref,
   user,
@@ -188,6 +195,26 @@ export function TitleBarLayout({
     </Button>
   );
 
+  // Dedicated notification bell — rendered immediately before the wishlist
+  // icon (per layout request). Falls back to invisible when no href is set;
+  // the count badge mirrors the wishlist/cart pattern.
+  const notificationsEl = notificationsHref ? (
+    <Link
+      href={notificationsHref}
+      aria-label={`Notifications${unreadNotificationCount > 0 ? `, ${unreadNotificationCount} unread` : ""}`}
+      className={`relative ${iconBtn}`}
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+      </svg>
+      {unreadNotificationCount > 0 && (
+        <Span className={countBadge}>
+          {unreadNotificationCount > 99 ? "99+" : unreadNotificationCount}
+        </Span>
+      )}
+    </Link>
+  ) : null;
+
   const wishlistEl = wishlistHref ? (
     <Link
       href={wishlistHref}
@@ -221,7 +248,7 @@ export function TitleBarLayout({
   const profileEl = profileHref ? (
     <Link
       href={profileHref}
-      aria-label={user ? `Profile — ${user.displayName ?? user.email}${unreadNotificationCount > 0 ? `, ${unreadNotificationCount} unread alerts` : ""}` : "Sign in"}
+      aria-label={user ? `Profile — ${user.displayName ?? user.email}` : "Sign in"}
       className={`relative ${iconBtn}`}
     >
       {user?.photoURL ? (
@@ -238,9 +265,6 @@ export function TitleBarLayout({
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0zM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
         </svg>
-      )}
-      {unreadNotificationCount > 0 && (
-        <Span className={countBadge}>{unreadNotificationCount > 99 ? "99+" : unreadNotificationCount}</Span>
       )}
     </Link>
   ) : null;
@@ -266,7 +290,7 @@ export function TitleBarLayout({
     </Row>
   ) : null;
 
-  const hasTb2 = !!(wishlistEl || cartEl || profileEl);
+  const hasTb2 = !!(notificationsEl || wishlistEl || cartEl || profileEl);
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
@@ -318,6 +342,7 @@ export function TitleBarLayout({
             {devSlot}
             {compareEl}
             {notificationSlot}
+            {notificationsEl && <Div className="hidden lg:flex">{notificationsEl}</Div>}
             {wishlistEl && <Div className="hidden lg:flex">{wishlistEl}</Div>}
             {cartEl && <Div className="hidden lg:flex">{cartEl}</Div>}
             {user
@@ -342,6 +367,7 @@ export function TitleBarLayout({
             gap="xs"
             className="flex lg:hidden h-10 border-t border-zinc-100 dark:border-slate-800 px-1"
           >
+            {notificationsEl}
             {wishlistEl}
             {cartEl}
             {profileEl}

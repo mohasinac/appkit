@@ -168,6 +168,7 @@ export { bidsSeedData } from "./bids-seed-data";
 export { couponsSeedData } from "./coupons-seed-data";
 export type { CouponUsageSeedRecord } from "./coupon-usage-seed-data";
 export { couponUsageSeedData } from "./coupon-usage-seed-data";
+export { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 export { eventsSeedData, eventEntriesSeedData } from "./events-seed-data";
 export { payoutsSeedData } from "./payouts-seed-data";
 export { notificationsSeedData } from "./notifications-seed-data";
@@ -187,6 +188,21 @@ export { scammersSeedData } from "./scammers-seed-data";
 export { supportTicketsSeedData } from "./support-tickets-seed-data";
 export { productFeaturesSeedData } from "./product-features-seed-data";
 export { offersSeedData } from "./offers-seed-data";
+
+// S-STORE Extensions (Tier S-STORE) — 11 new collections
+export {
+  payoutMethodsSeedData,
+  shippingConfigsSeedData,
+  analyticsCardsSeedData,
+  analyticsAlertsSeedData,
+  storeCategoriesSeedData,
+  listingTemplatesSeedData,
+  moderationQueueSeedData,
+  reportsSeedData,
+  itemRequestsSeedData,
+  storeWhatsAppConfigSeedData,
+  storeGoogleConfigSeedData,
+} from "./store-extensions-seed-data";
 
 // Seed manifest — lightweight index for SeedPanel previews
 export type { SeedManifest, SeedManifestEntry } from "./manifest";

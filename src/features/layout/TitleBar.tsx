@@ -4,6 +4,7 @@ import { useNotifications } from "../account/hooks/useNotifications";
 import { useDashboardNav } from "./DashboardNavContext";
 import { TitleBarLayout } from "./TitleBarLayout";
 import type { TitleBarLayoutProps } from "./TitleBarLayout";
+import { ROUTES } from "../../next/routing/route-map";
 
 export interface TitleBarProps
   extends Omit<
@@ -52,6 +53,13 @@ export function TitleBar({
       cartCount={cartCount}
       wishlistCount={wishlistCount}
       unreadNotificationCount={rest.user ? unreadCount : 0}
+      // Default the bell to the user notifications page when the user is
+      // authenticated — consumers can override by passing their own
+      // `notificationsHref` through `...rest`.
+      notificationsHref={
+        rest.notificationsHref ??
+        (rest.user ? String(ROUTES.USER.NOTIFICATIONS) : undefined)
+      }
       hasDashboardNav={suppressDashboardNav ? false : hasDashboardNav}
       onToggleDashboardNav={
         suppressDashboardNav

@@ -34,6 +34,12 @@ export interface FormShellProps {
    * A draft banner and "← Back to Edit" button are injected automatically.
    */
   previewSlot?: () => ReactNode;
+  /**
+   * S-STORE-3-D — when true AND previewSlot is provided, desktop renders a
+   * 60/40 split with form on the left and live preview on the right.
+   * On mobile the preview reverts to a toggleable modal-style view.
+   */
+  splitPreview?: boolean;
   children: ReactNode;
 }
 
@@ -69,6 +75,7 @@ export function FormShell({
   publishLabel = FORM_ACTION_META[FORM_ACTION_ID.PUBLISH].label,
   renderBottomBar,
   previewSlot,
+  splitPreview = false,
   children,
 }: FormShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -284,6 +291,21 @@ export function FormShell({
                   {previewSlot()}
                 </div>
               </>
+            ) : splitPreview && previewSlot ? (
+              // S-STORE-3-D — desktop 60/40 split: form left, preview right.
+              // Below `lg`, falls back to single-column form (preview-as-modal via existing toggle).
+              <div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
+                <div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
+                  {children}
+                </div>
+                <div className="hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4">
+                  <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>Live preview</span>
+                  </div>
+                  {previewSlot()}
+                </div>
+              </div>
             ) : (
               <div className="max-w-3xl mx-auto px-5 py-6 sm:px-6">
                 {children}

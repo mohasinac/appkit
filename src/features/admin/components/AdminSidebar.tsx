@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Nav } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
+import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
 export interface AdminNavItem {
   href: string;
@@ -225,24 +226,7 @@ export function AdminSidebar({
             {renderFooter && <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</div>}
           </div>
 
-          {/* Toggle tab — pill-shaped handle, always visible */}
-          <button
-            type="button"
-            onClick={handleToggle}
-            aria-label={desktopOpen ? "Collapse sidebar" : "Expand sidebar"}
-            className="w-9 shrink-0 flex items-center justify-center cursor-pointer rounded-r-[1.25rem] shadow-lg transition-all duration-200 hover:shadow-xl hover:brightness-110 active:scale-[0.96]"
-            style={{ background: "linear-gradient(to bottom, #1343de, #3570fc)" }}
-          >
-            <svg
-              className={`w-4 h-4 text-white drop-shadow-sm transition-transform duration-300 ${desktopOpen ? "" : "rotate-180"}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
+          <SidebarCollapseToggle expanded={desktopOpen} onToggle={handleToggle} />
         </div>
 
         {/* Mobile: bottom sheet */}

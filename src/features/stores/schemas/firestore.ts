@@ -101,6 +101,10 @@ export interface StoreDocument {
     averageRating?: number;
   };
 
+  // ── Vacation mode (S-STORE-6-A — `isVacationMode` + `vacationMessage` already declared above; this adds the optional return date.) ──
+  /** When the seller plans to return. Banner shows the date if set. */
+  vacationReturnDate?: Date | string;
+
   // ── Store capabilities (admin-controlled feature flags) ──────────────────────
   /**
    * Explicit capability set for this store. Defaults: ["suggest_brands", "create_coupons"].

@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, Div, Heading, SideDrawer, Text } from "../../../ui";
+import { Button, Div, Heading, Row, SideDrawer, Text } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
@@ -151,6 +151,7 @@ export function SellerAddressesView({
   apiBase = SELLER_ENDPOINTS.STORE_ADDRESSES,
 }: SellerAddressesViewProps) {
   const [addresses, setAddresses] = useState<AddressDoc[]>([]);
+  const [listView, setListView] = useState<"cards" | "table">("table");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -285,17 +286,71 @@ export function SellerAddressesView({
             </Button>
           </Div>
         ) : (
-          <div className="grid gap-3">
-            {addresses.map((addr) => (
-              <div key={addr.id} className={deletingId === addr.id ? "opacity-50 pointer-events-none" : ""}>
-                <AddressCard
-                  address={addr}
-                  onEdit={() => openEdit(addr)}
-                  onDelete={() => handleDelete(addr)}
-                />
+          <>
+            {/* S-STORE-6-D — table view alongside the card grid. */}
+            <Row className="justify-end mb-2">
+              <Button
+                size="sm"
+                variant={listView === "table" ? "primary" : "ghost"}
+                onClick={() => setListView("table")}
+              >
+                Table
+              </Button>
+              <Button
+                size="sm"
+                variant={listView === "cards" ? "primary" : "ghost"}
+                onClick={() => setListView("cards")}
+              >
+                Cards
+              </Button>
+            </Row>
+            {listView === "cards" ? (
+              <div className="grid gap-3">
+                {addresses.map((addr) => (
+                  <div key={addr.id} className={deletingId === addr.id ? "opacity-50 pointer-events-none" : ""}>
+                    <AddressCard
+                      address={addr}
+                      onEdit={() => openEdit(addr)}
+                      onDelete={() => handleDelete(addr)}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            ) : (
+              <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-slate-700">
+                <table className="w-full text-sm">
+                  <thead className="bg-zinc-50 dark:bg-slate-800">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-semibold">Label</th>
+                      <th className="text-left px-3 py-2 font-semibold">Name</th>
+                      <th className="text-left px-3 py-2 font-semibold">City</th>
+                      <th className="text-left px-3 py-2 font-semibold">Phone</th>
+                      <th className="text-right px-3 py-2 font-semibold">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {addresses.map((addr) => (
+                      <tr
+                        key={addr.id}
+                        className={`border-t border-zinc-100 dark:border-slate-700 ${deletingId === addr.id ? "opacity-50" : ""}`}
+                      >
+                        <td className="px-3 py-2">{addr.label}</td>
+                        <td className="px-3 py-2">{addr.fullName}</td>
+                        <td className="px-3 py-2">{addr.city}, {addr.state}</td>
+                        <td className="px-3 py-2 tabular-nums">{addr.phone}</td>
+                        <td className="px-3 py-2 text-right">
+                          <Row className="gap-1 justify-end">
+                            <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>Edit</Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>Delete</Button>
+                          </Row>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
         )}
       </div>
 

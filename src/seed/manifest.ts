@@ -7,6 +7,19 @@
  */
 
 import type { SeedCollectionName } from "./actions/demo-seed-actions";
+import {
+  payoutMethodsSeedData,
+  shippingConfigsSeedData,
+  analyticsCardsSeedData,
+  analyticsAlertsSeedData,
+  storeCategoriesSeedData,
+  listingTemplatesSeedData,
+  moderationQueueSeedData,
+  reportsSeedData,
+  itemRequestsSeedData,
+  storeWhatsAppConfigSeedData,
+  storeGoogleConfigSeedData,
+} from "./store-extensions-seed-data";
 // SB-UNI-C — brandsSeedData merged into categoriesSeedData.
 import { categoriesSeedData } from "./categories-seed-data";
 import { usersSeedData } from "./users-seed-data";
@@ -232,4 +245,28 @@ export const SEED_MANIFEST: SeedManifest = {
       name: o.productTitle ?? o.id,
     })),
   ),
+  // S-STORE foundation collections — entries derived lazily from store-extensions-seed-data
+  payoutMethods: pick(asArr(payoutMethodsSeedData)),
+  shippingConfigs: pick(asArr(shippingConfigsSeedData)),
+  analyticsCards: pick(
+    asArr(analyticsCardsSeedData).map((c) => ({ ...c, name: c.title ?? c.id })),
+  ),
+  analyticsAlerts: pick(
+    asArr(analyticsAlertsSeedData).map((a) => ({ ...a, name: a.label ?? a.id })),
+  ),
+  storeCategories: pick(asArr(storeCategoriesSeedData)),
+  listingTemplates: pick(
+    asArr(listingTemplatesSeedData).map((t) => ({ ...t, name: t.name ?? t.id })),
+  ),
+  moderationQueue: pick(asArr(moderationQueueSeedData)),
+  reports: pick(asArr(reportsSeedData)),
+  itemRequests: pick(
+    asArr(itemRequestsSeedData).map((r) => ({ ...r, name: r.title ?? r.id })),
+  ),
+  storeWhatsAppConfig: pick(asArr(storeWhatsAppConfigSeedData)),
+  storeGoogleConfig: pick(asArr(storeGoogleConfigSeedData)),
+  // RBAC + admin notifications — no seed docs yet; manifest stays empty until populated.
+  roleOverrides: [],
+  customRoles: [],
+  adminNotifications: [],
 };

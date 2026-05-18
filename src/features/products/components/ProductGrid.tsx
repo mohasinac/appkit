@@ -318,12 +318,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {onBuyNow && (
                 <Button
                   type="button"
+                  variant="primary"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     onBuyNow(product);
                   }}
-                  className="flex items-center justify-center gap-1 rounded-xl bg-primary py-2 text-xs font-semibold text-white hover:bg-primary/90 active:scale-[0.97] transition-all duration-150 btn-glow"
+                  className="flex items-center justify-center gap-1 text-xs btn-glow"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -334,12 +336,14 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {onAddToCart && (
                 <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     onAddToCart(product);
                   }}
-                  className="flex items-center justify-center gap-1 rounded-xl border-2 border-primary/40 bg-primary/5 py-2 text-xs font-semibold text-zinc-800 hover:bg-primary/10 hover:border-primary/60 active:scale-[0.97] transition-all duration-150 dark:text-zinc-100 dark:border-primary-400/50 dark:bg-primary/[0.08] dark:hover:bg-primary/[0.15] dark:hover:border-primary-400/70"
+                  className="flex items-center justify-center gap-1 text-xs"
                 >
                   <svg className="h-3.5 w-3.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v7a1 1 0 001 1h8a1 1 0 001-1v-7M9 21h6" />

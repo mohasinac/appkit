@@ -1,16 +1,22 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Badge,
+  BulkActionBar,
   Button,
+  Checkbox,
   Div,
   Heading,
+  Modal,
+  Row,
   Select,
   SideDrawer,
   Stack,
   Text,
+  Textarea,
 } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
 
 interface ReviewItem {
@@ -83,6 +89,72 @@ export function SellerReviewsView({
   const [replySaving, setReplySaving] = useState(false);
   const [replyError, setReplyError] = useState<string | null>(null);
 
+  // S-STORE-4-C — bulk reply + contest + feedback selection
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkReplyOpen, setBulkReplyOpen] = useState(false);
+  const [bulkReplyText, setBulkReplyText] = useState("");
+  const [bulkSaving, setBulkSaving] = useState(false);
+  const [contestTarget, setContestTarget] = useState<ReviewItem | null>(null);
+  const [contestReason, setContestReason] = useState("");
+  const [feedbackTarget, setFeedbackTarget] = useState<ReviewItem | null>(null);
+  const [feedbackText, setFeedbackText] = useState("");
+
+  const toggleSelected = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+  const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
+  const submitBulkReply = useCallback(async () => {
+    if (!bulkReplyText.trim() || selectedIds.size === 0) return;
+    setBulkSaving(true);
+    await Promise.all(
+      Array.from(selectedIds).map((id) =>
+        fetch(`${replyApiBase}/${id}/reply`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reply: bulkReplyText }),
+        }).catch(() => null),
+      ),
+    );
+    setBulkSaving(false);
+    setBulkReplyOpen(false);
+    setBulkReplyText("");
+    clearSelection();
+    fetchReviewsRef.current?.();
+  }, [bulkReplyText, selectedIds, replyApiBase, clearSelection]);
+
+  const submitContest = useCallback(async () => {
+    if (!contestTarget) return;
+    await fetch(`/api/store/reviews/${contestTarget.id}/contest`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reason: contestReason }),
+    }).catch(() => null);
+    setContestTarget(null);
+    setContestReason("");
+    fetchReviewsRef.current?.();
+  }, [contestTarget, contestReason]);
+
+  const submitFeedback = useCallback(async () => {
+    if (!feedbackTarget) return;
+    await fetch(`/api/store/reviews/${feedbackTarget.id}/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ feedback: feedbackText }),
+    }).catch(() => null);
+    setFeedbackTarget(null);
+    setFeedbackText("");
+  }, [feedbackTarget, feedbackText]);
+
+  const fetchReviewsRef = useMemo(
+    () => ({ current: null as (() => void) | null }),
+    [],
+  );
+
   const fetchReviews = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -104,6 +176,7 @@ export function SellerReviewsView({
   }, [reviewsApiBase, rating, replied, page]);
 
   useEffect(() => { fetchReviews(); }, [fetchReviews]);
+  useEffect(() => { fetchReviewsRef.current = fetchReviews; }, [fetchReviews, fetchReviewsRef]);
 
   const openReply = (review: ReviewItem) => {
     setReplyTarget(review);
@@ -170,6 +243,21 @@ export function SellerReviewsView({
 
           {error && <Alert variant="error">{error}</Alert>}
 
+          {/* S-STORE-4-C — bulk reply bar */}
+          {selectedIds.size > 0 && (
+            <BulkActionBar
+              selectedCount={selectedIds.size}
+              onClearSelection={clearSelection}
+              actions={[
+                {
+                  id: "bulk-reply",
+                  label: "Reply to selected",
+                  onClick: () => setBulkReplyOpen(true),
+                } as BulkActionItem,
+              ]}
+            />
+          )}
+
           {/* Review list */}
           {loading ? (
             <Div className="py-8 text-center">
@@ -187,42 +275,53 @@ export function SellerReviewsView({
                   className="p-4 rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
                 >
                   <Div className="flex items-start justify-between gap-3 flex-wrap">
-                    <Div className="flex-1 min-w-0">
-                      {/* Product + reviewer */}
-                      <Text className="font-medium truncate">{review.productTitle}</Text>
-                      <Div className="flex items-center gap-2 mt-1 flex-wrap">
-                        <Stars rating={review.rating} />
-                        <Text className="text-sm text-[var(--appkit-color-text-muted)]">by {review.userName}</Text>
-                        {review.verified && <Badge variant="success">Verified</Badge>}
-                        {statusBadge(review.status)}
-                        <Badge variant={review.sellerReply ? "success" : "warning"}>
-                          {review.sellerReply ? "Store replied" : "Awaiting store reply"}
-                        </Badge>
-                      </Div>
-
-                      {/* Review content */}
-                      {review.title && <Text className="mt-2 font-medium">{review.title}</Text>}
-                      <Text className="mt-1 text-sm text-[var(--appkit-color-text-secondary)] line-clamp-3">
-                        {review.comment}
-                      </Text>
-
-                      {/* Existing reply */}
-                      {review.sellerReply && (
-                        <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
-                          <Text className="text-xs text-[var(--appkit-color-text-muted)]">Store reply:</Text>
-                          <Text className="text-sm">{review.sellerReply}</Text>
+                    <Row className="gap-3 items-start flex-1 min-w-0">
+                      <Checkbox
+                        checked={selectedIds.has(review.id)}
+                        onChange={() => toggleSelected(review.id)}
+                        aria-label="Select review"
+                      />
+                      <Div className="flex-1 min-w-0">
+                        {/* Product + reviewer */}
+                        <Text className="font-medium truncate">{review.productTitle}</Text>
+                        <Div className="flex items-center gap-2 mt-1 flex-wrap">
+                          <Stars rating={review.rating} />
+                          <Text className="text-sm text-[var(--appkit-color-text-muted)]">by {review.userName}</Text>
+                          {review.verified && <Badge variant="success">Verified</Badge>}
+                          {statusBadge(review.status)}
+                          <Badge variant={review.sellerReply ? "success" : "warning"}>
+                            {review.sellerReply ? "Store replied" : "Awaiting store reply"}
+                          </Badge>
                         </Div>
-                      )}
-                    </Div>
 
-                    {/* Action */}
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openReply(review)}
-                    >
-                      {review.sellerReply ? "Edit Reply" : "Reply"}
-                    </Button>
+                        {/* Review content */}
+                        {review.title && <Text className="mt-2 font-medium">{review.title}</Text>}
+                        <Text className="mt-1 text-sm text-[var(--appkit-color-text-secondary)] line-clamp-3">
+                          {review.comment}
+                        </Text>
+
+                        {/* Existing reply */}
+                        {review.sellerReply && (
+                          <Div className="mt-2 pl-3 border-l-2 border-[var(--appkit-color-primary)]">
+                            <Text className="text-xs text-[var(--appkit-color-text-muted)]">Store reply:</Text>
+                            <Text className="text-sm">{review.sellerReply}</Text>
+                          </Div>
+                        )}
+                      </Div>
+                    </Row>
+
+                    {/* Actions */}
+                    <Row className="gap-2 flex-shrink-0">
+                      <Button variant="outline" size="sm" onClick={() => openReply(review)}>
+                        {review.sellerReply ? "Edit Reply" : "Reply"}
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => setContestTarget(review)}>
+                        Contest
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => setFeedbackTarget(review)}>
+                        Feedback
+                      </Button>
+                    </Row>
                   </Div>
                 </Div>
               ))}
@@ -300,6 +399,88 @@ export function SellerReviewsView({
           </Div>
         </Stack>
       </SideDrawer>
+
+      {/* S-STORE-4-C — Bulk reply modal */}
+      <Modal
+        isOpen={bulkReplyOpen}
+        onClose={() => setBulkReplyOpen(false)}
+        title={`Bulk reply to ${selectedIds.size} review${selectedIds.size === 1 ? "" : "s"}`}
+        actions={
+          <Row className="gap-2">
+            <Button variant="ghost" onClick={() => setBulkReplyOpen(false)} disabled={bulkSaving}>Cancel</Button>
+            <Button variant="primary" onClick={() => void submitBulkReply()} disabled={!bulkReplyText.trim() || bulkSaving} isLoading={bulkSaving}>
+              Send reply
+            </Button>
+          </Row>
+        }
+      >
+        <Stack gap="md" className="p-1">
+          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            The same reply will be posted on all selected reviews.
+          </Text>
+          <Textarea
+            value={bulkReplyText}
+            onChange={(e) => setBulkReplyText(e.target.value)}
+            rows={5}
+            placeholder="Thanks for your review…"
+            label="Reply"
+          />
+        </Stack>
+      </Modal>
+
+      {/* S-STORE-4-C — Contest review modal */}
+      <Modal
+        isOpen={!!contestTarget}
+        onClose={() => setContestTarget(null)}
+        title="Contest this review"
+        actions={
+          <Row className="gap-2">
+            <Button variant="ghost" onClick={() => setContestTarget(null)}>Cancel</Button>
+            <Button variant="primary" onClick={() => void submitContest()} disabled={!contestReason.trim()}>
+              Submit
+            </Button>
+          </Row>
+        }
+      >
+        <Stack gap="md" className="p-1">
+          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            Flag this review for admin investigation. Provide a clear reason — fake, abusive, off-topic, etc.
+          </Text>
+          <Textarea
+            value={contestReason}
+            onChange={(e) => setContestReason(e.target.value)}
+            rows={4}
+            label="Reason"
+          />
+        </Stack>
+      </Modal>
+
+      {/* S-STORE-4-C — Feedback to buyer modal */}
+      <Modal
+        isOpen={!!feedbackTarget}
+        onClose={() => setFeedbackTarget(null)}
+        title="Send feedback to buyer"
+        actions={
+          <Row className="gap-2">
+            <Button variant="ghost" onClick={() => setFeedbackTarget(null)}>Cancel</Button>
+            <Button variant="primary" onClick={() => void submitFeedback()} disabled={!feedbackText.trim()}>
+              Send
+            </Button>
+          </Row>
+        }
+      >
+        <Stack gap="md" className="p-1">
+          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            Private message sent to the buyer's notification inbox. Does not appear on the public review.
+          </Text>
+          <Textarea
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
+            rows={4}
+            label="Feedback"
+          />
+        </Stack>
+      </Modal>
     </>
   );
 }

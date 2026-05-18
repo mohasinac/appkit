@@ -21,7 +21,9 @@ export async function applyCouponAction(input: unknown) {
   const coupon = await validateCoupon(parsed.data, user.uid);
   const discount = computeDiscount(coupon, parsed.data.cartTotal);
 
-  await couponsRepository.applyCoupon(coupon.id, coupon.code, user.uid, [], discount);
+  // Coupon usage is recorded ONLY after order confirmation
+  // (see `_internal/server/features/checkout/actions.ts`). Validating /
+  // applying a coupon to a cart must never consume a redemption.
 
   return { couponId: coupon.id, code: coupon.code, discount, type: coupon.type };
 }

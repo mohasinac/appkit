@@ -28,6 +28,11 @@ export {
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ConfirmDeleteModal - Component for confirm delete modal.
 export { ConfirmDeleteModal } from "./ui/components/ConfirmDeleteModal";
+// S-STORE — pure-UI primitives + Seller view consumed by new dashboard pages
+export { EmptyState } from "./ui/components/EmptyState";
+export { Divider } from "./ui/components/Divider";
+export { TabStrip } from "./ui/components/TabStrip";
+export { SellerProductsView } from "./features/seller/components/SellerProductsView";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // Drawer - Component for drawer.
 export { Drawer } from "./ui/components/Drawer";
@@ -37,6 +42,18 @@ export { FilterDrawer } from "./ui/components/FilterDrawer";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // Modal - Component for modal.
 export { Modal } from "./ui/components/Modal";
+export { QuickCreateModal } from "./ui/components/QuickCreateModal";
+export type { QuickCreateModalProps } from "./ui/components/QuickCreateModal";
+export { VacationBanner } from "./ui/components/VacationBanner";
+export type { VacationBannerProps } from "./ui/components/VacationBanner";
+export { useInlineToggle, useInlineTextEdit } from "./react/hooks/useInlineRowEdit";
+export type {
+  InlineEditOptions,
+  InlineToggleResult,
+  InlineTextResult,
+} from "./react/hooks/useInlineRowEdit";
+export { useFormStatePreservation } from "./react/hooks/useFormStatePreservation";
+export type { FormStatePreservationOptions } from "./react/hooks/useFormStatePreservation";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // SideDrawer - Component for side drawer.
 export { SideDrawer } from "./ui/components/SideDrawer";
@@ -149,6 +166,10 @@ export { Div } from "./ui/components/Div";
 export { Main, Section } from "./ui/components/Semantic";
 export { Badge } from "./ui/components/Badge";
 export { Button } from "./ui/components/Button";
+export { StickyBottomBar } from "./ui/components/StickyBottomBar";
+export type { StickyBottomBarProps } from "./ui/components/StickyBottomBar";
+export { ClaimCouponButton } from "./ui/components/ClaimCouponButton";
+export type { ClaimCouponButtonProps } from "./ui/components/ClaimCouponButton";
 export { Checkbox } from "./ui/components/Checkbox";
 export { Input } from "./ui/components/Input";
 export { OtpInput } from "./ui/components/OtpInput";

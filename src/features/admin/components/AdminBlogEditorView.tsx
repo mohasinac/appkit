@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Button, Form, Heading, Input, RichTextEditor, RichTextRenderer, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { ImageUpload } from "../../media/upload/ImageUpload";
@@ -337,12 +337,52 @@ export function AdminBlogEditorView({
     return <div className="overflow-y-auto p-4">{formSection}</div>;
   }
 
+  // S-STORE-9B-D — rendered preview pane alongside the editor.
+  const previewSection = (
+    <div
+      key="preview"
+      className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-raised)] p-5 max-h-[calc(100vh-12rem)] overflow-y-auto"
+    >
+      <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+        <span>Live preview</span>
+      </div>
+      {coverImage ? (
+        <img src={coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
+      ) : null}
+      <Heading level={1} className="text-2xl font-bold mb-1">{title || "Untitled post"}</Heading>
+      <Text className="text-xs text-[var(--appkit-color-text-muted)] mb-4">
+        {authorName || "Anonymous"}
+        {category ? ` · ${category}` : ""}
+      </Text>
+      {excerpt ? (
+        <Text className="italic text-[var(--appkit-color-text-secondary)] mb-4">{excerpt}</Text>
+      ) : null}
+      <RichTextRenderer html={content || "<em>No content yet…</em>"} />
+      {tags.length > 0 ? (
+        <div className="mt-6 flex flex-wrap gap-1.5">
+          {tags.map((t) => (
+            <span key={t} className="px-2 py-0.5 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] text-xs">
+              #{t}
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+
   return (
     <StackedViewShell
       portal="admin"
       {...rest}
       title={isEdit ? "Edit Post" : "New Blog Post"}
-      sections={[formSection]}
+      sections={[
+        <div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
+          <div>{formSection}</div>
+          <div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">
+            {previewSection}
+          </div>
+        </div>,
+      ]}
     />
   );
 }

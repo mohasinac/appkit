@@ -216,11 +216,43 @@ function BundleCard({ bundle, onBuyNow }: BundleCardProps) {
   const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
   const price = bundle.bundlePriceInPaise;
 
+  // Plan §8 — render a 2x2 collage of member product images when the bundle's
+  // bundleItemDetails carry denormalised imageURLs. Falls back to the single
+  // hero cover (or emoji placeholder) when fewer than 2 are available.
+  const collageTiles = (bundle.bundleItemDetails ?? [])
+    .filter((d) => Boolean(d.imageURL))
+    .slice(0, 4);
+  const showCollage = collageTiles.length >= 2;
+  const overflow = memberCount - collageTiles.length;
+
   return (
     <div className="flex flex-col rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
       <Link href={href} className="group block flex-1 p-3 hover:no-underline">
         <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-          {cover ? (
+          {showCollage ? (
+            <Div
+              className={`grid h-full w-full gap-0.5 ${
+                collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
+              }`}
+            >
+              {collageTiles.map((tile, i) => (
+                <Div key={`${tile.productId}-${i}`} className="relative overflow-hidden bg-zinc-50 dark:bg-zinc-800">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={tile.imageURL}
+                    alt={tile.title ?? `${bundle.name} item ${i + 1}`}
+                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  {i === collageTiles.length - 1 && overflow > 0 && (
+                    <Div className="absolute inset-0 flex items-center justify-center bg-black/55 text-sm font-semibold text-white">
+                      +{overflow}
+                    </Div>
+                  )}
+                </Div>
+              ))}
+            </Div>
+          ) : cover ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={cover}

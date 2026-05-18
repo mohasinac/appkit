@@ -24,6 +24,11 @@ export interface GuestCartItem {
   productTitle?: string;
   productImage?: string;
   price?: number;
+  /** Store identifier (storeSlug) — required to group cart lines by seller. */
+  storeId?: string;
+  /** Denormalised store display name — keeps the cart-group header readable
+   *  for guest carts where we can't round-trip to Firestore at render time. */
+  storeName?: string;
 }
 
 export interface GuestCartStorage {
@@ -71,7 +76,13 @@ export function getGuestCartItems(
 export function addToGuestCart(
   productId: string,
   quantity: number,
-  snapshot?: { productTitle?: string; productImage?: string; price?: number },
+  snapshot?: {
+    productTitle?: string;
+    productImage?: string;
+    price?: number;
+    storeId?: string;
+    storeName?: string;
+  },
   storage: GuestCartStorage | null = getDefaultStorage(),
   key = DEFAULT_GUEST_CART_KEY,
 ): GuestCartItem[] {

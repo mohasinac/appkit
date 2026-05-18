@@ -351,6 +351,8 @@ export async function PrizeDrawDetailPageView({
                 remainingEntries={remaining}
                 revealStatus={revealStatus}
                 prizeGithubFileUrl={githubUrl}
+                storeId={typeof p.storeId === "string" ? p.storeId : undefined}
+                storeName={storeName ?? undefined}
               />
             </Div>
           )}

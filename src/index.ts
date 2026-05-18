@@ -1464,6 +1464,8 @@ export type { UserRole } from "./security/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // AddressesRepository - unified top-level addresses collection (SB-UNI-A 2026-05-13).
 export { AddressesRepository } from "./repositories/index";
+// S-STORE foundation — 14 schemas + 14 repositories + RBAC
+export * from "./features/store-extensions/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // BaseRepository - Shared export for base repository.
 export { BaseRepository } from "./repositories/index";
@@ -1567,6 +1569,15 @@ export { chatRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // couponsRepository - Shared export for coupons repository.
 export { couponsRepository } from "./repositories/index";
+// [DB] claimedCouponsRepository — user-wallet claims (plan §10).
+export { claimedCouponsRepository, ClaimedCouponsRepository } from "./repositories/index";
+export type { ClaimedCouponCreateInput } from "./repositories/index";
+export type {
+  ClaimedCouponDocument,
+  ClaimedCouponStatus,
+  ClaimedCouponSource,
+  ClaimedCouponSnapshot,
+} from "./features/promotions/schemas";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // emailVerificationTokenRepository - Shared export for email verification token repository.
 export { emailVerificationTokenRepository } from "./repositories/index";
@@ -1643,6 +1654,20 @@ export {
 // Support tickets â€" seed data
 export { supportTicketsSeedData } from "./seed/index";
 export { offersSeedData } from "./seed/index";
+// S-STORE foundation seed data
+export {
+  payoutMethodsSeedData,
+  shippingConfigsSeedData,
+  analyticsCardsSeedData,
+  analyticsAlertsSeedData,
+  storeCategoriesSeedData,
+  listingTemplatesSeedData,
+  moderationQueueSeedData,
+  reportsSeedData,
+  itemRequestsSeedData,
+  storeWhatsAppConfigSeedData,
+  storeGoogleConfigSeedData,
+} from "./seed/index";
 // SB-UNI-B â€" sublistingCategoriesRepository + SublistingCategoryDocument deleted.
 // Use categoriesRepository.findBySlugAndType(slug, "sublisting") and CategoryDocument with categoryType:"sublisting".
 // [DB]-Database layer â€" uses firebase-admin; server-only.
@@ -1748,6 +1773,8 @@ export { couponsSeedData } from "./seed/index";
 // couponUsageSeedData - Per-user coupon redemption records (subcollection seed).
 export type { CouponUsageSeedRecord } from "./seed/index";
 export { couponUsageSeedData } from "./seed/index";
+// claimedCouponsSeedData - Plan §10 wallet seed (active/expired/used rows).
+export { claimedCouponsSeedData } from "./seed/index";
 // demoSeed has been moved to "@mohasinac/appkit/server" â€" it transitively
 // reaches firebase-admin via the seed runner, which must not leak into client
 // bundles. Import from `@mohasinac/appkit/server` in server-only code.

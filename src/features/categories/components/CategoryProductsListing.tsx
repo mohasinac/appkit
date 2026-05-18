@@ -156,19 +156,15 @@ export function CategoryProductsListing({
 
   const handleAddToCart = useCallback(
     (product: any) => {
-      localCart.add(product.id, 1, {
+      const snapshot = {
         productTitle: product.title,
         productImage: product.mainImage,
         price: product.price,
-      });
-      pushCartOp({
-        op: "add",
-        productId: product.id,
-        quantity: 1,
-        productTitle: product.title,
-        productImage: product.mainImage,
-        price: product.price,
-      });
+        storeId: product.storeId,
+        storeName: product.storeName,
+      };
+      localCart.add(product.id, 1, snapshot);
+      pushCartOp({ op: "add", productId: product.id, quantity: 1, ...snapshot });
       showToast("Added to cart", "success");
     },
     [localCart, showToast],

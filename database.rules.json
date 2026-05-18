@@ -117,6 +117,18 @@
         }
       }
     },
+    "chats": {
+      "$conversationId": {
+        ".read": "auth != null && auth.token.conversationIds != null && auth.token.conversationIds[$conversationId] == true",
+        ".write": false
+      },
+      "user": {
+        "$userId": {
+          ".read": "auth != null && auth.uid == $userId",
+          ".write": false
+        }
+      }
+    },
     "auth_events": {
       "$eventId": {
         ".read": "auth != null && auth.token.authEventId == $eventId",

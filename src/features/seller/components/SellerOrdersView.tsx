@@ -391,6 +391,32 @@ export function SellerOrdersView({
         ),
     },
     {
+      key: "shipping",
+      header: "Shipping",
+      className: "w-32",
+      render: (row) => {
+        const r = row as unknown as { shippingMethod?: string; carrier?: string; trackingNumber?: string };
+        return (
+          <span className="text-xs text-zinc-600 dark:text-zinc-300">
+            {r.shippingMethod ?? r.carrier ?? "—"}
+          </span>
+        );
+      },
+    },
+    {
+      key: "weight",
+      header: "Weight",
+      className: "w-20 text-right",
+      render: (row) => {
+        const r = row as unknown as { weightGrams?: number };
+        return (
+          <span className="text-xs text-zinc-500 dark:text-zinc-400 tabular-nums">
+            {r.weightGrams ? `${r.weightGrams} g` : "—"}
+          </span>
+        );
+      },
+    },
+    {
       key: "updatedAt",
       header: "Date",
       className: "w-28",
@@ -431,6 +457,17 @@ export function SellerOrdersView({
     setSetLocationOpen(false);
   }, [selection.selectedIds]);
 
+  // S-STORE-5-A — bulk order selection → single payout request.
+  const requestPayoutForSelection = useCallback(async () => {
+    if (!selection.selectedIds.length) return;
+    await fetch("/api/store/payouts/request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orderIds: selection.selectedIds }),
+    }).catch(() => null);
+    selection.clearSelection();
+  }, [selection]);
+
   const bulkActions: BulkActionItem[] = [
     {
       id: ACTIONS.STORE["print-packing-slips"].id,
@@ -443,6 +480,12 @@ export function SellerOrdersView({
       label: ACTIONS.STORE["set-location"].label,
       icon: <MapPin className="w-4 h-4" />,
       onClick: () => setSetLocationOpen(true),
+    },
+    {
+      id: ACTIONS.STORE["request-payout"].id,
+      label: ACTIONS.STORE["request-payout"].label,
+      onClick: () => void requestPayoutForSelection(),
+      variant: "primary",
     },
   ];
 

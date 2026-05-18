@@ -94,7 +94,21 @@ export class SessionRepository extends BaseRepository<SessionDocument> {
       ...(data?.location && { location: data.location }),
     };
 
-    await this.update(sessionId, updateData);
+    try {
+      await this.update(sessionId, updateData);
+    } catch (err: unknown) {
+      // The session doc may have been revoked/expired/wiped while the client
+      // still holds the cookie. Firestore Admin throws `5 NOT_FOUND` in that
+      // case — swallow it so the activity ping is best-effort, not a 500.
+      // Any other error is rethrown so genuine failures still surface.
+      const code = (err as { code?: unknown })?.code;
+      const msg = (err as { message?: string })?.message ?? "";
+      const isNotFound =
+        code === 5 ||
+        code === "not-found" ||
+        /No document to update|NOT_FOUND/i.test(msg);
+      if (!isNotFound) throw err;
+    }
   }
 
   async revokeSession(sessionId: string, revokedBy: string): Promise<void> {

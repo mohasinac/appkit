@@ -54,6 +54,15 @@ export interface BundleItemDetail {
   productId: string;
   /** Number of draw entries included when product is a prize-draw. */
   drawCount?: number;
+  /**
+   * Denormalised member product image URL — snapshotted at bundle-edit time
+   * by the admin/store bundle editor (or the `onProductWrite` fan-out) so the
+   * BundleCard can render a 2x2 collage without N+1 product fetches.
+   * When absent the card falls back to `display.coverImage`.
+   */
+  imageURL?: string;
+  /** Denormalised member product title — used as alt text for the collage tile. */
+  title?: string;
 }
 
 // -- Category Document --------------------------------------------------------

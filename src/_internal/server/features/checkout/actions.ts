@@ -16,6 +16,7 @@ import {
   storeRepository,
   couponsRepository,
   notificationRepository,
+  claimedCouponsRepository,
 } from "../../../../repositories";
 import { failedCheckoutRepository } from "../../../../features/checkout/repository/failed-checkout.repository";
 import type {
@@ -770,9 +771,29 @@ export async function createCheckoutOrderAction(
 
   if (couponUsageAccumulator.size > 0) {
     Promise.all(
-      [...couponUsageAccumulator.values()].map(({ couponId, code, orderIds: ids, totalDiscount }) =>
-        couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount),
-      ),
+      [...couponUsageAccumulator.values()].map(async ({ couponId, code, orderIds: ids, totalDiscount }) => {
+        await couponsRepository.applyCoupon(couponId, code, uid, ids, totalDiscount);
+        // Flip the user's claimed-coupon wallet row to "used" when the
+        // per-user redemption limit has been reached (default: single-use
+        // when `perUserLimit` is absent or 1). Multi-use coupons with
+        // remaining redemptions stay "active" in the wallet.
+        try {
+          const coupon = await couponsRepository.findById(couponId);
+          // Default to single-use (1) when the coupon has no explicit
+          // per-user cap configured. Coupons issued via the wallet are
+          // claim-once-use-once by design unless the seller opts into a
+          // higher cap.
+          const perUserLimit = coupon?.usage?.perUserLimit ?? 1;
+          const newCount = await couponsRepository.getUserCouponUsageCount(uid, couponId);
+          if (newCount >= perUserLimit) {
+            await claimedCouponsRepository
+              .markUsed(uid, code, ids[0] ?? "")
+              .catch(() => { /* no claim row — coupon never went through the wallet */ });
+          }
+        } catch (err) {
+          serverLogger.warn("Failed to update claimed-coupon status", { err });
+        }
+      }),
     ).catch((err: unknown) =>
       serverLogger.error("Failed to record coupon usage:", err),
     );

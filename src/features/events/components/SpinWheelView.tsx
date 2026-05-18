@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, Div, Heading, LoginRequiredModal, Span, Text } from "../../../ui";
+import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
@@ -154,10 +154,19 @@ export function SpinWheelView({
             {wonPrize.label}
           </Text>
           {resultCoupon ? (
-            <Text className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
-              {l.couponHint}{" "}
-              <Span className="font-mono font-semibold">{resultCoupon}</Span>
-            </Text>
+            <>
+              <Text className="mt-2 text-sm text-emerald-800 dark:text-emerald-200">
+                {l.couponHint}{" "}
+                <Span className="font-mono font-semibold">{resultCoupon}</Span>
+              </Text>
+              {/* Plan §10 — surfacing the won coupon as a usable CTA: copies
+                  the code to the clipboard and deep-links to /checkout?coupon=…
+                  so the prize is actually redeemable instead of just being
+                  rendered as a string the user has to remember. */}
+              <Div className="mt-3 flex justify-center">
+                <ClaimCouponButton couponCode={resultCoupon} size="sm" source="spin" />
+              </Div>
+            </>
           ) : null}
         </Div>
       ) : null}

@@ -91,6 +91,9 @@ function formatDiscount(n: Normalized, labels: Required<CouponCardLabels>): stri
 export interface CouponCardLabels {
   copy?: string;
   copied?: string;
+  claim?: string;
+  claiming?: string;
+  claimed?: string;
   expires?: string;
   minOrder?: string;
   off?: string;
@@ -108,6 +111,9 @@ export interface CouponCardLabels {
 const DEFAULT_LABELS: Required<CouponCardLabels> = {
   copy: "Copy",
   copied: "Copied!",
+  claim: "Claim",
+  claiming: "Claiming…",
+  claimed: "Use →",
   expires: "Expires",
   minOrder: "Min order",
   off: "OFF",
@@ -136,6 +142,13 @@ interface CouponCardProps {
   onEdit?: (id: string) => void;
   onToggleActive?: (id: string, currentlyActive: boolean) => void | Promise<void>;
   onDelete?: (id: string) => void | Promise<void>;
+  /**
+   * Hide the public Claim CTA. Defaults to false. Set true on admin/CRUD
+   * surfaces where the user is managing coupons, not redeeming them.
+   */
+  hideClaim?: boolean;
+  /** Source enum forwarded to /api/user/coupons/claim for analytics. */
+  claimSource?: "manual" | "promo" | "spin" | "raffle" | "prize-draw";
 }
 
 export function CouponCard({
@@ -149,18 +162,24 @@ export function CouponCard({
   onEdit,
   onToggleActive,
   onDelete,
+  hideClaim,
+  claimSource = "manual",
 }: CouponCardProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const n = normalize(coupon as CouponLike);
   const colors = TYPE_COLORS[n.type] ?? TYPE_COLORS.percentage;
 
   const [copied, setCopied] = useState(false);
+  const [claiming, setClaiming] = useState(false);
   const [busy, setBusy] = useState<"toggle" | "delete" | null>(null);
   const longPress = useLongPress(() => onSelect?.(n.id, !isSelected));
 
   const expiry = formatDateSafe(n.expiresAt);
   const discountLabel = formatDiscount(n, labels);
   const hasAdminActions = Boolean(onEdit || onToggleActive || onDelete);
+  // Show Claim by default on public surfaces; hide automatically when this
+  // card is being rendered with admin/CRUD actions wired.
+  const showClaim = hideClaim === undefined ? !hasAdminActions : !hideClaim;
 
   const handleCopy = () => {
     if (!n.code) return;
@@ -168,6 +187,31 @@ export function CouponCard({
     setCopied(true);
     onCopy?.(n.code);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleClaim = async () => {
+    if (!n.code || claiming) return;
+    setClaiming(true);
+    try {
+      // Best-effort: claim into the wallet (anon users get 401, which we
+      // ignore so the deep-link still works), then jump to cart with the
+      // code pre-filled.
+      try {
+        await fetch("/api/user/coupons/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ couponCode: n.code, source: claimSource }),
+        });
+      } catch {
+        /* anon/network — non-fatal */
+      }
+      if (typeof window !== "undefined") {
+        window.location.href = `/cart?coupon=${encodeURIComponent(n.code)}`;
+      }
+    } finally {
+      setClaiming(false);
+    }
   };
 
   const handleToggle = async () => {
@@ -238,7 +282,9 @@ export function CouponCard({
         <Text className="text-xs opacity-60 mb-3">{n.description}</Text>
       )}
 
-      {/* Copy code block */}
+      {/* Copy code block + Claim CTA (public surfaces). On admin/CRUD surfaces
+          the Claim button is hidden via `hideClaim` since admins aren't
+          redeeming the coupons they're managing. */}
       <div className={`flex items-center gap-2 rounded-lg border border-dashed px-3 py-2 ${colors.code}`}>
         <span className="flex-1 font-mono text-sm font-bold tracking-widest uppercase select-all">
           {n.code || "—"}
@@ -254,6 +300,19 @@ export function CouponCard({
           </button>
         )}
       </div>
+      {showClaim && n.code && n.isActive && (
+        <div className="mt-2">
+          <button
+            type="button"
+            onClick={handleClaim}
+            disabled={claiming}
+            className="w-full rounded-md px-3 py-1.5 text-xs font-semibold transition-all active:scale-95 bg-[var(--appkit-color-primary-700)] text-[var(--appkit-color-text-on-primary,#fff)] hover:bg-[var(--appkit-color-primary-800)] disabled:opacity-50"
+            aria-label={`Claim coupon ${n.code} and apply at checkout`}
+          >
+            {claiming ? labels.claiming : labels.claim}
+          </button>
+        </div>
+      )}
 
       {/* Meta row */}
       <Row wrap gap="sm" className="text-xs opacity-60 mt-2">

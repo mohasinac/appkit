@@ -21,6 +21,8 @@ export interface PrizeDrawEntryActionsProps {
   remainingEntries: number;
   revealStatus: "pending" | "open" | "closed" | undefined;
   prizeGithubFileUrl?: string;
+  storeId?: string;
+  storeName?: string;
 }
 
 /**
@@ -40,6 +42,8 @@ export function PrizeDrawEntryActions({
   remainingEntries,
   revealStatus,
   prizeGithubFileUrl,
+  storeId,
+  storeName,
 }: PrizeDrawEntryActionsProps) {
   const router = useRouter();
   const cart = useGuestCart();
@@ -55,23 +59,19 @@ export function PrizeDrawEntryActions({
   }, [closed, requireAuth]);
 
   const handleConfirm = useCallback(() => {
-    cart.add(productId, 1, {
+    const snapshot = {
       productTitle: title,
       productImage: thumb,
       price: pricePerEntry,
-    });
-    pushCartOp({
-      op: "add",
-      productId,
-      quantity: 1,
-      productTitle: title,
-      productImage: thumb,
-      price: pricePerEntry,
-    });
+      storeId,
+      storeName,
+    };
+    cart.add(productId, 1, snapshot);
+    pushCartOp({ op: "add", productId, quantity: 1, ...snapshot });
     setConsentOpen(false);
     showToast("Entry added to cart", "success");
     router.push(String(ROUTES.USER.CART));
-  }, [cart, productId, title, thumb, pricePerEntry, router, showToast]);
+  }, [cart, productId, title, thumb, pricePerEntry, storeId, storeName, router, showToast]);
 
   return (
     <Stack gap="md">

@@ -70,6 +70,8 @@ export interface ProductDetailPageViewProps {
     productImage?: string;
     price: number | null;
     currency: string;
+    storeId?: string;
+    storeName?: string;
     inStock: boolean;
     variant: "desktop" | "mobile";
   }) => React.ReactNode;
@@ -663,6 +665,8 @@ export async function ProductDetailPageView({
                     productImage: product.mainImage,
                     price,
                     currency,
+                    storeId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
+                    storeName: typeof p.storeName === "string" ? (p.storeName as string) : undefined,
                     inStock,
                     variant: "desktop",
                   })
@@ -925,6 +929,8 @@ export async function ProductDetailPageView({
               productImage: product.mainImage,
               price,
               currency,
+              storeId: typeof p.storeId === "string" ? (p.storeId as string) : undefined,
+              storeName: typeof p.storeName === "string" ? (p.storeName as string) : undefined,
               inStock,
               variant: "mobile",
             })

@@ -29,6 +29,8 @@ export function useGuestCart() {
         productTitle?: string;
         productImage?: string;
         price?: number;
+        storeId?: string;
+        storeName?: string;
       },
     ) => {
       const updated = addToGuestCart(productId, quantity, snapshot);
