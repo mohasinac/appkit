@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Div, Row, Span, Text } from "../../ui";
+import { Button, Div, Row, Span, Text, Toggle } from "../../ui";
 import { cn } from "./filterUtils";
 
 export interface SwitchFilterProps {
@@ -103,38 +103,11 @@ export function SwitchFilter({
       </Row>
 
       {!isCollapsed && (
-        <Div className="mt-3">
-          <Button
-            type="button"
-            role="switch"
-            variant="ghost"
-            size="sm"
-            aria-checked={checked}
-            onClick={() => onChange(!checked)}
-            className="flex items-center justify-between w-full group"
-          >
-            <Span className="text-sm text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">
-              {label}
-            </Span>
-
-            {/* Toggle pill */}
-            <Span
-              aria-hidden="true"
-              className={cn(
-                "relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200",
-                checked
-                  ? "bg-primary-600 dark:bg-secondary-500"
-                  : "bg-zinc-200 dark:bg-slate-700",
-              )}
-            >
-              <Span
-                className={cn(
-                  "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200",
-                  checked ? "translate-x-4" : "translate-x-0",
-                )}
-              />
-            </Span>
-          </Button>
+        <Div className="mt-3 flex items-center justify-between gap-3">
+          <Span className="text-sm text-zinc-700 dark:text-zinc-300">
+            {label}
+          </Span>
+          <Toggle checked={checked} onChange={onChange} size="sm" />
         </Div>
       )}
     </Div>
