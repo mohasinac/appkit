@@ -88,6 +88,12 @@ export {
 } from "../features/blog/repository/blog.repository";
 export { payoutRepository } from "../features/payments/repository/payout.repository";
 
+// Grouped listings repository
+export {
+  GroupedListingsRepository,
+  groupedListingsRepository,
+} from "../features/grouped/repository/grouped-listings.repository";
+
 // S-STORE-CROSS — 11 new collection repositories
 export {
   payoutMethodsRepository,

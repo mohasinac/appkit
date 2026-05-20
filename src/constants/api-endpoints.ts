@@ -420,6 +420,10 @@ export const SELLER_ENDPOINTS = {
   FEATURE_BY_ID: (id: string) => `/api/store/features/${id}`,
   PRODUCTS_BULK_LOCATION: "/api/store/products/bulk-location",
   ORDERS_BULK_LOCATION: "/api/store/orders/bulk-location",
+  GROUPED_LISTINGS: "/api/store/grouped-listings",
+  GROUPED_LISTING_BY_ID: (id: string) => `/api/store/grouped-listings/${id}`,
+  ANALYTICS_ALERTS: "/api/store/analytics/alerts",
+  ANALYTICS_ALERT_BY_ID: (id: string) => `/api/store/analytics/alerts/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------

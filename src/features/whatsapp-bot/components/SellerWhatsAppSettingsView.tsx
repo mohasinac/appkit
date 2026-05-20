@@ -4,7 +4,7 @@ import React from "react";
 
 const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Form, FormActions, Heading, Input, Section, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Div, Form, FormActions, Heading, Input, Section, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { buildPurchaseAnnouncementMessage } from "../helpers/whatsapp";
@@ -108,6 +108,17 @@ const STATUS_COLOR: Record<string, string> = {
   partial: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
   failed: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
 };
+
+// ---------------------------------------------------------------------------
+// Sample catalog items for preview
+// ---------------------------------------------------------------------------
+
+const SAMPLE_CATALOG_ITEMS = [
+  { id: "1", emoji: "🃏", name: "Charizard PSA 9 Base Set", price: "₹4,500" },
+  { id: "2", emoji: "🚗", name: "Hot Wheels Redline Vintage", price: "₹1,200" },
+  { id: "3", emoji: "🤖", name: "Gundam HG RX-78-2 1/144", price: "₹2,800" },
+  { id: "4", emoji: "🪀", name: "Beyblade Burst Storm Pegasus", price: "₹650" },
+] as const;
 
 // ---------------------------------------------------------------------------
 // Main component
@@ -353,6 +364,63 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             orderId: "order-3-20260510-a1b2c3",
           })}
         </div>
+      </Section>
+
+      {/* ── Section 5: Catalog preview ───────────────────────────────────── */}
+      <Section className={CLS_SECTION_CARD}>
+        <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+          Catalog Preview
+        </Heading>
+        <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-4">
+          This is how your products appear in the WhatsApp Catalog when a buyer taps "View Catalog" in the chat. Only published standard products are included.
+        </Text>
+
+        {/* Simulated WhatsApp catalog tile grid */}
+        <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden bg-[#ECE5DD] dark:bg-zinc-800 p-3">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+              <span className="text-white text-xs font-bold">W</span>
+            </div>
+            <Div>
+              <Text className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                {cfg?.connected ? "Your Store" : "Store Name"}
+              </Text>
+              <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">WhatsApp Business</Text>
+            </Div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {SAMPLE_CATALOG_ITEMS.map((item) => (
+              <div key={item.id} className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm">
+                <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                  <span className="text-2xl">{item.emoji}</span>
+                </div>
+                <div className="p-2">
+                  <Text className="text-xs font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight">
+                    {item.name}
+                  </Text>
+                  <Text className="text-xs text-[#25D366] font-semibold mt-0.5">
+                    {item.price}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-3 text-center">
+            <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">
+              {cfg?.lastSyncCount
+                ? `${cfg.lastSyncCount} products synced to catalog`
+                : "Sync your products to populate the catalog"}
+            </Text>
+          </div>
+        </div>
+
+        {!cfg?.connected && (
+          <Text className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+            Connect your WhatsApp Business account above to enable the catalog.
+          </Text>
+        )}
       </Section>
 
     </div>

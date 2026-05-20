@@ -1692,6 +1692,7 @@ export { userRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // wishlistRepository - Shared export for wishlist repository.
 export { wishlistRepository } from "./repositories/index";
+export { GroupedListingsRepository, groupedListingsRepository } from "./repositories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // NewsletterListModel - Type contract for newsletter list model.
 export type { NewsletterListModel } from "./repositories/index";
@@ -7909,6 +7910,12 @@ export { SellerGuideView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerOffersView - Component for seller offers view.
 export { SellerOffersView } from "./features/seller/index";
+export { SellerGroupedListingsView } from "./features/seller/index";
+export type { SellerGroupedListingsViewProps } from "./features/seller/index";
+export { SellerGroupedListingsView as StoreGroupedListingsView } from "./features/seller/index";
+export { SellerAnalyticsAlertsView } from "./features/seller/index";
+export type { SellerAnalyticsAlertsViewProps } from "./features/seller/index";
+export { SellerAnalyticsAlertsView as StoreAnalyticsAlertsView } from "./features/seller/index";
 // [CLIENT]-Runs in browser only â€" uses useState/useEffect/fetch.
 // SellerOffersPanel - Interactive panel with accept/decline/counter actions for seller offers.
 export { SellerOffersPanel } from "./features/seller/index";
