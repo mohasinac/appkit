@@ -42,3 +42,5 @@ export { StoreOrdersGuideView } from "./StoreOrdersGuideView";
 export type { StoreOrdersGuideViewProps } from "./StoreOrdersGuideView";
 export { StoreFinanceGuideView } from "./StoreFinanceGuideView";
 export type { StoreFinanceGuideViewProps } from "./StoreFinanceGuideView";
+export { StoreCapabilitiesGuideView } from "./StoreCapabilitiesGuideView";
+export type { StoreCapabilitiesGuideViewProps } from "./StoreCapabilitiesGuideView";
