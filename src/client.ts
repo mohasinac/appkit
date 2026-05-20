@@ -158,6 +158,8 @@ export type { SessionProviderProps } from "./react/contexts/SessionContext";
 export { ThemeProvider } from "./react/contexts/ThemeContext";
 export { useUrlTable } from "./react/hooks/useUrlTable";
 export type { UseUrlTableOptions } from "./react/hooks/useUrlTable";
+export { useBulkSelection } from "./react/hooks/useBulkSelection";
+export type { UseBulkSelectionOptions, UseBulkSelectionReturn } from "./react/hooks/useBulkSelection";
 
 // Client-safe constants, UI primitives, and views
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
@@ -203,9 +205,11 @@ export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
-export { AdminDashboardView, AdminAnalyticsView, AdminListingScaffold, AdminPrizeDrawsView, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
-export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps } from "./features/admin/index";
+export { AdminDashboardView, AdminAnalyticsView, AdminListingScaffold, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, DataTable, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
+export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps } from "./features/admin/index";
+export type { BulkActionItem } from "./ui/components/BulkActionBar";
 export { ADMIN_ENDPOINTS } from "./constants/index";
+export { apiClient, ApiClientError } from "./http/index";
 export { UserSidebar } from "./features/account/components/UserSidebar";
 export type { UserSidebarProps, UserNavItem, UserNavGroup } from "./features/account/components/UserSidebar";
 export { CouponsIndexListing } from "./features/promotions/components/CouponsIndexListing";
