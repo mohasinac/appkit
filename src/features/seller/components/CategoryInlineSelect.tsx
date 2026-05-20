@@ -15,7 +15,9 @@ export interface CategoryInlineSelectProps {
   allowCreate?: boolean;
 }
 
-async function loadCategoryOptions(
+// Admin: paginated + server-side search via /api/admin/categories (admin/mod only).
+// Response via successResponse({ data: items, total }) → apiClient unwraps to { data, total, ... }.
+async function loadAdminCategoryOptions(
   query: string,
   page: number,
 ): Promise<AsyncPage<DynamicSelectOption<string>>> {
@@ -26,15 +28,34 @@ async function loadCategoryOptions(
     flat: "true",
   });
   const res = await apiClient.get<{
-    items?: { id?: string; name?: string }[];
+    data?: { id?: string; name?: string }[];
     total?: number;
   }>(`${ADMIN_ENDPOINTS.CATEGORIES}?${params}`);
-  const items = (res.items ?? []).map((c) => ({
+  const items = (res.data ?? []).map((c) => ({
     value: String(c.id ?? ""),
     label: String(c.name ?? ""),
   }));
   const total = res.total ?? items.length;
   return { items, hasMore: page * 20 < total, nextPage: page + 1 };
+}
+
+// Seller: fetch all flat categories from the public unauthenticated endpoint,
+// filter client-side by query. Public endpoint returns { success, data: CategoryItem[] }.
+async function loadPublicCategoryOptions(
+  query: string,
+  _page: number,
+): Promise<AsyncPage<DynamicSelectOption<string>>> {
+  const params = new URLSearchParams({ flat: "true", pageSize: "200" });
+  const res = await fetch(`/api/categories?${params}`, { credentials: "include" });
+  const json: { success?: boolean; data?: { id?: string; name?: string }[] } =
+    await res.json().catch(() => ({}));
+  const all = (json.data ?? []).map((c) => ({
+    value: String(c.id ?? ""),
+    label: String(c.name ?? ""),
+  }));
+  const q = query.trim().toLowerCase();
+  const items = q ? all.filter((c) => c.label.toLowerCase().includes(q)) : all;
+  return { items, hasMore: false, nextPage: 2 };
 }
 
 export function CategoryInlineSelect({
@@ -44,11 +65,12 @@ export function CategoryInlineSelect({
   disabled,
   allowCreate = false,
 }: CategoryInlineSelectProps) {
+  const loadOptions = allowCreate ? loadAdminCategoryOptions : loadPublicCategoryOptions;
   return (
     <InlineCreateSelect<string>
       value={value || null}
       onChange={(v) => onChange(v ?? "")}
-      loadOptions={loadCategoryOptions}
+      loadOptions={loadOptions}
       placeholder={placeholder}
       disabled={disabled}
       createLabel="category"

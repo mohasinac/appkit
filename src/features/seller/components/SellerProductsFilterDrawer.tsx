@@ -6,6 +6,8 @@ import React from "react";
 import { X } from "lucide-react";
 import { Button, Div, FilterChipGroup, Row, Text } from "../../../ui";
 import { INPUT_CLS, FILTER_LABEL_CLS } from "./seller-products-styles";
+import { CategoryInlineSelect } from "./CategoryInlineSelect";
+import { BrandInlineSelect } from "./BrandInlineSelect";
 
 const HALF_INPUT_CLS = INPUT_CLS.replace("w-full", "w-1/2");
 
@@ -76,22 +78,19 @@ export function SellerProductsFilterDrawer({
           />
           <Div className="space-y-1.5">
             <Text className={FILTER_LABEL_CLS}>Category</Text>
-            <input
-              type="text"
+            <CategoryInlineSelect
               value={pendingFilters.category ?? ""}
-              onChange={(e) => patch("category", e.target.value)}
-              placeholder="category slug"
-              className={INPUT_CLS}
+              onChange={(v) => patch("category", v)}
+              placeholder="Search categories…"
             />
           </Div>
           <Div className="space-y-1.5">
             <Text className={FILTER_LABEL_CLS}>Brand</Text>
-            <input
-              type="text"
+            <BrandInlineSelect
               value={pendingFilters.brand ?? ""}
-              onChange={(e) => patch("brand", e.target.value)}
-              placeholder="brand slug"
-              className={INPUT_CLS}
+              onChange={(v) => patch("brand", v)}
+              placeholder="Search brands…"
+              allowCreate={false}
             />
           </Div>
           <Div className="space-y-1.5">
@@ -107,7 +106,7 @@ export function SellerProductsFilterDrawer({
             </select>
           </Div>
           <Div className="space-y-1.5">
-            <Text className={FILTER_LABEL_CLS}>Price (paise)</Text>
+            <Text className={FILTER_LABEL_CLS}>Price (₹ Rupees)</Text>
             <Row className="gap-2">
               <input
                 type="number"

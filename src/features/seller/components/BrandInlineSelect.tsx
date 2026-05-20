@@ -15,7 +15,9 @@ export interface BrandInlineSelectProps {
   allowCreate?: boolean;
 }
 
-async function loadBrandOptions(
+// Admin: paginated search via /api/admin/brands (admin/mod only).
+// Response via successResponse({ data: items, total }) → apiClient unwraps to { data, total }.
+async function loadAdminBrandOptions(
   query: string,
   page: number,
 ): Promise<AsyncPage<DynamicSelectOption<string>>> {
@@ -25,17 +27,41 @@ async function loadBrandOptions(
     pageSize: "20",
   });
   const res = await apiClient.get<{
-    brands?: { id?: string; name?: string }[];
+    data?: { id?: string; name?: string }[];
     items?: { id?: string; name?: string }[];
     total?: number;
   }>(`${ADMIN_ENDPOINTS.BRANDS}?${params}`);
-  const raw = res.brands ?? res.items ?? [];
+  const raw = res.data ?? res.items ?? [];
   const items = raw.map((b) => ({
     value: String(b.id ?? ""),
     label: String(b.name ?? ""),
   }));
   const total = res.total ?? items.length;
   return { items, hasMore: page * 20 < total, nextPage: page + 1 };
+}
+
+// Seller/public: unauthenticated /api/brands endpoint returns { items, total }.
+// Client-side query filtering so all sellers can access the brand list.
+async function loadPublicBrandOptions(
+  query: string,
+  page: number,
+): Promise<AsyncPage<DynamicSelectOption<string>>> {
+  const params = new URLSearchParams({
+    page: String(page),
+    pageSize: "100",
+    active: "true",
+  });
+  const res = await apiClient.get<{
+    items?: { id?: string; name?: string }[];
+    total?: number;
+  }>(`/api/brands?${params}`);
+  const all = (res.items ?? []).map((b) => ({
+    value: String(b.id ?? ""),
+    label: String(b.name ?? ""),
+  }));
+  const q = query.trim().toLowerCase();
+  const items = q ? all.filter((b) => b.label.toLowerCase().includes(q)) : all;
+  return { items, hasMore: false, nextPage: page + 1 };
 }
 
 export function BrandInlineSelect({
@@ -45,11 +71,12 @@ export function BrandInlineSelect({
   disabled,
   allowCreate = true,
 }: BrandInlineSelectProps) {
+  const loadOptions = allowCreate ? loadAdminBrandOptions : loadPublicBrandOptions;
   return (
     <InlineCreateSelect<string>
       value={value || null}
       onChange={(v) => onChange(v ?? "")}
-      loadOptions={loadBrandOptions}
+      loadOptions={loadOptions}
       placeholder={placeholder}
       disabled={disabled}
       createLabel="brand"

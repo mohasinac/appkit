@@ -2,12 +2,12 @@
 
 import React, { useState, useCallback } from "react";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-import { X, Pencil, Trash2, Printer, MapPin } from "lucide-react";
+import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin } from "lucide-react";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -25,11 +25,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
-import {
-  INPUT_CLS,
-  FILTER_LABEL_CLS,
-  KIND_BADGE_VARIANT,
-} from "./seller-products-styles";
+import { KIND_BADGE_VARIANT } from "./seller-products-styles";
 
 const PAGE_SIZE = 25;
 
@@ -120,45 +116,6 @@ function TypeDropdown({
   );
 }
 
-// Kept for backward-compat callers; thin wrapper around TypeDropdown.
-function TypeChips({
-  active,
-  onChange,
-}: {
-  active: ListingKind;
-  onChange: (kind: ListingKind) => void;
-}) {
-  const chips: { kind: ListingKind; label: string }[] = [
-    { kind: "all", label: "All" },
-    { kind: "standard", label: "Standard" },
-    { kind: "auction", label: "Auction" },
-    { kind: "pre-order", label: "Pre-order" },
-    { kind: "prize-draw", label: "Prize Draw" },
-    { kind: "bundle", label: "Bundle" },
-    { kind: "classified", label: "Classified" },
-    { kind: "digital-code", label: "Digital Code" },
-    { kind: "live", label: "Live" },
-  ];
-  return (
-    <Row className="gap-2 px-3 lg:px-4 py-2 overflow-x-auto border-b border-[var(--appkit-color-border)]">
-      {chips.map(({ kind, label }) => (
-        <button
-          key={kind}
-          type="button"
-          onClick={() => onChange(kind)}
-          className={[
-            "flex-shrink-0 rounded-full px-3 py-1 text-xs font-medium border transition-colors",
-            active === kind
-              ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
-              : "border-[var(--appkit-color-border)] text-[var(--appkit-color-text-muted)] hover:border-[var(--appkit-color-primary)] hover:text-[var(--appkit-color-primary)]",
-          ].join(" ")}
-        >
-          {label}
-        </button>
-      ))}
-    </Row>
-  );
-}
 
 const PRODUCT_COLUMNS: AdminTableColumn<ProductRow>[] = [
   {
@@ -257,8 +214,12 @@ export function SellerProductsView({
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [listingKind, setListingKind] = useState<ListingKind>("all");
+  // listingKind is URL-driven so it survives navigation and back/forward
+  const listingKind = ((table.get("listingType") as ListingKind) || "all") as ListingKind;
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
+  const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [statusOverrides, setStatusOverrides] = useState<Map<string, string>>(new Map());
   const [setLocationOpen, setSetLocationOpen] = useState(false);
 
   const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
@@ -282,11 +243,10 @@ export function SellerProductsView({
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { q: "", sort: "", listingType: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
-    setListingKind("all");
   }, [table]);
 
   const commitSearch = useCallback(() => {
@@ -295,8 +255,8 @@ export function SellerProductsView({
 
   const handleKindChange = useCallback(
     (kind: ListingKind) => {
-      setListingKind(kind);
-      table.set("page", "1");
+      // setMany prevents the double router.replace race condition (audit-double-navigation)
+      table.setMany({ listingType: kind === "all" ? "" : kind, page: "1" });
     },
     [table],
   );
@@ -312,16 +272,7 @@ export function SellerProductsView({
   const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
   // SB1-G — single-field listingType clause. The repository's Sieve aliases
   // accept both `==auction|preorder|standard` and `==pre-order` directly.
-  const kindFilter =
-    listingKind === "auction"
-      ? "listingType==auction"
-      : listingKind === "pre-order"
-        ? "listingType==pre-order"
-        : listingKind === "prize-draw"
-          ? "listingType==prize-draw"
-          : listingKind === "standard"
-            ? "listingType==standard"
-            : undefined;
+  const kindFilter = listingKind === "all" ? undefined : `listingType==${listingKind}`;
 
   const filters = [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
 
@@ -374,7 +325,10 @@ export function SellerProductsView({
   const currentPage = table.getNumber("page", 1);
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const selection = useBulkSelection<ProductRow>({ items: rows, keyExtractor: (r) => r.id });
+  const visibleRows = rows
+    .filter((r) => !deletedIds.has(r.id))
+    .map((r) => statusOverrides.has(r.id) ? { ...r, status: statusOverrides.get(r.id)! } : r);
+  const selection = useBulkSelection<ProductRow>({ items: visibleRows, keyExtractor: (r) => r.id });
 
   if (hasChildren) {
     return (
@@ -396,23 +350,13 @@ export function SellerProductsView({
     void dispatch({ type: "NAVIGATE", href });
   };
 
-  // S-STORE-2-D — row click navigates to public detail/preview, NOT edit.
-  // Edit is only available via the per-row "..." action menu.
-  const handleRowClick = (row: ProductRow) => {
-    const href =
-      row.listingKind === "auction"
-        ? `/auctions/${row.id}`
-        : row.listingKind === "pre-order"
-          ? `/pre-orders/${row.id}`
-          : `/products/${row.id}`;
-    void dispatch({ type: "NAVIGATE", href });
-  };
-
   const handleDelete = async (row: ProductRow) => {
     if (!onDeleteProduct) return;
     setDeletingId(row.id);
     try {
       await onDeleteProduct(row.id);
+      // Optimistically remove from list — avoids a full refetch
+      setDeletedIds((prev) => new Set([...prev, row.id]));
     } finally {
       setDeletingId(null);
     }
@@ -427,6 +371,24 @@ export function SellerProductsView({
       const json = await res.json().catch(() => null);
       const newId: string | undefined = json?.data?.id;
       if (newId) handleEdit({ ...row, id: newId });
+    }
+  };
+
+  const handleTogglePublish = async (row: ProductRow) => {
+    const currentStatus = statusOverrides.get(row.id) ?? row.status;
+    const newStatus = currentStatus === "published" ? "draft" : "published";
+    setPublishingId(row.id);
+    try {
+      const res = await fetch(`/api/store/products/${row.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      }).catch(() => null);
+      if (res?.ok) {
+        setStatusOverrides((prev) => new Map([...prev, [row.id, newStatus]]));
+      }
+    } finally {
+      setPublishingId(null);
     }
   };
 
@@ -523,7 +485,7 @@ export function SellerProductsView({
           {view !== "table" && (
             <SellerProductsCards
               view={view}
-              rows={rows}
+              rows={visibleRows}
               isLoading={isLoading}
               listingKind={listingKind}
               selectedIds={selection.selectedIdSet}
@@ -536,7 +498,7 @@ export function SellerProductsView({
           {view === "table" && (
           <DataTable
             columns={PRODUCT_COLUMNS}
-            rows={rows}
+            rows={visibleRows}
             isLoading={isLoading}
             emptyLabel={
               listingKind !== "all"
@@ -545,7 +507,7 @@ export function SellerProductsView({
             }
             selectedIds={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
-            onToggleSelectAll={(next) => selection.toggleAll()}
+            onToggleSelectAll={() => selection.toggleAll()}
             getRowHref={(row) =>
               // S-STORE-2-D — row click → public detail/preview, not edit.
               row.listingKind === "auction"
@@ -554,41 +516,52 @@ export function SellerProductsView({
                   ? `/pre-orders/${row.id}`
                   : `/products/${row.id}`
             }
-            renderRowActions={
-              onDeleteProduct
-                ? (row) => (
-                    <Row className="gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); handleEdit(row); }}
-                        aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => { e.stopPropagation(); void handleDuplicate(row); }}
-                        aria-label="Duplicate listing"
-                        title="Duplicate"
-                      >
-                        ⧉
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        action={ACTIONS.STORE["delete-listing"]}
-                        onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
-                        disabled={deletingId === row.id}
-                        className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </Row>
-                  )
-                : undefined
-            }
+            renderRowActions={(row) => {
+              const isPublished = (statusOverrides.get(row.id) ?? row.status) === "published";
+              return (
+                <Row className="gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => { e.stopPropagation(); handleEdit(row); }}
+                    aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => { e.stopPropagation(); void handleTogglePublish(row); }}
+                    aria-label={isPublished ? "Unpublish" : "Publish"}
+                    title={isPublished ? "Unpublish" : "Publish"}
+                    disabled={publishingId === row.id}
+                  >
+                    {isPublished ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={(e) => { e.stopPropagation(); void handleDuplicate(row); }}
+                    aria-label="Duplicate listing"
+                    title="Duplicate"
+                  >
+                    ⧉
+                  </Button>
+                  {onDeleteProduct && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      action={ACTIONS.STORE["delete-listing"]}
+                      onClick={(e) => { e.stopPropagation(); void handleDelete(row); }}
+                      disabled={deletingId === row.id}
+                      className="text-[var(--appkit-color-error)] hover:bg-[var(--appkit-color-border-subtle)]"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                </Row>
+              );
+            }}
           />
           )}
         </Div>

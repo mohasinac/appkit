@@ -14,6 +14,7 @@ export type ProductListingMode =
   | "auction"
   | "pre-order"
   | "prize-draw"
+  | "bundle"
   | "classified"
   | "digital-code"
   | "live";
@@ -983,13 +984,15 @@ export function SellerProductShell({
       ? "Auction"
       : listingType === "pre-order"
         ? "Pre-Order"
-        : listingType === "classified"
-          ? "Classified"
-          : listingType === "digital-code"
-            ? "Digital Code"
-            : listingType === "live"
-              ? "Live Item"
-              : "Product";
+        : listingType === "bundle"
+          ? "Bundle"
+          : listingType === "classified"
+            ? "Classified"
+            : listingType === "digital-code"
+              ? "Digital Code"
+              : listingType === "live"
+                ? "Live Item"
+                : "Product";
 
   const typeSpecificStep: StepDef<SellerProductDraft> | null =
     listingType === "auction"

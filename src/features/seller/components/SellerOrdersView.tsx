@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Eye, Printer, MapPin } from "lucide-react";
+import { X, Eye, Printer, MapPin, Truck } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
@@ -48,8 +48,11 @@ const STATUS_BADGE_VARIANT: Record<string, "success" | "warning" | "danger" | "i
 
 const UPDATE_STATUS_OPTIONS: SelectOption[] = [
   { value: "", label: "— keep current —" },
+  { value: "confirmed", label: "Confirmed" },
   { value: "processing", label: "Processing" },
   { value: "shipped", label: "Shipped" },
+  { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -424,18 +427,45 @@ export function SellerOrdersView({
     },
   ];
 
+  const handleQuickShip = useCallback(async (row: OrderRow, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await fetch(`${orderDetailApiBase}/${row.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "shipped" }),
+    }).catch(() => null);
+    if (res?.ok) setSelectedOrderId(null);
+  }, [orderDetailApiBase]);
+
   const renderRowActions = useCallback(
-    (row: OrderRow) => (
-      <button
-        type="button"
-        onClick={() => setSelectedOrderId(row.id)}
-        title="View order details"
-        className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-      >
-        <Eye className="h-4 w-4" />
-      </button>
-    ),
-    [],
+    (row: OrderRow) => {
+      const isShippable = ["PENDING", "PROCESSING", "CONFIRMED"].includes(row.status?.toUpperCase() ?? "");
+      return (
+        <div className="flex items-center gap-1">
+          {isShippable && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => void handleQuickShip(row, e)}
+              aria-label="Mark as shipped"
+              title="Mark shipped"
+            >
+              <Truck className="h-4 w-4" />
+            </Button>
+          )}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => { e.stopPropagation(); setSelectedOrderId(row.id); }}
+            title="View order details"
+            aria-label="View order details"
+          >
+            <Eye className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+    [handleQuickShip],
   );
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
