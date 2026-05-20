@@ -215,6 +215,13 @@ export const DEFAULT_ROUTE_MAP = {
     LISTING_TEMPLATES_NEW: "/store/listing-templates/new",
     LISTING_TEMPLATES_EDIT: (id: string) => `/store/listing-templates/${id}/edit`,
     GOOGLE_REVIEWS: "/store/google-reviews",
+    // GD1–GD6 — Store Guide Hub + sub-pages
+    GUIDE: "/store/guide",
+    GUIDE_LISTINGS: "/store/guide/listings",
+    GUIDE_ORDERS: "/store/guide/orders",
+    GUIDE_FINANCE: "/store/guide/finance",
+    GUIDE_CAPABILITIES: "/store/guide/capabilities",
+    GUIDE_SETTINGS: "/store/guide/settings",
   },
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
