@@ -149,6 +149,8 @@
     "audit": "node scripts/audit-violations.mjs",
     "check:types": "tsc --noEmit",
     "check:audits": "node scripts/audit-violations.mjs && node scripts/verify-entries.mjs && node scripts/verify-css-build.mjs && node scripts/audit-use-client.mjs && node scripts/audit-double-navigation.mjs && node scripts/audit-repository-fields.mjs && node scripts/audit-query-provider.mjs && node scripts/audit-export-paths.mjs",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest",
     "check": "npm run check:types && npm run check:audits"
   },
   "dependencies": {
@@ -190,6 +192,8 @@
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.0.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.37.0",
     "concurrently": "^9.2.1",
@@ -197,6 +201,7 @@
     "firebase": "^12.8.0",
     "firebase-admin": "^10.3.0",
     "firebase-functions": "^6.6.0",
+    "jsdom": "^29.1.1",
     "lucide-react": "^1.7.0",
     "next": "^15.0.0",
     "next-intl": "^4.9.1",
@@ -206,6 +211,7 @@
     "resend": "^6.10.0",
     "server-only": "^0.0.1",
     "tailwindcss": "^3.4.19",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.7"
   }
 }

@@ -16,6 +16,55 @@
  *   }, { baseQuery });
  * }
  * ```
+ *
+ * ## Known Sieve ↔ Firestore incompatibilities
+ *
+ * These Sieve DSL features are silently unsupported or produce wrong results
+ * when translated to Firestore queries. Document them here to avoid surprise.
+ *
+ * ### 1. String-contains `@=*` (case-insensitive full-text)
+ * Sieve's `title@=*query` is a substring/CI match. Firestore has no native
+ * LIKE or ILIKE operator. The Firebase adapter maps it to `>=` / `<` prefix
+ * range tricks that only work for prefix matches on ASCII strings, not
+ * arbitrary substrings. Use a Firebase Function or in-memory post-filter for
+ * real substring search; never rely on `@=*` to match mid-string.
+ *
+ * ### 2. OR across different fields (`|` pipe between clauses)
+ * Sieve's `field1==v1|field2==v2` (OR across two different fields) is
+ * translated to `whereOr` by the stock Firebase adapter. Firestore's Admin SDK
+ * v6+ supports `Query.where(Filter.or(...))`, but the stock adapter version
+ * bundled with sievejs may emit an unsupported form. The enhanced adapter in
+ * this file only upgrades single-field OR groups (same-field equality → `in`
+ * query). Multi-field OR is still unsupported — apply it in memory.
+ *
+ * ### 3. OR on the same field (`field==v1|v2`) → Firestore `in`
+ * The custom `createEnhancedFirebaseAdapter` in this file upgrades these to
+ * Firestore `.where(field, "in", [v1, v2])`. Firestore supports up to 30
+ * values in an `in` clause. More than 30 values will throw. The stock adapter
+ * would have emitted a `whereOr` call that fails entirely.
+ *
+ * ### 4. Multi-field `orderBy` without a matching composite index
+ * Firestore requires a composite index for every combination of `where` +
+ * `orderBy` fields. Sieve sorts like `-createdAt,price` translate to two
+ * `orderBy` calls; if the Firestore collection has no index for that
+ * combination the query throws `FAILED_PRECONDITION`. Add the index to
+ * `appkit/firebase/base/firestore.indexes.json` and deploy before shipping.
+ *
+ * ### 5. Inequality filter + `orderBy` on a different field
+ * Firestore's rule: if you have an inequality filter (`!=`, `<`, `>`, `<=`,
+ * `>=`) on field A, the first `orderBy` must also be on field A. Sieve queries
+ * like `price>=100 & sorts=-createdAt` translate to an inequality on `price`
+ * with `orderBy createdAt`, which Firestore rejects. Work-arounds:
+ *   (a) move the inequality filter to the Firebase Function path where it can
+ *       be handled server-side, (b) apply it in-memory in the fallback path,
+ *       (c) restructure the sort to use the same field as the filter.
+ *
+ * ### 6. Dot-notation nested field filters (`address.city==Delhi`)
+ * Sieve parses the field name verbatim; the Firebase adapter passes it as the
+ * Firestore field path. Firestore Admin SDK supports dot-notation for nested
+ * fields, so `address.city==Delhi` works — but only if the field is indexed.
+ * Add nested-field indexes explicitly; Firestore does not auto-index nested
+ * paths in composite indexes declared at the root level.
  */
 
 import type {
@@ -180,23 +229,27 @@ export async function applySieveToFirestore<T extends DocumentData>(params: {
     fields,
   } as never);
 
+  const page = Math.max(1, Number(model.page ?? 1));
+  const pageSize = Math.min(
+    merged.maxPageSize,
+    Math.max(1, Number(model.pageSize ?? merged.defaultPageSize)),
+  );
+
+  // Apply filters + sorts once; count without reading docs.
   const filteredQ = processor.apply(effective, baseQuery, {
     applyPagination: false,
   } as never) as unknown as Query;
   const total = await getFirestoreCount(filteredQ);
 
-  const pagedQ = processor.apply(effective, baseQuery) as unknown as Query;
+  // Apply pagination on top of the already-filtered query — avoids re-applying
+  // the full Sieve DSL from the base.
+  const pagedQ = filteredQ.offset((page - 1) * pageSize).limit(pageSize);
   const snap = await pagedQ.get();
 
   const items = snap.docs.map(
     (d) => deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as T,
   );
 
-  const page = Math.max(1, Number(model.page ?? 1));
-  const pageSize = Math.min(
-    merged.maxPageSize,
-    Math.max(1, Number(model.pageSize ?? merged.defaultPageSize)),
-  );
   const totalPages = total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
 
   return {
@@ -238,14 +291,21 @@ export abstract class FirebaseSieveRepository<
       fields,
     } as never);
 
-    // Count (no docs fetched)
+    const page = Math.max(1, Number(model.page ?? 1));
+    const pageSize = Math.min(
+      merged.maxPageSize,
+      Math.max(1, Number(model.pageSize ?? merged.defaultPageSize)),
+    );
+
+    // Apply filters + sorts once; count without reading docs.
     const filteredQ = processor.apply(effective, base, {
       applyPagination: false,
     } as never) as unknown as Query;
     const total = await getFirestoreCount(filteredQ);
 
-    // Paginated result
-    const pagedQ = processor.apply(effective, base) as unknown as Query;
+    // Apply pagination on top of the already-filtered query — avoids re-applying
+    // the full Sieve DSL from the base.
+    const pagedQ = filteredQ.offset((page - 1) * pageSize).limit(pageSize);
     const snap = await pagedQ.get();
 
     const items = snap.docs.map(
@@ -253,11 +313,6 @@ export abstract class FirebaseSieveRepository<
         deserializeTimestamps({ id: d.id, ...d.data() }) as unknown as TResult,
     );
 
-    const page = Math.max(1, Number(model.page ?? 1));
-    const pageSize = Math.min(
-      merged.maxPageSize,
-      Math.max(1, Number(model.pageSize ?? merged.defaultPageSize)),
-    );
     const totalPages =
       total === 0 ? 0 : Math.max(1, Math.ceil(total / pageSize));
 

@@ -5,7 +5,7 @@ export const manifest: FeatureManifest = {
   i18nNamespace: "stores",
   envKeys: [],
   routes: [
-    { segment: "[locale]/stores", exports: { default: "StoresListView" } },
+    { segment: "[locale]/stores", exports: { default: "StoresIndexPageView" } },
     {
       segment: "[locale]/stores/[storeSlug]",
       exports: { default: "StoreStorefrontView" },

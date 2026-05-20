@@ -18,8 +18,6 @@ export { ReviewSummary } from "./ReviewSummary";
 export type { ViewReviewModalProps } from "./ReviewModal";
 export { ViewReviewModal } from "./ReviewModal";
 
-export { ReviewsListView } from "./ReviewsListView";
-export type { ReviewsListViewProps } from "./ReviewsListView";
 
 export { ReviewsIndexListing } from "./ReviewsIndexListing";
 export type { ReviewsIndexListingProps } from "./ReviewsIndexListing";

@@ -10,8 +10,6 @@ export { BreadcrumbTrail } from "./BreadcrumbTrail";
 export { ConcernCard } from "./ConcernCard";
 export { ConcernGrid } from "./ConcernGrid";
 
-export { CategoriesListView } from "./CategoriesListView";
-export type { CategoriesListViewProps } from "./CategoriesListView";
 
 export {
   CategoryFilters,

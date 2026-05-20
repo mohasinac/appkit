@@ -1,15 +1,15 @@
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section, Stack } from "../../../ui";
+import { Heading, Text, Section, Stack, Alert } from "../../../ui";
 import { TextLink } from "../../../ui";
 import {
   BookOpen,
   MessageCircle,
   ShoppingBag,
-  Truck,
-  CreditCard,
+  Gavel,
+  PackageCheck,
+  UserCheck,
   Store,
-  ShieldCheck,
   ChevronRight,
 } from "lucide-react";
 
@@ -30,55 +30,50 @@ export async function HelpPageView({
   const TOPICS = [
     {
       icon: ShoppingBag,
-      title: t("topicBuying"),
-      desc: t("topicBuyingDesc"),
-      href: String(ROUTES.PUBLIC.HOW_ORDERS_WORK),
-      color:
-        "bg-primary/5 border-primary/20 dark:bg-primary/10 dark:border-primary/30",
+      title: t("topicShopping"),
+      desc: t("topicShoppingDesc"),
+      href: String(ROUTES.PUBLIC.HELP_SHOPPING),
+      color: "bg-primary/5 border-primary/20 dark:bg-primary/10 dark:border-primary/30",
       iconColor: "text-primary",
     },
     {
-      icon: Truck,
-      title: t("topicShipping"),
-      desc: t("topicShippingDesc"),
-      href: String(ROUTES.PUBLIC.SHIPPING_POLICY),
+      icon: Gavel,
+      title: t("topicAuctions"),
+      desc: t("topicAuctionsDesc"),
+      href: String(ROUTES.PUBLIC.HELP_AUCTIONS),
       color: "bg-sky-50 border-sky-200 dark:bg-sky-900/20 dark:border-sky-700",
       iconColor: "text-sky-600 dark:text-sky-400",
     },
     {
-      icon: CreditCard,
-      title: t("topicPayment"),
-      desc: t("topicPaymentDesc"),
-      href: String(ROUTES.PUBLIC.HOW_CHECKOUT_WORKS),
-      color:
-        "bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700",
+      icon: PackageCheck,
+      title: t("topicOrders"),
+      desc: t("topicOrdersDesc"),
+      href: String(ROUTES.PUBLIC.HELP_ORDERS),
+      color: "bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:border-emerald-700",
       iconColor: "text-emerald-600 dark:text-emerald-400",
     },
     {
-      icon: Store,
-      title: t("topicSelling"),
-      desc: t("topicSellingDesc"),
-      href: String(ROUTES.PUBLIC.SELLER_GUIDE),
-      color:
-        "bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-700",
-      iconColor: "text-amber-600 dark:text-amber-400",
+      icon: UserCheck,
+      title: t("topicAccount"),
+      desc: t("topicAccountDesc"),
+      href: String(ROUTES.PUBLIC.HELP_ACCOUNT),
+      color: "bg-violet-50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-700",
+      iconColor: "text-violet-600 dark:text-violet-400",
     },
     {
       icon: BookOpen,
       title: t("topicFAQs"),
       desc: t("topicFAQsDesc"),
       href: String(ROUTES.PUBLIC.FAQS),
-      color:
-        "bg-violet-50 border-violet-200 dark:bg-violet-900/20 dark:border-violet-700",
-      iconColor: "text-violet-600 dark:text-violet-400",
+      color: "bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:border-amber-700",
+      iconColor: "text-amber-600 dark:text-amber-400",
     },
     {
-      icon: ShieldCheck,
-      title: t("topicSecurity"),
-      desc: t("topicSecurityDesc"),
-      href: String(ROUTES.PUBLIC.SECURITY),
-      color:
-        "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-700",
+      icon: Store,
+      title: t("topicSelling"),
+      desc: t("topicSellingDesc"),
+      href: String(ROUTES.PUBLIC.SELLER_GUIDE),
+      color: "bg-rose-50 border-rose-200 dark:bg-rose-900/20 dark:border-rose-700",
       iconColor: "text-rose-600 dark:text-rose-400",
     },
   ];
@@ -93,6 +88,7 @@ export async function HelpPageView({
       </Section>
       <div className={`${page.container.md} py-10 md:py-12 lg:py-16 space-y-14`} data-section="helppageview-div-109">
         {renderTopicsGrid(t, flex, TOPICS)}
+        {renderScamAwarenessAlert(t)}
         {renderTrackOrderSection(t, themed)}
         {renderContactCtaSection(t, themed)}
       </div>
@@ -127,6 +123,17 @@ function renderTopicsGrid(t: HelpTranslateFn, flex: HelpFlexTokens, topics: Topi
         ))}
       </div>
     </Section>
+  );
+}
+
+function renderScamAwarenessAlert(t: HelpTranslateFn) {
+  return (
+    <Alert variant="warning" title={t("scamAwarenessTitle")}>
+      {t("scamAwarenessText")}{" "}
+      <TextLink href={String(ROUTES.PUBLIC.SCAMS)} className="font-semibold underline">
+        {t("scamAwarenessCta")}
+      </TextLink>
+    </Alert>
   );
 }
 

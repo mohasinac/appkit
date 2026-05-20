@@ -4,7 +4,6 @@ export type {
   StoreAddressSelectorCreateProps,
   StoreAddressSelectorCreateLabels,
 } from "./StoreAddressSelectorCreate";
-export { StoresListView } from "./StoresListView";
 export { StoreNavTabs } from "./StoreNavTabs";
 export type { StoreNavTabsProps, StoreTab } from "./StoreNavTabs";
 export { StoreAboutView } from "./StoreAboutView";
