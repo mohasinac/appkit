@@ -180,7 +180,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
+    const updates: Record<string, string> = { q: "", sort: "", showSold: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -190,10 +190,12 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
     table.set("q", searchInput.trim());
   }, [searchInput, table]);
 
+  const showSold = table.get("showSold") === "true";
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
+  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0 || showSold;
 
   const filterParts: string[] = [];
+  if (!showSold) filterParts.push("isSold==false");
   const statusRaw = table.get("status");
   if (statusRaw && statusRaw !== "All") filterParts.push(`status==${statusRaw}`);
   const typeRaw = table.get("type");
@@ -315,6 +317,9 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
         onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
+        toggles={[
+          { label: "Show sold", active: showSold, onChange: (next) => table.set("showSold", next ? "true" : "") },
+        ]}
         extra={
           <Button size="sm" onClick={openCreatePanel} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />

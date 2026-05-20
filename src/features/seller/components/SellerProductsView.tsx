@@ -243,7 +243,7 @@ export function SellerProductsView({
   }, []);
 
   const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", listingType: "" };
+    const updates: Record<string, string> = { q: "", sort: "", listingType: "", showSold: "" };
     for (const k of FILTER_KEYS) updates[k] = "";
     table.setMany(updates);
     setSearchInput("");
@@ -261,20 +261,23 @@ export function SellerProductsView({
     [table],
   );
 
+  const showSold = table.get("showSold") === "true";
   const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
   const hasActiveState =
     !!table.get("q") ||
     table.get("sort") !== DEFAULT_SORT ||
     activeFilterCount > 0 ||
-    listingKind !== "all";
+    listingKind !== "all" ||
+    showSold;
 
   const statusRaw = table.get("status");
   const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
   // SB1-G — single-field listingType clause. The repository's Sieve aliases
   // accept both `==auction|preorder|standard` and `==pre-order` directly.
   const kindFilter = listingKind === "all" ? undefined : `listingType==${listingKind}`;
+  const soldFilter = showSold ? undefined : "isSold==false";
 
-  const filters = [statusFilter, kindFilter].filter(Boolean).join(",") || undefined;
+  const filters = [statusFilter, kindFilter, soldFilter].filter(Boolean).join(",") || undefined;
 
   const { rows, total, isLoading, errorMessage } = useSellerListingData<
     SellerProductsResponse,
@@ -442,6 +445,9 @@ export function SellerProductsView({
         onViewChange={(v) => setView(v)}
           onResetAll={resetAll}
           hasActiveState={hasActiveState}
+          toggles={[
+            { label: "Show sold", active: showSold, onChange: (next) => table.set("showSold", next ? "true" : "") },
+          ]}
           extra={
             onCreateClick ? (
               <Button variant="primary" size="sm" onClick={onCreateClick}>

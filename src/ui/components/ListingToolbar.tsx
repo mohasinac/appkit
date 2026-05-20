@@ -17,6 +17,12 @@ export interface ListingToolbarSortOption {
   label: string;
 }
 
+export interface ListingToolbarToggle {
+  label: string;
+  active: boolean;
+  onChange: (next: boolean) => void;
+}
+
 export interface ListingToolbarLabels {
   search?: string;
   filters?: string;
@@ -83,6 +89,9 @@ export interface ListingToolbarProps {
   onBulkSelectAll?: () => void;
   onBulkClear?: () => void;
 
+  /** Pill-style filter toggles rendered between view controls and extra */
+  toggles?: ListingToolbarToggle[];
+
   /** Any extra action buttons placed after the view toggle */
   extra?: React.ReactNode;
 
@@ -121,6 +130,7 @@ export function ListingToolbar({
   bulkTotalCount = 0,
   onBulkSelectAll,
   onBulkClear,
+  toggles,
   extra,
   labels,
   className = "",
@@ -261,6 +271,27 @@ export function ListingToolbar({
             >
               <RotateCcw className="h-4 w-4" />
             </button>
+          )}
+
+          {toggles && toggles.length > 0 && (
+            <div className="flex items-center gap-1">
+              {toggles.map((t) => (
+                <button
+                  key={t.label}
+                  type="button"
+                  role="switch"
+                  aria-checked={t.active}
+                  onClick={() => t.onChange(!t.active)}
+                  className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors whitespace-nowrap ${
+                    t.active
+                      ? "border-transparent bg-[var(--appkit-color-primary,theme(colors.violet.600))] text-white"
+                      : "border-zinc-300 dark:border-slate-600 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
           )}
 
           {extra}

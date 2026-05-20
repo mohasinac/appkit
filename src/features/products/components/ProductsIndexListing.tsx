@@ -184,28 +184,9 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
         bulkTotalCount={products.length}
         onBulkSelectAll={selection.toggleAll}
         onBulkClear={selection.clearSelection}
-        extra={
-          <label className="flex items-center gap-1.5 cursor-pointer select-none shrink-0">
-            <span className="hidden sm:inline text-xs text-zinc-600 dark:text-zinc-300 whitespace-nowrap">
-              Show sold
-            </span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={showSold}
-              onClick={() => table.set(TABLE_KEYS.SHOW_SOLD, showSold ? "" : "true")}
-              className={`relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 ${
-                showSold ? "bg-primary" : "bg-zinc-300 dark:bg-slate-600"
-              }`}
-            >
-              <span
-                className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                  showSold ? "translate-x-[19px]" : "translate-x-[3px]"
-                }`}
-              />
-            </button>
-          </label>
-        }
+        toggles={[
+          { label: "Show sold", active: showSold, onChange: (next) => table.set(TABLE_KEYS.SHOW_SOLD, next ? "true" : "") },
+        ]}
       />
 
       {/* ── Bulk action bar (inline, replaces fixed bottom bar) ────────── */}
