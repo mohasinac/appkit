@@ -4663,9 +4663,6 @@ export { CATEGORY_PUBLIC_SORT_OPTIONS } from "./features/categories/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // CATEGORY_SELLER_SORT_OPTIONS - Constant used across modules.
 export { CATEGORY_SELLER_SORT_OPTIONS } from "./features/categories/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// CategoriesListView - Component for categories list view.
-export { CategoriesListView } from "./features/categories/index";
 // [SERVER-RSC]-Self-fetching index/detail page views for categories.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // CategoryCard - Component for category card.
@@ -4783,9 +4780,6 @@ export { useCreateCategory } from "./features/categories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BreadcrumbTrailProps - Type contract for breadcrumb trail props.
 export type { BreadcrumbTrailProps } from "./features/categories/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// CategoriesListViewProps - Type contract for categories list view props.
-export type { CategoriesListViewProps } from "./features/categories/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // CategoriesResponse - Type contract for categories response.
 export type { CategoriesResponse } from "./features/categories/index";
@@ -6940,9 +6934,6 @@ export type { BundleBuyNowCtaProps } from "./features/categories/components/Bund
 // CategoryBundlesListing is also re-exported lower in this file (line ~8871);
 // the canonical export lives there next to BUNDLE_MIN_ITEMS / BUNDLE_MAX_ITEMS.
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AuctionsView - Component for auctions view.
-export { AuctionsView } from "./features/products/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BidHistory - Shared export for bid history.
 export { BidHistory } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -7012,9 +7003,6 @@ export { PlaceBidForm } from "./features/products/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // PreOrderDetailView - Component for pre order detail view.
 export { PreOrderDetailView } from "./features/products/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// PreOrdersView - Component for pre orders view.
-export { PreOrdersView } from "./features/products/index";
 // [SERVER-RSC]-Public listing for prize-draw products (SB4-F).
 export type { PrizeDrawsListingViewProps } from "./features/products/components/PrizeDrawsListingView";
 // [CLIENT]-Client toolbar+grid for prize draws (SB4-F).
@@ -7197,9 +7185,6 @@ export { useRelatedProducts } from "./features/products/index";
 // AuctionDetailViewProps - Type contract for auction detail view props.
 export type { AuctionDetailViewProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// AuctionsViewProps - Type contract for auctions view props.
-export type { AuctionsViewProps } from "./features/products/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidHistoryEntry - Type contract for bid history entry.
 export type { BidHistoryEntry } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -7223,9 +7208,6 @@ export type { PlaceBidFormProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PreOrderDetailViewProps - Type contract for pre order detail view props.
 export type { PreOrderDetailViewProps } from "./features/products/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PreOrdersViewProps - Type contract for pre orders view props.
-export type { PreOrdersViewProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ProductAdminUpdateInput - Type contract for product admin update input.
 export type { ProductAdminUpdateInput } from "./features/products/index";
@@ -7600,9 +7582,6 @@ export { ReviewSummary } from "./features/reviews/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ReviewsList - Shared export for reviews list.
 export { ReviewsList } from "./features/reviews/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// ReviewsListView - Component for reviews list view.
-export { ReviewsListView } from "./features/reviews/index";
 // [SERVER-RSC]-Self-fetching index page view for reviews.
 // [SERVER-RSC]-Self-fetching review detail page view.
 export type { ReviewDetailPageViewProps } from "./features/reviews/components/ReviewDetailPageView";
@@ -7708,9 +7687,6 @@ export type { ReviewVideoField } from "./features/reviews/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ReviewsListProps - Type contract for reviews list props.
 export type { ReviewsListProps } from "./features/reviews/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ReviewsListViewProps - Type contract for reviews list view props.
-export type { ReviewsListViewProps } from "./features/reviews/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ViewReviewModalProps - Type contract for view review modal props.
 export type { ViewReviewModalProps } from "./features/reviews/index";
@@ -8407,9 +8383,6 @@ export { StoreReviewsView } from "./features/stores/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // StoreStatusValues - Model for store status values.
 export { StoreStatusValues } from "./features/stores/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// StoresListView - Component for stores list view.
-export { StoresListView } from "./features/stores/index";
 // [SERVER-RSC] â€" Self-fetching RSC page views for store tab pages.
 export { StoresIndexListing } from "./features/stores/index";
 export type { StoresIndexListingProps } from "./features/stores/index";
@@ -8424,6 +8397,35 @@ export { StoreReviewsPageView } from "./features/stores/components/StoreReviewsP
 export type { StorePrizeDrawsPageViewProps } from "./features/stores/components/StorePrizeDrawsPageView";
 // [SERVER-RSC]-Public store â†’ Bundles tab (SB7-D / S7-PrizeDraws-3).
 export type { StoreBundlesPageViewProps } from "./features/stores/components/StoreBundlesPageView";
+// [CLIENT-SSR]-Admin guide hub — static view, permission-aware card grid.
+export { AdminGuideHubView } from "./features/admin/components/AdminGuideHubView";
+export type { AdminGuideHubViewProps } from "./features/admin/components/AdminGuideHubView";
+// [CLIENT-SSR]-Admin users guide — static view, no firebase-admin.
+export { AdminUsersGuideView } from "./features/admin/components/AdminUsersGuideView";
+// [CLIENT-SSR]-Admin catalog guide — static view, no firebase-admin.
+export { AdminCatalogGuideView } from "./features/admin/components/AdminCatalogGuideView";
+// [CLIENT-SSR]-Admin stores guide — static view, no firebase-admin.
+export { AdminStoresGuideView } from "./features/admin/components/AdminStoresGuideView";
+// [CLIENT-SSR]-Admin orders guide — static view, no firebase-admin.
+export { AdminOrdersGuideView } from "./features/admin/components/AdminOrdersGuideView";
+// [CLIENT-SSR]-Admin content guide — static view, no firebase-admin.
+export { AdminContentGuideView } from "./features/admin/components/AdminContentGuideView";
+// [CLIENT-SSR]-Admin site config guide — static view, no firebase-admin.
+export { AdminSiteConfigGuideView } from "./features/admin/components/AdminSiteConfigGuideView";
+// [CLIENT-SSR]-Admin team guide — static view, no firebase-admin.
+export { AdminTeamGuideView } from "./features/admin/components/AdminTeamGuideView";
+// [CLIENT-SSR]-Admin analytics guide — static view, no firebase-admin.
+export { AdminAnalyticsGuideView } from "./features/admin/components/AdminAnalyticsGuideView";
+// [CLIENT-SSR]-Admin trust & safety guide — static view, no firebase-admin.
+export { AdminTrustGuideView } from "./features/admin/components/AdminTrustGuideView";
+// [CLIENT-SSR]-Buyer shopping guide — static view, no firebase-admin.
+export { BuyerShoppingGuideView } from "./features/account/components/BuyerShoppingGuideView";
+// [CLIENT-SSR]-Buyer auctions & pre-orders guide — static view, no firebase-admin.
+export { BuyerAuctionsGuideView } from "./features/account/components/BuyerAuctionsGuideView";
+// [CLIENT-SSR]-Buyer orders & returns guide — static view, no firebase-admin.
+export { BuyerOrdersGuideView } from "./features/account/components/BuyerOrdersGuideView";
+// [CLIENT-SSR]-Buyer account & safety guide — static view, no firebase-admin.
+export { BuyerAccountGuideView } from "./features/account/components/BuyerAccountGuideView";
 // [CLIENT-SSR]-Store seller guide hub — static view, no firebase-admin.
 export { StoreGuideHubView } from "./features/stores/components/StoreGuideHubView";
 export type { StoreGuideHubViewProps } from "./features/stores/components/StoreGuideHubView";

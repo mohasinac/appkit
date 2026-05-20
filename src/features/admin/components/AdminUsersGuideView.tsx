@@ -1,0 +1,115 @@
+import React from "react";
+import { Users, Search, Edit, Monitor, UserCog, AlertTriangle } from "lucide-react";
+import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { GC } from "../../_guide-cls";
+
+export function AdminUsersGuideView() {
+  return (
+    <Div className="space-y-8 pb-10 max-w-3xl mx-auto">
+      <Section>
+        <Div className="flex items-center gap-3 mb-2">
+          <Div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: "linear-gradient(135deg,var(--appkit-color-primary-700,#4f46e5) 0%,var(--appkit-color-cobalt,#2563eb) 100%)" }}>
+            <Users className="w-5 h-5 text-white" />
+          </Div>
+          <Text className="text-sm font-semibold text-[var(--appkit-color-text-muted)] uppercase tracking-widest">Admin Guide</Text>
+        </Div>
+        <Heading level={1} className="text-2xl md:text-3xl font-bold text-[var(--appkit-color-text)] mb-2">Users &amp; Accounts</Heading>
+        <Text className="text-[var(--appkit-color-text-muted)]">Managing users, roles, sessions, and employee accounts on LetItRip.</Text>
+      </Section>
+
+      {[
+        {
+          Icon: Users, title: "User Roles Overview",
+          content: (
+            <Div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b border-[var(--appkit-color-border)]">
+                    {["Role", "What they can do", "How assigned"].map((h) => (
+                      <th key={h} className="text-left py-2 pr-4 font-semibold text-[var(--appkit-color-text)]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="text-[var(--appkit-color-text-muted)]">
+                  {[
+                    ["user", "Browse, buy, bid, wishlist, reviews, support tickets", "Auto on registration"],
+                    ["seller", "Everything above + store management + listings", "Auto when store is created"],
+                    ["moderator", "Review content, manage scam reports, FAQ moderation", "Admin team invite"],
+                    ["employee", "Assigned permission-group access to admin sections", "Admin team invite"],
+                    ["admin", "Full access to all admin sections, bypasses RBAC checks", "Manual via Firebase console"],
+                  ].map(([role, can, how]) => (
+                    <tr key={role} className="border-b border-[var(--appkit-color-border)]/50">
+                      <td className="py-2 pr-4 font-mono text-xs text-[var(--appkit-color-primary)]">{role}</td>
+                      <td className="py-2 pr-4">{can}</td>
+                      <td className="py-2">{how}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Div>
+          ),
+        },
+        {
+          Icon: Search, title: "User List & Search",
+          content: (
+            <ul className={GC.listMuted}>
+              <li><strong className="text-[var(--appkit-color-text)]">Columns</strong>: display name, email, role badge, emailVerified, createdAt, last login.</li>
+              <li><strong className="text-[var(--appkit-color-text)]">Filter chips</strong>: All, by role, verified only, banned.</li>
+              <li><strong className="text-[var(--appkit-color-text)]">Search</strong>: by email or displayName. Email matches use the HMAC blind index — searching partial emails returns no results.</li>
+            </ul>
+          ),
+        },
+        {
+          Icon: Edit, title: "Editing a User",
+          content: (
+            <>
+              <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">The AdminUserEditorView opens in a side drawer. Fields:</Text>
+              <ul className={GC.listMuted}>
+                <li><strong className="text-[var(--appkit-color-text)]">role Select</strong> — changing to <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code> bypasses all RBAC checks. Only do this with explicit senior approval.</li>
+                <li><strong className="text-[var(--appkit-color-text)]">emailVerified toggle</strong> — manually mark an email as verified (e.g. after manual ID check).</li>
+                <li><strong className="text-[var(--appkit-color-text)]">isDisabled</strong> — disables Firebase Auth login without a full hard ban. User sees "account suspended" on login.</li>
+                <li><strong className="text-[var(--appkit-color-text)]">PII note</strong> — email and phone are HMAC-indexed. The UI shows the hashed index, not the plaintext value. Never store plaintext in Firestore.</li>
+              </ul>
+            </>
+          ),
+        },
+        {
+          Icon: Monitor, title: "Sessions Management",
+          content: (
+            <ul className={GC.listMuted}>
+              <li><strong className="text-[var(--appkit-color-text)]">Session table</strong> shows: browser, OS, device type, masked IP (last octet zeroed), last activity, and estimated location.</li>
+              <li><strong className="text-[var(--appkit-color-text)]">Force expire</strong> a session if you suspect account takeover — the user will be signed out on their next request.</li>
+              <li><strong className="text-[var(--appkit-color-text)]">Hard ban cascade</strong> — issuing a hard ban automatically expires all active sessions for that user.</li>
+            </ul>
+          ),
+        },
+        {
+          Icon: UserCog, title: "Employee Accounts",
+          content: (
+            <ul className={GC.listMuted}>
+              <li>Create employee accounts via <strong>Admin → Team</strong>, not by manually writing to Firestore.</li>
+              <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</code> has no elevated Firestore rules by default — access is governed entirely by the permission group assigned to them.</li>
+              <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "admin"</code> bypasses all RBAC — use sparingly. One admin account per real person maximum.</li>
+            </ul>
+          ),
+        },
+        {
+          Icon: AlertTriangle, title: "PII Handling Notice",
+          content: (
+            <Alert variant="warning">
+              Email and phone are encrypted at rest and indexed via HMAC blind index. Never export raw user data outside of the admin panel. Any CSV export (future) de-identifies PII before download. If you encounter plaintext email or phone data in Firestore directly — report it to the engineering team immediately.
+            </Alert>
+          ),
+        },
+      ].map(({ Icon, title, content }) => (
+        <Section key={title} className="rounded-2xl border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] overflow-hidden">
+          <Div className="flex items-center gap-3 px-6 py-4 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-2,var(--appkit-color-border))]/20">
+            <Icon className="w-5 h-5 text-[var(--appkit-color-primary)]" />
+            <Heading level={2} className="text-base font-semibold text-[var(--appkit-color-text)]">{title}</Heading>
+          </Div>
+          <Div className="px-6 py-5">{content}</Div>
+        </Section>
+      ))}
+    </Div>
+  );
+}
