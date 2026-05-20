@@ -36,3 +36,5 @@ export type { StorePrizeDrawsPageViewProps } from "./StorePrizeDrawsPageView";
 export type { StoreBundlesPageViewProps } from "./StoreBundlesPageView";
 export { StoreGuideHubView } from "./StoreGuideHubView";
 export type { StoreGuideHubViewProps } from "./StoreGuideHubView";
+export { StoreListingsGuideView } from "./StoreListingsGuideView";
+export type { StoreListingsGuideViewProps } from "./StoreListingsGuideView";
