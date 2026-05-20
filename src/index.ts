@@ -8433,6 +8433,9 @@ export type { StoreListingsGuideViewProps } from "./features/stores/components/S
 // [CLIENT-SSR]-Store orders guide — static view, no firebase-admin.
 export { StoreOrdersGuideView } from "./features/stores/components/StoreOrdersGuideView";
 export type { StoreOrdersGuideViewProps } from "./features/stores/components/StoreOrdersGuideView";
+// [CLIENT-SSR]-Store finance guide — static view, no firebase-admin.
+export { StoreFinanceGuideView } from "./features/stores/components/StoreFinanceGuideView";
+export type { StoreFinanceGuideViewProps } from "./features/stores/components/StoreFinanceGuideView";
 export { StorePreOrdersListing } from "./features/stores/components/StorePreOrdersListing";
 export type { StorePreOrdersListingProps } from "./features/stores/components/StorePreOrdersListing";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
