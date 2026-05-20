@@ -27,6 +27,7 @@ import {
   Text,
   Textarea,
 } from "../../../ui";
+import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import {
   BundleItemsPicker,
   defaultBundleItemsFetch,
@@ -131,8 +132,9 @@ export function AdminBundleEditorView({
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<Record<string, BundleItemSearchResult>>({});
+  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   // Load existing bundle on mount when editing
   useEffect(() => {
@@ -149,7 +151,7 @@ export function AdminBundleEditorView({
       })
       .catch((err: unknown) => {
         if (cancelled) return;
-        setError(
+        setApiError(
           err instanceof Error
             ? err.message
             : BUNDLE_COPY.adminEditor.errors.loadFailed,
@@ -164,16 +166,19 @@ export function AdminBundleEditorView({
   }, [bundleId]);
 
   const handleSave = useCallback(async () => {
-    setError(null);
+    clearErrors();
+    setApiError(null);
     const priceInPaise = parsePriceRupees(form.priceRupees);
+    let hasError = false;
     if (!form.name.trim()) {
-      setError(BUNDLE_COPY.adminEditor.errors.nameRequired);
-      return;
+      setFieldError("name", BUNDLE_COPY.adminEditor.errors.nameRequired);
+      hasError = true;
     }
     if (priceInPaise === null) {
-      setError(BUNDLE_COPY.adminEditor.errors.priceInvalid);
-      return;
+      setFieldError("price", BUNDLE_COPY.adminEditor.errors.priceInvalid);
+      hasError = true;
     }
+    if (hasError) return;
 
     setSaving(true);
     try {
@@ -229,7 +234,7 @@ export function AdminBundleEditorView({
         if (newId) onSaved?.(newId);
       }
     } catch (err) {
-      setError(
+      setApiError(
         err instanceof Error
           ? err.message
           : BUNDLE_COPY.adminEditor.errors.saveFailed,
@@ -237,7 +242,7 @@ export function AdminBundleEditorView({
     } finally {
       setSaving(false);
     }
-  }, [form, bundleId, isEdit, onSaved]);
+  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError]);
 
   const handleDelete = useCallback(async () => {
     if (!bundleId) return;
@@ -245,7 +250,7 @@ export function AdminBundleEditorView({
       return;
     }
     setDeleting(true);
-    setError(null);
+    setApiError(null);
     try {
       const res = await fetch(
         `/api/admin/bundles/${encodeURIComponent(bundleId)}`,
@@ -254,7 +259,7 @@ export function AdminBundleEditorView({
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
       onDeleted?.();
     } catch (err) {
-      setError(
+      setApiError(
         err instanceof Error
           ? err.message
           : BUNDLE_COPY.adminEditor.errors.deleteFailed,
@@ -277,160 +282,159 @@ export function AdminBundleEditorView({
   }
 
   return (
-    <Section className="py-10">
-      <Container size="lg">
-        <Stack gap="lg">
-          <Row gap="sm" align="center" justify="between" className="flex-wrap">
-            <Heading
-              level={1}
-              className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
-            >
-              {isEdit
-                ? BUNDLE_COPY.adminEditorTitleEdit
-                : BUNDLE_COPY.adminEditorTitleNew}
-            </Heading>
-            {isEdit && (
-              <Button
-                variant="danger"
-                onClick={handleDelete}
-                disabled={deleting}
+    <FormShellContext.Provider value={shellCtx}>
+      <Section className="py-10">
+        <Container size="lg">
+          <Stack gap="lg">
+            <Row gap="sm" align="center" justify="between" className="flex-wrap">
+              <Heading
+                level={1}
+                className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100"
               >
-                {BUNDLE_COPY.adminEditor.deleteButton(deleting)}
-              </Button>
-            )}
-          </Row>
+                {isEdit
+                  ? BUNDLE_COPY.adminEditorTitleEdit
+                  : BUNDLE_COPY.adminEditorTitleNew}
+              </Heading>
+              {isEdit && (
+                <Button
+                  variant="danger"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                >
+                  {BUNDLE_COPY.adminEditor.deleteButton(deleting)}
+                </Button>
+              )}
+            </Row>
 
-          {error && (
-            <Text color="danger" role="alert">
-              {error}
-            </Text>
-          )}
-
-          <Stack gap="md">
-            <Stack gap="xs">
-              <Text size="sm" weight="semibold">
-                {BUNDLE_COPY.adminEditor.fields.nameLabel}
+            {apiError && (
+              <Text color="danger" role="alert">
+                {apiError}
               </Text>
-              <Input
-                type="text"
+            )}
+
+            <Stack gap="md">
+              <FieldInput
+                name="name"
+                label={BUNDLE_COPY.adminEditor.fields.nameLabel}
                 value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onChange={(v) => setForm((f) => ({ ...f, name: v }))}
                 placeholder={BUNDLE_COPY.adminEditor.fields.namePlaceholder}
                 disabled={saving}
+                required
               />
-            </Stack>
 
-            <Stack gap="xs">
-              <Text size="sm" weight="semibold">
-                {BUNDLE_COPY.adminEditor.fields.descriptionLabel}
-              </Text>
-              <Textarea
-                value={form.description}
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">
+                  {BUNDLE_COPY.adminEditor.fields.descriptionLabel}
+                </Text>
+                <Textarea
+                  value={form.description}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, description: e.target.value }))
+                  }
+                  placeholder={
+                    BUNDLE_COPY.adminEditor.fields.descriptionPlaceholder
+                  }
+                  rows={4}
+                  disabled={saving}
+                />
+              </Stack>
+
+              <Stack gap="xs">
+                <FieldInput
+                  name="price"
+                  label={BUNDLE_COPY.adminEditor.fields.priceLabel}
+                  type="number"
+                  inputMode="decimal"
+                  min={1}
+                  step={1}
+                  value={form.priceRupees}
+                  onChange={(v) =>
+                    setForm((f) => ({ ...f, priceRupees: v }))
+                  }
+                  placeholder={BUNDLE_COPY.adminEditor.fields.pricePlaceholder}
+                  disabled={saving}
+                  required
+                />
+                <Text size="xs" color="muted">
+                  {BUNDLE_COPY.adminEditor.fields.pricePaiseHint(
+                    parsePriceRupees(form.priceRupees),
+                  )}
+                </Text>
+              </Stack>
+
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">
+                  {BUNDLE_COPY.adminEditor.fields.coverImageLabel}
+                </Text>
+                <Input
+                  type="url"
+                  value={form.coverImage}
+                  onChange={(e) =>
+                    setForm((f) => ({ ...f, coverImage: e.target.value }))
+                  }
+                  placeholder="https://…"
+                  disabled={saving}
+                />
+              </Stack>
+
+              <Checkbox
+                checked={form.isActive}
                 onChange={(e) =>
-                  setForm((f) => ({ ...f, description: e.target.value }))
+                  setForm((f) => ({ ...f, isActive: e.target.checked }))
                 }
-                placeholder={
-                  BUNDLE_COPY.adminEditor.fields.descriptionPlaceholder
-                }
-                rows={4}
                 disabled={saving}
+                label={BUNDLE_COPY.adminEditor.fields.activeLabel}
               />
+
+              <Stack gap="xs">
+                <Text size="sm" weight="semibold">
+                  {BUNDLE_COPY.adminEditor.ruleTypeLabel}
+                </Text>
+                <Select<"static" | "dynamic">
+                  options={RULE_TYPE_OPTIONS}
+                  value={form.ruleType}
+                  onValueChange={(next) =>
+                    setForm((f) => ({ ...f, ruleType: next }))
+                  }
+                  disabled={saving}
+                  aria-label={BUNDLE_COPY.adminEditor.ruleTypeLabel}
+                />
+              </Stack>
+
+              {form.ruleType === "static" ? (
+                <BundleItemsPicker
+                  value={form.productIds}
+                  onChange={(next) =>
+                    setForm((f) => ({ ...f, productIds: next }))
+                  }
+                  fetchProducts={fetchProducts}
+                  initialMetadata={metadata}
+                />
+              ) : (
+                <BundleDynamicRuleEditor
+                  value={form.dynamicRule}
+                  onChange={(next) =>
+                    setForm((f) => ({ ...f, dynamicRule: next }))
+                  }
+                  disabled={saving}
+                />
+              )}
             </Stack>
 
-            <Stack gap="xs">
-              <Text size="sm" weight="semibold">
-                {BUNDLE_COPY.adminEditor.fields.priceLabel}
-              </Text>
-              <Input
-                type="number"
-                inputMode="decimal"
-                min={1}
-                step={1}
-                value={form.priceRupees}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, priceRupees: e.target.value }))
-                }
-                placeholder={BUNDLE_COPY.adminEditor.fields.pricePlaceholder}
+            <Row gap="sm" align="center" justify="end">
+              <Button
+                variant="primary"
+                onClick={handleSave}
                 disabled={saving}
-              />
-              <Text size="xs" color="muted">
-                {BUNDLE_COPY.adminEditor.fields.pricePaiseHint(
-                  parsePriceRupees(form.priceRupees),
-                )}
-              </Text>
-            </Stack>
-
-            <Stack gap="xs">
-              <Text size="sm" weight="semibold">
-                {BUNDLE_COPY.adminEditor.fields.coverImageLabel}
-              </Text>
-              <Input
-                type="url"
-                value={form.coverImage}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, coverImage: e.target.value }))
-                }
-                placeholder="https://…"
-                disabled={saving}
-              />
-            </Stack>
-
-            <Checkbox
-              checked={form.isActive}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, isActive: e.target.checked }))
-              }
-              disabled={saving}
-              label={BUNDLE_COPY.adminEditor.fields.activeLabel}
-            />
-
-            <Stack gap="xs">
-              <Text size="sm" weight="semibold">
-                {BUNDLE_COPY.adminEditor.ruleTypeLabel}
-              </Text>
-              <Select<"static" | "dynamic">
-                options={RULE_TYPE_OPTIONS}
-                value={form.ruleType}
-                onValueChange={(next) =>
-                  setForm((f) => ({ ...f, ruleType: next }))
-                }
-                disabled={saving}
-                aria-label={BUNDLE_COPY.adminEditor.ruleTypeLabel}
-              />
-            </Stack>
-
-            {form.ruleType === "static" ? (
-              <BundleItemsPicker
-                value={form.productIds}
-                onChange={(next) =>
-                  setForm((f) => ({ ...f, productIds: next }))
-                }
-                fetchProducts={fetchProducts}
-                initialMetadata={metadata}
-              />
-            ) : (
-              <BundleDynamicRuleEditor
-                value={form.dynamicRule}
-                onChange={(next) =>
-                  setForm((f) => ({ ...f, dynamicRule: next }))
-                }
-                disabled={saving}
-              />
-            )}
+                aria-busy={saving}
+              >
+                {BUNDLE_COPY.adminEditor.saveButton(saving, isEdit)}
+              </Button>
+            </Row>
           </Stack>
-
-          <Row gap="sm" align="center" justify="end">
-            <Button
-              variant="primary"
-              onClick={handleSave}
-              disabled={saving}
-              aria-busy={saving}
-            >
-              {BUNDLE_COPY.adminEditor.saveButton(saving, isEdit)}
-            </Button>
-          </Row>
-        </Stack>
-      </Container>
-    </Section>
+        </Container>
+      </Section>
+    </FormShellContext.Provider>
   );
 }
