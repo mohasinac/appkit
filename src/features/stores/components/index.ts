@@ -38,3 +38,5 @@ export { StoreGuideHubView } from "./StoreGuideHubView";
 export type { StoreGuideHubViewProps } from "./StoreGuideHubView";
 export { StoreListingsGuideView } from "./StoreListingsGuideView";
 export type { StoreListingsGuideViewProps } from "./StoreListingsGuideView";
+export { StoreOrdersGuideView } from "./StoreOrdersGuideView";
+export type { StoreOrdersGuideViewProps } from "./StoreOrdersGuideView";
