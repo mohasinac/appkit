@@ -142,7 +142,7 @@
     "appkit-seed-status": "./scripts/seed-cli.mjs"
   },
   "scripts": {
-    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/verify-css-build.mjs",
+    "build": "node -e \"const fs=require('fs');try{fs.rmSync('tsconfig.build.tsbuildinfo')}catch(e){}\" && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --minify && node scripts/bundle-css.mjs && node scripts/verify-css-build.mjs",
     "prepublishOnly": "npm run build",
     "watch": "concurrently --kill-others --restart-tries 0 --names \"ts,css\" \"tsc -p tsconfig.build.json --watch\" \"npm run watch:css\"",
     "watch:css": "tailwindcss -i src/tailwind-input.css -o dist/tailwind-utilities.css --watch",

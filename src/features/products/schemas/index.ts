@@ -56,10 +56,8 @@ export const productItemSchema = z.object({
   status: z.enum([
     "draft",
     "published",
+    "in_review",
     "archived",
-    "sold",
-    "out_of_stock",
-    "discontinued",
   ]),
   condition: z
     .enum([
@@ -215,10 +213,8 @@ export const productListParamsSchema = z.object({
     .enum([
       "draft",
       "published",
+      "in_review",
       "archived",
-      "sold",
-      "out_of_stock",
-      "discontinued",
     ])
     .optional(),
   condition: z

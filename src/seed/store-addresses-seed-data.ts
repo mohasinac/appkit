@@ -1,15 +1,23 @@
+/*
+ * WHY: Seeds store pickup/warehouse addresses for YGO marketplace — 2 stores.
+ * WHAT: 5 addresses: 2 LetItRip Official (HQ + warehouse), 3 Kaiba Corp (HQ + pickup + storage).
+ *
+ * EXPORTS:
+ *   StoreAddressSeedData (interface)
+ *   storeAddressesSeedData — Array for seed runner
+ *
+ * @tag domain:stores,addresses
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
+ */
+
 import { getSeedLocale, getDefaultPhonePrefix } from "./seed-market-config";
 
 const _locale = getSeedLocale();
 const _phonePrefix = getDefaultPhonePrefix();
-
-/**
- * Store Addresses Seed Data
- *
- * Pickup/warehouse addresses for all 8 demo stores.
- * Addresses stored as subcollection: stores/{storeSlug}/addresses/{addressId}
- * All storeSlug values must match exactly the ids in stores-seed-data.ts.
- */
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -67,12 +75,12 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
     updatedAt: daysAgo(30),
   },
 
-  // ── store-pokemon-palace ──────────────────────────────────────────────────
+  // ── store-kaiba-corp-cards ────────────────────────────────────────────────
   {
-    id: "saddr-pokemon-palace-main-001",
-    storeSlug: "store-pokemon-palace",
-    label: "Pokémon Palace HQ",
-    fullName: "Aryan Kapoor",
+    id: "saddr-kaiba-corp-main-001",
+    storeSlug: "store-kaiba-corp-cards",
+    label: "Kaiba Corp Card Vault HQ",
+    fullName: "Seto Kaiba",
     phone: `${_phonePrefix}9876501001`,
     addressLine1: "Flat 4B, Andheri Collectibles Centre, Link Road",
     addressLine2: "Andheri West",
@@ -86,10 +94,10 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
     updatedAt: daysAgo(5),
   },
   {
-    id: "saddr-pokemon-palace-pickup-002",
-    storeSlug: "store-pokemon-palace",
+    id: "saddr-kaiba-corp-pickup-002",
+    storeSlug: "store-kaiba-corp-cards",
     label: "Local Pickup Point",
-    fullName: "Aryan Kapoor",
+    fullName: "Seto Kaiba",
     phone: `${_phonePrefix}9876501001`,
     addressLine1: "Shop 12, Juhu Card Market, Juhu Tara Road",
     city: "Mumbai",
@@ -100,49 +108,12 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
     createdAt: daysAgo(300),
     updatedAt: daysAgo(10),
   },
-
-  // ── store-cardgame-hub ────────────────────────────────────────────────────
   {
-    id: "saddr-cardgame-hub-main-001",
-    storeSlug: "store-cardgame-hub",
-    label: "CardGame Hub Office",
-    fullName: "Nisha Reddy",
-    phone: `${_phonePrefix}9876502002`,
-    addressLine1: "Plot 23, Banjara Hills TCG District, Road No. 12",
-    addressLine2: "Near Banjara Hills Club",
-    city: "Hyderabad",
-    state: "Telangana",
-    postalCode: "500034",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(350),
-    updatedAt: daysAgo(3),
-  },
-
-  // ── store-diecast-depot ───────────────────────────────────────────────────
-  {
-    id: "saddr-diecast-depot-main-001",
-    storeSlug: "store-diecast-depot",
-    label: "Diecast Depot Store",
-    fullName: "Vikram Mehta",
-    phone: `${_phonePrefix}9876503003`,
-    addressLine1: "Shop 7, Lajpat Nagar Collectors Market, Central Market",
-    addressLine2: "Block A, Lajpat Nagar II",
-    landmark: "Opposite Lajpat Nagar Metro Station",
-    city: "New Delhi",
-    state: "Delhi",
-    postalCode: "110024",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(320),
-    updatedAt: daysAgo(2),
-  },
-  {
-    id: "saddr-diecast-depot-storage-002",
-    storeSlug: "store-diecast-depot",
+    id: "saddr-kaiba-corp-storage-003",
+    storeSlug: "store-kaiba-corp-cards",
     label: "Climate-Controlled Storage",
-    fullName: "Vikram Mehta",
-    phone: `${_phonePrefix}9876503003`,
+    fullName: "Seto Kaiba",
+    phone: `${_phonePrefix}9876501001`,
     addressLine1: "Unit 14, Noida Industrial Estate, Sector 63",
     city: "Noida",
     state: "Uttar Pradesh",
@@ -151,106 +122,5 @@ export const storeAddressesSeedData: StoreAddressSeedData[] = [
     isDefault: false,
     createdAt: daysAgo(280),
     updatedAt: daysAgo(15),
-  },
-
-  // ── store-beyblade-arena ──────────────────────────────────────────────────
-  {
-    id: "saddr-beyblade-arena-main-001",
-    storeSlug: "store-beyblade-arena",
-    label: "Beyblade Arena Showroom",
-    fullName: "Rohit Joshi",
-    phone: `${_phonePrefix}9876504004`,
-    addressLine1: "2nd Floor, FC Road Hobby Complex, Near Fergusson College",
-    city: "Pune",
-    state: "Maharashtra",
-    postalCode: "411004",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(290),
-    updatedAt: daysAgo(2),
-  },
-
-  // ── store-tokyo-toys-india ────────────────────────────────────────────────
-  {
-    id: "saddr-tokyo-toys-main-001",
-    storeSlug: "store-tokyo-toys-india",
-    label: "Tokyo Toys India Studio",
-    fullName: "Priya Singh",
-    phone: `${_phonePrefix}9876505005`,
-    addressLine1: "Door 4B, Nungambakkam Anime Hub, Nungambakkam High Road",
-    landmark: "Near Nungambakkam Metro Station",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    postalCode: "600034",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(260),
-    updatedAt: daysAgo(1),
-  },
-  {
-    id: "saddr-tokyo-toys-pickup-002",
-    storeSlug: "store-tokyo-toys-india",
-    label: "Local Pickup (T. Nagar)",
-    fullName: "Priya Singh",
-    phone: `${_phonePrefix}9876505005`,
-    addressLine1: "Shop 8, T. Nagar Collectibles Row, Usman Road",
-    city: "Chennai",
-    state: "Tamil Nadu",
-    postalCode: "600017",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(200),
-    updatedAt: daysAgo(5),
-  },
-
-  // ── store-gundam-galaxy ───────────────────────────────────────────────────
-  {
-    id: "saddr-gundam-galaxy-main-001",
-    storeSlug: "store-gundam-galaxy",
-    label: "Gundam Galaxy Workshop",
-    fullName: "Amit Sharma",
-    phone: `${_phonePrefix}9876506006`,
-    addressLine1: "3rd Floor, Koramangala Hobby Hub, 80 Feet Road",
-    addressLine2: "Koramangala 4th Block",
-    city: "Bengaluru",
-    state: "Karnataka",
-    postalCode: "560034",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(230),
-    updatedAt: daysAgo(2),
-  },
-
-  // ── store-vintage-vault ───────────────────────────────────────────────────
-  {
-    id: "saddr-vintage-vault-main-001",
-    storeSlug: "store-vintage-vault",
-    label: "Vintage Vault Gallery",
-    fullName: "Kavya Iyer",
-    phone: `${_phonePrefix}9876507007`,
-    addressLine1: "14, Park Street Antiques Lane, Park Street",
-    landmark: "Near Park Street Metro",
-    city: "Kolkata",
-    state: "West Bengal",
-    postalCode: "700016",
-    country: _locale.countryName,
-    isDefault: true,
-    createdAt: daysAgo(200),
-    updatedAt: daysAgo(3),
-  },
-  {
-    id: "saddr-vintage-vault-storage-002",
-    storeSlug: "store-vintage-vault",
-    label: "Climate-Controlled Archive",
-    fullName: "Kavya Iyer",
-    phone: `${_phonePrefix}9876507007`,
-    addressLine1: "Unit 3, Salt Lake City Collector Storage, Sector V",
-    city: "Kolkata",
-    state: "West Bengal",
-    postalCode: "700091",
-    country: _locale.countryName,
-    isDefault: false,
-    createdAt: daysAgo(180),
-    updatedAt: daysAgo(10),
   },
 ];

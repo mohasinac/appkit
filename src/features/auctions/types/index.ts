@@ -17,7 +17,7 @@ export interface AuctionItem {
   currentBid?: number;
   bidCount: number;
   auctionEndDate: string;
-  status: "published" | "draft" | "archived" | "sold";
+  status: "published" | "draft" | "in_review" | "archived";
   sellerId: string;
   storeId?: string;
   storeSlug?: string;

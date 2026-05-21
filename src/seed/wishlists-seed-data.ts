@@ -1,10 +1,16 @@
-/**
- * Wishlist Seed Data — one document per user at top-level `wishlists/wishlist-{userSlug}`.
+/*
+ * WHY: Seeds wishlists for YGO marketplace — one doc per user, max 20 items, newest-first.
+ * WHAT: 3 wishlists (Yugi 8 items, Kaiba 5 items, Admin 4 items). All productIds reference YGO seed products.
  *
- * id === slug === `wishlist-{userSlug}`. userSlug === user.uid (per users-seed-data.ts).
- * items[] capped at WISHLIST_MAX (20). Stored newest-first (addedAt desc).
- * All userId + productId values verified against users-seed-data.ts and
- * products-standard-seed-data.ts / products-auctions-seed-data.ts / products-preorders-seed-data.ts.
+ * EXPORTS:
+ *   wishlistsSeedData — Array of WishlistSeedDocument for seed runner
+ *
+ * @tag domain:wishlist
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
  */
 
 export interface WishlistItemSeed {
@@ -14,7 +20,6 @@ export interface WishlistItemSeed {
 }
 
 export interface WishlistSeedDocument {
-  /** doc id === slug === `wishlist-{userId}` */
   id: string;
   userId: string;
   items: WishlistItemSeed[];
@@ -25,7 +30,6 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 function makeDoc(userId: string, items: WishlistItemSeed[]): WishlistSeedDocument {
-  // Sort newest-first to match runtime invariant
   const sorted = [...items].sort(
     (a, b) => b.addedAt.getTime() - a.addedAt.getTime(),
   );
@@ -39,52 +43,32 @@ function makeDoc(userId: string, items: WishlistItemSeed[]): WishlistSeedDocumen
 }
 
 export const wishlistsSeedData: WishlistSeedDocument[] = [
-  makeDoc("user-rahul-sharma", [
-    { productId: "product-pokemon-sv-etb", productType: "product", addedAt: daysAgo(10) },
-    { productId: "product-vintage-pokemon-charizard-base-lp", productType: "product", addedAt: daysAgo(7) },
-    { productId: "auction-pokemon-charizard-base1-psa9", productType: "auction", addedAt: daysAgo(5) },
-  ]),
-  makeDoc("user-priya-patel", [
-    { productId: "product-hot-wheels-redline-1969-camaro", productType: "product", addedAt: daysAgo(12) },
-    { productId: "product-hot-wheels-rlc-bone-shaker", productType: "product", addedAt: daysAgo(8) },
-    { productId: "auction-hot-wheels-redline-camaro-pink", productType: "auction", addedAt: daysAgo(3) },
-  ]),
-  makeDoc("user-arjun-singh", [
-    { productId: "product-beyblade-x-bx01-dran-sword", productType: "product", addedAt: daysAgo(6) },
-    { productId: "product-beyblade-burst-b200-valkyrie", productType: "product", addedAt: daysAgo(4) },
-  ]),
-  makeDoc("user-meera-nair", [
-    { productId: "product-shf-goku-ultra-instinct", productType: "product", addedAt: daysAgo(9) },
-    { productId: "product-nendoroid-rem-rezero", productType: "product", addedAt: daysAgo(5) },
-    { productId: "product-gsc-racing-miku-2023", productType: "product", addedAt: daysAgo(2) },
-  ]),
-  makeDoc("user-kavya-iyer", [
-    { productId: "product-gundam-rx78-mg", productType: "product", addedAt: daysAgo(14) },
-    { productId: "product-gundam-wing-zero-rg", productType: "product", addedAt: daysAgo(9) },
-    { productId: "preorder-gundam-pg-unicorn-ver15", productType: "preorder", addedAt: daysAgo(4) },
-  ]),
-  makeDoc("user-sneha-kumar", [
-    { productId: "product-yugioh-25th-tin", productType: "product", addedAt: daysAgo(11) },
-    { productId: "product-pokemon-151-booster-box", productType: "product", addedAt: daysAgo(6) },
-  ]),
-  makeDoc("user-kartik-nair", [
-    { productId: "product-vintage-hot-wheels-deora-1968", productType: "product", addedAt: daysAgo(13) },
-    { productId: "product-vintage-motu-he-man-1982", productType: "product", addedAt: daysAgo(7) },
-  ]),
-  makeDoc("user-divya-menon", [
-    { productId: "preorder-beyblade-x-bx10-booster", productType: "preorder", addedAt: daysAgo(3) },
-    { productId: "preorder-shf-broly-super-hero", productType: "preorder", addedAt: daysAgo(1) },
+  // Yugi: 8 items — mix of standard + auctions from Kaiba's store
+  makeDoc("user-yugi-muto", [
+    { productId: "product-dark-magician-lob-1st", productType: "product", addedAt: daysAgo(14) },
+    { productId: "product-dark-magician-girl-ioc", productType: "product", addedAt: daysAgo(12) },
+    { productId: "product-black-luster-soldier", productType: "product", addedAt: daysAgo(10) },
+    { productId: "auction-blue-eyes-lob-1st-psa10", productType: "auction", addedAt: daysAgo(8) },
+    { productId: "product-monster-reborn-lob", productType: "product", addedAt: daysAgo(6) },
+    { productId: "product-pot-of-greed-lob", productType: "product", addedAt: daysAgo(4) },
+    { productId: "auction-dark-magician-girl-psa9", productType: "auction", addedAt: daysAgo(3) },
+    { productId: "preorder-25th-anniversary-lob", productType: "preorder", addedAt: daysAgo(1) },
   ]),
 
-  // Admin's personal wishlist — mix of listing types to test all flows
+  // Kaiba: 5 items from LetItRip Official (Kaiba as buyer)
+  makeDoc("user-seto-kaiba", [
+    { productId: "product-duelist-kingdom-playmat", productType: "product", addedAt: daysAgo(10) },
+    { productId: "product-egyptian-gods-playmat", productType: "product", addedAt: daysAgo(7) },
+    { productId: "product-duel-disk-replica", productType: "product", addedAt: daysAgo(5) },
+    { productId: "product-millennium-puzzle-model", productType: "product", addedAt: daysAgo(3) },
+    { productId: "product-kaiba-figure-15cm", productType: "product", addedAt: daysAgo(1) },
+  ]),
+
+  // Admin: 4 items — mix from Kaiba's store (Admin as buyer)
   makeDoc("user-admin-letitrip", [
-    { productId: "product-mafex-miles-morales-spiderman", productType: "product", addedAt: daysAgo(60) },
-    { productId: "product-figma-link-totk", productType: "product", addedAt: daysAgo(45) },
-    { productId: "auction-pokemon-mew-1st-edition-psa10", productType: "auction", addedAt: daysAgo(20) },
-    { productId: "product-alter-rem-wedding-scale", productType: "product", addedAt: daysAgo(8) },
-    { productId: "prize-pokemon-mystery-box-june", productType: "product", addedAt: daysAgo(5) },
-    { productId: "prize-hot-wheels-treasure-hunt", productType: "product", addedAt: daysAgo(4) },
-    { productId: "preorder-gundam-pg-unicorn-ver15", productType: "preorder", addedAt: daysAgo(3) },
-    { productId: "auction-pokemon-charizard-base1-psa9", productType: "auction", addedAt: daysAgo(2) },
+    { productId: "product-chaos-emperor-dragon", productType: "product", addedAt: daysAgo(20) },
+    { productId: "auction-exodia-complete-set-psa9", productType: "auction", addedAt: daysAgo(15) },
+    { productId: "product-rainbow-dragon", productType: "product", addedAt: daysAgo(8) },
+    { productId: "preorder-gx-tournament-pack", productType: "preorder", addedAt: daysAgo(2) },
   ]),
 ];

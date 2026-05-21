@@ -1,90 +1,69 @@
-/**
- * Coupon Usage Seed Data — LetItRip Collectibles Platform
+/*
+ * WHY: Seeds per-user coupon usage subcollection for YGO marketplace.
+ * WHAT: 4 records: Yugi used YUGI10 + FREESHIP499, Kaiba used KAIBA25, Admin used EXODIA50.
  *
- * These records live at users/{userId}/couponUsage/{couponId}.
- * Each doc represents how many times a buyer has used a specific coupon,
- * which order IDs consumed it, and when it was last used.
+ * EXPORTS:
+ *   CouponUsageSeedRecord (interface)
+ *   couponUsageSeedData — Array for seed runner
  *
- * Used by the seed route to populate the subcollection so that the
- * per-user limit check (validateCouponForCart → getUserCouponUsageCount)
- * has realistic data to work against in the demo environment.
+ * @tag domain:coupons,promotions
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
  */
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export interface CouponUsageSeedRecord {
-  /** users/{userId} — the parent doc */
   userId: string;
-  /** couponUsage/{couponId} — the subcollection doc ID */
   couponId: string;
-  /** Denormalised human-readable code for display */
   couponCode: string;
-  /** How many times this user has redeemed this coupon */
   usageCount: number;
   lastUsedAt: Date;
-  /** All order IDs that consumed this coupon (most recent first) */
   orders: string[];
 }
 
 export const couponUsageSeedData: CouponUsageSeedRecord[] = [
-  // ── aryan-kapoor used WELCOME10 once (perUserLimit: 1 → exhausted for him)
+  // Yugi used YUGI10 once (perUserLimit: 1 → exhausted)
   {
-    userId: "user-aryan-kapoor",
-    couponId: "coupon-welcome10",
-    couponCode: "WELCOME10",
+    userId: "user-yugi-muto",
+    couponId: "coupon-yugi10",
+    couponCode: "YUGI10",
     usageCount: 1,
     lastUsedAt: daysAgo(45),
     orders: ["order-2-20260325-a1b2c3"],
   },
 
-  // ── priya-patel used POKEMON25 twice (perUserLimit: 3 → one more use left)
+  // Yugi used FREESHIP499 once (no perUserLimit)
   {
-    userId: "user-priya-patel",
-    couponId: "coupon-pokemon25",
-    couponCode: "POKEMON25",
-    usageCount: 2,
-    lastUsedAt: daysAgo(10),
-    orders: ["order-1-20260420-d4e5f6", "order-3-20260430-g7h8i9"],
-  },
-
-  // ── arjun-singh used FREESHIP999 once (no perUserLimit)
-  {
-    userId: "user-arjun-singh",
-    couponId: "coupon-freeship999",
-    couponCode: "FREESHIP999",
+    userId: "user-yugi-muto",
+    couponId: "coupon-freeship499",
+    couponCode: "FREESHIP499",
     usageCount: 1,
     lastUsedAt: daysAgo(20),
     orders: ["order-1-20260410-j1k2l3"],
   },
 
-  // ── meera-nair used BEYARENA20 once (perUserLimit: 1 → exhausted for her)
+  // Kaiba used KAIBA25 once (perUserLimit: 2 → one more use left)
   {
-    userId: "user-meera-nair",
-    couponId: "coupon-beyarena20",
-    couponCode: "BEYARENA20",
-    usageCount: 1,
-    lastUsedAt: daysAgo(8),
-    orders: ["order-2-20260502-m4n5o6"],
-  },
-
-  // ── rahul-sharma used PALACE15 once (perUserLimit: 2 → one more use left)
-  {
-    userId: "user-rahul-sharma",
-    couponId: "coupon-palace15",
-    couponCode: "PALACE15",
+    userId: "user-seto-kaiba",
+    couponId: "coupon-kaiba25",
+    couponCode: "KAIBA25",
     usageCount: 1,
     lastUsedAt: daysAgo(15),
     orders: ["order-1-20260425-p7q8r9"],
   },
 
-  // ── vikram-mehta used TOKYOTOYS10 once (perUserLimit: 1 → exhausted for him)
+  // Admin used EXODIA50 once (perUserLimit: 1 → exhausted)
   {
-    userId: "user-vikram-mehta",
-    couponId: "coupon-tokyotoys10",
-    couponCode: "TOKYOTOYS10",
+    userId: "user-admin-letitrip",
+    couponId: "coupon-exodia50",
+    couponCode: "EXODIA50",
     usageCount: 1,
-    lastUsedAt: daysAgo(3),
-    orders: ["order-1-20260507-s1t2u3"],
+    lastUsedAt: daysAgo(10),
+    orders: ["order-1-20260430-g7h8i9"],
   },
 ];

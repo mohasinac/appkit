@@ -17,16 +17,13 @@ import { CATEGORY_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../cons
 const CATEGORIES_COLLECTION = "categories";
 const GROUPED_LISTINGS_COLLECTION = "groupedListings";
 const PRODUCT_COLLECTION = "products";
-const UNAVAILABLE_STATUSES = new Set<string>([
-  PRODUCT_FIELDS.STATUS_VALUES.SOLD,
-  PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK,
-  PRODUCT_FIELDS.STATUS_VALUES.DISCONTINUED,
-]);
 const MIN_ACTIVE_DEFAULT = 2;
 
-export function isAvailable(status?: string | null): boolean {
-  if (!status) return false;
-  return !UNAVAILABLE_STATUSES.has(status);
+export function isAvailable(doc: { isSold?: boolean; availableQuantity?: number; status?: string } | null): boolean {
+  if (!doc) return false;
+  if (doc.isSold) return false;
+  if (typeof doc.availableQuantity === "number" && doc.availableQuantity <= 0) return false;
+  return doc.status === PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED;
 }
 
 async function recomputeBundleStatus(
@@ -42,8 +39,8 @@ async function recomputeBundleStatus(
       .get();
     if (snap.size < chunk.length) return "out_of_stock";
     for (const doc of snap.docs) {
-      const status = (doc.data() as { status?: string }).status;
-      if (!isAvailable(status)) return "out_of_stock";
+      const data = doc.data() as { status?: string; isSold?: boolean; availableQuantity?: number };
+      if (!isAvailable(data)) return "out_of_stock";
     }
   }
   return "in_stock";
@@ -108,8 +105,8 @@ export async function syncGroupedListingsForProduct(
         .where("__name__", "in", chunk)
         .get();
       for (const doc of productSnap.docs) {
-        const status = (doc.data() as { status?: string }).status;
-        if (isAvailable(status)) activeCount++;
+        const data = doc.data() as { isSold?: boolean; availableQuantity?: number; status?: string };
+        if (isAvailable(data)) activeCount++;
       }
     }
     const nextVisibility: "visible" | "hidden" =
@@ -130,10 +127,16 @@ export async function syncGroupedListingsForProduct(
   return updated;
 }
 
+export interface ProductStockSnapshot {
+  isSold?: boolean;
+  availableQuantity?: number;
+  status?: string;
+}
+
 export interface HandleProductStockChangeInput {
   productId: string;
-  beforeStatus: string | null;
-  afterStatus: string | null;
+  before: ProductStockSnapshot | null;
+  after: ProductStockSnapshot | null;
   isDelete: boolean;
 }
 
@@ -141,7 +144,7 @@ export async function handleProductStockChange(
   input: HandleProductStockChangeInput,
   ctx: JobContext,
 ): Promise<void> {
-  const { productId, beforeStatus, afterStatus, isDelete } = input;
+  const { productId, before: beforeStatus, after: afterStatus, isDelete } = input;
 
   const beforeAvailable = isAvailable(beforeStatus);
   const afterAvailable = isAvailable(afterStatus);

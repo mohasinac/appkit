@@ -4,7 +4,6 @@ import {
   productRepository,
 } from "../../../../repositories";
 import { sendNotification } from "../../../../features/admin/actions/notification-actions";
-import { ProductStatusValues } from "../../../../features/products/schemas/firestore";
 import type { JobContext } from "../runtime/types";
 import { AUCTION_MESSAGES } from "../handlers/messages";
 
@@ -17,7 +16,7 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
   const batch = ctx.db.batch();
 
   if (activeBids.length === 0) {
-    productRepository.updateStatusInBatch(batch, product.id, ProductStatusValues.OUT_OF_STOCK);
+    productRepository.updateStatusInBatch(batch, product.id, "archived");
     await batch.commit();
     ctx.logger.info(AUCTION_MESSAGES.NO_BIDS_LOG(product.id));
     return;
@@ -39,7 +38,11 @@ async function settleAuction(ctx: JobContext, product: AuctionProductRow): Promi
     auctionProductId: product.id,
   });
 
-  productRepository.updateStatusInBatch(batch, product.id, ProductStatusValues.SOLD);
+  // Two-axis model: mark as sold without changing publish status
+  batch.update(ctx.db.collection("products").doc(product.id), {
+    isSold: true,
+    availableQuantity: 0,
+  });
   await batch.commit();
 
   // Fan-out notifications after batch commits.

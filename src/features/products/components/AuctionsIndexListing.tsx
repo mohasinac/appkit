@@ -13,21 +13,13 @@ import { pushWishlistOp } from "../../cart/utils/pending-ops";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
-import { sortBy } from "../../../constants/sort";
-import { PRODUCT_FIELDS } from "../../../constants/field-names";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
+import { AUCTION_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
 
-const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC");
+const DEFAULT_SORT = AUCTION_PUBLIC_SORT_OPTIONS[0].value;
 
-const AUCTION_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE, "ASC"), label: "Ending Soonest" },
-  { value: sortBy(PRODUCT_FIELDS.AUCTION_END_DATE), label: "Ending Latest" },
-  { value: sortBy(PRODUCT_FIELDS.CURRENT_BID, "ASC"), label: "Bid: Low to High" },
-  { value: sortBy(PRODUCT_FIELDS.CURRENT_BID), label: "Bid: High to Low" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newly Listed" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest Listed" },
-] as const;
+const AUCTION_SORT_OPTIONS = AUCTION_PUBLIC_SORT_OPTIONS;
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_BID, TABLE_KEYS.MAX_BID, TABLE_KEYS.STORE_ID, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 

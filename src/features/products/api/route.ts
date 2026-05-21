@@ -41,10 +41,8 @@ const productMutateSchema = z
       .enum([
         "draft",
         "published",
+        "in_review",
         "archived",
-        "sold",
-        "discontinued",
-        "out_of_stock",
       ])
       .optional(),
     mainImage: z.string().optional(),

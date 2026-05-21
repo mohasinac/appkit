@@ -1,405 +1,189 @@
+/*
+ * WHY: Seeds shopping carts for YGO marketplace — tests cart flows (multi-item, single, auction, guest, empty).
+ * WHAT: 4 carts: Yugi (3 items from Kaiba store), Kaiba (2 items from Admin store), Admin (2 items from Kaiba store), guest (2 items). All YGO-themed with YGOPRODECK images.
+ *
+ * EXPORTS:
+ *   cartsSeedData — Array of CartDocument for seed runner
+ *
+ * @tag domain:cart
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
+ */
+
+import type { CartDocument } from "../features/cart/schemas/firestore";
 import { getDefaultCurrency } from "./seed-market-config";
 
 const _CURRENCY = getDefaultCurrency();
-
-/**
- * Carts Seed Data â€" LetItRip Collectibles
- *
- * Covers all cart states for testing Add-to-Cart / Update / Remove / Checkout flows:
- *   â€" Multi-item cart (cross-store, mixed categories) â€" Rahul Sharma
- *   â€" Single-item cart                                â€" Priya Patel
- *   â€" Cart with auction item                          â€" Arjun Singh
- *   â€" Cart with quantity > 1                          â€" Meera Nair
- *   â€" Empty cart (items: [])                          â€" Amit Sharma
- *
- * Cart document ID = userId (O(1) lookup â€" see cart.ts schema).
- *
- * All FK references:
- *   userId             â†' users/{uid}  (see users-seed-data.ts)
- *   items[].productId  â†' products/{id} (see products-standard/auctions-seed-data.ts)
- *   items[].storeId    â†' stores/{id}  (see stores-seed-data.ts)
- */
-
-import type { CartDocument } from "../features/cart/schemas";
-
-// Dynamic date helpers
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const cartsSeedData: CartDocument[] = [
-  // -- Rahul Sharma: multi-item, cross-store cart ----------------------------
-  // Tests: list cart items, remove single item, update quantity, checkout
+  // Yugi's cart: 3 items from Kaiba Corp Card Vault
   {
-    id: "user-rahul-sharma",
-    userId: "user-rahul-sharma",
+    id: "user-yugi-muto",
+    userId: "user-yugi-muto",
     items: [
       {
-        itemId: "cartitem-rahul-pokemon-etb-001",
-        productId: "product-pokemon-sv-etb",
-        productTitle: "PokÃ©mon Scarlet & Violet Elite Trainer Box",
-        productImage: "/media/product-image-pokemon-sv-etb-1-20260101.jpg",
-        price: 349900,
+        itemId: "cartitem-yugi-dark-magician-lob-1st",
+        productId: "product-dark-magician-lob-1st",
+        productTitle: "Dark Magician LOB 1st Edition",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/46986414.jpg",
+        price: 499900,
         currency: _CURRENCY,
         quantity: 1,
-        storeId: "store-pokemon-palace",
-        storeName: "PokÃ©mon Palace",
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
         listingType: "standard",
-        addedAt: daysAgo(9),
-        updatedAt: daysAgo(9),
+        addedAt: daysAgo(3),
+        updatedAt: daysAgo(3),
       },
       {
-        itemId: "cartitem-rahul-hotwheels-001",
-        productId: "product-hot-wheels-redline-1969-camaro",
-        productTitle: "Hot Wheels Redline 1969 Camaro (Original)",
-        productImage: "/media/product-image-hot-wheels-redline-1969-camaro-1-20260101.jpg",
-        price: 189900,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-diecast-depot",
-        storeName: "Diecast Depot",
-        listingType: "standard",
-        addedAt: daysAgo(9),
-        updatedAt: daysAgo(9),
-      },
-      {
-        itemId: "cartitem-rahul-beyblade-001",
-        productId: "product-beyblade-x-bx01-dran-sword",
-        productTitle: "Beyblade X BX-01 Dran Sword 3-60F Starter",
-        productImage: "/media/product-image-beyblade-x-bx01-dran-sword-1-20260101.jpg",
-        price: 179900,
+        itemId: "cartitem-yugi-lob-booster-pack",
+        productId: "product-lob-booster-pack",
+        productTitle: "Legend of Blue Eyes Booster Pack",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/89631139.jpg",
+        price: 149900,
         currency: _CURRENCY,
         quantity: 2,
-        storeId: "store-beyblade-arena",
-        storeName: "Beyblade Arena",
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
         listingType: "standard",
-        addedAt: daysAgo(9),
-        updatedAt: daysAgo(9),
+        addedAt: daysAgo(2),
+        updatedAt: daysAgo(2),
+      },
+      {
+        itemId: "cartitem-yugi-kuriboh-mrd",
+        productId: "product-kuriboh-mrd",
+        productTitle: "Kuriboh MRD",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/40640057.jpg",
+        price: 29900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
       },
     ],
-    createdAt: daysAgo(9),
-    updatedAt: daysAgo(9),
+    createdAt: daysAgo(3),
+    updatedAt: daysAgo(1),
   },
 
-  // -- Priya Patel: single-item cart -----------------------------------------
-  // Tests: add item, checkout with single item, clear cart after order
+  // Kaiba's cart: 2 items from LetItRip Official (Kaiba as buyer)
   {
-    id: "user-priya-patel",
-    userId: "user-priya-patel",
+    id: "user-seto-kaiba",
+    userId: "user-seto-kaiba",
     items: [
       {
-        itemId: "cartitem-priya-goku-001",
-        productId: "product-shf-goku-ultra-instinct",
-        productTitle: "S.H.Figuarts Goku Ultra Instinct (Dragon Ball Super)",
-        productImage: "/media/product-image-shf-goku-ultra-instinct-1-20260101.jpg",
-        price: 449900,
+        itemId: "cartitem-kaiba-duelist-kingdom-playmat",
+        productId: "product-duelist-kingdom-playmat",
+        productTitle: "Duelist Kingdom Playmat",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/10000015.jpg",
+        price: 129900,
         currency: _CURRENCY,
         quantity: 1,
         storeId: "store-letitrip-official",
         storeName: "LetItRip Official",
         listingType: "standard",
-        addedAt: daysAgo(10),
-        updatedAt: daysAgo(10),
+        addedAt: daysAgo(5),
+        updatedAt: daysAgo(5),
       },
-    ],
-    createdAt: daysAgo(10),
-    updatedAt: daysAgo(10),
-  },
-
-  // -- Arjun Singh: cart with auction item ------------------------------------
-  // Tests: auction item add-to-cart display, checkout CTA blocked (must bid)
-  {
-    id: "user-arjun-singh",
-    userId: "user-arjun-singh",
-    items: [
       {
-        itemId: "cartitem-arjun-pokemon-base-auction-001",
-        productId: "auction-pokemon-base-set-booster-box",
-        productTitle: "PokÃ©mon Base Set 1st Edition Booster Box (SEALED AUCTION)",
-        productImage: "/media/auction-image-pokemon-base-set-booster-box-1-20260101.jpg",
-        price: 45000000,
+        itemId: "cartitem-kaiba-exodia-art-print",
+        productId: "product-exodia-art-print",
+        productTitle: "Exodia Art Print A3",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/33396948.jpg",
+        price: 79900,
         currency: _CURRENCY,
         quantity: 1,
-        storeId: "store-pokemon-palace",
-        storeName: "PokÃ©mon Palace",
-        listingType: "auction",
-        addedAt: daysAgo(17),
-        updatedAt: daysAgo(17),
-      },
-      {
-        itemId: "cartitem-arjun-yugioh-tin-001",
-        productId: "product-yugioh-25th-tin",
-        productTitle: "Yu-Gi-Oh! 25th Anniversary Tin: Dueling Heroes",
-        productImage: "/media/product-image-yugioh-25th-tin-1-20260101.jpg",
-        price: 299900,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-cardgame-hub",
-        storeName: "CardGame Hub",
+        storeId: "store-letitrip-official",
+        storeName: "LetItRip Official",
         listingType: "standard",
-        addedAt: daysAgo(12),
-        updatedAt: daysAgo(12),
+        addedAt: daysAgo(4),
+        updatedAt: daysAgo(4),
       },
     ],
-    createdAt: daysAgo(17),
-    updatedAt: daysAgo(12),
+    createdAt: daysAgo(5),
+    updatedAt: daysAgo(4),
   },
 
-  // -- Meera Nair: cart with quantity > 1 items ------------------------------
-  // Tests: increment/decrement quantity controls, cart total calculation
-  {
-    id: "user-meera-nair",
-    userId: "user-meera-nair",
-    items: [
-      {
-        itemId: "cartitem-meera-pokemon151-001",
-        productId: "product-pokemon-151-booster-box",
-        productTitle: "PokÃ©mon 151 Booster Box (Japanese)",
-        productImage: "/media/product-image-pokemon-151-booster-box-1-20260101.jpg",
-        price: 699900,
-        currency: _CURRENCY,
-        quantity: 3,
-        storeId: "store-pokemon-palace",
-        storeName: "PokÃ©mon Palace",
-        listingType: "standard",
-        addedAt: daysAgo(11),
-        updatedAt: daysAgo(11),
-      },
-      {
-        itemId: "cartitem-meera-hotwheels5pack-001",
-        productId: "product-hot-wheels-premium-5pack",
-        productTitle: "Hot Wheels Premium Car Culture 5-Pack",
-        productImage: "/media/product-image-hot-wheels-premium-5pack-1-20260101.jpg",
-        price: 149900,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-diecast-depot",
-        storeName: "Diecast Depot",
-        listingType: "standard",
-        addedAt: daysAgo(11),
-        updatedAt: daysAgo(11),
-      },
-    ],
-    createdAt: daysAgo(11),
-    updatedAt: daysAgo(11),
-  },
-
-  // -- Amit Sharma: empty cart (all items removed) ----------------------------
-  // Tests: empty cart UI state, "Your cart is empty" message,
-  //        add-to-cart starting from empty state
-  {
-    id: "user-amit-sharma",
-    userId: "user-amit-sharma",
-    items: [],
-    createdAt: daysAgo(27),
-    updatedAt: daysAgo(9),
-  },
-
-  // â"€â"€ P29 expansion (S17 2026-05-12) â€" 15 more carts via helper â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€â"€
-  ...mkCart("user-kavya-iyer", 6, [
-    {
-      productId: "product-pokemon-151-booster-box",
-      title: "PokÃ©mon 151 Booster Box (36-pack)",
-      price: 1799900,
-      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-sneha-kumar", 12, [
-    {
-      productId: "product-hot-wheels-treasure-hunt-2024",
-      title: "Hot Wheels 2024 Treasure Hunt (Single)",
-      price: 49900,
-      store: ["store-diecast-depot", "Diecast Depot"],
-      qty: 2,
-    },
-    {
-      productId: "product-funko-pop-naruto-sage-mode",
-      title: "Funko Pop Naruto Sage Mode",
-      price: 129900,
-      store: ["store-tokyo-toys-india", "Tokyo Toys India"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-kartik-nair", 3, [
-    {
-      productId: "product-beyblade-x-bx18-leon-crest",
-      title: "Beyblade X BX-18 Leon Crest Booster",
-      price: 199900,
-      store: ["store-beyblade-arena", "Beyblade Arena"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-divya-menon", 8, [
-    {
-      productId: "preorder-pokemon-stellar-crown-etb",
-      title: "PRE-ORDER: PokÃ©mon Stellar Crown ETB",
-      price: 599900,
-      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
-      qty: 1,
-      listingType: "pre-order",
-    },
-  ]),
-  ...mkCart("user-ankit-gupta", 14, [
-    {
-      productId: "product-gundam-rg-nu-gundam",
-      title: "Bandai RG 1/144 Nu Gundam",
-      price: 449900,
-      store: ["store-gundam-galaxy", "Gundam Galaxy"],
-      qty: 1,
-    },
-    {
-      productId: "product-gunpla-action-base-clear",
-      title: "Gunpla Action Base Clear (Display Stand)",
-      price: 59900,
-      store: ["store-gundam-galaxy", "Gundam Galaxy"],
-      qty: 2,
-    },
-  ]),
-  ...mkCart("user-siddharth-rao", 5, [
-    {
-      productId: "product-shf-luffy-gear-5",
-      title: "S.H.Figuarts Luffy Gear 5",
-      price: 1199900,
-      store: ["store-tokyo-toys-india", "Tokyo Toys India"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-tanvi-desai", 2, [
-    {
-      productId: "product-yugioh-25th-quarter-century-tin",
-      title: "Yu-Gi-Oh! 25th Quarter Century Stampede Tin",
-      price: 599900,
-      store: ["store-cardgame-hub", "CardGame Hub"],
-      qty: 1,
-    },
-    {
-      productId: "product-yugioh-rarity-collection-pack",
-      title: "Yu-Gi-Oh! Rarity Collection Pack",
-      price: 119900,
-      store: ["store-cardgame-hub", "CardGame Hub"],
-      qty: 3,
-    },
-  ]),
-  ...mkCart("user-anjali-verma", 1, [
-    {
-      productId: "product-pokemon-charizard-ex-obsidian",
-      title: "PokÃ©mon Charizard ex Obsidian Flames Hyper Rare",
-      price: 1499900,
-      store: ["store-cardgame-hub", "CardGame Hub"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-rohit-verma", 7, [
-    {
-      productId: "product-tomica-limited-vintage-skyline",
-      title: "Tomica Limited Vintage Nissan Skyline GT-R",
-      price: 349900,
-      store: ["store-vintage-vault", "Vintage Vault"],
-      qty: 1,
-    },
-  ]),
-  ...mkCart("user-pooja-sharma", 4, [
-    {
-      productId: "auction-pokemon-lugia-neo-genesis-psa9",
-      title: "PokÃ©mon Neo Genesis Lugia #9 PSA 9 (AUCTION)",
-      price: 6999900,
-      store: ["store-pokemon-palace", "PokÃ©mon Palace"],
-      qty: 1,
-      listingType: "auction",
-    },
-  ]),
-  // Guest carts skipped — sessionId is a runtime-only optional field on the
-  // Zod input but not on the `CartDocument` interface used by the seed array.
-  // Guest cart behavior is exercised at runtime via localStorage merge tests.
-
-  // -- Admin: personal collector cart (buying rare items from other stores) ---
+  // Admin's cart: 2 items from Kaiba Corp (Admin as buyer)
   {
     id: "user-admin-letitrip",
     userId: "user-admin-letitrip",
     items: [
       {
-        itemId: "cartitem-admin-nendoroid-miku-001",
-        productId: "product-nendoroid-hatsune-miku-v4x",
-        productTitle: "Nendoroid: Hatsune Miku V4X — Good Smile Company",
-        productImage: "/media/product-image-nendoroid-hatsune-miku-v4x-1-20260101.jpg",
-        price: 499900,
+        itemId: "cartitem-admin-chaos-emperor",
+        productId: "product-chaos-emperor-dragon",
+        productTitle: "Chaos Emperor Dragon — Envoy of the End",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/82301904.jpg",
+        price: 1299900,
         currency: _CURRENCY,
         quantity: 1,
-        storeId: "store-letitrip-official",
-        storeName: "LetItRip Official",
-        listingType: "standard" as const,
-        addedAt: daysAgo(3),
-        updatedAt: daysAgo(3),
-      },
-      {
-        itemId: "cartitem-admin-alter-rem-001",
-        productId: "product-alter-rem-wedding-scale",
-        productTitle: "ALTER: Re:Zero — Rem Wedding Ver. 1/7 Scale",
-        productImage: "/media/product-image-alter-rem-wedding-scale-1-20260101.jpg",
-        price: 1899900,
-        currency: _CURRENCY,
-        quantity: 1,
-        storeId: "store-tokyo-toys-india",
-        storeName: "Tokyo Toys India",
-        listingType: "standard" as const,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
         addedAt: daysAgo(2),
         updatedAt: daysAgo(2),
       },
+      {
+        itemId: "cartitem-admin-potd-box",
+        productId: "product-potd-booster-box",
+        productTitle: "Power of the Duelist Booster Box 24pk",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/89943723.jpg",
+        price: 2299900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
+      },
     ],
-    createdAt: daysAgo(3),
-    updatedAt: daysAgo(2),
+    createdAt: daysAgo(2),
+    updatedAt: daysAgo(1),
+  },
+
+  // Guest cart: 2 items, no userId
+  {
+    id: "guest-session-001",
+    userId: "",
+    items: [
+      {
+        itemId: "cartitem-guest-mirror-force",
+        productId: "product-mirror-force-mrd",
+        productTitle: "Mirror Force MRD Ultra Rare",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/44095762.jpg",
+        price: 999900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
+      },
+      {
+        itemId: "cartitem-guest-yugi-starter",
+        productId: "product-yugi-starter-deck",
+        productTitle: "Starter Deck: Yugi",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/46986414.jpg",
+        price: 199900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
+      },
+    ],
+    createdAt: daysAgo(1),
+    updatedAt: daysAgo(1),
   },
 ];
-
-interface CartItemSpec {
-  productId: string;
-  title: string;
-  price: number;
-  store: [string, string];
-  qty: number;
-  /** Canonical listing-kind snapshot (SB1-G Phase 4). Defaults to "standard". */
-  listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";
-}
-
-/**
- * Compact constructor for authenticated user carts. Each item gets a
- * deterministic itemId derived from the cart id + product id so the seed
- * is idempotent across re-runs. The id-prefix on `productId` infers a default
- * listingType when the spec doesn't pass one (auction-* / preorder-* / *).
- */
-function mkCart(
-  userId: string,
-  ageDays: number,
-  items: CartItemSpec[],
-): CartDocument[] {
-  const created = daysAgo(ageDays);
-  return [
-    {
-      id: userId,
-      userId,
-      items: items.map((it) => ({
-        itemId: `cartitem-${userId.replace("user-", "")}-${it.productId.split("-").slice(-3).join("-")}`,
-        productId: it.productId,
-        productTitle: it.title,
-        productImage: `/media/${it.productId.startsWith("auction-") ? "auction" : it.productId.startsWith("preorder-") ? "preorder" : "product"}-image-${it.productId.replace(/^(auction|preorder|product)-/, "")}-1-20260101.jpg`,
-        price: it.price,
-        currency: _CURRENCY,
-        quantity: it.qty,
-        storeId: it.store[0],
-        storeName: it.store[1],
-        listingType:
-          it.listingType ??
-          (it.productId.startsWith("auction-")
-            ? "auction"
-            : it.productId.startsWith("preorder-")
-              ? "pre-order"
-              : "standard"),
-        addedAt: created,
-        updatedAt: created,
-      })),
-      createdAt: created,
-      updatedAt: created,
-    },
-  ];
-}
-

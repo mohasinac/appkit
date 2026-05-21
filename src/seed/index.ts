@@ -159,7 +159,7 @@ export { storeAddressesSeedData } from "./store-addresses-seed-data";
 export { categoriesSeedData } from "./categories-seed-data";
 export { productsStandardSeedData } from "./products-standard-seed-data";
 export { productsAuctionsSeedData } from "./products-auctions-seed-data";
-export { productsPreOrdersSeedData } from "./products-preorders-seed-data";
+export { productsPreordersSeedData } from "./products-preorders-seed-data";
 export { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
 export { ordersSeedData } from "./orders-seed-data";
 export { reviewsSeedData } from "./reviews-seed-data";

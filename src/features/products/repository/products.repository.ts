@@ -10,7 +10,7 @@ import {
   type SieveModel,
 } from "../../../providers/db-firebase";
 import { cacheManager } from "../../../core";
-import { generateUniqueId, slugify } from "../../../utils";
+import { generateUniqueId, slugify, buildSearchTokens, tokenizeQuery } from "../../../utils";
 import {
   PRODUCT_COLLECTION,
   createAuctionId,
@@ -79,6 +79,23 @@ function buildListingKindClause(
   return `${PRODUCT_FIELDS.LISTING_TYPE}${op}${canonical}`;
 }
 
+function buildProductSearchTokens(p: Partial<ProductDocument>): string[] {
+  return buildSearchTokens(
+    p.title,
+    p.description,
+    p.brand,
+    p.brandSlug,
+    p.categoryNames,
+    p.tags,
+    p.features,
+    p.condition,
+    p.card?.setName,
+    p.card?.cardNumber,
+    p.grading?.service,
+    p.specifications?.map((s) => `${s.name} ${s.value}`),
+  );
+}
+
 export class ProductRepository extends BaseRepository<ProductDocument> {
   private static readonly CACHE_TTL_MS = 30_000;
 
@@ -134,7 +151,12 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     data: Partial<ProductDocument>,
   ): Promise<ProductDocument> {
     this.cacheInvalidateForId(id);
-    const updated = await super.update(id, data);
+    const current = await super.findById(id);
+    const merged = { ...current, ...data } as ProductDocument;
+    const updated = await super.update(id, {
+      ...data,
+      searchTokens: buildProductSearchTokens(merged),
+    });
     this.cacheSet(updated);
     return updated;
   }
@@ -159,6 +181,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ...input,
       slug: id,
       availableQuantity: input.stockQuantity,
+      searchTokens: buildProductSearchTokens(input),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -464,6 +487,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
     insurance: { canFilter: true, canSort: false },
     currency: { canFilter: true, canSort: false },
     freeShipping: { canFilter: true, canSort: false },
+    searchTokens: { canFilter: true, canSort: false },
   };
 
   /**
@@ -558,7 +582,7 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
 
   async list(
     model: SieveModel,
-    opts?: { storeId?: string; status?: string; categoriesIn?: string[] },
+    opts?: { storeId?: string; status?: string; categoriesIn?: string[]; search?: string },
   ): Promise<FirebaseSieveResult<ProductDocument>> {
     let baseQuery = this.getCollection();
 
@@ -578,7 +602,16 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
       ) as typeof baseQuery;
     }
 
-    if (opts?.categoriesIn && opts.categoriesIn.length > 0) {
+    const searchTokens = tokenizeQuery(opts?.search ?? "");
+    if (searchTokens.length > 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
+      // Firestore cannot combine two array operators in one query
+    } else if (searchTokens.length === 1) {
+      baseQuery = baseQuery.where("searchTokens", "array-contains", searchTokens[0]) as typeof baseQuery;
+    } else if (searchTokens.length > 1) {
+      baseQuery = baseQuery.where("searchTokens", "array-contains-any", searchTokens) as typeof baseQuery;
+    }
+
+    if (searchTokens.length === 0 && opts?.categoriesIn && opts.categoriesIn.length > 0) {
       baseQuery = baseQuery.where(
         PRODUCT_FIELDS.CATEGORY_SLUGS,
         "array-contains-any",

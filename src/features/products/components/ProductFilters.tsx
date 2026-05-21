@@ -10,7 +10,10 @@ import type { AsyncFacetSectionProps } from "../../filters/AsyncFacetSection";
 import { Div } from "../../../ui";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
-import { sortBy } from "../../../constants/sort";
+import {
+  STANDARD_SORT_OPTIONS,
+  STANDARD_PUBLIC_SORT_OPTIONS,
+} from "../constants/sieve";
 
 type LoadOptionsFn = AsyncFacetSectionProps["loadOptions"];
 
@@ -58,36 +61,9 @@ export const PRODUCT_FILTER_KEYS = {
   ],
 } as const;
 
-const LABEL_PRICE_HIGH_TO_LOW = "Price: High to Low";
-const LABEL_PRICE_LOW_TO_HIGH = "Price: Low to High";
-
-export const PRODUCT_ADMIN_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
-  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
-  { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z-A" },
-  { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
-] as const;
-
-export const PRODUCT_SELLER_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
-  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A-Z" },
-] as const;
-
-export const PRODUCT_PUBLIC_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH_TO_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW_TO_HIGH },
-  { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Title A–Z" },
-  { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Title Z–A" },
-  { value: sortBy(PRODUCT_FIELDS.VIEW_COUNT), label: "Most Viewed" },
-] as const;
+export const PRODUCT_ADMIN_SORT_OPTIONS = STANDARD_SORT_OPTIONS;
+export const PRODUCT_SELLER_SORT_OPTIONS = STANDARD_SORT_OPTIONS;
+export const PRODUCT_PUBLIC_SORT_OPTIONS = STANDARD_PUBLIC_SORT_OPTIONS;
 
 export function getProductFilterKeys(
   variant: ProductFilterVariant,
@@ -169,7 +145,8 @@ export function ProductFilters({
   const defaultStatusOptions: FacetOption[] = [
     { value: PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED, label: t("statusPublished") },
     { value: PRODUCT_FIELDS.STATUS_VALUES.DRAFT, label: t("statusDraft") },
-    { value: PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK, label: t("statusOutOfStock") },
+    { value: PRODUCT_FIELDS.STATUS_VALUES.IN_REVIEW, label: t("statusInReview") },
+    { value: PRODUCT_FIELDS.STATUS_VALUES.ARCHIVED, label: t("statusArchived") },
   ];
 
   const splitPipe = (key: string) =>

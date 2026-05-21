@@ -1900,8 +1900,8 @@ export { productsStandardSeedData } from "./seed/index";
 // productsAuctionsSeedData - Seed data for auction product listings.
 export { productsAuctionsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// productsPreOrdersSeedData - Seed data for pre-order product listings.
-export { productsPreOrdersSeedData } from "./seed/index";
+// productsPreordersSeedData - Seed data for pre-order product listings.
+export { productsPreordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPrizeDrawsSeedData - Seed data for prize-draw product listings (SB5-E).
 export { productsPrizeDrawsSeedData } from "./seed/index";
@@ -4051,11 +4051,11 @@ export { getBidById } from "./features/auctions/server";
 // listBidsByProduct - Helper for list bids by product.
 export { listBidsByProduct } from "./features/auctions/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
-// placeBid - Shared export for place bid.
-export { placeBid } from "./features/auctions/server";
+// placeBid / buyNowAuction - Shared export for bid + buy-now actions.
+export { placeBid, buyNowAuction } from "./features/auctions/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// PlaceBidInput - Type contract for place bid input.
-export type { PlaceBidInput } from "./features/auctions/server";
+// PlaceBidInput / BuyNowAuctionInput - Type contracts for bid + buy-now input.
+export type { PlaceBidInput, BuyNowAuctionInput, BuyNowAuctionResult } from "./features/auctions/server";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // PlaceBidResult - Type contract for place bid result.
 export type { PlaceBidResult } from "./features/auctions/server";
@@ -9088,6 +9088,17 @@ export type {
   SellerListingTabId,
   SearchTabId,
 } from "./features/products/constants/listing-tabs";
+export {
+  STANDARD_SORT_OPTIONS,
+  STANDARD_PUBLIC_SORT_OPTIONS,
+  AUCTION_SORT_OPTIONS,
+  AUCTION_PUBLIC_SORT_OPTIONS,
+  PREORDER_SORT_OPTIONS,
+  BUNDLE_SORT_OPTIONS,
+  PRIZE_DRAW_SORT_OPTIONS,
+  SORT_OPTIONS_BY_LISTING_TYPE,
+} from "./features/products/constants/sieve";
+export type { SortOption } from "./features/products/constants/sieve";
 // SB10-C admin + seller filter-chip tab sets (S8 2026-05-13)
 export {
   ALL_TAB,
@@ -9393,6 +9404,7 @@ export {
   sieveAnd,
 } from "./utils/sieve-builder";
 export type { SieveOp } from "./utils/sieve-builder";
+export { buildSearchTokens, tokenizeQuery } from "./utils/search-tokens";
 // [CLIENT-ONLY] — Admin panel components for action/nav permission management.
 export { ActionPermissionsManager } from "./features/site-settings/components/ActionPermissionsManager";
 export type { ActionPermissionsManagerProps } from "./features/site-settings/components/ActionPermissionsManager";

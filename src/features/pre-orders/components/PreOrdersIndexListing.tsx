@@ -19,19 +19,9 @@ import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hook
 import { useBrands } from "../../products/hooks/useBrands";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
-import { sortBy } from "../../../constants/sort";
-import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { PREORDER_SORT_OPTIONS } from "../../products/constants/sieve";
 
-const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-
-const PREORDER_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"), label: "Delivery: Soonest" },
-  { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE), label: "Delivery: Furthest" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Price: Low to High" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Price: High to Low" },
-] as const;
+const DEFAULT_SORT = PREORDER_SORT_OPTIONS[2].value;
 
 const FILTER_KEYS = [TABLE_KEYS.CATEGORY, TABLE_KEYS.BRAND, TABLE_KEYS.MIN_PRICE, TABLE_KEYS.MAX_PRICE, TABLE_KEYS.STORE_ID, TABLE_KEYS.PREORDER_STATUS, TABLE_KEYS.DATE_FROM, TABLE_KEYS.DATE_TO];
 

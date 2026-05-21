@@ -23,7 +23,7 @@ export interface WishlistProductData {
   price?: number;
   currency?: string;
   images?: string[];
-  status?: "draft" | "published" | "archived" | "sold" | "out_of_stock" | "discontinued";
+  status?: "draft" | "published" | "in_review" | "archived";
   isFeatured?: boolean;
   /** Canonical listing-kind discriminator (SB1-G Phase 4). */
   listingType?: "standard" | "auction" | "pre-order" | "prize-draw" | "classified" | "digital-code" | "live";

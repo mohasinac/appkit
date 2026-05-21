@@ -27,6 +27,7 @@ export const PRODUCT_FIELDS = {
   CURRENCY: "currency",
   STOCK_QUANTITY: "stockQuantity",
   AVAILABLE_QUANTITY: "availableQuantity",
+  IS_SOLD: "isSold",
   MAIN_IMAGE: "mainImage",
   IMAGES: "images",
   VIDEO: "video",
@@ -78,15 +79,15 @@ export const PRODUCT_FIELDS = {
   PRIZE_REVEAL_WINDOW_END: "prizeRevealWindowEnd",
   PRIZE_REVEAL_DEADLINE: "prizeRevealDeadline",
   IS_PART_OF_BUNDLE: "isPartOfBundle",
+  SEARCH_TOKENS: "searchTokens",
   CREATED_AT: "createdAt",
   UPDATED_AT: "updatedAt",
 
   STATUS_VALUES: {
     DRAFT: "draft",
     PUBLISHED: "published",
-    OUT_OF_STOCK: "out_of_stock",
-    DISCONTINUED: "discontinued",
-    SOLD: "sold",
+    IN_REVIEW: "in_review",
+    ARCHIVED: "archived",
   },
 
   CONDITION_VALUES: {
@@ -129,11 +130,10 @@ export const PRODUCT_FIELDS = {
 } as const;
 
 export const PRODUCT_STATUS_TRANSITIONS: Record<string, readonly string[]> = {
-  draft: ["published", "discontinued"],
-  published: ["draft", "out_of_stock", "discontinued"],
-  out_of_stock: ["published", "draft", "discontinued"],
-  sold: ["discontinued"],
-  discontinued: ["draft"],
+  draft: ["published", "in_review"],
+  published: ["draft", "archived"],
+  in_review: ["published", "draft", "archived"],
+  archived: ["draft"],
 } as const;
 
 // ============================================================================

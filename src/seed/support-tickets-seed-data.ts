@@ -1,9 +1,16 @@
-/**
- * Support Tickets Seed Data — 6 tickets across all statuses and categories.
+/*
+ * WHY: Seeds support tickets for YGO marketplace — 8 tickets across all statuses.
+ * WHAT: open (2), in_progress (2), waiting_on_user (1), resolved (2), closed (1).
  *
- * Covers: open, in_progress, waiting_on_user, resolved, closed (2).
- * Users: mix of buyers (rahul-sharma, priya-patel, arjun-singh, meera-nair).
- * Employee assignee: user-simran-kaur (employee role).
+ * EXPORTS:
+ *   supportTicketsSeedData — Array of Partial<SupportTicketDocument> for seed runner
+ *
+ * @tag domain:support
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
  */
 
 import type { SupportTicketDocument, TicketMessage } from "../features/support/schemas/firestore";
@@ -28,37 +35,37 @@ function daysBack(n: number) {
 export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
   // ── 1. Order issue — in progress ─────────────────────────────────────────
   {
-    id: "ticket-rahul-order-001",
-    userId: "user-rahul-sharma",
-    userEmail: "rahul.sharma@example.com",
-    userDisplayName: "Rahul Sharma",
+    id: "ticket-yugi-order-001",
+    userId: "user-yugi-muto",
+    userEmail: "yugi.muto@example.com",
+    userDisplayName: "Yugi Muto",
     category: "order_issue",
     subject: "Order delivered but item is missing from the box",
     description:
-      "I received order #order-rahul-001-pokemon-etb but the ETB box arrived empty — only the outer packaging was present. Please help.",
-    orderId: "order-rahul-001-pokemon-etb",
+      "I received order #order-1-20260515-abc123 but the Dark Magician LOB card was not inside — only the outer packaging and bubble wrap were present. Please help.",
+    orderId: "order-1-20260515-abc123",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
-    assignedTo: "user-simran-kaur",
-    assignedToName: "Simran Kaur",
+    assignedTo: "user-admin-letitrip",
+    assignedToName: "LetItRip Admin",
     messages: [
       msg(
-        "msg-rahul-001-u1",
-        "user-rahul-sharma",
+        "msg-yugi-001-u1",
+        "user-yugi-muto",
         "user",
-        "I received my order but it was empty! The seal was broken on arrival.",
+        "I received my order but the card was missing! The seal was broken on arrival.",
         5,
       ),
       msg(
-        "msg-rahul-001-s1",
-        "user-simran-kaur",
+        "msg-yugi-001-s1",
+        "user-admin-letitrip",
         "support",
-        "Hi Rahul, we're sorry to hear this. I've raised a claim with the courier. Could you please share a photo of the packaging?",
+        "Hi Yugi, we're sorry to hear this. I've raised a claim with the courier. Could you please share a photo of the packaging?",
         4,
       ),
       msg(
-        "msg-rahul-001-u2",
-        "user-rahul-sharma",
+        "msg-yugi-001-u2",
+        "user-yugi-muto",
         "user",
         "Photos attached. The outer tape was clearly cut and resealed.",
         3,
@@ -70,20 +77,20 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 2. Open ticket — refund request ───────────────────────────────────────
   {
-    id: "ticket-priya-refund-001",
-    userId: "user-priya-patel",
-    userEmail: "priya.patel@example.com",
-    userDisplayName: "Priya Patel",
+    id: "ticket-yugi-refund-001",
+    userId: "user-yugi-muto",
+    userEmail: "yugi.muto@example.com",
+    userDisplayName: "Yugi Muto",
     category: "refund_request",
     subject: "Requesting refund for cancelled pre-order",
     description:
-      "I placed a pre-order for the Nendoroid Rem figure 3 months ago. The store has now closed. I would like a full refund of ₹2,499.",
+      "I placed a pre-order for the Konami 25th Anniversary Rarity Collection 3 months ago. The store has now closed. I would like a full refund of ₹3,999.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.OPEN,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
     messages: [
       msg(
-        "msg-priya-001-u1",
-        "user-priya-patel",
+        "msg-yugi-002-u1",
+        "user-yugi-muto",
         "user",
         "The store closed without shipping. I paid via Razorpay. Transaction ID: pay_test_abc123.",
         2,
@@ -95,31 +102,31 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 3. Waiting on user — account recovery ─────────────────────────────────
   {
-    id: "ticket-arjun-account-001",
-    userId: "user-arjun-singh",
-    userEmail: "arjun.singh@example.com",
-    userDisplayName: "Arjun Singh",
+    id: "ticket-kaiba-account-001",
+    userId: "user-seto-kaiba",
+    userEmail: "seto.kaiba@example.com",
+    userDisplayName: "Seto Kaiba",
     category: "account",
     subject: "Cannot log in — OTP not arriving on new phone number",
     description:
-      "I changed my phone number and now OTP for login is going to the old number. I cannot access my account.",
+      "I changed my phone number and now OTP for login is going to the old number. I cannot access my seller dashboard.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.WAITING_ON_USER,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
-    assignedTo: "user-simran-kaur",
-    assignedToName: "Simran Kaur",
+    assignedTo: "user-admin-letitrip",
+    assignedToName: "LetItRip Admin",
     messages: [
       msg(
-        "msg-arjun-001-u1",
-        "user-arjun-singh",
+        "msg-kaiba-001-u1",
+        "user-seto-kaiba",
         "user",
         "I'm locked out. My old number is no longer active.",
         7,
       ),
       msg(
-        "msg-arjun-001-s1",
-        "user-simran-kaur",
+        "msg-kaiba-001-s1",
+        "user-admin-letitrip",
         "support",
-        "Hi Arjun, to verify ownership we need your registered email and last 4 digits of the payment card used on this account. Please reply here.",
+        "Hi Kaiba, to verify ownership we need your registered email and last 4 digits of the payment card used on this account. Please reply here.",
         6,
       ),
     ],
@@ -129,38 +136,38 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 4. Resolved — listing dispute ─────────────────────────────────────────
   {
-    id: "ticket-meera-dispute-001",
-    userId: "user-meera-nair",
-    userEmail: "meera.nair@example.com",
-    userDisplayName: "Meera Nair",
+    id: "ticket-yugi-dispute-001",
+    userId: "user-yugi-muto",
+    userEmail: "yugi.muto@example.com",
+    userDisplayName: "Yugi Muto",
     category: "listing_dispute",
-    subject: "Product description says mint condition but item is heavily played",
+    subject: "Product description says near mint but card is heavily played",
     description:
-      "The Beyblade BX-01 I received is scratched and worn. The listing said mint/unused. I want to return it.",
+      "The Mirror Force MRD 1st Edition I received is scratched and has edge wear. The listing said near mint. I want to return it.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.NORMAL,
-    assignedTo: "user-simran-kaur",
-    assignedToName: "Simran Kaur",
+    assignedTo: "user-admin-letitrip",
+    assignedToName: "LetItRip Admin",
     messages: [
       msg(
-        "msg-meera-001-u1",
-        "user-meera-nair",
+        "msg-yugi-003-u1",
+        "user-yugi-muto",
         "user",
-        "The item is clearly not mint. Here are photos showing the scratches.",
+        "The card is clearly not near mint. Here are photos showing the scratches and whitening.",
         12,
       ),
       msg(
-        "msg-meera-001-s1",
-        "user-simran-kaur",
+        "msg-yugi-003-s1",
+        "user-admin-letitrip",
         "support",
-        "Thank you for the photos Meera. We've contacted the seller and initiated a return + full refund.",
+        "Thank you for the photos Yugi. We've contacted the seller and initiated a return + full refund.",
         11,
       ),
       msg(
-        "msg-meera-001-s2",
-        "user-simran-kaur",
+        "msg-yugi-003-s2",
+        "user-admin-letitrip",
         "support",
-        "Refund of ₹1,200 has been processed back to your original payment method. This ticket is now resolved.",
+        "Refund of ₹15,000 has been processed back to your original payment method. This ticket is now resolved.",
         8,
       ),
     ],
@@ -171,34 +178,34 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 5. Closed — auction dispute (terminal) ────────────────────────────────
   {
-    id: "ticket-rahul-auction-001",
-    userId: "user-rahul-sharma",
-    userEmail: "rahul.sharma@example.com",
-    userDisplayName: "Rahul Sharma",
+    id: "ticket-yugi-auction-001",
+    userId: "user-yugi-muto",
+    userEmail: "yugi.muto@example.com",
+    userDisplayName: "Yugi Muto",
     category: "auction_dispute",
-    subject: "Winning bid was removed from auction",
+    subject: "Winning bid was removed from Blue-Eyes auction",
     description:
-      "I won the PSA 9 Charizard auction but my winning bid was removed without explanation.",
+      "I won the Blue-Eyes White Dragon LOB 1st Ed PSA 10 auction but my winning bid was removed without explanation.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.CLOSED,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.LOW,
     messages: [
       msg(
-        "msg-rahul-002-u1",
-        "user-rahul-sharma",
+        "msg-yugi-004-u1",
+        "user-yugi-muto",
         "user",
         "My winning bid was cancelled. I have a screenshot.",
         20,
       ),
       msg(
-        "msg-rahul-002-s1",
-        "user-simran-kaur",
+        "msg-yugi-004-s1",
+        "user-admin-letitrip",
         "support",
-        "Hi Rahul, after reviewing the auction logs we found a duplicate bid was submitted. The correct winning bid remains active. No action needed.",
+        "Hi Yugi, after reviewing the auction logs we found a duplicate bid was submitted. The correct winning bid remains active. No action needed.",
         18,
       ),
       msg(
-        "msg-rahul-002-u2",
-        "user-rahul-sharma",
+        "msg-yugi-004-u2",
+        "user-yugi-muto",
         "user",
         "Understood, thanks for clarifying.",
         17,
@@ -211,22 +218,22 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 6. Open — general inquiry ─────────────────────────────────────────────
   {
-    id: "ticket-kavya-general-001",
-    userId: "user-kavya-iyer",
-    userEmail: "kavya.iyer@example.com",
-    userDisplayName: "Kavya Iyer",
+    id: "ticket-kaiba-general-001",
+    userId: "user-seto-kaiba",
+    userEmail: "seto.kaiba@example.com",
+    userDisplayName: "Seto Kaiba",
     category: "general",
-    subject: "How do I become a verified seller?",
+    subject: "How do I list graded slabs with PSA verification?",
     description:
-      "I would like to start selling Pokémon cards on LetItRip. What are the steps to get verified and open a store?",
+      "I want to list my PSA 10 Blue-Eyes White Dragon with the PSA cert number visible and verified. What are the steps?",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.OPEN,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.LOW,
     messages: [
       msg(
-        "msg-kavya-001-u1",
-        "user-kavya-iyer",
+        "msg-kaiba-002-u1",
+        "user-seto-kaiba",
         "user",
-        "I've read the FAQ but couldn't find the exact verification requirements.",
+        "I've read the FAQ but couldn't find the exact grading verification requirements for PSA slabs.",
         1,
       ),
     ],
@@ -236,29 +243,29 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
 
   // ── 7. Resolved — escalated fraud report (admin handled) ──────────────────
   {
-    id: "ticket-meera-fraud-002",
-    userId: "user-meera-nair",
-    userEmail: "meera.nair@example.com",
-    userDisplayName: "Meera Nair",
+    id: "ticket-yugi-fraud-001",
+    userId: "user-yugi-muto",
+    userEmail: "yugi.muto@example.com",
+    userDisplayName: "Yugi Muto",
     category: "scam_report",
     subject: "Seller sent empty box and is now unreachable",
     description:
-      "I paid Rs 8,499 for a S.H.Figuarts Broly via Razorpay. The seller (store-beyblade-arena) has not responded in 7 days and the tracking shows the box was 200g — way too light for the figure.",
+      "I paid ₹8,499 for a Dark Magician Girl IOC 1st Edition via Razorpay. The seller from Kaiba Corp has not responded in 7 days and the tracking shows the box was 200g — way too light for a graded slab.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.RESOLVED,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-admin-letitrip",
     assignedToName: "LetItRip Admin",
     messages: [
-      msg("msg-meera-002-u1", "user-meera-nair", "user",
-        "I have the weight receipt from Delhivery. 200g is impossible for this figure. The seller is not replying on messages or phone.",
+      msg("msg-yugi-005-u1", "user-yugi-muto", "user",
+        "I have the weight receipt from Delhivery. 200g is impossible for a graded slab. The seller is not replying on messages or phone.",
         10),
-      msg("msg-meera-002-s1", "user-simran-kaur", "support",
-        "Hi Meera, I have escalated this to our admin team for review as it qualifies as a potential fraud case. You will hear back within 24 hours.",
+      msg("msg-yugi-005-s1", "user-admin-letitrip", "support",
+        "Hi Yugi, I have escalated this to our admin team for review as it qualifies as a potential fraud case. You will hear back within 24 hours.",
         9),
-      msg("msg-meera-002-a1", "user-admin-letitrip", "support",
-        "Hi Meera, this is the LetItRip admin. I have reviewed the shipment weight log and the seller communication history. We are initiating a full refund of Rs 8,499 under our buyer protection policy. The seller account has been suspended pending investigation.",
+      msg("msg-yugi-005-a1", "user-admin-letitrip", "support",
+        "Hi Yugi, this is the LetItRip admin. I have reviewed the shipment weight log and the seller communication history. We are initiating a full refund of ₹8,499 under our buyer protection policy. The seller account has been suspended pending investigation.",
         8),
-      msg("msg-meera-002-u2", "user-meera-nair", "user",
+      msg("msg-yugi-005-u2", "user-yugi-muto", "user",
         "Thank you so much. I really appreciate the quick escalation.",
         7),
     ],
@@ -267,26 +274,26 @@ export const supportTicketsSeedData: Partial<SupportTicketDocument>[] = [
     updatedAt: daysBack(7),
   },
 
-  // ── 8. In-progress — seller account ban appeal (admin handling) ────────────
+  // ── 8. In-progress — seller store suspension appeal (admin handling) ──────
   {
-    id: "ticket-rohit-ban-appeal-001",
-    userId: "user-rohit-joshi",
-    userEmail: "rohit.joshi@example.com",
-    userDisplayName: "Rohit Joshi",
+    id: "ticket-kaiba-ban-appeal-001",
+    userId: "user-seto-kaiba",
+    userEmail: "seto.kaiba@example.com",
+    userDisplayName: "Seto Kaiba",
     category: "account",
     subject: "My store was suspended — I believe it was a mistake",
     description:
-      "My store Beyblade Arena was suspended 2 days ago. I received no email explanation. I have 100% positive reviews and have never violated any policy. Please review.",
+      "My store Kaiba Corp Card Vault was suspended 2 days ago. I received no email explanation. I have 100% positive reviews and have never violated any policy. Please review.",
     status: SUPPORT_TICKET_FIELDS.STATUS_VALUES.IN_PROGRESS,
     priority: SUPPORT_TICKET_FIELDS.PRIORITY_VALUES.HIGH,
     assignedTo: "user-admin-letitrip",
     assignedToName: "LetItRip Admin",
     messages: [
-      msg("msg-rohit-001-u1", "user-rohit-joshi", "user",
-        "I run a legitimate business. I have 47 verified reviews and never had a single complaint. Please explain the suspension.",
+      msg("msg-kaiba-003-u1", "user-seto-kaiba", "user",
+        "I run a legitimate business. I have verified reviews and never had a single complaint. Please explain the suspension.",
         2),
-      msg("msg-rohit-001-a1", "user-admin-letitrip", "support",
-        "Hi Rohit, your store was suspended as part of an automatic fraud flag triggered by a buyer report. I am manually reviewing your transaction history and the specific report. Please share your business GST number and a copy of your most recent bank statement showing the Razorpay settlements for verification.",
+      msg("msg-kaiba-003-a1", "user-admin-letitrip", "support",
+        "Hi Kaiba, your store was suspended as part of an automatic fraud flag triggered by a buyer report. I am manually reviewing your transaction history and the specific report. Please share your business GST number and a copy of your most recent bank statement showing the Razorpay settlements for verification.",
         1),
     ],
     createdAt: daysBack(2),

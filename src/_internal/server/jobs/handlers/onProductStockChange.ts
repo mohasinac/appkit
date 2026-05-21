@@ -1,7 +1,17 @@
 import type { FirestoreTriggerHandler } from "../runtime/types";
 import { handleProductStockChange } from "../core/onProductStockChange";
+import type { ProductStockSnapshot } from "../core/onProductStockChange";
 
 type ProductDoc = Record<string, unknown>;
+
+function toSnapshot(doc: ProductDoc | null | undefined): ProductStockSnapshot | null {
+  if (!doc) return null;
+  return {
+    isSold: doc.isSold as boolean | undefined,
+    availableQuantity: doc.availableQuantity as number | undefined,
+    status: doc.status as string | undefined,
+  };
+}
 
 export const onProductStockChangeHandler: FirestoreTriggerHandler<
   ProductDoc,
@@ -10,8 +20,8 @@ export const onProductStockChangeHandler: FirestoreTriggerHandler<
   await handleProductStockChange(
     {
       productId: event.params.productId as string,
-      beforeStatus: (event.before?.status as string | undefined) ?? null,
-      afterStatus: (event.after?.status as string | undefined) ?? null,
+      before: toSnapshot(event.before),
+      after: toSnapshot(event.after),
       isDelete: !event.after,
     },
     ctx,

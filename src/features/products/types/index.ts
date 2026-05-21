@@ -5,10 +5,8 @@ export type { CustomField, CustomSection } from "../schemas/firestore";
 export type ProductStatus =
   | "draft"
   | "published"
-  | "archived"
-  | "sold"
-  | "out_of_stock"
-  | "discontinued";
+  | "in_review"
+  | "archived";
 export type ProductCondition =
   | "new"
   | "like_new"

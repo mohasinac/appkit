@@ -731,9 +731,9 @@ export function AppLayoutShell({
 
           <Main
             id="main-content"
-            className={`w-full flex-1 ${hasBottomActions ? "mb-28" : "mb-16"} md:mb-0`}
+            className={`w-full flex-1 flex flex-col ${hasBottomActions ? "mb-28" : "mb-16"} md:mb-0`}
           >
-            <Div className={contentClassName ?? "w-full px-5 py-6 md:px-6 lg:px-8"}>
+            <Div className={`flex-1 ${contentClassName ?? "w-full px-5 py-6 md:px-6 lg:px-8"}`}>
               {children}
             </Div>
           </Main>

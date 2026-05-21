@@ -27,9 +27,11 @@ export interface PlaceBidFormClientProps {
   currency: string;
   isEnded: boolean;
   buyNowPrice: number | null;
+  bidsHaveStarted?: boolean;
   bidCount: number;
   tags?: string[];
   onPlaceBid: (input: PlaceBidInput) => Promise<unknown>;
+  onBuyNow?: () => Promise<unknown>;
 }
 
 export function PlaceBidFormClient({
@@ -40,16 +42,49 @@ export function PlaceBidFormClient({
   currency,
   isEnded,
   buyNowPrice,
+  bidsHaveStarted = false,
   bidCount,
   tags = [],
   onPlaceBid,
+  onBuyNow,
 }: PlaceBidFormClientProps) {
   const minBid = currentBid + minBidIncrement;
   const [bidAmount, setBidAmount] = useState<string>(String(minBid));
   const [isPending, startTransition] = useTransition();
+  const [isBuyNowPending, startBuyNowTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const buyNowAvailable = buyNowPrice !== null && !isEnded && !bidsHaveStarted && !!onBuyNow;
+
+  function handleBuyNow() {
+    if (!onBuyNow) return;
+    setError(null);
+    setSuccess(false);
+    startBuyNowTransition(async () => {
+      try {
+        const result = await onBuyNow();
+        if (
+          result &&
+          typeof result === "object" &&
+          "ok" in result &&
+          (result as { ok: boolean }).ok === false
+        ) {
+          const r = result as { error?: string };
+          setError(r.error ?? "Buy Now failed. Please try again.");
+          return;
+        }
+        setSuccess(true);
+      } catch (err: unknown) {
+        if (isAuthError(err)) {
+          setShowLoginModal(true);
+        } else {
+          setError(err instanceof Error ? err.message : "Buy Now failed. Please try again.");
+        }
+      }
+    });
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -149,9 +184,16 @@ export function PlaceBidFormClient({
             {isPending ? "Placing Bid…" : isEnded ? "Auction Ended" : "Place Bid"}
           </Button>
 
-          {buyNowPrice !== null && !isEnded && (
-            <Button variant="secondary" size="md" className="w-full" type="button">
-              Buy Now — {formatCurrency(buyNowPrice, currency)}
+          {buyNowAvailable && (
+            <Button
+              variant="secondary"
+              size="md"
+              className="w-full"
+              type="button"
+              disabled={isBuyNowPending || isPending}
+              onClick={handleBuyNow}
+            >
+              {isBuyNowPending ? "Processing…" : `Buy Now — ${formatCurrency(buyNowPrice!, currency)}`}
             </Button>
           )}
         </Stack>

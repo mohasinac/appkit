@@ -292,6 +292,17 @@ export type {
   CompareProductLike,
 } from "./features/products/components/CompareOverlay";
 export { COMPARE_MAX_ITEMS } from "./features/products/constants/action-defs";
+export {
+  STANDARD_SORT_OPTIONS,
+  STANDARD_PUBLIC_SORT_OPTIONS,
+  AUCTION_SORT_OPTIONS,
+  AUCTION_PUBLIC_SORT_OPTIONS,
+  PREORDER_SORT_OPTIONS,
+  BUNDLE_SORT_OPTIONS,
+  PRIZE_DRAW_SORT_OPTIONS,
+  SORT_OPTIONS_BY_LISTING_TYPE,
+} from "./features/products/constants/sieve";
+export type { SortOption } from "./features/products/constants/sieve";
 
 // Messages — RTDB-pinged Firestore conversations (D5 + VC7)
 export { MessagesView } from "./features/account/components/MessagesView";

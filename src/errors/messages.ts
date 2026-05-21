@@ -416,6 +416,9 @@ export const ERROR_MESSAGES = {
     BID_TOO_LOW: "Your bid must be higher than the current bid",
     INCREMENT_TOO_LOW: "Your bid does not meet the minimum increment requirement",
     OWN_AUCTION: "You cannot bid on your own auction",
+    BUY_NOW_UNAVAILABLE: "Buy Now is not available for this auction",
+    BUY_NOW_BIDS_STARTED: "Buy Now is no longer available — bids have already been placed",
+    BUY_NOW_NO_PRICE: "This auction does not have a Buy Now price",
   },
 
   CONTACT: {

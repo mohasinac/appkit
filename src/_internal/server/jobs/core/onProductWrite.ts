@@ -14,9 +14,7 @@ import type { JobContext } from "../runtime/types";
 export type ProductDoc = Record<string, unknown>;
 
 const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
-  ProductStatusValues.SOLD,
-  ProductStatusValues.OUT_OF_STOCK,
-  ProductStatusValues.DISCONTINUED,
+  ProductStatusValues.ARCHIVED,
 ]);
 
 void UNAVAILABLE_PRODUCT_STATUSES;

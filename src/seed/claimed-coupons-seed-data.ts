@@ -1,13 +1,16 @@
-/**
- * Claimed Coupons Seed Data — plan §10.
+/*
+ * WHY: Seeds claimed coupons wallet for YGO marketplace.
+ * WHAT: 3 records for Yugi — active (spin), expired (manual), used (manual). Tabs Active/Expired/Used.
  *
- * Top-level `claimedCoupons` collection (one doc per user × coupon). These
- * rows populate the /user/coupons wallet with one example per status so the
- * tabs (Active / Expired / Used) all have something to render in demo.
+ * EXPORTS:
+ *   claimedCouponsSeedData — Array of ClaimedCouponDocument for seed runner
  *
- * Coupon snapshots mirror coupons-seed-data.ts (WELCOME10, POKEMON25,
- * FREESHIP999) so the discount badge labels render correctly. Seed user is
- * `user-mohsin-c` to match the dev-account convention used elsewhere.
+ * @tag domain:coupons,promotions
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/index.ts,seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
  */
 
 import type { ClaimedCouponDocument } from "../features/promotions/schemas";
@@ -20,14 +23,14 @@ const daysAhead = (n: number) => new Date(NOW.getTime() + n * 86_400_000);
 export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
   // Active — won from a spin wheel, expires in 14 days
   {
-    id: createClaimedCouponId("user-mohsin-c", "WELCOME10"),
-    userId: "user-mohsin-c",
-    couponId: "coupon-welcome10",
-    couponCode: "WELCOME10",
+    id: createClaimedCouponId("user-yugi-muto", "YUGI10"),
+    userId: "user-yugi-muto",
+    couponId: "coupon-yugi10",
+    couponCode: "YUGI10",
     source: "spin",
     couponSnapshot: {
-      name: "Welcome 10% Off",
-      description: "10% off your first order across the marketplace.",
+      name: "Yugi's Welcome 10% Off",
+      description: "10% off your first order on LetItRip.",
       type: "percentage",
       scope: "admin",
       discount: { value: 10, maxDiscount: 50000, minPurchase: 99900 },
@@ -40,17 +43,17 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
   },
   // Expired — manually claimed 30 days ago, no purchase made
   {
-    id: createClaimedCouponId("user-mohsin-c", "POKEMON25"),
-    userId: "user-mohsin-c",
-    couponId: "coupon-pokemon25",
-    couponCode: "POKEMON25",
+    id: createClaimedCouponId("user-yugi-muto", "EXODIA50"),
+    userId: "user-yugi-muto",
+    couponId: "coupon-exodia50",
+    couponCode: "EXODIA50",
     source: "manual",
     couponSnapshot: {
-      name: "Pokémon 25% Off",
-      description: "25% off Pokémon TCG products.",
-      type: "percentage",
+      name: "Exodia ₹500 Off",
+      description: "₹500 flat discount on orders above ₹5,000.",
+      type: "fixed",
       scope: "admin",
-      discount: { value: 25, maxDiscount: 250000, minPurchase: 199900 },
+      discount: { value: 50000, minPurchase: 500000 },
       restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
     },
     status: "expired",
@@ -60,17 +63,17 @@ export const claimedCouponsSeedData: ClaimedCouponDocument[] = [
   },
   // Used — applied to a prior order
   {
-    id: createClaimedCouponId("user-mohsin-c", "FREESHIP999"),
-    userId: "user-mohsin-c",
-    couponId: "coupon-freeship999",
-    couponCode: "FREESHIP999",
+    id: createClaimedCouponId("user-yugi-muto", "FREESHIP499"),
+    userId: "user-yugi-muto",
+    couponId: "coupon-freeship499",
+    couponCode: "FREESHIP499",
     source: "manual",
     couponSnapshot: {
-      name: "Free Shipping Over ₹999",
-      description: "Free shipping on orders above ₹999.",
+      name: "Free Shipping Over ₹499",
+      description: "Free shipping on orders above ₹499.",
       type: "free_shipping",
       scope: "admin",
-      discount: { value: 0, minPurchase: 99900 },
+      discount: { value: 0, minPurchase: 49900 },
       restrictions: { firstTimeUserOnly: false, combineWithSellerCoupons: true },
     },
     status: "used",

@@ -1,7 +1,18 @@
-/**
- * Stores Seed Data — Collectibles Marketplace
- * 5 stores: 1 admin/official store + 4 seller stores covering the 5 collectibles verticals.
- * id === storeSlug convention enforced throughout.
+/*
+ * WHY: Provides 8 seed stores covering all collectible categories for the marketplace demo.
+ * WHAT: Exports 8 StoreDocument partials — letitrip-official, kaiba-corp-cards, pokemon-palace,
+ *       cardgame-hub, diecast-depot, beyblade-arena, tokyo-toys-india, gundam-galaxy.
+ *       Mix of verified/basic stores with various capabilities.
+ *
+ * EXPORTS:
+ *   storesSeedData — array of 8 Partial<StoreDocument> for the seed runner
+ *
+ * @tag domain:stores
+ * @tag layer:seed
+ * @tag pattern:none
+ * @tag access:server-only
+ * @tag consumers:seed/runner.ts,SeedPanel
+ * @tag sideEffects:none
  */
 
 import type { StoreDocument } from "../features/stores/schemas";
@@ -12,21 +23,21 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const storesSeedData: Partial<StoreDocument>[] = [
-  // ── Store 1: LetItRip Official (admin-owned multi-category curated store) ──
+  // ── Store 1: LetItRip Official (admin-owned, curated YGO showcase) ──────────
   {
     id: "store-letitrip-official",
     storeSlug: "store-letitrip-official",
     ownerId: "user-admin-letitrip",
     storeName: "LetItRip Official",
     storeDescription:
-      "The official LetItRip curated store. Hand-picked premium collectibles across Pokémon TCG, Hot Wheels, Beyblade X, and anime figures. Verified authentic, carefully packaged.",
-    storeCategory: "category-action-figures",
+      "The official LetItRip curated store. Hand-picked premium Yu-Gi-Oh! collectibles — authenticated graded slabs, Egyptian God cards, sealed vintage product, and rare 1st Edition singles. Every item personally inspected.",
+    storeCategory: "category-singles",
     storeLogoURL:
-      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=400&h=400&fit=crop",
+      "https://images.ygoprodeck.com/images/cards/small/10000015.jpg",
     storeBannerURL:
-      "https://images.unsplash.com/photo-1614108831137-558fffac9ead?w=1600&h=400&fit=crop",
+      "https://images.ygoprodeck.com/images/cards/cropped/10000015.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Curated by the LetItRip team. Every item is personally inspected and authenticated before listing. Fast dispatch, safe packaging.",
+    bio: "Curated by the LetItRip team. All cards authenticated and graded by PSA/BGS/CGC before listing. Fast dispatch, collector-grade packaging.",
     location: "Mumbai, Maharashtra, India",
     website: "https://letitrip.in",
     socialLinks: {
@@ -37,8 +48,7 @@ export const storesSeedData: Partial<StoreDocument>[] = [
     returnPolicy:
       "7-day hassle-free returns on all items. Items must be in original condition. Full refund or replacement guaranteed.",
     shippingPolicy:
-      "Free shipping on orders above ₹999. Orders dispatched within 24 hours. 3–5 business day delivery across India. Express shipping available.",
-    // S-SBUNI-RULES 2026-05-13 — ShippingProviderConfig seed
+      "Free shipping on orders above ₹999. Orders dispatched within 24 hours. 3–5 business day delivery across India. Express shipping available. All graded slabs shipped in hard slab mailers.",
     shippingConfig: {
       defaultProviderId: "provider-letitrip-standard",
       providers: [
@@ -60,304 +70,310 @@ export const storesSeedData: Partial<StoreDocument>[] = [
           etaDaysMax: 2,
           requiresAwbUpload: true,
         },
+        {
+          providerId: "provider-letitrip-pickup",
+          label: "Store Pickup (Mumbai HQ)",
+          type: "store-pickup" as const,
+          fee: { flatInPaise: 0 },
+          etaDaysMin: 0,
+          etaDaysMax: 1,
+        },
       ],
     },
     isPublic: true,
     isVacationMode: false,
+
     stats: {
       totalProducts: 0,
       itemsSold: 0,
-      totalReviews: 0,
-      averageRating: 0,
+      totalReviews: 5,
+      averageRating: 4.8,
     },
-    capabilities: ["host_auctions", "host_preorders", "suggest_brands", "create_coupons", "bulk_listing_import", "verified_seller", "featured_placement", "promotional_banner", "advanced_analytics", "api_access", "multiple_stores", "early_access_features", "whatsapp_catalog_sync"] as StoreCapability[],
+    capabilities: [
+      "host_auctions",
+      "host_preorders",
+      "verified_seller",
+      "create_coupons",
+      "suggest_brands",
+      "bulk_listing_import",
+      "featured_placement",
+      "promotional_banner",
+      "advanced_analytics",
+      "api_access",
+      "multiple_stores",
+      "early_access_features",
+      "whatsapp_catalog_sync",
+    ] as StoreCapability[],
     createdAt: daysAgo(400),
     updatedAt: daysAgo(1),
   },
 
-  // ── Store 2: Pokémon Palace (Pokémon TCG) ──────────────────────────────────
+  // ── Store 2: Kaiba Corp Card Vault (seller-owned, main YGO inventory) ───────
   {
-    id: "store-pokemon-palace",
-    storeSlug: "store-pokemon-palace",
-    ownerId: "user-aryan-kapoor",
-    storeName: "Pokémon Palace",
+    id: "store-kaiba-corp-cards",
+    storeSlug: "store-kaiba-corp-cards",
+    ownerId: "user-seto-kaiba",
+    storeName: "Kaiba Corp Card Vault",
     storeDescription:
-      "India's premier Pokémon TCG store. Specialising in booster packs, Elite Trainer Boxes, sealed booster boxes, PSA/BGS graded slabs, and rare vintage cards from Base Set to Scarlet & Violet.",
-    storeCategory: "category-pokemon-tcg",
+      "The definitive Yu-Gi-Oh! card store by Seto Kaiba. Massive inventory of Duel Monsters era singles, GX era cards, graded slabs, sealed booster boxes, accessories, and rare collectibles. Authenticated and documented.",
+    storeCategory: "category-singles",
     storeLogoURL:
-      "https://images.unsplash.com/photo-1613771404784-3a5686aa2be3?w=400&h=400&fit=crop",
+      "https://images.ygoprodeck.com/images/cards/small/23995346.jpg",
     storeBannerURL:
-      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1600&h=400&fit=crop",
+      "https://images.ygoprodeck.com/images/cards/cropped/23995346.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Pokémon TCG enthusiast since 2010 and PTCGO tournament player. All cards are inspected under bright light and sleeved before shipping. Sealed product is sourced directly from official distributors.",
-    location: "Mumbai, Maharashtra, India",
+    bio: "CEO of Kaiba Corp. My vault contains the finest YGO cards in the world. Every card authenticated, graded, and catalogued. Blue-Eyes White Dragon specialist.",
+    location: "Domino City, Japan",
+    website: "https://kaibacorp.jp",
     socialLinks: {
-      instagram: "https://instagram.com/aryan.pokecollector",
+      instagram: "https://instagram.com/kaibacorpvault",
+      twitter: "https://twitter.com/kaibacorp",
     },
     returnPolicy:
-      "7-day return policy on factory-sealed product (seal must be intact). No returns on opened packs or singles. Graded slabs: 3-day return if slab is cracked on arrival.",
+      "3-day returns on singles (must be in original condition, same sleeve). No returns on opened sealed product. Graded slabs: 3-day return if slab arrives cracked.",
     shippingPolicy:
-      "Singles and small orders: bubble-padded envelope (₹49 shipping). Sealed boxes and ETBs: double-boxed with foam inserts. Free shipping on orders above ₹1,499. 3–7 business days.",
-    // S-SBUNI-RULES 2026-05-13 — ShippingProviderConfig seed
+      "Singles shipped in top loaders + team bags, bubble-padded envelope. Sealed product double-boxed. Free shipping on orders above ₹1,499. Dispatched within 48 hours. 3–7 business days.",
     shippingConfig: {
-      defaultProviderId: "provider-palace-standard",
+      defaultProviderId: "provider-kaiba-standard",
       providers: [
         {
-          providerId: "provider-palace-standard",
-          label: "Bubble Mailer (Singles)",
+          providerId: "provider-kaiba-standard",
+          label: "Standard (Singles & Accessories)",
           type: "self-courier" as const,
           fee: { flatInPaise: 4900, freeAboveInPaise: 149900 },
           etaDaysMin: 3,
           etaDaysMax: 7,
         },
         {
-          providerId: "provider-palace-box",
-          label: "Double-boxed (Sealed Product)",
-          type: "self-courier" as const,
+          providerId: "provider-kaiba-box",
+          label: "Box Shipping (Sealed Product)",
+          type: "shiprocket" as const,
           fee: { flatInPaise: 14900 },
           etaDaysMin: 4,
           etaDaysMax: 7,
+          requiresAwbUpload: true,
         },
         {
-          providerId: "provider-palace-pickup",
-          label: "Store Pickup — Mumbai",
-          type: "store-pickup" as const,
-          fee: { flatInPaise: 0 },
-          etaDaysMin: 0,
-          etaDaysMax: 1,
-          regions: ["400"],
+          providerId: "provider-kaiba-express",
+          label: "Express Courier",
+          type: "shiprocket" as const,
+          fee: { flatInPaise: 19900 },
+          etaDaysMin: 1,
+          etaDaysMax: 2,
+          requiresAwbUpload: true,
         },
       ],
     },
     isPublic: true,
     isVacationMode: false,
+    vacationMessage: "Taking a break to prepare my next card shipment. Back soon.",
+    vacationReturnDate: new Date(NOW.getTime() + 7 * 86_400_000), // 7 days from seed time
+
     stats: {
       totalProducts: 0,
-      itemsSold: 87,
-      totalReviews: 42,
-      averageRating: 4.8,
+      itemsSold: 0,
+      totalReviews: 30,
+      averageRating: 4.6,
     },
-    capabilities: ["host_auctions", "host_preorders", "suggest_brands", "create_coupons", "verified_seller", "featured_placement", "extended_return_window"] as StoreCapability[],
-    createdAt: daysAgo(380),
-    updatedAt: daysAgo(2),
+    capabilities: [
+      "host_auctions",
+      "host_preorders",
+      "verified_seller",
+      "create_coupons",
+      "suggest_brands",
+      "bulk_listing_import",
+      "advanced_analytics",
+    ] as StoreCapability[],
+    createdAt: daysAgo(350),
+    updatedAt: daysAgo(1),
   },
 
-  // ── Store 3: CardGame Hub (Yu-Gi-Oh! + Mixed TCG) ─────────────────────────
+  // ── Store 3: Pokémon Palace (Pokémon TCG specialist) ──────────────────────
+  {
+    id: "store-pokemon-palace",
+    storeSlug: "store-pokemon-palace",
+    ownerId: "user-ash-trainer",
+    storeName: "Pokémon Palace",
+    storeDescription:
+      "India's top Pokémon TCG store. Booster packs, Elite Trainer Boxes, singles, graded slabs, and Japanese exclusives. Base Set to Scarlet & Violet — if it's Pokémon, we've got it.",
+    storeCategory: "category-pokemon-tcg",
+    storeLogoURL: "/media/store-logo-pokemon-palace-20260101.jpg",
+    storeBannerURL: "/media/store-banner-pokemon-palace-20260101.jpg",
+    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
+    bio: "Pokémon Master turned seller. Building the largest Pokémon TCG collection marketplace in India.",
+    location: "Bengaluru, Karnataka, India",
+    website: "https://pokemonpalace.in",
+    socialLinks: { instagram: "https://instagram.com/pokemonpalace.in" },
+    returnPolicy: "7-day returns on singles. No returns on opened sealed product.",
+    shippingPolicy: "Free shipping on orders above ₹799. Ships within 48 hours. 4–6 business days across India.",
+    shippingConfig: {
+      defaultProviderId: "provider-pokemon-standard",
+      providers: [
+        { providerId: "provider-pokemon-standard", label: "Standard Shipping", type: "shiprocket" as const, fee: { flatInPaise: 4900, freeAboveInPaise: 79900 }, etaDaysMin: 4, etaDaysMax: 6, requiresAwbUpload: true },
+      ],
+    },
+    isPublic: true,
+    isVacationMode: false,
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 8, averageRating: 4.7 },
+    capabilities: ["host_auctions", "host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(200),
+    updatedAt: daysAgo(3),
+  },
+
+  // ── Store 4: CardGame Hub (multi-TCG store) ───────────────────────────────
   {
     id: "store-cardgame-hub",
     storeSlug: "store-cardgame-hub",
-    ownerId: "user-nisha-reddy",
+    ownerId: "user-priya-cards",
     storeName: "CardGame Hub",
     storeDescription:
-      "Yu-Gi-Oh! TCG specialist. Tournament-grade singles, booster boxes, structure decks, collector tins, and sealed product. Also stocks Pokémon ETBs and mixed TCG accessories.",
-    storeCategory: "category-yugioh-tcg",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=1600&h=400&fit=crop",
+      "Multi-TCG collectibles store. Yu-Gi-Oh!, Pokémon, One Piece, Dragon Ball Super, and Cardfight!! Vanguard. Singles, sealed product, and tournament accessories.",
+    storeCategory: "category-trading-cards",
+    storeLogoURL: "/media/store-logo-cardgame-hub-20260101.jpg",
+    storeBannerURL: "/media/store-banner-cardgame-hub-20260101.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "WCS 2022 qualifier and competitive Yu-Gi-Oh! player. Tournament-tested cards, sleeve recommendations, and deck-building advice on request. Bulk orders welcome.",
+    bio: "TCG enthusiast since 2010. Running local tournaments and selling authentic cards from my personal collection and distributor stock.",
     location: "Hyderabad, Telangana, India",
-    socialLinks: {
-      instagram: "https://instagram.com/nisha.cardgamehub",
+    socialLinks: { instagram: "https://instagram.com/cardgamehub.in", twitter: "https://twitter.com/cardgamehub" },
+    returnPolicy: "5-day returns. Items must be in original packaging.",
+    shippingPolicy: "Free shipping above ₹1,499. Ships within 48 hours via Shiprocket.",
+    shippingConfig: {
+      defaultProviderId: "provider-cardgame-standard",
+      providers: [
+        { providerId: "provider-cardgame-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 5900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
+      ],
     },
-    returnPolicy:
-      "Singles: 3-day return if card is misrepresented in condition grading. Sealed: 7-day return on factory-sealed only. No returns on opened product.",
-    shippingPolicy:
-      "Singles shipped in toploader and penny sleeve inside padded envelope. Sealed product double-boxed. Free shipping on orders above ₹1,199. 4–6 business days.",
     isPublic: true,
     isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 64,
-      totalReviews: 31,
-      averageRating: 4.6,
-    },
-    capabilities: ["suggest_brands", "create_coupons", "verified_seller", "extended_return_window"] as StoreCapability[],
-    createdAt: daysAgo(350),
-    updatedAt: daysAgo(3),
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 4, averageRating: 4.5 },
+    capabilities: ["host_auctions", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(180),
+    updatedAt: daysAgo(5),
   },
 
-  // ── Store 4: Diecast Depot (Hot Wheels + Tomica) ───────────────────────────
+  // ── Store 5: Diecast Depot (Hot Wheels, Tomica, Matchbox) ─────────────────
   {
     id: "store-diecast-depot",
     storeSlug: "store-diecast-depot",
-    ownerId: "user-vikram-mehta",
+    ownerId: "user-ravi-diecast",
     storeName: "Diecast Depot",
     storeDescription:
-      "Hot Wheels and Tomica diecast car specialists. Treasure Hunts (TH), Super Treasure Hunts (STH), Car Culture sets, Team Transport, premium Tomica Limited Vintage, and 1:18 scale cars.",
-    storeCategory: "category-hot-wheels",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?w=1600&h=400&fit=crop",
+      "India's premier diecast collectibles store. Hot Wheels mainline, Premium, Treasure Hunts, Super TH, Tomica, Matchbox, and Maisto. New arrivals every week.",
+    storeCategory: "category-diecast-vehicles",
+    storeLogoURL: "/media/store-logo-diecast-depot-20260101.jpg",
+    storeBannerURL: "/media/store-banner-diecast-depot-20260101.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Collector since 2005. STH hunter, Car Culture completionist, Tomica Limited Vintage dealer. All cars are fresh from retail, blister-checked, and never displayed. I source from Tokyo flea markets on my annual Japan trip.",
+    bio: "Collecting diecast since 1998. Over 5,000 Hot Wheels in my personal collection. Now sharing the hobby with collectors across India.",
     location: "Delhi, NCR, India",
-    socialLinks: {
-      instagram: "https://instagram.com/vikram.diecastdepot",
-      facebook: "https://facebook.com/diecastdepot",
+    socialLinks: { instagram: "https://instagram.com/diecastdepot.in", facebook: "https://facebook.com/diecastdepot" },
+    returnPolicy: "3-day returns on carded items only. No returns on loose or opened items.",
+    shippingPolicy: "Free shipping on 5+ items or orders above ₹999. Dispatched within 24 hours.",
+    shippingConfig: {
+      defaultProviderId: "provider-diecast-standard",
+      providers: [
+        { providerId: "provider-diecast-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 3900, freeAboveInPaise: 99900 }, etaDaysMin: 3, etaDaysMax: 5, requiresAwbUpload: true },
+      ],
     },
-    returnPolicy:
-      "7-day return on factory-sealed blister-pack cars (blister must be unopened). Loose cars: 3-day return if car is misrepresented. No returns on custom or modified cars.",
-    shippingPolicy:
-      "Each car bubble-wrapped individually and packed in rigid mailer. Multiple cars in padded box. Free shipping on orders above ₹999. Express India Post or Shiprocket: 3–5 business days.",
     isPublic: true,
     isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 115,
-      totalReviews: 58,
-      averageRating: 4.9,
-    },
-    capabilities: ["suggest_brands", "create_coupons"] as StoreCapability[],
-    createdAt: daysAgo(320),
-    updatedAt: daysAgo(1),
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 12, averageRating: 4.6 },
+    capabilities: ["verified_seller", "create_coupons", "suggest_brands", "bulk_listing_import"] as StoreCapability[],
+    createdAt: daysAgo(250),
+    updatedAt: daysAgo(2),
   },
 
-  // ── Store 5: Beyblade Arena (Beyblade X + Burst) ───────────────────────────
+  // ── Store 6: Beyblade Arena (spinning tops specialist) ────────────────────
   {
     id: "store-beyblade-arena",
     storeSlug: "store-beyblade-arena",
-    ownerId: "user-rohit-joshi",
+    ownerId: "user-tyson-blader",
     storeName: "Beyblade Arena",
     storeDescription:
-      "India's #1 Beyblade X and Burst store. Direct import from Takara Tomy Japan. Official tops, launchers, XStadiums, and combo sets. Competitive-grade product, genuine Japanese releases.",
-    storeCategory: "category-beyblade-x",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=1600&h=400&fit=crop",
+      "Everything Beyblade — X, Burst, Metal Fight, and vintage original series. Takara-Tomy authentic stock, tournament-grade stadiums, launchers, and rare limited editions.",
+    storeCategory: "category-spinning-tops",
+    storeLogoURL: "/media/store-logo-beyblade-arena-20260101.jpg",
+    storeBannerURL: "/media/store-banner-beyblade-arena-20260101.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Importing Beyblade X directly from Japan since 2023. All stock is Takara Tomy authentic — no knockoffs. Run weekly online tournaments with prizes. Discord community with 2,000+ members.",
-    location: "Pune, Maharashtra, India",
-    socialLinks: {
-      instagram: "https://instagram.com/rohit.beyladearena",
+    bio: "Beyblade champion turned seller. Importing authentic Takara-Tomy Beyblades directly from Japan. Let It Rip!",
+    location: "Chennai, Tamil Nadu, India",
+    socialLinks: { instagram: "https://instagram.com/beybladearena.in" },
+    returnPolicy: "7-day returns on sealed items. No returns on used/battled Beyblades.",
+    shippingPolicy: "Free shipping above ₹599. All items shipped in protective bubble wrap.",
+    shippingConfig: {
+      defaultProviderId: "provider-beyblade-standard",
+      providers: [
+        { providerId: "provider-beyblade-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 4500, freeAboveInPaise: 59900 }, etaDaysMin: 3, etaDaysMax: 6, requiresAwbUpload: true },
+      ],
     },
-    returnPolicy:
-      "7-day return on factory-sealed Beyblade product (box must be unopened). Launcher or stadium returns accepted within 3 days if manufacturing defect. No returns on opened combo sets.",
-    shippingPolicy:
-      "All tops packed individually in foam-lined boxes. Free shipping on orders above ₹799. Standard: 4–6 business days. Express available. Japan-sourced items may take 7–10 business days.",
     isPublic: true,
     isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 73,
-      totalReviews: 47,
-      averageRating: 4.7,
-    },
-    capabilities: ["host_auctions", "suggest_brands", "create_coupons", "extended_return_window"] as StoreCapability[],
-    createdAt: daysAgo(290),
-    updatedAt: daysAgo(2),
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 6, averageRating: 4.8 },
+    capabilities: ["host_preorders", "verified_seller", "create_coupons", "suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(150),
+    updatedAt: daysAgo(4),
   },
 
-  // ── Store 6: Tokyo Toys India (Anime Figures, Gundam, Funko Pop) ──────────
+  // ── Store 7: Tokyo Toys India (anime figures + model kits) ────────────────
   {
     id: "store-tokyo-toys-india",
     storeSlug: "store-tokyo-toys-india",
-    ownerId: "user-priya-singh",
+    ownerId: "user-megumi-figures",
     storeName: "Tokyo Toys India",
     storeDescription:
-      "India's premier anime figure and Gundam store. Nendoroids, S.H.Figuarts, scale PVC figures, Real Grade and High Grade Gunpla, and Funko Pops. All sourced from Akihabara, Good Smile Company, and Bandai Spirits directly.",
-    storeCategory: "category-anime-figures",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1608889825271-9696283b84bd?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=1600&h=400&fit=crop",
+      "Anime figures and model kits imported from Japan. Nendoroid, S.H.Figuarts, figma, Funko Pop, and scale figures. Plus Gunpla and 30 Minutes Missions kits.",
+    storeCategory: "category-action-figures",
+    storeLogoURL: "/media/store-logo-tokyo-toys-india-20260101.jpg",
+    storeBannerURL: "/media/store-banner-tokyo-toys-india-20260101.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "I visit Akihabara twice a year and bring back genuine figures direct from Good Smile, Bandai Spirits, and Kotobukiya. All products have original Japanese box with serial number. No grey-market, no bootlegs. Specialising in Nendoroids and S.H.Figuarts with a growing Gunpla section.",
-    location: "Chennai, Tamil Nadu, India",
-    socialLinks: {
-      instagram: "https://instagram.com/priya.tokyotoys",
-      twitter: "https://twitter.com/tokyotoysindia",
+    bio: "Direct imports from Akihabara and Nipponbashi. Authentic figures with original Japanese packaging. No bootlegs, ever.",
+    location: "Pune, Maharashtra, India",
+    website: "https://tokyotoys.in",
+    socialLinks: { instagram: "https://instagram.com/tokyotoys.in", twitter: "https://twitter.com/tokyotoysindia" },
+    returnPolicy: "7-day returns on unopened figures. Damaged-in-transit claims within 48 hours with photo proof.",
+    shippingPolicy: "Free shipping above ₹1,999. All figures double-boxed with foam inserts. 5–8 business days.",
+    shippingConfig: {
+      defaultProviderId: "provider-tokyo-standard",
+      providers: [
+        { providerId: "provider-tokyo-standard", label: "Standard (Double-Box)", type: "shiprocket" as const, fee: { flatInPaise: 9900, freeAboveInPaise: 199900 }, etaDaysMin: 5, etaDaysMax: 8, requiresAwbUpload: true },
+        { providerId: "provider-tokyo-express", label: "Express", type: "shiprocket" as const, fee: { flatInPaise: 19900 }, etaDaysMin: 2, etaDaysMax: 3, requiresAwbUpload: true },
+      ],
     },
-    returnPolicy:
-      "7-day return on factory-sealed product (seal must be intact). Figures with broken or missing accessories: 3-day return window, photographic evidence required. No returns on opened Nendoroids.",
-    shippingPolicy:
-      "Each figure individually bubble-wrapped in rigid box with foam padding. Free shipping on orders above ₹999. 3–5 business days. Japan-sourced items dispatched within 24 hours of arrival.",
     isPublic: true,
     isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 52,
-      totalReviews: 28,
-      averageRating: 4.8,
-    },
-    capabilities: ["suggest_brands", "create_coupons", "whatsapp_catalog_sync"] as StoreCapability[],
-    createdAt: daysAgo(260),
-    updatedAt: daysAgo(1),
-  },
-
-  // ── Store 7: Gundam Galaxy (Gunpla model kits specialist) ─────────────────
-  {
-    id: "store-gundam-galaxy",
-    storeSlug: "store-gundam-galaxy",
-    ownerId: "user-amit-sharma",
-    storeName: "Gundam Galaxy",
-    storeDescription:
-      "Gunpla model kit specialists — High Grade, Real Grade, Master Grade, and Perfect Grade kits. Bandai authentic stock only, sourced directly from official distributors in Japan and Singapore. Beginner kits to advanced PG builds.",
-    storeCategory: "category-gunpla",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1657664072470-99b02c2143f2?w=1600&h=400&fit=crop",
-    status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "Master Grade builder and competitive Gunpla modeller since 2016. All kits sourced from official Bandai distributors — no Malaysian bootlegs, no resealed boxes. YouTube channel with build tutorials for MG and RG kits. Discord server for India Gunpla community with 1,500+ members.",
-    location: "Bengaluru, Karnataka, India",
-    socialLinks: {
-      instagram: "https://instagram.com/amit.gundamgalaxy",
-      twitter: "https://twitter.com/gundamgalaxy",
-    },
-    returnPolicy:
-      "7-day return on factory-sealed kits (outer shrink wrap must be intact). Loose runner returns: 3-day window if misrepresented. No returns on started/built kits.",
-    shippingPolicy:
-      "All kits double-boxed in rigid cardboard. Free shipping on orders above ₹999. 3–5 business days. PG kits shipped with additional foam corner protection.",
-    isPublic: true,
-    isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 41,
-      totalReviews: 22,
-      averageRating: 4.7,
-    },
-    capabilities: ["host_preorders", "suggest_brands", "create_coupons", "extended_return_window"] as StoreCapability[],
-    createdAt: daysAgo(230),
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 3, averageRating: 4.9 },
+    capabilities: ["host_preorders", "verified_seller", "create_coupons", "suggest_brands", "advanced_analytics"] as StoreCapability[],
+    createdAt: daysAgo(120),
     updatedAt: daysAgo(2),
   },
 
-  // ── Store 8: Vintage Vault (vintage collectibles — WOTC era + 80s toys) ───
+  // ── Store 8: Gundam Galaxy (Gunpla + mecha model kits) ────────────────────
   {
-    id: "store-vintage-vault",
-    storeSlug: "store-vintage-vault",
-    ownerId: "user-kavya-iyer",
-    storeName: "Vintage Vault",
+    id: "store-gundam-galaxy",
+    storeSlug: "store-gundam-galaxy",
+    ownerId: "user-amuro-builder",
+    storeName: "Gundam Galaxy",
     storeDescription:
-      "Vintage collectibles from the golden era. Pokémon WOTC-era raw and graded cards, 1980s action figures (Masters of the Universe, TMNT, Star Wars vintage), vintage Hot Wheels Redlines, and rare Japanese toys from the Shōwa period. Sourced from estate sales, Tokyo flea markets, and private collector networks.",
-    storeCategory: "category-vintage-rare",
-    storeLogoURL:
-      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=400&h=400&fit=crop",
-    storeBannerURL:
-      "https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=1600&h=400&fit=crop",
+      "Gunpla and mecha model kits — HG, RG, MG, PG, SD grades by Bandai, plus Frame Arms by Kotobukiya and 30 Minutes Missions. Tools, paints, and accessories.",
+    storeCategory: "category-model-kits",
+    storeLogoURL: "/media/store-logo-gundam-galaxy-20260101.jpg",
+    storeBannerURL: "/media/store-banner-gundam-galaxy-20260101.jpg",
     status: STORE_FIELDS.STATUS_VALUES.ACTIVE,
-    bio: "20+ years sourcing vintage collectibles from Japan, the UK, and the US. Every item in my store has a provenance story. I travel to Japan twice a year — Tokyo Toy Show and the Shinjuku/Shibuya flea market circuit. Specialist in Pokémon WOTC era (Base Set through Skyridge) and vintage Redline Hot Wheels.",
+    bio: "Building Gunpla since 2005. Over 200 kits built. Importing directly from Bandai Hobby distributors in Japan and Hong Kong.",
     location: "Kolkata, West Bengal, India",
-    socialLinks: {
-      instagram: "https://instagram.com/kavya.vintagevault",
+    socialLinks: { instagram: "https://instagram.com/gundamgalaxy.in" },
+    returnPolicy: "7-day returns on sealed kits. No returns on opened or partially built kits.",
+    shippingPolicy: "Free shipping above ₹1,499. Kits shipped in original Bandai outer boxes. 4–7 business days.",
+    shippingConfig: {
+      defaultProviderId: "provider-gundam-standard",
+      providers: [
+        { providerId: "provider-gundam-standard", label: "Standard", type: "shiprocket" as const, fee: { flatInPaise: 7900, freeAboveInPaise: 149900 }, etaDaysMin: 4, etaDaysMax: 7, requiresAwbUpload: true },
+      ],
     },
-    returnPolicy:
-      "3-day return on all vintage items if misrepresented. Detailed grading photos taken before shipping. Any dispute handled promptly and fairly — reputation is everything in vintage.",
-    shippingPolicy:
-      "All vintage items individually sleeved and packed in rigid mailers with foam. Insured shipping on items above ₹5,000. Free standard shipping on orders above ₹999. 4–6 business days.",
     isPublic: true,
     isVacationMode: false,
-    stats: {
-      totalProducts: 0,
-      itemsSold: 34,
-      totalReviews: 19,
-      averageRating: 4.9,
-    },
-    capabilities: ["suggest_brands", "create_coupons", "featured_placement"] as StoreCapability[],
-    createdAt: daysAgo(200),
-    updatedAt: daysAgo(3),
+    stats: { totalProducts: 0, itemsSold: 0, totalReviews: 2, averageRating: 4.7 },
+    capabilities: ["host_preorders", "create_coupons", "suggest_brands"] as StoreCapability[],
+    createdAt: daysAgo(90),
+    updatedAt: daysAgo(6),
   },
 ];

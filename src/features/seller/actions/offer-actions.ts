@@ -389,8 +389,8 @@ export async function checkoutOffer(
   if (!product) throw new NotFoundError(ERROR_MESSAGES.PRODUCT.NOT_FOUND);
   if (
     (product.availableQuantity ?? 0) <= 0 ||
-    product.status === ProductStatusValues.DISCONTINUED ||
-    product.status === ProductStatusValues.SOLD
+    product.isSold === true ||
+    product.status === ProductStatusValues.ARCHIVED
   )
     throw new ValidationError(ERROR_MESSAGES.OFFER.PRODUCT_UNAVAILABLE);
 

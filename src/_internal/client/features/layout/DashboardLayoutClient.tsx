@@ -178,8 +178,8 @@ export function DashboardLayoutClient({
       {/* Content area — full width on both mobile and desktop.
           md:pl-14 clears the sidebar toggle tab (w-9 = 2.25 rem) + margin so the toggle does not overlap.
           Inner wrapper caps width on ultra-wide screens so content does not flush to the far left. */}
-      <div className="w-full px-5 py-8 md:pl-14 md:pr-6 lg:pl-16 lg:pr-10 min-h-[calc(100dvh-var(--header-height,3.5rem))]">
-        <div className="w-full max-w-screen-2xl mx-auto">{children}</div>
+      <div className="w-full flex-1 flex flex-col px-5 py-8 md:pl-14 md:pr-6 lg:pl-16 lg:pr-10 min-h-[calc(100dvh-var(--header-height,3.5rem))]">
+        <div className="w-full flex-1 max-w-screen-2xl mx-auto">{children}</div>
       </div>
     </>
   );

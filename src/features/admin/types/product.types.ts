@@ -8,9 +8,8 @@
 export type AdminProductStatus =
   | "draft"
   | "published"
-  | "out_of_stock"
-  | "discontinued"
-  | "sold";
+  | "in_review"
+  | "archived";
 
 export type AdminProductDrawerMode = "create" | "edit" | "delete" | null;
 
@@ -89,7 +88,6 @@ export const ADMIN_PRODUCT_STATUS_OPTIONS: {
 }[] = [
   { value: "draft", label: "Draft" },
   { value: "published", label: "Published" },
-  { value: "out_of_stock", label: "Out of Stock" },
-  { value: "discontinued", label: "Discontinued" },
-  { value: "sold", label: "Sold" },
+  { value: "in_review", label: "In Review" },
+  { value: "archived", label: "Archived" },
 ];

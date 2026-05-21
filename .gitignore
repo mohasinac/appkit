@@ -6,4 +6,4 @@
 /coverage/
 /.turbo/
 GEMINI.md
-.npmrc
+/.npmrc

@@ -157,7 +157,7 @@ const {
   // seed data
   brandsSeedData, usersSeedData, addressesSeedData, storeAddressesSeedData,
   categoriesSeedData, storesSeedData, sessionsSeedData,
-  productsStandardSeedData, productsAuctionsSeedData, productsPreOrdersSeedData,
+  productsStandardSeedData, productsAuctionsSeedData, productsPreordersSeedData,
   ordersSeedData, reviewsSeedData, cartsSeedData, bidsSeedData,
   couponsSeedData, couponUsageSeedData,
   eventsSeedData, eventEntriesSeedData, payoutsSeedData,
@@ -231,7 +231,7 @@ const SEED_DATA_MAP = {
   brands: brandsSeedData,
   categories: categoriesSeedData,
   stores: storesSeedData,
-  products: [...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreOrdersSeedData || [])],
+  products: [...(productsStandardSeedData || []), ...(productsAuctionsSeedData || []), ...(productsPreordersSeedData || [])],
   orders: ordersSeedData,
   reviews: reviewsSeedData,
   bids: bidsSeedData,

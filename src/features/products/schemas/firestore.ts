@@ -217,6 +217,7 @@ export interface ProductDocument {
   preOrderCurrentCount?: number;
   preOrderProductionStatus?: "upcoming" | "in_production" | "ready_to_ship";
   preOrderCancellable?: boolean;
+  preOrderClosed?: boolean;
   isPromoted?: boolean;
   isOnSale?: boolean;
   isSold?: boolean;
@@ -299,6 +300,8 @@ export interface ProductDocument {
     bin: string;
   };
 
+  searchTokens?: string[];
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -323,10 +326,8 @@ export interface PrizeDrawItem {
 export const ProductStatusValues = {
   DRAFT: "draft",
   PUBLISHED: "published",
+  IN_REVIEW: "in_review",
   ARCHIVED: "archived",
-  SOLD: "sold",
-  OUT_OF_STOCK: "out_of_stock",
-  DISCONTINUED: "discontinued",
 } as const satisfies Record<string, ProductStatus>;
 
 export const PRODUCT_COLLECTION = "products" as const;
@@ -340,6 +341,7 @@ export const PRODUCT_INDEXED_FIELDS = [
   "isPromoted",
   "isOnSale",
   "isSold",
+  "searchTokens",
   "createdAt",
 ] as const;
 

@@ -51,6 +51,10 @@ export async function placeBid(
   if (!isAuctionListing(product))
     throw new ValidationError(ERROR_MESSAGES.BID.NOT_AN_AUCTION);
 
+  if (product.isSold) {
+    throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED, { code: BID_ERROR_CODES.AUCTION_ENDED });
+  }
+
   if (product.auctionEndDate) {
     const endDate = resolveDate(product.auctionEndDate);
     if (endDate && endDate.getTime() < Date.now()) {
@@ -188,6 +192,92 @@ export async function placeBid(
     winning: newBidWins,
   });
   return { bid };
+}
+
+// --- Buy Now (auction direct-purchase) ----------------------------------------
+
+export interface BuyNowAuctionInput {
+  productId: string;
+}
+
+export interface BuyNowAuctionResult {
+  orderId: string;
+  amount: number;
+  currency: string;
+}
+
+export async function buyNowAuction(
+  userId: string,
+  userName: string,
+  userEmail: string,
+  input: BuyNowAuctionInput,
+): Promise<BuyNowAuctionResult> {
+  const { productId } = input;
+
+  const product = await productRepository.findById(productId);
+  if (!product) throw new NotFoundError(ERROR_MESSAGES.BID.AUCTION_NOT_FOUND);
+  if (!isAuctionListing(product))
+    throw new ValidationError(ERROR_MESSAGES.BID.NOT_AN_AUCTION);
+
+  if (product.isSold) {
+    throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED, { code: BID_ERROR_CODES.AUCTION_ENDED });
+  }
+
+  if (product.auctionEndDate) {
+    const endDate = resolveDate(product.auctionEndDate);
+    if (endDate && endDate.getTime() < Date.now()) {
+      throw new ValidationError(ERROR_MESSAGES.BID.AUCTION_ENDED, { code: BID_ERROR_CODES.AUCTION_ENDED });
+    }
+  }
+
+  if (product.storeId) {
+    const store = await storeRepository.findById(product.storeId);
+    if (store?.ownerId === userId) {
+      throw new AuthorizationError(ERROR_MESSAGES.BID.OWN_AUCTION);
+    }
+  }
+
+  const buyNowPrice = typeof product.buyNowPrice === "number" ? product.buyNowPrice : null;
+  if (buyNowPrice === null || buyNowPrice <= 0) {
+    throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_NO_PRICE, { code: BID_ERROR_CODES.BUY_NOW_NO_PRICE });
+  }
+
+  if (product.bidsHaveStarted === true) {
+    throw new ValidationError(ERROR_MESSAGES.BID.BUY_NOW_BIDS_STARTED, { code: BID_ERROR_CODES.BUY_NOW_BIDS_STARTED });
+  }
+
+  const currency = getDefaultCurrency();
+  let orderId = "";
+
+  await unitOfWork.runBatch((batch) => {
+    const orderRef = unitOfWork.orders.createFromAuction(batch, {
+      productId,
+      productTitle: product.title,
+      userId,
+      userName,
+      userEmail,
+      storeId: product.storeId,
+      amount: buyNowPrice,
+      currency,
+      auctionProductId: productId,
+    });
+    orderId = orderRef.id;
+
+    unitOfWork.products.updateInBatch(batch, productId, {
+      isSold: true,
+      availableQuantity: 0,
+      auctionEndDate: new Date(),
+    } as any);
+  });
+
+  serverLogger.info("buyNowAuction", {
+    orderId,
+    productId,
+    userId,
+    amount: buyNowPrice,
+  });
+
+  return { orderId, amount: buyNowPrice, currency };
 }
 
 export async function listBidsByProduct(

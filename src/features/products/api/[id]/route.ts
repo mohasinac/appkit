@@ -26,9 +26,7 @@ const ERR_DB_NOT_REGISTERED = "Database provider not registered";
 const ERR_PRODUCT_NOT_FOUND = "Product not found";
 
 const UNAVAILABLE_PRODUCT_STATUSES = new Set<string>([
-  "sold",
-  "out_of_stock",
-  "discontinued",
+  "archived",
 ]);
 
 // SB-UNI-V — `syncBundlesForUnavailableProduct` removed. Bundle stock
@@ -62,10 +60,8 @@ const productUpdateSchema = z
       .enum([
         "draft",
         "published",
+        "in_review",
         "archived",
-        "sold",
-        "discontinued",
-        "out_of_stock",
       ])
       .optional(),
     mainImage: z.string().optional(),
@@ -212,7 +208,7 @@ export const PATCH = createRouteHandler<
 });
 
 // --- DELETE /api/products/[id] ------------------------------------------------
-// Soft-delete (sets status to "discontinued"). Auth required.
+// Soft-delete (sets status to "archived"). Auth required.
 
 export const DELETE = createRouteHandler<never, { id: string }>({
   auth: true,
@@ -247,7 +243,7 @@ export const DELETE = createRouteHandler<never, { id: string }>({
     }
 
     await repo.update(id, {
-      status: "discontinued" as ProductItem["status"],
+      status: "archived" as ProductItem["status"],
       updatedAt: new Date().toISOString(),
     });
 

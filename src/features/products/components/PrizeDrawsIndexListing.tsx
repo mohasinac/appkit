@@ -9,19 +9,10 @@ import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
 import { ProductFilters } from "./ProductFilters";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
-import { sortBy } from "../../../constants/sort";
+import { PRIZE_DRAW_SORT_OPTIONS } from "../constants/sieve";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
 
-const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
-
-const PRIZE_DRAW_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: "Newest First" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: "Oldest First" },
-  { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START, "ASC"), label: "Reveal: Soonest" },
-  { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START), label: "Reveal: Furthest" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Entry: Low to High" },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: "Entry: High to Low" },
-] as const;
+const DEFAULT_SORT = PRIZE_DRAW_SORT_OPTIONS[0].value;
 
 const FILTER_KEYS = [
   TABLE_KEYS.CATEGORY,

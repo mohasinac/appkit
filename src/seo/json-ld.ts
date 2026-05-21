@@ -94,11 +94,13 @@ export function productJsonLd(
       price: product.price,
       priceCurrency: product.currency || getDefaultCurrency(),
       availability:
-        product.status === ProductStatusValues.PUBLISHED || !product.status
-          ? "https://schema.org/InStock"
-          : product.status === ProductStatusValues.OUT_OF_STOCK
+        (product as any).isSold === true
+          ? "https://schema.org/SoldOut"
+          : (product as any).availableQuantity === 0
             ? "https://schema.org/OutOfStock"
-            : "https://schema.org/Discontinued",
+            : product.status === ProductStatusValues.PUBLISHED || !product.status
+              ? "https://schema.org/InStock"
+              : "https://schema.org/Discontinued",
       url,
       seller: product.sellerName
         ? { "@type": "Organization", name: product.sellerName }

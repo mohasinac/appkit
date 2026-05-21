@@ -53,6 +53,7 @@ export interface AuctionDetailPageViewProps {
    */
   initialAuction?: import("../../products/schemas/firestore").ProductDocument | null;
   onPlaceBid?: (input: PlaceBidInput) => Promise<unknown>;
+  onBuyNow?: () => Promise<unknown>;
   /** SSR-loaded productFeatures (platform + store-scope). See ProductDetailPageView for semantics. */
   productFeatures?: ProductFeatureDocument[];
 }
@@ -169,7 +170,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
   );
 }
 
-export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, productFeatures }: AuctionDetailPageViewProps) {
+export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, onBuyNow, productFeatures }: AuctionDetailPageViewProps) {
   const product = initialAuction !== undefined
     ? (initialAuction ?? undefined)
     : await productRepository.findByIdOrSlug(id).catch(() => undefined);
@@ -236,6 +237,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
   const bidCount = typeof p.bidCount === "number" ? p.bidCount : 0;
   const buyNowPrice =
     typeof p.buyNowPrice === "number" ? p.buyNowPrice : null;
+  const bidsHaveStarted = p.bidsHaveStarted === true;
 
   const condition = typeof p.condition === "string" ? p.condition : null;
   const featured = p.featured === true;
@@ -332,9 +334,11 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
                     currency={currency}
                     isEnded={isEnded}
                     buyNowPrice={buyNowPrice}
+                    bidsHaveStarted={bidsHaveStarted}
                     bidCount={bidCount}
                     tags={tags}
                     onPlaceBid={onPlaceBid}
+                    onBuyNow={onBuyNow}
                     triggerClassName="w-full"
                   />
                 </Div>
@@ -358,8 +362,8 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
                   <Button variant="primary" size="md" className="w-full" disabled={isEnded}>
                     {isEnded ? "Auction Ended" : "Place Bid"}
                   </Button>
-                  {buyNowPrice !== null && !isEnded && (
-                    <Button variant="secondary" size="md" className="w-full">
+                  {buyNowPrice !== null && !isEnded && !bidsHaveStarted && (
+                    <Button variant="secondary" size="md" className="w-full" disabled>
                       Buy Now — {formatCurrency(buyNowPrice, currency)}
                     </Button>
                   )}
@@ -395,9 +399,11 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
                   currency={currency}
                   isEnded={isEnded}
                   buyNowPrice={buyNowPrice}
+                  bidsHaveStarted={bidsHaveStarted}
                   bidCount={bidCount}
                   tags={tags}
                   onPlaceBid={onPlaceBid}
+                  onBuyNow={onBuyNow}
                   triggerClassName="w-full"
                 />
               </Div>
@@ -478,7 +484,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, pr
               .filter((r) => {
                 if (r.id === product.id || r.listingType !== "auction") return false;
                 const s = r.status as string | undefined;
-                if (s && ["sold", "out_of_stock", "archived", "discontinued", "draft"].includes(s)) return false;
+                if (s && ["archived", "in_review", "draft"].includes(s)) return false;
                 if (r.isSold === true) return false;
                 const end = r.auctionEndDate;
                 if (!end) return true;

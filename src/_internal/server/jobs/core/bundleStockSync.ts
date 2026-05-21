@@ -12,16 +12,16 @@ import { CATEGORY_FIELDS, PRODUCT_FIELDS, COMMON_FIELDS } from "../../../../cons
 
 const CATEGORIES_COLLECTION = "categories";
 const PRODUCT_COLLECTION = "products";
-const UNAVAILABLE = new Set<string>([
-  PRODUCT_FIELDS.STATUS_VALUES.SOLD,
-  PRODUCT_FIELDS.STATUS_VALUES.OUT_OF_STOCK,
-  PRODUCT_FIELDS.STATUS_VALUES.DISCONTINUED,
-]);
-
 type BundleCategoryDoc = {
   bundleProductIds?: string[];
   bundleStockStatus?: "in_stock" | "out_of_stock";
 };
+
+function isMemberAvailable(data: { status?: string; isSold?: boolean; availableQuantity?: number }): boolean {
+  if (data.isSold) return false;
+  if (typeof data.availableQuantity === "number" && data.availableQuantity <= 0) return false;
+  return data.status === PRODUCT_FIELDS.STATUS_VALUES.PUBLISHED;
+}
 
 async function computeBundleStockStatus(
   productIds: string[],
@@ -36,8 +36,8 @@ async function computeBundleStockStatus(
       .get();
     if (snap.size < chunk.length) return "out_of_stock";
     for (const doc of snap.docs) {
-      const status = (doc.data() as { status?: string }).status;
-      if (!status || UNAVAILABLE.has(status)) return "out_of_stock";
+      const data = doc.data() as { status?: string; isSold?: boolean; availableQuantity?: number };
+      if (!isMemberAvailable(data)) return "out_of_stock";
     }
   }
   return "in_stock";
