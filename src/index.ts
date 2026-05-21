@@ -9411,3 +9411,33 @@ export type { ProductCodeDocument } from "./features/products/schemas/firestore"
 // ── Live-item listing feature ─────────────────────────────────────────────────
 export { getLiveItemForDetail } from "./_internal/server/features/live/data";
 
+// ── MarketplaceBundleCard (W3) ────────────────────────────────────────────────
+export { MarketplaceBundleCard } from "./features/products/index";
+export type {
+  MarketplaceBundleCardProps,
+  MarketplaceBundleCardData,
+  MarketplaceBundleCardLabels,
+} from "./features/products/index";
+
+// ── Wave 4 Seller management views ───────────────────────────────────────────
+export { SellerStoreCategoriesView } from "./features/seller/components/SellerStoreCategoriesView";
+export type { SellerStoreCategoriesViewProps } from "./features/seller/components/SellerStoreCategoriesView";
+export { SellerTemplatesView } from "./features/seller/components/SellerTemplatesView";
+export type { SellerTemplatesViewProps } from "./features/seller/components/SellerTemplatesView";
+export { SellerPayoutMethodsView } from "./features/seller/components/SellerPayoutMethodsView";
+export type { SellerPayoutMethodsViewProps } from "./features/seller/components/SellerPayoutMethodsView";
+export { SellerShippingConfigsView } from "./features/seller/components/SellerShippingConfigsView";
+export type { SellerShippingConfigsViewProps } from "./features/seller/components/SellerShippingConfigsView";
+export { SellerGoogleReviewsView } from "./features/seller/components/SellerGoogleReviewsView";
+export type { SellerGoogleReviewsViewProps } from "./features/seller/components/SellerGoogleReviewsView";
+
+// ── Wave 5 listing-type views ─────────────────────────────────────────────────
+export { SellerBundlesView } from "./features/seller/components/SellerBundlesView";
+export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
+export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
+export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
+export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
+export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
+export { SellerLiveView } from "./features/seller/components/SellerLiveView";
+export type { SellerLiveViewProps } from "./features/seller/components/SellerLiveView";
+

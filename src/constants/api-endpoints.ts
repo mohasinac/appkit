@@ -424,6 +424,16 @@ export const SELLER_ENDPOINTS = {
   GROUPED_LISTING_BY_ID: (id: string) => `/api/store/grouped-listings/${id}`,
   ANALYTICS_ALERTS: "/api/store/analytics/alerts",
   ANALYTICS_ALERT_BY_ID: (id: string) => `/api/store/analytics/alerts/${id}`,
+  STORE_CATEGORIES: "/api/store/categories",
+  STORE_CATEGORY_BY_ID: (id: string) => `/api/store/categories/${id}`,
+  TEMPLATES: "/api/store/templates",
+  TEMPLATE_BY_ID: (id: string) => `/api/store/templates/${id}`,
+  PAYOUT_METHODS: "/api/store/payout-methods",
+  PAYOUT_METHOD_BY_ID: (id: string) => `/api/store/payout-methods/${id}`,
+  SHIPPING_CONFIGS: "/api/store/shipping-configs",
+  SHIPPING_CONFIG_BY_ID: (id: string) => `/api/store/shipping-configs/${id}`,
+  GOOGLE_REVIEWS: "/api/store/google-reviews",
+  GOOGLE_REVIEWS_SYNC: "/api/store/google-reviews/sync",
 } as const;
 
 // ---------------------------------------------------------------------------

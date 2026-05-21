@@ -38,6 +38,12 @@ export type {
   MarketplacePrizeDrawCardData,
   MarketplacePrizeDrawCardLabels,
 } from "./MarketplacePrizeDrawCard";
+export { MarketplaceBundleCard } from "./MarketplaceBundleCard";
+export type {
+  MarketplaceBundleCardProps,
+  MarketplaceBundleCardData,
+  MarketplaceBundleCardLabels,
+} from "./MarketplaceBundleCard";
 export { PrizeDrawsIndexListing } from "./PrizeDrawsIndexListing";
 export type { PrizeDrawsIndexListingProps } from "./PrizeDrawsIndexListing";
 // PrizeDrawsListingView + PrizeDrawDetailPageView are server components that

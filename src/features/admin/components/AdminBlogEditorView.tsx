@@ -2,14 +2,27 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Heading, Input, RichTextEditor, RichTextRenderer, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import {
+  Button,
+  ConfirmDeleteModal,
+  Div,
+  Heading,
+  Input,
+  RichTextEditor,
+  RichTextRenderer,
+  Select,
+  StackedViewShell,
+  TagInput,
+  Text,
+  Toggle,
+  useToast,
+} from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
-import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
-import { ImageUpload } from "../../media/upload/ImageUpload";
-import { useMediaUpload } from "../../media";
+import { ImageUpload, useMediaUpload } from "../../media";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import type { BlogPostCategory, BlogPostStatus } from "../../blog/types";
+import { StepDef, StepForm } from "../../shell";
 
 // --- Types -------------------------------------------------------------------
 
@@ -19,6 +32,23 @@ export interface AdminBlogEditorViewProps
   onSaved?: (id: string) => void;
   onDeleted?: () => void;
   embedded?: boolean;
+}
+
+interface BlogDraft {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  youtubeId: string;
+  category: BlogPostCategory;
+  tags: string[];
+  status: BlogPostStatus;
+  isFeatured: boolean;
+  authorName: string;
+  publishedAt: string;
+  metaTitle: string;
+  metaDescription: string;
 }
 
 // --- Helpers -----------------------------------------------------------------
@@ -36,6 +66,23 @@ const CATEGORY_OPTIONS = [
   { label: "Updates", value: "updates" as BlogPostCategory },
   { label: "Community", value: "community" as BlogPostCategory },
 ];
+
+const DEFAULT_DRAFT: BlogDraft = {
+  title: "",
+  slug: "",
+  excerpt: "",
+  content: "",
+  coverImage: "",
+  youtubeId: "",
+  category: "news",
+  tags: [],
+  status: "published",
+  isFeatured: true,
+  authorName: "Admin",
+  publishedAt: "",
+  metaTitle: "",
+  metaDescription: "",
+};
 
 function toSlug(str: string): string {
   const base = str
@@ -65,25 +112,17 @@ export function AdminBlogEditorView({
   ...rest
 }: AdminBlogEditorViewProps) {
   const isEdit = Boolean(postId);
-
-  const [title, setTitle] = React.useState("");
-  const [slug, setSlug] = React.useState("");
+  const [draft, setDraft] = React.useState<BlogDraft>(DEFAULT_DRAFT);
   const [slugManual, setSlugManual] = React.useState(false);
-  const [excerpt, setExcerpt] = React.useState("");
-  const [content, setContent] = React.useState("");
-  const [coverImage, setCoverImage] = React.useState("");
-  const [category, setCategory] = React.useState<BlogPostCategory>("news");
-  const [tags, setTags] = React.useState<string[]>([]);
-  const [status, setStatus] = React.useState<BlogPostStatus>("draft");
-  const [isFeatured, setIsFeatured] = React.useState(false);
-  const [authorName, setAuthorName] = React.useState("Admin");
-  const [publishedAt, setPublishedAt] = React.useState("");
-  const [metaTitle, setMetaTitle] = React.useState("");
-  const [metaDescription, setMetaDescription] = React.useState("");
+  const [currentStep, setCurrentStep] = React.useState(0);
+  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
 
   const { showToast } = useToast();
   const { upload } = useMediaUpload();
-  const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+
+  const update = React.useCallback((partial: Partial<BlogDraft>) => {
+    setDraft((prev) => ({ ...prev, ...partial }));
+  }, []);
 
   // --- load existing post (edit mode) ---
   const postQuery = useQuery({
@@ -98,53 +137,49 @@ export function AdminBlogEditorView({
   React.useEffect(() => {
     const p = postQuery.data as any;
     if (!p) return;
-    setTitle(p.title ?? "");
-    setSlug(p.slug ?? "");
+    setDraft({
+      title: p.title ?? "",
+      slug: p.slug ?? "",
+      excerpt: p.excerpt ?? "",
+      content: p.content ?? "",
+      coverImage:
+        typeof p.coverImage === "string" ? p.coverImage : p.coverImage?.url ?? "",
+      youtubeId: p.youtubeId ?? "",
+      category: p.category ?? "news",
+      tags: Array.isArray(p.tags) ? p.tags : [],
+      status: p.status ?? "published",
+      isFeatured: p.isFeatured ?? true,
+      authorName: p.authorName ?? "Admin",
+      publishedAt: toDateInputValue(p.publishedAt),
+      metaTitle: p.metaTitle ?? "",
+      metaDescription: p.metaDescription ?? "",
+    });
     setSlugManual(true);
-    setExcerpt(p.excerpt ?? "");
-    setContent(p.content ?? "");
-    setCoverImage(
-      typeof p.coverImage === "string"
-        ? p.coverImage
-        : p.coverImage?.url ?? "",
-    );
-    setCategory(p.category ?? "news");
-    setTags(Array.isArray(p.tags) ? p.tags : []);
-    setStatus(p.status ?? "draft");
-    setIsFeatured(p.isFeatured ?? false);
-    setAuthorName(p.authorName ?? "Admin");
-    setPublishedAt(toDateInputValue(p.publishedAt));
-    setMetaTitle(p.metaTitle ?? "");
-    setMetaDescription(p.metaDescription ?? "");
   }, [postQuery.data]);
-
-  const handleTitleChange = (value: string) => {
-    setTitle(value);
-    if (!slugManual) setSlug(toSlug(value));
-  };
 
   // --- save ---
   const saveMutation = useMutation({
     mutationFn: async () => {
       const payload: Record<string, unknown> = {
-        title,
-        slug: slug || toSlug(title),
-        excerpt,
-        content,
-        coverImage: coverImage || undefined,
-        category,
-        tags,
-        status,
-        isFeatured,
-        authorName,
+        title: draft.title,
+        slug: draft.slug || toSlug(draft.title),
+        excerpt: draft.excerpt,
+        content: draft.content,
+        coverImage: draft.coverImage || undefined,
+        youtubeId: draft.youtubeId || undefined,
+        category: draft.category,
+        tags: draft.tags,
+        status: draft.status,
+        isFeatured: draft.isFeatured,
+        authorName: draft.authorName,
         publishedAt:
-          status === "published" && !publishedAt
+          draft.status === "published" && !draft.publishedAt
             ? new Date().toISOString()
-            : publishedAt
-              ? new Date(publishedAt).toISOString()
+            : draft.publishedAt
+              ? new Date(draft.publishedAt).toISOString()
               : undefined,
-        metaTitle: metaTitle || undefined,
-        metaDescription: metaDescription || undefined,
+        metaTitle: draft.metaTitle || undefined,
+        metaDescription: draft.metaDescription || undefined,
       };
       if (isEdit) {
         return apiClient.patch(ADMIN_ENDPOINTS.BLOG_BY_ID(postId!), payload);
@@ -154,7 +189,9 @@ export function AdminBlogEditorView({
         authorId: "admin",
         readTimeMinutes: Math.max(
           1,
-          Math.round(content.replace(/<[^>]*>/g, "").split(/\s+/).length / 200),
+          Math.round(
+            draft.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200,
+          ),
         ),
         views: 0,
       });
@@ -180,164 +217,214 @@ export function AdminBlogEditorView({
       showToast((err as Error)?.message ?? "Failed to delete post.", "error"),
   });
 
-  const isSubmitting = saveMutation.isPending || postQuery.isLoading;
-  const canSave = Boolean(title);
+  const isLoading = saveMutation.isPending || postQuery.isLoading;
 
-  const formSection = (
-    <FormShellContext.Provider value={shellCtx}>
-    <Form
-      key="blog-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            clearErrors();
-            if (!title.trim()) { setFieldError("title", "Title is required"); return; }
-            saveMutation.mutate();
-          }}
-          className="space-y-5"
-        >
-          {/* Core fields */}
-          <FieldInput
-            name="title"
+  const steps: StepDef<BlogDraft>[] = [
+    {
+      label: "Content",
+      validate: (values) =>
+        !values.title.trim() ? "Title is required" : null,
+      render: ({ values, onChange }) => (
+        <div className="space-y-5">
+          <Heading level={3} className="mb-2">Content</Heading>
+          <Input
             label="Title"
-            value={title}
-            onChange={(v) => handleTitleChange(v)}
-            required
+            value={values.title}
+            onChange={(e) => {
+              const v = e.target.value;
+              onChange({ title: v, ...(!slugManual && { slug: toSlug(v) }) });
+            }}
             placeholder="e.g. How to Grade Pokémon Cards"
           />
-
           <Input
             label="Slug"
-            value={slug}
+            value={values.slug}
             onChange={(e) => {
-              setSlug(e.target.value);
               setSlugManual(true);
+              onChange({ slug: e.target.value });
             }}
             placeholder="blog-how-to-grade-pokemon-cards"
             helperText="Auto-generated from title. Must start with 'blog-'."
           />
-
-          <div className="grid grid-cols-2 gap-4">
-            <Select
-              label="Category"
-              options={CATEGORY_OPTIONS}
-              value={category}
-              onValueChange={(v) => setCategory(v as BlogPostCategory)}
-            />
-            <Select
-              label="Status"
-              options={STATUS_OPTIONS}
-              value={status}
-              onValueChange={(v) => setStatus(v as BlogPostStatus)}
-            />
-          </div>
-
           <Input
             label="Excerpt"
-            value={excerpt}
-            onChange={(e) => setExcerpt(e.target.value)}
+            value={values.excerpt}
+            onChange={(e) => onChange({ excerpt: e.target.value })}
             placeholder="Short summary shown in listings and cards"
           />
-
-          {/* Cover image */}
-          <ImageUpload
-            label="Cover image"
-            currentImage={coverImage}
-            onUpload={(file) => upload(file, "blog", true, { type: "blog-cover", title: title || slug, category })}
-            onChange={setCoverImage}
-          />
-
-          {/* Rich text content */}
           <div className="space-y-1">
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Content
             </Text>
             <RichTextEditor
-              value={content}
-              onChange={setContent}
+              value={values.content}
+              onChange={(v) => onChange({ content: v })}
               placeholder="Write your article here..."
               minHeightClassName="min-h-[320px]"
             />
           </div>
-
-          {/* Tags */}
-          <TagInput
-            label="Tags"
-            value={tags}
-            onChange={setTags}
-            placeholder="e.g. pokemon, grading, tcg"
+        </div>
+      ),
+    },
+    {
+      label: "Media",
+      render: ({ values, onChange }) => (
+        <div className="space-y-5">
+          <Heading level={3} className="mb-2">Media</Heading>
+          <ImageUpload
+            label="Cover Image"
+            currentImage={values.coverImage}
+            onUpload={(file) =>
+              upload(file, "blog", true, {
+                type: "blog-cover",
+                title: values.title || values.slug,
+                category: values.category,
+              })
+            }
+            onChange={(url) => onChange({ coverImage: url })}
           />
-
-          {/* Author + publish date */}
-          <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="YouTube Video ID (optional)"
+            value={values.youtubeId}
+            onChange={(e) => onChange({ youtubeId: e.target.value })}
+            placeholder="e.g. dQw4w9WgXcQ"
+            helperText="The 11-character video ID from the YouTube URL."
+          />
+        </div>
+      ),
+    },
+    {
+      label: "SEO & Tags",
+      render: ({ values, onChange }) => {
+        const readTime = Math.max(
+          1,
+          Math.round(
+            values.content.replace(/<[^>]*>/g, "").split(/\s+/).filter(Boolean).length / 200,
+          ),
+        );
+        return (
+          <div className="space-y-5">
+            <Heading level={3} className="mb-2">SEO &amp; Tags</Heading>
+            <div className="grid grid-cols-2 gap-4">
+              <Select
+                label="Category"
+                options={CATEGORY_OPTIONS}
+                value={values.category}
+                onValueChange={(v) => onChange({ category: v as BlogPostCategory })}
+              />
+              <Div>
+                <Text className="text-sm font-medium mb-1.5">Estimated Read Time</Text>
+                <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+                  ~{readTime} min (auto-calculated from content)
+                </Text>
+              </Div>
+            </div>
+            <TagInput
+              label="Tags"
+              value={values.tags}
+              onChange={(t) => onChange({ tags: t })}
+              placeholder="e.g. pokemon, grading, tcg"
+            />
             <Input
-              label="Author name"
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              placeholder="Author display name"
+              label="Meta Title (optional)"
+              value={values.metaTitle}
+              onChange={(e) => onChange({ metaTitle: e.target.value })}
+              placeholder="Defaults to post title"
+            />
+            <Input
+              label="Meta Description (optional)"
+              value={values.metaDescription}
+              onChange={(e) => onChange({ metaDescription: e.target.value })}
+              placeholder="SEO description — max 160 chars"
+              maxLength={160}
+            />
+          </div>
+        );
+      },
+    },
+    {
+      label: "Publish",
+      render: ({ values, onChange }) => (
+        <div className="space-y-5">
+          <Heading level={3} className="mb-2">Publish Settings</Heading>
+          <div className="grid grid-cols-2 gap-4">
+            <Select
+              label="Status"
+              options={STATUS_OPTIONS}
+              value={values.status}
+              onValueChange={(v) => onChange({ status: v as BlogPostStatus })}
             />
             <Input
               label="Publish date (optional)"
-              value={publishedAt}
-              onChange={(e) => setPublishedAt(e.target.value)}
+              value={values.publishedAt}
+              onChange={(e) => onChange({ publishedAt: e.target.value })}
               type="date"
               helperText="Auto-set to now when publishing."
             />
           </div>
-
+          <Input
+            label="Author Name"
+            value={values.authorName}
+            onChange={(e) => onChange({ authorName: e.target.value })}
+            placeholder="Author display name"
+          />
           <Toggle
             label="Featured post"
-            checked={isFeatured}
-            onChange={setIsFeatured}
+            checked={values.isFeatured}
+            onChange={(checked) => onChange({ isFeatured: checked })}
           />
-
-          {/* SEO */}
-          <Input
-            label="Meta title (optional)"
-            value={metaTitle}
-            onChange={(e) => setMetaTitle(e.target.value)}
-            placeholder="Defaults to post title"
-          />
-          <Input
-            label="Meta description (optional)"
-            value={metaDescription}
-            onChange={(e) => setMetaDescription(e.target.value)}
-            placeholder="SEO description — max 160 chars"
-            maxLength={160}
-          />
-
-          {/* Actions */}
-          <div className="flex gap-3 pt-2">
-            <Button
-              type="submit"
-              isLoading={isSubmitting}
-              disabled={!canSave || isSubmitting}
-            >
-              {isEdit ? "Save changes" : "Create post"}
-            </Button>
-            {isEdit && (
+          {isEdit && (
+            <div className="pt-4 border-t border-[var(--appkit-color-border)]">
               <Button
                 type="button"
                 variant="danger"
+                size="sm"
+                onClick={() => setShowDeleteConfirm(true)}
                 isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (confirm("Delete this post? This cannot be undone.")) {
-                    deleteMutation.mutate();
-                  }
-                }}
               >
                 Delete post
               </Button>
-            )}
-          </div>
-    </Form>
-    </FormShellContext.Provider>
+            </div>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const deleteModal = (
+    <ConfirmDeleteModal
+      isOpen={showDeleteConfirm}
+      onConfirm={() => {
+        setShowDeleteConfirm(false);
+        deleteMutation.mutate();
+      }}
+      onClose={() => setShowDeleteConfirm(false)}
+      title="Delete post"
+      message="This will permanently delete the blog post. This cannot be undone."
+    />
+  );
+
+  const formContent = (
+    <>
+      <StepForm<BlogDraft>
+        steps={steps}
+        values={draft}
+        onChange={update}
+        onComplete={() => { saveMutation.mutate(); }}
+        formId="admin-blog"
+        currentStep={currentStep}
+        onStepChange={setCurrentStep}
+        completeLabel={isEdit ? "Save Changes" : "Create Post"}
+        isLoading={isLoading}
+      />
+      {deleteModal}
+    </>
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formSection}</div>;
+    return <div className="overflow-y-auto p-4">{formContent}</div>;
   }
 
-  // S-STORE-9B-D — rendered preview pane alongside the editor.
   const previewSection = (
     <div
       key="preview"
@@ -346,22 +433,29 @@ export function AdminBlogEditorView({
       <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
         <span>Live preview</span>
       </div>
-      {coverImage ? (
-        <img src={coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
+      {draft.coverImage ? (
+        <img src={draft.coverImage} alt="" className="w-full rounded-md mb-4 object-cover max-h-64" />
       ) : null}
-      <Heading level={1} className="text-2xl font-bold mb-1">{title || "Untitled post"}</Heading>
+      <Heading level={1} className="text-2xl font-bold mb-1">
+        {draft.title || "Untitled post"}
+      </Heading>
       <Text className="text-xs text-[var(--appkit-color-text-muted)] mb-4">
-        {authorName || "Anonymous"}
-        {category ? ` · ${category}` : ""}
+        {draft.authorName || "Anonymous"}
+        {draft.category ? ` · ${draft.category}` : ""}
       </Text>
-      {excerpt ? (
-        <Text className="italic text-[var(--appkit-color-text-secondary)] mb-4">{excerpt}</Text>
+      {draft.excerpt ? (
+        <Text className="italic text-[var(--appkit-color-text-secondary)] mb-4">
+          {draft.excerpt}
+        </Text>
       ) : null}
-      <RichTextRenderer html={content || "<em>No content yet…</em>"} />
-      {tags.length > 0 ? (
+      <RichTextRenderer html={draft.content || "<em>No content yet…</em>"} />
+      {draft.tags.length > 0 ? (
         <div className="mt-6 flex flex-wrap gap-1.5">
-          {tags.map((t) => (
-            <span key={t} className="px-2 py-0.5 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] text-xs">
+          {draft.tags.map((t) => (
+            <span
+              key={t}
+              className="px-2 py-0.5 rounded-full bg-[var(--appkit-color-surface)] border border-[var(--appkit-color-border)] text-xs"
+            >
               #{t}
             </span>
           ))}
@@ -377,7 +471,7 @@ export function AdminBlogEditorView({
       title={isEdit ? "Edit Post" : "New Blog Post"}
       sections={[
         <div key="split" className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6">
-          <div>{formSection}</div>
+          <div>{formContent}</div>
           <div className="mt-6 lg:mt-0 lg:sticky lg:top-4 lg:self-start">
             {previewSection}
           </div>

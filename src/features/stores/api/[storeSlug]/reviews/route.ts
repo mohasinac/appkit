@@ -49,6 +49,11 @@ export async function GET(
     const ratingFilter = ratingParam ? Number(ratingParam) : 0;
     const page = Math.max(1, Number(url.searchParams.get("page") || "1"));
     const pageSize = Math.min(50, Math.max(1, Number(url.searchParams.get("pageSize") || "12")));
+    const sort = url.searchParams.get("sort") || url.searchParams.get("sorts") || "-createdAt";
+    const q = (url.searchParams.get("q") || "").trim().toLowerCase();
+    const dateFrom = url.searchParams.get("dateFrom") || "";
+    const dateTo = url.searchParams.get("dateTo") || "";
+    const hasImages = url.searchParams.get("hasImages") === "true";
 
     const { db } = getProviders();
     if (!db) {
@@ -112,16 +117,57 @@ export async function GET(
 
     const averageRating = totalReviews > 0 ? ratingSum / totalReviews : 0;
 
-    // Flatten and sort all reviews by date desc
+    // Flatten all reviews
     const productMap = new Map(products.map((p) => [p.id, p]));
-    const allSorted: ReviewEntity[] = reviewArrays
-      .flat()
-      .sort((a, b) => new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime());
+    const allFlat: ReviewEntity[] = reviewArrays.flat();
+
+    // Apply sort
+    const sorted = [...allFlat].sort((a, b) => {
+      if (sort === "createdAt" || sort === "+createdAt") {
+        return new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime();
+      }
+      if (sort === "-rating" || sort === "rating") {
+        return (b.rating ?? 0) - (a.rating ?? 0);
+      }
+      if (sort === "rating,asc" || sort === "+rating" || sort === "ratingAsc") {
+        return (a.rating ?? 0) - (b.rating ?? 0);
+      }
+      // Default: newest first
+      return new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime();
+    });
 
     // Apply rating filter
-    const filtered = ratingFilter > 0
-      ? allSorted.filter((r) => Math.round(r.rating) === ratingFilter)
-      : allSorted;
+    let filtered = ratingFilter > 0
+      ? sorted.filter((r) => Math.round(r.rating) === ratingFilter)
+      : sorted;
+
+    // Apply search
+    if (q) {
+      filtered = filtered.filter((r) => {
+        const title = ((r as ReviewEntity & { title?: string }).title ?? "").toLowerCase();
+        const body = ((r as ReviewEntity & { body?: string }).body ?? "").toLowerCase();
+        const pt = (r.productTitle ?? "").toLowerCase();
+        return title.includes(q) || body.includes(q) || pt.includes(q);
+      });
+    }
+
+    // Apply date range
+    if (dateFrom) {
+      const from = new Date(dateFrom).getTime();
+      filtered = filtered.filter((r) => new Date(r.createdAt ?? 0).getTime() >= from);
+    }
+    if (dateTo) {
+      const to = new Date(dateTo).getTime() + 86_400_000; // inclusive end of day
+      filtered = filtered.filter((r) => new Date(r.createdAt ?? 0).getTime() <= to);
+    }
+
+    // Apply hasImages filter
+    if (hasImages) {
+      filtered = filtered.filter((r) => {
+        const imgs = (r as ReviewEntity & { images?: unknown[] }).images;
+        return Array.isArray(imgs) && imgs.length > 0;
+      });
+    }
 
     const totalFiltered = filtered.length;
     const totalPages = Math.max(1, Math.ceil(totalFiltered / pageSize));

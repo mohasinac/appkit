@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Badge, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text } from "../../../ui";
+import { Alert, Badge, Div, FormField, FormGroup, Heading, Stack, Text, Toggle } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
+import { StepDef, StepForm } from "../../shell";
 
 type PayoutMethod = "upi" | "bank_transfer";
 type AccountType = "savings" | "current";
@@ -14,6 +15,11 @@ interface PayoutDraft {
   ifscCode: string;
   bankName: string;
   accountType: AccountType;
+  gstin: string;
+  pan: string;
+  businessType: string;
+  autoPayout: boolean;
+  minimumThreshold: string;
 }
 
 interface SafePayoutDetails {
@@ -41,6 +47,11 @@ const DEFAULT_DRAFT: PayoutDraft = {
   ifscCode: "",
   bankName: "",
   accountType: "savings",
+  gstin: "",
+  pan: "",
+  businessType: "",
+  autoPayout: true,
+  minimumThreshold: "",
 };
 
 export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings" }: SellerPayoutSettingsViewProps) {
@@ -50,6 +61,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     fetch(apiBase)
@@ -65,14 +77,21 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
           ifscCode: details.bankAccount?.ifscCode ?? "",
           bankName: details.bankAccount?.bankName ?? "",
           accountType: details.bankAccount?.accountType ?? "savings",
+          gstin: res?.data?.taxInfo?.gstin ?? "",
+          pan: res?.data?.taxInfo?.pan ?? "",
+          businessType: res?.data?.taxInfo?.businessType ?? "",
+          autoPayout: res?.data?.preferences?.autoPayout ?? true,
+          minimumThreshold: res?.data?.preferences?.minimumThreshold
+            ? String(res.data.preferences.minimumThreshold / 100)
+            : "",
         });
       })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [apiBase]);
 
-  const update = useCallback(<K extends keyof PayoutDraft>(key: K, value: PayoutDraft[K]) => {
-    setDraft((prev) => ({ ...prev, [key]: value }));
+  const update = useCallback((partial: Partial<PayoutDraft>) => {
+    setDraft((prev) => ({ ...prev, ...partial }));
     setSuccess(false);
   }, []);
 
@@ -81,7 +100,7 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
     setSuccess(false);
     setSaving(true);
     try {
-      const body =
+      const methodFields =
         draft.method === "upi"
           ? { method: "upi" as const, upiId: draft.upiId.trim() }
           : {
@@ -93,6 +112,19 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
               accountType: draft.accountType,
             };
 
+      const body = {
+        ...methodFields,
+        taxInfo: {
+          gstin: draft.gstin.trim(),
+          pan: draft.pan.trim(),
+          businessType: draft.businessType.trim(),
+        },
+        preferences: {
+          autoPayout: draft.autoPayout,
+          minimumThreshold: Math.round(parseFloat(draft.minimumThreshold || "0") * 100),
+        },
+      };
+
       const res = await fetch(apiBase, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -103,7 +135,6 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
       setSuccess(true);
       const updated: SafePayoutDetails = json?.data?.payoutDetails ?? { method: draft.method, isConfigured: false };
       setCurrent(updated);
-      // clear sensitive field
       setDraft((prev) => ({ ...prev, accountNumber: "" }));
     } catch (err) {
       setError((err as Error).message);
@@ -112,36 +143,28 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
     }
   };
 
-  const isUpi = draft.method === "upi";
   const busy = loading || saving;
 
-  return (
-    <StackedViewShell portal="seller" title="Payout Settings" sections={[
-      <Stack key="payout" gap="lg">
-        {/* Status */}
-        {current && (
-          <Div className="flex items-center gap-2">
-            <Badge variant={current.isConfigured ? "success" : "warning"}>
-              {current.isConfigured ? "Payout configured" : "Not configured"}
-            </Badge>
-          </Div>
-        )}
-
-        {error && <Alert variant="error">{error}</Alert>}
-        {success && <Alert variant="success">Payout details saved.</Alert>}
-
-        {/* Current masked info */}
-        {current?.isConfigured && (
-          <Alert variant="info">
-            {current.method === "upi"
-              ? `Current UPI: ${current.upiId}`
-              : `Current bank: ${current.bankAccount?.bankName ?? ""} — ••••${current.bankAccount?.accountNumberMasked?.slice(-4) ?? "••••"} (${current.bankAccount?.accountType})`}
-          </Alert>
-        )}
-
-        {/* Method selector */}
-        <Section>
-          <Heading level={3} className="mb-3">Payout Method</Heading>
+  const steps: StepDef<PayoutDraft>[] = [
+    {
+      label: "Payout Method",
+      render: ({ values, onChange }) => (
+        <Stack gap="md">
+          <Heading level={3} className="mb-2">Payout Method</Heading>
+          {current && (
+            <Div className="flex items-center gap-2 mb-2">
+              <Badge variant={current.isConfigured ? "success" : "warning"}>
+                {current.isConfigured ? "Payout configured" : "Not configured"}
+              </Badge>
+            </Div>
+          )}
+          {current?.isConfigured && (
+            <Alert variant="info">
+              {current.method === "upi"
+                ? `Current UPI: ${current.upiId}`
+                : `Current bank: ${current.bankAccount?.bankName ?? ""} — ••••${current.bankAccount?.accountNumberMasked?.slice(-4) ?? "••••"} (${current.bankAccount?.accountType})`}
+            </Alert>
+          )}
           <Stack gap="sm">
             {([
               { value: "upi" as const, label: "UPI", desc: "Instant payouts via UPI VPA (e.g. name@upi)." },
@@ -155,8 +178,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   type="radio"
                   name="payoutMethod"
                   value={value}
-                  checked={draft.method === value}
-                  onChange={() => update("method", value)}
+                  checked={values.method === value}
+                  onChange={() => onChange({ method: value })}
                   className="accent-[var(--appkit-color-primary)]"
                   disabled={busy}
                 />
@@ -167,36 +190,26 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
               </label>
             ))}
           </Stack>
-        </Section>
-
-        {/* UPI fields */}
-        {isUpi && (
-          <Section>
-            <Heading level={3} className="mb-3">UPI Details</Heading>
+          {values.method === "upi" && (
             <FormField
               name="upiId"
               label="UPI ID (VPA)"
               type="text"
-              value={draft.upiId}
-              onChange={(v) => update("upiId", v)}
+              value={values.upiId}
+              onChange={(v) => onChange({ upiId: v })}
               placeholder="yourname@upi"
               helpText="Ensure this VPA is registered and active."
               disabled={busy}
             />
-          </Section>
-        )}
-
-        {/* Bank fields */}
-        {!isUpi && (
-          <Section>
-            <Heading level={3} className="mb-3">Bank Account Details</Heading>
-            <Stack gap="md">
+          )}
+          {values.method === "bank_transfer" && (
+            <Stack gap="md" className="mt-2">
               <FormField
                 name="accountHolderName"
                 label="Account Holder Name"
                 type="text"
-                value={draft.accountHolderName}
-                onChange={(v) => update("accountHolderName", v)}
+                value={values.accountHolderName}
+                onChange={(v) => onChange({ accountHolderName: v })}
                 placeholder="Name as on bank account"
                 disabled={busy}
               />
@@ -205,8 +218,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   name="accountNumber"
                   label="Account Number"
                   type="text"
-                  value={draft.accountNumber}
-                  onChange={(v) => update("accountNumber", v)}
+                  value={values.accountNumber}
+                  onChange={(v) => onChange({ accountNumber: v })}
                   placeholder="Enter full account number"
                   helpText={current?.bankAccount ? `Saved: ••••${current.bankAccount.accountNumberMasked?.slice(-4) ?? "••••"}` : "Stored securely, never displayed in full."}
                   disabled={busy}
@@ -215,8 +228,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   name="ifscCode"
                   label="IFSC Code"
                   type="text"
-                  value={draft.ifscCode}
-                  onChange={(v) => update("ifscCode", v.toUpperCase())}
+                  value={values.ifscCode}
+                  onChange={(v) => onChange({ ifscCode: v.toUpperCase() })}
                   placeholder="e.g. SBIN0001234"
                   disabled={busy}
                 />
@@ -226,8 +239,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                   name="bankName"
                   label="Bank Name"
                   type="text"
-                  value={draft.bankName}
-                  onChange={(v) => update("bankName", v)}
+                  value={values.bankName}
+                  onChange={(v) => onChange({ bankName: v })}
                   placeholder="e.g. State Bank of India"
                   disabled={busy}
                 />
@@ -240,8 +253,8 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                           type="radio"
                           name="accountType"
                           value={t}
-                          checked={draft.accountType === t}
-                          onChange={() => update("accountType", t)}
+                          checked={values.accountType === t}
+                          onChange={() => onChange({ accountType: t })}
                           className="accent-[var(--appkit-color-primary)]"
                           disabled={busy}
                         />
@@ -252,16 +265,99 @@ export function SellerPayoutSettingsView({ apiBase = "/api/store/payout-settings
                 </Div>
               </FormGroup>
             </Stack>
-          </Section>
-        )}
+          )}
+        </Stack>
+      ),
+    },
+    {
+      label: "Tax Info",
+      render: ({ values, onChange }) => (
+        <Stack gap="md">
+          <Heading level={3} className="mb-2">Tax Information</Heading>
+          <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+            Optional — required only for GST invoice generation and TDS compliance.
+          </Text>
+          <FormField
+            name="gstin"
+            label="GSTIN (optional)"
+            type="text"
+            value={values.gstin}
+            onChange={(v) => onChange({ gstin: v.toUpperCase() })}
+            placeholder="e.g. 22AAAAA0000A1Z5"
+            helpText="15-character Goods and Services Tax Identification Number."
+            disabled={busy}
+          />
+          <FormField
+            name="pan"
+            label="PAN (optional)"
+            type="text"
+            value={values.pan}
+            onChange={(v) => onChange({ pan: v.toUpperCase() })}
+            placeholder="e.g. ABCDE1234F"
+            helpText="Required for payouts above ₹50,000 per year (TDS threshold)."
+            disabled={busy}
+          />
+          <FormField
+            name="businessType"
+            label="Business Type (optional)"
+            type="text"
+            value={values.businessType}
+            onChange={(v) => onChange({ businessType: v })}
+            placeholder="e.g. Individual, Sole Proprietor, Private Limited"
+            disabled={busy}
+          />
+        </Stack>
+      ),
+    },
+    {
+      label: "Preferences",
+      render: ({ values, onChange }) => (
+        <Stack gap="md">
+          <Heading level={3} className="mb-2">Payout Preferences</Heading>
+          <Toggle
+            checked={values.autoPayout}
+            onChange={(checked) => onChange({ autoPayout: checked })}
+            label="Enable auto-payout — automatically transfer earnings on schedule"
+            disabled={busy}
+          />
+          <FormField
+            name="minimumThreshold"
+            label="Minimum Payout Threshold (₹)"
+            type="number"
+            value={values.minimumThreshold}
+            onChange={(v) => onChange({ minimumThreshold: v })}
+            placeholder="e.g. 500"
+            helpText="Payouts are held until your balance exceeds this amount. Leave blank for no minimum."
+            disabled={busy}
+          />
+          <Div className="p-3 rounded-lg bg-[var(--appkit-color-surface-alt)] border border-[var(--appkit-color-border)]">
+            <Text className="text-sm font-medium mb-1">Payout Schedule</Text>
+            <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+              Auto-payouts run every Monday for the previous week&apos;s settled orders. Manual payouts can be requested from the Payouts page at any time.
+            </Text>
+          </Div>
+        </Stack>
+      ),
+    },
+  ];
 
-        {/* Save */}
-        <Div className="flex justify-end pt-2 border-t border-[var(--appkit-color-border)]">
-          <Button variant="primary" onClick={handleSave} disabled={busy} isLoading={saving}>
-            Save Payout Details
-          </Button>
-        </Div>
-      </Stack>,
+  return (
+    <StackedViewShell portal="seller" title="Payout Settings" sections={[
+      <div key="payout">
+        {error && <Alert variant="error" className="mb-4">{error}</Alert>}
+        {success && <Alert variant="success" className="mb-4">Payout details saved.</Alert>}
+        <StepForm<PayoutDraft>
+          steps={steps}
+          values={draft}
+          onChange={update}
+          onComplete={handleSave}
+          formId="seller-payout-settings"
+          currentStep={currentStep}
+          onStepChange={setCurrentStep}
+          completeLabel="Save Payout Details"
+          isLoading={busy}
+        />
+      </div>,
     ]} />
   );
 }

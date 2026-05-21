@@ -206,7 +206,7 @@ export function AdminCouponEditorView({
     new Date().toISOString().split("T")[0],
   );
   const [endDate, setEndDate] = React.useState("");
-  const [isActive, setIsActive] = React.useState(false);
+  const [isActive, setIsActive] = React.useState(true);
 
   // restrictions
   const [firstTimeOnly, setFirstTimeOnly] = React.useState(false);

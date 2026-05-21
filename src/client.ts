@@ -279,6 +279,12 @@ export {
 } from "./features/wishlist/utils/guest-wishlist";
 export { InteractiveProductCard } from "./features/products/index";
 export type { InteractiveProductCardProps } from "./features/products/index";
+export { MarketplaceBundleCard } from "./features/products/components/MarketplaceBundleCard";
+export type {
+  MarketplaceBundleCardProps,
+  MarketplaceBundleCardData,
+  MarketplaceBundleCardLabels,
+} from "./features/products/components/MarketplaceBundleCard";
 export { CompareOverlay } from "./features/products/components/CompareOverlay";
 export type {
   CompareOverlayProps,
@@ -563,3 +569,23 @@ export type { PhysicalLocation } from "./features/seller/components/PhysicalLoca
 // [CLIENT-ONLY] — Toggle switch primitive.
 export { Toggle } from "./ui/components/Toggle";
 export type { ToggleProps } from "./ui/components/Toggle";
+
+// [CLIENT] Wave 4 seller management views.
+export { SellerStoreCategoriesView } from "./features/seller/components/SellerStoreCategoriesView";
+export type { SellerStoreCategoriesViewProps } from "./features/seller/components/SellerStoreCategoriesView";
+export { SellerTemplatesView } from "./features/seller/components/SellerTemplatesView";
+export type { SellerTemplatesViewProps } from "./features/seller/components/SellerTemplatesView";
+export { SellerPayoutMethodsView } from "./features/seller/components/SellerPayoutMethodsView";
+export type { SellerPayoutMethodsViewProps } from "./features/seller/components/SellerPayoutMethodsView";
+export { SellerShippingConfigsView } from "./features/seller/components/SellerShippingConfigsView";
+export type { SellerShippingConfigsViewProps } from "./features/seller/components/SellerShippingConfigsView";
+export { SellerGoogleReviewsView } from "./features/seller/components/SellerGoogleReviewsView";
+export type { SellerGoogleReviewsViewProps } from "./features/seller/components/SellerGoogleReviewsView";
+export { SellerBundlesView } from "./features/seller/components/SellerBundlesView";
+export type { SellerBundlesViewProps } from "./features/seller/components/SellerBundlesView";
+export { SellerClassifiedView } from "./features/seller/components/SellerClassifiedView";
+export type { SellerClassifiedViewProps } from "./features/seller/components/SellerClassifiedView";
+export { SellerDigitalCodesView } from "./features/seller/components/SellerDigitalCodesView";
+export type { SellerDigitalCodesViewProps } from "./features/seller/components/SellerDigitalCodesView";
+export { SellerLiveView } from "./features/seller/components/SellerLiveView";
+export type { SellerLiveViewProps } from "./features/seller/components/SellerLiveView";

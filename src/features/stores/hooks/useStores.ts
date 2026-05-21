@@ -119,13 +119,27 @@ export function useStoreAuctions(
 
 export function useStoreReviews(
   storeSlug: string,
-  params?: { rating?: number; page?: number; pageSize?: number },
+  params?: {
+    rating?: number;
+    page?: number;
+    pageSize?: number;
+    sort?: string;
+    q?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    hasImages?: boolean;
+  },
   opts?: { enabled?: boolean; endpoint?: string },
 ) {
   const sp = new URLSearchParams();
   if (params?.rating) sp.set("rating", String(params.rating));
   if (params?.page && params.page > 1) sp.set("page", String(params.page));
   if (params?.pageSize) sp.set("pageSize", String(params.pageSize));
+  if (params?.sort) sp.set("sort", params.sort);
+  if (params?.q) sp.set("q", params.q);
+  if (params?.dateFrom) sp.set("dateFrom", params.dateFrom);
+  if (params?.dateTo) sp.set("dateTo", params.dateTo);
+  if (params?.hasImages) sp.set("hasImages", "true");
   const qs = sp.toString();
   const baseEndpoint = opts?.endpoint ?? STORE_ENDPOINTS.REVIEWS(storeSlug);
   const endpoint = qs ? `${baseEndpoint}?${qs}` : baseEndpoint;

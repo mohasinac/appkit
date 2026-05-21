@@ -9,6 +9,9 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 - [FormShell splitPreview](#formshell-splitpreview) — desktop 60/40 form + live-preview layout
 - [SellerProductsView](#sellerproductsview) — toolbar + cards + filter-drawer split
 - [SellerBidsView grouped](#sellerbidsview-grouped) — collapsible per-auction sections
+- [Standard SellerView DataTable pattern](#standard-sellerview-datatable-pattern-w4w5) — correct DataTable/useBulkSelection/RowActionMenu/ConfirmDeleteModal API
+- [StepForm inside StackedViewShell](#stepform-inside-stackedviewshell-w6w7) — multi-step store/admin settings forms
+- [MarketplaceBundleCard](#marketplacebundlecard-w3) — 2x2 collage + BaseListingCard wrapper
 - [Vacation Banner](#vacationbanner) — store-paused notice flow
 
 ---
@@ -119,6 +122,101 @@ SellerBidsView
 
     ?grouped === "0":
       Flat DataTable (no grouping).
+```
+
+## Standard SellerView DataTable pattern (W4/W5)
+
+```
+SellerXxxView  (appkit/src/features/seller/components/)
+├── useUrlTable({ defaults: { sort: DEFAULT_SORT } })
+├── useSellerListingData<Response, Row>({ queryKey, endpoint, mapRows, ... })
+├── useBulkSelection({ items: rows, keyExtractor: (r) => r.id })
+│     └── selectedIds / selectedCount / clearSelection / setSelectedIds
+│
+├── ListingToolbar
+│     ├── search + commitSearch (table.set)
+│     ├── sort: SortOptions[]
+│     └── extra: <Button>New X</Button>
+│
+├── BulkActionBar (when selectedCount > 0 && bulkActions.length > 0)
+│
+└── DataTable
+      columns: DataTableColumn<Row>[]  (render: (item) => ReactNode, NOT cell:)
+      data={rows}                      (NOT rows=)
+      keyExtractor={(r) => r.id}
+      selectable={bulkActions.length > 0}
+      selectedIds={selection.selectedIds}
+      onSelectionChange={(ids) => selection.setSelectedIds(ids)}
+      actions={(row) => (
+        <RowActionMenu actions={[
+          { label: "Edit", onClick: () => handleEdit(row.id) },
+          { label: "Delete", destructive: true, onClick: () => setDeleteTargetId(row.id) },
+        ]} />
+      )}
+
+ConfirmDeleteModal props:
+  isOpen / onClose (NOT onCancel) / onConfirm / title / message (NOT description) / isDeleting (NOT isLoading)
+
+New SellerView components added (S-page-form-audit-sweep):
+  SellerStoreCategoriesView  — SideDrawer create/edit inline
+  SellerTemplatesView        — SideDrawer + Clone row action (NOT "Duplicate")
+  SellerPayoutMethodsView    — card view, Set as Default + Delete row actions
+  SellerShippingConfigsView  — DataTable, Set as Default row action
+  SellerGoogleReviewsView    — settings form + live review feed (Google Reviews split out of SellerStorefrontView)
+  SellerBundlesView          — pre-filtered listingType=bundle
+  SellerClassifiedView       — pre-filtered listingType=classified
+  SellerDigitalCodesView     — pre-filtered listingType=digital-code
+  SellerLiveView             — pre-filtered listingType=live
+```
+
+## StepForm inside StackedViewShell (W6/W7)
+
+```
+Pattern: StackedViewShell wrapper → StepForm inside sections[]
+
+<StackedViewShell portal="admin|seller" title={...} sections={[<div key="content">...</div>]}>
+  <StepForm<DraftType>
+    steps={steps}          // StepDef<DraftType>[] — each has label + render({ values, onChange }) + validate?
+    values={draft}
+    onChange={update}      // React.useCallback((partial) => setDraft(prev => ({...prev, ...partial})))
+    onComplete={() => { saveMutation.mutate(); }}
+    formId="unique-id"     // localStorage step persistence
+    currentStep={currentStep}
+    onStepChange={setCurrentStep}
+    completeLabel={isEdit ? "Save Changes" : "Create X"}
+    isLoading={isLoading}
+  />
+</StackedViewShell>
+
+Multi-step forms added (S-page-form-audit-sweep):
+  SellerStorefrontView    — 4 steps: Store Identity / Branding / Policies / Contact & Visibility
+  SellerShippingView      — 3 steps: Method / Pickup Address / Rules
+  SellerPayoutSettingsView — 3 steps: Payout Method / Tax Info / Preferences
+  AdminBlogEditorView     — 4 steps: Content / Media / SEO & Tags / Publish (+ live preview pane)
+  AdminEventEditorView    — 4 steps: Details / Media / Settings / Raffle & Spin
+                            Step 4 locked indicator when type ≠ raffle|spin_wheel
+                            FormFieldBuilder extracted as standalone component (audit-code-quality threshold)
+```
+
+## MarketplaceBundleCard (W3)
+
+```
+MarketplaceBundleCard  (appkit/src/features/products/components/)
+  Follows same pattern as MarketplacePrizeDrawCard
+
+  <BaseListingCard>
+    image area:
+      bundleItemDetails.length >= 2 → 2x2 collage (up to 4 images) with +N overflow badge
+      bundleItemDetails.length < 2  → single display.coverImage fallback
+    body:
+      title / price / store name
+      badge: "X items" bundle count
+      status badge
+    <BaseListingCard.Checkbox> for bulk selection
+  </BaseListingCard>
+
+  Props: variant="grid"|"list", href, onSelect, isSelected
+  Used in: CategoryBundlesListing (replaces internal BundleCard), SellerBundlesView card mode
 ```
 
 ## VacationBanner

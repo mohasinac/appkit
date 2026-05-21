@@ -10,14 +10,12 @@
  */
 
 import React, { useMemo, useCallback, useState } from "react";
-import Link from "next/link";
-import { Badge, Div, Row, Text } from "../../../ui";
+import { Div, Text } from "../../../ui";
 import { ListingToolbar, Pagination, FilterDrawer } from "../../../ui";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ROUTES } from "../../../next/routing/route-map";
-import { formatCurrency } from "../../../utils/number.formatter";
 import type { CategoryDocument } from "../schemas";
 import { BundleBuyNowCta } from "./BundleBuyNowCta";
+import { MarketplaceBundleCard } from "../../products/components/MarketplaceBundleCard";
 import { TABLE_KEYS } from "../../../constants/table-keys";
 
 const PAGE_SIZE = 12;
@@ -30,19 +28,6 @@ const SORT_OPTIONS = [
 ] as const;
 const DEFAULT_SORT = "-createdAt";
 
-type StockKey = NonNullable<CategoryDocument["bundleStockStatus"]>;
-
-const STOCK_BADGE_TEXT: Record<StockKey, string> = {
-  in_stock: "",
-  out_of_stock: "Not active",
-};
-
-const STOCK_BADGE_VARIANT: Record<StockKey, "success" | "warning"> = {
-  in_stock: "success",
-  out_of_stock: "warning",
-};
-
-const PLACEHOLDER_EMOJI = "📦" as const;
 
 export interface CategoryBundlesListingProps {
   initialBundles: CategoryDocument[];
@@ -163,7 +148,19 @@ export function CategoryBundlesListing({
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {pageItems.map((bundle) => (
-              <BundleCard key={bundle.id} bundle={bundle} onBuyNow={onBuyNow} />
+              <div key={bundle.id} className="flex flex-col">
+                <MarketplaceBundleCard bundle={bundle} />
+                {onBuyNow && (
+                  <div className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+                    <BundleBuyNowCta
+                      bundleSlug={bundle.slug}
+                      outOfStock={bundle.bundleStockStatus === "out_of_stock"}
+                      onBuyNow={onBuyNow}
+                      compact
+                    />
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         )}
@@ -203,94 +200,3 @@ export function CategoryBundlesListing({
   );
 }
 
-interface BundleCardProps {
-  bundle: CategoryDocument;
-  onBuyNow?: (input: { bundleSlug: string }) => Promise<unknown>;
-}
-
-function BundleCard({ bundle, onBuyNow }: BundleCardProps) {
-  const memberCount = bundle.bundleProductIds?.length ?? 0;
-  const stock = bundle.bundleStockStatus ?? "in_stock";
-  const badge = STOCK_BADGE_TEXT[stock];
-  const cover = bundle.display?.coverImage;
-  const href = String(ROUTES.PUBLIC.BUNDLE_DETAIL?.(bundle.slug) ?? "#");
-  const price = bundle.bundlePriceInPaise;
-
-  // Plan §8 — render a 2x2 collage of member product images when the bundle's
-  // bundleItemDetails carry denormalised imageURLs. Falls back to the single
-  // hero cover (or emoji placeholder) when fewer than 2 are available.
-  const collageTiles = (bundle.bundleItemDetails ?? [])
-    .filter((d) => Boolean(d.imageURL))
-    .slice(0, 4);
-  const showCollage = collageTiles.length >= 2;
-  const overflow = memberCount - collageTiles.length;
-
-  return (
-    <div className="flex flex-col rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-      <Link href={href} className="group block flex-1 p-3 hover:no-underline">
-        <Div className="mb-2 aspect-video overflow-hidden rounded-lg bg-zinc-100 dark:bg-zinc-800">
-          {showCollage ? (
-            <Div
-              className={`grid h-full w-full gap-0.5 ${
-                collageTiles.length === 2 ? "grid-cols-2 grid-rows-1" : "grid-cols-2 grid-rows-2"
-              }`}
-            >
-              {collageTiles.map((tile, i) => (
-                <Div key={`${tile.productId}-${i}`} className="relative overflow-hidden bg-zinc-50 dark:bg-zinc-800">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={tile.imageURL}
-                    alt={tile.title ?? `${bundle.name} item ${i + 1}`}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  {i === collageTiles.length - 1 && overflow > 0 && (
-                    <Div className="absolute inset-0 flex items-center justify-center bg-black/55 text-sm font-semibold text-white">
-                      +{overflow}
-                    </Div>
-                  )}
-                </Div>
-              ))}
-            </Div>
-          ) : cover ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={cover}
-              alt={bundle.name}
-              className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <Div className="flex h-full w-full items-center justify-center text-3xl">
-              {PLACEHOLDER_EMOJI}
-            </Div>
-          )}
-        </Div>
-        <Text className="line-clamp-2 text-sm font-semibold">{bundle.name}</Text>
-        <Row gap="sm" align="center" className="mt-1">
-          <Text size="sm" weight="bold">
-            {price ? formatCurrency(price / 100, "INR") : "—"}
-          </Text>
-          <Text size="xs" color="muted">
-            {memberCount} item{memberCount !== 1 ? "s" : ""}
-          </Text>
-        </Row>
-        {badge && (
-          <Badge variant={STOCK_BADGE_VARIANT[stock]} className="mt-1">
-            {badge}
-          </Badge>
-        )}
-      </Link>
-      {onBuyNow && (
-        <Div className="border-t border-zinc-100 p-3 pt-2 dark:border-zinc-800">
-          <BundleBuyNowCta
-            bundleSlug={bundle.slug}
-            outOfStock={stock === "out_of_stock"}
-            onBuyNow={onBuyNow}
-            compact
-          />
-        </Div>
-      )}
-    </div>
-  );
-}
