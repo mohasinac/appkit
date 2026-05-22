@@ -240,7 +240,7 @@ export function DataTable<T extends object>({
           <div className="text-center px-4" data-section="datatable-div-634">
             {emptyIcon ?? (
               <svg
-                className="mx-auto h-12 w-12 text-zinc-400"
+                className="mx-auto h-12 w-12 text-zinc-400 dark:text-zinc-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -474,7 +474,7 @@ export function DataTable<T extends object>({
                       <Row gap="sm">
                         {col.header}
                         {col.sortable && (
-                          <span className="text-zinc-400" aria-hidden="true">
+                          <span className="text-zinc-400 dark:text-zinc-500" aria-hidden="true">
                             {sortKey === col.key ? (
                               sortDirection === "asc" ? (
                                 "↑"
@@ -721,7 +721,7 @@ function DataTableTableView<T extends object>({
                   <Row gap="sm">
                     {col.header}
                     {col.sortable && (
-                      <span className="text-zinc-400" aria-hidden="true">
+                      <span className="text-zinc-400 dark:text-zinc-500" aria-hidden="true">
                         {sortKey === col.key ? (sortDirection === "asc" ? "↑" : "↓") : <span className="opacity-30">↕</span>}
                       </span>
                     )}

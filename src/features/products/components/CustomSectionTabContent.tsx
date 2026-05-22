@@ -50,7 +50,7 @@ export function CustomSectionTabContent({ section }: { section: CustomSection })
         </dl>
       )}
       {!html && fields.length === 0 && (
-        <Text className="text-sm text-zinc-400">No content in this section.</Text>
+        <Text className="text-sm text-zinc-400 dark:text-zinc-500">No content in this section.</Text>
       )}
     </Div>
   );

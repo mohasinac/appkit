@@ -63,7 +63,7 @@ export async function FAQPageView({
             <aside className="md:w-56 flex-shrink-0">
               <Heading
                 level={3}
-                className="text-sm font-semibold uppercase tracking-wide text-neutral-500 mb-3"
+                className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400 mb-3"
               >
                 {t("categoriesLabel")}
               </Heading>
@@ -109,7 +109,7 @@ export async function FAQPageView({
               <Section
                 className={`text-center py-16 rounded-2xl border ${themed.border} ${themed.bgSecondary}`}
               >
-                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
+                <HelpCircle className="w-10 h-10 mx-auto mb-3 text-zinc-300 dark:text-zinc-600" />
                 <Heading level={3} className="mb-2 text-base">
                   {t("emptyTitle")}
                 </Heading>

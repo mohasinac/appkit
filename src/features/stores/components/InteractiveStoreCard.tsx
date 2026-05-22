@@ -158,7 +158,7 @@ export function InteractiveStoreCard({
               {labels.visitStore ?? "Visit store"} →
             </Span>
             {store.totalReviews != null && store.totalReviews > 0 && (
-              <Span className="text-xs text-zinc-400 dark:text-zinc-500">
+              <Span className="text-xs text-zinc-400 dark:text-zinc-400">
                 {store.totalReviews} {labels.reviews ?? "reviews"}
               </Span>
             )}

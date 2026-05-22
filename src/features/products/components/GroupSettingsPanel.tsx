@@ -297,7 +297,7 @@ export function GroupSettingsPanel({
                   Members ({childSlugsCount + 1} — including this listing)
                 </Text>
                 {loading && !children ? (
-                  <Text className="text-xs text-zinc-400">Loading…</Text>
+                  <Text className="text-xs text-zinc-400 dark:text-zinc-500">Loading…</Text>
                 ) : (
                   <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
@@ -476,7 +476,7 @@ function AddChildContent({
               onValueChange={(v) => setCreateForm({ ...createForm, condition: v })}
               options={CONDITION_OPTIONS}
             />
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+            <Text className="text-xs text-zinc-400 dark:text-zinc-500/80">
               Other fields (category, brand, shipping, return policy) are inherited from this parent listing.
               Need more control? Edit the full listing after saving.
             </Text>

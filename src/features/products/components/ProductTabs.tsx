@@ -68,7 +68,7 @@ export function ProductTabs({
               className={`pb-2 text-sm font-medium border-b-2 transition-colors ${
                 activeTab === t.value
                   ? "border-current text-current"
-                  : "border-transparent text-neutral-500"
+                  : "border-transparent text-zinc-500 dark:text-zinc-400"
               }`}
             >
               {t.label}

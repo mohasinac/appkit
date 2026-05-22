@@ -90,7 +90,7 @@ export function BlogFeaturedCard({
           {/* Category + featured badges */}
           <Row className="gap-1.5 mb-2 flex-wrap">
             <Span
-              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700"}`}
+              className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"}`}
             >
               {post.category}
             </Span>

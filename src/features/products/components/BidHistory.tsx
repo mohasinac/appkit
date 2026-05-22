@@ -97,7 +97,7 @@ export function BidHistory({
               <Span className="font-bold text-primary-600 dark:text-primary-400">
                 {currency ? formatCurrency(bid.amount, currency) : bid.amount.toLocaleString()}
               </Span>
-              <Span className="text-xs text-zinc-400 dark:text-zinc-500">
+              <Span className="text-xs text-zinc-400 dark:text-zinc-400">
                 {formatBidDate(bid.placedAt)}
               </Span>
             </div>

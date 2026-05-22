@@ -40,7 +40,7 @@ export function VerifyEmailView({
             <Heading level={2} className="text-xl font-semibold mb-2">
               {labels.loadingTitle ?? "Verifying your email…"}
             </Heading>
-            <Text className="text-neutral-500">
+            <Text className="text-zinc-500 dark:text-zinc-400">
               {labels.loadingDescription ?? "Please wait a moment."}
             </Text>
           </>
@@ -67,7 +67,7 @@ export function VerifyEmailView({
             <Heading level={2} className="text-xl font-semibold mb-2">
               {labels.successTitle ?? "Email verified!"}
             </Heading>
-            <Text className="text-neutral-500 mb-6">
+            <Text className="text-zinc-500 dark:text-zinc-400 mb-6">
               {labels.successDescription ??
                 "Your email has been verified successfully."}
             </Text>
@@ -96,7 +96,7 @@ export function VerifyEmailView({
             <Heading level={2} className="text-xl font-semibold mb-2">
               {labels.errorTitle ?? "Verification failed"}
             </Heading>
-            <Text className="text-neutral-500 mb-2">
+            <Text className="text-zinc-500 dark:text-zinc-400 mb-2">
               {error ??
                 labels.errorDescription ??
                 "The verification link may have expired."}

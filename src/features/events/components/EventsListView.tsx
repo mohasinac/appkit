@@ -34,13 +34,13 @@ export function EventsListView<T extends EventItem = EventItem>({
         {Array.from({ length: 6 }).map((_, i) => (
           <Div
             key={i}
-            className="animate-pulse overflow-hidden rounded-xl border border-neutral-200 bg-neutral-100"
+            className="animate-pulse overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-800"
           >
-            <Div className="aspect-video bg-neutral-200" />
+            <Div className="aspect-video bg-zinc-200 dark:bg-zinc-700" />
             <Div className="space-y-2 p-4">
-              <Div className="h-4 w-16 rounded bg-neutral-200" />
-              <Div className="h-5 w-full rounded bg-neutral-200" />
-              <Div className="h-4 w-3/4 rounded bg-neutral-200" />
+              <Div className="h-4 w-16 rounded bg-zinc-200 dark:bg-zinc-700" />
+              <Div className="h-5 w-full rounded bg-zinc-200 dark:bg-zinc-700" />
+              <Div className="h-4 w-3/4 rounded bg-zinc-200 dark:bg-zinc-700" />
             </Div>
           </Div>
         ))}
@@ -53,7 +53,7 @@ export function EventsListView<T extends EventItem = EventItem>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text className="py-12 text-center text-sm text-neutral-500">
+      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
         {emptyLabel}
       </Text>
     );

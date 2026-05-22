@@ -60,9 +60,9 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
         {post.isFeatured && <Span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 px-2 py-0.5 rounded-full text-xs font-medium">{labels?.featured ?? "Featured"}</Span>}
       </Row>
       <Heading level={1} className="text-3xl font-bold mb-4">{post.title}</Heading>
-      {post.excerpt && <Text className="text-lg text-neutral-500 mb-6">{post.excerpt}</Text>}
-      <Row wrap gap="md" className="text-sm text-neutral-400">
-        {post.authorName && <Span>{labels?.author ?? "By"} <Span className="font-medium text-neutral-700">{post.authorName}</Span></Span>}
+      {post.excerpt && <Text className="text-lg text-zinc-500 dark:text-zinc-400 mb-6">{post.excerpt}</Text>}
+      <Row wrap gap="md" className="text-sm text-zinc-400 dark:text-zinc-500">
+        {post.authorName && <Span>{labels?.author ?? "By"} <Span className="font-medium text-zinc-700 dark:text-zinc-300">{post.authorName}</Span></Span>}
         {post.readTimeMinutes != null && <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>}
         {date && <Span>{labels?.publishedOn ?? "Published"} {date}</Span>}
         {post.views != null && <Span>{post.views} {labels?.viewsLabel ?? "views"}</Span>}
@@ -122,7 +122,7 @@ export function BlogPostView({
         <Heading level={1} className="text-xl font-semibold">
           {labels.notFound ?? "Post not found"}
         </Heading>
-        <Text className="text-neutral-500">
+        <Text className="text-zinc-500 dark:text-zinc-400">
           {labels.notFoundDescription ?? "This post is not available."}
         </Text>
         {renderBackButton?.()}

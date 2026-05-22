@@ -212,7 +212,7 @@ export function BlogListView<T extends BlogPost = BlogPost>({
       return <>{slots.renderEmptyState() as React.ReactNode}</>;
     }
     return (
-      <Text className="py-12 text-center text-sm text-neutral-500">
+      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
         {emptyLabel}
       </Text>
     );

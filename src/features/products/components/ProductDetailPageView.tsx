@@ -207,7 +207,7 @@ export async function ProductDetailPageView({
               >
                 Product Not Found
               </Heading>
-              <Text className="text-zinc-500">
+              <Text className="text-zinc-500 dark:text-zinc-400">
                 The product you are looking for may have been removed or the
                 link is incorrect.
               </Text>
@@ -638,7 +638,7 @@ export async function ProductDetailPageView({
                     </Text>
                     {formattedOriginal && discount && (
                       <>
-                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500">
+                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500/80">
                           {formattedOriginal}
                         </Span>
                         <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">

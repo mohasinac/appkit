@@ -172,7 +172,7 @@ export function MakeOfferButton({
               step={1}
               aria-label="Offer amount"
             />
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400">
               Must be between {fmt(minOffer)} and {fmt(listedPrice - 1)}
             </Text>
           </Div>
