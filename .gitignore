@@ -7,3 +7,5 @@
 /.turbo/
 GEMINI.md
 /.npmrc
+
+.vercel
