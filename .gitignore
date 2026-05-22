@@ -8,4 +8,10 @@
 GEMINI.md
 /.npmrc
 
-.vercel
+/.vercel
+
+# Generated Firebase configs — source of truth is firebase/base/
+/firestore.rules
+/firestore.indexes.json
+/storage.rules
+/database.rules.json
