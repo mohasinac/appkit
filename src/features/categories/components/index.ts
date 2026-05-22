@@ -75,3 +75,6 @@ export type {
 
 export { CategoryBundlesListing } from "./CategoryBundlesListing";
 export type { CategoryBundlesListingProps } from "./CategoryBundlesListing";
+
+export { CategoryStoresListing } from "./CategoryStoresListing";
+export type { CategoryStoresListingProps } from "./CategoryStoresListing";

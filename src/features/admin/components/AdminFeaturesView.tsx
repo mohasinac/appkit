@@ -27,6 +27,7 @@ import { AdminViewCards } from "./AdminViewCards";
 import { AdminFeatureEditorView } from "./AdminFeatureEditorView";
 import { PRODUCT_FEATURE_SCOPE_TABS } from "../../products/constants/product-features.constants";
 import type { ProductFeatureScope } from "../../products/schemas/product-features";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 50;
 const DEFAULT_SORT = "displayOrder";
@@ -161,6 +162,10 @@ export function AdminFeaturesView({
 
   const tabClass = (value: ProductFeatureScope) =>
     `${TAB_BASE_CLASS} ${scopeFilter === value ? TAB_ACTIVE_CLASS : TAB_INACTIVE_CLASS}`;
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+          { id: "delete", label: ACTIONS.ADMIN["delete-feature"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <Div className="min-h-screen">

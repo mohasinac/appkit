@@ -22,6 +22,7 @@ import { AdminViewCards } from "./AdminViewCards";
 import { ViewReviewModal } from "../../reviews/components/ReviewModal";
 import type { Review, ReviewStatus } from "../../reviews/types";
 import { apiClient } from "../../../http";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "rating"];
@@ -297,7 +298,12 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
             emptyLabel="No reviews found"
             renderRowActions={(row) => {
               const rr = row as ReviewRow;
-              return (
+              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: "approve", label: `${ACTIONS.ADMIN["approve-review"].label} Selected`, variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: "reject", label: `${ACTIONS.ADMIN["reject-review"].label} Selected`, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                 <RowActionMenu
                   actions={[
                     { label: ACTIONS.ADMIN["approve-review"].label, onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "approved" } }) },

@@ -14,8 +14,10 @@ import {
   Pagination,
   RowActionMenu,
   Text,
+  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
@@ -133,6 +135,7 @@ export function SellerLiveView({
   const [view] = useState<"grid" | "list" | "table">("table");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -195,8 +198,9 @@ export function SellerLiveView({
     try {
       if (onDelete) await onDelete(id);
       else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-    } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete]);
+      showToast("Listing deleted.", "success");
+    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete listing.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete, showToast]);
 
   const handleEdit = useCallback((id: string) => {
     if (onEditClick) onEditClick(id);
@@ -210,6 +214,8 @@ export function SellerLiveView({
       window.location.href = String(ROUTES.STORE.LIVE_ITEMS_NEW);
     }
   }, [onCreateClick]);
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

@@ -17,6 +17,7 @@ import { InteractiveProductCard } from "../../products/components/InteractivePro
 import { ClassifiedFilters } from "./ClassifiedFilters";
 import { ACTION_ID } from "../../products/constants/action-defs";
 import { useToast } from "../../../ui";
+import { useBottomActions } from "../../layout";
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -127,6 +128,8 @@ export function ClassifiedIndexListing({ initialData }: ClassifiedIndexListingPr
       wishlistActions.addToWishlist(id);
     }
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [] } } : {});
 
   return (
     <div className="min-h-screen">

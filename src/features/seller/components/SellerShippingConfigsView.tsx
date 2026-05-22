@@ -11,6 +11,7 @@ import {
   ListingToolbar,
   RowActionMenu,
   Text,
+  useToast,
 } from "../../../ui";
 import type { DataTableColumn } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -114,6 +115,7 @@ export function SellerShippingConfigsView({
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -162,11 +164,14 @@ export function SellerShippingConfigsView({
         });
       }
       refetch?.();
+      showToast("Shipping config deleted.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete config.", "error");
     } finally {
       setDeletingId(null);
       setDeleteTargetId(null);
     }
-  }, [onDelete, refetch]);
+  }, [onDelete, refetch, showToast]);
 
   const handleSetDefault = useCallback(async (id: string) => {
     setSettingDefaultId(id);
@@ -182,10 +187,13 @@ export function SellerShippingConfigsView({
         });
       }
       refetch?.();
+      showToast("Default shipping config updated.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to update default.", "error");
     } finally {
       setSettingDefaultId(null);
     }
-  }, [onSetDefault, refetch]);
+  }, [onSetDefault, refetch, showToast]);
 
   const handleCreate = useCallback(() => {
     if (onCreateClick) {

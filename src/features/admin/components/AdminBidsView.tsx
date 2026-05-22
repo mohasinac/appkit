@@ -21,6 +21,7 @@ import {
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -239,7 +240,11 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
             renderRowActions={(row) => {
               const bidRow = row as BidRow;
               const isCancelled = bidRow.status === "cancelled" || bidRow.status === "voided";
-              return (
+              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: ROW_ACTION_ID.CANCEL, label: ACTIONS.ADMIN["cancel-bid"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                 <RowActionMenu
                   actions={[
                     {

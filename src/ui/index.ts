@@ -446,12 +446,6 @@ export type {
 } from "./components/BulkActionBar";
 export { BulkActionBar } from "./components/BulkActionBar";
 
-export type { BulkActionsBarProps, BulkAction } from "./components/BulkActionsBar";
-export { BulkActionsBar } from "./components/BulkActionsBar";
-
-export type { StickyBottomBarProps } from "./components/StickyBottomBar";
-export { StickyBottomBar } from "./components/StickyBottomBar";
-
 export type { ClaimCouponButtonProps } from "./components/ClaimCouponButton";
 export { ClaimCouponButton } from "./components/ClaimCouponButton";
 

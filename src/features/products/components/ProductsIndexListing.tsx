@@ -22,6 +22,7 @@ import { useProductFeatures } from "./ProductFeaturesContext";
 import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { PRODUCT_FIELDS } from "../../../constants/field-names";
+import { useBottomActions } from "../../layout";
 
 type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
@@ -160,6 +161,53 @@ export function ProductsIndexListing({ initialData }: ProductsIndexListingProps)
       router.push(String(ROUTES.USER.CART));
     });
   }, [localCart, router, requireAuth]);
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
+          {
+            id: ACTION_ID.ADD_TO_CART,
+            label: ACTION_META[ACTION_ID.ADD_TO_CART].label,
+            icon: <ShoppingCart className="h-3.5 w-3.5" />,
+            variant: "primary",
+            onClick: () => {
+              const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+              selected.forEach((p) => {
+                const snapshot = { productTitle: p.title, productImage: p.mainImage, price: p.price, storeId: p.storeId, storeName: p.storeName };
+                localCart.add(p.id, 1, snapshot);
+                pushCartOp({ op: "add", productId: p.id, quantity: 1, ...snapshot });
+              });
+              showToast(`${selected.length} items added to cart`, "success");
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.ADD_TO_WISHLIST,
+            label: ACTION_META[ACTION_ID.ADD_TO_WISHLIST].label,
+            icon: <Heart className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            onClick: () => {
+              requireAuth(ACTION_ID.ADD_TO_WISHLIST, () => {
+                const selected = (products as any[]).filter((p) => selection.selectedIdSet.has(p.id));
+                selected.forEach((p) => {
+                  localWishlist.add(p.id, "product");
+                  pushWishlistOp({ op: "add", itemId: p.id, type: "product" });
+                });
+                showToast(`${selected.length} items added to wishlist`, "success");
+                selection.clearSelection();
+              });
+            },
+          },
+          {
+            id: ACTION_ID.COMPARE,
+            label: ACTION_META[ACTION_ID.COMPARE].label,
+            icon: <Columns className="h-3.5 w-3.5" />,
+            variant: "secondary",
+            disabled: selection.selectedCount < 2 || selection.selectedCount > COMPARE_MAX_ITEMS,
+            onClick: () => {
+              const ids = Array.from(selection.selectedIdSet).slice(0, COMPARE_MAX_ITEMS);
+              setCompareIds(ids);
+            },
+          },
+        ] } } : {});
 
   return (
     <div className="min-h-screen">

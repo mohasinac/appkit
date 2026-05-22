@@ -10,6 +10,7 @@
  * per page session even across remounts.
  */
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useToast } from "../../../ui";
 import { ACCOUNT_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   type GuestHistoryItem,
@@ -93,14 +94,19 @@ async function deleteAuthAll(): Promise<void> {
 
 export function useHistory(userId: string | null | undefined): UseHistoryReturn {
   const isAuth = !!userId;
+  const { showToast } = useToast();
   const [items, setItems] = useState<GuestHistoryItem[]>([]);
   const trackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const loadItems = useCallback(async () => {
-    if (isAuth) {
-      setItems(await fetchAuthHistory());
-    } else {
-      setItems(getGuestHistory());
+    try {
+      if (isAuth) {
+        setItems(await fetchAuthHistory());
+      } else {
+        setItems(getGuestHistory());
+      }
+    } catch {
+      // Data loading — silent fallback to empty
     }
   }, [isAuth]);
 
@@ -161,13 +167,18 @@ export function useHistory(userId: string | null | undefined): UseHistoryReturn 
   );
 
   const clear = useCallback(async () => {
-    if (isAuth) {
-      await deleteAuthAll();
-    } else {
-      clearGuestHistory();
+    try {
+      if (isAuth) {
+        await deleteAuthAll();
+      } else {
+        clearGuestHistory();
+      }
+      setItems([]);
+      showToast("History cleared.", "success");
+    } catch {
+      showToast("Failed to clear history.", "error");
     }
-    setItems([]);
-  }, [isAuth]);
+  }, [isAuth, showToast]);
 
   return {
     items,

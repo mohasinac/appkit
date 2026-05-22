@@ -9,6 +9,7 @@ import {
   Div,
   ListingToolbar,
   Text,
+  useToast,
 } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROUTES } from "../../..";
@@ -79,6 +80,7 @@ export function SellerPayoutMethodsView({
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -126,11 +128,14 @@ export function SellerPayoutMethodsView({
         });
       }
       refetch?.();
+      showToast("Payout method deleted.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete payout method.", "error");
     } finally {
       setDeletingId(null);
       setDeleteTargetId(null);
     }
-  }, [onDelete, refetch]);
+  }, [onDelete, refetch, showToast]);
 
   const handleSetDefault = useCallback(async (id: string) => {
     setSettingDefaultId(id);
@@ -146,10 +151,13 @@ export function SellerPayoutMethodsView({
         });
       }
       refetch?.();
+      showToast("Default payout method updated.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to update default.", "error");
     } finally {
       setSettingDefaultId(null);
     }
-  }, [onSetDefault, refetch]);
+  }, [onSetDefault, refetch, showToast]);
 
   const handleCreate = useCallback(() => {
     if (onCreateClick) {

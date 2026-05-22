@@ -18,6 +18,7 @@ import {
 } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 interface ReviewItem {
@@ -205,6 +206,14 @@ export function SellerReviewsView({
       setReplySaving(false);
     }
   };
+
+  useBottomActions(selectedIds.size > 0 ? { bulk: { selectedCount: selectedIds.size, onClearSelection: clearSelection, actions: [
+    {
+      id: "bulk-reply",
+      label: "Reply to selected",
+      onClick: () => setBulkReplyOpen(true),
+    } as BulkActionItem,
+  ] } } : {});
 
   return (
     <>

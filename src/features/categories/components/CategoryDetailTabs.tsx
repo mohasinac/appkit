@@ -5,8 +5,10 @@ import { AuctionsIndexListing } from "../../products/components/AuctionsIndexLis
 import { PreOrdersIndexListing } from "../../pre-orders/components/PreOrdersIndexListing";
 import { PrizeDrawsIndexListing } from "../../products/components/PrizeDrawsIndexListing";
 import { CategoryBundlesListing } from "./CategoryBundlesListing";
+import { CategoryStoresListing } from "./CategoryStoresListing";
 import { CATEGORY_PAGE_TABS, type CategoryTabId } from "../../products/constants/listing-tabs";
 import type { CategoryDocument } from "../schemas";
+import type { StoreListItem } from "../../stores/types";
 
 function tabLabel(label: string, count?: number) {
   if (!count) return label;
@@ -14,12 +16,13 @@ function tabLabel(label: string, count?: number) {
 }
 
 /** Maps CATEGORY_PAGE_TABS id → listing type / category type key for flag filtering. */
-const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category"; type: string }> = {
+const TAB_TYPE_MAP: Record<string, { kind: "listing" | "category" | "entity"; type: string }> = {
   products: { kind: "listing", type: "standard" },
   auctions: { kind: "listing", type: "auction" },
   "pre-orders": { kind: "listing", type: "pre-order" },
   "prize-draws": { kind: "listing", type: "prize-draw" },
   bundles: { kind: "category", type: "bundle" },
+  stores: { kind: "entity", type: "stores" },
 };
 
 export interface CategoryDetailTabsProps {
@@ -27,12 +30,14 @@ export interface CategoryDetailTabsProps {
   categoryId?: string;
   initialProductsData?: any;
   initialBundles?: CategoryDocument[];
+  initialStores?: StoreListItem[];
   counts?: {
     products?: number;
     auctions?: number;
     preOrders?: number;
     prizeDraws?: number;
     bundles?: number;
+    stores?: number;
   };
   /** Enabled listing types (e.g. ["standard","auction","pre-order"]). When omitted, all tabs shown. */
   enabledListingTypes?: string[];
@@ -45,6 +50,7 @@ export function CategoryDetailTabs({
   categoryId,
   initialProductsData,
   initialBundles = [],
+  initialStores = [],
   counts,
   enabledListingTypes,
   enabledCategoryTypes,
@@ -58,6 +64,7 @@ export function CategoryDetailTabs({
     if (mapping.kind === "category" && enabledCategoryTypes) {
       return enabledCategoryTypes.includes(mapping.type);
     }
+    if (mapping.kind === "entity") return true;
     return true;
   });
 
@@ -71,6 +78,7 @@ export function CategoryDetailTabs({
       case "pre-orders": return counts?.preOrders;
       case "prize-draws": return counts?.prizeDraws;
       case "bundles": return counts?.bundles;
+      case "stores": return counts?.stores;
       default: return undefined;
     }
   };
@@ -112,6 +120,9 @@ export function CategoryDetailTabs({
       )}
       {activeTab === "bundles" && (
         <CategoryBundlesListing initialBundles={initialBundles} />
+      )}
+      {activeTab === "stores" && (
+        <CategoryStoresListing stores={initialStores} />
       )}
     </>
   );

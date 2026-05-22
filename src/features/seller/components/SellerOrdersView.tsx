@@ -6,7 +6,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text } from "../../../ui";
+import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -23,6 +23,7 @@ import {
 } from "../hooks/useSellerListingData";
 import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
+import { useBottomActions } from "../../layout";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -277,6 +278,7 @@ export function SellerOrdersView({
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [setLocationOpen, setSetLocationOpen] = useState(false);
   const dispatch = useActionDispatch();
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -479,24 +481,42 @@ export function SellerOrdersView({
   }, [selection.selectedIds, dispatch]);
 
   const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
-    await fetch(SELLER_ENDPOINTS.ORDERS_BULK_LOCATION, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderIds: selection.selectedIds, physicalLocation: loc }),
-    });
-    setSetLocationOpen(false);
-  }, [selection.selectedIds]);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.ORDERS_BULK_LOCATION, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderIds: selection.selectedIds, physicalLocation: loc }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
+      }
+      showToast("Location updated.", "success");
+      setSetLocationOpen(false);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+    }
+  }, [selection.selectedIds, showToast]);
 
   // S-STORE-5-A — bulk order selection → single payout request.
   const requestPayoutForSelection = useCallback(async () => {
     if (!selection.selectedIds.length) return;
-    await fetch("/api/store/payouts/request", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderIds: selection.selectedIds }),
-    }).catch(() => null);
-    selection.clearSelection();
-  }, [selection]);
+    try {
+      const res = await fetch("/api/store/payouts/request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderIds: selection.selectedIds }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to request payout");
+      }
+      showToast("Payout requested.", "success");
+      selection.clearSelection();
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to request payout.", "error");
+    }
+  }, [selection, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     {
@@ -522,6 +542,8 @@ export function SellerOrdersView({
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

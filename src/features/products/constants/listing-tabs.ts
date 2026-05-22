@@ -18,6 +18,8 @@ export interface ListingTab {
   listingType?: ListingType;
   /** Set when the tab queries a different collection (e.g. `bundles`). */
   collection?: "bundles";
+  /** Set when the tab queries a non-product entity (e.g. `stores`). */
+  entity?: "stores";
 }
 
 /** Tabs shown on `/categories/[slug]` and `/brands/[slug]` detail pages. */
@@ -27,6 +29,7 @@ export const CATEGORY_PAGE_TABS = [
   { id: "pre-orders", label: "Pre-Orders", listingType: "pre-order" },
   { id: "prize-draws", label: "Prize Draws", listingType: "prize-draw" },
   { id: "bundles", label: "Bundles", collection: "bundles" },
+  { id: "stores", label: "Stores", entity: "stores" },
 ] as const satisfies readonly ListingTab[];
 
 export type CategoryTabId = (typeof CATEGORY_PAGE_TABS)[number]["id"];

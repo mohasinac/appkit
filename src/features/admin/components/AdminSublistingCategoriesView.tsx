@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ListingToolbar, Pagination } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -90,6 +91,8 @@ export function AdminSublistingCategoriesView({ onBulkDelete }: AdminSublistingC
       onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
     }] : []),
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

@@ -17,7 +17,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button, Div, Heading, LoginRequiredModal, Modal, Stack, Text } from "../../../ui";
+import { Button, Div, Heading, LoginRequiredModal, Modal, Stack, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -101,6 +101,7 @@ export function PrizeRevealModal({
     rngSourceUrl,
   );
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { showToast } = useToast();
 
   const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const endTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -172,9 +173,9 @@ export function PrizeRevealModal({
         return;
       }
       setPhase("error");
-      setErrorMessage(
-        err instanceof Error ? err.message : "Reveal request failed",
-      );
+      const msg = err instanceof Error ? err.message : "Reveal request failed";
+      setErrorMessage(msg);
+      showToast(msg, "error");
       return;
     }
 

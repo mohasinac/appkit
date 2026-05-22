@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text } from "../../../ui";
+import { Button, ClaimCouponButton, Div, Heading, LoginRequiredModal, Span, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import type { SpinPrize } from "../types";
 
@@ -70,6 +70,7 @@ export function SpinWheelView({
   );
   const [error, setError] = useState<string | null>(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const { showToast } = useToast();
 
   const now = Date.now();
   const startMs = windowStart ? new Date(windowStart).getTime() : null;
@@ -101,9 +102,10 @@ export function SpinWheelView({
         setShowLoginModal(true);
       } else {
         setError(l.errorFallback);
+        showToast(err instanceof Error ? err.message : l.errorFallback, "error");
       }
     }
-  }, [disabled, eventId, l.errorFallback, onSpin]);
+  }, [disabled, eventId, l.errorFallback, onSpin, showToast]);
 
   const wonPrize = resultPrizeId
     ? activePrizes.find((p) => p.id === resultPrizeId)

@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   categoriesRepository,
   productRepository,
+  storeRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
 import { Container, Heading, Main, Section, Text } from "../../../ui";
@@ -75,12 +76,51 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
       : Promise.resolve([] as CategoryItem[]),
   ]);
 
+  // Stores tab — query stores whose storeCategory matches this category or any child
+  const storeCategorySlugs = [
+    slug,
+    ...childCategories.map((c) => c.slug).filter(Boolean),
+  ];
+  const storeResults = await Promise.all(
+    storeCategorySlugs.map((catSlug) =>
+      storeRepository
+        .listStores({ filters: `storeCategory==${catSlug}`, page: 1, pageSize: 50 }, true)
+        .catch(() => null),
+    ),
+  );
+  const seen = new Set<string>();
+  const categoryStores = storeResults
+    .flatMap((r) => r?.items ?? [])
+    .filter((s) => {
+      if (seen.has(s.id)) return false;
+      seen.add(s.id);
+      return true;
+    })
+    .map((s) => ({
+      id: s.id,
+      storeSlug: s.storeSlug ?? s.id,
+      ownerId: s.ownerId,
+      storeName: s.storeName,
+      storeDescription: s.storeDescription,
+      storeCategory: s.storeCategory,
+      storeLogoURL: s.storeLogoURL,
+      storeBannerURL: s.storeBannerURL,
+      status: s.status,
+      isPublic: s.isPublic ?? true,
+      totalProducts: s.stats?.totalProducts,
+      itemsSold: s.stats?.itemsSold,
+      totalReviews: s.stats?.totalReviews,
+      averageRating: s.stats?.averageRating,
+      createdAt: s.createdAt as unknown as string,
+    }));
+
   const productCount = productsResult?.total ?? category?.metrics?.productCount ?? 0;
   const auctionCount = auctionsCountResult?.total ?? category?.metrics?.auctionCount ?? 0;
   const preOrderCount = preOrdersCountResult?.total ?? 0;
   const prizeDrawCount = prizeDrawsCountResult?.total ?? 0;
   const bundleCount = bundlesResult?.length ?? 0;
-  const totalCount = productCount + auctionCount + preOrderCount + prizeDrawCount + bundleCount;
+  const storeCount = categoryStores.length;
+  const totalCount = productCount + auctionCount + preOrderCount + prizeDrawCount + bundleCount + storeCount;
   const coverImage = category?.display?.coverImage;
   const hasCover = Boolean(coverImage);
 
@@ -153,6 +193,13 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 {preOrderCount.toLocaleString()} {preOrderCount === 1 ? "pre-order" : "pre-orders"}
               </span>
             )}
+            {storeCount > 0 && (
+              <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
+                hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+              }`}>
+                {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
+              </span>
+            )}
           </div>
         </div>
       </Section>
@@ -192,12 +239,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             categoryId={category?.id}
             initialProductsData={productsResult ?? undefined}
             initialBundles={bundlesResult ?? []}
+            initialStores={categoryStores}
             counts={{
               products: productCount,
               auctions: auctionCount,
               preOrders: preOrderCount,
               prizeDraws: prizeDrawCount,
               bundles: bundleCount,
+              stores: storeCount,
             }}
           />
         </Container>

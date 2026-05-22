@@ -6,6 +6,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, SideDrawer, Text, useToast } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -196,6 +197,8 @@ export function AdminCouponsView({ children, getRowHref, onBulkArchive, onBulkDe
       onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
     }] : []),
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;

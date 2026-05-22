@@ -16,6 +16,7 @@ import { ROUTES } from "../../../next";
 import { InteractiveProductCard } from "../../products/components/InteractiveProductCard";
 import { LiveItemFilters } from "./LiveItemFilters";
 import { ACTION_ID } from "../../products/constants/action-defs";
+import { useBottomActions } from "../../layout";
 
 const DEFAULT_SORT = sortBy(PRODUCT_FIELDS.CREATED_AT);
 
@@ -125,6 +126,8 @@ export function LiveItemsIndexListing({ initialData }: LiveItemsIndexListingProp
       wishlistActions.addToWishlist(id);
     }
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [] } } : {});
 
   return (
     <div className="min-h-screen">

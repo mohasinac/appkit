@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { Plus, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { useBottomActions } from "../../layout";
 import { BulkActionBar, Button, FilterChipGroup, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text, Toggle, useToast } from "../../../ui";
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -205,6 +206,9 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
       "Pre-orders": "listingType==pre-order",
       "Prize Draws": "listingType==prize-draw",
       Products: "listingType==standard",
+      Classifieds: "listingType==classified",
+      "Digital Codes": "listingType==digital-code",
+      "Live Items": "listingType==live",
     };
     const typeFilter = TYPE_FILTER[typeRaw];
     if (typeFilter) filterParts.push(typeFilter);
@@ -298,6 +302,12 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
       </div>
     ),
   };
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
+    { id: "feature", label: ACTIONS.ADMIN["toggle-featured"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "featured", !rows.find(r => r.id === id)?.featured); selection.clearSelection(); } },
+    { id: "promote", label: ACTIONS.ADMIN["toggle-promoted"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isPromoted", !rows.find(r => r.id === id)?.isPromoted); selection.clearSelection(); } },
+    { id: "sale", label: ACTIONS.ADMIN["toggle-on-sale"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isOnSale", !rows.find(r => r.id === id)?.isOnSale); selection.clearSelection(); } },
+  ] } } : {});
 
   return (
     <div className="min-h-screen">

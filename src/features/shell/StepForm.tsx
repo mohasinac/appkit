@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Check } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
-import { Text } from "../../ui";
+import { Text, useToast } from "../../ui";
 
 export interface StepDef<T extends object = Record<string, unknown>> {
   label: string;
@@ -169,6 +169,7 @@ export function StepForm<T extends object = Record<string, unknown>>({
   hideActions = false,
   stepErrors,
 }: StepFormProps<T>) {
+  const { showToast } = useToast();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [stepError, setStepError] = useState<string | null>(null);
 
@@ -198,9 +199,13 @@ export function StepForm<T extends object = Record<string, unknown>>({
     if (currentStep < steps.length - 1) {
       onStepChange(currentStep + 1);
     } else {
-      await onComplete();
+      try {
+        await onComplete();
+      } catch (err) {
+        showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
+      }
     }
-  }, [currentStep, steps, values, onComplete, onStepChange]);
+  }, [currentStep, steps, values, onComplete, onStepChange, showToast]);
 
   const goPrev = useCallback(() => {
     if (currentStep > 0) {

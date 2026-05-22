@@ -20,6 +20,7 @@ import {
 import { apiClient } from "../../../http";
 import { DataTable } from "./DataTable";
 import { AdminUserEditorView } from "./AdminUserEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "role"];
@@ -280,7 +281,11 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               renderRowActions={(row) => {
                 const ur = row as UserRow;
                 const isBanned = ur.status === "Hard banned";
-                return (
+                useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: "manage", label: ACTIONS.ADMIN["manage-user"].label, variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                   <RowActionMenu actions={[
                     {
                       label: ACTIONS.ADMIN["manage-user"].label,

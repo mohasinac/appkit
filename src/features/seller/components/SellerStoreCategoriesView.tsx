@@ -14,8 +14,10 @@ import {
   Pagination,
   RowActionMenu,
   Text,
+  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../../next";
@@ -103,6 +105,7 @@ export function SellerStoreCategoriesView({
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const commitSearch = useCallback(() => { table.set(TABLE_KEYS.QUERY, searchInput.trim()); }, [searchInput, table]);
 
@@ -144,9 +147,10 @@ export function SellerStoreCategoriesView({
   const handleDelete = useCallback(async (id: string) => {
     if (!onDelete) return;
     setDeletingId(id);
-    try { await onDelete(id); refetch?.(); }
+    try { await onDelete(id); refetch?.(); showToast("Category deleted.", "success"); }
+    catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete category.", "error"); }
     finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete, refetch]);
+  }, [onDelete, refetch, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     ...(onBulkDelete ? [{
@@ -171,6 +175,8 @@ export function SellerStoreCategoriesView({
     if (onCreateClick) { onCreateClick(); return; }
     window.location.href = String(ROUTES.STORE.STORE_CATEGORIES_NEW);
   };
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

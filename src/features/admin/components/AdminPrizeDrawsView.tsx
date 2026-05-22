@@ -21,6 +21,7 @@ import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import type { AdminTableColumn } from "../types";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -249,6 +250,10 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
       </ListingViewShell>
     );
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+          { id: "delete", label: ACTIONS.ADMIN["delete-prize-draw"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <div className="min-h-screen">

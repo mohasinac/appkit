@@ -7,7 +7,7 @@ import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -26,6 +26,7 @@ import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
 import { KIND_BADGE_VARIANT } from "./seller-products-styles";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 
@@ -210,6 +211,7 @@ export function SellerProductsView({
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const dispatch = useActionDispatch();
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -404,13 +406,22 @@ export function SellerProductsView({
   }, [selection.selectedIds, dispatch]);
 
   const handleSetLocation = useCallback(async (loc: PhysicalLocation) => {
-    await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_LOCATION, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productIds: selection.selectedIds, physicalLocation: loc }),
-    });
-    setSetLocationOpen(false);
-  }, [selection.selectedIds]);
+    try {
+      const res = await fetch(SELLER_ENDPOINTS.PRODUCTS_BULK_LOCATION, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIds: selection.selectedIds, physicalLocation: loc }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to update location");
+      }
+      showToast("Location updated.", "success");
+      setSetLocationOpen(false);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to update location.", "error");
+    }
+  }, [selection.selectedIds, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     {
@@ -426,6 +437,8 @@ export function SellerProductsView({
       onClick: () => setSetLocationOpen(true),
     },
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <>
@@ -524,7 +537,7 @@ export function SellerProductsView({
             }
             renderRowActions={(row) => {
               const isPublished = (statusOverrides.get(row.id) ?? row.status) === "published";
-              return (
+  return (
                 <Row className="gap-1">
                   <Button
                     variant="ghost"

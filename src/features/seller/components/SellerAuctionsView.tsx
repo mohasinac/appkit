@@ -5,7 +5,8 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, useToast } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -48,6 +49,7 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -134,13 +136,16 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
     try {
       if (onDelete) await onDelete(id);
       else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-    } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete]);
+      showToast("Auction deleted.", "success");
+    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete auction.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete, showToast]);
 
   const handleEdit = useCallback((id: string) => {
     if (onEditClick) onEditClick(id);
     else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
   }, [onEditClick]);
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;

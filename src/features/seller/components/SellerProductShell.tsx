@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { FormShell, StepForm, StepFormActions, useFormShell } from "../../shell";
 import type { FormShellSection, StepDef } from "../../shell";
 import { FormShellProvider } from "../../../ui/forms";
-import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle } from "../../../ui";
+import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text, Toggle, useToast } from "../../../ui";
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
@@ -923,6 +923,7 @@ export function SellerProductShell({
   const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
+  const { showToast } = useToast();
   const { upload: shellUpload } = useMediaUpload();
 
   // Auto-save in create mode — debounce 2s on any draft change
@@ -973,14 +974,24 @@ export function SellerProductShell({
   }, [onDiscard, router]);
 
   const handleSave = useCallback(async () => {
-    await onSave(draft);
-    markClean();
-  }, [draft, onSave, markClean]);
+    try {
+      await onSave(draft);
+      markClean();
+      showToast("Saved.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to save.", "error");
+    }
+  }, [draft, onSave, markClean, showToast]);
 
   const handlePublish = useCallback(async () => {
-    await onPublish({ ...draft, status: "published" });
-    markClean();
-  }, [draft, onPublish, markClean]);
+    try {
+      await onPublish({ ...draft, status: "published" });
+      markClean();
+      showToast("Published.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to publish.", "error");
+    }
+  }, [draft, onPublish, markClean, showToast]);
 
   const listingTypeLabel =
     listingType === "auction"
@@ -1091,9 +1102,13 @@ export function SellerProductShell({
     if (currentStep < steps.length - 1) {
       setCurrentStep((c) => c + 1);
     } else {
-      await handlePublish();
+      try {
+        await handlePublish();
+      } catch (err) {
+        showToast(err instanceof Error ? err.message : "Something went wrong.", "error");
+      }
     }
-  }, [currentStep, steps, draft, handlePublish]);
+  }, [currentStep, steps, draft, handlePublish, showToast]);
 
   // Step error badges — run each step's validate against current draft
   const stepValidationErrors = useMemo(

@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -236,6 +237,8 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
     }] : []),
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;

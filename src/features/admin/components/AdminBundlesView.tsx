@@ -30,6 +30,7 @@ import {
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { AdminTableColumn } from "../types";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["isActive", "bundleStockStatus"];
@@ -378,6 +379,8 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
       },
     },
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

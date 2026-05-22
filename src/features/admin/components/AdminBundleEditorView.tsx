@@ -27,6 +27,7 @@ import {
   Stack,
   Text,
   Textarea,
+  useToast,
 } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import {
@@ -137,6 +138,7 @@ export function AdminBundleEditorView({
   const [apiError, setApiError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<Record<string, BundleItemSearchResult>>({});
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
+  const { showToast } = useToast();
 
   // Load existing bundle on mount when editing
   useEffect(() => {
@@ -221,6 +223,7 @@ export function AdminBundleEditorView({
           },
         );
         if (!res.ok) throw new Error(`Update failed: ${res.status}`);
+        showToast("Bundle saved.", "success");
         onSaved?.(bundleId);
       } else {
         const res = await fetch(`/api/admin/bundles`, {
@@ -233,18 +236,17 @@ export function AdminBundleEditorView({
         }
         const json = (await res.json()) as { data?: CategoryDocument };
         const newId = json?.data?.id;
+        showToast("Bundle created.", "success");
         if (newId) onSaved?.(newId);
       }
     } catch (err) {
-      setApiError(
-        err instanceof Error
-          ? err.message
-          : BUNDLE_COPY.adminEditor.errors.saveFailed,
-      );
+      const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.saveFailed;
+      setApiError(msg);
+      showToast(msg, "error");
     } finally {
       setSaving(false);
     }
-  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError]);
+  }, [form, bundleId, isEdit, onSaved, clearErrors, setFieldError, showToast]);
 
   const handleDelete = useCallback(async () => {
     if (!bundleId) return;
@@ -256,18 +258,17 @@ export function AdminBundleEditorView({
         { method: "DELETE" },
       );
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+      showToast("Bundle deleted.", "success");
       setDeleteConfirmOpen(false);
       onDeleted?.();
     } catch (err) {
-      setApiError(
-        err instanceof Error
-          ? err.message
-          : BUNDLE_COPY.adminEditor.errors.deleteFailed,
-      );
+      const msg = err instanceof Error ? err.message : BUNDLE_COPY.adminEditor.errors.deleteFailed;
+      setApiError(msg);
+      showToast(msg, "error");
     } finally {
       setDeleting(false);
     }
-  }, [bundleId, onDeleted]);
+  }, [bundleId, onDeleted, showToast]);
 
   const fetchProducts = useMemo(() => defaultBundleItemsFetch, []);
 

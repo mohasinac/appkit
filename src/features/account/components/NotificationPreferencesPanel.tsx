@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Stack, Row, Text, Button, Div } from "../../../ui";
+import { Stack, Row, Text, Button, Div, useToast } from "../../../ui";
 import { useSiteSettings } from "../../../core/hooks/useSiteSettings";
 import type { NotificationPreferences, NotificationChannelPrefs, NotificationTypePrefs } from "../types";
 import type { NotificationChannelConfig } from "../../admin/schemas/firestore";
@@ -99,6 +99,7 @@ export function NotificationPreferencesPanel({
   saveUrl = "/api/user/notification-preferences",
   onSave,
 }: NotificationPreferencesPanelProps) {
+  const { showToast } = useToast();
   const { data: settings } = useSiteSettings<SiteSettingsShape>();
   const adminChannels = settings?.notificationChannels;
 
@@ -137,18 +138,25 @@ export function NotificationPreferencesPanel({
     setSaving(true);
     try {
       const prefs: NotificationPreferences = { channels, types };
-      await fetch(saveUrl, {
+      const res = await fetch(saveUrl, {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(prefs),
       });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        throw new Error((body as { error?: string })?.error ?? "Failed to save preferences");
+      }
       setSaved(true);
+      showToast("Preferences saved.", "success");
       onSave?.(prefs);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to save preferences.", "error");
     } finally {
       setSaving(false);
     }
-  }, [channels, types, saveUrl, onSave]);
+  }, [channels, types, saveUrl, onSave, showToast]);
 
   if (loading) {
     return (

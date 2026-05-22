@@ -5,7 +5,7 @@ import { X, Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Button, Div, ListingToolbar, Pagination, ListingViewShell, Text } from "../../../ui";
+import { BulkActionBar, Button, Div, ListingToolbar, Pagination, ListingViewShell, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
@@ -75,6 +75,7 @@ export function SellerCouponsView({
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -143,16 +144,18 @@ export function SellerCouponsView({
   const handleToggle = useCallback(async (id: string, currentlyActive: boolean) => {
     if (!onToggle) return;
     setTogglingId(id);
-    try { await onToggle(id, currentlyActive); refetch?.(); }
+    try { await onToggle(id, currentlyActive); refetch?.(); showToast("Coupon updated.", "success"); }
+    catch (err) { showToast(err instanceof Error ? err.message : "Failed to update coupon.", "error"); }
     finally { setTogglingId(null); }
-  }, [onToggle, refetch]);
+  }, [onToggle, refetch, showToast]);
 
   const handleDelete = useCallback(async (id: string) => {
     if (!onDelete) return;
     setDeletingId(id);
-    try { await onDelete(id); refetch?.(); }
+    try { await onDelete(id); refetch?.(); showToast("Coupon deleted.", "success"); }
+    catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete coupon.", "error"); }
     finally { setDeletingId(null); }
-  }, [onDelete, refetch]);
+  }, [onDelete, refetch, showToast]);
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 

@@ -28,6 +28,9 @@ import { productsStandardSeedData } from "./products-standard-seed-data";
 import { productsAuctionsSeedData } from "./products-auctions-seed-data";
 import { productsPreordersSeedData } from "./products-preorders-seed-data";
 import { productsPrizeDrawsSeedData } from "./products-prize-draws-seed-data";
+import { productsClassifiedsSeedData } from "./products-classifieds-seed-data";
+import { productsDigitalCodesSeedData } from "./products-digital-codes-seed-data";
+import { productsLiveItemsSeedData } from "./products-live-items-seed-data";
 import { ordersSeedData } from "./orders-seed-data";
 import { reviewsSeedData } from "./reviews-seed-data";
 import { bidsSeedData } from "./bids-seed-data";
@@ -98,6 +101,9 @@ export const SEED_MANIFEST: SeedManifest = {
       ...asArr(productsAuctionsSeedData),
       ...asArr(productsPreordersSeedData),
       ...asArr(productsPrizeDrawsSeedData),
+      ...asArr(productsClassifiedsSeedData),
+      ...asArr(productsDigitalCodesSeedData),
+      ...asArr(productsLiveItemsSeedData),
     ].map((p) => ({
       ...p,
       // SB1-G Phase 4 — canonical listingType drives the manifest "type" tag.
@@ -108,7 +114,15 @@ export const SEED_MANIFEST: SeedManifest = {
             ? "preorder"
             : p.listingType === "prize-draw"
               ? "prize-draw"
-              : "standard",
+              : p.listingType === "classified"
+                ? "classified"
+                : p.listingType === "digital-code"
+                  ? "digital-code"
+                  : p.listingType === "live"
+                    ? "live"
+                    : p.listingType === "bundle"
+                      ? "bundle"
+                      : "standard",
     })),
     "title",
   ),

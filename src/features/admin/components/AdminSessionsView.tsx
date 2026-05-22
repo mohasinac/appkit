@@ -19,6 +19,7 @@ import {
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["isActive"];
@@ -207,6 +208,10 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: ROW_ACTION_ID.REVOKE, label: ACTIONS.ADMIN["revoke-session"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <>

@@ -18,6 +18,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
 import { AdminCategoryEditorView } from "./AdminCategoryEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 50;
 const FILTER_KEYS = ["isActive", "isFeatured"];
@@ -183,6 +184,10 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+          { id: "edit", label: ACTIONS.ADMIN["edit-category"].label, variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+        ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <div className="min-h-screen">

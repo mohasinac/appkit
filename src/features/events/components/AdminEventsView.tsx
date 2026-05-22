@@ -18,6 +18,7 @@ import {
 } from "../../admin/hooks/useAdminListingData";
 import { DataTable } from "../../admin/components/DataTable";
 import { AdminEventEditorView } from "./AdminEventEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "type"];
@@ -134,6 +135,10 @@ export function AdminEventsView({ children, getRowHref, ...props }: AdminEventsV
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+          { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <div className="min-h-screen">

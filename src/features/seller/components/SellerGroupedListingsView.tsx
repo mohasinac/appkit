@@ -5,6 +5,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Badge, BulkActionBar, Button, ListingToolbar, Pagination } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
@@ -177,6 +178,8 @@ export function SellerGroupedListingsView({
       },
     },
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

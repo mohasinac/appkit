@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Alert, Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, RowActionMenu, Text } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -132,6 +132,7 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
   const dispatch = useActionDispatch();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -215,8 +216,9 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
     try {
       if (onDelete) await onDelete(id);
       else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-    } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete]);
+      showToast("Prize draw deleted.", "success");
+    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete prize draw.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete, showToast]);
 
   if (hasChildren) {
     return (

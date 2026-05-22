@@ -1905,6 +1905,12 @@ export { productsPreordersSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // productsPrizeDrawsSeedData - Seed data for prize-draw product listings (SB5-E).
 export { productsPrizeDrawsSeedData } from "./seed/index";
+// productsClassifiedsSeedData - Seed data for classified product listings (SB-UNI-I).
+export { productsClassifiedsSeedData } from "./seed/index";
+// productsDigitalCodesSeedData - Seed data for digital-code product listings (SB-UNI-J).
+export { productsDigitalCodesSeedData } from "./seed/index";
+// productsLiveItemsSeedData - Seed data for live-item product listings (SB-UNI-K).
+export { productsLiveItemsSeedData } from "./seed/index";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // registerSeedLocale - Helper for register seed locale.
 export { registerSeedLocale } from "./seed/index";
@@ -6936,9 +6942,6 @@ export type { BundleBuyNowCtaProps } from "./features/categories/components/Bund
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // BidHistory - Shared export for bid history.
 export { BidHistory } from "./features/products/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// BuyBar - Shared export for buy bar.
-export { BuyBar } from "./features/products/index";
 // [SCHEMA]-Schema / data-shape constant â€" Zod validator, default-value object, or Firestore collection/field name constant.
 // DEFAULT_PRODUCT_DATA - Constant used across modules.
 export { DEFAULT_PRODUCT_DATA } from "./features/products/index";
@@ -7190,9 +7193,6 @@ export type { BidHistoryEntry } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BidHistoryProps - Type contract for bid history props.
 export type { BidHistoryProps } from "./features/products/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// BuyBarProps - Type contract for buy bar props.
-export type { BuyBarProps } from "./features/products/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // InteractiveProductCardProps - Type contract for interactive product card props.
 export type { InteractiveProductCardProps } from "./features/products/index";

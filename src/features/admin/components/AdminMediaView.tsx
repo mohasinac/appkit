@@ -9,6 +9,7 @@ import {
   Select,
   StackedViewShell,
   Text,
+  useToast,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -317,6 +318,7 @@ export function AdminMediaView({
   );
   const [operationMessage, setOperationMessage] = React.useState<string | null>(null);
   const [copiedUrl, setCopiedUrl] = React.useState<string | null>(null);
+  const { showToast } = useToast();
 
   const onUpload = React.useCallback(
     async (file: File) => {
@@ -344,20 +346,24 @@ export function AdminMediaView({
       setHeroStagedUrls([]);
       setGalleryStagedUrls([]);
       setOperationMessage("Discarded staged media uploads.");
-    } catch {
+      showToast("Staged uploads cleared.", "success");
+    } catch (err) {
       setOperationMessage("Failed to discard staged media uploads.");
+      showToast(err instanceof Error ? err.message : "Failed to clear uploads.", "error");
     }
-  }, [cleanup, stagedUrls]);
+  }, [cleanup, stagedUrls, showToast]);
 
   const copyToClipboard = React.useCallback(async (url: string) => {
     try {
       await navigator.clipboard.writeText(url);
       setCopiedUrl(url);
       setTimeout(() => setCopiedUrl(null), 2000);
-    } catch {
+      showToast("Copied!", "success");
+    } catch (err) {
       setOperationMessage("Could not copy URL to clipboard.");
+      showToast(err instanceof Error ? err.message : "Failed to copy.", "error");
     }
-  }, []);
+  }, [showToast]);
 
   if (hasChildren) {
     return (

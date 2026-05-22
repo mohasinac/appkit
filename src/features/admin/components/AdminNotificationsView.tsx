@@ -19,6 +19,7 @@ import {
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["type"];
@@ -255,7 +256,12 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
             emptyLabel="No notifications found"
             renderRowActions={(row) => {
               const nr = row as NotifRow;
-              return (
+              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: ROW_ACTION_ID.MARK_READ, label: ACTIONS.ADMIN["mark-read"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: ROW_ACTION_ID.DELETE, label: ACTIONS.ADMIN["delete-notification"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                 <RowActionMenu
                   actions={[
                     { label: ACTIONS.ADMIN["resend-notification"].label, onClick: () => resendMutation.mutate(nr.id) },

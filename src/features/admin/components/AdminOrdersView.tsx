@@ -22,6 +22,7 @@ import {
 } from "../hooks/useAdminListingData";
 import { DataTable } from "./DataTable";
 import { AdminOrderEditorView } from "./AdminOrderEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -185,6 +186,12 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: "mark-shipped", label: ACTIONS.ADMIN["mark-shipped"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "SHIPPED"); selection.clearSelection(); } },
+            { id: "mark-delivered", label: ACTIONS.ADMIN["mark-delivered"].label, variant: "primary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "DELIVERED"); selection.clearSelection(); } },
+            { id: "mark-cancelled", label: ACTIONS.ADMIN["cancel-order"].label, variant: "danger", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "CANCELLED"); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <>

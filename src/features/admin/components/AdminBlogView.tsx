@@ -20,6 +20,7 @@ import {
 import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import { AdminBlogEditorView } from "./AdminBlogEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status", "isFeatured"];
@@ -185,6 +186,11 @@ export function AdminBlogView({ children, getRowHref, ...props }: AdminBlogViewP
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+          { id: "publish", label: ACTIONS.ADMIN["publish-blog"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
+          { id: "draft", label: ACTIONS.ADMIN["draft-blog"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
+        ] satisfies BulkActionItem[]) } } : {});
 
   return (
     <div className="min-h-screen">

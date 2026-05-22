@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   Toggle,
+  useToast,
 } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -45,6 +46,7 @@ export function SellerGoogleReviewsView({
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ text: string; ok: boolean } | null>(null);
+  const { showToast } = useToast();
 
   useEffect(() => {
     fetch(SELLER_ENDPOINTS.GOOGLE_REVIEWS, { credentials: "include" })
@@ -83,12 +85,14 @@ export function SellerGoogleReviewsView({
         });
         setSaveMessage({ text: res.ok ? "Settings saved." : "Save failed.", ok: res.ok });
       }
-    } catch {
+      showToast("Google Reviews settings saved.", "success");
+    } catch (err) {
       setSaveMessage({ text: "Save failed. Please try again.", ok: false });
+      showToast(err instanceof Error ? err.message : "Failed to save settings.", "error");
     } finally {
       setSaving(false);
     }
-  }, [draft, onSave]);
+  }, [draft, onSave, showToast]);
 
   const handleSync = useCallback(async () => {
     setSyncing(true);
@@ -103,12 +107,14 @@ export function SellerGoogleReviewsView({
         });
         setSaveMessage({ text: res.ok ? "Sync queued." : "Sync failed.", ok: res.ok });
       }
-    } catch {
+      showToast("Reviews synced.", "success");
+    } catch (err) {
       setSaveMessage({ text: "Sync failed. Please try again.", ok: false });
+      showToast(err instanceof Error ? err.message : "Failed to sync reviews.", "error");
     } finally {
       setSyncing(false);
     }
-  }, [onSync]);
+  }, [onSync, showToast]);
 
   if (loading) {
     return (

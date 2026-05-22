@@ -10,6 +10,7 @@ import { BulkActionBar, Button,
   Pagination,
   ListingViewShell,
   RowActionMenu, } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -236,6 +237,8 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
       onClick: async () => { await onBulkRemove(selection.selectedIds); selection.clearSelection(); },
     }] : []),
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
     return (

@@ -21,6 +21,7 @@ import {
 import { apiClient } from "../../../http";
 import { DataTable } from "./DataTable";
 import { AdminStoreEditorView } from "./AdminStoreEditorView";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -248,7 +249,11 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
                 const sr = row as StoreRow;
                 const isSuspended = sr.status?.toLowerCase() === "suspended";
                 const isVerified = Boolean(sr._raw?.isVerified);
-                return (
+                useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: "manage", label: ACTIONS.ADMIN["manage-store"].label, variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                   <RowActionMenu actions={[
                     {
                       label: ACTIONS.ADMIN["manage-store"].label,

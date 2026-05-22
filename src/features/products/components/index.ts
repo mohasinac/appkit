@@ -66,8 +66,6 @@ export {
   useProductFeatures,
 } from "./ProductFeaturesContext";
 export type { ProductFeaturesProviderProps } from "./ProductFeaturesContext";
-export { BuyBar } from "./BuyBar";
-export type { BuyBarProps } from "./BuyBar";
 export { ProductsView } from "./ProductsView";
 export type { ProductsViewProps } from "./ProductsView";
 export { ProductDetailView } from "./ProductDetailView";

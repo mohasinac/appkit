@@ -19,8 +19,10 @@ import {
   SideDrawer,
   Stack,
   Text,
+  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
@@ -144,6 +146,7 @@ export function SellerTemplatesView({
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
+  const { showToast } = useToast();
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -265,12 +268,14 @@ export function SellerTemplatesView({
       });
       closeDrawer();
       refetch?.();
-    } catch {
+      showToast("Template saved.", "success");
+    } catch (err) {
       setSavingError("Failed to save template. Please try again.");
+      showToast(err instanceof Error ? err.message : "Failed to save template.", "error");
     } finally {
       setSaving(false);
     }
-  }, [draft, drawerMode, editingId, closeDrawer, refetch]);
+  }, [draft, drawerMode, editingId, closeDrawer, refetch, showToast]);
 
   const handleDelete = useCallback(async (id: string) => {
     setDeletingId(id);
@@ -284,11 +289,14 @@ export function SellerTemplatesView({
         });
       }
       refetch?.();
+      showToast("Template deleted.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to delete template.", "error");
     } finally {
       setDeletingId(null);
       setDeleteTargetId(null);
     }
-  }, [onDelete, refetch]);
+  }, [onDelete, refetch, showToast]);
 
   const handleDuplicate = useCallback(async (row: TemplateRow) => {
     setDuplicatingId(row.id);
@@ -310,10 +318,13 @@ export function SellerTemplatesView({
         });
       }
       refetch?.();
+      showToast("Template duplicated.", "success");
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to duplicate template.", "error");
     } finally {
       setDuplicatingId(null);
     }
-  }, [onDuplicate, refetch]);
+  }, [onDuplicate, refetch, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     {
@@ -338,6 +349,8 @@ export function SellerTemplatesView({
       },
     },
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">

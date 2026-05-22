@@ -30,6 +30,7 @@ import {
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
+import { useBottomActions } from "../../layout";
 
 const PAGE_SIZE = 25;
 const FILTER_KEYS = ["status"];
@@ -279,7 +280,11 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
             emptyLabel="No payouts found"
             renderRowActions={(row) => {
               const pr = row as PayoutRow;
-              return (
+              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
+            { id: "mark-paid", label: ACTIONS.ADMIN["mark-paid"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
+          ] satisfies BulkActionItem[]) } } : {});
+
+  return (
                 <RowActionMenu
                   actions={[
                     {

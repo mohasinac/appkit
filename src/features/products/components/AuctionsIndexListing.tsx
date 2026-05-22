@@ -16,6 +16,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
 import { AUCTION_PUBLIC_SORT_OPTIONS } from "../constants/sieve";
+import { useBottomActions } from "../../layout";
 
 const DEFAULT_SORT = AUCTION_PUBLIC_SORT_OPTIONS[0].value;
 
@@ -133,6 +134,29 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
   };
 
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4";
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
+          {
+            id: ACTION_ID.WATCH_AUCTION,
+            label: "Add to Watchlist",
+            variant: "primary",
+            onClick: () => {
+              const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
+              selected.forEach((a) => { wishlistActions.addToWishlist(a.id); });
+              selection.clearSelection();
+            },
+          },
+          {
+            id: ACTION_ID.UNWATCH_AUCTION,
+            label: "Remove from Watchlist",
+            variant: "secondary",
+            onClick: () => {
+              const selected = (auctions as any[]).filter((a) => selection.selectedIdSet.has(a.id));
+              selected.forEach((a) => { wishlistActions.removeFromWishlist(a.id); });
+              selection.clearSelection();
+            },
+          },
+        ] } } : {});
 
   return (
     <div className="min-h-screen">

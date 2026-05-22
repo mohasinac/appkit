@@ -6,6 +6,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { BulkActionBar, Button, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text } from "../../../ui";
+import { useBottomActions } from "../../layout";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -180,6 +181,8 @@ export function AdminFaqsView({ children, getRowHref, onBulkArchive, onBulkDelet
       onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); },
     }] : []),
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;

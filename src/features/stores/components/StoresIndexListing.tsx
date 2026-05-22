@@ -14,6 +14,7 @@ import { TABLE_KEYS, VIEW_MODE } from "../../../constants/table-keys";
 import { sortBy } from "../../../constants/sort";
 import { STORE_FIELDS } from "../../../constants/field-names";
 import { ACTION_ID } from "../../products/constants/action-defs";
+import { useBottomActions } from "../../layout";
 
 const DEFAULT_SORT = sortBy(STORE_FIELDS.CREATED_AT);
 
@@ -237,7 +238,23 @@ export function StoresIndexListing({ initialData }: StoresIndexListingProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {stores.map((store) => {
               const storeKey = store.storeSlug ?? store.id;
-              return (
+              useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: [
+          {
+            id: ACTION_ID.COMPARE,
+            label: "Compare",
+            variant: "secondary",
+            onClick: () => { selection.clearSelection(); },
+          },
+          {
+            id: "visit",
+            label: "Visit Store",
+            variant: "primary",
+            disabled: selection.selectedCount !== 1,
+            onClick: () => { selection.clearSelection(); },
+          },
+        ] } } : {});
+
+  return (
                 <InteractiveStoreCard
                   key={storeKey}
                   store={store}

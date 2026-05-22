@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Badge, BulkActionBar, Div, FilterChipGroup, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Badge, BulkActionBar, Div, FilterChipGroup, ListingToolbar, Pagination, Text, useToast } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -19,6 +19,7 @@ import {
 } from "../hooks/useSellerListingData";
 import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
+import { useBottomActions } from "../../layout";
 
 // ---------------------------------------------------------------------------
 // Config
@@ -76,6 +77,7 @@ export interface SellerBidsViewProps {
 
 export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
+  const { showToast } = useToast();
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -217,17 +219,29 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   // S-STORE-4-B — bulk actions: cancel / retract.
   const bulkCancel = useCallback(async () => {
     if (!selection.selectedIds.length) return;
-    await Promise.all(
-      selection.selectedIds.map((id) =>
-        fetch(`/api/store/bids/${id}`, { method: "DELETE" }).catch(() => null),
-      ),
-    );
-    selection.clearSelection();
-  }, [selection]);
+    try {
+      const results = await Promise.all(
+        selection.selectedIds.map((id) =>
+          fetch(`/api/store/bids/${id}`, { method: "DELETE" }).then((r) => r.ok),
+        ),
+      );
+      const failed = results.filter((ok) => !ok).length;
+      if (failed > 0) {
+        showToast(`${failed} bid(s) failed to cancel.`, "error");
+      } else {
+        showToast(`${results.length} bid(s) cancelled.`, "success");
+      }
+      selection.clearSelection();
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : "Failed to cancel bids.", "error");
+    }
+  }, [selection, showToast]);
 
   const bulkActions: BulkActionItem[] = [
     { id: "cancel", label: ACTIONS.SELLER["cancel-bid"].label, onClick: () => void bulkCancel(), variant: "danger" },
   ];
+
+  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   return (
     <div className="min-h-screen">
@@ -289,7 +303,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
             )}
             {groupedRows.map((group) => {
               const collapsed = collapsedGroups.has(group.id);
-              return (
+  return (
                 <Div
                   key={group.id}
                   className="rounded-lg border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)]"
