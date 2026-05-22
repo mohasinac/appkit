@@ -132,7 +132,7 @@ export function MarketplaceAuctionGrid({
         <Text className="text-xl font-medium text-zinc-900 dark:text-zinc-50">
           {mergedLabels.emptyTitle}
         </Text>
-        <Text className="text-sm text-zinc-500">
+        <Text className="text-sm text-zinc-500 dark:text-zinc-400">
           {mergedLabels.emptyDescription}
         </Text>
       </Stack>

@@ -100,7 +100,7 @@ export function AdvertisementBanner({
                     variant="secondary"
                     size="lg"
                     onClick={onCtaClick}
-                    className="self-start bg-white text-zinc-900 hover:bg-zinc-100 font-semibold shadow-lg gap-2"
+                    className="self-start bg-white text-zinc-900 hover:bg-zinc-100 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2"
                   >
                     {ctaLabel}
                     <ArrowRight className="w-4 h-4" />
