@@ -8,6 +8,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS, HOMEPAGE_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -24,7 +25,9 @@ const PAGE_SIZE = 50;
 const FILTER_KEYS = ["active"];
 const DEFAULT_SORT = "order";
 
-export interface AdminCarouselViewProps extends ListingViewShellProps {}
+export interface AdminCarouselViewProps extends ListingViewShellProps {
+  onBulkDelete?: (ids: string[]) => Promise<void>;
+}
 
 interface AdminCarouselResponse {
   data?: unknown;
@@ -95,7 +98,7 @@ function CarouselFilterDrawer({
   );
 }
 
-export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps) {
+export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCarouselViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -225,6 +228,15 @@ export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps
 
   const selection = useBulkSelection({ items: fetchedRows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkDelete ? [{
+      id: "bulk-delete",
+      label: ACTIONS.ADMIN["delete-carousel"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -288,9 +300,9 @@ export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps
       render: (row) => (
         <RowActionMenu
           actions={[
-            { label: "Edit", onClick: () => { window.location.href = `/admin/carousel/${row.id}/edit`; } },
+            { label: ACTIONS.ADMIN["edit-carousel"].label, onClick: () => { window.location.href = `/admin/carousel/${row.id}/edit`; } },
             {
-              label: "Delete",
+              label: ACTIONS.ADMIN["delete-carousel"].label,
               destructive: true,
               onClick: () => handleDeleteSlide(row.id),
             },
@@ -320,6 +332,14 @@ export function AdminCarouselView({ children, ...props }: AdminCarouselViewProps
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </div>
+      )}
+
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
       )}
 
       <div className="py-4 px-3 sm:px-4">

@@ -10,6 +10,7 @@ import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BLOG_STATUS_TABS } from "../constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -215,8 +216,8 @@ export function AdminBlogView({ children, getRowHref, ...props }: AdminBlogViewP
         selectedCount={selection.selectedCount}
         onClearSelection={selection.clearSelection}
         actions={([
-          { id: "publish", label: "Publish Selected", variant: "primary", onClick: () => { selection.clearSelection(); } },
-          { id: "draft", label: "Move to Draft", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          { id: "publish", label: ACTIONS.ADMIN["publish-blog"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
+          { id: "draft", label: ACTIONS.ADMIN["draft-blog"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
         ] satisfies BulkActionItem[])}
       />
 

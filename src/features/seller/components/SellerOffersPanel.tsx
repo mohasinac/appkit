@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState, useTransition } from "react";
 import { Alert, Badge, Button, Div, Heading, Input, LoginRequiredModal, Spinner, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../schemas";
 
 export type SellerOfferAction =
@@ -317,7 +318,7 @@ export function SellerOffersPanel({
         </Div>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}
           className="border border-zinc-300 dark:border-zinc-600 text-xs">
-          {loading ? "Refreshing…" : "Refresh"}
+          {loading ? "Refreshing…" : ACTIONS.STORE["refresh-offers"].label}
         </Button>
       </Div>
 

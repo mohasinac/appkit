@@ -7,14 +7,17 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import {
   BulkActionBar,
   Button,
+  ConfirmDeleteModal,
   DataTable,
   Div,
   ListingToolbar,
   Pagination,
+  RowActionMenu,
   Text,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
 import {
   toRecordArray,
@@ -111,16 +114,22 @@ const COLUMNS: DataTableColumn<DigitalCodeRow>[] = [
 
 export interface SellerDigitalCodesViewProps {
   onCreateClick?: () => void;
+  onEditClick?: (id: string) => void;
+  onDelete?: (id: string) => Promise<void>;
   onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
 export function SellerDigitalCodesView({
   onCreateClick,
+  onEditClick,
+  onDelete,
   onBulkDelete,
 }: SellerDigitalCodesViewProps) {
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [view] = useState<"grid" | "list" | "table">("table");
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -172,11 +181,24 @@ export function SellerDigitalCodesView({
   const bulkActions: BulkActionItem[] = onBulkDelete
     ? [{
         id: "bulk-delete",
-        label: "Delete selected",
+        label: ACTIONS.STORE["delete-listing"].label,
         variant: "danger" as const,
         onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
       }]
     : [];
+
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id);
+    try {
+      if (onDelete) await onDelete(id);
+      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
+    } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete]);
+
+  const handleEdit = useCallback((id: string) => {
+    if (onEditClick) onEditClick(id);
+    else window.location.href = String(ROUTES.STORE.DIGITAL_CODES_EDIT(id));
+  }, [onEditClick]);
 
   const handleCreate = useCallback(() => {
     if (onCreateClick) {
@@ -250,9 +272,36 @@ export function SellerDigitalCodesView({
             selectable={bulkActions.length > 0}
             selectedIds={selection.selectedIds}
             onSelectionChange={(ids) => selection.setSelectedIds(ids)}
+            actions={(row) => (
+              <RowActionMenu
+                actions={[
+                  {
+                    label: ACTIONS.STORE["edit-listing"].label,
+                    onClick: () => handleEdit(row.id),
+                  },
+                  {
+                    label: ACTIONS.STORE["delete-listing"].label,
+                    destructive: true,
+                    onClick: () => setDeleteTargetId(row.id),
+                    disabled: deletingId === row.id,
+                  },
+                ]}
+              />
+            )}
           />
         )}
       </div>
+
+      {deleteTargetId && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Digital Code Product"
+          message="Are you sure you want to delete this digital code product? This cannot be undone."
+          onConfirm={() => handleDelete(deleteTargetId)}
+          onClose={() => setDeleteTargetId(null)}
+          isDeleting={deletingId === deleteTargetId}
+        />
+      )}
     </div>
   );
 }

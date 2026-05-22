@@ -220,7 +220,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "manage", label: "Manage Store", variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+            { id: "manage", label: ACTIONS.ADMIN["manage-store"].label, variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -251,7 +251,7 @@ export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
                 return (
                   <RowActionMenu actions={[
                     {
-                      label: "Manage",
+                      label: ACTIONS.ADMIN["manage-store"].label,
                       onClick: () => openEditPanel(sr.id),
                     },
                     {

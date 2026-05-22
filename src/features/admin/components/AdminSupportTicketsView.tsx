@@ -7,6 +7,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import {
   ADMIN_SUPPORT_TICKET_STATUS_TABS,
   ADMIN_SUPPORT_TICKET_PRIORITY_TABS,
@@ -301,7 +302,7 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
             renderRowActions={(row) => (
               <RowActionMenu
                 actions={[
-                  { label: "View", onClick: () => { setSelectedRow(row as TicketRow); setDrawerOpen(true); } },
+                  { label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label, onClick: () => { setSelectedRow(row as TicketRow); setDrawerOpen(true); } },
                 ]}
               />
             )}

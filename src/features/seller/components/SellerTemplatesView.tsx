@@ -22,6 +22,7 @@ import {
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toStringValue,
@@ -317,7 +318,7 @@ export function SellerTemplatesView({
   const bulkActions: BulkActionItem[] = [
     {
       id: "bulk-delete",
-      label: "Delete selected",
+      label: ACTIONS.STORE["delete-template"].label,
       variant: "danger",
       onClick: async () => {
         if (onBulkDelete) {
@@ -416,7 +417,7 @@ export function SellerTemplatesView({
               <RowActionMenu
                 actions={[
                   {
-                    label: "Edit",
+                    label: ACTIONS.STORE["edit-template"].label,
                     onClick: () => openEdit(row),
                   },
                   {
@@ -425,7 +426,7 @@ export function SellerTemplatesView({
                     onClick: () => handleDuplicate(row),
                   },
                   {
-                    label: "Delete",
+                    label: ACTIONS.STORE["delete-template"].label,
                     destructive: true,
                     onClick: () => setDeleteTargetId(row.id),
                     disabled: deletingId === row.id,

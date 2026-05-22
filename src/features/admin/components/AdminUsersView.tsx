@@ -253,7 +253,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "manage", label: "Manage Selected", variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
+            { id: "manage", label: ACTIONS.ADMIN["manage-user"].label, variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -283,7 +283,7 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
                 return (
                   <RowActionMenu actions={[
                     {
-                      label: "Manage",
+                      label: ACTIONS.ADMIN["manage-user"].label,
                       onClick: () => { setSelectedRow(ur); setDrawerOpen(true); },
                     },
                     {

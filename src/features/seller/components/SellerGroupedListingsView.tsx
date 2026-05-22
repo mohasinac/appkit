@@ -6,6 +6,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Badge, BulkActionBar, Button, ListingToolbar, Pagination } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -168,7 +169,7 @@ export function SellerGroupedListingsView({
   const bulkActions: BulkActionItem[] = [
     {
       id: "delete",
-      label: "Delete selected",
+      label: ACTIONS.STORE["delete-listing"].label,
       variant: "danger",
       onClick: () => {
         for (const id of selection.selectedIds) onDeleteClick?.(id);
@@ -226,8 +227,8 @@ export function SellerGroupedListingsView({
         onToggleSelectAll={(_next) => selection.toggleAll()}
         renderRowActions={(row: GroupedRow) => (
           <div className="flex gap-1">
-            <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>Edit</Button>
-            <Button size="sm" variant="ghost" onClick={() => onDeleteClick?.(row.id)}>Delete</Button>
+            <Button size="sm" variant="ghost" onClick={() => onEditClick?.(row.id)}>{ACTIONS.STORE["edit-listing"].label}</Button>
+            <Button size="sm" variant="ghost" onClick={() => onDeleteClick?.(row.id)}>{ACTIONS.STORE["delete-listing"].label}</Button>
           </div>
         )}
       />

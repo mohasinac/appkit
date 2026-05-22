@@ -5,10 +5,11 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_PAYOUT_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -32,9 +33,12 @@ interface SellerPayoutsResponse {
   meta?: { total: number };
 }
 
-export interface SellerPayoutsViewProps extends ListingViewShellProps {}
+export interface SellerPayoutsViewProps extends ListingViewShellProps {
+  onViewClick?: (id: string) => void;
+  onExportClick?: (id: string) => void;
+}
 
-export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps) {
+export function SellerPayoutsView({ children, onViewClick, onExportClick, ...props }: SellerPayoutsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
@@ -145,7 +149,19 @@ export function SellerPayoutsView({ children, ...props }: SellerPayoutsViewProps
           </div>
         )}
         {view === "table" ? (
-          <DataTable rows={rows} isLoading={isLoading} emptyLabel="No payouts found" />
+          <DataTable
+            rows={rows}
+            isLoading={isLoading}
+            emptyLabel="No payouts found"
+            renderRowActions={(row) => (
+              <RowActionMenu
+                actions={[
+                  ...(onViewClick ? [{ label: ACTIONS.STORE["view-payout"].label, onClick: () => onViewClick(row.id) }] : []),
+                  ...(onExportClick ? [{ label: ACTIONS.STORE["export-payout"].label, onClick: () => onExportClick(row.id) }] : []),
+                ]}
+              />
+            )}
+          />
         ) : (
           <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No payouts found" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
         )}

@@ -8,6 +8,7 @@ import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { BulkActionBar, Button, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -36,6 +37,8 @@ interface AdminFaqsResponse {
 export interface AdminFaqsViewProps extends ListingViewShellProps {
   actionHref?: string;
   getRowHref?: (row: AdminListingScaffoldRow) => string;
+  onBulkArchive?: (ids: string[]) => Promise<void>;
+  onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
 interface FaqsFilterDrawerProps {
@@ -91,7 +94,7 @@ function FaqsFilterDrawer({
   );
 }
 
-export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewProps) {
+export function AdminFaqsView({ children, getRowHref, onBulkArchive, onBulkDelete, ...props }: AdminFaqsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
@@ -136,7 +139,7 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
   const isActiveRaw = table.get("isActive");
   const filters = isActiveRaw ? `isActive==${isActiveRaw}` : undefined;
 
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<
+  const { rows, total, isLoading, errorMessage, refetch } = useAdminListingData<
     AdminFaqsResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
@@ -163,6 +166,20 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkArchive ? [{
+      id: "bulk-archive",
+      label: ACTIONS.ADMIN["archive-faq"].label,
+      onClick: async () => { await onBulkArchive(selection.selectedIds); selection.clearSelection(); refetch?.(); },
+    }] : []),
+    ...(onBulkDelete ? [{
+      id: "bulk-delete",
+      label: ACTIONS.ADMIN["delete-faq"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); },
+    }] : []),
+  ];
 
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
@@ -198,6 +215,14 @@ export function AdminFaqsView({ children, getRowHref, ...props }: AdminFaqsViewP
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
         </div>
+      )}
+
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
       )}
 
       <div className="py-4 px-3 sm:px-4">

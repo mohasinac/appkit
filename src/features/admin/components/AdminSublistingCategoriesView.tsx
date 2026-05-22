@@ -6,6 +6,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ListingToolbar, Pagination } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -29,7 +30,11 @@ interface SublistingCategoriesResponse {
   total?: number;
 }
 
-export function AdminSublistingCategoriesView() {
+interface AdminSublistingCategoriesViewProps {
+  onBulkDelete?: (ids: string[]) => Promise<void>;
+}
+
+export function AdminSublistingCategoriesView({ onBulkDelete }: AdminSublistingCategoriesViewProps) {
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -77,6 +82,15 @@ export function AdminSublistingCategoriesView() {
 
   const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkDelete ? [{
+      id: "bulk-delete",
+      label: ACTIONS.ADMIN["delete-sublisting-category"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   return (
     <div className="min-h-screen">
       <ListingToolbar
@@ -95,6 +109,14 @@ export function AdminSublistingCategoriesView() {
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
       />
+
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
+      )}
 
       {totalPages > 1 && (
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">

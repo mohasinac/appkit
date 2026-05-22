@@ -8,6 +8,7 @@ import { AdminViewCards } from "../../admin/components/AdminViewCards";
 import { Badge, BulkActionBar, Div, FilterChipGroup, ListingToolbar, Pagination, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { SELLER_BID_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import {
   toRecordArray,
@@ -225,7 +226,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
   }, [selection]);
 
   const bulkActions: BulkActionItem[] = [
-    { id: "cancel", label: "Cancel selected", onClick: () => void bulkCancel(), variant: "danger" },
+    { id: "cancel", label: ACTIONS.SELLER["cancel-bid"].label, onClick: () => void bulkCancel(), variant: "danger" },
   ];
 
   return (

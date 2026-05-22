@@ -15,6 +15,7 @@ import { BulkActionBar, Button,
   useToast, } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_NEWSLETTER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -35,7 +36,9 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = ADMIN_NEWSLETTER_STATUS_TABS;
 
-export interface AdminNewsletterViewProps extends ListingViewShellProps {}
+export interface AdminNewsletterViewProps extends ListingViewShellProps {
+  onBulkUnsubscribe?: (ids: string[]) => Promise<void>;
+}
 
 interface NewsletterFilterDrawerProps {
   filterOpen: boolean;
@@ -98,7 +101,7 @@ interface NewsletterRow {
   updatedAt: string;
 }
 
-export function AdminNewsletterView({ children, ...props }: AdminNewsletterViewProps) {
+export function AdminNewsletterView({ children, onBulkUnsubscribe, ...props }: AdminNewsletterViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const queryClient = useQueryClient();
@@ -208,12 +211,29 @@ export function AdminNewsletterView({ children, ...props }: AdminNewsletterViewP
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkUnsubscribe ? [{
+      id: "bulk-unsubscribe",
+      label: ACTIONS.ADMIN["unsubscribe-newsletter"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkUnsubscribe(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
 
   return (
     <>
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
+      )}
+
       <div className="min-h-screen">
         <ListingToolbar
           filterCount={activeFilterCount}
@@ -232,7 +252,7 @@ export function AdminNewsletterView({ children, ...props }: AdminNewsletterViewP
           hasActiveState={hasActiveState}
           extra={
             <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
-              Export CSV
+              {ACTIONS.ADMIN["export-csv"].label}
             </Button>
           }
         />
@@ -259,7 +279,7 @@ export function AdminNewsletterView({ children, ...props }: AdminNewsletterViewP
                 <RowActionMenu
                   actions={[
                     {
-                      label: "Unsubscribe",
+                      label: ACTIONS.ADMIN["unsubscribe-newsletter"].label,
                       destructive: true,
                       disabled: nr.status === "unsubscribed",
                       onClick: () => { setSelectedRow(nr); setUnsubscribeOpen(true); },

@@ -8,6 +8,8 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ConfirmDeleteModal, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -230,8 +232,8 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "mark-read", label: "Mark Read", variant: "primary", onClick: () => { selection.clearSelection(); } },
-            { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+            { id: ROW_ACTION_ID.MARK_READ, label: ACTIONS.ADMIN["mark-read"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: ROW_ACTION_ID.DELETE, label: ACTIONS.ADMIN["delete-notification"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -256,8 +258,8 @@ export function AdminNotificationsView({ children, ...props }: AdminNotification
               return (
                 <RowActionMenu
                   actions={[
-                    { label: "Resend", onClick: () => resendMutation.mutate(nr.id) },
-                    { label: "Delete", destructive: true, onClick: () => setDeleteTarget(nr) },
+                    { label: ACTIONS.ADMIN["resend-notification"].label, onClick: () => resendMutation.mutate(nr.id) },
+                    { label: ROW_ACTION_META[ROW_ACTION_ID.DELETE].label, destructive: ROW_ACTION_META[ROW_ACTION_ID.DELETE].destructive, onClick: () => setDeleteTarget(nr) },
                   ]}
                 />
               );

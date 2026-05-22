@@ -4,9 +4,10 @@ import React from "react";
 
 const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Div, Form, FormActions, Heading, Input, Section, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildPurchaseAnnouncementMessage } from "../helpers/whatsapp";
 
 // ---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ function MaskedTokenInput({
 }) {
   const [revealed, setRevealed] = React.useState(false);
   return (
-    <div className="relative">
+    <Div className="relative">
       <Input
         label={label}
         value={value}
@@ -59,14 +60,16 @@ function MaskedTokenInput({
         placeholder={placeholder}
         helperText={helperText}
       />
-      <button
+      <Button
         type="button"
+        variant="ghost"
+        size="sm"
         onClick={() => setRevealed((r) => !r)}
-        className="absolute right-3 top-8 text-xs text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+        className="absolute right-3 top-8 text-xs"
       >
         {revealed ? "Hide" : "Reveal"}
-      </button>
-    </div>
+      </Button>
+    </Div>
   );
 }
 
@@ -103,10 +106,10 @@ const STEPS = [
   },
 ];
 
-const STATUS_COLOR: Record<string, string> = {
-  success: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
-  partial: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
-  failed: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300",
+const STATUS_VARIANT: Record<string, "success" | "warning" | "danger"> = {
+  success: "success",
+  partial: "warning",
+  failed: "danger",
 };
 
 // ---------------------------------------------------------------------------
@@ -177,7 +180,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     },
   });
 
-  // Catalog sync mutation
+  // Catalog sync mutation (push: site → WhatsApp)
   const syncMutation = useMutation({
     mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_SYNC, {}),
     onSuccess: (res: unknown) => {
@@ -194,28 +197,45 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
     },
   });
 
+  // Catalog import mutation (pull: WhatsApp → site)
+  const importMutation = useMutation({
+    mutationFn: async () => apiClient.post(WHATSAPP_SELLER_ENDPOINTS.CATALOG_IMPORT, {}),
+    onSuccess: (res: unknown) => {
+      const r = (res as any) ?? {};
+      showToast(
+        `Imported ${r.imported ?? 0} product${(r.imported ?? 0) !== 1 ? "s" : ""} from WhatsApp (${r.skipped ?? 0} already synced)`,
+        "success",
+      );
+      void queryClient.invalidateQueries({ queryKey: ["store", "whatsapp-settings"] });
+    },
+    onError: (err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Import failed";
+      showToast(msg, "error");
+    },
+  });
+
   if (!hasCapability) {
     return (
-      <div className="max-w-xl mx-auto py-8 px-4">
+      <Div className="max-w-xl mx-auto py-8 px-4">
         <Alert variant="warning">
           <Text className="font-medium">WhatsApp catalog sync is not enabled for your store.</Text>
           <Text className="text-sm mt-1">
             Contact LetItRip support to request access to the WhatsApp Business integration.
           </Text>
         </Alert>
-      </div>
+      </Div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 py-6 px-4">
+    <Stack gap="xl" className="max-w-2xl mx-auto py-6 px-4">
 
       {/* ── Section 1: Step-by-step setup guide ─────────────────────────── */}
       <Section>
         <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
           How to connect your WhatsApp Business account
         </Heading>
-        <ol className="space-y-3">
+        <Stack gap="sm">
           {STEPS.map((step) => {
             const done =
               step.checkKey === undefined
@@ -224,40 +244,36 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
                   ? cfg?.connected === true
                   : Boolean(cfg?.[step.checkKey]);
             return (
-              <li key={step.n} className="flex gap-3">
-                <span
+              <Row key={step.n} gap="sm" align="start">
+                <Div
                   className={`flex-shrink-0 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 ${
                     done
-                      ? "bg-green-500 text-white"
+                      ? "bg-[var(--appkit-color-success)] text-white"
                       : "bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300"
                   }`}
                 >
                   {done ? "✓" : step.n}
-                </span>
-                <>
+                </Div>
+                <Div>
                   <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{step.title}</Text>
                   <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">{step.body}</Text>
-                </>
-              </li>
+                </Div>
+              </Row>
             );
           })}
-        </ol>
+        </Stack>
       </Section>
 
       {/* ── Section 2: Connection form ──────────────────────────────────── */}
       <Section className={CLS_SECTION_CARD}>
-        <div className="flex items-center justify-between mb-4">
+        <Row justify="between" align="center" className="mb-4">
           <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Connection</Heading>
           {isLoading ? null : cfg?.connected ? (
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300">
-              Connected
-            </span>
+            <Badge variant="success">Connected</Badge>
           ) : (
-            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
-              Not configured
-            </span>
+            <Badge variant="default">Not configured</Badge>
           )}
-        </div>
+        </Row>
 
         <Form
           onSubmit={(e) => {
@@ -296,7 +312,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           />
           <FormActions align="right">
             <Button type="submit" isLoading={saveMutation.isPending} disabled={saveMutation.isPending}>
-              {saveMutation.isPending ? "Saving…" : "Save & Connect"}
+              {saveMutation.isPending ? "Saving…" : ACTIONS.STORE["whatsapp-connect"].label}
             </Button>
           </FormActions>
         </Form>
@@ -306,30 +322,30 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
       <Section className={CLS_SECTION_CARD}>
         <Heading level={2} className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Catalog Sync</Heading>
 
-        <div className="flex items-center justify-between mb-4">
-          <>
+        <Row justify="between" align="center" className="mb-4">
+          <Div>
             <Text className="text-sm text-zinc-700 dark:text-zinc-300">Enable catalog sync</Text>
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               When enabled, your published standard products can be synced to WhatsApp.
             </Text>
-          </>
+          </Div>
           <Toggle
             checked={syncEnabled}
             onChange={setSyncEnabled}
             disabled={!cfg?.connected}
           />
-        </div>
+        </Row>
 
         {cfg?.lastCatalogSyncAt && (
-          <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-3">
-            <span>Last sync: {new Date(cfg.lastCatalogSyncAt).toLocaleString("en-IN")}</span>
-            {cfg.lastSyncCount !== undefined && <span>· {cfg.lastSyncCount} products</span>}
+          <Row gap="sm" align="center" className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+            <Text>Last sync: {new Date(cfg.lastCatalogSyncAt).toLocaleString("en-IN")}</Text>
+            {cfg.lastSyncCount !== undefined && <Text>· {cfg.lastSyncCount} products</Text>}
             {cfg.lastSyncStatus && (
-              <span className={`px-1.5 py-0.5 rounded ${STATUS_COLOR[cfg.lastSyncStatus] ?? ""}`}>
+              <Badge variant={STATUS_VARIANT[cfg.lastSyncStatus] ?? "default"}>
                 {cfg.lastSyncStatus}
-              </span>
+              </Badge>
             )}
-          </div>
+          </Row>
         )}
 
         <Text className="text-xs text-zinc-400 dark:text-zinc-500 mb-3">
@@ -337,14 +353,30 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
           Batches of up to 50 products per call.
         </Text>
 
-        <Button
-          onClick={() => syncMutation.mutate()}
-          isLoading={syncMutation.isPending}
-          disabled={!cfg?.connected || !syncEnabled || syncMutation.isPending}
-          variant="secondary"
-        >
-          {syncMutation.isPending ? "Syncing…" : "Sync Now"}
-        </Button>
+        <Div className="flex gap-3">
+          <Button
+            onClick={() => syncMutation.mutate()}
+            isLoading={syncMutation.isPending}
+            disabled={!cfg?.connected || !syncEnabled || syncMutation.isPending}
+            variant="secondary"
+          >
+            {syncMutation.isPending ? "Syncing…" : ACTIONS.STORE["whatsapp-catalog-sync"].label}
+          </Button>
+          <Button
+            onClick={() => importMutation.mutate()}
+            isLoading={importMutation.isPending}
+            disabled={!cfg?.connected || !syncEnabled || importMutation.isPending}
+            variant="secondary"
+          >
+            {importMutation.isPending ? "Importing…" : ACTIONS.STORE["whatsapp-catalog-import"].label}
+          </Button>
+        </Div>
+
+        <Text className="text-xs text-zinc-400 dark:text-zinc-500 mt-3">
+          <strong>Push</strong> sends your published standard products to WhatsApp.{" "}
+          <strong>Import</strong> creates draft products from your WhatsApp catalog.
+          Products are matched by slug in the description field.
+        </Text>
       </Section>
 
       {/* ── Section 4: Announcement preview ─────────────────────────────── */}
@@ -355,7 +387,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
           This message is sent automatically to your phone and the platform admin when a new order is placed.
         </Text>
-        <div className="bg-zinc-50 dark:bg-zinc-800/60 rounded-lg px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono">
+        <Div className="bg-zinc-50 dark:bg-zinc-800/60 rounded-lg px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 font-mono">
           {buildPurchaseAnnouncementMessage({
             buyerName: "Ravi K.",
             firstItemName: "Charizard PSA 9",
@@ -363,7 +395,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
             totalAmount: 450000,
             orderId: "order-3-20260510-a1b2c3",
           })}
-        </div>
+        </Div>
       </Section>
 
       {/* ── Section 5: Catalog preview ───────────────────────────────────── */}
@@ -376,45 +408,45 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Text>
 
         {/* Simulated WhatsApp catalog tile grid */}
-        <div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden bg-[#ECE5DD] dark:bg-zinc-800 p-3">
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
-              <span className="text-white text-xs font-bold">W</span>
-            </div>
+        <Div className="border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden bg-[#ECE5DD] dark:bg-zinc-800 p-3">
+          <Row gap="sm" align="center" className="mb-3">
+            <Div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+              <Text className="text-white text-xs font-bold">W</Text>
+            </Div>
             <Div>
               <Text className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
                 {cfg?.connected ? "Your Store" : "Store Name"}
               </Text>
               <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">WhatsApp Business</Text>
             </Div>
-          </div>
+          </Row>
 
-          <div className="grid grid-cols-2 gap-2">
+          <Div className="grid grid-cols-2 gap-2">
             {SAMPLE_CATALOG_ITEMS.map((item) => (
-              <div key={item.id} className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm">
-                <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
-                  <span className="text-2xl">{item.emoji}</span>
-                </div>
-                <div className="p-2">
+              <Div key={item.id} className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm">
+                <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                  <Text className="text-2xl">{item.emoji}</Text>
+                </Div>
+                <Div className="p-2">
                   <Text className="text-xs font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-tight">
                     {item.name}
                   </Text>
                   <Text className="text-xs text-[#25D366] font-semibold mt-0.5">
                     {item.price}
                   </Text>
-                </div>
-              </div>
+                </Div>
+              </Div>
             ))}
-          </div>
+          </Div>
 
-          <div className="mt-3 text-center">
+          <Div className="mt-3 text-center">
             <Text className="text-[10px] text-zinc-500 dark:text-zinc-400">
               {cfg?.lastSyncCount
                 ? `${cfg.lastSyncCount} products synced to catalog`
                 : "Sync your products to populate the catalog"}
             </Text>
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {!cfg?.connected && (
           <Text className="text-xs text-amber-600 dark:text-amber-400 mt-2">
@@ -423,6 +455,6 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         )}
       </Section>
 
-    </div>
+    </Stack>
   );
 }

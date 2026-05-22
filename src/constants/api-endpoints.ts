@@ -527,6 +527,7 @@ export const DEMO_ENDPOINTS = {
 export const WHATSAPP_SELLER_ENDPOINTS = {
   SETTINGS: "/api/store/whatsapp-settings",
   CATALOG_SYNC: "/api/store/whatsapp-settings/catalog-sync",
+  CATALOG_IMPORT: "/api/store/whatsapp-settings/catalog-import",
 } as const;
 
 // ---------------------------------------------------------------------------

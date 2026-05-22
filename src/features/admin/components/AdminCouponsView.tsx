@@ -8,6 +8,7 @@ import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, SideDrawer, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_COUPON_TYPE_TABS } from "../constants/filter-tabs";
 import { apiClient } from "../../../http";
 import {
@@ -37,6 +38,8 @@ interface AdminCouponsResponse {
 export interface AdminCouponsViewProps extends ListingViewShellProps {
   actionHref?: string;
   getRowHref?: (row: AdminListingScaffoldRow) => string;
+  onBulkArchive?: (ids: string[]) => Promise<void>;
+  onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
 interface CouponsFilterDrawerProps {
@@ -87,7 +90,7 @@ function CouponsFilterDrawer({
   );
 }
 
-export function AdminCouponsView({ children, getRowHref, ...props }: AdminCouponsViewProps) {
+export function AdminCouponsView({ children, getRowHref, onBulkArchive, onBulkDelete, ...props }: AdminCouponsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
@@ -180,6 +183,20 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkArchive ? [{
+      id: "bulk-archive",
+      label: "Archive",
+      onClick: async () => { await onBulkArchive(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+    ...(onBulkDelete ? [{
+      id: "bulk-delete",
+      label: ACTIONS.ADMIN["delete-coupon"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -208,6 +225,14 @@ export function AdminCouponsView({ children, getRowHref, ...props }: AdminCoupon
           </Button>
         }
       />
+
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
+      )}
 
       {totalPages > 1 && (
         <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">

@@ -11,6 +11,7 @@ import {
   Text,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   MediaUploadField,
   MediaUploadList,
@@ -144,7 +145,7 @@ function MediaBrowser({ onCopy }: { onCopy: (url: string) => void }) {
                   className="mt-1 w-full text-xs"
                   onClick={() => onCopy(f.downloadURL)}
                 >
-                  Copy URL
+                  {ACTIONS.MEDIA["copy-url"].label}
                 </Button>
               </Div>
             </Div>
@@ -224,7 +225,7 @@ function MediaUploaderPanel({
             variant="outline"
             onClick={() => onCopy(heroAssetUrl)}
           >
-            {copiedUrl === heroAssetUrl ? "Copied!" : "Copy URL"}
+            {copiedUrl === heroAssetUrl ? "Copied!" : ACTIONS.MEDIA["copy-url"].label}
           </Button>
         </Div>
       )}
@@ -269,7 +270,7 @@ function MediaUploaderPanel({
           onClick={onClearPreviews}
           disabled={isUploadPending || isCleanupPending}
         >
-          Clear previews
+          {ACTIONS.MEDIA["clear-previews"].label}
         </Button>
         <Button
           type="button"
@@ -277,7 +278,7 @@ function MediaUploaderPanel({
           onClick={onDiscardStaged}
           disabled={isUploadPending || isCleanupPending || stagedUrls.length === 0}
         >
-          {isCleanupPending ? "Discarding…" : "Discard staged uploads"}
+          {isCleanupPending ? "Discarding…" : ACTIONS.MEDIA["discard-staged"].label}
         </Button>
         <Text className="text-xs text-zinc-500 dark:text-zinc-400">
           {stagedUrls.length} staged upload(s)

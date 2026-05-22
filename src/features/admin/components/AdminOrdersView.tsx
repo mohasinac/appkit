@@ -11,6 +11,7 @@ import { QuickEditMenu } from "./QuickEditMenu";
 import { AdminViewCards } from "./AdminViewCards";
 import type { ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_ORDER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -209,9 +210,9 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "mark-shipped", label: "Mark as Shipped", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "SHIPPED"); selection.clearSelection(); } },
-            { id: "mark-delivered", label: "Mark as Delivered", variant: "primary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "DELIVERED"); selection.clearSelection(); } },
-            { id: "mark-cancelled", label: "Cancel Orders", variant: "danger", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "CANCELLED"); selection.clearSelection(); } },
+            { id: "mark-shipped", label: ACTIONS.ADMIN["mark-shipped"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "SHIPPED"); selection.clearSelection(); } },
+            { id: "mark-delivered", label: ACTIONS.ADMIN["mark-delivered"].label, variant: "primary", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "DELIVERED"); selection.clearSelection(); } },
+            { id: "mark-cancelled", label: ACTIONS.ADMIN["cancel-order"].label, variant: "danger", onClick: () => { for (const id of selection.selectedIds) void handleQuickStatus(id, "CANCELLED"); selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 

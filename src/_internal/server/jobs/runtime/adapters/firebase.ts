@@ -195,20 +195,11 @@ export function bindHttps<TInput = unknown, TOutput = unknown>(
 ) {
   const { secretEnvVar, methods = ["POST"], ...httpsOptions } = options;
 
-  // Firebase Functions v2 requires secrets to be DECLARED via `secrets: [...]`
-  // in the `onRequest` options for the runtime to inject them into
-  // `process.env`. Just *reading* `process.env[secretEnvVar]` returns
-  // undefined unless the secret is bound here. Declare it via `defineSecret`
-  // so the deploy step provisions the binding (and developers see the secret
-  // listed in `firebase deploy` output).
-  if (secretEnvVar) {
-    const existing = Array.isArray(httpsOptions.secrets)
-      ? httpsOptions.secrets
-      : [];
-    if (!existing.includes(secretEnvVar)) {
-      httpsOptions.secrets = [...existing, secretEnvVar];
-    }
-  }
+  // Secret is provided via functions/.env.<project> (dotenv) rather than
+  // Secret Manager binding. Skip adding to `secrets: [...]` — that requires
+  // roles/secretmanager.secretAccessor on the compute SA which isn't granted
+  // yet (Q1-iam). The dotenv file injects into process.env before the
+  // function runs, so the auth check below still works.
 
   return onRequest(httpsOptions, async (req, res) => {
     const ctx = buildContext(job);

@@ -18,6 +18,7 @@ import {
 } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { StackedViewShell } from "../../../ui";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 interface ReviewItem {
   id: string;
@@ -313,13 +314,13 @@ export function SellerReviewsView({
                     {/* Actions */}
                     <Row className="gap-2 flex-shrink-0">
                       <Button variant="outline" size="sm" onClick={() => openReply(review)}>
-                        {review.sellerReply ? "Edit Reply" : "Reply"}
+                        {review.sellerReply ? "Edit Reply" : ACTIONS.STORE["reply-review"].label}
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => setContestTarget(review)}>
-                        Contest
+                        {ACTIONS.STORE["contest-review"].label}
                       </Button>
                       <Button variant="ghost" size="sm" onClick={() => setFeedbackTarget(review)}>
-                        Feedback
+                        {ACTIONS.STORE["buyer-feedback"].label}
                       </Button>
                     </Row>
                   </Div>

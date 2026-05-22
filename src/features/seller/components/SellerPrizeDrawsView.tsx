@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Pencil, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Alert, Badge, BulkActionBar, Button, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, Text } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -122,12 +122,16 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
   },
 ];
 
-export interface SellerPrizeDrawsViewProps extends ListingViewShellProps {}
+export interface SellerPrizeDrawsViewProps extends ListingViewShellProps {
+  onDelete?: (id: string) => Promise<void>;
+}
 
-export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsViewProps) {
+export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPrizeDrawsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const dispatch = useActionDispatch();
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -206,6 +210,14 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id);
+    try {
+      if (onDelete) await onDelete(id);
+      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
+    } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete]);
+
   if (hasChildren) {
     return (
       <ListingViewShell portal="seller" {...props}>
@@ -257,17 +269,20 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
           emptyLabel="No prize draws listed yet"
           getRowHref={(row) => String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id))}
           renderRowActions={(row) => (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)) });
-              }}
-              aria-label={ACTIONS.STORE["edit-listing"].ariaLabel}
-            >
-              <Pencil className="w-4 h-4" />
-            </Button>
+            <RowActionMenu
+              actions={[
+                {
+                  label: ACTIONS.STORE["edit-listing"].label,
+                  onClick: () => void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRIZE_DRAWS_EDIT(row.id)) }),
+                },
+                ...(onDelete ? [{
+                  label: ACTIONS.STORE["delete-listing"].label,
+                  destructive: true,
+                  onClick: () => setDeleteTargetId(row.id),
+                  disabled: deletingId === row.id,
+                }] : []),
+              ]}
+            />
           )}
         />
       </div>
@@ -322,6 +337,17 @@ export function SellerPrizeDrawsView({ children, ...props }: SellerPrizeDrawsVie
             </Div>
           </Div>
         </>
+      )}
+
+      {deleteTargetId && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Prize Draw"
+          message="Are you sure you want to delete this prize draw listing? This cannot be undone."
+          onConfirm={() => handleDelete(deleteTargetId)}
+          onClose={() => setDeleteTargetId(null)}
+          isDeleting={deletingId === deleteTargetId}
+        />
       )}
     </Div>
   );

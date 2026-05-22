@@ -8,6 +8,7 @@ import { Alert, Button, Div, FormField, FormGroup, Heading, Section, Stack, Text
 import { ImageUpload, MediaUploadField, MediaUploadList, useMediaUpload } from "../../media";
 import { StoreAddressSelectorCreate } from "../../stores/components/StoreAddressSelectorCreate";
 import type { MediaField } from "../../media/types";
+import { QuickProductForm } from "./QuickProductForm";
 
 export type ProductListingMode =
   | "standard"
@@ -917,10 +918,12 @@ export function SellerProductShell({
   previewSlot,
 }: SellerProductShellProps) {
   const [draft, setDraft] = useState<SellerProductDraft>(initialValues ?? { status: "draft", condition: "new" });
+  const [formMode, setFormMode] = useState<"quick" | "full">(mode === "create" && listingType === "standard" ? "quick" : "full");
   const [currentStep, setCurrentStep] = useState(0);
   const [stepError, setStepError] = useState<string | null>(null);
   const { isDirty, markDirty, markClean } = useFormShell();
   const router = useRouter();
+  const { upload: shellUpload } = useMediaUpload();
 
   // Auto-save in create mode — debounce 2s on any draft change
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -1105,6 +1108,41 @@ export function SellerProductShell({
     mode === "create"
       ? `New ${listingTypeLabel}`
       : draft.title ?? `Edit ${listingTypeLabel}`;
+
+  if (mode === "create" && formMode === "quick") {
+    return (
+      <FormShellProvider isDirty={isDirty} values={draft as Record<string, unknown>}>
+        <FormShell
+          isOpen
+          onClose={handleDiscard}
+          title={title}
+          breadcrumb={breadcrumb}
+          isDirty={isDirty}
+          isLoading={isLoading}
+        >
+          <QuickProductForm
+            values={draft}
+            onChange={update}
+            onPublish={() => void handlePublish()}
+            onSave={() => void handleSave()}
+            onSwitchToFull={() => setFormMode("full")}
+            isLoading={isLoading}
+            renderCategorySelector={renderCategorySelector}
+            storeSlug={storeSlug}
+            onUploadImage={(file) =>
+              shellUpload(file, "products", true, {
+                type: "product-image",
+                index: 1,
+                name: draft.title ?? "product",
+                store: storeSlug ?? "store",
+                category: draft.category ?? "uncategorized",
+              })
+            }
+          />
+        </FormShell>
+      </FormShellProvider>
+    );
+  }
 
   if (mode === "create") {
     return (

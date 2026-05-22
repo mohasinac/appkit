@@ -8,6 +8,8 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, ConfirmDeleteModal, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -230,7 +232,7 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "revoke", label: "Revoke Sessions", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+            { id: ROW_ACTION_ID.REVOKE, label: ACTIONS.ADMIN["revoke-session"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -254,8 +256,8 @@ export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps
               <RowActionMenu
                 actions={[
                   {
-                    label: "Revoke",
-                    destructive: true,
+                    label: ROW_ACTION_META[ROW_ACTION_ID.REVOKE].label,
+                    destructive: ROW_ACTION_META[ROW_ACTION_ID.REVOKE].destructive,
                     onClick: () => setRevokeTarget(row as SessionRow),
                   },
                 ]}

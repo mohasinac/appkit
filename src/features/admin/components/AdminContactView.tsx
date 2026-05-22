@@ -14,6 +14,8 @@ import { BulkActionBar, ConfirmDeleteModal,
   useToast, } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ADMIN_CONTACT_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -35,7 +37,11 @@ const SORT_OPTIONS = [
 ];
 const STATUS_OPTIONS = ADMIN_CONTACT_STATUS_TABS;
 
-export interface AdminContactViewProps extends ListingViewShellProps {}
+export interface AdminContactViewProps extends ListingViewShellProps {
+  onBulkMarkRead?: (ids: string[]) => Promise<void>;
+  onBulkArchive?: (ids: string[]) => Promise<void>;
+  onBulkDelete?: (ids: string[]) => Promise<void>;
+}
 
 interface ContactFilterDrawerProps {
   filterOpen: boolean;
@@ -99,7 +105,7 @@ interface ContactRow {
   _raw?: Record<string, unknown>;
 }
 
-export function AdminContactView({ children, ...props }: AdminContactViewProps) {
+export function AdminContactView({ children, onBulkMarkRead, onBulkArchive, onBulkDelete, ...props }: AdminContactViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const queryClient = useQueryClient();
@@ -208,6 +214,25 @@ export function AdminContactView({ children, ...props }: AdminContactViewProps) 
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkMarkRead ? [{
+      id: "bulk-mark-read",
+      label: ACTIONS.ADMIN["mark-contact-read"].label,
+      onClick: async () => { await onBulkMarkRead(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+    ...(onBulkArchive ? [{
+      id: "bulk-archive",
+      label: ACTIONS.ADMIN["archive-contact"].label,
+      onClick: async () => { await onBulkArchive(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+    ...(onBulkDelete ? [{
+      id: "bulk-delete",
+      label: ACTIONS.ADMIN["delete-contact"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   if (hasChildren) {
     return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
   }
@@ -238,6 +263,14 @@ export function AdminContactView({ children, ...props }: AdminContactViewProps) 
           </div>
         )}
 
+        {selection.selectedCount > 0 && bulkActions.length > 0 && (
+          <BulkActionBar
+            selectedCount={selection.selectedCount}
+            actions={bulkActions}
+            onClearSelection={selection.clearSelection}
+          />
+        )}
+
         <div className="py-4 px-3 sm:px-4">
           {errorMessage && (
             <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
@@ -253,20 +286,20 @@ export function AdminContactView({ children, ...props }: AdminContactViewProps) 
               return (
                 <RowActionMenu
                   actions={[
-                    { label: "View", onClick: () => { setSelectedRow(cr); setDrawerOpen(true); } },
+                    { label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label, onClick: () => { setSelectedRow(cr); setDrawerOpen(true); } },
                     {
-                      label: "Mark read",
+                      label: ACTIONS.ADMIN["mark-contact-read"].label,
                       disabled: cr.status === "read" || cr.status === "resolved",
                       onClick: () => actionMutation.mutate({ id: cr.id, action: "read" }),
                     },
                     {
-                      label: "Archive",
+                      label: ACTIONS.ADMIN["archive-contact"].label,
                       disabled: cr.status === "resolved",
                       onClick: () => actionMutation.mutate({ id: cr.id, action: "resolved" }),
                     },
                     { separator: true, label: "", onClick: () => {} },
                     {
-                      label: "Delete",
+                      label: ACTIONS.ADMIN["delete-contact"].label,
                       destructive: true,
                       onClick: () => { setSelectedRow(cr); setDeleteOpen(true); },
                     },

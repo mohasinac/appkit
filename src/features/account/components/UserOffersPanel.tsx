@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { Alert, Badge, Button, Div, Heading, LoginRequiredModal, Spinner, Text } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import type { OfferDocument } from "../../seller/schemas";
 
 export interface UserOffersPanelProps {
@@ -227,7 +228,7 @@ export function UserOffersPanel({
         </Heading>
         <Button size="sm" variant="ghost" onClick={loadOffers} disabled={loading}
           className="border border-zinc-300 dark:border-zinc-600 text-xs">
-          {loading ? "Refreshing…" : "Refresh"}
+          {loading ? "Refreshing…" : ACTIONS.USER["refresh-offers"].label}
         </Button>
       </Div>
 

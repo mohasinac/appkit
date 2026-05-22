@@ -17,6 +17,7 @@ import {
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../../next";
 import {
   toRecordArray,
@@ -150,18 +151,18 @@ export function SellerStoreCategoriesView({
   const bulkActions: BulkActionItem[] = [
     ...(onBulkDelete ? [{
       id: "bulk-delete",
-      label: "Delete selected",
+      label: ACTIONS.STORE["delete-listing"].label,
       variant: "danger" as const,
       onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); },
     }] : []),
     ...(onBulkActivate ? [{
       id: "bulk-activate",
-      label: "Activate",
+      label: ACTIONS.ADMIN["activate-bundle"].label,
       onClick: async () => { await onBulkActivate(selection.selectedIds); selection.clearSelection(); refetch?.(); },
     }] : []),
     ...(onBulkDeactivate ? [{
       id: "bulk-deactivate",
-      label: "Deactivate",
+      label: ACTIONS.ADMIN["deactivate-bundle"].label,
       onClick: async () => { await onBulkDeactivate(selection.selectedIds); selection.clearSelection(); refetch?.(); },
     }] : []),
   ];
@@ -237,13 +238,13 @@ export function SellerStoreCategoriesView({
               <RowActionMenu
                 actions={[
                   {
-                    label: "Edit",
+                    label: ACTIONS.STORE["edit-listing"].label,
                     onClick: () => onEditClick
                       ? onEditClick(row.id)
                       : (window.location.href = String(ROUTES.STORE.STORE_CATEGORIES_EDIT(row.id))),
                   },
                   ...(onDelete ? [{
-                    label: "Delete",
+                    label: ACTIONS.STORE["delete-listing"].label,
                     destructive: true,
                     onClick: () => setDeleteTargetId(row.id),
                     disabled: deletingId === row.id,

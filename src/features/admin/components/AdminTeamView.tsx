@@ -12,6 +12,7 @@ import { BulkActionBar, Button,
   RowActionMenu, } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ALL_TAB } from "../constants/filter-tabs";
 import type { AdminFilterTab } from "../constants/filter-tabs";
 import {
@@ -75,7 +76,9 @@ interface EmployeeRow {
   _raw?: Record<string, unknown>;
 }
 
-export interface AdminTeamViewProps extends ListingViewShellProps {}
+export interface AdminTeamViewProps extends ListingViewShellProps {
+  onBulkRemove?: (ids: string[]) => Promise<void>;
+}
 
 interface TeamFilterDrawerProps {
   filterOpen: boolean;
@@ -125,7 +128,7 @@ function TeamFilterDrawer({
   );
 }
 
-export function AdminTeamView({ children, ...props }: AdminTeamViewProps) {
+export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
@@ -225,6 +228,15 @@ export function AdminTeamView({ children, ...props }: AdminTeamViewProps) {
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = [
+    ...(onBulkRemove ? [{
+      id: "bulk-remove",
+      label: ACTIONS.ADMIN["remove-team-member"].label,
+      variant: "danger" as const,
+      onClick: async () => { await onBulkRemove(selection.selectedIds); selection.clearSelection(); },
+    }] : []),
+  ];
+
   if (hasChildren) {
     return (
       <ListingViewShell portal="admin" {...props}>
@@ -266,6 +278,14 @@ export function AdminTeamView({ children, ...props }: AdminTeamViewProps) {
           }
         />
 
+        {selection.selectedCount > 0 && bulkActions.length > 0 && (
+          <BulkActionBar
+            selectedCount={selection.selectedCount}
+            actions={bulkActions}
+            onClearSelection={selection.clearSelection}
+          />
+        )}
+
         {totalPages > 1 && (
           <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
             <Pagination
@@ -290,7 +310,7 @@ export function AdminTeamView({ children, ...props }: AdminTeamViewProps) {
               <RowActionMenu
                 actions={[
                   {
-                    label: "Edit Permissions",
+                    label: ACTIONS.ADMIN["edit-team-member"].label,
                     onClick: () => openEdit(row as EmployeeRow),
                   },
                 ]}

@@ -17,6 +17,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Button,
   Checkbox,
+  ConfirmDeleteModal,
   Container,
   Heading,
   Input,
@@ -132,6 +133,7 @@ export function AdminBundleEditorView({
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
   const [metadata, setMetadata] = useState<Record<string, BundleItemSearchResult>>({});
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
@@ -246,9 +248,6 @@ export function AdminBundleEditorView({
 
   const handleDelete = useCallback(async () => {
     if (!bundleId) return;
-    if (!window.confirm(BUNDLE_COPY.adminEditor.deleteConfirm)) {
-      return;
-    }
     setDeleting(true);
     setApiError(null);
     try {
@@ -257,6 +256,7 @@ export function AdminBundleEditorView({
         { method: "DELETE" },
       );
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+      setDeleteConfirmOpen(false);
       onDeleted?.();
     } catch (err) {
       setApiError(
@@ -298,13 +298,21 @@ export function AdminBundleEditorView({
               {isEdit && (
                 <Button
                   variant="danger"
-                  onClick={handleDelete}
+                  onClick={() => setDeleteConfirmOpen(true)}
                   disabled={deleting}
                 >
                   {BUNDLE_COPY.adminEditor.deleteButton(deleting)}
                 </Button>
               )}
             </Row>
+            <ConfirmDeleteModal
+              isOpen={deleteConfirmOpen}
+              onClose={() => setDeleteConfirmOpen(false)}
+              onConfirm={handleDelete}
+              title="Delete this bundle?"
+              message={BUNDLE_COPY.adminEditor.deleteConfirm}
+              isDeleting={deleting}
+            />
 
             {apiError && (
               <Text color="danger" role="alert">

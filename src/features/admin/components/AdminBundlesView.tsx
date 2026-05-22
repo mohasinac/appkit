@@ -329,7 +329,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
   const bulkActions: BulkActionItem[] = [
     {
       id: "activate",
-      label: "Activate",
+      label: ACTIONS.ADMIN["activate-bundle"].label,
       variant: "primary",
       onClick: async () => {
         await Promise.all(
@@ -347,7 +347,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     },
     {
       id: "deactivate",
-      label: "Deactivate",
+      label: ACTIONS.ADMIN["deactivate-bundle"].label,
       variant: "secondary",
       onClick: async () => {
         await Promise.all(
@@ -365,7 +365,7 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
     },
     {
       id: "delete",
-      label: "Delete",
+      label: ACTIONS.ADMIN["delete-bundle"].label,
       variant: "danger",
       onClick: async () => {
         await Promise.all(

@@ -7,6 +7,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { AdminNavEditorView, type NavItemData } from "./AdminNavEditorView";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 
 // --- Types -------------------------------------------------------------------
 
@@ -50,8 +51,8 @@ function NavItemRow({
       </div>
       <Toggle checked={item.isVisible ?? true} onChange={(val) => onVisibilityChange(item.id!, val)} label="" />
       <RowActionMenu actions={[
-        { label: "Edit", onClick: () => onEdit(item) },
-        { label: "Delete", destructive: true, onClick: () => onDelete(item) },
+        { label: ROW_ACTION_META[ROW_ACTION_ID.EDIT].label, onClick: () => onEdit(item) },
+        { label: ROW_ACTION_META[ROW_ACTION_ID.DELETE].label, destructive: true, onClick: () => onDelete(item) },
       ]} />
     </div>
   );

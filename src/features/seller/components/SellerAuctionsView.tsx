@@ -5,10 +5,12 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROUTES } from "../../../constants";
 import {
   toRecordArray,
   toRelativeDate,
@@ -36,11 +38,16 @@ interface SellerAuctionsResponse {
 
 export interface SellerAuctionsViewProps extends ListingViewShellProps {
   renderHeader?: (onAdd: () => void) => React.ReactNode;
+  onEditClick?: (id: string) => void;
+  onDelete?: (id: string) => Promise<void>;
+  onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
-export function SellerAuctionsView({ renderHeader, children, ...props }: SellerAuctionsViewProps) {
+export function SellerAuctionsView({ renderHeader, children, onEditClick, onDelete, onBulkDelete, ...props }: SellerAuctionsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -113,6 +120,28 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
+  const bulkActions: BulkActionItem[] = onBulkDelete
+    ? [{
+        id: "bulk-delete",
+        label: ACTIONS.STORE["delete-listing"].label,
+        variant: "danger" as const,
+        onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
+      }]
+    : [];
+
+  const handleDelete = useCallback(async (id: string) => {
+    setDeletingId(id);
+    try {
+      if (onDelete) await onDelete(id);
+      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
+    } finally { setDeletingId(null); setDeleteTargetId(null); }
+  }, [onDelete]);
+
+  const handleEdit = useCallback((id: string) => {
+    if (onEditClick) onEditClick(id);
+    else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
+  }, [onEditClick]);
+
   if (hasChildren) {
     return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
   }
@@ -142,6 +171,14 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
         </div>
       )}
 
+      {selection.selectedCount > 0 && bulkActions.length > 0 && (
+        <BulkActionBar
+          selectedCount={selection.selectedCount}
+          actions={bulkActions}
+          onClearSelection={selection.clearSelection}
+        />
+      )}
+
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
           <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
@@ -149,7 +186,22 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
           </div>
         )}
         {view === "table" ? (
-          <DataTable rows={rows} isLoading={isLoading} emptyLabel="No auctions found" />
+          <DataTable
+            rows={rows}
+            isLoading={isLoading}
+            emptyLabel="No auctions found"
+            selectedIds={selection.selectedIdSet}
+            onToggleSelect={(id) => selection.toggle(id)}
+            onToggleSelectAll={() => selection.toggleAll()}
+            renderRowActions={(row) => (
+              <RowActionMenu
+                actions={[
+                  { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
+                  { label: ACTIONS.STORE["delete-listing"].label, destructive: true, onClick: () => setDeleteTargetId(row.id), disabled: deletingId === row.id },
+                ]}
+              />
+            )}
+          />
         ) : (
           <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No auctions found" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
         )}
@@ -185,6 +237,17 @@ export function SellerAuctionsView({ renderHeader, children, ...props }: SellerA
             </div>
           </div>
         </>
+      )}
+
+      {deleteTargetId && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Auction"
+          message="Are you sure you want to delete this auction? This cannot be undone."
+          onConfirm={() => handleDelete(deleteTargetId)}
+          onClose={() => setDeleteTargetId(null)}
+          isDeleting={deletingId === deleteTargetId}
+        />
       )}
     </div>
   );

@@ -8,6 +8,8 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, useToast } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ADMIN_EVENT_ENTRY_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -224,9 +226,9 @@ export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEn
             return (
               <RowActionMenu
                 actions={[
-                  { label: "Confirm", onClick: () => updateMutation.mutate({ id: er.id, status: "CONFIRMED" }) },
-                  { label: "Waitlist", onClick: () => updateMutation.mutate({ id: er.id, status: "WAITLISTED" }) },
-                  { label: "Cancel", destructive: true, onClick: () => updateMutation.mutate({ id: er.id, status: "CANCELLED" }) },
+                  { label: ACTIONS.ADMIN["confirm-entry"].label, onClick: () => updateMutation.mutate({ id: er.id, status: "CONFIRMED" }) },
+                  { label: ACTIONS.ADMIN["waitlist-entry"].label, onClick: () => updateMutation.mutate({ id: er.id, status: "WAITLISTED" }) },
+                  { label: ACTIONS.ADMIN["cancel-entry"].label, destructive: true, onClick: () => updateMutation.mutate({ id: er.id, status: "CANCELLED" }) },
                 ]}
               />
             );

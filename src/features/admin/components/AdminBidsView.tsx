@@ -9,6 +9,8 @@ import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingView
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_BID_STATUS_TABS } from "../constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../products/constants/action-defs";
 import {
   toRecordArray,
   toRelativeDate,
@@ -214,7 +216,7 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "cancel", label: "Cancel Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+            { id: ROW_ACTION_ID.CANCEL, label: ACTIONS.ADMIN["cancel-bid"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 
@@ -241,8 +243,8 @@ export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
                 <RowActionMenu
                   actions={[
                     {
-                      label: "Cancel bid",
-                      destructive: true,
+                      label: ROW_ACTION_META[ROW_ACTION_ID.CANCEL].label,
+                      destructive: ROW_ACTION_META[ROW_ACTION_ID.CANCEL].destructive,
                       disabled: isCancelled,
                       onClick: () => {
                         setSelectedRow(bidRow);

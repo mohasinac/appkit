@@ -15,6 +15,7 @@ import { BulkActionBar, Button,
   Text, } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -209,7 +210,7 @@ export function AdminFeaturesView({
         selectedCount={selection.selectedCount}
         onClearSelection={selection.clearSelection}
         actions={([
-          { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          { id: "delete", label: ACTIONS.ADMIN["delete-feature"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
         ] satisfies BulkActionItem[])}
       />
 

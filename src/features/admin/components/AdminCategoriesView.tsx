@@ -9,6 +9,7 @@ import { BulkActionBar, Button, Heading, ListingToolbar, ListingViewShell, Pagin
 import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
 import { AdminViewCards } from "./AdminViewCards";
 import { CATEGORY_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -213,7 +214,7 @@ export function AdminCategoriesView({ children, getRowHref, ...props }: AdminCat
         selectedCount={selection.selectedCount}
         onClearSelection={selection.clearSelection}
         actions={([
-          { id: "edit", label: "Edit Category", variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
+          { id: "edit", label: ACTIONS.ADMIN["edit-category"].label, variant: "primary", onClick: () => { const id = selection.selectedIds[0]; if (id) openEditPanel(id); selection.clearSelection(); } },
         ] satisfies BulkActionItem[])}
       />
 

@@ -9,6 +9,7 @@ import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingView
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { ADMIN_REVIEW_STATUS_TABS, ADMIN_REVIEW_RATING_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -302,15 +303,15 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
                     { label: ACTIONS.ADMIN["approve-review"].label, onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "approved" } }) },
                     { label: ACTIONS.ADMIN["reject-review"].label, destructive: true, onClick: () => patchMutation.mutate({ id: rr.id, payload: { status: "rejected" } }) },
                     {
-                      label: rr.isFeatured ? "Unfeature" : "Feature",
+                      label: rr.isFeatured ? ACTIONS.ADMIN["unfeature-review"].label : ACTIONS.ADMIN["feature-review"].label,
                       onClick: () => patchMutation.mutate({ id: rr.id, payload: { featured: !rr.isFeatured } }),
                     },
                     {
-                      label: "Reply",
+                      label: ROW_ACTION_META[ROW_ACTION_ID.REPLY].label,
                       onClick: () => { setReplyTarget(rr); setReplyText(""); setReplyOpen(true); },
                     },
                     {
-                      label: "View",
+                      label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label,
                       onClick: () => handleViewReview(rr),
                     },
                   ]}

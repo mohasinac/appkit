@@ -7,6 +7,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { Alert, Badge, BulkActionBar, Button, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_PRODUCT_STATUS_TABS } from "../constants/filter-tabs";
 import { ROUTES } from "../../../constants";
 import {
@@ -274,7 +275,7 @@ export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewP
         selectedCount={selection.selectedCount}
         onClearSelection={selection.clearSelection}
         actions={([
-          { id: "delete", label: "Delete Selected", variant: "secondary", onClick: () => { selection.clearSelection(); } },
+          { id: "delete", label: ACTIONS.ADMIN["delete-prize-draw"].label, variant: "secondary", onClick: () => { selection.clearSelection(); } },
         ] satisfies BulkActionItem[])}
       />
 

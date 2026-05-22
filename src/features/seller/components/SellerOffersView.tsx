@@ -5,10 +5,11 @@ import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
+import { BulkActionBar, Button, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_OFFER_STATUS_TABS } from "../../admin/constants/filter-tabs";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
@@ -32,9 +33,13 @@ interface SellerOffersResponse {
   meta?: { total: number };
 }
 
-export interface SellerOffersViewProps extends ListingViewShellProps {}
+export interface SellerOffersViewProps extends ListingViewShellProps {
+  onAcceptOffer?: (id: string) => Promise<void>;
+  onRejectOffer?: (id: string) => Promise<void>;
+  onCounterOffer?: (id: string) => void;
+}
 
-export function SellerOffersView({ children, ...props }: SellerOffersViewProps) {
+export function SellerOffersView({ children, onAcceptOffer, onRejectOffer, onCounterOffer, ...props }: SellerOffersViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
 
@@ -145,7 +150,20 @@ export function SellerOffersView({ children, ...props }: SellerOffersViewProps) 
           </div>
         )}
         {view === "table" ? (
-          <DataTable rows={rows} isLoading={isLoading} emptyLabel="No offers received" />
+          <DataTable
+            rows={rows}
+            isLoading={isLoading}
+            emptyLabel="No offers received"
+            renderRowActions={(row) => (
+              <RowActionMenu
+                actions={[
+                  ...(onAcceptOffer ? [{ label: ACTIONS.STORE["accept-offer"].label, onClick: () => void onAcceptOffer(row.id) }] : []),
+                  ...(onCounterOffer ? [{ label: ACTIONS.STORE["counter-offer"].label, onClick: () => onCounterOffer(row.id) }] : []),
+                  ...(onRejectOffer ? [{ label: ACTIONS.STORE["reject-offer"].label, destructive: true, onClick: () => void onRejectOffer(row.id) }] : []),
+                ]}
+              />
+            )}
+          />
         ) : (
           <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No offers received" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
         )}

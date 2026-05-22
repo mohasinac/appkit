@@ -248,7 +248,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           hasActiveState={hasActiveState}
           extra={
             <Button type="button" variant="outline" size="sm" onClick={handleExportCsv}>
-              Export CSV
+              {ACTIONS.ADMIN["export-csv"].label}
             </Button>
           }
         />
@@ -257,7 +257,7 @@ export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) 
           selectedCount={selection.selectedCount}
           onClearSelection={selection.clearSelection}
           actions={([
-            { id: "mark-paid", label: "Mark Paid", variant: "primary", onClick: () => { selection.clearSelection(); } },
+            { id: "mark-paid", label: ACTIONS.ADMIN["mark-paid"].label, variant: "primary", onClick: () => { selection.clearSelection(); } },
           ] satisfies BulkActionItem[])}
         />
 

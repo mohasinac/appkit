@@ -7,6 +7,7 @@ import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { BulkActionBar, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, RowActionMenu, Text } from "../../../ui";
 import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_SCAMMER_STATUS_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
@@ -282,7 +283,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
               <RowActionMenu
                 actions={[
                   {
-                    label: "Review",
+                    label: ACTIONS.ADMIN["review-scammer"].label,
                     onClick: () => {
                       setSelectedRow(row as ScammerRow);
                       setDrawerOpen(true);

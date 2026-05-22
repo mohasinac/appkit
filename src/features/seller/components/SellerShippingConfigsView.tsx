@@ -14,6 +14,7 @@ import {
 } from "../../../ui";
 import type { DataTableColumn } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
 import {
   toRecordArray,
@@ -258,7 +259,7 @@ export function SellerShippingConfigsView({
               <RowActionMenu
                 actions={[
                   {
-                    label: "Edit",
+                    label: ACTIONS.STORE["edit-listing"].label,
                     onClick: () => handleEdit(row.id),
                   },
                   ...(!row.isDefault
@@ -271,7 +272,7 @@ export function SellerShippingConfigsView({
                       ]
                     : []),
                   {
-                    label: "Delete",
+                    label: ACTIONS.STORE["delete-listing"].label,
                     destructive: true,
                     onClick: () => setDeleteTargetId(row.id),
                     disabled: deletingId === row.id,

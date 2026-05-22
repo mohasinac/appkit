@@ -14,6 +14,7 @@ import {
   Toggle,
 } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 interface GoogleConfigDraft {
   placeId: string;
@@ -216,7 +217,7 @@ export function SellerGoogleReviewsView({
             className="flex items-center gap-1.5"
           >
             <RefreshCw className="h-3.5 w-3.5" />
-            Sync now
+            {ACTIONS.STORE["google-reviews-sync"].label}
           </Button>
           <Button
             variant="primary"
@@ -225,7 +226,7 @@ export function SellerGoogleReviewsView({
             isLoading={saving}
             disabled={syncing}
           >
-            Save Settings
+            {ACTIONS.STORE["save-google-settings"].label}
           </Button>
         </div>
       </Stack>

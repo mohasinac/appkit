@@ -332,9 +332,9 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
         selectedCount={selection.selectedCount}
         onClearSelection={selection.clearSelection}
         actions={([
-          { id: "feature", label: "Toggle Featured", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "featured", !rows.find(r => r.id === id)?.featured); selection.clearSelection(); } },
-          { id: "promote", label: "Toggle Promoted", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isPromoted", !rows.find(r => r.id === id)?.isPromoted); selection.clearSelection(); } },
-          { id: "sale", label: "Toggle On Sale", variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isOnSale", !rows.find(r => r.id === id)?.isOnSale); selection.clearSelection(); } },
+          { id: "feature", label: ACTIONS.ADMIN["toggle-featured"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "featured", !rows.find(r => r.id === id)?.featured); selection.clearSelection(); } },
+          { id: "promote", label: ACTIONS.ADMIN["toggle-promoted"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isPromoted", !rows.find(r => r.id === id)?.isPromoted); selection.clearSelection(); } },
+          { id: "sale", label: ACTIONS.ADMIN["toggle-on-sale"].label, variant: "secondary", onClick: () => { for (const id of selection.selectedIds) void handleToggle(id, "isOnSale", !rows.find(r => r.id === id)?.isOnSale); selection.clearSelection(); } },
         ] satisfies BulkActionItem[])}
       />
 
