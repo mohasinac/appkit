@@ -125,14 +125,14 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Home
             </Link>
             <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
             <Link
               href={String((ROUTES.PUBLIC as any).BRANDS ?? "/brands")}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Brands
             </Link>

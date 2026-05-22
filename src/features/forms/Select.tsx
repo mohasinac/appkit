@@ -75,7 +75,7 @@ export function Select({
               "w-5 h-5 transition-transform duration-200",
               error
                 ? "text-red-500 dark:text-red-400"
-                : "text-zinc-400 dark:text-zinc-500",
+                : "text-zinc-400 dark:text-zinc-400",
             )}
             viewBox="0 0 20 20"
             fill="currentColor"

@@ -338,7 +338,7 @@ export function CouponCard({
               onClick={() => onEdit(n.id)}
               title={labels.edit}
               aria-label={labels.edit}
-              className="rounded-lg p-1.5 text-zinc-500 hover:bg-white/60 dark:hover:bg-black/30 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-black/30 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -350,7 +350,7 @@ export function CouponCard({
               disabled={busy === "toggle"}
               title={n.isActive ? labels.deactivate : labels.activate}
               aria-label={n.isActive ? labels.deactivate : labels.activate}
-              className="rounded-lg p-1.5 text-zinc-500 hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
+              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-white/60 dark:hover:bg-black/30 transition-colors disabled:opacity-50"
             >
               {n.isActive
                 ? <ToggleRight className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -364,7 +364,7 @@ export function CouponCard({
               disabled={busy === "delete"}
               title={labels.delete}
               aria-label={labels.delete}
-              className="rounded-lg p-1.5 text-zinc-500 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
+              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
             >
               <Trash2 className="h-4 w-4" />
             </button>

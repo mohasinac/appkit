@@ -114,6 +114,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
           ...(input.lockedPrice !== undefined && {
             lockedPrice: input.lockedPrice,
           }),
+          ...(input.locked !== undefined && { locked: input.locked }),
           // SB-UNI-4 2026-05-13 — propagate bundle identifiers when present.
           ...(input.bundleCategorySlug !== undefined && {
             bundleCategorySlug: input.bundleCategorySlug,
@@ -160,6 +161,7 @@ export class CartRepository extends BaseRepository<CartDocument> {
 
       const itemIndex = cart.items.findIndex((item) => item.itemId === itemId);
       if (itemIndex < 0) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
+      if (cart.items[itemIndex].locked) throw new ValidationError(ERR_CART_ITEM_LOCKED);
 
       const items = [...cart.items];
       items[itemIndex] = {
@@ -197,8 +199,9 @@ export class CartRepository extends BaseRepository<CartDocument> {
       const cart = await this.findByUserId(userId);
       if (!cart) throw new NotFoundError("Cart not found");
 
-      const itemExists = cart.items.some((item) => item.itemId === itemId);
-      if (!itemExists) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
+      const target = cart.items.find((item) => item.itemId === itemId);
+      if (!target) throw new NotFoundError(ERR_CART_ITEM_NOT_FOUND);
+      if (target.locked) throw new ValidationError(ERR_CART_ITEM_LOCKED);
 
       const items = cart.items.filter((item) => item.itemId !== itemId);
 
@@ -229,10 +232,11 @@ export class CartRepository extends BaseRepository<CartDocument> {
   async clearCart(userId: string): Promise<CartDocument> {
     try {
       const cart = await this.getOrCreate(userId);
+      const lockedItems = cart.items.filter((item) => item.locked);
 
       const clearedCart: CartDocument = {
         ...cart,
-        items: [],
+        items: lockedItems,
         updatedAt: new Date(),
       };
 

@@ -115,7 +115,7 @@ function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, sho
     <Div className="flex items-center justify-between gap-4 px-4 py-3 bg-white dark:bg-zinc-900">
       <Div className="flex-1 min-w-0">
         <Toggle checked={checked} onChange={onChange} label={label} />
-        <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-500 truncate">{desc}</Text>
+        <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-400 truncate">{desc}</Text>
       </Div>
       {showRollout && (
         <Div className="flex flex-col gap-1 w-28 shrink-0">

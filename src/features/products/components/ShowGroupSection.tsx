@@ -170,7 +170,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
           aria-expanded={open}
         >
           <Row align="center" gap="xs">
-            <span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">{open ? "â–¼" : "â–¶"}</span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-400 mr-1">{open ? "â–¼" : "â–¶"}</span>
             <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
               {parentLabel}
             </Text>

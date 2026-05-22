@@ -147,16 +147,16 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
       {/* Amounts */}
       <Div className="flex gap-4 flex-wrap">
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-500 uppercase tracking-wide">Listed</Text>
+          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Listed</Text>
           <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{formatRupees(offer.listedPrice)}</Text>
         </Div>
         <Div>
-          <Text className="text-xs text-zinc-400 dark:text-zinc-500 uppercase tracking-wide">Offered</Text>
+          <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Offered</Text>
           <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">{formatRupees(offer.offerAmount)}</Text>
         </Div>
         {offer.counterAmount != null && (
           <Div>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500 uppercase tracking-wide">Your Counter</Text>
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Your Counter</Text>
             <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
@@ -347,7 +347,7 @@ export function SellerOffersPanel({
 
       {!loading && offers.length === 0 && (
         <Div className="text-center py-12">
-          <Text className="text-zinc-400 dark:text-zinc-500 text-sm">No offers found</Text>
+          <Text className="text-zinc-400 dark:text-zinc-400 text-sm">No offers found</Text>
         </Div>
       )}
 

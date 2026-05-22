@@ -260,7 +260,7 @@ export function SellerDigitalCodesView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">
+            <Text className="text-zinc-400 dark:text-zinc-400">
               No digital code products yet — sell Steam keys, gift cards, and more
             </Text>
           </Div>

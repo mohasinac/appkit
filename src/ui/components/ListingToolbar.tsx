@@ -174,7 +174,7 @@ export function ListingToolbar({
             <button
               type="button"
               onClick={onBulkClear}
-              className="text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-500 transition-colors"
+              className="text-xs text-zinc-400 hover:text-rose-500 dark:text-zinc-400 transition-colors"
             >
               {l.clearSelection}
             </button>

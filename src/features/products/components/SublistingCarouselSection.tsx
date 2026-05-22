@@ -128,7 +128,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
         aria-expanded={open}
       >
         <Row align="center" gap="xs">
-          <span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">
+          <span className="text-xs text-zinc-400 dark:text-zinc-400 mr-1">
             {open ? "â–¼" : "â–¶"}
           </span>
           <Text className="text-sm font-medium text-zinc-800 dark:text-zinc-200">

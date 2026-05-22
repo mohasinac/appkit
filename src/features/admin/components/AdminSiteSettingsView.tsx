@@ -614,7 +614,7 @@ export function AdminSiteSettingsView({
               <Slider label={`Size — ${watermarkSize}% of image width`} value={watermarkSize} onChange={setWatermarkSize} min={5} max={100} step={5} />
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
               <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800">
-                <Text className="text-xs text-zinc-500 mb-2">Preview (text watermark only)</Text>
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">Preview (text watermark only)</Text>
                 <div className="relative bg-white dark:bg-zinc-900 rounded h-32 flex items-end justify-end overflow-hidden">
                   <span
                     className="text-zinc-400 select-none p-2 font-medium"

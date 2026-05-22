@@ -78,7 +78,7 @@ export function ViewReviewModal({
             <Row className="gap-2 mt-0.5">
               <StarRating value={review.rating} size="sm" readOnly />
               {date && (
-                <Text className="text-xs text-neutral-400 dark:text-zinc-500">
+                <Text className="text-xs text-zinc-400 dark:text-zinc-400">
                   {date}
                 </Text>
               )}
@@ -124,7 +124,7 @@ export function ViewReviewModal({
 
         {/* Helpful */}
         {(review.helpfulCount ?? 0) > 0 && (
-          <Text className="text-xs text-neutral-400 dark:text-zinc-500">
+          <Text className="text-xs text-zinc-400 dark:text-zinc-400">
             {review.helpfulCount} people found this helpful
           </Text>
         )}

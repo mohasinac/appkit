@@ -194,7 +194,7 @@ export function AdminSupportTicketDetailView({
                       : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
                   }`}
                 >
-                  <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">
+                  <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                     <span className="font-medium text-zinc-600 dark:text-zinc-300">
                       {ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}
                     </span>

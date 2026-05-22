@@ -84,7 +84,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                 "text-xs tabular-nums ml-2 flex-shrink-0",
                 charCount >= maxLength
                   ? "text-red-500 dark:text-red-400"
-                  : "text-zinc-400 dark:text-zinc-500",
+                  : "text-zinc-400 dark:text-zinc-400",
               )}
             >
               {charCount} / {maxLength}

@@ -239,7 +239,7 @@ export function RangeFilter({
               )}
               <Div className="relative">
                 {prefix && (
-                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-500 pointer-events-none">
+                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-400 pointer-events-none">
                     {prefix}
                   </Span>
                 )}
@@ -255,7 +255,7 @@ export function RangeFilter({
               </Div>
             </Div>
 
-            <Span className="flex-shrink-0 pb-1.5 text-zinc-400 dark:text-zinc-500 text-xs">
+            <Span className="flex-shrink-0 pb-1.5 text-zinc-400 dark:text-zinc-400 text-xs">
               -
             </Span>
 
@@ -267,7 +267,7 @@ export function RangeFilter({
               )}
               <Div className="relative">
                 {prefix && (
-                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-500 pointer-events-none">
+                  <Span className="absolute left-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 dark:text-zinc-400 pointer-events-none">
                     {prefix}
                   </Span>
                 )}

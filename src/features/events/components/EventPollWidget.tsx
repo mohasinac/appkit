@@ -80,7 +80,7 @@ export function EventPollWidget({
       <div className={`rounded-xl border border-zinc-200 dark:border-zinc-700 px-5 py-4 space-y-3 ${className}`} data-section="eventpollwidget-div-1">
         <Text className="text-sm font-medium text-zinc-500 dark:text-zinc-400">This poll has closed.</Text>
         {totalEntries !== undefined && (
-          <Text className="text-sm text-zinc-400 dark:text-zinc-500">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
+          <Text className="text-sm text-zinc-400 dark:text-zinc-400">{totalEntries.toLocaleString()} vote{totalEntries !== 1 ? "s" : ""} cast</Text>
         )}
         <div className="space-y-2" data-section="eventpollwidget-div-2">
           {pollConfig.options.map((opt) => (

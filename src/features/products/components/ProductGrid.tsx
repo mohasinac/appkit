@@ -248,7 +248,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         {(() => {
           const seller = safeDisplayName(product.storeName, "");
           return seller ? (
-            <Text className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
+            <Text className="mt-0.5 text-[11px] text-zinc-400 dark:text-zinc-400 truncate">
               by {seller}
             </Text>
           ) : null;
@@ -271,7 +271,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               {formatCurrency(product.price, getDefaultCurrency())}
             </Span>
             {product.originalPrice && product.originalPrice > product.price && (
-              <Span className="text-xs text-zinc-400 line-through dark:text-zinc-500">
+              <Span className="text-xs text-zinc-400 line-through dark:text-zinc-400">
                 {formatCurrency(product.originalPrice, getDefaultCurrency())}
               </Span>
             )}
@@ -506,7 +506,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
           {product.title}
         </Text>
         {(product.categoryName || product.brand) && (
-          <Span className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
+          <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 truncate">
             {[product.categoryName, product.brand].filter(Boolean).join(" · ")}
           </Span>
         )}
@@ -518,7 +518,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
             <Span className="text-[10px] font-bold text-rose-500">-{discount}%</Span>
           )}
           {product.rating !== undefined && (
-            <Span className="text-[11px] text-zinc-400 dark:text-zinc-500 flex items-center gap-0.5">
+            <Span className="text-[11px] text-zinc-400 dark:text-zinc-400 flex items-center gap-0.5">
               <Span className="text-amber-400">★</Span>
               {product.rating.toFixed(1)}
             </Span>
@@ -540,7 +540,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
                 className={`text-[11px] font-medium ${
                   low
                     ? "text-amber-600 dark:text-amber-400"
-                    : "text-zinc-400 dark:text-zinc-500"
+                    : "text-zinc-400 dark:text-zinc-400"
                 }`}
               >
                 {low ? `Only ${stock} left` : `${stock} in stock`}

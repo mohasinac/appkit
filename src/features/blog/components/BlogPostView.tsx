@@ -61,7 +61,7 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
       </Row>
       <Heading level={1} className="text-3xl font-bold mb-4">{post.title}</Heading>
       {post.excerpt && <Text className="text-lg text-zinc-500 dark:text-zinc-400 mb-6">{post.excerpt}</Text>}
-      <Row wrap gap="md" className="text-sm text-zinc-400 dark:text-zinc-500">
+      <Row wrap gap="md" className="text-sm text-zinc-400 dark:text-zinc-400">
         {post.authorName && <Span>{labels?.author ?? "By"} <Span className="font-medium text-zinc-700 dark:text-zinc-300">{post.authorName}</Span></Span>}
         {post.readTimeMinutes != null && <Span>{post.readTimeMinutes} {labels?.readTime ?? "min read"}</Span>}
         {date && <Span>{labels?.publishedOn ?? "Published"} {date}</Span>}
@@ -168,7 +168,7 @@ export function BlogPostView({
               <Link
                 key={tag}
                 href={`${String(ROUTES.PUBLIC.BLOG)}?tags=${encodeURIComponent(tag)}`}
-                className="inline-block px-3 py-1 rounded-full bg-neutral-100 hover:bg-primary/10 text-neutral-600 hover:text-primary text-xs font-medium transition-colors"
+                className="inline-block px-3 py-1 rounded-full bg-neutral-100 dark:bg-zinc-800 hover:bg-primary/10 text-zinc-600 dark:text-zinc-400 hover:text-primary text-xs font-medium transition-colors"
               >
                 #{tag}
               </Link>

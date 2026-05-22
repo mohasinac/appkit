@@ -399,7 +399,7 @@ export function SellerTemplatesView({
           </Div>
         ) : pageRows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">
+            <Text className="text-zinc-400 dark:text-zinc-400">
               {q || conditionFilter
                 ? "No templates match your search or filters"
                 : "No templates yet — add your first product template"}

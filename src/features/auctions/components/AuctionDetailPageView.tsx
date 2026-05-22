@@ -26,7 +26,7 @@ import { AuctionDetailView } from "../../products/components/AuctionDetailView";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
 import type { CustomSection } from "../../products/schemas/firestore";
-import { BuyBar } from "../../products/components/BuyBar";
+import { AuctionBottomActions } from "./AuctionBottomActions";
 import { RelatedProducts } from "../../products/components/RelatedProducts";
 import { ProductGalleryClient } from "../../products/components/ProductGalleryClient";
 import { ProductFeatureBadges } from "../../products/components/ProductFeatureBadges";
@@ -127,7 +127,7 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
           <Row justify="between" align="center">
             <Div>
-              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">Listed by</Text>
+              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">Listed by</Text>
               <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{safeSeller}</Text>
             </Div>
             {storeHref && <Link href={storeHref} className="shrink-0 rounded-lg bg-primary/10 dark:bg-primary/20 px-3 py-1.5 text-xs font-semibold text-primary-700 dark:text-primary-300 hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">Visit Store →</Link>}
@@ -162,7 +162,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
             </Row>
             {review.title && <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{review.title}</Text>}
             <Text className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">{review.comment}</Text>
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500">{review.productTitle}</Text>
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400">{review.productTitle}</Text>
           </Div>
         ))}
       </Stack>
@@ -529,23 +529,13 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
         {/* Store reviews section */}
         {renderAuctionStoreReviews(storeReviews)}
 
-        {/* Mobile sticky buy bar */}
-        {!isEnded && (
-          <BuyBar>
-            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
-              {formatCurrency(currentBid, currency)}
-            </Span>
-            <Span className="text-xs text-zinc-400 dark:text-zinc-500 mr-1">
-              {bidCount} bid{bidCount !== 1 ? "s" : ""}
-            </Span>
-            <a
-              href="#auction-bid-form"
-              className="appkit-button appkit-button--primary appkit-button--sm shrink-0"
-            >
-              <span className="appkit-button__content">Place Bid</span>
-            </a>
-          </BuyBar>
-        )}
+        {/* Mobile actions registered via useBottomActions() */}
+        <AuctionBottomActions
+          currentBid={currentBid}
+          currency={currency}
+          bidCount={bidCount}
+          isEnded={isEnded}
+        />
       </Container>
     </Main>
   );

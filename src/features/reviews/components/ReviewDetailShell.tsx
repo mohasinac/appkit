@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 hover:border-primary hover:shadow-sm transition-all";
-const CLS_RELATED_LABEL = "text-xs text-neutral-400 dark:text-zinc-500 mb-0.5";
+const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
 const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
 import Link from "next/link";
 import { Heading, RichText, Section, Span, StarRating, Text } from "../../../ui";
@@ -149,7 +149,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 </span>
               )}
               {date && (
-                <Text className="text-xs text-neutral-400 dark:text-zinc-500 mt-0.5">{date}</Text>
+                <Text className="text-xs text-zinc-400 dark:text-zinc-400 mt-0.5">{date}</Text>
               )}
             </div>
           </div>
@@ -173,7 +173,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Image grid with lightbox trigger */}
         {images.length > 0 && (
           <Section>
-            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
+            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
               Photos ({images.length})
             </Heading>
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -201,7 +201,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
         {/* Video player */}
         {review.video && (
           <Section>
-            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-neutral-400 dark:text-zinc-500 mb-3">
+            <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
               Video
             </Heading>
             <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video">
@@ -298,7 +298,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 👤
               </span>
               <div className="min-w-0">
-                <Span className="block text-xs text-neutral-400 dark:text-zinc-500 mb-0.5">Reviewer</Span>
+                <Span className="block text-xs text-zinc-400 dark:text-zinc-400 mb-0.5">Reviewer</Span>
                 <Span className="block text-sm font-medium text-neutral-900 dark:text-white truncate">
                   Anonymous
                 </Span>

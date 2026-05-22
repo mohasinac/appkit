@@ -239,7 +239,7 @@ export function SellerBundlesView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">
+            <Text className="text-zinc-400 dark:text-zinc-400">
               No bundles yet — create a bundle to group multiple products together
             </Text>
           </Div>

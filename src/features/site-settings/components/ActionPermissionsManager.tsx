@@ -144,7 +144,7 @@ export function ActionPermissionsManager({ initialConfig, onUpdate }: ActionPerm
                   <td className="px-4 py-3">
                     <Div>
                       <Text className="font-medium text-zinc-900 dark:text-zinc-100">{meta.label}</Text>
-                      <Text className="text-xs text-zinc-400 dark:text-zinc-500">{id}</Text>
+                      <Text className="text-xs text-zinc-400 dark:text-zinc-400">{id}</Text>
                     </Div>
                   </td>
                   <td className="px-4 py-3">

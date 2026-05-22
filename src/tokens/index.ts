@@ -226,7 +226,7 @@ const THEMED = {
   // Text
   textPrimary: "text-zinc-900 dark:text-zinc-50",
   textSecondary: "text-zinc-500 dark:text-zinc-400",
-  textMuted: "text-zinc-400 dark:text-zinc-500",
+  textMuted: "text-zinc-400 dark:text-zinc-400",
   textError: "text-red-600 dark:text-red-400",
   textSuccess: "text-emerald-600 dark:text-emerald-400",
   textOnPrimary: "text-white",
@@ -539,7 +539,7 @@ const INPUT = {
   success:
     "border-emerald-400 dark:border-emerald-500 focus:ring-emerald-500/20 focus:border-emerald-500",
   disabled:
-    "bg-zinc-50 dark:bg-slate-800/30 text-zinc-400 dark:text-zinc-500 cursor-not-allowed opacity-60",
+    "bg-zinc-50 dark:bg-slate-800/30 text-zinc-400 dark:text-zinc-400 cursor-not-allowed opacity-60",
   withIcon: "pl-10",
 } as const;
 
@@ -758,7 +758,7 @@ const PATTERNS = {
 
 /** Icon colour variants and sizes. */
 const ICON = {
-  muted: "text-zinc-400 dark:text-zinc-500",
+  muted: "text-zinc-400 dark:text-zinc-400",
   primary: "text-primary-600 dark:text-secondary-400",
   success: "text-emerald-500 dark:text-emerald-400",
   danger: "text-red-500 dark:text-red-400",

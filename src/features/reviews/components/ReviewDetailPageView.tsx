@@ -47,7 +47,7 @@ export async function ReviewDetailPageView({ id }: ReviewDetailPageViewProps) {
     <Main>
       {/* Breadcrumb */}
       <div className="border-b border-neutral-100 dark:border-zinc-800 bg-neutral-50 dark:bg-zinc-950 py-2.5 px-4">
-        <nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-neutral-400 dark:text-zinc-500" aria-label="Breadcrumb">
+        <nav className="mx-auto max-w-3xl flex items-center gap-1.5 text-xs text-zinc-400 dark:text-zinc-400" aria-label="Breadcrumb">
           <Link href={String(ROUTES.HOME)} className="hover:text-primary transition-colors">
             Home
           </Link>

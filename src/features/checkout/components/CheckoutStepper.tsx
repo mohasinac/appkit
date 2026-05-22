@@ -30,7 +30,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
                 {isDone ? "✓" : idx + 1}
               </Span>
               <Span
-                className={`text-sm font-medium ${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-neutral-400 dark:text-zinc-500"}`}
+                className={`text-sm font-medium ${isActive ? "text-neutral-900 dark:text-zinc-100" : isDone ? "text-neutral-500 dark:text-zinc-400" : "text-zinc-400 dark:text-zinc-400"}`}
               >
                 {step.label}
               </Span>

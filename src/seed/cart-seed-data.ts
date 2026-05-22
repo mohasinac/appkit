@@ -21,7 +21,7 @@ const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
 
 export const cartsSeedData: CartDocument[] = [
-  // Yugi's cart: 3 items from Kaiba Corp Card Vault
+  // Yugi's cart: 3 standard items + 1 won-auction (locked) + 1 accepted-offer (locked)
   {
     id: "user-yugi-muto",
     userId: "user-yugi-muto",
@@ -68,12 +68,45 @@ export const cartsSeedData: CartDocument[] = [
         addedAt: daysAgo(1),
         updatedAt: daysAgo(1),
       },
+      {
+        itemId: "cartitem-yugi-blue-eyes-auction-won",
+        productId: "auction-blue-eyes-white-dragon-psa9",
+        productTitle: "Blue-Eyes White Dragon PSA 9 — Won Auction",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/89631139.jpg",
+        price: 2499900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "auction",
+        locked: true,
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
+      },
+      {
+        itemId: "cartitem-yugi-red-eyes-offer-accepted",
+        productId: "product-red-eyes-black-dragon-mrd",
+        productTitle: "Red-Eyes Black Dragon MRD — Offer Accepted",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/74677422.jpg",
+        price: 899900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-kaiba-corp-cards",
+        storeName: "Kaiba Corp Card Vault",
+        listingType: "standard",
+        isOffer: true,
+        offerId: "offer-yugi-red-eyes-001",
+        lockedPrice: 350000,
+        locked: true,
+        addedAt: daysAgo(1),
+        updatedAt: daysAgo(1),
+      },
     ],
     createdAt: daysAgo(3),
     updatedAt: daysAgo(1),
   },
 
-  // Kaiba's cart: 2 items from LetItRip Official (Kaiba as buyer)
+  // Kaiba's cart: 2 standard + 1 pre-order
   {
     id: "user-seto-kaiba",
     userId: "user-seto-kaiba",
@@ -106,9 +139,23 @@ export const cartsSeedData: CartDocument[] = [
         addedAt: daysAgo(4),
         updatedAt: daysAgo(4),
       },
+      {
+        itemId: "cartitem-kaiba-gate-guardian-preorder",
+        productId: "preorder-gate-guardian-reprint-2026",
+        productTitle: "Gate Guardian 2026 Reprint — Pre-Order",
+        productImage: "https://images.ygoprodeck.com/images/cards/small/25833572.jpg",
+        price: 349900,
+        currency: _CURRENCY,
+        quantity: 1,
+        storeId: "store-letitrip-official",
+        storeName: "LetItRip Official",
+        listingType: "pre-order",
+        addedAt: daysAgo(2),
+        updatedAt: daysAgo(2),
+      },
     ],
     createdAt: daysAgo(5),
-    updatedAt: daysAgo(4),
+    updatedAt: daysAgo(2),
   },
 
   // Admin's cart: 2 items from Kaiba Corp (Admin as buyer)

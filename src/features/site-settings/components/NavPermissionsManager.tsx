@@ -79,7 +79,7 @@ export function NavPermissionsManager({
                         <Div>
                           <Text className="font-medium text-zinc-900 dark:text-zinc-100">{item.label}</Text>
                           {item.id && (
-                            <Text className="text-xs text-zinc-400 dark:text-zinc-500">{item.id}</Text>
+                            <Text className="text-xs text-zinc-400 dark:text-zinc-400">{item.id}</Text>
                           )}
                         </Div>
                       </td>

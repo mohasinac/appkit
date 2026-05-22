@@ -51,7 +51,7 @@ function CategoryTreeNode({
         {hasChildren && (
           <Span
             aria-hidden="true"
-            className={`text-xs text-neutral-400 dark:text-zinc-500 transition-transform duration-150 ${expanded ? "rotate-90" : ""}`}
+            className={`text-xs text-zinc-400 dark:text-zinc-400 transition-transform duration-150 ${expanded ? "rotate-90" : ""}`}
           >
             ▶
           </Span>
@@ -67,7 +67,7 @@ function CategoryTreeNode({
         <Text className="flex-1 truncate">{item.name}</Text>
 
         {item.metrics && (
-          <Span className="ml-auto flex-shrink-0 text-xs text-neutral-400 dark:text-zinc-500 tabular-nums">
+          <Span className="ml-auto flex-shrink-0 text-xs text-zinc-400 dark:text-zinc-400 tabular-nums">
             {item.metrics.productCount}
           </Span>
         )}

@@ -241,7 +241,7 @@ export function MarketplacePreorderCard({
               <RichText
                 html={normalizeRichTextHtml(product.description)}
                 proseClass="prose prose-sm max-w-none dark:prose-invert prose-p:my-0"
-                className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500`}
+                className={`${THEME_CONSTANTS.utilities.textClamp2} text-xs text-zinc-500 dark:text-zinc-400`}
               />
             ) : null}
             <Row justify="between" className="mt-1 gap-2">

@@ -65,7 +65,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 "absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
                   ? "text-red-600 dark:text-red-400"
-                  : "text-zinc-400 dark:text-zinc-500",
+                  : "text-zinc-400 dark:text-zinc-400",
                 "group-focus-within:text-primary-500 dark:group-focus-within:text-secondary-400",
               )}
             >
@@ -101,7 +101,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 "absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
                   ? "text-red-600 dark:text-red-400"
-                  : "text-zinc-400 dark:text-zinc-500",
+                  : "text-zinc-400 dark:text-zinc-400",
               )}
             >
               {rightIcon}

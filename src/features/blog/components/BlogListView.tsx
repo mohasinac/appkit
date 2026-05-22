@@ -73,7 +73,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             </Span>
           )}
           {post.readTimeMinutes && (
-            <Span className="text-xs text-neutral-400 dark:text-zinc-500">
+            <Span className="text-xs text-zinc-400 dark:text-zinc-400">
               {post.readTimeMinutes} min read
             </Span>
           )}

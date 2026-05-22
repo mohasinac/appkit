@@ -88,7 +88,7 @@ function GroupsContent({
               className={`flex w-full items-center justify-between px-4 py-2 text-[0.6875rem] font-semibold uppercase tracking-widest transition-colors ${
                 hasActive && !isOpen
                   ? "text-zinc-700 dark:text-zinc-200"
-                  : "text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300"
+                  : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
               }`}
             >
               <span>{group.title}</span>
@@ -134,7 +134,7 @@ function DrawerPanel({
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
         <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">{title}</span>
+          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</span>
           <button
             type="button"
             onClick={onClose}
@@ -220,7 +220,7 @@ export function AdminSidebar({
           {/* Nav panel */}
           <div className="flex-1 bg-white dark:bg-slate-950 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
             <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
-              {renderHeader ? renderHeader() : <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">Admin Panel</span>}
+              {renderHeader ? renderHeader() : <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">Admin Panel</span>}
             </div>
             <div className="flex-1 overflow-y-auto">{navContent}</div>
             {renderFooter && <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800">{renderFooter()}</div>}

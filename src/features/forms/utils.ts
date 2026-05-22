@@ -15,7 +15,7 @@ export const INPUT_SUCCESS =
   "border-emerald-400 dark:border-emerald-500 focus:ring-emerald-500/20 focus:border-emerald-500";
 
 export const INPUT_DISABLED =
-  "bg-zinc-50 dark:bg-slate-800/30 text-zinc-400 dark:text-zinc-500 cursor-not-allowed opacity-60";
+  "bg-zinc-50 dark:bg-slate-800/30 text-zinc-400 dark:text-zinc-400 cursor-not-allowed opacity-60";
 
 export const INPUT_WITH_ICON = "pl-10";
 

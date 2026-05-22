@@ -66,7 +66,7 @@ export function NewsletterSection({
 
         {/* Privacy */}
         {privacyLabel && privacyHref && (
-          <Text size="xs" className="text-zinc-400 dark:text-zinc-500 mt-4">
+          <Text size="xs" className="text-zinc-400 dark:text-zinc-400 mt-4">
             {privacyLabel}{" "}
             <TextLink
               href={privacyHref}

@@ -21,7 +21,7 @@ import {
   Text,
 } from "../../../ui";
 import { PreOrderDetailView } from "../../products/components/PreOrderDetailView";
-import { BuyBar } from "../../products/components/BuyBar";
+import { PreOrderBottomActions } from "./PreOrderBottomActions";
 import { ProductTabsShell } from "../../products/components/ProductTabsShell";
 import { CustomSectionTabContent } from "../../products/components/CustomSectionTabContent";
 import { PreOrderActionsClient } from "./PreOrderActionsClient";
@@ -219,7 +219,7 @@ function PreOrderInfoSection({
         <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
           <Row justify="between" align="center">
             <Div>
-              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+              <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
                 Sold by
               </Text>
               <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
@@ -600,20 +600,8 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
           )}
         />
 
-        {/* Mobile sticky buy bar */}
-        <BuyBar>
-          {price !== null && (
-            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
-              {formatCurrency(price, currency)}
-            </Span>
-          )}
-          <a
-            href="#pre-order-buy-bar"
-            className="appkit-button appkit-button--primary appkit-button--sm flex-1"
-          >
-            <span className="appkit-button__content">Reserve Now</span>
-          </a>
-        </BuyBar>
+        {/* Mobile actions registered via useBottomActions() */}
+        <PreOrderBottomActions price={price} currency={currency} />
       </Container>
     </Main>
   );

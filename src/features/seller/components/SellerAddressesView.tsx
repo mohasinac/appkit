@@ -14,7 +14,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
     <div className="space-y-1">
       <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</label>
       {children}
-      {hint && <Text className="text-xs text-zinc-400 dark:text-zinc-500">{hint}</Text>}
+      {hint && <Text className="text-xs text-zinc-400 dark:text-zinc-400">{hint}</Text>}
     </div>
   );
 }
@@ -117,7 +117,7 @@ function AddressCard({
             type="button"
             onClick={onEdit}
             title="Edit address"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+            className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -125,7 +125,7 @@ function AddressCard({
             type="button"
             onClick={onDelete}
             title="Delete address"
-            className="rounded-lg p-1.5 text-zinc-500 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/40 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <Trash2 className="h-4 w-4" />
           </button>

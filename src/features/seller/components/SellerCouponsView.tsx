@@ -216,7 +216,7 @@ export function SellerCouponsView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">No coupons found — create your first coupon</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400">No coupons found — create your first coupon</Text>
           </Div>
         ) : (
           <Div className="fluid-grid-card gap-3">
@@ -242,9 +242,9 @@ export function SellerCouponsView({
               <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
               <div className="flex items-center gap-2">
                 {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 transition-colors">Clear all</button>
+                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors">Clear all</button>
                 )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                   <X className="h-5 w-5" />
                 </button>
               </div>

@@ -110,7 +110,7 @@ export async function PublicProfileView({
         {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
         {renderProfileReviewsSection(t, themed, reviews, storeSlug ?? null)}
         <div className="flex justify-center pt-2">
-          <Link href={String(ROUTES.HOME)} className="text-sm text-neutral-400 dark:text-zinc-500 hover:text-neutral-600 dark:hover:text-zinc-300">
+          <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
           </Link>
         </div>

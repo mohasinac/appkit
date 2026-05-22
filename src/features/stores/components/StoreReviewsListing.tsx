@@ -136,7 +136,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
           <Span className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
             {averageRating.toFixed(1)}
           </Span>
-          <Span className="text-zinc-500 text-sm">/ 5 · {totalReviews} reviews</Span>
+          <Span className="text-zinc-500 dark:text-zinc-400 text-sm">/ 5 · {totalReviews} reviews</Span>
         </Row>
       )}
 
@@ -218,7 +218,7 @@ export function StoreReviewsListing({ storeSlug }: StoreReviewsListingProps) {
                     Clear all
                   </button>
                 )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-slate-800 transition-colors">
+                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                   <X className="h-5 w-5" />
                 </button>
               </div>

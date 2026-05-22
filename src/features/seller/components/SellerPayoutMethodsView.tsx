@@ -205,7 +205,7 @@ export function SellerPayoutMethodsView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">
+            <Text className="text-zinc-400 dark:text-zinc-400">
               No payout methods yet — add a UPI VPA or bank account to receive payouts
             </Text>
             <div className="mt-4">

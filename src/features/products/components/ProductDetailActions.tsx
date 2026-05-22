@@ -10,6 +10,8 @@ import { addToGuestWishlist } from "../../wishlist/utils/guest-wishlist";
 import { ROUTES } from "../../../next";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
+import { useBottomActions } from "../../layout/hooks/useBottomActions";
+import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface ProductDetailActionsProps {
   productId: string;
@@ -23,6 +25,11 @@ export interface ProductDetailActionsProps {
   /** Denormalised store display name — used by the cart group header. */
   storeName?: string;
   inStock: boolean;
+  /**
+   * "desktop" renders inline buttons. "mobile" registers actions via
+   * useBottomActions() for the layout-level BottomActions bar and renders
+   * nothing inline (only the auth modal).
+   */
   variant?: "desktop" | "mobile";
 }
 
@@ -37,6 +44,7 @@ export function ProductDetailActions({
   productTitle,
   productImage,
   price,
+  currency,
   storeId,
   storeName,
   inStock,
@@ -111,6 +119,42 @@ export function ProductDetailActions({
     });
   }
 
+  // Mobile: register actions with layout-level BottomActions bar
+  useBottomActions(
+    variant === "mobile"
+      ? {
+          actions: [
+            {
+              id: ACTION_ID.ADD_TO_WISHLIST,
+              label: wishlisted ? "♥ Saved" : "♡ Wishlist",
+              variant: "ghost",
+              grow: false,
+              disabled: busy !== null || wishlisted,
+              onClick: handleWishlist,
+            },
+            {
+              id: ACTION_ID.ADD_TO_CART,
+              label: busy === "cart" ? "Adding…" : "Add to Cart",
+              variant: "outline",
+              disabled: !inStock || busy !== null,
+              onClick: () => handleAddToCart(),
+            },
+            {
+              id: ACTION_ID.BUY_NOW,
+              label: !inStock ? "Out of Stock" : busy === "buy" ? "Loading…" : "Buy Now",
+              variant: "primary",
+              disabled: !inStock || busy !== null,
+              onClick: handleBuyNow,
+            },
+          ],
+          infoLabel:
+            price != null && currency
+              ? formatCurrency(price, currency)
+              : undefined,
+        }
+      : {},
+  );
+
   const authModal = (
     <LoginRequiredModal
       isOpen={modalOpen}
@@ -120,33 +164,7 @@ export function ProductDetailActions({
   );
 
   if (variant === "mobile") {
-    return (
-      <>
-        {authModal}
-        <Button
-          variant="secondary"
-          size="sm"
-          className="shrink-0"
-          disabled={!inStock || busy !== null}
-          onClick={() => handleAddToCart()}
-        >
-          {busy === "cart" ? "Adding…" : "Add to Cart"}
-        </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          className="flex-1"
-          disabled={!inStock || busy !== null}
-          onClick={handleBuyNow}
-        >
-          {!inStock
-            ? "Out of Stock"
-            : busy === "buy"
-              ? "Loading…"
-              : "Buy Now"}
-        </Button>
-      </>
-    );
+    return <>{authModal}</>;
   }
 
   return (

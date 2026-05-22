@@ -111,7 +111,7 @@ function ZonePicker({
   const zones = [1, 2, 3, 4, 5, 6] as const;
   return (
     <Div>
-      <Text className="text-xs text-zinc-500 mb-1">Zone (row × col grid)</Text>
+      <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">Zone (row × col grid)</Text>
       <div
         className="grid gap-1"
         style={{ gridTemplateRows: "repeat(2, 1fr)", gridTemplateColumns: "repeat(3, 1fr)", width: 150 }}

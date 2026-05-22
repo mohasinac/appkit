@@ -137,7 +137,7 @@ export function PlaceBidFormClient({
             {formatCurrency(startingBid, currency)}
           </Span>
         </Row>
-        <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+        <Text className="text-xs text-zinc-400 dark:text-zinc-400">
           {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment{" "}
           {formatCurrency(minBidIncrement, currency)}
         </Text>

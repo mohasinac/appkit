@@ -92,7 +92,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
         <div className="relative" data-section="input-div-528">
           {icon && (
-            <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-400 dark:text-zinc-500" data-section="input-div-529">
+            <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="input-div-529">
               {icon}
             </div>
           )}
@@ -107,7 +107,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
 
           {adornment && (
-            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-500" data-section="input-div-530">
+            <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-zinc-400 dark:text-zinc-400" data-section="input-div-530">
               {adornment}
             </div>
           )}

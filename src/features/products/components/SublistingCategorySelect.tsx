@@ -55,7 +55,7 @@ export function SublistingCategorySelect({ value, onChange, disabled }: Props) {
         disabled={disabled || loading}
         aria-label="Sub-listing category"
       />
-      <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+      <Text className="text-xs text-zinc-400 dark:text-zinc-400">
         Groups this listing with others for the same collectible (e.g. &ldquo;Base Set Charizard 108/120&rdquo;).
       </Text>
     </Stack>

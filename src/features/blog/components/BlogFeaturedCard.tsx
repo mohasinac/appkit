@@ -119,7 +119,7 @@ export function BlogFeaturedCard({
           )}
 
           {/* Footer — pushed to bottom */}
-          <Row className="mt-auto gap-3 text-xs text-neutral-400 dark:text-zinc-500 flex-wrap">
+          <Row className="mt-auto gap-3 text-xs text-zinc-400 dark:text-zinc-400 flex-wrap">
             {post.authorName && (
               <Span>{safeDisplayName(post.authorName, "Author")}</Span>
             )}

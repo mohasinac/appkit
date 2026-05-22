@@ -156,7 +156,7 @@ function SoftBanPanel({
               <div className="min-w-0 flex-1">
                 <div className="font-semibold text-zinc-800 dark:text-zinc-200">{formatBanAction(ban.action)}</div>
                 <div className="text-zinc-500 dark:text-zinc-400">{ban.reason}</div>
-                <div className="text-zinc-400 dark:text-zinc-500">{formatExpiry(ban.expiresAt)}</div>
+                <div className="text-zinc-400 dark:text-zinc-400">{formatExpiry(ban.expiresAt)}</div>
               </div>
               <Button type="button" variant="secondary" size="sm" isLoading={liftPending} disabled={liftPending} onClick={() => onLiftSoftBan(ban.action)}>Lift</Button>
             </li>
@@ -186,7 +186,7 @@ function SoftBanPanel({
         </div>
       )}
       {softBans.length === 0 && !showAddSoftBan && (
-        <Text className="text-xs text-zinc-400 dark:text-zinc-500">No active soft bans.</Text>
+        <Text className="text-xs text-zinc-400 dark:text-zinc-400">No active soft bans.</Text>
       )}
     </div>
   );

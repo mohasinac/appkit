@@ -17,7 +17,7 @@ import {
   Text,
 } from "../../../ui";
 import { PreOrderDetailView } from "./PreOrderDetailView";
-import { BuyBar } from "./BuyBar";
+import { PrizeDrawBottomActions } from "./PrizeDrawBottomActions";
 import { ProductTabsShell } from "./ProductTabsShell";
 import { ShareButton } from "./ShareButton";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
@@ -27,8 +27,6 @@ import type {
   ProductDocument,
 } from "../schemas/firestore";
 import { HistoryTracker } from "../../history/components/HistoryTracker";
-import { formatCurrency } from "../../../utils/number.formatter";
-import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 export interface PrizeDrawDetailPageViewProps {
   id: string;
@@ -303,7 +301,7 @@ export async function PrizeDrawDetailPageView({
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
                   <Row justify="between" align="center">
                     <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
                         Sold by
                       </Text>
                       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
@@ -358,18 +356,12 @@ export async function PrizeDrawDetailPageView({
           )}
         />
 
-        {/* Mobile sticky buy bar */}
-        <BuyBar>
-          <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
-            {formatCurrency(pricePerEntry, currency)}
-          </Span>
-          <a
-            href="#prize-draw-buy-bar"
-            className="appkit-button appkit-button--primary appkit-button--sm flex-1"
-          >
-            <span className="appkit-button__content">{ACTIONS.PRIZE_DRAW["enter-draw"].label}</span>
-          </a>
-        </BuyBar>
+        {/* Mobile actions registered via useBottomActions() */}
+        <PrizeDrawBottomActions
+          pricePerEntry={pricePerEntry}
+          currency={currency}
+          closed={revealStatus === "closed" || remaining === 0}
+        />
       </Container>
     </Main>
   );

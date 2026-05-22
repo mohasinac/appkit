@@ -89,7 +89,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Row>
           )}
           {isOutOfStock && (
-            <Span className="text-xs text-neutral-400 dark:text-zinc-500">Qty: {item.quantity}</Span>
+            <Span className="text-xs text-zinc-400 dark:text-zinc-400">Qty: {item.quantity}</Span>
           )}
         </Row>
       </Div>
@@ -99,7 +99,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
           variant="ghost"
           size="sm"
           aria-label={ACTIONS.CART["remove-item"].ariaLabel}
-          className="self-start text-neutral-400 dark:text-zinc-500 transition hover:text-red-500"
+          className="self-start text-zinc-400 dark:text-zinc-400 transition hover:text-red-500"
         >
           ✕
         </Button>

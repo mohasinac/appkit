@@ -224,7 +224,7 @@ export function SellerStoreCategoriesView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">No categories yet — add your first storefront category</Text>
+            <Text className="text-zinc-400 dark:text-zinc-400">No categories yet — add your first storefront category</Text>
           </Div>
         ) : (
           <DataTable

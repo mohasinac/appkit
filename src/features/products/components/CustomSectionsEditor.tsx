@@ -125,7 +125,7 @@ export function CustomSectionsEditor({
         >
           + Add section
         </Button>
-        <Text className="text-xs text-zinc-400 dark:text-zinc-500">
+        <Text className="text-xs text-zinc-400 dark:text-zinc-400">
           {sections.length} / {MAX_CUSTOM_SECTIONS} sections
         </Text>
       </Div>

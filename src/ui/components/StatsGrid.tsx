@@ -59,7 +59,7 @@ export function StatsGrid({
               <Div
                 className={classNames(
                   "appkit-stats-grid__icon",
-                  stat.colorClass ?? "text-zinc-400 dark:text-zinc-500",
+                  stat.colorClass ?? "text-zinc-400 dark:text-zinc-400",
                 )}
               >
                 {stat.icon}

@@ -201,7 +201,7 @@ export function AdminStoreEditorView({
                 <details key={group.label} className="group">
                   <summary className="flex cursor-pointer items-center justify-between px-3 py-2 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400 select-none hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors">
                     <span>{group.label}</span>
-                    <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-500">
+                    <span className="text-xs font-normal normal-case text-zinc-400 dark:text-zinc-400">
                       {checked}/{group.caps.length}
                     </span>
                   </summary>

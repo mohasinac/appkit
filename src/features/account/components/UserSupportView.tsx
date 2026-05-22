@@ -246,11 +246,11 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
           )}
           {(selectedTicket.messages ?? []).length > 0 && (
             <Div className="space-y-2">
-              <Text className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Messages</Text>
+              <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">Messages</Text>
               <div className="space-y-2 max-h-72 overflow-y-auto">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"}`}>
-                    <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-500">
+                    <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                       <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
                       {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}
                     </div>

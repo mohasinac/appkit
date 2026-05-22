@@ -166,7 +166,7 @@ export function FilterFacetSection({
                       {option.label}
                     </Span>
                     {option.count !== undefined && (
-                      <Span className="flex-shrink-0 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+                      <Span className="flex-shrink-0 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-400">
                         {option.count}
                       </Span>
                     )}
@@ -174,7 +174,7 @@ export function FilterFacetSection({
                 );
               })}
               {filtered.length === 0 && (
-                <Text className="px-3 py-2 text-xs text-zinc-400 dark:text-zinc-500">No results</Text>
+                <Text className="px-3 py-2 text-xs text-zinc-400 dark:text-zinc-400">No results</Text>
               )}
             </Div>
             {hasValue && (
@@ -279,7 +279,7 @@ export function FilterFacetSection({
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-500">
+            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-400">
               +{selected.length - 3} more
             </Span>
           )}
@@ -338,7 +338,7 @@ export function FilterFacetSection({
                   {option.label}
                 </Span>
                 {option.count !== undefined && (
-                  <Span className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums flex-shrink-0">
+                  <Span className="text-xs text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
                     {option.count}
                   </Span>
                 )}
@@ -346,7 +346,7 @@ export function FilterFacetSection({
             );
           })}
           {filtered.length === 0 && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500 py-1">
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1">
               No results
             </Text>
           )}

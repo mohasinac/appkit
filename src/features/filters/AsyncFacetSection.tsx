@@ -155,7 +155,7 @@ export function AsyncFacetSection({
             </Span>
           ))}
           {selected.length > 3 && (
-            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-500">
+            <Span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-zinc-400 dark:text-zinc-400">
               +{selected.length - 3} more
             </Span>
           )}
@@ -190,7 +190,7 @@ export function AsyncFacetSection({
                   {opt.label}
                 </Span>
                 {opt.count !== undefined && (
-                  <Span className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums flex-shrink-0">
+                  <Span className="text-xs text-zinc-400 dark:text-zinc-400 tabular-nums flex-shrink-0">
                     {opt.count}
                   </Span>
                 )}
@@ -199,13 +199,13 @@ export function AsyncFacetSection({
           })}
 
           {options.length === 0 && !loading && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500 py-1">
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1">
               No results
             </Text>
           )}
 
           {loading && (
-            <Text className="text-xs text-zinc-400 dark:text-zinc-500 py-1 animate-pulse">
+            <Text className="text-xs text-zinc-400 dark:text-zinc-400 py-1 animate-pulse">
               Loading…
             </Text>
           )}
@@ -215,7 +215,7 @@ export function AsyncFacetSection({
               type="button"
               variant="ghost"
               size="sm"
-              className="w-full text-xs text-left text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 py-1"
+              className="w-full text-xs text-left text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 py-1"
               onClick={() => void load(query, page + 1)}
             >
               Load more…

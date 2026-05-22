@@ -60,7 +60,7 @@ export function FeaturedResultsSection({
         </Heading>
 
         <Div
-          className={`mt-3 ${flex.center} gap-2 text-zinc-400 dark:text-zinc-500`}
+          className={`mt-3 ${flex.center} gap-2 text-zinc-400 dark:text-zinc-400`}
           aria-hidden="true"
         >
           <Span className="h-px w-6 bg-current" />

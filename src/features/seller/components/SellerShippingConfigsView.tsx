@@ -241,7 +241,7 @@ export function SellerShippingConfigsView({
           </Div>
         ) : rows.length === 0 ? (
           <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-500">
+            <Text className="text-zinc-400 dark:text-zinc-400">
               No shipping configs yet — define your first shipping rule
             </Text>
             <div className="mt-4">

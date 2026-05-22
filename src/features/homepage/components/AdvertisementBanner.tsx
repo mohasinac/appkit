@@ -158,7 +158,7 @@ export function AdvertisementBanner({
                   variant="secondary"
                   size="sm"
                   onClick={onCtaClick}
-                  className="bg-white text-indigo-700 hover:bg-zinc-50 font-semibold gap-1.5 flex-shrink-0"
+                  className="bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold gap-1.5 flex-shrink-0"
                 >
                   {ctaLabel}
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -193,7 +193,7 @@ export function AdvertisementBanner({
                   variant="secondary"
                   size="lg"
                   onClick={onCtaClick}
-                  className="bg-white text-indigo-700 hover:bg-zinc-50 font-semibold shadow-lg gap-2"
+                  className="bg-white dark:bg-zinc-100 text-indigo-700 hover:bg-zinc-50 dark:hover:bg-zinc-200 font-semibold shadow-lg gap-2"
                 >
                   {ctaLabel}
                   <ArrowRight className="w-4 h-4" />

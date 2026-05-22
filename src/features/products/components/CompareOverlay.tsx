@@ -343,7 +343,7 @@ export function CompareOverlay({
           type="button"
           onClick={onClose}
           aria-label={labels.close}
-          className="rounded-full p-2 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+          className="rounded-full p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
           <X className="h-5 w-5" />
         </button>

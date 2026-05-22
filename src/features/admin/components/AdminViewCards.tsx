@@ -108,7 +108,7 @@ function AdminCardItem({
           </div>
         )}
         <StatusBadge status={row.status} />
-        <span className="hidden sm:block text-xs text-zinc-400 dark:text-zinc-500 shrink-0 w-24 text-right">{row.updatedAt}</span>
+        <span className="hidden sm:block text-xs text-zinc-400 dark:text-zinc-400 shrink-0 w-24 text-right">{row.updatedAt}</span>
       </div>
     );
   }
@@ -153,7 +153,7 @@ function AdminCardItem({
         </div>
         <div className="flex items-center justify-between gap-2">
           <StatusBadge status={row.status} />
-          <span className="text-[11px] text-zinc-400 dark:text-zinc-500 shrink-0">{row.updatedAt}</span>
+          <span className="text-[11px] text-zinc-400 dark:text-zinc-400 shrink-0">{row.updatedAt}</span>
         </div>
       </div>
     </div>

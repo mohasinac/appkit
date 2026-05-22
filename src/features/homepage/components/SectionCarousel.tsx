@@ -232,7 +232,7 @@ export function SectionCarousel<T = unknown>({
           {/* Editorial ornament */}
           {headingVariant === "editorial" && (
             <div
-              className={`${flex.center} gap-2 mt-1 text-zinc-400 dark:text-zinc-500 text-xs select-none`}
+              className={`${flex.center} gap-2 mt-1 text-zinc-400 dark:text-zinc-400 text-xs select-none`}
               aria-hidden="true"
              data-section="sectioncarousel-div-355">
               <Span className="h-px w-6 bg-current" />

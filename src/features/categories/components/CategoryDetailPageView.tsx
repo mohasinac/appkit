@@ -103,14 +103,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
           <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
               href={String(ROUTES.HOME)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Home
             </Link>
             <span className={hasCover ? "text-white/40" : "text-zinc-400"}>/</span>
             <Link
               href={String(ROUTES.PUBLIC.CATEGORIES)}
-              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 hover:text-primary-600 transition-colors"}
+              className={hasCover ? "text-white/70 hover:text-white transition-colors" : "text-zinc-500 dark:text-zinc-400 hover:text-primary-600 transition-colors"}
             >
               Categories
             </Link>
@@ -173,7 +173,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                   )}
                   {child.name}
                   {(child.metrics?.productCount ?? 0) > 0 && (
-                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                    <span className="text-xs text-zinc-400 dark:text-zinc-400">
                       {(child.metrics?.productCount ?? 0).toLocaleString()}
                     </span>
                   )}

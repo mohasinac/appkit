@@ -64,7 +64,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
             Order #{order.id.slice(-8).toUpperCase()}
           </Text>
           {date && (
-            <Text className="mt-0.5 text-xs text-neutral-400 dark:text-zinc-500">{date}</Text>
+            <Text className="mt-0.5 text-xs text-zinc-400 dark:text-zinc-400">{date}</Text>
           )}
         </Div>
         <Span
@@ -100,12 +100,12 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
               <Text className={`text-sm font-medium text-neutral-900 dark:text-zinc-100 ${THEME_CONSTANTS.utilities.textClamp1}`}>
                 {item.title}
               </Text>
-              <Text className="text-xs text-neutral-400 dark:text-zinc-500">×{item.quantity}</Text>
+              <Text className="text-xs text-zinc-400 dark:text-zinc-400">×{item.quantity}</Text>
             </Div>
           </Row>
         ))}
         {order.items.length > 3 && (
-          <Span className="self-center text-xs text-neutral-400 dark:text-zinc-500">
+          <Span className="self-center text-xs text-zinc-400 dark:text-zinc-400">
             +{order.items.length - 3} more
           </Span>
         )}

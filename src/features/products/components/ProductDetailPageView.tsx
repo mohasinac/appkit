@@ -31,7 +31,6 @@ import { ProductFeatureBadges } from "./ProductFeatureBadges";
 import { FeatureBadgeList } from "./FeatureBadge";
 import type { ProductFeatureDocument } from "../schemas/product-features";
 import { RelatedProductsCarousel } from "./RelatedProductsCarousel";
-import { BuyBar } from "./BuyBar";
 import { ShareButton } from "./ShareButton";
 import { CustomSectionTabContent } from "./CustomSectionTabContent";
 import { SublistingCarouselSection } from "./SublistingCarouselSection";
@@ -607,7 +606,7 @@ export async function ProductDetailPageView({
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
                   <Row justify="between" align="center">
                     <Div>
-                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+                      <Text className="text-[10px] uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-0.5">
                         Sold by
                       </Text>
                       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
@@ -638,7 +637,7 @@ export async function ProductDetailPageView({
                     </Text>
                     {formattedOriginal && discount && (
                       <>
-                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-500/80">
+                        <Span className="text-sm text-zinc-400 line-through dark:text-zinc-400">
                           {formattedOriginal}
                         </Span>
                         <Span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
@@ -914,15 +913,9 @@ export async function ProductDetailPageView({
           }
         />
 
-        {/* Mobile sticky buy bar */}
-        <BuyBar>
-          {formattedPrice && (
-            <Span className="mr-auto text-sm font-bold text-zinc-900 dark:text-zinc-50">
-              {formattedPrice}
-            </Span>
-          )}
-          {renderPrimaryActions ? (
-            renderPrimaryActions({
+        {/* Mobile actions registered via useBottomActions() in ProductDetailActions variant="mobile" */}
+        {renderPrimaryActions
+          ? renderPrimaryActions({
               productId: product.id,
               productSlug: product.slug ?? slug,
               productTitle: product.title,
@@ -934,29 +927,7 @@ export async function ProductDetailPageView({
               inStock,
               variant: "mobile",
             })
-          ) : (
-            <>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="shrink-0"
-                disabled
-                title={ACTION_NOT_WIRED}
-              >
-                Add to Cart
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                className="flex-1"
-                disabled
-                title={ACTION_NOT_WIRED}
-              >
-                {inStock ? "Buy Now" : "Out of Stock"}
-              </Button>
-            </>
-          )}
-        </BuyBar>
+          : null}
       </Container>
     </Main>
   );
