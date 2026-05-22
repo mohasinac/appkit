@@ -12,11 +12,11 @@ import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const CATEGORY_BADGE: Record<BlogPostCategory, string> = {
-  news: "bg-blue-100 text-blue-800",
-  tips: "bg-emerald-100 text-emerald-800",
-  guides: "bg-indigo-100 text-indigo-800",
-  updates: "bg-purple-100 text-purple-800",
-  community: "bg-orange-100 text-orange-800",
+  news: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
+  tips: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300",
+  guides: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300",
+  updates: "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300",
+  community: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-300",
 };
 
 export interface BlogPostViewProps {
@@ -57,7 +57,7 @@ function renderBlogPostHeader(post: BlogPost, date: string, labels: BlogPostView
     <Div className="mb-8">
       <Row className="gap-2 mb-4">
         <Span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${CATEGORY_BADGE[post.category] ?? ""}`}>{post.category}</Span>
-        {post.isFeatured && <Span className="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full text-xs font-medium">{labels?.featured ?? "Featured"}</Span>}
+        {post.isFeatured && <Span className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300 px-2 py-0.5 rounded-full text-xs font-medium">{labels?.featured ?? "Featured"}</Span>}
       </Row>
       <Heading level={1} className="text-3xl font-bold mb-4">{post.title}</Heading>
       {post.excerpt && <Text className="text-lg text-neutral-500 mb-6">{post.excerpt}</Text>}

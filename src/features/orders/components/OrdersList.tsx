@@ -5,15 +5,15 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending: "bg-yellow-100 text-yellow-700",
-  confirmed: "bg-blue-100 text-blue-700",
-  processing: "bg-blue-100 text-blue-700",
-  shipped: "bg-indigo-100 text-indigo-700",
-  delivered: "bg-green-100 text-green-700",
-  cancelled: "bg-red-100 text-red-700",
-  refunded: "bg-orange-100 text-orange-700",
-  return_requested: "bg-amber-100 text-amber-700",
-  returned: "bg-neutral-100 text-neutral-600",
+  pending: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  processing: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  shipped: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
+  delivered: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+  cancelled: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  refunded: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+  return_requested: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  returned: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
 };
 
 interface OrderCardProps {
@@ -31,7 +31,7 @@ export function OrderCard({ order, onClick, labels = {} }: OrderCardProps) {
       })
     : "";
   const statusColor =
-    STATUS_COLORS[order.orderStatus] ?? "bg-neutral-100 text-neutral-700";
+    STATUS_COLORS[order.orderStatus] ?? "bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300";
 
   // SB8-F — count unrevealed prize-draw entries to surface a "reveals pending" badge.
   const unrevealedPrizeDraws = order.items.filter(

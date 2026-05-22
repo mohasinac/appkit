@@ -6,8 +6,8 @@ import { readdir, copyFile, mkdir, stat } from "fs/promises";
 import { join, relative, dirname, extname } from "path";
 
 const ASSET_EXTENSIONS = new Set([".css", ".json", ".svg", ".png"]);
-const SRC = new URL("../src", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
-const DIST = new URL("../dist", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
+const SRC = new URL("../src", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
+const DIST = new URL("../dist", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });

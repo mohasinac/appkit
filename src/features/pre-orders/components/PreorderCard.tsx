@@ -10,9 +10,9 @@ const STATUS_LABELS: Record<PreorderStatus, string> = {
 };
 
 const STATUS_COLORS: Record<PreorderStatus, string> = {
-  available: "bg-indigo-100 text-indigo-800",
-  shipping_soon: "bg-amber-100 text-amber-800",
-  shipped: "bg-green-100 text-green-800",
+  available: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-300",
+  shipping_soon: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
+  shipped: "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300",
 };
 
 interface PreorderBadgeProps {

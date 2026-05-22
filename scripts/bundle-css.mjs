@@ -10,7 +10,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { join, dirname, resolve } from "path";
 
-const DIST = new URL("../dist", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
+const DIST = new URL("../dist", import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 const ENTRY = join(DIST, "styles.css");
 
 const seen = new Set();

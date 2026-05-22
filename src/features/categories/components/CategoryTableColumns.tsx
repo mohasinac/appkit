@@ -48,7 +48,7 @@ export function getCategoryTableColumns(
             ) : (
               <div
                 className="w-full h-full flex items-center justify-center text-base"
-                style={{ backgroundColor: cat.display?.color ?? "#94a3b8" }}
+                style={{ backgroundColor: cat.display?.color ?? "#94a3b8", color: "#fff" }}
                data-section="categorytablecolumns-div-271">
                 {cat.display?.icon ?? "🗂️"}
               </div>
