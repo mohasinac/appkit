@@ -1,7 +1,9 @@
 "use client"
 import React from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button } from "./Button";
 import { Text } from "./Typography";
+import { SPRING_SNAPPY } from "../../tokens/motion";
 
 export type ToastVariant = "success" | "error" | "warning" | "info";
 export type ToastPosition =
@@ -103,9 +105,11 @@ export function ToastProvider({
           .filter(Boolean)
           .join(" ")}
        data-section="toast-div-623">
-        {toasts.map((toast) => (
-          <ToastRow key={toast.id} toast={toast} onClose={hideToast} />
-        ))}
+        <AnimatePresence mode="popLayout">
+          {toasts.map((toast) => (
+            <ToastRow key={toast.id} toast={toast} onClose={hideToast} />
+          ))}
+        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   );
@@ -118,6 +122,7 @@ function ToastRow({
   toast: ToastItem;
   onClose: (id: string) => void;
 }) {
+  const reduced = useReducedMotion();
   const iconMap: Record<ToastVariant, React.ReactNode> = {
     success: <span aria-hidden="true">✓</span>,
     error: <span aria-hidden="true">!</span>,
@@ -126,11 +131,17 @@ function ToastRow({
   };
 
   return (
-    <div
+    <motion.div
       role="alert"
       data-testid="toast"
       className={[UI_TOAST.row, UI_TOAST.variants[toast.variant]].join(" ")}
-     data-section="toast-div-624">
+      layout
+      initial={reduced ? false : { opacity: 0, x: 24, scale: 0.95 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 24, scale: 0.95 }}
+      transition={SPRING_SNAPPY}
+      data-section="toast-div-624"
+    >
       <div className={UI_TOAST.icon} data-section="toast-div-625">{iconMap[toast.variant]}</div>
       <Text as="div" size="sm" weight="medium" className="flex-1 pr-1">
         {toast.message}
@@ -156,6 +167,6 @@ function ToastRow({
       >
         ×
       </Button>
-    </div>
+    </motion.div>
   );
 }

@@ -128,7 +128,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
   }
 
   return (
-    <Div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3">
+    <Div surface="card" padding="sm" className="space-y-3">
       {/* Header row */}
       <Div className="flex items-start justify-between gap-2 flex-wrap">
         <Div className="min-w-0">
@@ -157,7 +157,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
         {offer.counterAmount != null && (
           <Div>
             <Text className="text-xs text-zinc-400 dark:text-zinc-400 uppercase tracking-wide">Your Counter</Text>
-            <Text className="text-sm font-medium text-blue-600 dark:text-blue-400">{formatRupees(offer.counterAmount)}</Text>
+            <Text className="text-sm font-medium text-info">{formatRupees(offer.counterAmount)}</Text>
           </Div>
         )}
       </Div>
@@ -175,7 +175,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
           <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
             className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
           <Button size="sm" variant="ghost" onClick={toDeclining} disabled={isPending}
-            className="text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">Decline</Button>
+            className="text-error border border-red-200 dark:border-red-800">Decline</Button>
         </Div>
       )}
 
@@ -208,7 +208,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
           />
           <Div className="flex gap-2">
             <Button size="sm" variant="ghost" onClick={handleDecline} disabled={isPending}
-              className="text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
+              className="text-error border border-red-200 dark:border-red-800">
               {isPending ? "Declining…" : "Confirm Decline"}
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
@@ -311,7 +311,7 @@ export function SellerOffersPanel({
             Offers Received
           </Heading>
           {pending > 0 && (
-            <Text className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+            <Text className="text-xs text-warning mt-0.5">
               {pending} pending offer{pending > 1 ? "s" : ""} awaiting your response
             </Text>
           )}

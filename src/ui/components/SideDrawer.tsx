@@ -1,11 +1,13 @@
 "use client"
 import { useEffect, useRef, useState, ReactNode, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button } from "./Button";
 import { Row } from "./Layout";
 import { Heading, Span } from "./Typography";
 import { useSwipe } from "../../react";
 import { Text } from "./Typography";
+import { SPRING_SNAPPY } from "../../tokens/motion";
 
 export type DrawerMode = "create" | "edit" | "delete" | "view";
 
@@ -181,112 +183,125 @@ export function SideDrawer({
     minSwipeDistance: 60,
   });
 
-  if (!isOpen) return null;
-
+  const reduced = useReducedMotion();
   const positionClass =
     side === "left" ? UI_SIDE_DRAWER.left : UI_SIDE_DRAWER.right;
+  const slideX = side === "left" ? "-100%" : "100%";
 
   return (
-    <>
-      {/* Backdrop */}
-      <div
-        className={UI_SIDE_DRAWER.backdrop}
-        onClick={attemptClose}
-        aria-hidden="true"
-      />
-
-      {/* Drawer */}
-      <div
-        ref={drawerRef}
-        className={[UI_SIDE_DRAWER.root, positionClass].join(" ")}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="drawer-title"
-       data-section="sidedrawer-div-598">
-        {/* Header */}
-        <Row
-          justify="between"
-          gap="none"
-          className={[
-            UI_SIDE_DRAWER.header,
-            UI_SIDE_DRAWER.headerMode[mode],
-          ].join(" ")}
-        >
-          <Row gap="3" className="min-w-0">
-            <Button
-              variant="ghost"
-              onClick={attemptClose}
-              className={UI_SIDE_DRAWER.closeBtn}
-              aria-label={tActions("close")}
-            >
-              <svg
-                className={UI_SIDE_DRAWER.closeIcon}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </Button>
-            <Heading level={3} id="drawer-title" className="truncate">
-              {title}
-            </Heading>
-          </Row>
-          {mode === "delete" && (
-            <Span className={UI_SIDE_DRAWER.deleteBadge}>
-              {tActions("delete")}
-            </Span>
-          )}
-        </Row>
-
-        {/* Content */}
-        <div className={UI_SIDE_DRAWER.content} data-section="sidedrawer-div-599">{children}</div>
-
-        {/* Footer */}
-        {footer && <div className={UI_SIDE_DRAWER.footer} data-section="sidedrawer-div-600">{footer}</div>}
-      </div>
-
-      {/* Unsaved changes warning overlay */}
-      {showUnsavedWarning && (
+    <AnimatePresence>
+      {isOpen && (
         <>
-          <div className={UI_SIDE_DRAWER.warnBackdrop} onClick={cancelClose} />
-          <div className={UI_SIDE_DRAWER.warnDialog} data-section="sidedrawer-div-601">
-            <div className={UI_SIDE_DRAWER.warnHeader} data-section="sidedrawer-div-602">
-              <div className={UI_SIDE_DRAWER.warnIcon} data-section="sidedrawer-div-603">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
-              </div>
-              <div data-section="sidedrawer-div-604">
-                <Heading level={4} className="mb-1">
-                  {tConfirm("unsavedChangesTitle")}
+          {/* Backdrop */}
+          <motion.div
+            className={UI_SIDE_DRAWER.backdrop}
+            onClick={attemptClose}
+            aria-hidden="true"
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+
+          {/* Drawer */}
+          <motion.div
+            ref={drawerRef}
+            className={[UI_SIDE_DRAWER.root, positionClass].join(" ")}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="drawer-title"
+            initial={reduced ? false : { x: slideX }}
+            animate={{ x: 0 }}
+            exit={{ x: slideX }}
+            transition={SPRING_SNAPPY}
+            data-section="sidedrawer-div-598"
+          >
+            {/* Header */}
+            <Row
+              justify="between"
+              gap="none"
+              className={[
+                UI_SIDE_DRAWER.header,
+                UI_SIDE_DRAWER.headerMode[mode],
+              ].join(" ")}
+            >
+              <Row gap="3" className="min-w-0">
+                <Button
+                  variant="ghost"
+                  onClick={attemptClose}
+                  className={UI_SIDE_DRAWER.closeBtn}
+                  aria-label={tActions("close")}
+                >
+                  <svg
+                    className={UI_SIDE_DRAWER.closeIcon}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </Button>
+                <Heading level={3} id="drawer-title" className="truncate">
+                  {title}
                 </Heading>
-                <Text className={UI_SIDE_DRAWER.warnText}>
-                  {tConfirm("unsavedChangesDescription")}
-                </Text>
+              </Row>
+              {mode === "delete" && (
+                <Span className={UI_SIDE_DRAWER.deleteBadge}>
+                  {tActions("delete")}
+                </Span>
+              )}
+            </Row>
+
+            {/* Content */}
+            <div className={UI_SIDE_DRAWER.content} data-section="sidedrawer-div-599">{children}</div>
+
+            {/* Footer */}
+            {footer && <div className={UI_SIDE_DRAWER.footer} data-section="sidedrawer-div-600">{footer}</div>}
+          </motion.div>
+
+          {/* Unsaved changes warning overlay */}
+          {showUnsavedWarning && (
+            <>
+              <div className={UI_SIDE_DRAWER.warnBackdrop} onClick={cancelClose} />
+              <div className={UI_SIDE_DRAWER.warnDialog} data-section="sidedrawer-div-601">
+                <div className={UI_SIDE_DRAWER.warnHeader} data-section="sidedrawer-div-602">
+                  <div className={UI_SIDE_DRAWER.warnIcon} data-section="sidedrawer-div-603">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
+                  </div>
+                  <div data-section="sidedrawer-div-604">
+                    <Heading level={4} className="mb-1">
+                      {tConfirm("unsavedChangesTitle")}
+                    </Heading>
+                    <Text className={UI_SIDE_DRAWER.warnText}>
+                      {tConfirm("unsavedChangesDescription")}
+                    </Text>
+                  </div>
+                </div>
+                <div className={UI_SIDE_DRAWER.warnActions} data-section="sidedrawer-div-605">
+                  <Button variant="outline" onClick={cancelClose} size="sm">
+                    {tActions("keepEditing")}
+                  </Button>
+                  <Button variant="danger" onClick={confirmClose} size="sm">
+                    {tActions("discardChanges")}
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className={UI_SIDE_DRAWER.warnActions} data-section="sidedrawer-div-605">
-              <Button variant="outline" onClick={cancelClose} size="sm">
-                {tActions("keepEditing")}
-              </Button>
-              <Button variant="danger" onClick={confirmClose} size="sm">
-                {tActions("discardChanges")}
-              </Button>
-            </div>
-          </div>
+            </>
+          )}
         </>
       )}
-    </>
+    </AnimatePresence>
   );
 }

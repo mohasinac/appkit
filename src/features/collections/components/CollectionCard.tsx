@@ -24,7 +24,7 @@ export function CollectionCard({ collection, href }: CollectionCardProps) {
       ) : (
         <Div className={`${LAYOUT.cardHeight.md} w-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30`} />
       )}
-      <Div className="p-4 bg-white dark:bg-slate-900">
+      <Div surface="default" padding="sm">
           <Heading level={3} className="font-semibold text-gray-900 dark:text-zinc-100">
           {collection.title}
         </Heading>

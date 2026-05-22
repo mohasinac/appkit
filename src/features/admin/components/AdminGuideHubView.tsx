@@ -182,9 +182,9 @@ export function AdminGuideHubView({ permissions = [], isFullAdmin = false }: Adm
       )}
 
       {/* Trust & Safety callout */}
-      <Section className="rounded-2xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-800 p-6">
+      <Section className="rounded-2xl border border-amber-200 bg-warning-surface dark:border-amber-800 p-6">
         <Div className="flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+          <AlertTriangle className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
           <Div>
             <Text className="font-semibold text-amber-800 dark:text-amber-300 mb-1">
               Remember: with great access comes responsibility

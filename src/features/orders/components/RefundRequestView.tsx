@@ -13,7 +13,7 @@
  */
 
 import React, { useState } from "react";
-import { Button, Checkbox, Div, Stack, Text, Textarea } from "../../../ui";
+import { Button, Checkbox, Div, Span, Stack, Text, Textarea } from "../../../ui";
 import { REFUND_COPY } from "../../../_internal/shared/features/orders/refund-copy";
 import { formatCurrency } from "../../../utils/number.formatter";
 import type { OrderDocument } from "../schemas";
@@ -55,9 +55,9 @@ export function RefundRequestView({
   if (order.contestable === false) {
     return (
       <Div
-        className={`rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-950/30 ${className}`}
+        className={`rounded-xl border border-amber-200 bg-warning-surface p-4 dark:border-amber-800 ${className}`}
       >
-        <Text size="sm" className="text-amber-700 dark:text-amber-400">
+        <Text size="sm" className="text-warning">
           {REFUND_COPY.request.alreadyRefundedMessage}
         </Text>
       </Div>
@@ -80,7 +80,7 @@ export function RefundRequestView({
     <Stack gap="md" className={className}>
       <Text size="sm" color="muted">
         {REFUND_COPY.request.orderTotalLabel}{" "}
-        <strong>{formatCurrency(order.totalPrice / 100, order.currency ?? "INR")}</strong>
+        <Span weight="bold">{formatCurrency(order.totalPrice / 100, order.currency ?? "INR")}</Span>
       </Text>
 
       <Stack gap="xs">

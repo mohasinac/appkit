@@ -84,9 +84,9 @@ function AlertCard({
   const windowLabel = WINDOW_OPTIONS.find((w) => w.value === String(alert.windowHours))?.label ?? `${alert.windowHours}h`;
 
   return (
-    <Div className="flex items-start justify-between gap-4 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900">
+    <Div surface="card" padding="sm" className="flex items-start justify-between gap-4">
       <div className="flex-1 min-w-0">
-        <Row className="items-center gap-2 mb-1 flex-wrap">
+        <Row className="gap-2 mb-1 flex-wrap">
           <Text className="font-medium text-zinc-900 dark:text-zinc-100 text-sm">{alert.label}</Text>
           <Badge variant={alert.isActive ? "success" : "default"}>
             {alert.isActive ? "Active" : "Paused"}
@@ -118,7 +118,7 @@ function AlertCard({
           variant="ghost"
           size="sm"
           onClick={() => onDelete(alert.id)}
-          className="text-red-500 hover:text-red-600"
+          className="text-error hover:text-error"
         >
           Delete
         </Button>
@@ -224,7 +224,7 @@ export function SellerAnalyticsAlertsView({
 
   return (
     <div className="space-y-6">
-      <Row className="items-center justify-between">
+      <Row justify="between">
         <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
           {labels.title ?? "Analytics Alerts"}
         </Heading>

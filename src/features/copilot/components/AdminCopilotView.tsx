@@ -111,7 +111,7 @@ function renderCopilotHistoryPanel(props: {
 }) {
   const { historyQuery, conversationInput, setConversationInput, loadConversation, labels } = props;
   return (
-    <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 space-y-3">
+    <Div surface="card" padding="sm" className="space-y-3">
       <Heading level={3} className="text-sm font-semibold">{labels?.historyTitle ?? "Conversation History"}</Heading>
       <form className="space-y-2" onSubmit={(e) => { e.preventDefault(); if (!conversationInput.trim()) return; loadConversation(conversationInput.trim()); }}>
         <Input label={labels?.conversationId ?? LBL_CONVERSATION_ID} value={conversationInput} onChange={(e) => setConversationInput(e.target.value)} placeholder="conv_..." />
@@ -251,7 +251,7 @@ export function AdminCopilotView({
             </Div>
           </Div>
 
-          <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 space-y-3">
+          <Div surface="card" padding="sm" className="space-y-3">
             <Heading level={3} className="text-sm font-semibold">
               {labels.historyTitle ?? "Conversation History"}
             </Heading>

@@ -93,7 +93,7 @@ export function SellerCouponEditorView({
           aria-hidden="true"
         />
         <Div className="border-b border-[var(--appkit-color-border)] px-6 py-5">
-          <Row className="items-center justify-between gap-3">
+          <Row justify="between" className="gap-3">
             <Heading level={2} className="text-lg font-semibold text-[var(--appkit-color-text)]">
               {isEdit ? "Edit Coupon" : "Create Coupon"}
             </Heading>
@@ -107,7 +107,7 @@ export function SellerCouponEditorView({
 
         <Stack gap="5" className="px-6 py-6">
           {error && (
-            <Div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+            <Div className="rounded-lg border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
               {error}
             </Div>
           )}
@@ -244,7 +244,7 @@ export function SellerCouponEditorView({
 
         {/* Footer actions */}
         <Div className="border-t border-[var(--appkit-color-border)] px-6 py-4">
-          <Row className="items-center justify-end gap-3">
+          <Row justify="end" className="gap-3">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} disabled={saving}>
                 Cancel

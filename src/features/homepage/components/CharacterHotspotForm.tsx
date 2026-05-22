@@ -386,7 +386,7 @@ export function CharacterHotspotForm({
             Place a Pin
           </Heading>
           <Text className="text-sm" style={{ color: "var(--color-muted)" }}>
-            <strong>Click anywhere on the image</strong> to drop a pin, or enter
+            <Span weight="bold">Click anywhere on the image</Span> to drop a pin, or enter
             exact coordinates below.
           </Text>
 
@@ -607,9 +607,9 @@ export function CharacterHotspotForm({
           </Heading>
           <Text className="text-sm" style={{ color: "var(--color-muted)" }}>
             Fill in the details for the pin at{" "}
-            <strong>
+            <Span weight="bold">
               {draftPos?.xPct}%, {draftPos?.yPct}%
-            </strong>
+            </Span>
             .
           </Text>
 

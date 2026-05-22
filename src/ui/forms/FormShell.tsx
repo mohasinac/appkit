@@ -9,8 +9,9 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
+import type { ZodType } from "zod";
 import { Button } from "../components/Button";
-import { Heading, Text } from "../components/Typography";
+import { Heading, Span, Text } from "../components/Typography";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -49,6 +50,10 @@ export interface FormShellProps {
   onPublish: (values: Record<string, unknown>) => Promise<void>;
   /** Current form values — caller owns state */
   values: Record<string, unknown>;
+  /** Zod schema for auto-validation on publish. Errors are mapped to field names. */
+  schema?: ZodType;
+  /** When true + schema provided, validate on every value change (not just publish). */
+  validateOnChange?: boolean;
   /** Whether any values differ from the persisted state */
   isDirty?: boolean;
   draftId?: string;
@@ -199,7 +204,7 @@ function ErrorSummary({ errors, visible }: ErrorSummaryProps) {
         {entries.map(([field, msg]) => (
           <li key={field}>
             <Text size="sm" variant="error">
-              <strong>{field}</strong>: {msg}
+              <Span weight="bold">{field}</Span>: {msg}
             </Text>
           </li>
         ))}
@@ -286,6 +291,30 @@ export function FormShellProvider({
   return <FormShellContext.Provider value={ctx}>{children}</FormShellContext.Provider>;
 }
 
+// ─── Schema validation helper ────────────────────────────────────────────────
+
+function validateSchema(
+  schema: ZodType,
+  values: Record<string, unknown>,
+  setFieldError: (name: string, error: string | null) => void,
+  setErrors: React.Dispatch<React.SetStateAction<Record<string, string>>>,
+): boolean {
+  const result = schema.safeParse(values);
+  if (result.success) {
+    setErrors({});
+    return true;
+  }
+  const newErrors: Record<string, string> = {};
+  for (const issue of result.error.issues) {
+    const path = issue.path.join(".");
+    if (path && !newErrors[path]) {
+      newErrors[path] = issue.message;
+    }
+  }
+  setErrors(newErrors);
+  return false;
+}
+
 // ─── FormShell ────────────────────────────────────────────────────────────────
 
 export function FormShell({
@@ -293,6 +322,8 @@ export function FormShell({
   onSaveDraft,
   onPublish,
   values,
+  schema,
+  validateOnChange = false,
   isDirty = false,
   autoSaveDelayMs = 2000,
   publishLabel = "Publish",
@@ -392,8 +423,18 @@ export function FormShell({
     }
   }, [onSaveDraft, values]);
 
+  // Schema-driven live validation on value changes
+  useEffect(() => {
+    if (!schema || !validateOnChange) return;
+    validateSchema(schema, values, setFieldError, setErrors);
+  }, [schema, validateOnChange, values, setFieldError]);
+
   const handlePublish = useCallback(async () => {
     setShowErrorSummary(true);
+    if (schema) {
+      const valid = validateSchema(schema, values, setFieldError, setErrors);
+      if (!valid) return;
+    }
     if (!isPublishReady) return;
     setIsSubmitting(true);
     try {
@@ -401,7 +442,7 @@ export function FormShell({
     } finally {
       setIsSubmitting(false);
     }
-  }, [isPublishReady, onPublish, values]);
+  }, [isPublishReady, onPublish, values, schema, setFieldError]);
 
   const ctx = useMemo<FormShellContextValue>(
     () => ({

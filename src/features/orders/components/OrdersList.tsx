@@ -5,14 +5,14 @@ import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { THEME_CONSTANTS } from "../../../tokens";
 
 const STATUS_COLORS: Record<OrderStatus, string> = {
-  pending: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
-  confirmed: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  processing: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  pending: "bg-warning-surface text-warning",
+  confirmed: "bg-info-surface text-info",
+  processing: "bg-info-surface text-info",
   shipped: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300",
-  delivered: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-  cancelled: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
-  refunded: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
-  return_requested: "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+  delivered: "bg-success-surface text-success",
+  cancelled: "bg-error-surface text-error",
+  refunded: "bg-warning-surface text-warning",
+  return_requested: "bg-warning-surface text-warning",
   returned: "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-300",
 };
 

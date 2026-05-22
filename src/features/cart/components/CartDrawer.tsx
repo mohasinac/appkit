@@ -16,7 +16,7 @@ interface CartItemRowProps {
 
 export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = false }: CartItemRowProps) {
   return (
-    <Div className={`flex gap-4 rounded-xl border bg-white dark:bg-slate-900 p-4 transition-opacity ${isOutOfStock ? "border-neutral-200 dark:border-slate-700 opacity-60" : "border-neutral-200 dark:border-slate-700"}`}>
+    <Div surface="card" padding="sm" className={`flex gap-4 transition-opacity ${isOutOfStock ? "opacity-60" : ""}`}>
       <Div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100 dark:bg-slate-800">
         {item.meta.image && (
           <Div
@@ -44,7 +44,7 @@ export function CartItemRow({ item, onQtyChange, onRemove, href, isOutOfStock = 
             </Text>
           )}
           {isOutOfStock && (
-            <Span className="flex-shrink-0 rounded bg-red-100 dark:bg-red-900/30 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[var(--appkit-color-error)]">
+            <Span className="flex-shrink-0 rounded bg-error-surface px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-error">
               Out of Stock
             </Span>
           )}

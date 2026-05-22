@@ -6,6 +6,7 @@ import { Button } from "./components/Button";
 import { Spinner } from "./components/Spinner";
 import { Pagination } from "./components/Pagination";
 import { Text } from "./components/Typography";
+import { AnimatedList } from "./components/Motion";
 import { GRID_MAP } from "./components/Layout";
 import type { GridCols } from "./components/Layout";
 import { Row } from "./components/Layout";
@@ -356,13 +357,15 @@ export function DataTable<T extends object>({
   const renderCardGrid = (mode: "grid" | "list") => {
     if (!mobileCardRender) return null;
     return (
-      <div
+      <AnimatedList
         className={
           mode === "grid"
             ? `${GRID_MAP[gridCols]} gap-6`
             : "flex flex-col gap-4"
         }
-       data-section="datatable-div-636">
+        staggerDelay={0.03}
+        data-section="datatable-div-636"
+      >
         {paginatedData.map((item) => (
           <SelectableCard
             key={keyExtractor(item)}
@@ -381,7 +384,7 @@ export function DataTable<T extends object>({
             {mobileCardRender(item)}
           </SelectableCard>
         ))}
-      </div>
+      </AnimatedList>
     );
   };
 

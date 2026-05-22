@@ -1,6 +1,6 @@
 import React from "react";
 import { UserCheck, Bell, Heart, Star, Lock, AlertTriangle, Flag } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { ROUTES } from "../../../constants";
 import { GC } from "../../_guide-cls";
 
@@ -18,7 +18,7 @@ const SECTIONS: AccountSection[] = [
     Icon: UserCheck, title: "Your Profile",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>Update your profile at <strong>My Account → My Profile</strong>. Your <strong>display name</strong> is shown to sellers on order summaries.</Text>
+        <Text className={GC.textMuted}>Update your profile at <Span weight="bold">My Account → My Profile</Span>. Your <Span weight="bold">display name</Span> is shown to sellers on order summaries.</Text>
         <Div className="grid sm:grid-cols-2 gap-4 text-sm">
           <Div>
             <Text className="font-semibold text-[var(--appkit-color-text)] mb-1">Visible to others:</Text>
@@ -54,7 +54,7 @@ const SECTIONS: AccountSection[] = [
           <li>Review request after a delivered order</li>
           <li>Support ticket replies</li>
         </ul>
-        <Text className={GC.textMuted}>Manage notification preferences at <strong>My Account → Settings → Notifications</strong>.</Text>
+        <Text className={GC.textMuted}>Manage notification preferences at <Span weight="bold">My Account → Settings → Notifications</Span>.</Text>
       </Div>
     ),
   },
@@ -62,9 +62,9 @@ const SECTIONS: AccountSection[] = [
     Icon: Heart, iconCls: "w-5 h-5 text-rose-500", title: "Wishlist",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>Save any listing to your wishlist by clicking the heart icon on a product card. View your wishlist at <strong>My Account → Wishlist</strong>.</Text>
+        <Text className={GC.textMuted}>Save any listing to your wishlist by clicking the heart icon on a product card. View your wishlist at <Span weight="bold">My Account → Wishlist</Span>.</Text>
         <Alert variant="info">
-          Your wishlist holds up to <strong>20 items</strong>. Remove items you no longer want to make room for new ones. Wishlists are private — other users cannot see your saved items.
+          Your wishlist holds up to <Span weight="bold">20 items</Span>. Remove items you no longer want to make room for new ones. Wishlists are private — other users cannot see your saved items.
         </Alert>
       </Div>
     ),
@@ -73,12 +73,12 @@ const SECTIONS: AccountSection[] = [
     Icon: Star, iconCls: "w-5 h-5 text-amber-400", title: "Leaving a Review",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>You can leave a review after your order is marked <strong>DELIVERED</strong>. Reviews are verified — only buyers who completed an order can review that product.</Text>
+        <Text className={GC.textMuted}>You can leave a review after your order is marked <Span weight="bold">DELIVERED</Span>. Reviews are verified — only buyers who completed an order can review that product.</Text>
         <ul className={GC.listMuted}>
-          <li><strong className={GC.textStrong}>Rating</strong> — 1–5 stars. Be fair and specific.</li>
-          <li><strong className={GC.textStrong}>Title &amp; body</strong> — describe item condition vs listing, packaging quality, and seller communication.</li>
-          <li><strong className={GC.textStrong}>Photos</strong> — optional but helpful for other buyers.</li>
-          <li><strong className={GC.textStrong}>Seller response</strong> — the seller may respond publicly. You cannot edit a review after a seller has responded.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Rating</Span> — 1–5 stars. Be fair and specific.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Title &amp; body</Span> — describe item condition vs listing, packaging quality, and seller communication.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Photos</Span> — optional but helpful for other buyers.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Seller response</Span> — the seller may respond publicly. You cannot edit a review after a seller has responded.</li>
         </ul>
         <Text className={GC.textMuted}>Review guidelines: no personal information, no hate speech or slurs, factual only.</Text>
       </Div>
@@ -88,9 +88,9 @@ const SECTIONS: AccountSection[] = [
     Icon: Lock, title: "Account Security",
     content: (
       <ul className={GC.listMuted}>
-        <li><strong className={GC.textStrong}>Change password</strong> — use &quot;Forgot password&quot; on the login page. A reset link is sent to your registered email.</li>
-        <li><strong className={GC.textStrong}>Active sessions</strong> — view all devices signed in at <strong>My Account → Sessions</strong>. Sign out unfamiliar devices immediately.</li>
-        <li><strong className={GC.textStrong}>Sign out everywhere</strong> — use &quot;Sign out everywhere&quot; on the Sessions page to invalidate all active sessions at once.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Change password</Span> — use &quot;Forgot password&quot; on the login page. A reset link is sent to your registered email.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Active sessions</Span> — view all devices signed in at <Span weight="bold">My Account → Sessions</Span>. Sign out unfamiliar devices immediately.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Sign out everywhere</Span> — use &quot;Sign out everywhere&quot; on the Sessions page to invalidate all active sessions at once.</li>
       </ul>
     ),
   },
@@ -100,11 +100,11 @@ const SECTIONS: AccountSection[] = [
       <>
         <Alert variant="warning" title="Top scam types in the collectibles market:">
           <ul className="space-y-1 text-sm mt-1">
-            <li><strong>1. Fake payment screenshots</strong> — always verify refunds in your bank app.</li>
-            <li><strong>2. Empty box shipping</strong> — item photos look real but the box arrives empty. Check seller rating.</li>
-            <li><strong>3. Fake graded cards</strong> — counterfeit PSA/BGS slabs. Verify cert numbers on the grading company&apos;s website.</li>
-            <li><strong>4. Urgency pressure</strong> — &quot;someone else is about to buy&quot;. Legitimate sellers don&apos;t pressure you.</li>
-            <li><strong>5. Sympathy plays</strong> — emotional manipulation is a red flag.</li>
+            <li><Span weight="bold">1. Fake payment screenshots</Span> — always verify refunds in your bank app.</li>
+            <li><Span weight="bold">2. Empty box shipping</Span> — item photos look real but the box arrives empty. Check seller rating.</li>
+            <li><Span weight="bold">3. Fake graded cards</Span> — counterfeit PSA/BGS slabs. Verify cert numbers on the grading company&apos;s website.</li>
+            <li><Span weight="bold">4. Urgency pressure</Span> — &quot;someone else is about to buy&quot;. Legitimate sellers don&apos;t pressure you.</li>
+            <li><Span weight="bold">5. Sympathy plays</Span> — emotional manipulation is a red flag.</li>
           </ul>
         </Alert>
         <Text className={`${GC.textMuted} mt-4`}>

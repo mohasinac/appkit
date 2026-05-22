@@ -50,7 +50,7 @@ export function SellerTopProducts({
                 </Text>
               </Div>
               <Div className="text-right ml-2">
-                <Span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                <Span className="text-sm font-semibold text-success">
                   {formatRevenue(product.revenue)}
                 </Span>
                 {renderProductLink?.(product)}

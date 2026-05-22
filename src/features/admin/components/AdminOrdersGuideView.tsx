@@ -1,6 +1,6 @@
 import React from "react";
 import { ShoppingBag, Hash, Scale, Wallet, RotateCcw, DollarSign, Gavel } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminOrdersGuideView() {
@@ -58,7 +58,7 @@ export function AdminOrdersGuideView() {
           content: (
             <ul className={GC.listMuted}>
               <li>Admin steps in when: seller is unresponsive for 3+ days on a return, or buyer escalates via support ticket.</li>
-              <li>Admin dispute tools: <strong>force-accept return</strong> (moves to REFUNDED and withholds seller payout), <strong>platform credit</strong> (future feature).</li>
+              <li>Admin dispute tools: <Span weight="bold">force-accept return</Span> (moves to REFUNDED and withholds seller payout), <Span weight="bold">platform credit</Span> (future feature).</li>
               <li>Document your reasoning in the support ticket before taking any force action.</li>
             </ul>
           ),
@@ -67,10 +67,10 @@ export function AdminOrdersGuideView() {
           Icon: Wallet, title: "Payouts",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">Payout cycle</strong>: Weekly. All DELIVERED orders (minus platform commission) are batched into a single payout per store.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Status flow</strong>: PENDING → PROCESSING → PAID / FAILED.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">FAILED payout</strong>: Check the store&apos;s <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">ordersIncluded</strong>: Array of order IDs bundled in this payout batch — use to audit which orders are covered.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Payout cycle</Span>: Weekly. All DELIVERED orders (minus platform commission) are batched into a single payout per store.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Status flow</Span>: PENDING → PROCESSING → PAID / FAILED.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">FAILED payout</Span>: Check the store&apos;s <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">payoutDetails</code> — UPI VPA or bank details may be stale. Contact the seller via their store email before retrying.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">ordersIncluded</Span>: Array of order IDs bundled in this payout batch — use to audit which orders are covered.</li>
             </ul>
           ),
         },
@@ -79,7 +79,7 @@ export function AdminOrdersGuideView() {
           content: (
             <ul className={GC.listMuted}>
               <li>Admin can view the return reason and attached photos on the order detail page.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">When to override a seller rejection</strong>: Only when photographic evidence clearly supports the buyer&apos;s claim of a significant not-as-described defect. Do not override for buyer&apos;s remorse.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">When to override a seller rejection</Span>: Only when photographic evidence clearly supports the buyer&apos;s claim of a significant not-as-described defect. Do not override for buyer&apos;s remorse.</li>
               <li>After admin override: refund is issued automatically via Razorpay (3–7 business days for card, 1–2 for UPI). Seller payout for that order is withheld.</li>
             </ul>
           ),
@@ -88,8 +88,8 @@ export function AdminOrdersGuideView() {
           Icon: DollarSign, title: "Commission & Settlement Math",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">platformFee</strong>: Set in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</code> (percentage). Applied to the order&apos;s item subtotal.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">customCommissionRate</strong>: Stored on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</code> for stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</code> capability. Overrides the platform default for that store.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">platformFee</Span>: Set in <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">siteSettings.fees.platformFee</code> (percentage). Applied to the order&apos;s item subtotal.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">customCommissionRate</Span>: Stored on <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">StoreDocument</code> for stores with the <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">lower_commission_rate</code> capability. Overrides the platform default for that store.</li>
               <li>Payout = order subtotal × (1 − commission rate). Shipping fees are passed through to the seller at cost.</li>
             </ul>
           ),

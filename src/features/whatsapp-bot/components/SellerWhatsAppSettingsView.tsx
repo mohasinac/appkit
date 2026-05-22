@@ -4,7 +4,7 @@ import React from "react";
 
 const CLS_SECTION_CARD = "border border-zinc-200 dark:border-zinc-700 rounded-xl p-5";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Stack, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Badge, Button, Div, Form, FormActions, Heading, Input, Row, Section, Span, Stack, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { WHATSAPP_SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -373,8 +373,8 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Div>
 
         <Text className="text-xs text-zinc-400 dark:text-zinc-400 mt-3">
-          <strong>Push</strong> sends your published standard products to WhatsApp.{" "}
-          <strong>Import</strong> creates draft products from your WhatsApp catalog.
+          <Span weight="bold">Push</Span> sends your published standard products to WhatsApp.{" "}
+          <Span weight="bold">Import</Span> creates draft products from your WhatsApp catalog.
           Products are matched by slug in the description field.
         </Text>
       </Section>
@@ -423,7 +423,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
 
           <Div className="grid grid-cols-2 gap-2">
             {SAMPLE_CATALOG_ITEMS.map((item) => (
-              <Div key={item.id} className="bg-white dark:bg-zinc-900 rounded-lg overflow-hidden shadow-sm">
+              <Div key={item.id} surface="card" className="overflow-hidden">
                 <Div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                   <Text className="text-2xl">{item.emoji}</Text>
                 </Div>
@@ -449,7 +449,7 @@ export function SellerWhatsAppSettingsView({ hasCapability }: SellerWhatsAppSett
         </Div>
 
         {!cfg?.connected && (
-          <Text className="text-xs text-amber-600 dark:text-amber-400 mt-2">
+          <Text className="text-xs text-warning mt-2">
             Connect your WhatsApp Business account above to enable the catalog.
           </Text>
         )}

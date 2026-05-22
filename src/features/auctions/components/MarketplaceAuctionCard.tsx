@@ -296,8 +296,8 @@ const DEFAULT_LABELS: Required<MarketplaceAuctionCardLabels> = {
 
 const COUNTDOWN_STATUS_CLASS = {
   ended: "bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400",
-  endingSoon: "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300",
-  live: "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300",
+  endingSoon: "bg-warning-surface text-warning",
+  live: "bg-success-surface text-success",
 } as const;
 
 function maskDisplayName(name: string): string {

@@ -295,7 +295,7 @@ export function AdminAdsView({
         <div data-section="adminadsview-div-242">
           <Text className="text-xs uppercase tracking-wide">{row.status}</Text>
           {row.publishReady === false ? (
-            <Text className="text-[11px] text-red-600 dark:text-red-300">Publish blocked</Text>
+            <Text className="text-[11px] text-error">Publish blocked</Text>
           ) : null}
         </div>
       ),

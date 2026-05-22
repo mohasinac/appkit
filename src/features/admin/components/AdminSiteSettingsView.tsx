@@ -790,7 +790,7 @@ export function AdminSiteSettingsView({
               <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800/50 space-y-2">
                 <div className="flex items-center justify-between">
                   <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">In-app (notification bell)</Text>
-                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">Always on</span>
+                  <span className="text-xs font-semibold text-success bg-success-surface px-2 py-0.5 rounded-full">Always on</span>
                 </div>
                 <Text className="text-xs text-zinc-500 dark:text-zinc-400">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
               </div>

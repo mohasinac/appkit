@@ -83,9 +83,9 @@ function renderAuctionInfoPanel(props: AuctionInfoPanelProps) {
         <Row gap="xs" className="mb-2 flex-wrap">
           <Span className="inline-block rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-300">🏷️ Live Auction</Span>
           {isEnded ? (
-            <Span className="inline-block rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400">Ended</Span>
+            <Span className="inline-block rounded-full bg-error-surface px-2.5 py-0.5 text-xs font-medium text-error">Ended</Span>
           ) : (
-            <Span className="inline-block rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">Active</Span>
+            <Span className="inline-block rounded-full bg-success-surface px-2.5 py-0.5 text-xs font-medium text-success">Active</Span>
           )}
         </Row>
         <Heading level={1} className="text-xl font-bold leading-snug text-zinc-900 dark:text-zinc-50 sm:text-2xl">{title}</Heading>
@@ -153,7 +153,7 @@ function renderAuctionStoreReviews(storeReviews: ReviewDocument[]) {
       </Div>
       <Stack gap="sm">
         {storeReviews.slice(0, 10).map((review) => (
-          <Div key={review.id} className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 p-4 space-y-1.5">
+          <Div key={review.id} surface="card" padding="sm" className="space-y-1.5">
             <Row justify="between" align="center">
               <Row gap="xs" align="center">
                 <Span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">{review.userName}</Span>

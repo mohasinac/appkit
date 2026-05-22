@@ -2,11 +2,11 @@ import type { PreOrderStatus } from "../types";
 import { Div, Span } from "../../../ui";
 
 const STATUS_MAP: Record<PreOrderStatus, { label: string; color: string }> = {
-  pending: { label: "Pending", color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300" },
-  confirmed: { label: "Confirmed", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" },
-  ready: { label: "Ready", color: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300" },
+  pending: { label: "Pending", color: "bg-warning-surface text-warning" },
+  confirmed: { label: "Confirmed", color: "bg-info-surface text-info" },
+  ready: { label: "Ready", color: "bg-success-surface text-success" },
   fulfilled: { label: "Fulfilled", color: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300" },
-  cancelled: { label: "Cancelled", color: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300" },
+  cancelled: { label: "Cancelled", color: "bg-error-surface text-error" },
 };
 
 interface PreOrderBadgeProps {

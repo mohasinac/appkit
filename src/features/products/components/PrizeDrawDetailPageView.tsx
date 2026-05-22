@@ -65,12 +65,12 @@ function statusLabel(s: "pending" | "open" | "closed" | undefined): string {
 function statusClass(s: "pending" | "open" | "closed" | undefined): string {
   switch (s) {
     case "open":
-      return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300";
+      return "bg-success-surface text-success";
     case "closed":
       return "bg-zinc-200 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-200";
     case "pending":
     default:
-      return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300";
+      return "bg-warning-surface text-warning";
   }
 }
 

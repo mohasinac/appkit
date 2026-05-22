@@ -1,6 +1,6 @@
 import React from "react";
 import { Gavel, TrendingUp, Trophy, AlertTriangle, Package, XCircle, ShieldCheck } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -17,10 +17,10 @@ const SECTIONS: AuctionSection[] = [
     Icon: Gavel, title: "How Auctions Work",
     content: (
       <ul className={GC.listMuted}>
-        <li><strong className={GC.textStrong}>Reserve price</strong> — the minimum amount the seller will accept. If bidding ends below the reserve, no sale occurs. You&apos;ll see &quot;Reserve not met&quot; on the listing.</li>
-        <li><strong className={GC.textStrong}>Bid increment</strong> — each new bid must exceed the current highest bid by at least the set increment. The increment is shown on the listing.</li>
-        <li><strong className={GC.textStrong}>Auction end time</strong> — displayed in your local timezone. Countdown timer shows hours and minutes remaining.</li>
-        <li><strong className={GC.textStrong}>Auto-extend</strong> — if a bid is placed within the last 5 minutes of an auction, the end time extends by 5 minutes. This prevents last-second sniping and gives all bidders a fair chance.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Reserve price</Span> — the minimum amount the seller will accept. If bidding ends below the reserve, no sale occurs. You&apos;ll see &quot;Reserve not met&quot; on the listing.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Bid increment</Span> — each new bid must exceed the current highest bid by at least the set increment. The increment is shown on the listing.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Auction end time</Span> — displayed in your local timezone. Countdown timer shows hours and minutes remaining.</li>
+        <li><Span weight="bold" className={GC.textStrong}>Auto-extend</Span> — if a bid is placed within the last 5 minutes of an auction, the end time extends by 5 minutes. This prevents last-second sniping and gives all bidders a fair chance.</li>
       </ul>
     ),
   },
@@ -28,13 +28,13 @@ const SECTIONS: AuctionSection[] = [
     Icon: TrendingUp, title: "Placing a Bid",
     content: (
       <>
-        <Text className={`${GC.textMuted} mb-3`}>Enter your bid amount — it must be at least the current high bid plus the increment — and click <strong>Place Bid</strong>. You&apos;ll be asked to confirm.</Text>
+        <Text className={`${GC.textMuted} mb-3`}>Enter your bid amount — it must be at least the current high bid plus the increment — and click <Span weight="bold">Place Bid</Span>. You&apos;ll be asked to confirm.</Text>
         <ul className={GC.listMuted}>
-          <li><strong className={GC.textStrong}>Outbid notification</strong> — you&apos;ll receive an in-app notification and email if someone outbids you.</li>
-          <li><strong className={GC.textStrong}>Max bid (proxy bidding)</strong> — enter the maximum you&apos;re willing to pay. LetItRip will automatically bid on your behalf up to that amount, in the minimum increments needed to keep you in the lead. Your max bid is never revealed to other bidders.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Outbid notification</Span> — you&apos;ll receive an in-app notification and email if someone outbids you.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Max bid (proxy bidding)</Span> — enter the maximum you&apos;re willing to pay. LetItRip will automatically bid on your behalf up to that amount, in the minimum increments needed to keep you in the lead. Your max bid is never revealed to other bidders.</li>
         </ul>
         <Text className={`${GC.textMuted} mt-3`}>
-          <strong>Example:</strong> Current bid is ₹500, increment is ₹50. You set a max bid of ₹800. Your bid is placed at ₹550. If someone bids ₹600, the system auto-bids ₹650 for you — up to ₹800.
+          <Span weight="bold">Example:</Span> Current bid is ₹500, increment is ₹50. You set a max bid of ₹800. Your bid is placed at ₹550. If someone bids ₹600, the system auto-bids ₹650 for you — up to ₹800.
         </Text>
       </>
     ),
@@ -45,9 +45,9 @@ const SECTIONS: AuctionSection[] = [
       <>
         <Text className={`${GC.textMuted} mb-3`}>When an auction ends and you&apos;re the highest bidder (above the reserve), you&apos;ve won.</Text>
         <ul className={GC.listMuted}>
-          <li><strong className={GC.textStrong}>Payment window</strong> — you have <strong>48 hours</strong> from the auction end time to complete payment.</li>
-          <li><strong className={GC.textStrong}>No payment</strong> — the order auto-cancels after 48 hours, you may receive a bid restriction, and the item may be offered to the next highest bidder.</li>
-          <li><strong className={GC.textStrong}>Winner badge</strong> — your winning order gets an &quot;Auction Winner&quot; badge in My Orders.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Payment window</Span> — you have <Span weight="bold">48 hours</Span> from the auction end time to complete payment.</li>
+          <li><Span weight="bold" className={GC.textStrong}>No payment</Span> — the order auto-cancels after 48 hours, you may receive a bid restriction, and the item may be offered to the next highest bidder.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Winner badge</Span> — your winning order gets an &quot;Auction Winner&quot; badge in My Orders.</li>
         </ul>
       </>
     ),
@@ -56,7 +56,7 @@ const SECTIONS: AuctionSection[] = [
     Icon: AlertTriangle, iconCls: "w-5 h-5 text-amber-500", title: "Bid Retraction Policy",
     content: (
       <Alert variant="warning">
-        Bids on LetItRip are <strong>binding</strong>. Only place a bid if you intend to pay. Retraction requires contacting support with a valid reason. Repeated retractions may result in a temporary restriction on placing new bids.
+        Bids on LetItRip are <Span weight="bold">binding</Span>. Only place a bid if you intend to pay. Retraction requires contacting support with a valid reason. Repeated retractions may result in a temporary restriction on placing new bids.
       </Alert>
     ),
   },
@@ -66,9 +66,9 @@ const SECTIONS: AuctionSection[] = [
       <>
         <Text className={`${GC.textMuted} mb-3`}>A pre-order is an item not yet in stock. The seller takes deposits or full payment upfront and orders from their supplier in bulk once demand is confirmed.</Text>
         <ul className={GC.listMuted}>
-          <li><strong className={GC.textStrong}>Deposit vs full price</strong> — check the listing. Some sellers take a partial deposit; others require full payment.</li>
-          <li><strong className={GC.textStrong}>Expected delivery date</strong> — shown on the listing. This is the seller&apos;s estimate based on supplier timelines — not a guaranteed date.</li>
-          <li><strong className={GC.textStrong}>&quot;Confirmed supplier&quot; status</strong> — some listings show this badge, meaning the seller has placed the order with their supplier and stock is secured.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Deposit vs full price</Span> — check the listing. Some sellers take a partial deposit; others require full payment.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Expected delivery date</Span> — shown on the listing. This is the seller&apos;s estimate based on supplier timelines — not a guaranteed date.</li>
+          <li><Span weight="bold" className={GC.textStrong}>&quot;Confirmed supplier&quot; status</Span> — some listings show this badge, meaning the seller has placed the order with their supplier and stock is secured.</li>
         </ul>
       </>
     ),
@@ -77,7 +77,7 @@ const SECTIONS: AuctionSection[] = [
     Icon: XCircle, iconCls: "w-5 h-5 text-rose-500", title: "Pre-order Cancellations",
     content: (
       <>
-        <Text className={`${GC.textMuted} mb-3`}>To cancel a pre-order before the item is shipped, open a support ticket with category <strong>Billing &amp; Payment</strong> or <strong>Order Issue</strong> and reference your order ID.</Text>
+        <Text className={`${GC.textMuted} mb-3`}>To cancel a pre-order before the item is shipped, open a support ticket with category <Span weight="bold">Billing &amp; Payment</Span> or <Span weight="bold">Order Issue</Span> and reference your order ID.</Text>
         <Text className={GC.textMuted}>After cancellation is accepted, refunds follow the standard timeline: 3–7 business days to your original payment method.</Text>
       </>
     ),

@@ -180,7 +180,7 @@ export function BlogPostView({
         {renderAuthorBio && <Div className="mb-6">{renderAuthorBio(post)}</Div>}
 
         {/* Content */}
-        <Div className="bg-white dark:bg-slate-900 rounded-xl border border-neutral-200 dark:border-slate-700 p-8 mb-12">
+        <Div surface="card" padding="xl" className="mb-12">
           {renderContent ? renderContent(post) : (
             <RichText html={normalizeRichTextHtml(post.content ?? "")} proseClass="prose max-w-none dark:prose-invert" />
           )}

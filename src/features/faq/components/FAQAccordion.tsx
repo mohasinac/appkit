@@ -91,7 +91,7 @@ export function FAQAccordion({
 
   if (faqs.length === 0 && labels?.noResults) {
     return (
-      <Div className="rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-8 text-center">
+      <Div surface="card" padding="xl" className="text-center">
         <Text className="text-neutral-600 dark:text-zinc-300">{labels.noResults}</Text>
       </Div>
     );
@@ -99,7 +99,8 @@ export function FAQAccordion({
 
   return (
     <Div
-      className={`divide-y divide-neutral-100 dark:divide-slate-700 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 ${className}`}
+      surface="card"
+      className={`divide-y divide-neutral-100 dark:divide-slate-700 px-5 ${className}`}
     >
       {faqs.map((faq) => (
         <FAQAccordionItem

@@ -64,10 +64,10 @@ export function PreOrderActionsClient({
       )}
 
       {error && (
-        <Text className="text-xs text-red-600 dark:text-red-400">{error}</Text>
+        <Text className="text-xs text-error">{error}</Text>
       )}
       {success && (
-        <Text className="text-xs text-emerald-600 dark:text-emerald-400">
+        <Text className="text-xs text-success">
           ✓ Reserved! Redirecting to checkout…
         </Text>
       )}

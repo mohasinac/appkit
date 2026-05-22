@@ -333,7 +333,7 @@ function PreOrderBuyBarPanel({
             </Div>
           )}
           <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-            <Row wrap gap="sm" className="justify-center text-center">
+            <Row wrap gap="sm" justify="center" className="text-center">
               {[
                 { icon: "🔒", label: "Secure\nPayment" },
                 { icon: "📅", label: "Guaranteed\nDelivery" },

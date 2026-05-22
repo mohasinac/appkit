@@ -198,7 +198,7 @@ export function SellerPayoutMethodsView({
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+          <Div className="mb-4 rounded-xl border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
             {errorMessage}
           </Div>
         )}
@@ -236,14 +236,14 @@ export function SellerPayoutMethodsView({
                         <Text className="text-sm font-medium">{row.label}</Text>
                         <TypeBadge type={row.type} />
                         {row.isDefault && (
-                          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+                          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-success-surface text-success">
                             Default
                           </span>
                         )}
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                             row.isActive
-                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                              ? "bg-success-surface text-success"
                               : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
                           }`}
                         >

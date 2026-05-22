@@ -51,7 +51,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           <label className={LABEL_BASE}>
             {label}
             {required && (
-              <Span className="text-red-500 ml-1" aria-hidden="true">
+              <Span className="text-error ml-1" aria-hidden="true">
                 *
               </Span>
             )}
@@ -64,7 +64,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className={cn(
                 "absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
-                  ? "text-red-600 dark:text-red-400"
+                  ? "text-error"
                   : "text-zinc-400 dark:text-zinc-400",
                 "group-focus-within:text-primary-500 dark:group-focus-within:text-secondary-400",
               )}
@@ -100,7 +100,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               className={cn(
                 "absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150",
                 error
-                  ? "text-red-600 dark:text-red-400"
+                  ? "text-error"
                   : "text-zinc-400 dark:text-zinc-400",
               )}
             >

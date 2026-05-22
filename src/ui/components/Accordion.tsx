@@ -3,6 +3,7 @@ import React, { createContext, useContext, useMemo, useState } from "react";
 import { Button } from "./Button";
 import { Div } from "./Div";
 import { Span } from "./Typography";
+import { Collapse } from "./Motion";
 
 interface AccordionContextValue {
   type: "single" | "multiple";
@@ -169,7 +170,9 @@ export function AccordionItem({
           ▾
         </Span>
       </Button>
-      {isOpen && <Div className="appkit-accordion__panel">{children}</Div>}
+      <Collapse isOpen={isOpen}>
+        <Div className="appkit-accordion__panel">{children}</Div>
+      </Collapse>
     </Div>
   );
 }

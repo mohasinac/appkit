@@ -287,7 +287,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
       key: "status",
       header: "Status",
       render: (row) => (
-        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${row.status === "Active" ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
+        <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${row.status === "Active" ? "bg-success-surface text-success" : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"}`}>
           {row.status}
         </span>
       ),
@@ -347,7 +347,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+          <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
             {errorMessage}
           </div>
         )}

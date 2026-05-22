@@ -17,7 +17,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { Button, Div, Heading, LoginRequiredModal, Modal, Stack, Text, useToast } from "../../../ui";
+import { Button, Div, Heading, LoginRequiredModal, Modal, Span, Stack, Text, useToast } from "../../../ui";
 import { isAuthError } from "../../../utils/auth-error";
 import { PrizeDrawCollage } from "./PrizeDrawCollage";
 import type { PrizeDrawItem } from "../schemas/firestore";
@@ -227,7 +227,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "error" ? (
-          <Div className="rounded border border-red-400/40 bg-red-50 px-4 py-3 text-red-900 dark:bg-red-900/30 dark:text-red-100">
+          <Div className="rounded border border-red-400/40 bg-error-surface px-4 py-3 text-error">
             <Text className="text-sm font-semibold">Something went wrong</Text>
             <Text className="text-sm">{errorMessage}</Text>
           </Div>
@@ -287,9 +287,9 @@ export function PrizeRevealModal({
 
         {/* Always-visible fairness disclaimer. */}
         <Div className="rounded border border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface-muted)] px-3 py-2 text-xs text-[var(--appkit-color-text-muted)]">
-          <strong className="text-[var(--appkit-color-text)]">
+          <Span weight="bold" className="text-[var(--appkit-color-text)]">
             Fairness guarantee:
-          </strong>{" "}
+          </Span>{" "}
           Winners are picked by <code>crypto.randomInt</code> running on
           LetItRip's server before the animation starts. The animation is
           theatrical — neither the store nor LetItRip staff can influence the

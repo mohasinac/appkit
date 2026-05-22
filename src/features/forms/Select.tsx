@@ -38,7 +38,7 @@ export function Select({
         <label className={LABEL_BASE}>
           {label}
           {required && (
-            <Span className="text-red-500 ml-1" aria-hidden="true">
+            <Span className="text-error ml-1" aria-hidden="true">
               *
             </Span>
           )}
@@ -74,7 +74,7 @@ export function Select({
             className={cn(
               "w-5 h-5 transition-transform duration-200",
               error
-                ? "text-red-500 dark:text-red-400"
+                ? "text-error"
                 : "text-zinc-400 dark:text-zinc-400",
             )}
             viewBox="0 0 20 20"

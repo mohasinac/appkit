@@ -255,7 +255,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
         })()}
 
         {product.rating !== undefined && (
-          <Row className="mt-1 gap-1 items-center">
+          <Row className="mt-1 gap-1">
             <Span className="text-[11px] text-amber-400">★</Span>
             <Span className="text-[11px] text-zinc-500 dark:text-zinc-400">
               {product.rating.toFixed(1)}
@@ -266,7 +266,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
 
         {/* Price row */}
         <Div className="mt-auto pt-2">
-          <Row className="items-baseline gap-2">
+          <Row align="baseline" className="gap-2">
             <Span className="text-base font-bold text-primary dark:text-primary-400">
               {formatCurrency(product.price, getDefaultCurrency())}
             </Span>
@@ -293,7 +293,7 @@ export function ProductCard<T extends ProductItem = ProductItem>({
               <Text
                 className={`mt-1 text-[11px] font-medium ${
                   low
-                    ? "text-amber-600 dark:text-amber-400"
+                    ? "text-warning"
                     : "text-zinc-500 dark:text-zinc-400"
                 }`}
               >
@@ -539,7 +539,7 @@ function ProductListRow<T extends ProductItem = ProductItem>({
               <Span
                 className={`text-[11px] font-medium ${
                   low
-                    ? "text-amber-600 dark:text-amber-400"
+                    ? "text-warning"
                     : "text-zinc-400 dark:text-zinc-400"
                 }`}
               >

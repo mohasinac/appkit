@@ -270,7 +270,7 @@ export function TitleBarLayout({
   ) : null;
 
   const authButtonsEl = !user && (loginHref || registerHref) ? (
-    <Row gap="xs" className="hidden lg:flex items-center">
+    <Row gap="xs" className="hidden lg:flex">
       {loginHref && (
         <Link
           href={loginHref}

@@ -107,6 +107,18 @@
   color: var(--appkit-color-secondary);
 }
 
+.appkit-color--faint {
+  color: var(--appkit-color-zinc-400);
+}
+
+.appkit-color--warning {
+  color: var(--appkit-color-warning, #d97706);
+}
+
+.appkit-color--info {
+  color: var(--appkit-color-info, #0284c7);
+}
+
 .dark .appkit-color--primary {
   color: var(--appkit-color-text);
 }
@@ -129,6 +141,18 @@
 
 .dark .appkit-color--accent {
   color: var(--appkit-color-primary-400);
+}
+
+.dark .appkit-color--faint {
+  color: var(--appkit-color-zinc-600);
+}
+
+.dark .appkit-color--warning {
+  color: var(--appkit-color-warning, #fbbf24);
+}
+
+.dark .appkit-color--info {
+  color: var(--appkit-color-info, #38bdf8);
 }
 
 .appkit-label {

@@ -46,6 +46,20 @@ export type {
   UlProps,
   OlProps,
   LiProps,
+  TableProps,
+  TheadProps,
+  TbodyProps,
+  TrProps,
+  ThProps,
+  TdProps,
+  CodeProps,
+  PreProps,
+  BlockquoteProps,
+  FigureProps,
+  FigcaptionProps,
+  DlProps,
+  DtProps,
+  DdProps,
 } from "./components/Semantic";
 export {
   Section,
@@ -60,12 +74,27 @@ export {
   Ul,
   Ol,
   Li,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Code,
+  Pre,
+  Blockquote,
+  Figure,
+  Figcaption,
+  Dl,
+  Dt,
+  Dd,
 } from "./components/Semantic";
 
 export type { DivProps } from "./components/Div";
 export { Div } from "./components/Div";
 
 // --- Typography primitives ----------------------------------------------------
+export type { ColorVariant } from "./components/Typography";
 export { Heading, Text, Label, Caption, Span } from "./components/Typography";
 
 // --- Filter chip group (SB10-C completion, S8 2026-05-13) --------------------
@@ -383,6 +412,24 @@ export {
   mergeTableConfig,
 } from "../contracts";
 
+// --- Surface tokens -----------------------------------------------------------
+export type {
+  SurfaceKey,
+  PaddingKey,
+  RoundedKey,
+  BorderKey,
+  ShadowKey,
+  SurfaceProps,
+} from "./components/surface-tokens";
+export {
+  SURFACE_MAP,
+  PADDING_MAP,
+  ROUNDED_MAP,
+  BORDER_MAP,
+  SHADOW_MAP,
+  buildSurfaceClasses,
+} from "./components/surface-tokens";
+
 // --- Layout Primitives --------------------------------------------------------
 export type {
   GapKey,
@@ -477,3 +524,45 @@ export { FormActionBar } from "./components/FormActionBar";
 // --- ConfirmDeleteModal ------------------------------------------------------
 export type { ConfirmDeleteModalProps } from "./components/ConfirmDeleteModal";
 export { ConfirmDeleteModal } from "./components/ConfirmDeleteModal";
+
+// --- Motion / Animation primitives -------------------------------------------
+export type {
+  FadeInProps,
+  SlideUpProps,
+  SlideInProps,
+  ScaleInProps,
+  CollapseProps,
+  PressScaleProps,
+  HoverLiftProps,
+  AnimatedListProps,
+  AnimatedDivProps,
+  AnimatedStackProps,
+  AnimatedRowProps,
+  DraggableProps,
+  SwipeableProps,
+} from "./components/Motion";
+export {
+  FadeIn,
+  SlideUp,
+  SlideIn,
+  ScaleIn,
+  Collapse,
+  PressScale,
+  HoverLift,
+  AnimatedList,
+  AnimatedDiv,
+  AnimatedStack,
+  AnimatedRow,
+  Draggable,
+  Swipeable,
+  AnimatePresence,
+} from "./components/Motion";
+
+// --- Motion tokens -----------------------------------------------------------
+export type { MotionPreset } from "../tokens/motion";
+export {
+  MOTION_PRESETS,
+  SPRING_SNAPPY,
+  SPRING_GENTLE,
+  EASE_OUT,
+} from "../tokens/motion";

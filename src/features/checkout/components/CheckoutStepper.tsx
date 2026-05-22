@@ -21,7 +21,7 @@ export function CheckoutStepper({ steps, current }: CheckoutStepperProps) {
               <Span
                 className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
                   isDone
-                    ? "bg-green-500 text-white"
+                    ? "bg-success text-white"
                     : isActive
                       ? "bg-neutral-900 text-white"
                       : "bg-neutral-200 dark:bg-slate-700 text-neutral-500 dark:text-zinc-400"

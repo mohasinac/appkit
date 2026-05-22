@@ -78,6 +78,10 @@ export interface MediaUploadFieldProps {
    * Set true after successful save to prevent auto-cleanup on unmount.
    */
   isPersisted?: boolean;
+  /** Allow selecting multiple files at once. Each is uploaded individually. */
+  multiple?: boolean;
+  /** Called with each successfully uploaded URL when `multiple` is true. */
+  onAddUrl?: (url: string) => void;
 }
 
 function isVideo(url: string): boolean {
@@ -220,23 +224,38 @@ function MediaPreviewPanel({
   return (
     <Div className="rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 p-3">
       {isVideo(value) ? (
-        <Div className="relative aspect-video overflow-hidden rounded-lg">
-          <MediaVideo src={value} alt={label} controls objectFit="contain" />
+        <Div className="space-y-2">
+          <Div className="relative aspect-video overflow-hidden rounded-lg">
+            <MediaVideo src={value} alt={label} controls objectFit="contain" />
+          </Div>
+          {/* Video size warning for large files */}
+          <Text size="xs" variant="secondary">
+            Video uploaded successfully. Large videos may take longer to process.
+          </Text>
         </Div>
       ) : isImage(value) ? (
         <Div className="relative aspect-video overflow-hidden rounded-lg">
           <MediaImage src={value} alt={label} size="card" objectFit="contain" />
         </Div>
       ) : isPdf(value) ? (
-        <Row gap="md" align="center">
-          <Div aria-hidden className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
-            <span className="text-xs font-bold">PDF</span>
+        <Div className="space-y-2">
+          <Div className="relative w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700" style={{ height: 280 }}>
+            <iframe
+              src={value}
+              title={filenameFromUrl(value)}
+              className="w-full h-full border-0"
+            />
           </Div>
-          <a href={value} target="_blank" rel="noopener noreferrer"
-            className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400">
-            {filenameFromUrl(value)}
-          </a>
-        </Row>
+          <Row gap="md" align="center">
+            <Div aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+              <span className="text-xs font-bold">PDF</span>
+            </Div>
+            <a href={value} target="_blank" rel="noopener noreferrer"
+              className="text-sm font-medium text-blue-600 underline break-all dark:text-blue-400">
+              {filenameFromUrl(value)}
+            </a>
+          </Row>
+        </Div>
       ) : (
         <a href={value} target="_blank" rel="noopener noreferrer"
           className="text-sm underline break-all text-blue-600 dark:text-blue-400">
@@ -284,6 +303,8 @@ export function MediaUploadField({
   onAbort,
   onStagedUrlsChange,
   isPersisted = false,
+  multiple = false,
+  onAddUrl,
 }: MediaUploadFieldProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -457,20 +478,33 @@ export function MediaUploadField({
     setPendingVideoUrl(null);
   };
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const uploadSingleFile = async (file: File) => {
     const fileSizeMB = file.size / 1024 / 1024;
     if (fileSizeMB > maxSizeMB) {
-      setError(`File size must be less than ${maxSizeMB}MB`);
-      return;
+      setError(`${file.name}: exceeds ${maxSizeMB}MB limit`);
+      return null;
     }
+    const url = await onUpload(file);
+    stageUrl(url);
+    return { url, type: file.type };
+  };
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
     setError(null);
     setIsLoading(true);
     try {
-      const url = await onUpload(file);
-      stageUrl(url);
-      afterUpload(url, file.type);
+      if (multiple && files.length > 1) {
+        for (const file of Array.from(files)) {
+          const result = await uploadSingleFile(file);
+          if (result) onAddUrl?.(result.url);
+        }
+      } else {
+        const result = await uploadSingleFile(files[0]);
+        if (result) afterUpload(result.url, result.type);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -649,6 +683,7 @@ export function MediaUploadField({
         ref={fileInputRef}
         type="file"
         accept={accept}
+        multiple={multiple}
         onChange={handleFileChange}
         className="hidden"
         aria-hidden="true"

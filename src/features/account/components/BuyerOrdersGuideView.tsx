@@ -1,6 +1,6 @@
 import React from "react";
 import { PackageCheck, Truck, Camera, RotateCcw, Clock, Headphones, Scale } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 // ─── Section data ─────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ const SECTIONS: OrderSection[] = [
     Icon: Truck, title: "Tracking Your Order",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>Once your order is SHIPPED, go to <strong>My Orders → [Order] → Tracking</strong> tab. Your tracking number and carrier name are shown there.</Text>
+        <Text className={GC.textMuted}>Once your order is SHIPPED, go to <Span weight="bold">My Orders → [Order] → Tracking</Span> tab. Your tracking number and carrier name are shown there.</Text>
         <Text className={GC.textMuted}>Paste the tracking number into the carrier&apos;s website for real-time updates. Common carriers: Shiprocket, Delhivery, BlueDart, India Post, Ekart.</Text>
         <Text className={GC.textMuted}>Typical delivery times: 2–5 days metro cities, 5–10 days remote areas, 7–14 days for pre-orders subject to supplier shipping.</Text>
       </Div>
@@ -56,7 +56,7 @@ const SECTIONS: OrderSection[] = [
         <Alert variant="warning" title="Do NOT refuse delivery.">
           Accept the parcel, then photograph it immediately — both the packaging and the contents before and after unwrapping. This evidence is required for any return or damage claim.
         </Alert>
-        <Text className={`${GC.textMuted} mt-4`}>After photographing, open a <strong>return request within 2 days of delivery</strong> and attach your photos.</Text>
+        <Text className={`${GC.textMuted} mt-4`}>After photographing, open a <Span weight="bold">return request within 2 days of delivery</Span> and attach your photos.</Text>
       </>
     ),
   },
@@ -64,7 +64,7 @@ const SECTIONS: OrderSection[] = [
     Icon: RotateCcw, title: "Return Policy",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>Platform-wide return window: <strong>7 days from DELIVERED date</strong>. Some stores offer 30-day windows — shown on the product page.</Text>
+        <Text className={GC.textMuted}>Platform-wide return window: <Span weight="bold">7 days from DELIVERED date</Span>. Some stores offer 30-day windows — shown on the product page.</Text>
         <Text className="text-sm font-semibold text-[var(--appkit-color-text)]">Non-returnable items:</Text>
         <ul className={GC.listDiscMuted}>
           <li>Opened card packs (Pokémon, Yu-Gi-Oh!, etc.)</li>
@@ -80,9 +80,9 @@ const SECTIONS: OrderSection[] = [
       <Div className="space-y-3">
         <Text className={GC.textMuted}>After the seller accepts your return and confirms receipt of the item:</Text>
         <ul className={GC.listMuted}>
-          <li><strong className={GC.textStrong}>Credit/debit card</strong> — 3–7 business days back to your card via Razorpay.</li>
-          <li><strong className={GC.textStrong}>UPI</strong> — typically 1–2 business days.</li>
-          <li><strong className={GC.textStrong}>Net banking</strong> — 3–5 business days.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Credit/debit card</Span> — 3–7 business days back to your card via Razorpay.</li>
+          <li><Span weight="bold" className={GC.textStrong}>UPI</Span> — typically 1–2 business days.</li>
+          <li><Span weight="bold" className={GC.textStrong}>Net banking</Span> — 3–5 business days.</li>
         </ul>
         <Text className={GC.textMuted}>Refunds go back to the original payment method. LetItRip does not issue platform credits in lieu of a refund unless both parties agree.</Text>
       </Div>
@@ -112,8 +112,8 @@ const SECTIONS: OrderSection[] = [
     Icon: Scale, title: "Dispute Escalation",
     content: (
       <Div className="space-y-3">
-        <Text className={GC.textMuted}>If the seller does not respond to your return request within <strong>3 days</strong>, LetItRip&apos;s support team steps in to mediate.</Text>
-        <Text className={GC.textMuted}>If mediation cannot resolve the dispute, LetItRip issues a <strong>full platform-funded refund</strong> to the buyer. The seller&apos;s payout for that order is withheld.</Text>
+        <Text className={GC.textMuted}>If the seller does not respond to your return request within <Span weight="bold">3 days</Span>, LetItRip&apos;s support team steps in to mediate.</Text>
+        <Text className={GC.textMuted}>If mediation cannot resolve the dispute, LetItRip issues a <Span weight="bold">full platform-funded refund</Span> to the buyer. The seller&apos;s payout for that order is withheld.</Text>
         <Alert variant="info">
           All dispute decisions are final. False dispute claims may result in account restrictions. Always provide accurate, photographic evidence when raising a dispute.
         </Alert>

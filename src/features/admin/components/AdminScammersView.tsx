@@ -133,9 +133,9 @@ function buildScammerColumns(
 }
 
 const STATUS_BADGE: Record<string, string> = {
-  pending_review: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
-  verified: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-  rejected: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  pending_review: "bg-warning-surface text-warning",
+  verified: "bg-success-surface text-success",
+  rejected: "bg-error-surface text-error",
   removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
@@ -271,7 +271,7 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
 
         <div className="py-4 px-3 sm:px-4">
           {errorMessage && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+            <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
               {errorMessage}
             </div>
           )}

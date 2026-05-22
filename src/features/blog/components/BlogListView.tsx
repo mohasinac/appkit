@@ -89,7 +89,7 @@ export function BlogCard({ post, href, onClick, className = "" }: BlogCardProps)
             {post.excerpt}
           </Text>
         )}
-        <Row className="mt-auto pt-3 gap-3 items-center">
+        <Row className="mt-auto pt-3 gap-3">
           {post.authorAvatar ? (
             <Div
               role="img"

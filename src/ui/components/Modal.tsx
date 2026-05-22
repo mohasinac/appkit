@@ -1,8 +1,10 @@
 "use client"
 import React from "react";
 import { createPortal } from "react-dom";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Heading } from "./Typography";
 import { Button } from "./Button";
+import { SPRING_GENTLE } from "../../tokens/motion";
 
 export interface ModalProps {
   isOpen?: boolean;
@@ -97,61 +99,77 @@ export function Modal({
     }
   };
 
-  if (!visible || typeof document === "undefined") {
+  const reduced = useReducedMotion();
+
+  if (typeof document === "undefined") {
     return null;
   }
 
   return createPortal(
-    <div
-      className="appkit-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? titleId : undefined}
-      onKeyDown={handleKeyDown}
-     data-section="modal-div-561">
-      <div
-        className="appkit-modal__backdrop"
-        aria-hidden="true"
-        onClick={onClose}
-      />
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          className="appkit-modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? titleId : undefined}
+          onKeyDown={handleKeyDown}
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
+          data-section="modal-div-561"
+        >
+          <div
+            className="appkit-modal__backdrop"
+            aria-hidden="true"
+            onClick={onClose}
+          />
 
-      <div
-        ref={panelRef}
-        tabIndex={-1}
-        className={["appkit-modal__panel", SIZE_CLASSES[size], className]
-          .filter(Boolean)
-          .join(" ")}
-       data-section="modal-div-562">
-        {(title || showCloseButton) && (
-          <div className="appkit-modal__header" data-section="modal-div-563">
-            {title ? (
-              <Heading level={2} id={titleId} className="appkit-modal__title">
-                {title}
-              </Heading>
-            ) : (
-              <span />
+          <motion.div
+            ref={panelRef}
+            tabIndex={-1}
+            className={["appkit-modal__panel", SIZE_CLASSES[size], className]
+              .filter(Boolean)
+              .join(" ")}
+            initial={reduced ? false : { opacity: 0, scale: 0.95, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 8 }}
+            transition={SPRING_GENTLE}
+            data-section="modal-div-562"
+          >
+            {(title || showCloseButton) && (
+              <div className="appkit-modal__header" data-section="modal-div-563">
+                {title ? (
+                  <Heading level={2} id={titleId} className="appkit-modal__title">
+                    {title}
+                  </Heading>
+                ) : (
+                  <span />
+                )}
+                {showCloseButton ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    type="button"
+                    onClick={onClose}
+                    className="appkit-modal__close"
+                    aria-label="Close"
+                  >
+                    <span className="appkit-modal__close-icon" aria-hidden="true">
+                      ×
+                    </span>
+                  </Button>
+                ) : null}
+              </div>
             )}
-            {showCloseButton ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                type="button"
-                onClick={onClose}
-                className="appkit-modal__close"
-                aria-label="Close"
-              >
-                <span className="appkit-modal__close-icon" aria-hidden="true">
-                  ×
-                </span>
-              </Button>
-            ) : null}
-          </div>
-        )}
 
-        <div className="appkit-modal__body" data-section="modal-div-564">{children}</div>
-        {actions ? <ModalFooter>{actions}</ModalFooter> : null}
-      </div>
-    </div>,
+            <div className="appkit-modal__body" data-section="modal-div-564">{children}</div>
+            {actions ? <ModalFooter>{actions}</ModalFooter> : null}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
     document.body,
   );
 }

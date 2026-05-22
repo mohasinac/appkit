@@ -50,7 +50,7 @@ const TAB_INACTIVE_CLASS =
 const PAGINATION_BAR_CLASS =
   "flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5";
 const ERROR_BANNER_CLASS =
-  "mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200";
+  "mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60";
 
 interface AdminFeaturesResponse {
   items?: unknown[];

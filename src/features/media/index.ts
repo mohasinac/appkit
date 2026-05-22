@@ -45,6 +45,9 @@ export type {
   ImageCropModalProps,
 } from "./modals/ImageCropModal";
 
+export { ImageEditor } from "./modals/ImageEditor";
+export type { ImageEditorProps } from "./modals/ImageEditor";
+
 export { VideoTrimModal } from "./modals/VideoTrimModal";
 export type { VideoTrimModalProps } from "./modals/VideoTrimModal";
 

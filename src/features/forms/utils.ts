@@ -22,4 +22,4 @@ export const INPUT_WITH_ICON = "pl-10";
 export const LABEL_BASE =
   "block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5";
 export const HELPER_BASE = "text-xs text-zinc-500 dark:text-zinc-400 mt-1";
-export const ERROR_BASE = "text-xs text-red-600 dark:text-red-400 mt-1";
+export const ERROR_BASE = "text-xs text-error mt-1";

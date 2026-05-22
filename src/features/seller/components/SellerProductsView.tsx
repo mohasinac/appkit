@@ -97,7 +97,7 @@ function TypeDropdown({
     { value: "live", label: "Live" },
   ];
   return (
-    <Row className="gap-2 px-3 lg:px-4 py-2 items-center border-b border-[var(--appkit-color-border)]">
+    <Row className="gap-2 px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]">
       <Text className="text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
         Listing type
       </Text>

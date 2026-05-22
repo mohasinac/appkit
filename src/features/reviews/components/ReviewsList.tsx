@@ -79,7 +79,7 @@ export function ReviewCard({ review, context = "general", className = "" }: Revi
                 {displayName}
               </Span>
               {review.verified && (
-                <Span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                <Span className="rounded-full bg-success-surface px-2 py-0.5 text-xs font-medium text-success">
                   Verified
                 </Span>
               )}

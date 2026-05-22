@@ -91,7 +91,7 @@ function AuctionRow({
             {auction.productTitle}
           </Text>
         </Div>
-        <Row gap="sm" className="shrink-0 items-center">
+        <Row gap="sm" className="shrink-0">
           {isWinning && (
             <Badge variant="active">Winning</Badge>
           )}

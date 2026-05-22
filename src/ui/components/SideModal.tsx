@@ -1,6 +1,8 @@
 "use client"
 import React, { useEffect, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { Button, Div, Heading } from "..";
+import { SPRING_SNAPPY } from "../../tokens/motion";
 
 // --- SideModal -----------------------------------------------------------------
 
@@ -75,56 +77,69 @@ export function SideModal({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  const reduced = useReducedMotion();
+  const slideX = side === "left" ? "-100%" : "100%";
 
   return (
-    <Div className="appkit-side-modal" aria-hidden={!isOpen}>
-      {/* Backdrop */}
-      <Div
-        className="appkit-side-modal__backdrop"
-        onClick={onClose}
-        aria-hidden="true"
-      />
+    <AnimatePresence>
+      {isOpen && (
+        <Div className="appkit-side-modal" aria-hidden={!isOpen}>
+          {/* Backdrop */}
+          <motion.div
+            className="appkit-side-modal__backdrop"
+            onClick={onClose}
+            aria-hidden="true"
+            initial={reduced ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
 
-      {/* Panel */}
-      <Div
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={title ? titleId.current : undefined}
-        className={[
-          "appkit-side-modal__panel",
-          `appkit-side-modal__panel--${side}`,
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {/* Header */}
-        {title && (
-          <Div className="appkit-side-modal__header">
-            <Heading
-              level={2}
-              id={titleId.current}
-              className="text-base font-semibold text-neutral-900 dark:text-white truncate"
-            >
-              {title}
-            </Heading>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              aria-label="Close panel"
-              className="ml-2 flex-shrink-0"
-            >
-              ✕
-            </Button>
-          </Div>
-        )}
+          {/* Panel */}
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={title ? titleId.current : undefined}
+            className={[
+              "appkit-side-modal__panel",
+              `appkit-side-modal__panel--${side}`,
+              className,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            initial={reduced ? false : { x: slideX }}
+            animate={{ x: 0 }}
+            exit={{ x: slideX }}
+            transition={SPRING_SNAPPY}
+          >
+            {/* Header */}
+            {title && (
+              <Div className="appkit-side-modal__header">
+                <Heading
+                  level={2}
+                  id={titleId.current}
+                  className="text-base font-semibold text-neutral-900 dark:text-white truncate"
+                >
+                  {title}
+                </Heading>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={onClose}
+                  aria-label="Close panel"
+                  className="ml-2 flex-shrink-0"
+                >
+                  ✕
+                </Button>
+              </Div>
+            )}
 
-        {/* Body — scrollable */}
-        <Div className="appkit-side-modal__body">{children}</Div>
-      </Div>
-    </Div>
+            {/* Body — scrollable */}
+            <Div className="appkit-side-modal__body">{children}</Div>
+          </motion.div>
+        </Div>
+      )}
+    </AnimatePresence>
   );
 }

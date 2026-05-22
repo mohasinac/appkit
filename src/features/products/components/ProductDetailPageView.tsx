@@ -468,8 +468,8 @@ export async function ProductDetailPageView({
                   <Span
                     className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-medium ${
                       inStock
-                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                        : "bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                        ? "bg-success-surface text-success"
+                        : "bg-error-surface text-error"
                     }`}
                   >
                     {inStock ? "✓ In Stock" : "✗ Out of Stock"}
@@ -647,7 +647,7 @@ export async function ProductDetailPageView({
                     )}
                   </Row>
                   {inStock && effectiveStock !== null && effectiveStock <= 10 && (
-                    <Text className="mt-1 text-xs text-amber-600 dark:text-amber-400">
+                    <Text className="mt-1 text-xs text-warning">
                       Only {effectiveStock} left — order soon!
                     </Text>
                   )}
@@ -764,7 +764,7 @@ export async function ProductDetailPageView({
 
               {/* Trust badges */}
               <Div className="border-t border-zinc-200 dark:border-zinc-700 pt-4">
-                <Row wrap gap="sm" className="justify-center text-center">
+                <Row wrap gap="sm" justify="center" className="text-center">
                   {[
                     { icon: "🔒", label: "Secure\nPayment" },
                     { icon: "✓", label: "Verified\nSeller" },

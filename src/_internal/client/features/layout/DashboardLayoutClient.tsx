@@ -52,6 +52,12 @@ export interface DashboardLayoutClientProps {
   renderSidebarFooter?: () => ReactNode;
   /** Optional className passed through to the sidebar component. */
   className?: string;
+  /** Override the content area padding classes. */
+  contentPadding?: string;
+  /** Additional className applied to the content area background. */
+  contentSurface?: string;
+  /** Override the max-width class on the inner content wrapper. */
+  contentMaxWidth?: string;
   children: ReactNode;
 }
 
@@ -115,6 +121,9 @@ function filterGroups<T extends SidebarNavGroup>(
     .filter((group) => group.items.length > 0) as T[];
 }
 
+const DEFAULT_CONTENT_PADDING = "px-5 py-8 md:pl-14 md:pr-6 lg:pl-16 lg:pr-10";
+const DEFAULT_CONTENT_MAX_WIDTH = "max-w-screen-2xl";
+
 export function DashboardLayoutClient({
   variant,
   groups,
@@ -122,6 +131,9 @@ export function DashboardLayoutClient({
   activeHref: explicitActiveHref,
   responsive: _responsive,
   className,
+  contentPadding,
+  contentSurface,
+  contentMaxWidth,
   children,
 }: DashboardLayoutClientProps) {
   const pathname = usePathname();
@@ -178,8 +190,12 @@ export function DashboardLayoutClient({
       {/* Content area — full width on both mobile and desktop.
           md:pl-14 clears the sidebar toggle tab (w-9 = 2.25 rem) + margin so the toggle does not overlap.
           Inner wrapper caps width on ultra-wide screens so content does not flush to the far left. */}
-      <div className="w-full flex-1 flex flex-col px-5 py-8 md:pl-14 md:pr-6 lg:pl-16 lg:pr-10 min-h-[calc(100dvh-var(--header-height,3.5rem))]">
-        <div className="w-full flex-1 max-w-screen-2xl mx-auto">{children}</div>
+      <div className={[
+        "w-full flex-1 flex flex-col min-h-[calc(100dvh-var(--header-height,3.5rem))]",
+        contentPadding ?? DEFAULT_CONTENT_PADDING,
+        contentSurface,
+      ].filter(Boolean).join(" ")}>
+        <div className={["w-full flex-1 mx-auto", contentMaxWidth ?? DEFAULT_CONTENT_MAX_WIDTH].filter(Boolean).join(" ")}>{children}</div>
       </div>
     </>
   );

@@ -234,7 +234,7 @@ export function ImageCropModal({
         {/* Zoom warning */}
         {showZoomWarning && (
           <Alert variant="warning">
-            <strong>{t("cropWarningTitle")}</strong> {t("cropWarningMessage")}
+            <Span weight="bold">{t("cropWarningTitle")}</Span> {t("cropWarningMessage")}
           </Alert>
         )}
 

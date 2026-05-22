@@ -6430,6 +6430,9 @@ export { CameraCapture } from "./features/media/index";
 // [CLIENT-ONLY]-Cannot run in SSR mode â€" uses browser-only APIs (window, navigator, localStorage, matchMedia, DOM events) that do not exist in Node.js.
 // ImageCropModal - Component for image crop modal.
 export { ImageCropModal } from "./features/media/index";
+// [CLIENT-ONLY]-Cannot run in SSR mode — uses browser-only APIs.
+// ImageEditor - Advanced crop/rotate/zoom editor (react-advanced-cropper).
+export { ImageEditor } from "./features/media/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // ImageUpload - Shared export for image upload.
 export { ImageUpload } from "./features/media/index";
@@ -6487,6 +6490,9 @@ export type { CameraCaptureProps } from "./features/media/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ImageCropData - Type contract for image crop data.
 export type { ImageCropData } from "./features/media/index";
+// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
+// ImageEditorProps - Type contract for image editor props.
+export type { ImageEditorProps } from "./features/media/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // ImageCropModalProps - Type contract for image crop modal props.
 export type { ImageCropModalProps } from "./features/media/index";

@@ -45,7 +45,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           <label className={LABEL_BASE}>
             {label}
             {required && (
-              <Span className="text-red-500 ml-1" aria-hidden="true">
+              <Span className="text-error ml-1" aria-hidden="true">
                 *
               </Span>
             )}
@@ -83,7 +83,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
               className={cn(
                 "text-xs tabular-nums ml-2 flex-shrink-0",
                 charCount >= maxLength
-                  ? "text-red-500 dark:text-red-400"
+                  ? "text-error"
                   : "text-zinc-400 dark:text-zinc-400",
               )}
             >

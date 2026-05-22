@@ -93,12 +93,12 @@ export function MakeOfferButton({
 
   if (state === "success") {
     return (
-      <Div className={`rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 p-4 text-center space-y-1 ${className}`}>
+      <Div className={`rounded-xl border border-emerald-200 dark:border-emerald-800 bg-success-surface p-4 text-center space-y-1 ${className}`}>
         <Span className="text-lg">🎉</Span>
-        <Text className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
+        <Text className="text-sm font-medium text-success">
           Offer sent!
         </Text>
-        <Text className="text-xs text-emerald-700 dark:text-emerald-400">
+        <Text className="text-xs text-success">
           The seller will review your offer and respond shortly.
         </Text>
       </Div>
@@ -191,7 +191,7 @@ export function MakeOfferButton({
             The seller will accept, decline, or suggest a counter price.
           </Text>
           {state === "error" && (
-            <Text className="text-xs text-red-600 dark:text-red-400">{errorMsg}</Text>
+            <Text className="text-xs text-error">{errorMsg}</Text>
           )}
         </Stack>
       </Modal>

@@ -206,7 +206,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
 
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
-        <Section className="border-b border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+        <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (

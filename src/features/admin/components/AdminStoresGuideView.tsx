@@ -1,6 +1,6 @@
 import React from "react";
 import { Store, GitBranch, Edit, Shield, MapPin, Ban } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminStoresGuideView() {
@@ -22,9 +22,9 @@ export function AdminStoresGuideView() {
           Icon: Store, title: "Store Lifecycle",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">Creation</strong>: Seller registers → completes onboarding wizard → admin reviews → store goes <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</code>.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Status values</strong>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</code> (visible and selling), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</code> (hidden, not selling), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pending_review</code> (awaiting admin approval).</li>
-              <li><strong className="text-[var(--appkit-color-text)]">isVerified badge</strong>: Awarded when the store has a consistent track record (≥20 delivered orders, ≥4.0 rating, 3+ months active). Click the toggle in AdminStoreEditorView after reviewing the store&apos;s history.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Creation</Span>: Seller registers → completes onboarding wizard → admin reviews → store goes <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</code>.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Status values</Span>: <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">active</code> (visible and selling), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</code> (hidden, not selling), <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">pending_review</code> (awaiting admin approval).</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">isVerified badge</Span>: Awarded when the store has a consistent track record (≥20 delivered orders, ≥4.0 rating, 3+ months active). Click the toggle in AdminStoreEditorView after reviewing the store&apos;s history.</li>
             </ul>
           ),
         },
@@ -37,9 +37,9 @@ export function AdminStoresGuideView() {
                 <code className="text-xs">ownerId = Firebase Auth UID</code> (internal only — never exposed in API responses).
               </Alert>
               <ul className="space-y-2 text-sm text-[var(--appkit-color-text-muted)] mt-4">
-                <li><strong className="text-[var(--appkit-color-text)]">Why separate?</strong> Allows future store ownership transfer without rewriting all product/order documents.</li>
-                <li><strong className="text-[var(--appkit-color-text)]">Two-step lookup</strong>: To find a store by owner, query <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">stores where ownerId == uid</code>. Never join products by ownerId directly.</li>
-                <li><strong className="text-[var(--appkit-color-text)]">Anti-patterns to reject</strong>: PRs that filter <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">products where ownerId ==</code> — the correct field is <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">storeId</code>.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Why separate?</Span> Allows future store ownership transfer without rewriting all product/order documents.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Two-step lookup</Span>: To find a store by owner, query <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">stores where ownerId == uid</code>. Never join products by ownerId directly.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Anti-patterns to reject</Span>: PRs that filter <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">products where ownerId ==</code> — the correct field is <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">storeId</code>.</li>
               </ul>
             </>
           ),
@@ -48,10 +48,10 @@ export function AdminStoresGuideView() {
           Icon: Edit, title: "Store Editor Walkthrough",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">storeName / storeDescription</strong>: Public-facing. Shown on the store profile page.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">ownerId</strong>: Read-only after store creation. Changing ownership requires engineering involvement.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">status Select</strong>: Suspend a store with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</code>; this hides all listings and shows a banner on the store profile.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">payoutDetails</strong>: UPI VPA and bank account details. Treated as PII — masked in the UI and encrypted in Firestore. Always verify details with the seller before issuing payouts.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">storeName / storeDescription</Span>: Public-facing. Shown on the store profile page.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">ownerId</Span>: Read-only after store creation. Changing ownership requires engineering involvement.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">status Select</Span>: Suspend a store with <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">suspended</code>; this hides all listings and shows a banner on the store profile.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">payoutDetails</Span>: UPI VPA and bank account details. Treated as PII — masked in the UI and encrypted in Firestore. Always verify details with the seller before issuing payouts.</li>
             </ul>
           ),
         },
@@ -61,7 +61,7 @@ export function AdminStoresGuideView() {
             <>
               <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">Capabilities are admin-granted feature flags on a store. The Capabilities section in AdminStoreEditorView shows all 18 flags with toggles.</Text>
               <Alert variant="warning">
-                These capabilities require documented contractual approval before granting: <strong>lower_commission_rate</strong> (commission rate change agreement), <strong>extended_return_window</strong> (operational review), <strong>api_access</strong> (technical integration agreement). Do not toggle these without a senior admin sign-off on file.
+                These capabilities require documented contractual approval before granting: <Span weight="bold">lower_commission_rate</Span> (commission rate change agreement), <Span weight="bold">extended_return_window</Span> (operational review), <Span weight="bold">api_access</Span> (technical integration agreement). Do not toggle these without a senior admin sign-off on file.
               </Alert>
             </>
           ),
@@ -82,7 +82,7 @@ export function AdminStoresGuideView() {
             <ul className={GC.listMuted}>
               <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">status: "suspended"</code> — hides all the store&apos;s products from search; the store profile shows "Currently Unavailable"; the seller receives an in-app notification.</li>
               <li>Suspension does NOT cancel pending orders — those must be handled separately.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Hard-banning the owner</strong> is a separate, more severe action — see the Trust &amp; Safety guide. A hard ban cascades to suspend the store automatically.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Hard-banning the owner</Span> is a separate, more severe action — see the Trust &amp; Safety guide. A hard ban cascades to suspend the store automatically.</li>
             </ul>
           ),
         },

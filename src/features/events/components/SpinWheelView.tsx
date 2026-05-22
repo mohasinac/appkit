@@ -148,8 +148,8 @@ export function SpinWheelView({
       </Div>
 
       {wonPrize ? (
-        <Div className="rounded-xl border border-emerald-300 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/30 p-4 text-center">
-          <Text className="text-sm uppercase tracking-wide text-emerald-700 dark:text-emerald-300">
+        <Div className="rounded-xl border border-emerald-300 bg-success-surface dark:border-emerald-700 p-4 text-center">
+          <Text className="text-sm uppercase tracking-wide text-success">
             {l.wonHeadline}
           </Text>
           <Text className="mt-1 text-lg font-bold text-emerald-900 dark:text-emerald-100">

@@ -1,6 +1,6 @@
 import React from "react";
 import { BarChart2 } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminAnalyticsGuideView() {
@@ -22,10 +22,10 @@ export function AdminAnalyticsGuideView() {
           title: "Revenue Dashboard",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">GMV (Gross Merchandise Value)</strong>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Net Revenue</strong>: GMV × platformFee — refunded orders excluded.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Period filter</strong>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Payout total</strong>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">GMV (Gross Merchandise Value)</Span>: Total order subtotals across all stores. Does not deduct platform commission or refunds.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Net Revenue</Span>: GMV × platformFee — refunded orders excluded.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Period filter</Span>: Last 7 / 30 / 90 days, or custom date range. All monetary values shown in INR.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Payout total</Span>: Total disbursed to sellers in the same period. Revenue - Payout = Platform earnings.</li>
             </ul>
           ),
         },
@@ -43,9 +43,9 @@ export function AdminAnalyticsGuideView() {
           title: "Product Performance",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">Top products by orders</strong>: Which products drive the most completed transactions.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Top products by views</strong>: High views but low orders may indicate pricing, photos, or description issues.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Return rate</strong>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Top products by orders</Span>: Which products drive the most completed transactions.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Top products by views</Span>: High views but low orders may indicate pricing, photos, or description issues.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Return rate</Span>: Products with &gt;10% return rate need review — usually a condition description or photo quality issue.</li>
             </ul>
           ),
         },

@@ -254,7 +254,7 @@ export function CouponCard({
           <Span
             className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
               n.isActive
-                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+                ? "bg-success-surface text-success"
                 : "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300"
             }`}
           >
@@ -331,7 +331,7 @@ export function CouponCard({
 
       {/* Admin / seller CRUD action bar */}
       {hasAdminActions && (
-        <Row gap="xs" className="mt-auto pt-3 justify-end">
+        <Row gap="xs" justify="end" className="mt-auto pt-3">
           {onEdit && (
             <button
               type="button"

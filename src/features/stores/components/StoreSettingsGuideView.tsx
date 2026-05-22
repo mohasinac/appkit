@@ -1,6 +1,6 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import { Alert, Div, Heading, Section, Text } from "../../../ui";
+import { Alert, Div, Heading, Section, Span, Text } from "../../../ui";
 import { ROUTES } from "../../../next/routing/route-map";
 
 const SUBHEADING = "mb-1 font-semibold text-[var(--appkit-color-text)]";
@@ -103,7 +103,7 @@ function ReturnPolicySection() {
       <Div>
         <Text className={SUBHEADING}>Store-level return window</Text>
         <Text className="leading-relaxed">
-          The default return window is <strong className="text-[var(--appkit-color-text)]">7 days</strong> from the
+          The default return window is <Span weight="bold" className="text-[var(--appkit-color-text)]">7 days</Span> from the
           DELIVERED date. Stores with the
           <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded mx-1">extended_return_window</code>
           capability can offer 30 days. The return window is displayed on every product detail page in the Returns tab.

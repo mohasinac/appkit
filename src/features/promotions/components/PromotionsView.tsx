@@ -105,7 +105,7 @@ export function PromotionsView({
   renderFeaturedSection,
 }: PromotionsViewProps) {
   return (
-    <Div className="min-h-screen bg-white dark:bg-slate-900">
+    <Div surface="default" className="min-h-screen">
       <PromotionsHero labels={labels} heroBannerClass={heroBannerClass} />
 
       <Div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">

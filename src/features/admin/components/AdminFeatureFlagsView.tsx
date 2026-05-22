@@ -112,7 +112,7 @@ interface FlagRowProps {
 
 function FlagRow({ label, desc, checked, onChange, rollout, onRolloutChange, showRollout }: FlagRowProps) {
   return (
-    <Div className="flex items-center justify-between gap-4 px-4 py-3 bg-white dark:bg-zinc-900">
+    <Div surface="default" padding="inline" className="flex items-center justify-between gap-4">
       <Div className="flex-1 min-w-0">
         <Toggle checked={checked} onChange={onChange} label={label} />
         <Text className="mt-0.5 ml-10 text-xs text-zinc-400 dark:text-zinc-400 truncate">{desc}</Text>

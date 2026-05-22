@@ -15,7 +15,7 @@ export function WishlistCard({
   onProductClick,
 }: WishlistCardProps) {
   return (
-    <Div className="flex gap-4 rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
+    <Div surface="card" padding="sm" className="flex gap-4">
       <Div
         role={onProductClick ? "button" : undefined}
         tabIndex={onProductClick ? 0 : undefined}

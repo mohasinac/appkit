@@ -62,11 +62,24 @@ export function defineTailwindConfig(override: TailwindConfigOverride = {}) {
           "text-inverse": "var(--appkit-color-textInverse)",
           link: "var(--appkit-color-link)",
           "link-hover": "var(--appkit-color-linkHover)",
-          // State
-          success: "var(--appkit-color-success)",
-          warning: "var(--appkit-color-warning)",
-          danger: "var(--appkit-color-danger)",
-          info: "var(--appkit-color-info)",
+          // State — semantic colors with surface sub-keys
+          success: {
+            DEFAULT: "var(--appkit-color-success)",
+            surface: "var(--appkit-color-success-surface)",
+          },
+          warning: {
+            DEFAULT: "var(--appkit-color-warning)",
+            surface: "var(--appkit-color-warning-surface)",
+          },
+          error: {
+            DEFAULT: "var(--appkit-color-error)",
+            surface: "var(--appkit-color-error-surface)",
+          },
+          danger: "var(--appkit-color-error)",
+          info: {
+            DEFAULT: "var(--appkit-color-info)",
+            surface: "var(--appkit-color-info-surface)",
+          },
         },
         ...((consumerTheme.extend as Record<string, unknown>) ?? {}),
       },

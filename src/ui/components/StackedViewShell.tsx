@@ -83,9 +83,11 @@ export function StackedViewShell({
         renderEmpty()
       ) : (
         <>
-          {sections.map((slot, i) => (
-            <React.Fragment key={i}>{resolveSlot(slot)}</React.Fragment>
-          ))}
+          {sections.map((slot, i) => {
+            const resolved = resolveSlot(slot);
+            if (resolved == null) return null;
+            return <React.Fragment key={i}>{resolved}</React.Fragment>;
+          })}
         </>
       )}
       {overlays}

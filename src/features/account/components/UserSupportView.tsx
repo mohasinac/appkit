@@ -56,10 +56,10 @@ const CATEGORY_OPTIONS = [
 ];
 
 const STATUS_BADGE: Record<string, string> = {
-  open: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  in_progress: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  open: "bg-info-surface text-info",
+  in_progress: "bg-warning-surface text-warning",
   waiting_on_user: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
-  resolved: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+  resolved: "bg-success-surface text-success",
   closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
@@ -168,7 +168,7 @@ function renderTicketListArea(props: {
         </Div>
       )}
       {error && (
-        <Div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+        <Div className="rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
           Failed to load support tickets.
         </Div>
       )}

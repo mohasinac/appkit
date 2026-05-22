@@ -32,7 +32,7 @@ export function StoreHeader({
   className = "",
 }: StoreHeaderProps) {
   return (
-    <Section className={`bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 ${className}`}>
+    <Section surface="default" className={`border-b border-gray-200 dark:border-slate-700 ${className}`}>
       {store.storeBannerURL && (
           <Div className="h-40 md:h-56 overflow-hidden bg-gray-100 dark:bg-slate-800">
           <Div

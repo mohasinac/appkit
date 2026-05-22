@@ -152,7 +152,7 @@ export function DataTable<T extends { id: string }>({
   const allRowsSelected =
     selectionEnabled && rows.length > 0 && rows.every((r) => selectedIds?.has(r.id));
   return (
-    <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+    <Div surface="card" className="overflow-hidden">
       <Div className="overflow-x-auto">
         <table data-testid="data-table" className="w-full text-sm">
           <thead>

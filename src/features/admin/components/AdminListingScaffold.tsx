@@ -266,7 +266,7 @@ export function AdminListingScaffold({
       filterPendingCount={0}
       errorSlot={
         errorMessage ? (
-          <Div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-200">
+          <Div className="rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
             {errorMessage}
           </Div>
         ) : undefined

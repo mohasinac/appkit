@@ -170,7 +170,7 @@ export function ListingLayout({
           <Row className="gap-1.5 flex-shrink-0">
             {sortSlot}
             {viewToggleSlot && (
-              <Row className="gap-0.5 rounded-full border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-0.5 shadow-sm">
+              <Row surface="card" className="gap-0.5 rounded-full p-0.5">
                 {viewToggleSlot}
               </Row>
             )}
@@ -246,7 +246,7 @@ export function ListingLayout({
                 : "w-0 opacity-0 pointer-events-none",
             ].join(" ")}
           >
-            <Div className="w-60 xl:w-64 2xl:w-72 rounded-2xl overflow-hidden border border-zinc-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-sm">
+            <Div surface="elevated" className="w-60 xl:w-64 2xl:w-72 overflow-hidden">
               <Row
                 justify="between"
                 className="px-4 py-3 border-b border-zinc-100 dark:border-slate-800"
@@ -361,7 +361,7 @@ export function ListingLayout({
               {filterContent}
             </Div>
 
-            <Div className="flex-shrink-0 flex gap-3 px-4 py-4 border-t border-zinc-100 dark:border-slate-800 bg-white dark:bg-slate-950">
+            <Div surface="muted" className="flex-shrink-0 flex gap-3 px-4 py-4 border-t border-zinc-100 dark:border-slate-800">
               <Button
                 type="button"
                 variant="outline"

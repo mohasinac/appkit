@@ -30,7 +30,7 @@ const TOAST = {
 const ROW_CLASS =
   "flex items-center justify-between gap-3 px-4 py-3";
 const CAP_BANNER_CLASS =
-  "rounded-xl border border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/40 px-4 py-2.5 text-xs text-amber-800 dark:text-amber-200";
+  "rounded-xl border border-amber-200 dark:border-amber-900/60 bg-warning-surface px-4 py-2.5 text-xs text-warning";
 const EMPTY_STATE_CLASS =
   "rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-center text-sm text-zinc-500 dark:text-zinc-400";
 const LIST_CLASS =

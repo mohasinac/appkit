@@ -57,9 +57,9 @@ export function AddressCard({
       ? address.line2
       : (address as { addressLine2?: string }).addressLine2;
   return (
-    <Div className="relative rounded-xl border border-neutral-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">
+    <Div surface="card" padding="sm" className="relative">
       {address.isDefault && (
-        <Span className="absolute right-3 top-3 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+        <Span className="absolute right-3 top-3 rounded-full bg-success-surface px-2 py-0.5 text-xs font-medium text-success">
           {labels.defaultBadge ?? "Default"}
         </Span>
       )}
@@ -93,7 +93,7 @@ export function AddressCard({
             onClick={() => onDelete(address.id)}
             variant="ghost"
             size="sm"
-            className="text-xs font-medium text-red-500 hover:underline"
+            className="text-xs font-medium text-error hover:underline"
           >
             {labels.delete ?? "Delete"}
           </Button>

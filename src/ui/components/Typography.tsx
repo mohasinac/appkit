@@ -26,8 +26,12 @@ const TYPOGRAPHY = {
     primary: "appkit-color--primary",
     secondary: "appkit-color--secondary",
     muted: "appkit-color--muted",
+    faint: "appkit-color--faint",
     error: "appkit-color--error",
+    danger: "appkit-color--error",
     success: "appkit-color--success",
+    warning: "appkit-color--warning",
+    info: "appkit-color--info",
     none: "",
     inherit: "",
     accent: "appkit-color--accent",
@@ -36,27 +40,32 @@ const TYPOGRAPHY = {
 
 // --- Heading -----------------------------------------------------------------
 
+export type ColorVariant = keyof typeof TYPOGRAPHY.colorVariant;
+
 interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: "primary" | "secondary" | "muted" | "none";
+  color?: ColorVariant;
   children: React.ReactNode;
 }
 
 export function Heading({
   level = 1,
   variant = "primary",
+  color,
   className = "",
   children,
   ...props
 }: HeadingProps) {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  const resolvedColor = color ?? variant;
 
   return (
     <Tag
       className={[
         "appkit-heading",
         TYPOGRAPHY.headingLevel[level],
-        TYPOGRAPHY.colorVariant[variant],
+        TYPOGRAPHY.colorVariant[resolvedColor],
         className,
       ]
         .filter(Boolean)
@@ -72,6 +81,7 @@ export function Heading({
 
 interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   variant?: "primary" | "secondary" | "muted" | "error" | "success" | "none";
+  color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   /** Override the rendered element. Defaults to `p`. */
@@ -81,6 +91,7 @@ interface TextProps extends React.HTMLAttributes<HTMLParagraphElement> {
 
 export function Text({
   variant = "primary",
+  color,
   size = "base",
   weight = "normal",
   className = "",
@@ -88,13 +99,14 @@ export function Text({
   children,
   ...props
 }: TextProps) {
+  const resolvedColor = color ?? variant;
   return (
     <Tag
       className={[
         "appkit-text",
         TYPOGRAPHY.textSize[size],
         TYPOGRAPHY.textWeight[weight],
-        TYPOGRAPHY.colorVariant[variant],
+        TYPOGRAPHY.colorVariant[resolvedColor],
         className,
       ]
         .filter(Boolean)
@@ -187,6 +199,7 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
     | "error"
     | "success"
     | "accent";
+  color?: ColorVariant;
   size?: "xs" | "sm" | "base" | "lg" | "xl";
   weight?: "normal" | "medium" | "semibold" | "bold";
   children?: React.ReactNode;
@@ -194,42 +207,19 @@ interface SpanProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export function Span({
   variant = "inherit",
+  color,
   size,
   weight,
   className = "",
   children,
   ...props
 }: SpanProps) {
-  const variantClasses: Record<NonNullable<SpanProps["variant"]>, string> = {
-    inherit: "",
-    primary: "appkit-color--primary",
-    secondary: "appkit-color--secondary",
-    muted: "appkit-color--muted",
-    error: "appkit-color--error",
-    success: "appkit-color--success",
-    accent: "appkit-color--accent",
-  };
-
-  const sizeClasses: Record<NonNullable<SpanProps["size"]>, string> = {
-    xs: "appkit-text--xs",
-    sm: "appkit-text--sm",
-    base: "appkit-text--base",
-    lg: "appkit-text--lg",
-    xl: "appkit-text--xl",
-  };
-
-  const weightClasses: Record<NonNullable<SpanProps["weight"]>, string> = {
-    normal: "appkit-font--normal",
-    medium: "appkit-font--medium",
-    semibold: "appkit-font--semibold",
-    bold: "appkit-font--bold",
-  };
-
+  const resolvedColor = color ?? variant;
   const classes = [
     "appkit-span",
-    size ? sizeClasses[size] : "",
-    weight ? weightClasses[weight] : "",
-    variantClasses[variant],
+    size ? TYPOGRAPHY.textSize[size] : "",
+    weight ? TYPOGRAPHY.textWeight[weight] : "",
+    TYPOGRAPHY.colorVariant[resolvedColor],
     className,
   ]
     .filter(Boolean)

@@ -1,6 +1,6 @@
 import React from "react";
 import { Users, Search, Edit, Monitor, UserCog, AlertTriangle } from "lucide-react";
-import { Div, Heading, Text, Section, Alert } from "../../../ui";
+import { Div, Heading, Span, Text, Section, Alert } from "../../../ui";
 import { GC } from "../../_guide-cls";
 
 export function AdminUsersGuideView() {
@@ -53,9 +53,9 @@ export function AdminUsersGuideView() {
           Icon: Search, title: "User List & Search",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">Columns</strong>: display name, email, role badge, emailVerified, createdAt, last login.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Filter chips</strong>: All, by role, verified only, banned.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Search</strong>: by email or displayName. Email matches use the HMAC blind index — searching partial emails returns no results.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Columns</Span>: display name, email, role badge, emailVerified, createdAt, last login.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Filter chips</Span>: All, by role, verified only, banned.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Search</Span>: by email or displayName. Email matches use the HMAC blind index — searching partial emails returns no results.</li>
             </ul>
           ),
         },
@@ -65,10 +65,10 @@ export function AdminUsersGuideView() {
             <>
               <Text className="text-sm text-[var(--appkit-color-text-muted)] mb-3">The AdminUserEditorView opens in a side drawer. Fields:</Text>
               <ul className={GC.listMuted}>
-                <li><strong className="text-[var(--appkit-color-text)]">role Select</strong> — changing to <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code> bypasses all RBAC checks. Only do this with explicit senior approval.</li>
-                <li><strong className="text-[var(--appkit-color-text)]">emailVerified toggle</strong> — manually mark an email as verified (e.g. after manual ID check).</li>
-                <li><strong className="text-[var(--appkit-color-text)]">isDisabled</strong> — disables Firebase Auth login without a full hard ban. User sees "account suspended" on login.</li>
-                <li><strong className="text-[var(--appkit-color-text)]">PII note</strong> — email and phone are HMAC-indexed. The UI shows the hashed index, not the plaintext value. Never store plaintext in Firestore.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">role Select</Span> — changing to <code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">admin</code> bypasses all RBAC checks. Only do this with explicit senior approval.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">emailVerified toggle</Span> — manually mark an email as verified (e.g. after manual ID check).</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">isDisabled</Span> — disables Firebase Auth login without a full hard ban. User sees "account suspended" on login.</li>
+                <li><Span weight="bold" className="text-[var(--appkit-color-text)]">PII note</Span> — email and phone are HMAC-indexed. The UI shows the hashed index, not the plaintext value. Never store plaintext in Firestore.</li>
               </ul>
             </>
           ),
@@ -77,9 +77,9 @@ export function AdminUsersGuideView() {
           Icon: Monitor, title: "Sessions Management",
           content: (
             <ul className={GC.listMuted}>
-              <li><strong className="text-[var(--appkit-color-text)]">Session table</strong> shows: browser, OS, device type, masked IP (last octet zeroed), last activity, and estimated location.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Force expire</strong> a session if you suspect account takeover — the user will be signed out on their next request.</li>
-              <li><strong className="text-[var(--appkit-color-text)]">Hard ban cascade</strong> — issuing a hard ban automatically expires all active sessions for that user.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Session table</Span> shows: browser, OS, device type, masked IP (last octet zeroed), last activity, and estimated location.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Force expire</Span> a session if you suspect account takeover — the user will be signed out on their next request.</li>
+              <li><Span weight="bold" className="text-[var(--appkit-color-text)]">Hard ban cascade</Span> — issuing a hard ban automatically expires all active sessions for that user.</li>
             </ul>
           ),
         },
@@ -87,7 +87,7 @@ export function AdminUsersGuideView() {
           Icon: UserCog, title: "Employee Accounts",
           content: (
             <ul className={GC.listMuted}>
-              <li>Create employee accounts via <strong>Admin → Team</strong>, not by manually writing to Firestore.</li>
+              <li>Create employee accounts via <Span weight="bold">Admin → Team</Span>, not by manually writing to Firestore.</li>
               <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "employee"</code> has no elevated Firestore rules by default — access is governed entirely by the permission group assigned to them.</li>
               <li><code className="text-xs bg-[var(--appkit-color-border)] px-1 rounded">role: "admin"</code> bypasses all RBAC — use sparingly. One admin account per real person maximum.</li>
             </ul>

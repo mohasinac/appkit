@@ -39,9 +39,9 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_COLOR: Record<string, string> = {
-  pending_review: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
-  verified: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
-  rejected: "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
+  pending_review: "bg-warning-surface text-warning",
+  verified: "bg-success-surface text-success",
+  rejected: "bg-error-surface text-error",
   removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 

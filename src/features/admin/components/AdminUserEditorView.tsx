@@ -89,9 +89,9 @@ function HardBanPanel({
       <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Hard ban</span>
         {isHardBanned ? (
-          <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">Banned</span>
+          <span className="rounded-full bg-error-surface px-2 py-0.5 text-xs font-semibold text-error">Banned</span>
         ) : (
-          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">Active</span>
+          <span className="rounded-full bg-success-surface px-2 py-0.5 text-xs font-semibold text-success">Active</span>
         )}
       </div>
       {isHardBanned ? (

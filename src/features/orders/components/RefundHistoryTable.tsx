@@ -63,7 +63,7 @@ function RefundRow({ event, currency }: { event: OrderRefundEvent; currency: str
 function WarningIcon() {
   return (
     <svg
-      className="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400"
+      className="h-4 w-4 shrink-0 text-warning"
       fill="currentColor"
       viewBox="0 0 20 20"
       aria-hidden="true"
@@ -86,10 +86,10 @@ export function RefundHistoryTable({ order, className = "" }: RefundHistoryTable
   return (
     <Div className={`rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900 ${className}`}>
       {order.contestable === false && (
-        <Div className="rounded-t-xl bg-amber-50 px-4 py-3 dark:bg-amber-950/30">
+        <Div className="rounded-t-xl bg-warning-surface px-4 py-3">
           <Row gap="sm" align="center">
             <WarningIcon />
-            <Text size="sm" weight="semibold" className="text-amber-700 dark:text-amber-400">
+            <Text size="sm" weight="semibold" className="text-warning">
               {REFUND_COPY.history.nonContestableBanner}
             </Text>
           </Row>

@@ -53,10 +53,10 @@ const PRIORITY_OPTIONS = [
 ];
 
 const STATUS_COLOR: Record<string, string> = {
-  open: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
-  in_progress: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300",
+  open: "bg-info-surface text-info",
+  in_progress: "bg-warning-surface text-warning",
   waiting_on_user: "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300",
-  resolved: "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
+  resolved: "bg-success-surface text-success",
   closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
@@ -191,7 +191,7 @@ export function AdminSupportTicketDetailView({
                   className={`rounded-lg p-3 text-sm ${
                     msg.authorRole === "user"
                       ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700"
-                      : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"
+                      : "bg-info-surface border border-blue-200 dark:border-blue-800"
                   }`}
                 >
                   <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">

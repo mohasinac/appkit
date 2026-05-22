@@ -188,7 +188,7 @@ export { FieldCheckbox } from "./ui/forms";
 export { Select } from "./ui/components/Select";
 export type { SelectOption, SelectProps } from "./ui/components/Select";
 export { Heading } from "./ui/components/Typography";
-export { Label, Text } from "./ui/components/Typography";
+export { Label, Text, Span, Caption } from "./ui/components/Typography";
 export { TextLink } from "./ui/components/TextLink";
 export type { TextLinkProps } from "./ui/components/TextLink";
 export { Textarea } from "./ui/components/Textarea";

@@ -100,7 +100,7 @@ function AddressCard({
   onDelete: () => void;
 }) {
   return (
-    <Div className="rounded-xl border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 flex flex-col gap-2">
+    <Div surface="card" padding="sm" className="flex flex-col gap-2">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
@@ -269,7 +269,7 @@ export function SellerAddressesView({
 
       <div className="py-6 px-4 sm:px-6 max-w-2xl">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+          <Div className="mb-4 rounded-xl border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
             {errorMessage}
           </Div>
         )}
@@ -289,7 +289,7 @@ export function SellerAddressesView({
         ) : (
           <>
             {/* S-STORE-6-D — table view alongside the card grid. */}
-            <Row className="justify-end mb-2">
+            <Row justify="end" className="mb-2">
               <Button
                 size="sm"
                 variant={listView === "table" ? "primary" : "ghost"}
@@ -340,7 +340,7 @@ export function SellerAddressesView({
                         <td className="px-3 py-2">{addr.city}, {addr.state}</td>
                         <td className="px-3 py-2 tabular-nums">{addr.phone}</td>
                         <td className="px-3 py-2 text-right">
-                          <Row className="gap-1 justify-end">
+                          <Row justify="end" className="gap-1">
                             <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
                             <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
                           </Row>
@@ -371,7 +371,7 @@ export function SellerAddressesView({
       >
         <div className="space-y-4 py-1">
           {saveError && (
-            <Div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-3 py-2 text-sm text-red-700 dark:text-red-200">
+            <Div className="rounded-lg border border-red-200 bg-error-surface dark:border-red-900/60 px-3 py-2 text-sm text-error">
               {saveError}
             </Div>
           )}

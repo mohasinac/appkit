@@ -24,6 +24,7 @@ import {
 import { MediaImage } from "../MediaImage";
 import { ImageCropModal } from "../modals/ImageCropModal";
 import type { ImageCropData } from "../modals/ImageCropModal";
+import { ImageEditor } from "../modals/ImageEditor";
 import CameraCapture from "./CameraCapture";
 
 export interface ImageUploadProps {
@@ -36,6 +37,10 @@ export interface ImageUploadProps {
   helperText?: string;
   captureSource?: "file-only" | "camera-only" | "both";
   enableCrop?: boolean;
+  /** Use the advanced pixel cropper instead of the focal-point editor. */
+  enableAdvancedCrop?: boolean;
+  /** Lock the crop aspect ratio (e.g. 1 for square, 16/9 for widescreen). */
+  cropAspectRatio?: number;
   onCropDataChange?: (cropData: ImageCropData) => void;
 }
 
@@ -64,6 +69,8 @@ export function ImageUpload({
   helperText,
   captureSource = "both",
   enableCrop = true,
+  enableAdvancedCrop = false,
+  cropAspectRatio,
   onCropDataChange,
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
@@ -71,6 +78,7 @@ export function ImageUpload({
   const [error, setError] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [showCropModal, setShowCropModal] = useState(false);
+  const [showAdvancedEditor, setShowAdvancedEditor] = useState(false);
   const [cropPreviewUrl, setCropPreviewUrl] = useState<string | null>(null);
   const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [captureMode, setCaptureMode] = useState<"file" | "camera">("file");
@@ -110,7 +118,7 @@ export function ImageUpload({
   };
 
   const prepareFile = (file: File) => {
-    if (!enableCrop) {
+    if (!enableCrop && !enableAdvancedCrop) {
       void performUpload(file);
       return;
     }
@@ -119,7 +127,11 @@ export function ImageUpload({
       if (event.target?.result) {
         setCropPreviewUrl(event.target.result as string);
         setPendingFile(file);
-        setShowCropModal(true);
+        if (enableAdvancedCrop) {
+          setShowAdvancedEditor(true);
+        } else {
+          setShowCropModal(true);
+        }
       }
     };
     reader.readAsDataURL(file);
@@ -134,6 +146,28 @@ export function ImageUpload({
 
   const handleCropClose = () => {
     setShowCropModal(false);
+    setCropPreviewUrl(null);
+    if (pendingFile) {
+      void performUpload(pendingFile);
+      setPendingFile(null);
+    }
+  };
+
+  const handleAdvancedEditorSave = (croppedFile: File) => {
+    setShowAdvancedEditor(false);
+    setCropPreviewUrl(null);
+    setPendingFile(null);
+    void performUpload(croppedFile);
+  };
+
+  const openEditor = (url: string) => {
+    setCropPreviewUrl(url);
+    if (enableAdvancedCrop) setShowAdvancedEditor(true);
+    else setShowCropModal(true);
+  };
+
+  const handleAdvancedEditorClose = () => {
+    setShowAdvancedEditor(false);
     setCropPreviewUrl(null);
     if (pendingFile) {
       void performUpload(pendingFile);
@@ -201,13 +235,10 @@ export function ImageUpload({
 
             {!uploading && (
               <Row wrap gap="sm">
-                {enableCrop && (
+                {(enableCrop || enableAdvancedCrop) && (
                   <Button
                     type="button"
-                    onClick={() => {
-                      setCropPreviewUrl(preview);
-                      setShowCropModal(true);
-                    }}
+                    onClick={() => openEditor(preview)}
                     variant="secondary"
                     size="sm"
                   >
@@ -333,12 +364,22 @@ export function ImageUpload({
         </Row>
       )}
 
-      {cropPreviewUrl && (
+      {cropPreviewUrl && !enableAdvancedCrop && (
         <ImageCropModal
           isOpen={showCropModal}
           imageUrl={cropPreviewUrl}
           onClose={handleCropClose}
           onSave={handleCropSave}
+        />
+      )}
+
+      {cropPreviewUrl && enableAdvancedCrop && (
+        <ImageEditor
+          isOpen={showAdvancedEditor}
+          imageUrl={cropPreviewUrl}
+          onClose={handleAdvancedEditorClose}
+          onSave={handleAdvancedEditorSave}
+          aspectRatio={cropAspectRatio}
         />
       )}
     </Div>

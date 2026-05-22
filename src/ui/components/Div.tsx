@@ -1,27 +1,14 @@
 import React from "react";
+import type { SurfaceProps } from "./surface-tokens";
+import { buildSurfaceClasses } from "./surface-tokens";
 
-export interface DivProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DivProps extends React.HTMLAttributes<HTMLDivElement>, SurfaceProps {
   children?: React.ReactNode;
 }
 
-/**
- * Semantic `<div data-section="div-div-477">` wrapper for general-purpose layout containers.
- *
- * Use when no more specific semantic element applies
- * (`<Section>`, `<Article>`, `<Main>`, `<Aside>` etc). Enables
- * future one-place theming and consistent import from `@mohasinac/appkit/ui`.
- *
- * @example
- * ```tsx
- * <Div className="flex items-center gap-4">
- *   <Badge>New</Badge>
- *   <Text>Product title</Text>
- * </Div>
- * ```
- */
 export const Div = React.forwardRef<HTMLDivElement, DivProps>(
-  ({ className = "", children, ...props }, ref) => (
-    <div ref={ref} className={className} {...props} data-section="div-div-478">
+  ({ className = "", surface, padding, rounded, border, shadow, children, ...props }, ref) => (
+    <div ref={ref} className={[buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className].filter(Boolean).join(" ")} {...props}>
       {children}
     </div>
   ),

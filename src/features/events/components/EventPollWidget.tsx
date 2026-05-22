@@ -110,8 +110,8 @@ export function EventPollWidget({
 
   if (isSubmitted) {
     return (
-      <div className={`rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 px-6 py-8 text-center space-y-2 ${className}`} data-section="eventpollwidget-div-5">
-        <Text className="font-semibold text-green-700 dark:text-green-300">Vote recorded!</Text>
+      <div className={`rounded-xl border border-green-200 dark:border-green-800 bg-success-surface px-6 py-8 text-center space-y-2 ${className}`} data-section="eventpollwidget-div-5">
+        <Text className="font-semibold text-success">Vote recorded!</Text>
         <Text className="text-sm text-zinc-500 dark:text-zinc-400">Thanks for participating.</Text>
       </div>
     );
@@ -154,7 +154,7 @@ export function EventPollWidget({
           className="w-full rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-800 dark:text-zinc-200 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary"
         />
       )}
-      {error && <Text className="text-sm text-red-500">{error}</Text>}
+      {error && <Text className="text-sm text-error">{error}</Text>}
       <button
         type="button"
         onClick={handleSubmit}

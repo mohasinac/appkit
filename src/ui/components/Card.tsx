@@ -1,4 +1,11 @@
+"use client"
 import React from "react";
+import { motion, useReducedMotion } from "motion/react";
+import type { SurfaceProps } from "./surface-tokens";
+import { buildSurfaceClasses } from "./surface-tokens";
+import { SPRING_SNAPPY } from "../../tokens/motion";
+
+type CardAnimate = "hoverLift" | "pressScale" | "hoverScale" | "both";
 
 type CardVariant =
   | "flat"
@@ -49,11 +56,12 @@ const UI_CARD = {
   },
 } as const;
 
-export interface CardProps {
+export interface CardProps extends SurfaceProps {
   children: React.ReactNode;
   variant?: CardVariant;
   padding?: CardPadding;
   hover?: boolean;
+  animate?: CardAnimate;
   className?: string;
   style?: React.CSSProperties;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
@@ -64,25 +72,62 @@ export function Card({
   variant = "flat",
   padding = "md",
   hover = false,
+  animate,
+  surface,
+  rounded,
+  border,
+  shadow,
   className = "",
   style,
   onClick,
 }: CardProps) {
+  const reduced = useReducedMotion();
+  const cls = [
+    UI_CARD.base,
+    UI_CARD.variants[variant],
+    UI_CARD.padding[padding],
+    hover ? "appkit-card--hoverable" : "",
+    onClick ? "appkit-card--clickable" : "",
+    buildSurfaceClasses({ surface, rounded, border, shadow }),
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  if (animate && !reduced) {
+    const whileHover =
+      animate === "hoverLift" || animate === "both"
+        ? { y: -2 }
+        : animate === "hoverScale"
+          ? { scale: 1.02 }
+          : undefined;
+    const whileTap =
+      animate === "pressScale" || animate === "both"
+        ? { scale: 0.97 }
+        : undefined;
+
+    return (
+      <motion.div
+        className={cls}
+        style={style}
+        onClick={onClick}
+        whileHover={whileHover}
+        whileTap={whileTap}
+        transition={SPRING_SNAPPY}
+        data-section="card-div-463"
+      >
+        {children}
+      </motion.div>
+    );
+  }
+
   return (
     <div
-      className={[
-        UI_CARD.base,
-        UI_CARD.variants[variant],
-        UI_CARD.padding[padding],
-        hover ? "appkit-card--hoverable" : "",
-        onClick ? "appkit-card--clickable" : "",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={cls}
       style={style}
       onClick={onClick}
-     data-section="card-div-463">
+      data-section="card-div-463"
+    >
       {children}
     </div>
   );

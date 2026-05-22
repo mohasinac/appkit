@@ -12,7 +12,7 @@
  */
 
 import { useCallback } from "react";
-import { Button, Div, FormField, Heading, Row, Stack, Text } from "../../../ui";
+import { Button, Div, FormField, Heading, Row, Span, Stack, Text } from "../../../ui";
 import { ImageUpload } from "../../media";
 import type { PrizeDrawItem } from "../schemas/firestore";
 
@@ -138,8 +138,8 @@ export function PrizeDrawItemsEditor({
         edited or removed.
       </Text>
       {anyWon ? (
-        <Div className="rounded border border-red-400/40 bg-red-50 px-3 py-2 text-sm text-red-900 dark:bg-red-900/30 dark:text-red-100">
-          <strong>Draw locked.</strong> At least one prize has been revealed —
+        <Div className="rounded border border-red-400/40 bg-error-surface px-3 py-2 text-sm text-error">
+          <Span weight="bold">Draw locked.</Span> At least one prize has been revealed —
           this listing can no longer be edited. To run a similar draw, clone it
           into a new prize-draw listing.
         </Div>
@@ -312,7 +312,7 @@ export function PrizeDrawItemsEditor({
       </Stack>
 
       {items.length < MIN_ITEMS ? (
-        <Div className="rounded border border-red-400/40 bg-red-50 px-3 py-2 text-sm text-red-900 dark:bg-red-900/30 dark:text-red-100">
+        <Div className="rounded border border-red-400/40 bg-error-surface px-3 py-2 text-sm text-error">
           At least {MIN_ITEMS} prizes are required.
         </Div>
       ) : null}

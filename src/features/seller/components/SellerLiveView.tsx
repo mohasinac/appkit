@@ -90,8 +90,8 @@ const COLUMNS: DataTableColumn<LiveRow>[] = [
     render: (row) => (
       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
         row.vendorVerified
-          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
-          : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+          ? "bg-success-surface text-success"
+          : "bg-warning-surface text-warning"
       }`}>
         {row.vendorVerified ? "Verified" : "Pending"}
       </span>
@@ -103,7 +103,7 @@ const COLUMNS: DataTableColumn<LiveRow>[] = [
     render: (row) => (
       <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
         row.status === "active"
-          ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300"
+          ? "bg-success-surface text-success"
           : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
       }`}>
         {row.status}
@@ -257,7 +257,7 @@ export function SellerLiveView({
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/40 dark:border-red-900/60 px-4 py-3 text-sm text-red-700 dark:text-red-200">
+          <Div className="mb-4 rounded-xl border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
             {errorMessage}
           </Div>
         )}

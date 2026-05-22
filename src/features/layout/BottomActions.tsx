@@ -86,7 +86,7 @@ function BulkPickerPanel({
               i > 0 ? "border-t border-zinc-100/80 dark:border-slate-800/80" : "",
               isSelected ? "bg-zinc-50 dark:bg-slate-800/60" : "",
               action.variant === "danger"
-                ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+                ? "text-error hover:bg-error-surface"
                 : "text-zinc-800 dark:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-slate-800/60",
               action.disabled || action.loading ? "opacity-50 cursor-not-allowed" : "",
             ]
@@ -291,7 +291,7 @@ export default function BottomActions() {
                   "bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-slate-800/60 dark:hover:bg-slate-700/60",
                   "border-zinc-200 dark:border-slate-700",
                   selectedAction?.variant === "danger"
-                    ? "text-red-600 dark:text-red-400"
+                    ? "text-error"
                     : "text-zinc-800 dark:text-zinc-100",
                 ]
                   .filter(Boolean)

@@ -17,7 +17,7 @@ interface AdminViewCardsProps {
 const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; color: string }> = [
   { key: "featured", label: "Featured", color: "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300" },
   { key: "isPromoted", label: "Promoted", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-  { key: "isOnSale", label: "Sale", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
+  { key: "isOnSale", label: "Sale", color: "bg-success-surface text-success" },
   { key: "isSold", label: "Sold", color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400" },
 ];
 

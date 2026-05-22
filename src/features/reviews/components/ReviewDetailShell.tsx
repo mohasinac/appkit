@@ -104,7 +104,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               {review.rating}.0
             </span>
             {review.verified && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1 rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
                 ✓ Verified Purchase
               </span>
             )}
@@ -221,7 +221,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           <div className="text-sm text-neutral-500 dark:text-zinc-400">
             {helpfulCount > 0 && (
               <span>
-                <strong className="text-neutral-900 dark:text-white">{helpfulCount}</strong>{" "}
+                <Span weight="bold" className="text-neutral-900 dark:text-white">{helpfulCount}</Span>{" "}
                 {helpfulCount === 1 ? "person" : "people"} found this helpful
               </span>
             )}
@@ -232,7 +232,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             disabled={voted || voting}
             className={`ml-auto flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
               voted
-                ? "border-emerald-200 bg-emerald-50 text-emerald-600 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400 cursor-default"
+                ? "border-emerald-200 bg-success-surface text-success dark:border-emerald-800 cursor-default"
                 : "border-neutral-300 dark:border-zinc-600 text-neutral-700 dark:text-zinc-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary disabled:opacity-50"
             }`}
           >

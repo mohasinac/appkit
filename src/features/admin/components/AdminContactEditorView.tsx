@@ -54,9 +54,9 @@ export function AdminContactEditorView({
   });
 
   const statusColor: Record<string, string> = {
-    new: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+    new: "bg-info-surface text-info",
     read: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
-    resolved: "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+    resolved: "bg-success-surface text-success",
   };
 
   return (

@@ -1,4 +1,6 @@
 import React from "react";
+import type { SurfaceProps } from "./surface-tokens";
+import { buildSurfaceClasses } from "./surface-tokens";
 
 /**
  * Layout Primitives — Container, Stack, Row, Grid
@@ -186,18 +188,7 @@ type JustifyContent = keyof typeof JUSTIFY_MAP;
  * <Container size="full" as="main">...</Container>
  * ```
  */
-export interface ContainerProps extends React.HTMLAttributes<HTMLElement> {
-  /**
-   * Max-width breakpoint preset.
-   * - `sm`    → `max-w-3xl`       (blog / policy)
-   * - `md`    → `max-w-4xl`       (contact / about)
-   * - `lg`    → `max-w-5xl`       (checkout / help)
-   * - `xl`    → `max-w-6xl`       (product detail / cart)
-   * - `2xl`   → `max-w-7xl`       (main content grids — **default**)
-   * - `full`  → `max-w-screen-2xl` (full-bleed)
-   * - `wide`  → `max-w-screen-2xl` (compact px, no lg step)
-   * - `ultra` → `max-w-[1920px]`  (ultra-wide / 4K displays)
-   */
+export interface ContainerProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   size?: ContainerSize;
   /** Render as a different element (e.g. `"main"`, `"section"`). Defaults to `"div"`. */
   as?: React.ElementType;
@@ -207,6 +198,11 @@ export interface ContainerProps extends React.HTMLAttributes<HTMLElement> {
 export function Container({
   size = "2xl",
   as,
+  surface,
+  padding,
+  rounded,
+  border,
+  shadow,
   className = "",
   children,
   ...props
@@ -214,7 +210,7 @@ export function Container({
   const Tag = (as ?? "div") as React.ElementType;
   return (
     <Tag
-      className={["appkit-container", CONTAINER_MAP[size], className]
+      className={["appkit-container", CONTAINER_MAP[size], buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className]
         .filter(Boolean)
         .join(" ")}
       {...props}
@@ -242,7 +238,7 @@ export function Container({
  * </Stack>
  * ```
  */
-export interface StackProps extends React.HTMLAttributes<HTMLElement> {
+export interface StackProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /** Space between children. Defaults to `"md"` (`gap-4`). */
   gap?: GapKey;
   /** Centers children on both axes (`items-center justify-center`). */
@@ -259,6 +255,11 @@ export function Stack({
   centered = false,
   align = "stretch",
   as,
+  surface,
+  padding,
+  rounded,
+  border,
+  shadow,
   className = "",
   children,
   ...props
@@ -269,6 +270,7 @@ export function Stack({
     GAP_MAP[gap],
     centered ? "appkit-stack--centered" : "",
     !centered && align !== "stretch" ? ITEMS_MAP[align] : "",
+    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
   ]
     .filter(Boolean)
@@ -298,7 +300,7 @@ export function Stack({
  * </Row>
  * ```
  */
-export interface RowProps extends React.HTMLAttributes<HTMLElement> {
+export interface RowProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /** Space between children. Defaults to `"md"` (`gap-4`). */
   gap?: GapKey;
   /** Centers children on both axes (`items-center justify-center`). */
@@ -321,6 +323,11 @@ export function Row({
   justify = "start",
   wrap = false,
   as,
+  surface,
+  padding,
+  rounded,
+  border,
+  shadow,
   className = "",
   children,
   ...props
@@ -332,6 +339,7 @@ export function Row({
     !centered && justify !== "start" ? JUSTIFY_MAP[justify] : "",
     GAP_MAP[gap],
     wrap ? "appkit-row--wrap" : "",
+    buildSurfaceClasses({ surface, padding, rounded, border, shadow }),
     className,
   ]
     .filter(Boolean)
@@ -361,7 +369,7 @@ export function Row({
  * </Grid>
  * ```
  */
-export interface GridProps extends React.HTMLAttributes<HTMLElement> {
+export interface GridProps extends React.HTMLAttributes<HTMLElement>, SurfaceProps {
   /**
    * Column preset.
    * - Numbers `1`–`6` → mobile-first responsive stacks
@@ -385,14 +393,18 @@ export function Grid({
   cols,
   gap = "md",
   as,
+  surface,
+  padding,
+  rounded,
+  border,
+  shadow,
   className = "",
   children,
   ...props
 }: GridProps) {
   const Tag = (as ?? "div") as React.ElementType;
-  // When cols is omitted callers supply grid-cols-* themselves via className.
   const baseClass = cols !== undefined ? GRID_MAP[cols] : "appkit-grid";
-  const classes = [baseClass, GAP_MAP[gap], className]
+  const classes = [baseClass, GAP_MAP[gap], buildSurfaceClasses({ surface, padding, rounded, border, shadow }), className]
     .filter(Boolean)
     .join(" ");
   return (
