@@ -270,7 +270,7 @@ export function MarketplacePreorderCard({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className={`text-base ${inWishlist ? "text-primary" : "text-zinc-500"}`}
+                  className={`text-base ${inWishlist ? "text-primary" : "text-zinc-500 dark:text-zinc-400"}`}
                   onClick={handleWishlist}
                   aria-label={inWishlist ? mergedLabels.removeFromWishlist : mergedLabels.addToWishlist}
                 >

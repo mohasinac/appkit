@@ -1,9 +1,10 @@
 import { randomUUID } from "crypto";
 import type { DocumentReference } from "firebase-admin/firestore";
 import type { DocumentSnapshot } from "../../../providers/db-firebase";
-import { DatabaseError, NotFoundError } from "../../../errors";
+import { DatabaseError, NotFoundError, ValidationError } from "../../../errors";
 
 const ERR_CART_ITEM_NOT_FOUND = "Cart item not found";
+const ERR_CART_ITEM_LOCKED = "This item requires payment and cannot be removed or modified.";
 
 import {
   BaseRepository,

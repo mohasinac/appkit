@@ -56,7 +56,7 @@ export function PreOrderActionsClient({
             {formatCurrency(price, currency)}
           </Text>
           {depositAmount !== null && (
-            <Text className="mt-0.5 text-xs text-zinc-500">
+            <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
               Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
             </Text>
           )}

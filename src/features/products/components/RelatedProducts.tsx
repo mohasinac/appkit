@@ -28,7 +28,7 @@ export function RelatedProducts({
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse" data-section="relatedproducts-div-428">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="aspect-square rounded-xl bg-neutral-100" />
+          <div key={i} className="aspect-square rounded-xl bg-zinc-100 dark:bg-zinc-800" />
         ))}
       </div>
     );

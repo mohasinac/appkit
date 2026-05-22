@@ -48,7 +48,7 @@ export async function StoreDetailLayoutView({
       <Main>
         <Section className="py-20">
           <Container size="md">
-            <Text className="text-center text-zinc-500">Store not found.</Text>
+            <Text className="text-center text-zinc-500 dark:text-zinc-400">Store not found.</Text>
           </Container>
         </Section>
       </Main>

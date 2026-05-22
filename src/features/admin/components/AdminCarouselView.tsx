@@ -292,7 +292,7 @@ export function AdminCarouselView({ children, onBulkDelete, ...props }: AdminCar
     {
       key: "updatedAt",
       header: "Updated",
-      render: (row) => <span className="text-sm text-zinc-500">{row.updatedAt}</span>,
+      render: (row) => <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>,
     },
     {
       key: "actions",

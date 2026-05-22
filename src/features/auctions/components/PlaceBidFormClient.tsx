@@ -126,14 +126,14 @@ export function PlaceBidFormClient({
       {/* Current / starting bid summary */}
       <Div className="space-y-1">
         <Row justify="between" align="center">
-          <Text className="text-xs text-zinc-500">Current bid</Text>
-          <Text className="text-xs text-zinc-500">Starting bid</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Current bid</Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">Starting bid</Text>
         </Row>
         <Row justify="between" align="baseline">
           <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
             {formatCurrency(currentBid, currency)}
           </Span>
-          <Span className="text-sm text-zinc-500">
+          <Span className="text-sm text-zinc-500 dark:text-zinc-400">
             {formatCurrency(startingBid, currency)}
           </Span>
         </Row>

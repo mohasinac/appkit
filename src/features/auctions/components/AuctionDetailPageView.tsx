@@ -192,7 +192,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
               <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
                 Auction Not Found
               </Heading>
-              <Text className="text-zinc-500">
+              <Text className="text-zinc-500 dark:text-zinc-400">
                 This auction may have ended or the link is incorrect.
               </Text>
               <Link href={String(ROUTES.PUBLIC.AUCTIONS)} className="text-sm font-medium text-primary-600 hover:underline">
@@ -322,7 +322,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                     <Span className="text-xl font-bold text-primary-600 dark:text-primary-400">
                       {formatCurrency(currentBid, currency)}
                     </Span>
-                    <Span className="text-xs text-zinc-500">
+                    <Span className="text-xs text-zinc-500 dark:text-zinc-400">
                       {bidCount} {bidCount === 1 ? "bid" : "bids"} · min increment {formatCurrency(minBidIncrement, currency)}
                     </Span>
                   </Row>
@@ -389,7 +389,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span className="text-xs text-zinc-500">{bidCount} bids</Span>
+                  <Span className="text-xs text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
                 </Row>
                 <PlaceBidModalButton
                   productId={String(product.id)}
@@ -413,7 +413,7 @@ export async function AuctionDetailPageView({ id, initialAuction, onPlaceBid, on
                   <Span className="text-base font-bold text-primary-600 dark:text-primary-400">
                     {formatCurrency(currentBid, currency)}
                   </Span>
-                  <Span className="text-xs text-zinc-500">{bidCount} bids</Span>
+                  <Span className="text-xs text-zinc-500 dark:text-zinc-400">{bidCount} bids</Span>
                 </Row>
                 <Button variant="primary" size="md" className="w-full">
                   Place Bid

@@ -285,7 +285,7 @@ export function SellerBidsView({ endpoint = SELLER_ENDPOINTS.BIDS }: SellerBidsV
         ) : (
           <div className="space-y-3">
             {groupedRows.length === 0 && !isLoading && (
-              <Text className="text-sm text-zinc-500">No bids found for your auctions.</Text>
+              <Text className="text-sm text-zinc-500 dark:text-zinc-400">No bids found for your auctions.</Text>
             )}
             {groupedRows.map((group) => {
               const collapsed = collapsedGroups.has(group.id);

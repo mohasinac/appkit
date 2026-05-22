@@ -720,7 +720,7 @@ export async function ProductDetailPageView({
                           Free Delivery
                         </Text>
                         {shippingInfo && (
-                          <Text className="text-xs text-zinc-500">{shippingInfo}</Text>
+                          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{shippingInfo}</Text>
                         )}
                       </Div>
                     </Row>

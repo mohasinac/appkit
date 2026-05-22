@@ -249,6 +249,13 @@ export const ACTIONS: ActionTree = {
     },
   },
   PRE_ORDER: {
+    "add-to-cart": {
+      id: "pre-order.add-to-cart",
+      label: "Add to cart",
+      description: "Add a pre-order listing to the cart for checkout.",
+      kind: "secondary",
+      listingTypeScope: ["pre-order"],
+    },
     "reserve-now": {
       id: "pre-order.reserve-now",
       label: "Reserve now",
@@ -271,11 +278,18 @@ export const ACTIONS: ActionTree = {
     },
   },
   PRIZE_DRAW: {
+    "buy-now": {
+      id: "prize-draw.buy-now",
+      label: "Buy now",
+      description: "Purchase a prize-draw entry directly (buyout — skips cart, goes to checkout).",
+      kind: "primary",
+      listingTypeScope: ["prize-draw"],
+    },
     "enter-draw": {
       id: "prize-draw.enter-draw",
       label: "Enter draw",
       description: "Purchase an entry into the prize draw.",
-      kind: "primary",
+      kind: "secondary",
       listingTypeScope: ["prize-draw"],
     },
     "reveal-code": {
@@ -314,10 +328,10 @@ export const ACTIONS: ActionTree = {
     },
   },
   BUNDLE: {
-    "add-bundle-to-cart": {
-      id: "bundle.add-to-cart",
-      label: "Add bundle to cart",
-      description: "Add a categoryType:'bundle' to the cart (SB-UNI-Bundle-Checkout).",
+    "buy-now": {
+      id: "bundle.buy-now",
+      label: "Buy now",
+      description: "Purchase a bundle directly (buyout — skips cart, goes to checkout).",
       kind: "primary",
       categoryTypeScope: ["bundle"],
     },
@@ -1714,6 +1728,18 @@ export const ACTIONS: ActionTree = {
       label: "No Payment — Admin Bypass Order",
       description: "Admin test mode: place a real order record without charging any payment.",
       kind: "secondary",
+    },
+    "apply-coupon": {
+      id: "checkout.apply-coupon",
+      label: "Apply coupon",
+      description: "Validate and apply a coupon code at checkout before payment.",
+      kind: "secondary",
+    },
+    "remove-coupon": {
+      id: "checkout.remove-coupon",
+      label: "Remove coupon",
+      description: "Remove an applied coupon from the current checkout session.",
+      kind: "ghost",
     },
   },
   NAV: {

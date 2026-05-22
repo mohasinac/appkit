@@ -10,7 +10,8 @@ export type DispatchAction =
   | { type: "OPEN_PANEL"; panelId: string; data?: Record<string, unknown> }
   | { type: "TOAST"; message: string; variant?: ToastVariant }
   | { type: "BULK"; actionId: string; ids: string[] }
-  | { type: "COPY"; text: string; successMessage?: string };
+  | { type: "COPY"; text: string; successMessage?: string }
+  | { type: "EXECUTE"; handler: () => Promise<void>; successMessage?: string; errorMessage?: string };
 
 export interface UseActionDispatchOptions {
   onBulk?: (actionId: string, ids: string[]) => void;
@@ -39,6 +40,17 @@ export function useActionDispatch(options?: UseActionDispatchOptions) {
         case "COPY":
           await navigator.clipboard.writeText(action.text);
           showToast(action.successMessage ?? "Copied!", "success");
+          break;
+        case "EXECUTE":
+          try {
+            await action.handler();
+            if (action.successMessage) showToast(action.successMessage, "success");
+          } catch (err) {
+            showToast(
+              action.errorMessage ?? (err instanceof Error ? err.message : "Something went wrong."),
+              "error",
+            );
+          }
           break;
       }
     },

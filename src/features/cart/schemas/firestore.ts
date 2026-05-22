@@ -40,6 +40,8 @@ export interface CartItemDocument {
   offerId?: string;
   /** Locked offer price — overrides normal product price at checkout */
   lockedPrice?: number;
+  /** When true the item cannot be removed or have its quantity changed. Set on won-auction and accepted-offer items that require mandatory payment. */
+  locked?: boolean;
   /**
    * SB-UNI-4 2026-05-13 — bundle identifier when this cart line represents a
    * bundle (categoryType:"bundle" row on the categories collection). When set,
@@ -151,6 +153,7 @@ export type AddToCartInput = {
   isOffer?: boolean;
   offerId?: string;
   lockedPrice?: number;
+  locked?: boolean;
   /** SB-UNI-4 2026-05-13 — bundle identifier when the line is a bundle. */
   bundleCategorySlug?: string;
   /** Snapshot of bundle members at add-to-cart time. */

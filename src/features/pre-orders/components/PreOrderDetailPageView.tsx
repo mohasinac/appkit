@@ -273,7 +273,7 @@ function PreOrderBuyBarPanel({
       {reserveTarget > 0 && (
         <Div className="space-y-2">
           <Row justify="between" align="center">
-            <Text className="text-xs text-zinc-500">
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               {reservedCount} of {reserveTarget} reserved
             </Text>
             <Span className="text-xs font-semibold text-primary-600 dark:text-primary-400">
@@ -305,7 +305,7 @@ function PreOrderBuyBarPanel({
                 {formatCurrency(price, currency)}
               </Text>
               {depositAmount !== null && (
-                <Text className="mt-0.5 text-xs text-zinc-500">
+                <Text className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
                   Reserve with {formatCurrency(depositAmount, currency)}{depositPercent !== null ? ` (${depositPercent}% deposit)` : ""}
                 </Text>
               )}
@@ -366,7 +366,7 @@ export async function PreOrderDetailPageView({ id, initialPreOrder, onReserveNow
               <Heading level={1} className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
                 Pre-Order Not Found
               </Heading>
-              <Text className="text-zinc-500">
+              <Text className="text-zinc-500 dark:text-zinc-400">
                 The pre-order item you are looking for may have been removed.
               </Text>
               <Link href={String(ROUTES.PUBLIC.PRE_ORDERS)} className="text-sm font-medium text-primary-600 hover:underline">

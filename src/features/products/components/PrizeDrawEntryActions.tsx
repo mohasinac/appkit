@@ -1,11 +1,9 @@
 "use client";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Stack, Text, useToast, LoginRequiredModal } from "../../../ui";
+import { Button, Stack, Text, LoginRequiredModal } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { formatCurrency } from "../../../utils/number.formatter";
-import { useGuestCart } from "../../cart/hooks/useGuestCart";
-import { pushCartOp } from "../../cart/utils/pending-ops";
 import { NonRefundableConsentModal } from "./NonRefundableConsentModal";
 import { useAuthGate } from "../../../react/hooks/useAuthGate";
 import { ACTION_ID } from "../constants/action-defs";
@@ -46,8 +44,6 @@ export function PrizeDrawEntryActions({
   storeName,
 }: PrizeDrawEntryActionsProps) {
   const router = useRouter();
-  const cart = useGuestCart();
-  const { showToast } = useToast();
   const { requireAuth, modalOpen, modalMessage, closeModal } = useAuthGate();
   const [consentOpen, setConsentOpen] = useState(false);
 
@@ -59,19 +55,10 @@ export function PrizeDrawEntryActions({
   }, [closed, requireAuth]);
 
   const handleConfirm = useCallback(() => {
-    const snapshot = {
-      productTitle: title,
-      productImage: thumb,
-      price: pricePerEntry,
-      storeId,
-      storeName,
-    };
-    cart.add(productId, 1, snapshot);
-    pushCartOp({ op: "add", productId, quantity: 1, ...snapshot });
     setConsentOpen(false);
-    showToast("Entry added to cart", "success");
-    router.push(String(ROUTES.USER.CART));
-  }, [cart, productId, title, thumb, pricePerEntry, storeId, storeName, router, showToast]);
+    const slug = productSlug ?? productId;
+    router.push(`${String(ROUTES.USER.CHECKOUT)}?directItem=${encodeURIComponent(slug)}&type=prize-draw`);
+  }, [productSlug, productId, router]);
 
   return (
     <Stack gap="md">
@@ -83,7 +70,7 @@ export function PrizeDrawEntryActions({
       </Text>
 
       <Button
-        action={closed ? undefined : ACTIONS.PRIZE_DRAW["enter-draw"]}
+        action={closed ? undefined : ACTIONS.PRIZE_DRAW["buy-now"]}
         variant="primary"
         size="md"
         className="w-full"
