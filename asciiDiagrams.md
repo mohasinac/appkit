@@ -5,6 +5,8 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 ## Index
 
 - [S-STORE Foundation](#s-store-foundation) — 14-collection store-extensions feature
+- [BottomActions + BulkActionBar](#bottomactions--bulkactionbar) — mobile vs desktop action bars
+- [Toast Audit Pattern](#toast-audit-pattern) — async handler error propagation + audit script
 - [QuickCreateModal](#quickcreatemodal) — slide-over with semantic `onSave(doc)` contract
 - [FormShell splitPreview](#formshell-splitpreview) — desktop 60/40 form + live-preview layout
 - [SellerProductsView](#sellerproductsview) — toolbar + cards + filter-drawer split
@@ -15,6 +17,95 @@ ASCII diagrams for non-trivial components and architectural flows. Updated along
 - [Vacation Banner](#vacationbanner) — store-paused notice flow
 
 ---
+
+## BottomActions + BulkActionBar
+
+```
+Desktop (lg+):                          Mobile (< lg):
+
+┌──────────────────────────────────┐    ┌──────────────────────────────────┐
+│  ListingToolbar                  │    │  ListingToolbar                  │
+├──────────────────────────────────┤    ├──────────────────────────────────┤
+│  BulkActionBar  (dropdown)       │    │  (no BulkActionBar)              │
+│  "3 selected" [Actions ▾]        │    │                                  │
+│   └─ Delete · Export · ...       │    │                                  │
+├──────────────────────────────────┤    ├──────────────────────────────────┤
+│                                  │    │                                  │
+│  DataTable / Cards               │    │  DataTable / Cards               │
+│                                  │    │                                  │
+│                                  │    ├──────────────────────────────────┤
+│                                  │    │  BottomActions (fixed bottom)    │
+│                                  │    │  "3 selected" [Clear] [Delete]   │
+└──────────────────────────────────┘    └──────────────────────────────────┘
+
+Architecture:
+
+  BottomActionsProvider (in AppLayoutShell)
+       │
+       ▼
+  useBottomActions(config?)   ← called per-view, sets actions via context
+       │
+       ▼
+  BottomActionsBar (lg:hidden, fixed bottom z-40)
+       ├── page mode:  actions[]  (route-specific CTAs)
+       └── bulk mode:  selectedCount + onClearSelection + actions[]
+
+Hook call pattern in every view with bulk selection:
+
+  useBottomActions(
+    selection.selectedCount > 0
+      ? { bulk: { selectedCount, onClearSelection, actions: [...] } }
+      : {}
+  );
+
+52 views migrated. BulkActionBar kept for desktop — both coexist.
+
+Deleted legacy:
+  ✗ BulkActionsBar  (96-line fixed-bottom, zero imports pre-migration)
+  ✗ StickyBottomBar  (Cart/Wishlist mobile bar → useBottomActions)
+  ✗ BuyBar           (product detail mobile CTA → useBottomActions)
+```
+
+## Toast Audit Pattern
+
+```
+Every useCallback(async ...) in "use client" files must have:
+
+  ┌─────────────────────────────────────────────────────┐
+  │  const handler = useCallback(async () => {          │
+  │    try {                                            │
+  │      const res = await fetch(url, { ... });         │
+  │      if (!res.ok) {                                 │
+  │        const body = await res.json()                │
+  │                       .catch(() => null);           │
+  │        throw new Error(                             │
+  │          (body as { error?: string })?.error        │
+  │            ?? "Fallback message"                    │
+  │        );                                           │
+  │      }                                              │
+  │      showToast("Success message.", "success");      │
+  │    } catch (err) {                                  │
+  │      showToast(                                     │
+  │        err instanceof Error                         │
+  │          ? err.message                              │
+  │          : "Fallback error.",                       │
+  │        "error"                                      │
+  │      );                                             │
+  │    }                                                │
+  │  }, [..., showToast]);                              │
+  └─────────────────────────────────────────────────────┘
+
+Server error propagation:
+  createRouteHandler returns { success: false, error: "message" }
+  Client parses: (body as { error?: string })?.error ?? fallback
+
+Audit script: scripts/audit-toast-coverage.mjs
+  - Scans all "use client" files for useCallback(async ...) blocks
+  - "error" = has await, no try/catch, no dispatch, no showToast
+  - "warn"  = has try/catch but no showToast
+  - Baseline (12 known): data loaders + background ops (intentionally silent)
+  - Exit 1 on errors or NEW warnings; 0 when only baseline
+```
 
 ## S-STORE Foundation
 
@@ -87,7 +178,8 @@ SellerProductsView   (appkit/src/features/seller/components/)
 ├── ListingToolbar  (+ extra: "New Listing" button)
 ├── TypeDropdown    (replaces TypeChips, 9 listing kinds)
 ├── Pagination      (sticky below toolbar)
-├── BulkActionBar   (when selection > 0)
+├── BulkActionBar   (desktop lg+, when selection > 0)
+├── useBottomActions (mobile <lg, when selection > 0)
 ├── view === "grid" | "list":
 │     SellerProductsCards   (extracted — sub-150-line threshold)
 └── view === "table":
@@ -109,7 +201,8 @@ Duplicate uses POST /api/store/products/[id]/duplicate.
 ```
 SellerBidsView
 ├── ListingToolbar
-├── BulkActionBar  (Cancel selected)
+├── BulkActionBar  (desktop lg+, Cancel selected)
+├── useBottomActions (mobile <lg, Cancel selected)
 └── ?grouped !== "0":
       ┌──────────────────────────────────────────────┐
       │ ▾ Charizard 1st Edition · 4 bids             │  <- collapsible header
@@ -138,7 +231,8 @@ SellerXxxView  (appkit/src/features/seller/components/)
 │     ├── sort: SortOptions[]
 │     └── extra: <Button>New X</Button>
 │
-├── BulkActionBar (when selectedCount > 0 && bulkActions.length > 0)
+├── BulkActionBar (desktop lg+, when selectedCount > 0)
+├── useBottomActions (mobile <lg, mirrors BulkActionBar actions)
 │
 └── DataTable
       columns: DataTableColumn<Row>[]  (render: (item) => ReactNode, NOT cell:)
