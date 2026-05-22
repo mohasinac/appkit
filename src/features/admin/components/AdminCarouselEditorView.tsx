@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Alert,
   Button,
+  ConfirmDeleteModal,
   Form,
   FormActions,
   Input,
@@ -24,6 +25,7 @@ import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
+import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 
 const CLS_PANEL = "rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 space-y-3";
 const CLS_ROW_BETWEEN = "flex items-center justify-between";
@@ -384,6 +386,7 @@ export function AdminCarouselEditorView({
 
   const [errorMsg, setErrorMsg] = React.useState("");
   const [successMsg, setSuccessMsg] = React.useState("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   const slideQuery = useQuery({
@@ -591,16 +594,24 @@ export function AdminCarouselEditorView({
               <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
             )}
             {isEdit && (
-              <Button
-                type="button"
-                variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (confirm("Delete this slide? This cannot be undone.")) deleteMutation.mutate();
-                }}
-              >
-                Delete slide
-              </Button>
+              <>
+                <Button
+                  type="button"
+                  variant="danger"
+                  isLoading={deleteMutation.isPending}
+                  onClick={() => setDeleteConfirmOpen(true)}
+                >
+                  {ACTIONS.ADMIN["delete-carousel"].label}
+                </Button>
+                <ConfirmDeleteModal
+                  isOpen={deleteConfirmOpen}
+                  onClose={() => setDeleteConfirmOpen(false)}
+                  onConfirm={() => { setDeleteConfirmOpen(false); deleteMutation.mutate(); }}
+                  title={ACTIONS.ADMIN["delete-carousel"].confirmation!.title}
+                  message={ACTIONS.ADMIN["delete-carousel"].confirmation!.body}
+                  isDeleting={deleteMutation.isPending}
+                />
+              </>
             )}
           </FormActions>
         </Form>

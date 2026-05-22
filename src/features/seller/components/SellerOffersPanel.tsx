@@ -192,7 +192,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             <Button size="sm" variant="primary" onClick={handleAccept} disabled={isPending}>
               {isPending ? "Accepting…" : "Confirm Accept"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
         </Div>
       )}
@@ -211,7 +211,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
               className="text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800">
               {isPending ? "Declining…" : "Confirm Decline"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
         </Div>
       )}
@@ -239,7 +239,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
             <Button size="sm" variant="secondary" onClick={handleCounter} disabled={isPending}>
               {isPending ? "Sending…" : "Send Counter"}
             </Button>
-            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>Cancel</Button>
+            <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>
           </Div>
         </Div>
       )}

@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Badge, Button, Div, Row, Text } from "../../../ui";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { CARD_BORDER, CARD_BORDER_ACTIVE, CARD_GRID_CLS, CARD_LIST_CLS, KIND_BADGE_VARIANT } from "./seller-products-styles";
 
 export interface SellerProductsCardsRowShape {
@@ -86,10 +87,10 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               </Div>
             </a>
             <Div className="border-t border-[var(--appkit-color-border)] flex justify-end gap-1 p-2">
-              <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(row); }} aria-label="Edit">Edit</Button>
-              <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate(row); }} aria-label="Duplicate">Duplicate</Button>
+              <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(row); }} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
+              <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDuplicate(row); }} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (
-                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(row); }} aria-label="Delete">Delete</Button>
+                <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(row); }} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
               )}
             </Div>
           </Div>
@@ -118,10 +119,10 @@ export function SellerProductsCards<TRow extends SellerProductsCardsRowShape>({
               </Row>
             </a>
             <Row className="gap-1 flex-shrink-0">
-              <Button variant="ghost" size="sm" onClick={() => onEdit(row)} aria-label="Edit">Edit</Button>
-              <Button variant="ghost" size="sm" onClick={() => onDuplicate(row)} aria-label="Duplicate">Duplicate</Button>
+              <Button variant="ghost" size="sm" onClick={() => onEdit(row)} aria-label="Edit">{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
+              <Button variant="ghost" size="sm" onClick={() => onDuplicate(row)} aria-label="Duplicate">{ROW_ACTION_META[ROW_ACTION_ID.DUPLICATE].label}</Button>
               {onDelete && (
-                <Button variant="ghost" size="sm" onClick={() => onDelete(row)} aria-label="Delete">Delete</Button>
+                <Button variant="ghost" size="sm" onClick={() => onDelete(row)} aria-label="Delete">{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
               )}
             </Row>
           </Div>

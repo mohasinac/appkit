@@ -107,6 +107,13 @@
   background: var(--appkit-color-secondary-400);
 }
 
+/* Cascade fill foreground to all non-appkit-component children inside filled
+   variants. :not([class*="appkit-"]) preserves Badge / Checkbox / Toggle
+   internal styling. Specificity (0,3,0) beats Tailwind text-* (0,1,0). */
+.appkit-button.appkit-button--primary :not([class*="appkit-"]) {
+  color: inherit;
+}
+
 .appkit-button.appkit-button--secondary {
   background: var(--appkit-color-surface);
   border-color: var(--appkit-color-primary-700);
@@ -173,6 +180,10 @@
   background: var(--appkit-color-error-hover);
 }
 
+.appkit-button.appkit-button--danger :not([class*="appkit-"]) {
+  color: inherit;
+}
+
 .appkit-button.appkit-button--warning {
   background: var(--appkit-color-warning);
   color: var(--appkit-color-text-on-primary);
@@ -180,6 +191,10 @@
 
 .appkit-button.appkit-button--warning:hover:not(:disabled) {
   background: var(--appkit-color-amber-400);
+}
+
+.appkit-button.appkit-button--warning :not([class*="appkit-"]) {
+  color: inherit;
 }
 
 .appkit-button__spinner {

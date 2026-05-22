@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
 import { Button, Div, Heading, Row, SideDrawer, Text } from "../../../ui";
+import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
@@ -340,8 +341,8 @@ export function SellerAddressesView({
                         <td className="px-3 py-2 tabular-nums">{addr.phone}</td>
                         <td className="px-3 py-2 text-right">
                           <Row className="gap-1 justify-end">
-                            <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>Edit</Button>
-                            <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>Delete</Button>
+                            <Button size="sm" variant="ghost" onClick={() => openEdit(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.EDIT].label}</Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDelete(addr)}>{ROW_ACTION_META[ROW_ACTION_ID.DELETE].label}</Button>
                           </Row>
                         </td>
                       </tr>
