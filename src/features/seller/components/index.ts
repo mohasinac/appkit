@@ -1,5 +1,3 @@
-export { SellerSidebar } from "./SellerSidebar";
-export type { SellerNavItem } from "./SellerSidebar";
 export { SellerDashboardView } from "./SellerDashboardView";
 export type { SellerDashboardViewProps } from "./SellerDashboardView";
 export { SellerProductsView } from "./SellerProductsView";

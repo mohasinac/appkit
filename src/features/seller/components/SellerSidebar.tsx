@@ -312,7 +312,3 @@ export function StoreSidebar({
   );
 }
 
-/** @deprecated Use StoreSidebar */
-export const SellerSidebar = StoreSidebar;
-/** @deprecated Use StoreNavItem */
-export type SellerNavItem = StoreNavItem;

@@ -7906,9 +7906,6 @@ export { SellerRevenueChart } from "./features/seller/index";
 // SellerShippingView - Component for seller shipping view.
 export { SellerShippingView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerSidebar - Shared export for seller sidebar.
-export { SellerSidebar } from "./features/seller/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerStoreSetupView - Component for seller store setup view.
 export { SellerStoreSetupView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -8076,9 +8073,6 @@ export type { SellerGuideViewProps } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerListResponse - Type contract for seller list response.
 export type { SellerListResponse } from "./features/seller/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// SellerNavItem - Type contract for seller nav item.
-export type { SellerNavItem } from "./features/seller/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // SellerOffersViewProps - Type contract for seller offers view props.
 export type { SellerOffersViewProps } from "./features/seller/index";

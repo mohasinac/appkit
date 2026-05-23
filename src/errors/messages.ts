@@ -556,12 +556,6 @@ export const ERROR_MESSAGES = {
     ORDER_CREATE_FAILED: "Failed to create shipment with shipping provider",
     AWB_ASSIGN_FAILED: "Failed to assign courier AWB number",
     PICKUP_SCHEDULE_FAILED: "Failed to schedule pickup with shipping provider",
-    /** @deprecated Use PROVIDER_CREDS_REQUIRED */
-    SHIPROCKET_CREDS_REQUIRED:
-      "Shipping provider email and password are required",
-    /** @deprecated Use PROVIDER_AUTH_FAILED */
-    SHIPROCKET_AUTH_FAILED:
-      "Failed to authenticate with shipping provider — check your credentials",
     TRACKING_FAILED: "Failed to fetch tracking details",
     INVALID_TRACKING_URL: "Please provide a valid tracking URL",
     CARRIER_NAME_REQUIRED:
