@@ -258,12 +258,6 @@ export function Li({ className = "", children, ...props }: LiProps) {
   );
 }
 
-// --- Header / Footer — convenience aliases ------------------------------------
-export type HeaderProps = BlockHeaderProps;
-export const Header = BlockHeader;
-export type FooterProps = BlockFooterProps;
-export const Footer = BlockFooter;
-
 // --- Table family -------------------------------------------------------------
 
 type TableVariant = "default" | "striped" | "bordered";

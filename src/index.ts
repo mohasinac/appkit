@@ -215,8 +215,6 @@ export type { FlowDiagramProps } from "./ui/index";
 // FlowStep - Type contract for flow step.
 export type { FlowStep } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// FooterProps - Type contract for footer props.
-export type { FooterProps } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // FormActionsProps - Type contract for form actions props.
 export type { FormActionsProps } from "./ui/index";
@@ -8929,7 +8927,7 @@ export { useLogout } from "./features/auth/index";
 // Missing UI semantic wrappers and typography
 export { Text, Label, Span } from "./ui/index";
 export { Input } from "./ui/index";
-export { Section, Main, Nav, Header, Footer, Ul, Li } from "./ui/index";
+export { Section, Main, Nav, Ul, Li } from "./ui/index";
 
 // Missing media helpers
 export { coerceMediaField, coerceMediaFieldArray, getMediaUrl, mediaFieldSchema } from "./features/media/index";
