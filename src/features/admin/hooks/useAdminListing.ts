@@ -15,6 +15,7 @@ export interface AdminListingConfig<TResponse, TRow extends { id: string }> {
   mapRows: (response: TResponse) => TRow[];
   getTotal?: (response: TResponse, rows: TRow[]) => number;
   buildFilters: (filterState: Record<string, string>) => string | undefined;
+  initialView?: "grid" | "list" | "table";
 }
 
 export function useAdminListing<TResponse, TRow extends { id: string }>(
@@ -31,7 +32,7 @@ export function useAdminListing<TResponse, TRow extends { id: string }>(
     buildFilters,
   } = config;
 
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
+  const [view, setView] = useState<"grid" | "list" | "table">(config.initialView ?? "table");
   const table = useUrlTable({ defaults: { pageSize: String(pageSize), sort: defaultSort } });
   const panel = usePanelUrlSync();
   const [searchInput, setSearchInput] = useState(table.get("q") || "");

@@ -129,6 +129,12 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
   /** When set, the table renders rows as anchor links to this href. */
   getRowHref?: (row: TRow) => string;
 
+  /** Hide the table toggle in the toolbar; views with no table column set should use this. */
+  hideTableView?: boolean;
+
+  /** Initial view mode (defaults to "table" when not hidden, "grid" when hidden). */
+  initialView?: "grid" | "list" | "table";
+
   // -- Optional CSS class on root container
   className?: string;
 }
@@ -138,7 +144,12 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 }: {
   config: ListingViewConfig<TResponse, TRow>;
 }) {
-  const listing = useAdminListing<TResponse, TRow>(config);
+  const effectiveInitialView =
+    config.initialView ?? (config.hideTableView ? "grid" : "table");
+  const listing = useAdminListing<TResponse, TRow>({
+    ...config,
+    initialView: effectiveInitialView,
+  });
   const {
     view,
     setView,
@@ -213,7 +224,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
         sortValue={table.get("sort") || config.defaultSort}
         sortOptions={config.sortOptions}
         onSortChange={(v) => table.set("sort", v)}
-        showTableView
+        showTableView={!config.hideTableView}
         view={view}
         onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
