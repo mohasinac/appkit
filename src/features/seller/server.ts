@@ -6,10 +6,6 @@
 export * from "./actions";
 
 export {
-  SellerRepository,
-  PayoutsRepository,
-} from "./repository/seller.repository";
-export {
   OfferRepository,
   offerRepository,
 } from "./repository/offer.repository";

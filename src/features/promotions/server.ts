@@ -5,7 +5,6 @@
  */
 export * from "./actions";
 
-export { PromotionsRepository } from "./repository/promotions.repository";
 export { couponsRepository } from "./repository/coupons.repository";
 
 export { GET as promotionsGET, GET } from "./api/route";

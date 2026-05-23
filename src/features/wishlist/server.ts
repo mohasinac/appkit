@@ -5,7 +5,6 @@
  */
 export * from "./actions";
 
-export { WishlistRepository } from "./repository/wishlist.repository";
 export {
   UserWishlistRepository,
   wishlistRepository,

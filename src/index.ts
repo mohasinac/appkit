@@ -3341,6 +3341,10 @@ export { AdminPayoutsView } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminPrizeDrawsView - Component for admin prize draws listing view (SB4-E).
 export { AdminPrizeDrawsView } from "./features/admin/index";
+// W1-29 2026-05-23 — admin listing views for orphaned listing types.
+export { AdminClassifiedView } from "./features/admin/index";
+export { AdminDigitalCodesView } from "./features/admin/index";
+export { AdminLiveView } from "./features/admin/index";
 export type { AdminPrizeDrawsViewProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // AdminProductsView - Component for admin products view.
@@ -4026,8 +4030,6 @@ export type { UseRealtimeBidsReturn } from "./features/auctions/index";
 
 // ./features/auctions/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// AuctionsRepository - Shared export for auctions repository.
-export { AuctionsRepository } from "./features/auctions/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // GET - Constant used across modules.
 export { GET } from "./features/auctions/server";
@@ -4355,11 +4357,6 @@ export type { BeforeAfterItem } from "./features/before-after/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // BeforeAfterListResponse - Type contract for before after list response.
 export type { BeforeAfterListResponse } from "./features/before-after/index";
-
-// ./features/before-after/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// BeforeAfterRepository - Shared export for before after repository.
-export { BeforeAfterRepository } from "./features/before-after/server";
 
 // ./features/blog/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -4994,10 +4991,6 @@ export type { CollectionItem } from "./features/collections/index";
 // CollectionListItem - Type contract for collection list item.
 export type { CollectionListItem } from "./features/collections/index";
 
-// ./features/collections/server
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// CollectionsRepository - Shared export for collections repository.
-export { CollectionsRepository } from "./features/collections/server";
 
 // ./features/consultation/index
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -6901,8 +6894,6 @@ export type { PreorderStatus } from "./features/pre-orders/index";
 
 // ./features/pre-orders/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// PreordersRepository - Shared export for preorders repository.
-export { PreordersRepository } from "./features/pre-orders/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // preOrdersGET - Shared export for pre orders get.
 export { preOrdersGET } from "./features/pre-orders/server";
@@ -7488,9 +7479,6 @@ export type { ValidityConfig } from "./features/promotions/index";
 
 // ./features/promotions/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// PromotionsRepository - Shared export for promotions repository.
-export { PromotionsRepository } from "./features/promotions/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // getPromotions - Helper for get promotions.
 export { getPromotions } from "./features/promotions/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -8193,11 +8181,7 @@ export type { UseBecomeSellerOptions } from "./features/seller/index";
 
 // ./features/seller/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// PayoutsRepository - Shared export for payouts repository.
-export { PayoutsRepository } from "./features/seller/server";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// SellerRepository - Shared export for seller repository.
-export { SellerRepository } from "./features/seller/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // acceptCounterOffer - Shared export for accept counter offer.
 export { acceptCounterOffer } from "./features/seller/server";
@@ -8543,9 +8527,6 @@ export type { StoreTab } from "./features/stores/index";
 
 // ./features/stores/server
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// StoresRepository - Shared export for stores repository.
-export { StoresRepository } from "./features/stores/server";
-// [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // createStoreAddressForSeller - Helper for create store address for seller.
 export { createStoreAddressForSeller } from "./features/stores/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
@@ -8705,9 +8686,6 @@ export type { WishlistViewProps } from "./features/wishlist/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // UserWishlistRepository - Shared export for user wishlist repository.
 export { UserWishlistRepository } from "./features/wishlist/server";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// WishlistRepository - Shared export for wishlist repository.
-export { WishlistRepository } from "./features/wishlist/server";
 // [SERVER-ONLY]-Server-only â€" uses Node.js, Next.js server internals, or third-party server SDKs (auth, email, payment, shipping).
 // addToWishlist - Helper for add to wishlist.
 export { addToWishlist } from "./features/wishlist/server";

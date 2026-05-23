@@ -5,7 +5,6 @@
  */
 export * from "./actions";
 
-export { StoresRepository } from "./repository/stores.repository";
 export {
   StoreRepository,
   storeRepository,
