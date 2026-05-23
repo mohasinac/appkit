@@ -285,8 +285,6 @@ export type {
 } from "./components/HorizontalScroller";
 export { HorizontalScroller } from "./components/HorizontalScroller";
 
-export type { SectionTabsProps, SectionTab } from "./components/SectionTabs";
-export { SectionTabs } from "./components/SectionTabs";
 
 // Tab strip with ResizeObserver-driven overflow scroll
 export type { TabStripProps, TabStripTab } from "./components/TabStrip";

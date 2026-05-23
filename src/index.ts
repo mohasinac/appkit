@@ -8828,7 +8828,7 @@ export { Button } from "./ui/index";
 export { Heading, Spinner, IconButton, Progress, IndeterminateProgress, Pagination, PageLoader } from "./ui/index";
 export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } from "./ui/index";
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
-export { CountdownDisplay, ItemRow, HorizontalScroller, SectionTabs, TabStrip } from "./ui/index";
+export { CountdownDisplay, ItemRow, HorizontalScroller, TabStrip } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
 export { TabsList, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
 export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
