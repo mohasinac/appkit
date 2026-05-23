@@ -71,7 +71,7 @@ const ROLE_LABEL: Record<string, string> = {
 
 // --- Component ---------------------------------------------------------------
 
-export interface UserSupportViewProps {}
+export type UserSupportViewProps = Record<string, never>;
 
 export function UserSupportView(_props: UserSupportViewProps) {
   const queryClient = useQueryClient();

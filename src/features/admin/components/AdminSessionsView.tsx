@@ -36,7 +36,7 @@ interface SessionRow {
   updatedAt: string;
 }
 
-export interface AdminSessionsViewProps extends ListingLayoutProps {}
+export type AdminSessionsViewProps = ListingLayoutProps;
 
 export function AdminSessionsView({ children, ...props }: AdminSessionsViewProps) {
   const queryClient = useQueryClient();

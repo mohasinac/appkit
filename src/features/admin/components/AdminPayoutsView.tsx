@@ -40,7 +40,7 @@ interface PayoutRow {
   updatedAt: string;
 }
 
-export interface AdminPayoutsViewProps extends ListingLayoutProps {}
+export type AdminPayoutsViewProps = ListingLayoutProps;
 
 export function AdminPayoutsView({ children, ...props }: AdminPayoutsViewProps) {
   const [markPaidOpen, setMarkPaidOpen] = useState(false);

@@ -319,7 +319,7 @@ function CommonFAQs() {
 
 // -- Main view -----------------------------------------------------------------
 
-export interface StoreOrdersGuideViewProps {}
+export type StoreOrdersGuideViewProps = Record<string, never>;
 
 export function StoreOrdersGuideView(_props: StoreOrdersGuideViewProps) {
   return (

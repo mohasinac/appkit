@@ -67,7 +67,7 @@ const ADMIN_LIVE_CONFIG: ListingViewConfig<AdminProductsResponse, LiveRow> = {
   buildFilters: () => "listingType==live",
 };
 
-export interface AdminLiveViewProps extends ListingLayoutProps {}
+export type AdminLiveViewProps = ListingLayoutProps;
 
 export function AdminLiveView({ children, ...props }: AdminLiveViewProps) {
   if (React.Children.count(children) > 0) {

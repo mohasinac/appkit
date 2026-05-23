@@ -68,7 +68,7 @@ const ADMIN_CARTS_CONFIG: ListingViewConfig<AdminCartsResponse, CartRow> = {
   ),
 };
 
-export interface AdminCartsViewProps extends ListingLayoutProps {}
+export type AdminCartsViewProps = ListingLayoutProps;
 
 export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
   if (React.Children.count(children) > 0) {

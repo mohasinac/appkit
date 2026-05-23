@@ -245,7 +245,7 @@ function TaxesSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export interface StoreFinanceGuideViewProps {}
+export type StoreFinanceGuideViewProps = Record<string, never>;
 
 export function StoreFinanceGuideView(_props: StoreFinanceGuideViewProps) {
   return (

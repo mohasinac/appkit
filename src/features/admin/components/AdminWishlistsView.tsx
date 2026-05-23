@@ -56,7 +56,7 @@ const ADMIN_WISHLISTS_CONFIG: ListingViewConfig<AdminWishlistsResponse, Wishlist
   buildFilters: () => undefined,
 };
 
-export interface AdminWishlistsViewProps extends ListingLayoutProps {}
+export type AdminWishlistsViewProps = ListingLayoutProps;
 
 export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewProps) {
   if (React.Children.count(children) > 0) {

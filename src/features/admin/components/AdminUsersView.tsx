@@ -43,7 +43,7 @@ interface UserRow {
   _raw?: Record<string, unknown>;
 }
 
-export interface AdminUsersViewProps extends ListingLayoutProps {}
+export type AdminUsersViewProps = ListingLayoutProps;
 
 export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
   const toast = useToast();

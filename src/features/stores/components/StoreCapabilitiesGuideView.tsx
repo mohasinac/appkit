@@ -241,7 +241,7 @@ function MultipleStoresSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export interface StoreCapabilitiesGuideViewProps {}
+export type StoreCapabilitiesGuideViewProps = Record<string, never>;
 
 export function StoreCapabilitiesGuideView(_props: StoreCapabilitiesGuideViewProps) {
   return (

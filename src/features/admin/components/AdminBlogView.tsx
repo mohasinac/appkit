@@ -33,7 +33,7 @@ interface BlogRow {
   updatedAt: string;
 }
 
-export interface AdminBlogViewProps extends ListingLayoutProps {}
+export type AdminBlogViewProps = ListingLayoutProps;
 
 export function AdminBlogView({ children, ...props }: AdminBlogViewProps) {
   if (React.Children.count(children) > 0) {

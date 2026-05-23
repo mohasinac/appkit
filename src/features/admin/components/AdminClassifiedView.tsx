@@ -61,7 +61,7 @@ const ADMIN_CLASSIFIED_CONFIG: ListingViewConfig<AdminProductsResponse, Classifi
   buildFilters: () => "listingType==classified",
 };
 
-export interface AdminClassifiedViewProps extends ListingLayoutProps {}
+export type AdminClassifiedViewProps = ListingLayoutProps;
 
 export function AdminClassifiedView({ children, ...props }: AdminClassifiedViewProps) {
   if (React.Children.count(children) > 0) {

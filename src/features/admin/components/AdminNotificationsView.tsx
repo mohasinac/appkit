@@ -34,7 +34,7 @@ interface NotifRow {
   type?: string;
 }
 
-export interface AdminNotificationsViewProps extends ListingLayoutProps {}
+export type AdminNotificationsViewProps = ListingLayoutProps;
 
 export function AdminNotificationsView({ children, ...props }: AdminNotificationsViewProps) {
   const queryClient = useQueryClient();

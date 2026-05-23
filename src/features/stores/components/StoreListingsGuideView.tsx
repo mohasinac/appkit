@@ -346,7 +346,7 @@ function CommonMistakes() {
 
 // -- Main view -----------------------------------------------------------------
 
-export interface StoreListingsGuideViewProps {}
+export type StoreListingsGuideViewProps = Record<string, never>;
 
 export function StoreListingsGuideView(_props: StoreListingsGuideViewProps) {
   return (

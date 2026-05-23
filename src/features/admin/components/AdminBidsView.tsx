@@ -31,7 +31,7 @@ interface BidRow {
   updatedAt: string;
 }
 
-export interface AdminBidsViewProps extends ListingLayoutProps {}
+export type AdminBidsViewProps = ListingLayoutProps;
 
 export function AdminBidsView({ children, ...props }: AdminBidsViewProps) {
   const queryClient = useQueryClient();

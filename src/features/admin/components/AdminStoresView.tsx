@@ -31,7 +31,7 @@ interface StoreRow {
   _raw?: Record<string, unknown>;
 }
 
-export interface AdminStoresViewProps extends ListingLayoutProps {}
+export type AdminStoresViewProps = ListingLayoutProps;
 
 export function AdminStoresView({ children, ...props }: AdminStoresViewProps) {
   const [editorRow, setEditorRow] = useState<StoreRow | null>(null);

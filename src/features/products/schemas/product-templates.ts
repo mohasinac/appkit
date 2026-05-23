@@ -26,8 +26,11 @@ export interface ProductTemplateDocument {
   updatedAt: Date | string;
 }
 
-export interface ProductTemplateCreateInput
-  extends Omit<ProductTemplateDocument, "id" | "createdAt" | "updatedAt"> {}
+export type ProductTemplateCreateInput = Omit<
+  ProductTemplateDocument,
+  "id" | "createdAt" | "updatedAt"
+>;
 
-export interface ProductTemplateUpdateInput
-  extends Partial<Omit<ProductTemplateDocument, "id" | "storeId" | "createdAt">> {}
+export type ProductTemplateUpdateInput = Partial<
+  Omit<ProductTemplateDocument, "id" | "storeId" | "createdAt">
+>;

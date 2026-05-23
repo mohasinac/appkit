@@ -155,7 +155,7 @@ const ADMIN_BRANDS_CONFIG: ListingViewConfig<AdminBrandsResponse, BrandRow> = {
   resolveEditorTitle: ({ isCreate }) => (isCreate ? "Add Brand" : "Edit Brand"),
 };
 
-export interface AdminBrandsViewProps extends ListingLayoutProps {}
+export type AdminBrandsViewProps = ListingLayoutProps;
 
 export function AdminBrandsView({ children, ...props }: AdminBrandsViewProps) {
   // Backward-compat passthrough — some page shims wrap with custom children.

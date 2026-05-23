@@ -90,7 +90,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawAdminRow>[] = [
   },
 ];
 
-export interface AdminPrizeDrawsViewProps extends ListingLayoutProps {}
+export type AdminPrizeDrawsViewProps = ListingLayoutProps;
 
 export function AdminPrizeDrawsView({ children, ...props }: AdminPrizeDrawsViewProps) {
   if (React.Children.count(children) > 0) {

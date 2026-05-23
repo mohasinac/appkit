@@ -96,7 +96,7 @@ const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
   },
 ];
 
-export interface AdminSupportTicketsViewProps extends ListingLayoutProps {}
+export type AdminSupportTicketsViewProps = ListingLayoutProps;
 
 export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);

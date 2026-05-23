@@ -59,7 +59,7 @@ const ADMIN_HISTORY_CONFIG: ListingViewConfig<AdminHistoryResponse, HistoryRow> 
   buildFilters: () => undefined,
 };
 
-export interface AdminHistoryViewProps extends ListingLayoutProps {}
+export type AdminHistoryViewProps = ListingLayoutProps;
 
 export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) {
   if (React.Children.count(children) > 0) {

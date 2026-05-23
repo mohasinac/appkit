@@ -58,7 +58,7 @@ function mapFeatureRow(item: Record<string, unknown>, index: number): FeatureRow
   };
 }
 
-export interface AdminFeaturesViewProps extends ListingLayoutProps {}
+export type AdminFeaturesViewProps = ListingLayoutProps;
 
 export function AdminFeaturesView({ children, ...props }: AdminFeaturesViewProps) {
   const searchParams = useSearchParams();

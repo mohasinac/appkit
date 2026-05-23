@@ -75,7 +75,7 @@ const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
   },
 ];
 
-export interface AdminScammersViewProps extends ListingLayoutProps {}
+export type AdminScammersViewProps = ListingLayoutProps;
 
 export function AdminScammersView({ children, ...props }: AdminScammersViewProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);

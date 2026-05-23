@@ -216,7 +216,7 @@ function VisibilityStatesSection() {
 
 // -- Main view -----------------------------------------------------------------
 
-export interface StoreSettingsGuideViewProps {}
+export type StoreSettingsGuideViewProps = Record<string, never>;
 
 export function StoreSettingsGuideView(_props: StoreSettingsGuideViewProps) {
   return (

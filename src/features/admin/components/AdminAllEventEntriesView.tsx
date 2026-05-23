@@ -30,7 +30,7 @@ interface EntryRow {
   eventId?: string;
 }
 
-export interface AdminAllEventEntriesViewProps extends ListingLayoutProps {}
+export type AdminAllEventEntriesViewProps = ListingLayoutProps;
 
 export function AdminAllEventEntriesView({ children, ...props }: AdminAllEventEntriesViewProps) {
   const queryClient = useQueryClient();

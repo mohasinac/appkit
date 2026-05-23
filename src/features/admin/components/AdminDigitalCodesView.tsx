@@ -68,7 +68,7 @@ const ADMIN_DIGITAL_CODES_CONFIG: ListingViewConfig<AdminProductsResponse, Digit
   buildFilters: () => "listingType==digital-code",
 };
 
-export interface AdminDigitalCodesViewProps extends ListingLayoutProps {}
+export type AdminDigitalCodesViewProps = ListingLayoutProps;
 
 export function AdminDigitalCodesView({ children, ...props }: AdminDigitalCodesViewProps) {
   if (React.Children.count(children) > 0) {

@@ -31,7 +31,7 @@ interface OrderRow {
   updatedAt: string;
 }
 
-export interface AdminOrdersViewProps extends ListingLayoutProps {}
+export type AdminOrdersViewProps = ListingLayoutProps;
 
 export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
   const { showToast } = useToast();
