@@ -13,6 +13,7 @@ import type {
   PrizeDrawItem,
 } from "../features/products/schemas";
 import { PRODUCT_FIELDS, SCHEMA_DEFAULTS } from "../constants/field-names";
+import { buildSearchTokens } from "../utils/search-tokens";
 
 const NOW = new Date();
 const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000);
@@ -333,4 +334,14 @@ export const productsPrizeDrawsSeedData: Partial<ProductDocument>[] =
   _rawProductsPrizeDrawsSeedData.map((p) => ({
     ...p,
     listingType: "prize-draw" as const,
+    // W1-50 — searchTokens consistent with other seeds.
+    searchTokens: buildSearchTokens(
+      p.title,
+      p.description,
+      p.brand,
+      p.brandSlug,
+      p.categoryNames,
+      p.tags,
+      p.condition,
+    ),
   }));
