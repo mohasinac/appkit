@@ -23,7 +23,7 @@ const ROW_DISABLED_CLASS =
 const ROW_DEFAULT_CLASS =
   "border-zinc-200 dark:border-slate-700 hover:bg-zinc-50 dark:hover:bg-slate-800";
 const OVER_LIMIT_BANNER_CLASS =
-  "rounded-lg border border-red-200 dark:border-red-900/60 bg-error-surface px-3 py-2 text-xs text-error";
+  "rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-xs text-error";
 const EMPTY_STATE_CLASS =
   "rounded-lg border border-zinc-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-4 text-xs text-zinc-500 dark:text-zinc-400 text-center";
 

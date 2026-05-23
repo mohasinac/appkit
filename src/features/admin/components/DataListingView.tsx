@@ -286,7 +286,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
 
       <div className="py-4 px-3 sm:px-4">
         {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
+          <div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
           </div>
         )}

@@ -107,7 +107,7 @@ export function SellerCouponEditorView({
 
         <Stack gap="5" className="px-6 py-6">
           {error && (
-            <Div className="rounded-lg border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
+            <Div className="rounded-lg border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
               {error}
             </Div>
           )}

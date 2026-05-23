@@ -134,7 +134,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
             <Button size="sm" variant="ghost"
               onClick={() => setConfirming("withdraw")}
               disabled={isPending}
-              className="text-error border border-red-200 dark:border-red-800">
+              className="text-error border border-error/20">
               Withdraw
             </Button>
           </Div>
@@ -155,7 +155,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
         <Button size="sm" variant="ghost"
           onClick={() => setConfirming("withdraw")}
           disabled={isPending}
-          className="text-error border border-red-200 dark:border-red-800 text-xs">
+          className="text-error border border-error/20 text-xs">
           Withdraw Offer
         </Button>
       )}
@@ -166,7 +166,7 @@ function BuyerOfferCard({ offer, onAcceptCounter, onWithdraw, onCheckout, onUpda
           <Button size="sm" variant="ghost"
             onClick={() => act(() => onWithdraw(offer.id), { status: "withdrawn" })}
             disabled={isPending}
-            className="text-error border border-red-200 dark:border-red-800">
+            className="text-error border border-error/20">
             {isPending ? "Withdrawing…" : "Confirm Withdraw"}
           </Button>
           <Button size="sm" variant="ghost" onClick={() => setConfirming(null)} disabled={isPending}>Cancel</Button>

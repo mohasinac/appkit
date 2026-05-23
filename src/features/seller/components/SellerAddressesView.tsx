@@ -263,7 +263,7 @@ export function SellerAddressesView({
 
       <div className="py-6 px-4 sm:px-6 max-w-2xl">
         {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
+          <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
           </Div>
         )}
@@ -365,7 +365,7 @@ export function SellerAddressesView({
       >
         <div className="space-y-4 py-1">
           {saveError && (
-            <Div className="rounded-lg border border-red-200 bg-error-surface dark:border-red-900/60 px-3 py-2 text-sm text-error">
+            <Div className="rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-sm text-error">
               {saveError}
             </Div>
           )}

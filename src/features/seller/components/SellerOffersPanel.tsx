@@ -175,7 +175,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
           <Button size="sm" variant="ghost" onClick={toCountering} disabled={isPending}
             className="border border-zinc-300 dark:border-zinc-600">Counter</Button>
           <Button size="sm" variant="ghost" onClick={toDeclining} disabled={isPending}
-            className="text-error border border-red-200 dark:border-red-800">Decline</Button>
+            className="text-error border border-error/20">Decline</Button>
         </Div>
       )}
 
@@ -208,7 +208,7 @@ function OfferCard({ offer, onRespond, onUpdate, onNeedsLogin }: OfferCardProps)
           />
           <Div className="flex gap-2">
             <Button size="sm" variant="ghost" onClick={handleDecline} disabled={isPending}
-              className="text-error border border-red-200 dark:border-red-800">
+              className="text-error border border-error/20">
               {isPending ? "Declining…" : "Confirm Decline"}
             </Button>
             <Button size="sm" variant="ghost" onClick={toIdle} disabled={isPending}>{ACTIONS.STORE["cancel-form"].label}</Button>

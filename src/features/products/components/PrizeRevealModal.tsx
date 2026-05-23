@@ -227,7 +227,7 @@ export function PrizeRevealModal({
         ) : null}
 
         {phase === "error" ? (
-          <Div className="rounded border border-red-400/40 bg-error-surface px-4 py-3 text-error">
+          <Div className="rounded border border-error/40 bg-error-surface px-4 py-3 text-error">
             <Text className="text-sm font-semibold">Something went wrong</Text>
             <Text className="text-sm">{errorMessage}</Text>
           </Div>
