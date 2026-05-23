@@ -2,11 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, RowActionMenu } from "../../../ui";
-import { useBottomActions } from "../../layout";
+import { ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
@@ -17,24 +13,21 @@ import {
   toRelativeDate,
   toRupees,
   toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { DataTable } from "../../admin/components/DataTable";
-
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status"];
-const DEFAULT_SORT = "endsAt";
-const SORT_OPTIONS = [
-  { value: "endsAt", label: "Ending soon" },
-  { value: "-endsAt", label: "Ending latest" },
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-];
-const STATUS_OPTIONS = SELLER_AUCTION_STATUS_TABS;
+} from "../../admin/hooks/useAdminListingData";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig } from "../../admin/components/DataListingView";
 
 interface SellerAuctionsResponse {
   auctions?: unknown[];
   meta?: { total: number };
+}
+
+interface AuctionRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
 }
 
 export interface SellerAuctionsViewProps extends ListingLayoutProps {
@@ -44,9 +37,13 @@ export interface SellerAuctionsViewProps extends ListingLayoutProps {
   onBulkDelete?: (ids: string[]) => Promise<void>;
 }
 
-export function SellerAuctionsView({ renderHeader, children, onEditClick, onDelete, onBulkDelete, ...props }: SellerAuctionsViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
+export function SellerAuctionsView({
+  children,
+  onEditClick,
+  onDelete,
+  onBulkDelete,
+  ...props
+}: SellerAuctionsViewProps) {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: (id) => `/api/store/products/${id}`,
@@ -55,58 +52,45 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
     fetchOptions: { credentials: "include" },
   });
 
-
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await performDelete(id);
+      setDeleteTargetId(null);
+    },
+    [performDelete],
   );
 
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
+  const handleEdit = useCallback(
+    (id: string) => {
+      if (onEditClick) onEditClick(id);
+      else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
+    },
+    [onEditClick],
+  );
 
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
+  if (React.Children.count(children) > 0) {
+    return (
+      <ListingLayout portal="seller" {...props}>
+        {children}
+      </ListingLayout>
+    );
+  }
 
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
-
-  const statusRaw = table.get("status");
-  const filters = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
-
-  const { rows, total, isLoading, errorMessage } = useSellerListingData<
-    SellerAuctionsResponse,
-    { id: string; primary: string; secondary: string; status: string; updatedAt: string }
-  >({
+  const config: ListingViewConfig<SellerAuctionsResponse, AuctionRow> = {
+    portal: "seller",
+    title: "Auctions",
+    searchPlaceholder: "Search auctions by product name",
+    emptyLabel: "No auctions found",
+    filterKeys: ["status"],
+    defaultSort: "endsAt",
     queryKey: ["seller", "auctions", "listing"],
     endpoint: SELLER_ENDPOINTS.AUCTIONS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
+    sortOptions: [
+      { value: "endsAt", label: "Ending soon" },
+      { value: "-endsAt", label: "Ending latest" },
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+    ],
     mapRows: (response) =>
       toRecordArray(response.auctions).map((item, index) => ({
         id: toStringValue(item.id, `auction-${index}`),
@@ -119,109 +103,50 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
         updatedAt: toRelativeDate(item.endsAt ?? item.updatedAt ?? item.createdAt),
       })),
     getTotal: (response, mappedRows) =>
-      typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-  });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
-  const bulkActions: BulkActionItem[] = onBulkDelete
-    ? [{
-        id: "bulk-delete",
-        label: ACTIONS.STORE["delete-listing"].label,
-        variant: "danger" as const,
-        onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
-      }]
-    : [];
-
-  const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
-    setDeleteTargetId(null);
-  }, [performDelete]);
-
-  const handleEdit = useCallback((id: string) => {
-    if (onEditClick) onEditClick(id);
-    else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
-  }, [onEditClick]);
-
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
-
-  if (hasChildren) {
-    return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
-  }
+      typeof response.meta?.total === "number"
+        ? response.meta.total
+        : mappedRows.length,
+    buildFilters: (state) =>
+      state.status && state.status !== "All" ? `status==${state.status}` : undefined,
+    buildBulkActions: onBulkDelete
+      ? (selection): BulkActionItem[] => [
+          {
+            id: "bulk-delete",
+            label: ACTIONS.STORE["delete-listing"].label,
+            variant: "danger",
+            onClick: async () => {
+              await onBulkDelete(selection.selectedIds);
+              selection.clearSelection();
+            },
+          },
+        ]
+      : undefined,
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
+          {
+            label: ACTIONS.STORE["delete-listing"].label,
+            destructive: true,
+            onClick: () => setDeleteTargetId(row.id),
+            disabled: deletingId === row.id,
+          },
+        ]}
+      />
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Status"
+        tabs={SELLER_AUCTION_STATUS_TABS}
+        value={pendingFilters.status ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+      />
+    ),
+  };
 
   return (
-    <div className="min-h-screen">
-      <ListingToolbar
-        filterCount={activeFilterCount}
-        onFiltersClick={openFilters}
-        searchValue={searchInput}
-        searchPlaceholder="Search auctions by product name"
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || DEFAULT_SORT}
-        sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-        onResetAll={resetAll}
-        hasActiveState={hasActiveState}
-      />
-
-      {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
-      )}
-
-      {selection.selectedCount > 0 && bulkActions.length > 0 && (
-        <BulkActionBar
-          selectedCount={selection.selectedCount}
-          actions={bulkActions}
-          onClearSelection={selection.clearSelection}
-        />
-      )}
-
-      <div className="py-4 px-3 sm:px-4">
-        {errorMessage && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
-            {errorMessage}
-          </div>
-        )}
-        {view === "table" ? (
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No auctions found"
-            selectedIds={selection.selectedIdSet}
-            onToggleSelect={(id) => selection.toggle(id)}
-            onToggleSelectAll={() => selection.toggleAll()}
-            renderRowActions={(row) => (
-              <RowActionMenu
-                actions={[
-                  { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
-                  { label: ACTIONS.STORE["delete-listing"].label, destructive: true, onClick: () => setDeleteTargetId(row.id), disabled: deletingId === row.id },
-                ]}
-              />
-            )}
-          />
-        ) : (
-          <AdminViewCards rows={rows} view={view} isLoading={isLoading} emptyLabel="No auctions found" onRowClick={undefined} selectedIdSet={selection.selectedIdSet} onToggleSelect={selection.toggle} />
-        )}
-      </div>
-
-      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-          label="Status"
-          tabs={STATUS_OPTIONS}
-          value={pendingFilters.status ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-        />
-      </ListingFilterDrawer>
-
+    <>
+      <DataListingView config={config} />
       {deleteTargetId && (
         <ConfirmDeleteModal
           isOpen
@@ -232,6 +157,6 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </div>
+    </>
   );
 }

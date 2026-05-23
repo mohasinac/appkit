@@ -2,22 +2,8 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { Plus } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import {
-  BulkActionBar,
-  Button,
-  ConfirmDeleteModal,
-  DataTable,
-  Div,
-  ListingToolbar,
-  Pagination,
-  RowActionMenu,
-  Text,
-} from "../../../ui";
-import type { BulkActionItem, DataTableColumn } from "../../../ui";
-import { useBottomActions } from "../../layout";
+import { ConfirmDeleteModal, RowActionMenu, Text } from "../../../ui";
+import type { BulkActionItem } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ROUTES } from "../../..";
@@ -26,24 +12,13 @@ import {
   toRelativeDate,
   toRupees,
   toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { TABLE_KEYS } from "../../../constants/table-keys";
-
-const PAGE_SIZE = 25;
-const DEFAULT_SORT = "-createdAt";
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "productTitle", label: "Name A–Z" },
-  { value: "-productTitle", label: "Name Z–A" },
-  { value: "price", label: "Price: Low–High" },
-  { value: "-price", label: "Price: High–Low" },
-];
+} from "../../admin/hooks/useAdminListingData";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig } from "../../admin/components/DataListingView";
+import type { AdminTableColumn } from "../../admin/types";
 
 interface BundleRow {
   id: string;
-  raw: Record<string, unknown>;
   title: string;
   price: string;
   itemCount: number;
@@ -56,17 +31,9 @@ interface ProductsResponse {
   meta?: { total: number };
 }
 
-const COLUMNS: DataTableColumn<BundleRow>[] = [
-  {
-    key: "title",
-    header: "Bundle",
-    render: (row) => <Text className="text-sm font-medium">{row.title}</Text>,
-  },
-  {
-    key: "price",
-    header: "Price",
-    render: (row) => <Text className="text-sm tabular-nums">{row.price}</Text>,
-  },
+const COLUMNS: AdminTableColumn<BundleRow>[] = [
+  { key: "title", header: "Bundle", render: (row) => <Text className="text-sm font-medium">{row.title}</Text> },
+  { key: "price", header: "Price", render: (row) => <Text className="text-sm tabular-nums">{row.price}</Text> },
   {
     key: "itemCount",
     header: "Items",
@@ -80,11 +47,13 @@ const COLUMNS: DataTableColumn<BundleRow>[] = [
     key: "status",
     header: "Status",
     render: (row) => (
-      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
-        row.status === "active"
-          ? "bg-success-surface text-success"
-          : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
-      }`}>
+      <span
+        className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium capitalize ${
+          row.status === "active"
+            ? "bg-success-surface text-success"
+            : "bg-zinc-100 text-zinc-600 dark:bg-slate-800 dark:text-slate-400"
+        }`}
+      >
         {row.status}
       </span>
     ),
@@ -92,7 +61,9 @@ const COLUMNS: DataTableColumn<BundleRow>[] = [
   {
     key: "createdAt",
     header: "Created",
-    render: (row) => <Text className="text-sm text-[var(--appkit-color-text-muted)]">{row.createdAt}</Text>,
+    render: (row) => (
+      <Text className="text-sm text-[var(--appkit-color-text-muted)]">{row.createdAt}</Text>
+    ),
   },
 ];
 
@@ -109,9 +80,6 @@ export function SellerBundlesView({
   onDelete,
   onBulkDelete,
 }: SellerBundlesViewProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
     endpoint: (id) => `/api/store/products/${id}`,
@@ -120,34 +88,48 @@ export function SellerBundlesView({
     fetchOptions: { credentials: "include" },
   });
 
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await performDelete(id);
+      setDeleteTargetId(null);
+    },
+    [performDelete],
+  );
 
-  const commitSearch = useCallback(() => {
-    table.set(TABLE_KEYS.QUERY, searchInput.trim());
-  }, [searchInput, table]);
+  const handleEdit = useCallback(
+    (id: string) => {
+      if (onEditClick) onEditClick(id);
+      else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
+    },
+    [onEditClick],
+  );
 
-  const resetAll = useCallback(() => {
-    table.setMany({ [TABLE_KEYS.QUERY]: "", [TABLE_KEYS.SORT]: "" });
-    setSearchInput("");
-  }, [table]);
+  const handleCreate = useCallback(() => {
+    if (onCreateClick) onCreateClick();
+    else window.location.href = String(ROUTES.STORE.PRODUCTS_NEW);
+  }, [onCreateClick]);
 
-  const hasActiveState =
-    !!table.get(TABLE_KEYS.QUERY) || table.get(TABLE_KEYS.SORT) !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useSellerListingData<
-    ProductsResponse,
-    BundleRow
-  >({
+  const config: ListingViewConfig<ProductsResponse, BundleRow> = {
+    portal: "seller",
+    title: "Bundles",
+    searchPlaceholder: "Search bundles...",
+    emptyLabel: "No bundles yet — create a bundle to group multiple products together",
+    filterKeys: [],
+    defaultSort: "-createdAt",
     queryKey: ["seller", "bundles"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
-    page: table.getNumber(TABLE_KEYS.PAGE, 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get(TABLE_KEYS.SORT) || DEFAULT_SORT,
-    filters: "listingType==bundle",
-    q: table.get(TABLE_KEYS.QUERY) || undefined,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "productTitle", label: "Name A–Z" },
+      { value: "-productTitle", label: "Name Z–A" },
+      { value: "price", label: "Price: Low–High" },
+      { value: "-price", label: "Price: High–Low" },
+    ],
+    columns: COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => ({
         id: toStringValue(item.id, `bundle-${index}`),
-        raw: item,
         title: toStringValue(item.productTitle ?? item.title, "Untitled bundle"),
         price: toRupees(item.price),
         itemCount: Array.isArray(item.bundleProductIds)
@@ -158,126 +140,39 @@ export function SellerBundlesView({
       })),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-  });
-
-  const currentPage = table.getNumber(TABLE_KEYS.PAGE, 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
-
-  const bulkActions: BulkActionItem[] = onBulkDelete
-    ? [{
-        id: "bulk-delete",
-        label: ACTIONS.STORE["delete-listing"].label,
-        variant: "danger" as const,
-        onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
-      }]
-    : [];
-
-  const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
-    setDeleteTargetId(null);
-  }, [performDelete]);
-
-  const handleEdit = useCallback((id: string) => {
-    if (onEditClick) onEditClick(id);
-    else window.location.href = String(ROUTES.STORE.PRODUCTS_EDIT(id));
-  }, [onEditClick]);
-
-  const handleCreate = useCallback(() => {
-    if (onCreateClick) {
-      onCreateClick();
-    } else {
-      window.location.href = String(ROUTES.STORE.PRODUCTS_NEW);
-    }
-  }, [onCreateClick]);
-
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
+    buildFilters: () => "listingType==bundle",
+    primaryAction: { label: "New Bundle", onClick: () => handleCreate() },
+    buildBulkActions: onBulkDelete
+      ? (selection): BulkActionItem[] => [
+          {
+            id: "bulk-delete",
+            label: ACTIONS.STORE["delete-listing"].label,
+            variant: "danger",
+            onClick: async () => {
+              await onBulkDelete(selection.selectedIds);
+              selection.clearSelection();
+            },
+          },
+        ]
+      : undefined,
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          { label: ACTIONS.STORE["edit-listing"].label, onClick: () => handleEdit(row.id) },
+          {
+            label: ACTIONS.STORE["delete-listing"].label,
+            destructive: true,
+            onClick: () => setDeleteTargetId(row.id),
+            disabled: deletingId === row.id,
+          },
+        ]}
+      />
+    ),
+  };
 
   return (
-    <div className="min-h-screen">
-      <ListingToolbar
-        filterCount={0}
-        searchValue={searchInput}
-        searchPlaceholder="Search bundles..."
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
-        sortValue={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
-        sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v as "grid" | "list" | "table")}
-        onResetAll={resetAll}
-        hasActiveState={hasActiveState}
-        extra={
-          <Button size="sm" onClick={handleCreate} className="flex items-center gap-1.5">
-            <Plus className="h-4 w-4" />
-            <span>New Bundle</span>
-          </Button>
-        }
-      />
-
-      {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
-      )}
-
-      {selection.selectedCount > 0 && bulkActions.length > 0 && (
-        <BulkActionBar
-          selectedCount={selection.selectedCount}
-          actions={bulkActions}
-          onClearSelection={selection.clearSelection}
-        />
-      )}
-
-      <div className="py-4 px-3 sm:px-4">
-        {errorMessage && (
-          <Div className="mb-4 rounded-xl border border-red-200 bg-error-surface dark:border-red-900/60 px-4 py-3 text-sm text-error">
-            {errorMessage}
-          </Div>
-        )}
-        {isLoading ? (
-          <Div className="space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Div key={i} className="h-14 animate-pulse rounded-xl border border-zinc-100 dark:border-slate-700 bg-zinc-50 dark:bg-slate-800" />
-            ))}
-          </Div>
-        ) : rows.length === 0 ? (
-          <Div className="py-16 text-center">
-            <Text className="text-zinc-400 dark:text-zinc-400">
-              No bundles yet — create a bundle to group multiple products together
-            </Text>
-          </Div>
-        ) : (
-          <DataTable
-            columns={COLUMNS}
-            data={rows}
-            keyExtractor={(r) => r.id}
-            selectable={bulkActions.length > 0}
-            selectedIds={selection.selectedIds}
-            onSelectionChange={(ids) => selection.setSelectedIds(ids)}
-            actions={(row) => (
-              <RowActionMenu
-                actions={[
-                  {
-                    label: ACTIONS.STORE["edit-listing"].label,
-                    onClick: () => handleEdit(row.id),
-                  },
-                  {
-                    label: ACTIONS.STORE["delete-listing"].label,
-                    destructive: true,
-                    onClick: () => setDeleteTargetId(row.id),
-                    disabled: deletingId === row.id,
-                  },
-                ]}
-              />
-            )}
-          />
-        )}
-      </div>
-
+    <>
+      <DataListingView config={config} />
       {deleteTargetId && (
         <ConfirmDeleteModal
           isOpen
@@ -288,6 +183,6 @@ export function SellerBundlesView({
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </div>
+    </>
   );
 }

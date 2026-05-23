@@ -126,6 +126,9 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
     panel: { openEditPanel: (id: string) => void },
   ) => void;
 
+  /** When set, the table renders rows as anchor links to this href. */
+  getRowHref?: (row: TRow) => string;
+
   // -- Optional CSS class on root container
   className?: string;
 }
@@ -270,6 +273,7 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
                 ? selection.setSelectedIds(rows.map((r) => r.id))
                 : selection.clearSelection()
             }
+            getRowHref={config.getRowHref}
             onRowClick={
               config.onRowClick
                 ? (row) =>
