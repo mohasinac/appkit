@@ -8,6 +8,9 @@ import {
 } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { PrizeDrawsSectionConfig } from "../../homepage/schemas/firestore";
+import { productRepository } from "../repository/products.repository";
+import type { ProductDocument } from "../schemas";
+import { InteractiveProductCard } from "./InteractiveProductCard";
 
 export interface PrizeDrawsSectionProps {
   config: PrizeDrawsSectionConfig;
@@ -15,10 +18,7 @@ export interface PrizeDrawsSectionProps {
 
 /**
  * Renders a prize-draws strip on the homepage.
- *
- * Reads products with `listingType="prize-draw"` and `prizeRevealStatus` in the
- * configured set. Those fields are added later in the prize-draw block; for now
- * the component renders an empty state and the section ships disabled in seed.
+ * W1-38 (2026-05-23): fetches active prize-draw listings from productRepository.
  */
 export async function PrizeDrawsSection({
   config,
@@ -27,7 +27,19 @@ export async function PrizeDrawsSection({
   const subtitle =
     config.subtitle ?? "Enter for a chance to win rare collectibles";
 
-  const draws: never[] = [];
+  const limit = 8;
+
+  let draws: ProductDocument[] = [];
+  try {
+    const result = await productRepository.list({
+      filters: "listingType==prize-draw,status==published",
+      sorts: "-createdAt",
+      pageSize: limit,
+    });
+    draws = (result.items ?? []) as ProductDocument[];
+  } catch {
+    draws = [];
+  }
 
   return (
     <Section className="py-10">
@@ -63,7 +75,17 @@ export async function PrizeDrawsSection({
                 Browse live auctions →
               </Link>
             </Stack>
-          ) : null}
+          ) : (
+            <div className="fluid-grid-card gap-3">
+              {draws.map((draw) => (
+                <InteractiveProductCard
+                  key={draw.id}
+                  product={draw as unknown as Parameters<typeof InteractiveProductCard>[0]["product"]}
+                  href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
+                />
+              ))}
+            </div>
+          )}
         </Stack>
       </Container>
     </Section>

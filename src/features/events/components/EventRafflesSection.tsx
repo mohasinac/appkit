@@ -8,6 +8,9 @@ import {
 } from "../../../ui";
 import { ROUTES } from "../../../next";
 import type { EventRafflesSectionConfig } from "../../homepage/schemas/firestore";
+import { eventRepository } from "../repository/events.repository";
+import { EventCard } from "./EventCard";
+import type { EventItem } from "../types";
 
 export interface EventRafflesSectionProps {
   config: EventRafflesSectionConfig;
@@ -15,10 +18,7 @@ export interface EventRafflesSectionProps {
 
 /**
  * Renders a live-raffle/spin-wheel strip on the homepage.
- *
- * Reads events with `hasRaffle=true` and status in {"active","upcoming"}. The
- * `hasRaffle` flag is added later with the raffle feature; for now the
- * component renders an empty state and the section ships disabled in seed.
+ * W1-38 (2026-05-23): fetches events with hasRaffle=true and renders the EventCard grid.
  */
 export async function EventRafflesSection({
   config,
@@ -26,8 +26,19 @@ export async function EventRafflesSection({
   const title = config.title ?? "Live Raffles & Spin Wheels";
   const subtitle =
     config.subtitle ?? "Participate in community events and win prizes";
+  const limit = 6;
 
-  const events: never[] = [];
+  let events: EventItem[] = [];
+  try {
+    const result = await eventRepository.list({
+      filters: "hasRaffle==true,status==active",
+      sorts: "-startsAt",
+      pageSize: limit,
+    });
+    events = (result.items ?? []) as unknown as EventItem[];
+  } catch {
+    events = [];
+  }
 
   return (
     <Section className="py-10">
@@ -63,7 +74,13 @@ export async function EventRafflesSection({
                 Browse all events →
               </Link>
             </Stack>
-          ) : null}
+          ) : (
+            <div className="fluid-grid-card gap-3">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+          )}
         </Stack>
       </Container>
     </Section>
