@@ -75,9 +75,12 @@ export function FormShell({
   publishLabel = FORM_ACTION_META[FORM_ACTION_ID.PUBLISH].label,
   renderBottomBar,
   previewSlot,
-  splitPreview = false,
+  splitPreview: splitPreviewProp,
   children,
 }: FormShellProps) {
+  // W1-37: auto-enable splitPreview when a previewSlot is provided. Callers
+  // can still pass splitPreview={false} explicitly to opt out.
+  const splitPreview = splitPreviewProp ?? Boolean(previewSlot);
   const panelRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const [showUnsaved, setShowUnsaved] = useState(false);

@@ -642,19 +642,18 @@ export const DEFAULT_SITE_SETTINGS_DATA: Partial<SiteSettingsDocument> = {
     coupons: true,
     notifications: true,
     sellerRegistration: true,
-    preOrders: false,
+    preOrders: true,
     seedPanel: true,
-    // SB-UNI-X4 2026-05-13 — Phase 1 types enabled by default; Phase 2 types
-    // (classified / digital-code / live) gated until per-type Phase 3 + 5
-    // surfaces ship. Admin Feature Flags UI lets the operator flip them.
+    // W1-37 2026-05-23 — Phase 2 listing types enabled by default; all per-type
+    // surfaces (seller + admin via W1-29 + public) are now shipped.
     listingTypes: {
       standard: true,
       auction: true,
       "pre-order": true,
       "prize-draw": true,
-      classified: false,
-      "digital-code": false,
-      live: false,
+      classified: true,
+      "digital-code": true,
+      live: true,
     },
     categoryTypes: {
       category: true,

@@ -416,8 +416,8 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
   },
   featureFlags: {
     chats: true,
-    smsVerification: false,
-    translations: false,
+    smsVerification: true,
+    translations: true,
     wishlists: true,
     auctions: true,
     reviews: true,
@@ -453,9 +453,9 @@ export const siteSettingsSeedData: Partial<SiteSettingsDocument> & {
   },
   notificationChannels: {
     inApp: { enabled: true, readOnly: true },
-    email: { enabled: false, minPriority: "normal" },
-    whatsapp: { enabled: false, minPriority: "high", otpEnabled: false },
-    sms: { enabled: false, minPriority: "high" },
+    email: { enabled: true, minPriority: "normal" },
+    whatsapp: { enabled: true, minPriority: "high", otpEnabled: true },
+    sms: { enabled: true, minPriority: "high" },
   },
   actionConfig: {},
   navConfig: {},

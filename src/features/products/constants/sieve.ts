@@ -9,14 +9,30 @@ const LABEL_OLDEST = "Oldest First";
 export type SortOption = { readonly value: string; readonly label: string };
 
 // ---------------------------------------------------------------------------
+// W2-6 — Base sort options shared by standard / pre-order / bundle / prize-draw.
+// Auctions get their own base (auctionEndDate primary) because the "Ending Soon"
+// dimension dominates browse intent.
+// ---------------------------------------------------------------------------
+
+const BASE_TIME_SORTS = [
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: LABEL_NEWEST },
+  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: LABEL_OLDEST },
+] as const satisfies readonly SortOption[];
+
+const BASE_PRICE_SORTS = [
+  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW },
+  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH },
+] as const satisfies readonly SortOption[];
+
+/** Time + price sorts, the common subset across most listing-type pickers. */
+export const BASE_SORT_OPTIONS = [...BASE_TIME_SORTS, ...BASE_PRICE_SORTS] as const satisfies readonly SortOption[];
+
+// ---------------------------------------------------------------------------
 // Standard Products
 // ---------------------------------------------------------------------------
 
 export const STANDARD_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: LABEL_NEWEST },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: LABEL_OLDEST },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH },
+  ...BASE_SORT_OPTIONS,
   { value: sortBy(PRODUCT_FIELDS.TITLE, "ASC"), label: "Name: A–Z" },
   { value: sortBy(PRODUCT_FIELDS.TITLE), label: "Name: Z–A" },
   { value: sortBy(PRODUCT_FIELDS.FEATURED), label: "Featured First" },
@@ -36,7 +52,7 @@ export const STANDARD_PUBLIC_SORT_OPTIONS = [
 ] as const satisfies readonly SortOption[];
 
 // ---------------------------------------------------------------------------
-// Auctions
+// Auctions — auction-specific base puts auctionEndDate primary
 // ---------------------------------------------------------------------------
 
 export const AUCTION_SORT_OPTIONS = [
@@ -67,9 +83,8 @@ export const AUCTION_PUBLIC_SORT_OPTIONS = [
 export const PREORDER_SORT_OPTIONS = [
   { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE, "ASC"), label: "Earliest Delivery" },
   { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DELIVERY_DATE), label: "Latest Delivery" },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: LABEL_NEWEST },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH },
+  ...BASE_TIME_SORTS.slice(0, 1), // Newest First
+  ...BASE_PRICE_SORTS,
   { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_CURRENT_COUNT), label: "Fewest Slots Left" },
   { value: sortBy(PRODUCT_FIELDS.PRE_ORDER_DEPOSIT_AMOUNT, "ASC"), label: "Lowest Deposit First" },
 ] as const satisfies readonly SortOption[];
@@ -79,9 +94,8 @@ export const PREORDER_SORT_OPTIONS = [
 // ---------------------------------------------------------------------------
 
 export const BUNDLE_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: LABEL_NEWEST },
-  { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: LABEL_PRICE_LOW },
-  { value: sortBy(PRODUCT_FIELDS.PRICE), label: LABEL_PRICE_HIGH },
+  ...BASE_TIME_SORTS.slice(0, 1), // Newest First
+  ...BASE_PRICE_SORTS,
   { value: "-savingsAmount", label: "Most Savings" },
   { value: "-bundleItemCount", label: "Most Items" },
 ] as const satisfies readonly SortOption[];
@@ -91,8 +105,7 @@ export const BUNDLE_SORT_OPTIONS = [
 // ---------------------------------------------------------------------------
 
 export const PRIZE_DRAW_SORT_OPTIONS = [
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT), label: LABEL_NEWEST },
-  { value: sortBy(PRODUCT_FIELDS.CREATED_AT, "ASC"), label: LABEL_OLDEST },
+  ...BASE_TIME_SORTS,
   { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START, "ASC"), label: "Reveal: Soonest" },
   { value: sortBy(PRODUCT_FIELDS.PRIZE_REVEAL_WINDOW_START), label: "Reveal: Furthest" },
   { value: sortBy(PRODUCT_FIELDS.PRICE, "ASC"), label: "Entry: Low to High" },
