@@ -78,6 +78,17 @@ class EventEntryRepository extends BaseRepository<EventEntryDocument> {
     );
   }
 
+  /**
+   * W1-42 — admin-facing list (all events, all users). Filterable on eventId,
+   * userId, reviewStatus, submittedAt; sortable on submittedAt + points.
+   */
+  async list(model: SieveModel): Promise<FirebaseSieveResult<EventEntryDocument>> {
+    return this.sieveQuery<EventEntryDocument>(
+      model,
+      EventEntryRepository.SIEVE_FIELDS,
+    );
+  }
+
   async hasUserEntered(eventId: string, userId: string): Promise<boolean> {
     try {
       const snapshot = await this.getCollection()
