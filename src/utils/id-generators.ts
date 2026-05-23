@@ -667,3 +667,39 @@ export function generateMediaFilename(ctx: MediaFilenameContext): string {
     }
   }
 }
+
+/**
+ * W1-51 — validate that a filename matches the canonical pattern produced
+ * by {@link generateMediaFilename}. Called from /api/media/sign before a
+ * signed-URL is issued so malformed names can never enter storage.
+ *
+ * Pattern: `<prefix>-<slug parts>-<YYYYMMDD>(-<N>)?(-<rand>)?\.<ext>` where
+ * the prefix is one of the known media type tokens.
+ *
+ * Returns true when the filename is acceptable.
+ */
+const MEDIA_FILENAME_PREFIXES = [
+  "product-image", "product-video",
+  "review-image", "review-video",
+  "auction-image", "preorder-image",
+  "store-logo", "store-banner",
+  "brand-logo", "brand-banner",
+  "blog-image", "blog-cover", "blog-content-image", "blog-additional-image",
+  "event-image", "event-cover", "event-winner-image", "event-additional-image",
+  "rich-text-image",
+  "category-image",
+  "user-avatar",
+  "carousel-image",
+  "invoice", "payout-doc",
+  "shipping-proof", "refund-proof",
+] as const;
+
+const MEDIA_FILENAME_REGEX = new RegExp(
+  `^(?:${MEDIA_FILENAME_PREFIXES.join("|")})-[a-z0-9]([a-z0-9-]*[a-z0-9])?(?:-\\d+)?\\.[a-z0-9]+$`,
+);
+
+export function validateMediaFilename(filename: string): boolean {
+  if (!filename || filename.length > 256) return false;
+  if (filename.includes("..") || filename.includes("/") || filename.includes("\\")) return false;
+  return MEDIA_FILENAME_REGEX.test(filename);
+}

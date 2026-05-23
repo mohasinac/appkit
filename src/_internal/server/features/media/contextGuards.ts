@@ -17,8 +17,30 @@ import {
 } from "../../../shared/media/limits";
 import {
   generateMediaFilename,
+  validateMediaFilename,
   type MediaFilenameContext,
 } from "../../../../utils/id-generators";
+
+/**
+ * W1-51 — validate the generated filename before returning ok:true so a
+ * malformed name can never enter signed-URL storage. Generators producing
+ * unexpected output fail-closed with a 500.
+ */
+function okWithFilename(
+  ctx: MediaFilenameContext,
+  filename: string,
+  ext: string,
+):
+  | { ok: true; filename: string; ext: string }
+  | { ok: false; status: 500; error: string; details: Record<string, unknown> } {
+  if (validateMediaFilename(filename)) return { ok: true, filename, ext };
+  return {
+    ok: false,
+    status: 500,
+    error: "Generated media filename failed validation",
+    details: { context: ctx.type, filename },
+  };
+}
 
 // Per-context limits — mirrored from the previous inline constants in
 // /api/media/upload. Adjust here, not at the call site.
@@ -290,7 +312,7 @@ export function applyMediaContextGuards({
         details: { context: ctx.type, detected: detectedMime },
       };
     }
-    return { ok: true, filename: generateMediaFilename(ctx), ext };
+    return okWithFilename(ctx, generateMediaFilename(ctx), ext);
   }
 
   if (isImageOrPdfContext(ctx)) {
@@ -302,7 +324,7 @@ export function applyMediaContextGuards({
         error: `${ctx.type} must be an image or PDF, not a video`,
       };
     }
-    return { ok: true, filename: generateMediaFilename(ctx), ext };
+    return okWithFilename(ctx, generateMediaFilename(ctx), ext);
   }
 
   if (isPdf) {
@@ -314,9 +336,5 @@ export function applyMediaContextGuards({
     };
   }
 
-  return {
-    ok: true,
-    filename: generateMediaFilename({ ...ctx, ext }),
-    ext,
-  };
+  return okWithFilename(ctx, generateMediaFilename({ ...ctx, ext }), ext);
 }
