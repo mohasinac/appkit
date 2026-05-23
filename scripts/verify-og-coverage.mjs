@@ -56,23 +56,14 @@ const OG_EXEMPT_ROUTES = new Set([
 
 // Known gaps awaiting follow-up tracker entries. Listed here so the gate
 // only blocks on NEW regressions; existing gaps count toward the baseline.
-const OG_KNOWN_GAPS = new Set([
-  // SB-UNI-4 2026-05-13 — bundles/[slug] OG renderer shipped, dropped from baseline.
-  "faqs/[category]",
-  "reviews/[id]",
-  "scams/[id]",
-  "sellers/[id]",
-  // Added S7-PrizeDraws-prep3 — page shim landed; OG renderer comes
-  // with SB4-G in S7-PrizeDraws-2 alongside the real detail view.
-  "prize-draws/[slug]",
-  // SB-UNI-F page shims landed; OG renderers deferred to per-feature sessions.
-  "classified/[slug]",
-  "digital-codes/[slug]",
-  "live/[slug]",
-  // S-STORE-12-B 2026-05-18 — item-requests/[id] page shim shipped; OG renderer
-  // deferred to OG-coverage-followup tier with the rest of the per-feature OG pass.
-  "item-requests/[id]",
-]);
+// OG-coverage-followup 2026-05-23 — baseline driven to 0. The previous
+// entries (faqs/[category], reviews/[id], scams/[id], sellers/[id],
+// classified/[slug], digital-codes/[slug], live/[slug] — all shipped via
+// per-feature sessions, plus prize-draws/[slug] + item-requests/[id]
+// shipped in this session) all have opengraph-image.tsx siblings now.
+// Re-add new entries here with a tracker ID when a public dynamic detail
+// page legitimately needs to ship without OG.
+const OG_KNOWN_GAPS = new Set([]);
 
 const DYNAMIC_SEGMENT_RE = /^\[(?:\.{3})?(.+?)\]$/;
 

@@ -1508,6 +1508,22 @@ export { updateActionConfigDomain, updateNavConfigDomain } from "./_internal/ser
 
 // ── Classified listing — data + adapters + metadata + OG ─────────────────────
 export { getClassifiedForDetail, type ClassifiedDataOptions } from "./_internal/server/features/classified/data";
+// OG-coverage-followup 2026-05-23 — prize-draws OG renderer.
+export {
+  getPrizeDrawForDetail,
+  renderPrizeDrawOg,
+  renderPrizeDrawOgImage,
+  type PrizeDrawDataOptions,
+  type PrizeDrawOgData,
+} from "./_internal/server/features/prize-draws/index";
+// OG-coverage-followup 2026-05-23 — item-requests OG renderer.
+export {
+  getItemRequestForDetail,
+  renderItemRequestOg,
+  renderItemRequestOgImage,
+  type ItemRequestDataOptions,
+  type ItemRequestOgData,
+} from "./_internal/server/features/item-requests/index";
 export { toClientClassified, type ClassifiedClientShape } from "./_internal/server/features/classified/adapters";
 export { buildClassifiedMetadata, type ClassifiedMetadataOptions } from "./_internal/server/features/classified/metadata";
 export { renderClassifiedOg, renderClassifiedOgImage, renderClassifiedOgFromDoc, type ClassifiedOgData } from "./_internal/server/features/classified/og";
