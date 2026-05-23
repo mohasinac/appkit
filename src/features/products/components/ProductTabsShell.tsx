@@ -4,6 +4,7 @@ import React, { useState } from "react";
 const STATIC_TABS = [
   { id: "description", label: "Description" },
   { id: "specs", label: "Specifications" },
+  { id: "grading", label: "Grading" },
   { id: "ingredients", label: "Ingredients" },
   { id: "howToUse", label: "How to Use" },
   { id: "reviews", label: "Reviews" },
@@ -20,6 +21,8 @@ export interface CustomTabDef {
 export interface ProductTabsShellProps {
   descriptionContent?: React.ReactNode;
   specsContent?: React.ReactNode;
+  /** W1-34 — grading tab content (PSA/BGS/CGC etc). Pass non-null to surface the tab. */
+  gradingContent?: React.ReactNode;
   ingredientsContent?: React.ReactNode;
   howToUseContent?: React.ReactNode;
   reviewsContent?: React.ReactNode;
@@ -31,6 +34,7 @@ export interface ProductTabsShellProps {
 export function ProductTabsShell({
   descriptionContent,
   specsContent,
+  gradingContent,
   ingredientsContent,
   howToUseContent,
   reviewsContent,
@@ -40,6 +44,7 @@ export function ProductTabsShell({
   const staticContentMap: Record<StaticTabId, React.ReactNode | undefined> = {
     description: descriptionContent,
     specs: specsContent,
+    grading: gradingContent,
     ingredients: ingredientsContent,
     howToUse: howToUseContent,
     reviews: reviewsContent,

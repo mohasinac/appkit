@@ -1,0 +1,76 @@
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { Div, Heading, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { ROUTES } from "../../../next/routing/route-map";
+
+export interface EventOfferCardProps {
+  /** Coupon code to copy. */
+  couponCode: string;
+  /** Description of what the coupon does. */
+  offerDescription?: string;
+  /** Headline. */
+  title?: string;
+  /** Optional filter param for the CTA — e.g. {key: "category", value: "trading-cards"}. */
+  filterParam?: { key: string; value: string };
+}
+
+/**
+ * `EventOfferCard` — W1-18 — offer event UI noted as missing in the plan.
+ * Renders a coupon code with copy-to-clipboard + a CTA to the filtered
+ * products page.
+ */
+export function EventOfferCard({
+  couponCode,
+  offerDescription,
+  title = "Exclusive offer",
+  filterParam,
+}: EventOfferCardProps) {
+  const [copied, setCopied] = useState(false);
+  const href = filterParam
+    ? `${ROUTES.PUBLIC.PRODUCTS}?${encodeURIComponent(filterParam.key)}=${encodeURIComponent(filterParam.value)}`
+    : String(ROUTES.PUBLIC.PRODUCTS);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — leave button as-is */
+    }
+  };
+
+  return (
+    <Div className="rounded-2xl border border-zinc-200 dark:border-zinc-700 p-6">
+      <Stack gap="md">
+        <Stack gap="xs">
+          <Heading level={2} className="text-2xl font-semibold">
+            {title}
+          </Heading>
+          {offerDescription ? (
+            <Text className="text-sm text-zinc-600 dark:text-zinc-400">
+              {offerDescription}
+            </Text>
+          ) : null}
+        </Stack>
+
+        <Div className="flex items-center gap-3 rounded-lg bg-zinc-50 dark:bg-zinc-900 px-4 py-3">
+          <code className="flex-1 font-mono text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            {couponCode}
+          </code>
+          <Button type="button" variant="outline" onClick={copyCode}>
+            {copied ? "Copied!" : "Copy code"}
+          </Button>
+        </Div>
+
+        <Div>
+          <Link href={href}>
+            <Button variant="primary">Apply at checkout</Button>
+          </Link>
+        </Div>
+      </Stack>
+    </Div>
+  );
+}

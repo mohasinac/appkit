@@ -82,6 +82,7 @@ const DEFAULT_TYPE_ICONS: Record<NavSuggestionRecord["type"], string> = {
   category: "🗂️",
   blog: "✍️",
   event: "🎉",
+  product: "📦",
 };
 
 const DEFAULT_TYPE_BADGES: Record<NavSuggestionRecord["type"], string> = {
@@ -89,6 +90,7 @@ const DEFAULT_TYPE_BADGES: Record<NavSuggestionRecord["type"], string> = {
   category: "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300",
   blog: "bg-fuchsia-100 text-fuchsia-600 dark:bg-fuchsia-900/40 dark:text-fuchsia-300",
   event: "bg-amber-100 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300",
+  product: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300",
 };
 
 function SuggestionItem({

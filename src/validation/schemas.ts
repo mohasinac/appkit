@@ -46,6 +46,47 @@ export const mediaUrlSchema = z
 export const dateStringSchema = z.string().datetime();
 
 // ============================================
+// SHARED PRIMITIVES (W2-4 — 2026-05-23)
+// Use these instead of redefining the same validators in feature schemas.
+// ============================================
+
+/** Monetary value in paise — non-negative integer. Use for `price`, `mrp`, `discount`, etc. */
+export const priceSchema = z.number().int().min(0, "Price must be non-negative (paise)");
+
+/** Discount percentage — 0–100. */
+export const discountPercentSchema = z.number().min(0).max(100);
+
+/** Bounded image-array schema factory — caps gallery length. */
+export const imageArraySchema = (max: number) =>
+  z.array(mediaUrlSchema).max(max, `At most ${max} images allowed`);
+
+/** Slug regex factory. Pass the `<prefix>-` token (e.g. `"product-"`) to enforce prefix discipline. */
+export const createSlugValidator = (prefix?: string) =>
+  prefix
+    ? z
+        .string()
+        .min(prefix.length + 1)
+        .regex(new RegExp(`^${prefix}[a-z0-9-]+$`), `Slug must start with "${prefix}"`)
+    : z.string().min(1).regex(/^[a-z0-9-]+$/, "Slug may only contain lowercase letters, numbers and hyphens");
+
+/** A Firestore Timestamp converted to JS Date — accepts string or Date instances. */
+export const timestampSchema = z.union([z.string().datetime(), z.date()]);
+
+/** Standard `createdAt`/`updatedAt` block — fold into doc schemas with `.merge(timestampsSchema)`. */
+export const timestampsSchema = z.object({
+  createdAt: timestampSchema,
+  updatedAt: timestampSchema,
+});
+
+/** Non-empty trimmed string with a length cap. */
+export const nonEmptyString = (max = 255) =>
+  z.string().trim().min(1, "Required").max(max, `Must be at most ${max} characters`);
+
+/** Optional rich-text body — uses the HTML schema (plain length cap). */
+export const richTextBodySchema = (max = 50_000) =>
+  z.string().trim().max(max, `Body must be at most ${max} characters`);
+
+// ============================================
 // AUTH / USER SCHEMAS
 // ============================================
 

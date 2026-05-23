@@ -331,7 +331,7 @@ export interface GenerateProductImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateProductImageFilename(
+function generateProductImageFilename(
   input: GenerateProductImageFilenameInput,
 ): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
@@ -349,7 +349,7 @@ export interface GenerateProductVideoFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateProductVideoFilename(
+function generateProductVideoFilename(
   input: GenerateProductVideoFilenameInput,
 ): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
@@ -367,7 +367,7 @@ export interface GenerateAuctionImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateAuctionImageFilename(
+function generateAuctionImageFilename(
   input: GenerateAuctionImageFilenameInput,
 ): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
@@ -385,7 +385,7 @@ export interface GeneratePreOrderImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generatePreOrderImageFilename(
+function generatePreOrderImageFilename(
   input: GeneratePreOrderImageFilenameInput,
 ): string {
   const name = slugify(input.name).substring(0, 40).replace(/-+$/, "");
@@ -401,7 +401,7 @@ export interface GenerateReviewImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateReviewImageFilename(
+function generateReviewImageFilename(
   input: GenerateReviewImageFilenameInput,
 ): string {
   const product = slugify(input.productId).substring(0, 40).replace(/-+$/, "");
@@ -414,7 +414,7 @@ export interface GenerateReviewVideoFilenameInput {
   productId: string;
   ext?: string;
 }
-export function generateReviewVideoFilename(
+function generateReviewVideoFilename(
   input: GenerateReviewVideoFilenameInput,
 ): string {
   const product = slugify(input.productId).substring(0, 40).replace(/-+$/, "");
@@ -422,7 +422,7 @@ export function generateReviewVideoFilename(
   return `review-${product}-video-1.${ext}`;
 }
 
-export function generateStoreLogoFilename(
+function generateStoreLogoFilename(
   storeName: string,
   ext: string = "webp",
 ): string {
@@ -430,7 +430,7 @@ export function generateStoreLogoFilename(
   return `store-${store}-logo.${ext.replace(/^\./, "")}`;
 }
 
-export function generateStoreBannerFilename(
+function generateStoreBannerFilename(
   storeName: string,
   ext: string = "webp",
 ): string {
@@ -438,7 +438,7 @@ export function generateStoreBannerFilename(
   return `store-${store}-banner.${ext.replace(/^\./, "")}`;
 }
 
-export function generateBrandLogoFilename(
+function generateBrandLogoFilename(
   brandName: string,
   ext: string = "webp",
 ): string {
@@ -446,7 +446,7 @@ export function generateBrandLogoFilename(
   return `brand-${brand}-logo.${ext.replace(/^\./, "")}`;
 }
 
-export function generateBrandBannerFilename(
+function generateBrandBannerFilename(
   brandName: string,
   ext: string = "webp",
 ): string {
@@ -460,7 +460,7 @@ export interface GenerateBlogImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateBlogImageFilename(
+function generateBlogImageFilename(
   input: GenerateBlogImageFilenameInput,
 ): string {
   const title = slugify(input.title).substring(0, 40).replace(/-+$/, "");
@@ -475,7 +475,7 @@ export interface GenerateEventImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateEventImageFilename(
+function generateEventImageFilename(
   input: GenerateEventImageFilenameInput,
 ): string {
   const title = slugify(input.title).substring(0, 50).replace(/-+$/, "");
@@ -490,7 +490,7 @@ export interface GenerateRichTextImageFilenameInput {
   index?: number;
   ext?: string;
 }
-export function generateRichTextImageFilename(
+function generateRichTextImageFilename(
   input: GenerateRichTextImageFilenameInput,
 ): string {
   const entity = slugify(input.entity).substring(0, 24).replace(/-+$/, "");
@@ -500,7 +500,7 @@ export function generateRichTextImageFilename(
   return `rich-text-${entity}-${name}-image-${n}.${ext}`;
 }
 
-export function generateCategoryImageFilename(
+function generateCategoryImageFilename(
   categoryName: string,
   ext: string = "webp",
 ): string {
@@ -508,7 +508,7 @@ export function generateCategoryImageFilename(
   return `category-${name}-image.${ext.replace(/^\./, "")}`;
 }
 
-export function generateUserAvatarFilename(
+function generateUserAvatarFilename(
   firstName: string,
   lastName: string,
   ext: string = "webp",
@@ -518,7 +518,7 @@ export function generateUserAvatarFilename(
   return `user-${first}-${last}-avatar.${ext.replace(/^\./, "")}`;
 }
 
-export function generateCarouselImageFilename(
+function generateCarouselImageFilename(
   title: string,
   ext: string = "webp",
 ): string {
@@ -548,7 +548,7 @@ export function generateTrimmedVideoFilename(
   return `${stem}-trimmed.${(ext ?? originalExt).replace(/^\./, "")}`;
 }
 
-export function generateInvoiceFilename(
+function generateInvoiceFilename(
   orderId: string,
   date: Date = new Date(),
 ): string {
@@ -558,7 +558,7 @@ export function generateInvoiceFilename(
   return `invoice-${orderId}-${y}${m}${d}.pdf`;
 }
 
-export function generatePayoutDocFilename(
+function generatePayoutDocFilename(
   sellerName: string,
   date: Date = new Date(),
 ): string {

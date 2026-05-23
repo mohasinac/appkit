@@ -324,15 +324,8 @@ export { generatePreOrderId } from "./utils/index";
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // generatePreOrderImageFilename - Helper for generate pre order image filename.
 export { generateProductId } from "./utils/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// generateProductImageFilename - Helper for generate product image filename.
-export { generateProductImageFilename } from "./utils/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// generateProductVideoFilename - Helper for generate product video filename.
-export { generateStoreBannerFilename } from "./utils/index";
-// [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
-// generateStoreLogoFilename - Helper for generate store logo filename.
-export { generateStoreLogoFilename } from "./utils/index";
+// W6-7 (2026-05-23) — per-feature generateXFilename wrappers no longer exported.
+// Call `generateMediaFilename({ type: "product-image", ... })` etc. directly.
 // [UTIL]-Pure utility â€" no framework or runtime dependency; safe to import from any environment.
 // generateTrimmedVideoFilename - Helper for generate trimmed video filename.
 export { getBusinessDaysElapsed } from "./utils/index";

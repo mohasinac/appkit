@@ -1,0 +1,62 @@
+"use client";
+import React from "react";
+import Link from "next/link";
+import { Div, Heading, Stack, Text } from "../../../ui";
+import { Button } from "../../../ui/components/Button";
+import { ROUTES } from "../../../next/routing/route-map";
+
+export interface EventSaleBannerProps {
+  /** Discount percent (e.g. 20 = 20% off). */
+  discountPercent?: number;
+  /** Coupon code (when the sale is gated by a code). */
+  couponCode?: string;
+  /** Sale headline override. */
+  title?: string;
+  /** Sale subheading override. */
+  subtitle?: string;
+  /** Filter the catalog page to a specific category / tag. */
+  filterParam?: { key: string; value: string };
+}
+
+/**
+ * `EventSaleBanner` — W1-18 — sale event UI noted as missing in the plan.
+ * Renders a hero banner with the discount, optional coupon, and a CTA to the
+ * filtered products catalog.
+ */
+export function EventSaleBanner({
+  discountPercent,
+  couponCode,
+  title,
+  subtitle,
+  filterParam,
+}: EventSaleBannerProps) {
+  const headline =
+    title ?? (discountPercent ? `${discountPercent}% off, today only` : "Special sale");
+  const href = filterParam
+    ? `${ROUTES.PUBLIC.PRODUCTS}?${encodeURIComponent(filterParam.key)}=${encodeURIComponent(filterParam.value)}`
+    : `${ROUTES.PUBLIC.PRODUCTS}?onSale=true`;
+
+  return (
+    <Div className="rounded-2xl bg-gradient-to-br from-[var(--appkit-color-primary)] to-[var(--appkit-color-secondary)] p-6 text-white shadow-lg">
+      <Stack gap="md">
+        <Stack gap="xs">
+          <Heading level={2} className="text-3xl font-bold">
+            {headline}
+          </Heading>
+          {subtitle ? <Text className="text-base text-white/90">{subtitle}</Text> : null}
+        </Stack>
+        {couponCode ? (
+          <Div className="inline-flex items-center gap-3 rounded-lg bg-white/10 px-4 py-2 backdrop-blur">
+            <span className="text-xs uppercase tracking-wide opacity-80">Code</span>
+            <span className="font-mono text-lg font-bold">{couponCode}</span>
+          </Div>
+        ) : null}
+        <Div>
+          <Link href={href}>
+            <Button variant="secondary">Shop the sale</Button>
+          </Link>
+        </Div>
+      </Stack>
+    </Div>
+  );
+}

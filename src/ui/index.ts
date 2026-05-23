@@ -294,6 +294,18 @@ export { TabStrip } from "./components/TabStrip";
 export type { FormGridProps, FormFieldProps } from "./components/FormGrid";
 export { FormGrid, FormField as FormGridField } from "./components/FormGrid";
 
+// Settings primitives (W1-31)
+export type { SettingsSectionProps, ToggleRowProps } from "./components/SettingsSection";
+export { SettingsSection, ToggleRow } from "./components/SettingsSection";
+
+// Detail-page primitives (W1-14)
+export type { DetailPageHeroProps } from "./components/DetailPageHero";
+export { DetailPageHero } from "./components/DetailPageHero";
+export type { DetailPageGalleryProps, DetailPageGalleryImage } from "./components/DetailPageGallery";
+export { DetailPageGallery } from "./components/DetailPageGallery";
+export type { DetailPageTabsProps, DetailPageTab } from "./components/DetailPageTabs";
+export { DetailPageTabs } from "./components/DetailPageTabs";
+
 export type { FormFieldProps as SmartFormFieldProps } from "./components/FormField";
 export { FormField } from "./components/FormField";
 

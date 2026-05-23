@@ -84,7 +84,15 @@ function maskName(value: string): string {
   return `${value[0]}${"*".repeat(Math.min(value.length - 1, 8))}`;
 }
 
-function maskIp(value: string): string {
+/**
+ * Mask an IPv4 address by zeroing the last three octets. Returns
+ * `[REDACTED]` for IPv6 / malformed input.
+ *
+ * W1-35: exported 2026-05-23 so session-read code paths can mask IPs at the
+ * repository layer (previously this lived as a private redact helper).
+ */
+export function maskIp(value: string): string {
+  if (!value) return "[REDACTED]";
   const parts = value.split(".");
   if (parts.length === 4) return `${parts[0]}.***.***.***`;
   return "[REDACTED]";

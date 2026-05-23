@@ -92,6 +92,11 @@ export { ProductGalleryClient } from "./ProductGalleryClient";
 export type { ProductGalleryClientProps } from "./ProductGalleryClient";
 export { ProductTabsShell } from "./ProductTabsShell";
 export type { ProductTabsShellProps, CustomTabDef } from "./ProductTabsShell";
+// W1-34: Product detail missing sections
+export { ProductGradingTab } from "./ProductGradingTab";
+export type { ProductGradingTabProps } from "./ProductGradingTab";
+export { ProductCardMetadataSection } from "./ProductCardMetadataSection";
+export type { ProductCardMetadataSectionProps } from "./ProductCardMetadataSection";
 export { CustomFieldsEditor } from "./CustomFieldsEditor";
 export type { CustomFieldsEditorProps } from "./CustomFieldsEditor";
 export { CustomSectionsEditor } from "./CustomSectionsEditor";

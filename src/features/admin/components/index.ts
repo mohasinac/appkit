@@ -49,6 +49,8 @@ export { AdminDigitalCodesView } from "./AdminDigitalCodesView";
 export type { AdminDigitalCodesViewProps } from "./AdminDigitalCodesView";
 export { AdminLiveView } from "./AdminLiveView";
 export type { AdminLiveViewProps } from "./AdminLiveView";
+export { AdminGroupedListingsView } from "./AdminGroupedListingsView";
+export type { AdminGroupedListingsViewProps } from "./AdminGroupedListingsView";
 // S-SBUNI-4 2026-05-13 — admin bundle CRUD views.
 export { AdminBundlesView } from "./AdminBundlesView";
 export type { AdminBundlesViewProps } from "./AdminBundlesView";

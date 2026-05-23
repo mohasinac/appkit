@@ -38,3 +38,11 @@ export { EventRaffleWinnerView } from "./EventRaffleWinnerView";
 export type { EventRaffleWinnerViewProps } from "./EventRaffleWinnerView";
 export { SpinWheelView } from "./SpinWheelView";
 export type { SpinWheelViewProps } from "./SpinWheelView";
+
+// W1-18: Event participation flows (raffle entry / sale banner / offer coupon)
+export { EventRaffleEntryForm } from "./EventRaffleEntryForm";
+export type { EventRaffleEntryFormProps } from "./EventRaffleEntryForm";
+export { EventSaleBanner } from "./EventSaleBanner";
+export type { EventSaleBannerProps } from "./EventSaleBanner";
+export { EventOfferCard } from "./EventOfferCard";
+export type { EventOfferCardProps } from "./EventOfferCard";

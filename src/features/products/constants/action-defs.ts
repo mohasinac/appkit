@@ -9,7 +9,14 @@
  *   Client  — useAuthGate() shows LoginRequiredModal for Tier 1 (public) actions
  *   Server  — checkActionAllowed() enforces the same guards on every server action
  *   Admin   — ActionPermissionsManager toggles defaultEnabled via siteSettings.actionConfig
+ *
+ * Label source of truth: `ACTIONS.{RESOURCE}["..."].label` in
+ * _internal/shared/actions/action-registry.ts. `ACTION_META` derives its labels
+ * via `regLabel()` where a registry counterpart exists; entries with no
+ * counterpart keep an inline literal until a registry leaf is added (W1-5).
  */
+
+import { ACTIONS, type ActionResource } from "../../../_internal/shared/actions/action-registry";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Shared variant type
@@ -22,6 +29,21 @@ export type ActionVariant =
   | "ghost"
   | "danger"
   | "warning";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Label-from-registry helper (W1-5)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Returns the label for `ACTIONS[resource][id]`. The `fallback` is used only
+ * when the registry has no leaf yet — orphan IDs should be added to ACTIONS
+ * over time. Adding the fallback parameter as required ensures every call
+ * site documents what the inline label was at migration time, simplifying
+ * the eventual cleanup.
+ */
+function regLabel(resource: ActionResource, id: string, fallback: string): string {
+  return ACTIONS[resource]?.[id]?.label ?? fallback;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // § 1  Product / listing actions
@@ -111,49 +133,50 @@ export interface ActionMeta {
 }
 
 export const ACTION_META: Record<ActionId, ActionMeta> = {
-  [ACTION_ID.BUY_NOW]:              { id: ACTION_ID.BUY_NOW,              label: "Buy Now",              variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
-  [ACTION_ID.ADD_TO_CART]:          { id: ACTION_ID.ADD_TO_CART,          label: "Add to Cart",          variant: "secondary", iconName: "ShoppingCart"                                                                          },
-  [ACTION_ID.ADD_TO_WISHLIST]:      { id: ACTION_ID.ADD_TO_WISHLIST,      label: "Add to Wishlist",      variant: "ghost",     iconName: "Heart",    requiresAuth: true,  authMessage: "You need to be signed in to save items to your wishlist." },
-  [ACTION_ID.REMOVE_FROM_WISHLIST]: { id: ACTION_ID.REMOVE_FROM_WISHLIST, label: "Remove from Wishlist", variant: "ghost",     iconName: "HeartOff", requiresAuth: true,  authMessage: "You need to be signed in to manage your wishlist."         },
-  [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: "Make an Offer",        variant: "outline",   iconName: "Tag",      requiresAuth: true,  authMessage: "You need to be signed in to make an offer."               },
-  [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: "Share",                variant: "ghost",     iconName: "Share2"                                                                                },
-  [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: "Compare",              variant: "secondary", iconName: "Columns"                                                                               },
-  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: "Place Bid",            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to place a bid."                      },
-  [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: "Buy Now",              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
-  [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: "Watch",                variant: "ghost",     iconName: "Eye",      requiresAuth: true,  authMessage: "You need to be signed in to watch auctions."              },
-  [ACTION_ID.UNWATCH_AUCTION]:      { id: ACTION_ID.UNWATCH_AUCTION,      label: "Unwatch",              variant: "ghost",     iconName: "EyeOff",   requiresAuth: true,  authMessage: "You need to be signed in to manage your watchlist."        },
-  [ACTION_ID.RESERVE_NOW]:          { id: ACTION_ID.RESERVE_NOW,          label: "Reserve Now",          variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to reserve a pre-order."              },
-  [ACTION_ID.CANCEL_RESERVATION]:   { id: ACTION_ID.CANCEL_RESERVATION,   label: "Cancel Reservation",   variant: "danger",    iconName: "X",        requiresAuth: true,  authMessage: "You need to be signed in to cancel a reservation."         },
+  [ACTION_ID.BUY_NOW]:              { id: ACTION_ID.BUY_NOW,              label: regLabel("PRODUCT",     "buy-now",                 "Buy Now"),              variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
+  [ACTION_ID.ADD_TO_CART]:          { id: ACTION_ID.ADD_TO_CART,          label: regLabel("PRODUCT",     "add-to-cart",             "Add to Cart"),          variant: "secondary", iconName: "ShoppingCart"                                                                          },
+  [ACTION_ID.ADD_TO_WISHLIST]:      { id: ACTION_ID.ADD_TO_WISHLIST,      label: regLabel("PRODUCT",     "add-to-wishlist",         "Add to Wishlist"),      variant: "ghost",     iconName: "Heart",    requiresAuth: true,  authMessage: "You need to be signed in to save items to your wishlist." },
+  [ACTION_ID.REMOVE_FROM_WISHLIST]: { id: ACTION_ID.REMOVE_FROM_WISHLIST, label: regLabel("PRODUCT",     "remove-from-wishlist",    "Remove from Wishlist"), variant: "ghost",     iconName: "HeartOff", requiresAuth: true,  authMessage: "You need to be signed in to manage your wishlist."         },
+  [ACTION_ID.MAKE_OFFER]:           { id: ACTION_ID.MAKE_OFFER,           label: regLabel("PRODUCT",     "make-offer",              "Make an Offer"),        variant: "outline",   iconName: "Tag",      requiresAuth: true,  authMessage: "You need to be signed in to make an offer."               },
+  [ACTION_ID.SHARE]:                { id: ACTION_ID.SHARE,                label: regLabel("PRODUCT",     "share",                   "Share"),                variant: "ghost",     iconName: "Share2"                                                                                },
+  [ACTION_ID.COMPARE]:              { id: ACTION_ID.COMPARE,              label: regLabel("PRODUCT",     "compare",                 "Compare"),              variant: "secondary", iconName: "Columns"                                                                               },
+  [ACTION_ID.PLACE_BID]:            { id: ACTION_ID.PLACE_BID,            label: regLabel("AUCTION",     "place-bid",               "Place Bid"),            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to place a bid."                      },
+  [ACTION_ID.BUY_NOW_AUCTION]:      { id: ACTION_ID.BUY_NOW_AUCTION,      label: regLabel("AUCTION",     "buy-it-now",              "Buy Now"),              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to purchase items."                   },
+  [ACTION_ID.WATCH_AUCTION]:        { id: ACTION_ID.WATCH_AUCTION,        label: regLabel("AUCTION",     "watch",                   "Watch"),                variant: "ghost",     iconName: "Eye",      requiresAuth: true,  authMessage: "You need to be signed in to watch auctions."              },
+  [ACTION_ID.UNWATCH_AUCTION]:      { id: ACTION_ID.UNWATCH_AUCTION,      label: regLabel("AUCTION",     "unwatch",                 "Unwatch"),              variant: "ghost",     iconName: "EyeOff",   requiresAuth: true,  authMessage: "You need to be signed in to manage your watchlist."        },
+  [ACTION_ID.RESERVE_NOW]:          { id: ACTION_ID.RESERVE_NOW,          label: regLabel("PRE_ORDER",   "reserve-now",             "Reserve Now"),          variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to reserve a pre-order."              },
+  [ACTION_ID.CANCEL_RESERVATION]:   { id: ACTION_ID.CANCEL_RESERVATION,   label: regLabel("PRE_ORDER",   "cancel-reservation",      "Cancel Reservation"),   variant: "danger",    iconName: "X",        requiresAuth: true,  authMessage: "You need to be signed in to cancel a reservation."         },
   // ── Checkout / navigation CTAs ────────────────────────────────────────────
-  [ACTION_ID.CHECKOUT]:             { id: ACTION_ID.CHECKOUT,             label: "Checkout",             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.CONTINUE_TO_VERIFY]:   { id: ACTION_ID.CONTINUE_TO_VERIFY,   label: "Continue",             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.SEND_OTP]:             { id: ACTION_ID.SEND_OTP,             label: "Send Code",            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.VERIFY_OTP]:           { id: ACTION_ID.VERIFY_OTP,           label: "Verify & Continue",    variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.PAY_ONLINE]:           { id: ACTION_ID.PAY_ONLINE,           label: "Pay Online",           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.PAY_COD]:              { id: ACTION_ID.PAY_COD,              label: "Cash on Delivery",     variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
-  [ACTION_ID.APPLY_COUPON]:         { id: ACTION_ID.APPLY_COUPON,         label: "Apply",                variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to apply a coupon."                   },
-  [ACTION_ID.REMOVE_COUPON]:        { id: ACTION_ID.REMOVE_COUPON,        label: "Remove",               variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to manage coupons."                   },
-  [ACTION_ID.ENTER_PRIZE_DRAW]:     { id: ACTION_ID.ENTER_PRIZE_DRAW,     label: "Enter Draw",           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a prize draw."               },
+  [ACTION_ID.CHECKOUT]:             { id: ACTION_ID.CHECKOUT,             label: regLabel("CART",        "checkout",                "Checkout"),             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.CONTINUE_TO_VERIFY]:   { id: ACTION_ID.CONTINUE_TO_VERIFY,   label: regLabel("CHECKOUT",    "continue-to-verification","Continue"),             variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.SEND_OTP]:             { id: ACTION_ID.SEND_OTP,             label: regLabel("CHECKOUT",    "send-otp",                "Send Code"),            variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.VERIFY_OTP]:           { id: ACTION_ID.VERIFY_OTP,           label: regLabel("CHECKOUT",    "verify-otp",              "Verify & Continue"),    variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.PAY_ONLINE]:           { id: ACTION_ID.PAY_ONLINE,           label: regLabel("CHECKOUT",    "pay-online",              "Pay Online"),           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.PAY_COD]:              { id: ACTION_ID.PAY_COD,              label: regLabel("CHECKOUT",    "pay-cod",                 "Cash on Delivery"),     variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to checkout."                         },
+  [ACTION_ID.APPLY_COUPON]:         { id: ACTION_ID.APPLY_COUPON,         label: regLabel("CHECKOUT",    "apply-coupon",            "Apply"),                variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to apply a coupon."                   },
+  [ACTION_ID.REMOVE_COUPON]:        { id: ACTION_ID.REMOVE_COUPON,        label: regLabel("CHECKOUT",    "remove-coupon",           "Remove"),               variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to manage coupons."                   },
+  [ACTION_ID.ENTER_PRIZE_DRAW]:     { id: ACTION_ID.ENTER_PRIZE_DRAW,     label: regLabel("PRIZE_DRAW",  "enter-draw",              "Enter Draw"),           variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a prize draw."               },
+  // ── Inline literals: no registry counterpart yet (orphan IDs — add to ACTIONS in a follow-up sweep) ─
   [ACTION_ID.ENTER_RAFFLE]:         { id: ACTION_ID.ENTER_RAFFLE,         label: "Enter Raffle",         variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to enter a raffle."                   },
   [ACTION_ID.REPORT_LISTING]:       { id: ACTION_ID.REPORT_LISTING,       label: "Report Listing",       variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to report a listing."                 },
-  [ACTION_ID.FOLLOW_STORE]:         { id: ACTION_ID.FOLLOW_STORE,         label: "Follow Store",         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to follow a store."                   },
+  [ACTION_ID.FOLLOW_STORE]:         { id: ACTION_ID.FOLLOW_STORE,         label: regLabel("STORE",       "follow",                  "Follow Store"),         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to follow a store."                   },
   // ── Reviews & social ──────────────────────────────────────────────────────
-  [ACTION_ID.WRITE_REVIEW]:         { id: ACTION_ID.WRITE_REVIEW,         label: "Write a Review",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to write a review."                   },
+  [ACTION_ID.WRITE_REVIEW]:         { id: ACTION_ID.WRITE_REVIEW,         label: regLabel("USER",        "write-review",            "Write a Review"),       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to write a review."                   },
   [ACTION_ID.MESSAGE_SELLER]:       { id: ACTION_ID.MESSAGE_SELLER,       label: "Message Seller",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to message a seller."                 },
   // ── Seller CTAs ───────────────────────────────────────────────────────────
   [ACTION_ID.BECOME_SELLER]:        { id: ACTION_ID.BECOME_SELLER,        label: "Apply as Seller",      variant: "primary",   requiresAuth: true,  authMessage: "You need to be signed in to apply as a seller."                },
-  [ACTION_ID.REQUEST_PAYOUT]:       { id: ACTION_ID.REQUEST_PAYOUT,       label: "Request Payout",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a payout.",  requiredPermission: "seller.payouts.request"  },
-  [ACTION_ID.RESPOND_TO_REVIEW]:    { id: ACTION_ID.RESPOND_TO_REVIEW,    label: "Respond to Review",    variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to respond to a review.", requiredPermission: "seller.reviews.respond" },
+  [ACTION_ID.REQUEST_PAYOUT]:       { id: ACTION_ID.REQUEST_PAYOUT,       label: regLabel("STORE",       "request-payout",          "Request Payout"),       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a payout.",  requiredPermission: "seller.payouts.request"  },
+  [ACTION_ID.RESPOND_TO_REVIEW]:    { id: ACTION_ID.RESPOND_TO_REVIEW,    label: regLabel("STORE",       "reply-review",            "Respond to Review"),    variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to respond to a review.", requiredPermission: "seller.reviews.respond" },
   // ── User account actions ──────────────────────────────────────────────────
-  [ACTION_ID.CANCEL_ORDER]:         { id: ACTION_ID.CANCEL_ORDER,         label: "Cancel Order",         variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to cancel an order."                  },
-  [ACTION_ID.REQUEST_RETURN]:       { id: ACTION_ID.REQUEST_RETURN,       label: "Request Return",       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a return."                 },
-  [ACTION_ID.REORDER]:              { id: ACTION_ID.REORDER,              label: "Reorder",              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to reorder."                          },
-  [ACTION_ID.TRACK_ORDER]:          { id: ACTION_ID.TRACK_ORDER,          label: "Track Order",          variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to track your order."                 },
+  [ACTION_ID.CANCEL_ORDER]:         { id: ACTION_ID.CANCEL_ORDER,         label: regLabel("USER",        "cancel-order",            "Cancel Order"),         variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to cancel an order."                  },
+  [ACTION_ID.REQUEST_RETURN]:       { id: ACTION_ID.REQUEST_RETURN,       label: regLabel("USER",        "request-return",          "Request Return"),       variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to request a return."                 },
+  [ACTION_ID.REORDER]:              { id: ACTION_ID.REORDER,              label: regLabel("USER",        "reorder",                 "Reorder"),              variant: "secondary", requiresAuth: true,  authMessage: "You need to be signed in to reorder."                          },
+  [ACTION_ID.TRACK_ORDER]:          { id: ACTION_ID.TRACK_ORDER,          label: regLabel("USER",        "track-order",             "Track Order"),          variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to track your order."                 },
   [ACTION_ID.EDIT_PROFILE]:         { id: ACTION_ID.EDIT_PROFILE,         label: "Edit Profile",         variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to edit your profile."                },
   [ACTION_ID.ADD_ADDRESS]:          { id: ACTION_ID.ADD_ADDRESS,          label: "Add Address",          variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to add an address."                   },
   [ACTION_ID.EDIT_ADDRESS]:         { id: ACTION_ID.EDIT_ADDRESS,         label: "Edit Address",         variant: "ghost",     requiresAuth: true,  authMessage: "You need to be signed in to edit an address."                  },
-  [ACTION_ID.DELETE_ADDRESS]:       { id: ACTION_ID.DELETE_ADDRESS,       label: "Delete Address",       variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to delete an address."                },
-  [ACTION_ID.CHANGE_PASSWORD]:      { id: ACTION_ID.CHANGE_PASSWORD,      label: "Change Password",      variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to change your password."             },
+  [ACTION_ID.DELETE_ADDRESS]:       { id: ACTION_ID.DELETE_ADDRESS,       label: regLabel("USER",        "delete-address",          "Delete Address"),       variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to delete an address."                },
+  [ACTION_ID.CHANGE_PASSWORD]:      { id: ACTION_ID.CHANGE_PASSWORD,      label: regLabel("USER",        "update-password",         "Change Password"),      variant: "outline",   requiresAuth: true,  authMessage: "You need to be signed in to change your password."             },
   [ACTION_ID.DELETE_ACCOUNT]:       { id: ACTION_ID.DELETE_ACCOUNT,       label: "Delete Account",       variant: "danger",    requiresAuth: true,  authMessage: "You need to be signed in to delete your account.",  requiredPermission: "user.account.delete" },
 };
 
