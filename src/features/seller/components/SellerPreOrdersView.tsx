@@ -2,11 +2,8 @@
 
 import React, { useState, useCallback } from "react";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Alert, Badge, BulkActionBar, ConfirmDeleteModal, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, RowActionMenu, Text } from "../../../ui";
-import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
+import { Badge, ConfirmDeleteModal, FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRE_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
@@ -16,26 +13,11 @@ import {
   toRelativeDate,
   toRupees,
   toStringValue,
-  useSellerListingData,
-} from "../hooks/useSellerListingData";
-import { DataTable } from "../../admin/components/DataTable";
+} from "../../admin/hooks/useAdminListingData";
+import { DataListingView } from "../../admin/components/DataListingView";
+import type { ListingViewConfig } from "../../admin/components/DataListingView";
 import type { AdminTableColumn } from "../../admin/types";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
-
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status"];
-const DEFAULT_SORT = "-createdAt";
-// Hardcoded sieve clause — this view only ever shows pre-orders.
-const LISTING_TYPE_FILTER = "listingType==pre-order";
-
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "title", label: "Title A–Z" },
-  { value: "preorderAvailableDate", label: "Delivery Soon" },
-];
-
-const STATUS_OPTIONS = SELLER_PRE_ORDER_STATUS_TABS;
 
 interface PreOrderRow {
   id: string;
@@ -128,8 +110,6 @@ export interface SellerPreOrdersViewProps extends ListingLayoutProps {
 }
 
 export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreOrdersViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
   const dispatch = useActionDispatch();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const { deletingId, handleDelete: performDelete } = useEntityDelete({
@@ -139,59 +119,38 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
     fetchOptions: { credentials: "include" },
   });
 
-
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
+  const handleDelete = useCallback(
+    async (id: string) => {
+      await performDelete(id);
+      setDeleteTargetId(null);
+    },
+    [performDelete],
   );
 
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
+  if (React.Children.count(children) > 0) {
+    return (
+      <ListingLayout portal="seller" {...props}>
+        {children}
+      </ListingLayout>
+    );
+  }
 
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
-
-  const statusRaw = table.get("status");
-  const statusFilter = statusRaw && statusRaw !== "All" ? `status==${statusRaw}` : undefined;
-  const filters = [LISTING_TYPE_FILTER, statusFilter].filter(Boolean).join(",");
-
-  const { rows, total, isLoading, errorMessage } = useSellerListingData<
-    SellerProductsResponse,
-    PreOrderRow
-  >({
+  const config: ListingViewConfig<SellerProductsResponse, PreOrderRow> = {
+    portal: "seller",
+    title: "Pre-Orders",
+    searchPlaceholder: "Search pre-orders by name…",
+    emptyLabel: "No pre-orders listed yet",
+    filterKeys: ["status"],
+    defaultSort: "-createdAt",
     queryKey: ["seller", "pre-orders", "listing"],
     endpoint: SELLER_ENDPOINTS.PRODUCTS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "title", label: "Title A–Z" },
+      { value: "preorderAvailableDate", label: "Delivery Soon" },
+    ],
+    columns: PRE_ORDER_COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.products).map((item, index) => {
         const priceRaw = typeof item.price === "number" ? item.price : 0;
@@ -210,96 +169,45 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
       }),
     getTotal: (response, mappedRows) =>
       typeof response.meta?.total === "number" ? response.meta.total : mappedRows.length,
-  });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
-  const handleDelete = useCallback(async (id: string) => {
-    await performDelete(id);
-    setDeleteTargetId(null);
-  }, [performDelete]);
-
-  if (hasChildren) {
-    return (
-      <ListingLayout portal="seller" {...props}>
-        {children}
-      </ListingLayout>
-    );
-  }
-
-  return (
-    <Div className="min-h-screen">
-      <ListingToolbar
-        filterCount={activeFilterCount}
-        onFiltersClick={openFilters}
-        searchValue={searchInput}
-        searchPlaceholder="Search pre-orders by name…"
-        onSearchChange={setSearchInput}
-        onSearchCommit={commitSearch}
-        sortValue={table.get("sort") || DEFAULT_SORT}
-        sortOptions={SORT_OPTIONS}
-        onSortChange={(v) => { table.set("sort", v); }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-        onResetAll={resetAll}
-        hasActiveState={hasActiveState}
-      />
-
-      {totalPages > 1 && (
-        <div
-          className="sticky z-10 flex justify-center bg-[var(--appkit-color-surface)]/95 backdrop-blur-sm border-b border-[var(--appkit-color-border)] px-3 py-1.5"
-          style={{ top: "calc(var(--header-height, 0px) + 44px)" }}
-        >
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(p) => table.setPage(p)}
-          />
-        </div>
-      )}
-
-      <div className="py-4 px-3 sm:px-4">
-        {errorMessage && (
-          <Alert variant="error" className="mb-4">{errorMessage}</Alert>
-        )}
-        <DataTable
-          columns={PRE_ORDER_COLUMNS}
-          rows={rows}
-          isLoading={isLoading}
-          emptyLabel="No pre-orders listed yet"
-          getRowHref={(row) => String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id))}
-          renderRowActions={(row) => (
-            <RowActionMenu
-              actions={[
+    buildFilters: (state) => {
+      const status = state.status && state.status !== "All" ? `status==${state.status}` : null;
+      return ["listingType==pre-order", status].filter(Boolean).join(",");
+    },
+    getRowHref: (row) => String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)),
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          {
+            label: ACTIONS.STORE["edit-listing"].label,
+            onClick: () =>
+              void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)) }),
+          },
+          ...(onDelete
+            ? [
                 {
-                  label: ACTIONS.STORE["edit-listing"].label,
-                  onClick: () => void dispatch({ type: "NAVIGATE", href: String(ROUTES.STORE.PRE_ORDERS_EDIT(row.id)) }),
-                },
-                ...(onDelete ? [{
                   label: ACTIONS.STORE["delete-listing"].label,
                   destructive: true,
                   onClick: () => setDeleteTargetId(row.id),
                   disabled: deletingId === row.id,
-                }] : []),
-              ]}
-            />
-          )}
-        />
-      </div>
+                },
+              ]
+            : []),
+        ]}
+      />
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Status"
+        tabs={SELLER_PRE_ORDER_STATUS_TABS}
+        value={pendingFilters.status ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+      />
+    ),
+  };
 
-      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-          label="Status"
-          tabs={STATUS_OPTIONS}
-          value={pendingFilters.status ?? ""}
-          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-        />
-      </ListingFilterDrawer>
-
+  return (
+    <>
+      <DataListingView config={config} />
       {deleteTargetId && (
         <ConfirmDeleteModal
           isOpen
@@ -310,6 +218,6 @@ export function SellerPreOrdersView({ children, onDelete, ...props }: SellerPreO
           isDeleting={deletingId === deleteTargetId}
         />
       )}
-    </Div>
+    </>
   );
 }
