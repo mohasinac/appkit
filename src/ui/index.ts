@@ -365,8 +365,6 @@ export { PasswordStrengthIndicator } from "./components/PasswordStrengthIndicato
 export type { AvatarDisplayProps } from "./components/AvatarDisplay";
 export { AvatarDisplay } from "./components/AvatarDisplay";
 
-export type { DashboardStatsCardProps } from "./components/DashboardStatsCard";
-export { DashboardStatsCard } from "./components/DashboardStatsCard";
 
 export type {
   ActiveFilter,

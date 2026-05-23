@@ -7909,9 +7909,6 @@ export { SellerShippingView } from "./features/seller/index";
 // SellerSidebar - Shared export for seller sidebar.
 export { SellerSidebar } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// SellerStatCard - Component for seller stat card.
-export { SellerStatCard } from "./features/seller/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // SellerStoreSetupView - Component for seller store setup view.
 export { SellerStoreSetupView } from "./features/seller/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -8833,7 +8830,7 @@ export { ModalFooter, UnsavedChangesModal, ResponsiveView, Textarea, Checkbox } 
 export { ToastProvider, StarRating, StepperNav, ViewToggle, PriceDisplay, SummaryCard } from "./ui/index";
 export { CountdownDisplay, ItemRow, HorizontalScroller, SectionTabs, TabStrip } from "./ui/index";
 export { CardBody, MenuTrigger, MenuContent, MenuSeparator, RoleBadge, SkipToMain } from "./ui/index";
-export { TabsList, TabsContent, PasswordStrengthIndicator, DashboardStatsCard, TablePagination } from "./ui/index";
+export { TabsList, TabsContent, PasswordStrengthIndicator, TablePagination } from "./ui/index";
 export { Stack, classNames, mergeTailwindClasses, SideModal, SideDrawer, RichText, RichTextRenderer } from "./ui/index";
 export type { RichTextRendererProps } from "./ui/index";
 export { SlottedListingView, DetailViewShell, StackedViewShell } from "./ui/index";
