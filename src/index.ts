@@ -192,18 +192,14 @@ export type { DropdownMenuItem } from "./ui/index";
 // DropdownProps - Type contract for dropdown props.
 export type { DropdownProps } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// DynamicSelectOption - Type contract for dynamic select option.
-export type { DynamicSelectOption } from "./ui/index";
+// PaginatedSelectOption - Option shape for PaginatedSelect ({ value, label, meta? }).
+export type { PaginatedSelectOption } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// DynamicSelectProps - Type contract for dynamic select props.
-export type { DynamicSelectProps } from "./ui/index";
+// PaginatedSelectProps - Discriminated union: single (default) or multiple. Search + paginated + optional inline create.
+export type { PaginatedSelectProps } from "./ui/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// InlineCreateSelect - Select with inline create-new form in a SideDrawer.
-export type { InlineCreateSelectProps } from "./ui/index";
-export { InlineCreateSelect } from "./ui/index";
-// PaginatedMultiSelect - Multi-value async paginated select with chips and checkbox dropdown.
-export type { PaginatedMultiSelectProps } from "./ui/index";
-export { PaginatedMultiSelect } from "./ui/index";
+// PaginatedSelect - Searchable, async-paginated select. Supports single + multi modes + optional inline create drawer.
+export { PaginatedSelect } from "./ui/index";
 // EmptyState - Component for empty state display.
 export { EmptyState } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
@@ -242,7 +238,6 @@ export type { ListingLayoutLabels } from "./ui/index";
 // ListingLayoutProps - Type contract for listing layout props.
 export type { ListingLayoutProps } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// ListingViewShellProps - Type contract for listing view shell props.
 export type { RadioGroupProps } from "./ui/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // RadioOption - Type contract for radio option.
@@ -1509,23 +1504,14 @@ export { OfferRepository } from "./repositories/index";
 // OrderRepository - Shared export for order repository.
 export { OrderRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// OrdersRepository - Shared export for orders repository.
-export { OrdersRepository } from "./repositories/index";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // PasswordResetTokenRepository - Shared export for password reset token repository.
 export { PasswordResetTokenRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // ProductRepository - Shared export for product repository.
 export { ProductRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// ProductsRepository - Shared export for products repository.
-export { ProductsRepository } from "./repositories/index";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // ReviewRepository - Shared export for review repository.
 export { ReviewRepository } from "./repositories/index";
-// [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
-// ReviewsRepository - Shared export for reviews repository.
-export { ReviewsRepository } from "./repositories/index";
 // [DB]-Database layer â€" uses firebase-admin or another server-side DB SDK; can only run in a trusted server environment.
 // SessionRepository - Shared export for session repository.
 export { SessionRepository } from "./repositories/index";
@@ -3362,10 +3348,10 @@ export { AdminProductsView } from "./features/admin/index";
 // AdminProductEditorView - Component for admin product create/edit form (3-mode: standard/auction/pre-order).
 export { AdminProductEditorView } from "./features/admin/index";
 export type { AdminProductEditorViewProps } from "./features/admin/index";
-// CategoryQuickCreateForm - Lightweight inline create form for categories used in InlineCreateSelect.
+// CategoryQuickCreateForm - Lightweight inline create form for categories used in PaginatedSelect.
 export { CategoryQuickCreateForm } from "./features/admin/index";
 export type { CategoryQuickCreateFormProps } from "./features/admin/index";
-// BrandQuickCreateForm - Lightweight inline create form for brands used in InlineCreateSelect.
+// BrandQuickCreateForm - Lightweight inline create form for brands used in PaginatedSelect.
 export { BrandQuickCreateForm } from "./features/admin/index";
 export type { BrandQuickCreateFormProps } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
@@ -3471,8 +3457,7 @@ export { DEFAULT_TRUST_BAR_ITEMS } from "./features/admin/index";
 // DashboardStatsGrid - Component for dashboard stats grid.
 export { DashboardStatsGrid } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// DemoSeedView - Component for demo seed view.
-export { DemoSeedView } from "./features/admin/index";
+// DemoSeedView — removed from main barrel (dev-only, load via dynamic import)
 // AdminTeamView - Employee management list view.
 export { AdminTeamView } from "./features/admin/index";
 // AdminEmployeeEditorView - Invite/edit employee permissions SideDrawer.
@@ -3695,8 +3680,7 @@ export type { ChatRoomUpdateInput } from "./features/admin/index";
 // DashboardStats - Type contract for dashboard stats.
 export type { DashboardStats } from "./features/admin/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// DemoSeedViewProps - Type contract for demo seed view props.
-export type { DemoSeedViewProps } from "./features/admin/index";
+// DemoSeedViewProps — removed from main barrel (dev-only)
 // AdminTeamViewProps - Type contract for AdminTeamView props.
 export type { AdminTeamViewProps } from "./features/admin/index";
 // AdminEmployeeEditorViewProps - Type contract for AdminEmployeeEditorView props.
@@ -7146,6 +7130,7 @@ export {
   type ActionTree,
   type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
+export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
 // User-role predicates â€" SB-UNI-E 2026-05-13.
 export {
   isAdminUser,
@@ -8933,7 +8918,7 @@ export {
   useMediaQuery, useBreakpoint, useClickOutside, useKeyPress, useLongPress,
   useGesture, useSwipe, ThemeProvider, useTheme, useSession, useAuth, useCountdown,
   useCamera, useBulkSelection, useUrlTable, usePendingFilters, usePendingTable,
-  useUnsavedChanges, UNSAVED_CHANGES_EVENT, useBulkAction, useContainerGrid,
+  useUnsavedChanges, UNSAVED_CHANGES_EVENT, useBulkAction, useEntityDelete, useContainerGrid,
   useMessage, useVisibleItems, useModalStack, RTDBPayloadStatus,
 } from "./react/index";
 

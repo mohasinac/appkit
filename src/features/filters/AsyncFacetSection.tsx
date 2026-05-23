@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Div, Input, Row, Span, Text } from "../../ui";
 import { cn } from "./filterUtils";
 import type { FacetOption } from "./FilterFacetSection";
-import type { AsyncPage } from "../../ui/components/DynamicSelect";
+import type { AsyncPage } from "../../ui/components/PaginatedSelect";
 
 export interface AsyncFacetSectionProps {
   title: string;

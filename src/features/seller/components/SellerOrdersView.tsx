@@ -1,16 +1,17 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Eye, Printer, MapPin, Truck } from "lucide-react";
+import { Eye, Printer, MapPin, Truck } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingToolbar, Pagination, ListingViewShell, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps, SelectOption } from "../../../ui";
+import { BulkActionBar, Badge, Button, Div, FilterChipGroup, Heading, Input, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Select, SideDrawer, Stack, Text, useToast } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps, SelectOption } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_ORDER_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { ROUTES } from "../../../constants";
@@ -91,7 +92,7 @@ interface SellerOrdersResponse {
   meta?: { total: number };
 }
 
-export interface SellerOrdersViewProps extends ListingViewShellProps {
+export interface SellerOrdersViewProps extends ListingLayoutProps {
   orderDetailApiBase?: string;
 }
 
@@ -519,28 +520,13 @@ export function SellerOrdersView({
   }, [selection, showToast]);
 
   const bulkActions: BulkActionItem[] = [
-    {
-      id: ACTIONS.STORE["print-packing-slips"].id,
-      label: ACTIONS.STORE["print-packing-slips"].label,
-      icon: <Printer className="w-4 h-4" />,
-      onClick: handlePrintPackingSlips,
-    },
-    {
-      id: ACTIONS.STORE["set-location"].id,
-      label: ACTIONS.STORE["set-location"].label,
-      icon: <MapPin className="w-4 h-4" />,
-      onClick: () => setSetLocationOpen(true),
-    },
-    {
-      id: ACTIONS.STORE["request-payout"].id,
-      label: ACTIONS.STORE["request-payout"].label,
-      onClick: () => void requestPayoutForSelection(),
-      variant: "primary",
-    },
+    buildBulkAction(ACTIONS.STORE["print-packing-slips"], handlePrintPackingSlips, { icon: <Printer className="w-4 h-4" /> }),
+    buildBulkAction(ACTIONS.STORE["set-location"], () => setSetLocationOpen(true), { icon: <MapPin className="w-4 h-4" /> }),
+    buildBulkAction(ACTIONS.STORE["request-payout"], () => void requestPayoutForSelection(), { variant: "primary" }),
   ];
 
   if (hasChildren) {
-    return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
   }
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
@@ -599,37 +585,14 @@ export function SellerOrdersView({
       </div>
 
       {/* Filter sidebar */}
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
-                label="Status"
-                tabs={STATUS_OPTIONS}
-                value={pendingFilters.status ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-              />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white transition-colors active:scale-[0.98]">
-                Apply{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+        <FilterChipGroup
+          label="Status"
+          tabs={STATUS_OPTIONS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+      </ListingFilterDrawer>
 
       {/* Order detail drawer */}
       {selectedOrderId && (

@@ -1,6 +1,6 @@
 {
   "name": "@mohasinac/appkit",
-  "version": "2.7.58",
+  "version": "2.7.59",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

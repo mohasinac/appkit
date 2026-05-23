@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, ListingToolbar, Pagination } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import React from "react";
+import { ListingToolbar, Pagination } from "../../../ui";
 import {
   toRecordArray,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
-const PAGE_SIZE = 25;
 const DEFAULT_SORT = "storeId";
 const SORT_OPTIONS = [
   { value: "storeId", label: "Store ID" },
@@ -39,28 +35,11 @@ export interface AdminStoreAddressesViewProps {
 }
 
 export function AdminStoreAddressesView({ children: _children }: AdminStoreAddressesViewProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
-
-  const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminStoreAddressesResponse, StoreAddressRow>({
+  const listing = useAdminListing<AdminStoreAddressesResponse, StoreAddressRow>({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "store-addresses", "listing"],
     endpoint: ADMIN_ENDPOINTS.STORE_ADDRESSES,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `addr-${index}`),
@@ -78,12 +57,10 @@ export function AdminStoreAddressesView({ children: _children }: AdminStoreAddre
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
+  const { view, setView, table, searchInput, setSearchInput, commitSearch, hasActiveState, resetAll, rows, isLoading, errorMessage, currentPage, totalPages, selection } = listing;
 
   return (
     <div className="min-h-screen">

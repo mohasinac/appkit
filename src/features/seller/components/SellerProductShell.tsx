@@ -100,7 +100,7 @@ export interface SellerProductShellProps {
   onDiscard?: () => void;
   isLoading?: boolean;
   storeSlug?: string;
-  /** Render a custom category selector (e.g. InlineCreateSelect). */
+  /** Render a custom category selector (e.g. PaginatedSelect with createLabel). */
   renderCategorySelector?: (props: {
     value: string;
     onChange: (v: string) => void;

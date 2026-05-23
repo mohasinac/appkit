@@ -3,19 +3,18 @@
  * filter-load-options.ts
  *
  * Factory functions that return `loadOptions(query, page)` callbacks for use
- * with AsyncFacetSection, PaginatedMultiSelect, DynamicSelect, and
- * InlineCreateSelect. Each factory hits a paginated API endpoint and maps the
- * response to { items: DynamicSelectOption[], hasMore: boolean }.
+ * with AsyncFacetSection and PaginatedSelect. Each factory hits a paginated API
+ * endpoint and maps the response to { items: PaginatedSelectOption[], hasMore: boolean }.
  *
  * Usage:
  *   const load = makeCategoryLoadOptions();
  *   <AsyncFacetSection loadOptions={load} ... />
  */
 
-import type { DynamicSelectOption, AsyncPage } from "../../../../ui/components/DynamicSelect";
+import type { PaginatedSelectOption, AsyncPage } from "../../../../ui/components/PaginatedSelect";
 import type { FacetOption } from "../../../../features/filters/FilterFacetSection";
 
-export type LoadOptionsFn<T = DynamicSelectOption> = (
+export type LoadOptionsFn<T = PaginatedSelectOption> = (
   query: string,
   page: number,
 ) => Promise<AsyncPage<T>>;
@@ -66,7 +65,7 @@ export function makeCategoryLoadOptions(
 ): LoadOptionsFn {
   const base = variant === "admin" ? "/api/admin/categories" : "/api/categories";
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl(base, q, page, categoryType ? { categoryType } : undefined),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
@@ -96,7 +95,7 @@ export function makeCategoryFacetLoadOptions(
 export function makeBrandLoadOptions(variant: "public" | "admin" = "admin"): LoadOptionsFn {
   const base = variant === "admin" ? "/api/admin/brands" : "/api/brands";
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl(base, q, page),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
@@ -122,7 +121,7 @@ export function makeBrandFacetLoadOptions(variant: "public" | "admin" = "public"
 
 export function makeStoreLoadOptions(): LoadOptionsFn {
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl("/api/admin/stores", q, page),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
@@ -147,7 +146,7 @@ export function makeStoreFacetLoadOptions(): LoadOptionsFn<FacetOption> {
 
 export function makeProductLoadOptions(storeId?: string): LoadOptionsFn {
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl("/api/admin/products", q, page, storeId ? { storeId } : undefined),
       (item) => ({
         value: String(item.id ?? item.slug ?? ""),
@@ -161,7 +160,7 @@ export function makeProductLoadOptions(storeId?: string): LoadOptionsFn {
 
 export function makeUserLoadOptions(role?: string): LoadOptionsFn {
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl("/api/admin/users", q, page, role ? { role } : undefined),
       (item) => ({
         value: String(item.id ?? item.uid ?? ""),
@@ -175,7 +174,7 @@ export function makeUserLoadOptions(role?: string): LoadOptionsFn {
 
 export function makeAddressLoadOptions(ownerType?: "user" | "store"): LoadOptionsFn {
   return async (q, page) =>
-    fetchPage<DynamicSelectOption>(
+    fetchPage<PaginatedSelectOption>(
       buildUrl("/api/admin/addresses", q, page, ownerType ? { ownerType } : undefined),
       (item) => ({
         value: String(item.id ?? ""),

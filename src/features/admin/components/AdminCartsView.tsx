@@ -1,25 +1,19 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import React from "react";
+import { FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ADMIN_CART_OWNERSHIP_TABS } from "../constants/filter-tabs";
 import {
   toRecordArray,
   toRelativeDate,
-  toRupees,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["type"];
 const DEFAULT_SORT = "-updatedAt";
 const SORT_OPTIONS = [
   { value: "-updatedAt", label: "Recently updated" },
@@ -27,7 +21,7 @@ const SORT_OPTIONS = [
 ];
 const TYPE_OPTIONS = ADMIN_CART_OWNERSHIP_TABS;
 
-export interface AdminCartsViewProps extends ListingViewShellProps {}
+export interface AdminCartsViewProps extends ListingLayoutProps {}
 
 interface AdminCartsResponse {
   items?: unknown[];
@@ -44,63 +38,19 @@ interface CartRow {
 
 export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const toggleSelect = (id: string, next: boolean) =>
-    setSelectedIds((prev) => {
-      const s = new Set(prev);
-      if (next) s.add(id); else s.delete(id);
-      return s;
-    });
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
-
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
-
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
-
-  const typeRaw = table.get("type");
-  const filters = typeRaw && typeRaw !== "All" ? `type==${typeRaw}` : undefined;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminCartsResponse, CartRow>({
+  const {
+    view, setView, table, searchInput, setSearchInput, commitSearch,
+    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
+    pendingFilters, setPendingFilters,
+    activeFilterCount, hasActiveState, resetAll,
+    rows, total, isLoading, errorMessage,
+    currentPage, totalPages, selection,
+  } = useAdminListing<AdminCartsResponse, CartRow>({
+    filterKeys: ["type"],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "carts", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_CARTS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const isGuest = !item.userId;
@@ -118,15 +68,14 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
       }),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: (filterState) => {
+      const typeRaw = filterState.type;
+      return typeRaw && typeRaw !== "All" ? `type==${typeRaw}` : undefined;
+    },
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
   if (hasChildren) {
-    return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="admin" {...props}>{children}</ListingLayout>;
   }
 
   return (
@@ -164,45 +113,17 @@ export function AdminCartsView({ children, ...props }: AdminCartsViewProps) {
           rows={rows}
           isLoading={isLoading}
           emptyLabel="No carts found"
-          selectedIds={selectedIds}
-          onToggleSelect={toggleSelect}
-          onToggleSelectAll={(next) =>
-            setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
-          }
         />
       </div>
 
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+<FilterChipGroup
                 label="Type"
                 tabs={TYPE_OPTIONS}
                 value={pendingFilters.type ?? ""}
                 onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
               />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      </ListingFilterDrawer>
     </div>
   );
 }

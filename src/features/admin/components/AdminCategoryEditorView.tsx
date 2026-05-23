@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Card, CardBody, ConfirmDeleteModal, Form, InlineCreateSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, Card, CardBody, ConfirmDeleteModal, Form, PaginatedSelect, Input, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -215,7 +215,7 @@ export function AdminCategoryEditorView({
             <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
               Parent category
             </Text>
-            <InlineCreateSelect
+            <PaginatedSelect
               value={parentId || null}
               onChange={(v) => setParentId(v ?? "")}
               loadOptions={loadCategoryOptions}
@@ -267,11 +267,7 @@ export function AdminCategoryEditorView({
             type="button"
             variant="danger"
             isLoading={deleteMutation.isPending}
-            onClick={() => {
-              if (confirm("Delete this category? Products in this category will become uncategorized.")) {
-                deleteMutation.mutate();
-              }
-            }}
+            onClick={() => setDeleteOpen(true)}
           >
             Delete category
           </Button>

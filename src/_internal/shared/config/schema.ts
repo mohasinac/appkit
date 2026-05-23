@@ -13,7 +13,7 @@
  *   baseUrl: "http://localhost:3000",
  *   locales: ["en"],
  *   routes: {
- *     smoke: [{ path: "/", expect: ["LetItRip"] }],
+ *     smoke: [{ path: "/", expect: ["MyBrand"] }],
  *   },
  * };
  * export default config;
@@ -92,7 +92,7 @@ export interface AppkitFirebaseConfig {
 }
 
 export interface AppkitBrandConfig {
-  /** Display name of the brand, e.g. "LetItRip" */
+  /** Display name of the brand, e.g. "Acme Store" */
   name: string;
   /** Short / abbreviated name, e.g. "LT" */
   shortName?: string;
@@ -111,7 +111,7 @@ export interface AppkitBrandConfig {
 }
 
 export interface AppkitSeoConfig {
-  /** Canonical site URL, e.g. "https://letitrip.in" */
+  /** Canonical site URL, e.g. "https://example.com" */
   siteUrl: string;
   /** Default page <title> */
   defaultTitle?: string;
@@ -121,7 +121,7 @@ export interface AppkitSeoConfig {
   defaultImage?: string;
   /** OG site name */
   siteName?: string;
-  /** Twitter/X handle including @, e.g. "@letitrip" */
+  /** Twitter/X handle including @, e.g. "@mybrand" */
   twitterHandle?: string;
   /** BCP 47 locale tag for OG/schema.org, e.g. "en-IN" */
   locale?: string;

@@ -1,27 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { Plus } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
 import { BulkActionBar, Button,
   Div,
   ListingToolbar,
-  ListingViewShell,
+  ListingLayout,
   Pagination,
   Row,
   SideDrawer,
   Text, } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 import { AdminFeatureEditorView } from "./AdminFeatureEditorView";
@@ -91,72 +89,49 @@ function mapFeatureRow(
   };
 }
 
-export interface AdminFeaturesViewProps extends ListingViewShellProps {}
+export interface AdminFeaturesViewProps extends ListingLayoutProps {}
 
 export function AdminFeaturesView({
   children,
   ...props
 }: AdminFeaturesViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
-  const table = useUrlTable({
-    defaults: {
-      pageSize: String(PAGE_SIZE),
-      sort: DEFAULT_SORT,
-      scope: DEFAULT_SCOPE,
-    },
-  });
+
+  /* scope is a URL-level tab, read before the listing hook so it can drive queryKey + endpoint */
+  const searchParams = useSearchParams();
+  const scopeFilter = (searchParams.get("scope") as ProductFeatureScope | null) || DEFAULT_SCOPE;
+
   const {
-    openCreatePanel,
-    openEditPanel,
-    closePanel,
-    isCreateOpen,
-    isEditOpen,
-    editId,
-  } = usePanelUrlSync();
-  const [searchInput, setSearchInput] = React.useState(table.get("q") || "");
-
-  const commitSearch = React.useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const resetAll = React.useCallback(() => {
-    table.setMany({ q: "", sort: "", scope: DEFAULT_SCOPE });
-    setSearchInput("");
-  }, [table]);
-
-  const scopeFilter =
-    (table.get("scope") as ProductFeatureScope | "") || DEFAULT_SCOPE;
-  const hasActiveState =
-    !!table.get("q") ||
-    table.get("sort") !== DEFAULT_SORT ||
-    scopeFilter !== DEFAULT_SCOPE;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<
-    AdminFeaturesResponse,
-    FeatureRow
-  >({
+    view, setView, table, panel, searchInput, setSearchInput, commitSearch,
+    hasActiveState: hookHasActiveState, resetAll: hookResetAll,
+    rows, total, isLoading, errorMessage,
+    currentPage, totalPages, selection,
+  } = useAdminListing<AdminFeaturesResponse, FeatureRow>({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
+    pageSize: PAGE_SIZE,
     queryKey: ["admin", "features", "listing", scopeFilter],
     endpoint: `${ADMIN_ENDPOINTS.PRODUCT_FEATURES}?scope=${scopeFilter}`,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) => toRecordArray(response.items).map(mapFeatureRow),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
+  /* Extend hasActiveState to include scope deviation */
+  const hasActiveState = hookHasActiveState || scopeFilter !== DEFAULT_SCOPE;
 
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
+  /* Extend resetAll to also reset scope */
+  const resetAll = useCallback(() => {
+    hookResetAll();
+    table.set("scope", DEFAULT_SCOPE);
+  }, [hookResetAll, table]);
 
   if (hasChildren) {
     return (
-      <ListingViewShell portal="admin" {...props}>
+      <ListingLayout portal="admin" {...props}>
         {children}
-      </ListingViewShell>
+      </ListingLayout>
     );
   }
 
@@ -187,7 +162,7 @@ export function AdminFeaturesView({
         extra={
           <Button
             size="sm"
-            onClick={openCreatePanel}
+            onClick={panel.openCreatePanel}
             className="flex items-center gap-1.5"
           >
             <Plus className="h-4 w-4" />
@@ -239,21 +214,21 @@ export function AdminFeaturesView({
           rows={rows}
           isLoading={isLoading}
           emptyLabel="No features found"
-          onRowClick={(row) => openEditPanel(row.id)}
+          onRowClick={(row) => panel.openEditPanel(row.id)}
         />
       </Div>
 
       <SideDrawer
-        isOpen={isCreateOpen || isEditOpen}
-        onClose={closePanel}
-        title={isCreateOpen ? "Add Feature" : "Edit Feature"}
-        mode={isCreateOpen ? "create" : "edit"}
+        isOpen={panel.isCreateOpen || panel.isEditOpen}
+        onClose={panel.closePanel}
+        title={panel.isCreateOpen ? "Add Feature" : "Edit Feature"}
+        mode={panel.isCreateOpen ? "create" : "edit"}
       >
-        {(isCreateOpen || isEditOpen) && (
+        {(panel.isCreateOpen || panel.isEditOpen) && (
           <AdminFeatureEditorView
-            featureId={editId ?? undefined}
-            onSaved={closePanel}
-            onDeleted={closePanel}
+            featureId={panel.editId ?? undefined}
+            onSaved={panel.closePanel}
+            onDeleted={panel.closePanel}
             embedded
           />
         )}

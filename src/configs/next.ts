@@ -115,6 +115,17 @@ export function defineNextConfig(override: NextConfigOverride = {}): NextConfigO
     "/api/**": [
       // Firebase Admin — entire package (lib/ + esm/, all sub-SDKs)
       "./node_modules/firebase-admin/**",
+      // @firebase/database-compat — dynamically required by firebase-admin/database
+      "./node_modules/@firebase/database-compat/**",
+      "./node_modules/@firebase/database/**",
+      "./node_modules/@firebase/database-types/**",
+      "./node_modules/@firebase/component/**",
+      "./node_modules/@firebase/util/**",
+      "./node_modules/@firebase/logger/**",
+      "./node_modules/@firebase/app/**",
+      "./node_modules/@firebase/app-check-interop-types/**",
+      "./node_modules/@firebase/auth-interop-types/**",
+      "./node_modules/faye-websocket/**",
       // All @google-cloud packages: firestore (incl. protos/**), storage, paginator, etc.
       "./node_modules/@google-cloud/**",
       // Auth libraries used by Firebase Admin token verification

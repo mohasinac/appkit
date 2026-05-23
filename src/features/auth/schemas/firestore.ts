@@ -137,6 +137,9 @@ export interface UserDocument {
   // ── Notification preferences ─────────────────────────────────────────────────
   /** User-controlled notification channel and type preferences. */
   notificationPreferences?: import("../../account/types").NotificationPreferences;
+
+  // ── Banner dismissal ────────────────────────────────────────────────────────
+  dismissedBannerHash?: string;
 }
 
 // ── Soft ban entry ─────────────────────────────────────────────────────────────

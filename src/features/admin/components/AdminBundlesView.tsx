@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { Plus, X } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import { Plus } from "lucide-react";
 import {
   Badge,
   BulkActionBar,
@@ -13,22 +11,22 @@ import {
   Pagination,
   Stack,
   Text,
-  useToast,
-} from "../../../ui";
+  useToast, ListingFilterDrawer} from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import {
   BUNDLE_COPY,
   BUNDLE_STOCK_VARIANT,
 } from "../../../_internal/shared/features/categories/bundle-copy";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import type { AdminTableColumn } from "../types";
 import { useBottomActions } from "../../layout";
 
@@ -111,182 +109,22 @@ export interface AdminBundlesViewProps {
   newHref: string;
 }
 
-interface BundlesFilterDrawerProps {
-  filterOpen: boolean;
-  setFilterOpen: (v: boolean) => void;
-  activeFilterCount: number;
-  clearFilters: () => void;
-  pendingFilters: Record<string, string>;
-  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  applyFilters: () => void;
-}
-
-function BundlesFilterDrawer({
-  filterOpen,
-  setFilterOpen,
-  activeFilterCount,
-  clearFilters,
-  pendingFilters,
-  setPendingFilters,
-  applyFilters,
-}: BundlesFilterDrawerProps) {
-  if (!filterOpen) return null;
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-40 bg-black/40"
-        aria-hidden="true"
-        onClick={() => setFilterOpen(false)}
-      />
-      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-          <div className="flex items-center gap-2">
-            {activeFilterCount > 0 && (
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors"
-              >
-                Clear all
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={() => setFilterOpen(false)}
-              aria-label="Close"
-              className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-          <div className="space-y-2">
-            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-              Status
-            </Text>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: "All", value: "" },
-                { label: "Active", value: "true" },
-                { label: "Inactive", value: "false" },
-              ].map((opt) => (
-                <button
-                  key={opt.label}
-                  type="button"
-                  onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                    (pendingFilters.isActive || "") === opt.value
-                      ? "bg-primary text-white border-primary"
-                      : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-              Stock
-            </Text>
-            <div className="flex flex-wrap gap-2">
-              {[
-                { label: "All", value: "" },
-                { label: "Sold out", value: "out_of_stock" },
-              ].map((opt) => (
-                <button
-                  key={opt.label}
-                  type="button"
-                  onClick={() =>
-                    setPendingFilters((p) => ({ ...p, bundleStockStatus: opt.value }))
-                  }
-                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                    (pendingFilters.bundleStockStatus || "") === opt.value
-                      ? "bg-primary text-white border-primary"
-                      : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <button
-            type="button"
-            onClick={applyFilters}
-            className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]"
-          >
-            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
 export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps) {
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
   const [rebuildingId, setRebuildingId] = useState<string | null>(null);
   const toast = useToast();
 
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
-
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState =
-    !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0;
-
-  const filterParts: string[] = [];
-  const isActiveRaw = table.get("isActive");
-  if (isActiveRaw) filterParts.push(`isActive==${isActiveRaw}`);
-  const stockStatusRaw = table.get("bundleStockStatus");
-  if (stockStatusRaw) filterParts.push(`bundleStockStatus==${stockStatusRaw}`);
-  const filters = filterParts.join(",") || undefined;
-
-  const { rows, total, isLoading, errorMessage, refetch } = useAdminListingData<
-    BundlesResponse,
-    BundleRow
-  >({
+  const {
+    table, searchInput, setSearchInput, commitSearch,
+    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
+    pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
+    rows, total, isLoading, errorMessage, refetch,
+    currentPage, totalPages, selection,
+  } = useAdminListing<BundlesResponse, BundleRow>({
+    filterKeys: FILTER_KEYS,
+    defaultSort: DEFAULT_SORT,
+    pageSize: PAGE_SIZE,
     queryKey: ["admin", "bundles", "listing"],
     endpoint: ADMIN_ENDPOINTS.BUNDLES,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `bundle-${index}`),
@@ -304,11 +142,13 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: (filterState) => {
+      const parts: string[] = [];
+      if (filterState.isActive) parts.push(`isActive==${filterState.isActive}`);
+      if (filterState.bundleStockStatus) parts.push(`bundleStockStatus==${filterState.bundleStockStatus}`);
+      return parts.join(",") || undefined;
+    },
   });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   const handleRebuild = useCallback(
     async (bundleId: string) => {
@@ -328,56 +168,41 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
   );
 
   const bulkActions: BulkActionItem[] = [
-    {
-      id: "activate",
-      label: ACTIONS.ADMIN["activate-bundle"].label,
-      variant: "primary",
-      onClick: async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ isActive: true }),
-            }),
-          ),
-        );
-        selection.clearSelection();
-        refetch();
-      },
-    },
-    {
-      id: "deactivate",
-      label: ACTIONS.ADMIN["deactivate-bundle"].label,
-      variant: "secondary",
-      onClick: async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ isActive: false }),
-            }),
-          ),
-        );
-        selection.clearSelection();
-        refetch();
-      },
-    },
-    {
-      id: "delete",
-      label: ACTIONS.ADMIN["delete-bundle"].label,
-      variant: "danger",
-      onClick: async () => {
-        await Promise.all(
-          selection.selectedIds.map((id) =>
-            fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), { method: "DELETE" }),
-          ),
-        );
-        selection.clearSelection();
-        refetch();
-      },
-    },
+    buildBulkAction(ACTIONS.ADMIN["activate-bundle"], async () => {
+      await Promise.all(
+        selection.selectedIds.map((id) =>
+          fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isActive: true }),
+          }),
+        ),
+      );
+      selection.clearSelection();
+      refetch();
+    }),
+    buildBulkAction(ACTIONS.ADMIN["deactivate-bundle"], async () => {
+      await Promise.all(
+        selection.selectedIds.map((id) =>
+          fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ isActive: false }),
+          }),
+        ),
+      );
+      selection.clearSelection();
+      refetch();
+    }),
+    buildBulkAction(ACTIONS.ADMIN["delete-bundle"], async () => {
+      await Promise.all(
+        selection.selectedIds.map((id) =>
+          fetch(ADMIN_ENDPOINTS.BUNDLE_BY_ID(id), { method: "DELETE" }),
+        ),
+      );
+      selection.clearSelection();
+      refetch();
+    }),
   ];
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
@@ -461,15 +286,59 @@ export function AdminBundlesView({ getEditHref, newHref }: AdminBundlesViewProps
         />
       </div>
 
-      <BundlesFilterDrawer
-        filterOpen={filterOpen}
-        setFilterOpen={setFilterOpen}
-        activeFilterCount={activeFilterCount}
-        clearFilters={clearFilters}
-        pendingFilters={pendingFilters}
-        setPendingFilters={setPendingFilters}
-        applyFilters={applyFilters}
-      />
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+        <div className="space-y-2">
+            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+              Status
+            </Text>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "All", value: "" },
+                { label: "Active", value: "true" },
+                { label: "Inactive", value: "false" },
+              ].map((opt) => (
+                <button
+                  key={opt.label}
+                  type="button"
+                  onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                    (pendingFilters.isActive || "") === opt.value
+                      ? "bg-primary text-white border-primary"
+                      : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+              Stock
+            </Text>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: "All", value: "" },
+                { label: "Sold out", value: "out_of_stock" },
+              ].map((opt) => (
+                <button
+                  key={opt.label}
+                  type="button"
+                  onClick={() =>
+                    setPendingFilters((p) => ({ ...p, bundleStockStatus: opt.value }))
+                  }
+                  className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                    (pendingFilters.bundleStockStatus || "") === opt.value
+                      ? "bg-primary text-white border-primary"
+                      : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+      </ListingFilterDrawer>
     </div>
   );
 }

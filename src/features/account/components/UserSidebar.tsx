@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Li, Nav, Span, Ul } from "../../../ui";
+import { ConfirmDeleteModal, Li, Nav, Span, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -39,29 +39,42 @@ function isNavItemActive(item: UserNavItem, activeHref: string): boolean {
 }
 
 function NavLink({ item, isActive, onClick }: { item: UserNavItem; isActive: boolean; onClick?: () => void }) {
+  const [showConfirm, setShowConfirm] = useState(false);
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (item.confirm && typeof window !== "undefined") {
-      const ok = window.confirm(item.confirm.message);
-      if (!ok) {
-        e.preventDefault();
-        return;
-      }
+    if (item.confirm) {
+      e.preventDefault();
+      setShowConfirm(true);
+      return;
     }
     onClick?.();
   };
+  const linkClass = `flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
+    isActive
+      ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
+      : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
+  }`;
   return (
-    <Link
-      href={item.href}
-      onClick={handleClick}
-      className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[0.8125rem] font-medium leading-tight transition-colors ${
-        isActive
-          ? "bg-primary-50 dark:bg-primary-900/25 text-primary-700 dark:text-primary-300"
-          : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-slate-800 hover:text-zinc-900 dark:hover:text-zinc-100"
-      }`}
-    >
-      {item.icon && <Span className="shrink-0 text-base opacity-70">{item.icon}</Span>}
-      <Span className="flex-1 truncate">{item.label}</Span>
-    </Link>
+    <>
+      <Link href={item.href} onClick={handleClick} className={linkClass}>
+        {item.icon && <Span className="shrink-0 text-base opacity-70">{item.icon}</Span>}
+        <Span className="flex-1 truncate">{item.label}</Span>
+      </Link>
+      {showConfirm && item.confirm && (
+        <ConfirmDeleteModal
+          isOpen
+          title={item.confirm.title ?? "Confirm"}
+          message={item.confirm.message}
+          confirmText="Continue"
+          variant="warning"
+          onConfirm={() => {
+            setShowConfirm(false);
+            onClick?.();
+            window.location.href = item.href;
+          }}
+          onClose={() => setShowConfirm(false)}
+        />
+      )}
+    </>
   );
 }
 

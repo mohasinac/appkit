@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import {
   Button,
+  ConfirmDeleteModal,
   Div,
   FormField,
   Heading,
@@ -16,7 +17,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  DynamicSelect,
+  PaginatedSelect,
   useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -85,6 +86,7 @@ export function GroupSettingsPanel({
   });
   const [linkTarget, setLinkTarget] = useState<string | null>(null);
   const [children, setChildren] = useState<ChildInfo[] | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
 
   if (isAuction) return null;
 
@@ -130,33 +132,45 @@ export function GroupSettingsPanel({
     }
   }
 
-  async function dissolveGroup() {
-    if (!confirm("Dissolve this group? All members will be unlinked. This cannot be undone.")) return;
-    setLoading(true);
-    try {
-      await apiClient.delete(groupEndpoint);
-      showToast("Group dissolved.", "success");
-      onGroupChanged();
-    } catch (e: unknown) {
-      showToast((e as Error)?.message ?? "Failed to dissolve group.", "error");
-    } finally {
-      setLoading(false);
-    }
+  function requestDissolveGroup() {
+    setConfirmAction({
+      title: "Dissolve Group",
+      message: "Dissolve this group? All members will be unlinked. This cannot be undone.",
+      onConfirm: async () => {
+        setConfirmAction(null);
+        setLoading(true);
+        try {
+          await apiClient.delete(groupEndpoint);
+          showToast("Group dissolved.", "success");
+          onGroupChanged();
+        } catch (e: unknown) {
+          showToast((e as Error)?.message ?? "Failed to dissolve group.", "error");
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
   }
 
-  async function unlinkChild(childId: string) {
-    if (!confirm("Remove this listing from the group?")) return;
-    setLoading(true);
-    try {
-      await apiClient.delete(`${childrenEndpoint}/${childId}`);
-      showToast("Listing removed from group.", "success");
-      setChildren((prev) => prev?.filter((c) => c.id !== childId) ?? null);
-      onGroupChanged();
-    } catch (e: unknown) {
-      showToast((e as Error)?.message ?? "Failed to unlink.", "error");
-    } finally {
-      setLoading(false);
-    }
+  function requestUnlinkChild(childId: string) {
+    setConfirmAction({
+      title: "Remove from Group",
+      message: "Remove this listing from the group?",
+      onConfirm: async () => {
+        setConfirmAction(null);
+        setLoading(true);
+        try {
+          await apiClient.delete(`${childrenEndpoint}/${childId}`);
+          showToast("Listing removed from group.", "success");
+          setChildren((prev) => prev?.filter((c) => c.id !== childId) ?? null);
+          onGroupChanged();
+        } catch (e: unknown) {
+          showToast((e as Error)?.message ?? "Failed to unlink.", "error");
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
   }
 
   async function addCreateChild() {
@@ -202,18 +216,24 @@ export function GroupSettingsPanel({
     }
   }
 
-  async function leaveGroup() {
-    if (!confirm("Leave this group? This listing will become standalone.")) return;
-    setLoading(true);
-    try {
-      await apiClient.delete(`${storeProductsEndpoint}/${productId}/group/leave`);
-      showToast("Left the group.", "success");
-      onGroupChanged();
-    } catch (e: unknown) {
-      showToast((e as Error)?.message ?? "Failed to leave group.", "error");
-    } finally {
-      setLoading(false);
-    }
+  function requestLeaveGroup() {
+    setConfirmAction({
+      title: "Leave Group",
+      message: "Leave this group? This listing will become standalone.",
+      onConfirm: async () => {
+        setConfirmAction(null);
+        setLoading(true);
+        try {
+          await apiClient.delete(`${storeProductsEndpoint}/${productId}/group/leave`);
+          showToast("Left the group.", "success");
+          onGroupChanged();
+        } catch (e: unknown) {
+          showToast((e as Error)?.message ?? "Failed to leave group.", "error");
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
   }
 
   async function loadLinkOptions(query: string, page: number) {
@@ -318,7 +338,7 @@ export function GroupSettingsPanel({
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => unlinkChild(child.id)}
+                          onClick={() => requestUnlinkChild(child.id)}
                           isLoading={loading}
                           className="text-red-500 hover:text-red-600 text-xs"
                         >
@@ -343,7 +363,7 @@ export function GroupSettingsPanel({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={dissolveGroup}
+                  onClick={requestDissolveGroup}
                   isLoading={loading}
                   className="text-red-500 hover:text-red-600"
                 >
@@ -369,7 +389,7 @@ export function GroupSettingsPanel({
                 type="button"
                 variant="ghost"
                 size="sm"
-                onClick={leaveGroup}
+                onClick={requestLeaveGroup}
                 isLoading={loading}
                 className="text-red-500 hover:text-red-600 w-fit"
               >
@@ -413,6 +433,16 @@ export function GroupSettingsPanel({
             loading={loading}
           />
         </Modal>
+      )}
+      {confirmAction && (
+        <ConfirmDeleteModal
+          isOpen
+          title={confirmAction.title}
+          message={confirmAction.message}
+          onConfirm={confirmAction.onConfirm}
+          onClose={() => setConfirmAction(null)}
+          isDeleting={loading}
+        />
       )}
     </Div>
   );
@@ -490,7 +520,7 @@ function AddChildContent({
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">
               Search your existing products or pre-orders. Auctions cannot be linked.
             </Text>
-            <DynamicSelect
+            <PaginatedSelect
               value={linkTarget}
               onChange={(v) => setLinkTarget(v)}
               loadOptions={loadLinkOptions}

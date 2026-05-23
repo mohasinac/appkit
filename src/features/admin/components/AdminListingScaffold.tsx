@@ -5,10 +5,10 @@ import {
   Button,
   Div,
   Input,
-  ListingViewShell,
+  ListingLayout,
   Span,
   Text,
-  type ListingViewShellProps,
+  type ListingLayoutProps,
 } from "../../../ui";
 import type { AdminTableColumn } from "../types";
 import { AdminPageHeader } from "./AdminPageHeader";
@@ -26,7 +26,7 @@ export interface AdminListingScaffoldRow {
   isSold?: boolean;
 }
 
-interface AdminListingScaffoldProps extends ListingViewShellProps {
+interface AdminListingScaffoldProps extends ListingLayoutProps {
   title: string;
   subtitle: string;
   actionLabel?: string;
@@ -187,7 +187,7 @@ export function AdminListingScaffold({
   const hasChildren = React.Children.count(children) > 0;
 
   return (
-    <ListingViewShell
+    <ListingLayout
       {...props}
       portal="admin"
       headerSlot={
@@ -284,6 +284,6 @@ export function AdminListingScaffold({
           renderRowActions={renderRowActions}
         />
       )}
-    </ListingViewShell>
+    </ListingLayout>
   );
 }

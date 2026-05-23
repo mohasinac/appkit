@@ -522,4 +522,3 @@ class OrderRepository extends BaseRepository<OrderDocument> {
 const orderRepository = new OrderRepository();
 
 export { OrderRepository, orderRepository };
-export { OrderRepository as OrdersRepository };

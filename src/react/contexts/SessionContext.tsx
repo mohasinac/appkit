@@ -68,6 +68,8 @@ export interface SessionUser {
   scamAwarenessAcknowledgedAt?: Date | null;
   /** RBAC permission keys granted to this user (from their role's permission set). */
   permissions?: string[];
+  /** Hash of the last dismissed announcement banner. */
+  dismissedBannerHash?: string;
 }
 
 export interface SessionContextValue {
@@ -204,6 +206,7 @@ function buildSessionUser(
     scamAwarenessAcknowledgedAt: serverData.scamAwarenessAcknowledgedAt
       ? new Date(serverData.scamAwarenessAcknowledgedAt)
       : null,
+    dismissedBannerHash: serverData.dismissedBannerHash,
   };
 }
 
@@ -293,6 +296,7 @@ export function SessionProvider({
           scamAwarenessAcknowledgedAt: data.scamAwarenessAcknowledgedAt
             ? new Date(data.scamAwarenessAcknowledgedAt as unknown as string)
             : null,
+          dismissedBannerHash: data.dismissedBannerHash,
         };
       } catch {
         return null;

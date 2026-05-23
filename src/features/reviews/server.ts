@@ -7,7 +7,6 @@ export * from "./actions";
 
 export {
   ReviewRepository,
-  ReviewsRepository,
   reviewRepository,
 } from "./repository/reviews.repository";
 

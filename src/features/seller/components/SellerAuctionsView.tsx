@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingToolbar, Pagination, ListingViewShell, RowActionMenu, useToast } from "../../../ui";
+import { BulkActionBar, Button, ConfirmDeleteModal, FilterChipGroup, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, RowActionMenu } from "../../../ui";
 import { useBottomActions } from "../../layout";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_AUCTION_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -37,7 +37,7 @@ interface SellerAuctionsResponse {
   meta?: { total: number };
 }
 
-export interface SellerAuctionsViewProps extends ListingViewShellProps {
+export interface SellerAuctionsViewProps extends ListingLayoutProps {
   renderHeader?: (onAdd: () => void) => React.ReactNode;
   onEditClick?: (id: string) => void;
   onDelete?: (id: string) => Promise<void>;
@@ -48,8 +48,13 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const { showToast } = useToast();
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    endpoint: (id) => `/api/store/products/${id}`,
+    deleteFn: onDelete,
+    successMessage: "Auction deleted.",
+    fetchOptions: { credentials: "include" },
+  });
+
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -132,13 +137,9 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
     : [];
 
   const handleDelete = useCallback(async (id: string) => {
-    setDeletingId(id);
-    try {
-      if (onDelete) await onDelete(id);
-      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-      showToast("Auction deleted.", "success");
-    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete auction.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [performDelete]);
 
   const handleEdit = useCallback((id: string) => {
     if (onEditClick) onEditClick(id);
@@ -148,7 +149,7 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
 
   if (hasChildren) {
-    return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
   }
 
   return (
@@ -212,37 +213,14 @@ export function SellerAuctionsView({ renderHeader, children, onEditClick, onDele
         )}
       </div>
 
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
-                label="Status"
-                tabs={STATUS_OPTIONS}
-                value={pendingFilters.status ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-              />
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+        <FilterChipGroup
+          label="Status"
+          tabs={STATUS_OPTIONS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+      </ListingFilterDrawer>
 
       {deleteTargetId && (
         <ConfirmDeleteModal

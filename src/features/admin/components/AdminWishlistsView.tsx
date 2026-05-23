@@ -1,29 +1,25 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import React from "react";
+import { ListingToolbar, Pagination, ListingLayout } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 
-const PAGE_SIZE = 25;
-const FILTER_KEYS: string[] = [];
 const DEFAULT_SORT = "-updatedAt";
 const SORT_OPTIONS = [
   { value: "-updatedAt", label: "Recently updated" },
   { value: "-itemCount", label: "Largest first" },
 ];
 
-export interface AdminWishlistsViewProps extends ListingViewShellProps {}
+export interface AdminWishlistsViewProps extends ListingLayoutProps {}
 
 interface AdminWishlistsResponse {
   items?: unknown[];
@@ -40,36 +36,17 @@ interface WishlistRow {
 
 export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const toggleSelect = (id: string, next: boolean) =>
-    setSelectedIds((prev) => {
-      const s = new Set(prev);
-      if (next) s.add(id); else s.delete(id);
-      return s;
-    });
-
-  const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminWishlistsResponse, WishlistRow>({
+  const {
+    view, setView, table, searchInput, setSearchInput, commitSearch,
+    hasActiveState, resetAll,
+    rows, total, isLoading, errorMessage,
+    currentPage, totalPages,
+  } = useAdminListing<AdminWishlistsResponse, WishlistRow>({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "wishlists", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_WISHLISTS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const itemCount = typeof item.itemCount === "number" ? item.itemCount : 0;
@@ -85,15 +62,11 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
       }),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
   if (hasChildren) {
-    return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="admin" {...props}>{children}</ListingLayout>;
   }
 
   return (
@@ -130,11 +103,6 @@ export function AdminWishlistsView({ children, ...props }: AdminWishlistsViewPro
           rows={rows}
           isLoading={isLoading}
           emptyLabel="No user wishlists found"
-          selectedIds={selectedIds}
-          onToggleSelect={toggleSelect}
-          onToggleSelectAll={(next) =>
-            setSelectedIds(next ? new Set(rows.map((r) => r.id)) : new Set())
-          }
         />
       </div>
     </div>

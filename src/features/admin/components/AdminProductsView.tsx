@@ -1,13 +1,10 @@
 "use client";
 
-import React, { useState, useCallback, useMemo } from "react";
-import { Plus, X } from "lucide-react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { usePanelUrlSync } from "../../../react/hooks/use-panel-url-sync";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import React, { useState, useCallback } from "react";
+import { Plus } from "lucide-react";
 import { useBottomActions } from "../../layout";
-import { BulkActionBar, Button, FilterChipGroup, Heading, ListingToolbar, ListingViewShell, Pagination, SideDrawer, Text, Toggle, useToast } from "../../../ui";
-import type { ListingViewShellProps, BulkActionItem } from "../../../ui";
+import { BulkActionBar, Button, FilterChipGroup, Heading, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, SideDrawer, Text, Toggle, useToast } from "../../../ui";
+import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   ADMIN_PRODUCT_STATUS_TABS,
@@ -17,8 +14,8 @@ import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import { AdminViewCards } from "./AdminViewCards";
@@ -29,7 +26,7 @@ import { AdminProductEditorView } from "./AdminProductEditorView";
 import { QuickEditMenu } from "./QuickEditMenu";
 
 const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status", "type"];
+const FILTER_KEYS = ["status", "type", "showSold"];
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest" },
@@ -40,7 +37,7 @@ const SORT_OPTIONS = [
 const STATUS_OPTIONS = ADMIN_PRODUCT_STATUS_TABS;
 const TYPE_OPTIONS = ADMIN_PRODUCT_LISTING_TYPE_TABS;
 
-export interface AdminProductsViewProps extends ListingViewShellProps {
+export interface AdminProductsViewProps extends ListingLayoutProps {
   actionHref?: string;
   getRowHref?: (row: AdminListingScaffoldRow) => string;
 }
@@ -96,133 +93,18 @@ function buildBaseColumns(): AdminTableColumn<ProductRow>[] {
   ];
 }
 
-interface ProductsFilterDrawerProps {
-  filterOpen: boolean;
-  setFilterOpen: (v: boolean) => void;
-  activeFilterCount: number;
-  clearFilters: () => void;
-  pendingFilters: Record<string, string>;
-  setPendingFilters: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-  applyFilters: () => void;
-}
-
-function ProductsFilterDrawer({
-  filterOpen, setFilterOpen, activeFilterCount, clearFilters,
-  pendingFilters, setPendingFilters, applyFilters,
-}: ProductsFilterDrawerProps) {
-  if (!filterOpen) return null;
-  return (
-    <>
-      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-          <div className="flex items-center gap-2">
-            {activeFilterCount > 0 && (
-              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-            )}
-            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-          <FilterChipGroup
-            label="Status"
-            tabs={STATUS_OPTIONS}
-            value={pendingFilters.status ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-          />
-          <FilterChipGroup
-            label="Type"
-            tabs={TYPE_OPTIONS}
-            value={pendingFilters.type ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
-          />
-        </div>
-        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
 
 export function AdminProductsView({ children, actionHref, getRowHref, ...props }: AdminProductsViewProps) {
   const hasChildren = React.Children.count(children) > 0;
   const [overrides, setOverrides] = useState<Record<string, Partial<ProductRow>>>({});
   const { showToast } = useToast();
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const { openCreatePanel, openEditPanel, closePanel, isCreateOpen, isEditOpen, editId } = usePanelUrlSync();
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [pendingFilters, setPendingFilters] = useState<Record<string, string>>(
-    () => Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])),
-  );
-
-  const openFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
-    setFilterOpen(true);
-  }, [table]);
-
-  const applyFilters = useCallback(() => {
-    const updates: Record<string, string> = { page: "1" };
-    for (const k of FILTER_KEYS) updates[k] = pendingFilters[k] ?? "";
-    table.setMany(updates);
-    setFilterOpen(false);
-  }, [pendingFilters, table]);
-
-  const clearFilters = useCallback(() => {
-    setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, ""])));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    const updates: Record<string, string> = { q: "", sort: "", showSold: "" };
-    for (const k of FILTER_KEYS) updates[k] = "";
-    table.setMany(updates);
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const showSold = table.get("showSold") === "true";
-  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT || activeFilterCount > 0 || showSold;
-
-  const filterParts: string[] = [];
-  if (!showSold) filterParts.push("isSold==false");
-  const statusRaw = table.get("status");
-  if (statusRaw && statusRaw !== "All") filterParts.push(`status==${statusRaw}`);
-  const typeRaw = table.get("type");
-  if (typeRaw && typeRaw !== "All") {
-    const TYPE_FILTER: Record<string, string> = {
-      Auctions: "listingType==auction",
-      "Pre-orders": "listingType==pre-order",
-      "Prize Draws": "listingType==prize-draw",
-      Products: "listingType==standard",
-      Classifieds: "listingType==classified",
-      "Digital Codes": "listingType==digital-code",
-      "Live Items": "listingType==live",
-    };
-    const typeFilter = TYPE_FILTER[typeRaw];
-    if (typeFilter) filterParts.push(typeFilter);
-  }
-  const filters = filterParts.join(",") || undefined;
-
-  const { rows: fetchedRows, total, isLoading, errorMessage } = useAdminListingData<AdminProductsResponse, ProductRow>({
+  const listing = useAdminListing<AdminProductsResponse, ProductRow>({
+    filterKeys: FILTER_KEYS,
+    defaultSort: DEFAULT_SORT,
+    pageSize: PAGE_SIZE,
     queryKey: ["admin", "products", "listing"],
     endpoint: ADMIN_ENDPOINTS.PRODUCTS,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    filters,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `product-${index}`),
@@ -240,13 +122,50 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: (filterState) => {
+      const parts: string[] = [];
+      if (filterState.showSold !== "true") parts.push("isSold==false");
+      const statusRaw = filterState.status;
+      if (statusRaw && statusRaw !== "All") parts.push(`status==${statusRaw}`);
+      const typeRaw = filterState.type;
+      if (typeRaw && typeRaw !== "All") {
+        const TYPE_FILTER: Record<string, string> = {
+          Auctions: "listingType==auction",
+          "Pre-orders": "listingType==pre-order",
+          "Prize Draws": "listingType==prize-draw",
+          Products: "listingType==standard",
+          Classifieds: "listingType==classified",
+          "Digital Codes": "listingType==digital-code",
+          "Live Items": "listingType==live",
+        };
+        const typeFilter = TYPE_FILTER[typeRaw];
+        if (typeFilter) parts.push(typeFilter);
+      }
+      return parts.join(",") || undefined;
+    },
   });
+
+  const {
+    view, setView, table, panel, searchInput, setSearchInput, commitSearch,
+    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
+    pendingFilters, setPendingFilters, hasActiveState: baseHasActiveState,
+    rows: fetchedRows, total, isLoading, errorMessage,
+    currentPage, totalPages, selection,
+  } = listing;
+
+  const showSold = table.get("showSold") === "true";
+  // Exclude showSold from filter chip count — it has its own toggle
+  const activeFilterCount = ["status", "type"].filter((k) => !!table.get(k)).length;
+  const hasActiveState = baseHasActiveState || showSold;
+
+  const resetAll = useCallback(() => {
+    table.setMany({ q: "", sort: "", showSold: "", status: "", type: "" });
+    listing.setSearchInput("");
+  }, [table, listing]);
 
   const rows: ProductRow[] = fetchedRows.map((r) =>
     overrides[r.id] ? { ...r, ...overrides[r.id] } : r,
   );
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   const handleToggle = async (id: string, field: FlagField, value: boolean) => {
     const prev = fetchedRows.find((r) => r.id === id)?.[field];
@@ -272,11 +191,8 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
     }
   }, [fetchedRows, showToast]);
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
   if (hasChildren) {
-    return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="admin" {...props}>{children}</ListingLayout>;
   }
 
   const flagColumn: AdminTableColumn<ProductRow> = {
@@ -331,7 +247,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
           { label: "Show sold", active: showSold, onChange: (next) => table.set("showSold", next ? "true" : "") },
         ]}
         extra={
-          <Button size="sm" onClick={openCreatePanel} className="flex items-center gap-1.5">
+          <Button size="sm" onClick={panel.openCreatePanel} className="flex items-center gap-1.5">
             <Plus className="h-4 w-4" />
             Add Product
           </Button>
@@ -366,7 +282,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
             columns={[...buildBaseColumns(), flagColumn]}
             isLoading={isLoading}
             emptyLabel="No products found"
-            onRowClick={(row) => openEditPanel(row.id)}
+            onRowClick={(row) => panel.openEditPanel(row.id)}
             selectedIds={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
             onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
@@ -401,7 +317,7 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
                   {
                     label: "Open full editor",
                     separator: true,
-                    onClick: () => openEditPanel(row.id),
+                    onClick: () => panel.openEditPanel(row.id),
                   },
                 ]}
               />
@@ -413,34 +329,39 @@ export function AdminProductsView({ children, actionHref, getRowHref, ...props }
             view={view}
             isLoading={isLoading}
             emptyLabel="No products found"
-            onRowClick={(row) => openEditPanel(row.id)}
+            onRowClick={(row) => panel.openEditPanel(row.id)}
             selectedIdSet={selection.selectedIdSet}
             onToggleSelect={selection.toggle}
           />
         )}
       </div>
 
-      <ProductsFilterDrawer
-        filterOpen={filterOpen}
-        setFilterOpen={setFilterOpen}
-        activeFilterCount={activeFilterCount}
-        clearFilters={clearFilters}
-        pendingFilters={pendingFilters}
-        setPendingFilters={setPendingFilters}
-        applyFilters={applyFilters}
-      />
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+          <FilterChipGroup
+            label="Status"
+            tabs={STATUS_OPTIONS}
+            value={pendingFilters.status ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+          />
+          <FilterChipGroup
+            label="Type"
+            tabs={TYPE_OPTIONS}
+            value={pendingFilters.type ?? ""}
+            onChange={(id) => setPendingFilters((p) => ({ ...p, type: id }))}
+          />
+      </ListingFilterDrawer>
 
       <SideDrawer
-        isOpen={isCreateOpen || isEditOpen}
-        onClose={closePanel}
-        title={isCreateOpen ? "Add Product" : "Edit Product"}
-        mode={isCreateOpen ? "create" : "edit"}
+        isOpen={panel.isCreateOpen || panel.isEditOpen}
+        onClose={panel.closePanel}
+        title={panel.isCreateOpen ? "Add Product" : "Edit Product"}
+        mode={panel.isCreateOpen ? "create" : "edit"}
       >
-        {(isCreateOpen || isEditOpen) && (
+        {(panel.isCreateOpen || panel.isEditOpen) && (
           <AdminProductEditorView
-            productId={editId ?? undefined}
-            onSaved={closePanel}
-            onDeleted={closePanel}
+            productId={panel.editId ?? undefined}
+            onSaved={panel.closePanel}
+            onDeleted={panel.closePanel}
             embedded
           />
         )}

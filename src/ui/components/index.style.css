@@ -58,8 +58,7 @@
 @import "./AvatarDisplay.style.css";
 @import "./BaseListingCard.style.css";
 @import "./ConfirmDeleteModal.style.css";
-@import "./DynamicSelect.style.css";
-@import "./PaginatedMultiSelect.style.css";
+@import "./PaginatedSelect.style.css";
 @import "./SideDrawer.style.css";
 @import "./FormActionBar.style.css";
 @import "./BackgroundRenderer.style.css";

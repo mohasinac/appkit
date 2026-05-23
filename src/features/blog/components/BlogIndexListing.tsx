@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useCallback, useMemo } from "react";
-import { X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBlogPosts } from "../hooks/useBlog";
-import { ListingToolbar, Pagination, Text } from "../../../ui";
+import { ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { ROUTES } from "../../../next";
 import { BlogCard } from "./BlogListView";
 import { BlogFilters, BLOG_PUBLIC_SORT_OPTIONS } from "./BlogFilters";
@@ -57,32 +56,10 @@ function renderBlogFilterDrawer(props: {
   applyFilters: () => void; pendingTable: UrlTable;
 }) {
   const { filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable } = props;
-  if (!filterOpen) return null;
   return (
-    <>
-      <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-      <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-        <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-          <div className="flex items-center gap-2">
-            {activeFilterCount > 0 && (
-              <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 hover:text-rose-500 dark:text-zinc-400 transition-colors">Clear all</button>
-            )}
-            <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close filters" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-        <div className="flex-1 overflow-y-auto px-4 py-4">
-          <BlogFilters table={pendingTable} variant="public" />
-        </div>
-        <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-          <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors active:scale-[0.98]">
-            Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-          </button>
-        </div>
-      </div>
-    </>
+    <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+      <BlogFilters table={pendingTable} variant="public" />
+    </ListingFilterDrawer>
   );
 }
 

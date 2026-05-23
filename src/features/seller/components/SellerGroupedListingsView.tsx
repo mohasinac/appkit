@@ -8,6 +8,7 @@ import type { BulkActionItem } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import {
   toRecordArray,
   toRelativeDate,
@@ -168,15 +169,10 @@ export function SellerGroupedListingsView({
   const selection = useBulkSelection({ items: rows, keyExtractor: (r) => r.id });
 
   const bulkActions: BulkActionItem[] = [
-    {
-      id: "delete",
-      label: ACTIONS.STORE["delete-listing"].label,
-      variant: "danger",
-      onClick: () => {
-        for (const id of selection.selectedIds) onDeleteClick?.(id);
-        selection.clearSelection();
-      },
-    },
+    buildBulkAction(ACTIONS.STORE["delete-listing"], () => {
+      for (const id of selection.selectedIds) onDeleteClick?.(id);
+      selection.clearSelection();
+    }),
   ];
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});

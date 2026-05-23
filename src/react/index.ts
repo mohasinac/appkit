@@ -103,6 +103,10 @@ export type {
   UseUnsavedChangesReturn,
 } from "./hooks/useUnsavedChanges";
 
+// Entity delete
+export { useEntityDelete } from "./hooks/useEntityDelete";
+export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./hooks/useEntityDelete";
+
 // Bulk action mutation
 export { useBulkAction } from "./hooks/useBulkAction";
 export type {

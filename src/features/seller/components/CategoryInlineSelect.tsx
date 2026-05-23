@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { InlineCreateSelect } from "../../../ui/components/InlineCreateSelect";
-import type { DynamicSelectOption, AsyncPage } from "../../../ui/components/DynamicSelect";
+import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
+import type { PaginatedSelectOption, AsyncPage } from "../../../ui/components/PaginatedSelect";
 import { CategoryQuickCreateForm } from "../../admin/components/CategoryQuickCreateForm";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -20,7 +20,7 @@ export interface CategoryInlineSelectProps {
 async function loadAdminCategoryOptions(
   query: string,
   page: number,
-): Promise<AsyncPage<DynamicSelectOption<string>>> {
+): Promise<AsyncPage<PaginatedSelectOption<string>>> {
   const params = new URLSearchParams({
     q: query,
     page: String(page),
@@ -44,7 +44,7 @@ async function loadAdminCategoryOptions(
 async function loadPublicCategoryOptions(
   query: string,
   _page: number,
-): Promise<AsyncPage<DynamicSelectOption<string>>> {
+): Promise<AsyncPage<PaginatedSelectOption<string>>> {
   const params = new URLSearchParams({ flat: "true", pageSize: "200" });
   const res = await fetch(`/api/categories?${params}`, { credentials: "include" });
   const json: { success?: boolean; data?: { id?: string; name?: string }[] } =
@@ -67,7 +67,7 @@ export function CategoryInlineSelect({
 }: CategoryInlineSelectProps) {
   const loadOptions = allowCreate ? loadAdminCategoryOptions : loadPublicCategoryOptions;
   return (
-    <InlineCreateSelect<string>
+    <PaginatedSelect<string>
       value={value || null}
       onChange={(v) => onChange(v ?? "")}
       loadOptions={loadOptions}

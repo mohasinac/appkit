@@ -160,6 +160,8 @@ export { useUrlTable } from "./react/hooks/useUrlTable";
 export type { UseUrlTableOptions } from "./react/hooks/useUrlTable";
 export { useBulkSelection } from "./react/hooks/useBulkSelection";
 export type { UseBulkSelectionOptions, UseBulkSelectionReturn } from "./react/hooks/useBulkSelection";
+export { useEntityDelete } from "./react/hooks/useEntityDelete";
+export type { UseEntityDeleteOptions, UseEntityDeleteReturn } from "./react/hooks/useEntityDelete";
 
 // Client-safe constants, UI primitives, and views
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "./constants/index";
@@ -193,8 +195,10 @@ export { TextLink } from "./ui/components/TextLink";
 export type { TextLinkProps } from "./ui/components/TextLink";
 export { Textarea } from "./ui/components/Textarea";
 export { GlobalError } from "./next/components/GlobalError";
-export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient, ListingLayout } from "./features/layout/index";
-export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, DashboardNavState, MainNavbarItem, LayoutClientProps, ListingLayoutProps, ListingLayoutLabels } from "./features/layout/index";
+export { AppLayoutShell, LocaleSwitcher, useDashboardNav, BottomActionsProvider, useBottomActions, DashboardNavProvider, LayoutClient } from "./features/layout/index";
+export type { AppLayoutShellProps, AppLayoutShellSidebarLink, AppLayoutShellSidebarSection, DashboardNavState, MainNavbarItem, LayoutClientProps } from "./features/layout/index";
+export { ListingLayout } from "./ui/components/ListingLayout";
+export type { ListingLayoutProps, ListingLayoutLabels } from "./ui/components/ListingLayout";
 export { Search } from "./features/search/components";
 export type { SearchLabels, SearchProps, SearchQuickLink, SearchRouterAdapter, SearchResourceType, SearchResourceTypeOption } from "./features/search/components";
 export { ToastProvider, SkipToMain, NavigationLoader } from "./ui/index";
@@ -478,6 +482,7 @@ export {
   type ActionTree,
   type ActionConfirmation,
 } from "./_internal/shared/actions/action-registry";
+export { buildBulkAction } from "./_internal/shared/actions/bulk-helpers";
 
 // SB-UNI-E user-role predicates (pure functions, client-safe).
 export {

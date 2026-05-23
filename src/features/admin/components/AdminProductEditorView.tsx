@@ -7,8 +7,7 @@ import {
   Card,
   CardBody,
   ConfirmDeleteModal,
-  DynamicSelect,
-  InlineCreateSelect,
+  PaginatedSelect,
   Form,
   Stack,
   StackedViewShell,
@@ -278,7 +277,7 @@ export function AdminProductEditorView({
             <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
               Store
             </Text>
-            <DynamicSelect
+            <PaginatedSelect
               value={product.storeId ?? null}
               onChange={handleStoreSelect}
               loadOptions={loadStoreOptions}
@@ -314,7 +313,7 @@ export function AdminProductEditorView({
                 <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {label}
                 </Text>
-                <InlineCreateSelect
+                <PaginatedSelect
                   value={value || null}
                   onChange={(v) => onChange(v ?? "")}
                   loadOptions={loadCategoryOptions}
@@ -338,7 +337,7 @@ export function AdminProductEditorView({
                 <Text className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {args.label}
                 </Text>
-                <InlineCreateSelect
+                <PaginatedSelect
                   value={args.multi ? null : (args.value || null)}
                   onChange={(v) => args.onValueChange(v ?? "")}
                   loadOptions={loadBrandOptions}
@@ -375,11 +374,7 @@ export function AdminProductEditorView({
             type="button"
             variant="danger"
             isLoading={deleteMutation.isPending}
-            onClick={() => {
-              if (confirm("Delete this product? This cannot be undone.")) {
-                deleteMutation.mutate();
-              }
-            }}
+            onClick={() => setDeleteOpen(true)}
           >
             Delete product
           </Button>

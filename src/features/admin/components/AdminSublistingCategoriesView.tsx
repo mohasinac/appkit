@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
+import React from "react";
 import { BulkActionBar, ListingToolbar, Pagination } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import type { BulkActionItem } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 
-const PAGE_SIZE = 25;
 const DEFAULT_SORT = "name";
 const SORT_OPTIONS = [
   { value: "name", label: "Name A–Z" },
@@ -36,31 +34,19 @@ interface AdminSublistingCategoriesViewProps {
 }
 
 export function AdminSublistingCategoriesView({ onBulkDelete }: AdminSublistingCategoriesViewProps) {
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<
+  const {
+    view, setView, table, searchInput, setSearchInput, commitSearch,
+    hasActiveState, resetAll,
+    rows, total, isLoading, errorMessage,
+    currentPage, totalPages, selection,
+  } = useAdminListing<
     SublistingCategoriesResponse,
     { id: string; primary: string; secondary: string; status: string; updatedAt: string }
   >({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "sublisting-categories", "listing"],
     endpoint: ADMIN_ENDPOINTS.SUBLISTING_CATEGORIES,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `sc-${index}`),
@@ -76,20 +62,11 @@ export function AdminSublistingCategoriesView({ onBulkDelete }: AdminSublistingC
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
-
   const bulkActions: BulkActionItem[] = [
-    ...(onBulkDelete ? [{
-      id: "bulk-delete",
-      label: ACTIONS.ADMIN["delete-sublisting-category"].label,
-      variant: "danger" as const,
-      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); },
-    }] : []),
+    ...(onBulkDelete ? [buildBulkAction(ACTIONS.ADMIN["delete-sublisting-category"], async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); })] : []),
   ];
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});

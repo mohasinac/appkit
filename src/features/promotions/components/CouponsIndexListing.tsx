@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { Pagination, SortDropdown, Div, Text, Heading } from "../../../ui";
+import { ListingFilterDrawer, Pagination, SortDropdown, Div, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -57,6 +57,8 @@ export function CouponsIndexListing({
     set: (key: string, value: string) =>
       setPendingFilters((p) => ({ ...p, [key]: value })),
   }), [pendingFilters]);
+
+  const activeFilterCount = FILTER_KEYS.filter((k) => !!table.get(k)).length;
 
   const openFilters = useCallback(() => {
     setPendingFilters(Object.fromEntries(FILTER_KEYS.map((k) => [k, table.get(k)])));
@@ -271,111 +273,65 @@ export function CouponsIndexListing({
       </div>
 
       {/* ── Filter Drawer ──────────────────────────────────────────────── */}
-      {filterOpen && (
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearPending} activeCount={activeFilterCount}>
+        {/* Coupon type */}
         <>
-          <div
-            className="fixed inset-0 z-40 bg-black/40"
-            aria-hidden="true"
-            onClick={() => setFilterOpen(false)}
-          />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            {/* Header */}
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="flex items-center gap-2 text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                <SlidersHorizontal className="h-4 w-4" />
-                Filters
-              </span>
+          <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+            Discount Type
+          </Heading>
+          <div className="space-y-2">
+            {COUPON_TYPES.map((t) => (
+              <label key={t.value} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300">
+                <input
+                  type="radio"
+                  name="coupon-type"
+                  value={t.value}
+                  checked={pendingTable.get(TABLE_KEYS.TYPE) === t.value}
+                  onChange={() => { pendingTable.set(TABLE_KEYS.TYPE, t.value); }}
+                  className="accent-primary"
+                />
+                {t.label}
+              </label>
+            ))}
+            {pendingTable.get(TABLE_KEYS.TYPE) && (
               <button
                 type="button"
-                onClick={() => setFilterOpen(false)}
-                aria-label="Close filters"
-                className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                onClick={() => { pendingTable.set(TABLE_KEYS.TYPE, ""); }}
+                className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 underline"
               >
-                <X className="h-5 w-5" />
+                Clear type
               </button>
-            </div>
-
-            {/* Scrollable filter body */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
-              {/* Coupon type */}
-              <>
-                <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
-                  Discount Type
-                </Heading>
-                <div className="space-y-2">
-                  {COUPON_TYPES.map((t) => (
-                    <label key={t.value} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300">
-                      <input
-                        type="radio"
-                        name="coupon-type"
-                        value={t.value}
-                        checked={pendingTable.get(TABLE_KEYS.TYPE) === t.value}
-                        onChange={() => { pendingTable.set(TABLE_KEYS.TYPE, t.value); }}
-                        className="accent-primary"
-                      />
-                      {t.label}
-                    </label>
-                  ))}
-                  {pendingTable.get(TABLE_KEYS.TYPE) && (
-                    <button
-                      type="button"
-                      onClick={() => { pendingTable.set(TABLE_KEYS.TYPE, ""); }}
-                      className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 underline"
-                    >
-                      Clear type
-                    </button>
-                  )}
-                </div>
-              </>
-
-              {/* Date range */}
-              <>
-                <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
-                  Valid Date Range
-                </Heading>
-                <div className="space-y-3">
-                  <>
-                    <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
-                    <input
-                      type="date"
-                      value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
-                      onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
-                      className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </>
-                  <>
-                    <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</label>
-                    <input
-                      type="date"
-                      value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
-                      onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_TO, e.target.value); }}
-                      className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </>
-                </div>
-              </>
-            </div>
-
-            {/* Footer */}
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5 flex gap-2">
-              <button
-                type="button"
-                onClick={clearPending}
-                className="flex-1 rounded-lg border border-zinc-300 dark:border-slate-600 py-2.5 text-sm font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-slate-800 transition-colors"
-              >
-                Clear all
-              </button>
-              <button
-                type="button"
-                onClick={applyFilters}
-                className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-semibold text-white hover:bg-primary-600 transition-colors"
-              >
-                Apply Filters
-              </button>
-            </div>
+            )}
           </div>
         </>
-      )}
+
+        {/* Date range */}
+        <>
+          <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
+            Valid Date Range
+          </Heading>
+          <div className="space-y-3">
+            <>
+              <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
+              <input
+                type="date"
+                value={pendingTable.get(TABLE_KEYS.DATE_FROM) || ""}
+                onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_FROM, e.target.value); }}
+                className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
+              />
+            </>
+            <>
+              <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">To date</label>
+              <input
+                type="date"
+                value={pendingTable.get(TABLE_KEYS.DATE_TO) || ""}
+                onChange={(e) => { pendingTable.set(TABLE_KEYS.DATE_TO, e.target.value); }}
+                className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
+              />
+            </>
+          </div>
+        </>
+      </ListingFilterDrawer>
     </div>
   );
 }

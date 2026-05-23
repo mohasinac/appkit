@@ -746,6 +746,4 @@ export class ProductRepository extends BaseRepository<ProductDocument> {
   }
 }
 
-export class ProductsRepository extends ProductRepository {}
-
 export const productRepository = new ProductRepository();

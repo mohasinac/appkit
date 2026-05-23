@@ -12,6 +12,11 @@ import { payoutRepository } from "../../payments/repository/payout.repository";
 import { userRepository } from "../../auth/repository/user.repository";
 import { productRepository } from "../../products/repository/products.repository";
 import { NotFoundError, ValidationError } from "../../../errors";
+import {
+  finalizeStagedMediaUrl,
+  finalizeStagedMediaField,
+  finalizeStagedMediaArray,
+} from "../../media/finalize";
 import { getProviders } from "../../../contracts";
 import type { OrderAdminUpdateInput, OrderDocument } from "../../orders";
 import type { PayoutDocument, PayoutUpdateInput } from "../../payments";
@@ -235,7 +240,26 @@ export async function adminUpdateProduct(
     throw new NotFoundError("Product not found");
   }
 
-  const updated = await productRepository.updateProduct(id, input);
+  const finalized = { ...input } as typeof input & {
+    mainImage?: string;
+    images?: string[];
+    video?: { url?: string; thumbnailUrl?: string };
+  };
+  if (typeof finalized.mainImage === "string" && finalized.mainImage) {
+    finalized.mainImage = await finalizeStagedMediaUrl(finalized.mainImage);
+  }
+  if (Array.isArray(finalized.images) && finalized.images.length > 0) {
+    finalized.images = await finalizeStagedMediaArray(finalized.images);
+  }
+  if (finalized.video?.url) {
+    finalized.video = {
+      ...finalized.video,
+      url: await finalizeStagedMediaUrl(finalized.video.url),
+      thumbnailUrl: (await finalizeStagedMediaField(finalized.video.thumbnailUrl)) ?? finalized.video.thumbnailUrl,
+    };
+  }
+
+  const updated = await productRepository.updateProduct(id, finalized);
 
   serverLogger.info("adminUpdateProduct", {
     adminId,

@@ -4,29 +4,26 @@
  * AdminHistoryView — read-only admin insights for the top-level `history` collection.
  * One row per user with item count + last visit. Mirrors AdminWishlistsView.
  */
-import React, { useState, useCallback } from "react";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, ListingToolbar, Pagination, ListingViewShell } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import React from "react";
+import { ListingToolbar, Pagination, ListingLayout } from "../../../ui";
+import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
   toRelativeDate,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
 import { AdminViewCards } from "./AdminViewCards";
 
-const PAGE_SIZE = 25;
 const DEFAULT_SORT = "-updatedAt";
 const SORT_OPTIONS = [
   { value: "-updatedAt", label: "Recently active" },
   { value: "-itemCount", label: "Largest first" },
 ];
 
-export interface AdminHistoryViewProps extends ListingViewShellProps {}
+export interface AdminHistoryViewProps extends ListingLayoutProps {}
 
 interface AdminHistoryResponse {
   items?: unknown[];
@@ -43,29 +40,17 @@ interface HistoryRow {
 
 export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) {
   const hasChildren = React.Children.count(children) > 0;
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-
-  const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminHistoryResponse, HistoryRow>({
+  const {
+    view, setView, table, searchInput, setSearchInput, commitSearch,
+    hasActiveState, resetAll,
+    rows, total, isLoading, errorMessage,
+    currentPage, totalPages, selection,
+  } = useAdminListing<AdminHistoryResponse, HistoryRow>({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "history", "listing"],
     endpoint: ADMIN_ENDPOINTS.ADMIN_HISTORY,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => {
         const itemCount = typeof item.itemCount === "number" ? item.itemCount : 0;
@@ -80,15 +65,11 @@ export function AdminHistoryView({ children, ...props }: AdminHistoryViewProps) 
       }),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
 
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
-
   if (hasChildren) {
-    return <ListingViewShell portal="admin" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="admin" {...props}>{children}</ListingLayout>;
   }
 
   return (

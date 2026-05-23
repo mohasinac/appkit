@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X, Plus } from "lucide-react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
+import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { BulkActionBar, Button, Div, ListingToolbar, Pagination, ListingViewShell, Text, useToast } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import { BulkActionBar, Button, Div, ListingFilterDrawer, ListingToolbar, Pagination, ListingLayout, Text, useToast } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import {
   toRecordArray,
@@ -43,7 +44,7 @@ interface SellerCouponsResponse {
   total?: number;
 }
 
-export interface SellerCouponsViewProps extends ListingViewShellProps {
+export interface SellerCouponsViewProps extends ListingLayoutProps {
   onCreateClick?: () => void;
   onEditClick?: (couponId: string) => void;
   onToggle?: (couponId: string, currentlyActive: boolean) => Promise<void>;
@@ -74,7 +75,11 @@ export function SellerCouponsView({
   const hasChildren = React.Children.count(children) > 0;
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [togglingId, setTogglingId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    deleteFn: onDelete,
+    successMessage: "Coupon deleted.",
+    onSuccess: () => { refetch?.(); },
+  });
   const { showToast } = useToast();
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
@@ -151,16 +156,13 @@ export function SellerCouponsView({
 
   const handleDelete = useCallback(async (id: string) => {
     if (!onDelete) return;
-    setDeletingId(id);
-    try { await onDelete(id); refetch?.(); showToast("Coupon deleted.", "success"); }
-    catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete coupon.", "error"); }
-    finally { setDeletingId(null); }
-  }, [onDelete, refetch, showToast]);
+    await performDelete(id);
+  }, [onDelete, performDelete]);
 
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
   if (hasChildren) {
-    return <ListingViewShell portal="seller" {...props}>{children}</ListingViewShell>;
+    return <ListingLayout portal="seller" {...props}>{children}</ListingLayout>;
   }
 
   return (
@@ -237,50 +239,27 @@ export function SellerCouponsView({
         )}
       </div>
 
-      {filterOpen && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/40" aria-hidden="true" onClick={() => setFilterOpen(false)} />
-          <div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-white dark:bg-slate-900 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Filters</span>
-              <div className="flex items-center gap-2">
-                {activeFilterCount > 0 && (
-                  <button type="button" onClick={clearFilters} className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-rose-500 transition-colors">Clear all</button>
-                )}
-                <button type="button" onClick={() => setFilterOpen(false)} aria-label="Close" className="rounded-lg p-1.5 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <div className="space-y-2">
-                <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
-                <div className="flex flex-wrap gap-2">
-                  {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
-                    <button
-                      key={opt.label}
-                      type="button"
-                      onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
-                      className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
-                        (pendingFilters.isActive || "") === opt.value
-                          ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
-                          : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="border-t border-zinc-200 dark:border-slate-700 px-4 py-3.5">
-              <button type="button" onClick={applyFilters} className="w-full rounded-lg bg-[var(--appkit-color-primary)] py-2.5 text-sm font-semibold text-white transition-colors active:scale-[0.98]">
-                Apply{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+        <div className="space-y-2">
+          <Text className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Status</Text>
+          <div className="flex flex-wrap gap-2">
+            {[{ label: "All", value: "" }, { label: "Active", value: "true" }, { label: "Inactive", value: "false" }].map((opt) => (
+              <button
+                key={opt.label}
+                type="button"
+                onClick={() => setPendingFilters((p) => ({ ...p, isActive: opt.value }))}
+                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
+                  (pendingFilters.isActive || "") === opt.value
+                    ? "bg-[var(--appkit-color-primary)] text-white border-[var(--appkit-color-primary)]"
+                    : "border-zinc-300 dark:border-slate-600 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-slate-800"
+                }`}
+              >
+                {opt.label}
               </button>
-            </div>
+            ))}
           </div>
-        </>
-      )}
+        </div>
+      </ListingFilterDrawer>
     </div>
   );
 }

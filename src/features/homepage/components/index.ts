@@ -98,7 +98,7 @@ export { HowItWorksInfoView } from "./HowItWorksInfoView";
 // -- New marketplace homepage sections ----------------------------------------
 
 export type { AnnouncementBarProps } from "./AnnouncementBar";
-export { AnnouncementBar } from "./AnnouncementBar";
+export { AnnouncementBar, hashBannerMessage } from "./AnnouncementBar";
 
 export type { ShopByCategorySectionProps } from "./ShopByCategorySection";
 export { ShopByCategorySection } from "./ShopByCategorySection";

@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useActionDispatch } from "../../../react/hooks/use-action-dispatch";
 import { Eye, EyeOff, Pencil, Trash2, Printer, MapPin } from "lucide-react";
 import { PhysicalLocationModal } from "./PhysicalLocationModal";
 import type { PhysicalLocation } from "./PhysicalLocationModal";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingViewShell, Pagination, Row, Span, Text, useToast } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import { Alert, Badge, BulkActionBar, Button, Div, ListingToolbar, ListingLayout, Pagination, Row, Span, Text, useToast } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRODUCT_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
@@ -22,6 +23,7 @@ import {
 import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
@@ -70,7 +72,7 @@ interface SellerProductsResponse {
   meta?: { total: number; totalPages?: number };
 }
 
-export interface SellerProductsViewProps extends ListingViewShellProps {
+export interface SellerProductsViewProps extends ListingLayoutProps {
   onDeleteProduct?: (id: string) => Promise<void>;
   /** S-STORE-2-E — "New Listing" toolbar button. */
   onCreateClick?: () => void;
@@ -218,7 +220,10 @@ export function SellerProductsView({
   const [filterOpen, setFilterOpen] = useState(false);
   // listingKind is URL-driven so it survives navigation and back/forward
   const listingKind = ((table.get("listingType") as ListingKind) || "all") as ListingKind;
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    deleteFn: onDeleteProduct,
+    onSuccess: (id) => { setDeletedIds((prev) => new Set([...prev, id])); },
+  });
   const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const [statusOverrides, setStatusOverrides] = useState<Map<string, string>>(new Map());
@@ -337,9 +342,9 @@ export function SellerProductsView({
 
   if (hasChildren) {
     return (
-      <ListingViewShell portal="seller" {...props}>
+      <ListingLayout portal="seller" {...props}>
         {children}
-      </ListingViewShell>
+      </ListingLayout>
     );
   }
 
@@ -357,14 +362,7 @@ export function SellerProductsView({
 
   const handleDelete = async (row: ProductRow) => {
     if (!onDeleteProduct) return;
-    setDeletingId(row.id);
-    try {
-      await onDeleteProduct(row.id);
-      // Optimistically remove from list — avoids a full refetch
-      setDeletedIds((prev) => new Set([...prev, row.id]));
-    } finally {
-      setDeletingId(null);
-    }
+    await performDelete(row.id);
   };
 
   // S-STORE-2-C — Duplicate verb. Server-side endpoint is /api/store/products/[id]/duplicate.
@@ -424,18 +422,8 @@ export function SellerProductsView({
   }, [selection.selectedIds, showToast]);
 
   const bulkActions: BulkActionItem[] = [
-    {
-      id: ACTIONS.STORE["print-labels"].id,
-      label: ACTIONS.STORE["print-labels"].label,
-      icon: <Printer className="w-4 h-4" />,
-      onClick: handleBulkPrintLabels,
-    },
-    {
-      id: ACTIONS.STORE["set-location"].id,
-      label: ACTIONS.STORE["set-location"].label,
-      icon: <MapPin className="w-4 h-4" />,
-      onClick: () => setSetLocationOpen(true),
-    },
+    buildBulkAction(ACTIONS.STORE["print-labels"], handleBulkPrintLabels, { icon: <Printer className="w-4 h-4" /> }),
+    buildBulkAction(ACTIONS.STORE["set-location"], () => setSetLocationOpen(true), { icon: <MapPin className="w-4 h-4" /> }),
   ];
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});

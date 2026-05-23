@@ -117,7 +117,7 @@ export function renderScamOgImage(data: ScamOgData, siteName: string): ReactElem
           )}
         </div>
         <div style={{ fontSize: 20, color: "#64748b", marginTop: 8 }}>
-          Do not transact with this individual. Verified by the LetItRip community.
+          Do not transact with this individual. Verified by the {siteName} community.
         </div>
       </div>
     </div>

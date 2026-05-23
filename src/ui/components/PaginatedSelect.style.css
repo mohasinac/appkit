@@ -1,18 +1,18 @@
-/* PaginatedMultiSelect — multi-value chips + async paginated checkbox dropdown */
+/* PaginatedSelect — single + multi searchable, async-paginated select with optional inline create. */
 
-.appkit-pms {
+.appkit-ps {
   position: relative;
 }
 
-/* ── chips row ── */
-.appkit-pms__chips {
+/* ── chips row (multi only) ── */
+.appkit-ps__chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.375rem;
   margin-bottom: 0.375rem;
 }
 
-.appkit-pms__chip {
+.appkit-ps__chip {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
@@ -27,19 +27,13 @@
   max-width: 12rem;
 }
 
-:is(.dark) .appkit-pms__chip {
-  border-color: var(--appkit-color-border);
-  background: var(--appkit-color-surface);
-  color: var(--appkit-color-text);
-}
-
-.appkit-pms__chip-label {
+.appkit-ps__chip-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.appkit-pms__chip-remove {
+.appkit-ps__chip-remove {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,17 +46,17 @@
   transition: color 0.15s, background-color 0.15s;
 }
 
-.appkit-pms__chip-remove:hover {
+.appkit-ps__chip-remove:hover {
   color: var(--appkit-color-text);
   background-color: var(--appkit-color-zinc-100);
 }
 
-:is(.dark) .appkit-pms__chip-remove:hover {
+:is(.dark) .appkit-ps__chip-remove:hover {
   color: var(--appkit-color-text);
   background-color: var(--appkit-color-slate-700);
 }
 
-.appkit-pms__overflow-chip {
+.appkit-ps__overflow-chip {
   display: inline-flex;
   align-items: center;
   border-radius: 9999px;
@@ -74,7 +68,7 @@
 }
 
 /* ── trigger ── */
-.appkit-pms__trigger {
+.appkit-ps__trigger {
   display: flex;
   width: 100%;
   align-items: center;
@@ -88,46 +82,39 @@
   transition: border-color 0.15s;
 }
 
-.appkit-pms__trigger:hover:not(:disabled) {
+.appkit-ps__trigger:hover:not(:disabled) {
   border-color: var(--appkit-color-zinc-400);
 }
 
-.appkit-pms__trigger:focus-visible {
+.appkit-ps__trigger:focus-visible {
   outline: 2px solid var(--appkit-color-focus-ring, var(--appkit-color-primary));
   outline-offset: 2px;
 }
 
-:is(.dark) .appkit-pms__trigger {
+:is(.dark) .appkit-ps__trigger {
   border-color: var(--appkit-color-border);
   background: var(--appkit-color-surface);
   color: var(--appkit-color-slate-200);
 }
 
-.appkit-pms__trigger--disabled {
+.appkit-ps__trigger--disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.appkit-pms__placeholder {
+.appkit-ps__placeholder {
   color: var(--appkit-color-text-faint);
 }
 
-.appkit-pms__trigger-left {
+.appkit-ps__trigger-left {
   display: flex;
   align-items: center;
   gap: 0.375rem;
   overflow: hidden;
 }
 
-.appkit-pms__trigger-count {
-  flex-shrink: 0;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--appkit-color-primary);
-}
-
 /* ── dropdown ── */
-.appkit-pms__dropdown {
+.appkit-ps__dropdown {
   position: absolute;
   z-index: var(--appkit-z-dropdown);
   margin-top: 0.25rem;
@@ -140,12 +127,12 @@
   box-shadow: var(--appkit-shadow-lg);
 }
 
-:is(.dark) .appkit-pms__dropdown {
+:is(.dark) .appkit-ps__dropdown {
   border-color: var(--appkit-color-border);
   background: var(--appkit-color-surface);
 }
 
-.appkit-pms__search {
+.appkit-ps__search {
   border-radius: 0;
   border-left: 0;
   border-right: 0;
@@ -153,13 +140,13 @@
 }
 
 /* ── option list ── */
-.appkit-pms__list {
+.appkit-ps__list {
   max-height: 13rem;
   overflow-y: auto;
   padding: 0.25rem 0;
 }
 
-.appkit-pms__option {
+.appkit-ps__option {
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -171,24 +158,24 @@
   transition: background-color 0.1s;
 }
 
-.appkit-pms__option:hover {
+.appkit-ps__option:hover {
   background-color: var(--appkit-color-zinc-100);
 }
 
-:is(.dark) .appkit-pms__option:hover {
+:is(.dark) .appkit-ps__option:hover {
   background-color: var(--appkit-color-slate-800);
 }
 
-.appkit-pms__option--selected {
+.appkit-ps__option--selected {
   font-weight: 500;
   background-color: var(--appkit-color-zinc-50);
 }
 
-:is(.dark) .appkit-pms__option--selected {
+:is(.dark) .appkit-ps__option--selected {
   background-color: rgba(15, 23, 42, 0.6);
 }
 
-.appkit-pms__checkbox {
+.appkit-ps__checkbox {
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
@@ -201,28 +188,23 @@
   transition: border-color 0.15s, background-color 0.15s;
 }
 
-.appkit-pms__option--selected .appkit-pms__checkbox {
+.appkit-ps__option--selected .appkit-ps__checkbox {
   border-color: var(--appkit-color-primary);
   background: var(--appkit-color-primary);
 }
 
-:is(.dark) .appkit-pms__option--selected .appkit-pms__checkbox {
-  border-color: var(--appkit-color-primary);
-  background: var(--appkit-color-primary);
-}
-
-.appkit-pms__checkmark {
+.appkit-ps__checkmark {
   display: none;
   font-size: 0.6rem;
   color: var(--appkit-color-text-on-primary, #fff);
   font-weight: 700;
 }
 
-.appkit-pms__option--selected .appkit-pms__checkmark {
+.appkit-ps__option--selected .appkit-ps__checkmark {
   display: block;
 }
 
-.appkit-pms__option-label {
+.appkit-ps__option-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -231,14 +213,14 @@
 }
 
 /* ── empty / loading / load-more / create ── */
-.appkit-pms__empty,
-.appkit-pms__loading {
+.appkit-ps__empty,
+.appkit-ps__loading {
   padding: 0.5rem 0.75rem;
   font-size: 0.75rem;
   color: var(--appkit-color-text-muted);
 }
 
-.appkit-pms__load-more {
+.appkit-ps__load-more {
   width: 100%;
   padding: 0.5rem 0.75rem;
   text-align: left;
@@ -246,11 +228,11 @@
   color: var(--appkit-color-secondary-600);
 }
 
-.appkit-pms__load-more:hover {
+.appkit-ps__load-more:hover {
   text-decoration: underline;
 }
 
-.appkit-pms__create-btn {
+.appkit-ps__create-btn {
   display: flex;
   align-items: center;
   gap: 0.375rem;
@@ -263,10 +245,10 @@
   transition: background-color 0.1s;
 }
 
-.appkit-pms__create-btn:hover {
+.appkit-ps__create-btn:hover {
   background-color: var(--appkit-color-zinc-50);
 }
 
-:is(.dark) .appkit-pms__create-btn:hover {
+:is(.dark) .appkit-ps__create-btn:hover {
   background-color: var(--appkit-color-slate-800);
 }

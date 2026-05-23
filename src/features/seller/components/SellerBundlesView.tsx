@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -14,7 +15,6 @@ import {
   Pagination,
   RowActionMenu,
   Text,
-  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { useBottomActions } from "../../layout";
@@ -113,8 +113,13 @@ export function SellerBundlesView({
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const { showToast } = useToast();
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    endpoint: (id) => `/api/store/products/${id}`,
+    deleteFn: onDelete,
+    successMessage: "Bundle deleted.",
+    fetchOptions: { credentials: "include" },
+  });
+
 
   const commitSearch = useCallback(() => {
     table.set(TABLE_KEYS.QUERY, searchInput.trim());
@@ -170,13 +175,9 @@ export function SellerBundlesView({
     : [];
 
   const handleDelete = useCallback(async (id: string) => {
-    setDeletingId(id);
-    try {
-      if (onDelete) await onDelete(id);
-      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-      showToast("Bundle deleted.", "success");
-    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete bundle.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [performDelete]);
 
   const handleEdit = useCallback((id: string) => {
     if (onEditClick) onEditClick(id);

@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  ConfirmDeleteModal,
   Form,
   Input,
   StackedViewShell,
@@ -61,6 +62,7 @@ export function AdminBrandEditorView({
   const [website, setWebsite] = React.useState("");
   const [isActive, setIsActive] = React.useState(true);
   const [displayOrder, setDisplayOrder] = React.useState<string>("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const { showToast } = useToast();
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
@@ -226,18 +228,23 @@ export function AdminBrandEditorView({
               <Button
                 type="button"
                 variant="danger"
-                isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (confirm("Delete this brand? This cannot be undone.")) {
-                    deleteMutation.mutate();
-                  }
-                }}
+                onClick={() => setDeleteConfirmOpen(true)}
               >
                 Delete brand
               </Button>
             )}
           </div>
     </Form>
+    {deleteConfirmOpen && (
+      <ConfirmDeleteModal
+        isOpen
+        title="Delete Brand"
+        message="Delete this brand? This cannot be undone."
+        onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+        onClose={() => setDeleteConfirmOpen(false)}
+        isDeleting={deleteMutation.isPending}
+      />
+    )}
     </FormShellContext.Provider>
   );
 

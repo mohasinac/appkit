@@ -41,11 +41,14 @@ export type { MarketplaceHomepageViewAdSlots } from "../lib/section-renderer";
 export interface MarketplaceHomepageViewProps {
   adSlots?: import("../lib/section-renderer").MarketplaceHomepageViewAdSlots;
   newsletterFormSlot?: React.ReactNode;
+  /** Callback when user dismisses announcement banner — wire to a server action to persist. */
+  onBannerDismiss?: (hash: string) => void;
 }
 
 export async function MarketplaceHomepageView({
   adSlots,
   newsletterFormSlot,
+  onBannerDismiss,
 }: MarketplaceHomepageViewProps = {}) {
   const slides = await carouselRepository.getActiveSlides().catch(() => []);
   const siteSettings = await siteSettingsRepository.getSingleton().catch(() => null);
@@ -155,7 +158,7 @@ export async function MarketplaceHomepageView({
 
   return (
     <Main>
-      {showAnnouncement ? <AnnouncementBar message={announcementMessage} /> : null}
+      {showAnnouncement ? <AnnouncementBar message={announcementMessage} onDismiss={onBannerDismiss} /> : null}
       {orderedSections.map((section) =>
         renderSection(section, adSlots, newsletterFormSlot ?? null, faqItems, carouselSlides, liveStats, sectionData),
       )}

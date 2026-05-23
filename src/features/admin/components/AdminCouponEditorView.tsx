@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  ConfirmDeleteModal,
   Form,
   Input,
   Select,
@@ -212,6 +213,7 @@ export function AdminCouponEditorView({
   const [firstTimeOnly, setFirstTimeOnly] = React.useState(false);
   const [combinable, setCombinable] = React.useState(false);
   const [appliesToAuctions, setAppliesToAuctions] = React.useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
@@ -455,21 +457,23 @@ export function AdminCouponEditorView({
                 type="button"
                 variant="danger"
                 isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Delete this coupon? This cannot be undone.",
-                    )
-                  ) {
-                    deleteMutation.mutate();
-                  }
-                }}
+                onClick={() => setDeleteConfirmOpen(true)}
               >
                 Delete coupon
               </Button>
             )}
           </div>
     </Form>
+    {deleteConfirmOpen && (
+      <ConfirmDeleteModal
+        isOpen
+        title="Delete Coupon"
+        message="Delete this coupon? This cannot be undone."
+        onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+        onClose={() => setDeleteConfirmOpen(false)}
+        isDeleting={deleteMutation.isPending}
+      />
+    )}
     </FormShellContext.Provider>
   );
 

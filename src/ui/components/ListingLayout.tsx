@@ -26,6 +26,7 @@ import { Button } from "./Button";
 import { Drawer } from "./Drawer";
 import { BulkActionBar } from "./BulkActionBar";
 import type { BulkActionItem } from "./BulkActionBar";
+import type { ViewPortal } from "./Layout";
 
 export interface ListingLayoutLabels {
   filtersTitle?: string;
@@ -74,7 +75,9 @@ export interface ListingLayoutProps {
   paginationSlot?: ReactNode;
 
   // -- Content --------------------------------------------------------------
-  children: ReactNode;
+  /** Optional — when `detailView` is provided, children are bypassed; when `overlays`-only,
+   * the layout still renders empty toolbar + sidebar around no content. */
+  children?: ReactNode;
 
   // -- Options --------------------------------------------------------------
   /** When true, sticky toolbar sits at top-0 (inside overflow-y-auto container).
@@ -89,6 +92,14 @@ export interface ListingLayoutProps {
 
   // -- i18n labels ----------------------------------------------------------
   labels?: ListingLayoutLabels;
+
+  // -- Folded from former ListingViewShell (2026-05-23, W6-11) -------------
+  /** Portal context — sets `isDashboard` default (admin/seller=true, user/public=false). */
+  portal?: ViewPortal;
+  /** Overlay elements rendered after the layout (drawers, modals, confirm dialogs). */
+  overlays?: ReactNode;
+  /** When provided, the entire layout is replaced with this view (detail/edit mode). */
+  detailView?: ReactNode;
 }
 
 const DEFAULT_LABELS: Required<ListingLayoutLabels> = {
@@ -121,14 +132,24 @@ export function ListingLayout({
   toolbarPaginationSlot,
   paginationSlot,
   children,
-  isDashboard = false,
+  isDashboard,
   defaultSidebarOpen = false,
   filterPendingCount,
   className = "",
   loading = false,
   errorSlot,
   labels,
+  portal,
+  overlays,
+  detailView,
 }: ListingLayoutProps) {
+  // Detail view short-circuit (folded from ListingViewShell)
+  if (detailView) {
+    return <>{detailView}</>;
+  }
+  // Portal-derived isDashboard default (folded from ListingViewShell)
+  const effectiveIsDashboard =
+    isDashboard ?? (portal === "admin" || portal === "seller");
   const l = { ...DEFAULT_LABELS, ...labels };
   const [sidebarOpen, setSidebarOpen] = useState(defaultSidebarOpen);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
@@ -169,7 +190,7 @@ export function ListingLayout({
       <div
         className={[
           "appkit-listing-layout__toolbar",
-          isDashboard
+          effectiveIsDashboard
             ? "appkit-listing-layout__toolbar--dashboard"
             : "appkit-listing-layout__toolbar--page",
         ].join(" ")}
@@ -293,7 +314,7 @@ export function ListingLayout({
             aria-label={panelTitle}
             className={[
               "appkit-listing-layout__sidebar",
-              isDashboard
+              effectiveIsDashboard
                 ? "appkit-listing-layout__sidebar--dashboard"
                 : "appkit-listing-layout__sidebar--page",
               sidebarOpen
@@ -373,7 +394,7 @@ export function ListingLayout({
           aria-label="Pagination"
           className={[
             "appkit-listing-layout__mobile-pagination",
-            isDashboard
+            effectiveIsDashboard
               ? "appkit-listing-layout__mobile-pagination--dashboard"
               : selectedCount > 0
                 ? "appkit-listing-layout__mobile-pagination--bulk"
@@ -421,6 +442,8 @@ export function ListingLayout({
           {filterContent}
         </Drawer>
       )}
+      {/* Overlays (folded from ListingViewShell — drawers, modals, confirm dialogs) */}
+      {overlays}
     </div>
   );
 }

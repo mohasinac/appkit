@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Form, Input, RichTextEditor, Select, StackedViewShell, TagInput, Text, Toggle, useToast } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { FieldInput, FormShellContext, useFormShellState } from "../../../ui/forms";
 import { apiClient } from "../../../http";
@@ -61,6 +61,7 @@ export function AdminFaqEditorView({
   const [isPinned, setIsPinned] = React.useState(false);
   const [showOnHomepage, setShowOnHomepage] = React.useState(false);
   const [showInFooter, setShowInFooter] = React.useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const { showToast } = useToast();
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
@@ -240,17 +241,23 @@ export function AdminFaqEditorView({
                 type="button"
                 variant="danger"
                 isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (confirm("Delete this FAQ? This cannot be undone.")) {
-                    deleteMutation.mutate();
-                  }
-                }}
+                onClick={() => setDeleteConfirmOpen(true)}
               >
                 Delete FAQ
               </Button>
             )}
           </div>
     </Form>
+    {deleteConfirmOpen && (
+      <ConfirmDeleteModal
+        isOpen
+        title="Delete FAQ"
+        message="Delete this FAQ? This cannot be undone."
+        onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+        onClose={() => setDeleteConfirmOpen(false)}
+        isDeleting={deleteMutation.isPending}
+      />
+    )}
     </FormShellContext.Provider>
   );
 

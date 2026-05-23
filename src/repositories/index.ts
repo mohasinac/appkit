@@ -35,17 +35,14 @@ export {
 } from "../features/addresses";
 export {
   ProductRepository,
-  ProductsRepository,
   productRepository,
 } from "../features/products/repository/products.repository";
 export {
   OrderRepository,
-  OrdersRepository,
   orderRepository,
 } from "../features/orders/repository/orders.repository";
 export {
   ReviewRepository,
-  ReviewsRepository,
   reviewRepository,
 } from "../features/reviews/repository/reviews.repository";
 

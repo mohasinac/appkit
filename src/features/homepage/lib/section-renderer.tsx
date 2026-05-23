@@ -3,7 +3,7 @@ import { ROUTES } from "../../../next";
 import { cleanTitle, parseWelcomeDescription } from "./section-helpers";
 import { DEFAULT_TRUST_FEATURES, DEFAULT_SECURITY_ITEMS } from "./section-defaults";
 import type { LiveStatsMap } from "./live-stats";
-import { AnnouncementBar } from "../components/AnnouncementBar";
+import { AnnouncementBar, hashBannerMessage } from "../components/AnnouncementBar";
 import { HeroCarousel } from "../components/HeroCarousel";
 import { StatsCounterSection } from "../components/StatsCounterSection";
 import { TrustFeaturesSection } from "../components/TrustFeaturesSection";
@@ -508,4 +508,4 @@ export function renderSection(
   );
 }
 
-export { AnnouncementBar };
+export { AnnouncementBar, hashBannerMessage };

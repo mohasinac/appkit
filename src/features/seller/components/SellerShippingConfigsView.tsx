@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import {
@@ -113,7 +114,13 @@ export function SellerShippingConfigsView({
   const table = useUrlTable({ defaults: { sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    endpoint: SELLER_ENDPOINTS.SHIPPING_CONFIG_BY_ID,
+    deleteFn: onDelete,
+    successMessage: "Shipping config deleted.",
+    onSuccess: () => { refetch?.(); },
+    fetchOptions: { credentials: "include" },
+  });
   const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
   const { showToast } = useToast();
 
@@ -153,25 +160,9 @@ export function SellerShippingConfigsView({
   });
 
   const handleDelete = useCallback(async (id: string) => {
-    setDeletingId(id);
-    try {
-      if (onDelete) {
-        await onDelete(id);
-      } else {
-        await fetch(SELLER_ENDPOINTS.SHIPPING_CONFIG_BY_ID(id), {
-          method: "DELETE",
-          credentials: "include",
-        });
-      }
-      refetch?.();
-      showToast("Shipping config deleted.", "success");
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Failed to delete config.", "error");
-    } finally {
-      setDeletingId(null);
-      setDeleteTargetId(null);
-    }
-  }, [onDelete, refetch, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [performDelete]);
 
   const handleSetDefault = useCallback(async (id: string) => {
     setSettingDefaultId(id);

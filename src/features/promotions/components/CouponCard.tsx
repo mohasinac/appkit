@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2, ToggleLeft, ToggleRight } from "lucide-react";
-import { BaseListingCard, Div, Row, Span, Text } from "../../../ui";
+import { BaseListingCard, ConfirmDeleteModal, Div, Row, Span, Text } from "../../../ui";
 import type { CouponItem, CouponType } from "../types";
 import { useLongPress } from "../../../react/hooks/useLongPress";
 
@@ -172,6 +172,7 @@ export function CouponCard({
   const [copied, setCopied] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [busy, setBusy] = useState<"toggle" | "delete" | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const longPress = useLongPress(() => onSelect?.(n.id, !isSelected));
 
   const expiry = formatDateSafe(n.expiresAt);
@@ -221,9 +222,9 @@ export function CouponCard({
     finally { setBusy(null); }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteConfirmed = async () => {
     if (!onDelete) return;
-    if (typeof window !== "undefined" && !window.confirm(labels.deleteConfirm)) return;
+    setDeleteConfirmOpen(false);
     setBusy("delete");
     try { await onDelete(n.id); }
     finally { setBusy(null); }
@@ -360,7 +361,7 @@ export function CouponCard({
           {onDelete && (
             <button
               type="button"
-              onClick={handleDelete}
+              onClick={() => setDeleteConfirmOpen(true)}
               disabled={busy === "delete"}
               title={labels.delete}
               aria-label={labels.delete}
@@ -370,6 +371,16 @@ export function CouponCard({
             </button>
           )}
         </Row>
+      )}
+      {deleteConfirmOpen && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Coupon"
+          message={labels.deleteConfirm}
+          onConfirm={handleDeleteConfirmed}
+          onClose={() => setDeleteConfirmOpen(false)}
+          isDeleting={busy === "delete"}
+        />
       )}
     </Div>
   );

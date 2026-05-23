@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
-import { BulkActionBar, ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
-import type { BulkActionItem } from "../../../ui";
+import { ListingToolbar, Pagination, ConfirmDeleteModal, RowActionMenu, useToast } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import {
@@ -13,13 +10,11 @@ import {
   toRelativeDate,
   toRupees,
   toStringValue,
-  useAdminListingData,
 } from "../hooks/useAdminListingData";
+import { useAdminListing } from "../hooks/useAdminListing";
 import { DataTable } from "./DataTable";
-import { AdminViewCards } from "./AdminViewCards";
 import { apiClient } from "../../../http";
 
-const PAGE_SIZE = 25;
 const DEFAULT_SORT = "-createdAt";
 const SORT_OPTIONS = [
   { value: "-createdAt", label: "Newest" },
@@ -51,28 +46,11 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
   const [rejectOpen, setRejectOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ReturnRow | null>(null);
 
-  const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
-  const [searchInput, setSearchInput] = useState(table.get("q") || "");
-  const [view, setView] = useState<"grid" | "list" | "table">("table");
-
-  const resetAll = useCallback(() => {
-    table.setMany({ q: "", sort: "" });
-    setSearchInput("");
-  }, [table]);
-
-  const commitSearch = useCallback(() => {
-    table.set("q", searchInput.trim());
-  }, [searchInput, table]);
-
-  const hasActiveState = !!table.get("q") || table.get("sort") !== DEFAULT_SORT;
-
-  const { rows, total, isLoading, errorMessage } = useAdminListingData<AdminOrdersResponse, ReturnRow>({
+  const listing = useAdminListing<AdminOrdersResponse, ReturnRow>({
+    filterKeys: [],
+    defaultSort: DEFAULT_SORT,
     queryKey: ["admin", "return-requests", "listing"],
     endpoint: `${ADMIN_ENDPOINTS.ORDERS}?status=RETURN_REQUESTED`,
-    page: table.getNumber("page", 1),
-    pageSize: PAGE_SIZE,
-    sorts: table.get("sort") || DEFAULT_SORT,
-    q: table.get("q") || undefined,
     mapRows: (response) =>
       toRecordArray(response.items).map((item, index) => ({
         id: toStringValue(item.id, `order-${index}`),
@@ -87,7 +65,10 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
       })),
     getTotal: (response, mappedRows) =>
       typeof response.total === "number" ? response.total : mappedRows.length,
+    buildFilters: () => undefined,
   });
+
+  const { view, setView, table, searchInput, setSearchInput, commitSearch, hasActiveState, resetAll, rows, isLoading, errorMessage, currentPage, totalPages } = listing;
 
   const approveMutation = useMutation({
     mutationFn: async (orderId: string) => {
@@ -120,11 +101,6 @@ export function AdminReturnRequestsView({ children: _children }: AdminReturnRequ
       showToast((err as Error)?.message ?? "Failed to reject return.", "error");
     },
   });
-
-  const currentPage = table.getNumber("page", 1);
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
-  const selection = useBulkSelection({ items: rows ?? [], keyExtractor: (r: { id: string }) => r.id });
 
   return (
     <>

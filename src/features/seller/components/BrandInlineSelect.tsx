@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import { InlineCreateSelect } from "../../../ui/components/InlineCreateSelect";
-import type { DynamicSelectOption, AsyncPage } from "../../../ui/components/DynamicSelect";
+import { PaginatedSelect } from "../../../ui/components/PaginatedSelect";
+import type { PaginatedSelectOption, AsyncPage } from "../../../ui/components/PaginatedSelect";
 import { BrandQuickCreateForm } from "../../admin/components/BrandQuickCreateForm";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
@@ -20,7 +20,7 @@ export interface BrandInlineSelectProps {
 async function loadAdminBrandOptions(
   query: string,
   page: number,
-): Promise<AsyncPage<DynamicSelectOption<string>>> {
+): Promise<AsyncPage<PaginatedSelectOption<string>>> {
   const params = new URLSearchParams({
     q: query,
     page: String(page),
@@ -45,7 +45,7 @@ async function loadAdminBrandOptions(
 async function loadPublicBrandOptions(
   query: string,
   page: number,
-): Promise<AsyncPage<DynamicSelectOption<string>>> {
+): Promise<AsyncPage<PaginatedSelectOption<string>>> {
   const params = new URLSearchParams({
     page: String(page),
     pageSize: "100",
@@ -73,7 +73,7 @@ export function BrandInlineSelect({
 }: BrandInlineSelectProps) {
   const loadOptions = allowCreate ? loadAdminBrandOptions : loadPublicBrandOptions;
   return (
-    <InlineCreateSelect<string>
+    <PaginatedSelect<string>
       value={value || null}
       onChange={(v) => onChange(v ?? "")}
       loadOptions={loadOptions}

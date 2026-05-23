@@ -356,4 +356,3 @@ class ReviewRepository extends BaseRepository<ReviewDocument> {
 const reviewRepository = new ReviewRepository();
 
 export { ReviewRepository, reviewRepository };
-export { ReviewRepository as ReviewsRepository };

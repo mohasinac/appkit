@@ -2,9 +2,10 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, Div, Heading, Row, SideDrawer, Text } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Heading, Row, SideDrawer, Text } from "../../../ui";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
 const CLS_GRID_2_COL = "grid grid-cols-2 gap-3";
@@ -161,8 +162,7 @@ export function SellerAddressesView({
   const [draft, setDraft] = useState<AddressDraft>(BLANK);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
-
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteTargetAddr, setDeleteTargetAddr] = useState<AddressDoc | null>(null);
 
   const load = useCallback(async () => {
     setIsLoading(true);
@@ -233,19 +233,13 @@ export function SellerAddressesView({
     }
   };
 
-  const handleDelete = async (addr: AddressDoc) => {
-    if (!confirm(`Delete address "${addr.label}"? This cannot be undone.`)) return;
-    setDeletingId(addr.id);
-    try {
-      const res = await fetch(`${apiBase}/${addr.id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
-      await load();
-    } catch {
-      alert("Failed to delete address. Please try again.");
-    } finally {
-      setDeletingId(null);
-    }
-  };
+  const { deletingId, handleDelete: deleteById } = useEntityDelete({
+    endpoint: apiBase,
+    successMessage: "Address deleted.",
+    onSuccess: () => { load(); },
+  });
+
+  const handleDelete = (addr: AddressDoc) => setDeleteTargetAddr(addr);
 
   const set = (key: keyof AddressDraft, value: string | boolean) =>
     setDraft((p) => ({ ...p, [key]: value }));
@@ -430,6 +424,17 @@ export function SellerAddressesView({
           </label>
         </div>
       </SideDrawer>
+
+      {deleteTargetAddr && (
+        <ConfirmDeleteModal
+          isOpen
+          title="Delete Address"
+          message={`Delete address "${deleteTargetAddr.label}"? This cannot be undone.`}
+          onConfirm={() => { deleteById(deleteTargetAddr.id); setDeleteTargetAddr(null); }}
+          onClose={() => setDeleteTargetAddr(null)}
+          isDeleting={deletingId === deleteTargetAddr.id}
+        />
+      )}
     </div>
   );
 }

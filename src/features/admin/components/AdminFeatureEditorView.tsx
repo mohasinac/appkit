@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  ConfirmDeleteModal,
   Div,
   Form,
   Grid,
@@ -112,6 +113,7 @@ export function AdminFeatureEditorView({
   >(["all"]);
   const [storeId, setStoreId] = React.useState<string>(fixedStoreId ?? "");
   const [isActive, setIsActive] = React.useState(true);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
   const [displayOrder, setDisplayOrder] = React.useState<string>(
     String(PRODUCT_FEATURE_DEFAULT_DISPLAY_ORDER),
   );
@@ -356,11 +358,7 @@ export function AdminFeatureEditorView({
               type="button"
               variant="danger"
               isLoading={deleteMutation.isPending}
-              onClick={() => {
-                if (confirm(DELETE_CONFIRM_TEXT)) {
-                  deleteMutation.mutate();
-                }
-              }}
+              onClick={() => setDeleteConfirmOpen(true)}
             >
               Delete
             </Button>
@@ -370,16 +368,30 @@ export function AdminFeatureEditorView({
     </Form>
   );
 
+  const deleteModal = deleteConfirmOpen && (
+    <ConfirmDeleteModal
+      isOpen
+      title="Delete Feature"
+      message={DELETE_CONFIRM_TEXT}
+      onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+      onClose={() => setDeleteConfirmOpen(false)}
+      isDeleting={deleteMutation.isPending}
+    />
+  );
+
   if (embedded) {
-    return <Div className="overflow-y-auto p-4">{formSection}</Div>;
+    return <Div className="overflow-y-auto p-4">{formSection}{deleteModal}</Div>;
   }
 
   return (
-    <StackedViewShell
-      portal="admin"
-      {...rest}
-      title={isEdit ? "Edit Feature" : "New Feature"}
-      sections={[formSection]}
-    />
+    <>
+      <StackedViewShell
+        portal="admin"
+        {...rest}
+        title={isEdit ? "Edit Feature" : "New Feature"}
+        sections={[formSection]}
+      />
+      {deleteModal}
+    </>
   );
 }

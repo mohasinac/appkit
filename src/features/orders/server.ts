@@ -7,7 +7,6 @@ export * from "./actions";
 
 export {
   OrderRepository,
-  OrdersRepository,
   orderRepository,
 } from "./repository/orders.repository";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback, useMemo } from "react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -25,6 +26,7 @@ import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import {
   toRecordArray,
   toStringValue,
@@ -144,7 +146,13 @@ export function SellerTemplatesView({
 
   // Delete state
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    endpoint: SELLER_ENDPOINTS.TEMPLATE_BY_ID,
+    deleteFn: onDelete,
+    successMessage: "Template deleted.",
+    onSuccess: () => { refetch?.(); },
+    fetchOptions: { credentials: "include" },
+  });
   const [duplicatingId, setDuplicatingId] = useState<string | null>(null);
   const { showToast } = useToast();
 
@@ -278,25 +286,9 @@ export function SellerTemplatesView({
   }, [draft, drawerMode, editingId, closeDrawer, refetch, showToast]);
 
   const handleDelete = useCallback(async (id: string) => {
-    setDeletingId(id);
-    try {
-      if (onDelete) {
-        await onDelete(id);
-      } else {
-        await fetch(SELLER_ENDPOINTS.TEMPLATE_BY_ID(id), {
-          method: "DELETE",
-          credentials: "include",
-        });
-      }
-      refetch?.();
-      showToast("Template deleted.", "success");
-    } catch (err) {
-      showToast(err instanceof Error ? err.message : "Failed to delete template.", "error");
-    } finally {
-      setDeletingId(null);
-      setDeleteTargetId(null);
-    }
-  }, [onDelete, refetch, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [performDelete]);
 
   const handleDuplicate = useCallback(async (row: TemplateRow) => {
     setDuplicatingId(row.id);
@@ -327,27 +319,22 @@ export function SellerTemplatesView({
   }, [onDuplicate, refetch, showToast]);
 
   const bulkActions: BulkActionItem[] = [
-    {
-      id: "bulk-delete",
-      label: ACTIONS.STORE["delete-template"].label,
-      variant: "danger",
-      onClick: async () => {
-        if (onBulkDelete) {
-          await onBulkDelete(selection.selectedIds);
-        } else {
-          await Promise.all(
-            selection.selectedIds.map((id) =>
-              fetch(SELLER_ENDPOINTS.TEMPLATE_BY_ID(id), {
-                method: "DELETE",
-                credentials: "include",
-              }),
-            ),
-          );
-        }
-        selection.clearSelection();
-        refetch?.();
-      },
-    },
+    buildBulkAction(ACTIONS.STORE["delete-template"], async () => {
+      if (onBulkDelete) {
+        await onBulkDelete(selection.selectedIds);
+      } else {
+        await Promise.all(
+          selection.selectedIds.map((id) =>
+            fetch(SELLER_ENDPOINTS.TEMPLATE_BY_ID(id), {
+              method: "DELETE",
+              credentials: "include",
+            }),
+          ),
+        );
+      }
+      selection.clearSelection();
+      refetch?.();
+    }),
   ];
 
   useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});

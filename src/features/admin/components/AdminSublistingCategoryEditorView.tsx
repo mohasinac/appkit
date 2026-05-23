@@ -4,6 +4,7 @@ import React from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Button,
+  ConfirmDeleteModal,
   Form,
   Input,
   StackedViewShell,
@@ -43,6 +44,7 @@ export function AdminSublistingCategoryEditorView({
   const [itemCode, setItemCode] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [coverImage, setCoverImage] = React.useState("");
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false);
 
   const categoryQuery = useQuery({
     queryKey: ["admin", "sublisting-category", categoryId],
@@ -102,6 +104,7 @@ export function AdminSublistingCategoryEditorView({
   const { shellCtx, setFieldError, clearErrors } = useFormShellState();
 
   return (
+    <>
     <StackedViewShell
       portal="admin"
       {...rest}
@@ -168,15 +171,7 @@ export function AdminSublistingCategoryEditorView({
                 type="button"
                 variant="danger"
                 isLoading={deleteMutation.isPending}
-                onClick={() => {
-                  if (
-                    confirm(
-                      "Delete this category? All linked listings will be unlinked. This cannot be undone.",
-                    )
-                  ) {
-                    deleteMutation.mutate();
-                  }
-                }}
+                onClick={() => setDeleteConfirmOpen(true)}
               >
                 Delete
               </Button>
@@ -186,5 +181,16 @@ export function AdminSublistingCategoryEditorView({
         </FormShellContext.Provider>,
       ]}
     />
+    {deleteConfirmOpen && (
+      <ConfirmDeleteModal
+        isOpen
+        title="Delete Sublisting Category"
+        message="Delete this category? All linked listings will be unlinked. This cannot be undone."
+        onConfirm={() => { deleteMutation.mutate(); setDeleteConfirmOpen(false); }}
+        onClose={() => setDeleteConfirmOpen(false)}
+        isDeleting={deleteMutation.isPending}
+      />
+    )}
+    </>
   );
 }

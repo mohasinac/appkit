@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { X, Plus } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -14,12 +15,12 @@ import {
   Pagination,
   RowActionMenu,
   Text,
-  useToast,
 } from "../../../ui";
 import type { BulkActionItem, DataTableColumn } from "../../../ui";
 import { useBottomActions } from "../../layout";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
+import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
 import { ROUTES } from "../../../next";
 import {
   toRecordArray,
@@ -104,8 +105,12 @@ export function SellerStoreCategoriesView({
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get(TABLE_KEYS.QUERY) || "");
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const { showToast } = useToast();
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    deleteFn: onDelete,
+    successMessage: "Category deleted.",
+    onSuccess: () => { refetch?.(); },
+  });
+
 
   const commitSearch = useCallback(() => { table.set(TABLE_KEYS.QUERY, searchInput.trim()); }, [searchInput, table]);
 
@@ -146,29 +151,14 @@ export function SellerStoreCategoriesView({
 
   const handleDelete = useCallback(async (id: string) => {
     if (!onDelete) return;
-    setDeletingId(id);
-    try { await onDelete(id); refetch?.(); showToast("Category deleted.", "success"); }
-    catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete category.", "error"); }
-    finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete, refetch, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [onDelete, performDelete]);
 
   const bulkActions: BulkActionItem[] = [
-    ...(onBulkDelete ? [{
-      id: "bulk-delete",
-      label: ACTIONS.STORE["delete-listing"].label,
-      variant: "danger" as const,
-      onClick: async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); },
-    }] : []),
-    ...(onBulkActivate ? [{
-      id: "bulk-activate",
-      label: ACTIONS.ADMIN["activate-bundle"].label,
-      onClick: async () => { await onBulkActivate(selection.selectedIds); selection.clearSelection(); refetch?.(); },
-    }] : []),
-    ...(onBulkDeactivate ? [{
-      id: "bulk-deactivate",
-      label: ACTIONS.ADMIN["deactivate-bundle"].label,
-      onClick: async () => { await onBulkDeactivate(selection.selectedIds); selection.clearSelection(); refetch?.(); },
-    }] : []),
+    ...(onBulkDelete ? [buildBulkAction(ACTIONS.STORE["delete-listing"], async () => { await onBulkDelete(selection.selectedIds); selection.clearSelection(); refetch?.(); })] : []),
+    ...(onBulkActivate ? [buildBulkAction(ACTIONS.ADMIN["activate-bundle"], async () => { await onBulkActivate(selection.selectedIds); selection.clearSelection(); refetch?.(); })] : []),
+    ...(onBulkDeactivate ? [buildBulkAction(ACTIONS.ADMIN["deactivate-bundle"], async () => { await onBulkDeactivate(selection.selectedIds); selection.clearSelection(); refetch?.(); })] : []),
   ];
 
   const handleNavigateNew = () => {

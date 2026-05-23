@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
-import { X } from "lucide-react";
+import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { AdminViewCards } from "../../admin/components/AdminViewCards";
-import { Alert, Badge, BulkActionBar, Button, ConfirmDeleteModal, Div, FilterChipGroup, ListingToolbar, ListingViewShell, Pagination, Row, RowActionMenu, Text, useToast } from "../../../ui";
-import type { BulkActionItem, ListingViewShellProps } from "../../../ui";
+import { Alert, Badge, BulkActionBar, ConfirmDeleteModal, Div, FilterChipGroup, ListingFilterDrawer, ListingToolbar, ListingLayout, Pagination, RowActionMenu, Text } from "../../../ui";
+import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { SELLER_PRIZE_DRAW_STATUS_TABS } from "../../admin/constants/filter-tabs";
 import { ROUTES } from "../../../constants";
@@ -122,7 +122,7 @@ const PRIZE_DRAW_COLUMNS: AdminTableColumn<PrizeDrawRow>[] = [
   },
 ];
 
-export interface SellerPrizeDrawsViewProps extends ListingViewShellProps {
+export interface SellerPrizeDrawsViewProps extends ListingLayoutProps {
   onDelete?: (id: string) => Promise<void>;
 }
 
@@ -131,8 +131,13 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
   const [view, setView] = useState<"grid" | "list" | "table">("table");
   const dispatch = useActionDispatch();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const { showToast } = useToast();
+  const { deletingId, handleDelete: performDelete } = useEntityDelete({
+    endpoint: (id) => `/api/store/products/${id}`,
+    deleteFn: onDelete,
+    successMessage: "Prize draw deleted.",
+    fetchOptions: { credentials: "include" },
+  });
+
 
   const table = useUrlTable({ defaults: { pageSize: String(PAGE_SIZE), sort: DEFAULT_SORT } });
   const [searchInput, setSearchInput] = useState(table.get("q") || "");
@@ -212,19 +217,15 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
   const selection = useBulkSelection({ items: rows, keyExtractor: (r: { id: string }) => r.id });
 
   const handleDelete = useCallback(async (id: string) => {
-    setDeletingId(id);
-    try {
-      if (onDelete) await onDelete(id);
-      else await fetch(`/api/store/products/${id}`, { method: "DELETE", credentials: "include" });
-      showToast("Prize draw deleted.", "success");
-    } catch (err) { showToast(err instanceof Error ? err.message : "Failed to delete prize draw.", "error"); } finally { setDeletingId(null); setDeleteTargetId(null); }
-  }, [onDelete, showToast]);
+    await performDelete(id);
+    setDeleteTargetId(null);
+  }, [performDelete]);
 
   if (hasChildren) {
     return (
-      <ListingViewShell portal="seller" {...props}>
+      <ListingLayout portal="seller" {...props}>
         {children}
-      </ListingViewShell>
+      </ListingLayout>
     );
   }
 
@@ -289,57 +290,14 @@ export function SellerPrizeDrawsView({ children, onDelete, ...props }: SellerPri
         />
       </div>
 
-      {filterOpen && (
-        <>
-          <Div
-            role="presentation"
-            className="fixed inset-0 z-40 bg-black/40"
-            onClick={() => setFilterOpen(false)}
-          />
-          <Div className="fixed inset-y-0 left-0 z-50 flex w-80 flex-col bg-[var(--appkit-color-surface)] shadow-2xl">
-            <Row justify="between" className="border-b border-[var(--appkit-color-border)] px-4 py-3.5">
-              <Text className="text-base font-semibold text-[var(--appkit-color-text)]">Filters</Text>
-              <Row className="gap-2">
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-xs text-[var(--appkit-color-text-muted)] hover:text-[var(--appkit-color-error)]"
-                  >
-                    Clear all
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setFilterOpen(false)}
-                  aria-label="Close filters"
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </Row>
-            </Row>
-            <Div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
-              <FilterChipGroup
-                label="Status"
-                tabs={STATUS_OPTIONS}
-                value={pendingFilters.status ?? ""}
-                onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-              />
-            </Div>
-            <Div className="border-t border-[var(--appkit-color-border)] px-4 py-3.5">
-              <Button
-                variant="primary"
-                onClick={applyFilters}
-                className="w-full rounded-lg py-2.5 active:scale-[0.98]"
-              >
-                Apply Filters{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
-              </Button>
-            </Div>
-          </Div>
-        </>
-      )}
+      <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
+        <FilterChipGroup
+          label="Status"
+          tabs={STATUS_OPTIONS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+      </ListingFilterDrawer>
 
       {deleteTargetId && (
         <ConfirmDeleteModal
