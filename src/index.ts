@@ -3522,9 +3522,6 @@ export { useDeleteChatRoom } from "./features/admin/index";
 // [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
 // useAdminListingData - React hook for admin listing data fetching.
 export { useAdminListingData } from "./features/admin/index";
-// [CLIENT-SSR]-Runs in both SSR and browser â€" React component or hook that does not depend on browser-only APIs.
-// AdminListingScaffold - Component for admin listing scaffold.
-export { AdminListingScaffold } from "./features/admin/index";
 // [CLIENT-SSR]-Utility function for converting values to record array.
 // toRecordArray - Helper for converting values to record array.
 export { toRecordArray } from "./features/admin/index";

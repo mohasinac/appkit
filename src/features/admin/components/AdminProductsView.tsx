@@ -14,9 +14,8 @@ import {
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
+import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
 import { FilterChipGroup } from "../../../ui";
-import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 import type { AdminTableColumn } from "../types";
 import { apiClient } from "../../../http";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";

@@ -15,8 +15,7 @@ import {
   toStringValue,
 } from "../hooks/useAdminListingData";
 import { DataListingView } from "./DataListingView";
-import type { ListingViewConfig } from "./DataListingView";
-import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
+import type { AdminListingScaffoldRow, ListingViewConfig } from "./DataListingView";
 import type { AdminTableColumn } from "../types";
 
 const STATUS_VARIANT: Record<

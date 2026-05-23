@@ -40,6 +40,23 @@ import type { AdminTableColumn } from "../types";
 import { AdminViewCards } from "./AdminViewCards";
 import { DataTable } from "./DataTable";
 
+/**
+ * Generic admin data row shape used by DataListingView and AdminViewCards.
+ * Moved here from AdminListingScaffold (which is now deleted) so views that
+ * need the base row type can import from this module instead.
+ */
+export interface AdminListingScaffoldRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  featured?: boolean;
+  isPromoted?: boolean;
+  isOnSale?: boolean;
+  isSold?: boolean;
+}
+
 export interface ListingSortOption {
   value: string;
   label: string;

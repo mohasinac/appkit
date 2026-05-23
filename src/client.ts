@@ -207,7 +207,7 @@ export { ZodSetup } from "./validation/ZodSetup";
 export type { ZodSetupProps } from "./validation/ZodSetup";
 export { AdminSidebar } from "./features/admin/components/AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./features/admin/components/AdminSidebar";
-export { AdminDashboardView, AdminAnalyticsView, AdminListingScaffold, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, DataTable, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
+export { AdminDashboardView, AdminAnalyticsView, AdminPrizeDrawsView, AdminCarouselView, AdminSublistingCategoriesView, DataTable, useAdminListingData, toRecordArray, toStringValue, toRelativeDate, toRupees } from "./features/admin/index";
 export type { AdminDashboardViewProps, AdminAnalyticsViewProps, AdminAnalyticsViewLabels, AdminPrizeDrawsViewProps, AdminCarouselViewProps } from "./features/admin/index";
 export type { BulkActionItem } from "./ui/components/BulkActionBar";
 export { ADMIN_ENDPOINTS } from "./constants/index";

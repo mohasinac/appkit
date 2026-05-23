@@ -1,10 +1,9 @@
 export { DataTable } from "./DataTable";
 export { QuickEditMenu } from "./QuickEditMenu";
 export type { QuickEditAction, QuickEditMenuProps } from "./QuickEditMenu";
-export { AdminListingScaffold } from "./AdminListingScaffold";
-export type { AdminListingScaffoldRow } from "./AdminListingScaffold";
 export { DataListingView } from "./DataListingView";
 export type {
+  AdminListingScaffoldRow,
   ListingViewConfig,
   ListingSortOption,
   ListingPanelContext,
@@ -165,8 +164,6 @@ export { AdminSidebar } from "./AdminSidebar";
 export type { AdminSidebarProps, AdminNavItem, AdminNavGroup } from "./AdminSidebar";
 export { AdminTopBar } from "./AdminTopBar";
 export type { AdminTopBarProps } from "./AdminTopBar";
-export { DemoSeedView } from "./DemoSeedView";
-export type { DemoSeedViewProps } from "./DemoSeedView";
 export { AdminTeamView } from "./AdminTeamView";
 export type { AdminTeamViewProps } from "./AdminTeamView";
 export { AdminEmployeeEditorView } from "./AdminEmployeeEditorView";

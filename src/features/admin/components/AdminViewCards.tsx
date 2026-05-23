@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { AdminListingScaffoldRow } from "./AdminListingScaffold";
+import type { AdminListingScaffoldRow } from "./DataListingView";
 import { Text } from "../../../ui";
 
 interface AdminViewCardsProps {
