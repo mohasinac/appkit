@@ -15,11 +15,10 @@ import {
 import { DataListingView } from "./DataListingView";
 import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
+import { NOTIFICATION_TYPES } from "../../../constants/notification-types";
 
-const NOTIF_TYPES = [
-  "All", "order_placed", "order_shipped", "order_delivered", "order_cancelled",
-  "bid_placed", "bid_outbid", "bid_won", "review_posted", "payout_processed",
-];
+// W1-33 — sourced from shared NOTIFICATION_TYPES registry, prefixed with "All".
+const NOTIF_TYPES = ["All", ...NOTIFICATION_TYPES] as const;
 
 interface AdminNotificationsResponse {
   items?: unknown[];

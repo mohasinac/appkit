@@ -59,6 +59,12 @@ export {
 } from "./pagination-presets";
 export type { PageSizeKey } from "./pagination-presets";
 
+export {
+  NOTIFICATION_TYPES,
+  NOTIFICATION_TYPE_TABS,
+} from "./notification-types";
+export type { NotificationType } from "./notification-types";
+
 export { resolveEndpoint, resolveEndpointFn } from "./api-endpoint-resolver";
 
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "../next/routing/route-map";
