@@ -51,6 +51,14 @@ export {
 
 export { COLLECTION_CACHE_PATHS } from "./cache-invalidation";
 
+export {
+  PAGE_SIZES,
+  MAX_PAGE_SIZE,
+  FEATURED_LIMITS,
+  SITEMAP_LIMITS,
+} from "./pagination-presets";
+export type { PageSizeKey } from "./pagination-presets";
+
 export { resolveEndpoint, resolveEndpointFn } from "./api-endpoint-resolver";
 
 export { ROUTES, PUBLIC_ROUTES, PROTECTED_ROUTES, AUTH_ROUTES } from "../next/routing/route-map";
