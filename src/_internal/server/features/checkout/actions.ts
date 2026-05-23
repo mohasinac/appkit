@@ -299,6 +299,17 @@ export async function createCheckoutOrderAction(
   const siteSettings = await siteSettingsRepository.getSingleton();
   const commissions = siteSettings?.commissions ?? CHECKOUT_DEFAULT_COMMISSIONS;
 
+  // W1-43 — enforce COD toggle. Admin bypass + non-COD payments still flow through.
+  if (
+    !adminBypass &&
+    paymentMethod === "cod" &&
+    siteSettings?.payment?.codEnabled === false
+  ) {
+    throw new ValidationError(
+      "Cash on Delivery is not currently accepted. Please choose another payment method.",
+    );
+  }
+
   const cart = await unitOfWork.carts.getOrCreate(uid);
   if (!cart.items || cart.items.length === 0) {
     throw new ValidationError(ERROR_MESSAGES.CHECKOUT.CART_EMPTY);

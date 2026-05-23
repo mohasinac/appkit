@@ -343,6 +343,14 @@ export type { DashboardQuickActionId, DashboardQuickActionMeta } from "./feature
 // [CLIENT-ONLY] useAuthGate: pre-dispatch auth gate using ACTION_ID registry.
 export { useAuthGate } from "./react/hooks/useAuthGate";
 export type { UseAuthGateReturn } from "./react/hooks/useAuthGate";
+
+// [CLIENT-ONLY] W1-43 — useListingTypeFlags: read featureFlags.listingTypes
+// from siteSettings; hide nav/search/picker entries for disabled types.
+export { useListingTypeFlags } from "./react/hooks/useListingTypeFlags";
+export type {
+  ListingTypeFlags,
+  ListingTypeFlagsShape,
+} from "./react/hooks/useListingTypeFlags";
 // Action dispatch hook + panel store
 export { useActionDispatch } from "./react/hooks/use-action-dispatch";
 export type { DispatchAction, UseActionDispatchOptions } from "./react/hooks/use-action-dispatch";
