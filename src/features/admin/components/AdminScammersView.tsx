@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FilterChipGroup, ListingToolbar, ListingLayout, Pagination, RowActionMenu, Text, ListingFilterDrawer} from "../../../ui";
+import { FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -11,20 +11,17 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
-import { useAdminListing } from "../hooks/useAdminListing";
-import { DataTable } from "./DataTable";
-import { AdminViewCards } from "./AdminViewCards";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
+import type { AdminTableColumn } from "../types";
 import { AdminScammerEditorView } from "./AdminScammerEditorView";
 
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status"];
-const DEFAULT_SORT = "-createdAt";
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "-views", label: "Most viewed" },
-  { value: "-incidentCount", label: "Most incidents" },
-];
+const STATUS_BADGE: Record<string, string> = {
+  pending_review: "bg-warning-surface text-warning",
+  verified: "bg-success-surface text-success",
+  rejected: "bg-error-surface text-error",
+  removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
+};
 
 interface AdminScammersResponse {
   scammers?: unknown[];
@@ -41,70 +38,73 @@ interface ScammerRow {
   _raw?: Record<string, unknown>;
 }
 
+const SCAMMER_COLUMNS: AdminTableColumn<ScammerRow>[] = [
+  {
+    key: "primary",
+    header: "Name / Aliases",
+    render: (row) => (
+      <div className="space-y-0.5">
+        <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+        {row.secondary ? (
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
+        ) : null}
+      </div>
+    ),
+  },
+  {
+    key: "status",
+    header: "Status",
+    className: "w-36",
+    render: (row) => (
+      <span
+        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+          STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review
+        }`}
+      >
+        {row.status.replace(/_/g, " ")}
+      </span>
+    ),
+  },
+  {
+    key: "updatedAt",
+    header: "Updated",
+    className: "w-32",
+    render: (row) => (
+      <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
+    ),
+  },
+];
+
 export interface AdminScammersViewProps extends ListingLayoutProps {}
 
-function buildScammerColumns(
-  setSelectedRow: (row: ScammerRow) => void,
-  setDrawerOpen: (v: boolean) => void,
-) {
-  return [
-    {
-      key: "primary",
-      header: "Name / Aliases",
-      render: (row: ScammerRow) => (
-        <div className="space-y-0.5">
-          <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
-          {row.secondary ? (
-            <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
-          ) : null}
-        </div>
-      ),
-    },
-    {
-      key: "status",
-      header: "Status",
-      className: "w-36",
-      render: (row: ScammerRow) => (
-        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[row.status] ?? STATUS_BADGE.pending_review}`}>
-          {row.status.replace(/_/g, " ")}
-        </span>
-      ),
-    },
-    {
-      key: "updatedAt",
-      header: "Updated",
-      className: "w-32",
-      render: (row: ScammerRow) => (
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
-      ),
-    },
-  ] as const;
-}
-
-const STATUS_BADGE: Record<string, string> = {
-  pending_review: "bg-warning-surface text-warning",
-  verified: "bg-success-surface text-success",
-  rejected: "bg-error-surface text-error",
-  removed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
-};
-
 export function AdminScammersView({ children, ...props }: AdminScammersViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<ScammerRow | null>(null);
 
-  const {
-    view, setView, table, searchInput, setSearchInput, commitSearch,
-    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
-    pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
-    rows, total, isLoading, errorMessage,
-    currentPage, totalPages, selection, defaultSort,
-  } = useAdminListing<AdminScammersResponse, ScammerRow>({
-    filterKeys: FILTER_KEYS,
-    defaultSort: DEFAULT_SORT,
-    pageSize: PAGE_SIZE,
+  if (React.Children.count(children) > 0) {
+    return (
+      <ListingLayout portal="admin" {...props}>
+        {children}
+      </ListingLayout>
+    );
+  }
+
+  const config: ListingViewConfig<AdminScammersResponse, ScammerRow> = {
+    portal: "admin",
+    title: "Scammers",
+    searchPlaceholder: "Search by name, phone, UPI ID",
+    emptyLabel: "No scammer profiles found",
+    filterKeys: ["status"],
+    defaultSort: "-createdAt",
     queryKey: ["admin", "scammers", "listing"],
     endpoint: ADMIN_ENDPOINTS.SCAMMERS,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "-views", label: "Most viewed" },
+      { value: "-incidentCount", label: "Most incidents" },
+    ],
+    columns: SCAMMER_COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.scammers).map((item, index) => ({
         id: toStringValue(item.id, `scammer-${index}`),
@@ -128,90 +128,33 @@ export function AdminScammersView({ children, ...props }: AdminScammersViewProps
       if (typeof response.total === "number") return response.total;
       return mappedRows.length;
     },
-    buildFilters: (f) => {
-      const parts: string[] = [];
-      if (f.status && f.status !== "All") parts.push(`status==${f.status}`);
-      return parts.join(",") || undefined;
-    },
-  });
-
-  if (hasChildren) {
-    return (
-      <ListingLayout portal="admin" {...props}>
-        {children}
-      </ListingLayout>
-    );
-  }
+    buildFilters: (f) => (f.status && f.status !== "All" ? `status==${f.status}` : undefined),
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          {
+            label: ACTIONS.ADMIN["review-scammer"].label,
+            onClick: () => {
+              setSelectedRow(row);
+              setDrawerOpen(true);
+            },
+          },
+        ]}
+      />
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Status"
+        tabs={ADMIN_SCAMMER_STATUS_TABS}
+        value={pendingFilters.status ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+      />
+    ),
+  };
 
   return (
     <>
-      <div className="min-h-screen">
-        <ListingToolbar
-          filterCount={activeFilterCount}
-          onFiltersClick={openFilters}
-          searchValue={searchInput}
-          searchPlaceholder="Search by name, phone, UPI ID"
-          onSearchChange={setSearchInput}
-          onSearchCommit={commitSearch}
-          sortValue={table.get("sort") || defaultSort}
-          sortOptions={SORT_OPTIONS}
-          onSortChange={(v) => {
-            table.set("sort", v);
-          }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-          onResetAll={resetAll}
-          hasActiveState={hasActiveState}
-        />
-
-        {totalPages > 1 && (
-          <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
-
-        <div className="py-4 px-3 sm:px-4">
-          {errorMessage && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
-              {errorMessage}
-            </div>
-          )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No scammer profiles found"
-            renderRowActions={(row) => (
-              <RowActionMenu
-                actions={[
-                  {
-                    label: ACTIONS.ADMIN["review-scammer"].label,
-                    onClick: () => {
-                      setSelectedRow(row as ScammerRow);
-                      setDrawerOpen(true);
-                    },
-                  },
-                ]}
-              />
-            )}
-            columns={buildScammerColumns(setSelectedRow, setDrawerOpen) as any}
-          />
-        </div>
-
-        <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-            label="Status"
-            tabs={ADMIN_SCAMMER_STATUS_TABS}
-            value={pendingFilters.status ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-          />
-      </ListingFilterDrawer>
-      </div>
-
+      <DataListingView config={config} />
       <AdminScammerEditorView
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}

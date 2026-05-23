@@ -2,13 +2,7 @@
 
 import React, { useState, useCallback } from "react";
 import { UserPlus } from "lucide-react";
-import { BulkActionBar, Button,
-  FilterChipGroup,
-  ListingToolbar,
-  Pagination,
-  ListingLayout,
-  RowActionMenu, ListingFilterDrawer} from "../../../ui";
-import { useBottomActions } from "../../layout";
+import { Button, FilterChipGroup, ListingLayout, RowActionMenu } from "../../../ui";
 import type { BulkActionItem, ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
@@ -20,18 +14,9 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
-import { useAdminListing } from "../hooks/useAdminListing";
-import { DataTable } from "./DataTable";
-import { AdminViewCards } from "./AdminViewCards";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
 import { AdminEmployeeEditorView } from "./AdminEmployeeEditorView";
-
-const FILTER_KEYS = ["group"];
-const DEFAULT_SORT = "-createdAt";
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "displayName", label: "Name A–Z" },
-];
 
 const GROUP_TABS: readonly AdminFilterTab[] = [
   ALL_TAB,
@@ -80,48 +65,9 @@ export interface AdminTeamViewProps extends ListingLayoutProps {
 }
 
 export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<EmployeeRow | null>(null);
   const [inviteMode, setInviteMode] = useState(false);
-
-  const {
-    view, setView, table, searchInput, setSearchInput, commitSearch,
-    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
-    pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
-    rows, total, isLoading, errorMessage,
-    currentPage, totalPages, selection,
-  } = useAdminListing<AdminTeamResponse, EmployeeRow>({
-    filterKeys: FILTER_KEYS,
-    defaultSort: DEFAULT_SORT,
-    queryKey: ["admin", "team", "listing"],
-    endpoint: ADMIN_ENDPOINTS.TEAM,
-    buildFilters: (state) => {
-      const groupRaw = state.group;
-      return groupRaw && groupRaw !== "All" ? `permissionGroup==${groupRaw}` : undefined;
-    },
-    mapRows: (response) =>
-      toRecordArray(response.users).map((item, index) => ({
-        id: toStringValue(item.id ?? item.uid, `employee-${index}`),
-        primary: toStringValue(item.displayName, "Unnamed employee"),
-        secondary: [
-          toStringValue(item.email, "No email"),
-          item.permissionGroup
-            ? formatGroup(toStringValue(item.permissionGroup, ""))
-            : "Custom",
-        ].join(" · "),
-        status: typeof item.disabled === "boolean"
-          ? item.disabled ? "Disabled" : "Active"
-          : "Active",
-        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
-        _raw: item,
-      })),
-    getTotal: (response, mappedRows) => {
-      if (typeof response.meta?.total === "number") return response.meta.total;
-      if (typeof response.total === "number") return response.total;
-      return mappedRows.length;
-    },
-  });
 
   const openInvite = useCallback(() => {
     setSelectedRow(null);
@@ -135,13 +81,7 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
     setDrawerOpen(true);
   }, []);
 
-  const bulkActions: BulkActionItem[] = [
-    ...(onBulkRemove ? [buildBulkAction(ACTIONS.ADMIN["remove-team-member"], async () => { await onBulkRemove(selection.selectedIds); selection.clearSelection(); })] : []),
-  ];
-
-  useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: bulkActions } } : {});
-
-  if (hasChildren) {
+  if (React.Children.count(children) > 0) {
     return (
       <ListingLayout portal="admin" {...props}>
         {children}
@@ -149,90 +89,88 @@ export function AdminTeamView({ children, onBulkRemove, ...props }: AdminTeamVie
     );
   }
 
+  const config: ListingViewConfig<AdminTeamResponse, EmployeeRow> = {
+    portal: "admin",
+    title: "Team",
+    searchPlaceholder: "Search by name or email",
+    emptyLabel: "No employees found",
+    filterKeys: ["group"],
+    defaultSort: "-createdAt",
+    queryKey: ["admin", "team", "listing"],
+    endpoint: ADMIN_ENDPOINTS.TEAM,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "displayName", label: "Name A–Z" },
+    ],
+    mapRows: (response) =>
+      toRecordArray(response.users).map((item, index) => ({
+        id: toStringValue(item.id ?? item.uid, `employee-${index}`),
+        primary: toStringValue(item.displayName, "Unnamed employee"),
+        secondary: [
+          toStringValue(item.email, "No email"),
+          item.permissionGroup
+            ? formatGroup(toStringValue(item.permissionGroup, ""))
+            : "Custom",
+        ].join(" · "),
+        status:
+          typeof item.disabled === "boolean"
+            ? item.disabled
+              ? "Disabled"
+              : "Active"
+            : "Active",
+        updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
+        _raw: item,
+      })),
+    getTotal: (response, mappedRows) => {
+      if (typeof response.meta?.total === "number") return response.meta.total;
+      if (typeof response.total === "number") return response.total;
+      return mappedRows.length;
+    },
+    buildFilters: (state) =>
+      state.group && state.group !== "All" ? `permissionGroup==${state.group}` : undefined,
+    toolbarExtra: (
+      <Button
+        type="button"
+        variant="primary"
+        onClick={openInvite}
+        className="flex items-center gap-1.5 whitespace-nowrap"
+      >
+        <UserPlus className="h-4 w-4" />
+        Invite Employee
+      </Button>
+    ),
+    buildBulkActions: onBulkRemove
+      ? (selection): BulkActionItem[] => [
+          buildBulkAction(ACTIONS.ADMIN["remove-team-member"], async () => {
+            await onBulkRemove(selection.selectedIds);
+            selection.clearSelection();
+          }),
+        ]
+      : undefined,
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          {
+            label: ACTIONS.ADMIN["edit-team-member"].label,
+            onClick: () => openEdit(row),
+          },
+        ]}
+      />
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <FilterChipGroup
+        label="Permission Group"
+        tabs={GROUP_TABS}
+        value={pendingFilters.group ?? ""}
+        onChange={(id) => setPendingFilters((p) => ({ ...p, group: id }))}
+      />
+    ),
+  };
+
   return (
     <>
-      <div className="min-h-screen">
-        <ListingToolbar
-          filterCount={activeFilterCount}
-          onFiltersClick={openFilters}
-          searchValue={searchInput}
-          searchPlaceholder="Search by name or email"
-          onSearchChange={setSearchInput}
-          onSearchCommit={commitSearch}
-          sortValue={table.get("sort") || DEFAULT_SORT}
-          sortOptions={SORT_OPTIONS}
-          onSortChange={(v) => {
-            table.set("sort", v);
-          }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-          onResetAll={resetAll}
-          hasActiveState={hasActiveState}
-          extra={
-            <Button
-              type="button"
-              variant="primary"
-              onClick={openInvite}
-              className="flex items-center gap-1.5 whitespace-nowrap"
-            >
-              <UserPlus className="h-4 w-4" />
-              Invite Employee
-            </Button>
-          }
-        />
-
-        {selection.selectedCount > 0 && bulkActions.length > 0 && (
-          <BulkActionBar
-            selectedCount={selection.selectedCount}
-            actions={bulkActions}
-            onClearSelection={selection.clearSelection}
-          />
-        )}
-
-        {totalPages > 1 && (
-          <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
-
-        <div className="py-4 px-3 sm:px-4">
-          {errorMessage && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
-              {errorMessage}
-            </div>
-          )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No employees found"
-            renderRowActions={(row) => (
-              <RowActionMenu
-                actions={[
-                  {
-                    label: ACTIONS.ADMIN["edit-team-member"].label,
-                    onClick: () => openEdit(row as EmployeeRow),
-                  },
-                ]}
-              />
-            )}
-          />
-        </div>
-
-        <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-            label="Permission Group"
-            tabs={GROUP_TABS}
-            value={pendingFilters.group ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, group: id }))}
-          />
-      </ListingFilterDrawer>
-      </div>
-
+      <DataListingView config={config} />
       <AdminEmployeeEditorView
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}

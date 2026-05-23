@@ -28,11 +28,9 @@ import {
   BulkActionBar,
   Button,
   ListingFilterDrawer,
-  ListingLayout,
   ListingToolbar,
   Pagination,
   SideDrawer,
-  Text,
 } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { useBottomActions } from "../../layout";
@@ -103,6 +101,19 @@ export interface ListingViewConfig<TResponse, TRow extends { id: string }>
     onClick: (panel: { openCreatePanel: () => void }) => void;
     icon?: React.ReactNode;
   };
+
+  /** Extra arbitrary content in the toolbar (e.g. export buttons). Rendered alongside primaryAction. */
+  toolbarExtra?: React.ReactNode;
+
+  /** Slot rendered between the toolbar and the table content (e.g. URL-driven scope tabs). */
+  renderAboveContent?: () => React.ReactNode;
+
+  /** Pill toggles displayed alongside the search/sort/filter row in ListingToolbar. */
+  toggles?: Array<{
+    label: string;
+    active: boolean;
+    onChange: (next: boolean) => void;
+  }>;
 
   // -- Row actions menu
   renderRowActions?: (row: TRow) => React.ReactNode;
@@ -225,27 +236,35 @@ export function DataListingView<TResponse, TRow extends { id: string }>({
         sortOptions={config.sortOptions}
         onSortChange={(v) => table.set("sort", v)}
         showTableView={!config.hideTableView}
+        toggles={config.toggles}
         view={view}
         onViewChange={(v) => setView(v)}
         onResetAll={resetAll}
         hasActiveState={hasActiveState}
         extra={
-          config.primaryAction ? (
-            <Button
-              size="sm"
-              onClick={() =>
-                config.primaryAction!.onClick({
-                  openCreatePanel: panel.openCreatePanel,
-                })
-              }
-              className="flex items-center gap-1.5"
-            >
-              {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
-              {config.primaryAction.label}
-            </Button>
+          config.primaryAction || config.toolbarExtra ? (
+            <div className="flex items-center gap-2">
+              {config.toolbarExtra}
+              {config.primaryAction && (
+                <Button
+                  size="sm"
+                  onClick={() =>
+                    config.primaryAction!.onClick({
+                      openCreatePanel: panel.openCreatePanel,
+                    })
+                  }
+                  className="flex items-center gap-1.5"
+                >
+                  {config.primaryAction.icon ?? <Plus className="h-4 w-4" />}
+                  {config.primaryAction.label}
+                </Button>
+              )}
+            </div>
           ) : undefined
         }
       />
+
+      {config.renderAboveContent?.()}
 
       {bulkActionItems && (
         <BulkActionBar

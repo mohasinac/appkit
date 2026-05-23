@@ -2,9 +2,19 @@
 
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { BulkActionBar, Button, FilterChipGroup, Form, FormActions, Input, ListingToolbar, Modal, Pagination, ListingLayout, RowActionMenu, Text as AppText, useToast, ListingFilterDrawer} from "../../../ui";
+import {
+  Button,
+  FilterChipGroup,
+  Form,
+  FormActions,
+  Input,
+  ListingLayout,
+  Modal,
+  RowActionMenu,
+  Text as AppText,
+  useToast,
+} from "../../../ui";
 import type { ListingLayoutProps, BulkActionItem } from "../../../ui";
-import { AdminViewCards } from "./AdminViewCards";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { ADMIN_USER_STATUS_TABS, ADMIN_USER_ROLE_TABS } from "../constants/filter-tabs";
@@ -13,22 +23,10 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
-import { useAdminListing } from "../hooks/useAdminListing";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
 import { apiClient } from "../../../http";
-import { DataTable } from "./DataTable";
 import { AdminUserEditorView } from "./AdminUserEditorView";
-import { useBottomActions } from "../../layout";
-
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status", "role"];
-const DEFAULT_SORT = "-createdAt";
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "displayName", label: "Name A–Z" },
-];
-const STATUS_OPTIONS = ADMIN_USER_STATUS_TABS;
-const ROLE_OPTIONS = ADMIN_USER_ROLE_TABS;
 
 interface AdminUsersResponse {
   users?: unknown[];
@@ -48,7 +46,6 @@ interface UserRow {
 export interface AdminUsersViewProps extends ListingLayoutProps {}
 
 export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -70,7 +67,9 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       setBanReason("");
       void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
     },
-    onError: () => { toast.showToast("Failed to ban user.", "error"); },
+    onError: () => {
+      toast.showToast("Failed to ban user.", "error");
+    },
   });
 
   const unbanUser = useMutation({
@@ -79,21 +78,33 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       toast.showToast("Ban lifted.", "success");
       void queryClient.invalidateQueries({ queryKey: ["admin", "users", "listing"] });
     },
-    onError: () => { toast.showToast("Failed to lift ban.", "error"); },
+    onError: () => {
+      toast.showToast("Failed to lift ban.", "error");
+    },
   });
 
-  const {
-    view, setView, table, searchInput, setSearchInput, commitSearch,
-    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
-    pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
-    rows, total, isLoading, errorMessage,
-    currentPage, totalPages, selection, defaultSort,
-  } = useAdminListing<AdminUsersResponse, UserRow>({
-    filterKeys: FILTER_KEYS,
-    defaultSort: DEFAULT_SORT,
-    pageSize: PAGE_SIZE,
+  if (React.Children.count(children) > 0) {
+    return (
+      <ListingLayout portal="admin" {...props}>
+        {children}
+      </ListingLayout>
+    );
+  }
+
+  const config: ListingViewConfig<AdminUsersResponse, UserRow> = {
+    portal: "admin",
+    title: "Users",
+    searchPlaceholder: "Search users, email, or seller handles",
+    emptyLabel: "No users found",
+    filterKeys: ["status", "role"],
+    defaultSort: "-createdAt",
     queryKey: ["admin", "users", "listing"],
     endpoint: ADMIN_ENDPOINTS.USERS,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "displayName", label: "Name A–Z" },
+    ],
     mapRows: (response) =>
       toRecordArray(response.users).map((item, index) => {
         const isDisabled = Boolean(item.isDisabled ?? item.disabled);
@@ -128,116 +139,77 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
       if (f.role && f.role !== "All") parts.push(`role==${f.role}`);
       return parts.join(",") || undefined;
     },
-  });
-
-  if (hasChildren) {
-    return <ListingLayout portal="admin" {...props}>{children}</ListingLayout>;
-  }
+    onRowClick: (row) => {
+      setSelectedRow(row);
+      setDrawerOpen(true);
+    },
+    buildBulkActions: (selection): BulkActionItem[] => [
+      {
+        id: "manage",
+        label: ACTIONS.ADMIN["manage-user"].label,
+        variant: "primary",
+        onClick: () => {
+          const id = selection.selectedIds[0];
+          const row = selection.rows.find((r) => r.id === id) ?? null;
+          if (row) {
+            setSelectedRow(row);
+            setDrawerOpen(true);
+          }
+          selection.clearSelection();
+        },
+      },
+    ],
+    renderRowActions: (row) => {
+      const isBanned = row.status === "Hard banned";
+      return (
+        <RowActionMenu
+          actions={[
+            {
+              label: ACTIONS.ADMIN["manage-user"].label,
+              onClick: () => {
+                setSelectedRow(row);
+                setDrawerOpen(true);
+              },
+            },
+            {
+              label: ACTIONS.ADMIN["ban-user"].label,
+              onClick: () => {
+                setBanTargetId(row.id);
+                setBanReason("");
+                setBanModalOpen(true);
+              },
+              disabled: isBanned,
+            },
+            {
+              label: ACTIONS.ADMIN["unban-user"].label,
+              onClick: () => unbanUser.mutate(row.id),
+              disabled: !isBanned || unbanUser.isPending,
+            },
+          ]}
+        />
+      );
+    },
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={ADMIN_USER_STATUS_TABS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+        <FilterChipGroup
+          label="Role"
+          tabs={ADMIN_USER_ROLE_TABS}
+          value={pendingFilters.role ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, role: id }))}
+        />
+      </>
+    ),
+  };
 
   return (
     <>
-      <div className="min-h-screen">
-        <ListingToolbar
-          filterCount={activeFilterCount}
-          onFiltersClick={openFilters}
-          searchValue={searchInput}
-          searchPlaceholder="Search users, email, or seller handles"
-          onSearchChange={setSearchInput}
-          onSearchCommit={commitSearch}
-          sortValue={table.get("sort") || defaultSort}
-          sortOptions={SORT_OPTIONS}
-          onSortChange={(v) => { table.set("sort", v); }}
-          showTableView
-          view={view}
-          onViewChange={(v) => setView(v)}
-          onResetAll={resetAll}
-          hasActiveState={hasActiveState}
-        />
-
-        <BulkActionBar
-          selectedCount={selection.selectedCount}
-          onClearSelection={selection.clearSelection}
-          actions={([
-            { id: "manage", label: ACTIONS.ADMIN["manage-user"].label, variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
-          ] satisfies BulkActionItem[])}
-        />
-
-        {totalPages > 1 && (
-          <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-          </div>
-        )}
-
-        <div className="py-4 px-3 sm:px-4">
-          {errorMessage && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
-              {errorMessage}
-            </div>
-          )}
-          {view === "table" ? (
-            <DataTable
-              rows={rows}
-              isLoading={isLoading}
-              emptyLabel="No users found"
-              selectedIds={selection.selectedIdSet}
-              onToggleSelect={selection.toggle}
-              onToggleSelectAll={(next) => next ? selection.setSelectedIds(rows.map(r => r.id)) : selection.clearSelection()}
-              renderRowActions={(row) => {
-                const ur = row as UserRow;
-                const isBanned = ur.status === "Hard banned";
-                useBottomActions(selection.selectedCount > 0 ? { bulk: { selectedCount: selection.selectedCount, onClearSelection: selection.clearSelection, actions: ([
-            { id: "manage", label: ACTIONS.ADMIN["manage-user"].label, variant: "primary", onClick: () => { setSelectedRow(rows.find(r => r.id === selection.selectedIds[0]) as UserRow ?? null); setDrawerOpen(true); selection.clearSelection(); } },
-          ] satisfies BulkActionItem[]) } } : {});
-
-  return (
-                  <RowActionMenu actions={[
-                    {
-                      label: ACTIONS.ADMIN["manage-user"].label,
-                      onClick: () => { setSelectedRow(ur); setDrawerOpen(true); },
-                    },
-                    {
-                      label: ACTIONS.ADMIN["ban-user"].label,
-                      onClick: () => { setBanTargetId(ur.id); setBanReason(""); setBanModalOpen(true); },
-                      disabled: isBanned,
-                    },
-                    {
-                      label: ACTIONS.ADMIN["unban-user"].label,
-                      onClick: () => unbanUser.mutate(ur.id),
-                      disabled: !isBanned || unbanUser.isPending,
-                    },
-                  ]} />
-                );
-              }}
-            />
-          ) : (
-            <AdminViewCards
-              rows={rows}
-              view={view}
-              isLoading={isLoading}
-              emptyLabel="No users found"
-              onRowClick={(row) => { setSelectedRow(row as UserRow); setDrawerOpen(true); }}
-              selectedIdSet={selection.selectedIdSet}
-              onToggleSelect={selection.toggle}
-            />
-          )}
-        </div>
-
-        <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-            label="Status"
-            tabs={STATUS_OPTIONS}
-            value={pendingFilters.status ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-          />
-          <FilterChipGroup
-            label="Role"
-            tabs={ROLE_OPTIONS}
-            value={pendingFilters.role ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, role: id }))}
-          />
-      </ListingFilterDrawer>
-      </div>
-
+      <DataListingView config={config} />
       <AdminUserEditorView
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -276,16 +248,24 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
             : undefined
         }
       />
-
       <Modal
         isOpen={banModalOpen}
-        onClose={() => { setBanModalOpen(false); setBanTargetId(null); setBanReason(""); }}
+        onClose={() => {
+          setBanModalOpen(false);
+          setBanTargetId(null);
+          setBanReason("");
+        }}
         title={ACTIONS.ADMIN["ban-user"].confirmation!.title}
       >
         <AppText size="sm" color="muted" className="mb-4">
           {ACTIONS.ADMIN["ban-user"].confirmation!.body}
         </AppText>
-        <Form onSubmit={(e) => { e.preventDefault(); banUser.mutate(); }}>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            banUser.mutate();
+          }}
+        >
           <Input
             label="Reason"
             value={banReason}
@@ -294,7 +274,15 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
             required
           />
           <FormActions>
-            <Button type="button" variant="secondary" onClick={() => { setBanModalOpen(false); setBanTargetId(null); setBanReason(""); }}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => {
+                setBanModalOpen(false);
+                setBanTargetId(null);
+                setBanReason("");
+              }}
+            >
               Cancel
             </Button>
             <Button

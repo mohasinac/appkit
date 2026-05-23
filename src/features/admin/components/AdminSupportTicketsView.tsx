@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FilterChipGroup, ListingToolbar, ListingLayout, Pagination, RowActionMenu, Text, ListingFilterDrawer} from "../../../ui";
+import { FilterChipGroup, ListingLayout, RowActionMenu, Text } from "../../../ui";
 import type { ListingLayoutProps } from "../../../ui";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
@@ -14,36 +14,10 @@ import {
   toRelativeDate,
   toStringValue,
 } from "../hooks/useAdminListingData";
-import { useAdminListing } from "../hooks/useAdminListing";
-import { DataTable } from "./DataTable";
-import { AdminViewCards } from "./AdminViewCards";
+import { DataListingView } from "./DataListingView";
+import type { ListingViewConfig } from "./DataListingView";
+import type { AdminTableColumn } from "../types";
 import { AdminSupportTicketDetailView } from "./AdminSupportTicketDetailView";
-
-const PAGE_SIZE = 25;
-const FILTER_KEYS = ["status", "priority"];
-const DEFAULT_SORT = "-createdAt";
-const SORT_OPTIONS = [
-  { value: "-createdAt", label: "Newest" },
-  { value: "createdAt", label: "Oldest" },
-  { value: "-updatedAt", label: "Recently updated" },
-];
-
-interface AdminSupportTicketsResponse {
-  tickets?: unknown[];
-  meta?: { total?: number; filteredTotal?: number };
-  total?: number;
-}
-
-interface TicketRow {
-  id: string;
-  primary: string;
-  secondary: string;
-  status: string;
-  updatedAt: string;
-  _raw?: Record<string, unknown>;
-}
-
-export interface AdminSupportTicketsViewProps extends ListingLayoutProps {}
 
 const PRIORITY_BADGE: Record<string, string> = {
   urgent: "bg-error-surface text-error",
@@ -60,65 +34,97 @@ const STATUS_BADGE: Record<string, string> = {
   closed: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
-function buildTicketColumns(
-  setSelectedRow: (row: TicketRow) => void,
-  setDrawerOpen: (v: boolean) => void,
-) {
-  return [
-    {
-      key: "primary",
-      header: "Subject",
-      render: (row: TicketRow) => {
-        const priority = toStringValue(row._raw?.priority, "normal");
-        return (
-          <div className="space-y-1">
-            <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
-            {row.secondary ? <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text> : null}
-            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal}`}>
-              {priority}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      key: "status",
-      header: "Status",
-      className: "w-36",
-      render: (row: TicketRow) => (
-        <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_BADGE[row.status] ?? STATUS_BADGE.open}`}>
-          {row.status.replace(/_/g, " ")}
-        </span>
-      ),
-    },
-    {
-      key: "updatedAt",
-      header: "Updated",
-      className: "w-32",
-      render: (row: TicketRow) => (
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
-      ),
-    },
-  ] as const;
+interface AdminSupportTicketsResponse {
+  tickets?: unknown[];
+  meta?: { total?: number; filteredTotal?: number };
+  total?: number;
 }
 
+interface TicketRow {
+  id: string;
+  primary: string;
+  secondary: string;
+  status: string;
+  updatedAt: string;
+  _raw?: Record<string, unknown>;
+}
+
+const TICKET_COLUMNS: AdminTableColumn<TicketRow>[] = [
+  {
+    key: "primary",
+    header: "Subject",
+    render: (row) => {
+      const priority = toStringValue(row._raw?.priority, "normal");
+      return (
+        <div className="space-y-1">
+          <Text className="font-medium text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          {row.secondary ? (
+            <Text className="text-xs text-zinc-500 dark:text-zinc-400">{row.secondary}</Text>
+          ) : null}
+          <span
+            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+              PRIORITY_BADGE[priority] ?? PRIORITY_BADGE.normal
+            }`}
+          >
+            {priority}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    key: "status",
+    header: "Status",
+    className: "w-36",
+    render: (row) => (
+      <span
+        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+          STATUS_BADGE[row.status] ?? STATUS_BADGE.open
+        }`}
+      >
+        {row.status.replace(/_/g, " ")}
+      </span>
+    ),
+  },
+  {
+    key: "updatedAt",
+    header: "Updated",
+    className: "w-32",
+    render: (row) => (
+      <span className="text-sm text-zinc-500 dark:text-zinc-400">{row.updatedAt}</span>
+    ),
+  },
+];
+
+export interface AdminSupportTicketsViewProps extends ListingLayoutProps {}
+
 export function AdminSupportTicketsView({ children, ...props }: AdminSupportTicketsViewProps) {
-  const hasChildren = React.Children.count(children) > 0;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<TicketRow | null>(null);
 
-  const {
-    view, setView, table, searchInput, setSearchInput, commitSearch,
-    filterOpen, setFilterOpen, openFilters, applyFilters, clearFilters,
-    pendingFilters, setPendingFilters, activeFilterCount, hasActiveState, resetAll,
-    rows, total, isLoading, errorMessage,
-    currentPage, totalPages, selection, defaultSort,
-  } = useAdminListing<AdminSupportTicketsResponse, TicketRow>({
-    filterKeys: FILTER_KEYS,
-    defaultSort: DEFAULT_SORT,
-    pageSize: PAGE_SIZE,
+  if (React.Children.count(children) > 0) {
+    return (
+      <ListingLayout portal="admin" {...props}>
+        {children}
+      </ListingLayout>
+    );
+  }
+
+  const config: ListingViewConfig<AdminSupportTicketsResponse, TicketRow> = {
+    portal: "admin",
+    title: "Support Tickets",
+    searchPlaceholder: "Search by subject",
+    emptyLabel: "No support tickets found",
+    filterKeys: ["status", "priority"],
+    defaultSort: "-createdAt",
     queryKey: ["admin", "support-tickets", "listing"],
     endpoint: ADMIN_ENDPOINTS.SUPPORT_TICKETS,
+    sortOptions: [
+      { value: "-createdAt", label: "Newest" },
+      { value: "createdAt", label: "Oldest" },
+      { value: "-updatedAt", label: "Recently updated" },
+    ],
+    columns: TICKET_COLUMNS,
     mapRows: (response) =>
       toRecordArray(response.tickets).map((item, index) => ({
         id: toStringValue(item.id, `ticket-${index}`),
@@ -146,85 +152,40 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
       if (f.priority && f.priority !== "All") parts.push(`priority==${f.priority}`);
       return parts.join(",") || undefined;
     },
-  });
-
-  if (hasChildren) {
-    return (
-      <ListingLayout portal="admin" {...props}>
-        {children}
-      </ListingLayout>
-    );
-  }
+    renderRowActions: (row) => (
+      <RowActionMenu
+        actions={[
+          {
+            label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label,
+            onClick: () => {
+              setSelectedRow(row);
+              setDrawerOpen(true);
+            },
+          },
+        ]}
+      />
+    ),
+    renderFilterPanel: ({ pendingFilters, setPendingFilters }) => (
+      <>
+        <FilterChipGroup
+          label="Status"
+          tabs={ADMIN_SUPPORT_TICKET_STATUS_TABS}
+          value={pendingFilters.status ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
+        />
+        <FilterChipGroup
+          label="Priority"
+          tabs={ADMIN_SUPPORT_TICKET_PRIORITY_TABS}
+          value={pendingFilters.priority ?? ""}
+          onChange={(id) => setPendingFilters((p) => ({ ...p, priority: id }))}
+        />
+      </>
+    ),
+  };
 
   return (
     <>
-      <div className="min-h-screen">
-        <ListingToolbar
-          filterCount={activeFilterCount}
-          onFiltersClick={openFilters}
-          searchValue={searchInput}
-          searchPlaceholder="Search by subject"
-          onSearchChange={setSearchInput}
-          onSearchCommit={commitSearch}
-          sortValue={table.get("sort") || defaultSort}
-          sortOptions={SORT_OPTIONS}
-          onSortChange={(v) => {
-            table.set("sort", v);
-          }}
-        showTableView
-        view={view}
-        onViewChange={(v) => setView(v)}
-          onResetAll={resetAll}
-          hasActiveState={hasActiveState}
-        />
-
-        {totalPages > 1 && (
-          <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={(p) => table.setPage(p)}
-            />
-          </div>
-        )}
-
-        <div className="py-4 px-3 sm:px-4">
-          {errorMessage && (
-            <div className="mb-4 rounded-xl border border-red-200 bg-error-surface px-4 py-3 text-sm text-error dark:border-red-900/60">
-              {errorMessage}
-            </div>
-          )}
-          <DataTable
-            rows={rows}
-            isLoading={isLoading}
-            emptyLabel="No support tickets found"
-            renderRowActions={(row) => (
-              <RowActionMenu
-                actions={[
-                  { label: ROW_ACTION_META[ROW_ACTION_ID.VIEW].label, onClick: () => { setSelectedRow(row as TicketRow); setDrawerOpen(true); } },
-                ]}
-              />
-            )}
-            columns={buildTicketColumns(setSelectedRow, setDrawerOpen) as any}
-          />
-        </div>
-
-        <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
-        <FilterChipGroup
-            label="Status"
-            tabs={ADMIN_SUPPORT_TICKET_STATUS_TABS}
-            value={pendingFilters.status ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, status: id }))}
-          />
-          <FilterChipGroup
-            label="Priority"
-            tabs={ADMIN_SUPPORT_TICKET_PRIORITY_TABS}
-            value={pendingFilters.priority ?? ""}
-            onChange={(id) => setPendingFilters((p) => ({ ...p, priority: id }))}
-          />
-      </ListingFilterDrawer>
-      </div>
-
+      <DataListingView config={config} />
       <AdminSupportTicketDetailView
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
