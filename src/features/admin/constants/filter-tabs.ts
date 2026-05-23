@@ -74,27 +74,27 @@ export const ADMIN_STORE_STATUS_TABS = [
   { id: "rejected", label: "Rejected" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Admin > Payouts — payout state filter chip set. Uppercase IDs match the
- *  `PayoutDocument.status` enum on the server. */
+/** Admin > Payouts — payout state filter chip set. Lowercase IDs match
+ *  `PayoutStatusValues` and the actual Firestore document `status` field. */
 export const ADMIN_PAYOUT_STATUS_TABS = [
   ALL_TAB,
-  { id: "PENDING", label: "Pending" },
-  { id: "PROCESSING", label: "Processing" },
-  { id: "PAID", label: "Paid" },
-  { id: "FAILED", label: "Failed" },
+  { id: "pending", label: "Pending" },
+  { id: "processing", label: "Processing" },
+  { id: "paid", label: "Paid" },
+  { id: "failed", label: "Failed" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Admin > Orders — order-state filter chip set. Uppercase IDs match the
- *  `OrderDocument.status` enum on the server. */
+/** Admin > Orders — order-state filter chip set. Lowercase IDs match
+ *  `OrderStatusValues` and the actual Firestore document `status` field. */
 export const ADMIN_ORDER_STATUS_TABS = [
   ALL_TAB,
-  { id: "PENDING", label: "Pending" },
-  { id: "PROCESSING", label: "Processing" },
-  { id: "SHIPPED", label: "Shipped" },
-  { id: "DELIVERED", label: "Delivered" },
-  { id: "CANCELLED", label: "Cancelled" },
-  { id: "REFUNDED", label: "Refunded" },
-  { id: "RETURN_REQUESTED", label: "Return Requested" },
+  { id: "pending", label: "Pending" },
+  { id: "processing", label: "Processing" },
+  { id: "shipped", label: "Shipped" },
+  { id: "delivered", label: "Delivered" },
+  { id: "cancelled", label: "Cancelled" },
+  { id: "refunded", label: "Refunded" },
+  { id: "return_requested", label: "Return Requested" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Reviews — moderation state filter chip set. */

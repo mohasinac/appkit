@@ -41,7 +41,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
 
   const approveMutation = useMutation({
     mutationFn: async (orderId: string) => {
-      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "REFUNDED" });
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "refunded" });
     },
     onSuccess: () => {
       showToast("Return approved — order marked as Refunded.", "success");
@@ -57,7 +57,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
 
   const rejectMutation = useMutation({
     mutationFn: async (orderId: string) => {
-      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "DELIVERED" });
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(orderId), { status: "delivered" });
     },
     onSuccess: () => {
       showToast("Return rejected — order reverted to Delivered.", "success");
@@ -79,7 +79,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
     filterKeys: [],
     defaultSort: "-createdAt",
     queryKey: ["admin", "return-requests", "listing"],
-    endpoint: `${ADMIN_ENDPOINTS.ORDERS}?status=RETURN_REQUESTED`,
+    endpoint: `${ADMIN_ENDPOINTS.ORDERS}?status=return_requested`,
     sortOptions: [
       { value: "-createdAt", label: "Newest" },
       { value: "createdAt", label: "Oldest" },
@@ -92,7 +92,7 @@ export function AdminReturnRequestsView(_props: AdminReturnRequestsViewProps) {
           toStringValue(item.buyerName ?? item.buyerId, "Unknown buyer"),
           toRupees(item.totalAmount),
         ].join(" · "),
-        status: toStringValue(item.status, "RETURN_REQUESTED"),
+        status: toStringValue(item.status, "return_requested"),
         updatedAt: toRelativeDate(item.updatedAt ?? item.createdAt),
       })),
     getTotal: (response, mappedRows) =>

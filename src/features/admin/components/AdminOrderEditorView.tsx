@@ -25,13 +25,13 @@ export interface AdminOrderEditorViewProps {
 }
 
 const STATUS_OPTIONS = [
-  { label: "Pending", value: "PENDING" },
-  { label: "Processing", value: "PROCESSING" },
-  { label: "Shipped", value: "SHIPPED" },
-  { label: "Delivered", value: "DELIVERED" },
-  { label: "Cancelled", value: "CANCELLED" },
-  { label: "Refunded", value: "REFUNDED" },
-  { label: "Return requested", value: "RETURN_REQUESTED" },
+  { label: "Pending", value: "pending" },
+  { label: "Processing", value: "processing" },
+  { label: "Shipped", value: "shipped" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Refunded", value: "refunded" },
+  { label: "Return requested", value: "return_requested" },
 ];
 
 const CARRIER_OPTIONS = [
@@ -56,7 +56,7 @@ export function AdminOrderEditorView({
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
-  const [status, setStatus] = React.useState(currentStatus ?? "PENDING");
+  const [status, setStatus] = React.useState(currentStatus ?? "pending");
   const [trackingNumber, setTrackingNumber] = React.useState("");
   const [carrier, setCarrier] = React.useState("");
   const [notes, setNotes] = React.useState("");
@@ -64,7 +64,7 @@ export function AdminOrderEditorView({
 
   React.useEffect(() => {
     if (open) {
-      setStatus(currentStatus ?? "PENDING");
+      setStatus(currentStatus ?? "pending");
       setTrackingNumber("");
       setCarrier("");
       setNotes("");
@@ -143,7 +143,7 @@ export function AdminOrderEditorView({
           />
         </div>
 
-        {(status === "REFUNDED" || status === "RETURN_REQUESTED") && (
+        {(status === "refunded" || status === "return_requested") && (
           <Input
             label="Refund amount ₹ (optional)"
             type="number"

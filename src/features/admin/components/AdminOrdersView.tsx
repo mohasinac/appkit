@@ -92,7 +92,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         label: ACTIONS.ADMIN["mark-shipped"].label,
         variant: "secondary",
         onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "SHIPPED");
+          for (const id of selection.selectedIds) void handleQuickStatus(id, "shipped");
           selection.clearSelection();
         },
       },
@@ -101,7 +101,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         label: ACTIONS.ADMIN["mark-delivered"].label,
         variant: "primary",
         onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "DELIVERED");
+          for (const id of selection.selectedIds) void handleQuickStatus(id, "delivered");
           selection.clearSelection();
         },
       },
@@ -110,7 +110,7 @@ export function AdminOrdersView({ children, ...props }: AdminOrdersViewProps) {
         label: ACTIONS.ADMIN["cancel-order"].label,
         variant: "danger",
         onClick: () => {
-          for (const id of selection.selectedIds) void handleQuickStatus(id, "CANCELLED");
+          for (const id of selection.selectedIds) void handleQuickStatus(id, "cancelled");
           selection.clearSelection();
         },
       },
