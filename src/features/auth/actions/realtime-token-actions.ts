@@ -28,7 +28,7 @@ export async function issueRealtimeToken(
     serverLogger.warn("Could not resolve chatIds for realtime token", { userId, err });
   }
 
-  let conversationIds: Record<string, boolean> = {};
+  const conversationIds: Record<string, boolean> = {};
   try {
     const buyerConvs = await conversationsRepository.listByBuyer(userId);
     buyerConvs.forEach((c) => { conversationIds[c.id] = true; });

@@ -119,7 +119,7 @@ export async function fetchLiveStats(
       (async () => {
         try {
           const db = getAdminDb();
-          let ref = db.collection(collection);
+          const ref = db.collection(collection);
           const query =
             filterField !== undefined && filterValue !== undefined
               ? ref.where(filterField, "==", filterValue)

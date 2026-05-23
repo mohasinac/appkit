@@ -71,7 +71,7 @@ export class UserRepository extends BaseRepository<UserDocument> {
     // addPiiIndices is intentionally NOT called here — it spreads the original
     // plaintext `data` back into the result, which would overwrite the encrypted
     // ciphertext with the original plaintext values, defeating the encryption.
-    let encrypted = encryptPiiFields(data, [...USER_PII_FIELDS]);
+    const encrypted = encryptPiiFields(data, [...USER_PII_FIELDS]);
 
     if (encrypted.payoutDetails) {
       (encrypted as Record<string, unknown>).payoutDetails =
