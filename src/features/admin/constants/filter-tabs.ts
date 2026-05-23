@@ -56,13 +56,17 @@ export const ADMIN_USER_STATUS_TABS = [
   { id: "Disabled", label: "Disabled" },
 ] as const satisfies readonly AdminFilterTab[];
 
-/** Admin > Users — role filter chip set. */
+/** Admin > Users — role filter chip set. IDs match the canonical UserRole
+ *  union ("user" | "seller" | "moderator" | "employee" | "admin") and the
+ *  Firestore `users/{uid}.role` field. The label "Buyer" maps to id "user"
+ *  per SB-UNI-E. Previously sent "buyer" which silently returned 0 rows. */
 export const ADMIN_USER_ROLE_TABS = [
   ALL_TAB,
   { id: "admin", label: "Admin" },
   { id: "seller", label: "Seller" },
-  { id: "buyer", label: "Buyer" },
+  { id: "user", label: "Buyer" },
   { id: "moderator", label: "Moderator" },
+  { id: "employee", label: "Employee" },
 ] as const satisfies readonly AdminFilterTab[];
 
 /** Admin > Stores — seller-onboarding state filter chip set. */

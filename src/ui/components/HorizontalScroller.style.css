@@ -18,11 +18,24 @@
   scroll-snap-type: x mandatory;
 }
 
+/* W1-47 — show a slim themed scrollbar instead of hiding it, so users can
+ * manually drag through the strip during auto-rotation. */
 .appkit-hscroller__track--no-scrollbar {
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--appkit-color-border) transparent;
 }
 .appkit-hscroller__track--no-scrollbar::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+}
+.appkit-hscroller__track--no-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.appkit-hscroller__track--no-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--appkit-color-border);
+  border-radius: 3px;
+}
+.appkit-hscroller__track--no-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--appkit-color-text-muted);
 }
 
 /* -- Items ------------------------------------------- */
