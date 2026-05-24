@@ -31,6 +31,9 @@ export const TicketCategoryValues = {
   // ST-4 — sellers request admin-only field changes on their store
   // (status / capabilities / isVerified) through this category.
   STORE_CHANGE_REQUEST: "store_change_request",
+  // ST-3 — buyers/sellers request mutation of order line items
+  // (wrong item shipped, partial fulfilment, bundle correction).
+  ORDER_MODIFICATION_REQUEST: "order_modification_request",
 } as const;
 
 export type TicketCategory =

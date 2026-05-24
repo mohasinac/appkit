@@ -55,6 +55,8 @@ const CATEGORY_OPTIONS = [
   // ST-4 — sellers use this to request changes to admin-controlled
   // store fields (status, capabilities, verification badge).
   { label: "Store Change Request (sellers)", value: "store_change_request" },
+  // ST-3 — buyers/sellers request mutation of order line items
+  { label: "Order Modification Request", value: "order_modification_request" },
   { label: "General", value: "general" },
 ];
 

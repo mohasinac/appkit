@@ -7,6 +7,7 @@ import {
   Div,
   FormActions,
   Input,
+  Row,
   Select,
   SideDrawer,
   Text,
@@ -199,6 +200,75 @@ export function AdminSupportTicketDetailView({
     },
   });
 
+  // ST-3 — Modify Order Items panel (fetches current items on demand, lets
+  // admin edit quantity per line + remove lines, then PATCHes the order).
+  const [orderItemsOpen, setOrderItemsOpen] = React.useState(false);
+  const [orderItems, setOrderItems] = React.useState<OrderItemEdit[]>([]);
+  const linkedOrderId = parties.orderId?.trim() || orderId;
+  const isOrderModificationRequest =
+    category === "order_modification_request" || category === "order_issue";
+
+  const loadOrderItems = useMutation({
+    mutationFn: async () => {
+      if (!linkedOrderId) throw new Error("No linked order on this ticket.");
+      const res = await apiClient.get<{
+        items?: OrderItemEdit[];
+      }>(ADMIN_ENDPOINTS.ORDER_BY_ID(linkedOrderId));
+      const items = Array.isArray(res?.items) ? res.items : [];
+      setOrderItems(
+        items.map((it) => ({
+          productId: String(it.productId ?? ""),
+          productTitle: String(it.productTitle ?? ""),
+          quantity: Number(it.quantity ?? 0),
+          unitPrice: Number(it.unitPrice ?? 0),
+          totalPrice: Number(it.totalPrice ?? 0),
+        })),
+      );
+      setOrderItemsOpen(true);
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to load order.", "error");
+    },
+  });
+
+  const applyOrderItems = useMutation({
+    mutationFn: async () => {
+      if (!linkedOrderId) throw new Error("No linked order on this ticket.");
+      // Recalculate totalPrice per line from quantity × unitPrice so qty edits
+      // flow through. Lines with quantity 0 are dropped.
+      const items = orderItems
+        .filter((it) => it.quantity > 0)
+        .map((it) => ({
+          productId: it.productId,
+          productTitle: it.productTitle,
+          quantity: it.quantity,
+          unitPrice: it.unitPrice,
+          totalPrice: it.quantity * it.unitPrice,
+        }));
+      await apiClient.patch(ADMIN_ENDPOINTS.ORDER_BY_ID(linkedOrderId), {
+        items,
+      });
+    },
+    onSuccess: () => {
+      showToast("Order items updated.", "success");
+      apiClient
+        .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
+          internalNotes:
+            (notes ? notes + "\n" : "") +
+            `[${new Date().toISOString()}] Modified order ${linkedOrderId} items: ${orderItems
+              .filter((it) => it.quantity > 0)
+              .map((it) => `${it.productId}x${it.quantity}`)
+              .join(", ")}`,
+        })
+        .catch(() => {});
+      invalidate();
+      setOrderItemsOpen(false);
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to update order items.", "error");
+    },
+  });
+
   return (
     <SideDrawer
       isOpen={open}
@@ -357,62 +427,29 @@ export function AdminSupportTicketDetailView({
           ))}
         </Div>
 
-        {/* ST-4 — Apply Store Change action panel */}
+        {isOrderModificationRequest && (
+          <OrderItemsPanel
+            linkedOrderId={linkedOrderId}
+            orderItemsOpen={orderItemsOpen}
+            setOrderItemsOpen={setOrderItemsOpen}
+            orderItems={orderItems}
+            setOrderItems={setOrderItems}
+            loadOrderItems={loadOrderItems}
+            applyOrderItems={applyOrderItems}
+          />
+        )}
+
         {isStoreChangeRequest && (
-          <Div
-            padding="sm"
-            className="flex flex-col gap-2 rounded-lg border border-warning/40 bg-warning-surface/40"
-          >
-            <Text className="text-xs font-semibold text-warning uppercase tracking-wide">
-              Apply store change
-            </Text>
-            {linkedStoreId ? (
-              <>
-                <Text className="text-xs text-zinc-600 dark:text-zinc-300">
-                  Editing store: <code className="font-mono">{linkedStoreId}</code>
-                </Text>
-                <Select
-                  label="Store status"
-                  options={[
-                    { label: "Active", value: "active" },
-                    { label: "Pending", value: "pending" },
-                    { label: "Suspended", value: "suspended" },
-                    { label: "Rejected", value: "rejected" },
-                  ]}
-                  value={storeStatus}
-                  onValueChange={setStoreStatus}
-                />
-                <Toggle
-                  label="Verified badge"
-                  checked={storeIsVerified}
-                  onChange={setStoreIsVerified}
-                />
-                <Toggle
-                  label="Featured store"
-                  checked={storeIsFeatured}
-                  onChange={setStoreIsFeatured}
-                />
-                <Button
-                  type="button"
-                  variant="primary"
-                  size="sm"
-                  isLoading={applyStoreChange.isPending}
-                  disabled={applyStoreChange.isPending}
-                  onClick={() => applyStoreChange.mutate()}
-                >
-                  Apply store change
-                </Button>
-              </>
-            ) : (
-              <Text className="text-xs text-zinc-600 dark:text-zinc-300">
-                Set the{" "}
-                <Text as="span" weight="semibold">
-                  Store slug
-                </Text>{" "}
-                field in the Linked parties panel above to enable this action.
-              </Text>
-            )}
-          </Div>
+          <StoreChangePanel
+            linkedStoreId={linkedStoreId}
+            storeStatus={storeStatus}
+            setStoreStatus={setStoreStatus}
+            storeIsVerified={storeIsVerified}
+            setStoreIsVerified={setStoreIsVerified}
+            storeIsFeatured={storeIsFeatured}
+            setStoreIsFeatured={setStoreIsFeatured}
+            applyStoreChange={applyStoreChange}
+          />
         )}
 
         <FormActions align="right">
@@ -430,5 +467,211 @@ export function AdminSupportTicketDetailView({
         </FormActions>
       </Div>
     </SideDrawer>
+  );
+}
+
+// ── Sub-components extracted to keep parent under LARGE_COMPONENT threshold ──
+
+interface OrderItemEdit {
+  productId: string;
+  productTitle: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function OrderItemsPanel(props: {
+  linkedOrderId: string | undefined;
+  orderItemsOpen: boolean;
+  setOrderItemsOpen: (v: boolean) => void;
+  orderItems: OrderItemEdit[];
+  setOrderItems: React.Dispatch<React.SetStateAction<OrderItemEdit[]>>;
+  loadOrderItems: any;
+  applyOrderItems: any;
+}) {
+  const {
+    linkedOrderId,
+    orderItemsOpen,
+    setOrderItemsOpen,
+    orderItems,
+    setOrderItems,
+    loadOrderItems,
+    applyOrderItems,
+  } = props;
+  const updateQty = (idx: number, raw: string) => {
+    const q = Math.max(0, parseInt(raw, 10) || 0);
+    setOrderItems((prev) =>
+      prev.map((p, i) => (i === idx ? { ...p, quantity: q } : p)),
+    );
+  };
+  return (
+    <Div
+      padding="sm"
+      className="flex flex-col gap-2 rounded-lg border border-info/40 bg-info-surface/40"
+    >
+      <Text className="text-xs font-semibold text-info uppercase tracking-wide">
+        Modify order items
+      </Text>
+      {linkedOrderId ? (
+        <>
+          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+            Editing order: <code className="font-mono">{linkedOrderId}</code>
+          </Text>
+          {!orderItemsOpen ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              isLoading={loadOrderItems.isPending}
+              disabled={loadOrderItems.isPending}
+              onClick={() => loadOrderItems.mutate()}
+            >
+              Load current items
+            </Button>
+          ) : (
+            <>
+              {orderItems.length === 0 ? (
+                <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                  Order has no items.
+                </Text>
+              ) : (
+                <Div className="flex flex-col gap-2">
+                  {orderItems.map((it, idx) => (
+                    <Div
+                      key={`${it.productId}-${idx}`}
+                      className="flex items-center gap-2 rounded border border-zinc-200 dark:border-zinc-700 px-2 py-1"
+                    >
+                      <Div className="flex-1 min-w-0">
+                        <Text className="text-xs font-medium truncate">
+                          {it.productTitle}
+                        </Text>
+                        <Text size="xs" color="muted">
+                          {it.productId} · ₹{(it.unitPrice / 100).toFixed(2)}/ea
+                        </Text>
+                      </Div>
+                      <input
+                        type="number"
+                        min="0"
+                        value={it.quantity}
+                        onChange={(e) => updateQty(idx, e.target.value)}
+                        className="w-16 rounded border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-2 py-1 text-xs"
+                      />
+                    </Div>
+                  ))}
+                </Div>
+              )}
+              <Row gap="sm">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setOrderItemsOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  isLoading={applyOrderItems.isPending}
+                  disabled={applyOrderItems.isPending}
+                  onClick={() => applyOrderItems.mutate()}
+                >
+                  Apply changes
+                </Button>
+              </Row>
+            </>
+          )}
+        </>
+      ) : (
+        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          Set the{" "}
+          <Text as="span" weight="semibold">
+            Order ID
+          </Text>{" "}
+          field in the Linked parties panel above to enable this action.
+        </Text>
+      )}
+    </Div>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function StoreChangePanel(props: {
+  linkedStoreId: string | undefined;
+  storeStatus: string;
+  setStoreStatus: (v: string) => void;
+  storeIsVerified: boolean;
+  setStoreIsVerified: (v: boolean) => void;
+  storeIsFeatured: boolean;
+  setStoreIsFeatured: (v: boolean) => void;
+  applyStoreChange: any;
+}) {
+  const {
+    linkedStoreId,
+    storeStatus,
+    setStoreStatus,
+    storeIsVerified,
+    setStoreIsVerified,
+    storeIsFeatured,
+    setStoreIsFeatured,
+    applyStoreChange,
+  } = props;
+  return (
+    <Div
+      padding="sm"
+      className="flex flex-col gap-2 rounded-lg border border-warning/40 bg-warning-surface/40"
+    >
+      <Text className="text-xs font-semibold text-warning uppercase tracking-wide">
+        Apply store change
+      </Text>
+      {linkedStoreId ? (
+        <>
+          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+            Editing store: <code className="font-mono">{linkedStoreId}</code>
+          </Text>
+          <Select
+            label="Store status"
+            options={[
+              { label: "Active", value: "active" },
+              { label: "Pending", value: "pending" },
+              { label: "Suspended", value: "suspended" },
+              { label: "Rejected", value: "rejected" },
+            ]}
+            value={storeStatus}
+            onValueChange={setStoreStatus}
+          />
+          <Toggle
+            label="Verified badge"
+            checked={storeIsVerified}
+            onChange={setStoreIsVerified}
+          />
+          <Toggle
+            label="Featured store"
+            checked={storeIsFeatured}
+            onChange={setStoreIsFeatured}
+          />
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            isLoading={applyStoreChange.isPending}
+            disabled={applyStoreChange.isPending}
+            onClick={() => applyStoreChange.mutate()}
+          >
+            Apply store change
+          </Button>
+        </>
+      ) : (
+        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          Set the{" "}
+          <Text as="span" weight="semibold">
+            Store slug
+          </Text>{" "}
+          field in the Linked parties panel above to enable this action.
+        </Text>
+      )}
+    </Div>
   );
 }
