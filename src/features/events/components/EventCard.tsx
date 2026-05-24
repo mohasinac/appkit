@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Article, BaseListingCard, Button, Div, Heading, RichText, Span, TextLink } from "../../../ui";
 import { THEME_CONSTANTS, LAYOUT } from "../../../tokens";

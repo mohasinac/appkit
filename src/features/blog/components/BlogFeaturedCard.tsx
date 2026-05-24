@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Article, BaseListingCard, Div, Heading, Row, Span, Text, TextLink } from "../../../ui";
 import { THEME_CONSTANTS } from "../../../tokens";
