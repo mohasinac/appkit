@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert, Button, Form, FormActions, Input, Select, Slider, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Toggle, useToast } from "../../../ui";
+import { Alert, Button, Div, Form, FormActions, Grid, Input, Row, Select, Slider, Span, Stack, StackedViewShell, Tabs, TabsContent, TabsList, TabsTrigger, Text, Textarea, Toggle, useToast } from "../../../ui";
 import type { SelectOption } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
 import { ImageUpload } from "../../media/upload/ImageUpload";
@@ -34,7 +34,7 @@ function MaskedInput({
 }) {
   const [revealed, setRevealed] = React.useState(false);
   return (
-    <div className="relative">
+    <Div className="relative">
       <Input
         label={label}
         value={value}
@@ -50,11 +50,10 @@ function MaskedInput({
       >
         {revealed ? "Hide" : "Reveal"}
       </button>
-    </div>
+    </Div>
   );
 }
 
-const NOTIF_CHANNEL_BOX = "rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 space-y-4";
 const NOTIF_CHANNEL_INDENT = "space-y-4 pl-4 border-l-2 border-zinc-200 dark:border-zinc-700";
 const PRIORITY_OPTIONS: SelectOption[] = [
   { label: "Low (send all)", value: "low" },
@@ -515,10 +514,10 @@ export function AdminSiteSettingsView({
               <Input label="Tagline" value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="India's Largest Collectibles Marketplace" />
               <ImageUpload label="Logo" currentImage={logoUrl} onUpload={(file) => upload(file, "store")} onChange={setLogoUrl} />
               <ImageUpload label="Favicon" currentImage={faviconUrl} onUpload={(file) => upload(file, "store")} onChange={setFaviconUrl} />
-              <div className="space-y-3 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4">
+              <Stack gap="sm" rounded="lg" border="default" padding="md">
                 <Toggle label="Maintenance mode" checked={maintenanceMode} onChange={setMaintenanceMode} />
                 <Input label="Maintenance message" value={maintenanceMessage} onChange={(e) => setMaintenanceMessage(e.target.value)} placeholder="We're back soon." disabled={!maintenanceMode} />
-              </div>
+              </Stack>
               <GroupSaveButton isPending={brandingMutation.isPending} />
             </Form>
           </TabsContent>
@@ -526,24 +525,24 @@ export function AdminSiteSettingsView({
           {/* ② Appearance */}
           <TabsContent value="appearance">
             <Form onSubmit={(e) => { e.preventDefault(); appearanceMutation.mutate(); }} className="space-y-4 pt-4">
-              <div className="grid grid-cols-3 gap-4">
-                <>
-                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Primary color</Text>
+              <Grid gap="md" className="grid-cols-3">
+                <Stack gap="none">
+                  <Text size="sm" weight="medium" color="muted" className="mb-1">Primary color</Text>
                   <input type="color" value={primaryColor || "#000000"} onChange={(e) => setPrimaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </>
-                <>
-                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Secondary color</Text>
+                </Stack>
+                <Stack gap="none">
+                  <Text size="sm" weight="medium" color="muted" className="mb-1">Secondary color</Text>
                   <input type="color" value={secondaryColor || "#000000"} onChange={(e) => setSecondaryColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </>
-                <>
-                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Accent color</Text>
+                </Stack>
+                <Stack gap="none">
+                  <Text size="sm" weight="medium" color="muted" className="mb-1">Accent color</Text>
                   <input type="color" value={accentColor || "#000000"} onChange={(e) => setAccentColor(e.target.value)} className="h-10 w-full rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" />
-                </>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+                </Stack>
+              </Grid>
+              <Grid cols={2} gap="md">
                 <Select label="Default theme" options={THEME_OPTIONS} value={defaultTheme} onValueChange={setDefaultTheme} />
                 <Select label="Font family" options={FONT_OPTIONS} value={fontFamily} onValueChange={setFontFamily} />
-              </div>
+              </Grid>
               <GroupSaveButton isPending={appearanceMutation.isPending} />
             </Form>
           </TabsContent>
@@ -554,10 +553,10 @@ export function AdminSiteSettingsView({
               <Toggle label="Show announcement bar" checked={announcementEnabled} onChange={setAnnouncementEnabled} />
               <Input label="Announcement text" value={announcementText} onChange={(e) => setAnnouncementText(e.target.value)} placeholder="🎉 Free shipping on orders ₹999+" disabled={!announcementEnabled} />
               <Input label="Link URL (optional)" value={announcementLink} onChange={(e) => setAnnouncementLink(e.target.value)} placeholder="/products" disabled={!announcementEnabled} />
-              <>
-                <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Background color</Text>
+              <Stack gap="none">
+                <Text size="sm" weight="medium" color="muted" className="mb-1">Background color</Text>
                 <input type="color" value={announcementBg || "#1d4ed8"} onChange={(e) => setAnnouncementBg(e.target.value)} className="h-10 w-32 rounded border border-zinc-200 dark:border-zinc-700 cursor-pointer" disabled={!announcementEnabled} />
-              </>
+              </Stack>
               <GroupSaveButton isPending={announcementMutation.isPending} />
             </Form>
           </TabsContent>
@@ -577,14 +576,14 @@ export function AdminSiteSettingsView({
           {/* ⑤ Contact & Social */}
           <TabsContent value="contact">
             <Form onSubmit={(e) => { e.preventDefault(); contactMutation.mutate(); }} className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <Grid cols={2} gap="md">
                 <Input label="Support email" value={supportEmail} onChange={(e) => setSupportEmail(e.target.value)} type="email" placeholder="support@letitrip.in" />
                 <Input label="Support phone" value={supportPhone} onChange={(e) => setSupportPhone(e.target.value)} placeholder="+91 XXXXX XXXXX" />
-              </div>
+              </Grid>
               <Input label="Physical address" value={supportAddress} onChange={(e) => setSupportAddress(e.target.value)} placeholder="Mumbai, Maharashtra, India" />
               <Input label="Support hours" value={supportHours} onChange={(e) => setSupportHours(e.target.value)} placeholder="Mon–Fri, 10 AM – 6 PM IST" />
               <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400 pt-2">Social links</Text>
-              <div className="grid grid-cols-2 gap-4">
+              <Grid cols={2} gap="md">
                 <Input label="Instagram URL" value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/letitrip" />
                 <Input label="Twitter / X URL" value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://twitter.com/letitrip" />
                 <Input label="Facebook URL" value={facebook} onChange={(e) => setFacebook(e.target.value)} placeholder="https://facebook.com/letitrip" />
@@ -592,7 +591,7 @@ export function AdminSiteSettingsView({
                 <Input label="WhatsApp number" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+91XXXXXXXXXX" />
                 <Input label="LinkedIn URL" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/letitrip" />
                 <Input label="Pinterest URL" value={pinterest} onChange={(e) => setPinterest(e.target.value)} placeholder="https://pinterest.com/letitrip" />
-              </div>
+              </Grid>
               <GroupSaveButton isPending={contactMutation.isPending} />
             </Form>
           </TabsContent>
@@ -613,17 +612,18 @@ export function AdminSiteSettingsView({
               )}
               <Slider label={`Size — ${watermarkSize}% of image width`} value={watermarkSize} onChange={setWatermarkSize} min={5} max={100} step={5} />
               <Slider label={`Opacity — ${watermarkOpacity}%`} value={watermarkOpacity} onChange={setWatermarkOpacity} min={5} max={100} step={5} />
-              <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800">
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">Preview (text watermark only)</Text>
-                <div className="relative bg-white dark:bg-zinc-900 rounded h-32 flex items-end justify-end overflow-hidden">
-                  <span
-                    className="text-zinc-400 select-none p-2 font-medium"
+              <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
+                <Text size="xs" color="muted">Preview (text watermark only)</Text>
+                <Row justify="end" align="end" className="relative h-32 overflow-hidden rounded bg-white dark:bg-zinc-900">
+                  <Span
+                    weight="medium"
+                    className="text-zinc-400 select-none p-2"
                     style={{ fontSize: `${Math.max(10, watermarkSize / 5)}px`, opacity: watermarkOpacity / 100 }}
                   >
                     {watermarkText}
-                  </span>
-                </div>
-              </div>
+                  </Span>
+                </Row>
+              </Stack>
               <GroupSaveButton isPending={watermarkMutation.isPending} />
             </Form>
           </TabsContent>
@@ -631,7 +631,7 @@ export function AdminSiteSettingsView({
           {/* ⑦ Fees & Commissions */}
           <TabsContent value="fees">
             <Form onSubmit={(e) => { e.preventDefault(); feesMutation.mutate(); }} className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <Grid cols={2} gap="md">
                 <Input label="Platform fee — our cut (%)" helperText="% charged on order value. Buyer pays this." value={String(platformFeePercent)} onChange={(e) => setPlatformFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="GST on platform fee (%)" helperText="Applied to our fee only (not full order). Usually 18%." value={String(gstPercent)} onChange={(e) => setGstPercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={100} step={0.1} />
                 <Input label="Razorpay gateway cost (%)" helperText="Gateway's own fee — absorbed by platform, not passed through." value={String(gatewayFeePercent)} onChange={(e) => setGatewayFeePercent(parseFloat(e.target.value) || 0)} type="number" min={0} max={10} step={0.01} />
@@ -642,7 +642,7 @@ export function AdminSiteSettingsView({
                 <Input label="Pre-order listing fee (₹)" value={String(preOrderListingFee)} onChange={(e) => setPreOrderListingFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Featured slot fee (₹)" value={String(featuredSlotFee)} onChange={(e) => setFeaturedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Promoted slot fee (₹)" value={String(promotedSlotFee)} onChange={(e) => setPromotedSlotFee(parseInt(e.target.value) || 0)} type="number" min={0} />
-              </div>
+              </Grid>
               <GroupSaveButton isPending={feesMutation.isPending} />
             </Form>
           </TabsContent>
@@ -651,60 +651,60 @@ export function AdminSiteSettingsView({
           <TabsContent value="integrations">
             <Form onSubmit={(e) => { e.preventDefault(); integrationsMutation.mutate(); }} className="space-y-4 pt-4">
               <Text className="text-xs text-zinc-500 dark:text-zinc-400">Keys are masked in transit and stored encrypted. Click Reveal to view.</Text>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Razorpay</Text>
-                <div className="grid grid-cols-2 gap-4">
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Razorpay</Text>
+                <Grid cols={2} gap="md">
                   <MaskedInput label="Razorpay Key ID" value={razorpayKeyId} onChange={setRazorpayKeyId} placeholder="rzp_live_…" />
                   <MaskedInput label="Razorpay Secret" value={razorpaySecret} onChange={setRazorpaySecret} placeholder="••••••••" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Shiprocket</Text>
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Shiprocket</Text>
                 <MaskedInput label="Shiprocket API token" value={shiprocketToken} onChange={setShiprocketToken} placeholder="••••••••" />
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">SMTP / Email</Text>
-                <div className="grid grid-cols-2 gap-4">
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">SMTP / Email</Text>
+                <Grid cols={2} gap="md">
                   <Input label="SMTP host" value={smtpHost} onChange={(e) => setSmtpHost(e.target.value)} placeholder="smtp.sendgrid.net" />
                   <Input label="SMTP port" value={smtpPort} onChange={(e) => setSmtpPort(e.target.value)} type="number" placeholder="587" />
                   <Input label="SMTP user" value={smtpUser} onChange={(e) => setSmtpUser(e.target.value)} placeholder="apikey" />
                   <MaskedInput label="SMTP password" value={smtpPassword} onChange={setSmtpPassword} placeholder="••••••••" />
-                </div>
+                </Grid>
                 <Input label="From address" value={smtpFrom} onChange={(e) => setSmtpFrom(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Analytics & Tracking</Text>
-                <div className="grid grid-cols-2 gap-4">
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Analytics & Tracking</Text>
+                <Grid cols={2} gap="md">
                   <Input label="Google Analytics ID" value={gaMeasurementId} onChange={(e) => setGaMeasurementId(e.target.value)} placeholder="G-XXXXXXXXXX" />
                   <Input label="Facebook Pixel ID" value={fbPixelId} onChange={(e) => setFbPixelId(e.target.value)} placeholder="XXXXXXXXXXXXXXXX" />
                   <Input label="GTM Container ID" value={gtmContainerId} onChange={(e) => setGtmContainerId(e.target.value)} placeholder="GTM-XXXXXXX" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Meta (Instagram &amp; Facebook Social Feed)</Text>
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</Text>
-                <div className="grid grid-cols-2 gap-4">
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">Meta (Instagram &amp; Facebook Social Feed)</Text>
+                <Text size="xs" color="muted">Used by the Social Feed section to fetch Instagram and Facebook posts via Meta Graph API v19.</Text>
+                <Grid cols={2} gap="md">
                   <MaskedInput label="Page Access Token" value={metaPageAccessToken} onChange={setMetaPageAccessToken} placeholder="EAAxxxxxxx…" />
                   <Input label="Page ID (or handle)" value={metaPageId} onChange={(e) => setMetaPageId(e.target.value)} placeholder="letitrip" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">TikTok for Developers (Social Feed)</Text>
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</Text>
-                <div className="grid grid-cols-2 gap-4">
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">TikTok for Developers (Social Feed)</Text>
+                <Text size="xs" color="muted">Client credentials + long-lived access token from TikTok for Developers. Used to list your account's public videos.</Text>
+                <Grid cols={2} gap="md">
                   <MaskedInput label="Client Key" value={tiktokClientKey} onChange={setTiktokClientKey} placeholder="aw…" />
                   <MaskedInput label="Client Secret" value={tiktokClientSecret} onChange={setTiktokClientSecret} placeholder="••••••••" />
                   <MaskedInput label="Access Token (long-lived)" value={tiktokAccessToken} onChange={setTiktokAccessToken} placeholder="••••••••" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <Text className="text-sm font-medium text-zinc-600 dark:text-zinc-400">DeviantArt OAuth2 (Social Feed)</Text>
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</Text>
-                <div className="grid grid-cols-2 gap-4">
+                </Grid>
+              </Stack>
+              <Stack gap="sm">
+                <Text size="sm" weight="medium" color="muted">DeviantArt OAuth2 (Social Feed)</Text>
+                <Text size="xs" color="muted">Client credentials for DeviantArt gallery fetching (client-credentials OAuth2 flow — no user login required).</Text>
+                <Grid cols={2} gap="md">
                   <MaskedInput label="Client ID" value={deviantartClientId} onChange={setDeviantartClientId} placeholder="1234" />
                   <MaskedInput label="Client Secret" value={deviantartClientSecret} onChange={setDeviantartClientSecret} placeholder="••••••••" />
-                </div>
-              </div>
+                </Grid>
+              </Stack>
               <GroupSaveButton isPending={integrationsMutation.isPending} />
             </Form>
           </TabsContent>
@@ -733,14 +733,14 @@ export function AdminSiteSettingsView({
           {/* ⑪ Platform Limits */}
           <TabsContent value="limits">
             <Form onSubmit={(e) => { e.preventDefault(); limitsMutation.mutate(); }} className="space-y-4 pt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <Grid cols={2} gap="md">
                 <Input label="Max products per store" value={String(maxProductsPerStore)} onChange={(e) => setMaxProductsPerStore(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max images per product" value={String(maxImagesPerProduct)} onChange={(e) => setMaxImagesPerProduct(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max video size (MB)" value={String(maxVideoSizeMb)} onChange={(e) => setMaxVideoSizeMb(parseInt(e.target.value) || 0)} type="number" min={1} />
                 <Input label="Max custom fields per product" value={String(maxCustomFields)} onChange={(e) => setMaxCustomFields(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Max custom sections per product" value={String(maxCustomSections)} onChange={(e) => setMaxCustomSections(parseInt(e.target.value) || 0)} type="number" min={0} />
                 <Input label="Order cancellation window (hours)" value={String(orderCancelWindow)} onChange={(e) => setOrderCancelWindow(parseInt(e.target.value) || 0)} type="number" min={0} />
-              </div>
+              </Grid>
               <GroupSaveButton isPending={limitsMutation.isPending} />
             </Form>
           </TabsContent>
@@ -787,40 +787,40 @@ export function AdminSiteSettingsView({
               </Text>
 
               {/* In-app — read-only */}
-              <div className="rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 bg-zinc-50 dark:bg-zinc-800/50 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">In-app (notification bell)</Text>
-                  <span className="text-xs font-semibold text-success bg-success-surface px-2 py-0.5 rounded-full">Always on</span>
-                </div>
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
-              </div>
+              <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="md">
+                <Row justify="between" gap="sm">
+                  <Text size="sm" weight="medium" color="muted">In-app (notification bell)</Text>
+                  <Span size="xs" weight="semibold" className="rounded-full bg-success-surface px-2 py-0.5 text-success">Always on</Span>
+                </Row>
+                <Text size="xs" color="muted">Displayed in the notification bell and inbox. Cannot be disabled.</Text>
+              </Stack>
 
               {/* Email channel */}
-              <div className={NOTIF_CHANNEL_BOX}>
+              <Stack gap="md" rounded="lg" border="default" padding="md">
                 <Toggle label="Email notifications" checked={notifEmailEnabled} onChange={setNotifEmailEnabled} />
                 {notifEmailEnabled && (
-                  <div className={NOTIF_CHANNEL_INDENT}>
+                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Select
                       label="Minimum priority to send email"
                       options={PRIORITY_OPTIONS}
                       value={notifEmailMinPriority}
                       onValueChange={setNotifEmailMinPriority}
                     />
-                    <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400 pt-1">Resend API (for transactional email)</Text>
+                    <Text size="xs" weight="medium" color="muted" className="pt-1">Resend API (for transactional email)</Text>
                     <MaskedInput label="Resend API Key" value={resendApiKey} onChange={setResendApiKey} placeholder="re_live_…" helperText="Get your key at resend.com — used for all transactional notifications." />
-                    <div className="grid grid-cols-2 gap-4">
+                    <Grid cols={2} gap="md">
                       <Input label="From email" value={notifFromEmail} onChange={(e) => setNotifFromEmail(e.target.value)} placeholder="noreply@letitrip.in" type="email" />
                       <Input label="From name" value={notifFromName} onChange={(e) => setNotifFromName(e.target.value)} placeholder="LetItRip" />
-                    </div>
-                  </div>
+                    </Grid>
+                  </Stack>
                 )}
-              </div>
+              </Stack>
 
               {/* WhatsApp channel */}
-              <div className={NOTIF_CHANNEL_BOX}>
+              <Stack gap="md" rounded="lg" border="default" padding="md">
                 <Toggle label="WhatsApp notifications" checked={notifWhatsappEnabled} onChange={setNotifWhatsappEnabled} />
                 {notifWhatsappEnabled && (
-                  <div className={NOTIF_CHANNEL_INDENT}>
+                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Select
                       label="Minimum priority to send WhatsApp"
                       options={PRIORITY_OPTIONS}
@@ -832,30 +832,30 @@ export function AdminSiteSettingsView({
                       checked={notifWhatsappOtpEnabled}
                       onChange={setNotifWhatsappOtpEnabled}
                     />
-                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <Text size="xs" color="muted">
                       WhatsApp credentials are configured in the WhatsApp tab (⑬). OTP messages use the same phone number.
                     </Text>
-                  </div>
+                  </Stack>
                 )}
-              </div>
+              </Stack>
 
               {/* SMS channel */}
-              <div className={NOTIF_CHANNEL_BOX}>
+              <Stack gap="md" rounded="lg" border="default" padding="md">
                 <Toggle label="SMS notifications" checked={notifSmsEnabled} onChange={setNotifSmsEnabled} />
                 {notifSmsEnabled && (
-                  <div className={NOTIF_CHANNEL_INDENT}>
+                  <Stack gap="md" className={NOTIF_CHANNEL_INDENT}>
                     <Select
                       label="Minimum priority to send SMS"
                       options={PRIORITY_OPTIONS}
                       value={notifSmsMinPriority}
                       onValueChange={setNotifSmsMinPriority}
                     />
-                    <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <Text size="xs" color="muted">
                       SMS gateway credentials (e.g. Twilio, MSG91) can be configured in the Integrations tab once an SMS provider is connected.
                     </Text>
-                  </div>
+                  </Stack>
                 )}
-              </div>
+              </Stack>
 
               <GroupSaveButton isPending={notifChannelsMutation.isPending} />
             </Form>
@@ -871,16 +871,15 @@ export function AdminSiteSettingsView({
                 ["Shipping Policy", shippingPolicyHtml, setShippingPolicyHtml],
                 ["Cookie Policy", cookieHtml, setCookieHtml],
               ].map(([label, value, setter]) => (
-                <div key={label as string} className="space-y-1">
-                  <Text className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{label as string}</Text>
-                  <textarea
-                    value={value as string}
-                    onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
-                    placeholder={`<Text>Enter ${label} HTML here…</Text>`}
-                    rows={6}
-                    className="w-full rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 p-3 text-sm font-mono text-zinc-800 dark:text-zinc-200 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                <Textarea
+                  key={label as string}
+                  label={label as string}
+                  value={value as string}
+                  onChange={(e) => (setter as React.Dispatch<React.SetStateAction<string>>)(e.target.value)}
+                  placeholder={`Enter ${label} HTML here…`}
+                  rows={6}
+                  className="font-mono"
+                />
               ))}
               <GroupSaveButton isPending={legalMutation.isPending} />
             </Form>

@@ -6,13 +6,18 @@ import {
   Alert,
   Button,
   Div,
+  Grid,
   Heading,
   Input,
+  Label,
   RichTextEditor,
+  Row,
   Select,
+  Stack,
   StackedViewShell,
   TagInput,
   Text,
+  Textarea,
   Toggle,
 } from "../../../ui";
 import type { StackedViewShellProps } from "../../../ui";
@@ -30,9 +35,6 @@ import type {
 import { StepDef, StepForm } from "../../shell";
 
 // --- Constants ---------------------------------------------------------------
-
-const CLS_PANEL_SM = "rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-3 space-y-2";
-const CLS_PANEL_LG = "rounded-xl border border-zinc-200 dark:border-slate-700 p-4 space-y-4";
 
 export interface AdminEventEditorViewProps extends Omit<StackedViewShellProps, "sections"> {
   eventId?: string;
@@ -96,43 +98,41 @@ function FormFieldBuilder({ fields, setFields }: FormFieldBuilderProps) {
     setFields(fields.map((f) => (f.id === id ? { ...f, ...patch } : f)));
 
   return (
-    <div className="space-y-3">
-      <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-400 uppercase tracking-wide">Form fields</Text>
+    <Stack gap="sm">
+      <Text size="xs" weight="medium" color="muted" className="uppercase tracking-wide">Form fields</Text>
       {fields.length === 0 && (
-        <Text className="text-xs text-zinc-500 dark:text-zinc-400">No fields yet. Add fields to collect responses from participants.</Text>
+        <Text size="xs" color="muted">No fields yet. Add fields to collect responses from participants.</Text>
       )}
       {fields.map((field, idx) => {
         const hasOptions = FIELD_TYPES_WITH_OPTIONS.includes(field.type);
         const isNumeric = field.type === "number" || field.type === "rating";
         const isText = field.type === "text" || field.type === "textarea" || field.type === "email";
         return (
-          <div key={field.id} className="rounded-lg border border-zinc-200 dark:border-zinc-600 p-3 space-y-2 bg-white dark:bg-zinc-900">
-            <div className="flex items-center justify-between gap-2">
-              <Text className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Field {idx + 1}</Text>
+          <Stack key={field.id} gap="xs" surface="default" rounded="lg" border="default" padding="sm">
+            <Row justify="between" gap="xs">
+              <Text size="xs" weight="medium" color="muted">Field {idx + 1}</Text>
               <button type="button" onClick={() => removeField(field.id)} className="text-zinc-400 hover:text-red-500 transition-colors text-lg leading-none px-1" aria-label="Remove field">×</button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            </Row>
+            <Grid cols={2} gap="xs">
               <Select label="Type" value={field.type} options={FORM_FIELD_TYPE_OPTIONS} onChange={(e) => updateField(field.id, { type: e.target.value as FormFieldType, options: undefined })} />
               <Input label="Label" value={field.label} onChange={(e) => updateField(field.id, { label: e.target.value })} placeholder="e.g. Describe your entry" required />
-            </div>
+            </Grid>
             {!hasOptions && field.type !== "date" && field.type !== "file" && field.type !== "rating" && (
               <Input label="Placeholder (optional)" value={field.placeholder ?? ""} onChange={(e) => updateField(field.id, { placeholder: e.target.value || undefined })} placeholder="Hint shown inside the field" />
             )}
             {hasOptions && (
-              <div className="space-y-1">
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Options — one per line</Text>
-                <textarea
-                  className="w-full rounded-lg border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm text-zinc-800 dark:text-zinc-200 px-3 py-2 resize-y min-h-[72px] focus:outline-none focus:ring-2 focus:ring-primary/50"
-                  value={(field.options ?? []).join("\n")}
-                  onChange={(e) => updateField(field.id, { options: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) })}
-                  placeholder={"Option A\nOption B\nOption C"}
-                />
-              </div>
+              <Textarea
+                label="Options — one per line"
+                value={(field.options ?? []).join("\n")}
+                onChange={(e) => updateField(field.id, { options: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) })}
+                placeholder={"Option A\nOption B\nOption C"}
+                rows={3}
+              />
             )}
             {(isText || isNumeric) && (
-              <div className="rounded bg-zinc-50 dark:bg-zinc-800 p-2 space-y-2">
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Validation (optional)</Text>
-                <div className="grid grid-cols-2 gap-2">
+              <Stack gap="xs" surface="muted" rounded="md" padding="xs">
+                <Text size="xs" color="muted">Validation (optional)</Text>
+                <Grid gap="xs" className="grid-cols-2">
                   {isText && (
                     <>
                       <Input label="Min length" type="number" value={String(field.validation?.minLength ?? "")} onChange={(e) => updateField(field.id, { validation: { ...field.validation, minLength: e.target.value ? Number(e.target.value) : undefined } })} placeholder="0" />
@@ -145,18 +145,18 @@ function FormFieldBuilder({ fields, setFields }: FormFieldBuilderProps) {
                       <Input label="Max value" type="number" value={String(field.validation?.max ?? "")} onChange={(e) => updateField(field.id, { validation: { ...field.validation, max: e.target.value ? Number(e.target.value) : undefined } })} placeholder="100" />
                     </>
                   )}
-                </div>
+                </Grid>
                 {field.type === "text" && (
                   <Input label="Pattern (regex, optional)" value={field.validation?.pattern ?? ""} onChange={(e) => updateField(field.id, { validation: { ...field.validation, pattern: e.target.value || undefined } })} placeholder="^[A-Z].*" />
                 )}
-              </div>
+              </Stack>
             )}
             <Toggle checked={field.required} onChange={(v) => updateField(field.id, { required: v })} label="Required" />
-          </div>
+          </Stack>
         );
       })}
       <Button type="button" variant="outline" size="sm" onClick={addField}>+ Add field</Button>
-    </div>
+    </Stack>
   );
 }
 
@@ -458,7 +458,7 @@ export function AdminEventEditorView({
         return null;
       },
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Stack gap="md">
           <Heading level={3} className="mb-2">Event Details</Heading>
           {!isEdit && (
             <Select
@@ -485,22 +485,22 @@ export function AdminEventEditorView({
             placeholder="event-charizard-flash-sale-2026"
             helperText="Auto-generated from title. Must start with 'event-'."
           />
-          <Div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">Description</label>
+          <Stack gap="xs">
+            <Label>Description</Label>
             <RichTextEditor value={values.description} onChange={(v) => onChange({ description: v })} minHeightClassName="min-h-[120px]" placeholder="Describe this event…" />
-          </Div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          </Stack>
+          <Grid cols={2} gap="sm">
             <Input label="Starts at" type="datetime-local" value={values.startsAt} onChange={(e) => onChange({ startsAt: e.target.value })} required />
             <Input label="Ends at" type="datetime-local" value={values.endsAt} onChange={(e) => onChange({ endsAt: e.target.value })} required />
-          </div>
+          </Grid>
           <TagInput label="Tags" value={values.tags} onChange={(t) => onChange({ tags: t })} placeholder="e.g. pokemon, sale, 2026" />
-        </div>
+        </Stack>
       ),
     },
     {
       label: "Media",
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Stack gap="md">
           <Heading level={3} className="mb-2">Media</Heading>
           <Input
             label="Cover Image URL (optional)"
@@ -509,7 +509,7 @@ export function AdminEventEditorView({
             placeholder="https://…"
             helperText="Direct link to the event cover image."
           />
-        </div>
+        </Stack>
       ),
     },
     {
@@ -521,100 +521,100 @@ export function AdminEventEditorView({
         return null;
       },
       render: ({ values, onChange }) => (
-        <div className="space-y-5">
+        <Stack gap="md">
           <Heading level={3} className="mb-2">Event Settings</Heading>
           {isEdit && (
             <Select label="Status" value={values.status} options={EVENT_STATUS_OPTIONS} onChange={(e) => onChange({ status: e.target.value as EventStatus })} />
           )}
           {values.createdBy && (
-            <Div>
-              <Text className="text-sm font-medium mb-1">Created by</Text>
-              <Text className="text-sm text-[var(--appkit-color-text-muted)]">{values.createdBy}</Text>
-            </Div>
+            <Stack gap="none">
+              <Text size="sm" weight="medium" className="mb-1">Created by</Text>
+              <Text size="sm" color="muted">{values.createdBy}</Text>
+            </Stack>
           )}
 
           {/* Sale config */}
           {values.type === "sale" && (
-            <div className={CLS_PANEL_SM}>
-              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Sale configuration</Text>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+              <Text size="sm" weight="semibold" color="muted">Sale configuration</Text>
+              <Grid cols={2} gap="sm">
                 <Input label="Discount %" type="number" value={values.discountPercent} onChange={(e) => onChange({ discountPercent: e.target.value })} placeholder="10" />
                 <Input label="Banner text (optional)" value={values.saleBannerText} onChange={(e) => onChange({ saleBannerText: e.target.value })} placeholder="Limited time — ends Sunday!" />
-              </div>
-            </div>
+              </Grid>
+            </Stack>
           )}
 
           {/* Offer config */}
           {values.type === "offer" && (
-            <div className={CLS_PANEL_SM}>
-              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Offer configuration</Text>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
+              <Text size="sm" weight="semibold" color="muted">Offer configuration</Text>
+              <Grid cols={2} gap="sm">
                 <Input label="Coupon ID" value={values.couponId} onChange={(e) => onChange({ couponId: e.target.value })} placeholder="Firestore coupon document ID" required />
                 <Input label="Display code" value={values.displayCode} onChange={(e) => onChange({ displayCode: e.target.value })} placeholder="CHARIZARD25" required />
-              </div>
+              </Grid>
               <Input label="Banner text (optional)" value={values.offerBannerText} onChange={(e) => onChange({ offerBannerText: e.target.value })} placeholder="Use CHARIZARD25 at checkout" />
-            </div>
+            </Stack>
           )}
 
           {/* Poll config */}
           {values.type === "poll" && (
-            <div className={CLS_PANEL_LG}>
-              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Poll configuration</Text>
-              <div className="space-y-2">
-                <Text className="text-xs text-zinc-500 dark:text-zinc-400">Options (minimum 2)</Text>
+            <Stack gap="md" rounded="xl" border="default" padding="md">
+              <Text size="sm" weight="semibold" color="muted">Poll configuration</Text>
+              <Stack gap="xs">
+                <Text size="xs" color="muted">Options (minimum 2)</Text>
                 {values.pollOptions.map((opt, idx) => (
-                  <div key={opt.id} className="flex items-center gap-2">
-                    <div className="flex-1">
+                  <Row key={opt.id} gap="xs">
+                    <Div className="flex-1">
                       <Input
                         value={opt.label}
                         onChange={(e) => onChange({ pollOptions: values.pollOptions.map((o) => o.id === opt.id ? { ...o, label: e.target.value } : o) })}
                         placeholder={`Option ${idx + 1}`}
                       />
-                    </div>
+                    </Div>
                     {values.pollOptions.length > 2 && (
                       <button type="button" onClick={() => onChange({ pollOptions: values.pollOptions.filter((o) => o.id !== opt.id) })} className="text-zinc-400 hover:text-red-500 transition-colors px-2 py-1 text-lg leading-none" aria-label="Remove option">×</button>
                     )}
-                  </div>
+                  </Row>
                 ))}
                 <Button type="button" variant="outline" size="sm" onClick={() => onChange({ pollOptions: [...values.pollOptions, { id: `opt${Date.now()}`, label: "" }] })}>+ Add option</Button>
-              </div>
+              </Stack>
               <Select label="Results visibility" value={values.resultsVisibility} options={POLL_VISIBILITY_OPTIONS} onChange={(e) => onChange({ resultsVisibility: e.target.value as "always" | "after_vote" | "after_end" })} />
-              <div className="space-y-3">
+              <Stack gap="sm">
                 <Toggle checked={values.allowMultiSelect} onChange={(v) => onChange({ allowMultiSelect: v })} label="Allow multi-select" />
                 <Toggle checked={values.allowComment} onChange={(v) => onChange({ allowComment: v })} label="Allow comment with vote" />
-              </div>
-            </div>
+              </Stack>
+            </Stack>
           )}
 
           {/* Survey config */}
           {values.type === "survey" && (
-            <div className={CLS_PANEL_LG}>
-              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Survey configuration</Text>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Stack gap="md" rounded="xl" border="default" padding="md">
+              <Text size="sm" weight="semibold" color="muted">Survey configuration</Text>
+              <Grid cols={2} gap="sm">
                 <Input label="Max entries per user" type="number" value={values.maxEntriesPerUser} onChange={(e) => onChange({ maxEntriesPerUser: e.target.value })} placeholder="1" />
                 {values.hasPointSystem && (
                   <Input label="Points label" value={values.pointsLabel} onChange={(e) => onChange({ pointsLabel: e.target.value })} placeholder="Points" />
                 )}
-              </div>
-              <div className="space-y-2">
+              </Grid>
+              <Stack gap="xs">
                 <Toggle checked={values.requireLogin} onChange={(v) => onChange({ requireLogin: v })} label="Require login to participate" />
                 <Toggle checked={values.hasLeaderboard} onChange={(v) => onChange({ hasLeaderboard: v })} label="Show leaderboard" />
                 <Toggle checked={values.hasPointSystem} onChange={(v) => onChange({ hasPointSystem: v })} label="Enable point system" />
                 <Toggle checked={values.entryReviewRequired} onChange={(v) => onChange({ entryReviewRequired: v })} label="Require employee review before entry is approved" />
-              </div>
+              </Stack>
               <FormFieldBuilder fields={values.surveyFields} setFields={(f) => onChange({ surveyFields: f })} />
-            </div>
+            </Stack>
           )}
 
           {/* Feedback config */}
           {values.type === "feedback" && (
-            <div className={CLS_PANEL_LG}>
-              <Text className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Feedback configuration</Text>
+            <Stack gap="md" rounded="xl" border="default" padding="md">
+              <Text size="sm" weight="semibold" color="muted">Feedback configuration</Text>
               <Toggle checked={values.anonymous} onChange={(v) => onChange({ anonymous: v })} label="Allow anonymous submissions" />
               <FormFieldBuilder fields={values.feedbackFields} setFields={(f) => onChange({ feedbackFields: f })} />
-            </div>
+            </Stack>
           )}
-        </div>
+        </Stack>
       ),
     },
     {
@@ -624,78 +624,78 @@ export function AdminEventEditorView({
         const showRaffleConfig = isRaffleType || values.hasRaffle;
         const isSpinMode = values.type === "spin_wheel" || values.raffleType === "spin_wheel";
         return (
-          <div className="space-y-5">
+          <Stack gap="md">
             <Heading level={3} className="mb-2">Raffle &amp; Spin Wheel</Heading>
             {!isRaffleType && (
               <Toggle checked={values.hasRaffle} onChange={(v) => onChange({ hasRaffle: v })} label="Attach a raffle to this event" />
             )}
             {!isRaffleType && !values.hasRaffle && (
-              <Text className="text-sm text-[var(--appkit-color-text-muted)]">
+              <Text size="sm" color="muted">
                 Enable the toggle above to attach a raffle draw to this event. Not applicable for this event type by default.
               </Text>
             )}
             {showRaffleConfig && (
-              <div className={CLS_PANEL_LG}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <Stack gap="md" rounded="xl" border="default" padding="md">
+                <Grid cols={2} gap="sm">
                   <Select label="Raffle type" value={values.type === "spin_wheel" ? "spin_wheel" : values.raffleType} options={RAFFLE_TYPE_OPTIONS} onChange={(e) => onChange({ raffleType: e.target.value as RaffleType })} disabled={values.type === "spin_wheel"} />
                   <Input label="Top N (for top-N raffle types)" type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
-                </div>
+                </Grid>
                 <Input label="Prize description" value={values.rafflePrize} onChange={(e) => onChange({ rafflePrize: e.target.value })} placeholder="₹2,000 store credit + exclusive Pikachu sticker" />
                 <Input label="Coupon ID for winner (optional)" value={values.rafflePrizeCouponId} onChange={(e) => onChange({ rafflePrizeCouponId: e.target.value })} placeholder="coupon-vip-winner-2026" />
 
                 {isSpinMode && (
-                  <div className="rounded-lg border border-zinc-200 dark:border-slate-700 p-3 space-y-3">
-                    <Text className="text-xs font-medium text-zinc-600 dark:text-zinc-300">Spin prizes (weighted random)</Text>
+                  <Stack gap="sm" rounded="lg" border="default" padding="sm">
+                    <Text size="xs" weight="medium" color="muted">Spin prizes (weighted random)</Text>
                     {values.spinPrizes.length === 0 && (
-                      <Text className="text-xs text-zinc-500 dark:text-zinc-400">No spin prizes yet. Add at least one to enable spinning.</Text>
+                      <Text size="xs" color="muted">No spin prizes yet. Add at least one to enable spinning.</Text>
                     )}
                     {values.spinPrizes.map((p) => (
-                      <div key={p.id} className="grid grid-cols-12 gap-2 items-end">
-                        <div className="col-span-5">
+                      <Grid key={p.id} gap="xs" className="grid-cols-12 items-end">
+                        <Div className="col-span-5">
                           <Input label="Label" value={p.label} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, label: e.target.value } : sp) })} placeholder="₹100 off" />
-                        </div>
-                        <div className="col-span-3">
+                        </Div>
+                        <Div className="col-span-3">
                           <Input label="Coupon ID" value={p.couponId ?? ""} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, couponId: e.target.value || undefined } : sp) })} />
-                        </div>
-                        <div className="col-span-2">
+                        </Div>
+                        <Div className="col-span-2">
                           <Input label="Weight" type="number" value={String(p.weight)} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, weight: Number(e.target.value) || 0 } : sp) })} />
-                        </div>
-                        <div className="col-span-1 flex items-center justify-center pb-2">
+                        </Div>
+                        <Row centered className="col-span-1 pb-2">
                           <Toggle checked={p.isActive} onChange={(v) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, isActive: v } : sp) })} label="" />
-                        </div>
-                        <div className="col-span-1 flex items-center justify-center pb-2">
+                        </Row>
+                        <Row centered className="col-span-1 pb-2">
                           <button type="button" onClick={() => onChange({ spinPrizes: values.spinPrizes.filter((sp) => sp.id !== p.id) })} className="text-zinc-400 hover:text-red-500 text-lg leading-none px-2" aria-label="Remove prize">×</button>
-                        </div>
-                      </div>
+                        </Row>
+                      </Grid>
                     ))}
                     <Button type="button" variant="outline" size="sm" onClick={() => onChange({ spinPrizes: [...values.spinPrizes, { id: `prize-${Date.now()}`, label: "", couponId: undefined, weight: 1, isActive: true }] })}>+ Add spin prize</Button>
                     <Input label="Max spins per user" type="number" value={values.spinMaxPerUser} onChange={(e) => onChange({ spinMaxPerUser: e.target.value })} placeholder="1" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <Grid cols={2} gap="sm">
                       <Input label="Spin window start" type="datetime-local" value={values.spinWindowStart} onChange={(e) => onChange({ spinWindowStart: e.target.value })} />
                       <Input label="Spin window end" type="datetime-local" value={values.spinWindowEnd} onChange={(e) => onChange({ spinWindowEnd: e.target.value })} />
-                    </div>
-                  </div>
+                    </Grid>
+                  </Stack>
                 )}
 
                 {/* Manual trigger + winner (edit mode only) */}
                 {isEdit && (
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20 p-3 space-y-2">
-                    <div className="flex items-center justify-between gap-3">
-                      <Text className="text-sm font-medium text-amber-900 dark:text-amber-100">
+                  <Stack gap="xs" rounded="lg" padding="sm" className="border border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20">
+                    <Row justify="between" gap="sm">
+                      <Text size="sm" weight="medium" className="text-amber-900 dark:text-amber-100">
                         {raffleWinnerName ? `Winner: ${raffleWinnerName}` : "Raffle not yet triggered"}
                       </Text>
                       <Button type="button" variant="primary" size="sm" onClick={() => triggerRaffleMutation.mutate()} disabled={triggerRaffleMutation.isPending || Boolean(raffleWinnerName)}>
                         {triggerRaffleMutation.isPending ? "Triggering…" : raffleWinnerName ? "Already triggered" : "Trigger Raffle Now"}
                       </Button>
-                    </div>
-                    {raffleEntryCount !== null && <Text className="text-xs text-amber-800 dark:text-amber-200">Pool size: {raffleEntryCount}</Text>}
-                    {raffleGithubUrl && <Text className="text-xs text-amber-800 dark:text-amber-200 break-all">Fairness proof: {raffleGithubUrl}</Text>}
-                    {triggerMessage && <Text className="text-xs text-amber-900 dark:text-amber-100">{triggerMessage}</Text>}
-                  </div>
+                    </Row>
+                    {raffleEntryCount !== null && <Text size="xs" className="text-amber-800 dark:text-amber-200">Pool size: {raffleEntryCount}</Text>}
+                    {raffleGithubUrl && <Text size="xs" className="break-all text-amber-800 dark:text-amber-200">Fairness proof: {raffleGithubUrl}</Text>}
+                    {triggerMessage && <Text size="xs" className="text-amber-900 dark:text-amber-100">{triggerMessage}</Text>}
+                  </Stack>
                 )}
-              </div>
+              </Stack>
             )}
-          </div>
+          </Stack>
         );
       },
     },
@@ -708,7 +708,7 @@ export function AdminEventEditorView({
   ) : null;
 
   const formContent = (
-    <div className="space-y-4">
+    <Stack gap="sm">
       {alertSection}
       <StepForm<EventDraft>
         steps={steps}
@@ -726,11 +726,11 @@ export function AdminEventEditorView({
           {saveMessage}
         </Alert>
       )}
-    </div>
+    </Stack>
   );
 
   if (embedded) {
-    return <div className="overflow-y-auto p-4">{formContent}</div>;
+    return <Div className="overflow-y-auto p-4">{formContent}</Div>;
   }
 
   return (
