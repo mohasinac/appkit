@@ -203,6 +203,12 @@ export function AdminSupportTicketsView({ children, ...props }: AdminSupportTick
         }
         internalNotes={toStringValue(selectedRow?._raw?.internalNotes, "") || undefined}
         orderId={toStringValue(selectedRow?._raw?.orderId, "") || undefined}
+        relatedParties={
+          selectedRow?._raw?.relatedParties &&
+          typeof selectedRow._raw.relatedParties === "object"
+            ? (selectedRow._raw.relatedParties as Record<string, string>)
+            : undefined
+        }
       />
     </>
   );

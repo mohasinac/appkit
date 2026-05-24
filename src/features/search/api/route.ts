@@ -23,6 +23,11 @@ import { NextResponse } from "next/server.js";
 import { getProviders } from "../../../contracts";
 import { SearchRepository } from "../repository/search.repository";
 import type { SearchProductItem } from "../types/index";
+import {
+  isListingTypeEnabled,
+  enabledListingTypes,
+} from "../../../_internal/shared/listing-types/feature-flags";
+import { getSiteSettingsGlobal } from "../../admin/utils/getSiteSettingsGlobal";
 
 function param(url: URL, key: string): string | null {
   return url.searchParams.get(key);
@@ -73,6 +78,34 @@ export async function GET(request: Request): Promise<NextResponse> {
     const page = numParam(url, "page", 1);
     const pageSize = Math.min(numParam(url, "pageSize", 20), 100);
 
+    // W1-43 — listing-type feature flag gating. Reject a search scoped to a
+    // disabled listing type with an empty result; for unscoped searches,
+    // strip disabled types post-query so search-bar suggestions stay clean.
+    let siteSettings: Awaited<ReturnType<typeof getSiteSettingsGlobal>> | null = null;
+    try {
+      siteSettings = await getSiteSettingsGlobal();
+    } catch {
+      siteSettings = null;
+    }
+    if (listingType && siteSettings && !isListingTypeEnabled(listingType, siteSettings)) {
+      return NextResponse.json({
+        success: true,
+        data: {
+          items: [],
+          total: 0,
+          page,
+          pageSize,
+          totalPages: 0,
+          hasMore: false,
+          backend: "firestore" as const,
+          listingTypeDisabled: true,
+        },
+      });
+    }
+    const enabledSet = new Set<string>(
+      siteSettings ? enabledListingTypes(siteSettings) : [],
+    );
+
     const repo = new SearchRepository(
       db.getRepository<SearchProductItem>("products"),
     );
@@ -92,9 +125,27 @@ export async function GET(request: Request): Promise<NextResponse> {
       pageSize,
     });
 
+    // W1-43 — when no specific listingType filter, strip disabled types from
+    // the surface. Skipped when all types are enabled or settings failed to load.
+    let filteredItems = result.items;
+    let filteredTotal = result.total;
+    if (!listingType && enabledSet.size > 0 && enabledSet.size < 7) {
+      const before = filteredItems.length;
+      filteredItems = filteredItems.filter((it) =>
+        enabledSet.has(it.listingType ?? "standard"),
+      );
+      const removed = before - filteredItems.length;
+      filteredTotal = Math.max(0, filteredTotal - removed);
+    }
+
     return NextResponse.json({
       success: true,
-      data: { ...result, backend: "firestore" as const },
+      data: {
+        ...result,
+        items: filteredItems,
+        total: filteredTotal,
+        backend: "firestore" as const,
+      },
     });
   } catch (error) {
     console.error("[feat-search] GET /api/search failed", error);

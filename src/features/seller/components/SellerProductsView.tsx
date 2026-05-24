@@ -24,6 +24,7 @@ import { DataTable } from "../../admin/components/DataTable";
 import type { AdminTableColumn } from "../../admin/types";
 import { ACTIONS } from "../../../_internal/shared/actions/action-registry";
 import { buildBulkAction } from "../../../_internal/shared/actions/bulk-helpers";
+import { useListingTypeFlags } from "../../../react/hooks/useListingTypeFlags";
 
 import { SellerProductsCards } from "./SellerProductsCards";
 import { SellerProductsFilterDrawer } from "./SellerProductsFilterDrawer";
@@ -87,17 +88,21 @@ function TypeDropdown({
   active: ListingKind;
   onChange: (kind: ListingKind) => void;
 }) {
+  const flags = useListingTypeFlags();
+  // W1-43 — hide disabled types so the seller can't filter for an
+  // inactive listing surface. Bundle is a categoryType (not a listingType)
+  // and stays unconditionally available.
   const options: { value: ListingKind; label: string }[] = [
     { value: "all", label: "All listings" },
-    { value: "standard", label: "Standard" },
-    { value: "auction", label: "Auction" },
-    { value: "pre-order", label: "Pre-order" },
-    { value: "prize-draw", label: "Prize Draw" },
+    flags.standard && { value: "standard", label: "Standard" },
+    flags.auction && { value: "auction", label: "Auction" },
+    flags["pre-order"] && { value: "pre-order", label: "Pre-order" },
+    flags["prize-draw"] && { value: "prize-draw", label: "Prize Draw" },
     { value: "bundle", label: "Bundle" },
-    { value: "classified", label: "Classified" },
-    { value: "digital-code", label: "Digital Code" },
-    { value: "live", label: "Live" },
-  ];
+    flags.classified && { value: "classified", label: "Classified" },
+    flags["digital-code"] && { value: "digital-code", label: "Digital Code" },
+    flags.live && { value: "live", label: "Live" },
+  ].filter(Boolean) as { value: ListingKind; label: string }[];
   return (
     <Row className="gap-2 px-3 lg:px-4 py-2 border-b border-[var(--appkit-color-border)]">
       <Text className="text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">

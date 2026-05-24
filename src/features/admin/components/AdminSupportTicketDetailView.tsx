@@ -6,6 +6,7 @@ import {
   Button,
   Div,
   FormActions,
+  Input,
   Select,
   SideDrawer,
   Text,
@@ -22,6 +23,14 @@ interface TicketMessageClient {
   createdAt?: string;
 }
 
+interface RelatedPartiesClient {
+  userId?: string;
+  storeId?: string;
+  orderId?: string;
+  productId?: string;
+  bidId?: string;
+}
+
 export interface AdminSupportTicketDetailViewProps {
   open: boolean;
   onClose: () => void;
@@ -35,6 +44,8 @@ export interface AdminSupportTicketDetailViewProps {
   messages?: TicketMessageClient[];
   internalNotes?: string;
   orderId?: string;
+  /** ST-6 — current relatedParties snapshot from the ticket document. */
+  relatedParties?: RelatedPartiesClient;
 }
 
 const STATUS_OPTIONS = [
@@ -79,6 +90,7 @@ export function AdminSupportTicketDetailView({
   messages = [],
   internalNotes,
   orderId,
+  relatedParties,
 }: AdminSupportTicketDetailViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -87,6 +99,10 @@ export function AdminSupportTicketDetailView({
   const [priority, setPriority] = React.useState(currentPriority ?? "normal");
   const [notes, setNotes] = React.useState(internalNotes ?? "");
   const [replyBody, setReplyBody] = React.useState("");
+  // ST-6 — local edits for the linked-parties panel
+  const [parties, setParties] = React.useState<RelatedPartiesClient>(
+    relatedParties ?? {},
+  );
 
   React.useEffect(() => {
     if (open) {
@@ -94,11 +110,22 @@ export function AdminSupportTicketDetailView({
       setPriority(currentPriority ?? "normal");
       setNotes(internalNotes ?? "");
       setReplyBody("");
+      setParties(relatedParties ?? {});
     }
-  }, [open, currentStatus, currentPriority, internalNotes]);
+  }, [open, currentStatus, currentPriority, internalNotes, relatedParties]);
 
   const invalidate = () =>
     queryClient.invalidateQueries({ queryKey: ["admin", "support-tickets"] });
+
+  const cleanedParties = React.useMemo(() => {
+    const out: RelatedPartiesClient = {};
+    if (parties.userId?.trim()) out.userId = parties.userId.trim();
+    if (parties.storeId?.trim()) out.storeId = parties.storeId.trim();
+    if (parties.orderId?.trim()) out.orderId = parties.orderId.trim();
+    if (parties.productId?.trim()) out.productId = parties.productId.trim();
+    if (parties.bidId?.trim()) out.bidId = parties.bidId.trim();
+    return out;
+  }, [parties]);
 
   const updateMutation = useMutation({
     mutationFn: async () => {
@@ -106,6 +133,8 @@ export function AdminSupportTicketDetailView({
         status,
         priority,
         internalNotes: notes || undefined,
+        relatedParties:
+          Object.keys(cleanedParties).length > 0 ? cleanedParties : undefined,
       });
     },
     onSuccess: () => {
@@ -261,6 +290,37 @@ export function AdminSupportTicketDetailView({
             placeholder="Notes visible only to admins and employees…"
             className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
+        </Div>
+
+        {/* ST-6 — Linked parties (admin-assigned subjects of this ticket) */}
+        <Div
+          padding="sm"
+          className="flex flex-col gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700"
+        >
+          <Text className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wide">
+            Linked parties
+          </Text>
+          <Text className="text-xs text-zinc-500 dark:text-zinc-400">
+            Tag the buyer / store / order / product / bid this ticket concerns.
+          </Text>
+          {([
+            ["userId", "User slug"],
+            ["storeId", "Store slug"],
+            ["orderId", "Order ID"],
+            ["productId", "Product slug"],
+            ["bidId", "Bid ID"],
+          ] as const).map(([key, label]) => (
+            <Input
+              key={key}
+              label={label}
+              type="text"
+              value={parties[key] ?? ""}
+              onChange={(e) =>
+                setParties((p) => ({ ...p, [key]: e.target.value }))
+              }
+              placeholder={label}
+            />
+          ))}
         </Div>
 
         <FormActions align="right">

@@ -85,6 +85,24 @@ export interface TicketMessage {
 }
 
 // ============================================================================
+// LINKED PARTIES (ST-6)
+// ============================================================================
+
+/**
+ * Subject entities a ticket concerns. Assigned by admin/support agents so a
+ * single ticket can reference the buyer, store, order, product, or bid in
+ * dispute. Used to render clickable chips in the ticket detail view that link
+ * to the relevant admin detail page.
+ */
+export interface TicketRelatedParties {
+  userId?: string;
+  storeId?: string;
+  orderId?: string;
+  productId?: string;
+  bidId?: string;
+}
+
+// ============================================================================
 // SUPPORT TICKET DOCUMENT
 // ============================================================================
 
@@ -103,6 +121,12 @@ export interface SupportTicketDocument {
 
   /** Linked order ID — required when category === "order_issue". */
   orderId?: string;
+
+  /**
+   * ST-6 — subjects of the ticket. Admin/support assignable. `orderId` is
+   * mirrored here for consistency when set via the linked-parties panel.
+   */
+  relatedParties?: TicketRelatedParties;
 
   status: TicketStatus;
   priority: TicketPriority;
@@ -152,6 +176,7 @@ export type SupportTicketUpdateInput = Partial<
     | "internalNotes"
     | "resolvedAt"
     | "closedAt"
+    | "relatedParties"
   >
 >;
 
