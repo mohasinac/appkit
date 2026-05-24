@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Input, Label, Select, SideDrawer, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Input, Label, Select, SideDrawer, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -413,6 +413,192 @@ export function AdminUserEditorView({
   const isHardBanned = currentIsHardBanned ?? false;
   const softBans = currentSoftBans ?? [];
 
+  const renderInfoCard = () =>
+    userId ? (
+      <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900/40">
+        <div className="flex flex-col gap-1 text-zinc-700 dark:text-zinc-300">
+          <>
+            <span className="font-semibold">Owner ID (Firebase UID):</span>{" "}
+            <code className="select-all font-mono">{userId}</code>
+          </>
+          {ownedStoreId && (
+            <>
+              <span className="font-semibold">Owns store:</span>{" "}
+              <code className="select-all font-mono">{ownedStoreId}</code>
+              {ownedStoreName ? ` — ${ownedStoreName}` : ""}
+            </>
+          )}
+        </div>
+      </div>
+    ) : null;
+
+  const renderRoleSection = () => (
+    <Select
+      label="Role"
+      options={ROLE_OPTIONS}
+      value={role}
+      onValueChange={setRole}
+    />
+  );
+
+  const renderEmailVerifiedSection = () => (
+    <Toggle
+      label="Email verified"
+      checked={emailVerified}
+      onChange={setEmailVerified}
+    />
+  );
+
+  const renderProfileSection = () => (
+    <div className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
+      <Heading
+        level={3}
+        className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+      >
+        Profile details
+      </Heading>
+      <div className="space-y-3">
+        <Input
+          label="Display name"
+          value={editDisplayName}
+          onChange={(e) => setEditDisplayName(e.target.value)}
+          placeholder="Full name shown on profile"
+        />
+        <Input
+          label="Phone number"
+          type="tel"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          placeholder="+91 90000 00000"
+        />
+        <div className="flex flex-col gap-1">
+          <Label>Bio</Label>
+          <textarea
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
+            placeholder="Short bio shown on the public profile…"
+            className={TEXTAREA_CHROME}
+          />
+        </div>
+        <Input
+          label="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="City, Country"
+        />
+        <Input
+          label="Website"
+          type="url"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          placeholder="https://"
+        />
+        <Text size="xs" color="muted">
+          Social links
+        </Text>
+        <Input
+          label="Twitter / X"
+          value={twitter}
+          onChange={(e) => setTwitter(e.target.value)}
+          placeholder="@handle or full URL"
+        />
+        <Input
+          label="Instagram"
+          value={instagram}
+          onChange={(e) => setInstagram(e.target.value)}
+          placeholder="@handle or full URL"
+        />
+        <Input
+          label="Facebook"
+          value={facebook}
+          onChange={(e) => setFacebook(e.target.value)}
+          placeholder="https://facebook.com/…"
+        />
+        <Input
+          label="LinkedIn"
+          value={linkedin}
+          onChange={(e) => setLinkedin(e.target.value)}
+          placeholder="https://linkedin.com/in/…"
+        />
+      </div>
+    </div>
+  );
+
+  const renderAdminNotesSection = () => (
+    <div className="flex flex-col gap-1">
+      <Label>Admin notes (optional)</Label>
+      <textarea
+        value={adminNotes}
+        onChange={(e) => setAdminNotes(e.target.value)}
+        rows={3}
+        placeholder="Internal notes about this user…"
+        className={TEXTAREA_CHROME}
+      />
+    </div>
+  );
+
+  const renderActionsSection = () => (
+    <FormActions align="right">
+      <Button
+        type="button"
+        variant="danger"
+        onClick={() => setDeleteOpen(true)}
+        disabled={!userId}
+      >
+        Delete user
+      </Button>
+      <Button type="button" variant="secondary" onClick={onClose}>
+        Cancel
+      </Button>
+      <Button
+        type="submit"
+        isLoading={saveMutation.isPending}
+        disabled={!userId || saveMutation.isPending}
+      >
+        Save changes
+      </Button>
+    </FormActions>
+  );
+
+  const renderModerationSection = () => (
+    <div className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
+      <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        Moderation
+      </Heading>
+
+      <HardBanPanel
+        userId={userId}
+        isHardBanned={isHardBanned}
+        currentHardBanReason={currentHardBanReason}
+        showHardBanForm={showHardBanForm}
+        setShowHardBanForm={setShowHardBanForm}
+        hardBanReasonInput={hardBanReasonInput}
+        setHardBanReasonInput={setHardBanReasonInput}
+        hardBanPending={hardBanMutation.isPending}
+        unbanPending={unbanMutation.isPending}
+        onHardBan={(reason) => hardBanMutation.mutate(reason)}
+        onUnban={() => unbanMutation.mutate()}
+      />
+      <SoftBanPanel
+        userId={userId}
+        softBans={softBans}
+        showAddSoftBan={showAddSoftBan}
+        setShowAddSoftBan={setShowAddSoftBan}
+        softBanAction={softBanAction}
+        setSoftBanAction={setSoftBanAction}
+        softBanReason={softBanReason}
+        setSoftBanReason={setSoftBanReason}
+        softBanExpiry={softBanExpiry}
+        setSoftBanExpiry={setSoftBanExpiry}
+        softBanPending={softBanMutation.isPending}
+        liftPending={liftSoftBanMutation.isPending}
+        onAddSoftBan={(payload) => softBanMutation.mutate(payload)}
+        onLiftSoftBan={(action) => liftSoftBanMutation.mutate(action)}
+      />
+    </div>
+  );
+
   return (
     <>
       <SideDrawer
@@ -425,188 +611,21 @@ export function AdminUserEditorView({
             e.preventDefault();
             saveMutation.mutate();
           }}
-          className="space-y-4 p-4"
+          className="p-4"
         >
-          {/* ── Info card ── */}
-          {userId && (
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900/40">
-              <div className="flex flex-col gap-1 text-zinc-700 dark:text-zinc-300">
-                <>
-                  <span className="font-semibold">Owner ID (Firebase UID):</span>{" "}
-                  <code className="select-all font-mono">{userId}</code>
-                </>
-                {ownedStoreId && (
-                  <>
-                    <span className="font-semibold">Owns store:</span>{" "}
-                    <code className="select-all font-mono">{ownedStoreId}</code>
-                    {ownedStoreName ? ` — ${ownedStoreName}` : ""}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* ── Role ── */}
-          <Select
-            label="Role"
-            options={ROLE_OPTIONS}
-            value={role}
-            onValueChange={setRole}
+          <StackedViewShell
+            portal="admin"
+            className="space-y-4"
+            sections={[
+              renderInfoCard,
+              renderRoleSection,
+              renderEmailVerifiedSection,
+              renderProfileSection,
+              renderAdminNotesSection,
+              renderActionsSection,
+              renderModerationSection,
+            ]}
           />
-
-          {/* ── Email verified ── */}
-          <Toggle
-            label="Email verified"
-            checked={emailVerified}
-            onChange={setEmailVerified}
-          />
-
-          {/* ── ST-2 — Profile Details (admin-editable on user's behalf) ── */}
-          <div className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
-            <Heading
-              level={3}
-              className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
-            >
-              Profile details
-            </Heading>
-            <div className="space-y-3">
-              <Input
-                label="Display name"
-                value={editDisplayName}
-                onChange={(e) => setEditDisplayName(e.target.value)}
-                placeholder="Full name shown on profile"
-              />
-              <Input
-                label="Phone number"
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+91 90000 00000"
-              />
-              <div className="flex flex-col gap-1">
-                <Label>Bio</Label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  rows={3}
-                  placeholder="Short bio shown on the public profile…"
-                  className={TEXTAREA_CHROME}
-                />
-              </div>
-              <Input
-                label="Location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="City, Country"
-              />
-              <Input
-                label="Website"
-                type="url"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                placeholder="https://"
-              />
-              <Text size="xs" color="muted">
-                Social links
-              </Text>
-              <Input
-                label="Twitter / X"
-                value={twitter}
-                onChange={(e) => setTwitter(e.target.value)}
-                placeholder="@handle or full URL"
-              />
-              <Input
-                label="Instagram"
-                value={instagram}
-                onChange={(e) => setInstagram(e.target.value)}
-                placeholder="@handle or full URL"
-              />
-              <Input
-                label="Facebook"
-                value={facebook}
-                onChange={(e) => setFacebook(e.target.value)}
-                placeholder="https://facebook.com/…"
-              />
-              <Input
-                label="LinkedIn"
-                value={linkedin}
-                onChange={(e) => setLinkedin(e.target.value)}
-                placeholder="https://linkedin.com/in/…"
-              />
-            </div>
-          </div>
-
-          {/* ── Admin notes ── */}
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              Admin notes (optional)
-            </label>
-            <textarea
-              value={adminNotes}
-              onChange={(e) => setAdminNotes(e.target.value)}
-              rows={3}
-              placeholder="Internal notes about this user…"
-              className={TEXTAREA_CHROME}
-            />
-          </div>
-
-          <FormActions align="right">
-            <Button
-              type="button"
-              variant="danger"
-              onClick={() => setDeleteOpen(true)}
-              disabled={!userId}
-            >
-              Delete user
-            </Button>
-            <Button type="button" variant="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              isLoading={saveMutation.isPending}
-              disabled={!userId || saveMutation.isPending}
-            >
-              Save changes
-            </Button>
-          </FormActions>
-
-          {/* ── Moderation section ── */}
-          <div className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
-            <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
-              Moderation
-            </Heading>
-
-            <HardBanPanel
-              userId={userId}
-              isHardBanned={isHardBanned}
-              currentHardBanReason={currentHardBanReason}
-              showHardBanForm={showHardBanForm}
-              setShowHardBanForm={setShowHardBanForm}
-              hardBanReasonInput={hardBanReasonInput}
-              setHardBanReasonInput={setHardBanReasonInput}
-              hardBanPending={hardBanMutation.isPending}
-              unbanPending={unbanMutation.isPending}
-              onHardBan={(reason) => hardBanMutation.mutate(reason)}
-              onUnban={() => unbanMutation.mutate()}
-            />
-            <SoftBanPanel
-              userId={userId}
-              softBans={softBans}
-              showAddSoftBan={showAddSoftBan}
-              setShowAddSoftBan={setShowAddSoftBan}
-              softBanAction={softBanAction}
-              setSoftBanAction={setSoftBanAction}
-              softBanReason={softBanReason}
-              setSoftBanReason={setSoftBanReason}
-              softBanExpiry={softBanExpiry}
-              setSoftBanExpiry={setSoftBanExpiry}
-              softBanPending={softBanMutation.isPending}
-              liftPending={liftSoftBanMutation.isPending}
-              onAddSoftBan={(payload) => softBanMutation.mutate(payload)}
-              onLiftSoftBan={(action) => liftSoftBanMutation.mutate(action)}
-            />
-          </div>
         </Form>
       </SideDrawer>
 
