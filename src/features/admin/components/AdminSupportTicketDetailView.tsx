@@ -10,6 +10,7 @@ import {
   Select,
   SideDrawer,
   Text,
+  Toggle,
   useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
@@ -162,6 +163,39 @@ export function AdminSupportTicketDetailView({
     },
     onError: (err: unknown) => {
       showToast((err as Error)?.message ?? "Failed to send reply.", "error");
+    },
+  });
+
+  // ST-4 — Apply Store Change action (only relevant for store_change_request)
+  const [storeStatus, setStoreStatus] = React.useState("active");
+  const [storeIsVerified, setStoreIsVerified] = React.useState(false);
+  const [storeIsFeatured, setStoreIsFeatured] = React.useState(false);
+  const linkedStoreId = parties.storeId?.trim();
+  const isStoreChangeRequest = category === "store_change_request";
+
+  const applyStoreChange = useMutation({
+    mutationFn: async () => {
+      if (!linkedStoreId) throw new Error("No linked store on this ticket.");
+      await apiClient.patch(ADMIN_ENDPOINTS.STORE_BY_ID(linkedStoreId), {
+        storeStatus,
+        isVerified: storeIsVerified,
+        isFeatured: storeIsFeatured,
+      });
+    },
+    onSuccess: () => {
+      showToast("Store change applied.", "success");
+      // Append an internal note marking the action; non-fatal if it fails.
+      apiClient
+        .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
+          internalNotes:
+            (notes ? notes + "\n" : "") +
+            `[${new Date().toISOString()}] Applied store change to ${linkedStoreId}: status=${storeStatus}, verified=${storeIsVerified}, featured=${storeIsFeatured}`,
+        })
+        .catch(() => {});
+      invalidate();
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to apply store change.", "error");
     },
   });
 
@@ -322,6 +356,64 @@ export function AdminSupportTicketDetailView({
             />
           ))}
         </Div>
+
+        {/* ST-4 — Apply Store Change action panel */}
+        {isStoreChangeRequest && (
+          <Div
+            padding="sm"
+            className="flex flex-col gap-2 rounded-lg border border-warning/40 bg-warning-surface/40"
+          >
+            <Text className="text-xs font-semibold text-warning uppercase tracking-wide">
+              Apply store change
+            </Text>
+            {linkedStoreId ? (
+              <>
+                <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+                  Editing store: <code className="font-mono">{linkedStoreId}</code>
+                </Text>
+                <Select
+                  label="Store status"
+                  options={[
+                    { label: "Active", value: "active" },
+                    { label: "Pending", value: "pending" },
+                    { label: "Suspended", value: "suspended" },
+                    { label: "Rejected", value: "rejected" },
+                  ]}
+                  value={storeStatus}
+                  onValueChange={setStoreStatus}
+                />
+                <Toggle
+                  label="Verified badge"
+                  checked={storeIsVerified}
+                  onChange={setStoreIsVerified}
+                />
+                <Toggle
+                  label="Featured store"
+                  checked={storeIsFeatured}
+                  onChange={setStoreIsFeatured}
+                />
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  isLoading={applyStoreChange.isPending}
+                  disabled={applyStoreChange.isPending}
+                  onClick={() => applyStoreChange.mutate()}
+                >
+                  Apply store change
+                </Button>
+              </>
+            ) : (
+              <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+                Set the{" "}
+                <Text as="span" weight="semibold">
+                  Store slug
+                </Text>{" "}
+                field in the Linked parties panel above to enable this action.
+              </Text>
+            )}
+          </Div>
+        )}
 
         <FormActions align="right">
           <Button type="button" variant="secondary" onClick={onClose}>

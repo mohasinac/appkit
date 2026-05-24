@@ -52,6 +52,9 @@ const CATEGORY_OPTIONS = [
   { label: "Listing Dispute", value: "listing_dispute" },
   { label: "Refund Request", value: "refund_request" },
   { label: "Auction Dispute", value: "auction_dispute" },
+  // ST-4 — sellers use this to request changes to admin-controlled
+  // store fields (status, capabilities, verification badge).
+  { label: "Store Change Request (sellers)", value: "store_change_request" },
   { label: "General", value: "general" },
 ];
 

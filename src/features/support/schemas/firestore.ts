@@ -28,6 +28,9 @@ export const TicketCategoryValues = {
   REFUND_REQUEST: "refund_request",
   AUCTION_DISPUTE: "auction_dispute",
   GENERAL: "general",
+  // ST-4 — sellers request admin-only field changes on their store
+  // (status / capabilities / isVerified) through this category.
+  STORE_CHANGE_REQUEST: "store_change_request",
 } as const;
 
 export type TicketCategory =
