@@ -116,8 +116,16 @@ function hasUseClient(content) {
 /**
  * Returns the client hooks imported (if any) and which packages they come from.
  * We parse import statements literally rather than using AST for speed.
+ *
+ * Detects two classes of client-only imports:
+ *   1. Named hooks from known client-only packages (react, next-intl, next/navigation).
+ *   2. Any identifier matching /^use[A-Z]/ from a **local** module (relative path
+ *      starting with "./" or "../"). Local hooks named `useX` are React hooks by
+ *      convention; importing one from a server-component file would crash at SSR
+ *      with "No QueryClient set" / "context not found" / similar provider-missing
+ *      errors. Caught: 2026-05-24 TitleBar.tsx missing "use client" → prod 500.
  */
-function findClientImports(content) {
+function findClientImports(content, currentFile = "") {
   const found = [];
   // Match: import { ... } from "pkg"  or  import { ... } from 'pkg'
   const importRE = /import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"]/g;
@@ -125,9 +133,15 @@ function findClientImports(content) {
   while ((m = importRE.exec(content)) !== null) {
     const names = m[1].split(",").map((s) => s.trim().split(/\s+as\s+/)[0].trim());
     const pkg = m[2];
+    const isLocal = pkg.startsWith("./") || pkg.startsWith("../");
     for (const name of names) {
       if (hookToPackage.get(name) === pkg) {
         found.push({ hook: name, pkg });
+      } else if (isLocal && /^use[A-Z]/.test(name) && /\.tsx$/.test(currentFile)) {
+        // Only flag local use* imports inside .tsx component files. Hook .ts
+        // files don't always need "use client" — their direct caller does, and
+        // flagging them produces false positives for utility hooks.
+        found.push({ hook: name, pkg: `${pkg} (local)` });
       }
     }
   }
@@ -139,7 +153,7 @@ const violations = [];
 for (const file of walk(SRC_DIR)) {
   const content = readFileSync(file, "utf8");
   if (hasUseClient(content)) continue; // already correctly marked
-  const clientImports = findClientImports(content);
+  const clientImports = findClientImports(content, file);
   if (clientImports.length > 0) {
     violations.push({
       file: relative(SRC_DIR, file),
