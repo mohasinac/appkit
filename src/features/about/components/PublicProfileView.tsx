@@ -3,7 +3,7 @@ import { getPublicUserProfile, getProfileStoreProducts, getSellerReviews } from 
 import { storeRepository } from "../../stores/repository/store.repository";
 import { ROUTES } from "../../../constants";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Heading, Text, Section } from "../../../ui";
+import { Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { ProductCard } from "../../products/components/ProductGrid";
 import { ReviewCard } from "../../reviews/components/ReviewsList";
 import type { ProductItem } from "../../products/types";
@@ -101,21 +101,21 @@ export async function PublicProfileView({
   const statItems = buildProfileStatItems(t, { listingCount, reviewCount, itemsSold, auctionsWon, totalOrders, isSeller });
 
   return (
-    <div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10" data-section="publicprofileview-div-186">
+    <Div className="-mx-4 md:-mx-6 lg:-mx-8 -mt-6 sm:-mt-8 lg:-mt-10">
       {renderProfileHero(t, profileHeroCtx)}
-      <div className={`${page.container.md} py-10 md:py-12 space-y-10`}>
+      <Stack gap="2xl" className={`${page.container.md} py-10 md:py-12`}>
         {renderProfileStatsRow(themed, flex, statItems)}
         {renderProfileBioSection(themed, pub)}
         {renderStoreDescriptionSection(themed, isSeller, storeSlug ?? null, storeDescription ?? null, storeName, t)}
         {renderProfileListingsSection(t, themed, products, storeSlug ?? null)}
         {renderProfileReviewsSection(t, themed, reviews, storeSlug ?? null)}
-        <div className="flex justify-center pt-2">
+        <Row justify="center" className="pt-2">
           <Link href={String(ROUTES.HOME)} className="text-sm text-zinc-400 dark:text-zinc-400 hover:text-neutral-600 dark:hover:text-zinc-300">
             ← {t("backHome")}
           </Link>
-        </div>
-      </div>
-    </div>
+        </Row>
+      </Stack>
+    </Div>
   );
 }
 
@@ -151,28 +151,28 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
   const { displayName, photoURL, memberSince, isSeller, storeSlug, flex, page, heroBannerClass } = ctx;
   return (
     <Section className={`${heroBannerClass} text-white py-10 md:py-14`}>
-      <div className={`${page.container.md}`}>
-        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5">
-          <div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}>
+      <Div className={`${page.container.md}`}>
+        <Row gap="md" align="end" wrap className="flex-col sm:flex-row items-center sm:items-end">
+          <Div className={`w-20 h-20 rounded-full bg-white/20 ${flex.center} flex-shrink-0 overflow-hidden`}>
             {photoURL ? <img src={photoURL} alt={displayName} className="w-full h-full object-cover" /> : <User className="w-10 h-10 text-white/60" />}
-          </div>
-          <div className="text-center sm:text-left">
-            <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
+          </Div>
+          <Stack gap="xs" className="text-center sm:text-left">
+            <Row gap="xs" wrap className="justify-center sm:justify-start">
               <Heading level={1} variant="none" className="text-white mb-0">{displayName}</Heading>
-              {isSeller && <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white/90">{t("roleSeller")}</span>}
-            </div>
-            <Text variant="none" className="text-white/60 text-sm mt-1">{memberSince}</Text>
-          </div>
+              {isSeller && <Span className="rounded-full bg-white/20 px-2.5 py-0.5 text-xs font-semibold text-white/90">{t("roleSeller")}</Span>}
+            </Row>
+            <Text variant="none" className="text-white/60 text-sm">{memberSince}</Text>
+          </Stack>
           {isSeller && storeSlug && (
-            <div className="sm:ml-auto">
+            <Div className="sm:ml-auto">
               <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="inline-flex items-center gap-1.5 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 px-4 py-2 text-sm font-medium text-white transition-colors">
                 <ExternalLink className="w-3.5 h-3.5" />
                 {t("visitStore")}
               </Link>
-            </div>
+            </Div>
           )}
-        </div>
-      </div>
+        </Row>
+      </Div>
     </Section>
   );
 }
@@ -180,15 +180,15 @@ function renderProfileHero(t: ProfileT, ctx: { displayName: string; photoURL: st
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function renderProfileStatsRow(themed: ProfileThemed, flex: ProfileFlex, statItems: { icon: any; label: string; value: string }[]) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <Grid gap="md" className="grid-cols-2 sm:grid-cols-4">
       {statItems.map(({ icon: Icon, label, value }) => (
-        <div key={label} className={`rounded-xl border ${themed.border} ${themed.bgPrimary} p-4 text-center`}>
-          <div className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></div>
+        <Div key={label} rounded="xl" className={`border ${themed.border} ${themed.bgPrimary} p-4 text-center`}>
+          <Row centered className={`${flex.center} mb-1`}><Icon className="w-4 h-4 text-neutral-400" /></Row>
           <Text className="text-lg font-bold">{value}</Text>
           <Text variant="secondary" className="text-xs">{label}</Text>
-        </div>
+        </Div>
       ))}
-    </div>
+    </Grid>
   );
 }
 
@@ -196,13 +196,13 @@ function renderProfileBioSection(themed: ProfileThemed, pub: PubProfile) {
   if (!pub?.bio && !pub?.location && !pub?.website) return null;
   return (
     <Section>
-      <div className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6 space-y-3`}>
+      <Stack gap="sm" className={`rounded-2xl border ${themed.border} ${themed.bgPrimary} p-6`}>
         {pub.bio && <Text className="text-sm leading-relaxed text-neutral-700 dark:text-zinc-300">{pub.bio}</Text>}
-        <div className="flex flex-wrap gap-4">
-          {pub.location && <span className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</span>}
+        <Row gap="md" wrap>
+          {pub.location && <Span className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-zinc-400"><MapPin className="w-4 h-4" />{pub.location}</Span>}
           {pub.website && <a href={pub.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-sm text-primary hover:underline"><Globe className="w-4 h-4" />{pub.website.replace(/^https?:\/\//, "")}</a>}
-        </div>
-      </div>
+        </Row>
+      </Stack>
     </Section>
   );
 }
@@ -211,11 +211,11 @@ function renderStoreDescriptionSection(themed: ProfileThemed, isSeller: boolean,
   if (!isSeller || !storeSlug || !storeDescription) return null;
   return (
     <Section>
-      <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-6`}>
+      <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-6`}>
         <Heading level={3} className="mb-2">{storeName}</Heading>
         <Text variant="secondary" className="text-sm leading-relaxed">{storeDescription}</Text>
         <Link href={String(ROUTES.PUBLIC.STORE_DETAIL(storeSlug))} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">{t("visitStore")} →</Link>
-      </div>
+      </Div>
     </Section>
   );
 }
@@ -225,19 +225,19 @@ function renderProfileListingsSection(t: ProfileT, themed: ProfileThemed, produc
     <Section>
       <Heading level={2} className="mb-4">{t("listingsTitle")}</Heading>
       {products.length === 0 ? (
-        <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
           <ShoppingBag className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
           <Text variant="secondary" className="text-sm">{t("noListings")}</Text>
-        </div>
+        </Div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
           {products.slice(0, 8).map((p: ProfileProduct) => <ProductCard key={p.id} product={toProductItem(p)} href={getProductHref(p)} />)}
-        </div>
+        </Grid>
       )}
       {products.length > 8 && storeSlug && (
-        <div className="mt-4 text-center">
+        <Div className="mt-4 text-center">
           <Link href={String(ROUTES.PUBLIC.STORE_PRODUCTS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllListings", { count: products.length })}</Link>
-        </div>
+        </Div>
       )}
     </Section>
   );
@@ -248,19 +248,19 @@ function renderProfileReviewsSection(t: ProfileT, themed: ProfileThemed, reviews
     <Section>
       <Heading level={2} className="mb-4">{t("reviewsTitle")}</Heading>
       {reviews.length === 0 ? (
-        <div className={`rounded-2xl border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
+        <Div rounded="2xl" className={`border ${themed.border} ${themed.bgSecondary} p-12 text-center`}>
           <Star className="w-10 h-10 mx-auto mb-3 text-neutral-300 dark:text-neutral-600" />
           <Text variant="secondary" className="text-sm">{t("noReviews")}</Text>
-        </div>
+        </Div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Grid gap="md" className="grid-cols-1 sm:grid-cols-2">
           {reviews.slice(0, 6).map((review: ProfileReview) => <ReviewCard key={review.id} review={review} />)}
-        </div>
+        </Grid>
       )}
       {reviews.length > 6 && storeSlug && (
-        <div className="mt-4 text-center">
+        <Div className="mt-4 text-center">
           <Link href={String(ROUTES.PUBLIC.STORE_REVIEWS(storeSlug))} className="text-sm font-medium text-primary hover:underline">{t("viewAllReviews", { count: reviews.length })}</Link>
-        </div>
+        </Div>
       )}
     </Section>
   );

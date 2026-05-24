@@ -5,7 +5,7 @@ const CLS_RELATED_LINK = "group flex items-center gap-3 rounded-xl border border
 const CLS_RELATED_LABEL = "text-xs text-zinc-400 dark:text-zinc-400 mb-0.5";
 const CLS_RELATED_TITLE = "text-sm font-medium text-neutral-900 dark:text-white truncate group-hover:text-primary transition-colors";
 import Link from "next/link";
-import { Heading, RichText, Section, Span, StarRating, Text } from "../../../ui";
+import { Div, Grid, Heading, RichText, Row, Section, Span, StarRating, Stack, Text } from "../../../ui";
 import { maskName } from "../../../security";
 import { getDefaultLocale } from "../../../core/baseline-resolver";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
@@ -95,25 +95,25 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
   return (
     <>
       {/* ── Hero: rating + title ──────────────────────────────────────────── */}
-      <div className="border-b border-neutral-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 pb-8 pt-10">
-        <div className="mx-auto max-w-3xl px-4">
+      <Div className="border-b border-neutral-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 pb-8 pt-10">
+        <Div className="mx-auto max-w-3xl px-4">
           {/* Star rating — large */}
-          <div className="mb-4 flex items-center gap-3">
+          <Row gap="sm" className="mb-4">
             <StarRating value={review.rating} size="lg" readOnly />
-            <span className="text-2xl font-bold text-neutral-900 dark:text-white">
+            <Span weight="bold" className="text-2xl text-neutral-900 dark:text-white">
               {review.rating}.0
-            </span>
+            </Span>
             {review.verified && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
+              <Span className="inline-flex items-center gap-1 rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
                 ✓ Verified Purchase
-              </span>
+              </Span>
             )}
             {review.featured && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
+              <Span className="inline-flex items-center gap-1 rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400">
                 ★ Featured
-              </span>
+              </Span>
             )}
-          </div>
+          </Row>
 
           {review.title && (
             <Heading level={1} className="text-2xl font-bold text-neutral-900 dark:text-white mb-4 leading-snug">
@@ -122,20 +122,20 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           )}
 
           {/* Reviewer row */}
-          <div className="flex items-center gap-3">
+          <Row gap="sm">
             {review.userAvatar ? (
-              <div
+              <Div
                 role="img"
                 aria-label={displayName}
                 className="h-11 w-11 flex-shrink-0 rounded-full bg-center bg-cover ring-2 ring-white dark:ring-zinc-800"
                 style={{ backgroundImage: `url(${review.userAvatar})` }}
               />
             ) : (
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-base font-bold text-primary ring-2 ring-white dark:ring-zinc-800">
+              <Row centered className="h-11 w-11 flex-shrink-0 rounded-full bg-primary/10 text-base font-bold text-primary ring-2 ring-white dark:ring-zinc-800">
                 {initials}
-              </div>
+              </Row>
             )}
-            <div className="min-w-0">
+            <Div className="min-w-0">
               {reviewerHref ? (
                 <Link
                   href={reviewerHref}
@@ -144,20 +144,20 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   {displayName}
                 </Link>
               ) : (
-                <span className="text-sm font-semibold text-neutral-900 dark:text-white">
+                <Span weight="semibold" className="text-sm text-neutral-900 dark:text-white">
                   {review.isAnonymous ? "Anonymous" : displayName}
-                </span>
+                </Span>
               )}
               {date && (
-                <Text className="text-xs text-zinc-400 dark:text-zinc-400 mt-0.5">{date}</Text>
+                <Text size="xs" color="muted" className="mt-0.5">{date}</Text>
               )}
-            </div>
-          </div>
-        </div>
-      </div>
+            </Div>
+          </Row>
+        </Div>
+      </Div>
 
       {/* ── Main content ─────────────────────────────────────────────────────── */}
-      <div className="mx-auto max-w-3xl px-4 py-8 space-y-8">
+      <Stack gap="xl" className="mx-auto max-w-3xl px-4 py-8">
 
         {/* Rich text comment */}
         {review.comment && (
@@ -176,7 +176,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
               Photos ({images.length})
             </Heading>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            <Grid gap="xs" className="grid-cols-3 sm:grid-cols-4">
               {images.map((img, i) => (
                 <button
                   key={i}
@@ -185,16 +185,16 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   aria-label={`View photo ${i + 1}`}
                   className="group relative aspect-square overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-neutral-100 dark:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
-                  <div
+                  <Div
                     className="h-full w-full bg-center bg-cover transition-transform duration-300 group-hover:scale-105"
                     style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                   />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
-                    <span className="text-white text-xl">🔍</span>
-                  </div>
+                  <Row centered className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                    <Span className="text-white text-xl">🔍</Span>
+                  </Row>
                 </button>
               ))}
-            </div>
+            </Grid>
           </Section>
         )}
 
@@ -204,7 +204,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
             <Heading level={2} className="text-sm font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-400 mb-3">
               Video
             </Heading>
-            <div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video">
+            <Div className="overflow-hidden rounded-xl border border-neutral-200 dark:border-zinc-700 bg-black aspect-video">
               <video
                 src={review.video.url}
                 poster={review.video.thumbnailUrl}
@@ -212,20 +212,20 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                 className="h-full w-full"
                 preload="metadata"
               />
-            </div>
+            </Div>
           </Section>
         )}
 
         {/* Helpful votes */}
         <Section className="flex items-center gap-4 py-4 border-t border-neutral-100 dark:border-zinc-800">
-          <div className="text-sm text-neutral-500 dark:text-zinc-400">
+          <Div className="text-sm text-neutral-500 dark:text-zinc-400">
             {helpfulCount > 0 && (
-              <span>
+              <Span>
                 <Span weight="bold" className="text-neutral-900 dark:text-white">{helpfulCount}</Span>{" "}
                 {helpfulCount === 1 ? "person" : "people"} found this helpful
-              </span>
+              </Span>
             )}
-          </div>
+          </Div>
           <button
             type="button"
             onClick={handleVote}
@@ -251,12 +251,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-100 dark:bg-orange-900/30 text-xl">
                 📦
               </span>
-              <div className="min-w-0">
+              <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Product</Text>
                 <Text className={CLS_RELATED_TITLE}>
                   {review.productTitle ?? "View Product"}
                 </Text>
-              </div>
+              </Div>
             </Link>
           )}
 
@@ -268,12 +268,12 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-xl">
                 🏪
               </span>
-              <div className="min-w-0">
+              <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Seller</Text>
                 <Text className={CLS_RELATED_TITLE}>
                   View Seller
                 </Text>
-              </div>
+              </Div>
             </Link>
           )}
 
@@ -285,33 +285,34 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
                 👤
               </span>
-              <div className="min-w-0">
+              <Div className="min-w-0">
                 <Text className={CLS_RELATED_LABEL}>Reviewer</Text>
                 <Text className={CLS_RELATED_TITLE}>
                   {displayName}
                 </Text>
-              </div>
+              </Div>
             </Link>
           ) : (
-            <div className="flex items-center gap-3 rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
-              <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
+            <Row gap="sm" className="rounded-xl border border-neutral-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4">
+              <Span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30 text-xl">
                 👤
-              </span>
-              <div className="min-w-0">
+              </Span>
+              <Div className="min-w-0">
                 <Span className="block text-xs text-zinc-400 dark:text-zinc-400 mb-0.5">Reviewer</Span>
                 <Span className="block text-sm font-medium text-neutral-900 dark:text-white truncate">
                   Anonymous
                 </Span>
-              </div>
-            </div>
+              </Div>
+            </Row>
           )}
         </Section>
-      </div>
+      </Stack>
 
       {/* ── Lightbox ────────────────────────────────────────────────────────── */}
       {lightboxIdx !== null && currentImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+        <Row
+          centered
+          className="fixed inset-0 z-50 bg-black/95"
           onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
@@ -328,9 +329,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           </button>
 
           {/* Counter */}
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+          <Div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/70 text-sm">
             {lightboxIdx + 1} / {images.length}
-          </div>
+          </Div>
 
           {/* Prev */}
           {images.length > 1 && (
@@ -345,8 +346,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
           )}
 
           {/* Image */}
-          <div
-            className="max-h-[85vh] max-w-[85vw] flex items-center justify-center"
+          <Row
+            centered
+            className="max-h-[85vh] max-w-[85vw]"
             onClick={(e) => e.stopPropagation()}
           >
             <img
@@ -354,7 +356,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
               alt={`Review photo ${lightboxIdx + 1}`}
               className="max-h-[85vh] max-w-[85vw] rounded-lg object-contain shadow-2xl"
             />
-          </div>
+          </Row>
 
           {/* Next */}
           {images.length > 1 && (
@@ -370,7 +372,7 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
 
           {/* Thumbnail strip */}
           {images.length > 1 && (
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 px-4">
+            <Row justify="center" gap="xs" className="absolute bottom-4 left-0 right-0 px-4">
               {images.map((img, i) => (
                 <button
                   key={i}
@@ -385,9 +387,9 @@ export function ReviewDetailShell({ review, storeHref }: ReviewDetailShellProps)
                   style={{ backgroundImage: `url(${img.thumbnailUrl ?? img.url})` }}
                 />
               ))}
-            </div>
+            </Row>
           )}
-        </div>
+        </Row>
       )}
     </>
   );

@@ -2,21 +2,20 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { MapPin, Pencil, Plus, Trash2, Star } from "lucide-react";
-import { Button, ConfirmDeleteModal, Div, Heading, Row, SideDrawer, Text } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Grid, Heading, Label, Row, SideDrawer, Span, Stack, Text } from "../../../ui";
 import { ROW_ACTION_META, ROW_ACTION_ID } from "../../../features/products/constants/action-defs";
 import { SELLER_ENDPOINTS } from "../../../constants/api-endpoints";
 import { useEntityDelete } from "../../../react/hooks/useEntityDelete";
 
 const INPUT_CLS = "w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-[var(--appkit-color-primary)]";
-const CLS_GRID_2_COL = "grid grid-cols-2 gap-3";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
-    <div className="space-y-1">
-      <label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</label>
+    <Stack gap="xs">
+      <Label className="block text-xs font-medium text-zinc-700 dark:text-zinc-300">{label}</Label>
       {children}
-      {hint && <Text className="text-xs text-zinc-400 dark:text-zinc-400">{hint}</Text>}
-    </div>
+      {hint && <Text size="xs" color="muted">{hint}</Text>}
+    </Stack>
   );
 }
 
@@ -102,18 +101,18 @@ function AddressCard({
 }) {
   return (
     <Div surface="card" padding="sm" className="flex flex-col gap-2">
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-center gap-2 min-w-0">
+      <Row align="start" justify="between" gap="xs">
+        <Row gap="xs" className="min-w-0">
           <MapPin className="h-4 w-4 shrink-0 text-[var(--appkit-color-primary)]" />
-          <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">{address.label}</span>
+          <Span weight="semibold" className="text-sm text-zinc-900 dark:text-zinc-100 truncate">{address.label}</Span>
           {address.isDefault && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs px-2 py-0.5 font-medium">
+            <Span className="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs px-2 py-0.5 font-medium">
               <Star className="h-3 w-3" />
               Default
-            </span>
+            </Span>
           )}
-        </div>
-        <div className="flex items-center gap-1 shrink-0">
+        </Row>
+        <Row gap="px" className="shrink-0">
           <button
             type="button"
             onClick={onEdit}
@@ -130,8 +129,8 @@ function AddressCard({
           >
             <Trash2 className="h-4 w-4" />
           </button>
-        </div>
-      </div>
+        </Row>
+      </Row>
       <Text className="text-sm text-zinc-700 dark:text-zinc-300">
         {address.fullName} · {address.phone}
       </Text>
@@ -248,20 +247,20 @@ export function SellerAddressesView({
     (e: React.ChangeEvent<HTMLInputElement>) => set(key, e.target.value);
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* Header */}
-      <div className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between" style={{ top: "var(--header-height, 0px)" }}>
-        <>
+      <Row justify="between" className="sticky z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-4 py-3" style={{ top: "var(--header-height, 0px)" }}>
+        <Stack gap="none">
           <Heading level={2} className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Pickup Addresses</Heading>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Manage your store&apos;s pickup and return locations</Text>
-        </>
+          <Text size="xs" color="muted" className="mt-0.5">Manage your store&apos;s pickup and return locations</Text>
+        </Stack>
         <Button size="sm" onClick={openAdd} className="flex items-center gap-1.5">
           <Plus className="h-4 w-4" />
-          <span>Add Address</span>
+          <Span>Add Address</Span>
         </Button>
-      </div>
+      </Row>
 
-      <div className="py-6 px-4 sm:px-6 max-w-2xl">
+      <Div className="py-6 px-4 sm:px-6 max-w-2xl">
         {errorMessage && (
           <Div className="mb-4 rounded-xl border border-error/20 bg-error-surface px-4 py-3 text-sm text-error">
             {errorMessage}
@@ -269,9 +268,9 @@ export function SellerAddressesView({
         )}
 
         {isLoading ? (
-          <div className="flex justify-center py-16">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
-          </div>
+          <Row justify="center" className="py-16">
+            <Div className="h-6 w-6 animate-spin rounded-full border-2 border-[var(--appkit-color-primary)] border-t-transparent" />
+          </Row>
         ) : addresses.length === 0 ? (
           <Div className="rounded-xl border-2 border-dashed border-zinc-200 dark:border-slate-700 py-16 flex flex-col items-center gap-3">
             <MapPin className="h-8 w-8 text-zinc-300 dark:text-slate-600" />
@@ -300,19 +299,19 @@ export function SellerAddressesView({
               </Button>
             </Row>
             {listView === "cards" ? (
-              <div className="grid gap-3">
+              <Grid gap="sm">
                 {addresses.map((addr) => (
-                  <div key={addr.id} className={deletingId === addr.id ? "opacity-50 pointer-events-none" : ""}>
+                  <Div key={addr.id} className={deletingId === addr.id ? "opacity-50 pointer-events-none" : ""}>
                     <AddressCard
                       address={addr}
                       onEdit={() => openEdit(addr)}
                       onDelete={() => handleDelete(addr)}
                     />
-                  </div>
+                  </Div>
                 ))}
-              </div>
+              </Grid>
             ) : (
-              <div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-slate-700">
+              <Div className="overflow-x-auto rounded-lg border border-zinc-200 dark:border-slate-700">
                 <table className="w-full text-sm">
                   <thead className="bg-zinc-50 dark:bg-slate-800">
                     <tr>
@@ -343,11 +342,11 @@ export function SellerAddressesView({
                     ))}
                   </tbody>
                 </table>
-              </div>
+              </Div>
             )}
           </>
         )}
-      </div>
+      </Div>
 
       {/* Add / Edit Drawer */}
       <SideDrawer
@@ -355,15 +354,15 @@ export function SellerAddressesView({
         onClose={closeDrawer}
         title={editingId ? "Edit Address" : "Add Address"}
         footer={
-          <div className="flex gap-2">
+          <Row gap="xs">
             <Button variant="outline" onClick={closeDrawer} className="flex-1">Cancel</Button>
             <Button onClick={handleSave} disabled={saving} className="flex-1">
               {saving ? "Saving…" : editingId ? "Save Changes" : "Add Address"}
             </Button>
-          </div>
+          </Row>
         }
       >
-        <div className="space-y-4 py-1">
+        <Stack gap="md" className="py-1">
           {saveError && (
             <Div className="rounded-lg border border-error/20 bg-error-surface px-3 py-2 text-sm text-error">
               {saveError}
@@ -374,14 +373,14 @@ export function SellerAddressesView({
             <input type="text" value={draft.label} onChange={handleTextField("label")} placeholder="Warehouse" maxLength={60} className={INPUT_CLS} />
           </Field>
 
-          <div className={CLS_GRID_2_COL}>
+          <Grid cols={2} gap="sm">
             <Field label="Full Name *">
               <input type="text" value={draft.fullName} onChange={handleTextField("fullName")} placeholder="Ravi Kumar" maxLength={100} className={INPUT_CLS} />
             </Field>
             <Field label="Phone *">
               <input type="tel" value={draft.phone} onChange={handleTextField("phone")} placeholder="+91 98765 43210" maxLength={20} className={INPUT_CLS} />
             </Field>
-          </div>
+          </Grid>
 
           <Field label="Address Line 1 *">
             <input type="text" value={draft.addressLine1} onChange={handleTextField("addressLine1")} placeholder="Shop 12, Main Market" maxLength={200} className={INPUT_CLS} />
@@ -395,23 +394,23 @@ export function SellerAddressesView({
             <input type="text" value={draft.landmark} onChange={handleTextField("landmark")} placeholder="Near metro station (optional)" maxLength={100} className={INPUT_CLS} />
           </Field>
 
-          <div className={CLS_GRID_2_COL}>
+          <Grid cols={2} gap="sm">
             <Field label="City *">
               <input type="text" value={draft.city} onChange={handleTextField("city")} placeholder="Mumbai" maxLength={100} className={INPUT_CLS} />
             </Field>
             <Field label="State *">
               <input type="text" value={draft.state} onChange={handleTextField("state")} placeholder="Maharashtra" maxLength={100} className={INPUT_CLS} />
             </Field>
-          </div>
+          </Grid>
 
-          <div className={CLS_GRID_2_COL}>
+          <Grid cols={2} gap="sm">
             <Field label="Postal Code *">
               <input type="text" value={draft.postalCode} onChange={handleTextField("postalCode")} placeholder="400001" maxLength={10} className={INPUT_CLS} />
             </Field>
             <Field label="Country *">
               <input type="text" value={draft.country} onChange={handleTextField("country")} placeholder="India" maxLength={60} className={INPUT_CLS} />
             </Field>
-          </div>
+          </Grid>
 
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -420,9 +419,9 @@ export function SellerAddressesView({
               onChange={(e) => set("isDefault", e.target.checked)}
               className="h-4 w-4 rounded border-zinc-300 dark:border-slate-600 text-[var(--appkit-color-primary)] focus:ring-[var(--appkit-color-primary)]"
             />
-            <span className="text-sm text-zinc-700 dark:text-zinc-300">Set as default pickup address</span>
+            <Span className="text-sm text-zinc-700 dark:text-zinc-300">Set as default pickup address</Span>
           </label>
-        </div>
+        </Stack>
       </SideDrawer>
 
       {deleteTargetAddr && (
@@ -435,6 +434,6 @@ export function SellerAddressesView({
           isDeleting={deletingId === deleteTargetAddr.id}
         />
       )}
-    </div>
+    </Div>
   );
 }

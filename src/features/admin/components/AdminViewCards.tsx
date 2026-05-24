@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { AdminListingScaffoldRow } from "./DataListingView";
-import { Text } from "../../../ui";
+import { Div, Grid, Row, Span, Stack, Text } from "../../../ui";
 
 interface AdminViewCardsProps {
   rows: AdminListingScaffoldRow[];
@@ -23,35 +23,35 @@ const FLAG_BADGES: Array<{ key: keyof AdminListingScaffoldRow; label: string; co
 
 function StatusBadge({ status }: { status: string }) {
   return (
-    <span className="inline-flex rounded-full bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]">
+    <Span className="inline-flex rounded-full bg-primary-50 px-2 py-0.5 text-xs font-medium text-primary-800 dark:bg-secondary-900/30 dark:text-secondary-300 truncate max-w-[120px]">
       {status}
-    </span>
+    </Span>
   );
 }
 
 function SkeletonCard({ view }: { view: "grid" | "list" }) {
   if (view === "list") {
     return (
-      <div className="flex items-center gap-3 px-4 py-3 animate-pulse">
-        <div className="h-4 w-4 rounded bg-zinc-200 dark:bg-slate-700 shrink-0" />
-        <div className="flex-1 space-y-1.5">
-          <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-          <div className="h-2.5 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
-        </div>
-        <div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 rounded-full shrink-0" />
-        <div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 rounded shrink-0" />
-      </div>
+      <Row gap="sm" className="px-4 py-3 animate-pulse">
+        <Div className="h-4 w-4 rounded bg-zinc-200 dark:bg-slate-700 shrink-0" />
+        <Stack gap="xs" className="flex-1">
+          <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+          <Div className="h-2.5 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+        </Stack>
+        <Div className="h-5 w-16 bg-zinc-200 dark:bg-slate-700 rounded-full shrink-0" />
+        <Div className="h-3 w-20 bg-zinc-200 dark:bg-slate-700 rounded shrink-0" />
+      </Row>
     );
   }
   return (
-    <div className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-      <div className="p-4 space-y-2.5">
-        <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-        <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-        <div className="h-5 bg-zinc-200 dark:bg-slate-700 rounded-full w-20 mt-1" />
-        <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
-      </div>
-    </div>
+    <Div rounded="xl" border="subtle" className="overflow-hidden animate-pulse">
+      <Stack gap="xs" padding="md">
+        <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+        <Div className="h-5 bg-zinc-200 dark:bg-slate-700 rounded-full w-20 mt-1" />
+        <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+      </Stack>
+    </Div>
   );
 }
 
@@ -77,16 +77,17 @@ function AdminCardItem({
 
   if (view === "list") {
     return (
-      <div
+      <Row
+        gap="sm"
         className={[
-          "flex items-center gap-3 px-4 py-3 cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-slate-800/50",
+          "px-4 py-3 cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-slate-800/50",
           selected ? "bg-primary-50/40 dark:bg-primary-900/10" : "",
         ].filter(Boolean).join(" ")}
         onClick={handleClick}
         role={onRowClick ? "button" : undefined}
       >
         {onToggleSelect && (
-          <div data-checkbox className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
+          <Div data-checkbox className="shrink-0" onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}>
             <input
               type="checkbox"
               checked={selected}
@@ -94,29 +95,30 @@ function AdminCardItem({
               className="h-4 w-4 rounded border-zinc-300 text-primary accent-primary cursor-pointer"
               aria-label={`Select ${row.primary}`}
             />
-          </div>
+          </Div>
         )}
-        <div className="flex-1 min-w-0 space-y-0.5">
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 truncate">{row.primary}</Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Text>
-        </div>
+        <Stack gap="none" className="flex-1 min-w-0">
+          <Text size="sm" weight="semibold" className="truncate text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
+        </Stack>
         {flags.length > 0 && (
-          <div className="hidden sm:flex items-center gap-1 shrink-0">
+          <Row gap="xs" className="hidden sm:flex shrink-0">
             {flags.map(({ key, label, color }) => (
-              <span key={key} className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium ${color}`}>{label}</span>
+              <Span key={key} className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium ${color}`}>{label}</Span>
             ))}
-          </div>
+          </Row>
         )}
         <StatusBadge status={row.status} />
-        <span className="hidden sm:block text-xs text-zinc-400 dark:text-zinc-400 shrink-0 w-24 text-right">{row.updatedAt}</span>
-      </div>
+        <Span size="xs" color="muted" className="hidden sm:block shrink-0 w-24 text-right">{row.updatedAt}</Span>
+      </Row>
     );
   }
 
   return (
-    <div
+    <Div
+      rounded="xl"
       className={[
-        "rounded-xl border overflow-hidden cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
+        "border overflow-hidden cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5",
         selected
           ? "border-primary ring-1 ring-primary/20 bg-primary-50/30 dark:bg-primary-900/10"
           : "border-zinc-100 dark:border-slate-700 bg-white dark:bg-slate-900",
@@ -125,9 +127,10 @@ function AdminCardItem({
       role={onRowClick ? "button" : undefined}
     >
       {onToggleSelect && (
-        <div
+        <Row
+          gap="xs"
           data-checkbox
-          className="flex items-center gap-2 px-3 pt-3"
+          className="px-3 pt-3"
           onClick={(e) => { e.stopPropagation(); onToggleSelect(row.id); }}
         >
           <input
@@ -138,25 +141,25 @@ function AdminCardItem({
             aria-label={`Select ${row.primary}`}
           />
           {flags.length > 0 && (
-            <div className="flex items-center gap-1 flex-wrap">
+            <Row gap="xs" wrap>
               {flags.map(({ key, label, color }) => (
-                <span key={key} className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium ${color}`}>{label}</span>
+                <Span key={key} className={`inline-flex rounded-full px-1.5 py-0.5 text-[10px] font-medium ${color}`}>{label}</Span>
               ))}
-            </div>
+            </Row>
           )}
-        </div>
+        </Row>
       )}
-      <div className="p-3.5 space-y-2">
-        <div className="space-y-0.5">
-          <Text className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug">{row.primary}</Text>
-          <Text className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{row.secondary}</Text>
-        </div>
-        <div className="flex items-center justify-between gap-2">
+      <Stack gap="xs" className="p-3.5">
+        <Stack gap="none">
+          <Text size="sm" weight="semibold" className="line-clamp-2 leading-snug text-zinc-900 dark:text-zinc-100">{row.primary}</Text>
+          <Text size="xs" color="muted" className="truncate">{row.secondary}</Text>
+        </Stack>
+        <Row justify="between" gap="xs">
           <StatusBadge status={row.status} />
-          <span className="text-[11px] text-zinc-400 dark:text-zinc-400 shrink-0">{row.updatedAt}</span>
-        </div>
-      </div>
-    </div>
+          <Span color="muted" className="text-[11px] shrink-0">{row.updatedAt}</Span>
+        </Row>
+      </Stack>
+    </Div>
   );
 }
 
@@ -173,27 +176,27 @@ export function AdminViewCards({
     const count = view === "grid" ? 12 : 8;
     if (view === "list") {
       return (
-        <div className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
+        <Div rounded="xl" border="subtle" className="overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
           {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i} view="list" />)}
-        </div>
+        </Div>
       );
     }
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+      <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: count }).map((_, i) => <SkeletonCard key={i} view="grid" />)}
-      </div>
+      </Grid>
     );
   }
 
   if (rows.length === 0) {
     return (
-      <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">{emptyLabel}</Text>
+      <Text size="sm" color="muted" className="py-12 text-center">{emptyLabel}</Text>
     );
   }
 
   if (view === "list") {
     return (
-      <div className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
+      <Div rounded="xl" border="subtle" className="overflow-hidden divide-y divide-zinc-100 dark:divide-slate-700">
         {rows.map((row) => (
           <AdminCardItem
             key={row.id}
@@ -204,12 +207,12 @@ export function AdminViewCards({
             onRowClick={onRowClick}
           />
         ))}
-      </div>
+      </Div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    <Grid gap="md" className="grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {rows.map((row) => (
         <AdminCardItem
           key={row.id}
@@ -220,6 +223,6 @@ export function AdminViewCards({
           onRowClick={onRowClick}
         />
       ))}
-    </div>
+    </Grid>
   );
 }
