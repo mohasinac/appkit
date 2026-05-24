@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Input, Label, Select, SideDrawer, StackedViewShell, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Div, Form, FormActions, Heading, Input, Row, Select, SideDrawer, Span, Stack, StackedViewShell, Text, Textarea, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -62,12 +62,6 @@ const BANNED_ACTION_OPTIONS = [
   { label: "Report scammers", value: "report_scammers" },
 ];
 
-// Standard textarea/input chrome for raw <textarea>/<input> elements in this
-// view (consistent border/focus styling). Deduped to satisfy
-// audit-code-quality REPEATED_STRING rule.
-const TEXTAREA_CHROME =
-  "w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
-
 function formatBanAction(action: string): string {
   return BANNED_ACTION_OPTIONS.find((o) => o.value === action)?.label ?? action;
 }
@@ -102,36 +96,39 @@ function HardBanPanel({
   hardBanPending, unbanPending, onHardBan, onUnban,
 }: HardBanPanelProps) {
   return (
-    <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Hard ban</span>
+    <Div surface="muted" padding="sm" rounded="lg" border="default" className="mb-4">
+      <Row justify="between" gap="sm" className="mb-2">
+        <Span size="sm" weight="medium" color="muted">Hard ban</Span>
         {isHardBanned ? (
-          <span className="rounded-full bg-error-surface px-2 py-0.5 text-xs font-semibold text-error">Banned</span>
+          <Span size="xs" weight="semibold" className="rounded-full bg-error-surface px-2 py-0.5 text-error">Banned</Span>
         ) : (
-          <span className="rounded-full bg-success-surface px-2 py-0.5 text-xs font-semibold text-success">Active</span>
+          <Span size="xs" weight="semibold" className="rounded-full bg-success-surface px-2 py-0.5 text-success">Active</Span>
         )}
-      </div>
+      </Row>
       {isHardBanned ? (
-        <div className="space-y-2">
-          {currentHardBanReason && <Text className="text-xs text-zinc-600 dark:text-zinc-400">Reason: {currentHardBanReason}</Text>}
+        <Stack gap="xs">
+          {currentHardBanReason && <Text size="xs" color="muted">Reason: {currentHardBanReason}</Text>}
           <Button type="button" variant="secondary" size="sm" isLoading={unbanPending} disabled={unbanPending} onClick={onUnban}>Lift hard ban</Button>
-        </div>
+        </Stack>
       ) : showHardBanForm ? (
-        <div className="space-y-2">
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Ban reason (required)</label>
-            <textarea value={hardBanReasonInput} onChange={(e) => setHardBanReasonInput(e.target.value)} rows={2} placeholder="e.g. Repeated fraud, scam activity…"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500" />
-          </div>
-          <div className="flex gap-2">
+        <Stack gap="xs">
+          <Textarea
+            label="Ban reason (required)"
+            value={hardBanReasonInput}
+            onChange={(e) => setHardBanReasonInput(e.target.value)}
+            rows={2}
+            placeholder="e.g. Repeated fraud, scam activity…"
+            variant="error"
+          />
+          <Row gap="xs">
             <Button type="button" variant="danger" size="sm" isLoading={hardBanPending} disabled={!hardBanReasonInput.trim() || hardBanPending} onClick={() => onHardBan(hardBanReasonInput.trim())}>Confirm hard ban</Button>
             <Button type="button" variant="secondary" size="sm" onClick={() => { setShowHardBanForm(false); setHardBanReasonInput(""); }}>Cancel</Button>
-          </div>
-        </div>
+          </Row>
+        </Stack>
       ) : (
         <Button type="button" variant="danger" size="sm" disabled={!userId} onClick={() => setShowHardBanForm(true)}>Impose hard ban</Button>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -159,53 +156,66 @@ function SoftBanPanel({
   onAddSoftBan, onLiftSoftBan,
 }: SoftBanPanelProps) {
   return (
-    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 dark:border-zinc-700 dark:bg-zinc-900/40">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Soft bans{softBans.length > 0 ? ` (${softBans.length})` : ""}</span>
+    <Div surface="muted" padding="sm" rounded="lg" border="default">
+      <Row justify="between" gap="sm" className="mb-2">
+        <Span size="sm" weight="medium" color="muted">Soft bans{softBans.length > 0 ? ` (${softBans.length})` : ""}</Span>
         {!showAddSoftBan && (
           <Button type="button" variant="secondary" size="sm" disabled={!userId} onClick={() => setShowAddSoftBan(true)}>Add soft ban</Button>
         )}
-      </div>
+      </Row>
       {softBans.length > 0 && (
-        <ul className="mb-3 space-y-2">
+        <Stack as="ul" gap="xs" className="mb-3">
           {softBans.map((ban) => (
-            <li key={ban.action} className="flex items-start justify-between gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-800">
-              <div className="min-w-0 flex-1">
-                <div className="font-semibold text-zinc-800 dark:text-zinc-200">{formatBanAction(ban.action)}</div>
-                <div className="text-zinc-500 dark:text-zinc-400">{ban.reason}</div>
-                <div className="text-zinc-400 dark:text-zinc-400">{formatExpiry(ban.expiresAt)}</div>
-              </div>
+            <Row
+              as="li"
+              key={ban.action}
+              align="start"
+              justify="between"
+              gap="xs"
+              surface="default"
+              padding="inlineSm"
+              rounded="md"
+              border="default"
+            >
+              <Stack gap="none" className="min-w-0 flex-1">
+                <Span size="xs" weight="semibold">{formatBanAction(ban.action)}</Span>
+                <Span size="xs" color="muted">{ban.reason}</Span>
+                <Span size="xs" color="muted">{formatExpiry(ban.expiresAt)}</Span>
+              </Stack>
               <Button type="button" variant="secondary" size="sm" isLoading={liftPending} disabled={liftPending} onClick={() => onLiftSoftBan(ban.action)}>Lift</Button>
-            </li>
+            </Row>
           ))}
-        </ul>
+        </Stack>
       )}
       {showAddSoftBan && (
-        <div className="space-y-2">
+        <Stack gap="xs">
           <Select label="Action to restrict" options={BANNED_ACTION_OPTIONS} value={softBanAction} onValueChange={setSoftBanAction} />
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Reason (required)</label>
-            <textarea value={softBanReason} onChange={(e) => setSoftBanReason(e.target.value)} rows={2} placeholder="e.g. Suspicious bid activity…"
-              className={TEXTAREA_CHROME} />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Expires at (optional — leave blank for permanent)</label>
-            <input type="datetime-local" value={softBanExpiry} onChange={(e) => setSoftBanExpiry(e.target.value)}
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-primary-500" />
-          </div>
-          <div className="flex gap-2">
+          <Textarea
+            label="Reason (required)"
+            value={softBanReason}
+            onChange={(e) => setSoftBanReason(e.target.value)}
+            rows={2}
+            placeholder="e.g. Suspicious bid activity…"
+          />
+          <Input
+            label="Expires at (optional — leave blank for permanent)"
+            type="datetime-local"
+            value={softBanExpiry}
+            onChange={(e) => setSoftBanExpiry(e.target.value)}
+          />
+          <Row gap="xs">
             <Button type="button" variant="primary" size="sm" isLoading={softBanPending} disabled={!softBanReason.trim() || softBanPending}
               onClick={() => onAddSoftBan({ action: softBanAction, reason: softBanReason.trim(), ...(softBanExpiry ? { expiresAt: new Date(softBanExpiry).toISOString() } : {}) })}>
               Apply soft ban
             </Button>
             <Button type="button" variant="secondary" size="sm" onClick={() => { setShowAddSoftBan(false); setSoftBanReason(""); setSoftBanExpiry(""); }}>Cancel</Button>
-          </div>
-        </div>
+          </Row>
+        </Stack>
       )}
       {softBans.length === 0 && !showAddSoftBan && (
-        <Text className="text-xs text-zinc-400 dark:text-zinc-400">No active soft bans.</Text>
+        <Text size="xs" color="muted">No active soft bans.</Text>
       )}
-    </div>
+    </Div>
   );
 }
 
@@ -415,21 +425,21 @@ export function AdminUserEditorView({
 
   const renderInfoCard = () =>
     userId ? (
-      <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs dark:border-zinc-700 dark:bg-zinc-900/40">
-        <div className="flex flex-col gap-1 text-zinc-700 dark:text-zinc-300">
-          <>
-            <span className="font-semibold">Owner ID (Firebase UID):</span>{" "}
+      <Div surface="muted" rounded="lg" border="default" className="px-3 py-2 text-xs">
+        <Stack gap="xs" className="text-zinc-700 dark:text-zinc-300">
+          <Text size="xs">
+            <Span weight="semibold">Owner ID (Firebase UID):</Span>{" "}
             <code className="select-all font-mono">{userId}</code>
-          </>
+          </Text>
           {ownedStoreId && (
-            <>
-              <span className="font-semibold">Owns store:</span>{" "}
+            <Text size="xs">
+              <Span weight="semibold">Owns store:</Span>{" "}
               <code className="select-all font-mono">{ownedStoreId}</code>
               {ownedStoreName ? ` — ${ownedStoreName}` : ""}
-            </>
+            </Text>
           )}
-        </div>
-      </div>
+        </Stack>
+      </Div>
     ) : null;
 
   const renderRoleSection = () => (
@@ -450,92 +460,81 @@ export function AdminUserEditorView({
   );
 
   const renderProfileSection = () => (
-    <div className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
-      <Heading
-        level={3}
-        className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
-      >
+    <Stack as="section" gap="sm" className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
+      <Heading level={3} className="mb-1 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
         Profile details
       </Heading>
-      <div className="space-y-3">
-        <Input
-          label="Display name"
-          value={editDisplayName}
-          onChange={(e) => setEditDisplayName(e.target.value)}
-          placeholder="Full name shown on profile"
-        />
-        <Input
-          label="Phone number"
-          type="tel"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          placeholder="+91 90000 00000"
-        />
-        <div className="flex flex-col gap-1">
-          <Label>Bio</Label>
-          <textarea
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            rows={3}
-            placeholder="Short bio shown on the public profile…"
-            className={TEXTAREA_CHROME}
-          />
-        </div>
-        <Input
-          label="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder="City, Country"
-        />
-        <Input
-          label="Website"
-          type="url"
-          value={website}
-          onChange={(e) => setWebsite(e.target.value)}
-          placeholder="https://"
-        />
-        <Text size="xs" color="muted">
-          Social links
-        </Text>
-        <Input
-          label="Twitter / X"
-          value={twitter}
-          onChange={(e) => setTwitter(e.target.value)}
-          placeholder="@handle or full URL"
-        />
-        <Input
-          label="Instagram"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-          placeholder="@handle or full URL"
-        />
-        <Input
-          label="Facebook"
-          value={facebook}
-          onChange={(e) => setFacebook(e.target.value)}
-          placeholder="https://facebook.com/…"
-        />
-        <Input
-          label="LinkedIn"
-          value={linkedin}
-          onChange={(e) => setLinkedin(e.target.value)}
-          placeholder="https://linkedin.com/in/…"
-        />
-      </div>
-    </div>
+      <Input
+        label="Display name"
+        value={editDisplayName}
+        onChange={(e) => setEditDisplayName(e.target.value)}
+        placeholder="Full name shown on profile"
+      />
+      <Input
+        label="Phone number"
+        type="tel"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        placeholder="+91 90000 00000"
+      />
+      <Textarea
+        label="Bio"
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+        rows={3}
+        placeholder="Short bio shown on the public profile…"
+      />
+      <Input
+        label="Location"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        placeholder="City, Country"
+      />
+      <Input
+        label="Website"
+        type="url"
+        value={website}
+        onChange={(e) => setWebsite(e.target.value)}
+        placeholder="https://"
+      />
+      <Text size="xs" color="muted">
+        Social links
+      </Text>
+      <Input
+        label="Twitter / X"
+        value={twitter}
+        onChange={(e) => setTwitter(e.target.value)}
+        placeholder="@handle or full URL"
+      />
+      <Input
+        label="Instagram"
+        value={instagram}
+        onChange={(e) => setInstagram(e.target.value)}
+        placeholder="@handle or full URL"
+      />
+      <Input
+        label="Facebook"
+        value={facebook}
+        onChange={(e) => setFacebook(e.target.value)}
+        placeholder="https://facebook.com/…"
+      />
+      <Input
+        label="LinkedIn"
+        value={linkedin}
+        onChange={(e) => setLinkedin(e.target.value)}
+        placeholder="https://linkedin.com/in/…"
+      />
+    </Stack>
   );
 
   const renderAdminNotesSection = () => (
-    <div className="flex flex-col gap-1">
-      <Label>Admin notes (optional)</Label>
-      <textarea
-        value={adminNotes}
-        onChange={(e) => setAdminNotes(e.target.value)}
-        rows={3}
-        placeholder="Internal notes about this user…"
-        className={TEXTAREA_CHROME}
-      />
-    </div>
+    <Textarea
+      label="Admin notes (optional)"
+      value={adminNotes}
+      onChange={(e) => setAdminNotes(e.target.value)}
+      rows={3}
+      placeholder="Internal notes about this user…"
+    />
   );
 
   const renderActionsSection = () => (
@@ -562,7 +561,7 @@ export function AdminUserEditorView({
   );
 
   const renderModerationSection = () => (
-    <div className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
+    <Stack as="section" gap="sm" className="border-t border-zinc-200 pt-4 dark:border-zinc-700">
       <Heading level={3} className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
         Moderation
       </Heading>
@@ -596,7 +595,7 @@ export function AdminUserEditorView({
         onAddSoftBan={(payload) => softBanMutation.mutate(payload)}
         onLiftSoftBan={(action) => liftSoftBanMutation.mutate(action)}
       />
-    </div>
+    </Stack>
   );
 
   return (
