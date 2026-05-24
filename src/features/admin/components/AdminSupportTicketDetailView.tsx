@@ -231,6 +231,56 @@ export function AdminSupportTicketDetailView({
     },
   });
 
+  // ST-5 — Lift Ban actions for unban_request tickets
+  const linkedUserId = parties.userId?.trim();
+  const isUnbanRequest = category === "unban_request";
+
+  const liftHardBan = useMutation({
+    mutationFn: async () => {
+      if (!linkedUserId) throw new Error("No linked user on this ticket.");
+      await apiClient.post(ADMIN_ENDPOINTS.USER_UNBAN(linkedUserId), {});
+    },
+    onSuccess: () => {
+      showToast("Hard ban lifted.", "success");
+      apiClient
+        .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
+          internalNotes:
+            (notes ? notes + "\n" : "") +
+            `[${new Date().toISOString()}] Lifted hard ban for ${linkedUserId}`,
+          status: "resolved",
+        })
+        .catch(() => {});
+      invalidate();
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to lift hard ban.", "error");
+    },
+  });
+
+  const liftSoftBanTickets = useMutation({
+    mutationFn: async () => {
+      if (!linkedUserId) throw new Error("No linked user on this ticket.");
+      await apiClient.delete(
+        ADMIN_ENDPOINTS.USER_SOFT_BAN_LIFT(linkedUserId, "create_support_tickets"),
+      );
+    },
+    onSuccess: () => {
+      showToast("Ticket-creation soft ban lifted.", "success");
+      apiClient
+        .patch(ADMIN_ENDPOINTS.SUPPORT_TICKET_BY_ID(ticketId!), {
+          internalNotes:
+            (notes ? notes + "\n" : "") +
+            `[${new Date().toISOString()}] Lifted create_support_tickets soft ban for ${linkedUserId}`,
+          status: "resolved",
+        })
+        .catch(() => {});
+      invalidate();
+    },
+    onError: (err: unknown) => {
+      showToast((err as Error)?.message ?? "Failed to lift soft ban.", "error");
+    },
+  });
+
   const applyOrderItems = useMutation({
     mutationFn: async () => {
       if (!linkedOrderId) throw new Error("No linked order on this ticket.");
@@ -452,6 +502,14 @@ export function AdminSupportTicketDetailView({
           />
         )}
 
+        {isUnbanRequest && (
+          <UnbanRequestPanel
+            linkedUserId={linkedUserId}
+            liftHardBan={liftHardBan}
+            liftSoftBanTickets={liftSoftBanTickets}
+          />
+        )}
+
         <FormActions align="right">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancel
@@ -670,6 +728,66 @@ function StoreChangePanel(props: {
             Store slug
           </Text>{" "}
           field in the Linked parties panel above to enable this action.
+        </Text>
+      )}
+    </Div>
+  );
+}
+
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function UnbanRequestPanel(props: {
+  linkedUserId: string | undefined;
+  liftHardBan: any;
+  liftSoftBanTickets: any;
+}) {
+  const { linkedUserId, liftHardBan, liftSoftBanTickets } = props;
+  return (
+    <Div
+      padding="sm"
+      className="flex flex-col gap-2 rounded-lg border border-error/40 bg-error-surface/40"
+    >
+      <Text className="text-xs font-semibold text-error uppercase tracking-wide">
+        Lift account ban
+      </Text>
+      {linkedUserId ? (
+        <>
+          <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+            Appellant: <code className="font-mono">{linkedUserId}</code>
+          </Text>
+          <Text size="xs" color="muted">
+            Resolves the ticket and appends an audit note on success.
+          </Text>
+          <Row gap="sm">
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              isLoading={liftHardBan.isPending}
+              disabled={liftHardBan.isPending}
+              onClick={() => liftHardBan.mutate()}
+            >
+              Lift hard ban
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              isLoading={liftSoftBanTickets.isPending}
+              disabled={liftSoftBanTickets.isPending}
+              onClick={() => liftSoftBanTickets.mutate()}
+            >
+              Lift ticket soft ban
+            </Button>
+          </Row>
+        </>
+      ) : (
+        <Text className="text-xs text-zinc-600 dark:text-zinc-300">
+          Set the{" "}
+          <Text as="span" weight="semibold">
+            User slug
+          </Text>{" "}
+          field in the Linked parties panel above to enable these actions.
         </Text>
       )}
     </Div>

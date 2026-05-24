@@ -34,6 +34,10 @@ export const TicketCategoryValues = {
   // ST-3 — buyers/sellers request mutation of order line items
   // (wrong item shipped, partial fulfilment, bundle correction).
   ORDER_MODIFICATION_REQUEST: "order_modification_request",
+  // ST-5 — users appeal a soft-ban or hard-ban via this category.
+  // Server bypasses the create_support_tickets soft-ban guard and the
+  // active-ticket limit so the user always has an appeal channel.
+  UNBAN_REQUEST: "unban_request",
 } as const;
 
 export type TicketCategory =

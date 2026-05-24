@@ -57,6 +57,9 @@ const CATEGORY_OPTIONS = [
   { label: "Store Change Request (sellers)", value: "store_change_request" },
   // ST-3 — buyers/sellers request mutation of order line items
   { label: "Order Modification Request", value: "order_modification_request" },
+  // ST-5 — appeal a soft or hard ban; bypasses the create_support_tickets
+  // soft-ban guard server-side.
+  { label: "Appeal a ban (unban request)", value: "unban_request" },
   { label: "General", value: "general" },
 ];
 
