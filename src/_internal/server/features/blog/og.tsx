@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { renderOgLayout } from "../seo/og-layout";
 import { resolveOgImageUrl } from "../seo/og";
 
 export interface BlogOgData {
@@ -39,110 +40,13 @@ export function renderBlogOg(
 }
 
 export function renderBlogOgImage(data: BlogOgData, siteName: string): ReactElement {
-  const { title, excerpt, authorName, category, coverImage } = data;
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        background: "#0f172a",
-        fontFamily: "sans-serif",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {coverImage && (
-        <img
-          src={coverImage}
-          alt=""
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.12 }}
-        />
-      )}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(135deg, rgba(15,23,42,0.97) 0%, rgba(15,23,42,0.82) 100%)",
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          padding: "60px",
-          gap: "48px",
-          alignItems: "center",
-        }}
-      >
-        {coverImage && (
-          <img
-            src={coverImage}
-            alt={title}
-            style={{ width: 360, height: 360, objectFit: "cover", borderRadius: 16, flexShrink: 0 }}
-          />
-        )}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 16, color: "#34d399", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" }}>
-              {siteName} · Blog
-            </div>
-            {category && (
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#6ee7b7",
-                  fontWeight: 500,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  background: "rgba(52,211,153,0.12)",
-                  padding: "3px 10px",
-                  borderRadius: 100,
-                }}
-              >
-                {category}
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              fontSize: coverImage ? 44 : 56,
-              fontWeight: 700,
-              color: "#f1f5f9",
-              lineHeight: 1.2,
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {title}
-          </div>
-          {excerpt && (
-            <div
-              style={{
-                fontSize: 22,
-                color: "#94a3b8",
-                lineHeight: 1.45,
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {excerpt}
-            </div>
-          )}
-          {authorName && (
-            <div style={{ fontSize: 18, color: "#64748b", fontWeight: 500, marginTop: 4 }}>
-              By {authorName}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const sublines = [data.excerpt, data.authorName ? `By ${data.authorName}` : null].filter(Boolean);
+  return renderOgLayout({
+    title: data.title,
+    subtitle: sublines.length > 0 ? sublines.join(" · ") : undefined,
+    imageUrl: data.coverImage,
+    siteName: `${siteName} · Blog`,
+    badges: data.category ? [data.category] : undefined,
+    theme: { accentColor: "#34d399" },
+  });
 }

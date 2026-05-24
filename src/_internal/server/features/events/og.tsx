@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import { renderOgLayout } from "../seo/og-layout";
 import { resolveOgImageUrl } from "../seo/og";
 
 export interface EventOgData {
@@ -66,110 +67,13 @@ export function renderEventOg(
 }
 
 export function renderEventOgImage(data: EventOgData, siteName: string): ReactElement {
-  const { title, description, typeLabel, startsAt, coverImageUrl } = data;
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        background: "#0f172a",
-        fontFamily: "sans-serif",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {coverImageUrl && (
-        <img
-          src={coverImageUrl}
-          alt=""
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.15 }}
-        />
-      )}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(15,23,42,0.80) 100%)",
-        }}
-      />
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          padding: "60px",
-          gap: "48px",
-          alignItems: "center",
-        }}
-      >
-        {coverImageUrl && (
-          <img
-            src={coverImageUrl}
-            alt={title}
-            style={{ width: 380, height: 380, objectFit: "cover", borderRadius: 16, flexShrink: 0 }}
-          />
-        )}
-        <div style={{ display: "flex", flexDirection: "column", gap: 20, flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ fontSize: 16, color: "#a78bfa", fontWeight: 600, letterSpacing: 2, textTransform: "uppercase" }}>
-              {siteName} · Events
-            </div>
-            {typeLabel && (
-              <div
-                style={{
-                  fontSize: 13,
-                  color: "#c4b5fd",
-                  fontWeight: 500,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  background: "rgba(167,139,250,0.12)",
-                  padding: "3px 10px",
-                  borderRadius: 100,
-                }}
-              >
-                {typeLabel}
-              </div>
-            )}
-          </div>
-          <div
-            style={{
-              fontSize: coverImageUrl ? 44 : 56,
-              fontWeight: 700,
-              color: "#f1f5f9",
-              lineHeight: 1.2,
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {title}
-          </div>
-          {description && (
-            <div
-              style={{
-                fontSize: 22,
-                color: "#94a3b8",
-                lineHeight: 1.45,
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
-              {description}
-            </div>
-          )}
-          {startsAt && (
-            <div style={{ fontSize: 22, fontWeight: 600, color: "#a78bfa" }}>
-              {startsAt}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  return renderOgLayout({
+    title: data.title,
+    subtitle: data.description ?? undefined,
+    imageUrl: data.coverImageUrl,
+    siteName: `${siteName} · Events`,
+    badges: data.typeLabel ? [data.typeLabel] : undefined,
+    accentSlot: data.startsAt,
+    theme: { accentColor: "#a78bfa" },
+  });
 }
