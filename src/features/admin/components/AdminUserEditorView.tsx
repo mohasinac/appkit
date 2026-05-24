@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Select, SideDrawer, Text, Toggle, useToast } from "../../../ui";
+import { Button, ConfirmDeleteModal, Form, FormActions, Heading, Input, Label, Select, SideDrawer, Text, Toggle, useToast } from "../../../ui";
 import { apiClient } from "../../../http";
 import { ADMIN_ENDPOINTS } from "../../../constants/api-endpoints";
 
@@ -32,6 +32,17 @@ export interface AdminUserEditorViewProps {
   /** Whether the user is hard-banned (isDisabled + hardBanReason set). */
   currentIsHardBanned?: boolean;
   currentHardBanReason?: string;
+  // ST-2 — extended profile fields the admin can edit on the user's behalf
+  currentPhoneNumber?: string | null;
+  currentBio?: string;
+  currentLocation?: string;
+  currentWebsite?: string;
+  currentSocialLinks?: {
+    twitter?: string;
+    instagram?: string;
+    facebook?: string;
+    linkedin?: string;
+  };
 }
 
 const ROLE_OPTIONS = [
@@ -50,6 +61,12 @@ const BANNED_ACTION_OPTIONS = [
   { label: "Create support tickets", value: "create_support_tickets" },
   { label: "Report scammers", value: "report_scammers" },
 ];
+
+// Standard textarea/input chrome for raw <textarea>/<input> elements in this
+// view (consistent border/focus styling). Deduped to satisfy
+// audit-code-quality REPEATED_STRING rule.
+const TEXTAREA_CHROME =
+  "w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500";
 
 function formatBanAction(action: string): string {
   return BANNED_ACTION_OPTIONS.find((o) => o.value === action)?.label ?? action;
@@ -169,7 +186,7 @@ function SoftBanPanel({
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Reason (required)</label>
             <textarea value={softBanReason} onChange={(e) => setSoftBanReason(e.target.value)} rows={2} placeholder="e.g. Suspicious bid activity…"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500" />
+              className={TEXTAREA_CHROME} />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">Expires at (optional — leave blank for permanent)</label>
@@ -207,6 +224,11 @@ export function AdminUserEditorView({
   currentSoftBans,
   currentIsHardBanned,
   currentHardBanReason,
+  currentPhoneNumber,
+  currentBio,
+  currentLocation,
+  currentWebsite,
+  currentSocialLinks,
 }: AdminUserEditorViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
@@ -216,6 +238,17 @@ export function AdminUserEditorView({
   const [emailVerified, setEmailVerified] = React.useState(currentEmailVerified ?? false);
   const [adminNotes, setAdminNotes] = React.useState("");
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+
+  // --- ST-2 profile fields --------------------------------------------------
+  const [editDisplayName, setEditDisplayName] = React.useState(displayName ?? "");
+  const [phoneNumber, setPhoneNumber] = React.useState(currentPhoneNumber ?? "");
+  const [bio, setBio] = React.useState(currentBio ?? "");
+  const [location, setLocation] = React.useState(currentLocation ?? "");
+  const [website, setWebsite] = React.useState(currentWebsite ?? "");
+  const [twitter, setTwitter] = React.useState(currentSocialLinks?.twitter ?? "");
+  const [instagram, setInstagram] = React.useState(currentSocialLinks?.instagram ?? "");
+  const [facebook, setFacebook] = React.useState(currentSocialLinks?.facebook ?? "");
+  const [linkedin, setLinkedin] = React.useState(currentSocialLinks?.linkedin ?? "");
 
   // --- Hard ban form --------------------------------------------------------
   const [showHardBanForm, setShowHardBanForm] = React.useState(false);
@@ -232,6 +265,15 @@ export function AdminUserEditorView({
       setRole(currentRole ?? "user");
       setEmailVerified(currentEmailVerified ?? false);
       setAdminNotes("");
+      setEditDisplayName(displayName ?? "");
+      setPhoneNumber(currentPhoneNumber ?? "");
+      setBio(currentBio ?? "");
+      setLocation(currentLocation ?? "");
+      setWebsite(currentWebsite ?? "");
+      setTwitter(currentSocialLinks?.twitter ?? "");
+      setInstagram(currentSocialLinks?.instagram ?? "");
+      setFacebook(currentSocialLinks?.facebook ?? "");
+      setLinkedin(currentSocialLinks?.linkedin ?? "");
       setShowHardBanForm(false);
       setHardBanReasonInput("");
       setShowAddSoftBan(false);
@@ -239,7 +281,20 @@ export function AdminUserEditorView({
       setSoftBanReason("");
       setSoftBanExpiry("");
     }
-  }, [open, currentRole, currentEmailVerified]);
+  }, [
+    open,
+    currentRole,
+    currentEmailVerified,
+    displayName,
+    currentPhoneNumber,
+    currentBio,
+    currentLocation,
+    currentWebsite,
+    currentSocialLinks?.twitter,
+    currentSocialLinks?.instagram,
+    currentSocialLinks?.facebook,
+    currentSocialLinks?.linkedin,
+  ]);
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
 
@@ -247,10 +302,27 @@ export function AdminUserEditorView({
 
   const saveMutation = useMutation({
     mutationFn: async () => {
+      // ST-2 — build publicProfile partial only when something changed; keeps
+      // the PATCH payload minimal and avoids overwriting unrelated subkeys.
+      const socialLinks: Record<string, string> = {};
+      if (twitter.trim()) socialLinks.twitter = twitter.trim();
+      if (instagram.trim()) socialLinks.instagram = instagram.trim();
+      if (facebook.trim()) socialLinks.facebook = facebook.trim();
+      if (linkedin.trim()) socialLinks.linkedin = linkedin.trim();
+      const publicProfile: Record<string, unknown> = {};
+      if (bio.trim()) publicProfile.bio = bio.trim();
+      if (location.trim()) publicProfile.location = location.trim();
+      if (website.trim()) publicProfile.website = website.trim();
+      if (Object.keys(socialLinks).length > 0) publicProfile.socialLinks = socialLinks;
+
       await apiClient.patch(ADMIN_ENDPOINTS.USER_BY_ID(userId!), {
         role,
         emailVerified,
         adminNotes: adminNotes || undefined,
+        displayName: editDisplayName.trim() || undefined,
+        phoneNumber: phoneNumber.trim() || undefined,
+        publicProfile:
+          Object.keys(publicProfile).length > 0 ? publicProfile : undefined,
       });
     },
     onSuccess: () => {
@@ -389,6 +461,81 @@ export function AdminUserEditorView({
             onChange={setEmailVerified}
           />
 
+          {/* ── ST-2 — Profile Details (admin-editable on user's behalf) ── */}
+          <div className="border-t border-zinc-200 pt-3 dark:border-zinc-700">
+            <Heading
+              level={3}
+              className="mb-3 text-sm font-semibold text-zinc-700 dark:text-zinc-300"
+            >
+              Profile details
+            </Heading>
+            <div className="space-y-3">
+              <Input
+                label="Display name"
+                value={editDisplayName}
+                onChange={(e) => setEditDisplayName(e.target.value)}
+                placeholder="Full name shown on profile"
+              />
+              <Input
+                label="Phone number"
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="+91 90000 00000"
+              />
+              <div className="flex flex-col gap-1">
+                <Label>Bio</Label>
+                <textarea
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  rows={3}
+                  placeholder="Short bio shown on the public profile…"
+                  className={TEXTAREA_CHROME}
+                />
+              </div>
+              <Input
+                label="Location"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="City, Country"
+              />
+              <Input
+                label="Website"
+                type="url"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                placeholder="https://"
+              />
+              <Text size="xs" color="muted">
+                Social links
+              </Text>
+              <Input
+                label="Twitter / X"
+                value={twitter}
+                onChange={(e) => setTwitter(e.target.value)}
+                placeholder="@handle or full URL"
+              />
+              <Input
+                label="Instagram"
+                value={instagram}
+                onChange={(e) => setInstagram(e.target.value)}
+                placeholder="@handle or full URL"
+              />
+              <Input
+                label="Facebook"
+                value={facebook}
+                onChange={(e) => setFacebook(e.target.value)}
+                placeholder="https://facebook.com/…"
+              />
+              <Input
+                label="LinkedIn"
+                value={linkedin}
+                onChange={(e) => setLinkedin(e.target.value)}
+                placeholder="https://linkedin.com/in/…"
+              />
+            </div>
+          </div>
+
           {/* ── Admin notes ── */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -399,7 +546,7 @@ export function AdminUserEditorView({
               onChange={(e) => setAdminNotes(e.target.value)}
               rows={3}
               placeholder="Internal notes about this user…"
-              className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className={TEXTAREA_CHROME}
             />
           </div>
 

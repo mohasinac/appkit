@@ -247,6 +247,41 @@ export function AdminUsersView({ children, ...props }: AdminUsersViewProps) {
               }))
             : undefined
         }
+        // ST-2 — extended profile fields
+        currentPhoneNumber={
+          toStringValue(selectedRow?._raw?.phoneNumber, "") || undefined
+        }
+        currentBio={
+          toStringValue(
+            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.bio,
+            "",
+          ) || undefined
+        }
+        currentLocation={
+          toStringValue(
+            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.location,
+            "",
+          ) || undefined
+        }
+        currentWebsite={
+          toStringValue(
+            (selectedRow?._raw?.publicProfile as Record<string, unknown> | undefined)?.website,
+            "",
+          ) || undefined
+        }
+        currentSocialLinks={(() => {
+          const pp = selectedRow?._raw?.publicProfile as
+            | Record<string, unknown>
+            | undefined;
+          const sl = pp?.socialLinks as Record<string, unknown> | undefined;
+          if (!sl) return undefined;
+          return {
+            twitter: toStringValue(sl.twitter, "") || undefined,
+            instagram: toStringValue(sl.instagram, "") || undefined,
+            facebook: toStringValue(sl.facebook, "") || undefined,
+            linkedin: toStringValue(sl.linkedin, "") || undefined,
+          };
+        })()}
       />
       <Modal
         isOpen={banModalOpen}
