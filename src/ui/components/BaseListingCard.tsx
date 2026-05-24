@@ -2,6 +2,15 @@ import type { ReactNode, MouseEvent } from "react";
 import { Button } from "./Button";
 import { Span } from "./Typography";
 
+export interface BaseListingCardIconOverlayProps {
+  /** Single icon (emoji or `/media/<slug>` URL) — typically `product.groupIcon`. */
+  groupIcon?: string;
+  /** Second icon — typically `product.sublistingIcon`. */
+  sublistingIcon?: string;
+  /** Where the overlay sits inside the hero. */
+  position?: string;
+}
+
 export interface BaseListingCardRootProps {
   className?: string;
   isSelected?: boolean;
@@ -198,8 +207,49 @@ function BaseListingCardCheckbox({
   );
 }
 
+function BaseListingCardIconOverlay({
+  groupIcon,
+  sublistingIcon,
+  position = "top-2 right-2",
+}: BaseListingCardIconOverlayProps) {
+  if (!groupIcon && !sublistingIcon) return null;
+  const renderOne = (icon: string, key: string) => {
+    const isMediaUrl = icon.startsWith("/media/") || icon.startsWith("http");
+    if (isMediaUrl) {
+      return (
+        // eslint-disable-next-line @next/next/no-img-element, lir/no-raw-media-elements
+        <img
+          key={key}
+          src={icon}
+          alt=""
+          className="w-5 h-5 rounded-full border border-white/80 shadow-sm bg-white dark:bg-zinc-900 object-cover"
+        />
+      );
+    }
+    return (
+      <Span
+        key={key}
+        size="sm"
+        className="inline-flex items-center justify-center w-5 h-5 rounded-full border border-white/80 bg-white/95 dark:bg-zinc-900/95 shadow-sm leading-none"
+      >
+        {icon}
+      </Span>
+    );
+  };
+  return (
+    <div
+      className={`absolute z-10 flex items-center gap-1 ${position}`}
+      aria-hidden="true"
+    >
+      {groupIcon && renderOne(groupIcon, "group")}
+      {sublistingIcon && renderOne(sublistingIcon, "sublisting")}
+    </div>
+  );
+}
+
 export const BaseListingCard = Object.assign(BaseListingCardRoot, {
   Hero: BaseListingCardHero,
   Info: BaseListingCardInfo,
   Checkbox: BaseListingCardCheckbox,
+  IconOverlay: BaseListingCardIconOverlay,
 });

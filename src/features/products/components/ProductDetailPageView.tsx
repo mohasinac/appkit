@@ -601,7 +601,7 @@ export async function ProductDetailPageView({
                 />
               )}
 
-              {/* Store card */}
+              {/* Store card — W1-34 adds optional seller rating + review count */}
               {safeSeller && (
                 <Div className="rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/60 p-3">
                   <Row justify="between" align="center">
@@ -612,6 +612,17 @@ export async function ProductDetailPageView({
                       <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
                         {safeSeller}
                       </Text>
+                      {typeof p.storeRating === "number" && p.storeRating > 0 && (
+                        <Row gap="xs" align="center" className="mt-0.5">
+                          <Text size="xs" color="muted">
+                            <span className="text-warning" aria-hidden="true">★</span>{" "}
+                            {(p.storeRating as number).toFixed(1)}
+                            {typeof p.storeReviewCount === "number" &&
+                              p.storeReviewCount > 0 &&
+                              ` · ${p.storeReviewCount} reviews`}
+                          </Text>
+                        </Row>
+                      )}
                     </Div>
                     {storeHref && (
                       <Link

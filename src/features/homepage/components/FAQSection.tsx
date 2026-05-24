@@ -47,10 +47,6 @@ export interface FAQSectionProps {
   viewMoreLabel?: string;
   hasMore?: boolean;
   moreCount?: number;
-  /** @deprecated Tabs are now derived internally or from the tabs prop */
-  activeTab?: string;
-  /** @deprecated Use showCategoryTabs + tabs props instead */
-  renderTabs?: () => React.ReactNode;
   className?: string;
 }
 

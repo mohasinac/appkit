@@ -8765,9 +8765,6 @@ export type { FAQSectionConfig } from "./features/homepage/schemas/index";
 // FeaturesSectionConfig - Type contract for features section config.
 export type { FeaturesSectionConfig } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
-// GridCard - Type contract for grid card.
-export type { GridCard } from "./features/homepage/schemas/index";
-// [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.
 // GridCardCreateInput - Type contract for grid card create input.
 export type { GridCardCreateInput } from "./features/homepage/schemas/index";
 // [TYPE]-TypeScript type-only export â€" erased at compile time, zero runtime cost.

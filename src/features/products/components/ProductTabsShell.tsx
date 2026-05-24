@@ -8,6 +8,8 @@ const STATIC_TABS = [
   { id: "ingredients", label: "Ingredients" },
   { id: "howToUse", label: "How to Use" },
   { id: "reviews", label: "Reviews" },
+  // W1-34 — Q&A tab; consumers pass `qaContent` to surface it.
+  { id: "qa", label: "Q&A" },
 ] as const;
 
 type StaticTabId = (typeof STATIC_TABS)[number]["id"];
@@ -26,6 +28,8 @@ export interface ProductTabsShellProps {
   ingredientsContent?: React.ReactNode;
   howToUseContent?: React.ReactNode;
   reviewsContent?: React.ReactNode;
+  /** W1-34 — Q&A tab content. Pass non-null to surface the tab. */
+  qaContent?: React.ReactNode;
   /** Additional tabs from custom sections — rendered after standard tabs */
   customTabs?: CustomTabDef[];
   className?: string;
@@ -38,6 +42,7 @@ export function ProductTabsShell({
   ingredientsContent,
   howToUseContent,
   reviewsContent,
+  qaContent,
   customTabs = [],
   className = "",
 }: ProductTabsShellProps) {
@@ -48,6 +53,7 @@ export function ProductTabsShell({
     ingredients: ingredientsContent,
     howToUse: howToUseContent,
     reviews: reviewsContent,
+    qa: qaContent,
   };
 
   const visibleStatic = STATIC_TABS.filter(

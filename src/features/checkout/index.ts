@@ -7,7 +7,6 @@ export type {
   CartApiResponse,
   PlaceOrderResponse,
   CreatePaymentOrderResponse,
-  CreateRazorpayOrderResponse,
   UnavailableItem,
   PreflightResponse,
 } from "./hooks/useCheckoutApi";

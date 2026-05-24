@@ -164,6 +164,10 @@ export interface ProductDocument {
   status: ProductStatus;
   storeId: string;
   storeName?: string;
+  /** W1-34 — denormalized seller rating (0–5) shown on product detail store card. */
+  storeRating?: number;
+  /** W1-34 — denormalized seller total review count shown alongside the rating. */
+  storeReviewCount?: number;
   featured: boolean;
   tags: string[];
   specifications?: ProductSpecification[];
@@ -239,6 +243,19 @@ export interface ProductDocument {
   groupParentSlug?: string;
   groupChildSlugs?: string[];
   groupTitle?: string;
+  /**
+   * W1-45 — optional icon shown as an overlay badge on every card whose
+   * product belongs to this group. Set once on the group parent; cards
+   * inherit it via the snapshot pipeline. Either an emoji or a media slug
+   * (rendered via `/media/<slug>`).
+   */
+  groupIcon?: string;
+  /**
+   * W1-45 — denormalized icon from the sublisting category (`display.icon`).
+   * Mirrored onto the product snapshot at create/update time so cards can
+   * render it without an extra category lookup per row.
+   */
+  sublistingIcon?: string;
 
   // ── SB1 (S19 / S22 Phase 4 2026-05-12) — canonical listing-kind discriminator
   /**

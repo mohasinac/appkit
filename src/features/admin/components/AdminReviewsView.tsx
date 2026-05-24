@@ -34,12 +34,9 @@ interface ReviewRow {
   _raw?: Record<string, unknown>;
 }
 
-export interface AdminReviewsViewProps extends ListingLayoutProps {
-  /** @deprecated Use `detailView` instead. */
-  renderDetailView?: () => React.ReactNode;
-}
+export type AdminReviewsViewProps = ListingLayoutProps;
 
-export function AdminReviewsView({ renderDetailView, children, ...props }: AdminReviewsViewProps) {
+export function AdminReviewsView({ children, ...props }: AdminReviewsViewProps) {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
   const [viewReview, setViewReview] = useState<Review | null>(null);
@@ -98,9 +95,9 @@ export function AdminReviewsView({ renderDetailView, children, ...props }: Admin
     });
   }, []);
 
-  if (React.Children.count(children) > 0 || renderDetailView) {
+  if (React.Children.count(children) > 0) {
     return (
-      <ListingLayout portal="admin" {...props} detailView={renderDetailView?.()}>
+      <ListingLayout portal="admin" {...props}>
         {children}
       </ListingLayout>
     );

@@ -179,6 +179,13 @@ export function ProductCard<T extends ProductItem = ProductItem>({
           )}
         </Div>
 
+        {/* W1-45 — group/sublisting icon overlay (bottom-right) */}
+        <BaseListingCard.IconOverlay
+          groupIcon={product.groupIcon}
+          sublistingIcon={product.sublistingIcon}
+          position="bottom-2 right-2"
+        />
+
         {/* Wishlist button — always visible */}
         {onAddToWishlist && (
           <Button

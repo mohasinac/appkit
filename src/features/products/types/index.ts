@@ -92,6 +92,10 @@ export interface ProductItem {
   groupParentSlug?: string;
   groupChildSlugs?: string[];
   groupTitle?: string;
+  /** W1-45 — icon shown as a card overlay; emoji or `/media/<slug>`. */
+  groupIcon?: string;
+  /** W1-45 — denormalized icon from the sublisting category. */
+  sublistingIcon?: string;
   isOnSale?: boolean;
   isSold?: boolean;
   inStock?: boolean;

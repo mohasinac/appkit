@@ -69,8 +69,6 @@ export interface CarouselCard {
   gridCol?: 1 | 2 | 3;
 }
 
-/** @deprecated Use CarouselCard. This alias is kept for backward compatibility. */
-export type GridCard = CarouselCard;
 export type GridCardCreateInput = Omit<CarouselCard, "id">;
 
 /** A named carousel that holds up to MAX_SLIDES_PER_CAROUSEL slide references. */

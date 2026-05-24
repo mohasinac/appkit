@@ -37,9 +37,6 @@ export interface PreflightResponse {
   unavailable: UnavailableItem[];
 }
 
-/** @deprecated Use `CreatePaymentOrderResponse` instead. */
-export type CreateRazorpayOrderResponse = CreatePaymentOrderResponse;
-
 export interface CreatePaymentOrderResponse {
   gatewayOrderId: string;
   amount: number;
