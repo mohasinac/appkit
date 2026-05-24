@@ -4,7 +4,7 @@ import { X, AlertTriangle, Eye, ArrowLeft } from "lucide-react";
 import { Button } from "../../ui/components/Button";
 import { classNames } from "../../ui/style.helper";
 import { FORM_ACTION_META, FORM_ACTION_ID } from "../products/constants/action-defs";
-import { Text } from "../../ui";
+import { Div, Row, Span, Stack, Text } from "../../ui";
 
 export interface FormShellSection {
   id: string;
@@ -151,7 +151,7 @@ export function FormShell({
   return (
     <>
       {/* Backdrop */}
-      <div
+      <Div
         className="fixed inset-0 bg-black/50 backdrop-blur-[2px]"
         style={{ zIndex: "calc(var(--appkit-z-modal) - 1)" }}
         aria-hidden="true"
@@ -159,7 +159,7 @@ export function FormShell({
       />
 
       {/* Panel */}
-      <div
+      <Div
         ref={panelRef}
         role="dialog"
         aria-modal="true"
@@ -168,7 +168,7 @@ export function FormShell({
         style={{ zIndex: "var(--appkit-z-modal)" }}
       >
         {/* ── Top bar ─────────────────────────────────────── */}
-        <div className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3 flex items-center gap-3">
+        <Row gap="sm" className="flex-shrink-0 sticky top-0 z-10 border-b border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3">
           {previewMode ? (
             <button
               type="button"
@@ -177,7 +177,7 @@ export function FormShell({
               className="rounded-lg p-1.5 text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors flex-shrink-0 flex items-center gap-1.5 text-sm"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Back to Edit</span>
+              <Span className="hidden sm:inline">Back to Edit</Span>
             </button>
           ) : (
             <button
@@ -190,16 +190,16 @@ export function FormShell({
             </button>
           )}
 
-          <div className="flex-1 min-w-0">
+          <Div className="flex-1 min-w-0">
             {breadcrumb && (
               <Text className="text-xs text-[var(--appkit-color-text-muted)] truncate mb-0.5">{breadcrumb}</Text>
             )}
             <Text className="text-sm font-semibold text-[var(--appkit-color-text)] truncate">
               {previewMode ? `Preview — ${title}` : title}
             </Text>
-          </div>
+          </Div>
 
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <Row gap="xs" className="flex-shrink-0">
             {previewMode ? null : (
               <>
                 {previewSlot && (
@@ -209,7 +209,7 @@ export function FormShell({
                     className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[var(--appkit-color-text-muted)] hover:bg-[var(--appkit-color-border-subtle)] transition-colors border border-[var(--appkit-color-border)]"
                   >
                     <Eye className="w-4 h-4" />
-                    <span className="hidden sm:inline">Preview</span>
+                    <Span className="hidden sm:inline">Preview</Span>
                   </button>
                 )}
                 {onSaveDraft && (
@@ -236,11 +236,11 @@ export function FormShell({
                 )}
               </>
             )}
-          </div>
-        </div>
+          </Row>
+        </Row>
 
         {/* ── Body (left nav + scrollable content) ───────── */}
-        <div className="flex flex-1 overflow-hidden">
+        <Div className="flex flex-1 overflow-hidden">
           {/* Left section nav — desktop only (lg+), hidden in preview mode */}
           {sections && sections.length > 0 && !previewMode && (
             <nav
@@ -262,7 +262,7 @@ export function FormShell({
 
           {/* Mobile horizontal section strip */}
           {sections && sections.length > 0 && !previewMode && (
-            <div className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 flex overflow-x-auto gap-1 px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
+            <Row gap="px" className="lg:hidden fixed top-[var(--form-shell-topbar-h,57px)] left-0 right-0 z-10 overflow-x-auto px-5 py-2 bg-[var(--appkit-color-surface)] border-b border-[var(--appkit-color-border)]">
               {sections.map((sec) => (
                 <button
                   key={sec.id}
@@ -273,11 +273,11 @@ export function FormShell({
                   {sec.label}
                 </button>
               ))}
-            </div>
+            </Row>
           )}
 
           {/* Scrollable form body / preview pane */}
-          <div
+          <Div
             ref={bodyRef}
             className={classNames(
               "flex-1 overflow-y-auto",
@@ -286,46 +286,46 @@ export function FormShell({
           >
             {previewMode && previewSlot ? (
               <>
-                <div className="sticky top-0 z-10 flex items-center gap-2 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 py-2 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]">
+                <Row gap="xs" className="sticky top-0 z-10 bg-[var(--appkit-color-warning-surface)] border-b border-[var(--appkit-color-warning)] px-4 py-2 text-sm text-[var(--appkit-color-warning-text,var(--appkit-color-warning))]">
                   <Eye className="w-4 h-4 flex-shrink-0" />
-                  <span>Preview — not visible to buyers until published</span>
-                </div>
-                <div className="py-4">
+                  <Span>Preview — not visible to buyers until published</Span>
+                </Row>
+                <Div className="py-4">
                   {previewSlot()}
-                </div>
+                </Div>
               </>
             ) : splitPreview && previewSlot ? (
               // S-STORE-3-D — desktop 60/40 split: form left, preview right.
               // Below `lg`, falls back to single-column form (preview-as-modal via existing toggle).
-              <div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
-                <div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
+              <Div className="lg:grid lg:grid-cols-[3fr_2fr] lg:gap-6 lg:px-6 lg:py-6 lg:max-w-[1400px] lg:mx-auto">
+                <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6 lg:max-w-none lg:px-0 lg:py-0">
                   {children}
-                </div>
-                <div className="hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4">
-                  <div className="flex items-center gap-2 mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
+                </Div>
+                <Div className="hidden lg:block sticky lg:top-4 lg:self-start lg:max-h-[calc(100vh-6rem)] overflow-y-auto border border-[var(--appkit-color-border)] rounded-lg bg-[var(--appkit-color-surface-raised)] p-4">
+                  <Row gap="xs" className="mb-3 text-xs font-semibold uppercase tracking-wide text-[var(--appkit-color-text-muted)]">
                     <Eye className="w-3.5 h-3.5" />
-                    <span>Live preview</span>
-                  </div>
+                    <Span>Live preview</Span>
+                  </Row>
                   {previewSlot()}
-                </div>
-              </div>
+                </Div>
+              </Div>
             ) : (
-              <div className="max-w-3xl mx-auto px-5 py-6 sm:px-6">
+              <Div className="max-w-3xl mx-auto px-5 py-6 sm:px-6">
                 {children}
-              </div>
+              </Div>
             )}
-          </div>
-        </div>
+          </Div>
+        </Div>
 
         {/* ── Bottom bar — hidden in preview mode ─────────── */}
         {!previewMode && renderBottomBar ? (
           renderBottomBar()
         ) : !previewMode && (onSaveDraft || onPublish) ? (
-          <div className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3 flex items-center justify-between">
+          <Row justify="between" className="flex-shrink-0 sticky bottom-0 z-10 border-t border-[var(--appkit-color-border)] bg-[var(--appkit-color-surface)] px-5 py-3">
             <Button variant="ghost" size="sm" onClick={attemptClose} disabled={isLoading}>
               {FORM_ACTION_META[FORM_ACTION_ID.DISCARD].label}
             </Button>
-            <div className="flex items-center gap-2">
+            <Row gap="xs">
               {onSaveDraft && (
                 <Button
                   variant="outline"
@@ -348,39 +348,39 @@ export function FormShell({
                   {publishLabel} →
                 </Button>
               )}
-            </div>
-          </div>
+            </Row>
+          </Row>
         ) : null}
-      </div>
+      </Div>
 
       {/* Unsaved changes dialog */}
       {showUnsaved && (
         <>
-          <div
+          <Div
             className="fixed inset-0 bg-black/60"
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
             onClick={() => setShowUnsaved(false)}
           />
-          <div
+          <Div
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-sm bg-[var(--appkit-color-surface)] rounded-xl shadow-2xl p-6"
             style={{ zIndex: "calc(var(--appkit-z-modal) + 5)" }}
           >
-            <div className="flex gap-3 mb-4">
-              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--appkit-color-warning-surface)] flex items-center justify-center">
+            <Row gap="sm" align="start" className="mb-4">
+              <Span className="flex-shrink-0 w-10 h-10 rounded-full bg-[var(--appkit-color-warning-surface)] flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-[var(--appkit-color-warning)]" />
-              </span>
-              <>
+              </Span>
+              <Stack gap="xs">
                 <Text className="font-semibold text-[var(--appkit-color-text)]">Unsaved changes</Text>
-                <Text className="text-sm text-[var(--appkit-color-text-muted)] mt-1">
+                <Text className="text-sm text-[var(--appkit-color-text-muted)]">
                   You have unsaved changes. Leave without saving?
                 </Text>
-              </>
-            </div>
-            <div className="flex gap-2 justify-end">
+              </Stack>
+            </Row>
+            <Row gap="xs" justify="end">
               <Button variant="outline" size="sm" onClick={() => setShowUnsaved(false)}>Stay</Button>
               <Button variant="danger" size="sm" onClick={() => { setShowUnsaved(false); onClose(); }}>Leave</Button>
-            </div>
-          </div>
+            </Row>
+          </Div>
         </>
       )}
     </>

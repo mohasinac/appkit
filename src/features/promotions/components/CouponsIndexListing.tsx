@@ -2,7 +2,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
-import { ListingFilterDrawer, Pagination, SortDropdown, Div, Text, Heading } from "../../../ui";
+import { ListingFilterDrawer, Pagination, SortDropdown, Div, Grid, Row, Span, Stack, Text, Heading } from "../../../ui";
 import { usePromotions } from "../hooks/usePromotions";
 import { CouponCard } from "./CouponCard";
 import type { CouponType } from "../types";
@@ -120,10 +120,10 @@ export function CouponsIndexListing({
   };
 
   return (
-    <div className="min-h-[40vh]">
+    <Div className="min-h-[40vh]">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
-      <div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
-        <div className="flex items-center gap-2.5 max-w-full">
+      <Div className="sticky top-[var(--header-height,0px)] z-20 border-b border-zinc-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm py-2.5 px-4">
+        <Row gap="xs" className="max-w-full">
           {/* Filters button */}
           <button
             type="button"
@@ -135,11 +135,11 @@ export function CouponsIndexListing({
             }`}
           >
             <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters{hasActiveFilters ? " •" : ""}</span>
+            <Span className="hidden sm:inline">Filters{hasActiveFilters ? " •" : ""}</Span>
           </button>
 
           {/* Search */}
-          <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
+          <Row className="flex-1 overflow-hidden rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-900">
             <input
               type="text"
               value={searchInput}
@@ -166,45 +166,45 @@ export function CouponsIndexListing({
             >
               <Search className="h-4 w-4" />
             </button>
-          </div>
+          </Row>
 
           {/* Sort */}
-          <div className="flex shrink-0 items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-            <span className="hidden md:inline whitespace-nowrap">Sort by</span>
+          <Row gap="xs" className="shrink-0 text-sm text-zinc-500 dark:text-zinc-400">
+            <Span className="hidden md:inline whitespace-nowrap">Sort by</Span>
             <SortDropdown
               value={table.get(TABLE_KEYS.SORT) || DEFAULT_SORT}
               onChange={(v) => { table.set(TABLE_KEYS.SORT, v); }}
               options={COUPON_SORT_OPTIONS as any}
             />
-          </div>
-        </div>
+          </Row>
+        </Row>
 
         {/* Active filter chips */}
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-2 mt-2">
+          <Row gap="xs" wrap className="mt-2">
             {activeType && (
-              <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 {COUPON_TYPES.find((t) => t.value === activeType)?.label ?? activeType}
                 <button type="button" onClick={() => { table.set(TABLE_KEYS.TYPE, ""); }} aria-label="Remove type filter">
                   <X className="h-3 w-3" />
                 </button>
-              </span>
+              </Span>
             )}
             {table.get(TABLE_KEYS.DATE_FROM) && (
-              <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 From: {table.get(TABLE_KEYS.DATE_FROM)}
                 <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_FROM, ""); }} aria-label="Remove from-date filter">
                   <X className="h-3 w-3" />
                 </button>
-              </span>
+              </Span>
             )}
             {table.get(TABLE_KEYS.DATE_TO) && (
-              <span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
+              <Span className="flex items-center gap-1 rounded-full bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium px-2.5 py-1">
                 To: {table.get(TABLE_KEYS.DATE_TO)}
                 <button type="button" onClick={() => { table.set(TABLE_KEYS.DATE_TO, ""); }} aria-label="Remove to-date filter">
                   <X className="h-3 w-3" />
                 </button>
-              </span>
+              </Span>
             )}
             <button
               type="button"
@@ -213,31 +213,34 @@ export function CouponsIndexListing({
             >
               Clear all
             </button>
-          </div>
+          </Row>
         )}
-      </div>
+      </Div>
 
       {/* ── Coupon grid ─────────────────────────────────────────────────── */}
-      <div className="py-6 px-4">
+      <Div className="py-6 px-4">
         {isLoading ? (
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div
+              <Stack
                 key={i}
-                className="rounded-xl border-2 border-zinc-100 dark:border-slate-700 p-4 animate-pulse space-y-3"
+                gap="sm"
+                rounded="xl"
+                padding="md"
+                className="border-2 border-zinc-100 dark:border-slate-700 animate-pulse"
               >
-                <div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
-                <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-              </div>
+                <Div className="h-6 bg-zinc-200 dark:bg-slate-700 rounded w-2/3" />
+                <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+              </Stack>
             ))}
-          </div>
+          </Grid>
         ) : displayCoupons.length === 0 ? (
-          <div className="py-16 text-center">
+          <Div className="py-16 text-center">
             <Text className="text-zinc-400 dark:text-zinc-400">No coupons match your search.</Text>
-          </div>
+          </Div>
         ) : (
-          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <Grid gap="sm" className="md:grid-cols-2 lg:grid-cols-3">
             {displayCoupons.map((coupon: any) => (
               <CouponCard
                 key={coupon.id}
@@ -252,17 +255,17 @@ export function CouponsIndexListing({
                 }}
               />
             ))}
-          </div>
+          </Grid>
         )}
 
         {totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
+          <Row justify="center" className="mt-8">
             <Pagination
               currentPage={table.getNumber("page", 1)}
               totalPages={totalPages}
               onPageChange={(p) => table.setPage(p)}
             />
-          </div>
+          </Row>
         )}
 
         {!isLoading && total > 0 && (
@@ -270,7 +273,7 @@ export function CouponsIndexListing({
             <Text className="text-xs text-zinc-400 dark:text-zinc-400">{total} coupon{total !== 1 ? "s" : ""} available</Text>
           </Div>
         )}
-      </div>
+      </Div>
 
       {/* ── Filter Drawer ──────────────────────────────────────────────── */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearPending} activeCount={activeFilterCount}>
@@ -279,7 +282,7 @@ export function CouponsIndexListing({
           <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
             Discount Type
           </Heading>
-          <div className="space-y-2">
+          <Stack gap="xs">
             {COUPON_TYPES.map((t) => (
               <label key={t.value} className="flex items-center gap-2 cursor-pointer text-sm text-zinc-700 dark:text-zinc-300">
                 <input
@@ -302,7 +305,7 @@ export function CouponsIndexListing({
                 Clear type
               </button>
             )}
-          </div>
+          </Stack>
         </>
 
         {/* Date range */}
@@ -310,7 +313,7 @@ export function CouponsIndexListing({
           <Heading level={6} className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-3">
             Valid Date Range
           </Heading>
-          <div className="space-y-3">
+          <Stack gap="sm">
             <>
               <label className="block text-xs text-zinc-500 dark:text-zinc-400 mb-1">From date</label>
               <input
@@ -329,9 +332,9 @@ export function CouponsIndexListing({
                 className="w-full rounded-lg border border-zinc-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm text-zinc-900 dark:text-zinc-100 outline-none focus:ring-2 focus:ring-primary"
               />
             </>
-          </div>
+          </Stack>
         </>
       </ListingFilterDrawer>
-    </div>
+    </Div>
   );
 }

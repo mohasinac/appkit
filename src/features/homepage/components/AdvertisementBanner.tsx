@@ -1,6 +1,6 @@
 import React from "react";
 import { THEME_CONSTANTS } from "../../../tokens";
-import { Button, Heading, Row, Section, Span, Text } from "../../../ui";
+import { Button, Div, Grid, Heading, Row, Section, Span, Stack, Text } from "../../../ui";
 import { MediaImage } from "../../media/MediaImage";
 import { ArrowRight, Sparkles } from "lucide-react";
 
@@ -43,9 +43,9 @@ export function AdvertisementBanner({
   if (isLoading) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className={CLS_CONTAINER} data-section="advertisementbanner-div-297">
-          <div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
-        </div>
+        <Div className={CLS_CONTAINER}>
+          <Div className="h-72 bg-zinc-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
+        </Div>
       </Section>
     );
   }
@@ -54,31 +54,31 @@ export function AdvertisementBanner({
   if (backgroundImage) {
     return (
       <Section className={`p-8 ${wrapClass} ${className}`}>
-        <div className={CLS_CONTAINER} data-section="advertisementbanner-div-298">
-          <div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl" data-section="advertisementbanner-div-299">
-            <div className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-300">
+        <Div className={CLS_CONTAINER}>
+          <Div className="relative overflow-hidden rounded-2xl bg-zinc-900 shadow-xl">
+            <Grid className={`${THEME_CONSTANTS.grid.cols2Md} min-h-[clamp(300px,40vh,420px)]`}>
               {/* Left: image */}
-              <div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`} data-section="advertisementbanner-div-301">
+              <Div className={`relative ${THEME_CONSTANTS.card.aspectBanner} order-last md:order-first min-h-0 min-h-[clamp(300px,40vh,420px)]`}>
                 <MediaImage
                   src={backgroundImage}
                   alt={title}
                   size="banner"
                   priority
                 />
-                <div className="hidden md:block absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-zinc-900/60 pointer-events-none" />
-              </div>
+                <Div className="hidden md:block absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-zinc-900/60 pointer-events-none" />
+              </Div>
 
               {/* Right: content */}
-              <div className="relative flex flex-col justify-center px-8 py-10 md:px-12 md:py-14" data-section="advertisementbanner-div-302">
-                <div
+              <Stack className="relative justify-center px-8 py-10 md:px-12 md:py-14">
+                <Div
                   className="absolute top-0 right-0 w-32 h-32 opacity-10 pointer-events-none bg-[radial-gradient(circle,_white_1px,_transparent_1px)] bg-[length:12px_12px]"
                   aria-hidden
                 />
                 {tagLabel && (
-                  <div className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm" data-section="advertisementbanner-div-303">
+                  <Span className="inline-flex items-center gap-1.5 self-start bg-white/10 text-white/80 text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full mb-5 backdrop-blur-sm">
                     <Sparkles className="w-3.5 h-3.5" />
                     {tagLabel}
-                  </div>
+                  </Span>
                 )}
                 <Heading
                   level={2}
@@ -106,10 +106,10 @@ export function AdvertisementBanner({
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 )}
-              </div>
-            </div>
-          </div>
-        </div>
+              </Stack>
+            </Grid>
+          </Div>
+        </Div>
       </Section>
     );
   }
@@ -117,29 +117,30 @@ export function AdvertisementBanner({
   // -- Full-width gradient layout --
   return (
     <Section className={`p-8 ${wrapClass} ${className}`}>
-      <div className={CLS_CONTAINER} data-section="advertisementbanner-div-304">
-        <div
+      <Div className={CLS_CONTAINER}>
+        <Row
+          align="center"
           className={[
-            "relative overflow-hidden rounded-2xl flex items-center",
+            "relative overflow-hidden rounded-2xl",
             compact
               ? "h-[clamp(112px,16vh,160px)]"
               : "min-h-[clamp(240px,34vh,360px)]",
           ].join(" ")}
           style={backgroundColor ? { backgroundColor } : undefined}
-         data-section="advertisementbanner-div-305">
+        >
           {/* Gradient background */}
           {!backgroundColor && (
-            <div
+            <Div
               className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600"
               aria-hidden
             />
           )}
 
           {/* Decorative blobs */}
-          <div className="absolute inset-0 overflow-hidden" aria-hidden data-section="advertisementbanner-div-306">
-            <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse" />
-            <div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full bg-cobalt/20 blur-3xl animate-pulse" />
-          </div>
+          <Div className="absolute inset-0 overflow-hidden" aria-hidden>
+            <Div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-primary/20 blur-3xl animate-pulse" />
+            <Div className="absolute -bottom-16 right-0 w-80 h-80 rounded-full bg-cobalt/20 blur-3xl animate-pulse" />
+          </Div>
 
           {/* Content */}
           {compact ? (
@@ -147,12 +148,12 @@ export function AdvertisementBanner({
               justify="between"
               className="relative z-10 w-full px-6 py-4 gap-4 flex-wrap"
             >
-              <div className="inline-flex items-center gap-2" data-section="advertisementbanner-div-307">
+              <Span className="inline-flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-white/80" />
                 <Span className="text-white font-semibold text-sm">
                   {title}
                 </Span>
-              </div>
+              </Span>
               {ctaLabel && onCtaClick && (
                 <Button
                   variant="secondary"
@@ -166,12 +167,12 @@ export function AdvertisementBanner({
               )}
             </Row>
           ) : (
-            <div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center" data-section="advertisementbanner-div-308">
+            <Div className="relative z-10 w-full max-w-4xl mx-auto px-6 py-12 md:py-16 text-center">
               {tagLabel && (
-                <div className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm" data-section="advertisementbanner-div-309">
+                <Span className="inline-flex items-center gap-1.5 bg-white/15 text-white/90 text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full mb-5 backdrop-blur-sm shadow-sm">
                   <Sparkles className="w-3.5 h-3.5" />
                   {tagLabel}
-                </div>
+                </Span>
               )}
               <Heading
                 level={2}
@@ -199,10 +200,10 @@ export function AdvertisementBanner({
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               )}
-            </div>
+            </Div>
           )}
-        </div>
-      </div>
+        </Row>
+      </Div>
     </Section>
   );
 }

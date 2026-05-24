@@ -1,3 +1,5 @@
+"use client";
+
 import { useCartCount } from "../cart/hooks/useCartCount";
 import { useWishlistCount } from "../wishlist/hooks/useWishlistCount";
 import { useNotifications } from "../account/hooks/useNotifications";
