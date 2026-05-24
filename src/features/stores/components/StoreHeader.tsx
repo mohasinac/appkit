@@ -10,6 +10,7 @@ import {
 } from "../../../ui";
 import { normalizeRichTextHtml } from "../../../utils/string.formatter";
 import { ShareButton } from "../../products/components/ShareButton";
+import { StoreScopedSearch } from "./StoreScopedSearch";
 import type { StoreDetail } from "../types";
 
 interface StoreHeaderProps {
@@ -114,6 +115,14 @@ export function StoreHeader({
               "Store is on vacation mode"}
           </Text>
         )}
+
+        {/* W1-19 — store-scoped search; routes to /products?storeId=…&q=… */}
+        <Div className="mt-3">
+          <StoreScopedSearch
+            storeId={store.storeSlug}
+            storeName={store.storeName}
+          />
+        </Div>
 
       </Div>
     </Section>
