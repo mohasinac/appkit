@@ -40,6 +40,8 @@ export type SeedCollectionName =
   | "supportTickets"
   | "productFeatures"
   | "offers"
+  | "couponUsage"
+  | "claimedCoupons"
   // S-STORE collections (Tier S-STORE) — added 2026-05-18
   | "payoutMethods"
   | "shippingConfigs"

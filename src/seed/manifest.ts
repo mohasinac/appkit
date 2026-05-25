@@ -58,6 +58,8 @@ import { scammersSeedData } from "./scammers-seed-data";
 import { supportTicketsSeedData } from "./support-tickets-seed-data";
 import { productFeaturesSeedData } from "./product-features-seed-data";
 import { offersSeedData } from "./offers-seed-data";
+import { couponUsageSeedData } from "./coupon-usage-seed-data";
+import { claimedCouponsSeedData } from "./claimed-coupons-seed-data";
 
 export interface SeedManifestEntry {
   id: string;
@@ -257,6 +259,16 @@ export const SEED_MANIFEST: SeedManifest = {
     asArr(offersSeedData).map((o) => ({
       ...o,
       name: o.productTitle ?? o.id,
+    })),
+  ),
+  couponUsage: asArr(couponUsageSeedData).map((u) => ({
+    id: `${u.userId}/${u.couponId}`,
+    name: String(u.couponCode ?? u.couponId),
+  })),
+  claimedCoupons: pick(
+    asArr(claimedCouponsSeedData).map((c) => ({
+      ...c,
+      name: c.couponCode ?? c.couponId ?? c.id,
     })),
   ),
   // S-STORE foundation collections — entries derived lazily from store-extensions-seed-data
