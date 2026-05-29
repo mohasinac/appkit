@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../hooks/useProducts";
-import { FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, FilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { useCategoryTree, categoriesToFacetOptions } from "../../categories/hooks/useCategoryTree";
 import { useBrands } from "../hooks/useBrands";
 import { MarketplacePrizeDrawCard } from "./MarketplacePrizeDrawCard";
@@ -118,7 +118,7 @@ export function PrizeDrawsIndexListing({
   const gridClass = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       <ListingToolbar
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
@@ -165,38 +165,38 @@ export function PrizeDrawsIndexListing({
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
                 className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse"
               >
-                <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-                  <div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : filteredDraws.length === 0 ? (
           <Text className="py-12 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No prize draws found.
           </Text>
         ) : (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {filteredDraws.map((product: any) => (
               <MarketplacePrizeDrawCard
                 key={product.id}
@@ -204,9 +204,9 @@ export function PrizeDrawsIndexListing({
                 variant={view}
               />
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -217,7 +217,7 @@ export function PrizeDrawsIndexListing({
         activeCount={filterActiveCount}
         hideTrigger
       >
-        <div className="space-y-4">
+        <Div className="space-y-4">
           <>
             <label
               htmlFor="prizeRevealStatusFilter"
@@ -245,8 +245,8 @@ export function PrizeDrawsIndexListing({
             categoryOptions={categoryOptions}
             brandOptions={brandOptions}
           />
-        </div>
+        </Div>
       </FilterDrawer>
-    </div>
+    </Div>
   );
 }

@@ -16,6 +16,8 @@
 
 import React, { useCallback } from "react";
 import { Div, Input, Row, Select, Stack, Text } from "../../../ui";
+import { CategoryInlineSelect } from "../../seller/components/CategoryInlineSelect";
+import { BrandInlineSelect } from "../../seller/components/BrandInlineSelect";
 import { BUNDLE_MAX_ITEMS } from "../../../_internal/shared/features/categories/bundle-config";
 import { BUNDLE_COPY } from "../../../_internal/shared/features/categories/bundle-copy";
 
@@ -96,14 +98,11 @@ export function BundleDynamicRuleEditor({
           <Text size="xs" weight="semibold">
             {BUNDLE_COPY.adminEditor.dynamic.fields.categorySlug}
           </Text>
-          <Input
-            type="text"
+          <CategoryInlineSelect
             value={rule.filter.categorySlug ?? ""}
-            onChange={(e) =>
-              patchFilter({ categorySlug: e.target.value.trim() || undefined })
-            }
-            placeholder="category-action-figures"
+            onChange={(id) => patchFilter({ categorySlug: id || undefined })}
             disabled={disabled}
+            placeholder="Filter by category…"
           />
         </Stack>
 
@@ -111,14 +110,11 @@ export function BundleDynamicRuleEditor({
           <Text size="xs" weight="semibold">
             {BUNDLE_COPY.adminEditor.dynamic.fields.brandSlug}
           </Text>
-          <Input
-            type="text"
+          <BrandInlineSelect
             value={rule.filter.brandSlug ?? ""}
-            onChange={(e) =>
-              patchFilter({ brandSlug: e.target.value.trim() || undefined })
-            }
-            placeholder="brand-bandai"
+            onChange={(id) => patchFilter({ brandSlug: id || undefined })}
             disabled={disabled}
+            placeholder="Filter by brand…"
           />
         </Stack>
       </Div>

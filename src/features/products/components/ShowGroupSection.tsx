@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
-import { Row, Text, Modal, SideDrawer, Button } from "../../../ui";
+import { Div, Row, Text, Modal, SideDrawer, Button } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isPreOrderListing } from "../utils/listing-type";
 
@@ -60,9 +60,9 @@ function MemberThumb({ member, isCurrent }: { member: GroupMember; isCurrent: bo
           // eslint-disable-next-line @next/next/no-img-element
           <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
         ) : (
-          <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
+          <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
             â—¯
-          </div>
+          </Div>
         )}
         {member.isGroupParent && (
           <span className="absolute bottom-0 right-0 bg-[var(--appkit-color-primary,#6366f1)] text-white text-[8px] leading-none px-1 py-0.5 rounded-tl">
@@ -91,7 +91,7 @@ function GroupTableRow({ member }: { member: GroupMember }) {
             // eslint-disable-next-line @next/next/no-img-element
             <img src={image} alt={member.title} className="w-full h-full object-cover" loading="lazy" />
           ) : (
-            <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800" />
+            <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800" />
           )}
         </div>
       </td>
@@ -191,7 +191,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
 
         {open && (
           <div className="px-4 pb-4 pt-1 overflow-x-auto">
-            <div className="flex gap-3 min-w-0">
+            <Div className="flex gap-3 min-w-0">
               {/* Parent first */}
               {[...members]
                 .sort((a, b) => (b.isGroupParent ? 1 : 0) - (a.isGroupParent ? 1 : 0))
@@ -202,7 +202,7 @@ export function ShowGroupSection({ groupId, currentSlug, isParent, groupTitle }:
                     isCurrent={m.slug === currentSlug || m.id === currentSlug}
                   />
                 ))}
-            </div>
+            </Div>
           </div>
         )}
       </div>

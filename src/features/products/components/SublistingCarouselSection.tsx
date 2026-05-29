@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ROUTES } from "../../../next";
-import { Row, Text } from "../../../ui";
+import { Div, Row, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 import { isAuctionListing, isPreOrderListing } from "../utils/listing-type";
 
@@ -77,9 +77,9 @@ function ListingThumb({
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
+          <Div className="w-full h-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 text-xs">
             â—¯
-          </div>
+          </Div>
         )}
       </div>
       <Text className="text-[10px] text-center text-zinc-600 dark:text-zinc-400 leading-tight line-clamp-2 w-full">
@@ -152,7 +152,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
 
       {open && (
         <div className="px-4 pb-4 pt-1 overflow-x-auto">
-          <div className="flex gap-3 min-w-0">
+          <Div className="flex gap-3 min-w-0">
             {listings.map((listing) => (
               <ListingThumb
                 key={listing.id}
@@ -160,7 +160,7 @@ export function SublistingCarouselSection({ sublistingCategoryId, currentListing
                 isCurrent={listing.id === currentListingId}
               />
             ))}
-          </div>
+          </Div>
         </div>
       )}
     </div>

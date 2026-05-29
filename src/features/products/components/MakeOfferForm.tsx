@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui/components/Div";
 
 export interface MakeOfferFormProps {
   listedPrice?: number;
@@ -33,11 +34,11 @@ export function MakeOfferForm({
   if (isSubmitted && renderSuccess) return <>{renderSuccess()}</>;
 
   return (
-    <div className={`space-y-4 ${className}`} data-section="makeofferform-div-423">
+    <Div className={`space-y-4 ${className}`}>
       {renderError?.()}
       {renderInput?.()}
       {renderTerms?.()}
       {renderAction?.()}
-    </div>
+    </Div>
   );
 }

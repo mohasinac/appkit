@@ -1,5 +1,6 @@
 "use client"
 import React from "react";
+import { Div } from "../../../ui/components/Div";
 
 export interface ProductTab {
   value: string;
@@ -56,11 +57,11 @@ export function ProductTabs({
   const tabs = allTabs.length > 0 ? allTabs : DEFAULT_TABS;
 
   return (
-    <div className={className} data-section="producttabs-div-426">
+    <Div className={className}>
       {renderTabBar ? (
         renderTabBar(activeTab, setActiveTab, tabs)
       ) : (
-        <div className="flex gap-4 border-b mb-4" data-section="producttabs-div-427">
+        <Div className="flex gap-4 border-b mb-4">
           {tabs.map((t) => (
             <button
               key={t.value}
@@ -74,12 +75,12 @@ export function ProductTabs({
               {t.label}
             </button>
           ))}
-        </div>
+        </Div>
       )}
       {activeTab === "description" && renderDescription?.()}
       {activeTab === "specs" && renderSpecs?.()}
       {activeTab === "reviews" && renderReviews?.()}
       {renderExtraTab?.(activeTab)}
-    </div>
+    </Div>
   );
 }

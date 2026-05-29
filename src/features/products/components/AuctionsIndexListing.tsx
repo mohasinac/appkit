@@ -2,7 +2,7 @@
 import React, { useState, useCallback } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useProducts } from "../hooks/useProducts";
-import { Pagination, useToast, ListingToolbar, BulkActionBar, LoginRequiredModal, FilterDrawer } from "../../../ui";
+import { Div, Pagination, useToast, ListingToolbar, BulkActionBar, LoginRequiredModal, FilterDrawer } from "../../../ui";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import type { BulkActionItem } from "../../../ui/components/BulkActionBar";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
@@ -159,7 +159,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         ] } } : {});
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={filterActiveCount}
@@ -216,31 +216,31 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
       {/* ── Auction grid ───────────────────────────────────────────────── */}
-      <div className="py-6">
+      <Div className="py-6">
         {isLoading ? (
-          <div className={gridClass}>
+          <Div className={gridClass}>
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-                <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+                <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                  <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-                  <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
-                  <div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                  <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                  <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+                  <Div className="h-8 bg-zinc-200 dark:bg-slate-700 rounded" />
                 </div>
               </div>
             ))}
-          </div>
+          </Div>
         ) : (
           <MarketplaceAuctionGrid
             auctions={auctions as any[]}
@@ -250,7 +250,7 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
           />
         )}
 
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -264,6 +264,6 @@ export function AuctionsIndexListing({ initialData, categorySlug, brandName }: A
         <AuctionFilters table={pendingTable as any} currencyPrefix="₹" categoryOptions={categoryOptions} brandOptions={brandOptions} />
       </FilterDrawer>
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
-    </div>
+    </Div>
   );
 }

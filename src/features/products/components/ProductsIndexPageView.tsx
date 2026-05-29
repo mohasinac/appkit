@@ -1,7 +1,7 @@
 import React from "react";
 import { productRepository } from "../../../repositories";
 import { ROUTES } from "../../../constants";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
 import { AdSlot } from "../../homepage/components/AdSlot";
 import { parseListingSearchParams } from "../../../utils/listing-params";
 import { ProductsIndexListing } from "./ProductsIndexListing";
@@ -78,14 +78,14 @@ export async function ProductsIndexPageView({ searchParams = {} }: ProductsIndex
           <Text className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Discover amazing products and deals
           </Text>
-          <div className="mt-3">
+          <Div className="mt-3">
             <a
               href={ROUTES.PUBLIC.AUCTIONS}
               className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary-700 dark:text-primary-400 hover:bg-primary/15 transition-colors"
             >
               🏷️ Looking for unique deals? Browse Auctions →
             </a>
-          </div>
+          </Div>
         </Container>
       </Section>
 

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { Div } from "../../../ui/components/Div";
 
 const STATIC_TABS = [
   { id: "description", label: "Description" },
@@ -77,7 +78,7 @@ export function ProductTabsShell({
   const activeContent = allTabs.find((t) => t.id === activeId)?.content;
 
   return (
-    <div className={`mt-8 ${className}`}>
+    <Div className={`mt-8 ${className}`}>
       <div className="mb-6 flex gap-1 overflow-x-auto border-b border-zinc-200 dark:border-zinc-700 pb-px">
         {allTabs.map((t) => (
           <button
@@ -95,6 +96,6 @@ export function ProductTabsShell({
         ))}
       </div>
       <div>{activeContent}</div>
-    </div>
+    </Div>
   );
 }

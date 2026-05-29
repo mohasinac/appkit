@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui/components/Div";
 
 export interface PlaceBidFormProps {
   currentBid?: number;
@@ -31,12 +32,12 @@ export function PlaceBidForm({
   if (renderAuthGate) return <>{renderAuthGate()}</>;
 
   return (
-    <div className={`space-y-4 ${className}`} data-section="placebidform-div-424">
+    <Div className={`space-y-4 ${className}`}>
       {renderCountdown?.()}
       {renderBidInfo?.()}
       {renderError?.()}
       {renderInput?.()}
       {renderAction?.()}
-    </div>
+    </Div>
   );
 }

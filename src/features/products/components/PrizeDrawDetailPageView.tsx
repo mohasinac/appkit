@@ -198,7 +198,7 @@ export async function PrizeDrawDetailPageView({
       />
       <Container size="xl" className="px-4 py-6">
         {/* Breadcrumb + share */}
-        <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+        <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
           <nav
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap"
@@ -219,7 +219,7 @@ export async function PrizeDrawDetailPageView({
             </Span>
           </nav>
           <ShareButton title={title} />
-        </div>
+        </Div>
 
         <PreOrderDetailView
           renderGallery={() => (

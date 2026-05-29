@@ -9206,6 +9206,21 @@ export type { CategoryInlineSelectProps } from "./features/seller/components/Cat
 // [CLIENT] BrandInlineSelect â€" searchable brand selector with inline quick-create (default: allowCreate=true).
 export { BrandInlineSelect } from "./features/seller/components/BrandInlineSelect";
 export type { BrandInlineSelectProps } from "./features/seller/components/BrandInlineSelect";
+// [CLIENT] SublistingInlineSelect â€" searchable sub-listing-category picker with optional admin quick-create.
+export { SublistingInlineSelect } from "./features/seller/components/SublistingInlineSelect";
+export type { SublistingInlineSelectProps } from "./features/seller/components/SublistingInlineSelect";
+// [CLIENT] CouponInlineSelect â€" searchable coupon picker (admin or store scope) with store-side quick-create.
+export { CouponInlineSelect } from "./features/seller/components/CouponInlineSelect";
+export type { CouponInlineSelectProps } from "./features/seller/components/CouponInlineSelect";
+// [CLIENT] GroupInlineSelect â€" searchable grouped-listing picker with inline quick-create.
+export { GroupInlineSelect } from "./features/seller/components/GroupInlineSelect";
+export type { GroupInlineSelectProps } from "./features/seller/components/GroupInlineSelect";
+// [CLIENT] ProductInlineSelect â€" searchable product picker (admin or store scope), single or multi-select.
+export { ProductInlineSelect } from "./features/seller/components/ProductInlineSelect";
+export type { ProductInlineSelectProps } from "./features/seller/components/ProductInlineSelect";
+// [CLIENT] AddressInlineSelect â€" searchable address picker (user or store ownerType) with inline drawer-create.
+export { AddressInlineSelect } from "./features/account/components/AddressInlineSelect";
+export type { AddressInlineSelectProps } from "./features/account/components/AddressInlineSelect";
 
 // --- Shell primitives (UX1/UX2/UX3) -------------------------------------------
 // [CLIENT] FormShell â€" full-viewport edit overlay with sticky top/bottom bars, left section nav, and dirty-state hook.

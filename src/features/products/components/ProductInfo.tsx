@@ -1,4 +1,5 @@
 import React from "react";
+import { Div } from "../../../ui/components/Div";
 
 export interface ProductInfoProps {
   isLoading?: boolean;
@@ -31,7 +32,7 @@ export function ProductInfo({
   className = "",
 }: ProductInfoProps) {
   return (
-    <div className={`space-y-4 ${className}`} data-section="productinfo-div-425">
+    <Div className={`space-y-4 ${className}`}>
       {renderTitle?.(isLoading)}
       {renderRating?.()}
       {renderPrice?.(isLoading)}
@@ -39,6 +40,6 @@ export function ProductInfo({
       {renderVariants?.()}
       {renderDescription?.()}
       {renderSeller?.()}
-    </div>
+    </Div>
   );
 }

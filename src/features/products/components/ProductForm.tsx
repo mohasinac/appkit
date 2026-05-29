@@ -110,6 +110,16 @@ export interface ProductFormProps {
    * non-auction product. Returns null/undefined to omit.
    */
   renderGroupSettings?: (product: ProductFormValue) => React.ReactNode;
+  /**
+   * Render a "join existing group" picker (create + edit). When omitted, the
+   * groupId field is hidden. Receives current groupId and an onChange handler.
+   */
+  renderGroupJoinField?: (args: {
+    label: string;
+    value: string | undefined;
+    onChange: (id: string | undefined) => void;
+    disabled: boolean;
+  }) => React.ReactNode;
 }
 
 function readFileAsDataUrl(file: File): Promise<string> {
@@ -131,6 +141,7 @@ export function ProductForm({
   onMediaAbort,
   currencyPrefix = "",
   renderGroupSettings,
+  renderGroupJoinField,
 }: ProductFormProps) {
   const t = useTranslations("adminProducts");
   const { upload } = useMediaUpload();
@@ -242,7 +253,7 @@ export function ProductForm({
           {t("formBrand")}
         </Text>
         {/* Mode selector */}
-        <div className="flex gap-3 flex-wrap">
+        <Div className="flex gap-3 flex-wrap">
           {(["single", "unbranded", "mixed"] as const).map((mode) => (
             <label key={mode} className="flex items-center gap-1.5 cursor-pointer select-none text-sm text-zinc-700 dark:text-zinc-300">
               <input
@@ -265,7 +276,7 @@ export function ProductForm({
               {mode === "single" ? "Single Brand" : mode === "unbranded" ? "Unbranded" : "Mixed Brands"}
             </label>
           ))}
-        </div>
+        </Div>
         {/* Help text for unbranded / mixed */}
         {(product.brandMode === "unbranded") && (
           <Text className="text-xs text-zinc-500 dark:text-zinc-400">
@@ -318,7 +329,7 @@ export function ProductForm({
       </Stack>
 
       <FormGroup columns={2}>
-        <div /> {/* spacer */}
+        <Div /> {/* spacer */}
         <FormField
           name="status"
           label={t("formStatus")}
@@ -921,6 +932,14 @@ export function ProductForm({
         onChange={(id) => update({ sublistingCategoryId: id || undefined })}
         disabled={isReadonly}
       />
+
+      {/* ── Join existing group — create + edit mode, hidden for auctions ── */}
+      {!isAuctionListing(product) && renderGroupJoinField?.({
+        label: "Group (optional)",
+        value: product.groupId,
+        onChange: (id) => update({ groupId: id || undefined }),
+        disabled: isReadonly,
+      })}
 
       {/* ── Group Settings (GP2) — edit mode only, hidden for auctions ── */}
       {!isAuctionListing(product) && renderGroupSettings?.(product)}

@@ -402,7 +402,7 @@ export async function ProductDetailPageView({
       <Container size="xl" className="px-4 py-6">
         <ProductDetailView
           renderBreadcrumb={() => (
-            <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+            <Div className="mb-4 flex items-center justify-between flex-wrap gap-2">
               <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 flex-wrap">
                 <Link href={String(ROUTES.HOME)} className={CLS_BREADCRUMB_LINK}>
                   Home
@@ -427,7 +427,7 @@ export async function ProductDetailPageView({
                 )}
               </nav>
               <ShareButton title={title || undefined} />
-            </div>
+            </Div>
           )}
           renderGallery={() => (
             <ProductGalleryClient images={images} productName={title || undefined} />
@@ -887,32 +887,32 @@ export async function ProductDetailPageView({
             bundleMemberships.length > 0
               ? () => (
                   <div className="rounded-xl border border-teal-200 dark:border-teal-800/60 bg-teal-50/60 dark:bg-teal-900/20 p-5">
-                    <div className="flex items-center gap-2 mb-3">
+                    <Div className="flex items-center gap-2 mb-3">
                       <Span className="text-teal-600 dark:text-teal-400 text-base" aria-hidden="true">📦</Span>
                       <Text className="text-sm font-semibold text-teal-800 dark:text-teal-200">
                         Part of {bundleMemberships.length === 1 ? "a bundle" : `${bundleMemberships.length} bundles`}
                       </Text>
-                    </div>
-                    <div className="flex flex-col gap-3">
+                    </Div>
+                    <Div className="flex flex-col gap-3">
                       {bundleMemberships.map((b) => (
-                        <div key={b.id} className="flex items-center justify-between gap-4 rounded-lg border border-teal-200 dark:border-teal-800/50 bg-white dark:bg-teal-900/30 px-4 py-3">
-                          <div className="min-w-0">
+                        <Div key={b.id} className="flex items-center justify-between gap-4 rounded-lg border border-teal-200 dark:border-teal-800/50 bg-white dark:bg-teal-900/30 px-4 py-3">
+                          <Div className="min-w-0">
                             <Text className="text-xs text-teal-600 dark:text-teal-400 font-medium uppercase tracking-wide mb-0.5">
                               Included in bundle
                             </Text>
                             <Text className="text-sm font-semibold text-zinc-800 dark:text-zinc-100 truncate">
                               {b.title}
                             </Text>
-                          </div>
+                          </Div>
                           <Link
                             href={String(ROUTES.PUBLIC.BUNDLE_DETAIL(b.id))}
                             className="flex-shrink-0 rounded-lg bg-teal-600 hover:bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors"
                           >
                             View Bundle →
                           </Link>
-                        </div>
+                        </Div>
                       ))}
-                    </div>
+                    </Div>
                   </div>
                 )
               : undefined

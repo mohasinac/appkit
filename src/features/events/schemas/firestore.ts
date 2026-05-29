@@ -46,6 +46,7 @@ export interface EventDocument {
   raffleTopN?: number;
   rafflePrize?: string;
   rafflePrizeCouponId?: string;
+  rafflePrizeProductIds?: string[];
   raffleGithubFunctionUrl?: string;
   raffleWinnerUserId?: string;
   raffleWinnerDisplayName?: string;

@@ -171,6 +171,8 @@ export const ADMIN_ENDPOINTS = {
   SCAMMER_BY_ID: (id: string) => `/api/admin/scammers/${id}`,
   ADDRESSES: "/api/admin/addresses",
   ADDRESS_BY_ID: (id: string) => `/api/admin/addresses/${id}`,
+  GROUPED_LISTINGS: "/api/admin/grouped-listings",
+  GROUPED_LISTING_BY_ID: (id: string) => `/api/admin/grouped-listings/${id}`,
 } as const;
 
 // ---------------------------------------------------------------------------

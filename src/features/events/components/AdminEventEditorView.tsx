@@ -33,6 +33,8 @@ import type {
   SurveyFormField,
 } from "../types";
 import { StepDef, StepForm } from "../../shell";
+import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
+import { CouponInlineSelect } from "../../seller/components/CouponInlineSelect";
 
 // --- Constants ---------------------------------------------------------------
 
@@ -208,6 +210,7 @@ interface EventDraft {
   raffleTopN: string;
   rafflePrize: string;
   rafflePrizeCouponId: string;
+  rafflePrizeProductIds: string[];
   spinPrizes: SpinPrize[];
   spinMaxPerUser: string;
   spinWindowStart: string;
@@ -280,6 +283,7 @@ const DEFAULT_DRAFT: EventDraft = {
   raffleTopN: "10",
   rafflePrize: "",
   rafflePrizeCouponId: "",
+  rafflePrizeProductIds: [],
   spinPrizes: [],
   spinMaxPerUser: "1",
   spinWindowStart: "",
@@ -356,6 +360,7 @@ export function AdminEventEditorView({
       raffleTopN: String(event.raffleTopN ?? 10),
       rafflePrize: event.rafflePrize || "",
       rafflePrizeCouponId: event.rafflePrizeCouponId || "",
+      rafflePrizeProductIds: Array.isArray(event.rafflePrizeProductIds) ? event.rafflePrizeProductIds : [],
       spinPrizes: Array.isArray(event.spinPrizes) ? event.spinPrizes : [],
       spinMaxPerUser: String(event.spinMaxPerUser ?? 1),
       spinWindowStart: toLocalDatetime(event.spinWindowStart),
@@ -387,6 +392,7 @@ export function AdminEventEditorView({
         if (Number(draft.raffleTopN) > 0) raffleFields.raffleTopN = Number(draft.raffleTopN);
         if (draft.rafflePrize) raffleFields.rafflePrize = draft.rafflePrize;
         if (draft.rafflePrizeCouponId) raffleFields.rafflePrizeCouponId = draft.rafflePrizeCouponId;
+        if (draft.rafflePrizeProductIds.length > 0) raffleFields.rafflePrizeProductIds = draft.rafflePrizeProductIds;
         if (draft.raffleType === "spin_wheel" || draft.type === "spin_wheel") {
           raffleFields.spinPrizes = draft.spinPrizes;
           if (Number(draft.spinMaxPerUser) > 0) raffleFields.spinMaxPerUser = Number(draft.spinMaxPerUser);
@@ -549,7 +555,16 @@ export function AdminEventEditorView({
             <Stack gap="xs" surface="muted" rounded="lg" border="default" padding="sm">
               <Text size="sm" weight="semibold" color="muted">Offer configuration</Text>
               <Grid cols={2} gap="sm">
-                <Input label="Coupon ID" value={values.couponId} onChange={(e) => onChange({ couponId: e.target.value })} placeholder="Firestore coupon document ID" required />
+                <Div>
+                  <Text size="sm" weight="medium" className="mb-1">Coupon</Text>
+                  <CouponInlineSelect
+                    scope="admin"
+                    value={values.couponId}
+                    onChange={(id) => onChange({ couponId: id ?? "" })}
+                    placeholder="Search coupons…"
+                    allowCreate={false}
+                  />
+                </Div>
                 <Input label="Display code" value={values.displayCode} onChange={(e) => onChange({ displayCode: e.target.value })} placeholder="CHARIZARD25" required />
               </Grid>
               <Input label="Banner text (optional)" value={values.offerBannerText} onChange={(e) => onChange({ offerBannerText: e.target.value })} placeholder="Use CHARIZARD25 at checkout" />
@@ -641,7 +656,27 @@ export function AdminEventEditorView({
                   <Input label="Top N (for top-N raffle types)" type="number" value={values.raffleTopN} onChange={(e) => onChange({ raffleTopN: e.target.value })} placeholder="10" />
                 </Grid>
                 <Input label="Prize description" value={values.rafflePrize} onChange={(e) => onChange({ rafflePrize: e.target.value })} placeholder="₹2,000 store credit + exclusive Pikachu sticker" />
-                <Input label="Coupon ID for winner (optional)" value={values.rafflePrizeCouponId} onChange={(e) => onChange({ rafflePrizeCouponId: e.target.value })} placeholder="coupon-vip-winner-2026" />
+                <Div>
+                  <Text size="sm" weight="medium" className="mb-1">Coupon for winner (optional)</Text>
+                  <CouponInlineSelect
+                    scope="admin"
+                    value={values.rafflePrizeCouponId}
+                    onChange={(id) => onChange({ rafflePrizeCouponId: id ?? "" })}
+                    placeholder="Search coupons…"
+                    allowCreate={false}
+                  />
+                </Div>
+                <Div>
+                  <Text size="sm" weight="medium" className="mb-1">Prize products (optional)</Text>
+                  <ProductInlineSelect
+                    scope="admin"
+                    multiple
+                    value={values.rafflePrizeProductIds}
+                    onChange={(ids) => onChange({ rafflePrizeProductIds: ids })}
+                    placeholder="Search products to feature as prizes…"
+                  />
+                  <Text size="xs" color="muted" className="mt-1">Products shown to winners or displayed as the prize showcase.</Text>
+                </Div>
 
                 {isSpinMode && (
                   <Stack gap="sm" rounded="lg" border="default" padding="sm">
@@ -655,7 +690,14 @@ export function AdminEventEditorView({
                           <Input label="Label" value={p.label} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, label: e.target.value } : sp) })} placeholder="₹100 off" />
                         </Div>
                         <Div className="col-span-3">
-                          <Input label="Coupon ID" value={p.couponId ?? ""} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, couponId: e.target.value || undefined } : sp) })} />
+                          <Text size="xs" weight="medium" className="mb-1">Coupon</Text>
+                          <CouponInlineSelect
+                            scope="admin"
+                            value={p.couponId ?? ""}
+                            onChange={(id) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, couponId: id || undefined } : sp) })}
+                            placeholder="Search…"
+                            allowCreate={false}
+                          />
                         </Div>
                         <Div className="col-span-2">
                           <Input label="Weight" type="number" value={String(p.weight)} onChange={(e) => onChange({ spinPrizes: values.spinPrizes.map((sp) => sp.id === p.id ? { ...sp, weight: Number(e.target.value) || 0 } : sp) })} />

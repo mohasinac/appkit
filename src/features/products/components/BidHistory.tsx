@@ -1,5 +1,5 @@
 import React from "react";
-import { Heading, Span, Text } from "../../../ui";
+import { Div, Heading, Span, Text } from "../../../ui";
 import { formatCurrency } from "../../../utils/number.formatter";
 
 export interface BidHistoryEntry {
@@ -59,11 +59,11 @@ export function BidHistory({
   if (isLoading) {
     if (renderSkeleton) return <>{renderSkeleton()}</>;
     return (
-      <div className="animate-pulse space-y-2" data-section="bidhistory-div-419">
+      <Div className="animate-pulse space-y-2">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800" />
+          <Div key={i} className="h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800" />
         ))}
-      </div>
+      </Div>
     );
   }
 
@@ -76,16 +76,16 @@ export function BidHistory({
     );
   }
 
-  if (renderList) return <div className={className} data-section="bidhistory-div-420">{renderList()}</div>;
+  if (renderList) return <Div className={className}>{renderList()}</Div>;
 
   return (
-    <div className={className} data-section="bidhistory-div-421">
+    <Div className={className}>
       {labels.title && (
         <Heading level={3} className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           {labels.title}
         </Heading>
       )}
-      <div className="space-y-2">
+      <Div className="space-y-2">
         {bids.map((bid, i) =>
           renderBid ? (
             <React.Fragment key={bid.id}>{renderBid(bid, i)}</React.Fragment>
@@ -103,7 +103,7 @@ export function BidHistory({
             </div>
           ),
         )}
-      </div>
-    </div>
+      </Div>
+    </Div>
   );
 }

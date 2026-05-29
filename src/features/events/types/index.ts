@@ -122,6 +122,7 @@ export interface EventItem {
   raffleTopN?: number;
   rafflePrize?: string;
   rafflePrizeCouponId?: string;
+  rafflePrizeProductIds?: string[];
   raffleGithubFunctionUrl?: string;
   raffleWinnerUserId?: string;
   raffleWinnerDisplayName?: string;

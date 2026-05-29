@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { ImageLightbox } from "../../../ui/components/ImageLightbox";
 import type { LightboxImage } from "../../../ui/components/ImageLightbox";
-import { Text } from "../../../ui";
+import { Div, Text } from "../../../ui";
 
 export interface ProductGalleryClientProps {
   images: string[];
@@ -37,9 +37,9 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   if (images.length === 0) {
     return (
       <div className="overflow-hidden rounded-xl border border-zinc-100 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex aspect-square items-center justify-center text-zinc-300 dark:text-zinc-700">
+        <Div className="flex aspect-square items-center justify-center text-zinc-300 dark:text-zinc-700">
           <PlaceholderSvg />
-        </div>
+        </Div>
       </div>
     );
   }
@@ -47,7 +47,7 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
   const mainImage = images[activeIndex] ?? images[0];
 
   return (
-    <div className="space-y-3">
+    <Div className="space-y-3">
       {/* Main image — click to open lightbox */}
       <div
         className="overflow-hidden rounded-xl border border-zinc-100 dark:border-zinc-800 cursor-zoom-in"
@@ -101,6 +101,6 @@ export function ProductGalleryClient({ images, productName }: ProductGalleryClie
         onClose={() => setLightboxIndex(null)}
         onNavigate={(i) => setLightboxIndex(i)}
       />
-    </div>
+    </Div>
   );
 }

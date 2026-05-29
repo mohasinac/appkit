@@ -17,10 +17,10 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  PaginatedSelect,
   useToast,
 } from "../../../ui";
 import { apiClient } from "../../../http";
+import { ProductInlineSelect } from "../../seller/components/ProductInlineSelect";
 
 export interface GroupSettingsPanelProps {
   productId: string;
@@ -84,7 +84,7 @@ export function GroupSettingsPanel({
     price: "",
     condition: "new",
   });
-  const [linkTarget, setLinkTarget] = useState<string | null>(null);
+  const [linkTargets, setLinkTargets] = useState<string[]>([]);
   const [children, setChildren] = useState<ChildInfo[] | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ title: string; message: string; onConfirm: () => void } | null>(null);
 
@@ -200,17 +200,35 @@ export function GroupSettingsPanel({
   }
 
   async function addLinkChild() {
-    if (!linkTarget) { showToast("Select a listing to link.", "error"); return; }
+    if (linkTargets.length === 0) {
+      showToast("Select at least one listing to link.", "error");
+      return;
+    }
     setLoading(true);
+    let succeeded = 0;
+    const failures: string[] = [];
     try {
-      await apiClient.post(childrenEndpoint, { mode: "link", childId: linkTarget, parentId: productId });
-      showToast("Listing linked to group.", "success");
-      setShowAddModal(false);
-      setLinkTarget(null);
-      loadChildren();
-      onGroupChanged();
-    } catch (e: unknown) {
-      showToast((e as Error)?.message ?? "Failed to link listing.", "error");
+      for (const childId of linkTargets) {
+        try {
+          await apiClient.post(childrenEndpoint, { mode: "link", childId, parentId: productId });
+          succeeded++;
+        } catch (e: unknown) {
+          failures.push((e as Error)?.message ?? "Failed to link listing.");
+        }
+      }
+      if (succeeded > 0) {
+        showToast(
+          succeeded === 1 ? "Listing linked to group." : `${succeeded} listings linked to group.`,
+          "success",
+        );
+        setShowAddModal(false);
+        setLinkTargets([]);
+        loadChildren();
+        onGroupChanged();
+      }
+      if (failures.length > 0) {
+        showToast(failures[0] ?? "Some listings could not be linked.", "error");
+      }
     } finally {
       setLoading(false);
     }
@@ -234,18 +252,6 @@ export function GroupSettingsPanel({
         }
       },
     });
-  }
-
-  async function loadLinkOptions(query: string, page: number) {
-    const params = new URLSearchParams({ page: String(page), pageSize: "25" });
-    if (query) params.set("q", query);
-    params.set("filters", "listingType==standard");
-    const res = (await apiClient.get(`${storeProductsEndpoint}?${params.toString()}`)) as {
-      products?: { id: string; title: string }[];
-      items?: { id: string; title: string }[];
-    };
-    const items = (res.products ?? res.items ?? []).map((p) => ({ value: p.id, label: p.title }));
-    return { items, hasMore: false };
   }
 
   const childSlugsCount = groupChildSlugs?.length ?? 0;
@@ -295,7 +301,7 @@ export function GroupSettingsPanel({
           {isGroupParent && groupId && (
             <Stack gap="md">
               <Row align="start" gap="sm" className="flex-wrap">
-                <div className="flex-1 min-w-[200px]">
+                <Div className="flex-1 min-w-[200px]">
                   <FormField
                     name="groupTitle"
                     label="Group title"
@@ -304,12 +310,12 @@ export function GroupSettingsPanel({
                     onChange={setEditTitle}
                     placeholder="e.g. Human Toy Complete Set"
                   />
-                </div>
-                <div className="pt-6">
+                </Div>
+                <Div className="pt-6">
                   <Button type="button" variant="secondary" size="sm" onClick={saveTitle} isLoading={loading}>
                     Save title
                   </Button>
-                </div>
+                </Div>
               </Row>
 
               <Div>
@@ -319,7 +325,7 @@ export function GroupSettingsPanel({
                 {loading && !children ? (
                   <Text className="text-xs text-zinc-400 dark:text-zinc-400">Loading…</Text>
                 ) : (
-                  <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                  <Div className="divide-y divide-zinc-100 dark:divide-zinc-800">
                     {/* Parent row */}
                     <Row align="center" gap="sm" className="py-2">
                       <span className="rounded bg-[var(--appkit-color-primary,#6366f1)]/10 text-[var(--appkit-color-primary,#6366f1)] text-[10px] font-semibold px-1.5 py-0.5">Parent</span>
@@ -331,7 +337,7 @@ export function GroupSettingsPanel({
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={child.images[0]} alt={child.title} className="w-8 h-8 rounded-full object-cover border border-zinc-200 dark:border-zinc-700" />
                         ) : (
-                          <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800" />
+                          <Div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800" />
                         )}
                         <Text className="text-sm text-zinc-800 dark:text-zinc-200 flex-1 truncate">{child.title}</Text>
                         <Button
@@ -346,7 +352,7 @@ export function GroupSettingsPanel({
                         </Button>
                       </Row>
                     ))}
-                  </div>
+                  </Div>
                 )}
               </Div>
 
@@ -409,9 +415,9 @@ export function GroupSettingsPanel({
             createForm={createForm}
             setCreateForm={setCreateForm}
             productSlug={productSlug}
-            linkTarget={linkTarget}
-            setLinkTarget={setLinkTarget}
-            loadLinkOptions={loadLinkOptions}
+            storeProductsEndpoint={storeProductsEndpoint}
+            linkTargets={linkTargets}
+            setLinkTargets={setLinkTargets}
             onAddCreate={addCreateChild}
             onAddLink={addLinkChild}
             loading={loading}
@@ -425,9 +431,9 @@ export function GroupSettingsPanel({
             createForm={createForm}
             setCreateForm={setCreateForm}
             productSlug={productSlug}
-            linkTarget={linkTarget}
-            setLinkTarget={setLinkTarget}
-            loadLinkOptions={loadLinkOptions}
+            storeProductsEndpoint={storeProductsEndpoint}
+            linkTargets={linkTargets}
+            setLinkTargets={setLinkTargets}
             onAddCreate={addCreateChild}
             onAddLink={addLinkChild}
             loading={loading}
@@ -454,9 +460,9 @@ interface AddChildContentProps {
   createForm: CreateChildForm;
   setCreateForm: (f: CreateChildForm) => void;
   productSlug: string;
-  linkTarget: string | null;
-  setLinkTarget: (v: string | null) => void;
-  loadLinkOptions: (query: string, page: number) => Promise<{ items: { value: string; label: string }[]; hasMore: boolean }>;
+  storeProductsEndpoint: string;
+  linkTargets: string[];
+  setLinkTargets: (v: string[]) => void;
   onAddCreate: () => void;
   onAddLink: () => void;
   loading: boolean;
@@ -468,9 +474,9 @@ function AddChildContent({
   createForm,
   setCreateForm,
   productSlug,
-  linkTarget,
-  setLinkTarget,
-  loadLinkOptions,
+  storeProductsEndpoint,
+  linkTargets,
+  setLinkTargets,
   onAddCreate,
   onAddLink,
   loading,
@@ -518,19 +524,19 @@ function AddChildContent({
         <TabsContent value="link">
           <Stack gap="sm" className="mt-4">
             <Text className="text-xs text-zinc-500 dark:text-zinc-400">
-              Search your existing products or pre-orders. Auctions cannot be linked.
+              Search your existing products or pre-orders. Auctions cannot be linked. Select multiple to bulk-link.
             </Text>
-            <PaginatedSelect
-              value={linkTarget}
-              onChange={(v) => setLinkTarget(v)}
-              loadOptions={loadLinkOptions}
+            <ProductInlineSelect
+              scope="store"
+              endpoint={storeProductsEndpoint}
+              filters="listingType==standard"
+              multiple
+              value={linkTargets}
+              onChange={setLinkTargets}
               placeholder="Search listings…"
-              searchPlaceholder="Type title or slug…"
-              noResultsText="No matching listings found"
-              ariaLabel="Listing to link"
             />
-            <Button type="button" onClick={onAddLink} isLoading={loading} disabled={!linkTarget}>
-              Link to group
+            <Button type="button" onClick={onAddLink} isLoading={loading} disabled={linkTargets.length === 0}>
+              {linkTargets.length > 1 ? `Link ${linkTargets.length} to group` : "Link to group"}
             </Button>
           </Stack>
         </TabsContent>

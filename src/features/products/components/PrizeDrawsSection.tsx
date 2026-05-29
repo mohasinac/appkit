@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Container,
+  Div,
   Heading,
   Section,
   Stack,
@@ -76,7 +77,7 @@ export async function PrizeDrawsSection({
               </Link>
             </Stack>
           ) : (
-            <div className="fluid-grid-card gap-3">
+            <Div className="fluid-grid-card gap-3">
               {draws.map((draw) => (
                 <InteractiveProductCard
                   key={draw.id}
@@ -84,7 +85,7 @@ export async function PrizeDrawsSection({
                   href={String(ROUTES.PUBLIC.PRODUCT_DETAIL(draw.slug ?? draw.id ?? ""))}
                 />
               ))}
-            </div>
+            </Div>
           )}
         </Stack>
       </Container>
