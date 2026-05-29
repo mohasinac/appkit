@@ -1,5 +1,5 @@
 "use client"
-import { Select, Label, Button, SideDrawer } from "../../../ui";
+import { Div, Select, Label, Button, SideDrawer } from "../../../ui";
 import { useState, useCallback } from "react";
 import { useCategories, useCreateCategory } from "../hooks/useCategorySelector";
 import { useMessage } from "../../../react";
@@ -67,7 +67,7 @@ function CreateCategoryContent({
   }, [draft, mutate]);
 
   return (
-    <div className={stackClassName} data-section="categoryselectorcreate-div-266">
+    <Div className={stackClassName}>
       <CategoryForm
         category={draft}
         allCategories={allCategories}
@@ -82,7 +82,7 @@ function CreateCategoryContent({
         onCancel={onCancel}
         isSubmitDisabled={!draft.name}
       />
-    </div>
+    </Div>
   );
 }
 
@@ -112,10 +112,10 @@ export function CategorySelectorCreate({
 
   return (
     <>
-      <div data-section="categoryselectorcreate-div-267">
+      <Div>
         {label && <Label className="mb-1.5">{label}</Label>}
-        <div className="flex gap-2 items-center" data-section="categoryselectorcreate-div-268">
-          <div className="flex-1" data-section="categoryselectorcreate-div-269">
+        <Div className="flex gap-2 items-center">
+          <Div className="flex-1">
             <Select
               value={value}
               onChange={(e) => onChange(e.target.value)}
@@ -129,7 +129,7 @@ export function CategorySelectorCreate({
                 })),
               ]}
             />
-          </div>
+          </Div>
 
           {!disabled && (
             <Button
@@ -142,8 +142,8 @@ export function CategorySelectorCreate({
               {L.addCategory}
             </Button>
           )}
-        </div>
-      </div>
+        </Div>
+      </Div>
 
       <SideDrawer
         isOpen={drawerOpen}

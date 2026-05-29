@@ -5,7 +5,7 @@ import {
   productRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
 import { BrandDetailTabs } from "./BrandDetailTabs";
 import type { CategoryItem } from "../types";
 import type { CategoryDocument } from "../schemas/firestore";
@@ -110,7 +110,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
               className="absolute inset-0 bg-center bg-cover"
               style={{ backgroundImage: `url(${coverImage})` }}
             />
-            <div className="absolute inset-0 bg-black/55" />
+            <Div className="absolute inset-0 bg-black/55" />
           </>
         )}
         {!hasCover && (
@@ -120,7 +120,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           />
         )}
 
-        <div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
+        <Div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
@@ -143,7 +143,7 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
           </nav>
 
           {/* Brand logo + name */}
-          <div className="flex items-center gap-4 mb-3">
+          <Div className="flex items-center gap-4 mb-3">
             {brand?.display?.icon && (
               <span className={`text-5xl leading-none ${!hasCover ? "" : ""}`}>
                 {brand.display.icon}
@@ -159,10 +159,10 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 </Text>
               )}
             </>
-          </div>
+          </Div>
 
           {/* Item count chips */}
-          <div className="flex flex-wrap gap-2 mt-3">
+          <Div className="flex flex-wrap gap-2 mt-3">
             {counts.products > 0 && (
               <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
                 hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"
@@ -189,8 +189,8 @@ export async function BrandDetailPageView({ slug, initialBrand }: BrandDetailPag
                 No items listed yet
               </span>
             )}
-          </div>
-        </div>
+          </Div>
+        </Div>
       </Section>
 
       {/* ── Tabs: Products / Auctions / Pre-Orders ──────────────────────── */}

@@ -131,24 +131,24 @@ export function CategoryBundlesListing({
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={safePage}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-6">
+      <Div className="py-6">
         {pageItems.length === 0 ? (
           <Text className="py-16 text-center text-sm text-zinc-500 dark:text-zinc-400">
             No bundles match your search{brandName ? ` for ${brandName}` : ""}.
           </Text>
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {pageItems.map((bundle) => (
-              <div key={bundle.id} className="flex flex-col">
+              <Div key={bundle.id} className="flex flex-col">
                 <MarketplaceBundleCard bundle={bundle} />
                 {onBuyNow && (
                   <div className="border-t border-zinc-100 px-3 pt-2 pb-3 dark:border-zinc-800 -mt-px rounded-b-xl border border-t-0 border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
@@ -160,11 +160,11 @@ export function CategoryBundlesListing({
                     />
                   </div>
                 )}
-              </div>
+              </Div>
             ))}
-          </div>
+          </Div>
         )}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}

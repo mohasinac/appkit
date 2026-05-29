@@ -1,5 +1,5 @@
 "use client";
-import { FormGroup } from "../../../ui";
+import { Div, FormGroup } from "../../../ui";
 import { Label, Span, Checkbox, RichTextEditor, Text } from "../../../ui";
 import { ImageUpload, MediaImage, useMediaUpload } from "../../media";
 import { FormField } from "../../../ui";
@@ -69,7 +69,7 @@ export function CategoryForm({
   };
 
   return (
-    <div className={stackClassName} data-section="categoryform-div-262">
+    <Div className={stackClassName}>
       <FormGroup columns={2}>
         <FormField
           name="name"
@@ -89,7 +89,7 @@ export function CategoryForm({
         />
       </FormGroup>
 
-      <div className="appkit-form-field" data-section="categoryform-div-263">
+      <Div className="appkit-form-field">
         <Label className="appkit-form-field__label">{L.description}</Label>
         <RichTextEditor
           value={normalizeRichTextHtml(category.description || "")}
@@ -101,7 +101,7 @@ export function CategoryForm({
         <Text size="sm" variant="secondary" className="appkit-form-field__hint">
           Rich text is supported for category descriptions.
         </Text>
-      </div>
+      </Div>
 
       {!isReadonly && (
         <ImageUpload
@@ -121,18 +121,18 @@ export function CategoryForm({
       )}
 
       {category.display?.coverImage && isReadonly && (
-        <div data-section="categoryform-div-264">
+        <Div>
           <Label className="block text-sm font-medium mb-2">
             {L.categoryImage}
           </Label>
-          <div className="relative h-32 w-40 overflow-hidden rounded" data-section="categoryform-div-265">
+          <div className="relative h-32 w-40 overflow-hidden rounded">
             <MediaImage
               src={category.display.coverImage}
               alt={category.name || ""}
               size="card"
             />
           </div>
-        </div>
+        </Div>
       )}
 
       <FormField
@@ -184,6 +184,6 @@ export function CategoryForm({
         onChange={(value) => update({ order: parseInt(value) || 0 })}
         disabled={isReadonly}
       />
-    </div>
+    </Div>
   );
 }

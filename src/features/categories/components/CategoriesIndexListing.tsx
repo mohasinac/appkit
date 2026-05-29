@@ -4,7 +4,7 @@ import React, { useState, useCallback, useMemo } from "react";
 
 import { useCategoriesFiltered } from "../hooks/useCategories";
 import { ROUTES } from "../../../next";
-import { ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
+import { Div, ListingFilterDrawer, ListingToolbar, Pagination, Text } from "../../../ui";
 import { CategoryCard } from "./CategoryGrid";
 import type { CategoryItem } from "../types";
 import { CategoryFilters } from "./CategoryFilters";
@@ -24,17 +24,17 @@ function renderCategoryGrid(props: {
   const isBrandView = activeTab === "brands" || brandsOnly;
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
         {Array.from({ length: 10 }).map((_, i) => (
           <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-            <div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
+            <Div className="aspect-[4/3] bg-zinc-200 dark:bg-slate-700" />
             <div className="p-3.5 space-y-2">
-              <div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
+              <Div className="h-3.5 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-full" />
             </div>
           </div>
         ))}
-      </div>
+      </Div>
     );
   }
   if (categories.length === 0) {
@@ -46,15 +46,15 @@ function renderCategoryGrid(props: {
   }
   if (view === "list") {
     return (
-      <div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
+      <Div className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800 rounded-xl border border-zinc-100 dark:border-zinc-800">
         {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
-      </div>
+      </Div>
     );
   }
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {categories.map((category) => <CategoryCard key={category.id} category={category} href={String(ROUTES.PUBLIC.CATEGORY_DETAIL(category.slug))} />)}
-    </div>
+    </Div>
   );
 }
 
@@ -211,10 +211,10 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
   ] as const;
 
   return (
-    <div className="min-h-screen">
+    <Div className="min-h-screen">
       {/* ── Tab bar — only shown on the combined /categories page ──────── */}
       {!brandsOnly && (
-        <div className="flex gap-1 border-b border-zinc-200 dark:border-slate-700 mb-2">
+        <Div className="flex gap-1 border-b border-zinc-200 dark:border-slate-700 mb-2">
           {TABS.map((tab) => (
             <button
               key={tab.key}
@@ -230,7 +230,7 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
               {tab.label}
             </button>
           ))}
-        </div>
+        </Div>
       )}
 
       {/* ── Sticky toolbar ─────────────────────────────────────────────── */}
@@ -252,16 +252,16 @@ export function CategoriesIndexListing({ initialData: _, brandsOnly = false }: C
 
       {/* ── Sticky pagination (below toolbar) ─────────────────────────── */}
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => table.setPage(p)} />
-        </div>
+        </Div>
       )}
 
       {/* ── Category / brand grid ──────────────────────────────────────── */}
-      <div className="py-6">{renderCategoryGrid({ isLoading, categories, view, activeSearch, activeTab, brandsOnly })}</div>
+      <Div className="py-6">{renderCategoryGrid({ isLoading, categories, view, activeSearch, activeTab, brandsOnly })}</Div>
 
       {/* ── Filter drawer ──────────────────────────────────────────────── */}
       {renderCategoryFilterDrawer({ filterOpen, setFilterOpen, activeFilterCount, clearFilters, applyFilters, pendingTable })}
-    </div>
+    </Div>
   );
 }

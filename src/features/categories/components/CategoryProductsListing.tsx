@@ -4,6 +4,7 @@ import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { usePendingTable } from "../../../react/hooks/usePendingTable";
 import { useProducts } from "../../products/hooks/useProducts";
 import {
+  Div,
   Pagination,
   useToast,
   ListingToolbar,
@@ -27,18 +28,18 @@ function renderCategoryProductGrid(props: { isLoading: boolean; products: any[];
   const { isLoading, products, view, getProductHref, onWishlistToggle, wishlistedIds, onAddToCart } = props;
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <Div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {Array.from({ length: 8 }).map((_, i) => (
           <div key={i} className="rounded-xl border border-zinc-100 dark:border-slate-700 overflow-hidden animate-pulse">
-            <div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
+            <Div className="aspect-square bg-zinc-200 dark:bg-slate-700" />
             <div className="p-3 space-y-2">
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-              <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
-              <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+              <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+              <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
             </div>
           </div>
         ))}
-      </div>
+      </Div>
     );
   }
   return (
@@ -171,7 +172,7 @@ export function CategoryProductsListing({
   );
 
   return (
-    <div className="min-h-[200px]">
+    <Div className="min-h-[200px]">
       <ListingToolbar
         filterCount={filterActiveCount}
         onFiltersClick={openFilters}
@@ -191,23 +192,23 @@ export function CategoryProductsListing({
       />
 
       {totalPages > 1 && (
-        <div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
+        <Div className="sticky top-[calc(var(--header-height,0px)+44px)] z-10 flex justify-center bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-zinc-200 dark:border-slate-700 px-3 py-1.5">
           <Pagination
             currentPage={page}
             totalPages={totalPages}
             onPageChange={(p) => table.setPage(p)}
           />
-        </div>
+        </Div>
       )}
 
-      <div className="py-6">
+      <Div className="py-6">
         {renderCategoryProductGrid({
           isLoading, products: products as any[], view,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           getProductHref: (p: any) => String(ROUTES.PUBLIC.PRODUCT_DETAIL((p as any).slug || p.id)),
           onWishlistToggle: handleWishlistToggle, wishlistedIds, onAddToCart: handleAddToCart,
         })}
-      </div>
+      </Div>
 
       <FilterDrawer
         open={filterOpen}
@@ -222,6 +223,6 @@ export function CategoryProductsListing({
       </FilterDrawer>
 
       <LoginRequiredModal isOpen={modalOpen} onClose={closeModal} message={modalMessage} />
-    </div>
+    </Div>
   );
 }

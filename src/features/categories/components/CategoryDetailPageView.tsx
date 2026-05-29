@@ -6,7 +6,7 @@ import {
   storeRepository,
 } from "../../../repositories";
 import { ROUTES } from "../../../next";
-import { Container, Heading, Main, Section, Text } from "../../../ui";
+import { Container, Div, Heading, Main, Section, Text } from "../../../ui";
 import { CategoryDetailTabs } from "./CategoryDetailTabs";
 import type { CategoryItem } from "../types";
 
@@ -134,11 +134,11 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
               className="absolute inset-0 bg-center bg-cover"
               style={{ backgroundImage: `url(${coverImage})` }}
             />
-            <div className="absolute inset-0 bg-black/55" />
+            <Div className="absolute inset-0 bg-black/55" />
           </>
         )}
 
-        <div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
+        <Div className={`relative z-10 max-w-7xl mx-auto px-4 ${hasCover ? "py-12" : "py-8"}`}>
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-sm mb-4" aria-label="Breadcrumb">
             <Link
@@ -171,7 +171,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
             </Text>
           )}
 
-          <div className="flex flex-wrap gap-2">
+          <Div className="flex flex-wrap gap-2">
             {productCount > 0 && (
               <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${
                 hasCover ? "bg-white/20 text-white backdrop-blur-sm" : "bg-primary/10 text-primary-700 dark:text-primary-400"
@@ -200,14 +200,14 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 {storeCount.toLocaleString()} {storeCount === 1 ? "store" : "stores"}
               </span>
             )}
-          </div>
-        </div>
+          </Div>
+        </Div>
       </Section>
 
       {/* ── Sub-categories horizontal scroller ──────────────────────────── */}
       {childCategories.length > 0 && (
         <Section surface="default" className="border-b border-zinc-100 dark:border-zinc-800">
-          <div className="max-w-7xl mx-auto px-4 py-3">
+          <Div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex gap-2.5 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
               {childCategories.map((child) => (
                 <Link
@@ -227,7 +227,7 @@ export async function CategoryDetailPageView({ slug }: CategoryDetailPageViewPro
                 </Link>
               ))}
             </div>
-          </div>
+          </Div>
         </Section>
       )}
 

@@ -129,7 +129,7 @@ export function CategoryGrid({
   }
 
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ${className}`}>
+    <Div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 ${className}`}>
       {categories.map((cat) => (
         <CategoryCard
           key={cat.id}
@@ -138,6 +138,6 @@ export function CategoryGrid({
           onClick={!getHref ? onCategoryClick : undefined}
         />
       ))}
-    </div>
+    </Div>
   );
 }
