@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react";
-import { Button, Checkbox, FormField, FormGroup } from "../../../ui";
+import { Button, Checkbox, Div, FormField, FormGroup } from "../../../ui";
 import { useFormShellState } from "../../../ui/forms";
 import type { AddressFormData } from "../hooks/useAddresses";
 import { THEME_CONSTANTS } from "../../../tokens";
@@ -231,7 +231,7 @@ export function AddressForm({
         label={mergedLabels.setDefault}
       />
 
-      <div className={`flex items-center justify-start ${THEME_CONSTANTS.spacing.gap.xs} pt-2`} data-section="addressform-div-223">
+      <Div className={`flex items-center justify-start ${THEME_CONSTANTS.spacing.gap.xs} pt-2`}>
         <Button
           type="button"
           variant="outline"
@@ -244,7 +244,7 @@ export function AddressForm({
         <Button type="submit" variant="primary" disabled={isLoading}>
           {isLoading ? mergedLabels.loading : effectiveSubmitLabel}
         </Button>
-      </div>
+      </Div>
     </form>
   );
 }

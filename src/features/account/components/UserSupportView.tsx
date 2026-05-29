@@ -172,7 +172,7 @@ function renderTicketListArea(props: {
     <>
       {isLoading && (
         <Div className="space-y-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />)}
+          {[1, 2, 3].map((i) => <Div key={i} className="h-16 animate-pulse rounded-lg bg-zinc-100 dark:bg-zinc-800" />)}
         </Div>
       )}
       {error && (
@@ -189,13 +189,13 @@ function renderTicketListArea(props: {
         {tickets.map((ticket) => (
           <li key={ticket.id}>
             <button type="button" className="w-full rounded-xl border border-zinc-200 bg-white p-4 text-left shadow-sm hover:border-primary-300 transition-colors dark:border-zinc-700 dark:bg-zinc-900" onClick={() => { setSelectedTicket(ticket); setDetailOpen(true); }}>
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0 flex-1">
+              <Div className="flex items-start justify-between gap-2">
+                <Div className="min-w-0 flex-1">
                   <Text className="font-medium text-zinc-900 dark:text-zinc-100 truncate">{ticket.subject}</Text>
                   <Text className="text-xs text-zinc-500 dark:text-zinc-400">{ticket.category.replace(/_/g, " ")}{ticket.orderId ? ` · Order: ${ticket.orderId}` : ""}</Text>
-                </div>
+                </Div>
                 <span className={`shrink-0 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_BADGE[ticket.status] ?? STATUS_BADGE.open}`}>{ticket.status.replace(/_/g, " ")}</span>
-              </div>
+              </Div>
             </button>
           </li>
         ))}
@@ -258,10 +258,10 @@ function renderTicketDetailDrawer(props: { detailOpen: boolean; setDetailOpen: (
               <div className="space-y-2 max-h-72 overflow-y-auto">
                 {(selectedTicket.messages ?? []).map((msg, i) => (
                   <div key={msg.id ?? i} className={`rounded-lg p-3 text-sm ${msg.authorRole === "user" ? "bg-zinc-50 border border-zinc-200 dark:bg-zinc-900/40 dark:border-zinc-700" : "bg-blue-50 border border-blue-200 dark:bg-blue-900/20 dark:border-blue-800"}`}>
-                    <div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
+                    <Div className="mb-1 flex items-center gap-2 text-xs text-zinc-400 dark:text-zinc-400">
                       <span className="font-medium text-zinc-600 dark:text-zinc-300">{ROLE_LABEL[msg.authorRole ?? "user"] ?? msg.authorRole}</span>
                       {msg.createdAt && <span>{new Date(msg.createdAt).toLocaleString()}</span>}
-                    </div>
+                    </Div>
                     <Text className="whitespace-pre-wrap text-zinc-700 dark:text-zinc-200">{msg.body}</Text>
                   </div>
                 ))}

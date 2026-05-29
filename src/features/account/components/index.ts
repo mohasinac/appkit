@@ -15,6 +15,8 @@ export type {
   AddressSelectorCreateProps,
   AddressSelectorCreateLabels,
 } from "./AddressSelectorCreate";
+export { AddressInlineSelect } from "./AddressInlineSelect";
+export type { AddressInlineSelectProps } from "./AddressInlineSelect";
 export { UserAccountHubView } from "./UserAccountHubView";
 export type {
   UserAccountHubViewProps,

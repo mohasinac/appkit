@@ -3,7 +3,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useUrlTable } from "../../../react/hooks/useUrlTable";
 import { useBulkSelection } from "../../../react/hooks/useBulkSelection";
 import { useAddresses } from "../hooks/useAddresses";
-import { BulkActionBar, ListingFilterDrawer, ListingToolbar, Text } from "../../../ui";
+import { BulkActionBar, Div, ListingFilterDrawer, ListingToolbar, Text } from "../../../ui";
 import type { BulkActionItem } from "../../../ui";
 import { AddressBook } from "./AddressBook";
 import { AddressFilters } from "./AddressFilters";
@@ -99,7 +99,7 @@ export function AddressesIndexListing({
   });
 
   return (
-    <div className="space-y-4">
+    <Div className="space-y-4">
       {/* ── Toolbar ─────────────────────────────────────────────────────── */}
       <ListingToolbar
         filterCount={activeFilterCount}
@@ -115,20 +115,20 @@ export function AddressesIndexListing({
       />
 
       {/* ── Address list ────────────────────────────────────────────────── */}
-      <div className="px-3 sm:px-4">
+      <Div className="px-3 sm:px-4">
         {isLoading ? (
-          <div className="grid sm:grid-cols-2 gap-4">
+          <Div className="grid sm:grid-cols-2 gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
                 className="rounded-xl border border-zinc-200 dark:border-slate-700 animate-pulse p-4 space-y-2"
               >
-                <div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
-                <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
-                <div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
+                <Div className="h-4 bg-zinc-200 dark:bg-slate-700 rounded w-1/3" />
+                <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-3/4" />
+                <Div className="h-3 bg-zinc-200 dark:bg-slate-700 rounded w-1/2" />
               </div>
             ))}
-          </div>
+          </Div>
         ) : addresses.length === 0 ? (
           <Text className="py-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
             {table.get(TABLE_KEYS.QUERY) ? `No addresses matching "${table.get(TABLE_KEYS.QUERY)}"` : "No saved addresses."}
@@ -141,12 +141,12 @@ export function AddressesIndexListing({
             onAdd={onAdd}
           />
         )}
-      </div>
+      </Div>
 
       {/* ── Filter drawer ───────────────────────────────────────────────── */}
       <ListingFilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} onApply={applyFilters} onClear={clearFilters} activeCount={activeFilterCount}>
         <AddressFilters table={pendingTable} />
       </ListingFilterDrawer>
-    </div>
+    </Div>
   );
 }

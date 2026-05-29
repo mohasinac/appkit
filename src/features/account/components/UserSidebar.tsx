@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ConfirmDeleteModal, Li, Nav, Span, Ul } from "../../../ui";
+import { ConfirmDeleteModal, Div, Li, Nav, Span, Ul } from "../../../ui";
 import { BottomSheet } from "../../layout/BottomSheet";
 import { SidebarCollapseToggle } from "../../../_internal/client/features/layout/SidebarCollapseToggle";
 
@@ -130,7 +130,7 @@ function DrawerContent({
           (i) => activeHref === i.href || activeHref.startsWith(i.href + "/")
         );
         return (
-          <div key={group.title} className="mb-0.5">
+          <Div key={group.title} className="mb-0.5">
             <button
               type="button"
               onClick={() => toggle(group.title)}
@@ -157,7 +157,7 @@ function DrawerContent({
                 ))}
               </Ul>
             )}
-          </div>
+          </Div>
         );
       })}
     </Nav>
@@ -174,7 +174,7 @@ function DrawerPanel({
   children: React.ReactNode;
 }) {
   return (
-    <div className="hidden md:block">
+    <Div className="hidden md:block">
       {/* Backdrop */}
       <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       {/* Panel — slides in from RIGHT */}
@@ -184,7 +184,7 @@ function DrawerPanel({
         aria-label={title}
         className="fixed top-0 right-0 z-50 h-full w-64 bg-white dark:bg-slate-900 border-l border-zinc-200 dark:border-slate-700 flex flex-col shadow-2xl"
       >
-        <div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+        <Div className="flex items-center justify-between px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
           <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">{title}</span>
           <button
             type="button"
@@ -196,10 +196,10 @@ function DrawerPanel({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
+        </Div>
         <div className="flex-1 overflow-y-auto">{children}</div>
       </div>
-    </div>
+    </Div>
   );
 }
 
@@ -243,9 +243,9 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         >
           {/* Nav panel */}
           <div className="flex-1 bg-white dark:bg-slate-900 border-r border-zinc-200 dark:border-slate-800 flex flex-col overflow-hidden shadow-xl">
-            <div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
+            <Div className="px-4 py-3.5 border-b border-zinc-100 dark:border-slate-800 shrink-0">
               <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-400">My Account</span>
-            </div>
+            </Div>
             <div className="flex-1 overflow-y-auto">
               <DrawerContent groups={groups} items={items} activeHref={pathname} />
             </div>
@@ -255,11 +255,11 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
         </div>
 
         {/* Mobile: bottom sheet */}
-        <div className="md:hidden">
+        <Div className="md:hidden">
           <BottomSheet open={mobileOpen} onClose={close} title="My Account">
             <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
           </BottomSheet>
-        </div>
+        </Div>
       </>
     );
   }
@@ -278,11 +278,11 @@ export function UserSidebar({ items, groups, mobileOpen = false, onCloseMobile, 
           document.body
         )}
       {/* Mobile — BottomSheet */}
-      <div className="md:hidden">
+      <Div className="md:hidden">
         <BottomSheet open={mobileOpen} onClose={close} title="My Account">
           <DrawerContent groups={groups} items={items} activeHref={pathname} onItemClick={close} />
         </BottomSheet>
-      </div>
+      </Div>
     </>
   );
 }

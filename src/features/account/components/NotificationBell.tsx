@@ -4,6 +4,7 @@ import {
   Button,
   Heading,
   Li,
+  Div,
   Row,
   Spinner,
   Span,
@@ -224,9 +225,9 @@ function renderNotificationDropdown(props: {
         {renderNotificationListContent({ isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink })}
       </div>
       {viewAllHref && (
-        <div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center" data-section="notificationbell-div-234">
+        <Div className="px-4 py-3 border-t border-zinc-200 dark:border-slate-800 text-center">
           {renderActionLink({ href: viewAllHref, onClick: () => setIsOpen(false), className: "text-sm text-primary hover:underline font-medium", children: labels.viewAll })}
-        </div>
+        </Div>
       )}
     </div>
   );
@@ -239,35 +240,35 @@ function renderNotificationListContent(props: {
   renderActionLink: (p: NotificationBellRenderLinkProps) => React.ReactNode;
 }) {
   const { isLoading, notifications, notificationIcons, labels, handleMarkRead, handleMarkReadAndClose, renderActionLink } = props;
-  if (isLoading) return <div className="flex items-center justify-center py-10" data-section="notificationbell-div-230"><Spinner size="md" /></div>;
+  if (isLoading) return <Div className="flex items-center justify-center py-10"><Spinner size="md" /></Div>;
   if (notifications.length === 0) return (
-    <div className="flex flex-col items-center justify-center py-10 px-4 text-center" data-section="notificationbell-div-231">
+    <Div className="flex flex-col items-center justify-center py-10 px-4 text-center">
       <svg className="w-12 h-12 text-zinc-300 dark:text-zinc-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
       </svg>
       <Text className="font-medium text-zinc-900 dark:text-white">{labels.empty}</Text>
       <Text size="sm" className="mt-1 text-zinc-500 dark:text-zinc-400">{labels.emptyDesc}</Text>
-    </div>
+    </Div>
   );
   return (
     <Ul>
       {notifications.map((notification) => (
         <Li key={notification.id} className={`group flex items-start gap-3 px-4 py-3 border-b border-zinc-200 dark:border-slate-800 last:border-0 transition-colors hover:bg-zinc-50 dark:hover:bg-slate-900 ${!notification.isRead ? "bg-primary/5 dark:bg-primary/10" : ""}`}>
           <Span className="text-xl flex-shrink-0 mt-0.5">{notificationIcons[notification.type] ?? "🔔"}</Span>
-          <div className="flex-1 min-w-0" data-section="notificationbell-div-232">
-            <div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`} data-section="notificationbell-div-233">
+          <Div className="flex-1 min-w-0">
+            <Div className={`flex items-start justify-between ${THEME_CONSTANTS.spacing.gap.xs}`}>
               <Text size="sm" className="font-medium text-zinc-900 dark:text-white leading-tight">
                 {notification.title}
                 {!notification.isRead && <Span className="ml-1.5 inline-block w-2 h-2 rounded-full bg-primary flex-shrink-0 align-middle" />}
               </Text>
               <Span className="text-xs text-zinc-500 dark:text-zinc-400 flex-shrink-0">{formatRelativeTime(notification.createdAt)}</Span>
-            </div>
+            </Div>
             <Text size="sm" className={`text-zinc-600 dark:text-zinc-300 mt-0.5 ${THEME_CONSTANTS.utilities.textClamp2}`}>{notification.message}</Text>
             <Row gap="3" className="mt-1.5">
               {notification.actionUrl && renderActionLink({ href: notification.actionUrl, onClick: () => { void handleMarkReadAndClose(notification); }, className: "text-xs text-primary hover:underline font-medium", children: notification.actionLabel ?? labels.viewAction })}
               {!notification.isRead && <Button variant="ghost" onClick={() => void handleMarkRead(notification.id)} className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:underline p-0 h-auto">{labels.markRead}</Button>}
             </Row>
-          </div>
+          </Div>
         </Li>
       ))}
     </Ul>
